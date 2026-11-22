@@ -1082,11 +1082,11 @@ export const MAP_FORMS_CSS = '.map-forms{container-type:inline-size}.map-list{di
 export const mapWidthQuery = (width: number): string => `@container (width < ${width}px){.map-forms[data-figure-width="${width}"]>.map-drawing{display:none}.map-forms[data-figure-width="${width}"]>.map-list{display:block}}`;
 
 type MapMarking = 'observed' | 'inferred' | 'unknown';
-interface MapBox { readonly id: string; readonly label: string; readonly epistemic: MapMarking; readonly attributes: string }
-interface MapArrow extends MapBox { readonly from: string; readonly to: string }
+export interface MapBox { readonly id: string; readonly label: string; readonly epistemic: MapMarking; readonly attributes: string }
+export interface MapArrow extends MapBox { readonly from: string; readonly to: string }
 
 /** One map figure: caption, the two forms, legend and tally. Throws where it would hold more than `MAP_MAX_BOXES` boxes or is not inert. */
-function mapFigure(map: string, index: string, caption: string, boxes: readonly MapBox[], arrows: readonly MapArrow[]): { readonly html: string; readonly width: number } {
+export function mapFigure(map: string, index: string, caption: string, boxes: readonly MapBox[], arrows: readonly MapArrow[]): { readonly html: string; readonly width: number } {
   if (boxes.length === 0 || boxes.length > MAP_MAX_BOXES) throw new DossierRenderError('not-renderable');
   const attributes = new Map([...boxes, ...arrows].map(element => [element.id, element.attributes]));
   const diagram = { nodes: boxes, edges: arrows };

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { LocalDerivedFact, LocalDerivedStructure, LocalManifestFact, LocalManifestFacts, LocalManifestFileEntry, LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
 import { readingInput } from './dossier-reading.testkit.js';
-import { renderDossierSite, renderLocalDossier } from './dossier-site.js';
+import { mapFigure, renderDossierSite, renderLocalDossier, type MapBox } from './dossier-site.js';
 
 // syzygy-3efd.36: the computed map pages (REQ-polaris-generation-034 version 2.9). Inputs are built here from a fixture tree and fixture
 // manifest files; every expected string, count, caption, identity and mark is a literal written from the requirement's words.
@@ -293,6 +293,22 @@ describe('the CI pipeline map', () => {
   });
 });
 
+describe('a map figure', () => {
+  const boxes = (n: number): MapBox[] => Array.from({ length: n }, (_, i) => ({ id: `b${i + 1}`, label: `box ${i + 1}`, epistemic: 'inferred', attributes: ` data-manifest-id="_manifest-${i + 1}"` }));
+
+  it('holds at most 25 boxes, refusing 26 and none, and gives a box no arrow touches its own text-form item', () => {
+    const figure = mapFigure('ci', 'map-test', 'Twenty-five boxes', boxes(25), [{ id: 'a1', from: 'b2', to: 'b1', label: 'needs', epistemic: 'inferred', attributes: ' data-manifest-id="_manifest-99"' }]);
+    const items = [...figure.html.matchAll(/<li class="inferred">([^]*?)<\/li>/gu)].map((m) => m[1]);
+    expect(items).toHaveLength(24);
+    expect(items[0]).toBe('<span class="map-head">box 2</span> needs box 1');
+    expect(items[1]).toBe('<span class="map-head">box 3</span>');
+    expect(items[23]).toBe('<span class="map-head">box 25</span>');
+    expect(figure.html).toContain('<p class="diagram-tally">25 boxes and 1 arrow, derived by Syzygy: 0 observed, 26 inferred, 0 unknown.</p>');
+    expect(() => mapFigure('ci', 'map-test', 'Twenty-six boxes', boxes(26), [])).toThrow('not-renderable');
+    expect(() => mapFigure('ci', 'map-test', 'No box', [], [])).toThrow('not-renderable');
+  });
+});
+
 describe('computed maps on the site', () => {
   it('carries computedMaps in the machine view beside derivedStructure, each member as the render derived it', () => {
     const files = site(structure(1, [['.github', 1], ['packages', 2]]), workspaceMember());
@@ -343,6 +359,8 @@ describe('computed maps on the site', () => {
     const input = readingInput();
     const page = { path: 'maps/units.html', title: 'Taken', intro: 'x', groups: [] };
     expect(() => renderLocalDossier({ ...input, local: { ...input.local, pages: [...input.local.pages, page], derivedStructure: structure(1, []), manifestFacts: workspaceMember() } })).toThrow('page-path-collision');
+    // The map paths are reserved even where no map renders.
+    expect(() => renderLocalDossier({ ...input, local: { ...input.local, pages: [...input.local.pages, page] } })).toThrow('page-path-collision');
     expect(typeof renderDossierSite).toBe('function');
   });
 });

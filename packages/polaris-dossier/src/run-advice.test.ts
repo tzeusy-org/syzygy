@@ -47,16 +47,18 @@ describe('the run file', () => {
       2: record(2, [reordered, wide]),
       3: '{ not json',
       4: record(5, [wide]),
-      10: record(10, null),
+      10: record(10, [wide]),
+      11: record(11, null),
     });
     const advice = computeRunAdvice(run, 'run-x');
     expect(advice).toEqual({
       format: 'polaris-dossier-run-advice/1', runId: 'run-x', rules: [{ id: 'no-figure-layout', version: 1 }, { id: 'graph-without-narrow-form', version: 1 }],
-      // Revision 3 does not parse and revision 4's record names revision 5: both unreadable. Revision 10 has no figureFit.
-      checkRecords: { read: 4, unreadable: 2 }, occurrences: 4,
+      // Revision 3 does not parse and revision 4's record names revision 5: both unreadable. Revision 11 has no figureFit. Revisions are
+      // taken in numeric order, so 10 follows 2.
+      checkRecords: { read: 5, unreadable: 2 }, occurrences: 5,
       advisories: [
         { rule: 'no-figure-layout', advice: { diagram: 'e', unknown: NO_LAYOUT }, revisions: [0, 1] },
-        { rule: 'graph-without-narrow-form', advice: wide, revisions: [1, 2] },
+        { rule: 'graph-without-narrow-form', advice: wide, revisions: [1, 2, 10] },
       ],
     });
     writeRunAdvice(run, advice);
@@ -64,6 +66,13 @@ describe('the run file', () => {
     expect(readRunAdvice(run)).toEqual(advice);
     fs.writeFileSync(path.join(run, 'run-advice.json'), JSON.stringify(advice));
     expect(readRunAdvice(run)).toBeNull();
+  });
+
+  it('throws where the file cannot be put in place, leaving no temporary file', () => {
+    const run = runWith({ 0: record(0, []) });
+    fs.mkdirSync(path.join(run, 'run-advice.json'));
+    expect(() => writeRunAdvice(run, computeRunAdvice(run, 'run-z'))).toThrow();
+    expect(fs.readdirSync(run).sort()).toEqual(['checks', 'run-advice.json']);
   });
 
   it('is empty for a run with no check record', () => {
