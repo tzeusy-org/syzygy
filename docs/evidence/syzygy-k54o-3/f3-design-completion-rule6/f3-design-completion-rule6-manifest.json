@@ -1,0 +1,12 @@
+{
+  "subjectCommit": "2eef3518b2847399bde893cd3ecb9c4618660a6c",
+  "source": "packages/polaris-dossier/src/url-run-sessions.ts",
+  "sourceSha256": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d",
+  "test": "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+  "testSha256": "80514c21de626663dbdb8c2f8c563f911cd44ac442e72650d86750e4f8d26eb7",
+  "old": "outcome.outcome === 'exited' && ",
+  "new": "",
+  "predicate": "stopped semantic terminal must not retire normal design health",
+  "log": "/home/orca/.tmp/f3-design-completion-rule6.log",
+  "exitCode": 1
+}

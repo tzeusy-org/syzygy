@@ -1,0 +1,404 @@
+diff --git a/packages/polaris-dossier/src/session-broker.ts b/packages/polaris-dossier/src/session-broker.ts
+index 3e1bf67b3..50d7ff07c 100644
+--- a/packages/polaris-dossier/src/session-broker.ts
++++ b/packages/polaris-dossier/src/session-broker.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import * as fs from 'node:fs';
+ import * as net from 'node:net';
+ import path from 'node:path';
+@@ -81,7 +83,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+     };
+     // This deadline also bounds flushing the reply to a non-reading peer.
+     // The invocation retains its slot until its own promise actually settles.
+-    const timer = setTimeout(() => { poison(); completed = true; connection.destroy(); }, bounded.milliseconds);
++    const timer = setTimeout(() => { f3Trace('broker-timeout',{milliseconds:bounded.milliseconds}); poison(); completed = true; connection.destroy(); }, bounded.milliseconds);
+     connection.on('error', () => { poison(); clearTimeout(timer); completed = true; });
+     connection.on('close', () => { sockets.delete(raw); clearTimeout(timer); completed = true; });
+     connection.on('data', (chunk: Buffer) => {
+@@ -105,7 +107,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+       try {
+         const reply = await invoke(value, release, context);
+         if (!completed) release(reply);
+-      } catch { poison(); finish(FAILURE); }
++      } catch { f3Trace('broker-invoke-refused'); poison(); finish(FAILURE); }
+       finally { pending--; }
+     })(); });
+   })().catch(() => { poison(); raw.destroy(); }); });
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 8ed992cac..4ea71667d 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
+ import { constants, type Stats } from 'node:fs';
+@@ -392,7 +394,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   let pendingSample: Promise<void> | undefined;
+   const sample = setInterval(() => {
+     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+-    let sampleActive = true;
++    let sampleActive = true, samplePhase = 'initial';
+     const sampleBegan = performance.now();
+     const checkSample = (): void => {
+       if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
+@@ -403,21 +405,21 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+       // The walks share a deadline. Keep storage's earlier refusal and
+       // publication order even if the process walk completes first.
+       const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
+-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
++      samplePhase='storage'; const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
+       checkSample();
+       sampledStorageBytes = storageBytes;
+       if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
+       if (processCount !== undefined) {
+-        const count = await processCount;
++        samplePhase='process'; const count = await processCount;
+         checkSample();
+         if (count === null) throw refused();
+         peakProcesses = Math.max(peakProcesses ?? 0, count);
+         if (count > limits.processes) { stop('process-limit'); return; }
+       }
+-      const stillCurrent = await state.current();
++      samplePhase='current'; const stillCurrent = await state.current();
+       checkSample();
+-      if (stillCurrent !== true) stop('inspection-failed');
+-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
++      if (stillCurrent !== true) { f3Trace('sample-current-refused-'+state.profile.input.binding.role,{elapsed:Math.ceil(performance.now()-sampleBegan)}); stop('inspection-failed'); }
++    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) { f3Trace('sample-failed-'+state.profile.input.binding.role,{phase:samplePhase,elapsed:Math.ceil(performance.now()-sampleBegan)}); stop('inspection-failed'); } })
+       .finally(() => { sampleActive = false; pendingSample = undefined; });
+   }, limits.sampleMilliseconds);
+   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);
+diff --git a/packages/polaris-dossier/src/url-design-product.ts b/packages/polaris-dossier/src/url-design-product.ts
+index 85f2970d4..334c55a9e 100644
+--- a/packages/polaris-dossier/src/url-design-product.ts
++++ b/packages/polaris-dossier/src/url-design-product.ts
+@@ -1,3 +1,6 @@
++let f3StableCalls=0, f3ProductSequence=0;
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import path from 'node:path';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import { isDeepStrictEqual } from 'node:util';
+@@ -79,7 +82,7 @@ const lifetimes = new WeakMap<ValidatedUrlDesignProduct, { readonly deadline: nu
+ function retireProduct(capability: ValidatedUrlDesignProduct): void {
+   const lifetime = lifetimes.get(capability);
+   if (lifetime && Date.now() < lifetime.deadline) lifetime.retired = true;
+-  validated.delete(capability);
++  f3Trace('product-invalidator-'+lifetime?.retired,{remaining:lifetime===undefined?null:lifetime.deadline-Date.now()}); validated.delete(capability);
+ }
+ export function urlDesignProductLeaseState(capability: ValidatedUrlDesignProduct):
+   { readonly state: 'open' | 'expired' | 'retired'; readonly deadline: number } | { readonly state: 'Unknown' } {
+@@ -185,7 +188,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+     if (checkedView === null) return null;
+     await waitForValidation();
+     if (!leaseCurrent()) return null;
+-    const stable = (): boolean => {
++    const stable = (): boolean => { const n=++f3StableCalls, began=performance.now(); try {
+       if (!live() || !isDeepStrictEqual(screen, screening)) return false;
+       const currentProducts = products.revalidate();
+       return isDeepStrictEqual(bindings, { record, declaration, renderer: renderer.identity, products: currentProducts.metadata })
+@@ -193,7 +196,8 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+         && equalOrderedRenderValue(subject, { run: input.run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
+           input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies })
+         && isDeepStrictEqual(parentMetadata, ledger.inspectMetadata(parentSubjects))
+-        && semanticParentsSha256 === ledger.semanticProvenance(parents) && leaseCurrent();
++        && (()=>{const began=performance.now();const same=semanticParentsSha256 === ledger.semanticProvenance(parents); if(n<=64)f3Trace('product-semantic-'+n,{elapsed:Math.ceil(performance.now()-began),same});return same;})() && leaseCurrent();
++      } finally { if(n<=64)f3Trace('product-stable-'+n,{elapsed:Math.ceil(performance.now()-began),remaining:deadline-Date.now()}); }
+     };
+     const rendererCurrent = (): Promise<boolean> => urlRendererCurrent(renderer);
+     if (checkedView.files !== screened.files || checkedView.pages !== screened.pages
+@@ -217,7 +221,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
+     if (!leaseCurrent()) return null;
+     const lifetime = { deadline, authorityCurrent: current, retired: false };
+     signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
+-    lifetimes.set(capability, lifetime);
++    lifetimes.set(capability, lifetime); f3Trace('product-minted-'+(++f3ProductSequence),{deadline,remaining:deadline-Date.now()});
+     validated.set(capability, entry);
+     return capability;
+   } catch { return null; }
+diff --git a/packages/polaris-dossier/src/url-machine-peer.ts b/packages/polaris-dossier/src/url-machine-peer.ts
+index 428f1962f..2a9484850 100644
+--- a/packages/polaris-dossier/src/url-machine-peer.ts
++++ b/packages/polaris-dossier/src/url-machine-peer.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import * as fs from 'node:fs';
+ import { open as openFile, realpath as realFilePath, lstat as namedFileStat } from 'node:fs/promises';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+@@ -445,9 +447,9 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation:
+       const value = await effect(boundary);
+       if (!boundary()) throw refused();
+       result = { ok: true, value };
+-      } catch { result = undefined; }
++      } catch { f3Trace('peer-effect-refused-'+operation, {role:context.role,kind:context.kind}); result = undefined; }
+     }, options.profile);
+-    return completed && result ? result : { ok: false };
++    if (!completed || !result) f3Trace('peer-mediation-refused-'+operation, {completed,hasResult:result!==undefined,role:context.role,kind:context.kind}); return completed && result ? result : { ok: false };
+   } catch { closeState(state); return { ok: false }; }
+   finally { state.mediating = false; }
+ }
+diff --git a/packages/polaris-dossier/src/url-machine-store.ts b/packages/polaris-dossier/src/url-machine-store.ts
+index bba6bbd2f..7d229f4d2 100644
+--- a/packages/polaris-dossier/src/url-machine-store.ts
++++ b/packages/polaris-dossier/src/url-machine-store.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import { constants, renameSync } from 'node:fs';
+ import { mkdir, open, realpath, lstat, rmdir, unlink, opendir, type FileHandle } from 'node:fs/promises';
+ import { randomBytes } from 'node:crypto';
+@@ -434,7 +436,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
+           timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); }, Math.min(operationMilliseconds, Math.max(1, deadline - live())));
+         })]);
+         return true;
+-      } catch { uncertain = true; return false; }
++      } catch { f3Trace('store-transaction-refused-'+operationMilliseconds, {elapsed:Math.ceil(performance.now()-began),operationMilliseconds,deadlineOpen:options.now()<deadline,held}); uncertain = true; return false; }
+       finally {
+         clearTimeout(timer); active = false;
+         // An unresolved operation leaves a durable lock. No successor steals it.
+diff --git a/packages/polaris-dossier/src/url-ordered-design-host.ts b/packages/polaris-dossier/src/url-ordered-design-host.ts
+index 8b9edf38f..8c9804e36 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-host.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-host.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+ import { isRecord, sha256 } from '@syzygy/support';
+ import { startSessionBroker, type SessionBroker } from './session-broker.js';
+@@ -57,7 +59,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
+   let closing = false, failed = false, started = false, issuedCall: SessionResponseObservation['tool'] = null;
+   let closingPromise: ReturnType<SessionHost['close']> | undefined;
+-  const poison = (): void => { failed = true; void controller?.retire('refused').catch(() => {}); };
++  const poison = (): void => { f3Trace('host-poison'); failed = true; void controller?.retire('refused').catch(() => {}); };
+   let cancelActivation!: () => void;
+   const cancelled = new Promise<false>(resolve => { cancelActivation = () => resolve(false); });
+   const active = Promise.race([Promise.resolve(input.controller).then(async selected => {
+@@ -66,14 +68,14 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+       if (isProductionOrderedDesignSession(selected)) await selected.retire('interrupted').catch(() => {});
+       throw refused();
+     }
+-    controller = selected;
++    controller = selected; f3Trace('host-activation-selected', {started});
+     if (started) clearTimeout(activationTimer);
+     return true;
+   }), cancelled]).catch(() => { poison(); cancelActivation(); if (started) void close(); return false; });
+   const current = async (): Promise<boolean> => await active && !closing && !failed
+     && await input.current() === true && !closing && !failed;
+   const selectedController = (): Controller => { if (!controller || closing || failed) throw refused(); return controller; };
+-  const activationTimer = setTimeout(() => { poison(); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
++  const activationTimer = setTimeout(() => { f3Trace('host-activation-timeout'); poison(); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
+   const close: SessionHost['close'] = () => closingPromise ??= (async () => {
+     closing = true;
+     cancelActivation();
+@@ -106,7 +108,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+             || (result !== undefined && !admission.originIds.includes(result.id))) throw refused();
+           return { ok: true, body, admission, consumedToolResults: result === undefined ? []
+             : [{ receiptId: result.id, toolUseId: result.toolUseId, digest: result.digest, bytes: result.bytes }] };
+-        } catch { poison(); return { ok: false }; }
++        } catch { f3Trace('host-request-refused'); poison(); return { ok: false }; }
+       },
+       providerHeaders: incoming => {
+         selectedController();
+@@ -122,29 +124,29 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+           await input.audit(event);
+           if (event.event === 'response-admitted') issuedCall = event.response?.tool ?? null;
+           if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) poison();
+-        } catch { poison(); throw refused(); }
++        } catch { f3Trace('host-audit-refused', {event:event.event}); poison(); throw refused(); }
+       },
+     }, undefined, input.relayMachine);
+     if (closing || failed) throw refused();
+     broker = await startSessionBroker(input.brokerSocket, async (value, release, context) => {
+-      if (context === null || !(await current()) || !relay!.responseFlushed() || issuedCall === null
+-        || !isRecord(value) || (value.tool !== 'artifact_read' && value.tool !== 'dossier_step')) throw refused();
+-      const call = issuedCall, operation = value.tool;
++      let brokerCurrent: boolean | undefined; if (context === null || !(brokerCurrent = await current()) || !relay!.responseFlushed() || issuedCall === null
++        || !isRecord(value) || (value.tool !== 'artifact_read' && value.tool !== 'dossier_step')) { f3Trace('host-broker-entry-refused',{hasContext:context!==null,current:brokerCurrent,flushed:relay!.responseFlushed(),hasCall:issuedCall!==null}); throw refused(); }
++      const call = issuedCall, operation = value.tool; f3Trace('host-broker-invoke-'+operation);
+       const result = await context.mediate(operation, async boundary => {
+         if (!boundary()) throw refused();
+         await selectedController().issueReply(value, (reply, revalidate) => {
+-          const text = canonical(reply), identity = { digest: sha256(text), bytes: Buffer.byteLength(text) };
++          f3Trace('host-broker-reply-ready-'+operation); const text = canonical(reply), identity = { digest: sha256(text), bytes: Buffer.byteLength(text) };
+           const receipt: ReplyIdentity = Object.freeze({ ...identity, toolUseId: call.id,
+             id: `tool-${sha256(canonical({ call, reply: identity }))}` });
+           if (replies.has(call.id)) throw refused();
+           revalidate?.();
+           if (!boundary()) throw refused();
+-          release(reply, () => { revalidate?.(); if (!boundary()) throw refused(); });
++          try { release(reply, () => { revalidate?.(); if (!boundary()) { f3Trace('host-broker-release-boundary-refused'); throw refused(); } }); f3Trace('host-broker-released-'+operation); } catch { f3Trace('host-broker-release-refused'); throw refused(); }
+           replies.set(call.id, receipt);
+           issuedCall = null;
+         });
+       });
+-      if (!result.ok) { poison(); throw refused(); }
++      if (!result.ok) { f3Trace('host-broker-mediation-refused'); poison(); throw refused(); }
+     }, poison, undefined, input.brokerMachine);
+     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
+     started = true;
+diff --git a/packages/polaris-dossier/src/url-ordered-design-screen.ts b/packages/polaris-dossier/src/url-ordered-design-screen.ts
+index 298332ba8..aa18e13c7 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-screen.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-screen.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
+ import * as fs from 'node:fs';
+@@ -126,9 +128,9 @@ export async function runOrderedDesignScreen(options: {
+         failed = true;
+         try { if (child.pid !== undefined) process.kill(-child.pid, 'SIGKILL'); } catch { child.kill('SIGKILL'); }
+       };
+-      const timer = setTimeout(stop, enforcedWallMilliseconds);
++      const timer = setTimeout(() => { f3Trace('screen-worker-wall-timeout', {operation:options.input.operation,enforcedWallMilliseconds}); stop(); }, enforcedWallMilliseconds);
+       // Revocation and shared budget exhaustion must stop a running child too.
+-      const poll = setInterval(() => { try { current(); } catch { stop(); } }, 20);
++      const poll = setInterval(() => { try { current(); } catch { f3Trace('screen-worker-current-refused', {operation:options.input.operation}); stop(); } }, 20);
+       child.once('error', stop);
+       child.stdin!.once('error', stop);
+       child.stdout!.once('error', stop);
+@@ -147,7 +149,7 @@ export async function runOrderedDesignScreen(options: {
+       });
+       child.stdin!.end(input);
+     });
+-    if (result.failed || result.status !== 0 || result.signal !== null
++    f3Trace('screen-worker-result-'+options.input.operation+'-'+result.failed+'-'+result.status+'-'+result.stdout.length, {failed:result.failed,status:result.status,signal:result.signal,bytes:result.stdout.length,elapsed:Math.ceil(performance.now()-started)}); if (result.failed || result.status !== 0 || result.signal !== null
+       || !held.every(unchanged) || !options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse();
+     const output = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(result.stdout);
+     const observation: unknown = parseBoundedJson(output, ORDERED_SCREEN_OUTPUT_LIMITS);
+diff --git a/packages/polaris-dossier/src/url-ordered-design-session.ts b/packages/polaris-dossier/src/url-ordered-design-session.ts
+index da9314544..4de76e999 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-session.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-session.ts
+@@ -1,3 +1,5 @@
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+ import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+ import type { ReleaseReply } from './session-broker.js';
+@@ -129,9 +131,9 @@ export function createOrderedDesignSession(options: Options) {
+   };
+   const requireAuthority = (): void => {
+     if (stopped || (workBudget !== null && !workBudget.current()) || !selected().healthy() || !(Date.now() < deadline)
+-      || !(budgetReservation === null ? budget.current() : budgetReservation.current())) throw refused();
++      || !(budgetReservation === null ? budget.current() : budgetReservation.current())) { f3Trace('controller-authority-refused', {stopped, ledger:workBudget?.current(), relay:selected().healthy(), deadline:Date.now()<deadline,budget:budgetReservation===null?budget.current():budgetReservation.current()}); throw refused(); }
+   };
+-  const requireLive = (): void => { requireAuthority(); assertCurrent(); };
++  const requireLive = (): void => { requireAuthority(); try {assertCurrent();} catch {f3Trace('controller-full-assert-refused'); throw refused();} };
+   const requireProcessingCurrent = (): void => {
+     requireAuthority();
+     (options.assertProcessingCurrent ?? assertCurrent)();
+@@ -140,7 +142,7 @@ export function createOrderedDesignSession(options: Options) {
+     requireAuthority();
+     // The genuine current port may reproduce an expired short-lived product.
+     // No result is released until its replacement passes the full check.
+-    if (await current() !== true) throw refused();
++    if (await current() !== true) { f3Trace('controller-current-refused'); throw refused(); }
+     // current() already performed the full protected-product check. Recheck
+     // continuous authority after its await; synchronous release guards stay full.
+     requireAuthority();
+@@ -228,7 +230,7 @@ export function createOrderedDesignSession(options: Options) {
+         chargeCpuMicroseconds: value => { work.chargeScreenCpuMicroseconds(value); workBudget?.current(); boundary.check(); } });
+       workBudget?.current();
+       boundary.check();
+-      if (!result.ok) throw refused();
++      f3Trace('screen-result-'+input.operation+'-'+result.ok+'-'+input.receivedBase64.length, {ok:result.ok, charge: result.charge}); if (!result.ok) throw refused();
+       return result.observation;
+     }
+     const empty = () => ({ secretCalls: 0, secretCodeUnits: 0, activeCalls: 0, activeCodeUnits: 0, maximumInputCodeUnits: 0 });
+diff --git a/packages/polaris-dossier/src/url-run-ordered-attempt.ts b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+index 6da729679..a1268429d 100644
+--- a/packages/polaris-dossier/src/url-run-ordered-attempt.ts
++++ b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+@@ -1,3 +1,6 @@
++let f3KnownDeadline = 0, f3FullChecks = 0, f3CurrentCalls = 0;
++const f3Seen = new Set<string>();
++const f3Trace = (stage: string, data: Record<string, unknown> = {}): void => { if (f3Seen.has(stage)) return; f3Seen.add(stage); console.error(JSON.stringify({ f3Trace: stage, at: Date.now(), ...data })); };
+ import path from 'node:path';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+ import { sha256 } from '@syzygy/support';
+@@ -76,7 +79,7 @@ export async function checkUrlOrderedProductCurrent(input: {
+   readonly assertCurrent: () => void;
+   readonly refresh: () => Promise<boolean>;
+ }): Promise<boolean> {
+-  const state = urlDesignProductLeaseState(input.product).state;
++  const status = urlDesignProductLeaseState(input.product); if ('deadline' in status) f3KnownDeadline = status.deadline; const state = status.state; f3Trace('attempt-helper-state-'+state, {remaining: f3KnownDeadline-Date.now()});
+   if (state === 'open') {
+     try { input.assertCurrent(); return true; }
+     catch { if (urlDesignProductLeaseState(input.product).state !== 'expired') return false; }
+@@ -110,15 +113,21 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+   };
+   const assertProcessingCurrent = (): void => {
+     if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null
+-      || !input.budget.current() || !input.machine.current()) throw refused();
++      || !input.budget.current() || !input.machine.current()) { f3Trace('attempt-processing-refused', {closed, effect: sessionMachineEffectCurrent(), delivery: delivery !== null, render: render !== null, budget: input.budget.current(), machine: input.machine.current()}); throw refused(); }
+   };
+   const assertCurrent = (): void => {
++    const n=++f3FullChecks, began=performance.now(); try {
+     assertProcessingCurrent();
+-    if (!isUrlDesignProductLeaseOpen(render!.product)) throw refused();
+-    assertUrlDesignDeliveryViewCurrent(delivery!);
++    if (!isUrlDesignProductLeaseOpen(render!.product)) { f3Trace('attempt-proof-expired'); throw refused(); }
++    try { assertUrlDesignDeliveryViewCurrent(delivery!); } catch { f3Trace('attempt-delivery-current-refused'); throw refused(); }
++    } finally { if(n<=64) f3Trace('attempt-full-check-'+n,{elapsed:Math.ceil(performance.now()-began), lastQueriedProofRemaining:f3KnownDeadline===0?null:f3KnownDeadline-Date.now(), leaseOpen:render!==null && isUrlDesignProductLeaseOpen(render.product)}); }
+   };
+   const current = async (): Promise<boolean> => {
+-    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
++    if(closed) return false;
++    const n=++f3CurrentCalls, began=performance.now(), parent=await input.current(), effect=sessionMachineEffectCurrent();
++    const parentEnd=performance.now(), machine=parent && effect!==false ? input.machine.current() : false;
++    if(n<=64) f3Trace('attempt-current-'+n,{parent, effect, machine, parentMilliseconds:Math.ceil(parentEnd-began), machineMilliseconds:Math.ceil(performance.now()-parentEnd)});
++    if(!parent || effect===false || !machine) return false;
+     // Bootstrap has no controller yet; activation still gates every send/tool.
+     if (delivery === null) return true;
+     if (render === null) return false;
+@@ -126,12 +135,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+       product: render.product,
+       assertCurrent,
+       refresh: () => renewing ??= (async () => {
+-        const next = await input.reproduce();
+-        if (next === null) return false;
++        const f3RenewStart=performance.now(); const next = await input.reproduce(); f3Trace('renew-reproduce-'+f3CurrentCalls,{elapsed:Math.ceil(performance.now()-f3RenewStart),present:next!==null});
++        if (next === null) { f3Trace('attempt-renew-reproduction-refused'); return false; } else f3Trace('attempt-renew-reproduced');
+         let adopted = false;
+         try {
+           if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
+-          const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
++          const f3RenewViewStart=performance.now(); const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead); f3Trace('renew-read-view-'+f3CurrentCalls,{elapsed:Math.ceil(performance.now()-f3RenewViewStart)});
+           const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
+           assertCurrent(); return true;
+         } finally { if (!adopted) next.close(); }
+@@ -220,12 +229,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+       launch = await input.audit.commitLaunchHistory(written.capability);
+       await input.registerLaunch(launch);
+     }
+-    render = await input.reproduce();
++    const f3ReproduceStart=performance.now(); render = await input.reproduce(); f3Trace('bootstrap-reproduce',{elapsed:Math.ceil(performance.now()-f3ReproduceStart),present:render!==null});
+     if (render === null || !(await input.current()) || !(await input.waitForSamples())) throw refused();
+-    delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
++    const f3DeliveryStart=performance.now(); delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
+       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin }, input.waitForSamples);
+-    delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
+-    const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
++    f3Trace('bootstrap-delivery-committed',{elapsed:Math.ceil(performance.now()-f3DeliveryStart)}); const f3ViewStart=performance.now(); delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead); f3Trace('bootstrap-view-checked',{elapsed:Math.ceil(performance.now()-f3ViewStart),leaseOpen:isUrlDesignProductLeaseOpen(render.product)});
++    const f3PlanStart=performance.now(); const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
+     const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
+     const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
+       inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
+@@ -260,7 +269,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+         } finally { fresh.close(); }
+       },
+     });
+-    if (!(await current())) throw refused();
++    f3Trace('bootstrap-controller-constructed',{elapsed:Math.ceil(performance.now()-f3PlanStart),leaseOpen:render!==null && isUrlDesignProductLeaseOpen(render.product)}); const f3ActivateStart=performance.now(); if (!(await current())) {f3Trace('bootstrap-current-refused'); throw refused();} f3Trace('bootstrap-current-accepted',{elapsed:Math.ceil(performance.now()-f3ActivateStart)});
+     assertProcessingCurrent(); activate(controller);
+     return Object.freeze({ delivery, launch, host, child, close,
+       consumeTerminal,

@@ -1,0 +1,89 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+ ❯ |unit| packages/polaris-dossier/src/url-design-product.test.ts (56 tests | 1 failed | 55 skipped) 381ms
+   ↓ active URL design product capability > checks the actual open product once without reproduction
+   ↓ active URL design product capability > refuses a delivery check failure while its genuine product lease remains open
+   × active URL design product capability > never renews actual invalidator retirement, including after its original deadline 247ms
+     → expected true to be false // Object.is equality
+   ↓ active URL design product capability > refreshes once when the actual full product check reaches expiry: refreshed=true
+   ↓ active URL design product capability > refreshes once when the actual full product check reaches expiry: refreshed=false
+   ↓ active URL design product capability > never treats abort before the deadline as timed expiry
+   ↓ active URL design product capability > never treats revocation before the deadline as timed expiry
+   ↓ active URL design product capability > never treats operation-close before the deadline as timed expiry
+   ↓ active URL design product capability > never refreshes unknown or copied capabilities and never loops a rejected genuine refresh
+   ↓ active URL design product capability > recomposes packet criteria from the authenticated brief standards and refuses standards drift
+   ↓ active URL design product capability > settles an active sample before screening and through the inert-view checks
+   ↓ active URL design product capability > retires an inert-view capability when read sample 1 refuses
+   ↓ active URL design product capability > retires an inert-view capability when read sample 2 refuses
+   ↓ active URL design product capability > preserves bounded JSON record prototypes in nested render values and bindings
+   ↓ active URL design product capability > compares reproduced evidence with its own lease and exact product metadata
+   ↓ active URL design product capability > binds the exact original, payload, view, complete checked outputs, renderer, policies and actual parents
+   ↓ active URL design product capability > returns defensive byte, metadata, population and parent-array copies
+   ↓ active URL design product capability > returns only the inert view and its provenance under an active render lease
+   ↓ active URL design product capability > refuses empty, copied and serialized tokens without affecting the genuine token
+   ↓ active URL design product capability > retires a token on wrong run/pin identity and never revives it
+   ↓ active URL design product capability > expires when the original product operation closes and refuses currentness/renderer failures
+   ↓ active URL design product capability > refuses changed full output
+   ↓ active URL design product capability > refuses changed nested Map
+   ↓ active URL design product capability > refuses changed origin policy
+   ↓ active URL design product capability > refuses changed screen policy
+   ↓ active URL design product capability > refuses changed profile
+   ↓ active URL design product capability > refuses changed record census
+   ↓ active URL design product capability > refuses changed parent metadata
+   ↓ active URL design product capability > refuses changed receipt identity
+   ↓ active URL design product capability > refuses a pending host read when another inspection retires its token
+   ↓ active URL design product capability > refuses caller scope drift while the host check is pending
+   ↓ active URL design product capability > issues no token for failed checks or pre-aborted operations
+   ↓ active URL design product capability > issues no token after an abort or subject mutation during awaited verification
+   ↓ independent design capability lifetime and exact inputs > rejects a nested input Map whose iteration order changed after mint
+   ↓ independent design capability lifetime and exact inputs > retires a live capability when a synchronous release check detects changed product inputs
+   ↓ independent design capability lifetime and exact inputs > rejects a nested input Map reordered while renderer currentness is awaited
+   ↓ independent design capability lifetime and exact inputs > requires exact file Map iteration order through the full subject check
+   ↓ independent design capability lifetime and exact inputs > does not materialize bytes after wrong binding retires currentness
+   ↓ independent design capability lifetime and exact inputs > does not materialize bytes after abort retires currentness
+   ↓ independent design capability lifetime and exact inputs > does not materialize bytes after operation close retires currentness
+   ↓ independent design capability lifetime and exact inputs > does not materialize bytes after operation expiry retires currentness
+   ↓ independent design capability lifetime and exact inputs > refuses expiry inside the asynchronous renderer check and irreversibly retires the capability
+   ↓ independent design capability lifetime and exact inputs > rejects changed pinned renderer identity after the render operation passed
+   ↓ independent design capability lifetime and exact inputs > does not expose internal nested policy, renderer, record and parent arrays via host copies
+   ↓ second independent design capability boundary controls > refuses mint at the exact original read deadline reached after its last read check
+   ↓ second independent design capability boundary controls > refuses metadata at the exact operation deadline reached after its last read check
+   ↓ second independent design capability boundary controls > refuses bytes at the exact operation deadline reached after its last read check
+   ↓ second independent design capability boundary controls > refuses nested Map reordering during a pending read and retires that capability across order restoration
+   ↓ second independent design capability boundary controls > returns independent copies for concurrent reads in either completion order
+   ↓ second independent design capability boundary controls > preserves exact nested Map key Set and plain own-key order, with an unmodified cycle control
+   ↓ final synchronous copy lease controls > discards prepared mint when deadline occurs during its copy
+   ↓ final synchronous copy lease controls > discards prepared mint when abort occurs during its copy
+   ↓ final synchronous copy lease controls > discards prepared metadata when deadline occurs during its copy
+   ↓ final synchronous copy lease controls > discards prepared metadata when abort occurs during its copy
+   ↓ final synchronous copy lease controls > discards prepared bytes when deadline occurs during its copy
+   ↓ final synchronous copy lease controls > discards prepared bytes when abort occurs during its copy
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-design-product.test.ts > active URL design product capability > never renews actual invalidator retirement, including after its original deadline
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/url-design-product.test.ts:132:100
+    130|     Object.assign(f.reads, { revalidate: () => { throw new Error('owne…
+    131|     const assertCurrent = () => { if (!recheckUrlDesignProductInputs(f…
+    132|     expect(await checkUrlOrderedProductCurrent({ product: f.capability…
+       |                                                                                                    ^
+    133|     Object.assign(f.reads, { revalidate });
+    134|     expect(urlDesignProductLeaseState(f.capability).state).toBe('retir…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 55 skipped (56)
+   Start at  16:35:25
+   Duration  5.92s (transform 3.63s, setup 71ms, collect 4.87s, tests 381ms, environment 0ms, prepare 91ms)
+

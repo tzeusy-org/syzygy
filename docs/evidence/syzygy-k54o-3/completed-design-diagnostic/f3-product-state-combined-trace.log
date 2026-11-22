@@ -1,0 +1,672 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-work-budget
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-1","at":1795336787690,"elapsed":19,"same":true}
+{"f3Trace":"product-stable-1","at":1795336787692,"elapsed":31,"remaining":2375}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-2","at":1795336787937,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-2","at":1795336787937,"elapsed":20,"remaining":2130}
+{"f3Trace":"product-minted-1","at":1795336787937,"deadline":1795336790067,"remaining":2130}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-3","at":1795336788282,"elapsed":22,"same":true}
+{"f3Trace":"product-stable-3","at":1795336788282,"elapsed":32,"remaining":1785}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-4","at":1795336788652,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-4","at":1795336788652,"elapsed":19,"remaining":1415}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-5","at":1795336789977,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-5","at":1795336789977,"elapsed":19,"remaining":3676}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-6","at":1795336790237,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-6","at":1795336790237,"elapsed":21,"remaining":3416}
+{"f3Trace":"product-minted-2","at":1795336790237,"deadline":1795336793653,"remaining":3416}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-1","at":1795336792177,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-2","at":1795336792236,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-7","at":1795336794729,"elapsed":26,"same":true}
+{"f3Trace":"product-stable-7","at":1795336794729,"elapsed":39,"remaining":3738}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-8","at":1795336795108,"elapsed":15,"same":true}
+{"f3Trace":"product-stable-8","at":1795336795109,"elapsed":22,"remaining":3358}
+{"f3Trace":"product-minted-3","at":1795336795110,"deadline":1795336798467,"remaining":3357}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"bootstrap-reproduce","at":1795336795333,"elapsed":1866,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-9","at":1795336795349,"elapsed":9,"same":true}
+{"f3Trace":"product-stable-9","at":1795336795349,"elapsed":15,"remaining":3118}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-10","at":1795336795702,"elapsed":17,"same":true}
+{"f3Trace":"product-stable-10","at":1795336795702,"elapsed":26,"remaining":2765}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-11","at":1795336795748,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-11","at":1795336795748,"elapsed":19,"remaining":2719}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-12","at":1795336795922,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-12","at":1795336795922,"elapsed":19,"remaining":2545}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"bootstrap-delivery-committed","at":1795336795974,"elapsed":640}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-13","at":1795336796000,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-13","at":1795336796000,"elapsed":25,"remaining":2467}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-14","at":1795336796380,"elapsed":15,"same":true}
+{"f3Trace":"product-stable-14","at":1795336796380,"elapsed":28,"remaining":2087}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"bootstrap-view-checked","at":1795336796398,"elapsed":425,"leaseOpen":true}
+{"f3Trace":"bootstrap-controller-constructed","at":1795336796430,"elapsed":32,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-3","at":1795336796431,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-helper-state-open","at":1795336796431,"remaining":2036}
+{"f3Trace":"product-semantic-15","at":1795336796463,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-15","at":1795336796463,"elapsed":25,"remaining":2004}
+{"f3Trace":"attempt-full-check-1","at":1795336796463,"elapsed":32,"lastQueriedProofRemaining":2004,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"bootstrap-current-accepted","at":1795336796463,"elapsed":33}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-4","at":1795336796464,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-16","at":1795336796490,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-16","at":1795336796490,"elapsed":19,"remaining":1977}
+{"f3Trace":"attempt-full-check-2","at":1795336796490,"elapsed":27,"lastQueriedProofRemaining":1977,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"host-activation-selected","at":1795336796501,"started":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-5","at":1795336796501,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-17","at":1795336796530,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-17","at":1795336796530,"elapsed":21,"remaining":1937}
+{"f3Trace":"attempt-full-check-3","at":1795336796530,"elapsed":29,"lastQueriedProofRemaining":1937,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-18","at":1795336796699,"elapsed":19,"same":true}
+{"f3Trace":"product-stable-18","at":1795336796700,"elapsed":28,"remaining":1767}
+{"f3Trace":"attempt-full-check-4","at":1795336796700,"elapsed":39,"lastQueriedProofRemaining":1767,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-6","at":1795336796701,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-19","at":1795336796734,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-19","at":1795336796734,"elapsed":17,"remaining":1733}
+{"f3Trace":"attempt-full-check-5","at":1795336796734,"elapsed":33,"lastQueriedProofRemaining":1733,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-initial-false-0-1455","at":1795336797343,"failed":false,"status":0,"signal":null,"bytes":1455,"elapsed":609}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-initial-true-6016","at":1795336797350,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":612,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-7","at":1795336797352,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-20","at":1795336797390,"elapsed":17,"same":true}
+{"f3Trace":"product-stable-20","at":1795336797390,"elapsed":25,"remaining":1077}
+{"f3Trace":"attempt-full-check-6","at":1795336797390,"elapsed":38,"lastQueriedProofRemaining":1077,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-21","at":1795336797426,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-21","at":1795336797426,"elapsed":18,"remaining":1041}
+{"f3Trace":"attempt-full-check-7","at":1795336797426,"elapsed":35,"lastQueriedProofRemaining":1041,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-8","at":1795336797682,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-22","at":1795336797719,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-22","at":1795336797719,"elapsed":25,"remaining":748}
+{"f3Trace":"attempt-full-check-8","at":1795336797719,"elapsed":37,"lastQueriedProofRemaining":748,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-9","at":1795336797721,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-23","at":1795336797756,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-23","at":1795336797756,"elapsed":20,"remaining":711}
+{"f3Trace":"attempt-full-check-9","at":1795336797756,"elapsed":35,"lastQueriedProofRemaining":711,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-10","at":1795336797802,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-24","at":1795336797832,"elapsed":14,"same":true}
+{"f3Trace":"product-stable-24","at":1795336797832,"elapsed":22,"remaining":635}
+{"f3Trace":"attempt-full-check-10","at":1795336797832,"elapsed":30,"lastQueriedProofRemaining":635,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-11","at":1795336798061,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-25","at":1795336798092,"elapsed":16,"same":true}
+{"f3Trace":"product-stable-25","at":1795336798092,"elapsed":24,"remaining":375}
+{"f3Trace":"attempt-full-check-11","at":1795336798092,"elapsed":32,"lastQueriedProofRemaining":375,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-12","at":1795336798093,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-26","at":1795336798118,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-26","at":1795336798118,"elapsed":16,"remaining":349}
+{"f3Trace":"attempt-full-check-12","at":1795336798118,"elapsed":25,"lastQueriedProofRemaining":349,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-13","at":1795336798120,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-27","at":1795336798163,"elapsed":22,"same":true}
+{"f3Trace":"product-stable-27","at":1795336798163,"elapsed":30,"remaining":304}
+{"f3Trace":"attempt-full-check-13","at":1795336798163,"elapsed":44,"lastQueriedProofRemaining":304,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-14","at":1795336798335,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-28","at":1795336798363,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-28","at":1795336798364,"elapsed":19,"remaining":103}
+{"f3Trace":"attempt-full-check-14","at":1795336798364,"elapsed":29,"lastQueriedProofRemaining":103,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-15","at":1795336798365,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-29","at":1795336798400,"elapsed":15,"same":true}
+{"f3Trace":"product-stable-29","at":1795336798401,"elapsed":23,"remaining":66}
+{"f3Trace":"attempt-full-check-15","at":1795336798401,"elapsed":36,"lastQueriedProofRemaining":66,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-16","at":1795336798402,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-30","at":1795336798434,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-30","at":1795336798434,"elapsed":25,"remaining":33}
+{"f3Trace":"attempt-full-check-16","at":1795336798435,"elapsed":33,"lastQueriedProofRemaining":32,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-17","at":1795336798476,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-helper-state-expired","at":1795336798476,"remaining":-9}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-31","at":1795336799391,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-31","at":1795336799391,"elapsed":17,"remaining":4085}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-32","at":1795336799539,"elapsed":9,"same":true}
+{"f3Trace":"product-stable-32","at":1795336799539,"elapsed":14,"remaining":3937}
+{"f3Trace":"product-minted-4","at":1795336799539,"deadline":1795336803476,"remaining":3937}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-17","at":1795336799677,"elapsed":1201,"present":true}
+{"f3Trace":"attempt-renew-reproduced","at":1795336799677}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-33","at":1795336799691,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-33","at":1795336799691,"elapsed":15,"remaining":3785}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-34","at":1795336799826,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-34","at":1795336799826,"elapsed":16,"remaining":3650}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-17","at":1795336799841,"elapsed":165}
+{"f3Trace":"product-semantic-35","at":1795336799860,"elapsed":8,"same":true}
+{"f3Trace":"product-stable-35","at":1795336799860,"elapsed":13,"remaining":3616}
+{"f3Trace":"attempt-full-check-17","at":1795336799860,"elapsed":19,"lastQueriedProofRemaining":-1393,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-36","at":1795336799995,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-36","at":1795336799995,"elapsed":24,"remaining":3481}
+{"f3Trace":"attempt-full-check-18","at":1795336799995,"elapsed":33,"lastQueriedProofRemaining":-1528,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-18","at":1795336799997,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-37","at":1795336800022,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-37","at":1795336800022,"elapsed":18,"remaining":3454}
+{"f3Trace":"attempt-full-check-19","at":1795336800022,"elapsed":25,"lastQueriedProofRemaining":3454,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-response-false-0-1309","at":1795336800756,"failed":false,"status":0,"signal":null,"bytes":1309,"elapsed":734}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-response-true-1288","at":1795336800760,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":737,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-19","at":1795336800761,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-38","at":1795336800799,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-38","at":1795336800799,"elapsed":28,"remaining":2677}
+{"f3Trace":"attempt-full-check-20","at":1795336800799,"elapsed":38,"lastQueriedProofRemaining":2677,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-20","at":1795336800970,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-39","at":1795336801004,"elapsed":18,"same":true}
+{"f3Trace":"product-stable-39","at":1795336801004,"elapsed":26,"remaining":2472}
+{"f3Trace":"attempt-full-check-21","at":1795336801004,"elapsed":35,"lastQueriedProofRemaining":2472,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-21","at":1795336801006,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-40","at":1795336801038,"elapsed":16,"same":true}
+{"f3Trace":"product-stable-40","at":1795336801038,"elapsed":23,"remaining":2438}
+{"f3Trace":"attempt-full-check-22","at":1795336801038,"elapsed":33,"lastQueriedProofRemaining":2438,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-22","at":1795336801040,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-41","at":1795336801104,"elapsed":35,"same":true}
+{"f3Trace":"product-stable-41","at":1795336801104,"elapsed":46,"remaining":2372}
+{"f3Trace":"attempt-full-check-23","at":1795336801104,"elapsed":65,"lastQueriedProofRemaining":2372,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-23","at":1795336801208,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-42","at":1795336801234,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-42","at":1795336801234,"elapsed":19,"remaining":2242}
+{"f3Trace":"attempt-full-check-24","at":1795336801235,"elapsed":27,"lastQueriedProofRemaining":2241,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-24","at":1795336802058,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-43","at":1795336802087,"elapsed":16,"same":true}
+{"f3Trace":"product-stable-43","at":1795336802087,"elapsed":23,"remaining":1389}
+{"f3Trace":"attempt-full-check-25","at":1795336802087,"elapsed":30,"lastQueriedProofRemaining":1389,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"host-broker-invoke-dossier_step","at":1795336802087}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-25","at":1795336802212,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-44","at":1795336802245,"elapsed":17,"same":true}
+{"f3Trace":"product-stable-44","at":1795336802245,"elapsed":23,"remaining":1231}
+{"f3Trace":"attempt-full-check-26","at":1795336802245,"elapsed":34,"lastQueriedProofRemaining":1231,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-45","at":1795336802275,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-45","at":1795336802275,"elapsed":20,"remaining":1201}
+{"f3Trace":"attempt-full-check-27","at":1795336802275,"elapsed":30,"lastQueriedProofRemaining":1201,"leaseOpen":true}
+{"f3Trace":"product-semantic-46","at":1795336802479,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-46","at":1795336802479,"elapsed":19,"remaining":997}
+{"f3Trace":"attempt-full-check-28","at":1795336802479,"elapsed":28,"lastQueriedProofRemaining":997,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-26","at":1795336802484,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-47","at":1795336802510,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-47","at":1795336802510,"elapsed":18,"remaining":966}
+{"f3Trace":"attempt-full-check-29","at":1795336802510,"elapsed":26,"lastQueriedProofRemaining":966,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-27","at":1795336802542,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-48","at":1795336802576,"elapsed":16,"same":true}
+{"f3Trace":"product-stable-48","at":1795336802577,"elapsed":24,"remaining":899}
+{"f3Trace":"attempt-full-check-30","at":1795336802577,"elapsed":35,"lastQueriedProofRemaining":899,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-28","at":1795336802596,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-49","at":1795336802624,"elapsed":14,"same":true}
+{"f3Trace":"product-stable-49","at":1795336802625,"elapsed":20,"remaining":851}
+{"f3Trace":"attempt-full-check-31","at":1795336802625,"elapsed":29,"lastQueriedProofRemaining":851,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-29","at":1795336802639,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-50","at":1795336802667,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-50","at":1795336802667,"elapsed":19,"remaining":809}
+{"f3Trace":"attempt-full-check-32","at":1795336802667,"elapsed":28,"lastQueriedProofRemaining":809,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-30","at":1795336802676,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-51","at":1795336802754,"elapsed":42,"same":true}
+{"f3Trace":"product-stable-51","at":1795336802756,"elapsed":62,"remaining":720}
+{"f3Trace":"attempt-full-check-33","at":1795336802756,"elapsed":80,"lastQueriedProofRemaining":720,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-31","at":1795336802777,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-52","at":1795336802828,"elapsed":25,"same":true}
+{"f3Trace":"product-stable-52","at":1795336802828,"elapsed":36,"remaining":648}
+{"f3Trace":"attempt-full-check-34","at":1795336802828,"elapsed":51,"lastQueriedProofRemaining":648,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-32","at":1795336802837,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-53","at":1795336802858,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-53","at":1795336802858,"elapsed":15,"remaining":618}
+{"f3Trace":"attempt-full-check-35","at":1795336802858,"elapsed":22,"lastQueriedProofRemaining":618,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-33","at":1795336802869,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-54","at":1795336802919,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-54","at":1795336802919,"elapsed":19,"remaining":557}
+{"f3Trace":"attempt-full-check-36","at":1795336802919,"elapsed":51,"lastQueriedProofRemaining":557,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"host-broker-reply-ready-dossier_step","at":1795336802920}
+{"f3Trace":"product-semantic-55","at":1795336802951,"elapsed":14,"same":true}
+{"f3Trace":"product-stable-55","at":1795336802952,"elapsed":22,"remaining":524}
+{"f3Trace":"attempt-full-check-37","at":1795336802952,"elapsed":32,"lastQueriedProofRemaining":524,"leaseOpen":true}
+{"f3Trace":"product-semantic-56","at":1795336802981,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-56","at":1795336802981,"elapsed":20,"remaining":495}
+{"f3Trace":"attempt-full-check-38","at":1795336802982,"elapsed":29,"lastQueriedProofRemaining":494,"leaseOpen":true}
+{"f3Trace":"host-broker-released-dossier_step","at":1795336802985}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-34","at":1795336803691,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-57","at":1795336804826,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-57","at":1795336804826,"elapsed":16,"remaining":3865}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-58","at":1795336805029,"elapsed":23,"same":true}
+{"f3Trace":"product-stable-58","at":1795336805030,"elapsed":31,"remaining":3661}
+{"f3Trace":"product-minted-5","at":1795336805031,"deadline":1795336808691,"remaining":3660}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-34","at":1795336805205,"elapsed":1514,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-59","at":1795336805222,"elapsed":12,"same":true}
+{"f3Trace":"product-stable-59","at":1795336805222,"elapsed":17,"remaining":3469}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-60","at":1795336805367,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-60","at":1795336805367,"elapsed":16,"remaining":3324}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-34","at":1795336805380,"elapsed":176}
+{"f3Trace":"product-semantic-61","at":1795336805402,"elapsed":11,"same":true}
+{"f3Trace":"product-stable-61","at":1795336805402,"elapsed":17,"remaining":3289}
+{"f3Trace":"attempt-full-check-39","at":1795336805402,"elapsed":23,"lastQueriedProofRemaining":-1926,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-semantic-62","at":1795336805528,"elapsed":13,"same":true}
+{"f3Trace":"product-stable-62","at":1795336805529,"elapsed":21,"remaining":3162}
+{"f3Trace":"attempt-full-check-40","at":1795336805529,"elapsed":32,"lastQueriedProofRemaining":-2053,"leaseOpen":true}
+{"f3Trace":"product-semantic-63","at":1795336805565,"elapsed":21,"same":true}
+{"f3Trace":"product-stable-63","at":1795336805565,"elapsed":28,"remaining":3126}
+{"f3Trace":"attempt-full-check-41","at":1795336805565,"elapsed":36,"lastQueriedProofRemaining":-2089,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-35","at":1795336805569,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"product-semantic-64","at":1795336805594,"elapsed":10,"same":true}
+{"f3Trace":"product-stable-64","at":1795336805594,"elapsed":16,"remaining":3097}
+{"f3Trace":"attempt-full-check-42","at":1795336805594,"elapsed":25,"lastQueriedProofRemaining":3097,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-request-false-0-1662","at":1795336808887,"failed":false,"status":0,"signal":null,"bytes":1662,"elapsed":3292}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-request-true-7508","at":1795336808888,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":3294,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-36","at":1795336808890,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-6","at":1795336809926,"deadline":1795336813890,"remaining":3964}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-36","at":1795336810050,"elapsed":1160,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-36","at":1795336810220,"elapsed":170}
+{"f3Trace":"attempt-full-check-43","at":1795336810240,"elapsed":20,"lastQueriedProofRemaining":-1549,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-full-check-44","at":1795336810261,"elapsed":21,"lastQueriedProofRemaining":-1570,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-37","at":1795336810453,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-45","at":1795336810482,"elapsed":30,"lastQueriedProofRemaining":3408,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-38","at":1795336810483,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-46","at":1795336810502,"elapsed":19,"lastQueriedProofRemaining":3388,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-39","at":1795336810505,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-47","at":1795336810525,"elapsed":20,"lastQueriedProofRemaining":3365,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-40","at":1795336810548,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-48","at":1795336810566,"elapsed":19,"lastQueriedProofRemaining":3324,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-41","at":1795336810577,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-49","at":1795336810601,"elapsed":25,"lastQueriedProofRemaining":3289,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-42","at":1795336810614,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-50","at":1795336810632,"elapsed":18,"lastQueriedProofRemaining":3258,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-43","at":1795336810639,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-51","at":1795336810663,"elapsed":25,"lastQueriedProofRemaining":3227,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-44","at":1795336810677,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-52","at":1795336810702,"elapsed":25,"lastQueriedProofRemaining":3188,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-45","at":1795336810709,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-53","at":1795336810729,"elapsed":21,"lastQueriedProofRemaining":3161,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-46","at":1795336810733,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-54","at":1795336810759,"elapsed":26,"lastQueriedProofRemaining":3132,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-47","at":1795336810789,"parent":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-55","at":1795336810808,"elapsed":19,"lastQueriedProofRemaining":3082,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-48","at":1795336811005,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-56","at":1795336811034,"elapsed":29,"lastQueriedProofRemaining":2856,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-49","at":1795336811037,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-57","at":1795336811061,"elapsed":25,"lastQueriedProofRemaining":2829,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-50","at":1795336811071,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-58","at":1795336811101,"elapsed":30,"lastQueriedProofRemaining":2789,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-51","at":1795336811129,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-59","at":1795336811151,"elapsed":23,"lastQueriedProofRemaining":2739,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-52","at":1795336811156,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-60","at":1795336811182,"elapsed":26,"lastQueriedProofRemaining":2708,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-53","at":1795336811190,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-61","at":1795336811229,"elapsed":39,"lastQueriedProofRemaining":2661,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-54","at":1795336811247,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-62","at":1795336811293,"elapsed":46,"lastQueriedProofRemaining":2597,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-55","at":1795336811314,"parent":true,"effect":true,"machine":true,"parentMilliseconds":4,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-63","at":1795336811351,"elapsed":38,"lastQueriedProofRemaining":2539,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-56","at":1795336811361,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+{"f3Trace":"attempt-full-check-64","at":1795336811388,"elapsed":27,"lastQueriedProofRemaining":2503,"leaseOpen":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-57","at":1795336811390,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-58","at":1795336811556,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-59","at":1795336811586,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-60","at":1795336811613,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-61","at":1795336811672,"parent":true,"effect":true,"machine":true,"parentMilliseconds":2,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-62","at":1795336811706,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-63","at":1795336811751,"parent":true,"effect":true,"machine":true,"parentMilliseconds":3,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"attempt-current-64","at":1795336811792,"parent":true,"effect":true,"machine":true,"parentMilliseconds":1,"machineMilliseconds":1}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-response-false-0-1288","at":1795336812707,"failed":false,"status":0,"signal":null,"bytes":1288,"elapsed":542}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-response-true-1256","at":1795336812710,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":545,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"host-broker-invoke-artifact_read","at":1795336813866}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-7","at":1795336815001,"deadline":1795336818988,"remaining":3987}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-83","at":1795336815145,"elapsed":1158,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-83","at":1795336815307,"elapsed":160}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"host-broker-reply-ready-artifact_read","at":1795336815612}
+{"f3Trace":"host-broker-released-artifact_read","at":1795336815658}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-request-false-0-1823","at":1795336820741,"failed":false,"status":0,"signal":null,"bytes":1823,"elapsed":3876}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-request-true-594572","at":1795336820744,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":3878,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-8","at":1795336822020,"deadline":1795336825746,"remaining":3726}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-94","at":1795336822169,"elapsed":1424,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-94","at":1795336822405,"elapsed":235}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-9","at":1795336827624,"deadline":1795336831102,"remaining":3478}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-140","at":1795336827828,"elapsed":1727,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-140","at":1795336828076,"elapsed":248}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-request-false-0-1968","at":1795336834733,"failed":false,"status":0,"signal":null,"bytes":1968,"elapsed":4015}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-request-true-962068","at":1795336834736,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":4017,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-10","at":1795336835790,"deadline":1795336839737,"remaining":3947}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-152","at":1795336835967,"elapsed":1231,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-152","at":1795336836155,"elapsed":187}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-response-false-0-3082","at":1795336838682,"failed":false,"status":0,"signal":null,"bytes":3082,"elapsed":518}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-response-true-4140","at":1795336838687,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":520,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-11","at":1795336840964,"deadline":1795336844866,"remaining":3902}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-198","at":1795336841092,"elapsed":1227,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-198","at":1795336841266,"elapsed":174}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-12","at":1795336842818,"deadline":1795336846807,"remaining":3989}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-13","at":1795336846582,"deadline":1795336850332,"remaining":3750}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-231","at":1795336846736,"elapsed":1404,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-231","at":1795336846920,"elapsed":185}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-request-false-0-2112","at":1795336850846,"failed":false,"status":0,"signal":null,"bytes":2112,"elapsed":3717}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-request-true-965360","at":1795336850848,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":3718,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-14","at":1795336851948,"deadline":1795336855849,"remaining":3901}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-233","at":1795336852088,"elapsed":1240,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-233","at":1795336852293,"elapsed":204}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-worker-result-response-false-0-1205","at":1795336854849,"failed":false,"status":0,"signal":null,"bytes":1205,"elapsed":535}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"screen-result-response-true-1116","at":1795336854855,"ok":true,"charge":{"cpuMicroseconds":18000000,"cpuAccounting":"charged-hard-capacity","wallMilliseconds":538,"enforcedWallMilliseconds":20000}}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-invalidator-false","at":1795336855849,"remaining":0}
+{"f3Trace":"attempt-delivery-current-refused","at":1795336855850}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-15","at":1795336857069,"deadline":1795336860850,"remaining":3781}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-reproduce-285","at":1795336857278,"elapsed":1429,"present":true}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"renew-read-view-285","at":1795336857500,"elapsed":221}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"product-minted-16","at":1795336859315,"deadline":1795336862765,"remaining":3450}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"sample-current-refused-inventory","at":1795336860944,"elapsed":36}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"sample-current-refused-author","at":1795336860945,"elapsed":36}
+
+stderr | packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+{"f3Trace":"sample-current-refused-fidelity","at":1795336860945,"elapsed":36}
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (2 tests | 1 failed | 1 skipped) 166308ms
+   × composed URL run with actual role processes > runs the genuine production pipeline to complete 164479ms
+     → {"failure":"{\"events\":[\"told the inventory session: draft revision 0 is frozen\",\"delivered the fidelity packet for draft revision 0 and inventory revision 0\",\"rendering draft revision 0\",\"prepared design round 1 for the reviewer\",\"run ended: checked design render continuation unavailable\"],\"failures\":[\"transport-unavailable\"],\"summary\":{\"failure\":\"transport-unavailable\",\"budget\":{\"state\":\"open\",\"reason\":null,\"requestReservations\":22,\"heldDesignTurns\":0,\"completeUsageReports\":19,\"pendingRoles\":[\"author\",\"inventory\",\"fidelity\"],\"reportedTokens\":133,\"usageLabel\":\"Inferred\",\"usagePopulation\":\"normalized complete responses captured by checked host relays\",\"uncapturedUsage\":\"Unknown\",\"tokenEnforcement\":\"reported-response-boundary; in-flight usage Unknown\"},\"roles\":[{\"role\":\"author\",\"pid\":1581219,\"startedAt\":1795336706460,\"finishedAt\":1795336861021,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":4116,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"inventory\",\"pid\":1582261,\"startedAt\":1795336710253,\"finishedAt\":1795336860996,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3792,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"fidelity\",\"pid\":1583088,\"startedAt\":1795336715029,\"finishedAt\":1795336861022,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3173,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"design\",\"pid\":1610446,\"startedAt\":1795336793418,\"finishedAt\":1795336860849,\"outcome\":{\"outcome\":\"exited\",\"exitCode\":0,\"signal\":null,\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":1690,\"sha256\":\"72c544f3a3a47dcc9faa029af3577661f7ef46959422178d364cbfea7fc67bc8\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3486,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}}],\"audit\":{\"captured\":{\"before-tool\":14,\"control\":1,\"design-delivery\":1,\"design-ordered\":23,\"design-verdict\":0,\"launch-attempt\":4,\"launch-history\":3,\"launch-terminal\":4,\"machine-peer\":204,\"ordered-design-verdict\":1,\"relay\":82,\"tool-receipt\":14,\"usage\":19},\"capturedUsage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":57,\"outputTokens\":76},\"closed\":true,\"completeness\":\"Unknown\",\"declarations\":4,\"durableBytes\":668127,\"durableRecords\":374,\"format\":\"url-session-audit/2\",\"hostileSameUidIsolation\":\"Unknown\",\"limits\":{\"bytes\":16777216,\"eventBytes\":65536,\"events\":4096,\"milliseconds\":5000,\"pending\":8},\"nativeSendCensus\":\"Unknown\",\"pendingAppends\":0,\"pendingCallbacks\":0,\"pendingFilesystemOperations\":0,\"poisoned\":false,\"providerReceipts\":\"Unknown\",\"relayEvents\":{\"attempt-allowed\":22,\"attempt-refused\":0,\"response-admitted\":19,\"response-refused\":0,\"send-attempt\":22,\"send-outcome\":19,\"transport-failed\":0},\"roles\":{\"author\":{\"bytes\":188981,\"records\":112,\"tipSha256\":\"36abb64763261ae292bd5126691b608542b9745bd5d51e36bc7caa3d9307e3f9\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":18,\"outputTokens\":24},\"usageReports\":6},\"design\":{\"bytes\":195452,\"records\":103,\"tipSha256\":\"798b5e4efd9609c5a71aa08c5ead0973dbd8c43f7e38922c76be88ba7fee2703\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":15,\"outputTokens\":20},\"usageReports\":5},\"fidelity\":{\"bytes\":123740,\"records\":62,\"tipSha256\":\"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":9,\"outputTokens\":12},\"usageReports\":3},\"inventory\":{\"bytes\":159954,\"records\":97,\"tipSha256\":\"6da486a9718d2fbbf16c5e0e7bd7e36cbbf69561fdb6221ede60131a884501b9\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":15,\"outputTokens\":20},\"usageReports\":5}},\"tail\":\"durable-prefix\",\"termination\":\"closed\",\"tipSha256\":\"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c\",\"usageReports\":19},\"historicallySettledRoles\":[],\"machine\":{\"identitySha256\":\"45bde561d8396c6b0c429230ab57023fe1391f1a4cde5d5ca7a7a3c86c5e8058\",\"lifecycle\":\"retired\"}},\"draws\":[[\"run    run-1000591ced525de7bc8299dee54375f7\",\"result checked design render continuation unavailable\",\"cleanup owned process groups and pending callbacks confirmed settled\",\"Provider receipts and uncaptured send completeness remain Unknown.\",\"A retained tmux view is for inspection.\"]],\"producerReports\":[{\"role\":\"author\",\"operation\":\"check\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"run\",\"checkFile\",\"format\",\"runId\",\"revision\",\"supersedes\",\"pinnedRevision\",\"checkedAt\",\"outcome\",\"draft\",\"session\",\"findings\",\"executionFlags\",\"quotations\",\"excludedContent\",\"citedBlobs\",\"screeningPolicy\",\"credential\",\"limits\",\"label\",\"figureFit\",\"readingLedger\",\"manifestFacts\",\"mechanismAdvice\",\"disclosures\",\"screenCensus\",\"readerAdvice\",\"readingDifference\",\"reviewReach\",\"inventoryCoverageAdvice\"],\"command\":\"check\",\"outcome\":\"passed\"},{\"role\":\"inventory\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"session\",\"round\",\"continuing\",\"read\",\"sha256\",\"next\",\"label\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"delivered\"},{\"role\":\"inventory\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"session\",\"passed\",\"check\",\"next\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"submitted\"},{\"role\":\"fidelity\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"kind\",\"session\",\"round\",\"continuing\",\"read\",\"sha256\",\"next\",\"label\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"delivered\"},{\"role\":\"fidelity\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"kind\",\"session\",\"passed\",\"check\",\"next\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"submitted\"}]}: expected 1 to be +0 // Object.is equality","events":["told the inventory session: draft revision 0 is frozen","delivered the fidelity packet for draft revision 0 and inventory revision 0","rendering draft revision 0","prepared design round 1 for the reviewer","run ended: checked design render continuation unavailable"],"failures":["transport-unavailable"],"roles":{"failure":"transport-unavailable","budget":{"state":"open","reason":null,"requestReservations":22,"heldDesignTurns":0,"completeUsageReports":19,"pendingRoles":["author","inventory","fidelity"],"reportedTokens":133,"usageLabel":"Inferred","usagePopulation":"normalized complete responses captured by checked host relays","uncapturedUsage":"Unknown","tokenEnforcement":"reported-response-boundary; in-flight usage Unknown"},"roles":[{"role":"author","pid":1581219,"startedAt":1795336706460,"finishedAt":1795336861021,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":4116,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"inventory","pid":1582261,"startedAt":1795336710253,"finishedAt":1795336860996,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3792,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"fidelity","pid":1583088,"startedAt":1795336715029,"finishedAt":1795336861022,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3173,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"design","pid":1610446,"startedAt":1795336793418,"finishedAt":1795336860849,"outcome":{"outcome":"exited","exitCode":0,"signal":null,"viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":1690,"sha256":"72c544f3a3a47dcc9faa029af3577661f7ef46959422178d364cbfea7fc67bc8"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3486,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}}],"audit":{"captured":{"before-tool":14,"control":1,"design-delivery":1,"design-ordered":23,"design-verdict":0,"launch-attempt":4,"launch-history":3,"launch-terminal":4,"machine-peer":204,"ordered-design-verdict":1,"relay":82,"tool-receipt":14,"usage":19},"capturedUsage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":57,"outputTokens":76},"closed":true,"completeness":"Unknown","declarations":4,"durableBytes":668127,"durableRecords":374,"format":"url-session-audit/2","hostileSameUidIsolation":"Unknown","limits":{"bytes":16777216,"eventBytes":65536,"events":4096,"milliseconds":5000,"pending":8},"nativeSendCensus":"Unknown","pendingAppends":0,"pendingCallbacks":0,"pendingFilesystemOperations":0,"poisoned":false,"providerReceipts":"Unknown","relayEvents":{"attempt-allowed":22,"attempt-refused":0,"response-admitted":19,"response-refused":0,"send-attempt":22,"send-outcome":19,"transport-failed":0},"roles":{"author":{"bytes":188981,"records":112,"tipSha256":"36abb64763261ae292bd5126691b608542b9745bd5d51e36bc7caa3d9307e3f9","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":18,"outputTokens":24},"usageReports":6},"design":{"bytes":195452,"records":103,"tipSha256":"798b5e4efd9609c5a71aa08c5ead0973dbd8c43f7e38922c76be88ba7fee2703","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":15,"outputTokens":20},"usageReports":5},"fidelity":{"bytes":123740,"records":62,"tipSha256":"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":9,"outputTokens":12},"usageReports":3},"inventory":{"bytes":159954,"records":97,"tipSha256":"6da486a9718d2fbbf16c5e0e7bd7e36cbbf69561fdb6221ede60131a884501b9","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":15,"outputTokens":20},"usageReports":5}},"tail":"durable-prefix","termination":"closed","tipSha256":"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c","usageReports":19},"historicallySettledRoles":[],"machine":{"identitySha256":"45bde561d8396c6b0c429230ab57023fe1391f1a4cde5d5ca7a7a3c86c5e8058","lifecycle":"retired"}},"authorForwards":7,"inventoryForwards":6,"fidelityForwards":4,"designForwards":5,"producerReports":[{"role":"author","operation":"check","exit":0,"stderrEmpty":true,"keys":["command","run","checkFile","format","runId","revision","supersedes","pinnedRevision","checkedAt","outcome","draft","session","findings","executionFlags","quotations","excludedContent","citedBlobs","screeningPolicy","credential","limits","label","figureFit","readingLedger","manifestFacts","mechanismAdvice","disclosures","screenCensus","readerAdvice","readingDifference","reviewReach","inventoryCoverageAdvice"],"command":"check","outcome":"passed"},{"role":"inventory","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","session","round","continuing","read","sha256","next","label","disclosures"],"command":"await","outcome":"delivered"},{"role":"inventory","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","session","passed","check","next","disclosures"],"command":"await","outcome":"submitted"},{"role":"fidelity","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","kind","session","round","continuing","read","sha256","next","label","disclosures"],"command":"await","outcome":"delivered"},{"role":"fidelity","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","kind","session","passed","check","next","disclosures"],"command":"await","outcome":"submitted"}],"reads":[{"paths":["inventory/session-1.json"],"kind":"present"},{"paths":["inventory/session-1.launch.json"],"kind":"present"},{"paths":["run.json"],"kind":"present"},{"paths":["inventory/rev-0.json"],"kind":"present"},{"paths":["reviews/checks/fidelity-verdict-0.json"],"kind":"present"},{"paths":["reviews/fidelity-verdict-0.json"],"kind":"present"},{"paths":["drafts/rev-0.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.launch.json"],"kind":"present"},{"paths":["run.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.delivery-1.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"},{"paths":["run.json","url-declaration.json"],"kinds":["present","present"]},{"paths":["brief.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"}],"relayObservations":[{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"}],"receipts":[{"role":"author","id":"tool-c9d0241962a8823e501af35fb852c1e2f1149be7ade4d19c9830c580df526d6c","digest":"1ce770079678c97dd152912fbd38617920c14a4054a9c9211652bb00ea568a06","bytes":36967,"toolName":"mcp__syzygy__artifact_read","inputSha256":"aef2f599cbe7ca49b1ce5a2cb0433401c43c7de4ecadd2ae62a92f2edb690324","committed":true},{"role":"author","id":"tool-2ed80f61f39262775d9ecc021234e314dacb437523b4c7e70d770b51686d38dd","digest":"895426057d52eb3b3c12127035a2266139809a68501c3697c9699ea39fe8907f","bytes":46617,"toolName":"mcp__syzygy__artifact_read","inputSha256":"fa9dcb8fef5e2bf86ef3ae09b2040360aa30a91b7bf5d87cbbc4756e4143ce31","committed":true},{"role":"author","id":"tool-f50e4b2aae55d2cde8326ca2b1e16e5a29c24320fa2c0b0f531b0d4d76b5c357","digest":"eb0117c464b4cc10f09f8c9cd248d5952e4306885ad91bf2da82a9b387cc997e","bytes":406,"toolName":"mcp__syzygy__source_read","inputSha256":"190470f05adca087203b3c0c7d07c59be91e2014c029f65dc1fd31a7c638d986","committed":true},{"role":"author","id":"tool-29828ae4823fa35187255fd5f0668128e1bfcd65afbefd22383a771288ea63e8","digest":"bdc6880612921b0dc8bc01f977b334454d90deeb19d309118239d818e94561fd","bytes":309,"toolName":"mcp__syzygy__source_read","inputSha256":"c7529c04728e7e6e516ac721c98c4065fda0138376296b55f02a22123f63c414","committed":true},{"role":"author","id":"tool-c585cb6ae426aebfc17c0724ac568d97d0322fec58fca9d621499600a2567729","digest":"765e4d78f8335043a3d1ddb48d2c1d10a2287bd5069f7e65c4cf5110caebee84","bytes":139,"toolName":"mcp__syzygy__artifact_write","inputSha256":"b2413bf7d654c3725cc266d279eb6510138ef6cf722b3196aa153ed9ab51467c","committed":true},{"role":"author","id":"tool-e0404de8c7f3424c919f4d3bfa6538431dbff6b051cd4b1260d9beeb4090cdd1","digest":"8ceb95e95445e97c6938463630eb6ebcd5e51f65ea912cfa561f5699d2a25754","bytes":13237,"toolName":"mcp__syzygy__dossier_step","inputSha256":"d218bda7f45cf91a5ebb76f417afe5de5afcd88064fe54d10ca93919ca0f7303","committed":true},{"role":"inventory","id":"tool-e1f39a57ac6f003525058277dfbb87c58313c15fb009b2586e6a5c9b40b2d43a","digest":"361562ce921ef41ee68656bf02e3b76fb0fc5c4d5e83e4b661b977146fc08db7","bytes":1869,"toolName":"mcp__syzygy__dossier_step","inputSha256":"523a19c5c8c62fe535dd57ebb9f56367834ee4d427e6c7d548ee02d15d56854a","committed":true},{"role":"inventory","id":"tool-c5a623d4b4e57560c5bb27bb0041d0bde93c1f314375b58d074ece9229fe5c5c","digest":"fc08f709e6e35e61c128fc139e0d64f4a34ac2fb013f28e6dca79d030a1afe43","bytes":16687,"toolName":"mcp__syzygy__artifact_read","inputSha256":"93df7dda31192839444d1efae91786b6a4d651247e88877aadfe1aeeb909a159","committed":true},{"role":"inventory","id":"tool-5d217b22a054502e4e2a9162ec6c13de2fca5986a13c115e2cc4ef415d5d9aaa","digest":"eb0117c464b4cc10f09f8c9cd248d5952e4306885ad91bf2da82a9b387cc997e","bytes":406,"toolName":"mcp__syzygy__source_read","inputSha256":"190470f05adca087203b3c0c7d07c59be91e2014c029f65dc1fd31a7c638d986","committed":true},{"role":"inventory","id":"tool-f075b5b78c2e22a71c9e6af2238f5f58d9af96c465a263dc7acdc1c989d363e5","digest":"bdc6880612921b0dc8bc01f977b334454d90deeb19d309118239d818e94561fd","bytes":309,"toolName":"mcp__syzygy__source_read","inputSha256":"c7529c04728e7e6e516ac721c98c4065fda0138376296b55f02a22123f63c414","committed":true},{"role":"inventory","id":"tool-090edf68073f52dd16b26ce96927c1ae0a93974effb59c34390bebe9ef9a0364","digest":"823d9b84c7a53f5c81efad33fbc852cc9c3408a3da589580b30666243325f661","bytes":5603,"toolName":"mcp__syzygy__dossier_step","inputSha256":"d75b9e076ac219c404fa8521eaf3576a6d0ef13efeb21e6b5ad7fd84471b00df","committed":true},{"role":"fidelity","id":"tool-d805964f9552f85e7e9efc4083d3ed96a8cf68058adcb91aad4a52de4dc3fb53","digest":"a1802286c0ebf23d7423d484b1f701a44c776561ff04288ed3309c7ae1fe1666","bytes":1911,"toolName":"mcp__syzygy__dossier_step","inputSha256":"10725d4dd33e5ec0d4ccc0fe56fb10fdb99a7f6f18a7bacb6d634f3e20a036d6","committed":true},{"role":"fidelity","id":"tool-a48e19dada7895af3d45cff0e8e918ca7552927ed24d1199cc07444db291857c","digest":"e6fa8d15c27582f96b846bfad81c27a8b6a9a41f69c78aae6723be217a0758fd","bytes":28386,"toolName":"mcp__syzygy__artifact_read","inputSha256":"1dd1c7bb99242849de8fb4d1aecd4080c5867ea3ae431806a9aeeb2a25bade07","committed":true},{"role":"fidelity","id":"tool-4f59c1cfe09a9ef618edca8f3c07507a970230c85eeedf6547768723dfafd0ea","digest":"a5eac8ad751eb4625f4a2e4b11f225d24d1dd3d76504d8d5e7e8a79599e7573f","bytes":5068,"toolName":"mcp__syzygy__dossier_step","inputSha256":"6edd2a66416f61aa1b91d1a9ac0b74b0943183d4906e541b67d1035a31d88c86","committed":true}]}
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to delivery-stop
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes > runs the genuine production pipeline to complete
+Error: {"failure":"{\"events\":[\"told the inventory session: draft revision 0 is frozen\",\"delivered the fidelity packet for draft revision 0 and inventory revision 0\",\"rendering draft revision 0\",\"prepared design round 1 for the reviewer\",\"run ended: checked design render continuation unavailable\"],\"failures\":[\"transport-unavailable\"],\"summary\":{\"failure\":\"transport-unavailable\",\"budget\":{\"state\":\"open\",\"reason\":null,\"requestReservations\":22,\"heldDesignTurns\":0,\"completeUsageReports\":19,\"pendingRoles\":[\"author\",\"inventory\",\"fidelity\"],\"reportedTokens\":133,\"usageLabel\":\"Inferred\",\"usagePopulation\":\"normalized complete responses captured by checked host relays\",\"uncapturedUsage\":\"Unknown\",\"tokenEnforcement\":\"reported-response-boundary; in-flight usage Unknown\"},\"roles\":[{\"role\":\"author\",\"pid\":1581219,\"startedAt\":1795336706460,\"finishedAt\":1795336861021,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":4116,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"inventory\",\"pid\":1582261,\"startedAt\":1795336710253,\"finishedAt\":1795336860996,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3792,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"fidelity\",\"pid\":1583088,\"startedAt\":1795336715029,\"finishedAt\":1795336861022,\"outcome\":{\"outcome\":\"inspection-failed\",\"exitCode\":null,\"signal\":\"SIGTERM\",\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3173,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}},{\"role\":\"design\",\"pid\":1610446,\"startedAt\":1795336793418,\"finishedAt\":1795336860849,\"outcome\":{\"outcome\":\"exited\",\"exitCode\":0,\"signal\":null,\"viewTermination\":\"view-exited\",\"groupTermination\":\"confirmed\",\"toolTermination\":\"settled\",\"pendingInvocations\":0,\"stdout\":{\"bytes\":1690,\"sha256\":\"72c544f3a3a47dcc9faa029af3577661f7ef46959422178d364cbfea7fc67bc8\"},\"stderr\":{\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"sampledStorageBytes\":3486,\"peakProcesses\":5,\"aggregateEnforcement\":\"sampled-stop-only\",\"betweenSamples\":\"Unknown\"}}],\"audit\":{\"captured\":{\"before-tool\":14,\"control\":1,\"design-delivery\":1,\"design-ordered\":23,\"design-verdict\":0,\"launch-attempt\":4,\"launch-history\":3,\"launch-terminal\":4,\"machine-peer\":204,\"ordered-design-verdict\":1,\"relay\":82,\"tool-receipt\":14,\"usage\":19},\"capturedUsage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":57,\"outputTokens\":76},\"closed\":true,\"completeness\":\"Unknown\",\"declarations\":4,\"durableBytes\":668127,\"durableRecords\":374,\"format\":\"url-session-audit/2\",\"hostileSameUidIsolation\":\"Unknown\",\"limits\":{\"bytes\":16777216,\"eventBytes\":65536,\"events\":4096,\"milliseconds\":5000,\"pending\":8},\"nativeSendCensus\":\"Unknown\",\"pendingAppends\":0,\"pendingCallbacks\":0,\"pendingFilesystemOperations\":0,\"poisoned\":false,\"providerReceipts\":\"Unknown\",\"relayEvents\":{\"attempt-allowed\":22,\"attempt-refused\":0,\"response-admitted\":19,\"response-refused\":0,\"send-attempt\":22,\"send-outcome\":19,\"transport-failed\":0},\"roles\":{\"author\":{\"bytes\":188981,\"records\":112,\"tipSha256\":\"36abb64763261ae292bd5126691b608542b9745bd5d51e36bc7caa3d9307e3f9\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":18,\"outputTokens\":24},\"usageReports\":6},\"design\":{\"bytes\":195452,\"records\":103,\"tipSha256\":\"798b5e4efd9609c5a71aa08c5ead0973dbd8c43f7e38922c76be88ba7fee2703\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":15,\"outputTokens\":20},\"usageReports\":5},\"fidelity\":{\"bytes\":123740,\"records\":62,\"tipSha256\":\"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":9,\"outputTokens\":12},\"usageReports\":3},\"inventory\":{\"bytes\":159954,\"records\":97,\"tipSha256\":\"6da486a9718d2fbbf16c5e0e7bd7e36cbbf69561fdb6221ede60131a884501b9\",\"usage\":{\"cacheCreationInputTokens\":0,\"cacheReadInputTokens\":0,\"inputTokens\":15,\"outputTokens\":20},\"usageReports\":5}},\"tail\":\"durable-prefix\",\"termination\":\"closed\",\"tipSha256\":\"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c\",\"usageReports\":19},\"historicallySettledRoles\":[],\"machine\":{\"identitySha256\":\"45bde561d8396c6b0c429230ab57023fe1391f1a4cde5d5ca7a7a3c86c5e8058\",\"lifecycle\":\"retired\"}},\"draws\":[[\"run    run-1000591ced525de7bc8299dee54375f7\",\"result checked design render continuation unavailable\",\"cleanup owned process groups and pending callbacks confirmed settled\",\"Provider receipts and uncaptured send completeness remain Unknown.\",\"A retained tmux view is for inspection.\"]],\"producerReports\":[{\"role\":\"author\",\"operation\":\"check\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"run\",\"checkFile\",\"format\",\"runId\",\"revision\",\"supersedes\",\"pinnedRevision\",\"checkedAt\",\"outcome\",\"draft\",\"session\",\"findings\",\"executionFlags\",\"quotations\",\"excludedContent\",\"citedBlobs\",\"screeningPolicy\",\"credential\",\"limits\",\"label\",\"figureFit\",\"readingLedger\",\"manifestFacts\",\"mechanismAdvice\",\"disclosures\",\"screenCensus\",\"readerAdvice\",\"readingDifference\",\"reviewReach\",\"inventoryCoverageAdvice\"],\"command\":\"check\",\"outcome\":\"passed\"},{\"role\":\"inventory\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"session\",\"round\",\"continuing\",\"read\",\"sha256\",\"next\",\"label\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"delivered\"},{\"role\":\"inventory\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"session\",\"passed\",\"check\",\"next\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"submitted\"},{\"role\":\"fidelity\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"kind\",\"session\",\"round\",\"continuing\",\"read\",\"sha256\",\"next\",\"label\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"delivered\"},{\"role\":\"fidelity\",\"operation\":\"await\",\"exit\":0,\"stderrEmpty\":true,\"keys\":[\"command\",\"format\",\"outcome\",\"role\",\"kind\",\"session\",\"passed\",\"check\",\"next\",\"disclosures\"],\"command\":\"await\",\"outcome\":\"submitted\"}]}: expected 1 to be +0 // Object.is equality","events":["told the inventory session: draft revision 0 is frozen","delivered the fidelity packet for draft revision 0 and inventory revision 0","rendering draft revision 0","prepared design round 1 for the reviewer","run ended: checked design render continuation unavailable"],"failures":["transport-unavailable"],"roles":{"failure":"transport-unavailable","budget":{"state":"open","reason":null,"requestReservations":22,"heldDesignTurns":0,"completeUsageReports":19,"pendingRoles":["author","inventory","fidelity"],"reportedTokens":133,"usageLabel":"Inferred","usagePopulation":"normalized complete responses captured by checked host relays","uncapturedUsage":"Unknown","tokenEnforcement":"reported-response-boundary; in-flight usage Unknown"},"roles":[{"role":"author","pid":1581219,"startedAt":1795336706460,"finishedAt":1795336861021,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":4116,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"inventory","pid":1582261,"startedAt":1795336710253,"finishedAt":1795336860996,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3792,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"fidelity","pid":1583088,"startedAt":1795336715029,"finishedAt":1795336861022,"outcome":{"outcome":"inspection-failed","exitCode":null,"signal":"SIGTERM","viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3173,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}},{"role":"design","pid":1610446,"startedAt":1795336793418,"finishedAt":1795336860849,"outcome":{"outcome":"exited","exitCode":0,"signal":null,"viewTermination":"view-exited","groupTermination":"confirmed","toolTermination":"settled","pendingInvocations":0,"stdout":{"bytes":1690,"sha256":"72c544f3a3a47dcc9faa029af3577661f7ef46959422178d364cbfea7fc67bc8"},"stderr":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"sampledStorageBytes":3486,"peakProcesses":5,"aggregateEnforcement":"sampled-stop-only","betweenSamples":"Unknown"}}],"audit":{"captured":{"before-tool":14,"control":1,"design-delivery":1,"design-ordered":23,"design-verdict":0,"launch-attempt":4,"launch-history":3,"launch-terminal":4,"machine-peer":204,"ordered-design-verdict":1,"relay":82,"tool-receipt":14,"usage":19},"capturedUsage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":57,"outputTokens":76},"closed":true,"completeness":"Unknown","declarations":4,"durableBytes":668127,"durableRecords":374,"format":"url-session-audit/2","hostileSameUidIsolation":"Unknown","limits":{"bytes":16777216,"eventBytes":65536,"events":4096,"milliseconds":5000,"pending":8},"nativeSendCensus":"Unknown","pendingAppends":0,"pendingCallbacks":0,"pendingFilesystemOperations":0,"poisoned":false,"providerReceipts":"Unknown","relayEvents":{"attempt-allowed":22,"attempt-refused":0,"response-admitted":19,"response-refused":0,"send-attempt":22,"send-outcome":19,"transport-failed":0},"roles":{"author":{"bytes":188981,"records":112,"tipSha256":"36abb64763261ae292bd5126691b608542b9745bd5d51e36bc7caa3d9307e3f9","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":18,"outputTokens":24},"usageReports":6},"design":{"bytes":195452,"records":103,"tipSha256":"798b5e4efd9609c5a71aa08c5ead0973dbd8c43f7e38922c76be88ba7fee2703","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":15,"outputTokens":20},"usageReports":5},"fidelity":{"bytes":123740,"records":62,"tipSha256":"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":9,"outputTokens":12},"usageReports":3},"inventory":{"bytes":159954,"records":97,"tipSha256":"6da486a9718d2fbbf16c5e0e7bd7e36cbbf69561fdb6221ede60131a884501b9","usage":{"cacheCreationInputTokens":0,"cacheReadInputTokens":0,"inputTokens":15,"outputTokens":20},"usageReports":5}},"tail":"durable-prefix","termination":"closed","tipSha256":"6f3d630b085bed76472de829938c6a513bdee5505bd9ce256c28d2f235d94d1c","usageReports":19},"historicallySettledRoles":[],"machine":{"identitySha256":"45bde561d8396c6b0c429230ab57023fe1391f1a4cde5d5ca7a7a3c86c5e8058","lifecycle":"retired"}},"authorForwards":7,"inventoryForwards":6,"fidelityForwards":4,"designForwards":5,"producerReports":[{"role":"author","operation":"check","exit":0,"stderrEmpty":true,"keys":["command","run","checkFile","format","runId","revision","supersedes","pinnedRevision","checkedAt","outcome","draft","session","findings","executionFlags","quotations","excludedContent","citedBlobs","screeningPolicy","credential","limits","label","figureFit","readingLedger","manifestFacts","mechanismAdvice","disclosures","screenCensus","readerAdvice","readingDifference","reviewReach","inventoryCoverageAdvice"],"command":"check","outcome":"passed"},{"role":"inventory","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","session","round","continuing","read","sha256","next","label","disclosures"],"command":"await","outcome":"delivered"},{"role":"inventory","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","session","passed","check","next","disclosures"],"command":"await","outcome":"submitted"},{"role":"fidelity","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","kind","session","round","continuing","read","sha256","next","label","disclosures"],"command":"await","outcome":"delivered"},{"role":"fidelity","operation":"await","exit":0,"stderrEmpty":true,"keys":["command","format","outcome","role","kind","session","passed","check","next","disclosures"],"command":"await","outcome":"submitted"}],"reads":[{"paths":["inventory/session-1.json"],"kind":"present"},{"paths":["inventory/session-1.launch.json"],"kind":"present"},{"paths":["run.json"],"kind":"present"},{"paths":["inventory/rev-0.json"],"kind":"present"},{"paths":["reviews/checks/fidelity-verdict-0.json"],"kind":"present"},{"paths":["reviews/fidelity-verdict-0.json"],"kind":"present"},{"paths":["drafts/rev-0.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.launch.json"],"kind":"present"},{"paths":["run.json"],"kind":"present"},{"paths":["reviews/fidelity-session-1.delivery-1.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"},{"paths":["run.json","url-declaration.json"],"kinds":["present","present"]},{"paths":["brief.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"},{"paths":["brief.json"],"kind":"present"}],"relayObservations":[{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"author","event":"send-outcome","route":"messages"},{"role":"author","event":"response-admitted","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"author","event":"attempt-allowed","route":"messages"},{"role":"author","event":"send-attempt","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"inventory","event":"send-outcome","route":"messages"},{"role":"inventory","event":"response-admitted","route":"messages"},{"role":"inventory","event":"attempt-allowed","route":"messages"},{"role":"inventory","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"fidelity","event":"send-outcome","route":"messages"},{"role":"fidelity","event":"response-admitted","route":"messages"},{"role":"fidelity","event":"attempt-allowed","route":"messages"},{"role":"fidelity","event":"send-attempt","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"},{"role":"design","event":"attempt-allowed","route":"messages"},{"role":"design","event":"send-attempt","route":"messages"},{"role":"design","event":"send-outcome","route":"messages"},{"role":"design","event":"response-admitted","route":"messages"}],"receipts":[{"role":"author","id":"tool-c9d0241962a8823e501af35fb852c1e2f1149be7ade4d19c9830c580df526d6c","digest":"1ce770079678c97dd152912fbd38617920c14a4054a9c9211652bb00ea568a06","bytes":36967,"toolName":"mcp__syzygy__artifact_read","inputSha256":"aef2f599cbe7ca49b1ce5a2cb0433401c43c7de4ecadd2ae62a92f2edb690324","committed":true},{"role":"author","id":"tool-2ed80f61f39262775d9ecc021234e314dacb437523b4c7e70d770b51686d38dd","digest":"895426057d52eb3b3c12127035a2266139809a68501c3697c9699ea39fe8907f","bytes":46617,"toolName":"mcp__syzygy__artifact_read","inputSha256":"fa9dcb8fef5e2bf86ef3ae09b2040360aa30a91b7bf5d87cbbc4756e4143ce31","committed":true},{"role":"author","id":"tool-f50e4b2aae55d2cde8326ca2b1e16e5a29c24320fa2c0b0f531b0d4d76b5c357","digest":"eb0117c464b4cc10f09f8c9cd248d5952e4306885ad91bf2da82a9b387cc997e","bytes":406,"toolName":"mcp__syzygy__source_read","inputSha256":"190470f05adca087203b3c0c7d07c59be91e2014c029f65dc1fd31a7c638d986","committed":true},{"role":"author","id":"tool-29828ae4823fa35187255fd5f0668128e1bfcd65afbefd22383a771288ea63e8","digest":"bdc6880612921b0dc8bc01f977b334454d90deeb19d309118239d818e94561fd","bytes":309,"toolName":"mcp__syzygy__source_read","inputSha256":"c7529c04728e7e6e516ac721c98c4065fda0138376296b55f02a22123f63c414","committed":true},{"role":"author","id":"tool-c585cb6ae426aebfc17c0724ac568d97d0322fec58fca9d621499600a2567729","digest":"765e4d78f8335043a3d1ddb48d2c1d10a2287bd5069f7e65c4cf5110caebee84","bytes":139,"toolName":"mcp__syzygy__artifact_write","inputSha256":"b2413bf7d654c3725cc266d279eb6510138ef6cf722b3196aa153ed9ab51467c","committed":true},{"role":"author","id":"tool-e0404de8c7f3424c919f4d3bfa6538431dbff6b051cd4b1260d9beeb4090cdd1","digest":"8ceb95e95445e97c6938463630eb6ebcd5e51f65ea912cfa561f5699d2a25754","bytes":13237,"toolName":"mcp__syzygy__dossier_step","inputSha256":"d218bda7f45cf91a5ebb76f417afe5de5afcd88064fe54d10ca93919ca0f7303","committed":true},{"role":"inventory","id":"tool-e1f39a57ac6f003525058277dfbb87c58313c15fb009b2586e6a5c9b40b2d43a","digest":"361562ce921ef41ee68656bf02e3b76fb0fc5c4d5e83e4b661b977146fc08db7","bytes":1869,"toolName":"mcp__syzygy__dossier_step","inputSha256":"523a19c5c8c62fe535dd57ebb9f56367834ee4d427e6c7d548ee02d15d56854a","committed":true},{"role":"inventory","id":"tool-c5a623d4b4e57560c5bb27bb0041d0bde93c1f314375b58d074ece9229fe5c5c","digest":"fc08f709e6e35e61c128fc139e0d64f4a34ac2fb013f28e6dca79d030a1afe43","bytes":16687,"toolName":"mcp__syzygy__artifact_read","inputSha256":"93df7dda31192839444d1efae91786b6a4d651247e88877aadfe1aeeb909a159","committed":true},{"role":"inventory","id":"tool-5d217b22a054502e4e2a9162ec6c13de2fca5986a13c115e2cc4ef415d5d9aaa","digest":"eb0117c464b4cc10f09f8c9cd248d5952e4306885ad91bf2da82a9b387cc997e","bytes":406,"toolName":"mcp__syzygy__source_read","inputSha256":"190470f05adca087203b3c0c7d07c59be91e2014c029f65dc1fd31a7c638d986","committed":true},{"role":"inventory","id":"tool-f075b5b78c2e22a71c9e6af2238f5f58d9af96c465a263dc7acdc1c989d363e5","digest":"bdc6880612921b0dc8bc01f977b334454d90deeb19d309118239d818e94561fd","bytes":309,"toolName":"mcp__syzygy__source_read","inputSha256":"c7529c04728e7e6e516ac721c98c4065fda0138376296b55f02a22123f63c414","committed":true},{"role":"inventory","id":"tool-090edf68073f52dd16b26ce96927c1ae0a93974effb59c34390bebe9ef9a0364","digest":"823d9b84c7a53f5c81efad33fbc852cc9c3408a3da589580b30666243325f661","bytes":5603,"toolName":"mcp__syzygy__dossier_step","inputSha256":"d75b9e076ac219c404fa8521eaf3576a6d0ef13efeb21e6b5ad7fd84471b00df","committed":true},{"role":"fidelity","id":"tool-d805964f9552f85e7e9efc4083d3ed96a8cf68058adcb91aad4a52de4dc3fb53","digest":"a1802286c0ebf23d7423d484b1f701a44c776561ff04288ed3309c7ae1fe1666","bytes":1911,"toolName":"mcp__syzygy__dossier_step","inputSha256":"10725d4dd33e5ec0d4ccc0fe56fb10fdb99a7f6f18a7bacb6d634f3e20a036d6","committed":true},{"role":"fidelity","id":"tool-a48e19dada7895af3d45cff0e8e918ca7552927ed24d1199cc07444db291857c","digest":"e6fa8d15c27582f96b846bfad81c27a8b6a9a41f69c78aae6723be217a0758fd","bytes":28386,"toolName":"mcp__syzygy__artifact_read","inputSha256":"1dd1c7bb99242849de8fb4d1aecd4080c5867ea3ae431806a9aeeb2a25bade07","committed":true},{"role":"fidelity","id":"tool-4f59c1cfe09a9ef618edca8f3c07507a970230c85eeedf6547768723dfafd0ea","digest":"a5eac8ad751eb4625f4a2e4b11f225d24d1dd3d76504d8d5e7e8a79599e7573f","bytes":5068,"toolName":"mcp__syzygy__dossier_step","inputSha256":"6edd2a66416f61aa1b91d1a9ac0b74b0943183d4906e541b67d1035a31d88c86","committed":true}]}
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:332:13
+    330|     } catch (error) {
+    331|       await controller.stop(); await loop.catch(() => {});
+    332|       throw new Error(JSON.stringify({ failure: error instanceof Error…
+       |             ^
+    333|         roles: controller.summary(), authorForwards: author.count(), i…
+    334|         producerReports: f.producerReports(), reads: f.productReadRepo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  16:38:13
+   Duration  170.12s (transform 2.50s, setup 11ms, collect 3.31s, tests 166.31s, environment 0ms, prepare 87ms)
+

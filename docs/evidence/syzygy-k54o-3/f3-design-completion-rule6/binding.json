@@ -1,0 +1,13 @@
+{
+  "subjectCommit": "2eef3518b2847399bde893cd3ecb9c4618660a6c",
+  "source": "packages/polaris-dossier/src/url-run-sessions.ts",
+  "baselineSourceSha256": "ef4edafa3c81fec0f5cb9516e136e8833a50823d7c3f1c909c622b965633771d",
+  "mutantSourceSha256": "c50430ab8d6a7ebdbe3d10667577d4585090011135e74a75a3dea895e2008159",
+  "test": "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+  "testSha256": "80514c21de626663dbdb8c2f8c563f911cd44ac442e72650d86750e4f8d26eb7",
+  "old": "outcome.outcome === 'exited' && ",
+  "new": "",
+  "rawLogSha256": "f781e011ef54570a94605fa81bba157859efbf482141c27082c915c8e8b54d5d",
+  "declaredExit": 1,
+  "limit": "Single selected predicate fault, not a suite-wide mutation score."
+}
