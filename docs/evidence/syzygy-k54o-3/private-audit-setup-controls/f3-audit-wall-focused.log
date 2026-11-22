@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-session-audit.test.ts (101 tests) 7547ms
+   ✓ protected URL session audit > bounds queue-inclusive waits and close, reporting an uncancelled filesystem operation as Unknown  568ms
+
+ Test Files  1 passed (1)
+      Tests  101 passed (101)
+   Start at  22:04:21
+   Duration  11.27s (transform 2.46s, setup 13ms, collect 3.30s, tests 7.55s, environment 0ms, prepare 72ms)
+

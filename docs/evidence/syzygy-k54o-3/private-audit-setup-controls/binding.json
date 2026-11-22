@@ -1,0 +1,14 @@
+{
+  "subject": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "predecessor": "71983d7c8a33b5dddb42b3b1c0b12f44f5f01f6c",
+  "predecessorTestOverlay": "dbe17dc40 direct audit test file",
+  "logSha256": {
+    "f3-audit-predecessor-red.log": "591d957a585bc148e62d3cc448bb9be9083b0a7bcea6d5c1940b24adc0d557f8",
+    "f3-audit-wall-focused.log": "bc76982079c3f936157e46f5ec51954963e69cfae982013ce5bef04adb49e63e",
+    "f3-audit-wall-typecheck.log": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "commands": [
+    "npm run typecheck",
+    "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-session-audit.test.ts"
+  ]
+}
