@@ -371,7 +371,7 @@ describe('the loop\'s limit stop (syzygy-1z8m.5, R-PR718-LAUNCH-NOTES-3937-1 N1)
 });
 
 describe('the loop reads each side from its own check directory (syzygy-1z8m.6, R-PR718-LAUNCH-NOTES-A44D-2 P2)', () => {
-  it.each(['symlink', 'hardlink', 'oversized', 'non-object'] as const)('withholds a latest %s check instead of treating its bytes as a stage result', (kind) => {
+  it.each(['symlink', 'hardlink', 'oversized', 'non-object'] as const)('reads a latest %s display check under the adopted shared reader rule', (kind) => {
     const run = tempDir('polaris-check-boundary-');
     const directory = path.join(run, 'checks'); fs.mkdirSync(directory);
     fs.writeFileSync(path.join(directory, 'rev-1.json'), '{"outcome":"passed"}');
@@ -380,8 +380,11 @@ describe('the loop reads each side from its own check directory (syzygy-1z8m.6, 
       const outside = path.join(run, 'unbound-check.json'); fs.writeFileSync(outside, '{"outcome":"passed"}');
       if (kind === 'symlink') fs.symlinkSync(outside, latest); else fs.linkSync(outside, latest);
     } else fs.writeFileSync(latest, kind === 'oversized' ? JSON.stringify({ outcome: 'passed', detail: 'x'.repeat(16_777_216) }) : '[]');
-    // The preceding passing revision cannot stand in for an unreadable newer one.
-    expect(latestChecks(run).draft).toBeNull();
+    // Main's adopted 2.10 reader follows links to regular bounded records.
+    // These are display records; URL supervision uses authenticated products.
+    // An unreadable newer record still cannot fall back to an older success.
+    expect(latestChecks(run).draft).toEqual(kind === 'symlink' || kind === 'hardlink'
+      ? { n: 2, doc: { outcome: 'passed' } } : null);
   });
 
   it('takes the draft from checks/ and the inventory from inventory/checks/, newest revision each', () => {

@@ -15,6 +15,7 @@ import { GitObjectReadRefusal, type PinnedObjectReader } from './git-object-read
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig, type RunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+import { heldOutQuestionsIn, readKeyQuestions } from './regression-hold-out.testkit.js';
 import { tempDir } from '@syzygy/test-kit';
 import { reverifyPinnedRevision } from './reverify.js';
 import { buildDossierScreen } from './screen.js';
@@ -241,6 +242,19 @@ describe('brief: issued', () => {
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
     const input = { runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2', copy: null };
     expect(renderBrief(input)).toBe(renderBrief(structuredClone(input)));
+  });
+
+  it('a rendered brief carries no question of the regression key, and one put into it is found (syzygy-5dhm.134)', async () => {
+    const sec3 = readSec3(REAL_ROOT);
+    if (!sec3.ok) throw new Error(sec3.reason);
+    const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
+    const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2', copy: null });
+    const questions = readKeyQuestions(REAL_ROOT);
+    expect(questions).toHaveLength(24);
+    expect(heldOutQuestionsIn(text, questions)).toEqual([]);
+    const planted = text.replace('\n', '\nWhat is Redis, where does it keep its data, and what kinds of application problems is it meant to solve?\n');
+    expect(planted).not.toBe(text);
+    expect(heldOutQuestionsIn(planted, questions)).toEqual(['Q01']);
   });
 
   it('a copy-class run\'s brief names the copy as the clone to work in and tells the session not to read the operator\'s clone (REQ-polaris-generation-046, 047)', async () => {

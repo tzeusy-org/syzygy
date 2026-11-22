@@ -206,7 +206,7 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
         || expected.ordered.some(attempt => attempt.plan.manifest.binding.deadline !== new Date(originalDeadline!).toISOString())) fail();
       const declaration = expected.declarations.design;
       if (verifyColdOrderedDesignAuditHistory({ rows: orderedRows, attempts: expected.ordered,
-        profileSha256: declaration.scope.profileSha256,
+        profileSha256: declaration.scope.profileSha256, firstEpoch: expected.ordered[0]!.plan.manifest.binding.transferEpoch,
         subject: { project: declaration.payload.project, pin: declaration.payload.pin, principal: declaration.payload.principal,
           deadline: expected.ordered[0]!.plan.manifest.binding.deadline }, asOf: Date.now() }) === null) fail();
     }

@@ -289,6 +289,7 @@ export interface UrlSessionAuditOptions {
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
   readonly limits?: Partial<Limits>;
   readonly deadline?: number;
+  readonly firstDesignRound?: number;
 }
 const ROLES: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
 const KINDS = ['relay', 'control', 'launch-attempt', 'before-tool', 'tool-receipt', 'usage', 'launch-terminal', 'launch-history', 'design-delivery', 'design-verdict', 'design-ordered', 'machine-peer', 'ordered-design-verdict'] as const;
@@ -406,11 +407,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     const profiles = [given.profiles[0]!, given.profiles[1]!, given.profiles[2]!, given.profiles[3]!];
     const input = copy({ parent: given.parent, name: given.name, binding: given.binding, originPolicySha256: given.originPolicySha256,
       project: given.project, pin: given.pin, principal: given.principal, declaredClasses: given.declaredClasses, limits: given.limits ?? {},
-      ...(given.deadline === undefined ? {} : { deadline: given.deadline }) });
+      ...(given.deadline === undefined ? {} : { deadline: given.deadline }),
+      ...(given.firstDesignRound === undefined ? {} : { firstDesignRound: given.firstDesignRound }) });
     const current = given.current, screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
-    if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits']), ...(given.deadline === undefined ? [] : ['deadline'])])
+    if (!exact(given, ['parent', 'name', 'binding', 'originPolicySha256', 'project', 'pin', 'principal', 'profiles', 'declaredClasses', 'screen', 'current', ...(given.limits === undefined ? [] : ['limits']), ...(given.deadline === undefined ? [] : ['deadline']), ...(given.firstDesignRound === undefined ? [] : ['firstDesignRound'])])
       || !exact(input.binding, ['run', 'sourceBinding', 'policy', 'provider', 'model']) || !Object.values(input.binding).every(id)
       || (input.deadline !== undefined && (!Number.isSafeInteger(input.deadline) || input.deadline <= Date.now()))
+      || (input.firstDesignRound !== undefined && (!count(input.firstDesignRound, 999_999) || input.firstDesignRound < 1))
       || !hex(input.binding.sourceBinding) || !hex(input.binding.policy) || input.binding.policy !== policy || !hex(input.originPolicySha256)
       || !id(input.project) || !id(input.principal) || typeof input.pin !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.pin)
       || typeof input.parent !== 'string' || !path.isAbsolute(input.parent) || path.resolve(input.parent) !== input.parent
@@ -915,7 +918,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       ownLaunches.add(committed);
       return committed;
     };
-    let nextDesignRound = 1, designPending = false, designRetired = false;
+    let nextDesignRound = input.firstDesignRound ?? 1, designPending = false, designRetired = false;
     const designReads = new WeakMap<UrlDesignDeliveryAuditRecord, {
       readonly receipt: UrlSessionToolReceiptMetadata; readonly event: DurableEvent; readonly product: WeakRef<ValidatedUrlDesignProduct>;
     }>();
