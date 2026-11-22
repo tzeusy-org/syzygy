@@ -14,6 +14,7 @@ import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { effectiveUrlProjection } from './effective-run-record.js';
+import type { UrlRunSessionsSummary } from './url-run-sessions.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -50,6 +51,12 @@ export interface CloseDeps extends ReviewDeps {
   readonly probe: CredentialProbe;
   /** Recheck the supervisor's completion evidence immediately before writing the record. */
   readonly admitRecord?: () => boolean;
+  /** The stopped supervisor's own captures. Ordinary close has no such source. */
+  readonly urlSupervisorCapture?: Pick<UrlRunSessionsSummary, 'roles'> & {
+    readonly audit: Pick<UrlRunSessionsSummary['audit'], 'tipSha256' | 'durableRecords' | 'providerReceipts' | 'completeness'> & {
+      readonly relayEvents: Pick<UrlRunSessionsSummary['audit']['relayEvents'], 'send-attempt' | 'send-outcome'>;
+    };
+  };
 }
 
 export type AgentUsage =
@@ -129,6 +136,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
 
   const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
   const stored = storedFiles(run);
+  const capture = deps.urlSupervisorCapture;
   const record = {
     format: EXECUTION_RECORD_FORMAT,
     runId,
@@ -155,6 +163,23 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
       providerDispatch: 'The declared local CLI uses the checked transport relay for supported inference requests; Git source transport is separately declared. This stored configuration establishes no completed send, receipt or complete capture.',
     }),
     credentialsIssued: url === undefined ? NO_CREDENTIAL_ISSUED : 'Unknown',
+    ...(url !== undefined && capture !== undefined && deps.admitRecord !== undefined ? {
+      supervisorCapture: {
+        label: 'Inferred',
+        basis: 'retained from the local URL supervisor after process and audit teardown',
+        roles: capture.roles,
+        protectedAudit: {
+          capturedAt: isoOf(now),
+          locator: url.storage.protectedAudit.locator,
+          tipSha256: capture.audit.tipSha256,
+          durableRecords: capture.audit.durableRecords,
+          capturedSendAttempts: capture.audit.relayEvents['send-attempt'],
+          capturedSendOutcomes: capture.audit.relayEvents['send-outcome'],
+          providerReceipts: capture.audit.providerReceipts,
+          completeness: capture.audit.completeness,
+        },
+      },
+    } : {}),
     stored: { label: 'Inferred', basis: 'the digest of each file in the run directory as Syzygy read it at close; no body is copied, so no brief, prompt or transcript body enters this record', ...stored },
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,
   };

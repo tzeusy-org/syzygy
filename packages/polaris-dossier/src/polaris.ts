@@ -1290,9 +1290,10 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   if (final !== null) {
     const result = final;
     phase = 'final render produced, run closure unconfirmed';
-    if (stopped.failure === null && cleanupConfirmed(stopped) && current() && Date.now() < deadline) {
+    if (stopped.failure === null && stopped.budget.reason === null && cleanupConfirmed(stopped) && current() && Date.now() < deadline) {
       const close = await closeRun(run, {}, {
         ...renderDeps,
+        urlSupervisorCapture: stopped,
         admitRecord: () => current()
           && checkStoredUrlRender(run, result.path, result.output, () => Date.now() < deadline) === result.record.site
           && current() && Date.now() < deadline,

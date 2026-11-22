@@ -299,13 +299,23 @@ describe('effective host run readers', () => {
     const refusedClose = await closeRun(run, {}, { ...deps, admitRecord: () => false });
     expect(refusedClose).toMatchObject({ ok: false, refusal: { stage: 'write' } });
     expect(fs.existsSync(path.join(run, 'record.json'))).toBe(false);
-    const close = await closeRun(run, {}, { ...deps, admitRecord: () => true });
+    const urlSupervisorCapture = {
+      roles: URL_ROLES.map((role, index) => ({
+        role, pid: 1_000 + index, startedAt: NOW, finishedAt: LATER, outcome: 'Unknown' as const,
+      })),
+      audit: { tipSha256: H, durableRecords: 8, relayEvents: { 'send-attempt': 1, 'send-outcome': 1 },
+        providerReceipts: 'Unknown' as const, completeness: 'Unknown' as const },
+    };
+    const close = await closeRun(run, {}, { ...deps, admitRecord: () => true, urlSupervisorCapture });
     expect(close.ok).toBe(true);
     const record = JSON.parse(fs.readFileSync(path.join(run, 'record.json'), 'utf8'));
     expect(record.mode).toBe(status.report.mode);
     expect(record.effectiveRun).toEqual(status.report.effectiveRun);
     expect(record.noProviderCall).toBeUndefined();
     expect(record.credentialsIssued).toBe('Unknown');
+    expect(record.supervisorCapture).toMatchObject({ label: 'Inferred', roles: urlSupervisorCapture.roles,
+      protectedAudit: { locator: url.declaration.storage.protectedAudit.locator, tipSha256: H, durableRecords: 8,
+        capturedSendAttempts: 1, capturedSendOutcomes: 1, providerReceipts: 'Unknown', completeness: 'Unknown' } });
     expect(record.effectiveRun.capture.actualSends).toBe('Unknown');
     expect(record.effectiveRun.storage.protectedAudit.roleWritable).toBe(false);
     expect(record.effectiveRun.storage.compatibleHistory.roleWritable).toBe(true);
