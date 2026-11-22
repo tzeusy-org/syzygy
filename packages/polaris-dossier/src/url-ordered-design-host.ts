@@ -32,12 +32,19 @@ export interface OrderedDesignHost extends SessionHost {
   readonly relay: SessionRelay;
   readTerminal(): ReturnType<Controller['readTerminal']>;
 }
+const hosts = new WeakMap<OrderedDesignHost, OrderedDesignSessionProfile>();
+export const isOrderedDesignHostFor = (host: unknown, profile: OrderedDesignSessionProfile): boolean =>
+  host !== null && typeof host === 'object' && hosts.get(host as OrderedDesignHost) === profile;
 const refused = (): Error => new Error('url-ordered-design-host-unavailable');
 const canonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
 
 /** Actual broker and declared-provider transport for one sealed ordered attempt.
  * No ordinary artifact tool or whole-view delivery is reachable from this host. */
-export async function startOrderedDesignHost(input: OrderedDesignHostOptions): Promise<OrderedDesignHost> {
+export const startOrderedDesignHost = (input: OrderedDesignHostOptions): Promise<OrderedDesignHost> => start(input, startSessionRelay);
+/** Internal synthetic-provider seam. Genuine machine transports and the selected
+ * production controller remain mandatory; no fixture grant enters the host. */
+export const orderedDesignHostTestPort = (relay: typeof startSessionRelay) => (input: OrderedDesignHostOptions): Promise<OrderedDesignHost> => start(input, relay);
+async function start(input: OrderedDesignHostOptions, startRelay: typeof startSessionRelay): Promise<OrderedDesignHost> {
   if (!isOrderedDesignSessionProfile(input.profile) || !Number.isSafeInteger(input.activationDeadline)
     || input.activationDeadline <= Date.now() || input.activationDeadline - Date.now() > 2_147_483_647
     || canonical(input.subject.binding) !== canonical(input.profile.input.binding)) throw refused();
@@ -75,7 +82,7 @@ export async function startOrderedDesignHost(input: OrderedDesignHostOptions): P
   })();
   try {
     if (await Promise.race([Promise.resolve(input.current()), cancelled]) !== true || closing || failed) throw refused();
-    relay = await startSessionRelay(input.relaySocket, input.subject, {
+    relay = await startRelay(input.relaySocket, input.subject, {
       current,
       request: bytes => {
         try {
@@ -137,7 +144,9 @@ export async function startOrderedDesignHost(input: OrderedDesignHostOptions): P
     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
     started = true;
     if (controller) clearTimeout(activationTimer);
-    return Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
+    const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
+    hosts.set(host, profile);
+    return host;
   } catch { await close(); throw refused(); }
 }
