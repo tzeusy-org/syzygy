@@ -2,8 +2,7 @@ import { escapeHtml } from '@syzygy/http-host';
 import {
   WORK_ITEM_GOVERNING_INTENT_REGION_ID,
   WORK_ITEM_TITLES_REGION_ID,
-  workItemGoverningIntentId,
-  workItemVerificationId,
+  WORK_ITEM_VERIFICATION_REGION_ID,
   workerChangeVerificationId,
   type PocModel,
   type PocUnknown,
@@ -135,22 +134,60 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
   const unverified = closed.filter((item) => item.verification === 'unknown').length;
   return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
         <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
-        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; each card carries its own disclosure and route.
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; the verification notice gives the reason and route.
       </p>`;
 }
 
-function itemVerification(model: PocModel, itemId: string): string {
-  const id = workItemVerificationId(itemId);
-  const unknown = unknownSubject(model, id);
-  return `<span class="epistemic epistemic-unknown" data-parity-field="work-item-verification"${unknownMarker(id, unknown)} title="${escapeHtml(unknown.reason)}">Verification: Unknown. ${unknownRoute(unknown)}</span>`;
+/** The element id of each board-level disclosure a card mark refers to. */
+const NOTICE_ELEMENT_ID = {
+  [WORK_ITEM_TITLES_REGION_ID]: 'notice-work-item-titles',
+  [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'notice-work-item-governing-intent',
+  [WORK_ITEM_VERIFICATION_REGION_ID]: 'notice-work-item-verification',
+} as const;
+
+type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
+
+/** syzygy-t3jk.15: a card's mark for an Unknown its board discloses once.
+ * It keeps the encoding class, its parity field, the closed reason and its
+ * label; it names the board disclosure (`data-unknown-ref`) and links to
+ * it, where the reason sentence and route stand with their count. It reads
+ * nothing per item from `model.unknownSubjects`, so it renders for any
+ * served item. */
+function cardMark(field: string, ref: BoardDisclosureId, className: string, reason: string, label: string): string {
+  return `<span class="epistemic ${className}" data-parity-field="${field}" data-unknown-ref="${ref}" data-unknown-reason="${escapeHtml(reason)}">${escapeHtml(label)} <a class="mark-ref" href="#${NOTICE_ELEMENT_ID[ref]}">reason and route</a></span>`;
 }
 
-/** POC-REQ-014: the card's governing-intent mark, read from the model under
- * the card's own id. The class is the POC-REQ-060 table's for the label the
- * model carries, so no state but Unknown can take the Unknown encoding. */
-function itemGoverningIntent(itemId: string, unknown: PocUnknown): string {
-  const id = workItemGoverningIntentId(itemId);
-  return `<span class="epistemic ${epistemicClassName(unknown.label)}" data-parity-field="work-item-governed-by"${unknownMarker(id, unknown)} title="${escapeHtml(unknown.reason)}">Governing intent: ${escapeHtml(unknown.label)}. ${unknownRoute(unknown)}</span>`;
+/** POC-REQ-043: the item's own verification, which is always Unknown. */
+function itemVerification(): string {
+  return cardMark('work-item-verification', WORK_ITEM_VERIFICATION_REGION_ID, 'epistemic-unknown', 'missing-evidence', 'Verification: Unknown');
+}
+
+/** POC-REQ-014: the card's governing-intent mark, from the item's served
+ * `governedBy`. The class is the POC-REQ-060 table's for its label, so no
+ * state but Unknown can take the Unknown encoding. */
+function itemGoverningIntent(governedBy: { readonly label: string; readonly closedReason: string }): string {
+  return cardMark('work-item-governed-by', WORK_ITEM_GOVERNING_INTENT_REGION_ID, epistemicClassName(governedBy.label as PocUnknown['label']), governedBy.closedReason, `Governing intent: ${governedBy.label}`);
+}
+
+/** POC-REQ-043 (syzygy-t3jk.15): verification is Unknown for every served
+ * item; the board says so once, with the served, inside and outside counts
+ * the machine answer carries, the reason and its route. */
+function verificationRegion(model: PocModel, counts: { readonly served: number; readonly inside: number; readonly outside: number }): string {
+  if (model.workItems.kind !== 'observed') return '';
+  const unknown = unknownSubject(model, WORK_ITEM_VERIFICATION_REGION_ID);
+  return `<p class="verification-count notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_VERIFICATION_REGION_ID]}" data-parity-field="work-item-verification-count"${unknownMarker(WORK_ITEM_VERIFICATION_REGION_ID, unknown)}>
+        Verification: Unknown for <span data-parity-field="verification-unknown-count">${counts.served}</span> of ${model.workItems.items.length} observed work items;
+        <span data-parity-field="verification-unknown-inside">${counts.inside}</span> are in this selection and <span data-parity-field="verification-unknown-outside">${counts.outside}</span> are outside it.
+        ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
+      </p>`;
+}
+
+/** POC-REQ-040 (syzygy-t3jk.15): what is known about the item, as text:
+ * its tracker priority and recorded instants, exactly as served. */
+function itemFacts(item: TrajectoryLaneItem): string {
+  const instant = (field: string, label: string, value: string): string =>
+    `${label} <time data-parity-field="${field}" datetime="${escapeHtml(value)}">${escapeHtml(value)}</time>`;
+  return `<span class="wi-facts">priority <span data-parity-field="work-item-priority">${item.priority}</span> · ${instant('work-item-created', 'created', item.createdAt)} · ${instant('work-item-updated', 'updated', item.updatedAt)}${item.closedAt === null ? '' : ` · ${instant('work-item-closed', 'closed', item.closedAt)}`}</span>`;
 }
 
 /** POC-REQ-014: the served count of the governing-intent Unknown beside how
@@ -160,13 +197,13 @@ function itemGoverningIntent(itemId: string, unknown: PocUnknown): string {
 function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLaneItem[]): string {
   if (model.workItems.kind !== 'observed') return '';
   const count = model.workItems.governedByUnknownCount;
-  const subjects = new Map(model.unknownSubjects.map((subject) => [subject.id, subject.epistemic]));
+  const subjects = new Map(model.workItems.items.map((item) => [item.id, item.governedBy]));
   const inside = rendered.filter((item) => {
-    const governedBy = subjects.get(workItemGoverningIntentId(item.id));
+    const governedBy = subjects.get(item.id);
     return governedBy?.label === 'Unknown' && governedBy.closedReason === 'source-uncaptured-or-unreachable';
   }).length;
   const unknown = unknownSubject(model, WORK_ITEM_GOVERNING_INTENT_REGION_ID);
-  return `<p class="governing-intent-count notice" data-parity-field="work-item-governed-by-count"${unknownMarker(WORK_ITEM_GOVERNING_INTENT_REGION_ID, unknown)}>
+  return `<p class="governing-intent-count notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_GOVERNING_INTENT_REGION_ID]}" data-parity-field="work-item-governed-by-count"${unknownMarker(WORK_ITEM_GOVERNING_INTENT_REGION_ID, unknown)}>
         Governing intent: Unknown for <span data-parity-field="governed-by-unknown-count">${count}</span> of ${model.workItems.items.length} observed work items;
         <span data-parity-field="governed-by-unknown-inside">${inside}</span> are in this selection and <span data-parity-field="governed-by-unknown-outside">${count - inside}</span> are outside it.
         Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
@@ -177,20 +214,27 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
 }
 
 /** SEC-5: a card is named by its identifier; its title is never read, and
- * the card says so under the one withheld-title disclosure. */
+ * the card's mark refers to the one withheld-title disclosure. */
 function itemTitleWithheld(model: PocModel): string {
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
-  return `<span class="epistemic ${epistemicClassName(unknown.label)}" data-parity-field="work-item-title"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>Title: withheld (SEC-5). ${unknownRoute(unknown)}</span>`;
+  return cardMark('work-item-title', WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, 'Title: withheld (SEC-5)');
 }
 
 /** The board-level statement of the withheld titles, with the reason. */
 function titlesWithheldRegion(model: PocModel): string {
   if (model.workItems.kind !== 'observed') return '';
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
-  return `<p class="titles-withheld notice" data-parity-field="work-item-titles-withheld"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>
+  return `<p class="titles-withheld notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_TITLES_REGION_ID]}" data-parity-field="work-item-titles-withheld"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>
         Titles: ${escapeHtml(unknown.label)} for every observed work item. ${escapeHtml(unknown.reason)}
         Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
       </p>`;
+}
+
+/** The item's served governing intent; a rendered item is always served. */
+function servedGovernedBy(model: PocModel, itemId: string): { readonly label: string; readonly closedReason: string } {
+  const served = model.workItems.kind === 'observed' ? model.workItems.items.find((entry) => entry.id === itemId) : undefined;
+  if (served === undefined) throw new Error(`rendered work item ${itemId} is not served`);
+  return served.governedBy;
 }
 
 function itemCard(
@@ -202,14 +246,15 @@ function itemCard(
   governingIntentId: string | null,
   demonstrated: boolean,
 ): string {
-  const governedBy = unknownSubject(model, workItemGoverningIntentId(item.id));
+  const governedBy = servedGovernedBy(model, item.id);
   return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}" id="workitem-${escapeHtml(item.id)}" data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
     ${demonstrated ? '<span class="demo-badge">Demonstrated item</span>' : ''}
     <a class="wi-title" href="#workitem-${escapeHtml(item.id)}" data-parity-field="work-item-id">${escapeHtml(item.id)}</a>
     ${itemTitleWithheld(model)}
     <span class="wi-status" data-parity-field="work-item-status">${escapeHtml(item.status)}</span>
-    ${itemGoverningIntent(item.id, governedBy)}
-    ${itemVerification(model, item.id)}
+    ${itemFacts(item)}
+    ${itemGoverningIntent(governedBy)}
+    ${itemVerification()}
     ${workerChangeBadge(model, workerChange, testArtifactVerification, governingIntentId)}
     ${laneBar(item, range)}
   </li>`;
@@ -217,7 +262,12 @@ function itemCard(
 
 const TRAJECTORY_STYLE = `
   .scope-statement { max-width: 78ch; }
-  .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; padding: 1.5rem 0 3rem; }
+  /* syzygy-t3jk.15: the seven columns stay one row and the board scrolls
+     inside itself when narrower; no code identity widens the page. */
+  code { overflow-wrap: anywhere; }
+  .board { display: grid; grid-template-columns: repeat(7, minmax(10rem, 1fr)); gap: .75rem; padding: 1.5rem 0 3rem; overflow-x: auto; }
+  .wi-facts { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); overflow-wrap: anywhere; }
+  .mark-ref { font-size: .68rem; }
   .board-column { background: linear-gradient(145deg, #102126, var(--panel)); border: 1px solid var(--line); padding: 1rem; min-width: 0; }
   .board-column h2 { font-size: 1.1rem; margin: 0 0 .8rem; }
   .board-column .count { color: var(--muted); font-family: var(--font-mono); font-size: .78rem; }
@@ -296,6 +346,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
       ${closureNotice(trajectory.rendered)}
       ${governingIntentRegion(model, trajectory.rendered)}
       ${titlesWithheldRegion(model)}
+      ${verificationRegion(model, trajectory.verificationUnknown)}
       ${demonstratedCallout}
       <div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
   }

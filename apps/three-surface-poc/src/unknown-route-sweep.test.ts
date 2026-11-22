@@ -81,7 +81,9 @@ function uncovered(html: string): string[] {
     if (unknownBadge || none) {
       const inside = [{ tag, attrs }, ...stack];
       const legend = inside.some((entry) => /\sclass="legend"/.test(entry.attrs));
-      const marked = inside.some((entry) => /\sdata-unknown-disclosure="/.test(entry.attrs));
+      // A mark naming a board disclosure (`data-unknown-ref`) is covered
+      // here only provisionally; `references` decides whether it resolves.
+      const marked = inside.some((entry) => /\sdata-unknown-(?:disclosure|ref)="/.test(entry.attrs));
       const row = [...stack].reverse().find((entry) => entry.tag === 'tr');
       const rowId = row === undefined ? undefined : /\sdata-(?:entity|relationship)-id="([^"]*)"/.exec(row.attrs)?.[1];
       if (!legend && !marked && rowId === undefined) failures.push(match[0]);
@@ -96,7 +98,39 @@ function uncovered(html: string): string[] {
   return failures.filter((failure) => !failure.startsWith('row:') || !rowsMarked.has(failure.slice('row:'.length)));
 }
 
-interface Sweep { readonly denominator: number; readonly failures: readonly string[] }
+interface Reference { readonly ref: string; readonly reason: string | undefined; readonly href: string | undefined }
+
+/** Every element carrying `data-unknown-ref`: the board disclosure it
+ * names, its own closed reason, and the fragment its link targets. */
+function referenceMarks(html: string): Reference[] {
+  const body = html.replace(/<(style|script)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+  return [...body.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)\sdata-unknown-ref="([^"]*)"([^>]*)>([\s\S]*?)<\/\1>/g)].map((match) => ({
+    ref: match[3]!,
+    reason: /\sdata-unknown-reason="([^"]*)"/.exec(`${match[2]!} ${match[4]!}`)?.[1],
+    href: /<a\b[^>]*\shref="#([^"]*)"/.exec(match[5]!)?.[1],
+  }));
+}
+
+/** syzygy-t3jk.15, the one rule added to P-71 Q1's sweep: a mark that
+ * names a board disclosure resolves to exactly one in-page disclosure with
+ * that id, the same closed reason and a route, and its link targets that
+ * disclosure's element id. Anything else is a failure. */
+function references(html: string): string[] {
+  const failures: string[] = [];
+  const all = disclosures(html);
+  for (const mark of referenceMarks(html)) {
+    const targets = all.filter((disclosure) => disclosure.id === mark.ref);
+    if (targets.length !== 1) { failures.push(`reference ${mark.ref}: ${targets.length} disclosures`); continue; }
+    const target = targets[0]!;
+    if (reasonOf(target) !== mark.reason) failures.push(`reference ${mark.ref}: reason ${mark.reason ?? 'absent'} differs from ${reasonOf(target) ?? 'absent'}`);
+    if (routeOf(target) === undefined) failures.push(`reference ${mark.ref}: its disclosure has no route`);
+    const elementId = /^<[^>]*\sid="([^"]*)"/.exec(target.inner)?.[1];
+    if (mark.href === undefined || mark.href !== elementId) failures.push(`reference ${mark.ref}: link #${mark.href ?? ''} does not reach #${elementId ?? ''}`);
+  }
+  return failures;
+}
+
+interface Sweep { readonly denominator: number; readonly references: number; readonly failures: readonly string[] }
 
 /** The AC1 sweep for one served page. */
 function sweep(html: string): Sweep {
@@ -108,7 +142,8 @@ function sweep(html: string): Sweep {
     if (routeOf(disclosure) === undefined) failures.push(`${disclosure.id}: no route`);
   }
   for (const tag of uncovered(html)) failures.push(`unmarked Unknown: ${tag}`);
-  return { denominator: all.length, failures };
+  failures.push(...references(html));
+  return { denominator: all.length, references: referenceMarks(html).length, failures };
 }
 
 // ---------------------------------------------------------------------------
@@ -194,25 +229,41 @@ function model(name: string): PocModel {
 // notice), worker-change 4 → 6 (one card, one notice).
 // syzygy-bpyt.7.1 removed the seedless build; its no-seeds row (8, 2, 1)
 // became unsupported-repository, the remaining state with no dispatch.
+// syzygy-t3jk.15 states each card Unknown once per board: a card keeps three
+// marks that refer to board disclosures (REFERENCES) and carries no
+// disclosure of its own. Trajectory, plain and observed-shape: 17 - 5 cards
+// x 3 per-card disclosures + 1 new verification notice = 3 (titles,
+// governing intent, verification); worker-change: 6 - 1 x 3 + 1 = 4 (those
+// three and the worker-change verification). unreachable and
+// unsupported-repository render no board and do not move.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
-  plain: { polaris: 21, trajectory: 17, orrery: 9 },
-  'observed-shape': { polaris: 13, trajectory: 17, orrery: 9 },
+  plain: { polaris: 21, trajectory: 3, orrery: 9 },
+  'observed-shape': { polaris: 13, trajectory: 3, orrery: 9 },
   unreachable: { polaris: 24, trajectory: 1, orrery: 10 },
   'unsupported-repository': { polaris: 22, trajectory: 2, orrery: 9 },
-  'worker-change': { polaris: 19, trajectory: 6, orrery: 7 },
+  'worker-change': { polaris: 19, trajectory: 4, orrery: 7 },
+};
+
+/** Trajectory's card marks that refer to a board disclosure: three per
+ * rendered card (title, governing intent, verification). */
+const REFERENCES: Readonly<Record<string, number>> = {
+  plain: 15, 'observed-shape': 15, unreachable: 0, 'unsupported-repository': 0, 'worker-change': 3,
 };
 
 describe('every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060)', () => {
   for (const [name, expected] of Object.entries(DENOMINATORS)) {
     it(`${name}: per-surface denominators, zero exceptions on each`, () => {
       const counts: Record<string, number> = {};
+      let references = 0;
       for (const surface of ['polaris', 'trajectory', 'orrery'] as const) {
         const result = sweep(RENDER[surface](model(name)));
         expect(result.failures, `${name}/${surface}`).toEqual([]);
         counts[surface] = result.denominator;
+        references += result.references;
       }
-      process.stdout.write(`[M4 unknown sweep] ${JSON.stringify({ model: name, ...counts })}\n`);
+      process.stdout.write(`[M4 unknown sweep] ${JSON.stringify({ model: name, ...counts, references })}\n`);
       expect(counts).toEqual(expected);
+      expect(references).toBe(REFERENCES[name]);
     });
   }
 
@@ -223,7 +274,7 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
         for (const disclosure of disclosures(RENDER[surface](model(name)))) ids.add(disclosure.id.replace(/^(work-item|worker-change):[^/]+/, '$1:*'));
       }
     }
-    for (const id of ['worker-change:*/verification', 'work-item:*/verification', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code']) {
+    for (const id of ['worker-change:*/verification', 'region:work-item-verification', 'region:work-item-governing-intent', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code']) {
       expect(ids, id).toContain(id);
     }
     expect([...ids].some((id) => id.endsWith('/lifecycle')), 'a proposal lifecycle disclosure').toBe(true);
@@ -236,7 +287,7 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
     expect(html).toContain('unmapped.dataset.unknownReason = known.reason;');
   });
 
-  it('fails when a disclosure loses its reason, gains a thirteenth, drops its route, or an Orrery row re-emits a bare provenance-none span', () => {
+  it('fails when a disclosure loses its reason, gains a thirteenth, drops its route, a card mark refers to no disclosure or another reason, or an Orrery row re-emits a bare provenance-none span', () => {
     const polaris = renderPolarisPage(model('plain'));
     const trajectory = renderTrajectoryPage(model('plain'));
     const orrery = renderOrreryPage(model('plain'));
@@ -246,6 +297,9 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
       ['orrery blank reason', orrery, orrery.replace('data-unknown-reason="missing-evidence"', 'data-unknown-reason=""')],
       ['thirteenth reason', orrery, orrery.replace('data-unknown-reason="mapping-coverage-absent"', 'data-unknown-reason="none-modelled"')],
       ['dropped route', trajectory, trajectory.replace(/Route: <span data-unknown-route[^>]*>[^<]*<\/span>\./, '')],
+      ['dangling card reference', trajectory, trajectory.replace('data-unknown-ref="region:work-item-verification"', 'data-unknown-ref="region:work-item-nowhere"')],
+      ['card reason differing from its disclosure', trajectory, trajectory.replace(/(data-unknown-ref="region:work-item-verification" data-unknown-reason=")missing-evidence"/, '$1excluded-content"')],
+      ['card link missing its disclosure', trajectory, trajectory.replace('href="#notice-work-item-verification"', 'href="#notice-elsewhere"')],
       ['bare provenance-none', orrery, orrery.replace(/<span class="provenance-none" data-unknown-disclosure="[^"]*" data-unknown-reason="[^"]*">/, '<span class="provenance-none">')],
     ];
     for (const [label, original, mutated] of mutants) {

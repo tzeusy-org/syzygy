@@ -94,4 +94,41 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       await page.close();
     }
   });
+
+  // syzygy-t3jk.15: the board reads as columns and the page never scrolls
+  // sideways. On the 252-row fixture, at 1440 px the seven headings share one
+  // row; at 1440 and 390 px the document is no wider than the viewport.
+  it.each([1440, 390])('at %i px the document is no wider than the viewport, and at 1440 the seven columns share one row', async (width) => {
+    const instant = '2026-08-01T00:00:00Z';
+    const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked'];
+    const rows = [
+      ...Array.from({ length: 201 }, (_, i) => fixtureWorkItemRow(`bu-current-${String(i).padStart(3, '0')}`, statuses[i % 6]!, instant, instant, null)),
+      ...Array.from({ length: 51 }, (_, i) => fixtureWorkItemRow(`bu-closed-${String(i).padStart(3, '0')}`, 'closed', instant, instant, instant)),
+    ];
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const directory = tempDir('syzygy-trajectory-layout-');
+    const file = join(directory, 'trajectory.html');
+    writeFileSync(file, renderTrajectoryPage(model));
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(width, 1000);
+      await page.navigate(pathToFileURL(file).href);
+      const measured = await page.evaluate<{ scrollWidth: number; viewport: number; tops: number[]; widest: string }>(`(() => {
+        const tops = Array.from(document.querySelectorAll('.board-column h2')).map(h => Math.round(h.getBoundingClientRect().top));
+        let widest = '';
+        let right = 0;
+        for (const el of document.body.querySelectorAll('*')) {
+          const r = el.getBoundingClientRect().right;
+          if (r > right) { right = r; widest = el.tagName + '.' + el.className; }
+        }
+        return { scrollWidth: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth, tops, widest: widest + ' ' + Array.from(document.body.querySelectorAll('*')).sort((a, b) => b.getBoundingClientRect().right - a.getBoundingClientRect().right)[0].textContent.slice(0, 80) };
+      })()`);
+      process.stdout.write(`[T2 layout] ${JSON.stringify({ width, ...measured })}\n`);
+      expect(measured.tops).toHaveLength(7);
+      expect(measured.scrollWidth, measured.widest).toBeLessThanOrEqual(measured.viewport);
+      if (width === 1440) expect(new Set(measured.tops).size).toBe(1);
+    } finally {
+      await page.close();
+    }
+  });
 });
