@@ -190,13 +190,30 @@ export function prepareUrlMachineListener(server: Server, program: KernelPeerPro
     const identity = serverIdentity(server);
     const descriptor = (server as Server & { readonly _handle: { readonly fd: number } })._handle.fd;
     const result = runNative(program, descriptor, 'listener', chargeNativeCpuMicroseconds);
-    const fields = /^L ([0-9]{1,20}) ([0-9]{1,20})\n$/u.exec(result.stdout.toString('ascii'));
-    if (result.status !== 0 || !fields || `${fields[1]}:${fields[2]}` !== identity || serverIdentity(server) !== identity) return null;
-    const capability: UrlMachineListener = Object.freeze({ transport: 'kernel-sender-stream/1' });
-    listeners.set(capability, { server, identity, programSha256: program.sha256 });
-    return capability;
+    return registerListener(server, program, identity, result.status, result.stdout);
   } catch { return null; }
 }
+/** Production listener setup remains asynchronous even when another role's CLI
+ * is already live. Await this before launching this endpoint's first writer. */
+export async function prepareUrlMachineListenerAsync(server: Server, program: KernelPeerProgram,
+  chargeNativeCpuMicroseconds?: (capacity: number) => void): Promise<UrlMachineListener | null> {
+  try {
+    if (!(server instanceof Server)) return null;
+    const identity = serverIdentity(server);
+    const descriptor = (server as Server & { readonly _handle: { readonly fd: number } })._handle.fd;
+    const result = await executeKernelPeerProgramAsync(descriptor, program, 'listener', chargeNativeCpuMicroseconds);
+    return result === null ? null : registerListener(server, program, identity, result.status, result.stdout);
+  } catch { return null; }
+}
+function registerListener(server: Server, program: KernelPeerProgram, identity: string, status: number | null,
+  output: Buffer): UrlMachineListener | null {
+  const fields = /^L ([0-9]{1,20}) ([0-9]{1,20})\n$/u.exec(output.toString('ascii'));
+  if (status !== 0 || !fields || `${fields[1]}:${fields[2]}` !== identity || serverIdentity(server) !== identity) return null;
+  const capability: UrlMachineListener = Object.freeze({ transport: 'kernel-sender-stream/1' });
+  listeners.set(capability, { server, identity, programSha256: program.sha256 });
+  return capability;
+}
+
 function listenerCurrent(options: UrlMachinePeerOptions): boolean {
   const selected = listeners.get(options.listener);
   return selected !== undefined && selected.programSha256 === options.programs.reader.sha256

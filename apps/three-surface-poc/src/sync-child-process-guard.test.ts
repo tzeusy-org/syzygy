@@ -106,11 +106,11 @@ const EMBEDDED_FIXTURE = DOSSIER + 'acquisition-process.test.ts';
 const EMBEDDED_CALL = '496476a19a8b66906bd56990727e80e227041208e23bd8af1b01026751afd69b';
 // Bind the child-file writer and the production fd verification to the admitted calls.
 const FIXTURE_WRITER = 'e49f3dc7ce221b2a257bcbc95f0ad98201ddcf5f433fd6e8f44ba7e71e852cb7';
-const PEER_SOURCE = '4063d681c237038ba686e70d7edf3cf24f1b9bf34562766927c5833fbf6c7fea';
+const PEER_SOURCE = '9b297766e237b26b25947b054e32a52edbf65260662c26cc37937a825fb08163';
 const PEER_CAPTURE = '008ddd0641401d72b40fe0524fc920588d8da678ed7f46c8fcc5035ac27ccef5';
 // The call's limits and image verifier are shared helpers/constants. Bind that
 // complete context as well as the one admitted call; another call still fails.
-const MACHINE_PEER_SOURCE = '08a7e5d24425834746c47539151773a00f9545977750a2a967de9a2a23045815';
+const MACHINE_PEER_SOURCE = 'a86be15ddef5efdd5a1f790921c0d692442a7831f050e32326366216f8106193';
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
 const MODULE_SPECIFIER = /(?:\bfrom|\bimport)\s*\(?\s*['"]([^'"]+)['"]/g;

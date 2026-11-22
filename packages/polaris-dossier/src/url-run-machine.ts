@@ -9,7 +9,7 @@ import { createSessionMachineTransport, type SessionMachineTransport } from './s
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import type { UrlMachineClientContext, UrlMachineClientKind, UrlMachineClientRecord, UrlMachineOperation } from './url-machine-instance.js';
-import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListener,
+import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
@@ -122,9 +122,13 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
       const key = `${plan.role}/${kind}`;
       if (clients.has(key)) throw refuse();
       clients.set(key, client);
-      let listener: ReturnType<typeof prepareUrlMachineListener> = null;
+      let listener: Awaited<ReturnType<typeof prepareUrlMachineListenerAsync>> = null;
       const transport = createSessionMachineTransport({
-        prepare: server => { if (!current()) return false; listener = prepareUrlMachineListener(server, reader, input.chargeNativeCpuMicroseconds); return listener !== null; },
+        prepare: async server => {
+          if (!current()) return false;
+          listener = await prepareUrlMachineListenerAsync(server, reader, input.chargeNativeCpuMicroseconds);
+          return listener !== null && current();
+        },
         accept: async socket => {
           const until = Math.min(input.deadline, input.now() + 5000);
           let launch = input.launch(plan.role);

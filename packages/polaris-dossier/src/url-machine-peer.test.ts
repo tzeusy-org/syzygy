@@ -11,13 +11,14 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionLaunchOptions } from './session-launch.js';
-import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
+import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, prepareUrlMachineListenerAsync, closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
 import { captureKernelUnixPeer, captureKernelUnixPeerAsync } from './session-peer.js';
 
-const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [] }));
+const nativeObservations = vi.hoisted(() => ({ calls: (): readonly (readonly unknown[])[] => [],
+  synchronous: (): readonly (readonly unknown[])[] => [] }));
 const filesystemBoundary = vi.hoisted(() => ({ refuseLargeSyncReads: false, largeSyncReads: 0 }));
 vi.mock('node:fs', async importOriginal => {
   const actual = await importOriginal<typeof import('node:fs')>();
@@ -32,6 +33,7 @@ vi.mock('node:child_process', async importOriginal => {
   const actual = await importOriginal<typeof import('node:child_process')>();
   // Observe real helper execution at the OS boundary; keep its actual result.
   const observed = vi.fn(actual.spawnSync), asynchronous = vi.fn(actual.spawn);
+  nativeObservations.synchronous = () => observed.mock.calls;
   nativeObservations.calls = () => [...observed.mock.calls, ...asynchronous.mock.calls]
     .filter(call => call[0] === '/usr/bin/prlimit' && Array.isArray(call[1]) && call[1][2] === '/proc/self/fd/4');
   return { ...actual, spawnSync: observed, spawn: asynchronous };
@@ -112,7 +114,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
   for (const endpoint of [brokerSocket, relaySocket]) {
     const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, socket => { sockets.add(socket); socket.on('error', () => {}); if (endpoint === brokerSocket) accept(socket); });
     await new Promise<void>(resolve => server.listen(endpoint, resolve)); servers.push(server);
-    const preparedListener = prepareUrlMachineListener(server, programs.reader, chargeNativeCpuMicroseconds);
+    const preparedListener = await prepareUrlMachineListenerAsync(server, programs.reader, chargeNativeCpuMicroseconds);
     expect(preparedListener).not.toBeNull();
     if (endpoint === brokerSocket) listener = preparedListener;
   }
@@ -161,7 +163,7 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
   });
 
   it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {
-    const calls = nativeObservations.calls, before = calls().length, charges: number[] = [];
+    const calls = nativeObservations.calls, before = calls().length, syncBefore = nativeObservations.synchronous().length, charges: number[] = [];
     let denied = false;
     const charge = (capacity: number) => { charges.push(capacity); if (denied) throw new Error('owned capacity exhausted'); };
     const f = await fixture('live', charge); expect(f.peer).not.toBeNull(); if (!f.peer) return;
@@ -170,6 +172,7 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     expect(await mediateUrlMachinePeer(f.peer, 'artifact_read', () => 'owned')).toEqual({ ok: true, value: 'owned' });
     expect(charges.length).toBeGreaterThan(5); expect(charges.every(value => value === 2_000_000)).toBe(true);
     expect(calls().length - before).toBe(charges.length);
+    expect(nativeObservations.synchronous()).toHaveLength(syncBefore);
     for (const call of calls()) {
       const args: unknown = call[1];
       expect(call[0]).toBe('/usr/bin/prlimit'); expect(Array.isArray(args)).toBe(true);
@@ -180,10 +183,11 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     denied = true; const invoked = calls().length, reserved = charges.length;
     const server = (f.socket as Socket & { readonly server: Server }).server;
     expect(prepareUrlMachineListener(server, programs.reader, charge)).toBeNull();
+    expect(await prepareUrlMachineListenerAsync(server, programs.reader, charge)).toBeNull();
     expect(captureKernelUnixPeer(f.socket, programs.peer, charge)).toBeNull();
     expect(await captureKernelUnixPeerAsync(f.socket, programs.peer, charge)).toBeNull();
     expect(await f.read()).toBeNull();
-    expect(charges).toHaveLength(reserved + 4); expect(calls()).toHaveLength(invoked);
+    expect(charges).toHaveLength(reserved + 5); expect(calls()).toHaveLength(invoked);
   });
 
   it('captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files', async () => {

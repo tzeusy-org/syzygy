@@ -351,7 +351,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
       const failed = (): void => { reject(new Error('session-relay-start-failed')); };
       listener.once('error', failed); listener.listen(socket, () => { listener.off('error', failed); resolve(); });
     });
-    if (!fixture && !prepareSessionMachineTransport(machine!, listener)) throw new Error('session-relay-start-failed');
+    if (!fixture && !(await prepareSessionMachineTransport(machine!, listener))) throw new Error('session-relay-start-failed');
     listener.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections();
       for (const raw of rawSockets) raw.destroy(); });
     fs.chmodSync(socket, 0o600);

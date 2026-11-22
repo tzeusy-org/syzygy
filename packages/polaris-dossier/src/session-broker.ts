@@ -118,7 +118,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
       server.once('error', failed);
       server.listen(socket, () => { server.off('error', failed); resolve(); });
     });
-    if (!fixture && !prepareSessionMachineTransport(machine!, server)) throw new Error('session-broker-start-failed');
+    if (!fixture && !(await prepareSessionMachineTransport(machine!, server))) throw new Error('session-broker-start-failed');
     server.on('error', poison);
     fs.chmodSync(socket, 0o600);
   } catch {

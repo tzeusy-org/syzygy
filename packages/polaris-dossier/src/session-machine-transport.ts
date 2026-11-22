@@ -15,7 +15,7 @@ export interface SessionMachineEffectContext {
 }
 interface TransportPorts {
   /** Configure sender metadata on the actual listener before any client launch. */
-  readonly prepare: (server: Server) => boolean;
+  readonly prepare: (server: Server) => boolean | Promise<boolean>;
   /** The trusted closure selects the genuine launch and captures this exact socket.
    * It may await launch registration within the connection's original deadline. */
   readonly accept: (socket: Socket) => Promise<UrlMachinePeer | null>;
@@ -50,8 +50,8 @@ export function createSessionMachineTransport(ports: TransportPorts): SessionMac
   return transport;
 }
 export const isSessionMachineTransport = (transport: SessionMachineTransport): boolean => transports.has(transport);
-export function prepareSessionMachineTransport(transport: SessionMachineTransport, server: Server): boolean {
-  try { return transports.get(transport)?.prepare(server) === true; } catch { return false; }
+export async function prepareSessionMachineTransport(transport: SessionMachineTransport, server: Server): Promise<boolean> {
+  try { return await transports.get(transport)?.prepare(server) === true; } catch { return false; }
 }
 export function sessionMachineEffectContext(stream: Duplex): SessionMachineEffectContext | null {
   return connections.get(stream) ?? null;

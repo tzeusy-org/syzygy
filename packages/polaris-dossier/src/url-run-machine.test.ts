@@ -130,7 +130,7 @@ async function fixture() {
         const connection = openSessionMachineConnection(socket, transport, { bytes: 65_536, milliseconds: 60_000 }); accepted.push(connection);
       });
       await new Promise<void>(resolve => server.listen(path.join(directory, name), resolve)); servers.push(server);
-      expect(prepareSessionMachineTransport(transport, server)).toBe(true);
+      expect(await prepareSessionMachineTransport(transport, server)).toBe(true);
     }
     cleanup.push(async () => { for (const socket of sockets) socket.destroy(); for (const server of servers) await new Promise<void>(resolve => server.close(() => resolve())); });
     launch = await launchRestrictedUrlSession({ preparation, host: {

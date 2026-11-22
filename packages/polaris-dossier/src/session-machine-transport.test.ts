@@ -51,6 +51,30 @@ function client(path: string) {
 }
 
 describe('verified-chunk session transport adapter', () => {
+  it.each([
+    ['broker', true], ['broker', false], ['relay', true], ['relay', false],
+  ] as const)('awaits actual %s listener preparation and honors its %s result before returning a host', async (kind, allowed) => {
+    let enter!: () => void, release!: (value: boolean) => void, finished = false;
+    const entered = new Promise<void>(resolve => { enter = resolve; });
+    const gate = new Promise<boolean>(resolve => { release = resolve; });
+    const transport = createSessionMachineTransport({ prepare: server => {
+      expect(server.listening).toBe(true); enter(); return gate;
+    }, accept: async () => null })!;
+    const socket = join(tempDir('machine-prepare-'), 'p.sock');
+    const subject: SessionRelaySubject = { binding: { run: 'own', role: 'author', sourceBinding: 'a'.repeat(64), policy: 'b'.repeat(64),
+      provider: 'anthropic', model: 'own' }, project: 'project:syzygy', pin: 'c'.repeat(40), principal: 'own' };
+    const ports: SessionRelayPorts = { current: () => true, request: () => ({ ok: false }), providerHeaders: () => null,
+      response: () => ({ ok: false }), audit: () => {} };
+    const started = kind === 'broker' ? startSessionBroker(socket, async () => undefined, () => {}, undefined, transport)
+      : sessionRelayTestPort(async () => { throw new Error('no provider exchange in listener fixture'); })(socket, subject, ports, undefined, transport);
+    void started.then(() => { finished = true; }, () => { finished = true; });
+    cleanup.push(async () => { release(false); try { await (await started).close(); } catch { /* Refused listener already closed. */ } });
+    await entered; await new Promise<void>(resolve => setImmediate(resolve));
+    expect(finished).toBe(false); release(allowed);
+    if (allowed) expect((await started).socket).toBe(socket);
+    else await expect(started).rejects.toThrow(`session-${kind}-start-failed`);
+  });
+
   it('binds context to the exact accepted stream and writes only inside its active mediated boundary', async () => {
     let context: SessionMachineEffectContext | null = null, actual: Socket | undefined;
     const transport = fixtureTransport([Buffer.from('verified\n')], socket => { actual = socket; });
@@ -72,7 +96,7 @@ describe('verified-chunk session transport adapter', () => {
     })(); });
     const socketPath = join(tempDir('machine-adapter-'), 'a.sock'); server.listen(socketPath); await once(server, 'listening');
     cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
-    expect(prepareSessionMachineTransport(transport, server)).toBe(true);
+    expect(await prepareSessionMachineTransport(transport, server)).toBe(true);
     const c = client(socketPath); c.socket.write('unverified raw bytes');
     expect(await c.output).toBe('checked reply');
     expect(context).not.toBeNull(); expect(actual?.listenerCount('data')).toBe(0); expect(actual?.listenerCount('readable')).toBe(0);

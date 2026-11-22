@@ -90,7 +90,7 @@ function parseKernelUnixPeer(output: string): KernelUnixPeer | null {
  * arrives; a timeout, stderr, image/channel replacement or failed exec refuses.
  * Capacity is reserved before spawning and is never refunded on failure. */
 export async function executeKernelPeerProgramAsync(descriptor: number, program: KernelPeerProgram,
-  mode: 'identity' | 'prepare' | 'read', chargeNativeCpuMicroseconds?: (capacity: number) => void):
+  mode: 'identity' | 'listener' | 'prepare' | 'read', chargeNativeCpuMicroseconds?: (capacity: number) => void):
   Promise<{ readonly status: number | null; readonly stdout: Buffer } | null> {
   let image: number | undefined;
   try {
