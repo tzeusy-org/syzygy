@@ -39,16 +39,16 @@ the *measurement*, never the *selection*.
 |---|---:|---:|---:|---|---|
 | `context-selection-1-polaris-narrative.md` | 5 | 16,585 | 22,390 | **above the proposed trigger** by 11.9% | `592e3064733290e3…` |
 | `context-selection-10-trajectory-lifecycle.md` | 12 | 43,645 | 58,921 | **above the proposed trigger** by 194.6% | `f117cd851f00de86…` |
-| `context-selection-2-trajectory-adapter.md` | 8 | 23,194 | 31,312 | **above the proposed trigger** by 56.6% | `41e8cc6d0b96cf25…` |
+| `context-selection-2-trajectory-adapter.md` | 8 | 23,496 | 31,720 | **above the proposed trigger** by 58.6% | `56971c0f767fba23…` |
 | `context-selection-3-orrery-lens.md` | 5 | 17,024 | 22,982 | **above the proposed trigger** by 14.9% | `962f42f56516c492…` |
-| `context-selection-4-execution-profile.md` | 6 | 14,764 | 19,931 | above the proposed default band, under the proposed trigger | `2d34030b734cccc5…` |
+| `context-selection-4-execution-profile.md` | 6 | 15,066 | 20,339 | **above the proposed trigger** by 1.7% | `368f2745d7f5a9c4…` |
 | `context-selection-5-cross-project-mission.md` | 11 | 26,320 | 35,532 | **above the proposed trigger** by 77.7% | `06b28623848bf613…` |
 | `context-selection-6-doctrine-amendment.md` | 6 | 15,239 | 20,573 | **above the proposed trigger** by 2.9% | `733fd2dde0a619a9…` |
 | `context-selection-7-kernel-identity.md` | 5 | 18,867 | 25,470 | **above the proposed trigger** by 27.4% | `b2b03d02242465b2…` |
 | `context-selection-8-openspec-authoring.md` | 6 | 27,275 | 36,821 | **above the proposed trigger** by 84.1% | `cec797f611026625…` |
-| `context-selection-9-evidence-adapter.md` | 12 | 30,352 | 40,975 | **above the proposed trigger** by 104.9% | `1b0869206767bab4…` |
+| `context-selection-9-evidence-adapter.md` | 12 | 30,654 | 41,383 | **above the proposed trigger** by 106.9% | `ff1b175a2944a54d…` |
 
-**9 of 10 fixtures are above the proposed 20,000-token trigger.**
+**10 of 10 fixtures are above the proposed 20,000-token trigger.**
 
 ## 2. Candidate budget exceptions — one row per breaching fixture
 
@@ -94,7 +94,7 @@ printed at the foot of §5.
 
 ### `context-selection-2-trajectory-adapter.md`
 
-- **Measured:** 23,194 words ≈ 31,312 estimated tokens — 56.6% above the proposed trigger.
+- **Measured:** 23,496 words ≈ 31,720 estimated tokens — 58.6% above the proposed trigger.
 - **Reason:** An authorization-bearing derivation-mapping edit cannot shed (i) the act contract that makes the edited artifact honored — RFC3-16(a)/(b)/(c), whose smallest load unit is one module (word cost in `CONTEXT-BUDGET-REPORT.md` §3); (ii) the consuming state vocabulary the mapping projects into (RFC8-12/13, tables read verbatim); (iii) the adapter contract bounding what the adapter may write; or (iv) the SEC-3 premise that makes (i) necessary. The only measured configuration under the trigger is reached by dropping (i), which RFC11-5 forbids and which this fixture's own reasoning refuses
 - **Scope:** Work-provider adapter changes that edit an **RFC3-16(a) authorization-bearing** derivation mapping. Does **not** cover: the approval ceremony for such a mapping (a separate, smaller packet); mapping edits that are not authorization-bearing; adapter changes touching execution-record capture or fidelity joins, which is fixture 9's class
 - **Reviewer:** **RC-12, independent reviewer, 2026-08-06.** Ruled `WAIVER SOUND` in `round-2026-08b/reviews/RC-12-budget-waiver-RAW.md`, over the *selection* — not over the contracts it selects. That review's own verdict was `EXCEPTIONS`; read §5 there on what this signature can and cannot mean while no budget rule is installed
@@ -104,6 +104,15 @@ printed at the foot of §5.
 ### `context-selection-3-orrery-lens.md`
 
 - **Measured:** 17,024 words ≈ 22,982 estimated tokens — 14.9% above the proposed trigger.
+- **Reason:** [Unknown] — not declared in the fixture
+- **Scope:** [Unknown] — not declared in the fixture
+- **Reviewer:** [Unknown] — not declared in the fixture
+- **Expiry / revisit trigger:** [Unknown] — not declared in the fixture
+- **Decomposition reviewed:** [Unknown] — not declared in the fixture
+
+### `context-selection-4-execution-profile.md`
+
+- **Measured:** 15,066 words ≈ 20,339 estimated tokens — 1.7% above the proposed trigger.
 - **Reason:** [Unknown] — not declared in the fixture
 - **Scope:** [Unknown] — not declared in the fixture
 - **Reviewer:** [Unknown] — not declared in the fixture
@@ -148,7 +157,7 @@ printed at the foot of §5.
 
 ### `context-selection-9-evidence-adapter.md`
 
-- **Measured:** 30,352 words ≈ 40,975 estimated tokens — 104.9% above the proposed trigger.
+- **Measured:** 30,654 words ≈ 41,383 estimated tokens — 106.9% above the proposed trigger.
 - **Reason:** The evidence plane is the corpus's widest authorization surface. RFC-0004 gates six clauses across three of its modules under RFC3-16(a) (see `RFC-0004/README.md`), so an authorization-bearing change here needs the whole four-module package, the tier vocabulary it emits into, the profile contract that defines its one self-sufficient route, and the act machinery that makes any of it honored
 - **Scope:** Evidence-adapter changes touching gate provenance (RFC4-13 routes), capture cadence or retention (RFC4-16), or fidelity labels (RFC4-24/25), **where the warrant spans the retention × cause coupling** — i.e. where a `reduced-fidelity` cause depends on a retention-horizon fact. A warrant touching **labels only**, with no RFC4-16 dependency, is **out of scope** and takes the smaller shard instead. Does not cover changes that also touch work-state rendering (fixture 2's class), or that add prose fields to a record, which pulls `RFC-0005/consent-egress-secrets` (scope tightened by RC-12)
 - **Reviewer:** **RC-12, independent reviewer, 2026-08-06.** Ruled `WAIVER SOUND` in `round-2026-08b/reviews/RC-12-budget-waiver-RAW.md`, over the *selection* — not over the contracts it selects. That review's own verdict was `EXCEPTIONS`; read §5 there on what this signature can and cannot mean while no budget rule is installed
