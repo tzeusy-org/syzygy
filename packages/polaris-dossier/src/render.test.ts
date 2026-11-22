@@ -441,6 +441,33 @@ describe('render', () => {
     } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
   }, 60_000);
 
+  it('refuses actual URL production at the remaining monotonic boundary before its timer runs', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 8000);
+    let initial = true, elapsed = 0, admissions = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      const rendered = await renderRun(f.run, { ...f.deps, productReads: reads, loadScreen: async () => {
+        if (initial) { initial = false; vi.advanceTimersByTime(6000); }
+        return f.deps.loadScreen();
+      }, admitProducedSite: input => {
+        admissions++;
+        expect(Date.now()).toBe(LATER + 6000);
+        expect(reads.isLeaseOpen()).toBe(true);
+        expect(input.signal.aborted).toBe(false);
+        // Only monotonic work reaches the two seconds remaining after the
+        // initial read. No wall-clock advance can run the producer timer.
+        elapsed = 2000;
+        return true;
+      } });
+      expect(admissions).toBe(1);
+      expect(rendered).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+      expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+    } finally { clock.mockRestore(); reads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
   it('awaits actual producer admission before storing a site, and withholds it on a failed producer', async () => {
     const run = await prepared(); let calls = 0;
     const result = await renderRun(run, renderDeps({ admitProducedSite: async input => {
