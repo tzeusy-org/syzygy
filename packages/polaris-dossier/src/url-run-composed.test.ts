@@ -41,7 +41,8 @@ type Forward = Parameters<typeof sessionRelayTestPort>[0];
 const provider = vi.hoisted(() => new Map<string, Forward>());
 const relayRoles = vi.hoisted(() => [] as string[]);
 const settledProviderRoles = vi.hoisted(() => new Set<string>());
-const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null }));
+const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null,
+  afterEndTurn: null as ((role: string) => void) | null }));
 const relayObservations = vi.hoisted(() => [] as { role: string; event: string; route: string | null }[]);
 // Keep the real host, machine mediation, policy, audit and relay. Replace only
 // the relay's compiled provider boundary; this fixture performs no network send.
@@ -66,6 +67,7 @@ vi.mock('./session-relay.js', async importOriginal => {
       await ports.audit(event, context);
       if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn') {
         settledProviderRoles.add(args[1].binding.role);
+        finalResponseDelivery.afterEndTurn?.(args[1].binding.role);
         // The next guard may wait only after this genuine durable append.
       }
     } }, args[3], args[4]);
@@ -114,7 +116,7 @@ let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
 beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
 afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
-afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; finalResponseDelivery.afterEndTurn = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
 async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean) {
@@ -164,6 +166,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
     const releaseProvider = new Map<(typeof ordinary)[number], () => void>();
+    if (cut) finalResponseDelivery.afterEndTurn = role => {
+      const index = ordinary.findIndex(candidate => candidate === role);
+      if (index < 0) return;
+      const next = ordinary[index + 1];
+      if (next !== undefined) releaseProvider.get(next)?.();
+    };
     const finalResponse = (role: (typeof ordinary)[number]): (() => Promise<ScriptCall>)[] => {
       if (!stoppingCut) return [];
       const released = new Promise<void>(resolve => { releaseProvider.set(role, resolve); });
@@ -177,7 +185,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       // Create an audit boundary with no outstanding ordinary exchanges.
       // Settle each synthetic end-turn separately against the live machine.
       for (const role of ordinary) {
-        releaseProvider.get(role)!();
+        if (!cut) releaseProvider.get(role)!();
         while (!settledProviderRoles.has(role) && performance.now() < until)
           await new Promise(resolve => setTimeout(resolve, 5));
         expect(settledProviderRoles.has(role), `${role} end-turn audit at the owned stop`).toBe(true);
@@ -290,8 +298,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           delivered = view;
           if (!cut) return view;
           cutTaken = true;
-          // Complete the already observed ordinary exchanges, then begin the
-          // real stop before allowing their final delivery guards to recheck.
+          // Confirm the earlier ordinary exchanges have durably settled, then
+          // begin the real stop before releasing their final delivery guards.
           await settleOrdinaryResponses();
           void beginOwnedStop().catch(() => {});
           throw new Error('owned interruption after confirmed design delivery');
@@ -409,6 +417,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
       artifacts: f.artifacts, runtime: observedRuntime, stop,
     });
+    // The initial cut waits at a live Design delivery. Let ordinary end-turns
+    // progress in durable audit order during their existing exchanges.
+    if (cut) releaseProvider.get('author')!();
     author.allow();
     try {
       const authorPassed = () => {
