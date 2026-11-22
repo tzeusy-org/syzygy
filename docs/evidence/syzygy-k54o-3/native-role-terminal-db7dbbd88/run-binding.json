@@ -1,0 +1,294 @@
+{
+  "subjectCommit": "db7dbbd88db2bfc50dd4e8bfd36e4fae5f28de28",
+  "subjectTree": "47a78059cdb43a89784de2c0ebf458267f88641d",
+  "fixture": {
+    "selectedTest": "runs the genuine production pipeline to stop-resume",
+    "runDeadline": "PT2H",
+    "watchdogMilliseconds": 540000,
+    "workers": 1,
+    "exitCode": 1,
+    "suiteVerdict": "failed",
+    "selectedElapsedMilliseconds": 251492,
+    "suiteTestsElapsedMilliseconds": 254240,
+    "totalElapsedMilliseconds": 260620,
+    "initialCutRetained": true,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "designForwardsTotal": 0,
+    "executionRecordSha256": null
+  },
+  "screenChronology": [
+    {
+      "clock": "14:54:36",
+      "phase": "rendering-draft"
+    },
+    {
+      "clock": "14:55:25",
+      "phase": "prepared-design",
+      "round": 2
+    },
+    {
+      "clock": "14:55:53",
+      "phase": "role-ended"
+    }
+  ],
+  "nativeWitness": null,
+  "auditPopulations": [
+    {
+      "kind": "initial",
+      "roles": {
+        "author": {
+          "records": 118,
+          "kinds": {
+            "declaration": 1,
+            "launch-attempt": 1,
+            "machine-peer": 68,
+            "relay": 28,
+            "usage": 7,
+            "before-tool": 6,
+            "tool-receipt": 6,
+            "launch-terminal": 1
+          },
+          "terminal": {
+            "outcome": "stopped",
+            "exitCode": null,
+            "signal": "SIGTERM",
+            "viewTermination": "view-exited",
+            "groupTermination": "confirmed",
+            "toolTermination": "settled",
+            "pendingInvocations": 0
+          },
+          "binding": {
+            "bytes": 202048,
+            "sha256": "7006dd531a8d2135abf69ecd333084de9e79544bb64ec9614b35586d9fb65d26",
+            "lastModifiedNs": 1795359198824879253
+          }
+        },
+        "inventory": {
+          "records": 103,
+          "kinds": {
+            "declaration": 1,
+            "launch-attempt": 1,
+            "launch-history": 1,
+            "machine-peer": 58,
+            "relay": 24,
+            "usage": 6,
+            "control": 1,
+            "before-tool": 5,
+            "tool-receipt": 5,
+            "launch-terminal": 1
+          },
+          "terminal": {
+            "outcome": "stopped",
+            "exitCode": null,
+            "signal": "SIGTERM",
+            "viewTermination": "view-exited",
+            "groupTermination": "confirmed",
+            "toolTermination": "settled",
+            "pendingInvocations": 0
+          },
+          "binding": {
+            "bytes": 171864,
+            "sha256": "1ad1511ae5fd3832e617b39595b9502b2ff24a177919681e8efed0a52588260b",
+            "lastModifiedNs": 1795359198854879692
+          }
+        },
+        "fidelity": {
+          "records": 68,
+          "kinds": {
+            "declaration": 1,
+            "launch-attempt": 1,
+            "launch-history": 1,
+            "machine-peer": 38,
+            "relay": 16,
+            "usage": 4,
+            "before-tool": 3,
+            "tool-receipt": 3,
+            "launch-terminal": 1
+          },
+          "terminal": {
+            "outcome": "stopped",
+            "exitCode": null,
+            "signal": "SIGTERM",
+            "viewTermination": "view-exited",
+            "groupTermination": "confirmed",
+            "toolTermination": "settled",
+            "pendingInvocations": 0
+          },
+          "binding": {
+            "bytes": 138343,
+            "sha256": "e01720de0016dbf2c9c7011caeb85381f77e77144fc1f581da2835405d4f95c5",
+            "lastModifiedNs": 1795359198844879546
+          }
+        },
+        "design": {
+          "records": 5,
+          "kinds": {
+            "declaration": 1,
+            "launch-attempt": 1,
+            "launch-history": 1,
+            "design-delivery": 1,
+            "launch-terminal": 1
+          },
+          "chronology": [
+            {
+              "sequence": 4,
+              "kind": "declaration"
+            },
+            {
+              "sequence": 270,
+              "kind": "launch-attempt"
+            },
+            {
+              "sequence": 271,
+              "kind": "launch-history"
+            },
+            {
+              "sequence": 272,
+              "kind": "design-delivery",
+              "round": 1,
+              "site": 0
+            },
+            {
+              "sequence": 294,
+              "kind": "launch-terminal",
+              "terminal": {
+                "outcome": "stopped",
+                "exitCode": null,
+                "signal": "SIGTERM",
+                "viewTermination": "view-exited",
+                "groupTermination": "confirmed",
+                "toolTermination": "settled",
+                "pendingInvocations": 0
+              }
+            }
+          ],
+          "binding": {
+            "bytes": 7548,
+            "sha256": "9c789691745c6325b294f21fcd325abdcf91160a2e4039c077e6a5bd074442ea",
+            "lastModifiedNs": 1795359198873879970
+          }
+        }
+      }
+    },
+    {
+      "kind": "fresh",
+      "roles": {
+        "author": {
+          "records": 1,
+          "kinds": {
+            "declaration": 1
+          },
+          "binding": {
+            "bytes": 1185,
+            "sha256": "f943330bf25d2f3145c50082e15274cc91c865cd8b25de895b2741a82f8467db",
+            "lastModifiedNs": 1795359255652710062
+          }
+        },
+        "inventory": {
+          "records": 1,
+          "kinds": {
+            "declaration": 1
+          },
+          "binding": {
+            "bytes": 1253,
+            "sha256": "9e745ced91a4917098387952b58d4cc2ae8947d086675a222b1d605c25f7a041",
+            "lastModifiedNs": 1795359255989714979
+          }
+        },
+        "fidelity": {
+          "records": 1,
+          "kinds": {
+            "declaration": 1
+          },
+          "binding": {
+            "bytes": 1251,
+            "sha256": "539494b87af33178323f269491dba7f4e5a7f100f0ed2f4d8149791147680b84",
+            "lastModifiedNs": 1795359256340720100
+          }
+        },
+        "design": {
+          "records": 5,
+          "kinds": {
+            "declaration": 1,
+            "launch-attempt": 1,
+            "launch-history": 1,
+            "design-delivery": 1,
+            "machine-peer": 1
+          },
+          "chronology": [
+            {
+              "sequence": 4,
+              "kind": "declaration"
+            },
+            {
+              "sequence": 5,
+              "kind": "launch-attempt"
+            },
+            {
+              "sequence": 6,
+              "kind": "launch-history"
+            },
+            {
+              "sequence": 7,
+              "kind": "design-delivery",
+              "round": 2,
+              "site": 1
+            },
+            {
+              "sequence": 8,
+              "kind": "machine-peer",
+              "operation": "inference-forward",
+              "at": "2026-11-22T14:55:30.661Z"
+            }
+          ],
+          "binding": {
+            "bytes": 7621,
+            "sha256": "eac68e942094043a818f34a6893954cec6f263648b1b7a99f93596efc3ddbdb0",
+            "lastModifiedNs": 1795359331789818379
+          }
+        }
+      }
+    }
+  ],
+  "retainedOriginalArtifactsByDigest": {
+    "nativeLog": {
+      "bytes": 43431,
+      "sha256": "c36b3720dd88f50aeb40f458609491e7894686fe48e49d0e864c106510f2396c",
+      "lastModifiedNs": 1795359377365479481
+    },
+    "cut": {
+      "bytes": 137298,
+      "sha256": "a7ac280cf346d0bb087951f4bc7dcbc94f1e9ebc9ae6c759bc7a20226a5c4ad9",
+      "lastModifiedNs": 1795359200224899760
+    },
+    "failure": {
+      "bytes": 40323,
+      "sha256": "d9590d7eee971afc3e6ea9f382e310829cedfd4b4d25ea2f895d3d6f4e4f6d84",
+      "lastModifiedNs": 1795359377196477033
+    }
+  }
+}

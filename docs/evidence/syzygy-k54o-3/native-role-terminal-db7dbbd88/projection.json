@@ -1,0 +1,930 @@
+{
+  "traceSha256": "88eeee615034862d920f1c4f66f20c1f7976f80ee454bd9f16d67aa177b93f9d",
+  "eventCount": 22423,
+  "componentCounts": {
+    "authority": 11824,
+    "broker": 28,
+    "connection": 284,
+    "held-authority": 8933,
+    "host": 10,
+    "ordered": 42,
+    "peer-current": 134,
+    "peer-effect": 22,
+    "process": 6,
+    "relay": 119,
+    "sampler": 1013,
+    "supervisor": 8
+  },
+  "firstResumedFailure": {
+    "component": "supervisor",
+    "stage": "failure",
+    "event": "role-ended",
+    "resumed": true,
+    "at": 236371.186101
+  },
+  "freshLaunch": {
+    "start": {
+      "component": "sampler",
+      "stage": "child",
+      "event": "spawn",
+      "detail": "none",
+      "elapsed": 0,
+      "launch": 2,
+      "sample": 0,
+      "at": 194266.119812
+    },
+    "terminal": [
+      {
+        "component": "process",
+        "event": "exit",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 236277.896595
+      },
+      {
+        "component": "process",
+        "event": "close",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 236368.647663
+      },
+      {
+        "component": "process",
+        "event": "finished",
+        "code": null,
+        "launch": 2,
+        "detail": "inspection-failed",
+        "signal": "SIGTERM",
+        "at": 236370.943342
+      }
+    ],
+    "stop": {
+      "component": "sampler",
+      "stage": "child",
+      "event": "stop",
+      "detail": "inspection-failed",
+      "elapsed": 0,
+      "launch": 2,
+      "sample": 62,
+      "at": 236270.859042
+    },
+    "inspection": {
+      "first": {
+        "component": "sampler",
+        "stage": "storage",
+        "event": "timer",
+        "detail": "deadline",
+        "elapsed": 1132.999994999991,
+        "launch": 2,
+        "sample": 62,
+        "at": 236270.207119
+      },
+      "rowsForFailingSample": [
+        {
+          "component": "sampler",
+          "stage": "census",
+          "event": "begin",
+          "detail": "cadence",
+          "elapsed": 0.004147999978158623,
+          "launch": 2,
+          "sample": 62,
+          "at": 235137.211503
+        },
+        {
+          "component": "sampler",
+          "stage": "storage",
+          "event": "begin",
+          "detail": "none",
+          "elapsed": 0.08071199999540113,
+          "launch": 2,
+          "sample": 62,
+          "at": 235137.287777
+        },
+        {
+          "component": "sampler",
+          "stage": "verify",
+          "event": "begin",
+          "detail": "none",
+          "elapsed": 0.10715199998230673,
+          "launch": 2,
+          "sample": 62,
+          "at": 235137.314117
+        },
+        {
+          "component": "sampler",
+          "stage": "storage",
+          "event": "timer",
+          "detail": "deadline",
+          "elapsed": 1132.999994999991,
+          "launch": 2,
+          "sample": 62,
+          "at": 236270.207119
+        },
+        {
+          "component": "sampler",
+          "stage": "storage",
+          "event": "rejected",
+          "detail": "none",
+          "elapsed": 1133.2166739999957,
+          "launch": 2,
+          "sample": 62,
+          "at": 236270.423849
+        },
+        {
+          "component": "sampler",
+          "stage": "child",
+          "event": "stop",
+          "detail": "inspection-failed",
+          "elapsed": 0,
+          "launch": 2,
+          "sample": 62,
+          "at": 236270.859042
+        },
+        {
+          "component": "sampler",
+          "stage": "storage",
+          "event": "settled",
+          "detail": "none",
+          "elapsed": 1133.7994159999944,
+          "launch": 2,
+          "sample": 62,
+          "at": 236271.00653
+        },
+        {
+          "component": "sampler",
+          "stage": "storage-walk",
+          "event": "guard-refused",
+          "detail": "inactive",
+          "elapsed": 1133.9368859999813,
+          "launch": 2,
+          "sample": 62,
+          "at": 236271.14394
+        },
+        {
+          "component": "sampler",
+          "stage": "verify",
+          "event": "return",
+          "detail": "true",
+          "elapsed": 1228.356728999992,
+          "launch": 2,
+          "sample": 62,
+          "at": 236365.564084
+        },
+        {
+          "component": "sampler",
+          "stage": "process-walk",
+          "event": "rejected",
+          "detail": "none",
+          "elapsed": 1228.6896179999749,
+          "launch": 2,
+          "sample": 62,
+          "at": 236365.896753
+        }
+      ],
+      "overlappingPhases": [
+        {
+          "component": "authority",
+          "check": 1185,
+          "stage": "first-settlement",
+          "beginFromSampleMs": 724.708,
+          "endFromSampleMs": 724.727,
+          "outcome": "return",
+          "openAtFirstRefusal": false
+        },
+        {
+          "component": "authority",
+          "check": 1185,
+          "stage": "first-effect",
+          "beginFromSampleMs": 724.727,
+          "endFromSampleMs": 775.896,
+          "outcome": "return",
+          "openAtFirstRefusal": false
+        },
+        {
+          "component": "authority",
+          "check": 1185,
+          "stage": "independent",
+          "beginFromSampleMs": 775.9,
+          "endFromSampleMs": null,
+          "outcome": null,
+          "openAtFirstRefusal": true
+        }
+      ],
+      "priorCensusCount": 61,
+      "priorConfirmedCount": 61,
+      "overlap": [
+        {
+          "begin": {
+            "component": "peer-effect",
+            "effect": 2,
+            "stage": "exclusive",
+            "event": "begin",
+            "at": 211239.374456
+          },
+          "end": {
+            "component": "peer-effect",
+            "effect": 2,
+            "stage": "exclusive",
+            "event": "refused",
+            "at": 236459.827231
+          },
+          "durationMs": 25220.453,
+          "startFromAnchorMs": -23897.837
+        },
+        {
+          "begin": {
+            "component": "peer-effect",
+            "effect": 2,
+            "stage": "host-effect",
+            "event": "begin",
+            "at": 216786.542488
+          },
+          "end": {
+            "component": "peer-effect",
+            "effect": 2,
+            "stage": "host-effect",
+            "event": "return",
+            "at": 236394.512656
+          },
+          "durationMs": 19607.97,
+          "startFromAnchorMs": -18350.669
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "before-held",
+            "event": "begin",
+            "at": 235137.318224
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "before-held",
+            "event": "true",
+            "at": 235137.402804
+          },
+          "durationMs": 0.085,
+          "startFromAnchorMs": 0.107
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "before-record",
+            "event": "begin",
+            "at": 235137.403385
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "before-record",
+            "event": "true",
+            "at": 235138.455905
+          },
+          "durationMs": 1.053,
+          "startFromAnchorMs": 0.192
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "policy",
+            "event": "begin",
+            "at": 235138.457388
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 488,
+            "stage": "policy",
+            "event": "true",
+            "at": 236364.068497
+          },
+          "durationMs": 1225.611,
+          "startFromAnchorMs": 1.246
+        },
+        {
+          "begin": {
+            "component": "authority",
+            "stage": "first-settlement",
+            "event": "begin",
+            "check": 1185,
+            "at": 235861.919778
+          },
+          "end": {
+            "component": "authority",
+            "stage": "first-settlement",
+            "event": "return",
+            "check": 1185,
+            "at": 235861.938183
+          },
+          "durationMs": 0.018,
+          "startFromAnchorMs": 724.708
+        },
+        {
+          "begin": {
+            "component": "authority",
+            "stage": "first-effect",
+            "event": "begin",
+            "check": 1185,
+            "at": 235861.938584
+          },
+          "end": {
+            "component": "authority",
+            "stage": "first-effect",
+            "event": "return",
+            "check": 1185,
+            "at": 235913.10774
+          },
+          "durationMs": 51.169,
+          "startFromAnchorMs": 724.727
+        },
+        {
+          "begin": {
+            "component": "authority",
+            "stage": "independent",
+            "event": "begin",
+            "check": 1185,
+            "at": 235913.111136
+          },
+          "end": {
+            "component": "authority",
+            "stage": "independent",
+            "event": "return",
+            "check": 1185,
+            "at": 236475.995313
+          },
+          "durationMs": 562.884,
+          "startFromAnchorMs": 775.9
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "before-held",
+            "event": "begin",
+            "at": 235913.114643
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "before-held",
+            "event": "true",
+            "at": 235913.17117
+          },
+          "durationMs": 0.057,
+          "startFromAnchorMs": 775.903
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "before-record",
+            "event": "begin",
+            "at": 235913.17151
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "before-record",
+            "event": "true",
+            "at": 235913.983405
+          },
+          "durationMs": 0.812,
+          "startFromAnchorMs": 775.96
+        },
+        {
+          "begin": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "policy",
+            "event": "begin",
+            "at": 235913.984357
+          },
+          "end": {
+            "component": "held-authority",
+            "check": 489,
+            "stage": "policy",
+            "event": "true",
+            "at": 236474.815984
+          },
+          "durationMs": 560.832,
+          "startFromAnchorMs": 776.773
+        }
+      ]
+    },
+    "sampleCounts": {
+      "census": 62,
+      "confirmed": 61
+    },
+    "sampleTimeDistributions": {
+      "confirm": {
+        "count": 61,
+        "minMs": 36.25,
+        "medianMs": 51.928,
+        "maxMs": 77.579
+      },
+      "current": {
+        "count": 61,
+        "minMs": 0.001,
+        "medianMs": 0.001,
+        "maxMs": 156.664
+      },
+      "process": {
+        "count": 61,
+        "minMs": 0.001,
+        "medianMs": 0.001,
+        "maxMs": 2.004
+      },
+      "storage": {
+        "count": 61,
+        "minMs": 49.796,
+        "medianMs": 179.13,
+        "maxMs": 663.829
+      },
+      "verify": {
+        "count": 62,
+        "minMs": 45.866,
+        "medianMs": 120.624,
+        "maxMs": 1228.25
+      }
+    },
+    "firstInferenceAuditReturn": {
+      "component": "peer-effect",
+      "effect": 2,
+      "stage": "peer-audit",
+      "event": "return",
+      "at": 215396.379092
+    },
+    "firstByComponentAfterAnchor": {
+      "sampler": {
+        "component": "sampler",
+        "stage": "storage",
+        "event": "timer",
+        "detail": "deadline",
+        "elapsed": 1132.999994999991,
+        "launch": 2,
+        "sample": 62,
+        "at": 236270.207119
+      },
+      "relay": {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "close",
+        "event": "poison",
+        "at": 236369.416566
+      },
+      "supervisor": {
+        "component": "supervisor",
+        "stage": "failure",
+        "event": "role-ended",
+        "resumed": true,
+        "at": 236371.186101
+      },
+      "host": {
+        "component": "host",
+        "host": 2,
+        "stage": "request",
+        "event": "poison",
+        "at": 236394.022569
+      },
+      "peer-effect": {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "post-effect-boundary",
+        "event": "refused",
+        "at": 236394.5465
+      },
+      "authority": {
+        "component": "authority",
+        "stage": "second-settlement",
+        "event": "refused",
+        "check": 1185,
+        "at": 236475.99867
+      }
+    },
+    "postAnchorChronology": [
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "peer-audit",
+        "event": "return",
+        "at": 215396.379092,
+        "msFromAnchor": 0.0
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "post-audit-peer",
+        "event": "begin",
+        "at": 215396.379523,
+        "msFromAnchor": 0.0
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "pre-check",
+        "event": "begin",
+        "at": 215396.384672,
+        "msFromAnchor": 0.006
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "pre-check",
+        "event": "return",
+        "at": 215464.021478,
+        "msFromAnchor": 67.642
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "parent",
+        "event": "begin",
+        "at": 215483.16742,
+        "msFromAnchor": 86.788
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "parent",
+        "event": "return",
+        "at": 215842.181104,
+        "msFromAnchor": 445.802
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "mid-check",
+        "event": "begin",
+        "at": 215842.185944,
+        "msFromAnchor": 445.807
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "mid-check",
+        "event": "return",
+        "at": 215902.822577,
+        "msFromAnchor": 506.443
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "kernel",
+        "event": "begin",
+        "at": 215902.827035,
+        "msFromAnchor": 506.448
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "kernel",
+        "event": "return",
+        "at": 216020.401089,
+        "msFromAnchor": 624.022
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "sample-drain",
+        "event": "begin",
+        "at": 216020.833637,
+        "msFromAnchor": 624.455
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "sample-drain",
+        "event": "return",
+        "at": 216618.565536,
+        "msFromAnchor": 1222.186
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "post-check",
+        "event": "begin",
+        "at": 216618.565967,
+        "msFromAnchor": 1222.187
+      },
+      {
+        "component": "peer-current",
+        "check": 14,
+        "edge": "post-audit-peer",
+        "stage": "post-check",
+        "event": "return",
+        "at": 216676.882274,
+        "msFromAnchor": 1280.503
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "post-audit-peer",
+        "event": "return",
+        "at": 216676.908013,
+        "msFromAnchor": 1280.529
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "pre-effect-boundary",
+        "event": "begin",
+        "at": 216676.915697,
+        "msFromAnchor": 1280.537
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "pre-effect-boundary",
+        "event": "return",
+        "at": 216786.5381,
+        "msFromAnchor": 1390.159
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "host-effect",
+        "event": "begin",
+        "at": 216786.542488,
+        "msFromAnchor": 1390.163
+      },
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "request-check",
+        "event": "begin",
+        "at": 216996.796347,
+        "msFromAnchor": 1600.417
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "attempt-current",
+        "event": "begin",
+        "at": 216997.063732,
+        "msFromAnchor": 1600.685
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "attempt-current",
+        "event": "return",
+        "at": 217584.794506,
+        "msFromAnchor": 2188.415
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "current-drain",
+        "event": "begin",
+        "at": 217584.803403,
+        "msFromAnchor": 2188.424
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "current-drain",
+        "event": "return",
+        "at": 217654.281058,
+        "msFromAnchor": 2257.902
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "product-authority",
+        "event": "return",
+        "at": 217812.902475,
+        "msFromAnchor": 2416.523
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "renew-render",
+        "event": "begin",
+        "at": 217866.21845,
+        "msFromAnchor": 2469.839
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "renew-render",
+        "event": "return",
+        "at": 230748.043922,
+        "msFromAnchor": 15351.665
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "renew-delivery",
+        "event": "begin",
+        "at": 231154.000579,
+        "msFromAnchor": 15757.621
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "renew-delivery",
+        "event": "return",
+        "at": 233566.134794,
+        "msFromAnchor": 18169.756
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "delivery-assert",
+        "event": "begin",
+        "at": 233566.246435,
+        "msFromAnchor": 18169.867
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "delivery-assert",
+        "event": "return",
+        "at": 234218.603305,
+        "msFromAnchor": 18822.224
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "delivery-assert",
+        "event": "begin",
+        "at": 234218.768307,
+        "msFromAnchor": 18822.389
+      },
+      {
+        "component": "ordered",
+        "round": 2,
+        "stage": "delivery-assert",
+        "event": "return",
+        "at": 234983.019491,
+        "msFromAnchor": 19586.64
+      },
+      {
+        "component": "process",
+        "event": "exit",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 236277.896595,
+        "msFromAnchor": 20881.518
+      },
+      {
+        "component": "process",
+        "event": "close",
+        "code": null,
+        "launch": 2,
+        "detail": "none",
+        "signal": "SIGTERM",
+        "at": 236368.647663,
+        "msFromAnchor": 20972.269
+      },
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "close",
+        "event": "begin",
+        "at": 236368.951788,
+        "msFromAnchor": 20972.573
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "close",
+        "event": "poison",
+        "at": 236369.416566,
+        "msFromAnchor": 20973.037
+      },
+      {
+        "component": "process",
+        "event": "finished",
+        "code": null,
+        "launch": 2,
+        "detail": "inspection-failed",
+        "signal": "SIGTERM",
+        "at": 236370.943342,
+        "msFromAnchor": 20974.564
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-observed",
+        "event": "inspection-failed",
+        "resumed": true,
+        "at": 236371.09016,
+        "msFromAnchor": 20974.711
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-expected",
+        "event": "refused",
+        "resumed": true,
+        "at": 236371.150644,
+        "msFromAnchor": 20974.772
+      },
+      {
+        "component": "supervisor",
+        "stage": "failure",
+        "event": "role-ended",
+        "resumed": true,
+        "at": 236371.186101,
+        "msFromAnchor": 20974.807
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-audit",
+        "event": "begin",
+        "resumed": true,
+        "at": 236371.25448,
+        "msFromAnchor": 20974.875
+      },
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "request",
+        "event": "poison",
+        "at": 236394.022569,
+        "msFromAnchor": 20997.643
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "host-effect",
+        "event": "return",
+        "at": 236394.512656,
+        "msFromAnchor": 20998.134
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "post-effect-boundary",
+        "event": "begin",
+        "at": 236394.513327,
+        "msFromAnchor": 20998.134
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "post-effect-boundary",
+        "event": "refused",
+        "at": 236394.5465,
+        "msFromAnchor": 20998.167
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "raw",
+        "event": "closed",
+        "at": 236445.406521,
+        "msFromAnchor": 21049.027
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "stream",
+        "event": "closed",
+        "detail": "raw",
+        "bound": 0,
+        "at": 236445.429264,
+        "msFromAnchor": 21049.05
+      },
+      {
+        "component": "peer-effect",
+        "effect": 2,
+        "stage": "exclusive",
+        "event": "refused",
+        "at": 236459.827231,
+        "msFromAnchor": 21063.448
+      },
+      {
+        "component": "supervisor",
+        "stage": "terminal-audit",
+        "event": "refused",
+        "resumed": true,
+        "at": 236618.889488,
+        "msFromAnchor": 21222.51
+      }
+    ],
+    "postAnchorChronologyPopulation": 49
+  }
+}

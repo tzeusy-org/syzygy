@@ -1,0 +1,1133 @@
+diff --git a/packages/polaris-dossier/src/session-broker.ts b/packages/polaris-dossier/src/session-broker.ts
+index 3e1bf67b3..c4088fe6d 100644
+--- a/packages/polaris-dossier/src/session-broker.ts
++++ b/packages/polaris-dossier/src/session-broker.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import * as net from 'node:net';
+ import path from 'node:path';
+@@ -17,6 +18,9 @@ export interface SessionBroker {
+   readonly socket: string;
+   close(): Promise<{ readonly pendingInvocations: number; readonly termination: 'settled' | 'Unknown' }>;
+ }
++const transportTrace = channel('owned-f3-db7');
++let transportBrokerOrdinal = 0;
++
+ const FAILURE = '{"ok":false,"reason":"session-broker-unavailable"}\n';
+ export type ReleaseReply = (reply: unknown, revalidate?: () => void) => void;
+ 
+@@ -47,20 +51,28 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+   const bounded = Object.freeze({ ...limits });
+   const sockets = new Set<net.Socket>();
+   let pending = 0, poisoned = false, closing = false;
+-  const poison = (): void => { poisoned = true; try { onFault(); } catch { /* Safe fixed transport outcome only. */ } };
++  const broker = ++transportBrokerOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'broker', broker, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!poisoned) note(stage, 'poison');
++    poisoned = true; try { onFault(); } catch { /* Safe fixed transport outcome only. */ }
++  };
+   const server = net.createServer({ allowHalfOpen: true, pauseOnConnect: !fixture }, raw => { void (async () => {
++    note('raw', 'begin');
+     sockets.add(raw);
+     // Install handlers even for refused connections: a peer reset must never
+     // escape as a platform diagnostic or retain a connection slot.
+-    raw.on('error', () => undefined);
+-    raw.once('close', () => { sockets.delete(raw); });
++    raw.on('error', () => note('raw', 'refused'));
++    raw.once('close', () => { sockets.delete(raw); note('raw', 'closed'); });
+     if (closing || poisoned || sockets.size > bounded.connections || pending >= bounded.invocations) {
+-      raw.destroy(); return;
++      note('raw-limit', 'refused'); raw.destroy(); return;
+     }
+-    const connection: Duplex | null = fixture ? raw : await openSessionMachineConnection(raw, machine!, { bytes: bounded.maxBytes, milliseconds: bounded.milliseconds });
+-    if (connection === null) { poison(); raw.destroy(); return; }
++    const connection: Duplex | null = fixture ? raw : await openSessionMachineConnection(raw, machine!, { bytes: bounded.maxBytes, milliseconds: bounded.milliseconds }, 'broker');
++    if (connection === null) { poison('raw-open'); raw.destroy(); return; }
+     const context = fixture ? null : sessionMachineEffectContext(connection);
+-    if (!fixture && context === null) { poison(); connection.destroy(); return; }
++    if (!fixture && context === null) { poison('context'); connection.destroy(); return; }
+     const chunks: Buffer[] = [];
+     let size = 0, completed = false;
+     const deadline = performance.now() + bounded.milliseconds;
+@@ -81,13 +93,13 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+     };
+     // This deadline also bounds flushing the reply to a non-reading peer.
+     // The invocation retains its slot until its own promise actually settles.
+-    const timer = setTimeout(() => { poison(); completed = true; connection.destroy(); }, bounded.milliseconds);
+-    connection.on('error', () => { poison(); clearTimeout(timer); completed = true; });
++    const timer = setTimeout(() => { poison('frame-deadline'); completed = true; connection.destroy(); }, bounded.milliseconds);
++    connection.on('error', () => { poison('stream-error'); clearTimeout(timer); completed = true; });
+     connection.on('close', () => { sockets.delete(raw); clearTimeout(timer); completed = true; });
+     connection.on('data', (chunk: Buffer) => {
+       if (completed) return;
+       size += chunk.length;
+-      if (size > bounded.maxBytes) { poison(); finish(FAILURE); connection.destroy(); return; }
++      if (size > bounded.maxBytes) { poison('frame-size'); finish(FAILURE); connection.destroy(); return; }
+       chunks.push(chunk);
+     });
+     connection.once('end', () => { void (async () => {
+@@ -97,7 +109,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+         const bytes = Buffer.concat(chunks, size);
+         if (bytes.length === 0 || bytes.at(-1) !== 10 || bytes.indexOf(10) !== bytes.length - 1) throw new Error();
+         value = parseBoundedJson(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes.subarray(0, -1)), bounded);
+-      } catch { poison(); finish(FAILURE); return; }
++      } catch { poison('frame-parse'); finish(FAILURE); return; }
+       // Recheck after the complete frame: simultaneous open connections may
+       // all have arrived before any invocation consumed a slot.
+       if (closing || poisoned || pending >= bounded.invocations) { finish(FAILURE); return; }
+@@ -105,10 +117,10 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+       try {
+         const reply = await invoke(value, release, context);
+         if (!completed) release(reply);
+-      } catch { poison(); finish(FAILURE); }
++      } catch { poison('invocation'); finish(FAILURE); }
+       finally { pending--; }
+     })(); });
+-  })().catch(() => { poison(); raw.destroy(); }); });
++  })().catch(() => { poison('raw-exception'); raw.destroy(); }); });
+   // Extra connections receive no authority; the callback's lower bound also
+   // covers environments where maxConnections is handled differently.
+   server.maxConnections = bounded.connections;
+@@ -119,7 +131,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
+       server.listen(socket, () => { server.off('error', failed); resolve(); });
+     });
+     if (!fixture && !(await prepareSessionMachineTransport(machine!, server))) throw new Error('session-broker-start-failed');
+-    server.on('error', poison);
++    server.on('error', () => poison('listener-error'));
+     fs.chmodSync(socket, 0o600);
+   } catch {
+     server.close(); throw new Error('session-broker-start-failed');
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 4a10b849f..109783191 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { spawn } from 'node:child_process';
+ import { createHash } from 'node:crypto';
+ import { constants, type Stats } from 'node:fs';
+@@ -20,17 +21,19 @@ export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupM
+ export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]: number };
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
++const resumeTrace = channel('owned-f3-db7');
++let resumeLaunchOrdinal = 0;
+ const refused = (): Error => new Error('url-session-launch-refused');
+ const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+ /** Bounds waiting, not cancellation of an arbitrary caller-owned callback. */
+-async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number): Promise<T> {
++async function bounded<T>(operation: () => T | Promise<T>, milliseconds: number, onTimeout?: () => void): Promise<T> {
+   const deadline = performance.now() + Math.max(1, milliseconds);
+   let timer: ReturnType<typeof setTimeout> | undefined;
+   const timeout = new Promise<never>((_resolve, reject) => {
+     const expire = (): void => {
+       // A timer callback can arrive early when its clock rounds the delay.
+       const remaining = deadline - performance.now();
+-      if (remaining <= 0) reject(refused());
++      if (remaining <= 0) { onTimeout?.(); reject(refused()); }
+       else timer = setTimeout(expire, Math.ceil(remaining));
+     };
+     expire();
+@@ -371,6 +374,17 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+   try { child = spawn('/usr/bin/prlimit', processArgs(state.args, limits),
+     { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
+   } catch { await bounded(closeHost, limits.cleanupMilliseconds).catch(() => {}); throw refused(); }
++  const launch = state.profile.input.binding.role === 'design' ? ++resumeLaunchOrdinal : 0;
++  let sampleOrdinal = 0;
++  const note = (stage: string, event: string, detail = 'none', elapsed = 0): void => {
++    if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'sampler', stage, event, detail,
++      elapsed, launch, sample: sampleOrdinal, at: performance.now() });
++  };
++  const noteTerminal = (event: string, code: number | null, signal: string | null, detail = 'none'): void => {
++    if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'process', event, code, launch, detail,
++      signal: signal === null || signal === 'SIGTERM' || signal === 'SIGKILL' ? signal : 'other', at: performance.now() });
++  };
++  note('child', 'spawn');
+   const stdout = createHash('sha256'), stderr = createHash('sha256'); let outBytes = 0, errBytes = 0;
+   let reason: UrlSessionLaunchOutcome['outcome'] = 'exited', finishedCapture = false, exited = false, closed = false;
+   let exitCode: number | null = null, signalName: string | null = null, sampledStorageBytes: number | null = null, peakProcesses: number | null = null;
+@@ -383,6 +397,7 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     // are still closing. A cleanup request must preserve that terminal result.
+     if (why !== 'stopped' || !exited) reason = why;
+     if (endTimer !== undefined) return;
++    note('child', 'stop', why);
+     signal('SIGTERM');
+     killTimer = setTimeout(() => signal('SIGKILL'), Math.min(250, limits.cleanupMilliseconds));
+     endTimer = setTimeout(wake, limits.cleanupMilliseconds);
+@@ -393,48 +408,84 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     if (outBytes + errBytes > limits.outputBytes) stop('output-limit');
+   };
+   child.stdout!.on('data', (bytes: Buffer) => capture(bytes, true)); child.stderr!.on('data', (bytes: Buffer) => capture(bytes, false));
+-  child.once('error', () => { reason = 'launch-refused'; wake(); });
+-  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; });
+-  child.once('close', () => { closed = true; wake(); });
++  child.once('error', () => { reason = 'launch-refused'; noteTerminal('error', null, null); wake(); });
++  child.once('exit', (code, sig) => { exited = true; exitCode = code; signalName = sig; noteTerminal('exit', code, sig); });
++  child.once('close', () => { closed = true; noteTerminal('close', exitCode, signalName); wake(); });
+   let pendingSample: Promise<void> | undefined;
+   const sample = setInterval(() => {
+     if (exited || finishedCapture || pendingSample !== undefined || reason !== 'exited') return;
+     let sampleActive = true;
+     const sampleBegan = performance.now();
+-    const checkSample = (): void => {
+-      if (!sampleActive || exited || finishedCapture || reason !== 'exited' || performance.now() - sampleBegan >= limits.inspectionMilliseconds) throw refused();
++    const sampleId = ++sampleOrdinal;
++    let phase = 'storage';
++    let firstRefusal = true;
++    const mark = (stage: string, event: string, detail = 'none'): void => {
++      if (launch !== 0 && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'sampler', stage, event, detail,
++        elapsed: performance.now() - sampleBegan, launch, sample: sampleId, at: performance.now() });
++    };
++    mark('census', 'begin', 'cadence');
++    const checkSample = (source: string): void => {
++      const why = !sampleActive ? 'inactive' : exited ? 'exited' : finishedCapture ? 'capture-finished'
++        : reason !== 'exited' ? 'stopping' : performance.now() - sampleBegan >= limits.inspectionMilliseconds ? 'deadline' : null;
++      if (why !== null) {
++        if (firstRefusal) { firstRefusal = false; mark(source, 'guard-refused', why); }
++        throw refused();
++      }
+     };
+     // Cadence and completion are separate finite limits. Other native roles
+     // and the shared host may delay descriptor IO; admit no partial census.
+     pendingSample = bounded(async () => {
+       // The walks share a deadline. Keep storage's earlier refusal and
+       // publication order even if the process walk completes first.
+-      const processCount = child.pid === undefined ? undefined : descendants(child.pid, limits.processes, checkSample).catch(() => null);
++      const processCount = child.pid === undefined ? undefined
++        : descendants(child.pid, limits.processes, () => checkSample('process-walk')).catch(() => {
++          mark('process-walk', 'rejected'); return null;
++        });
+       const authority = state.inspectionAuthority;
+       // Verification reads authority only. Census refusal takes precedence and
+       // the exact live guard runs when both the census and verification settle.
++      const verify = authority?.verify;
+       const verification = authority === undefined ? undefined
+-        : Promise.resolve().then(authority.verify).then(result => result === true, () => false);
+-      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample);
+-      checkSample();
++        : Promise.resolve().then(() => { mark('verify', 'begin'); return verify!(); }).then(result => {
++          mark('verify', 'return', result === true ? 'true' : 'false');
++          return result === true;
++        }, () => { mark('verify', 'rejected'); return false; });
++      mark('storage', 'begin');
++      const storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, () => checkSample('storage-walk'));
++      mark('storage', 'return');
++      checkSample('storage-return');
+       sampledStorageBytes = storageBytes;
+       if (sampledStorageBytes > limits.storageBytes) { stop('storage-limit'); return; }
+       if (processCount !== undefined) {
++        phase = 'process';
++        mark('process', 'begin');
+         const count = await processCount;
+-        checkSample();
++        mark('process', 'return', count === null ? 'unavailable' : 'counted');
++        checkSample('process-return');
+         if (count === null) throw refused();
+         peakProcesses = Math.max(peakProcesses ?? 0, count);
+         if (count > limits.processes) { stop('process-limit'); return; }
+       }
++      phase = 'current';
++      mark('current', 'begin');
+       let stillCurrent = await (verification ?? state.current());
+-      checkSample();
++      mark('current', 'return', stillCurrent === true ? 'true' : 'false');
++      checkSample('current-return');
+       if (authority !== undefined) {
++        phase = 'confirm';
++        mark('confirm', 'begin');
+         stillCurrent = authority.confirm(stillCurrent === true);
+-        checkSample();
++        mark('confirm', 'return', stillCurrent === true ? 'true' : 'false');
++        checkSample('confirm-return');
+       }
+       if (stillCurrent !== true) stop('inspection-failed');
+-    }, limits.inspectionMilliseconds).catch(() => { if (!exited && !finishedCapture) stop('inspection-failed'); })
+-      .finally(() => { sampleActive = false; pendingSample = undefined; });
++    }, limits.inspectionMilliseconds, () => mark(phase, 'timer', 'deadline')).catch(() => {
++      mark(phase, 'rejected');
++      if (!exited && !finishedCapture) stop('inspection-failed');
++    }).finally(() => {
++      mark(phase, 'settled');
++      sampleActive = false; pendingSample = undefined;
++    });
+   }, limits.sampleMilliseconds);
+   const wall = setTimeout(() => stop('wall-limit'), limits.milliseconds);
+   const finished = (async (): Promise<UrlSessionLaunchOutcome> => {
+@@ -449,16 +500,21 @@ export async function launchRestrictedUrlSession(input: { readonly preparation:
+     const tool = candidate && ['settled', 'Unknown'].includes(candidate.termination)
+       && Number.isSafeInteger(candidate.pendingInvocations) && candidate.pendingInvocations >= 0
+       && (candidate.termination !== 'settled' || candidate.pendingInvocations === 0) ? candidate : null;
+-    return deepFreeze({ outcome: reason, exitCode, signal: signalName, viewTermination: exited && closed ? 'view-exited' : 'Unknown',
++    const outcome: UrlSessionLaunchOutcome = deepFreeze({ outcome: reason, exitCode, signal: signalName, viewTermination: exited && closed ? 'view-exited' : 'Unknown',
+       groupTermination: !groupExists() ? 'confirmed' : 'Unknown', toolTermination: tool?.termination ?? 'Unknown', pendingInvocations: tool?.pendingInvocations ?? null,
+       stdout: { bytes: outBytes, sha256: stdout.digest('hex') }, stderr: { bytes: errBytes, sha256: stderr.digest('hex') },
+-      sampledStorageBytes, peakProcesses, aggregateEnforcement: 'sampled-stop-only', betweenSamples: 'Unknown' });
++      sampledStorageBytes, peakProcesses, aggregateEnforcement: 'sampled-stop-only' as const, betweenSamples: 'Unknown' as const });
++    noteTerminal('finished', outcome.exitCode, outcome.signal, outcome.outcome);
++    return outcome;
+   })();
+   if (child.pid === undefined) { await finished; throw refused(); }
+   const launched: UrlSessionProcess = Object.freeze({ pid: child.pid, commandSha256: input.preparation.commandSha256, finished,
+     waitForSample: async () => {
++      note('wait', 'begin', pendingSample === undefined ? 'idle' : 'pending');
+       await pendingSample;
+-      return !exited && !finishedCapture && reason === 'exited';
++      const current = !exited && !finishedCapture && reason === 'exited';
++      note('wait', 'return', current ? 'true' : 'false');
++      return current;
+     },
+     stop: () => { stop('stopped'); return finished; } });
+   launchedProcesses.set(launched, () => reason === 'exited' && !exited && !closed && !finishedCapture && child.exitCode === null && child.signalCode === null);
+diff --git a/packages/polaris-dossier/src/session-machine-transport.ts b/packages/polaris-dossier/src/session-machine-transport.ts
+index 5b4ca56bd..f2332951c 100644
+--- a/packages/polaris-dossier/src/session-machine-transport.ts
++++ b/packages/polaris-dossier/src/session-machine-transport.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { Socket, Server } from 'node:net';
+ import { AsyncLocalStorage } from 'node:async_hooks';
+ import { Duplex } from 'node:stream';
+@@ -22,6 +23,9 @@ interface TransportPorts {
+   /** Complete protected issuance while the captured raw socket remains paused. */
+   readonly authorize?: (peer: UrlMachinePeer, stillOpening: () => boolean) => Promise<boolean>;
+ }
++let transportOrdinal = 0;
++const transportTrace = channel('owned-f3-db7');
++
+ const transports = new WeakMap<SessionMachineTransport, TransportPorts>();
+ interface ConnectionState {
+   readonly raw: Socket; readonly peer: UrlMachinePeer; readonly stream: Duplex;
+@@ -75,43 +79,66 @@ export function stopSessionMachineIngress(stream: Duplex): boolean {
+  * its sole reader; only checked chunks enter this bounded parser-facing stream.
+  * Native writes require the active effect's immediate boundary guard. */
+ export async function openSessionMachineConnection(raw: Socket, transport: SessionMachineTransport,
+-  limits: { readonly bytes: number; readonly milliseconds: number }): Promise<Duplex | null> {
++  limits: { readonly bytes: number; readonly milliseconds: number }, traceEdge: 'relay' | 'broker' | 'other' = 'other'): Promise<Duplex | null> {
+   const ports = transports.get(transport), began = performance.now();
+   const deadline = began + limits.milliseconds, captureDeadline = Math.min(deadline, began + 5000);
++  const connection = ++transportOrdinal;
++  const note = (stage: string, event: string, detail = 'none', bound = 0): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'connection', edge: traceEdge, connection,
++      stage, event, detail, bound, at: performance.now() });
++  };
+   if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
+     || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
+     || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
+-    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
++    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) {
++    note('open', 'refused', 'initial'); return null;
++  }
++  note('open', 'begin', 'none', limits.milliseconds);
+   let expired = false;
+-  const before = async <T>(until: number, work: () => Promise<T>): Promise<T | null> => {
++  const before = async <T>(stage: 'capture' | 'authorize', until: number, work: () => Promise<T>): Promise<T | null> => {
+     let timer: ReturnType<typeof setTimeout> | undefined;
+     try {
+       return await Promise.race([new Promise<null>(resolve => {
+-        timer = setTimeout(() => { expired = true; resolve(null); }, Math.max(1, until - performance.now()));
++        timer = setTimeout(() => { expired = true; note(stage, 'timer', 'deadline'); resolve(null); }, Math.max(1, until - performance.now()));
+       }), work()]);
+     } finally { clearTimeout(timer); }
+   };
+   let peer: UrlMachinePeer | null = null;
+   try {
+-    peer = await before(captureDeadline, async () => {
++    note('capture', 'begin', 'none', captureDeadline - began);
++    peer = await before('capture', captureDeadline, async () => {
+       const captured = await ports.accept(raw);
++      note('capture-port', 'return', captured === null ? 'refused' : 'accepted');
+       if (captured !== null && (expired || performance.now() >= captureDeadline)) {
++        note('capture', 'refused', 'late');
+         closeUrlMachinePeer(captured);
+         return null;
+       }
+       return captured;
+     });
++    note('capture', 'return', peer === null ? 'refused' : 'accepted');
+     if (peer === null) return null;
+     const captured = peer;
+     const stillOpening = (): boolean => !expired && performance.now() < deadline
+       && !raw.destroyed && raw.isPaused() && raw.readableLength === 0 && isUrlMachinePeerFor(captured, raw);
+     const authorize = ports.authorize;
+-    if (!stillOpening() || (authorize !== undefined
+-      && (await before(deadline, () => authorize(captured, stillOpening)) !== true || !stillOpening()))) {
++    if (!stillOpening()) {
++      note('authorize', 'refused', 'before');
+       closeUrlMachinePeer(captured);
+       return null;
+     }
++    if (authorize !== undefined) {
++      note('authorize', 'begin', 'none', Math.max(0, deadline - performance.now()));
++      const authorized = await before('authorize', deadline, () => authorize(captured, stillOpening));
++      note('authorize', 'return', authorized === true ? 'accepted' : authorized === false ? 'refused' : 'deadline');
++      if (authorized !== true || !stillOpening()) {
++        if (authorized === true) note('authorize', 'refused', 'after');
++        closeUrlMachinePeer(captured);
++        return null;
++      }
++    }
+   } catch {
++    note('open', 'refused', 'exception');
+     if (peer !== null) closeUrlMachinePeer(peer);
+     return null;
+   }
+@@ -123,7 +150,9 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+   const stream = new Duplex({ allowHalfOpen: true, autoDestroy: false, readableHighWaterMark: 65_536, writableHighWaterMark: 65_536,
+     read() { resume?.(); resume = null; },
+     write(chunk: Buffer, _encoding, done) {
+-      if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) { done(new Error('session-machine-transport-unavailable')); return; }
++      if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline) {
++        note('stream-write', 'refused', 'boundary'); done(new Error('session-machine-transport-unavailable')); return;
++      }
+       // HTTP completion can write no bytes after the bridge consumed its full
+       // response. Keep the guard, but perform no needless write to that peer.
+       if (chunk.length === 0) { done(); return; }
+@@ -156,8 +185,11 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+     },
+   });
+   contexts.set(context, state); connections.set(stream, context);
+-  const lifetime = setTimeout(() => stream.destroy(new Error('session-machine-transport-unavailable')), Math.max(1, deadline - performance.now()));
+-  raw.once('close', () => stream.destroy()); raw.on('error', () => stream.destroy());
++  const lifetime = setTimeout(() => {
++    note('stream', 'timer', 'deadline'); stream.destroy(new Error('session-machine-transport-unavailable'));
++  }, Math.max(1, deadline - performance.now()));
++  raw.once('close', () => { note('stream', 'closed', 'raw'); stream.destroy(); });
++  raw.on('error', () => { note('stream', 'refused', 'raw'); stream.destroy(); });
+   stream.on('error', () => undefined);
+   stream.once('finish', () => { setImmediate(() => stream.destroy()); });
+   const pump = async (): Promise<void> => {
+@@ -166,7 +198,10 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+     try {
+       while (!ended && !stream.destroyed && !state.ingressComplete && performance.now() < deadline) {
+         const chunk = await readUrlMachinePeer(selected);
+-        if (!chunk || ended || stream.destroyed || performance.now() >= deadline) throw new Error();
++        if (!chunk || ended || stream.destroyed || performance.now() >= deadline) {
++          note('stream-read', 'refused', chunk === null ? 'native-null' : ended || stream.destroyed ? 'closed' : 'deadline');
++          throw new Error();
++        }
+         if (state.ingressComplete) {
+           if (chunk.kind === 'data') throw new Error();
+           return;
+@@ -179,10 +214,11 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
+         if (!stream.push(Buffer.from(chunk.bytes)) && !ended && !stream.destroyed) await new Promise<void>(resolve => { resume = resolve; });
+       }
+       if (!ended && !state.ingressComplete) stream.destroy(new Error('session-machine-transport-unavailable'));
+-    } catch { stream.destroy(new Error('session-machine-transport-unavailable')); }
++    } catch { note('stream-read', 'refused', 'pump'); stream.destroy(new Error('session-machine-transport-unavailable')); }
+     finally { reading = false; settleIngress(); }
+   };
+   // Let the caller attach its bounded parser before the first checked chunk.
+   setImmediate(() => { void pump(); });
++  note('open', 'return', 'accepted');
+   return stream;
+ }
+diff --git a/packages/polaris-dossier/src/session-relay.ts b/packages/polaris-dossier/src/session-relay.ts
+index 5782bfe9a..311c1099e 100644
+--- a/packages/polaris-dossier/src/session-relay.ts
++++ b/packages/polaris-dossier/src/session-relay.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import * as http from 'node:http';
+ import * as net from 'node:net';
+@@ -30,6 +31,9 @@ export interface SessionResponseObservation {
+   readonly tool: { readonly id: string; readonly name: SessionTool; readonly inputSha256: string } | null;
+ }
+ export const SESSION_COUNT_TOKENS_PATH = '/v1/messages/count_tokens?beta=true';
++const transportTrace = channel('owned-f3-db7');
++let transportRelayOrdinal = 0;
++
+ const ROUTES = ['/v1/messages', '/v1/messages?beta=true', SESSION_COUNT_TOKENS_PATH] as const;
+ type SessionRelayPath = typeof ROUTES[number];
+ export const SESSION_COUNT_RESPONSE_MAX_BYTES = 1024;
+@@ -187,12 +191,21 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+   const controllers = new Set<AbortController>();
+   const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
+   let pending = false, poisoned = false, closing = false, responseFlushed = false;
++  const relayOrdinal = ++transportRelayOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'relay', role: subject.binding.role,
++      relay: relayOrdinal, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!poisoned) { poisoned = true; note(stage, 'poison'); }
++  };
+   const server = http.createServer({ maxHeaderSize: 16_384, requestTimeout: limits.milliseconds, headersTimeout: Math.min(limits.milliseconds, 10_000) }, (incoming, outgoing) => {
+     const context = fixture ? null : sessionMachineEffectContext(incoming.socket);
+     if ((!fixture && context === null) || pending || poisoned || closing) {
+-      if (!fixture) { poisoned = true; incoming.socket.destroy(); return; }
++      if (!fixture) { poison('http-entry'); incoming.socket.destroy(); return; }
+       outgoing.writeHead(503, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE); incoming.resume(); return;
+     }
++    note('http-entry', 'begin');
+     const route = ROUTES.find(candidate => candidate === incoming.url);
+     const tokenCount = route === SESSION_COUNT_TOKENS_PATH;
+     pending = true;
+@@ -230,7 +243,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+     };
+     const refuse = (status: number): void => {
+       if (terminal) return;
+-      poisoned = true; refusing = true; controller.abort(); incoming.resume();
++      poison('http-refusal'); refusing = true; controller.abort(); incoming.resume();
+       if (!outgoing.headersSent && !outgoing.destroyed) {
+         outgoing.writeHead(status, { 'content-type': 'application/json', connection: 'close' }); outgoing.end(SAFE_FAILURE);
+       } else outgoing.destroy();
+@@ -245,14 +258,14 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       void Promise.resolve().then(() => audit(event('transport-failed', 'Unknown', null))).catch(() => undefined);
+       // An absolute transport deadline includes output backpressure. Destroy
+       // immediately; a complete HTTP error cannot be promised to a stalled peer.
+-      poisoned = true; refusing = true; controller.abort(); incoming.destroy(); outgoing.destroy(); finish();
++      poison('http-deadline'); refusing = true; controller.abort(); incoming.destroy(); outgoing.destroy(); finish();
+     }, limits.milliseconds);
+     outgoing.once('finish', () => {
+       if (writingAdmittedResponse && !terminal && !refusing) responseFlushed = true;
+       finish();
+     });
+-    outgoing.on('close', () => { if (!terminal) { poisoned = true; controller.abort(); finish(); } });
+-    outgoing.on('error', () => { poisoned = true; controller.abort(); outgoing.destroy(); finish(); });
++    outgoing.on('close', () => { if (!terminal) { poison('response-close'); controller.abort(); finish(); } });
++    outgoing.on('error', () => { poison('response-error'); controller.abort(); outgoing.destroy(); finish(); });
+     incoming.on('error', () => refuse(400));
+     if (incoming.method !== 'POST' || route === undefined
+       || !JSON_CONTENT_TYPE.test(incoming.headers['content-type'] ?? '')
+@@ -284,7 +297,9 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       if (terminal || refusing) return;
+       try {
+         if (!fixture && !stopSessionMachineIngress(incoming.socket)) throw new Error('session-machine-transport-unavailable');
+-        if (!(await ports.current()) || terminal) { await auditRefusal(409); return; }
++        note('first-current', 'begin');
++        if (!(await ports.current()) || terminal) { note('first-current', 'refused'); await auditRefusal(409); return; }
++        note('first-current', 'return');
+         const body = Buffer.concat(chunks, size);
+         received = { digest: sha256(body), bytes: body.byteLength };
+         const decision = await effect(boundary => {
+@@ -385,13 +400,16 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+   });
+   const rawSockets = new Set<net.Socket>();
+   const listener = fixture ? server : net.createServer({ allowHalfOpen: true, pauseOnConnect: true }, raw => {
+-    rawSockets.add(raw); raw.on('error', () => undefined); raw.once('close', () => rawSockets.delete(raw));
+-    if (closing || poisoned || rawSockets.size > limits.connections) { raw.destroy(); return; }
+-    void openSessionMachineConnection(raw, machine!, { bytes: limits.requestBytes + 16_384, milliseconds: limits.milliseconds }).then(stream => {
+-      if (!stream || closing || poisoned) { poisoned = true; stream?.destroy(); raw.destroy(); return; }
+-      stream.once('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); });
++    note('raw', 'begin');
++    rawSockets.add(raw); raw.on('error', () => note('raw', 'refused'));
++    raw.once('close', () => { rawSockets.delete(raw); note('raw', 'closed'); });
++    if (closing || poisoned || rawSockets.size > limits.connections) { note('raw-limit', 'refused'); raw.destroy(); return; }
++    void openSessionMachineConnection(raw, machine!, { bytes: limits.requestBytes + 16_384, milliseconds: limits.milliseconds }, 'relay').then(stream => {
++      if (!stream || closing || poisoned) { poison('raw-open'); stream?.destroy(); raw.destroy(); return; }
++      stream.once('error', () => { poison('stream-error'); for (const controller of controllers) controller.abort(); });
++      note('raw-open', 'return');
+       server.emit('connection', stream);
+-    }, () => { poisoned = true; raw.destroy(); });
++    }, () => { poison('raw-exception'); raw.destroy(); });
+   });
+   listener.maxConnections = limits.connections;
+   observe?.(server);
+@@ -401,13 +419,13 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
+       listener.once('error', failed); listener.listen(socket, () => { listener.off('error', failed); resolve(); });
+     });
+     if (!fixture && !(await prepareSessionMachineTransport(machine!, listener))) throw new Error('session-relay-start-failed');
+-    listener.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections();
++    listener.on('error', () => { poison('listener-error'); for (const controller of controllers) controller.abort(); server.closeAllConnections();
+       for (const raw of rawSockets) raw.destroy(); });
+     fs.chmodSync(socket, 0o600);
+   }
+   catch { listener.close(); throw new Error('session-relay-start-failed'); }
+   const relay = Object.freeze({ socket, healthy: () => !poisoned && !closing, responseFlushed: () => responseFlushed && !poisoned && !closing, close: async () => {
+-    closing = true; poisoned = true;
++    closing = true; poison('close');
+     for (const controller of controllers) controller.abort();
+     server.closeAllConnections();
+     for (const raw of rawSockets) raw.destroy();
+diff --git a/packages/polaris-dossier/src/url-machine-peer.ts b/packages/polaris-dossier/src/url-machine-peer.ts
+index 388e72ba3..6087794d4 100644
+--- a/packages/polaris-dossier/src/url-machine-peer.ts
++++ b/packages/polaris-dossier/src/url-machine-peer.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import { open as openFile, realpath as realFilePath, lstat as namedFileStat } from 'node:fs/promises';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+@@ -71,6 +72,8 @@ interface PeerState {
+   readonly executable: fs.BigIntStats; readonly script: fs.BigIntStats | null; readonly command: Buffer;
+   closed: boolean; finished: boolean; reading: boolean; mediating: boolean; chunks: number; bytes: number; lastNow: number;
+ }
++const resumeTrace = channel('owned-f3-db7');
++let resumePeerCheck = 0, resumePeerEffect = 0;
+ const issued = new WeakMap<UrlMachinePeer, PeerState>();
+ const claimed = new WeakSet<Socket>();
+ const listeners = new WeakMap<UrlMachineListener, { readonly server: Server; readonly identity: string; readonly programSha256: string }>();
+@@ -291,21 +294,45 @@ async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
+     return valid === true && (options.effectCurrent === undefined || options.effectCurrent() === true);
+   } finally { clearTimeout(timer); }
+ }
+-async function current(state: PeerState, drainSample = false): Promise<number> {
+-  await yieldToPoll();
+-  check(state);
+-  await yieldToPoll();
+-  // The parent may drain the genuine launcher's in-flight resource sample.
+-  // Preserve current parent and sampled process authority before launching
+-  // the asynchronous helper; the event loop remains available during exec.
+-  if (await parentCurrent(state.options) !== true) throw refused();
+-  check(state);
+-  const { options } = state;
+-  const peerNow = await captureKernelUnixPeerAsync(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
+-  if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
+-  await yieldToPoll();
+-  if (drainSample && !(await options.launch.waitForSample())) throw refused();
+-  return check(state);
++async function current(state: PeerState, drainSample = false, edge = 'capture-or-read'): Promise<number> {
++  const trace = state.options.context.role === 'design' && state.options.context.kind === 'inference-bridge';
++  const checkId = trace ? ++resumePeerCheck : 0;
++  let phase = 'pre-check';
++  const mark = (event: string): void => {
++    if (trace && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'peer-current', check: checkId,
++      edge, stage: phase, event, at: performance.now() });
++  };
++  try {
++    mark('begin');
++    await yieldToPoll();
++    check(state);
++    mark('return');
++    await yieldToPoll();
++    // The parent may drain the genuine launcher's in-flight resource sample.
++    // Preserve current parent and sampled process authority before launching
++    // the asynchronous helper; the event loop remains available during exec.
++    phase = 'parent'; mark('begin');
++    if (await parentCurrent(state.options) !== true) throw refused();
++    mark('return');
++    phase = 'mid-check'; mark('begin');
++    check(state);
++    mark('return');
++    const { options } = state;
++    phase = 'kernel'; mark('begin');
++    const peerNow = await captureKernelUnixPeerAsync(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
++    if (!peerNow || peerNow.pid !== state.native.pid || peerNow.uid !== state.native.uid || peerNow.gid !== state.native.gid) throw refused();
++    mark('return');
++    await yieldToPoll();
++    if (drainSample) {
++      phase = 'sample-drain'; mark('begin');
++      if (!(await options.launch.waitForSample())) throw refused();
++      mark('return');
++    }
++    phase = 'post-check'; mark('begin');
++    const now = check(state);
++    mark('return');
++    return now;
++  } catch (error) { mark('refused'); throw error; }
+ }
+ 
+ /** Capture attests actual current kernel/proc facts, not arbitrary role hashes.
+@@ -426,13 +453,29 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation:
+   const state = issued.get(peer);
+   if (!state || state.mediating) return { ok: false };
+   state.mediating = true; let result: { readonly ok: true; readonly value: T } | undefined;
++  const trace = state.options.context.role === 'design' && operation === 'inference-forward';
++  const effectId = trace ? ++resumePeerEffect : 0;
++  let phase = 'effect-enter';
++  const mark = (event: string): void => {
++    if (trace && resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'peer-effect', effect: effectId,
++      stage: phase, event, at: performance.now() });
++  };
+   try {
+-    await current(state);
++    mark('begin');
++    await current(state, false, 'effect-enter');
++    mark('return');
+     const { options } = state, context = options.context;
+-    if (!context.allowedScopes.includes(operation)) return { ok: false };
++    if (!context.allowedScopes.includes(operation)) { phase = 'scope'; mark('refused'); return { ok: false }; }
++    phase = 'exclusive'; mark('begin');
+     const completed = await options.store.exclusive(context.clientId, context.deadline, async lease => {
+       try {
+-      const now = await current(state), snapshot = await lease.read();
++      phase = 'lease-peer'; mark('begin');
++      const now = await current(state, false, 'lease-peer');
++      mark('return');
++      phase = 'lease-read'; mark('begin');
++      const snapshot = await lease.read();
++      mark('return');
++      phase = 'lease-check'; mark('begin');
+       if (!snapshot || !snapshot.canonical || snapshot.anchor.kind !== 'committed' || !lease.current()
+         || !equal(snapshot.anchor.head.binding, options.binding) || !equal(snapshot.anchor.head, snapshot.audit)
+         || !equal(snapshot.projection, snapshot.anchor.head.record) || sha256(snapshot.canonical) !== snapshot.anchor.head.record.sha256) throw refused();
+@@ -442,12 +485,17 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation:
+       if (!equal(active.verifier, peer.verifier) || record.revokedAt !== null || active.retiredAt !== null || active.revokedAt !== null
+         || !record.scopes.includes(operation) || now < Date.parse(record.issuedAt) || now >= Date.parse(record.expiresAt)
+         || now < Date.parse(active.issuedAt) || now >= Date.parse(active.expiresAt)) throw refused();
++      mark('return');
++      phase = 'peer-audit'; mark('begin');
+       await options.audit({ event: 'machine-peer-effect', clientId: record.clientId, instanceId: active.instanceId, revision: record.revision,
+         runId: record.runId, role: record.role, operation, processIdentitySha256: peer.verifier.processIdentitySha256,
+         channelIdentitySha256: peer.verifier.channelIdentitySha256, at: now });
++      mark('return');
++      phase = 'post-audit-peer'; mark('begin');
+       // Native reattestation can start a fresh inspection. Settle that sample
+       // before the synchronous effect guards, within the same held lease.
+-      await current(state, true);
++      await current(state, true, 'post-audit-peer');
++      mark('return');
+       const effectiveUntil = Math.min(context.deadline, Date.parse(record.expiresAt), Date.parse(active.expiresAt));
+       const boundary = (): boolean => {
+         try {
+@@ -456,14 +504,21 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation:
+           return now !== null && now < effectiveUntil;
+         } catch { return false; }
+       };
++      phase = 'pre-effect-boundary'; mark('begin');
+       if (!boundary()) throw refused();
++      mark('return');
++      phase = 'host-effect'; mark('begin');
+       const value = await effect(boundary);
++      mark('return');
++      phase = 'post-effect-boundary'; mark('begin');
+       if (!boundary()) throw refused();
++      mark('return');
+       result = { ok: true, value };
+-      } catch { result = undefined; }
++      } catch { mark('refused'); result = undefined; }
+     }, options.profile);
++    phase = 'exclusive'; mark(completed && result ? 'return' : 'refused');
+     return completed && result ? result : { ok: false };
+-  } catch { closeState(state); return { ok: false }; }
++  } catch { mark('refused'); closeState(state); return { ok: false }; }
+   finally { state.mediating = false; }
+ }
+ export function closeUrlMachinePeer(peer: UrlMachinePeer): void {
+diff --git a/packages/polaris-dossier/src/url-ordered-design-host.ts b/packages/polaris-dossier/src/url-ordered-design-host.ts
+index 8b9edf38f..0be7b68ec 100644
+--- a/packages/polaris-dossier/src/url-ordered-design-host.ts
++++ b/packages/polaris-dossier/src/url-ordered-design-host.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+ import { isRecord, sha256 } from '@syzygy/support';
+ import { startSessionBroker, type SessionBroker } from './session-broker.js';
+@@ -33,6 +34,9 @@ export interface OrderedDesignHost extends SessionHost {
+   readonly relay: SessionRelay;
+   readTerminal(): ReturnType<Controller['readTerminal']>;
+ }
++const transportTrace = channel('owned-f3-db7');
++let transportHostOrdinal = 0;
++
+ const hosts = new WeakMap<OrderedDesignHost, { readonly profile: OrderedDesignSessionProfile; readonly current: () => boolean }>();
+ export const isOrderedDesignHostFor = (host: unknown, profile: OrderedDesignSessionProfile): boolean => {
+   const selected = host !== null && typeof host === 'object' ? hosts.get(host as OrderedDesignHost) : undefined;
+@@ -57,25 +61,37 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
+   let closing = false, failed = false, started = false, issuedCall: SessionResponseObservation['tool'] = null;
+   let closingPromise: ReturnType<SessionHost['close']> | undefined;
+-  const poison = (): void => { failed = true; void controller?.retire('refused').catch(() => {}); };
++  const hostOrdinal = ++transportHostOrdinal;
++  const note = (stage: string, event: string): void => {
++    if (transportTrace.hasSubscribers) transportTrace.publish({ component: 'host', host: hostOrdinal, stage, event, at: performance.now() });
++  };
++  const poison = (stage: string): void => {
++    if (!failed) note(stage, 'poison');
++    failed = true; void controller?.retire('refused').catch(() => {});
++  };
+   let cancelActivation!: () => void;
+   const cancelled = new Promise<false>(resolve => { cancelActivation = () => resolve(false); });
+   const active = Promise.race([Promise.resolve(input.controller).then(async selected => {
++    note('activation', 'begin');
+     if (!isProductionOrderedDesignSession(selected, profile) || closing || failed || Date.now() >= input.activationDeadline
+       || !(await input.current()) || closing || failed || Date.now() >= input.activationDeadline) {
++      note('activation', 'refused');
+       if (isProductionOrderedDesignSession(selected)) await selected.retire('interrupted').catch(() => {});
+       throw refused();
+     }
+     controller = selected;
+     if (started) clearTimeout(activationTimer);
++    note('activation', 'return');
+     return true;
+-  }), cancelled]).catch(() => { poison(); cancelActivation(); if (started) void close(); return false; });
++  }), cancelled]).catch(() => { poison('activation-rejected'); cancelActivation(); if (started) void close(); return false; });
+   const current = async (): Promise<boolean> => await active && !closing && !failed
+     && await input.current() === true && !closing && !failed;
+   const selectedController = (): Controller => { if (!controller || closing || failed) throw refused(); return controller; };
+-  const activationTimer = setTimeout(() => { poison(); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
++  note('activation-cutoff', 'scheduled');
++  const activationTimer = setTimeout(() => { note('activation-cutoff', 'timer'); poison('activation-cutoff'); cancelActivation(); if (started) void close(); }, Math.max(1, input.activationDeadline - Date.now()));
+   const close: SessionHost['close'] = () => closingPromise ??= (async () => {
+     closing = true;
++    note('close', 'begin');
+     cancelActivation();
+     clearTimeout(activationTimer);
+     await controller?.retire('interrupted').catch(() => { failed = true; });
+@@ -90,7 +106,9 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+       request: async (bytes, _context, route) => {
+         try {
+           if (route === SESSION_COUNT_TOKENS_PATH) throw refused();
++          note('request-check', 'begin');
+           const checked = await selectedController().checkRequest(bytes);
++          note('request-check', checked.ok ? 'return' : 'refused');
+           if (!checked.ok) throw refused();
+           const parsed = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), SESSION_POLICY_LIMITS);
+           if (!isRecord(parsed) || Object.hasOwn(parsed, 'tool_choice')) throw refused();
+@@ -106,7 +124,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+             || (result !== undefined && !admission.originIds.includes(result.id))) throw refused();
+           return { ok: true, body, admission, consumedToolResults: result === undefined ? []
+             : [{ receiptId: result.id, toolUseId: result.toolUseId, digest: result.digest, bytes: result.bytes }] };
+-        } catch { poison(); return { ok: false }; }
++        } catch { poison('request'); return { ok: false }; }
+       },
+       providerHeaders: incoming => {
+         selectedController();
+@@ -121,8 +139,8 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+           await selectedController().observe(event);
+           await input.audit(event);
+           if (event.event === 'response-admitted') issuedCall = event.response?.tool ?? null;
+-          if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) poison();
+-        } catch { poison(); throw refused(); }
++          if (['attempt-refused', 'transport-failed', 'response-refused'].includes(event.event)) poison('relay-audit-outcome');
++        } catch { poison('relay-audit-exception'); throw refused(); }
+       },
+     }, undefined, input.relayMachine);
+     if (closing || failed) throw refused();
+@@ -144,13 +162,19 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
+           issuedCall = null;
+         });
+       });
+-      if (!result.ok) { poison(); throw refused(); }
+-    }, poison, undefined, input.brokerMachine);
++      if (!result.ok) { poison('broker-effect'); throw refused(); }
++    }, () => poison('broker-fault'), undefined, input.brokerMachine);
+     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
+     started = true;
+     if (controller) clearTimeout(activationTimer);
++    note('ready', 'return');
++    let healthStamped = false;
+     const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
+-      healthy: () => !closing && !failed && relay!.healthy(),
++      healthy: () => {
++        const failure = closing ? 'health-closing' : failed ? 'health-poisoned' : !relay!.healthy() ? 'health-relay' : null;
++        if (failure !== null && !healthStamped) { healthStamped = true; note(failure, 'refused'); }
++        return failure === null;
++      },
+       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
+     hosts.set(host, { profile, current: () => !closing && !failed && started && relay!.healthy() });
+     return host;
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index 74e313a8c..d97c89f42 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs/promises';
+ import path from 'node:path';
+ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+@@ -112,8 +113,35 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall
+ 
+ let runtime: UrlRuntime;
+ const cleanup: (() => Promise<unknown>)[] = [];
+-beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+-afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
++const ownedBootstrapChannel = channel('owned-f3-db7');
++const ownedBootstrapRows: unknown[] = [];
++let ownedBootstrapFile: fs.FileHandle | undefined;
++let ownedBootstrapDropped = 0;
++const collectBootstrap = (row: unknown): void => {
++  if (ownedBootstrapRows.length < 65_536) ownedBootstrapRows.push(row);
++  else ownedBootstrapDropped++;
++};
++beforeAll(async () => {
++  const traceFile = process.env['SYZYGY_COMPOSED_DB7_TRACE'];
++  if (traceFile !== undefined) {
++    ownedBootstrapFile = await fs.open(traceFile, 'wx', 0o600);
++    ownedBootstrapChannel.subscribe(collectBootstrap);
++  }
++  await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700);
++  runtime = await buildComposedRuntime();
++}, 60_000);
++afterAll(async () => {
++  try {
++    if (ownedBootstrapFile !== undefined) {
++      ownedBootstrapChannel.unsubscribe(collectBootstrap);
++      const rows = [...ownedBootstrapRows, { component: 'collector', dropped: ownedBootstrapDropped }];
++      try { await ownedBootstrapFile.writeFile(rows.map(row => JSON.stringify(row) + '\n').join('')); }
++      finally { await ownedBootstrapFile.close(); }
++    }
++  } finally {
++    if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true });
++  }
++});
+ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+ 
+ type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
+diff --git a/packages/polaris-dossier/src/url-run-ordered-attempt.ts b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+index c47bfcf07..8e55a4ff6 100644
+--- a/packages/polaris-dossier/src/url-run-ordered-attempt.ts
++++ b/packages/polaris-dossier/src/url-run-ordered-attempt.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import path from 'node:path';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+@@ -28,6 +29,7 @@ type Audit = Extract<UrlSessionAuditResult, { ok: true }>;
+ type Artifacts = ReturnType<typeof createUrlRunArtifacts>;
+ type Stage = Awaited<ReturnType<Artifacts['stageOrderedDesignVerdict']>>;
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
++const resumeTrace = channel('owned-f3-db7');
+ const refused = (): Error => new Error('url-ordered-attempt-unavailable');
+ 
+ export interface UrlOrderedAttemptOptions {
+@@ -110,36 +112,52 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
+     input.work.observeProtectedRead(bytes);
+     controller?.reportAuditRead(bytes);
+   };
++  const note = (stage: string, event: string): void => {
++    if (resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'ordered', round: input.round, stage, event, at: performance.now() });
++  };
+   const assertProcessingCurrent = (): void => {
+     if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null
+       || !input.budget.current() || !input.machine.current()) throw refused();
+   };
+   const assertCurrent = (): void => {
++    note('delivery-assert', 'begin');
+     assertProcessingCurrent();
+-    if (!isUrlDesignProductLeaseOpen(render!.product)) throw refused();
++    if (!isUrlDesignProductLeaseOpen(render!.product)) { note('delivery-assert', 'refused'); throw refused(); }
+     assertUrlDesignDeliveryViewCurrent(delivery!);
++    note('delivery-assert', 'return');
+   };
+   const current = async (): Promise<boolean> => {
+-    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
++    note('attempt-current', 'begin');
++    if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) { note('attempt-current', 'refused'); return false; }
++    note('attempt-current', 'return');
+     // Bootstrap has no controller yet; activation still gates every send/tool.
+     if (delivery === null) return input.machine.current();
+     // Activation and the first parsed request can wake in consecutive turns.
+     // Drain before reading the full delivery proof for a live child.
+     if (isUrlSessionProcess(child)) {
++      note('current-drain', 'begin');
+       await yieldToPoll();
+-      if (!(await input.waitForSamples())) return false;
++      if (!(await input.waitForSamples())) { note('current-drain', 'refused'); return false; }
++      note('current-drain', 'return');
++    }
++    if (closed || render === null || sessionMachineEffectCurrent() === false || !input.machine.current()) {
++      note('product-authority', 'refused'); return false;
+     }
+-    if (closed || render === null || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
++    note('product-authority', 'return');
+     return checkUrlOrderedProductCurrent({
+       product: render.product,
+       assertCurrent,
+       refresh: () => renewing ??= (async () => {
++        note('renew-render', 'begin');
+         const next = await input.reproduce();
+-        if (next === null) return false;
++        if (next === null) { note('renew-render', 'refused'); return false; }
++        note('renew-render', 'return');
+         let adopted = false;
+         try {
+           if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
++          note('renew-delivery', 'begin');
+           const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
++          note('renew-delivery', 'return');
+           const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
+           assertCurrent(); return true;
+         } finally { if (!adopted) next.close(); }
+diff --git a/packages/polaris-dossier/src/url-run-sessions.ts b/packages/polaris-dossier/src/url-run-sessions.ts
+index 5aad66d81..bad3095e9 100644
+--- a/packages/polaris-dossier/src/url-run-sessions.ts
++++ b/packages/polaris-dossier/src/url-run-sessions.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import { createServer } from 'node:net';
+ import { setImmediate as yieldToPoll } from 'node:timers/promises';
+ import path from 'node:path';
+@@ -35,6 +36,9 @@ import { isClaimedStoppedUrlRun, isClaimedStoppedUrlRunAsync, type verifyStopped
+ import type { UrlRecoveryClaim } from './url-stopped-run.js';
+ import { URL_HOST_ROOT } from './url-mode-registry.js';
+ 
++const bootstrapTrace = channel('owned-f3-db7');
++let bootstrapCurrentOrdinal = 0;
++
+ const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+ /** A semantic terminal permits cleanup; only the actual successful launch
+  * outcome permits retiring its transport health check. */
+@@ -51,15 +55,36 @@ export async function checkUrlSessionCurrent(input: {
+   readonly current: () => boolean | Promise<boolean>;
+   readonly bindingChanged: () => void;
+ }): Promise<boolean> {
+-  if (await input.settleCompletedDesign() === 'refused' || !input.effectCurrent()) return false;
++  const check = ++bootstrapCurrentOrdinal;
++  const trace = (stage: string, event: string): void => {
++    if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'authority', stage, event, check, at: performance.now() });
++  };
++  trace('first-settlement', 'begin');
++  if (await input.settleCompletedDesign() === 'refused') { trace('first-settlement', 'refused'); return false; }
++  trace('first-settlement', 'return');
++  trace('first-effect', 'begin');
++  if (!input.effectCurrent()) { trace('first-effect', 'refused'); return false; }
++  trace('first-effect', 'return');
+   try {
+-    if (await input.current() !== true) { input.bindingChanged(); return false; }
++    trace('independent', 'begin');
++    if (await input.current() !== true) { trace('independent', 'refused'); input.bindingChanged(); return false; }
++    trace('independent', 'return');
++    trace('second-settlement', 'begin');
+     const settlement = await input.settleCompletedDesign();
+-    if (settlement === 'refused' || !input.effectCurrent()) return false;
++    if (settlement === 'refused') { trace('second-settlement', 'refused'); return false; }
++    trace('second-settlement', 'return');
++    trace('second-effect', 'begin');
++    if (!input.effectCurrent()) { trace('second-effect', 'refused'); return false; }
++    trace('second-effect', 'return');
+     if (settlement === 'current') return true;
+-    if (await input.current() !== true) { input.bindingChanged(); return false; }
+-    return input.effectCurrent();
+-  } catch { input.bindingChanged(); return false; }
++    trace('settled-independent', 'begin');
++    if (await input.current() !== true) { trace('settled-independent', 'refused'); input.bindingChanged(); return false; }
++    trace('settled-independent', 'return');
++    trace('settled-effect', 'begin');
++    const current = input.effectCurrent();
++    trace('settled-effect', current ? 'return' : 'refused');
++    return current;
++  } catch { trace('exception', 'refused'); input.bindingChanged(); return false; }
+ }
+ type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
+   | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
+@@ -256,9 +281,13 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
+   let preparedDesign: PreparedDesign | null = null;
+   let activeDesignView: UrlDesignDeliveryView | null = null;
+   let pendingDesignReview: PendingDesignReview | null = null;
++  const note = (stage: string, event: string): void => {
++    if (bootstrapTrace.hasSubscribers) bootstrapTrace.publish({ component: 'supervisor', stage, event, resumed: resume !== undefined, at: performance.now() });
++  };
+   const fail = (reason: Failure): void => {
+     if (failure !== null || stopping) return;
+     failure = reason;
++    note('failure', reason);
+     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
+   };
+   const settleCompletedDesign = async (): Promise<CompletedDesignSettlement> => {
+@@ -285,15 +314,15 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
+   };
+   const effectBudgetCurrent = (): boolean => !stopping && failure === null && budget.current();
+   const effectEnvironmentCurrent = (): boolean => {
+-    try { if (options.stopRequested?.() === true) return false; }
+-    catch { fail('control-unavailable'); return false; }
+-    if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
+-    if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
++    try { if (options.stopRequested?.() === true) { note('effect-stop', 'refused'); return false; } }
++    catch { note('effect-control', 'refused'); fail('control-unavailable'); return false; }
++    if (!withinCpuBudget()) { note('effect-cpu', 'refused'); fail('cpu-budget'); return false; }
++    if ([...hostHealth.values()].some(healthy => !healthy())) { note('effect-health', 'refused'); fail('transport-unavailable'); return false; }
+     return true;
+   };
+   const effectCurrent = (): boolean => {
+-    if (!effectBudgetCurrent()) return false;
+-    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { fail('binding-changed'); return false; }
++    if (!effectBudgetCurrent()) { note('effect-budget', 'refused'); return false; }
++    if (resume !== undefined && !isClaimedStoppedUrlRun(resume.verified, resume.claim)) { note('effect-claim', 'refused'); fail('binding-changed'); return false; }
+     return effectEnvironmentCurrent();
+   };
+   const current = (): Promise<boolean> => checkUrlSessionCurrent({ settleCompletedDesign, effectCurrent,
+@@ -396,13 +425,23 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
+     };
+     const design = role === 'design' && completedDesign?.child === child ? completedDesign : null;
+     terminals.push(child.finished.then(async outcome => {
++      if (role === 'design') note('terminal-observed', outcome.outcome);
+       capture.outcome = outcome; capture.finishedAt = options.now();
+       const permitted = canExit();
+       const completed = design !== null && permitted && isCompletedUrlDesignExit(outcome);
+       if (!urlSessionStoppedCleanly(outcome) || (!stopping && (!permitted
+-        || design !== null && completedDesign === design && !completed))) unexpectedTerminal();
+-      try { await audit.append({ kind: 'launch-terminal', role, scope: audit.scope(role), payload: outcome }); }
+-      catch { if (stopping) failure ??= 'audit-unavailable'; else fail('audit-unavailable'); }
++        || design !== null && completedDesign === design && !completed))) {
++        if (role === 'design') note('terminal-expected', 'refused');
++        unexpectedTerminal();
++      }
++      try {
++        if (role === 'design') note('terminal-audit', 'begin');
++        await audit.append({ kind: 'launch-terminal', role, scope: audit.scope(role), payload: outcome });
++        if (role === 'design') note('terminal-audit', 'return');
++      } catch {
++        if (role === 'design') note('terminal-audit', 'refused');
++        if (stopping) failure ??= 'audit-unavailable'; else fail('audit-unavailable');
++      }
+     }, unexpectedTerminal));
+   };
+   const probe = createServer(socket => socket.destroy()); probe.on('error', () => {});
+diff --git a/packages/polaris-dossier/src/url-stopped-run.ts b/packages/polaris-dossier/src/url-stopped-run.ts
+index af9dc29be..18a4f0b67 100644
+--- a/packages/polaris-dossier/src/url-stopped-run.ts
++++ b/packages/polaris-dossier/src/url-stopped-run.ts
+@@ -1,3 +1,4 @@
++import { channel } from 'node:diagnostics_channel';
+ import * as fs from 'node:fs';
+ import path from 'node:path';
+ import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+@@ -267,6 +268,8 @@ export interface UrlRecoveryClaim {
+    * retains its directory lock; no timeout/PID guess silently steals it. */
+   readonly release: () => boolean;
+ }
++const resumeTrace = channel('owned-f3-db7');
++let resumeClaimCheck = 0;
+ const claims = new WeakSet<UrlRecoveryClaim>();
+ export function isUrlRecoveryClaim(value: unknown): value is UrlRecoveryClaim {
+   return isRecord(value) && claims.has(value as unknown as UrlRecoveryClaim);
+@@ -328,17 +331,48 @@ export function acquireUrlRecoveryClaim(input: {
+       return true;
+     };
+     const heldCurrent = (): boolean => {
+-      try { return own() && authorityCurrent() && markerCurrent() && boundaryCurrent(); }
+-      catch { return false; }
++      const refusedSync = (stage: string): false => {
++        if (resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'held-authority', check: 0, stage, event: 'false', at: performance.now() });
++        return false;
++      };
++      try {
++        if (!own()) return refusedSync('sync-held');
++        if (!authorityCurrent()) return refusedSync('sync-authority');
++        if (!markerCurrent()) return refusedSync('sync-marker');
++        return boundaryCurrent() || refusedSync('sync-stopped-bytes');
++      } catch { return refusedSync('sync-exception'); }
+     };
+     const ownsConsumedBoundary = (): boolean => consumedStat !== undefined && own() && markerCurrent();
+     const currentAsync = async (): Promise<boolean> => {
++      const check = ++resumeClaimCheck;
++      const mark = (stage: string, event: string): void => {
++        if (resumeTrace.hasSubscribers) resumeTrace.publish({ component: 'held-authority', check, stage, event, at: performance.now() });
++      };
++      let phase = 'before-held';
++      const stamp = (stage: string): void => { phase = stage; mark(stage, 'begin'); };
+       try {
+-        if (!ownsConsumedBoundary() || input.current() !== true || await input.policy.currentAsync() !== true) return false;
++        stamp('before-held');
++        if (!ownsConsumedBoundary()) { mark(phase, 'false'); return false; }
++        mark(phase, 'true');
++        stamp('before-record');
++        if (input.current() !== true) { mark(phase, 'false'); return false; }
++        mark(phase, 'true');
++        stamp('policy');
++        if (await input.policy.currentAsync() !== true) { mark(phase, 'false'); return false; }
++        mark(phase, 'true');
+         // The policy check may suspend. Recheck the lease, marker and exact
+         // stopped bytes before admitting the freshly checked run record.
+-        return ownsConsumedBoundary() && boundaryCurrent() && input.current() === true;
+-      } catch { return false; }
++        stamp('after-held');
++        if (!ownsConsumedBoundary()) { mark(phase, 'false'); return false; }
++        mark(phase, 'true');
++        stamp('stopped-bytes');
++        if (!boundaryCurrent()) { mark(phase, 'false'); return false; }
++        mark(phase, 'true');
++        stamp('after-record');
++        const current = input.current() === true;
++        mark(phase, current ? 'true' : 'false');
++        return current;
++      } catch { mark(phase, 'exception'); return false; }
+     };
+     if (!heldCurrent()) {
+       if (own()) { fs.rmdirSync(lock); fs.fsyncSync(directoryFd); }

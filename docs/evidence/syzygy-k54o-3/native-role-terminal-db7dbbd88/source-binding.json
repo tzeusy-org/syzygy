@@ -1,0 +1,76 @@
+{
+  "sourceCommit": "db7dbbd88db2bfc50dd4e8bfd36e4fae5f28de28",
+  "sourceTree": "47a78059cdb43a89784de2c0ebf458267f88641d",
+  "priorUninstrumentedBytesCommit": "27e83c50b66723f2b87c54e7ea254c7f401507a7",
+  "baseDeltaFiles": [
+    "packages/polaris-dossier/src/session-launch.test.ts"
+  ],
+  "overlaySha256": "806cf485cdbf5aa96c3a1805f3a433517a3c9c9fa6862a79222d7ea89ed986a0",
+  "changedSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": {
+      "before": "79a30d748606c2b621209a77a6cbb37716cdfb0531c551a603bef9a78c88bbbd",
+      "after": "d6e8b7bc7f5186e332753306b45693606ba955f8eddd8e6dc6e85c4057763337"
+    },
+    "packages/polaris-dossier/src/session-launch.ts": {
+      "before": "ca6a02828de4d7cd5348f8c7deb8eb32f2a662eca0ef271f3738bbded313ed1e",
+      "after": "83b9e0b0a731b953aee31e0c6ebf4301343fec5ca5bc27960a91c3c669cb45d7"
+    },
+    "packages/polaris-dossier/src/session-machine-transport.ts": {
+      "before": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+      "after": "932647eec4a64035497218c4428e15e327e72a9c65e460e5050a989db17dbdea"
+    },
+    "packages/polaris-dossier/src/session-relay.ts": {
+      "before": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+      "after": "a48f6ce9977ed20627698b1bbd929e5acc595c7a0fd6ab1c451d7ca6cf0cbc6d"
+    },
+    "packages/polaris-dossier/src/url-machine-peer.ts": {
+      "before": "4579210c3643213b7b2f1344e64b1f7d991866f4d3cb3848668490f65166927e",
+      "after": "7acdd9d6d2774608b04a22ec3964e9941c92c2821d1a3f9783aba46afbb66bd8"
+    },
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": {
+      "before": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+      "after": "65a6e330bc5cc58b6b3654d5340e548a27835a9d02457ce413eabf94ae49b5bb"
+    },
+    "packages/polaris-dossier/src/url-run-composed.test.ts": {
+      "before": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+      "after": "18641e583e889136b73d962f643b99b4d058cf5d54fbd305917b286f8ac1613c"
+    },
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": {
+      "before": "012aaa4449875596aea3aee69b6f1ff530e7065630eef92a6bd97cf8ade2cfc0",
+      "after": "28b043e30306cc5b0e36ef8e8829582385399ec7de5a35f9829b93661b0c8112"
+    },
+    "packages/polaris-dossier/src/url-run-sessions.ts": {
+      "before": "43d7349918a2e5ed1c6165dbc4d777cf2032795bddc5273d81008f2ed5095182",
+      "after": "509bf4504c8384501169ac1dd1bec1b7e7e1585df28e2ed807090340cff441ca"
+    },
+    "packages/polaris-dossier/src/url-stopped-run.ts": {
+      "before": "7d8713e299385d57e4888a6dfeb37fef0146fc39482839e8ed91c604c13fb70e",
+      "after": "f50e4ae4589a9d6015cf8eb59ccb29ca8c0a6d14f25d8947e14d2787936714d2"
+    }
+  },
+  "runtime": {
+    "manifestSha256": "528b0df1aecab8aa3898d563d9c850ec245c17c15f4059c546d9105bfc0c8206",
+    "manifestTimeUtc": "2026-11-22T14:52:05.478+00:00",
+    "inputTreeSha256": "65cad38c2bc3d90b3f37e26ba48c31f23e945178e7799277585f41f41a43cc2d",
+    "manifestInputs": 380,
+    "inputsMatchingPhysicalBytes": 380,
+    "unmodifiedTrackedInputsMatchingBase": 277,
+    "overlayManifestInputs": [
+      "packages/polaris-dossier/src/session-broker.ts",
+      "packages/polaris-dossier/src/session-launch.ts",
+      "packages/polaris-dossier/src/session-machine-transport.ts",
+      "packages/polaris-dossier/src/session-relay.ts",
+      "packages/polaris-dossier/src/url-machine-peer.ts",
+      "packages/polaris-dossier/src/url-ordered-design-host.ts",
+      "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "packages/polaris-dossier/src/url-run-sessions.ts",
+      "packages/polaris-dossier/src/url-stopped-run.ts"
+    ],
+    "overlayFixtureOrUnbundledFiles": [
+      "packages/polaris-dossier/src/url-run-composed.test.ts"
+    ],
+    "installInputsMatchingManifest": 94,
+    "manifestOutputs": 8,
+    "outputsMatchingPhysicalBytes": 8
+  }
+}
