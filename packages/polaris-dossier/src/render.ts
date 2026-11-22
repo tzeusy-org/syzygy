@@ -4,7 +4,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
+  backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
@@ -705,6 +705,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const executions = new Map(list(doc['executions']).flatMap((entry) => (isRecord(entry) && text(entry['id']) !== undefined ? [[text(entry['id'])!, clean(text(entry['command']) ?? '')] as const] : [])));
   const support = review.counts ? review.verdict.blockSupport : {};
   const blocks = new Map<string, LocalBlock>();
+  const unindexedNames = new Set<string>();
   let withheldExcerpts = 0;
   for (const block of collectBlocks(doc).filter((candidate) => candidate.textKey === 'text')) {
     const value = block.value;
@@ -743,11 +744,15 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     });
     segments.push({ kind: 'prose', text: prose.slice(at) });
     const secret = screen.screenBody(prose) === 'secret-detector-match';
+    // A backticked span the path detector matches is never a name of the generated index (the index-and-task-routes change).
+    // Spans are paired inside each prose segment, as the index reads them, never across a quotation.
+    for (const part of segments) if (part.kind === 'prose') for (const span of backtickSpans(part.text)) if (screen.screenPath(span) === 'secret-detector-match') unindexedNames.add(span);
     if (secret) segments = [{ kind: 'prose', text: WITHHELD_TEXT }];
     segments = segments.filter((part) => part.kind !== 'prose' || part.text !== '');
     const named = list(value['executionIds']).flatMap((executionId) => (typeof executionId === 'string' && executions.has(executionId) ? [{ id: executionId, command: executions.get(executionId)! }] : []));
-    const unknown = (reason: string, basis: string): LocalBlock => ({ marking: 'unknown', unknownReason: reason, basis, segments, executions: named, ...marks });
-    if (label === 'non-normative') blocks.set(id, { marking: 'non-normative', unknownReason: null, basis: 'the agent marks this block non-normative: it claims nothing from a source', segments, executions: [] });
+    const matched = secret ? { secretMatched: true as const } : {};
+    const unknown = (reason: string, basis: string): LocalBlock => ({ marking: 'unknown', unknownReason: reason, basis, segments, executions: named, ...marks, ...matched });
+    if (label === 'non-normative') blocks.set(id, { marking: 'non-normative', unknownReason: null, basis: 'the agent marks this block non-normative: it claims nothing from a source', segments, executions: [], ...matched });
     else if (label === 'unknown') blocks.set(id, unknown(text(value['reason']) ?? 'missing-evidence', 'the agent labels this block Unknown'));
     else if (withheld || secret) {
       blocks.set(id, unknown('excluded-content', secret ? 'a secret detector matches its text, so it is withheld'
@@ -1071,6 +1076,16 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { label: held ? WITHHELD_LABEL : title(pole['label']), sections };
         }),
       } } : {}),
+      // Task routes (the index-and-task-routes change). Each step is a claim block of `blocks`; a task over only withheld steps reads as any short label
+      // over withheld content does.
+      ...(unindexedNames.size === 0 ? {} : { unindexedNames: [...unindexedNames].sort() }),
+      ...(Array.isArray(doc['taskRoutes']) ? { taskRoutes: doc['taskRoutes'].filter(isRecord).map((route) => ({
+        id: text(route['id'])!, task: over(route['steps'], route['task']),
+        steps: list(route['steps']).filter(isRecord).map((step) => {
+          const see = isRecord(step['see']) ? step['see'] : undefined;
+          return { paragraph: paragraph(step), ...(see === undefined ? {} : { see: { kind: see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const, id: text(see['target'])! } }) };
+        }),
+      })) } : {}),
       counts: {
         uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
         withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,

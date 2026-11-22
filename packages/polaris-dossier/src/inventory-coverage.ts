@@ -22,11 +22,14 @@ import { protectedProduct, UrlProductReadRefusal, type RunProductReads } from '.
  * Advice, like `readerAdvice` and `reviewReach`: on `check`'s report only, never a finding, the outcome, the exit code or the stored
  * check record. Where no inventory counts, or it cannot be read, the advice is Unknown with the reason, never an empty list. */
 
-export const COVERAGE_RULE = Object.freeze({ id: 'overlap-or-path-named', version: 1 } as const);
+/** Version 2 (the index-and-task-routes change) is version 1 with a task route's steps counted: their citations are reading content
+ * and their text is searched for a named path. For a draft without `taskRoutes` the two versions decide every entry alike. */
+export const COVERAGE_RULE = Object.freeze({ id: 'overlap-or-path-named', version: 2 } as const);
 
-/** The parts of a draft whose citations count as covering an entry: what a reader is shown. The understanding record, the discovery
- * account, the clarifications and the omission record itself are the author's ledger, not reading content. */
-const READING_PARTS = /^\$\.(?:introduction|sections|diagrams|deepDives|unresolved)(?:$|[.[])/u;
+/** The parts of a draft whose citations count as covering an entry: what a reader is shown, a task route's steps among them (rule
+ * version 2). The understanding record, the discovery account, the clarifications and the omission record itself are the author's
+ * ledger, not reading content. */
+const READING_PARTS = /^\$\.(?:introduction|sections|diagrams|deepDives|unresolved|taskRoutes)(?:$|[.[])/u;
 
 /** A cited span: a path and its closed line range. A citation without a well-formed range counts as its whole file, so a malformed
  * citation (already a finding of `check`) never makes an entry look uncovered. */

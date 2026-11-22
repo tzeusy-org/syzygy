@@ -5,7 +5,7 @@ import { DOSSIER_REQUESTED_ASSETS } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
-import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
+import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, TASK_ROUTE_MAX, TASK_ROUTE_MIN, TASK_ROUTE_STEP_MAX, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule, type PermittingArm } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
@@ -43,15 +43,19 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
+/** v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
+ * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v12';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v13';
 
 /** The paragraph brief v12 adds immediately after the thesis-basis paragraph, in the requirement's words. */
 export const FIGURE_KINDS_PARAGRAPH = 'A diagram\'s `kind` may also be `sequence` or `swimlane`, and each takes its own members in place of `nodes` and `edges`. Use a `sequence` when two to five components exchange messages in a fixed order, such as a request, the calls it causes and the reply: list the components in `participants`, left to right, each with `id`, `label`, `epistemic` and `citations` as a node has, and list one to thirty messages in `messages`, in the order they happen, each with `id`, `label`, `epistemic` and `citations` as an edge has, naming the participant that sends it in `from` and the one that receives it in `to` (the same one for a message to itself). Use a `swimlane` when two to five actors or components do a workflow\'s steps in turn: list them in `lanes`, left to right, each as a node, and list two to twenty steps in `steps`, in the order they are done, each with `id`, `label`, `epistemic` and `citations` and naming in `lane` the lane that does it; Syzygy draws an arrow from each step to the next, so the order of `steps` is a claim the steps\' citations must support. Every participant sends or receives a message and every lane holds a step. On a narrow screen Syzygy shows a sequence as a numbered list of its messages and a swimlane as a numbered list of its steps, each headed by its lane. Keep every other figure a graph of `nodes` and `edges` in one of the six graph kinds.';
 
 /** The paragraph brief v11 adds after the one naming each section's `id`, in the requirement's words. */
 export const THESIS_BASIS_PARAGRAPH = 'Set `thesisBasis` to say what your introduction, the dossier\'s thesis, rests on. Write `stated` when it rests on a statement of the project\'s purpose by its maintainers, such as a README, documentation or a package description, and cite that statement. Write `code-reading` when no source you found states the project\'s purpose: the introduction then says what the code does, never why it was made, quotes nothing, and cites at least two entry points, two different code files through which a user or a program enters the project, such as a main program, a command\'s handler or the module a package exports; Syzygy renders it under a line saying that no maintainer statement of purpose was found and that it is Polaris\'s reading of the code. Write `none` when neither is possible, and make the introduction an `unknown` block, or a `non-normative` one that makes no claim.';
+
+/** The brief's task-routes section (the index-and-task-routes change). It carries no project content. */
+export const TASK_ROUTES_RULE = `Write \`taskRoutes\`: ${TASK_ROUTE_MIN} to ${TASK_ROUTE_MAX} tasks a reader brings to this project when they mean to work on it, each answered by a short route. Phrase \`task\` as the reader's own task, in the imperative and in at most 120 characters, such as "Add a command" or "Change how data is persisted": a short label under the rules for an element's short label, never a topic or a file name. Choose the tasks this repository's own structure makes likely (adding the kind of thing it has many of, changing its central behaviour, changing how it stores, sends or checks data, adding a test, changing its build or configuration), and cover different parts of the code rather than one part many times. Each route has 1 to ${TASK_ROUTE_STEP_MAX} \`steps\`, in the order the reader takes them. A step is a claim: \`label\` is \`inferred\`, \`basis\` is \`source\`, and it cites at least one file and the lines the reader reads or changes at that step. Say in the step's text what to do there and name the function, type, table or key to look for, in backticks; the citation carries the file and lines, and Syzygy shows them beside the step. Cite the narrowest range that holds what the step names, never a whole file. Where a section or a deep dive of your draft explains the step, name it in \`see\` (\`{"kind": "section", "target": …}\` or \`{"kind": "deep-dive", "target": …}\`). Syzygy checks a step as it checks any claim block, and a step whose citation names no file or lines at the pinned revision is refused; the fidelity review judges whether the cited lines support the step. A task you cannot route from the code is left out, never written from guesswork; if fewer than ${TASK_ROUTE_MIN} can be routed, omit \`taskRoutes\` and the page says this run has none. Syzygy renders the routes on a "Find by task" page linked beside the overview.`;
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
@@ -180,6 +184,10 @@ export function renderBrief(input: BriefInput): string {
     '## Poles',
     '',
     `Divide the sections into Poles in \`poles\`: at most ${poleLimitOf(declared)}, this run's Pole limit, each a short label (under the rules for an element's short label) and the sections it holds, every section in exactly one. Choose the Poles from what the repository holds, each holding a substantial share of its documentation; never fill a fixed template, such as a server and a client, where the repository says little about one of them. Name in \`whySection\` the section that answers why the project exists. Syzygy renders a landing page holding the title, that section and a map of the Poles, then one page per Pole; the why section's own Pole links back to the landing page rather than repeating it, and a Pole holding only that section has no page of its own. A Pole is a page boundary and carries no claim. A draft with no \`poles\` keeps its sections on one page.`,
+    '',
+    '## Task routes',
+    '',
+    TASK_ROUTES_RULE,
     '',
     '## The understanding record',
     '',
