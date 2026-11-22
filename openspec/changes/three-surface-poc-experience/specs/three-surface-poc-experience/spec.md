@@ -1163,21 +1163,28 @@ equal values (`trajectory.answers`). Today:
 
 - *What remains* SHALL give the served items' count for every tracker
   status in the status vocabulary (POC-REQ-040), summing to the served
-  total.
+  total, and SHALL say that these are the tracker's items only, not
+  checked against materialization records, and that RFC8-8's other two
+  planes (approved claims no proposal covers; approved intent not yet
+  materialized) are not enumerated.
 - *What is running* SHALL give how many served items the tracker marks
-  `in_progress`, worded as the tracker's claim, and their liveness as an
-  Unknown (reason `no-currency-bound-declared`).
+  `in_progress`, worded as the tracker's claim, and their liveness as the
+  state `activity-undetermined` while no staleness bound is declared
+  (RFC8-16): state-local, carrying no RFC2-24 reason and no machine
+  Unknown, with what resolves it.
 - *What changed* and *what it cost* SHALL each be an Unknown with its
-  closed reason and route while no movement source or cost record is read.
+  closed reason and route while no movement source or cost record is read
+  (RFC8-19: absent cost is Unknown, never zero).
 - *Verified against intent* SHALL give three separately labelled counts,
   each with its own denominator, and no element SHALL add any two of them:
   (a) Unknown-provenance, the served items with no traceable warrant, n of
   N, referring to POC-REQ-014's governing-intent disclosure; (b) the
   reconciliation chain, the count of materialized work items whose change
-  is on the default branch, each member stated as "reconciliation evidence
-  absent / Unknown" with its route (run a reconciliation evaluation) and no
-  RFC2-24 reason, or an Unknown with its reason when the materialized
-  item's change could not be observed; and (c) orphaned work, stated as not
+  is on the default branch, of the materialized work items, its members
+  stated as "reconciliation evidence absent / Unknown" with their route
+  (run a reconciliation evaluation) and no RFC2-24 reason, or an Unknown
+  with its reason when the materialized item's change could not be
+  observed; and (c) orphaned work among the served items, stated as not
   checked, its count an Unknown with its reason, never 0. The word
   "verified" SHALL NOT name a state among the answers.
 
@@ -1195,24 +1202,29 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
   the work-item observation Unknown.
 - **Observable**: five answers in order before the scope statement; the
   status counts, claimed count and three fifth-answer counts with their
-  denominators; each Unknown part's reason and route.
+  denominators; the liveness state; each Unknown part's reason and route.
 - **Oracle**: the five question labels and the machine answer's ids
   equal the fixed order; each status count equals the count of served
   items with that status, they sum to the served total, and the closed
   count differs from the rendered Closed column when the selection leaves
   a closed item outside; the claimed count equals the served `in_progress`
-  items; each Unknown part carries a closed reason and a route and has a
-  machine twin under its id (POC-REQ-060); count (a) equals
-  `workItems.governedByUnknownCount`; count (b) is 1 with a merged
-  materialized item and 0 without one while (a) is unchanged; (c) renders
-  Unknown, never a number; with work items Unknown, five answers render
-  and none carries a count. Equality decides.
+  items, and the liveness state renders `activity-undetermined` with no
+  Unknown encoding, reason or machine Unknown; each Unknown part carries a
+  closed reason and a route and has a machine twin under its id
+  (POC-REQ-060); every count and every denominator on the page equals the
+  machine answer's; count (a) equals `workItems.governedByUnknownCount`;
+  count (b) is 1 of 1 with a merged materialized item and 0 of 0 without
+  one while (a) is unchanged; (c) renders Unknown, never a number; with
+  work items Unknown, five answers render and none carries a count.
+  Equality decides.
 - **Oracle independence**: expected counts are the checker's own fixture
   rows, counted by the checker, never the renderer's model.
 - **Falsifier**: an answer missing, out of order or dropped for being
   Unknown; a count taken over the rendered selection; status counts that
   do not sum to the served total; a running count worded as observed
-  activity; an Unknown part with no reason or route; an element adding two
+  activity, or liveness rendered as `active` or under an RFC2-24 reason;
+  a count shown without its denominator; an Unknown part with no reason
+  or route; an element adding two
   of the fifth answer's counts; orphaned work rendered as 0; a chain member
   stated under an RFC2-24 reason; or "verified" naming a state.
 
@@ -1221,14 +1233,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
 - **WHEN** 252 work items are served and the selection renders 250
 - **THEN** five answers render first, in order: the served count of each
   tracker status summing to 252, the tracker's claimed count with liveness
-  Unknown, what changed and what it cost as Unknowns with their reasons and
+  `activity-undetermined`, what changed and what it cost as Unknowns with their reasons and
   routes, and three separate counts for verification against intent; the
   machine answer carries the same five with equal values
 
 #### Scenario: A merged materialized item enters the chain
 
 - **WHEN** the materialized work item's change is on the default branch
-- **THEN** the reconciliation-chain count is 1, stated with
+- **THEN** the reconciliation-chain count is 1 of 1, stated with
   "reconciliation evidence absent / Unknown" and its route, and the
   Unknown-provenance count is unchanged
 
@@ -1242,7 +1254,7 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
 warrants:
   primary: VIS-2
   doctrine: [VIS-2, VIS-3]
-  contracts: [RFC2-19(a), RFC2-24, RFC6-17, RFC8-23, RFC8-28, RFC8-29]
+  contracts: [RFC2-18, RFC2-19(a), RFC2-24, RFC6-17, RFC8-8, RFC8-16, RFC8-19, RFC8-23, RFC8-28, RFC8-29]
   policies: []
   decisions: []
   topology: []

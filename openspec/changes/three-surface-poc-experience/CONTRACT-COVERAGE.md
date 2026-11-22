@@ -44,15 +44,15 @@ Every clause was judged exactly once and lands in exactly one part:
 | Family | Accepted clauses | Part A (mapped) | Part B1 (applicable, uncovered) | Part B2 (believed not applicable) |
 |---|---|---|---|---|
 | RFC1 | 39 | 12 | 4 | 23 |
-| RFC2 | 27 | 9 | 0 | 18 |
+| RFC2 | 27 | 10 | 0 | 17 |
 | RFC3 | 38 | 0 | 0 | 38 |
 | RFC4 | 32 | 10 | 1 | 21 |
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 10 | 1 | 21 |
+| RFC8 | 32 | 13 | 2 | 17 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **81** | **28** | **215** |
+| **Total** | **324** | **85** | **29** | **210** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -228,13 +228,23 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-23 | Equal Unknown values stay separate countable/filterable work-item claims; sharing neither clears Unknown nor invents warrants | covered — Amendment row (observation-local governedBy wire value); existing unresolved orphaned-work and other limbs remain Unknown | POC-REQ-014 |
 | RFC2-24 | Each of Trajectory's five answers, or part of one, that is Unknown carries one closed reason and its route, with a machine twin under its id | covered — Amendment row (five answers, syzygy-t3jk.16) | POC-REQ-044 |
 | RFC2-19(a) | Merged-but-unreconciled work renders "reconciliation evidence absent / Unknown" as a fact of the render, counted in its own right and routed to running a reconciliation evaluation, never stamped with or counted among RFC2-24 reasons | covered — Amendment row (five answers); the oracle reads the chain count and its statement and finds no RFC2-24 reason on it. Moved from Part B2 | POC-REQ-044 |
+| RFC2-19(a) | That rendering carries the member's durable identity, its merge fact and the intent revision | **Unknown** — Amendment row (five answers); the answer gives a count and one statement, naming no member, commit or revision | — |
 | RFC8-28 | The merged, not yet evaluated chain state renders as its own counted answer, never sharing a rendering with another state | covered — Amendment row (five answers); the count of materialized work on the default branch, with its own wording. Moved from Part B2 | POC-REQ-044 |
-| RFC8-28 | The six chain states are queryable and filterable on each item's durable identity, beside its normalized state | **Unknown** — Amendment row (five answers); the POC computes no chain state per item and no requirement observes a query or filter on one | — |
-| RFC8-29 | Every merged-but-unreconciled item renders "reconciliation evidence absent / Unknown"; nothing simulates a verdict | covered — Amendment row (five answers); stated once for the counted members, not on each card. Moved from Part B2 | POC-REQ-044 |
+| RFC8-28 | The six chain states are queryable and filterable on each item's durable identity, beside its normalized state, including on the member's own card | **Unknown** — Amendment row (five answers); the POC computes no chain state per item, the member's card shows none, and no requirement observes a query or filter on one | — |
+| RFC8-29 | Merged-but-unreconciled work is stated as "reconciliation evidence absent / Unknown", and no verdict is rendered | covered — Amendment row (five answers); stated once for the counted members. Moved from Part B2 | POC-REQ-044 |
+| RFC8-29 | Each merged-but-unreconciled item renders that statement on its own rendering | **Unknown** — Amendment row (five answers); the member's card carries no chain statement | — |
+| RFC2-18 | `merged` is execution state, never proof that intent is satisfied: work that reached the default branch is counted as a chain member, never as satisfied | covered — Amendment row (five answers). Moved from Part B2 | POC-REQ-044 |
+| RFC2-18 | The chain's states are computed per item from snapshot items alone, on the item's durable identity | **Unknown** — Amendment row (five answers); the POC computes no per-item chain state | — |
+| RFC8-8 | "What remains?" labels the plane it enumerates: the tracker's work items, counted per status over every served item | covered — Amendment row (five answers); the answer says the items are the tracker's only, unchecked against materialization records. Moved from Part B2 | POC-REQ-044 |
+| RFC8-8 | Planes (a) approved claims no proposal covers and (b) approved intent not yet materialized are enumerated, and each open item is checked against the materialization record; an orphaned Syzygy-created item is a Contradiction | **Unknown** — Amendment row (five answers); the answer says these are not enumerated and orphaned work is not checked | — |
+| RFC8-16 | Until a staleness bound is declared, claimed items render `activity-undetermined`, state-local, never the reason `no-currency-bound-declared` and never counted among Unknown reasons | covered — Amendment row (five answers); stated once for the claimed count, not on each card. Moved from Part B2 | POC-REQ-044 |
+| RFC8-16 | `active` and `stale-or-dead` against a declared bound with an effective owner act; worker liveness between signals; inadmissible liveness signals | **Unknown** — Amendment row (five answers); no bound is declared and no progress signal is read | — |
+| RFC8-19 | Absent cost renders Unknown, never zero | covered — Amendment row (five answers). Moved from Part B2 | POC-REQ-044 |
+| RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | **Unknown** — Amendment row (five answers); no cost measure is read, so no aggregate exists to disclose coverage | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **159 consequence rows over 81 clauses — 116 covered,
-43 Unknown.**
+table"]`: **169 consequence rows over 85 clauses — 120 covered,
+49 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
@@ -293,6 +303,7 @@ direct requirement additions.
 
 | Clause | Observable consequence (row label) | Disposition | Requirements |
 |---|---|---|---|
+| RFC8-18 | Cost renders as independent measures with declared source and evidence class, never a composite | **Unknown** — Amendment row (five answers); the cost answer is Unknown because no measure is read, so no requirement observes a measure or the independence rule. Moved from Part B2 | — |
 | RFC1-3 | Observed-source repository is read-only; no writes emitted to Butlers | **Unknown** — Borderline: out-of-scope bars "writes to the observed project," matching RFC1-3's read-only default, but no POC-REQ's oracle tests absence of writes; consent-record specifics have no matching requirement | — |
 | RFC1-6 | VCS objects (git revision) not reified as first-class nodes, enter only as identifier/evidence | **Unknown** — POC stamps facts with "exact git revision"; no requirement's oracle checks it isn't reified as a separate Commit node | — |
 | RFC1-17 | Multi-capability code-element mapping counted identity-based, once per query subject | **Unknown** — Orrery's reconciling-counts req (051) doesn't explicitly test non-duplication under multi-capability mapping | — |
@@ -375,7 +386,6 @@ are listed so the owner can review or contest each one directly.
 | RFC2-15 | Contradiction and gap as formal entities with adjudication/dismissal exits tied to intent-revision tracking; POC's "evidence gaps" wording (POC-REQ-032) is an informal, unrelated usage |
 | RFC2-16 | Aligned/Converged as formal claim predicates requiring gate-backed evaluation machinery; POC never computes or renders either |
 | RFC2-17 | Word reservation of "reconciliation"/"unsatisfied"/"contradiction-raised" against scheduler-substrate terms; Trajectory only maps status vocabulary to columns, never these reserved words |
-| RFC2-18 | The post-merge reconciliation chain state machine; not rendered anywhere in the POC |
 | RFC2-19 | Reconciliation trigger and V0/V1 staging of that chain; the chain itself is unbuilt |
 | RFC2-21 | Composite "no gap at E" semantics requiring Aligned/challenge/reconciled tracking; none of that machinery exists in POC |
 | RFC2-22 | Fixed-point idempotence across repeated evaluations of an unchanged no-gap snapshot; POC is one-shot, not a repeated-evaluation loop |
@@ -498,16 +508,12 @@ are listed so the owner can review or contest each one directly.
 | RFC8-5 | Non-reification of idea/milestone/no-Feature/contradiction/dismissal; POC renders none of these concepts |
 | RFC8-6 | Compaction-record schema and retention-fact discipline; POC performs no compaction |
 | RFC8-7 | Pre-materialization Proposal lifecycle (drafted→…→materialized) and post-materialization scheduler-state read discipline; POC renders raw Beads status only, no Proposal lifecycle |
-| RFC8-8 | "What remains?" three-plane enumeration, orphaned-work Contradiction, exclusivity/candidate-futures; POC has no approved-intent/materialization enumeration or exclusivity groups |
 | RFC8-9 | SDR-18 Trajectory-vs-Polaris drafting-queue ownership boundary; POC's Polaris/Trajectory split has no drafting-queue concept |
 | RFC8-10 | Materialization-record one-way-door join (proposal identity, work-item-set, pinned revision); POC builds no materialization records — the relationship is left Unknown by design |
 | RFC8-11 | Divergence-rendering for substrate-side warrant-pointer edits; no warrant pointers exist in POC's Trajectory |
 | RFC8-13 | Per-value derivation logic (dispatch-eligibility queries, PR-lane facts, VCS merge facts, liveness); POC's kanban columns derive from Beads' own status field only |
 | RFC8-14 | Raw-status-visibility/`state-undetermined` resolution routed through the RFC3-16(a)-authorized governance-plane derivation mapping; POC's status mapping isn't a `.syzygy/governance/**` authorization-bearing artifact |
-| RFC8-16 | `active`/`stale-or-dead` liveness classification against a staleness bound with an effective state-(1) or state-(2) owner act and fail-closed missing/invalid behavior; POC's time visualization displays recorded instants, not a claim-liveness state machine |
 | RFC8-17 | Closed blocked-cause taxonomy; POC's kanban has no `blocked`-cause rendering |
-| RFC8-18 | Independent cost measures, no composite "effort" score; POC scope excludes cost accounting |
-| RFC8-19 | Absent-cost-means-Unknown-never-zero aggregation; same cost-machinery exclusion as RFC8-18 |
 | RFC8-20 | Execution-Record-sourced telemetry staging; POC has no Execution Records or telemetry |
 | RFC8-25 | Inherited-mutation sub-entry accounting and warrant-coverage test; no diff/mutation attribution in POC |
 | RFC8-26 | Compaction preservation set (what survives compaction); no compaction machinery in POC |
@@ -560,10 +566,10 @@ Part B2 total `[Observed, computed]`: **218 clauses.**
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 81 + 28 + 215 = 324.
+  return 324 for RFC1–9, and 85 + 29 + 210 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (81 identifiers).
+  `contracts[]` union (85 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.

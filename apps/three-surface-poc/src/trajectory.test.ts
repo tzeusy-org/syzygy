@@ -229,8 +229,8 @@ describe('Trajectory', () => {
         sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
     });
     const intentOf = (m: PocModel) => m.trajectory.answers.find((answer) => answer.id === 'intent');
-    expect(intentOf(model)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 1 } });
-    expect(intentOf(unmaterialized)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 0 } });
+    expect(intentOf(model)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 1, materialized: 1 } });
+    expect(intentOf(unmaterialized)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 0, materialized: 0 } });
     expect(/data-parity-field="answer-intent-chain-members">(\d+)</.exec(renderTrajectoryPage(model))?.[1]).toBe('1');
     expect(/data-parity-field="answer-intent-unknown-provenance">(\d+)</.exec(renderTrajectoryPage(model))?.[1]).toBe('1');
 
@@ -701,13 +701,13 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   // Each route occurs once per board disclosure carrying its reason:
   // excluded-content (titles); source-uncaptured-or-unreachable (governing
   // intent, and the changed, cost and orphaned-work answer parts,
-  // syzygy-t3jk.16); missing-evidence (verification);
-  // no-currency-bound-declared (the running answer's liveness).
+  // syzygy-t3jk.16); missing-evidence (verification). The running
+  // answer's liveness is the state-local activity-undetermined (RFC8-16),
+  // which carries no reason and so no route.
   const ROUTE_COUNTS: readonly (readonly [string, number])[] = [
     ['Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.', 1],
     ['Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.', 4],
     ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 1],
-    ['Route: <span data-unknown-route="no-currency-bound-declared" data-route-actor="owner" data-route-verb="declare" data-route-target="policy">Declare the bound in quality policy</span>.', 1],
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
@@ -815,15 +815,19 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     expect(/<h2>Closed <span class="count">\((\d+)\)<\/span>/.exec(html)?.[1]).toBe('50');
   });
 
-  it('states the running count as a tracker claim with its liveness Unknown, reason and route', async () => {
+  it('states the running count as a tracker claim with its liveness the state-local activity-undetermined (RFC8-16)', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
     const served = await servedAnswer(model);
-    expect(served.trajectory.answers[1]).toEqual({ id: 'running', state: 'observed', claimed: 34, served: 252, liveness: { state: 'unknown', disclosure: 'region:trajectory-running-liveness' } });
-    const words = answerBody(renderTrajectoryPage(model), 'running').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+    expect(served.trajectory.answers[1]).toEqual({ id: 'running', state: 'observed', claimed: 34, served: 252, liveness: 'activity-undetermined' });
+    const body = answerBody(renderTrajectoryPage(model), 'running');
+    const words = body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(words).toContain("34 of 252 served work items are claimed in the tracker (status in_progress), which is the tracker's claim.");
-    expect(words).toContain('Liveness: Unknown.');
-    expect(words).toContain('Reason: no-currency-bound-declared. Route: Declare the bound in quality policy.');
-    expect(served.unknownSubjects.find((subject) => subject.id === 'region:trajectory-running-liveness')?.epistemic.closedReason).toBe('no-currency-bound-declared');
+    expect(words).toContain('Liveness: activity-undetermined. No staleness bound is declared for claims, so no claimed item can be shown as active; declaring the bound in quality policy resolves it.');
+    // State-local: no Unknown encoding, no RFC2-24 reason, no machine Unknown.
+    expect(body).not.toContain('data-unknown-');
+    expect(body).not.toContain('epistemic');
+    expect(served.unknownSubjects.some((subject) => subject.id.includes('liveness'))).toBe(false);
+    expect(body).toContain('data-parity-field="answer-running-served">252<');
   });
 
   it('renders what changed and what it cost as Unknown with a closed reason and a route', async () => {
@@ -849,31 +853,34 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
       id: 'intent',
       state: 'observed',
       unknownProvenance: { count: 252, served: 252, disclosure: 'region:work-item-governing-intent' },
-      reconciliationChain: { members: 0, memberEvidence: 'reconciliation-evidence-absent' },
-      orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work' },
+      reconciliationChain: { members: 0, materialized: 0, memberEvidence: 'reconciliation-evidence-absent' },
+      orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work', served: 252 },
     });
     expect(served.workItems.governedByUnknownCount).toBe(252);
     const body = answerBody(html, 'intent');
     const words = body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(words).toContain('Unknown-provenance: 252 of 252 served work items have no traceable warrant.');
     expect(body).toContain('data-unknown-ref="region:work-item-governing-intent" data-unknown-reason="source-uncaptured-or-unreachable"');
-    expect(words).toContain('Reconciliation chain: 0 materialized work items whose change is on the default branch.');
+    expect(words).toContain('Reconciliation chain: 0 of 0 materialized work items whose change is on the default branch.');
     // The chain state is a fact of the render, not an RFC2-24 Unknown.
     const chain = /<span class="chain-state" data-parity-field="answer-intent-chain-evidence">([^<]*)<\/span>/.exec(body);
     expect(chain?.[1]).toBe('reconciliation evidence absent / Unknown');
     expect(words).toContain('running a reconciliation evaluation resolves it');
-    expect(words).toContain('Orphaned work: not checked. Count: Unknown.');
+    expect(words).toContain('Orphaned work, of 252 served work items: not checked. Count: Unknown.');
     expect(body).toContain('data-unknown-disclosure="region:trajectory-orphaned-work" data-unknown-reason="source-uncaptured-or-unreachable"');
-    expect(words).not.toMatch(/Orphaned work: not checked\. Count: 0/);
+    expect(words).not.toMatch(/not checked\. Count: 0/);
     expect(words).toContain('The three counts are separate and never added together.');
     expect(body).toContain('href="#n-verification"');
     // No element carries a sum of two counts (252 + 0 = 252 is ambiguous,
     // so the oracle is structural: exactly three count elements, no total).
     expect([...body.matchAll(/data-parity-field="answer-intent-[a-z-]+"/g)].map((m) => m[0])).toEqual([
       'data-parity-field="answer-intent-unknown-provenance"',
+      'data-parity-field="answer-intent-unknown-provenance-served"',
       'data-parity-field="answer-intent-unknown-provenance-mark"',
       'data-parity-field="answer-intent-chain-members"',
+      'data-parity-field="answer-intent-chain-materialized"',
       'data-parity-field="answer-intent-chain-evidence"',
+      'data-parity-field="answer-intent-orphaned-served"',
       'data-parity-field="answer-intent-orphaned"',
     ]);
     // "verified" occurs in the answers only as the question's verb.
@@ -885,7 +892,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     const disclosed = [...answersRegion(html).matchAll(/data-unknown-disclosure="([^"]*)"/g)].map((m) => m[1]);
-    expect(disclosed).toEqual(['region:trajectory-running-liveness', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
+    expect(disclosed).toEqual(['region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
     for (const id of disclosed) expect(served.unknownSubjects.some((subject) => subject.id === id), id).toBe(true);
   });
 

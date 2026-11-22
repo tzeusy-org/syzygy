@@ -142,8 +142,6 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
 }
 
 /** The element id of each board-level disclosure a card mark refers to. */
-const GOVERNING_INTENT_DISCLOSURE = WORK_ITEM_GOVERNING_INTENT_REGION_ID;
-
 const NOTICE_ELEMENT_ID = {
   [WORK_ITEM_TITLES_REGION_ID]: 'n-titles',
   [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'n-intent',
@@ -189,6 +187,9 @@ function verificationRegion(model: PocModel, counts: { readonly served: number; 
       </p>`;
 }
 
+/** POC-REQ-044's fifth answer refers to POC-REQ-014's board disclosure. */
+const GOVERNING_INTENT_DISCLOSURE = WORK_ITEM_GOVERNING_INTENT_REGION_ID;
+
 /** POC-REQ-044 (syzygy-t3jk.16): README.md:99's five questions. */
 const ANSWER_QUESTION: Readonly<Record<TrajectoryAnswerId, string>> = {
   remains: 'What remains?',
@@ -216,11 +217,11 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
       const parts = (Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[])
         .map((status) => `<span data-parity-field="answer-remains-${status}">${answer.byStatus[status]}</span> <code>${escapeHtml(status)}</code>`)
         .join(' · ');
-      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection.`;
+      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection. These are the tracker's items only, not checked against materialization records; approved intent that no proposal covers, and approved intent not yet materialized, are not enumerated here.`;
     }
     case 'running': {
       if (!('claimed' in answer)) break;
-      return `<span data-parity-field="answer-running-claimed">${answer.claimed}</span> of ${answer.served} served work items are claimed in the tracker (status <code>in_progress</code>), which is the tracker's claim. ${answerDisclosure(model, 'answer-running-liveness', answer.liveness.disclosure, 'Liveness')}`;
+      return `<span data-parity-field="answer-running-claimed">${answer.claimed}</span> of <span data-parity-field="answer-running-served">${answer.served}</span> served work items are claimed in the tracker (status <code>in_progress</code>), which is the tracker's claim. Liveness: <span class="liveness-state" data-parity-field="answer-running-liveness">${escapeHtml(answer.liveness)}</span>. No staleness bound is declared for claims, so no claimed item can be shown as active; declaring the bound in quality policy resolves it.`;
     }
     case 'changed':
     case 'cost':
@@ -230,13 +231,14 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
       if (!('unknownProvenance' in answer)) break;
       const provenance = unknownSubject(model, answer.unknownProvenance.disclosure);
       const members = answer.reconciliationChain.members;
+      const materialized = `<span data-parity-field="answer-intent-chain-materialized">${answer.reconciliationChain.materialized}</span>`;
       const chain = typeof members === 'number'
-        ? `<span data-parity-field="answer-intent-chain-members">${members}</span>`
-        : answerDisclosure(model, 'answer-intent-chain-members', members.disclosure, 'Members');
+        ? `<span data-parity-field="answer-intent-chain-members">${members}</span> of ${materialized}`
+        : `${answerDisclosure(model, 'answer-intent-chain-members', members.disclosure, 'Members')} Of ${materialized}`;
       return `<ul class="answer-counts">
-          <li>Unknown-provenance: <span data-parity-field="answer-intent-unknown-provenance">${answer.unknownProvenance.count}</span> of ${answer.unknownProvenance.served} served work items have no traceable warrant. ${cardMark('answer-intent-unknown-provenance-mark', GOVERNING_INTENT_DISCLOSURE, 'epistemic-unknown', provenance.closedReason, 'Governing intent: Unknown')}</li>
+          <li>Unknown-provenance: <span data-parity-field="answer-intent-unknown-provenance">${answer.unknownProvenance.count}</span> of <span data-parity-field="answer-intent-unknown-provenance-served">${answer.unknownProvenance.served}</span> served work items have no traceable warrant. ${cardMark('answer-intent-unknown-provenance-mark', GOVERNING_INTENT_DISCLOSURE, 'epistemic-unknown', provenance.closedReason, 'Governing intent: Unknown')}</li>
           <li>Reconciliation chain: ${chain} materialized work items whose change is on the default branch. For each member: <span class="chain-state" data-parity-field="answer-intent-chain-evidence">reconciliation evidence absent / Unknown</span>; running a reconciliation evaluation resolves it.</li>
-          <li>Orphaned work: not checked. ${answerDisclosure(model, 'answer-intent-orphaned', answer.orphanedWork.disclosure, 'Count')}</li>
+          <li>Orphaned work, of <span data-parity-field="answer-intent-orphaned-served">${answer.orphanedWork.served}</span> served work items: not checked. ${answerDisclosure(model, 'answer-intent-orphaned', answer.orphanedWork.disclosure, 'Count')}</li>
         </ul>
         <p class="answer-note">The three counts are separate and never added together. Each item's own verification is in the <a href="#n-verification">verification notice</a>.</p>`;
     }
@@ -247,7 +249,8 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
 /** POC-REQ-044: the five answers, first on the page, in their fixed order;
  * an Unknown answer is rendered, never dropped. */
 function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[]): string {
-  return `<section class="answers" aria-label="Five answers about the work" data-parity-field="trajectory-answers">
+  return `<section class="answers" aria-labelledby="answers-heading" data-parity-field="trajectory-answers">
+      <h2 id="answers-heading" class="answers-heading">Five answers about the work</h2>
       <dl>${answers.map((answer) => `
         <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer)}</dd></div>`).join('')}
       </dl>
@@ -337,6 +340,7 @@ const TRAJECTORY_STYLE = `
   .answers dl { display: grid; gap: .6rem; margin: 0 0 1.5rem; max-width: 96ch; }
   .answer { display: grid; grid-template-columns: minmax(10rem, 16rem) 1fr; gap: .2rem 1rem; border-top: 1px solid var(--line); padding-top: .5rem; }
   .answer dt { font-weight: 600; }
+  .answers-heading { font-size: 1.1rem; margin: 0 0 .6rem; }
   .answer dd { margin: 0; }
   .answer-counts { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
   .answer-note { margin: .4rem 0 0; color: var(--muted); }

@@ -8,7 +8,6 @@ import {
   TRAJECTORY_CHANGED_ID,
   TRAJECTORY_COST_ID,
   TRAJECTORY_ORPHANED_WORK_ID,
-  TRAJECTORY_RUNNING_LIVENESS_ID,
   type TrajectoryProjection,
 } from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
@@ -276,10 +275,9 @@ const WORK_ITEM_VERIFICATION_BASIS =
   'Activity is not verification: no test evidence has been ingested for any work item.';
 
 /** POC-REQ-044 basis sentences for the five answers' Unknown parts. */
-const RUNNING_LIVENESS_BASIS = "The tracker's in_progress status is a claim, not a progress signal; no staleness bound is declared for claims, so whether any claimed item is being worked on now is Unknown.";
 const CHANGED_BASIS = 'No movement source is read: the observation holds each work item\'s current status and recorded instants, not its history of changes.';
-const COST_BASIS = 'No cost record is read: no effort, compute, token or elapsed-time measure is captured for any work item, so what the work cost is Unknown, never zero.';
-const ORPHANED_WORK_BASIS = 'No orphaned-work check runs: the observation does not read who created each tracker item, which the check compares with materialization records, so how many items are orphaned is Unknown, never 0.';
+const COST_BASIS = 'No cost record is read: no effort, compute, token or blocked-time measure is captured for any work item, and lead time, derivable from recorded instants, is not yet measured, so what the work cost is Unknown, never zero.';
+const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
@@ -338,7 +336,6 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       // the observation's own `titles` with its basis sentence.
       subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: workItemTitlesDisclosure(input.workItems.titles) });
       // POC-REQ-044 (syzygy-t3jk.16): the five answers' Unknown parts.
-      add(TRAJECTORY_RUNNING_LIVENESS_ID, RUNNING_LIVENESS_BASIS, 'no-currency-bound-declared');
       add(TRAJECTORY_CHANGED_ID, CHANGED_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');

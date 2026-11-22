@@ -237,20 +237,21 @@ function model(name: string): PocModel {
 // three and the worker-change verification). unreachable and
 // unsupported-repository render no board and do not move.
 // syzygy-t3jk.16 opens Trajectory with five answers (POC-REQ-044). On an
-// observed board four answer parts are their own disclosures (running
-// liveness, changed, cost, orphaned-work count): plain and observed-shape
-// 3 + 4 = 7, worker-change 4 + 4 = 8 (its worker change is observed, so no
-// chain-membership disclosure). The Unknown-provenance count adds one
+// observed board three answer parts are their own disclosures (changed,
+// cost, orphaned-work count; running liveness is the state-local
+// activity-undetermined, RFC8-16, and no disclosure): plain and
+// observed-shape 3 + 3 = 6, worker-change 4 + 3 = 7 (its worker change is
+// observed, so no chain-membership disclosure). The Unknown-provenance count adds one
 // reference to the governing-intent notice (15 + 1, 3 + 1). On a board
 // with no work items each of the five answers is a reference to the
 // work-items notice and no disclosure: unreachable and
 // unsupported-repository keep 1 and 2, references 0 + 5.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
-  plain: { polaris: 21, trajectory: 7, orrery: 9 },
-  'observed-shape': { polaris: 13, trajectory: 7, orrery: 9 },
+  plain: { polaris: 21, trajectory: 6, orrery: 9 },
+  'observed-shape': { polaris: 13, trajectory: 6, orrery: 9 },
   unreachable: { polaris: 24, trajectory: 1, orrery: 10 },
   'unsupported-repository': { polaris: 22, trajectory: 2, orrery: 9 },
-  'worker-change': { polaris: 19, trajectory: 8, orrery: 7 },
+  'worker-change': { polaris: 19, trajectory: 7, orrery: 7 },
 };
 
 /** Trajectory's marks that refer to a board disclosure: three per rendered
@@ -284,7 +285,7 @@ describe('every surface Unknown carries a closed reason and a route (M4 slice 1,
         for (const disclosure of disclosures(RENDER[surface](model(name)))) ids.add(disclosure.id.replace(/^(work-item|worker-change):[^/]+/, '$1:*'));
       }
     }
-    for (const id of ['worker-change:*/verification', 'region:work-item-verification', 'region:work-item-governing-intent', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code', 'region:trajectory-running-liveness', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']) {
+    for (const id of ['worker-change:*/verification', 'region:work-item-verification', 'region:work-item-governing-intent', 'materialization', 'region:code-structure', 'region:work-items', 'region:work-item-titles', 'relationship:intent-to-work', 'region:unmapped-code', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']) {
       expect(ids, id).toContain(id);
     }
     expect([...ids].some((id) => id.endsWith('/lifecycle')), 'a proposal lifecycle disclosure').toBe(true);

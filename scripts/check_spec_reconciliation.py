@@ -3489,7 +3489,8 @@ def check_census(root, report):
     if signed_reference:
         poc_added = poc_scenarios_added(root)
         poc_literal = {**EXPECTED["POC"], "014": 8}
-        assert (len(poc_literal), sum(poc_literal.values())) == (26, 34)
+        if (len(poc_literal), sum(poc_literal.values())) != (26, 34):
+            findings.append("POC: the signed literal is no longer 26 / 34 before amendments")
         poc_literal = {**poc_literal, **{req: poc_literal.get(req, 0) + count for req, count in poc_added.items()}}
         totals["POC"] = (len(poc_literal), sum(poc_literal.values()))
     for family, (n_req, n_scen) in totals.items():

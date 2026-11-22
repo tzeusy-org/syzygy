@@ -247,9 +247,11 @@ selected item's text. The size-only comparison and choice rationale are in
 4. Trajectory opens with five answers, before the scope statement and the
    board, each counted over every served work item rather than the board's
    selection (`trajectory.answers` on the machine answer):
-   - what remains: the served count for each tracker status;
+   - what remains: the served count for each tracker status (the tracker's
+     items only, not checked against materialization records);
    - what is running: how many items the tracker marks `in_progress`, as
-     the tracker's claim, with liveness Unknown;
+     the tracker's claim, with liveness `activity-undetermined` because no
+     staleness bound is declared;
    - what changed and what it cost: Unknown, with reason and route;
    - verified against intent: three separate counts, never added together.
      They are the items with no traceable warrant; the materialized work on

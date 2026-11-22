@@ -26,7 +26,6 @@ export interface TrajectoryLaneItem {
 
 /** POC-REQ-044 (syzygy-t3jk.16): the disclosures the five answers name.
  * Each exists in `unknownSubjects` exactly when its answer part renders. */
-export const TRAJECTORY_RUNNING_LIVENESS_ID = 'region:trajectory-running-liveness' as const;
 export const TRAJECTORY_CHANGED_ID = 'region:trajectory-changed' as const;
 export const TRAJECTORY_COST_ID = 'region:trajectory-cost' as const;
 export const TRAJECTORY_ORPHANED_WORK_ID = 'region:trajectory-orphaned-work' as const;
@@ -63,7 +62,10 @@ export type TrajectoryAnswer =
       /** Items the tracker marks in_progress: the tracker's claim. */
       readonly claimed: number;
       readonly served: number;
-      readonly liveness: TrajectoryAnswerUnknown;
+      /** RFC8-16: with no staleness bound declared, a claimed item's
+       * liveness state is `activity-undetermined`, state-local (RFC8-12):
+       * never an RFC2-24 reason, never counted among Unknown reasons. */
+      readonly liveness: 'activity-undetermined';
     }
   | ({ readonly id: 'changed' | 'cost' } & TrajectoryAnswerUnknown)
   | {
@@ -76,10 +78,13 @@ export type TrajectoryAnswer =
        * chain-state fact carrying no RFC2-24 reason. */
       readonly reconciliationChain: {
         readonly members: number | TrajectoryAnswerUnknown;
+        /** The denominator: materialized work items (0 or 1 in the POC). */
+        readonly materialized: number;
         readonly memberEvidence: 'reconciliation-evidence-absent';
       };
-      /** RFC8-8: no orphaned-work check runs, so the count is Unknown. */
-      readonly orphanedWork: TrajectoryAnswerUnknown;
+      /** RFC8-8: no orphaned-work check runs, so the count of the served
+       * items that are orphaned is Unknown. */
+      readonly orphanedWork: TrajectoryAnswerUnknown & { readonly served: number };
     }
   | ({ readonly id: TrajectoryAnswerId } & TrajectoryAnswerUnknown);
 
@@ -138,15 +143,19 @@ function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' 
   const served = workItems.items.length;
   return [
     { id: 'remains', state: 'observed', byStatus, served },
-    { id: 'running', state: 'observed', claimed: byStatus.in_progress, served, liveness: { state: 'unknown', disclosure: TRAJECTORY_RUNNING_LIVENESS_ID } },
+    { id: 'running', state: 'observed', claimed: byStatus.in_progress, served, liveness: 'activity-undetermined' },
     { id: 'changed', state: 'unknown', disclosure: TRAJECTORY_CHANGED_ID },
     { id: 'cost', state: 'unknown', disclosure: TRAJECTORY_COST_ID },
     {
       id: 'intent',
       state: 'observed',
       unknownProvenance: { count: workItems.governedByUnknownCount, served, disclosure: GOVERNING_INTENT_REGION_ID },
-      reconciliationChain: { members: chainMembers(chain), memberEvidence: 'reconciliation-evidence-absent' },
-      orphanedWork: { state: 'unknown', disclosure: TRAJECTORY_ORPHANED_WORK_ID },
+      reconciliationChain: {
+        members: chainMembers(chain),
+        materialized: chain === undefined || chain.materializedBeadId === null ? 0 : 1,
+        memberEvidence: 'reconciliation-evidence-absent',
+      },
+      orphanedWork: { state: 'unknown', disclosure: TRAJECTORY_ORPHANED_WORK_ID, served },
     },
   ];
 }

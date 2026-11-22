@@ -72,15 +72,15 @@ describe('Trajectory projection', () => {
     expect(projection.renderedCount).toBe(3);
     expect(projection.answers).toEqual([
       { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 } },
-      { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: { state: 'unknown', disclosure: 'region:trajectory-running-liveness' } },
+      { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: 'activity-undetermined' },
       { id: 'changed', state: 'unknown', disclosure: 'region:trajectory-changed' },
       { id: 'cost', state: 'unknown', disclosure: 'region:trajectory-cost' },
       {
         id: 'intent',
         state: 'observed',
         unknownProvenance: { count: 4, served: 4, disclosure: 'region:work-item-governing-intent' },
-        reconciliationChain: { members: 0, memberEvidence: 'reconciliation-evidence-absent' },
-        orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work' },
+        reconciliationChain: { members: 0, materialized: 0, memberEvidence: 'reconciliation-evidence-absent' },
+        orphanedWork: { state: 'unknown', disclosure: 'region:trajectory-orphaned-work', served: 4 },
       },
     ]);
   });

@@ -8,7 +8,7 @@
 > here is overwritten and `--check` fails first. Identifiers only —
 > nothing here quotes or paraphrases any clause.
 >
-> Source: `spec.md` sha256 `9ed6223ad9ef1635253e560ddd9bd2abb10be85c7b276559258d1034fd79c374` — 27 requirement(s), 94 distinct authorities.
+> Source: `spec.md` sha256 `ecac09a06eedf2b6b1fc1c36684eee0dc94ef36c67f6d7d5d5b035da8badb22b` — 27 requirement(s), 98 distinct authorities.
 
 ## doctrine (9)
 
@@ -24,7 +24,7 @@
 | `VIS-6` | POC-REQ-001, POC-REQ-004, POC-REQ-010, POC-REQ-011, POC-REQ-012, POC-REQ-014, POC-REQ-040, POC-REQ-041, POC-REQ-050, POC-REQ-052 |
 | `VIS-7` | POC-REQ-001, POC-REQ-004, POC-REQ-010, POC-REQ-011, POC-REQ-012, POC-REQ-014, POC-REQ-020, POC-REQ-031, POC-REQ-041, POC-REQ-050, POC-REQ-055 |
 
-## contracts (81)
+## contracts (85)
 
 | Authority | Cited by |
 |---|---|
@@ -44,6 +44,7 @@
 | `RFC2-2` | POC-REQ-003, POC-REQ-013 |
 | `RFC2-3` | POC-REQ-004, POC-REQ-041 |
 | `RFC2-6` | POC-REQ-042, POC-REQ-051 |
+| `RFC2-18` | POC-REQ-044 |
 | `RFC2-19(a)` | POC-REQ-044 |
 | `RFC2-20` | POC-REQ-043 |
 | `RFC2-23` | POC-REQ-003, POC-REQ-013 |
@@ -83,8 +84,11 @@
 | `RFC7-33` | POC-REQ-020, POC-REQ-022 |
 | `RFC7-34` | POC-REQ-022, POC-REQ-061 |
 | `RFC8-2` | POC-REQ-043 |
+| `RFC8-8` | POC-REQ-044 |
 | `RFC8-12` | POC-REQ-040 |
 | `RFC8-15` | POC-REQ-043 |
+| `RFC8-16` | POC-REQ-044 |
+| `RFC8-19` | POC-REQ-044 |
 | `RFC8-22` | POC-REQ-014 |
 | `RFC8-23` | POC-REQ-014, POC-REQ-044 |
 | `RFC8-24` | POC-REQ-014, POC-REQ-043 |
