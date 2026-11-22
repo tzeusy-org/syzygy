@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 473,
+      "scenarios": 477,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -991,7 +991,11 @@
             "Conservative visibility preserves exclusions",
             "Legacy continuation is explicit",
             "Disclosures name actual evidence",
-            "URL projection does not inherit a false local dispatch reason"
+            "URL projection does not inherit a false local dispatch reason",
+            "Verify gives each claim one of six outcomes",
+            "Verify never reads or names a withheld path",
+            "Verify's quotation check is check's",
+            "Verify writes nothing into a run"
           ]
         },
         "REQ-polaris-generation-034": {
