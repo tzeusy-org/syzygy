@@ -1,0 +1,126 @@
+{
+  "answers": [
+    {
+      "id": "Q01",
+      "answer": "Redis is an in-memory key-value database and data structure server. It maps binary-safe keys to typed values primarily in RAM, with optional disk persistence. It targets low-latency real-time application work such as caching, session storage, job and priority queues, messaging through pub/sub and streams, and search and vector similarity.",
+      "where": "index.md: Why Redis exists; poles/1.md: The ideas Redis is built on"
+    },
+    {
+      "id": "Q02",
+      "answer": "RDB is a point-in-time snapshot of the whole dataset, taken at configured save points by a forked child while the parent serves clients. AOF records write commands for replay at startup. A crash or power outage can lose minutes of writes with snapshots; AOF has better durability, with everysec potentially losing about one second. When both are enabled, startup loads AOF because of its better durability guarantees.",
+      "where": "poles/1.md: RDB snapshot and AOF; poles/3.md: Mechanisms and what they cost; deep-dives/mechanism-deep-dive.md: Snapshots and Command log; understanding.md: Trade-offs"
+    },
+    {
+      "id": "Q03",
+      "answer": "not stated",
+      "where": "not stated"
+    },
+    {
+      "id": "Q04",
+      "answer": "Modules extend Redis with new commands and data types. A module is a shared library loaded into redis-server, for example through a loadmodule configuration line at startup. How to load one into an already running server is not stated. How a module-defined data type is saved and restored is not stated.",
+      "where": "poles/1.md: Module"
+    },
+    {
+      "id": "Q05",
+      "answer": "The event loop in ae.c sleeps until file descriptors are ready and processes their events; aeMain repeats until stopped. The listening handler connSocketAcceptHandler accepts TCP connections, passes them to acceptCommonHandler, and creates a client. createClient installs readQueryFromClient so readiness leads to filling a query buffer, parsing a complete command, checking it and executing it. Replies enter a client output buffer. Before the loop waits again, beforeSleep flushes AOF before replies and handleClientsWithPendingWrites sends buffered replies. A fuller description of one loop turn and the general connection abstraction is not stated.",
+      "where": "glossary.md: Event-loop; poles/2.md: The request path in the source code; deep-dives/mechanism-deep-dive.md: Command log"
+    },
+    {
+      "id": "Q06",
+      "answer": "The keyspace is in memory and each binary-safe string key names one typed value. The specific containers for keys and expirations, their cluster-mode layout, and where the key name is stored relative to its value are not stated.",
+      "where": "poles/1.md: The ideas Redis is built on"
+    },
+    {
+      "id": "Q07",
+      "answer": "A data type describes the kind of value held by a key, such as string, list, set, hash or sorted set. Encoding, why both type and encoding exist, and who chooses the encoding are not stated.",
+      "where": "poles/1.md: Data type"
+    },
+    {
+      "id": "Q08",
+      "answer": "Cluster mode divides keys among 16384 hash slots. A key maps to a slot using CRC16 of the key name. processCommand redirects requests whose keys are owned by another node; multi-key operations require all keys to share a slot. The division of the clustering source code and the detailed ownership/routing decision are not stated.",
+      "where": "poles/1.md: Hash slot; poles/2.md: The request path in the source code; poles/3.md: Mechanisms and what they cost"
+    },
+    {
+      "id": "Q09",
+      "answer": "readQueryFromClient receives bytes into the client query buffer and invokes processInputBuffer. That parser distinguishes multibulk input beginning with * from inline commands, parses arguments, and calls processCommandAndResetClient for a complete command. processCommand looks up the command, checks ACL permissions and cluster routing, runs eviction if maxmemory is configured, and refuses writes after persistence errors. These checks can prevent local execution. Inside MULTI the command is queued and replies QUEUED; otherwise call invokes the command proc against memory. addReply buffers its reply. After a write, call uses alsoPropagate and propagateNow to feedAppendOnlyFile and replicationFeedSlaves. AOF writes first enter a memory buffer and flushAppendOnlyFile writes it in beforeSleep before replies; appendfsync determines disk syncing frequency. Replication streams writes asynchronously to replicas. Additional pre-execution checks are not stated.",
+      "where": "poles/2.md: The request path in the source code; deep-dives/mechanism-deep-dive.md: Command log and Copies; poles/3.md: Mechanisms and what they cost"
+    },
+    {
+      "id": "Q10",
+      "answer": "Since Redis 7 the AOF consists of a base snapshot, incremental command files, and a manifest ordering them. The background rewrite steps and how the manifest/files are updated while writes continue are not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md: Command log"
+    },
+    {
+      "id": "Q11",
+      "answer": "A replica connects with SYNC or PSYNC, handled by syncCommand. A master retains recent writes in a replication backlog, letting a briefly disconnected replica resume with a partial resync instead of copying everything again. The precise tests for choosing partial versus full synchronization and the steps of full synchronization are not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md: Copies; glossary.md: PSYNC and Replication-backlog"
+    },
+    {
+      "id": "Q12",
+      "answer": "Key expiration is named as a caching capability. The mechanisms for removing TTL keys, the background cost limit, and propagation of removal to replicas and AOF are not stated.",
+      "where": "index.md: Why Redis exists / Caching"
+    },
+    {
+      "id": "Q13",
+      "answer": "The artifact says LRU, LFU, LRM and volatile-ttl use approximated randomized algorithms. Why exact LRU order is avoided, how the approximation selects victims, and its cost are not stated.",
+      "where": "poles/3.md: Mechanisms and what they cost"
+    },
+    {
+      "id": "Q14",
+      "answer": "not stated",
+      "where": "not stated"
+    },
+    {
+      "id": "Q15",
+      "answer": "The mostly single-threaded core keeps the design simple; the artifact describes combining simple shared-nothing instances using higher-level protocols as suited to NUMA systems. One slow command delays every other client of its instance. Optional I/O threads move socket reading, parsing and writing off the main thread. They are disabled by default and recommended only with at least four cores and a real performance problem; threaded I/O is not supported for TLS connections. Background snapshots use a forked child process. Other extra-thread uses and their costs are not stated.",
+      "where": "poles/1.md: A mostly single-threaded core and Scale out by many cores; poles/3.md: Technology choices and Mechanisms and what they cost"
+    },
+    {
+      "id": "Q16",
+      "answer": "appendfsync sets how often AOF is synced to disk; everysec syncs once per second as a compromise and can lose about one second of writes. The complete set of sync policies and their trade-offs is not stated. feedAppendOnlyFile buffers propagated writes and flushAppendOnlyFile writes them during beforeSleep before replies, because AOF must be written before replying. Why this is preferable to writing inside each command is not stated. The mitigation during background saves and durability it gives up are not stated.",
+      "where": "glossary.md: fsync; understanding.md: Trade-offs; poles/3.md: Mechanisms and what they cost; deep-dives/mechanism-deep-dive.md: Command log"
+    },
+    {
+      "id": "Q17",
+      "answer": "not stated",
+      "where": "not stated"
+    },
+    {
+      "id": "Q18",
+      "answer": "not stated",
+      "where": "not stated"
+    },
+    {
+      "id": "Q19",
+      "answer": "not stated",
+      "where": "not stated"
+    },
+    {
+      "id": "Q20",
+      "answer": "(a) not stated. (b) not stated.",
+      "where": "not stated"
+    },
+    {
+      "id": "Q21",
+      "answer": "At maxmemory the server evicts keys according to maxmemory-policy. The default noeviction policy returns errors on writes, and when no key can be evicted, write commands requiring memory get errors. Which memory or instances are exempt from the limit, and other situations in which writes fail because of it, are not stated.",
+      "where": "poles/3.md: Mechanisms and what they cost; understanding.md: Limits"
+    },
+    {
+      "id": "Q22",
+      "answer": "By default a failed background save causes Redis to stop accepting writes so the failure is noticed. The command path also refuses writes following persistence errors. Behavior for a damaged AOF at startup or a data file that cannot be loaded at all is not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md: Snapshots; poles/2.md: The request path in the source code"
+    },
+    {
+      "id": "Q23",
+      "answer": "Replication is asynchronous and acknowledged writes can be lost during failover. A master can be configured to stop accepting writes if it appears not to have at least a configured number of replicas; this limits the exposure window but does not guarantee that N replicas accept a write. The precise configuration names and a replica's client behavior when disconnected from its master are not stated.",
+      "where": "understanding.md: Trade-offs; poles/3.md: Mechanisms and what they cost; deep-dives/mechanism-deep-dive.md: Copies"
+    },
+    {
+      "id": "Q24",
+      "answer": "Multi-key operations in cluster mode work only when all their keys share a hash slot; requests for keys owned elsewhere are redirected. Additional command restrictions, restrictions on databases, and cluster availability when some slots have no serving node are not stated.",
+      "where": "poles/3.md: Mechanisms and what they cost; poles/2.md: The request path in the source code"
+    }
+  ],
+  "minutes_felt": 5,
+  "notes": "The overview, request-path page and persistence deep dive made purpose and basic execution easy to locate. Detailed implementation, extension and failure-policy questions were often not stated, and repeated evidence labels made the text slower to scan."
+}

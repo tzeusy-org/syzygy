@@ -9,7 +9,8 @@
       "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
       "exit": 1,
       "killed": true,
-      "log": "/home/orca/.tmp/f3-coverage-mutation-results/reader-lease.log"
+      "log": "docs/evidence/syzygy-k54o-3/coverage-bridge-mutations/reader-lease.log",
+      "logSha256": "9370b01ac544f310c2abc1abc21cf90d4af2b00b5b6313bbb0f67094ae329e34"
     },
     {
       "id": "protected-refusal",
@@ -19,7 +20,8 @@
       "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
       "exit": 1,
       "killed": true,
-      "log": "/home/orca/.tmp/f3-coverage-mutation-results/protected-refusal.log"
+      "log": "docs/evidence/syzygy-k54o-3/coverage-bridge-mutations/protected-refusal.log",
+      "logSha256": "eb880840177240aac15bb34cb2345e8e64c97c3afc5f383553fe5ab82c56fc2f"
     },
     {
       "id": "compared-projection",
@@ -29,7 +31,8 @@
       "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
       "exit": 1,
       "killed": true,
-      "log": "/home/orca/.tmp/f3-coverage-mutation-results/compared-projection.log"
+      "log": "docs/evidence/syzygy-k54o-3/coverage-bridge-mutations/compared-projection.log",
+      "logSha256": "3649640e3365ebc61851a682b59cd9ce5f6a38498c2721f4857f2863fa5be417"
     },
     {
       "id": "inventory-parentage",
@@ -39,7 +42,8 @@
       "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
       "exit": 1,
       "killed": true,
-      "log": "/home/orca/.tmp/f3-coverage-mutation-results/inventory-parentage.log"
+      "log": "docs/evidence/syzygy-k54o-3/coverage-bridge-mutations/inventory-parentage.log",
+      "logSha256": "efa257bc3db53b978415e5af13a3996518a895a1e6e6e27a7585349adea41992"
     },
     {
       "id": "screen-policy-binding",
@@ -49,7 +53,8 @@
       "commit": "d0d0d9a43c59c130e05f5ae149ba0a85826caf87",
       "exit": 1,
       "killed": true,
-      "log": "/home/orca/.tmp/f3-coverage-mutation-results/screen-policy-binding.log"
+      "log": "docs/evidence/syzygy-k54o-3/coverage-bridge-mutations/screen-policy-binding.log",
+      "logSha256": "959e4e0b38bdc884333869f37ea7e2c0eb1198b66a418ccb86aa98fe8b4463ed"
     }
   ]
 }

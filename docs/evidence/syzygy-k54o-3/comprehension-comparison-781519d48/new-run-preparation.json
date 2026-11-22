@@ -1,0 +1,171 @@
+{
+  "format": "f3-comprehension-new-run-preparation/1",
+  "capturedAt": "2026-11-22T07:50:29.506266+00:00",
+  "source": {
+    "commit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+    "trackedChanges": 0,
+    "buildLogSha256": "769467a9b1798586b17628153d0e8c95cc8ba6bf3890a0d15e6f3a0caf2b8b7a",
+    "checkpoint": "Built 781519d48 reused without rebuilding. Later guards/advice glue are not measured by this capture."
+  },
+  "input": {
+    "originalRun": "/home/orca/.local/state/syzygy-dossier/run-658f2f90470f73eea1dc1d90209c5ef7",
+    "originalSite": 1,
+    "newRun": "/home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2",
+    "oldDraftRevision": 4,
+    "newDraftRevision": 0,
+    "draftSha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "draftBytes": 93863,
+    "draftBytesIdentical": true,
+    "pinnedCommit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+    "clone": "/home/orca/.local/state/syzygy-polaris-clones/redis-redis-8.10.2",
+    "config": "/home/orca/.tmp/f3-comprehension-781519d48/new-run-config.json",
+    "configSha256": "84b1976143d5b2b653d86193f5c9ea0330b3b0ec3b7e7afdeeca742e86a45068"
+  },
+  "commands": {
+    "init": {
+      "result": "/home/orca/.tmp/f3-comprehension-781519d48/new-init.json",
+      "sha256": "14c0fc0c8caf3efed68ca2ecdd975cd55aaa2d68eefe09dbdac0ad4503d272d6",
+      "exitCode": 0,
+      "outcome": "initialized"
+    },
+    "brief": {
+      "result": "/home/orca/.tmp/f3-comprehension-781519d48/new-brief.json",
+      "sha256": "d9c08ef81ec2e76e1cc9458cf73b2daca170c4630754b7f7f07071fdac13bcc5",
+      "exitCode": 0,
+      "outcome": "issued"
+    },
+    "check": {
+      "result": "/home/orca/.tmp/f3-comprehension-781519d48/new-check.json",
+      "sha256": "9307769fb76c993ea0e02dfee94111d7053f5b032e866699f50c00b71e1ed411",
+      "exitCode": 0,
+      "outcome": "passed"
+    },
+    "render": {
+      "result": "/home/orca/.tmp/f3-comprehension-781519d48/new-render.json",
+      "sha256": "4066b5bb4040396ba312663b1e61a85498363c45eb384a1e20a2473eaef4b2ca",
+      "exitCode": 0,
+      "outcome": "rendered"
+    }
+  },
+  "before": {
+    "readerText": "/home/orca/.tmp/f3-comprehension-781519d48/before-reader-text",
+    "counts": {
+      "pages": 15,
+      "words": 12574,
+      "sourcesPagesExcluded": 27,
+      "perPageWords": {
+        "appendix.html": 1024,
+        "clarifications.html": 107,
+        "contents.html": 144,
+        "deep-dives/mechanism-deep-dive.html": 696,
+        "discovery.html": 945,
+        "executions.html": 198,
+        "glossary.html": 451,
+        "index.html": 1563,
+        "poles/1.html": 1172,
+        "poles/2.html": 1298,
+        "poles/3.html": 2015,
+        "review.html": 460,
+        "size-report.html": 511,
+        "sources/index.html": 777,
+        "understanding.html": 1213
+      },
+      "rule": "every .html under the site except sources/*.html other than sources/index.html; text from <main> only",
+      "site": "/home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7/site/1"
+    }
+  },
+  "after": {
+    "readerText": "/home/orca/.tmp/f3-comprehension-781519d48/after-reader-text",
+    "site": "/home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2/site/0",
+    "counts": {
+      "pages": 18,
+      "words": 19060,
+      "sourcesPagesExcluded": 28,
+      "perPageWords": {
+        "appendix.html": 799,
+        "clarifications.html": 70,
+        "contents.html": 117,
+        "deep-dives/mechanism-deep-dive.html": 821,
+        "discovery.html": 907,
+        "executions.html": 161,
+        "glossary.html": 414,
+        "index.html": 2867,
+        "maps/ci.html": 3293,
+        "maps/directories.html": 972,
+        "maps/units.html": 410,
+        "poles/1.html": 1418,
+        "poles/2.html": 1593,
+        "poles/3.html": 2614,
+        "review.html": 160,
+        "size-report.html": 506,
+        "sources/index.html": 752,
+        "understanding.html": 1186
+      },
+      "rule": "every .html under the site except sources/*.html other than sources/index.html; text from <main> only",
+      "site": "/home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2/site/0"
+    },
+    "renderReport": {
+      "format": "polaris-dossier-render/1",
+      "command": "render",
+      "outcome": "rendered",
+      "run": "/home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2",
+      "site": "/home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2/site/0",
+      "draftRevision": 0,
+      "draftLayer": {
+        "state": "editorial-draft"
+      },
+      "fidelityReview": {
+        "counts": false,
+        "why": "no fidelity verdict has been checked"
+      },
+      "designReview": {
+        "counts": false,
+        "packetSha256": "a848f4d87c97500011f193e121102beef2166875fdeccf62d6b1e38c2da92e9b",
+        "why": "no design verdict has been checked"
+      },
+      "pages": 46,
+      "quotations": {
+        "rendered": 9,
+        "withheld": 0,
+        "label": "Observed"
+      },
+      "sources": {
+        "admitted": 28,
+        "excluded": 3
+      },
+      "credential": {
+        "required": false,
+        "why": "the brief carried SEC-3's rule and permits no execution"
+      },
+      "disclosures": [
+        "the Syzygy checkout and local run records lie within the agent sessions write reach; stored history and declarations remain Inferred",
+        "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+        "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+      ]
+    }
+  },
+  "integrity": {
+    "originalRunFiles": 149,
+    "originalRunUnchangedAgainstBeforeManifest": true,
+    "newRunManifest": "/home/orca/.tmp/f3-comprehension-781519d48/new-run-files.json",
+    "newRunManifestSha256": "b707c009dde86892dbcd589294a402e519f36b8a995ec7c4b2302507c7a1159b",
+    "readerTextManifest": "/home/orca/.tmp/f3-comprehension-781519d48/reader-text-files.json",
+    "readerTextManifestSha256": "599658799a22555b91925fe5e57baf09a8df71fc7943283b54d27a4ffb5456f9",
+    "cloneTrackedDiffAndCachedDiffExitCodes": 0
+  },
+  "comparisonLimits": [
+    "A new declared-source run under current policy, current brief and current tool/provider declarations imports historical draft bytes as input. It is not a continuation or migration of the historical run.",
+    "The before retained site had a counted fidelity review; the new run has no checked inventory/fidelity/design verdict. Draft claims in the new initial render therefore carry the treatment the real renderer gives that state.",
+    "Policy, run declarations, disclosure text, source admission and derived-map state may differ. A before/after comprehension difference cannot be attributed solely to the F3 code.",
+    "The historical draft was authored by the historical session. The new configuration identifies this measurement session; no new authoring/provider call was made. No old verdict, launch record or authority was imported.",
+    "No fresh reader or grader has run in this context; comprehension shares are not measured here."
+  ],
+  "protocol": {
+    "keyAnswersOrGradingRead": false,
+    "readerOrGraderStarted": false,
+    "providerOrNetworkCall": false,
+    "observedCodeExecuted": false,
+    "legacyAuthorityImported": false,
+    "guardsDisabled": false
+  }
+}

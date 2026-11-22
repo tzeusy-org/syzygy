@@ -1,0 +1,91 @@
+{
+  "format": "syzygy-f3-comprehension-comparison/1",
+  "subjectCommit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+  "questions": 24,
+  "facts": 81,
+  "arms": {
+    "before": {
+      "share": 0.278,
+      "perKind": {
+        "purpose": 0.538,
+        "structure": 0.214,
+        "mechanism": 0.333,
+        "rationale": 0.269,
+        "change": 0.038,
+        "limits": 0.269
+      },
+      "factsGiven": 22.5,
+      "wrongStatements": 0
+    },
+    "after": {
+      "share": 0.259,
+      "perKind": {
+        "purpose": 0.5,
+        "structure": 0.214,
+        "mechanism": 0.3,
+        "rationale": 0.269,
+        "change": 0.0,
+        "limits": 0.269
+      },
+      "factsGiven": 21.0,
+      "wrongStatements": 0
+    }
+  },
+  "denominators": {
+    "purpose": 13,
+    "overall": 81,
+    "structure": 14,
+    "mechanism": 15,
+    "rationale": 13,
+    "change": 13,
+    "limits": 13
+  },
+  "limits": [
+    "Different run stages: retained before site has counted fidelity; new after site has no checked inventory or verdicts.",
+    "Same unchanged historical draft, current declaration/policy/brief/disclosures and three added computed maps; not an isolated renderer or F3 effect.",
+    "One repository, one after reader, one blind grader; uncalibrated; no improvement or regression claim."
+  ],
+  "inputSha256": "96968c9702c32c1aaa392817dd07ad679aba66304bc9230bddd14f0feb7ff610",
+  "gradesSha256": "f4c7137d14d59a30b551c66e998e762d223ddd1fc6efd2b5b75f49de009dad4f",
+  "dropsAboveFivePoints": [],
+  "historicalThirdGrading": {
+    "record": "docs/evidence/pursuit-2026-11-21b/pilot/result3.json",
+    "share": 0.333,
+    "perKind": {
+      "purpose": 0.58,
+      "structure": 0.29,
+      "mechanism": 0.37,
+      "rationale": 0.31,
+      "change": 0.04,
+      "limits": 0.42
+    }
+  },
+  "dropsFromHistoricalAboveFivePoints": [
+    {
+      "kind": "overall",
+      "before": 0.333,
+      "after": 0.259
+    },
+    {
+      "kind": "purpose",
+      "before": 0.58,
+      "after": 0.5
+    },
+    {
+      "kind": "structure",
+      "before": 0.29,
+      "after": 0.214
+    },
+    {
+      "kind": "mechanism",
+      "before": 0.37,
+      "after": 0.3
+    },
+    {
+      "kind": "limits",
+      "before": 0.42,
+      "after": 0.269
+    }
+  ],
+  "historicalComparisonExplanation": "The paired blind grading scores the same historical before answers0.278, versus the prior pilot0.333, demonstrating grading-session variation. The after artifact is also a new run at another stage, with current declarations/disclosures and3computed maps, no counted inventory/verdicts, and19060words versus12574. These changes confound attribution; a matched-stage repeated run is needed to diagnose an isolated code effect. The original-baseline drops are reported without calling one result a regression."
+}

@@ -1,0 +1,89 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-machine-store
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts (51 tests | 1 failed | 50 skipped) 410ms
+   ↓ trusted URL artifact producer bridge > pins logical launch reads to the latest independently committed physical generation and retains old bytes
+   ↓ trusted URL artifact producer bridge > restores sealed product provenance into a genuinely fresh ledger and can freeze another stop
+   ↓ trusted URL artifact producer bridge > takes a recovery capability before the first await so two fresh ledgers cannot race its transfer
+   ↓ trusted URL artifact producer bridge > refuses the first failed resource check before importing historical provenance
+   ↓ trusted URL artifact producer bridge > withdraws recovery on claim loss after an awaited resource check
+   ↓ trusted URL artifact producer bridge > refuses copy drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses json drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses file drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses boundary drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses claim drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses source drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses ledger-run drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > binds the broker one-minute helper default while refusing changed arguments or output
+   ↓ trusted URL artifact producer bridge > authenticates actual initial/core reads once, isolates returned bytes and reports deduplicated metadata only
+   × trusted URL artifact producer bridge > reverifies the exact retained initialized bytes and sidecar under the protected bindings 408ms
+     → promise resolved "{ state: 'unknown', …(2) }" instead of rejecting
+   ↓ trusted URL artifact producer bridge > selects exact committed check/report sets and refuses missing, unknown higher, uncommitted or mutated products
+   ↓ trusted URL artifact producer bridge > captures verified absence but never treats unknown inserted records or unsupported species as absent
+   ↓ trusted URL artifact producer bridge > reuses fresh proofs for the same render inputs and separates changed paths and read operations
+   ↓ trusted URL artifact producer bridge > refuses changed bytes, hash rewrites, rename replacements and unsafe filesystem identities after an admitted read
+   ↓ trusted URL artifact producer bridge > binds helper check/report/delivery reads to actual committed producer lineage
+   ↓ trusted URL artifact producer bridge > lets resource polls run before binding a submitted verdict and consumes its pending capture once
+   ↓ trusted URL artifact producer bridge > rejects fake/cross-bridge contexts, expired/aborted/current-lost reads, and bounded excess contexts
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded record read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded record batch read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded selection read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded selection batch read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded revalidation read
+   ↓ trusted URL artifact producer bridge > binds actual initial products, refuses unknown or changed bytes and retains metadata only
+   ↓ trusted URL artifact producer bridge > publishes no initial artifact when the last helper prompt fails verification
+   ↓ trusted URL artifact producer bridge > refuses a helper whose issued report and record agree on the wrong role
+   ↓ trusted URL artifact producer bridge > refuses symlinks, hardlinks, oversized bytes, changed records and decoded secret/active products
+   ↓ trusted URL artifact producer bridge > authenticates source bodies independently and admits draft reports only after actual receipt audit commit
+   ↓ trusted URL artifact producer bridge > never counts a stored check under an unrelated source-read audit commit
+   ↓ trusted URL artifact producer bridge > captures real component bytes, checks source/payload identity, and refuses counting before durable commit
+   ↓ trusted URL artifact producer bridge > preserves checked findings and binds waiting reports to the requested helper round and exit
+   ↓ trusted URL artifact producer bridge > screens actual control replies and retains original question source classes without persisting the exchange
+   ↓ trusted URL artifact producer bridge > captures genuine schema-bound submitted evidence and full packet source/report lineage, including trailing json normalization
+   ↓ trusted URL artifact producer bridge > preserves the committed author check if staging its paired draft fails
+   ↓ trusted URL artifact producer bridge > polls only the latest exact paired committed product without issuing receipts
+   ↓ trusted URL artifact producer bridge > stops fidelity packet construction before a protected population read when its sample fails
+   ↓ trusted URL artifact producer bridge > refuses render fidelity input reads before the verdict census when an active sample fails
+   ↓ trusted URL artifact producer bridge > refuses a whole stage poll if authority changes during its last descriptor read
+   ↓ trusted URL artifact producer bridge > stops packet registration before the next protected read when an active sample fails
+   ↓ trusted URL artifact producer bridge > keeps every round artifact unavailable when validating its schema file fails
+   ↓ trusted URL artifact producer bridge > requires the exact committed passing inventory check for its packet revision
+   ↓ trusted URL artifact producer bridge > refuses a byte-identical packet replacement between capture and binding
+   ↓ trusted URL artifact producer bridge > refuses a packet after replacement of an exact committed check, even with equal bytes
+   ↓ trusted URL artifact producer bridge > refuses active content even in a verified source span embedded in an otherwise valid composition
+   ↓ trusted URL artifact producer bridge > accepts exact help and an actual own-run status report while bounding limits and refusing response drift
+   ↓ trusted URL artifact producer bridge > binds review feedback only from a committed exact verdict and matching committed check, to the two fixed recipient roots
+   ↓ trusted URL artifact producer bridge > records the current policy refusal for an actual own fixture rendered by the installed renderer
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts > trusted URL artifact producer bridge > reverifies the exact retained initialized bytes and sidecar under the protected bindings
+AssertionError: promise resolved "{ state: 'unknown', …(2) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "note": "Advice: it sets no outcome and is not stored in the check record. Whether this draft covers the independent inventory is Unknown at this check, not zero uncovered entries: check again once an inventory counts.",
++   "state": "unknown",
++   "why": "the inventory of record could not be read or compared (Error)",
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-artifacts.test.ts:610:69
+    608|         // check revalidation refusing too cannot substitute for this …
+    609|         await expect(inventoryCoverageAdvice(f.run, f.draft, { invento…
+    610|           productReads: withdrawnReads, isSecretPath: () => false })).…
+       |                                                                     ^
+    611|         expect(fs.existsSync(path.join(f.run, 'drafts/rev-0.json'))).t…
+    612|         expect(fs.existsSync(path.join(f.run, 'checks/rev-0.json'))).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 50 skipped (51)
+   Start at  15:50:48
+   Duration  3.42s (transform 2.09s, setup 10ms, collect 2.65s, tests 410ms, environment 0ms, prepare 71ms)
+

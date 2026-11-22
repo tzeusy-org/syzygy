@@ -1,0 +1,13 @@
+{
+  "subjectCommit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+  "sha256": {
+    "comparison.json": "7a0db21846cbe840d6f68fa23c727391d37dfa823a1dccc2a610712ff1043d94",
+    "answers-after.json": "760dbf722d9a4c702596996a0a9d594a1decaf1d95dfe003237765bbe1980ace",
+    "independent-totals.json": "e45d54b550d9cd0451175713c3e5c02f25de381db2a1747e88ecc8336c29f31d",
+    "labels.json": "9629eed98faba87a450ca6451ef3d11b66704c461f7550df4caf8acd7cf39e31",
+    "reader-text-files.json": "599658799a22555b91925fe5e57baf09a8df71fc7943283b54d27a4ffb5456f9",
+    "new-run-preparation.json": "01769fd6887d55027ee2c697189183b0d791571c56ad559ea89e0f063be14cdf",
+    "grades.json": "f4c7137d14d59a30b551c66e998e762d223ddd1fc6efd2b5b75f49de009dad4f",
+    "commands.txt": "8311e2f01f5092901cf7555728fea49950fe6a7da4cf6b4ab214448d3f96cd87"
+  }
+}

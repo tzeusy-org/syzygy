@@ -1,0 +1,46 @@
+{
+  "method": "Independent JavaScript filtering and array reductions; Python record used exact rational grouped accumulation",
+  "questions": 24,
+  "values": {
+    "overall": {
+      "denominator": 81,
+      "before": 0.278,
+      "after": 0.259
+    },
+    "purpose": {
+      "denominator": 13,
+      "before": 0.538,
+      "after": 0.5
+    },
+    "structure": {
+      "denominator": 14,
+      "before": 0.214,
+      "after": 0.214
+    },
+    "mechanism": {
+      "denominator": 15,
+      "before": 0.333,
+      "after": 0.3
+    },
+    "rationale": {
+      "denominator": 13,
+      "before": 0.269,
+      "after": 0.269
+    },
+    "change": {
+      "denominator": 13,
+      "before": 0.038,
+      "after": 0
+    },
+    "limits": {
+      "denominator": 13,
+      "before": 0.269,
+      "after": 0.269
+    }
+  },
+  "dropsAboveFivePoints": [],
+  "wrongStatements": {
+    "before": 0,
+    "after": 0
+  }
+}

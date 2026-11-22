@@ -1,0 +1,171 @@
+{
+  "before": [
+    {
+      "path": "appendix.md",
+      "bytes": 6740,
+      "sha256": "253d5e9e8188b636896ab0a539cff86ea4ecbaedd12f8f4bfdc4559614b98ea1"
+    },
+    {
+      "path": "clarifications.md",
+      "bytes": 760,
+      "sha256": "2a906332321b224b92087dd7b2bdcc568bd0d1ce01e3ee50539c3207c056b0ae"
+    },
+    {
+      "path": "contents.md",
+      "bytes": 918,
+      "sha256": "17320587d84775dfc1c1ff60cca546350d354098a67b627da3ee72937e9ba1f3"
+    },
+    {
+      "path": "deep-dives/mechanism-deep-dive.md",
+      "bytes": 4768,
+      "sha256": "a885fa09877fadbc6d71a7da64b253b6308650a9d6faa2c4c2355286b176af1f"
+    },
+    {
+      "path": "discovery.md",
+      "bytes": 8424,
+      "sha256": "ebdfaafce637460152a75f526e41939175711d336c9b8af682c6a86a29817e3f"
+    },
+    {
+      "path": "executions.md",
+      "bytes": 1550,
+      "sha256": "b29c61d0ee902ce5991f6ad89b98fd593e6482e0d7b41f46b89c134d220ddca7"
+    },
+    {
+      "path": "glossary.md",
+      "bytes": 3114,
+      "sha256": "67bd898c90c81df0adfe1c5a1cf0cef37be11f348e147e8d20b781fb5d09af74"
+    },
+    {
+      "path": "index.md",
+      "bytes": 10992,
+      "sha256": "7b8f84c173e9c735afc62a288665b42e4a1fdc8a9e3db17b4eabd8e45182a299"
+    },
+    {
+      "path": "poles/1.md",
+      "bytes": 8137,
+      "sha256": "fbee14adc7d701f5b154ce6b888833e092af39c0664ecffc172650ea3229a554"
+    },
+    {
+      "path": "poles/2.md",
+      "bytes": 9548,
+      "sha256": "7db8af46cad144c8e8085bd6ddb68de8c14bbff6558405429775fe3869b42651"
+    },
+    {
+      "path": "poles/3.md",
+      "bytes": 14518,
+      "sha256": "3496f604b538e6e90c3ebb6cf73f78f522f787781ca9741a8d04a1d9a60b4c62"
+    },
+    {
+      "path": "review.md",
+      "bytes": 3104,
+      "sha256": "5d37f79c865bbbfc1451b81b592ea4fec84b2093cf51f9491f5451fb5a8e51f3"
+    },
+    {
+      "path": "size-report.md",
+      "bytes": 2594,
+      "sha256": "21bf8f7b30b04a072597bcf0ed23a8c6bd1cd5a26062b10496cb4212863d737c"
+    },
+    {
+      "path": "sources/index.md",
+      "bytes": 5115,
+      "sha256": "8806f6e537d11ed3f6c236bd2a108d77058e24bfaae57bd2f91dd14242c79493"
+    },
+    {
+      "path": "understanding.md",
+      "bytes": 8477,
+      "sha256": "bff6fdeed6b271c50ba9bfec0d0f78293a5fcdd270cb88d67a1a3de7065ab247"
+    }
+  ],
+  "after": [
+    {
+      "path": "appendix.md",
+      "bytes": 5358,
+      "sha256": "1b0c84183b6d0d3c0974fa5626475199f110d7787ef0e44c42c4af6738aa57f5"
+    },
+    {
+      "path": "clarifications.md",
+      "bytes": 460,
+      "sha256": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710"
+    },
+    {
+      "path": "contents.md",
+      "bytes": 666,
+      "sha256": "68b62bed6a5461a77ca15ef4e6deb45021d29f7b95dbcdd39d69d55b9fb8432c"
+    },
+    {
+      "path": "deep-dives/mechanism-deep-dive.md",
+      "bytes": 5728,
+      "sha256": "861368c9d0f756cacf2dcc65ea21eaf6ea40423a6418f1fddec5ae68816276ea"
+    },
+    {
+      "path": "discovery.md",
+      "bytes": 8121,
+      "sha256": "2cf10fd0cbbbd11612296acbb077442b03e2f277e6a357e92861cf12c71098d8"
+    },
+    {
+      "path": "executions.md",
+      "bytes": 1250,
+      "sha256": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c"
+    },
+    {
+      "path": "glossary.md",
+      "bytes": 2814,
+      "sha256": "81ca0b3619c164d46422a1d1ad191650ce67587c74c026762a15cd193fd0da7b"
+    },
+    {
+      "path": "index.md",
+      "bytes": 22525,
+      "sha256": "be48d6f95a4c4578aebf76601c3b714fcc548f97a35b1fb55a9340a972b8551c"
+    },
+    {
+      "path": "maps/ci.md",
+      "bytes": 29031,
+      "sha256": "ca8d97f63abaef956d52c44a7a9ad5bc210e87f82bbe9399f65d5fedbee5139b"
+    },
+    {
+      "path": "maps/directories.md",
+      "bytes": 8571,
+      "sha256": "408fc52ff30280bdaa5bde1b379bd9ae3aa484cf7fd77c3fb811bff29d8714dc"
+    },
+    {
+      "path": "maps/units.md",
+      "bytes": 2493,
+      "sha256": "1b3964dc057d6c9ef5c56945e298e7d7f0c95a362660a71bc73d06821683833a"
+    },
+    {
+      "path": "poles/1.md",
+      "bytes": 10042,
+      "sha256": "b9aa0b6338b6547e23afec39605aa2a3c0de496c214a7910106da8e253059cd1"
+    },
+    {
+      "path": "poles/2.md",
+      "bytes": 11803,
+      "sha256": "6a148ed946415dcdbf29425d632f0610b4b680102176f0e8a79a265dd363d026"
+    },
+    {
+      "path": "poles/3.md",
+      "bytes": 19141,
+      "sha256": "e9e96b4a579a096affa857a94ee0c85342cd700f6b9e3ecb8aa446c798072f7e"
+    },
+    {
+      "path": "review.md",
+      "bytes": 1010,
+      "sha256": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c"
+    },
+    {
+      "path": "size-report.md",
+      "bytes": 2450,
+      "sha256": "8cb6f34dadf8022d25016a408e17908bf70b4a491831e7ec5bb86c488a29dffa"
+    },
+    {
+      "path": "sources/index.md",
+      "bytes": 4857,
+      "sha256": "b9b4d21b3c7284aa8197e11c0afa4bead0bd84bd824bddad3b50bf63c541ba33"
+    },
+    {
+      "path": "understanding.md",
+      "bytes": 8271,
+      "sha256": "c4acaabc85bd9ca72cc8f996695c9f61c4068953c9df0b479e0f68a271f79b32"
+    }
+  ]
+}

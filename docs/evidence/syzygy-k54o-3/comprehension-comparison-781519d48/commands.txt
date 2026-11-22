@@ -1,0 +1,27 @@
+# All commands local, with no network or observed-project execution.
+# Initial source checkout: /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+# Reporting rule read: sed -n '180,240p' CONTRIBUTING.md
+# Pilot protocol read: cat docs/evidence/pursuit-2026-11-21b/pilot/README.md
+# Isolated build:
+git clone --shared --no-checkout /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current /home/orca/.tmp/f3-comprehension-781519d48/build-source
+cd /home/orca/.tmp/f3-comprehension-781519d48/build-source
+git checkout --detach 781519d484235acb2b81cfcb317c93f7e03cf9b9
+npm ci --offline --ignore-scripts --no-audit --no-fund
+npm run build > /home/orca/.tmp/f3-comprehension-781519d48/build.log 2>&1
+# Original run copied using Python shutil.copytree into private-state; its original bytes independently inventoried and hashed before/after.
+python3 scripts/dossier_site_to_text.py /home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7/site/1 /home/orca/.tmp/f3-comprehension-781519d48/before-reader-text --report /home/orca/.tmp/f3-comprehension-781519d48/before-text-counts.json
+node apps/syzygy/dist/main.js dossier render /home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7 --json > /home/orca/.tmp/f3-comprehension-781519d48/render-result.json 2> /home/orca/.tmp/f3-comprehension-781519d48/render-stderr.txt
+node /home/orca/.tmp/f3-comprehension-781519d48/metadata-diagnosis.mjs
+# Independent original-run file census/digests (cwd original run):
+find . -type f -print0 | sort -z | xargs -0 sha256sum > /home/orca/.tmp/f3-comprehension-781519d48/original-run-sha256sum.txt
+
+# New declared-source run; these all exited 0. New explicit config is new-run-config.json.
+cd /home/orca/.tmp/f3-comprehension-781519d48/build-source
+node apps/syzygy/dist/main.js dossier init /home/orca/.local/state/syzygy-polaris-clones/redis-redis-8.10.2 --url https://github.com/redis/redis --config /home/orca/.tmp/f3-comprehension-781519d48/new-run-config.json --state-root /home/orca/.tmp/f3-comprehension-781519d48/new-declared-state --revision 498ecd0d6d007db11ddb3aea9428552598a78622 --identity redis-redis --visibility public --json > /home/orca/.tmp/f3-comprehension-781519d48/new-init.json 2> /home/orca/.tmp/f3-comprehension-781519d48/new-init.stderr.txt
+node apps/syzygy/dist/main.js dossier brief /home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2 --json > /home/orca/.tmp/f3-comprehension-781519d48/new-brief.json 2> /home/orca/.tmp/f3-comprehension-781519d48/new-brief.stderr.txt
+cp /home/orca/.local/state/syzygy-dossier/run-658f2f90470f73eea1dc1d90209c5ef7/drafts/rev-4.json /home/orca/.tmp/f3-comprehension-781519d48/historical-draft-input.json
+node apps/syzygy/dist/main.js dossier check /home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2 --draft /home/orca/.tmp/f3-comprehension-781519d48/historical-draft-input.json --json > /home/orca/.tmp/f3-comprehension-781519d48/new-check.json 2> /home/orca/.tmp/f3-comprehension-781519d48/new-check.stderr.txt
+node apps/syzygy/dist/main.js dossier render /home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2 --json > /home/orca/.tmp/f3-comprehension-781519d48/new-render.json 2> /home/orca/.tmp/f3-comprehension-781519d48/new-render.stderr.txt
+python3 scripts/dossier_site_to_text.py /home/orca/.tmp/f3-comprehension-781519d48/new-declared-state/run-e4c99886d70216f0ebbaef97ca0962d2/site/0 /home/orca/.tmp/f3-comprehension-781519d48/after-reader-text --report /home/orca/.tmp/f3-comprehension-781519d48/after-text-counts.json
+# Clone read-only tracked-state check (cwd original Redis clone):
+git --no-optional-locks diff --quiet && git --no-optional-locks diff --cached --quiet
