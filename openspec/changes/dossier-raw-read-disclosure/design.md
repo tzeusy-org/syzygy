@@ -6,7 +6,7 @@
 
 [Inferred] There are three effective requirement homes. REQ-polaris-generation-033 owns the disclosure surfaces and captured relay scope. REQ-polaris-generation-036 applies those disclosures to the two discovery populations and retains screening on writes back into Syzygy. REQ-polaris-generation-046 binds the new policy for future initializations and protects historical bindings. The policy's raw-body and agent-session paragraphs carry the same boundary. Its screening predicates, scope and classified-content handling are carried forward from version 3.0.0.
 
-The run record keeps the exact /2 core and adds one bounded, versioned disclosure companion. It binds to the run and declared provider and records the state of author handoff. The companion holds no source data. Historical reads leave files intact and show missing evidence as Unknown. A compatible resume records the disclosure on an explicit transition before producing new work.
+The run record keeps the exact /2 core and adds one bounded, versioned disclosure companion. It binds to the run and declared provider and records the state of author handoff. The companion holds no source data. Historical reads leave files intact and show missing evidence as Unknown. A resume with a valid companion preserves its original policy binding. A missing, invalid or mismatched companion refuses a new handoff or site render and directs the operator to a new run.
 
 ## Impact and verification
 

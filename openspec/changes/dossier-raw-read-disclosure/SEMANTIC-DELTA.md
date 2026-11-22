@@ -4,7 +4,7 @@
 
 ## Specification
 
-[Observed] Successor specification SHA-256 is `d27d44815bb7bf72e54131e6c113143570438ffd70e850f88a23c54f2ed15a27`. The predecessor of each requirement is its effective modification below. The same three requirement identities compose after the preceding dossier versions. The old version's proposed specification, design and delta remain its historical record.
+[Observed] Successor specification SHA-256 is `a53432d787d857185b76193aa614c47d42eca39b3f9c22857935b61127ff5517`. The predecessor of each requirement is its effective modification below. The same three requirement identities compose after the preceding dossier versions. The old version's proposed specification, design and delta remain its historical record.
 
 ## REQ-polaris-generation-033
 
@@ -22,7 +22,7 @@
     "",
     "Syzygy SHALL put the D11 disclosure in the run record even if the run stops, refuses a dependent step or otherwise renders no page. If the run stops before launching or handing over to the authoring session, its disclosure SHALL describe the channel and risk that apply to such a session and record that the session was not reached. If the run cannot establish whether it reached the session, it SHALL record that status as Unknown and state the same risk. The disclosure SHALL make no claim of observed read completeness, an actual secret transmission or verification of the agent's account. An uncaptured value remains Unknown. A captured relay request remains a Syzygy transmission under REQ-polaris-generation-025 and REQ-polaris-generation-048 and SHALL still pass their checks. The D11 disclosure SHALL also be carried in each projection of the authoring disclosure named by this requirement. Provider-mode rendering has no dossier authoring session and its disclosures retain their existing contract.",
     "",
-    "The stored operator-agent run record SHALL include a bounded disclosure companion beside its polaris-dossier-run/2 core. Its exact required fields SHALL be schemaVersion with value polaris-dossier-raw-read-disclosure/1, runId and declaredProvider matching the run's validated declarations, and authorHandoff with value not-reached, reached or unknown. The schema version carries the fixed raw-clone risk statement above, with no inspected path, history, credential or secret value. Syzygy SHALL record the companion at initialization and update authorHandoff at an explicit run transition, before rendering. A historical /2 without the companion remains readable under its historical format. Read-only inspection SHALL report the recorded disclosure as Unknown, explain the D11 channel and risk as current policy, and leave the stored bytes intact. A supported resume SHALL establish and record the companion before a new authoring handoff or site render, preserving the original bound policy. Missing, malformed or mismatched disclosure evidence in a run whose record requires it SHALL refuse that dependent operation."
+    "The stored operator-agent run record SHALL include a bounded disclosure companion beside its polaris-dossier-run/2 core. Its exact required fields SHALL be schemaVersion with value polaris-dossier-raw-read-disclosure/1, runId and declaredProvider matching the run's validated declarations, and authorHandoff with value not-reached, reached or unknown. The schema version carries the fixed raw-clone risk statement above, with no inspected path, history, credential or secret value. Syzygy SHALL record the companion at initialization and update authorHandoff at an explicit run transition, before rendering. A historical /2 without the companion remains readable under its historical format. Read-only inspection SHALL report the recorded disclosure as Unknown, explain the D11 channel and risk as current policy, and leave the stored bytes intact. For every stored run, a missing, malformed or mismatched companion SHALL refuse any new authoring handoff or site render without editing the retained files. The refusal SHALL name the disclosure requirement and explain how to start a new run. A run with a valid companion keeps its original screening policy on resume."
   ]
 }
 ```
@@ -60,7 +60,7 @@
     "- **WHEN** an operator-agent run is recorded and stops without rendering a page",
     "- **THEN** the run record still carries the unscreened raw-clone and declared-provider risk disclosure",
     "- **AND** if the run stopped before author handoff it records that the authoring session was not reached, and if handoff cannot be established it records Unknown, with neither case claiming that an actual read occurred",
-    "- **AND** a historical /2 with no companion preserves its bytes on inspection, and a mismatched run identity or provider in a required companion refuses a new site render",
+    "- **AND** a /2 with no companion preserves its bytes on inspection, while absence, a mismatched run identity or a mismatched provider refuses a new handoff or site render and gives a restart explanation",
     "",
     "#### Scenario: Checked relay evidence does not stand for raw-read traffic",
     "",
@@ -307,6 +307,20 @@
   ],
   "after": [
     "- **Falsifier:** A consent question or retired record read/write, credential-bearing locator output, unexpected network access or clone mutation; a surviving collision, attribution, configuration write reach or human/machine disclosure is omitted or treated as identity verification; the observed-source role is absent or mislabeled, or governance-root material creates a second repository entity or identity. A path the predecessor places changes class, or a body the predecessor screens changes outcome, other than by a new denied directory, or a path the predecessor leaves indeterminate changes other than by a new denial or the second stage; a stage-two body is retained as `redacted-span`, skips the active-content scan or escapes a detector; a document with a word of `withheldTokens`, a path the stem or evidence lists refuse, a notebook or a vendored path is admitted; a governance-text-by-name document is sent as `project-documentation`; a new denied path is read; a configuration detector match is admitted, quoted or rendered; a run bound to the predecessor is re-screened or migrated without refusal. Under version 3.0.0: a path version 2.0.0 places changes class, stage or outcome, or a path it denies is read; an entry `notAdoptedFromTheOption` names places a path; a re-admitted body skips a detector, the active-content scan or the configuration detectors, or is retained as `redacted-span`; a run bound to version 2.0.0 is re-screened or migrated without refusal. Versions 3.0.0 and 4.0.0 differ in a screening outcome or protected metadata; a missing original policy binding changes a run file; or raw-read disclosure is treated as permission for a separate Syzygy send."
+  ]
+}
+```
+
+
+### Replace predecessor lines 119–119, successor lines 127–127
+
+```json
+{
+  "before": [
+    "  parent_requirements: [REQ-polaris-generation-001, REQ-polaris-generation-025, REQ-polaris-generation-033, REQ-polaris-generation-034, REQ-polaris-generation-048]"
+  ],
+  "after": [
+    "  parent_requirements: [REQ-polaris-generation-001, REQ-polaris-generation-025, REQ-polaris-generation-033, REQ-polaris-generation-034, REQ-polaris-generation-048, REQ-polaris-generation-047]"
   ]
 }
 ```

@@ -655,7 +655,7 @@ RAW_READ_TAG = "polaris-dossier-raw-read-disclosure-v2.17"
 RAW_READ_ROUTE = f"[Raw-read disclosure amendment 2.17]({RAW_READ_HOME})"
 RAW_READ_REPLACES = tuple(POLARIS_ID + number for number in ("033", "036", "046"))
 RAW_READ_SUBJECTS = {
-    RAW_READ_SPEC: "d27d44815bb7bf72e54131e6c113143570438ffd70e850f88a23c54f2ed15a27",
+    RAW_READ_SPEC: "a53432d787d857185b76193aa614c47d42eca39b3f9c22857935b61127ff5517",
     ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json":
         "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
 }
