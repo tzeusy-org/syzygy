@@ -179,7 +179,7 @@ authority and no model yet called on the current path.
     `run-advice.json`, and the bounded form's words for a draft that does not parse); its code is not yet landed.
     *(2026-11-22: the predecessor figure "432 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Page subsections amendment 2.15](openspec/changes/dossier-page-subsections) is agent-adopted in A-47.
+    [Page subsections amendment 2.15](openspec/changes/dossier-page-subsections) is agent-adopted in A-48.
     It replaces REQ-polaris-generation-034 again (130 to 140 scenarios: draft schema v8 with answer-led subsections,
     rule `one-sentence-answer`, third-level headings and an on-page contents list, brief v13, and the 2.14 makefile
     recipe-context correction of syzygy-3efd.81); its code is not yet landed.
