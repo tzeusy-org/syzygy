@@ -76,7 +76,9 @@ function fixture() {
     readBatch: files => files.map(() => null), selectGroups: selectors => selectors.map(() => []), revalidate: () => {
     if (!readsLive) throw new Error('operation ended');
     return evidence;
-  }, isLeaseOpen: () => readsLive, close: () => { readsLive = false; } };
+  }, isLeaseOpen: () => readsLive,
+    leaseState: () => !readsLive ? 'retired' : Date.now() >= metadata.deadline ? 'expired' : 'open',
+    close: () => { readsLive = false; } };
   gates.reads.add(reads);
   const loadedRenderer = { renderer, identity: { format: 'polaris-url-installed-renderer/1', sourceEntry: 'own.ts', programSha256: 'd'.repeat(64),
     programBytes: 10, inputTreeSha256: 'e'.repeat(64), manifestSha256: 'f'.repeat(64), profileRegistrySha256: '1'.repeat(64) } };
