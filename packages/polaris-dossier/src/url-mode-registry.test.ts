@@ -61,7 +61,7 @@ describe('persistent host URL mode declaration binding', () => {
     for (const [boundPath, version] of [
       [DOSSIER_REACH_POLICY_PATH, 'dossier-declared-source/2.0.0'],
       [DOSSIER_PREDECESSOR_POLICY_PATH, 'dossier-declared-source/1.0.0'],
-    ]) {
+    ] as const) {
       const legacy = { ...f.context, expectedBasePolicy: { ...f.context.expectedBasePolicy, path: boundPath, policyVersion: version } };
       fs.writeFileSync(f.file, JSON.stringify({ format: 'polaris-url-mode-binding/1', run: f.run, runId: f.runId, context: legacy }), { mode: 0o600 });
       const retained = authority(f.run, f.runId);
