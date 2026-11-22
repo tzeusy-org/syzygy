@@ -29,7 +29,7 @@ Reader notes, binding on how this file is read:
   named in each requirement's `Group` line: *Code-structure
   observation* (001–004), *Work-item observation* (010–014), *Client
   rendering and parity* (020–022), *Polaris* (030–032), *Trajectory*
-  (040–043), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
+  (040–044), *Orrery* (050–053), *Cross-cutting experience* (055, 060–061).
   Identifiers are stable and literal: minted once, amended in place,
   retired rather than reused, never renumbered (CC-SPEC-3). Gaps in the
   numbering are deliberate.
@@ -663,7 +663,9 @@ warranted, green or complete state.
 
 #### Scenario: A title names a requirement
 
-- **WHEN** a served item's title reads "Implement POC-REQ-010"
+- **WHEN** the tracker holds an item whose title reads "Implement
+  POC-REQ-010" (the POC withholds titles, SEC-5, so the title is never read
+  into the model)
 - **THEN** that item's `governedBy` is the same Unknown, and nothing served
   for it names POC-REQ-010 as its governing intent
 
@@ -927,18 +929,26 @@ Group: Trajectory. Form: **state projection/query**.
 **Required behavior.** WHEN Trajectory is read, it SHALL project observed work
 items onto board columns drawn from a declared closed mapping of the Beads
 status vocabulary, with every rendered item placed by its observed status and
-carrying its identifier.
+carrying its identifier. Each rendered item SHALL also show, as text, its
+tracker priority and its recorded created, updated and (when present) closed
+instants, each equal to the machine answer's value for that item
+(`trajectory.rendered[]`).
 
 - **Case**: a checker loads Trajectory at a known Dolt revision with
-  known item statuses.
+  known item statuses, priorities and recorded instants.
 - **Observable**: each rendered item sits in the column its observed
-  status maps to.
+  status maps to, and its card shows its priority and recorded instants.
 - **Oracle**: per sampled item, the rendered column equals the declared
   mapping applied to the status read directly from Dolt at the served
-  revision; equality decides.
-- **Oracle independence**: expected statuses are direct database reads.
+  revision, and the priority and instants shown equal the machine
+  answer's for that item; equality decides.
+- **Oracle independence**: expected statuses, priorities and instants
+  are direct database reads (in a fixture, the checker's own rows), never
+  the renderer's model.
 - **Falsifier**: an item rendered in a column that contradicts its
-  observed status, or a column outside the declared mapping.
+  observed status, a column outside the declared mapping, or a card whose
+  priority or recorded instant differs from the machine answer's or is
+  missing.
 
 #### Scenario: Items placed by observed status
 
@@ -946,6 +956,13 @@ carrying its identifier.
   `in_progress`
 - **THEN** Trajectory at the observation of D renders that item in the
   column the declared mapping assigns to `in_progress`
+
+#### Scenario: A card shows its own facts
+
+- **WHEN** an item at revision D has priority 3 and recorded created,
+  updated and closed instants
+- **THEN** its card shows priority 3 and those three instants as text,
+  each equal to the machine answer's value for that item
 
 ```yaml
 warrants:
@@ -1043,9 +1060,27 @@ warrants:
 Group: Trajectory. Form: **prohibition**.
 
 **Required behavior.** Trajectory SHALL NOT render work-item activity,
-closure, or merge state as intent satisfaction or verification.
+closure, or merge state as intent satisfaction or verification. No text in
+the wording population (Scope) SHALL name tracker closure or a tracker claim
+with the words done, complete, completed, finished, resolved, satisfied, in
+progress or active: the closed column is headed "Closed" and the claimed
+column "Claimed", and the worker-change state label says only what git
+showed on the bounded seam. One notice above the board SHALL state how many
+rendered items are closed and that verification is Unknown for each of
+them, with its reason. Trajectory SHALL state the verification Unknown once
+per board: one notice giving how many served items it holds for, how many of
+those the selection renders and how many it leaves outside, each equal to
+the machine answer (`trajectory.verificationUnknown`), with the reason
+sentence and its route. Each rendered item SHALL keep its own verification
+mark, carrying the Unknown encoding and closed reason and referring to that
+notice; the reason sentence and route are not repeated per item.
 
-- **Scope.** every satisfaction/verification encoding on the surface.
+- **Scope.** every satisfaction/verification encoding on the surface, and
+  the wording population: the page heading and lede, every board heading
+  and label, every worker-change label, every notice, and every
+  `trajectory.rendered[].column` and status-to-column value on the machine
+  answer. The card's own tracker status word and the worker-change state
+  identifier are outside it.
 
 - **Case (counterexample schema + sweep)**: a checker closes an
   observed item whose governing relationship holds no verification
@@ -1055,11 +1090,26 @@ closure, or merge state as intent satisfaction or verification.
   verification relationship stays visibly not-verified/Unknown.
 - **Oracle**: the rendered verification encoding equals the machine
   answer's relationship state (not the item's activity state); equality
-  decides.
+  decides. For wording, a case-folded, word-bounded match of
+  `done|complete|completed|finished|resolved|satisfied|in[ _-]progress|active`
+  over the wording population finds nothing, and the notice's closed count
+  equals the machine answer's rendered items with status closed. For the
+  board-level count, the notice's served, inside and outside figures equal
+  `trajectory.verificationUnknown`; every rendered item carries exactly
+  one verification mark whose reference resolves to that notice (the mark
+  names the notice's subject and links to its element); and no rendered
+  item's card contains the reason sentence or the route literal, each of
+  which occurs once on the page.
 - **Oracle independence**: the relationship state comes from the
   machine answer; the checker induced the mismatch.
 - **Falsifier**: a closed or merged item rendered with a verified,
-  satisfied, or green encoding while its relationship lacks evidence.
+  satisfied, or green encoding while its relationship lacks evidence; or a
+  heading, label, sentence or served column value in the wording
+  population that names closure as done, complete, finished or resolved,
+  or a claim as in progress or active; or a verification notice whose
+  counts differ from the machine answer's, a rendered item with no
+  verification mark or a mark referring to no notice, or a card that
+  repeats the reason sentence or route.
 
 #### Scenario: Closed but unverified
 
@@ -1068,13 +1118,145 @@ closure, or merge state as intent satisfaction or verification.
 - **THEN** Trajectory renders the closure as activity and the
   verification state as not verified/Unknown, distinctly encoded
 
+#### Scenario: Closed is the tracker's word, not done
+
+- **WHEN** the board renders closed and claimed items
+- **THEN** their columns read "Closed" and "Claimed" on the page and on the
+  machine answer, no heading, label or notice in the wording population
+  reads done, complete, finished, resolved, in progress or active, and one
+  notice above the board states the rendered closed count and that
+  verification is Unknown for each of them
+
+#### Scenario: Verification is Unknown once per board, with its count
+
+- **WHEN** 252 items are served and the selection renders 250
+- **THEN** one notice says verification is Unknown for 252 served items,
+  250 in the selection and 2 outside it, with the reason and route, and
+  each of the 250 cards carries one verification mark that refers to it
+  and repeats neither the reason sentence nor the route
+
 ```yaml
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2]
-  contracts: [RFC1-19, RFC1-22, RFC1-23, RFC1-24, RFC2-20, RFC8-2, RFC8-15, RFC8-30]
+  contracts: [RFC1-19, RFC1-22, RFC1-23, RFC1-24, RFC2-20, RFC6-17, RFC8-2, RFC8-15, RFC8-24, RFC8-30]
   policies: []
   decisions: [POC-DIR-2026-08-29, POC-DIR-2026-08-30]
+  topology: []
+  parent_requirements: []
+```
+
+### Requirement: POC-REQ-044 — Trajectory opens with its five answers
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** Trajectory's first content, before its scope
+statement, notices and board, SHALL be five answers in this fixed order,
+one per question of the Trajectory row of `README.md`: what remains, what
+is running, what changed, what it cost, and whether the result has been
+verified against intent. Each answer SHALL be a fact with its count and
+denominator over every served work item, never the rendered selection
+(POC-REQ-042), or an explicit Unknown carrying its closed reason and route;
+an answer whose value is Unknown SHALL be rendered, never dropped. The
+machine answer SHALL carry the same five answers, in the same order, with
+equal values (`trajectory.answers`). Today:
+
+- *What remains* SHALL give the served items' count for every tracker
+  status in the status vocabulary (POC-REQ-040), summing to the served
+  total, and SHALL say that these are the tracker's items only, not
+  checked against materialization records, and that RFC8-8's other two
+  planes (approved claims no proposal covers; approved intent not yet
+  materialized) are not enumerated.
+- *What is running* SHALL give how many served items the tracker marks
+  `in_progress`, worded as the tracker's claim, and their liveness as the
+  state `activity-undetermined` while no staleness bound is declared
+  (RFC8-16): state-local, carrying no RFC2-24 reason and no machine
+  Unknown, with what resolves it.
+- *What changed* and *what it cost* SHALL each be an Unknown with its
+  closed reason and route while no movement source or cost record is read
+  (RFC8-19: absent cost is Unknown, never zero).
+- *Verified against intent* SHALL give three separately labelled counts,
+  each with its own denominator, and no element SHALL add any two of them:
+  (a) Unknown-provenance, the served items with no traceable warrant, n of
+  N, referring to POC-REQ-014's governing-intent disclosure; (b) the
+  reconciliation chain, the count of materialized work items whose change
+  is on the default branch, of the materialized work items, its members
+  stated as "reconciliation evidence absent / Unknown" with their route
+  (run a reconciliation evaluation) and no RFC2-24 reason, or an Unknown
+  with its reason when the materialized item's change could not be
+  observed; and (c) orphaned work among the served items, stated as not
+  checked, its count an Unknown with its reason, never 0. The word
+  "verified" SHALL NOT name a state among the answers.
+
+When work items are not observed, all five answers SHALL render, each an
+Unknown referring to the work-items disclosure, and no count SHALL appear.
+
+- **Scope.** the answers region of Trajectory and `trajectory.answers` on
+  the machine answer. The wider charter (what is planned, blocked, and why
+  the work exists), orphaned-work detection and any reconciliation verdict
+  are outside it.
+
+- **Case**: a checker serves 252 work items, of which the selection
+  renders 250, and reads Trajectory and the machine answer; then repeats
+  with a materialized item whose change is on the default branch, and with
+  the work-item observation Unknown.
+- **Observable**: five answers in order before the scope statement; the
+  status counts, claimed count and three fifth-answer counts with their
+  denominators; the liveness state; each Unknown part's reason and route.
+- **Oracle**: the five question labels and the machine answer's ids
+  equal the fixed order; each status count equals the count of served
+  items with that status, they sum to the served total, and the closed
+  count differs from the rendered Closed column when the selection leaves
+  a closed item outside; the claimed count equals the served `in_progress`
+  items, and the liveness state renders `activity-undetermined` with no
+  Unknown encoding, reason or machine Unknown; each Unknown part carries a
+  closed reason and a route and has a machine twin under its id
+  (POC-REQ-060); every count and every denominator on the page equals the
+  machine answer's; count (a) equals `workItems.governedByUnknownCount`;
+  count (b) is 1 of 1 with a merged materialized item and 0 of 0 without
+  one while (a) is unchanged; (c) renders Unknown, never a number; with
+  work items Unknown, five answers render and none carries a count.
+  Equality decides.
+- **Oracle independence**: expected counts are the checker's own fixture
+  rows, counted by the checker, never the renderer's model.
+- **Falsifier**: an answer missing, out of order or dropped for being
+  Unknown; a count taken over the rendered selection; status counts that
+  do not sum to the served total; a running count worded as observed
+  activity, or liveness rendered as `active` or under an RFC2-24 reason;
+  a count shown without its denominator; an Unknown part with no reason
+  or route; an element adding two
+  of the fifth answer's counts; orphaned work rendered as 0; a chain member
+  stated under an RFC2-24 reason; or "verified" naming a state.
+
+#### Scenario: Five answers before the board
+
+- **WHEN** 252 work items are served and the selection renders 250
+- **THEN** five answers render first, in order: the served count of each
+  tracker status summing to 252, the tracker's claimed count with liveness
+  `activity-undetermined`, what changed and what it cost as Unknowns with their reasons and
+  routes, and three separate counts for verification against intent; the
+  machine answer carries the same five with equal values
+
+#### Scenario: A merged materialized item enters the chain
+
+- **WHEN** the materialized work item's change is on the default branch
+- **THEN** the reconciliation-chain count is 1 of 1, stated with
+  "reconciliation evidence absent / Unknown" and its route, and the
+  Unknown-provenance count is unchanged
+
+#### Scenario: Work items not observed
+
+- **WHEN** the work-item observation is Unknown
+- **THEN** all five answers render, each an Unknown referring to the
+  work-items disclosure, and no count appears
+
+```yaml
+warrants:
+  primary: VIS-2
+  doctrine: [VIS-2, VIS-3]
+  contracts: [RFC2-18, RFC2-19(a), RFC2-24, RFC6-17, RFC8-8, RFC8-16, RFC8-19, RFC8-23, RFC8-28, RFC8-29]
+  policies: []
+  decisions: []
   topology: []
   parent_requirements: []
 ```

@@ -7,7 +7,7 @@ import { TOP_LEVEL_UNIT } from './derive-rules.js';
 import { deriveTreeFacts, type TreeFact, type TreeFacts } from './derive.js';
 import { GitObjectReadRefusal, type TreeEntry } from './git-object-reader.js';
 import { readCommittedBytes } from './policy-snapshot.js';
-import type { DossierScreen } from './screen.js';
+import { secretPathOf, type DossierScreen } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
 /** The derived-structure record and its currency (REQ-polaris-generation-034 version 2.3, syzygy-3efd.27).
@@ -31,9 +31,8 @@ export const CURRENCY_POLICY_SHA256 = '95a3aa132041aa5dd8f860e8ce4c92b3e3c3380eb
 
 const RECORD_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 100_000, maxDepth: 8 });
 
-/** A path a secret detector of the bound screening policy matches, read as a path or as text. */
-export const secretPathOf = (screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>) => (repositoryPath: string): boolean =>
-  screen.screenPath(repositoryPath) === 'secret-detector-match' || screen.screenBody(repositoryPath, repositoryPath) === 'secret-detector-match';
+/** The secret-path predicate lives beside the screen it reads (`screen.ts`); it is still exported from here for its first importers. */
+export { secretPathOf };
 
 export const derivedRecordFile = (run: string, revision: number): string => path.join(run, RUN_LAYOUT.derived, `rev-${revision}.json`);
 

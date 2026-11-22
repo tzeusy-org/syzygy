@@ -91,6 +91,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/gate-label-row.test.ts',
   'packages/polaris-dossier/src/gate-parts.test.ts',
   'packages/polaris-dossier/src/git-object-reader.test.ts',
+  'packages/polaris-dossier/src/inventory-coverage-flow.test.ts',
   'packages/polaris-dossier/src/inventory.test.ts',
   'packages/polaris-dossier/src/launch-store.test.ts',
   'packages/polaris-dossier/src/launch-write-consent.test.ts',

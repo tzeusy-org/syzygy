@@ -1,8 +1,15 @@
 import type { CodeStructureResult } from './code-structure.js';
-import { GOVERNING_INTENT_UNKNOWN_BASIS, governingIntentDisclosure, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
+import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
 import type { OrreryProjection } from './orrery-projection.js';
-import type { TrajectoryProjection } from './trajectory-projection.js';
+import {
+  GOVERNING_INTENT_REGION_ID,
+  TRAJECTORY_CHAIN_MEMBERSHIP_ID,
+  TRAJECTORY_CHANGED_ID,
+  TRAJECTORY_COST_ID,
+  TRAJECTORY_ORPHANED_WORK_ID,
+  type TrajectoryProjection,
+} from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { GitRunner, PwbResourceLimits } from './pwb-types.js';
@@ -261,22 +268,23 @@ export interface BuildPocModelInput {
   readonly acceptance?: AcceptanceSliceBuilder | undefined;
 }
 
-/** Exported for the renderers: the work-item verification Unknown every
- * Trajectory card discloses, and the worker-change verification beside it. */
+/** POC-REQ-043: the one board-level disclosure every Trajectory card's
+ * verification mark refers to (syzygy-t3jk.15). Each served item's own
+ * verification stays on its fact (`trajectory.rendered[].verification`). */
 const WORK_ITEM_VERIFICATION_BASIS =
-  'Activity is not verification: no test evidence has been ingested for this item.';
+  'Activity is not verification: no test evidence has been ingested for any work item.';
 
-export function workItemVerificationId(itemId: string): string {
-  return `work-item:${itemId}/verification`;
-}
+/** POC-REQ-044 basis sentences for the five answers' Unknown parts. */
+const CHANGED_BASIS = 'No movement source is read: the observation holds each work item\'s current status and recorded instants, not its history of changes.';
+const COST_BASIS = 'No cost record is read: no effort, compute, token or blocked-time measure is captured for any work item, and lead time, derivable from recorded instants, is not yet measured, so what the work cost is Unknown, never zero.';
+const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
-/** POC-REQ-014: the governing-intent disclosure on a rendered card, and the
- * Trajectory region that counts the served items carrying it. */
-export function workItemGoverningIntentId(itemId: string): string {
-  return `work-item:${itemId}/governed-by`;
-}
+export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
 
-export const WORK_ITEM_GOVERNING_INTENT_REGION_ID = 'region:work-item-governing-intent' as const;
+/** POC-REQ-014: the Trajectory region that counts the served items whose
+ * governing intent is Unknown; each card's mark refers to it, and each
+ * item's own value is its served `governedBy`. */
+export const WORK_ITEM_GOVERNING_INTENT_REGION_ID = GOVERNING_INTENT_REGION_ID;
 
 /** SEC-5: the one disclosure every rendered card's withheld title, and the
  * board's notice, render under. One id, since one policy gap withholds
@@ -317,20 +325,25 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
   const lifecycle = input.proposedWork?.lifecycle;
   if (input.proposedWork !== null && lifecycle?.kind === 'unknown') add(`${input.proposedWork.id}/lifecycle`, lifecycle.reason, lifecycle.closedReason);
   if (input.trajectory.kind === 'observed') {
-    for (const item of input.trajectory.rendered) add(workItemVerificationId(item.id), WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
     if (input.workItems.kind === 'observed') {
-      // POC-REQ-014: the machine twin of each rendered card's mark is that
-      // item's own `governedBy` with its basis sentence, and the count
-      // region's is the same Unknown.
-      const served = new Map(input.workItems.items.map((item) => [item.id, item.governedBy]));
-      for (const item of input.trajectory.rendered) {
-        const governedBy = served.get(item.id);
-        if (governedBy !== undefined) subjects.push({ id: workItemGoverningIntentId(item.id), epistemic: governingIntentDisclosure(governedBy) });
-      }
+      // syzygy-t3jk.15: each Unknown a card marks is disclosed once, on the
+      // board, with its count (RFC2-24 aggregation). A card's mark refers to
+      // that disclosure; the item's own value is its served fact
+      // (`workItems.items[].governedBy`, `trajectory.rendered[].verification`).
+      add(WORK_ITEM_VERIFICATION_REGION_ID, WORK_ITEM_VERIFICATION_BASIS, 'missing-evidence');
       add(WORK_ITEM_GOVERNING_INTENT_REGION_ID, GOVERNING_INTENT_UNKNOWN_BASIS, 'source-uncaptured-or-unreachable');
       // SEC-5: the machine twin of the board's withheld-title disclosure is
       // the observation's own `titles` with its basis sentence.
       subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: workItemTitlesDisclosure(input.workItems.titles) });
+      // POC-REQ-044 (syzygy-t3jk.16): the five answers' Unknown parts.
+      add(TRAJECTORY_CHANGED_ID, CHANGED_BASIS, 'source-uncaptured-or-unreachable');
+      add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
+      add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');
+      const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
+      if (intent !== undefined && 'reconciliationChain' in intent && typeof intent.reconciliationChain.members !== 'number') {
+        const change = input.workerChange;
+        add(TRAJECTORY_CHAIN_MEMBERSHIP_ID, `Whether the materialized work item's change reached the default branch is Unknown: ${change.kind === 'unknown' ? change.reason : 'no worker change was observed'}.`, 'source-uncaptured-or-unreachable');
+      }
     }
     const change = input.workerChange;
     if (change.kind === 'observed' && input.trajectory.rendered.some((item) => item.id === change.beadId)) {

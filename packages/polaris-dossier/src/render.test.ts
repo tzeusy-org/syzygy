@@ -52,7 +52,10 @@ const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp
 const TAGGED = 'const end = "</pre>";\n';
 /** A path the credential-assignment detector matches: counted wherever cited, and never named (dossier spec v1.5). */
 const SECRET_PATH = 'conf/token=abcdefghijk';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n' };
+/** A path both a denied-path rule (`.env` is a denied basename) and a secret detector (the directory is a token format, built from parts)
+ * match: path screening answers `denied-path` for it before it tries a detector (syzygy-8hm6). */
+const BOTH_PATH = `conf/${['gh', 'p_'].join('')}${'y'.repeat(24)}/.env`;
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n', [BOTH_PATH]: 'Y=2\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -188,7 +191,8 @@ const verdict = (packetSha256: string): Doc => ({
 });
 
 /** A briefed run with a passed draft revision; with `reviewed`, an inventory of record and a counted fidelity review. */
-async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc) => void } = {}): Promise<string> {
+/** A briefed run with `doc` as its draft, checked once; the check may have failed. */
+async function started(doc: Doc): Promise<{ run: string; checked: Awaited<ReturnType<typeof checkDraft>> }> {
   const clone = path.join(tempDir('dossier-render-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-render-state-'), RUN_ID);
@@ -203,21 +207,13 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
   fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc, null, 2));
-  const checked = await checkDraft(run, {}, checkDeps());
+  return { run, checked: await checkDraft(run, {}, checkDeps()) };
+}
+async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc) => void } = {}): Promise<string> {
+  const { run, checked } = await started(doc);
   if (!checked.ok || checked.report.outcome !== 'passed') throw new Error(`fixture draft: ${JSON.stringify(checked.ok ? checked.report.findings : checked.refusal)}`);
   if (!reviewed) return run;
-  const handed = await sessionPrompt(run, { role: 'inventory' }, { sources: sources(), now: () => LATER });
-  if (!handed.ok) throw new Error(handed.refusal.reason);
-  const inv0 = inventory();
-  edit.inventory?.(inv0);
-  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inv0, null, 2));
-  const inv = await checkInventory(run, {}, checkDeps());
-  if (!inv.ok || inv.report.outcome !== 'passed') throw new Error(`fixture inventory: ${JSON.stringify(inv.ok ? inv.report.findings : inv.refusal)}`);
-  await launchForm(run, { role: 'inventory', form: 'terminal' }, { sources: sources(), now: () => LATER });
-  const packet = await reviewPacket(run, { kind: 'fidelity' }, { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
-  if (!packet.ok) throw new Error(packet.refusal.reason);
-  const review = await sessionPrompt(run, { role: 'review', kind: 'fidelity' }, { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
-  if (!review.ok) throw new Error(review.refusal.reason);
+  const { packet, review } = await handedPacket(run, edit.inventory);
   const spans = JSON.parse(fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8')).spans as { id: string; path: string; startLine: number }[];
   const v = verdict(packet.report.packetSha256);
   v.inventoryAccuracy[0].spanIds = spans.filter((span) => span.path === 'src/kestrel.c' && span.startLine === 1).slice(0, 1).map((span) => span.id);
@@ -231,6 +227,23 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   if (!validated.ok || validated.report.outcome !== 'validated') throw new Error(`fixture verdict: ${JSON.stringify(validated.ok ? validated.report.problems : validated.refusal)}`);
   await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
   return run;
+}
+
+/** The counted inventory and the fidelity packet of a run whose draft passed. */
+async function handedPacket(run: string, editInventory?: (inv: Doc) => void) {
+  const handed = await sessionPrompt(run, { role: 'inventory' }, { sources: sources(), now: () => LATER });
+  if (!handed.ok) throw new Error(handed.refusal.reason);
+  const inv0 = inventory();
+  editInventory?.(inv0);
+  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inv0, null, 2));
+  const inv = await checkInventory(run, {}, checkDeps());
+  if (!inv.ok || inv.report.outcome !== 'passed') throw new Error(`fixture inventory: ${JSON.stringify(inv.ok ? inv.report.findings : inv.refusal)}`);
+  await launchForm(run, { role: 'inventory', form: 'terminal' }, { sources: sources(), now: () => LATER });
+  const packet = await reviewPacket(run, { kind: 'fidelity' }, { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
+  if (!packet.ok) throw new Error(packet.refusal.reason);
+  const review = await sessionPrompt(run, { role: 'review', kind: 'fidelity' }, { sources: sources(), now: () => LATER, loadScreen: async () => buildDossierScreen(fixturePolicy, true, null, fixtureVisibility) });
+  if (!review.ok) throw new Error(review.refusal.reason);
+  return { packet, review };
 }
 
 /** The renderer, recording what it was given. */
@@ -566,6 +579,23 @@ describe('render', () => {
     expect(list.split('class="selected-why"').length - 1).toBe(2);
   });
 
+  it('names a path both denied and matched by a secret detector on no page, counting it as not named (syzygy-8hm6)', async () => {
+    const doc = draft();
+    doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+    (doc['sections'] as Doc[])[0]!['paragraphs'].push({ id: 'p7', label: 'inferred', basis: 'source', text: 'zq-both paragraph.', citations: [cite('c-p7', '.env', 1, 1), cite('c-p7b', BOTH_PATH, 1, 1)], quotations: [], children: [] });
+    (doc['discovery'] as Doc)['selected'] = [{ path: BOTH_PATH, reason: 'zq-why-both.' }];
+    expect(buildDossierScreen(fixturePolicy, true, null, fixtureVisibility)).toMatchObject({ ok: true });
+    const result = await renderRun(await prepared(doc, false), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    // Booleans, so a failure prints no page.
+    expect([...files].filter(([, page]) => page.includes('y'.repeat(24))).map(([file]) => file)).toEqual([]);
+    expect(files.get('index.html')).toContain('Withheld from this dossier: it rests on 2 source file(s) that screening withholds (.env; 1 not named, because a secret detector matches the path), so its text is not shown.');
+    const discovery = files.get('discovery.html')!;
+    expect(discovery.includes('zq-why-both.')).toBe(true);
+    expect(discovery.split('a path a secret detector matches (not shown)').length - 1).toBe(2);
+  });
+
   it('says on the sources list which pages cite each source and how often (syzygy-pdja.15)', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
@@ -807,7 +837,7 @@ describe('render', () => {
     const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
     expect(result).toMatchObject({ ok: true });
     const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
-    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json' }]);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit, visibility: 'public', policySha256: policyFixture(fixturePolicy).binding.sha256, policyPath: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v3.json' }]);
     expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
@@ -885,6 +915,136 @@ describe('render', () => {
 // syzygy-qkea.10 (S9b): the rendered-design review (REQ-polaris-generation-035, scenario "Design review survives its status region";
 // design decision 5). The expected packet is assembled here from the site's files with this file's own region pattern; only the criteria
 // text and the verdict schema document, Syzygy's own constants, are taken from the modules that define them.
+
+// syzygy-8hm6, review 1 of the fix: the fix may only tighten. Five kinds of cited path, each with a body screening admits and a body it
+// excludes, under the real two-stage declared-source policy 2.0.0. `MAIN` is what the predecessor (291bafa19, before 629c67ce) gave for
+// the same fixture, recorded by running it there; `HEAD` is what this tree gives. Planted values are fake and built from parts; every
+// assertion is over booleans and outcome words, so a failure prints no path.
+describe('a cited path by kind and body under the two-stage policy: the secret-path fix only tightens (syzygy-8hm6)', () => {
+  const V2 = new Uint8Array(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json')));
+  const TOKEN = `${['gh', 'p_'].join('')}${'q'.repeat(24)}`, BODY_TOKEN = `${['gh', 'p_'].join('')}${'r'.repeat(24)}`;
+  const KEYED = `${['au', 'th'].join('')}:${'abcdefghij'}`;
+  const KINDS: readonly (readonly [string, (dir: string) => string])[] = [
+    ['stage-1', (dir) => `tt/${dir}/plain.c`], ['stage-2-text-matched', (dir) => `conf/${dir}/${KEYED}.yaml`], ['denied', (dir) => `tt/${dir}/.env`],
+    ['secret', (dir) => `tt/${dir}/${TOKEN}.c`], ['denied-and-secret', (dir) => `tt/${dir}/${TOKEN}/.env`],
+  ];
+  const BODIES: readonly (readonly [string, string])[] = [['kept', 'int a;\n'], ['held', `int a; // ${BODY_TOKEN}\n`]];
+  const CASES = KINDS.flatMap(([kind, at]) => BODIES.map(([dir, body]) => ({ name: `${kind}/${dir}`, file: at(dir), body })));
+  const GONE = KINDS.map(([kind, at]) => ({ name: `${kind}/gone`, file: at('gone') }));
+  let ttOrigin: string, ttCommit: string;
+  beforeAll(() => {
+    ttOrigin = tempDir('dossier-render-tt-origin-');
+    const git = (...args: string[]): string => execFileSync('git', ['-C', ttOrigin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+    git('init', '-q', '-b', 'main');
+    for (const [file, body] of [...Object.entries(FILES), ...CASES.map((c) => [c.file, c.body] as const)]) {
+      fs.mkdirSync(path.dirname(path.join(ttOrigin, file)), { recursive: true });
+      fs.writeFileSync(path.join(ttOrigin, file), body);
+    }
+    git('add', '-A', '-f');
+    git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'fixture');
+    ttCommit = git('rev-parse', 'HEAD');
+  });
+  /** Run `body` with the fixture repository and the two-stage policy in place of the file's own. */
+  const under = async <T>(body: () => Promise<T>): Promise<T> => {
+    const before = [origin, commit] as const;
+    [origin, commit, fixturePolicy] = [ttOrigin, ttCommit, V2];
+    try { return await body(); } finally { [origin, commit] = before; }
+  };
+  const withParagraphs = (cites: readonly { file: string }[], endLine: number): Doc => {
+    const doc = draft();
+    doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+    (doc['sections'] as Doc[])[0]!['paragraphs'].push(...cites.map((c, i) => ({ id: `p-tt-${i}`, label: 'inferred', basis: 'source', text: `zq-tt-${i}-text paragraph.`, citations: [cite(`c-tt-${i}`, c.file, 1, endLine)], quotations: [], children: [] })));
+    return doc;
+  };
+
+  type Row = { blob: [boolean, boolean, string]; inStoredRecord: boolean; inReviewNote: boolean; reachWithheld: boolean; textShown: boolean; pathOnAPage: boolean; span: [boolean, boolean, string, boolean] };
+  // blob and span: [path named, object id named, outcome(, text sent)].
+  const NAMED_KEPT: Row = { blob: [true, true, 'admitted'], inStoredRecord: true, inReviewNote: false, reachWithheld: false, textShown: true, pathOnAPage: true, span: [true, true, 'admitted', true] };
+  const named = (outcome: string): Row => ({ blob: [true, true, outcome], inStoredRecord: true, inReviewNote: true, reachWithheld: true, textShown: false, pathOnAPage: true, span: [true, true, outcome, false] });
+  const unnamed = (outcome: string): Row => ({ blob: [false, false, outcome], inStoredRecord: false, inReviewNote: false, reachWithheld: true, textShown: false, pathOnAPage: false, span: [false, false, outcome, false] });
+  const MAIN: Record<string, Row> = {
+    'stage-1/kept': NAMED_KEPT, 'stage-1/held': named('secret-detector-match'),
+    'stage-2-text-matched/kept': NAMED_KEPT, 'stage-2-text-matched/held': named('secret-detector-match'),
+    'denied/kept': named('denied-path'), 'denied/held': named('denied-path'),
+    'secret/kept': unnamed('secret-detector-match'), 'secret/held': unnamed('secret-detector-match'),
+    'denied-and-secret/kept': named('denied-path'), 'denied-and-secret/held': named('denied-path'),
+  };
+  // Three rows differ from MAIN, each only by a name withheld: the excluded Stage-2 file whose path a configuration detector matches as
+  // text, and both denied-and-secret files.
+  const HEAD: Record<string, Row> = {
+    ...MAIN, 'stage-2-text-matched/held': unnamed('secret-detector-match'),
+    'denied-and-secret/kept': unnamed('denied-path'), 'denied-and-secret/held': unnamed('denied-path'),
+  };
+  // Per citation: [finding kind, whether its detail quotes the path]. A path-excluded body is never read, so its range is not checked.
+  const MAIN_FINDINGS: Record<string, [string, boolean][]> = {
+    'stage-1/kept': [['range-beyond-blob', true]], 'stage-1/held': [['range-beyond-blob', true]],
+    'stage-2-text-matched/kept': [['range-beyond-blob', true]], 'stage-2-text-matched/held': [['range-beyond-blob', true]],
+    'denied/kept': [], 'denied/held': [], 'secret/kept': [], 'secret/held': [], 'denied-and-secret/kept': [], 'denied-and-secret/held': [],
+    'stage-1/gone': [['path-absent', true]], 'stage-2-text-matched/gone': [['path-absent', true]], 'denied/gone': [['path-absent', true]],
+    'secret/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', true]],
+  };
+  const HEAD_FINDINGS: Record<string, [string, boolean][]> = {
+    ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [['range-beyond-blob', false]], 'stage-2-text-matched/held': [['range-beyond-blob', false]],
+    'stage-2-text-matched/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', false]],
+  };
+  /** Whether `now` shows, names or sends nothing `before` did not: every flag that says so may only go from true to false, the review
+   * reach only from reaching to withheld, and an outcome never changes. */
+  const noLooser = (before: Row, now: Row): boolean => {
+    const shows = (row: Row): boolean[] => [row.blob[0], row.blob[1], row.inStoredRecord, row.inReviewNote, row.textShown, row.pathOnAPage, row.span[0], row.span[1], row.span[3], !row.reachWithheld];
+    return shows(now).every((flag, i) => !flag || shows(before)[i]!) && now.blob[2] === before.blob[2] && now.span[2] === before.span[2];
+  };
+
+  it('shows, names and sends nothing the predecessor withheld, for every kind of path and both bodies', async () => {
+    const table = await under(async () => {
+      const { run, checked } = await started(withParagraphs(CASES, 1));
+      if (!checked.ok) throw new Error(checked.refusal.reason);
+      const report = checked.report as unknown as { outcome: string; citedBlobs: { path: string | null; objectId: string | null; outcome: string }[]; reviewReach?: { blocks: { blockId: string | null }[] }; reviewVisibility?: { withheld: { path: string; outcome: string }[] } };
+      expect(report.outcome).toBe('passed');
+      // The ten files are the last ten cited, in order; a blob recorded without its path is told apart by that order alone.
+      const blobs = report.citedBlobs.slice(-CASES.length);
+      expect(report.citedBlobs.slice(0, -CASES.length).map((blob) => blob.path)).toEqual(['src/kestrel.c', 'docs/notes.txt']);
+      // Withheld from the review, counted: every file but the two admitted ones, named or by the fixed phrase.
+      expect((report.reviewVisibility?.withheld ?? []).map((w) => w.outcome)).toEqual(['secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path']);
+      const stored = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
+      const rendered = await renderRun(run, renderDeps());
+      if (!rendered.ok) throw new Error(rendered.refusal.reason);
+      const files = readSite(rendered.report.site);
+      const { review } = await handedPacket(run);
+      const spans = JSON.parse(fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8')).spans as { path: string | null; objectId: string | null; outcome: string; text?: string; citedBy: { citationId: string }[] }[];
+      // The planted body value reaches no page, record or span.
+      expect([[...files.values()].some((page) => page.includes(BODY_TOKEN)), stored.includes(BODY_TOKEN), JSON.stringify(spans).includes(BODY_TOKEN)]).toEqual([false, false, false]);
+      return Object.fromEntries(CASES.map((c, i): [string, Row] => {
+        const span = spans.find((s) => s.citedBy.some((by) => by.citationId === `c-tt-${i}`))!;
+        return [c.name, {
+          blob: [blobs[i]!.path !== null, blobs[i]!.objectId !== null, blobs[i]!.outcome],
+          inStoredRecord: stored.includes(JSON.stringify(c.file).slice(1, -1)),
+          inReviewNote: (report.reviewVisibility?.withheld ?? []).some((w) => w.path === c.file),
+          reachWithheld: (report.reviewReach?.blocks ?? []).some((b) => b.blockId === `p-tt-${i}`),
+          textShown: [...files.values()].some((page) => page.includes(`zq-tt-${i}-text`)),
+          pathOnAPage: [...files.values()].some((page) => page.includes(c.file)),
+          span: [span.path !== null, span.objectId !== null, span.outcome, span.text !== undefined],
+        }];
+      }));
+    });
+    expect(table).toEqual(HEAD);
+    expect(Object.keys(HEAD).filter((name) => !noLooser(MAIN[name]!, HEAD[name]!))).toEqual([]);
+    expect(Object.keys(HEAD).filter((name) => JSON.stringify(HEAD[name]) !== JSON.stringify(MAIN[name]))).toEqual(['stage-2-text-matched/held', 'denied-and-secret/kept', 'denied-and-secret/held']);
+    // The comparison is not vacuous: it refuses the regression review 1 found (the excluded Stage-2 file's item text rendering).
+    expect(noLooser(MAIN['stage-2-text-matched/held']!, { ...HEAD['stage-2-text-matched/held']!, textShown: true })).toBe(false);
+  }, 120_000);
+
+  it('quotes in a finding no path the predecessor left unquoted', async () => {
+    const cites = [...CASES, ...GONE];
+    const got = await under(async () => {
+      const { checked } = await started(withParagraphs(cites, 999));
+      if (!checked.ok) throw new Error(checked.refusal.reason);
+      const findings = (checked.report as unknown as { findings: { kind: string; citationId?: string; detail: string }[] }).findings;
+      return Object.fromEntries(cites.map((c, i) => [c.name, findings.filter((f) => f.citationId === `c-tt-${i}`).map((f): [string, boolean] => [f.kind, f.detail.includes(c.file)])]));
+    });
+    expect(got).toEqual(HEAD_FINDINGS);
+    expect(Object.keys(HEAD_FINDINGS).filter((name) => HEAD_FINDINGS[name]!.some(([kind, quoted], i) => kind !== MAIN_FINDINGS[name]![i]![0] || (quoted && !MAIN_FINDINGS[name]![i]![1])) || HEAD_FINDINGS[name]!.length !== MAIN_FINDINGS[name]!.length)).toEqual([]);
+  }, 120_000);
+});
 
 const REGION = /<aside class="review-status" data-review-status-region="review-status" aria-label="Review status">.*?<\/aside>/su;
 const sha = (text: string): string => createHash('sha256').update(text).digest('hex');
@@ -1701,7 +1861,7 @@ describe('render: derived structure (version 2.3)', () => {
     expect(record).toEqual({
       format: 'polaris-dossier-derived-structure/1', repositoryId: 'redis-redis', revision: commit, capturedAt: '2026-10-07T12:01:00.000Z',
       scope: 'tree-metadata: the paths and modes of the pinned tree\'s entries; no file body, size or object id', producer: 'syzygy dossier check',
-      rules: [{ id: 'top-level-unit', version: 1 }], state: 'derived', files: 8, secretPathsLeftOut: 1, submodules: 0, facts: FACTS, unitsNotListed: 0,
+      rules: [{ id: 'top-level-unit', version: 1 }], state: 'derived', files: 9, secretPathsLeftOut: 2, submodules: 0, facts: FACTS, unitsNotListed: 0,
     });
     expect(kept.toString('utf8')).toBe(`${JSON.stringify(record, null, 2)}\n`);
     // An inventory check keeps none.
@@ -1818,14 +1978,14 @@ describe('render: derived structure (version 2.3)', () => {
     // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
     for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
     for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text, `${file} ${name}`).not.toContain(name);
-    expect(JSON.parse(record)).toMatchObject({ files: 8, secretPathsLeftOut: 1, facts: FACTS });
+    expect(JSON.parse(record)).toMatchObject({ files: 9, secretPathsLeftOut: 2, facts: FACTS });
     for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
   });
 
-  // Version 2.9 (syzygy-3efd.36): the directory map counts what the render re-derives from the tree: FILES holds 8 blob entries, 2 at the
-  // root, 5 under docs/ and src/, and 1 a secret detector matches.
+  // Version 2.9 (syzygy-3efd.36): the directory map counts what the render re-derives from the tree: FILES holds 9 blob entries, 2 at the
+  // root, 5 under docs/ and src/, and 2 a secret detector matches (one of them also a denied path, syzygy-8hm6).
   it('counts the directory map from the tree, never the record, and marks its line Unknown where the record\'s files alone was edited', async () => {
-    const coverage = (mark: string, ending = ''): string => `<p class="map-coverage" ${mark}>Coverage: 8 files in the tree at that revision: 2 at the root; 5 under the 2 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 1 left out and not named, because a secret detector matches their path; and 0 submodules, not followed. Directories below the top level are not mapped: no rule of this version derives them.${ending}</p>`;
+    const coverage = (mark: string, ending = ''): string => `<p class="map-coverage" ${mark}>Coverage: 9 files in the tree at that revision: 2 at the root; 5 under the 2 top-level directories listed here; 0 under 0 more top-level directories counted and not listed; 2 left out and not named, because a secret detector matches their path; and 0 submodules, not followed. Directories below the top level are not mapped: no rule of this version derives them.${ending}</p>`;
     const run = await prepared(draft(), false);
     const current = await rendered(run);
     expect(current.files.get('maps/directories.html')).toContain(coverage('data-epistemic="observed"'));

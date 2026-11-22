@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { CENSUS_LISTED_LIMIT, CENSUS_PATH_LIMIT, censusPath, censusSection, loadCensus, screenCensusReport, shownPath, withheldCensus, type CensusLoad } from './census.js';
 import { GitObjectReadRefusal, type PinnedObjectReader } from './git-object-reader.js';
-import { buildDossierScreen } from './screen.js';
+import { buildDossierScreen, secretPathOf } from './screen.js';
 
 // syzygy-mea.3 (owner direction OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03, item 1): the path-only census of the files screening
 // withholds from the review session. The screen is built from the live policy's detectors and denied-path rules with a fixture class
@@ -60,6 +60,11 @@ describe('withheldCensus, a path both a denied-path rule and a secret detector m
   // known-token-formats. `screenPath` reports denied-path for both, so only the census's own detector pass keeps them unnamed.
   // `.env.<b>x` is denied and carries an HTML tag but no secret: only a detector match withholds a denied path's name, so it is listed.
   const BOTH = [blob('.env.token=abcdefghij'), blob('keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'), blob('.env.local'), blob('src/main.c'), blob('.env.<b>x')];
+
+  it('is a secret path to secretPathOf though screenPath answers denied-path, and only where a detector matches (syzygy-8hm6)', () => {
+    expect(BOTH.map((entry) => secretPathOf(SCREEN)(entry.path))).toEqual([true, true, false, false, false]);
+    expect(secretPathOf(SCREEN)('src/token=abcdefghij.c')).toBe(true);
+  });
 
   it('counts such a path under secretPath and names it nowhere: not in the census, the brief section or the check report', () => {
     expect(BOTH.map((entry) => SCREEN.screenPath(entry.path))).toEqual(['denied-path', 'denied-path', 'denied-path', undefined, 'denied-path']);
