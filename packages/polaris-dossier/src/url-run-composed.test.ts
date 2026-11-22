@@ -157,18 +157,26 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const resumeChecks: unknown[] = [];
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
-    let finishProviders!: () => void;
-    const providerFinish = new Promise<void>(resolve => { finishProviders = resolve; });
-    const finalResponse: (() => Promise<ScriptCall>)[] = stoppingCut ? [async () => {
-      await providerFinish; return { type: 'text', text: 'OWN ROLE COMPLETE AT CONTROLLED STOP' };
-    }] : [];
+    const ordinary = ['author', 'inventory', 'fidelity'] as const;
+    const releaseProvider = new Map<(typeof ordinary)[number], () => void>();
+    const finalResponse = (role: (typeof ordinary)[number]): (() => Promise<ScriptCall>)[] => {
+      if (!stoppingCut) return [];
+      const released = new Promise<void>(resolve => { releaseProvider.set(role, resolve); });
+      return [async () => {
+        await released;
+        return { type: 'text', text: 'OWN ROLE COMPLETE AT CONTROLLED STOP' };
+      }];
+    };
     const settleOrdinaryResponses = async () => {
-      finishProviders();
-      const ordinary = ['author', 'fidelity', 'inventory'];
       const until = performance.now() + 5_000;
-      while (!ordinary.every(role => settledProviderRoles.has(role)) && performance.now() < until)
-        await new Promise(resolve => setTimeout(resolve, 5));
-      expect(ordinary.filter(role => settledProviderRoles.has(role))).toEqual(ordinary);
+      // Create an audit boundary with no outstanding ordinary exchanges.
+      // Settle each synthetic end-turn separately against the live machine.
+      for (const role of ordinary) {
+        releaseProvider.get(role)!();
+        while (!settledProviderRoles.has(role) && performance.now() < until)
+          await new Promise(resolve => setTimeout(resolve, 5));
+        expect(settledProviderRoles.has(role), `${role} end-turn audit at the owned stop`).toBe(true);
+      }
     };
     const liveFinals: sessionAudit.UrlDesignRenderContinuation[] = [], coldFinals: sessionAudit.UrlDesignRenderContinuation[] = [];
     let finalProductAssertions = 0, finalSiteBeforeStop = -1;
@@ -264,11 +272,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
         schemaVersion: 'polaris-dossier-local-draft-v7', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
-      tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...finalResponse]);
+      tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...finalResponse('author')]);
     const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
       tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),
       tool('inventory_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory, '--submit', 'inventory.json', '--stdin'],
-        stdin: canonical({ ...inventory(f.commit), sessionId: session('inventory') }) }), ...finalResponse]);
+        stdin: canonical({ ...inventory(f.commit), sessionId: session('inventory') }) }), ...finalResponse('inventory')]);
     const resultTexts = (requests: readonly unknown[]): Record<string, unknown>[] => {
       const results: Record<string, unknown>[] = [];
       const visit = (value: unknown): void => {
@@ -286,7 +294,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const packet = JSON.parse(artifact.text) as { spans: { id: string; path: string; startLine: number }[] };
         return tool('fidelity_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.fidelity, '--submit', 'round-1/verdict.json', '--stdin'],
           stdin: canonical({ ...fidelityVerdict(f.commit, artifact.sha256, packet.spans), sessionId: session('fidelity') }) });
-      }, ...finalResponse]);
+      }, ...finalResponse('fidelity')]);
     let designRound = 1;
     const design = scripted('design', [tool('design_poll', 'dossier_step', { argv: ['dossier', 'poll', f.runId] }),
       () => tool('design_part_1', 'artifact_read', { path: `round-${designRound}/design-view-part-1.json` }),
