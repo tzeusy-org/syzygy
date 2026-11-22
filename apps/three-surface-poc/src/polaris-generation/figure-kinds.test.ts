@@ -74,9 +74,22 @@ describe('figure kinds on the operator-agent site', () => {
     graphFiles = renderLocalDossier(readingInput()).files as ReadonlyMap<string, string>;
   });
 
+  // The index-and-task-routes change (syzygy-5dhm.70): a sequence and a swimlane are fragment targets as a graph figure is, and the index lists them.
+  it('gives each sequence and swimlane its fragment identity, outside every details element, and the index its title and home', () => {
+    const machine = JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string; home: { page: string; fragment: string } | null }[] } };
+    expect(machine.nameIndex.names.filter(entry => entry.kind === 'figure').map(entry => `${entry.name} | ${entry.home!.page}#${entry.home!.fragment}`)).toEqual(['Handshake | index.html#figure-handshake', 'Release | index.html#figure-release']);
+    const index = files.get('index.html')!;
+    for (const id of ['figure-handshake', 'figure-release']) {
+      expect(index.split(` id="${id}"`).length - 1, id).toBe(1);
+      const before = index.slice(0, index.indexOf(` id="${id}"`));
+      expect(before.split('<details').length - before.split('</details>').length, id).toBe(0);
+      expect(before.slice(before.lastIndexOf('<')).startsWith('<figure '), id).toBe(true);
+    }
+  });
+
   it('draws the sequence with its lifelines, a wrapped message label, a loop and an escaped Unknown label', () => {
     const index = files.get('index.html')!;
-    expect(index).toContain('<figure data-hue="1" data-visual-provenance="curated" data-figure-kind="sequence"><figcaption id="diagram-title-0">Handshake</figcaption><p class="diagram-relationship"><span class="eyebrow">sequence</span> who asks whom</p><div class="figure-forms" data-figure-width="592"><div class="diagram-scroll figure-drawing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 592 392" width="592" height="392"');
+    expect(index).toContain('<figure data-hue="1" data-visual-provenance="curated" data-figure-kind="sequence" id="figure-handshake"><figcaption id="diagram-title-0">Handshake</figcaption><p class="diagram-relationship"><span class="eyebrow">sequence</span> who asks whom</p><div class="figure-forms" data-figure-width="592"><div class="diagram-scroll figure-drawing"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 592 392" width="592" height="392"');
     expect(index).toContain('<g class="lifeline inferred"><path d="M 112 80 L 112 392"/></g>');
     expect(index).toContain('<tspan x="388" dy="0">reads the stored</tspan><tspan x="388" dy="15">record for the key it…</tspan>');
     expect(index).toContain('<g class="edge unknown"><title>checks its cache (unknown)</title><path d="M 296 272 L 328 272 L 328 296 L 298 296" marker-end="url(#arrow-0)"/>');

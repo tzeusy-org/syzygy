@@ -8,6 +8,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
+import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -21,6 +22,8 @@ import { assertInertSvg } from './svg-inert.js';
  * - `index.html` (depth 0): title, introduction and open questions at reading
  *   level 0; every section at level 1, each linking its deep dives.
  * - `contents.html`, `glossary.html`, `sources/index.html` (depth 1).
+ * - `find-by-task.html` and `name-index.html` (depth 1; operator-agent runs only, `dossier-finding.ts`): the draft's task routes,
+ *   each step a claim block, and the generated index of every name the site shows.
  * - `deep-dives/<id>.html` (depth 1): one per produced deep dive, level 2.
  * - `sources/<anchor-digest>.html` (depth 2): one per quotable source, its
  *   exact admitted text as one quote with byte offsets, level 3.
@@ -207,7 +210,7 @@ interface PageChrome { readonly notice: string; readonly disclosure: (path: stri
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = ''): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${mapCss}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${mapCss}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
@@ -366,9 +369,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
   // `attributes` is markup the caller built with escape(); nothing is spliced in afterwards. `marks` are dossier spec v1.5's machine
   // attributes, present only where a claim has one, so a page without them keeps its bytes.
-  const claim = (tag: string, id: string, m: EpistemicMarking, body: string, attributes = '', unknownReason: string | null = null, marks?: ClaimMarks): string => {
+  const claim = (tag: string, id: string, m: EpistemicMarking, body: string, attributes = '', unknownReason: string | null = null, marks?: ClaimMarks, last = ''): string => {
     pending.push({ id, epistemic: m, unknownReason, ...(marks === undefined || Object.keys(marks).length === 0 ? {} : { v15: marks }) });
-    return `<${tag}${attributes}${marks === undefined ? '' : marksAttributes(marks)} data-claim-id="${escape(id)}" data-epistemic="${m}">${body}</${tag}>`;
+    return `<${tag}${attributes}${marks === undefined ? '' : marksAttributes(marks)} data-claim-id="${escape(id)}" data-epistemic="${m}"${last}>${body}</${tag}>`;
   };
   // An operator-agent block: its segments (Syzygy's located bytes for every quotation), its marking and reason, and the commands a claim
   // resting on execution names. A non-normative block is no claim and carries no anchor.
@@ -432,16 +435,40 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const where = `${sources.get(part.sourceId)!.path}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
     return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
   };
-  const localParagraph = (from: string, p: DraftParagraph, tag: string): string => {
+  // The generated index (the index-and-task-routes change) links a name to every block that names it, so each operator-agent block is a fragment target and
+  // is filed here as it is drawn, with the text it shows. A block drawn inside a folded element is reached through that element: a
+  // fragment target inside a `details` strands a keyboard reader. `place` is the words a link to the block shows.
+  const indexed: (IndexedBlock & { readonly rank: number })[] = [];
+  const figureHomes: { id: string; title: string; home: IndexTarget }[] = [];
+  const repeatedLists: { diagramId: string; target: IndexTarget }[] = [];
+  let fold: string | null = null;
+  let place = '';
+  // Where a block stands in the index's order: the introduction (0), the sections (1), the deep dives (2), the task routes (3).
+  let rank = 1;
+  const folded = <T>(elementId: string, draw: () => T): T => {
+    const outer = fold;
+    fold = outer ?? `element-${elementId}`;
+    try { return draw(); } finally { fold = outer; }
+  };
+  const blockTarget = (from: string, p: DraftParagraph, b: LocalBlock): string => {
+    // A withheld item, or a block a secret detector matches, shows Syzygy's sentence, never the agent's text, so it names nothing.
+    if (b.withheld === undefined && b.secretMatched !== true) {
+      const texts = (kind: 'prose' | 'quotation'): string => b.segments.flatMap(part => part.kind === kind ? [part.text] : []).join('\n');
+      indexed.push({ id: p.id, page: from, fragment: fold ?? `block-${p.id}`, label: place, prose: texts('prose'), quoted: texts('quotation'), sourceIds: p.sourceIds, rank });
+    }
+    return fold === null ? ` id="block-${escape(p.id)}"` : '';
+  };
+  const localParagraph = (from: string, p: DraftParagraph, tag: string, after = ''): string => {
     const b = local!.blocks.get(p.id);
     if (b === undefined) throw new DossierRenderError('unknown-block');
     const body = b.segments.map(part => segment(from, p.id, part)).join('');
     const reading = narrative(from);
+    const target = blockTarget(from, p, b);
     if (b.marking === 'non-normative') {
       nonNormative.push({ page: from, id: p.id });
       return reading
-        ? `<${tag} class="non-normative" data-non-normative="${escape(p.id)}" data-claim-kind="non-normative">${body} <span class="framing-mark">framing</span>${clipped(' <span class="marking non-normative">[Non-normative]</span> Evidence: claim-block kind non-normative; it claims nothing from a source.')}</${tag}>`
-        : `<${tag} class="non-normative" data-non-normative="${escape(p.id)}">${body} <span class="marking non-normative">[Non-normative]</span></${tag}>`;
+        ? `<${tag} class="non-normative" data-non-normative="${escape(p.id)}" data-claim-kind="non-normative"${target}>${body} <span class="framing-mark">framing</span>${clipped(' <span class="marking non-normative">[Non-normative]</span> Evidence: claim-block kind non-normative; it claims nothing from a source.')}</${tag}>`
+        : `<${tag} class="non-normative" data-non-normative="${escape(p.id)}"${target}>${body} <span class="marking non-normative">[Non-normative]</span>${after}</${tag}>`;
     }
     const kind = p.sourceIds.length > 0 ? 'anchored' : 'labeled';
     // In the reading view an Unknown block opens with `Not established` and its reason follows in words; the reason code is clipped.
@@ -452,8 +479,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const executions = b.executions.length === 0 ? '' : ` <span class="executions">Rests on the agent's report of running ${b.executions.map(run => `<code>${escape(run.command)}</code>`).join('; ')}${selfReported}</span>`;
     const judged = b.judgement === undefined ? '' : ' <span class="judgement-mark">judgement</span>';
     const evidence = reading ? clipped(` <span class="evidence-note">${escape(evidenceNote(b, kind))}</span>`) : '';
-    return claim(tag, p.id, b.marking, `${lead}${body}${judged} ${mark(from, b.marking)}${reason}${executions}${evidence} ${refs(from, p.sourceIds, p.id)}`,
-      `${b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`}${reading ? ` data-claim-kind="${kind}"` : ''}`, b.unknownReason, blockMarks(b));
+    return claim(tag, p.id, b.marking, `${lead}${body}${judged} ${mark(from, b.marking)}${reason}${executions}${evidence} ${refs(from, p.sourceIds, p.id)}${after}`,
+      `${b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`}${reading ? ` data-claim-kind="${kind}"` : ''}`, b.unknownReason, blockMarks(b), target);
   };
   const paragraph = (from: string, p: DraftParagraph, tag: string): string => local !== undefined ? localParagraph(from, p, tag)
     : claim(tag, p.id, label(p.id), `${escape(p.text)} ${marking(label(p.id))}${quoteNote(p.id)} ${refs(from, p.sourceIds)}`);
@@ -466,11 +493,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const TONE_NAME: Readonly<Record<string, string>> = { note: 'Note', tip: 'Tip', caution: 'Caution', important: 'Important' };
   // A list repeating a diagram of its section (dossier spec v1.5) renders collapsed, its summary Syzygy's words with the count of Unknown
   // claims inside; each item stays a claim block. The element's identity moves to the details, outside the collapsed part.
-  const repeated = (diagramId: string | undefined, attrs: string, list: (own: string) => string): string => {
+  const repeated = (from: string, id: string, diagramId: string | undefined, attrs: string, list: (own: string) => string): string => {
     if (diagramId === undefined) return list(attrs);
     const before = pending.length;
     const shownBefore = new Set(termsShown);
-    const inner = list('');
+    repeatedLists.push({ diagramId, target: { page: from, fragment: fold ?? `element-${id}`, label: place } });
+    const inner = folded(id, () => list(''));
     termsShown.clear();
     for (const id of shownBefore) termsShown.add(id);
     const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;
@@ -495,17 +523,17 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       case 'callout':
         return `<aside class="callout callout-${e.tone}"${attrs} aria-label="${escape(`${TONE_NAME[e.tone]}: ${e.title}`)}"><p class="callout-title"><span class="callout-tone">${TONE_NAME[e.tone]}</span> ${escape(e.title)}</p>${e.children.map(child => block(from, child)).join('')}</aside>`;
       case 'steps':
-        return repeated(e.repeatsDiagram, attrs, own => `<ol class="steps"${own}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`);
+        return repeated(from, id, e.repeatsDiagram, attrs, own => `<ol class="steps"${own}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`);
       case 'definitions':
-        return repeated(e.repeatsDiagram, attrs, own => `<dl class="definitions"${own}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`);
+        return repeated(from, id, e.repeatsDiagram, attrs, own => `<dl class="definitions"${own}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`);
       case 'cards':
-        return repeated(e.repeatsDiagram, attrs, own => `<ul class="cards"${own}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`);
+        return repeated(from, id, e.repeatsDiagram, attrs, own => `<ul class="cards"${own}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`);
       case 'details': {
         // A collapsed section never hides an Unknown silently (v1.3 note 2): its summary counts the Unknown claims inside it.
         const before = pending.length;
         // A collapsed first use does not use up the section's visible one.
         const shownBefore = new Set(termsShown);
-        const inner = e.elements.map(child => block(from, child)).join('');
+        const inner = folded(id, () => e.elements.map(child => block(from, child)).join(''));
         termsShown.clear();
         for (const id of shownBefore) termsShown.add(id);
         const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;
@@ -568,8 +596,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
+    // An operator-agent figure is a fragment target, so the index can send a reader to it; it is never drawn inside a folded element.
+    if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -610,14 +640,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     figureStructures.push({ index, entry: figure.kind === 'sequence'
       ? { diagram: d.id, kind: 'sequence', page: from, laidOutPx: width, participants: figure.participants.map(p => p.id), messages: figure.messages.map(m => ({ id: m.id, from: m.from, to: m.to })) }
       : { diagram: d.id, kind: 'swimlane', page: from, laidOutPx: width, lanes: figure.lanes.map(l => l.id), steps: figure.steps.map(st => ({ id: st.id, lane: st.lane })) } });
+    // A sequence or swimlane is a fragment target as a graph figure is (the index-and-task-routes change).
+    if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated} data-figure-kind="${figure.kind}"${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${figure.kind}</span> ${escape(d.relationship)}</p>`
       + `<div class="figure-forms" data-figure-width="${width}"><div class="diagram-scroll figure-drawing">${svg}</div><ol class="figure-stepper">${stepper}</ol></div>`
       + `${figureLegend(all.map(element => element.epistemic), 0, 0, 'as marked', tallyHead, figure.kind === 'swimlane')}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${ownerList}</ul><ol>${useList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(figureToMermaid(figure))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, ...deepPaths.values(), ...sourcePaths.values(),
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, DERIVED_SITE_FILE, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, ...deepPaths.values(), ...sourcePaths.values(),
     ...poles.flatMap(pole => pole.path === null ? [] : [pole.path])]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
@@ -631,7 +663,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const reportItems = (from: string): string => `${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}`;
   // A provider run's bytes are pinned, so its list keeps its old shape.
   const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="review-report"${reportPaths.includes(from) ? ' open' : ''}><summary>Review report</summary><ol>${reportItems(from)}</ol></details>`;
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${local === undefined ? '' : `<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li>`}${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li>${local === undefined ? '' : `<li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}<li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -682,6 +714,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ` class="unresolved-asset" data-asset-disposition="not-generated" data-stop-reason="${escape(stop!.shown)}"`);
   const sectionMarkup = (from: string, section: DossierDraft['sections'][number], index: number): string => {
     termsShown.clear();
+    place = section.title;
+    rank = 1;
     const head = `<span class="eyebrow">${String(index + 1).padStart(2, '0')}</span><h2>${escape(section.title)}</h2>`;
     if (view.deferredSections.has(section.id)) return `<section id="section-${escape(section.id)}" data-reading-level="1" data-topics="">${head}${notGenerated(section.id, 'section')}</section>`;
     if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(from, section.id, section.disposition)}</section>`;
@@ -713,6 +747,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>${derivedRegion}`);
   } else {
     termsShown.clear();
+    place = 'Overview';
+    rank = 0;
     // A v6 draft whose thesis is a reading of the code (version 2.4): Syzygy's one line, immediately before the introduction's block and
     // outside it, carrying no label token, citation or anchor; none where the introduction or the draft layer is withheld.
     const thesisLine = local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE : '';
@@ -723,6 +759,50 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
     const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${sections}${poleMap}${missingList}${derivedRegion}`);
+  }
+
+  // --- find by task (the index-and-task-routes change): the draft's task routes, right after the overview in the reading order. A step is a claim block and
+  // renders as one, with its label, its numbered sources and, in words, the file and lines it cites and the part of the dossier that
+  // explains it. A draft with no routes gets the page and a plain sentence; Syzygy writes no route of its own.
+  if (local !== undefined) {
+    const at = FIND_BY_TASK_PAGE;
+    const routes = withheld ? [] : local.taskRoutes ?? [];
+    const routeFragment = (id: string): string => `route-${id}`;
+    const where = (stepId: string, sourceIds: readonly string[]): string => {
+      // One file once, however many source pieces of it the step cites: linked at the first piece cited, with each piece's lines.
+      const cited = [...new Set(sourceIds)].flatMap(id => {
+        const source = sources.get(id), target = sourcePaths.get(id);
+        return source === undefined || target === undefined ? [] : [{ path: source.path, target, lines: local.citationLines?.get(stepId)?.get(id) }];
+      });
+      const files = [...new Set(cited.map(piece => piece.path))].map(path => {
+        const pieces = cited.filter(piece => piece.path === path);
+        const lines = pieces.flatMap(piece => piece.lines === undefined ? [] : [piece.lines]);
+        return `<a href="${escape(href(at, pieces[0]!.target, 'exact-text'))}"><code>${escape(path)}</code></a>${lines.length === 0 ? '' : `, ${escape(lines.join(', '))}`}`;
+      });
+      return files.length === 0 ? '' : `<span class="route-where">Read or change: ${files.join('; ')}</span>`;
+    };
+    const see = (step: NonNullable<LocalRenderInput['taskRoutes']>[number]['steps'][number]): string => {
+      if (step.see === undefined) return '';
+      const dive = step.see.kind === 'deep-dive' ? draft.deepDives.find(candidate => candidate.id === step.see!.id) : undefined;
+      const section = draft.sections.find(candidate => candidate.id === (dive?.sectionId ?? step.see!.id));
+      // A deep dive with no page of its own is explained in its section.
+      const target = dive !== undefined && deepPaths.has(dive.id) ? { to: href(at, deepPaths.get(dive.id)!), title: dive.title }
+        : section === undefined ? undefined : { to: sectionHref(at, section.id), title: section.title };
+      return target === undefined ? '' : `<span class="route-see">In this dossier: <a href="${escape(target.to)}">${escape(target.title)}</a></span>`;
+    };
+    const drawn = routes.map(route => {
+      termsShown.clear();
+      place = route.task;
+      rank = 3;
+      const shown = (id: string): boolean => { const own = local.blocks.get(id); return own?.withheld === undefined && own?.secretMatched !== true; };
+      const steps = route.steps.map(step => localParagraph(at, step.paragraph, 'li', shown(step.paragraph.id) ? `${where(step.paragraph.id, step.paragraph.sourceIds)}${see(step)}` : '')).join('');
+      return `<section id="${escape(routeFragment(route.id))}" class="task-route" data-task-route="${escape(route.id)}"><h2>${escape(route.task)}</h2><ol class="steps route-steps">${steps}</ol></section>`;
+    }).join('');
+    const body = withheld ? `<p class="no-routes" data-task-routes="withheld">${escape(TASK_ROUTES_WITHHELD)}</p>`
+      : routes.length === 0 ? `<p class="no-routes" data-task-routes="none">${escape(NO_TASK_ROUTES)} To find where something is named, use <a href="${escape(href(at, NAME_INDEX_PAGE))}">the index</a>.</p>`
+      : `<p class="route-note">${routes.length === 1 ? '1 task' : `${routes.length} tasks`} a reader may bring to this project, each answered by a short route. Every step is the authoring agent's claim, labelled and checked like any block of this dossier: it cites the file and lines to read or change at the pinned revision. Names are listed on <a href="${escape(href(at, NAME_INDEX_PAGE))}">the index</a>.</p>`
+        + `<nav class="route-list" aria-label="Tasks"><ol>${routes.map(route => `<li><a href="#${escape(routeFragment(route.id))}">${escape(route.task)}</a></li>`).join('')}</ol></nav>${drawn}`;
+    add(at, 1, 'Find by task', `<section id="find-by-task" data-topics="" data-task-route-count="${routes.length}"><h1>Find by task</h1>${body}</section>`);
   }
 
   // --- Pole pages, in the map's order, after the landing page: each draws its sections; the why section stays on the landing page,
@@ -743,6 +823,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   for (const dive of deepDives) {
     const path = deepPaths.get(dive.id)!;
     termsShown.clear();
+    place = dive.title;
+    rank = 2;
     const parent = draft.sections.find(section => section.id === dive.sectionId)!;
     // A deep dive leads with the figures whose home it is, as a section does (syzygy-3efd.18).
     const diveFigures = draft.diagrams.map((d, i) => d.home?.kind === 'deep-dive' && d.home.id === dive.id ? diagram(path, d, i) : '').join('');
@@ -750,8 +832,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   }
 
   // --- contents
-  const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
+  const contents = `<ol>${local === undefined ? '' : `<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li>`}${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li>${local === undefined ? '' : `<li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}<li><a href="sources/index.html">Sources</a></li>${maps === undefined ? '' : COMPUTED_MAPS.map(m => `<li><a href="${m.path}">${m.title}</a></li>`).join('')}${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -768,6 +850,24 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     ? '<p>The inventory recorded no terms, so this glossary is empty.</p>'
     : `<dl class="glossary">${terms.map(term => `<dt id="term-${escape(term.id)}">${escape(term.id)}</dt>${claim('dd', `glossary/${term.id}`, 'inferred', `${escape(term.statement)} ${marking('inferred')} ${refs('glossary.html', term.sourceIds)}`)}`).join('')}</dl>`;
   add('glossary.html', 1, 'Glossary', `<section id="glossary"><h1>Glossary</h1>${glossary}</section>`);
+
+  // --- the generated index (the index-and-task-routes change), after every page that holds a block is drawn: each glossary term, derived top-level
+  // directory, cited or named file, backticked identifier and figure title, with its home and every block that names it.
+  const nameIndex = local === undefined ? [] : buildNameIndex({
+    // In reading order, whatever order the pages were drawn in: the introduction, the sections, the deep dives, the task routes.
+    blocks: [0, 1, 2, 3].flatMap(stage => indexed.filter(block => block.rank === stage)),
+    terms: withheld ? [] : local.glossary.map(term => ({ id: term.id, name: term.title ?? term.id })),
+    units: local.derivedStructure?.state === 'derived' ? local.derivedStructure.facts.flatMap(fact => fact.fact === 'top-level-unit' && fact.epistemic === 'observed' ? [fact.path] : []) : [],
+    paths: [...new Set(quotable.map(source => source.path))].map(path => {
+      const pieces = quotable.filter(source => source.path === path);
+      return { path, sourceIds: pieces.map(source => source.sourceId), page: sourcePaths.get(pieces[0]!.sourceId)! };
+    }),
+    unindexed: local.unindexedNames ?? [],
+    figures: figureHomes.map(figure => ({ ...figure, repeatedBy: repeatedLists.filter(list => list.diagramId === figure.id).map(list => list.target) })),
+  });
+  if (local !== undefined) {
+    add(NAME_INDEX_PAGE, 1, 'Index', renderNameIndex(nameIndex, target => href(NAME_INDEX_PAGE, target.page, target.fragment), escape, !withheld));
+  }
 
   // --- sources: the whole population as a denominator, then one page per quotable source
   // An operator-agent page keeps the identifier on the source page's identity details and in the machine view (syzygy-pdja.1).
@@ -896,6 +996,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       claims: claimsByPage,
       nonNormative,
       glossaryShown,
+      // The index-and-task-routes change: the task routes as drawn (each step is one of `claims`), and the generated index's names with every link.
+      taskRoutes: (withheld ? [] : local.taskRoutes ?? []).map(route => ({ id: route.id, page: FIND_BY_TASK_PAGE, steps: route.steps.map(step => step.paragraph.id) })),
+      nameIndex: { page: NAME_INDEX_PAGE, entries: nameIndex.length, links: indexLinkCount(nameIndex),
+        names: nameIndex.map(entry => ({ kind: entry.kind, name: entry.name, home: entry.home === null ? null : { page: entry.home.page, fragment: entry.home.fragment }, blocks: entry.blocks.map(target => ({ page: target.page, fragment: target.fragment })), ...(entry.namedBy === undefined ? {} : { namedBy: entry.namedBy }) })) },
       quotations,
       sources: quotable.map(source => ({ sourceId: source.sourceId, page: sourcePaths.get(source.sourceId)!, anchor: local.sourceAnchors.get(source.sourceId)!, ...(source.redaction === undefined ? {} : { redaction: { redactionClass: source.redaction.redactionClass, withheldLines: source.redaction.withheldLines } }) })),
       localPages: localPages,

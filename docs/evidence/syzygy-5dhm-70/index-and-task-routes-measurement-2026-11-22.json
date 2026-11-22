@@ -1,0 +1,184 @@
+{
+  "format": "index-and-task-routes-rerender-measurement/1",
+  "beads": [
+    "syzygy-5dhm.70",
+    "syzygy-5dhm.71"
+  ],
+  "measuredAt": "2026-11-22T09:55:32Z",
+  "commit": "040e47c5a8bb037cee91d7de5efbb49e7b39a88d",
+  "renderer": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "5391eafe8ff2232e4bc72550a984cadffd7e4c040e51d448631214e7b99d94c1",
+    "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts": "709fe3814dbd5cfd2abdad3874445e89748c2604b6da24f460ffe6b624ada2cb",
+    "packages/polaris-dossier/src/render.ts": "6a00391d18a7461dfd91e3790f919ad5aa7f90bbfc2848ba3af24ef2bad50455"
+  },
+  "method": "[Observed] The latest passed draft of each stored run was drawn by this commit's renderer from a copy of the run directory outside the state root, through the functions the render command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier), because the command refuses a legacy run record; nothing was written under the state root and no session directory was opened. No fidelity or design review is bound in the scratch render, so the review-status region differs from a real render's. Both runs predate the derived record, so the derived structure is not established and the index lists no top-level directory. Words are counted by scripts/dossier_site_to_text.py over main elements, source pages left out. beforeAndAfter compares that text with the same draft drawn the same way by the renderer of the default branch at 291bafa19 (its dossier packages are byte-equal to those at ec94b634c, the commit the scratch tree was extracted from): pages whose converted text is byte-identical, pages whose text changed with their word counts before and after, and the two new pages.",
+  "limits": "[Observed] Both drafts are schema v4 and carry no task routes, so the find-by-task page is measured only in its no-routes form; a page with routes is measured by no stored run. [Unknown] Whether the index or routes raise a reader's share of recovered facts, overall or for any question kind: no reader session and no grading was run for this change, so the comprehension regression's before and after shares are not reported; the word and link figures here are sizes, not comprehension.",
+  "runs": [
+    {
+      "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "draft": {
+        "file": "drafts/rev-4.json",
+        "sha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+        "schemaVersion": "polaris-dossier-local-draft-v4",
+        "storedCopyEqual": true
+      },
+      "index": {
+        "entries": 55,
+        "byKind": {
+          "term": 3,
+          "path": 14,
+          "identifier": 35,
+          "figure": 3
+        },
+        "namesWithNoBlock": 3,
+        "links": 94,
+        "linksResolved": {
+          "resolved": 94,
+          "of": 94,
+          "method": "each home and block target of machine.json nameIndex: its page is a file of the site and its fragment an id on that page"
+        },
+        "hrefsResolved": {
+          "resolved": 99,
+          "of": 99,
+          "method": "second method: every href drawn inside the name-index region of name-index.html, the five in-page kind links among them"
+        },
+        "distinctTargets": 42,
+        "targetsInsideDetails": 0
+      },
+      "noise": {
+        "filesListedOnceWithACount": 1,
+        "placesBehindThoseCounts": [
+          36
+        ],
+        "mostLinksOnOneEntry": 11
+      },
+      "findByTask": {
+        "taskRoutes": 0,
+        "saysTheRunHasNone": true,
+        "words": 68
+      },
+      "bytes": {
+        "name-index.html": 46212,
+        "find-by-task.html": 28796,
+        "everyHtmlPage": 3018841
+      },
+      "htmlPages": 44,
+      "scriptTags": 0,
+      "beforeAndAfter": {
+        "before": {
+          "pages": 18,
+          "words": 16545
+        },
+        "after": {
+          "pages": 20,
+          "words": 17594
+        },
+        "newPages": {
+          "find-by-task.html": 68,
+          "name-index.html": 959
+        },
+        "pagesWithIdenticalText": 16,
+        "pagesWithChangedText": {
+          "contents.html": [
+            115,
+            121
+          ],
+          "size-report.html": [
+            472,
+            488
+          ]
+        },
+        "pagesOnlyBefore": []
+      },
+      "words": {
+        "pagesConverted": 20,
+        "words": 17594,
+        "sourcePagesLeftOut": 24,
+        "nameIndexWords": 959
+      }
+    },
+    {
+      "run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "draft": {
+        "file": "drafts/rev-6.json",
+        "sha256": "ae7c654cd41997b48fe4e00546ae591a919341f242f90503660f07d6c30b4890",
+        "schemaVersion": "polaris-dossier-local-draft-v4",
+        "storedCopyEqual": true
+      },
+      "index": {
+        "entries": 88,
+        "byKind": {
+          "term": 10,
+          "path": 14,
+          "identifier": 58,
+          "figure": 6
+        },
+        "namesWithNoBlock": 8,
+        "links": 235,
+        "linksResolved": {
+          "resolved": 235,
+          "of": 235,
+          "method": "each home and block target of machine.json nameIndex: its page is a file of the site and its fragment an id on that page"
+        },
+        "hrefsResolved": {
+          "resolved": 240,
+          "of": 240,
+          "method": "second method: every href drawn inside the name-index region of name-index.html, the five in-page kind links among them"
+        },
+        "distinctTargets": 96,
+        "targetsInsideDetails": 0
+      },
+      "noise": {
+        "filesListedOnceWithACount": 1,
+        "placesBehindThoseCounts": [
+          43
+        ],
+        "mostLinksOnOneEntry": 28
+      },
+      "findByTask": {
+        "taskRoutes": 0,
+        "saysTheRunHasNone": true,
+        "words": 68
+      },
+      "bytes": {
+        "name-index.html": 69291,
+        "find-by-task.html": 29065,
+        "everyHtmlPage": 3374683
+      },
+      "htmlPages": 47,
+      "scriptTags": 0,
+      "beforeAndAfter": {
+        "before": {
+          "pages": 19,
+          "words": 20910
+        },
+        "after": {
+          "pages": 21,
+          "words": 24162
+        },
+        "newPages": {
+          "find-by-task.html": 68,
+          "name-index.html": 3162
+        },
+        "pagesWithIdenticalText": 17,
+        "pagesWithChangedText": {
+          "contents.html": [
+            153,
+            159
+          ],
+          "size-report.html": [
+            496,
+            512
+          ]
+        },
+        "pagesOnlyBefore": []
+      },
+      "words": {
+        "pagesConverted": 21,
+        "words": 24162,
+        "sourcePagesLeftOut": 26,
+        "nameIndexWords": 3162
+      }
+    }
+  ]
+}
