@@ -1,8 +1,9 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
-import { sha256 } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
@@ -29,6 +30,10 @@ import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
 import * as policySnapshot from './policy-snapshot.js';
+import * as sessionBroker from './session-broker.js';
+import * as orderedHost from './url-ordered-design-host.js';
+import * as orderedBounds from './url-ordered-design-bounds.js';
+import * as orderedWork from './url-ordered-design-work-budget.js';
 
 const recoveryHost = await vi.hoisted(async () => {
   const { homedir } = await import('node:os');
@@ -132,6 +137,44 @@ type ResumeConnection = {
   stages: Partial<Record<ResumeTransportStage, ResumeStamp>>;
 };
 type ResumeSample = { ordinal: number; verify: ResumeStamp; confirm?: ResumeStamp; confirmationInput?: boolean };
+type ResumeBrokerStage = 'invoke' | 'host-current' | 'mediate-peer' | 'host-action' | 'transfer-bounds'
+  | 'plan-work-hold' | 'create-work-budget' | 'release' | 'release-check';
+
+const resumedOrderedKinds = ['prepared', 'part-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted',
+  'delivery-completed', 'verdict-staged', 'acknowledgment-receipt', 'eligible', 'retired'];
+
+async function readResumedDesignAuditKinds(file: string | undefined) {
+  if (file === undefined) return { status: 'not-created' };
+  try {
+    const handle = await fs.open(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
+    try {
+      const limit = 512 * 1024;
+      const stat = await handle.stat();
+      if (!stat.isFile() || stat.size > limit) return { status: 'outside-read-limit' };
+      const bytes = Buffer.alloc(stat.size);
+      const { bytesRead } = await handle.read(bytes, 0, bytes.length, 0);
+      if (bytesRead !== stat.size || (await handle.stat()).size !== stat.size) return { status: 'incomplete' };
+      const lines = bytes.toString('utf8').split('\n');
+      const tail = lines.pop();
+      const kinds = lines.map(line => {
+        const row: unknown = JSON.parse(line);
+        if (!isRecord(row) || !isRecord(row.event)) return 'other';
+        const { kind, payload } = row.event;
+        if (isRecord(payload) && kind === 'design-ordered' && typeof payload.kind === 'string'
+          && resumedOrderedKinds.includes(payload.kind)) return `ordered:${payload.kind}`;
+        if (isRecord(payload) && kind === 'relay' && typeof payload.event === 'string'
+          && ['attempt-allowed', 'send-attempt', 'send-outcome', 'response-admitted', 'attempt-refused', 'transport-failed',
+            'response-refused'].includes(payload.event)) return `relay:${payload.event}`;
+        if (isRecord(payload) && kind === 'machine-peer' && typeof payload.operation === 'string'
+          && ['inference-forward', 'dossier_step', 'artifact_read'].includes(payload.operation)) return `machine-peer:${payload.operation}`;
+        return typeof kind === 'string' && ['declaration', 'launch-attempt', 'launch-history', 'launch-terminal', 'design-delivery',
+          'ordered-design-verdict', 'tool-receipt', 'machine-peer', 'relay', 'usage'].includes(kind) ? kind : 'other';
+      });
+      return { status: tail === '' ? 'read' : 'incomplete', count: kinds.length,
+        kinds: kinds.length > 24 ? [...kinds.slice(0, 12), 'omitted', ...kinds.slice(-12)] : kinds };
+    } finally { await handle.close(); }
+  } catch { return { status: 'unavailable' }; }
+}
 
 function observeInterruptedResume() {
   const began = performance.now();
@@ -179,6 +222,56 @@ function observeInterruptedResume() {
     } catch (error) { rejected(); throw error; }
   }
 
+  const firstBrokerInvocation = new AsyncLocalStorage<true>();
+  const brokerStages: Partial<Record<ResumeBrokerStage, ResumeStamp>> = {};
+  let brokerInvocations = 0, brokerContextPresent: boolean | undefined, brokerFaultMs: number | undefined;
+
+  function brokerPhase<T>(stage: ResumeBrokerStage, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
+    if (firstBrokerInvocation.getStore() !== true || brokerStages[stage] !== undefined) return call();
+    const stamp: ResumeStamp = { startedMs: clock() };
+    brokerStages[stage] = stamp;
+    const settle = (outcome: ResumeObservation) => { Object.assign(stamp, { settledMs: clock(), outcome }); };
+    const completed = (value: Awaited<T>) => settle(accepted(value) ? 'accepted' : 'refused');
+    try {
+      const original = call();
+      if (original instanceof Promise) void original.then(completed, () => settle('rejected'));
+      else completed(original as Awaited<T>);
+      return original;
+    } catch (error) { settle('rejected'); throw error; }
+  }
+
+  const startBroker = sessionBroker.startSessionBroker;
+  vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine) =>
+    startBroker(socket, (value, release, context) => {
+      if (++brokerInvocations !== 1) return invoke(value, release, context);
+      brokerContextPresent = context !== null;
+      // Keep the original context, peer and effect guard identities.
+      return firstBrokerInvocation.run(true, () => brokerPhase('invoke', () => invoke(value, (reply, revalidate) =>
+        brokerPhase('release', () => release(reply, revalidate === undefined ? undefined : () =>
+          brokerPhase('release-check', revalidate, () => true)), () => true), context), () => true));
+    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine));
+
+  const startHost = orderedHost.startOrderedDesignHost;
+  vi.spyOn(orderedHost, 'startOrderedDesignHost').mockImplementation(input =>
+    startHost({ ...input, current: () => brokerPhase('host-current', input.current, value => value === true) }));
+
+  const mediatePeer = machinePeer.mediateUrlMachinePeer;
+  vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
+    if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect);
+    return brokerPhase('mediate-peer', () => mediatePeer(peer, operation, current =>
+      brokerPhase('host-action', () => effect(current), () => true)), result => result.ok);
+  });
+
+  const boundTransfer = orderedBounds.boundOrderedDesignTransfer;
+  vi.spyOn(orderedBounds, 'boundOrderedDesignTransfer').mockImplementation(input =>
+    brokerPhase('transfer-bounds', () => boundTransfer(input), result => result !== null));
+  const planWork = orderedWork.planOrderedDesignWork;
+  vi.spyOn(orderedWork, 'planOrderedDesignWork').mockImplementation(input =>
+    brokerPhase('plan-work-hold', () => planWork(input), result => result !== null));
+  const createWorkBudget = orderedWork.createOrderedDesignWorkBudget;
+  vi.spyOn(orderedWork, 'createOrderedDesignWorkBudget').mockImplementation((...args) =>
+    brokerPhase('create-work-budget', () => createWorkBudget(...args), () => true));
+
   function transport<T>(connection: ResumeConnection, stage: ResumeTransportStage, call: () => Promise<T>,
     accepted: (value: T) => boolean): Promise<T> {
     transportCounts[stage]++;
@@ -216,11 +309,30 @@ function observeInterruptedResume() {
   });
 
   const capture = machinePeer.captureUrlMachinePeer;
+  let firstMcpPeer: machinePeer.UrlMachinePeer | undefined;
+  const mcpReads = { started: 0, data: 0, end: 0, pending: 0, refused: 0, rejected: 0 };
+  let mcpReadStartedMs: number | undefined, mcpReadDataMs: number | undefined;
+  let mcpReadEndMs: number | undefined, mcpReadRefusedMs: number | undefined;
   vi.spyOn(machinePeer, 'captureUrlMachinePeer').mockImplementation(options => {
     if (options.context.role !== 'design') return capture(options);
     const connection = link(options.socket);
     connection.kind = options.context.kind;
-    return transport(connection, 'capture', () => capture(options), value => value !== null);
+    return transport(connection, 'capture', () => capture(options), value => {
+      if (value !== null && connection.kind === 'mcp-shim') firstMcpPeer ??= value;
+      return value !== null;
+    });
+  });
+  const readPeer = machinePeer.readUrlMachinePeer;
+  vi.spyOn(machinePeer, 'readUrlMachinePeer').mockImplementation(peer => {
+    if (peer !== firstMcpPeer) return readPeer(peer);
+    mcpReads.started++;
+    mcpReadStartedMs ??= clock();
+    return observe(() => readPeer(peer), chunk => {
+      mcpReads[chunk?.kind ?? 'refused']++;
+      if (chunk === null) mcpReadRefusedMs ??= clock();
+      else if (chunk.kind === 'data') mcpReadDataMs ??= clock();
+      else if (chunk.kind === 'end') mcpReadEndMs ??= clock();
+    }, () => { mcpReads.rejected++; mcpReadRefusedMs ??= clock(); });
   });
 
   const prepare = sessionLaunch.prepareRestrictedUrlSession;
@@ -285,7 +397,10 @@ function observeInterruptedResume() {
   });
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
-    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal });
+    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal,
+    broker: { invocations: brokerInvocations, contextPresent: brokerContextPresent, faultMs: brokerFaultMs, stages: brokerStages },
+    mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
+      endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
 }
 
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
@@ -333,6 +448,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
     let resumeDiagnostic: ReturnType<typeof observeInterruptedResume> | undefined;
+    let resumedDesignAudit: string | undefined;
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
@@ -454,6 +570,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const resumedAudit = cutTaken;
       const actual = await createAudit(options);
       if (!actual.ok) return actual;
+      if (resumedAudit && scenario === 'stop-resume') resumedDesignAudit = path.join(options.parent, `${options.name}-design.jsonl`);
       return { ...actual,
         beginOrderedDesignAudit: (...args) => { (resumedAudit ? resumedBegins : beginOrdered)(); return actual.beginOrderedDesignAudit(...args); },
         commitDesignDelivery: async (...args) => {
@@ -788,6 +905,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
       const stopped = await controller.stop(); await loop.catch(() => {});
+      const resumeEvidence = resumeDiagnostic === undefined ? undefined : {
+        ...resumeDiagnostic(), audit: await readResumedDesignAuditKinds(resumedDesignAudit),
+      };
       const retainedCut = process.env['SYZYGY_COMPOSED_RETAIN'];
       if (retainedCut !== undefined) {
         const closing = cleanup.indexOf(f.close);
@@ -796,11 +916,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeDiagnostic?.() }, null, 2));
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
-        resumeChecks, resumeDiagnostic: resumeDiagnostic?.(), producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
+        resumeChecks, resumeDiagnostic: resumeEvidence, producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
     }
   }, scenario === 'stop-resume' ? 540_000 : 360_000);
 });
