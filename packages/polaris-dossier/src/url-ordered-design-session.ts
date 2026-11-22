@@ -207,12 +207,12 @@ export function createOrderedDesignSession(options: Options) {
   };
   const append: OrderedDesignAuditWriter['append'] = (kind, payload) => auditOperation('audit', () => writer.append(kind, payload));
   type ScreenInput = OrderedScreenInput | Omit<Extract<OrderedScreenInput, { operation: 'request' }>, 'planInput'>;
-  const screen = (input: ScreenInput, boundary: ReturnType<typeof openOperation>): OrderedScreenObservation => {
+  const screen = async (input: ScreenInput, boundary: ReturnType<typeof openOperation>): Promise<OrderedScreenObservation> => {
     if (screening.kind === 'bounded-worker') {
       if (input.operation === 'request' && !('planInput' in input)) throw refused();
-      const result = runOrderedDesignScreen({ program: screening.program, input, deadlineEpochMilliseconds: boundary.expires,
-        current: () => { try { requireLive(); boundary.check(); return true; } catch { return false; } } });
-      work.chargeScreenCpuMicroseconds(result.charge.cpuMicroseconds);
+      const result = await runOrderedDesignScreen({ program: screening.program, input, deadlineEpochMilliseconds: boundary.expires,
+        current: () => { try { requireLive(); boundary.check(); return true; } catch { return false; } },
+        chargeCpuMicroseconds: value => { work.chargeScreenCpuMicroseconds(value); workBudget?.current(); boundary.check(); } });
       workBudget?.current();
       boundary.check();
       if (!result.ok) throw refused();
@@ -233,10 +233,10 @@ export function createOrderedDesignSession(options: Options) {
     return { format: 'ordered-design-screen/1', policySha256: profile.input.binding.policy, profileSha256: profile.digest,
       counts, branches, inverseInputs, selfCpuMicrosecondsBeforeOutput: 0, outcome };
   };
-  const screenOperation = (input: ScreenInput): OrderedScreenObservation => {
+  const screenOperation = async (input: ScreenInput): Promise<OrderedScreenObservation> => {
     const boundary = openOperation(input.operation === 'response' ? 'response' : 'request', Math.max(0, receipts.length - 1));
     try {
-      const observed = screen(input, boundary);
+      const observed = await screen(input, boundary);
       if (observed.outcome.operation !== input.operation || !Array.isArray(observed.inverseInputs) || observed.inverseInputs.length > 2) throw refused();
       if (input.operation === 'request' && observed.outcome.result.ok && observed.inverseInputs.length !== 2) throw refused();
       const cap = work.enforcement.operations[input.operation === 'response' ? 'response' : 'request'];
@@ -257,12 +257,14 @@ export function createOrderedDesignSession(options: Options) {
   const common = (bytes: Uint8Array) => ({ policyBase64: policy === null ? '' : Buffer.from(policy).toString('base64'),
     policySha256: profile.input.binding.policy, profileInput: profile.input, profileSha256: profile.digest,
     receivedBase64: Buffer.from(bytes).toString('base64') });
-  const checkRequest = (bytes: Uint8Array): ReturnType<typeof screenOrderedDesignRequest> => {
+  const checkRequest = async (bytes: Uint8Array): Promise<ReturnType<typeof screenOrderedDesignRequest>> => {
     if (stopped || eligible || busy || request !== null || pending !== null) throw refused();
+    busy = true;
+    try {
     requireLive();
     if (initial) {
       if (admittedInitial || receipts.length !== 0) throw refused();
-      const observed = screenOperation({ ...common(bytes), operation: 'initial' });
+      const observed = await screenOperation({ ...common(bytes), operation: 'initial' });
       if (observed.outcome.operation !== 'initial') throw refused();
       const checks = observed.outcome.result;
       if (checks.ok) request = checks.value;
@@ -286,7 +288,7 @@ export function createOrderedDesignSession(options: Options) {
     }
     const prepared = receipts[0]!;
     const asResult = ({ call, usage }: Receipt) => ({ toolUseId: call.id, usage });
-    const observed = screenOperation({ ...common(bytes), operation: 'request', envelopeUtf8: new TextDecoder('utf-8', { fatal: true }).decode(envelope()),
+    const observed = await screenOperation({ ...common(bytes), operation: 'request', envelopeUtf8: new TextDecoder('utf-8', { fatal: true }).decode(envelope()),
       ...(screening.kind === 'bounded-worker' ? { planInput: screening.planInput } : {}), manifestSha256: plan.manifestSha256,
       bindings: { prepared: asResult(prepared), parts: receipts.slice(1, parts.length + 1).map(asResult),
         ...(submission === null ? {} : { acknowledgment: { ...asResult(receipts.at(-1)!), input: submission } }) } });
@@ -294,15 +296,18 @@ export function createOrderedDesignSession(options: Options) {
     const checks = observed.outcome.result;
     if (checks.ok) request = checks.value;
     return checks;
+    } finally { busy = false; }
   };
 
-  const checkResponse = (bytes: Uint8Array, contentType: string): ReturnType<SessionRelayPorts['response']> => {
+  const checkResponse = async (bytes: Uint8Array, contentType: string): Promise<Awaited<ReturnType<SessionRelayPorts['response']>>> => {
+    let held = false;
     try {
       requireLive();
       if (busy || eligible || checkedResponse !== null || pending?.step !== 'response-admitted'
         || !/^text\/event-stream(?:\s*;\s*charset=utf-8)?$/iu.test(contentType))
         throw refused();
-      const observed = screenOperation({ ...common(bytes), operation: 'response', contentType });
+      busy = true; held = true;
+      const observed = await screenOperation({ ...common(bytes), operation: 'response', contentType });
       if (observed.outcome.operation !== 'response') throw refused();
       const decoded = observed.outcome.result;
       if (!decoded.ok) throw refused();
@@ -338,6 +343,7 @@ export function createOrderedDesignSession(options: Options) {
         resultIndex: receipts.length, expectedCall: { type: 'tool_use', id, name, input } })) throw refused();
       return accept({ stopReason: 'tool_use', textBlocks: 0, tool: { id, name, inputSha256: sha256(canonical(input)) } });
     } catch { return { ok: false }; }
+    finally { if (held) busy = false; }
   };
 
   const observe = async (event: SessionAuditEvent): Promise<void> => {

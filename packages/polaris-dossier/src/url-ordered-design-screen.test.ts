@@ -67,9 +67,9 @@ function run(input: OrderedScreenInput, overrides: Partial<Parameters<typeof run
 }
 
 describe('preemptible ordered design screen', () => {
-  it('reissues the exact profile and plan and returns request identities and response observations over a private pipe', () => {
+  it('reissues the exact profile and plan and returns request identities and response observations over a private pipe', async () => {
     const f = fixture();
-    const request = run(f.request);
+    const request = await run(f.request);
     expect(request.ok).toBe(true);
     if (!request.ok) return;
     expect(request.observation.outcome).toMatchObject({ operation: 'request', result: { ok: true } });
@@ -79,46 +79,53 @@ describe('preemptible ordered design screen', () => {
     expect(request.observation.inverseInputs).toEqual([Buffer.byteLength(f.request.envelopeUtf8), Buffer.byteLength(f.request.envelopeUtf8)]);
     for (const value of Object.values(request.observation.branches)) expect(value.secretCalls).toBeGreaterThan(0);
     expect(Object.values(request.observation.branches).reduce((sum, value) => sum + value.secretCalls, 0)).toBe(request.observation.counts.secretCalls);
-    const initial = run(f.initial);
+    const initial = await run(f.initial);
     expect(initial.ok && initial.observation.outcome.result.ok).toBe(true);
     if (initial.ok) {
       expect(initial.observation.branches.raw.secretCalls).toBe(1);
       expect(initial.observation.branches.prepared.secretCalls).toBeGreaterThan(0);
       expect(initial.observation.branches.logicalReceived.secretCalls).toBe(0);
     }
-    const response = run(f.response());
+    const response = await run(f.response());
     expect(response.ok).toBe(true);
     if (!response.ok) return;
     expect(response.observation.outcome).toMatchObject({ operation: 'response', result: { ok: true, content: [{ type: 'text', text: 'Owned response.' }] } });
     expect(response.charge).toMatchObject({ cpuAccounting: 'charged-hard-capacity', cpuMicroseconds: 6_000_000, enforcedWallMilliseconds: 5000 });
     expect(response.observation.selfCpuMicrosecondsBeforeOutput).toBeGreaterThan(0);
-  });
+  }, 30_000);
 
   it('keeps private no-path secret screening and refuses changed policy, profile, manifest, image and currentness', async () => {
     const f = fixture(), marker = `${['to', 'ken'].join('')} = "${'z'.repeat(12)}"`;
-    const refused = run(f.response(marker));
+    const refused = await run(f.response(marker));
     expect(refused.ok).toBe(true);
     if (refused.ok) expect(refused.observation.outcome).toEqual({ operation: 'response', result: { ok: false, reason: 'provider-response-refused' } });
     expect(JSON.stringify(refused).includes(marker)).toBe(false);
     // Response parsing performs only secret screening; active-content semantics
     // remain with the caller's separate checked response registration.
-    const html = run(f.response('<script>owned()</script>'));
+    const html = await run(f.response('<script>owned()</script>'));
     expect(html.ok && html.observation.outcome.result.ok).toBe(true);
     for (const input of [{ ...f.response(), policySha256: '0'.repeat(64) }, { ...f.response(), profileSha256: '0'.repeat(64) },
-      { ...f.request, manifestSha256: '0'.repeat(64) }]) expect(run(input).ok).toBe(false);
-    expect(run(f.response(), { current: () => false }).ok).toBe(false);
-    expect(run(f.response(), { deadlineEpochMilliseconds: Date.now() - 1 }).ok).toBe(false);
-    expect(run(f.response(), { program: { ...program, worker: { ...program.worker, sha256: '0'.repeat(64) } } }).ok).toBe(false);
+      { ...f.request, manifestSha256: '0'.repeat(64) }]) expect((await run(input)).ok).toBe(false);
+    expect((await run(f.response(), { current: () => false })).ok).toBe(false);
+    expect((await run(f.response(), { deadlineEpochMilliseconds: Date.now() - 1 })).ok).toBe(false);
+    expect((await run(f.response(), { program: { ...program, worker: { ...program.worker, sha256: '0'.repeat(64) } } })).ok).toBe(false);
     const changed = join(directory, 'changed.mjs'); await writeFile(changed, workerBytes, { mode: 0o600 });
     const pinned = await selected(changed); await writeFile(changed, Buffer.concat([workerBytes, Buffer.from(' ')]));
-    expect(run(f.response(), { program: { ...program, worker: pinned } }).ok).toBe(false);
-  });
+    expect((await run(f.response(), { program: { ...program, worker: pinned } })).ok).toBe(false);
+  }, 30_000);
 
   it('kills a pathological unchanged detector, enforces output and address limits, and returns no private diagnostic', async () => {
     const policy = JSON.parse(V8); policy.detectors.push({ id: 'owned-exponential-fixture', kind: 'regular-expression', pattern: '(a+)+$', flags: '' });
     const f = fixture(JSON.stringify(policy));
     const started = performance.now();
-    const result = run(f.response(`${'a'.repeat(40)}!`), { limits: { ...ORDERED_SCREEN_LIMITS, wallMilliseconds: 800, cpuSeconds: 1 } });
+    let heartbeats = 0, launched = false;
+    const heartbeat = setInterval(() => { if (launched) heartbeats++; }, 20);
+    let result;
+    const charged = vi.fn();
+    try { result = await run(f.response(`${'a'.repeat(40)}!`), { limits: { ...ORDERED_SCREEN_LIMITS, wallMilliseconds: 800, cpuSeconds: 1 }, chargeCpuMicroseconds: value => { charged(value); launched = true; } }); }
+    finally { clearInterval(heartbeat); }
+    expect(heartbeats).toBeGreaterThan(2);
+    expect(charged).toHaveBeenCalledExactlyOnceWith(4_000_000);
     expect(result.ok).toBe(false);
     expect(performance.now() - started).toBeLessThan(3000);
     expect(result.charge.wallMilliseconds).toBeGreaterThanOrEqual(700);
@@ -127,9 +134,24 @@ describe('preemptible ordered design screen', () => {
     for (const [name, source] of [['output', 'process.stdout.write("x".repeat(13000000));'],
       ['address', 'const blocks=[]; for(;;) blocks.push(Buffer.alloc(128000000,1));']] as const) {
       const worker = join(directory, `${name}.mjs`); await writeFile(worker, source, { mode: 0o600 });
-      expect(run(fixture().response(), { program: { ...program, worker: await selected(worker) } }).ok).toBe(false);
+      expect((await run(fixture().response(), { program: { ...program, worker: await selected(worker) } })).ok).toBe(false);
     }
-  });
+  }, 30_000);
+
+  it('stops an asynchronous worker when live authority is revoked and retains its charged capacity', async () => {
+    const worker = join(directory, 'wait.mjs');
+    await writeFile(worker, 'setTimeout(()=>{},10000);', { mode: 0o600 });
+    const selectedWorker = await selected(worker);
+    let current = true;
+    const charged = vi.fn();
+    const pending = run(fixture().response(), { program: { ...program, worker: selectedWorker }, current: () => current,
+      chargeCpuMicroseconds: value => { charged(value); setTimeout(() => { current = false; }, 50); } });
+    const result = await pending;
+    expect(result.ok).toBe(false);
+    expect(charged).toHaveBeenCalledExactlyOnceWith(6_000_000);
+    expect(result.charge.cpuMicroseconds).toBe(6_000_000);
+    expect(result.charge.wallMilliseconds).toBeLessThan(3000);
+  }, 30_000);
 
   it('has no inherited canary, host-home access, child spawning or provider network route', async () => {
     const canary = join(directory, 'host-only'); await writeFile(canary, 'synthetic-only', { mode: 0o600 });
@@ -146,9 +168,9 @@ await new Promise((resolve,reject)=>{const s=probeConnect({host:'127.0.0.1',port
     const worker = join(directory, 'confinement.mjs'); await writeFile(worker, Buffer.concat([Buffer.from(prefix), workerBytes]), { mode: 0o600 });
     vi.stubEnv('ORDERED_SCREEN_SYNTHETIC_CANARY', 'synthetic-only');
     try {
-      const result = run(fixture().response(), { program: { ...program, worker: await selected(worker) } });
+      const result = await run(fixture().response(), { program: { ...program, worker: await selected(worker) } });
       expect(result.ok).toBe(true);
     } finally { vi.unstubAllEnvs(); await new Promise<void>(resolve => server.close(() => resolve())); }
     expect((await stat(canary)).size).toBe(14);
-  });
+  }, 30_000);
 });

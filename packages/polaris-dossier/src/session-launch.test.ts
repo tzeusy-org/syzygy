@@ -398,7 +398,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
       const prepared = sessionProfileProviderHeaders(profile, incoming);
       return prepared.ok ? { ...prepared.value.headers, authorization: SESSION_PROFILE_SYNTHETIC_AUTHORIZATION } : null;
     },
-    request: bytes => {
+    request: async bytes => {
       try {
         const raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
         const { messages, ...controls } = parseBoundedJson(raw, SESSION_POLICY_LIMITS) as NativeFixtureRequest;
@@ -442,7 +442,7 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
         const detectors = { scanSecrets: (text: string) => screen.screenSecrets(text) !== undefined,
           scanDesignView: (text: string) => screen.screenBody(text) !== undefined };
         if (checked === 0) {
-          const admission = orderedSession.checkRequest(bytes);
+          const admission = await orderedSession.checkRequest(bytes);
           if (!admission.ok || !sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
             || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })) throw new Error('initial request refused');
         }
@@ -457,10 +457,10 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
               [...messages, { role: 'user', content: 'Unregistered extra history.' }],
               [...messages.slice(0, -1), { ...messages.at(-1), content: [...messages.at(-1)!.content,
                 { type: 'text', text: 'Unregistered result suffix.' }] }],
-            ]) expect(() => orderedSession.checkRequest(Buffer.from(orderedCanonical({ ...controls, messages: unknownHistory }))))
-              .toThrow('url-ordered-design-session-refused');
+            ]) await expect(orderedSession.checkRequest(Buffer.from(orderedCanonical({ ...controls, messages: unknownHistory }))))
+              .rejects.toThrow('url-ordered-design-session-refused');
           }
-          const admission = orderedSession.checkRequest(bytes);
+          const admission = await orderedSession.checkRequest(bytes);
           if (!admission.ok) throw new Error(`ordered detector branches refused (${admission.code})`);
           if (!sameWireValue(admission.value.received, { bytes: bytes.length, sha256: sha256(bytes) })
             || !sameWireValue(admission.value.forwarded, { bytes: body.length, sha256: sha256(body) })
@@ -482,12 +482,12 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
             digest: sha256(prior.reply), bytes: Buffer.byteLength(prior.reply) }] };
       } catch (error) { faults.push(error instanceof Error ? error.message : 'invalid owned request'); return { ok: false }; }
     },
-    response: (bytes, contentType) => {
+    response: async (bytes, contentType) => {
       const scanSecrets = (text: string) => screen.screenSecrets(text) !== undefined;
       if (scenario !== 'out-of-order' || checked !== 2) {
         if (scenario === 'oversized-verdict' && checked === 4)
           expect(decodeSessionResponse(bytes, contentType, DEFAULT_SESSION_MODEL, scanSecrets).ok).toBe(true);
-        const accepted = orderedSession.checkResponse(bytes, contentType);
+        const accepted = await orderedSession.checkResponse(bytes, contentType);
         if (!accepted.ok || accepted.usage === undefined) {
           faults.push('fixture response codec refused');
           return { ok: false };
