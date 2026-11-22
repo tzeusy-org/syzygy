@@ -171,7 +171,8 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     verifiedRuns.set(verified, async () => {
       if (!await policyCurrent() || !current() || !historyCurrent()) return null;
       const claim = acquireUrlRecoveryClaim({ root: URL_HOST_ROOT, expected, sha256: sealed.sha256, now,
-        current: () => current() && committedUrlPoliciesCurrent(root, policy.binding, origin.binding, adoption) });
+        current, policy: { current: () => committedUrlPoliciesCurrent(root, policy.binding, origin.binding, adoption),
+          currentAsync: policyCurrent } });
       if (!claim) return null;
       if (!await policyCurrent() || !claim.consume() || !claim.current()) { claim.release(); return null; }
       return claim;

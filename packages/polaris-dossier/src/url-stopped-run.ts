@@ -259,6 +259,8 @@ export interface UrlRecoveryClaim {
   /** True only after durable consumption, while the held OS lease and exact
    * original stopped subject are current. Holding a lease alone is no grant. */
   readonly current: () => boolean;
+  /** Recheck policy asynchronously, then recheck the exact consumed subject. */
+  readonly currentAsync: () => Promise<boolean>;
   /** Commit one-way consumption before issuing any fresh process authority. */
   readonly consume: () => boolean;
   /** Cleanup only. A consumed generation can never be claimed again. A crash
@@ -276,14 +278,16 @@ export function isUrlRecoveryClaim(value: unknown): value is UrlRecoveryClaim {
 export function acquireUrlRecoveryClaim(input: {
   readonly root: string; readonly expected: StopExpected; readonly sha256: string;
   readonly now: () => number; readonly current: () => boolean;
+  readonly policy: { readonly current: () => boolean; readonly currentAsync: () => Promise<boolean> };
 }): UrlRecoveryClaim | null {
   let rootFd: number | undefined, lockFd: number | undefined;
   try {
-    input = Object.freeze({ ...input, expected: Object.freeze({ ...input.expected }) });
+    input = Object.freeze({ ...input, expected: Object.freeze({ ...input.expected }), policy: Object.freeze({ ...input.policy }) });
+    const authorityCurrent = (): boolean => input.current() && input.policy.current();
     const key = sha256(input.expected.run);
     if (!exact(input.expected, ['run', 'runId', 'generation', 'coreSha256', 'declarationSha256', 'sourcePin', 'deadline'])
       || !HEX.test(input.sha256) || !namesBound(input.root, input.expected.run, input.expected.runId)
-      || !GENERATION.test(input.expected.generation) || !input.current()) return null;
+      || !GENERATION.test(input.expected.generation) || !authorityCurrent()) return null;
     rootFd = fs.openSync(input.root, DESCRIPTOR);
     const directoryFd = rootFd, rootStat = fs.fstatSync(directoryFd, { bigint: true });
     if (!checkedRoot(input.root, directoryFd, rootStat)) return null;
@@ -309,21 +313,31 @@ export function acquireUrlRecoveryClaim(input: {
       try { return consumedStat === undefined ? unconsumed() : sameSlot(consumedStat, fs.lstatSync(consumed, { bigint: true })); }
       catch { return false; }
     };
+    const boundaryCurrent = (): boolean => {
+      const asOf = input.now(), previous = retained;
+      if (previous !== undefined) return withStoppedBoundaryBytes(input.root, input.expected, bytes =>
+        previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf) ? true : null) === true;
+      const first = withStoppedBoundaryBytes(input.root, input.expected, bytes => {
+        const boundary = decodeStoppedBoundary(bytes, input.expected, asOf);
+        return boundary?.sha256 === input.sha256 ? { boundary, bytes: Buffer.from(bytes) } : null;
+      });
+      if (first === null) return false;
+      // Retain only deterministic decoding of these exact bounded bytes.
+      // Every later callback still reads them afresh and checks live authority.
+      retained = { boundary: deepFreeze(first.boundary), bytes: first.bytes };
+      return true;
+    };
     const heldCurrent = (): boolean => {
+      try { return own() && authorityCurrent() && markerCurrent() && boundaryCurrent(); }
+      catch { return false; }
+    };
+    const ownsConsumedBoundary = (): boolean => consumedStat !== undefined && own() && markerCurrent();
+    const currentAsync = async (): Promise<boolean> => {
       try {
-        if (!own() || !input.current() || !markerCurrent()) return false;
-        const asOf = input.now(), previous = retained;
-        if (previous !== undefined) return withStoppedBoundaryBytes(input.root, input.expected, bytes =>
-          previous.bytes.equals(bytes) && matchesSubject(previous.boundary.record, input.expected, asOf) ? true : null) === true;
-        const first = withStoppedBoundaryBytes(input.root, input.expected, bytes => {
-          const boundary = decodeStoppedBoundary(bytes, input.expected, asOf);
-          return boundary?.sha256 === input.sha256 ? { boundary, bytes: Buffer.from(bytes) } : null;
-        });
-        if (first === null) return false;
-        // Retain only deterministic decoding of these exact bounded bytes.
-        // Every later callback still reads them afresh and checks live authority.
-        retained = { boundary: deepFreeze(first.boundary), bytes: first.bytes };
-        return true;
+        if (!ownsConsumedBoundary() || input.current() !== true || await input.policy.currentAsync() !== true) return false;
+        // The policy check may suspend. Recheck the lease, marker and exact
+        // stopped bytes before admitting the freshly checked run record.
+        return ownsConsumedBoundary() && boundaryCurrent() && input.current() === true;
       } catch { return false; }
     };
     if (!heldCurrent()) {
@@ -332,6 +346,7 @@ export function acquireUrlRecoveryClaim(input: {
     }
     fs.fsyncSync(directoryFd);
     const claim: UrlRecoveryClaim = Object.freeze({ current: () => consumedStat !== undefined && heldCurrent(),
+      currentAsync,
       consume: (): boolean => {
         if (consumedStat !== undefined) return heldCurrent();
         if (!heldCurrent()) return false;

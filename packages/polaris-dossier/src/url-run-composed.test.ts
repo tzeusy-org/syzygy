@@ -22,6 +22,7 @@ import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.
 import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryOptions } from './url-session-audit-history.js';
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
+import * as policySnapshot from './policy-snapshot.js';
 
 const recoveryHost = await vi.hoisted(async () => {
   const { homedir } = await import('node:os');
@@ -227,9 +228,30 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         expect(await options.current()).toBe(true);
         const lock = path.join(recoveryHost.root, `${sha256(f.run)}.recovery.lock`);
         const withdrawn = `${lock}.controlled-withdrawal`;
-        await fs.rename(lock, withdrawn);
-        try { expect(await options.current()).toBe(false); }
-        finally { await fs.rename(withdrawn, lock); }
+        const policyCurrent = policySnapshot.committedUrlPoliciesCurrentAsync;
+        let reportChecked!: () => void, releasePolicy!: () => void;
+        const checkedPolicy = new Promise<void>(resolve => { reportChecked = resolve; });
+        const policyHold = new Promise<void>(resolve => { releasePolicy = resolve; });
+        const pausePolicy = vi.spyOn(policySnapshot, 'committedUrlPoliciesCurrentAsync').mockImplementationOnce(async (...args) => {
+          const current = await policyCurrent(...args);
+          expect(current).toBe(true);
+          reportChecked();
+          await policyHold;
+          return current;
+        });
+        try {
+          const pending = options.current();
+          expect(await Promise.race([checkedPolicy.then(() => 'checking-policy'), Promise.resolve(pending).then(() => 'finished')]))
+            .toBe('checking-policy');
+          await fs.rename(lock, withdrawn);
+          try {
+            releasePolicy();
+            expect(await pending).toBe(false);
+          } finally { await fs.rename(withdrawn, lock); }
+        } finally {
+          releasePolicy();
+          pausePolicy.mockRestore();
+        }
         expect(await options.current()).toBe(true);
         resumeGuardsChecked = true;
         resumeChecks.push({ phase: 'resumed-guards', policyWithdrawal: 'refused', claimWithdrawal: 'refused' });

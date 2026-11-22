@@ -8,6 +8,8 @@ import { acquireUrlRecoveryClaim, isUrlRecoveryClaim, readUrlStoppedBoundary, re
 
 const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 262_144, maxNodes: 32_768, maxDepth: 16 });
 
+const policy = { current: () => true, currentAsync: async () => true };
+
 const stoppedFixture = () => {
   const parent = tempDir('url-stopped-boundary-');
   const root = path.join(parent, 'host');
@@ -102,7 +104,7 @@ describe('retained URL stop expectation', () => {
   it('holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay', () => {
     const f = stoppedFixture(); f.write(); const boundary = f.load()!;
     let live = true;
-    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256, now: () => 2000, current: () => live };
+    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256, now: () => 2000, current: () => live, policy };
     let claim = acquireUrlRecoveryClaim(input)!;
     expect(claim).not.toBeNull(); expect(isUrlRecoveryClaim(claim)).toBe(true); expect(isUrlRecoveryClaim({ ...claim })).toBe(false);
     expect(claim.current()).toBe(false); expect(acquireUrlRecoveryClaim(input)).toBeNull();
@@ -125,7 +127,7 @@ describe('retained URL stop expectation', () => {
 
   it('never steals a stale or replaced lock, and invalidates a holder when its stop bytes change', () => {
     const f = stoppedFixture(); f.write(); const boundary = f.load()!;
-    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256, now: () => 2000, current: () => true };
+    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256, now: () => 2000, current: () => true, policy };
     const claim = acquireUrlRecoveryClaim(input)!;
     const lock = path.join(f.root, `${sha256(f.run)}.recovery.lock`), old = `${lock}.old`;
     fs.renameSync(lock, old); fs.mkdirSync(lock, { mode: 0o700 });
@@ -141,7 +143,7 @@ describe('retained URL stop expectation', () => {
     const f = stoppedFixture(); f.write(); const boundary = f.load()!;
     let now = 2000;
     const input = { root: f.root, expected: f.expected, sha256: boundary.sha256,
-      now: () => now, current: () => true };
+      now: () => now, current: () => true, policy };
     const claim = acquireUrlRecoveryClaim(input)!;
     expect(claim.consume()).toBe(true);
     expect(claim.current()).toBe(true);
@@ -159,10 +161,43 @@ describe('retained URL stop expectation', () => {
     expect(claim.release()).toBe(true);
   });
 
+  it.each(['none', 'lock', 'marker', 'boundary', 'record', 'deadline', 'policy'] as const)(
+    'rechecks the exact consumed claim after a deferred policy observation (%s)', async change => {
+      const f = stoppedFixture(); f.write();
+      const key = sha256(f.run), lock = path.join(f.root, `${key}.recovery.lock`);
+      const marker = path.join(f.root, `${key}.${f.expected.generation}.resumed.json`);
+      let now = 2000, recordCurrent = true, resolvePolicy!: (value: boolean) => void;
+      const policyResult = new Promise<boolean>(resolve => { resolvePolicy = resolve; });
+      const syncPolicy = vi.fn(() => true), asyncPolicy = vi.fn(() => policyResult);
+      const claim = acquireUrlRecoveryClaim({ root: f.root, expected: f.expected, sha256: f.load()!.sha256,
+        now: () => now, current: () => recordCurrent, policy: { current: syncPolicy, currentAsync: asyncPolicy } })!;
+      try {
+        const unconsumed = claim.currentAsync();
+        expect(asyncPolicy).not.toHaveBeenCalled();
+        expect(await unconsumed).toBe(false);
+        expect(claim.consume()).toBe(true);
+        const synchronousChecks = syncPolicy.mock.calls.length;
+        const pending = claim.currentAsync();
+        expect(asyncPolicy).toHaveBeenCalledTimes(1);
+        if (change === 'lock') fs.renameSync(lock, `${lock}.withdrawn`);
+        if (change === 'marker') fs.unlinkSync(marker);
+        if (change === 'boundary') f.write({ ...f.record, stoppedAt: 1100 });
+        if (change === 'record') recordCurrent = false;
+        if (change === 'deadline') now = f.expected.deadline;
+        resolvePolicy(change !== 'policy');
+        expect(await pending).toBe(change === 'none');
+        expect(syncPolicy).toHaveBeenCalledTimes(synchronousChecks);
+      } finally {
+        resolvePolicy(false);
+        if (change === 'lock' && fs.existsSync(`${lock}.withdrawn`)) fs.renameSync(`${lock}.withdrawn`, lock);
+        claim.release();
+      }
+    });
+
   it('rejects replacement of the named slot during the exact byte comparison', () => {
     const f = stoppedFixture(); f.write(); const boundary = f.load()!;
     const claim = acquireUrlRecoveryClaim({ root: f.root, expected: f.expected, sha256: boundary.sha256,
-      now: () => 2000, current: () => true })!;
+      now: () => 2000, current: () => true, policy })!;
     expect(claim.consume()).toBe(true);
     const bytes = fs.readFileSync(f.file), equals = Buffer.prototype.equals;
     let replaced = false;
@@ -185,7 +220,7 @@ describe('retained URL stop expectation', () => {
 
   it('requires a complete genuine initial boundary match before issuing a claim', () => {
     const f = stoppedFixture(); f.write();
-    const input = { root: f.root, expected: f.expected, now: () => 2000, current: () => true };
+    const input = { root: f.root, expected: f.expected, now: () => 2000, current: () => true, policy };
     expect(acquireUrlRecoveryClaim({ ...input, sha256: 'f'.repeat(64) })).toBeNull();
     fs.writeFileSync(f.file, '{"record":{}}\n');
     expect(acquireUrlRecoveryClaim({ ...input, sha256: sha256(canonical(f.record)) })).toBeNull();
