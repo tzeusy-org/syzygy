@@ -404,6 +404,14 @@ describe('cmake-lists version 1', () => {
     expect(facts(recognizeCMakeLists('project([[\nKestrel]])\n'))).toEqual([['cmake-project', 1, 2, 'Kestrel']]);
     expect(facts(recognizeCMakeLists('project([=[\r\n\nK]=])\n'))).toEqual([['cmake-project', 1, 3, '\nK']]);
   });
+  it('refuses an invocation followed on its line by anything but white space or a comment as syntax', () => {
+    expect(facts(recognizeCMakeLists('project(a) add_executable(b x.c)\n'))).toBe('syntax');
+    expect(facts(recognizeCMakeLists('project(a)x\n'))).toBe('syntax');
+    expect(facts(recognizeCMakeLists('project(a) \t#[[c]] # note\nadd_executable(b x.c)'))).toEqual([['cmake-project', 1, 1, 'a'], ['cmake-target', 2, 2, 'b', 'executable']]);
+  });
+  it('keeps an inner quote of an unquoted argument as written', () => {
+    expect(facts(recognizeCMakeLists('add_executable(a"b" x.c)\n'))).toEqual([['cmake-target', 1, 1, 'a"b"', 'executable']]);
+  });
   it('refuses a target command with no argument as field-type, and reads an empty file as Inferred with zero facts', () => {
     expect(facts(recognizeCMakeLists(F['cmakeNoArgument']!))).toBe('field-type');
     expect(facts(recognizeCMakeLists(F['cmakeEmpty']!))).toEqual([]);

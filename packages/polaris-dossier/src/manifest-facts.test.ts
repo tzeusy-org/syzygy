@@ -375,6 +375,9 @@ describe('manifestFacts: values, caps and order', () => {
     const bytes = (member: unknown): number => Buffer.byteLength(JSON.stringify({ manifestFacts: member }, null, 2)) - Buffer.byteLength(JSON.stringify({ manifestFacts: {} }, null, 2));
     // The census form of a path is the one the recognizer writes: the first 512 code units quoted, then the count of the rest.
     expect(census.slice(0, 8)).toBe('"\\u0001\\');
+    // The evidence record (docs/evidence/syzygy-3efd-26/manifest-member-bound-2026-11-22.json) measures 12,741,921 bytes, 42,339 more than
+    // the census form here: it writes every ruleVersion, fact id number and line as a 16-digit safe integer and every rule id as the
+    // longest, terraform-configuration, where this keeps each recognizer's own id and smaller numbers. Both sit under 13,000,000.
     expect([bytes(widest(FILES.inferred)), bytes(widest(FILES.unparsed)), bytes(widest(FILES.census))]).toEqual([9_066_582, 9_052_582, 12_699_582]);
     expect(bytes(widest(FILES.census))).toBeLessThan(13_000_000);
   });

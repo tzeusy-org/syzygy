@@ -141,7 +141,8 @@ export function recognizeMakefile(text: string): Recognized {
 
     const found = scan(content);
     if (!found.balanced) { syntax = true; continue; }
-    if (found.op >= 0 && (found.colon < 0 || found.op < found.colon)) {
+    // scan() records no separator after an operator, so an operator with no separator is exactly one that comes first.
+    if (found.op >= 0 && found.colon < 0) {
       // An assignment; one to `.RECIPEPREFIX` changes which lines are recipe lines.
       let name = content.slice(0, found.op).trim();
       for (;;) { const w = firstWord(name); if (!PREFIXES.includes(w) || name.length === w.length) break; name = name.slice(w.length).trim(); }

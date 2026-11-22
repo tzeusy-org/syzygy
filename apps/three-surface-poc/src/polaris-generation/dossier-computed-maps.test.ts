@@ -226,7 +226,7 @@ describe('the unit map', () => {
     expect(units).not.toContain('<figure');
     expect(files.get('maps/units.html')).not.toContain('.map-forms');
     expect(sectionOf(files.get('maps/ci.html')!)).toContain('<ul class="map-unknown-files"><li>No candidate file.</li></ul>');
-    const unknown = site(structure(1, []), { format: 'polaris-dossier-manifest-facts/1', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+    const unknown = site(structure(1, []), { format: 'polaris-dossier-manifest-facts/2', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
     for (const [path, map, title] of [['maps/units.html', 'units', 'Unit map'], ['maps/ci.html', 'ci', 'CI pipeline map']] as const) {
       expect(sectionOf(unknown.get(path)!)).toBe(`<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${title}</h1>`
         + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the manifest files at revision ${REV} declare is Unknown at this render: the pinned tree could not be listed.</p></section>`);

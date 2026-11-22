@@ -1977,9 +1977,9 @@ describe('render: derived structure (version 2.3)', () => {
     const derivedText = [record, JSON.stringify(machine.derivedStructure), regionOfIndex(index)].join('\n');
     // The denied `.env`, the active-content `src/tagged.c`, the unknown-class `docs/notes.txt` and the secret path: no object id of any.
     for (const [file, id] of Object.entries(objectIds)) expect(derivedText, file).not.toContain(id);
-    // The secret path's directory, as a path or a remainder place (infrastructure recognizers: the bare word `conf` is in the rule id
-    // `terraform-configuration`, which every map page and machine.json now name).
-    for (const name of ['conf/', '"conf"', '>conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text, `${file} ${name}`).not.toContain(name);
+    // The secret path's directory, anywhere: the rule id `terraform-configuration`, which every map page and machine.json name, is taken
+    // out of the text first, so the bare word `conf` is checked everywhere else.
+    for (const name of ['conf', 'token=', 'abcdefghijk']) for (const [file, text] of files) expect(text.replaceAll('terraform-configuration', ''), `${file} ${name}`).not.toContain(name);
     expect(JSON.parse(record)).toMatchObject({ files: 9, secretPathsLeftOut: 2, facts: FACTS });
     for (const fact of JSON.parse(record).facts as Record<string, unknown>[]) expect(Object.keys(fact).filter((key) => /size|bytes|object|blob|sha|id$/iu.test(key) && key !== 'id')).toEqual([]);
   });
@@ -2226,17 +2226,23 @@ describe('review and render: a passed check record carrying the widest manifest 
   const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
   const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
   const widest = {
-    format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+    format: 'polaris-dossier-manifest-facts/2', state: 'derived',
     screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
-    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+    recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow',
+      'compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'].map((rule, i) => ({
       rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
-      files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+      files: Array.from({ length: i < 5 ? 250 : 100 }, () => census), filesNotListed: MAX,
     })),
     facts: Array.from({ length: 1000 }, (_, i) => ({
       id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
       name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
     })),
     factsNotListed: MAX,
+    remainder: {
+      files: MAX, secretPathsLeftOut: MAX, candidates: MAX, notCandidates: MAX,
+      places: Array.from({ length: 251 }, () => ({ place: census.path, files: MAX, notCandidates: MAX })),
+      placesNotListed: MAX, filesInPlacesNotListed: MAX, notCandidatesInPlacesNotListed: MAX,
+    },
   };
 
   it('builds the fidelity packet and renders the whole site on that revision, where version 2.7 refused both', async () => {

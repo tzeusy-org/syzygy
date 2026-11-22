@@ -9,7 +9,8 @@ import { lineIndex, type RawFact, type Recognized } from './manifest-model.js';
  * An argument is taken without a quoted or bracket argument's delimiters and with a quoted (or unquoted) argument's escape sequences
  * resolved; a variable reference or generator expression in it is never expanded. A fact spans its invocation from the line of its
  * command name through the line of its closing parenthesis. Faults: an unterminated quoted argument, bracket argument, bracket comment or
- * parenthesis, and text that is not a command invocation, a comment or white space, are `syntax`; one of the four commands with no
+ * parenthesis, and text that is not a command invocation, a comment or white space (an invocation followed on its line by anything
+ * but white space, a bracket comment or a line comment included), are `syntax`; one of the four commands with no
  * argument is `field-type`. An empty file has zero facts. Pure. */
 
 export const isCMakeListsPath = (path: string): boolean => path.slice(path.lastIndexOf('/') + 1) === 'CMakeLists.txt';
@@ -112,11 +113,12 @@ export function recognizeCMakeLists(text: string): Recognized {
           args.push(out);
           continue;
         }
-        // An unquoted argument: up to white space, a parenthesis, `#` or `"`, escapes resolved, `${...}` and `$<...>` kept as written.
+        // An unquoted argument (it begins with no `"`): up to white space, a parenthesis or `#`, an inner `"` kept as written
+        // (`a"b"`), escapes resolved, `${...}` and `$<...>` kept as written.
         let out = '';
         while (i < n) {
           const u = text[i]!;
-          if (u === ' ' || u === '\t' || isNewline(u) || u === '(' || u === ')' || u === '#' || u === '"') break;
+          if (u === ' ' || u === '\t' || isNewline(u) || u === '(' || u === ')' || u === '#') break;
           if (u === '\\') { out += escape(); continue; }
           out += u;
           i++;
@@ -125,6 +127,13 @@ export function recognizeCMakeLists(text: string): Recognized {
         args.push(out);
       }
       const lines = { first: lineOf(nameStart), last: lineOf(i - 1) };
+      // An invocation ends its line: only spaces, tabs and bracket comments may follow it before a line end, a line comment or the end.
+      for (;;) {
+        if (text[i] === ' ' || text[i] === '\t') { i++; continue; }
+        if (text[i] === '#' && bracketOpen(i + 1) >= 0) { i++; bracket(); continue; }
+        break;
+      }
+      if (i < n && !isNewline(text[i]) && text[i] !== '#') fail();
       const command = name!.toLowerCase();
       if (command === 'project' || Object.hasOwn(TARGET_KINDS, command)) {
         if (args.length === 0) { fieldType = true; continue; }
