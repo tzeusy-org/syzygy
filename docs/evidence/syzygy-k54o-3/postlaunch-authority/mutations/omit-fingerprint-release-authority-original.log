@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ✓ |integration| packages/polaris-dossier/src/url-origin-ledger.test.ts (20 tests | 19 skipped) 46ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 19 skipped (20)
+   Start at  19:17:41
+   Duration  2.66s (transform 1.73s, setup 10ms, collect 2.34s, tests 46ms, environment 0ms, prepare 50ms)
+

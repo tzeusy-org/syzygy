@@ -1,0 +1,11 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |unit| packages/polaris-dossier/src/url-stored-render.test.ts (15 tests) 2013ms
+   ✓ read-only recovery of stored URL render metadata > admits the byte ceiling and refuses the next byte or an over-limit file population  1823ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  19:17:00
+   Duration  2.65s (transform 274ms, setup 26ms, collect 335ms, tests 2.01s, environment 0ms, prepare 48ms)
+

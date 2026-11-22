@@ -1,0 +1,19 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |unit| packages/polaris-dossier/src/url-design-product.test.ts (58 tests) 10269ms
+   ✓ active URL design product capability > returns only the inert view and its provenance under an active render lease  1566ms
+   ✓ active URL design product capability > retires a token on wrong run/pin identity and never revives it  417ms
+   ✓ active URL design product capability > expires when the original product operation closes and refuses currentness/renderer failures  397ms
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts (38 tests) 12203ms
+   ✓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered)  739ms
+   ✓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-mutated)  339ms
+   ✓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-extra)  324ms
+ ✓ |integration| packages/polaris-dossier/src/url-origin-ledger.test.ts (20 tests) 511ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts (5 tests) 10ms
+
+ Test Files  4 passed (4)
+      Tests  121 passed (121)
+   Start at  19:04:57
+   Duration  29.98s (transform 4.04s, setup 51ms, collect 5.90s, tests 22.99s, environment 1ms, prepare 254ms)
+

@@ -1,0 +1,46 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-origin-ledger.test.ts (20 tests | 1 failed | 19 skipped) 27ms
+   ↓ host-owned URL origin ledger > compares complete semantic provenance across fresh allocation counts and binds every subject and edge
+   ↓ host-owned URL origin ledger > issues genuine opaque local receipts and rejects copied, foreign, changed or absent parents
+   × host-owned URL origin ledger > checks authority at capture and release of a shared provenance graph 26ms
+     → expected "spy" to be called 2 times, but got 1 times
+   ↓ host-owned URL origin ledger > returns a read-only receipt batch after exact bytes and final authority are checked
+   ↓ host-owned URL origin ledger > retains transitive actual class unions with valid earlier declaration edges, without all-seven widening
+   ↓ host-owned URL origin ledger > screens raw, decoded, cross-field and active-content composition without source-extension exemptions
+   ↓ host-owned URL origin ledger > rehashes pinned commit/path/blob and keeps the base source treatment separate from arbitrary composed text
+   ↓ host-owned URL origin ledger > authenticates exact complete byte coverage beyond 2000 lines without accepting span assertions or extending raw active treatment
+   ↓ host-owned URL origin ledger > refuses whole-body tail secrets, private exclusions and public partial redaction while retaining actual base classes
+   ↓ host-owned URL origin ledger > matches the renderer’s complete ordered pieces to a native full-body receipt
+   ↓ host-owned URL origin ledger > keeps complete-body bounds/currentness and cancels late issuance without poisoning a concurrent independent operation
+   ↓ host-owned URL origin ledger > never reads an index inserted after an empty-pack census in the actual whole-source operation
+   ↓ host-owned URL origin ledger > adds evidence-content only for host schema checked named role reports with genuine parents
+   ↓ host-owned URL origin ledger > rechecks authority after validating a report with genuine parents and before issuing its origin
+   ↓ host-owned URL origin ledger > rechecks both bounds of a subject batch and refuses inexact bytes
+   ↓ host-owned URL origin ledger > derives actual-host draft and submitted-report callbacks from captured admission, ignoring shaped receipt class labels
+   ↓ host-owned URL origin ledger > keeps a draft unbound during polling and refuses a changed admission or replay
+   ↓ host-owned URL origin ledger > independently matches source and artifact replies instead of trusting a successful shaped receipt
+   ↓ host-owned URL origin ledger > keeps existing bindings and publishes no partial batch after validation or capacity refusal
+   ↓ host-owned URL origin ledger > fails closed on stale policy, bound-policy mismatch, byte/receipt/parent limits and mutable registry inputs
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-origin-ledger.test.ts > host-owned URL origin ledger > checks authority at capture and release of a shared provenance graph
+AssertionError: expected "spy" to be called 2 times, but got 1 times
+ ❯ packages/polaris-dossier/src/url-origin-ledger.test.ts:99:21
+     97|     current.mockClear();
+     98|     const captured = ledger.captureProvenance([receipt]);
+     99|     expect(current).toHaveBeenCalledTimes(2);
+       |                     ^
+    100|     expect(captured.keys).toEqual(['node-6']);
+    101|     expect(captured.graph.nodes.map(node => node.parents)).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  19:17:38
+   Duration  2.65s (transform 1.75s, setup 12ms, collect 2.34s, tests 27ms, environment 0ms, prepare 52ms)
+

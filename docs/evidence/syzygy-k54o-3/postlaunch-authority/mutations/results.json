@@ -1,0 +1,220 @@
+{
+  "subject": "02947eea982781b96d22048dc0f59082c5bc3bfb",
+  "results": [
+    {
+      "fault": "duplicate-session-authority",
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "fileSha256": "1f3fc585abae1e70470f7a521229ddc6eebb500c62e3eed32ccf777a2f8d7bfd",
+      "old": "if (settlement === 'current') return true;",
+      "new": "if (settlement === 'current') return input.effectCurrent();",
+      "original": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+          "-t",
+          "checks policy once and checks effect"
+        ],
+        "exit": 0,
+        "outcome": "passed",
+        "log": "duplicate-session-authority-original.log",
+        "sha256": "283ec816c2abab6b8667c834547cf64071353dcaacdde4335c3719b869967039"
+      },
+      "mutated": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+          "-t",
+          "checks policy once and checks effect"
+        ],
+        "exit": 1,
+        "outcome": "failed",
+        "log": "duplicate-session-authority-mutated.log",
+        "sha256": "7a555d1eaf74c7a82512a4edc41d3e4db7605f72a355e714c54f89dd027cb71f"
+      }
+    },
+    {
+      "fault": "full-authority-per-provenance-edge",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "fileSha256": "5e798f6f7b7780c0363ef87a9e6284b310ebd040cd554ef417980a9569944d1e",
+      "old": "const value = lookup(receipt), provenance = lineage.get(receipt);",
+      "new": "const value = entry(receipt), provenance = lineage.get(receipt);",
+      "original": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 0,
+        "outcome": "passed",
+        "log": "full-authority-per-provenance-edge-original.log",
+        "sha256": "819088d7b93eee7c7989fdfda760e7b26d077eeebf5215f080ff911e8ab2897e"
+      },
+      "mutated": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 1,
+        "outcome": "failed",
+        "log": "full-authority-per-provenance-edge-mutated.log",
+        "sha256": "f8111476f104dde1dfcc391a0073919bef76ad0a55ec57f3d60f96aff4c8d60c"
+      }
+    },
+    {
+      "fault": "omit-provenance-release-authority",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "fileSha256": "5e798f6f7b7780c0363ef87a9e6284b310ebd040cd554ef417980a9569944d1e",
+      "old": "    live();\n    return captured;",
+      "new": "    return captured;",
+      "original": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 0,
+        "outcome": "passed",
+        "log": "omit-provenance-release-authority-original.log",
+        "sha256": "708d2b5683c31e7c13d8980abaf40d11bca4885ab582055982124c5181992f4f"
+      },
+      "mutated": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 1,
+        "outcome": "failed",
+        "log": "omit-provenance-release-authority-mutated.log",
+        "sha256": "1422c35b097c8662c74108597a7072b8b67cc46152acedbeac65d9cbcbce9e04"
+      }
+    },
+    {
+      "fault": "omit-fingerprint-release-authority",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "fileSha256": "5e798f6f7b7780c0363ef87a9e6284b310ebd040cd554ef417980a9569944d1e",
+      "old": "      live(); return fingerprint;",
+      "new": "      return fingerprint;",
+      "original": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 0,
+        "outcome": "passed",
+        "log": "omit-fingerprint-release-authority-original.log",
+        "sha256": "b4522f4bb938f85e8d81514c24afadb86f4dab09a148d6052062faf74b619dcd"
+      },
+      "mutated": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "-t",
+          "authority at capture and release"
+        ],
+        "exit": 1,
+        "outcome": "failed",
+        "log": "omit-fingerprint-release-authority-mutated.log",
+        "sha256": "573f4515ed0560259b3441454ed12e01200669e819bf71bd6c0bb2c4fd7286b5"
+      }
+    },
+    {
+      "fault": "omit-early-launch-sampler-drain",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "fileSha256": "18fd67c54177e10f2f619c656e3a6f34b16498f863fb7aa783792a66112b7f02",
+      "old": "    if (waitForSamples !== undefined) {\n      await yieldToPoll();\n      if (!(await waitForSamples())) refuse();\n    }\n    live();\n    const { history, scope, project, eventSha256 }",
+      "new": "    live();\n    const { history, scope, project, eventSha256 }",
+      "original": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-launch-history.test.ts",
+          "-t",
+          "before inspecting or registering launch history"
+        ],
+        "exit": 0,
+        "outcome": "passed",
+        "log": "omit-early-launch-sampler-drain-original.log",
+        "sha256": "e5dd5204e629bb045e5eebd8989f5aa1188ac3ed66fd18f1e0d67cb4cefde58e"
+      },
+      "mutated": {
+        "command": [
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--project",
+          "integration",
+          "--maxWorkers=1",
+          "packages/polaris-dossier/src/url-launch-history.test.ts",
+          "-t",
+          "before inspecting or registering launch history"
+        ],
+        "exit": 1,
+        "outcome": "failed",
+        "log": "omit-early-launch-sampler-drain-mutated.log",
+        "sha256": "76236486a96a238e35357db2ca765f6d55edade5a74a27b6282a3320f1c54315"
+      }
+    }
+  ]
+}

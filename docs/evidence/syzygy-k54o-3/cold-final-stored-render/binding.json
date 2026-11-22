@@ -1,0 +1,50 @@
+{
+  "subject": "31070e4d12af2fe07ebb4ec981357f8089630660",
+  "parent": "b873fc4c8c038a80738d3415adfa4652e706d1e5",
+  "tree": "fcb142417d0bdbb1a7fc1ddf58afc2c2ba234f2e",
+  "diffSha256": "30e844e3f5fa3ddba66d2c02eb8286c487ed649036b12fb127634d1594f1caeb",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "b5f361257d7fd0e4f0cbcd73fe21f6c323522c1fbd209d44550f74f4c73135bd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "0ca1e2d4cafe5d2e6d5a4d79e7fcefabf5d41280429bd151f3bfafe246c158cf"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "38d3e2307ceec0178bdca8332688615d4cc8fb578218984c81fac618a17caf45"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stored-render.test.ts",
+      "sha256": "b13fa238db3223a1206a16d1cbac7b95d93af15df0394de285e5b04389c21530"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-stored-render.ts",
+      "sha256": "a5f865e6ab2f86a4eec8bd5feb1c250c18fd717cd4c0818a12cf322094c9d244"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "focused.log",
+      "bytes": 512,
+      "sha256": "0be11f07f236b3099e19a938d92c6fee4b1bb2f15bc09ec4a3ea24f57f83098a"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 4115,
+      "sha256": "4958c39001ea9b619ba3586d391afd4340c609b1330d5479b1cb190bab2f7766"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "results": {
+    "focusedPassed": 15,
+    "focusedFiles": 1
+  },
+  "scope": "Independent frozen source review and actual unit fixtures on the stored site and authority bracket. The eligible public composite run has yet to establish cold factory issuance and final close."
+}

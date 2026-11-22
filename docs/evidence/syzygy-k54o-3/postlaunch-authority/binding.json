@@ -1,0 +1,108 @@
+{
+  "subject": "02947eea982781b96d22048dc0f59082c5bc3bfb",
+  "tree": "a77d2bb82f94d4d74bbb0ec6aef5db8190a6d1af",
+  "base": "b6287a887d4ba150dd10bbaa87ce024669b1e6d2",
+  "diffSha256": "3434ccaab103756d079c5f7d2fcd969712cfa7493dfa4a0071fe13f1664c1823",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "0da881656f5f55066f341cde872ad06501a6445bf0642bbf605aa4fd97d27f34"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "sha256": "8f9ead565314a53b08653d87b5a99bd2da4423325ea953158c2a2b2cce7074d8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "sha256": "5e798f6f7b7780c0363ef87a9e6284b310ebd040cd554ef417980a9569944d1e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "18fd67c54177e10f2f619c656e3a6f34b16498f863fb7aa783792a66112b7f02"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions-completion.test.ts",
+      "sha256": "e985601bb7430c7ae210a4384205a39fdf88864bee82ae404cf0c2d4b67746b6"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "1f3fc585abae1e70470f7a521229ddc6eebb500c62e3eed32ccf777a2f8d7bfd"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "focused.log",
+      "bytes": 1413,
+      "sha256": "e74654cddefcb7032f30791e3d0ae16333cbcfe8cc2da6b4a7d0917c94c57080"
+    },
+    {
+      "path": "native-stop.log",
+      "bytes": 36043,
+      "sha256": "6b99db6ff55612fbf0e23995856caadc3d1ba9a9f7dc9735b8242e2738acd737"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 5253,
+      "sha256": "27840461aa0f41506a89169553d83ab679f1a92f5eb17c64808f90b68bd70195"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "inputTreeSha256": "0857bc6e4cf9a4a907ce7a828dd5b4f1c2c5b4ccd0d9824355f3a341645408d3",
+  "profileRegistrySha256": "79590df541a474994c46595e1c0adb6ddc27002b53f27db647d2ef6a15ee6659",
+  "nativeFailureManifestSha256": "12dd73c87e4eafc76bf533956a36443e3cadd0ff576a8dca4f8fcb99ce27df3b",
+  "nativeResumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true
+    }
+  ],
+  "freshDesignAudit": {
+    "sha256": "9ce0c1cd80d89615e8897e378cb411c1de926e336251b51f8338e17f6e714c81",
+    "events": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "launch-terminal"
+    ],
+    "terminal": {
+      "outcome": "inspection-failed",
+      "signal": "SIGTERM",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 1475,
+      "peakProcesses": 5,
+      "betweenSamples": "Unknown"
+    }
+  },
+  "executionRecordPresent": false,
+  "results": {
+    "focusedPassed": 121,
+    "focusedFiles": 4,
+    "nativeFailed": 1,
+    "nativeSkipped": 3,
+    "nativeDurationSeconds": 191.68
+  },
+  "scope": "Real public resume command, installed native role processes, and owned synthetic source and provider. Recovery reached a durable new launch and stopped with inspection-failed before delivery. The exact failure phase was not instrumented in this run."
+}

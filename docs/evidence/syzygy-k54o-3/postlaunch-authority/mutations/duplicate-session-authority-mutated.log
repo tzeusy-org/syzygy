@@ -1,0 +1,31 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts (5 tests | 1 failed | 4 skipped) 7ms
+   ↓ completed design launch health > accepts only a successful exit with independently settled process and tool cleanup
+   × current policy across completed design cleanup > checks policy once and checks effect authority after each settlement 6ms
+     → expected "spy" to be called 2 times, but got 3 times
+   ↓ current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: true)
+   ↓ current policy across completed design cleanup > rechecks policy after deferred child cleanup (policy remains current: false)
+   ↓ current policy across completed design cleanup > retains cheap authority checks after the final independent verifier await
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-run-sessions-completion.test.ts > current policy across completed design cleanup > checks policy once and checks effect authority after each settlement
+AssertionError: expected "spy" to be called 2 times, but got 3 times
+ ❯ packages/polaris-dossier/src/url-run-sessions-completion.test.ts:36:27
+     34|       effectCurrent, current, bindingChanged: changed })).toBe(true);
+     35|     expect(current).toHaveBeenCalledTimes(1);
+     36|     expect(effectCurrent).toHaveBeenCalledTimes(2);
+       |                           ^
+     37|     expect(changed).not.toHaveBeenCalled();
+     38|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  19:17:25
+   Duration  2.61s (transform 1.76s, setup 31ms, collect 2.32s, tests 7ms, environment 0ms, prepare 49ms)
+

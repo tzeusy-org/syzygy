@@ -1,0 +1,75 @@
+{
+  "baseCommit": "78e9539547f797b70a1f540085236853b8abac49",
+  "baseTree": "a72693ae435cda5591429628cd61557ff4738dfb",
+  "baseSourceFiles": {
+    "packages/polaris-dossier/src/polaris.ts": "8108ed7afa7b477d38ec1b649f156b64dc891d01b335b1f126fb1bd79ea3be3e",
+    "packages/polaris-dossier/src/policy-snapshot.ts": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+    "packages/polaris-dossier/src/render.ts": "53cd99c6cc5613a8739cf48ed64548cbd68c0f3183b88c0f04b9ca669f0b1e1b",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-design-product.ts": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "6a72c3b74211058c77ee06ee0e10493776ee06aef2c158d3718c232cd21ae071",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "009b828db3cb2f5c9a527238ca0f3bf864af2d87a706e9753171bfe0a611cef4",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "95484d941f449496d1873a7526cfb83da2291a557827aff94ee28c20821cdcd4",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9",
+    "packages/polaris-dossier/src/render.test.ts": "f509e5730c1f9bf5d87f9f462f72ab487be0a9b59c6f4f9b0d25a8c38d4a2153"
+  },
+  "instrumentedSourceFiles": {
+    "packages/polaris-dossier/src/polaris.ts": "6076656a71892b4c990961e8f1a879d7020be212ae5f5fa3e4a3d525250df33f",
+    "packages/polaris-dossier/src/policy-snapshot.ts": "836048376774aa22ed3a8b8baa40ee17bb301bc4f4fcb3247fee05864c49c7c8",
+    "packages/polaris-dossier/src/render.ts": "a12e2ba7fd93588d13a63507bc101e59b37ac8159172f53cc71a9614124b58e3",
+    "packages/polaris-dossier/src/session-launch.ts": "d33b1585ac76bb67d7026b10ddf940b312fd3ef1571f67874578fd1e20d7a08d",
+    "packages/polaris-dossier/src/session-relay.ts": "543ca6383c9ea629436e125252eb5e8f221340f7283fc32caa16d9230c32aa23",
+    "packages/polaris-dossier/src/url-design-product.ts": "ede5fb22967255674b94bca55e3cacf0abc56fd3b06d2bacadbd6d520a0971fa",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "4ef122855766917870d45042f82f34c0e4c069435cf649e78f9e7eda2bafb3c8",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "113bd2f0b32a0c6e30380ce9d3eedfa1ff9c19807f3b8187129c132da289bc64"
+  },
+  "rawArtifacts": [
+    {
+      "file": "overlay.patch",
+      "bytes": 54185,
+      "sha256": "3efc461bc23d993a3788127f00e3621039acd4becc02b07c7ff2f5e4be170fbe"
+    },
+    {
+      "file": "trace.jsonl",
+      "bytes": 332022,
+      "sha256": "19f736d544c23dd4bacbcff09ba88e047036319cbfb9301afdd2479e8e18cf11"
+    }
+  ],
+  "retainedOriginalsByDigest": [
+    {
+      "file": "f3-78e953954-diagnostic-subject.txt",
+      "bytes": 1099,
+      "sha256": "a025e62137019df582dafd14db93ad8d67caa31175d676db6f2fe9b5da8c1f9e"
+    },
+    {
+      "file": "f3-78e953954-stop.log",
+      "bytes": 36048,
+      "sha256": "5d709f7b2c7de337f6f8b1b64836fc464bf610bb51092e3d6d8e5039bd7573db"
+    },
+    {
+      "file": "f3-78e953954-diagnostic.log",
+      "bytes": 36523,
+      "sha256": "a2f451d4f9f5783640b94593042705e7afcace864ff01d4a1218b64a73da8208"
+    },
+    {
+      "file": "f3-78e953954-diagnostic-cut.json",
+      "bytes": 137298,
+      "sha256": "823a8f8cf191011501af7ef9f8bfbe6bdeb4c76017c29ce3c3331a8c06358675"
+    },
+    {
+      "file": "f3-78e953954-diagnostic-cut.json.failure.json",
+      "bytes": 40265,
+      "sha256": "e2ff7b0921189f8fbce2bbff65e73c20254bc864e5666ecfa051717434fb29ef"
+    }
+  ],
+  "scope": "A replay of the owned synthetic composed fixture with the diagnostic source overlay. The three timer cases and public stop-resume test ran in the integration project with maxWorkers=1.",
+  "nativeResultLogSummary": {
+    "exitCode": 1,
+    "timerCasesPassed": 3,
+    "nativeCasesFailed": 1,
+    "testsSkipped": 119,
+    "nativeTestMilliseconds": 210720,
+    "commandMilliseconds": 219090
+  }
+}

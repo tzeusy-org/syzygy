@@ -1,0 +1,29 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-runtime-current
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-machine.test.ts (6 tests) 37930ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; close defeats awaited effects and permits durable retirement  7747ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; withdraw-effects defeats awaited effects and permits durable retirement  7912ms
+   ✓ production URL run machine provisioner > close closes admission while a genuine socket awaits parent revalidation  6778ms
+   ✓ production URL run machine provisioner > withdraw-effects closes admission while a genuine socket awaits parent revalidation  7270ms
+   ✓ production URL run machine provisioner > refuses copied capabilities before creating a store and reports expired retirement as Unknown  6685ms
+ ✓ |integration| packages/polaris-dossier/src/url-machine-peer.test.ts (12 tests) 31739ms
+   ✓ live URL machine peer binding > pins the actual installed Node image without large synchronous reads on the supervisor event loop  2697ms
+   ✓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: false)  2556ms
+   ✓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: true)  2511ms
+   ✓ live URL machine peer binding > reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses  2453ms
+   ✓ live URL machine peer binding > captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files  3255ms
+   ✓ live URL machine peer binding > rejects copied launch objects and an unrelated same-UID socket carrying copied claims  2860ms
+   ✓ live URL machine peer binding > refuses the inherited descriptor sender rather than authenticating it as the living connector  2925ms
+   ✓ live URL machine peer binding > refuses the mixed descriptor sender rather than authenticating it as the living connector  2809ms
+   ✓ live URL machine peer binding > refuses queued bytes and subsequent effects after the captured sender exits  2373ms
+   ✓ live URL machine peer binding > blocks the effect on current parent failure  2466ms
+   ✓ live URL machine peer binding > blocks the effect on current audit failure  2299ms
+   ✓ live URL machine peer binding > blocks the effect on current expiry failure  2345ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (30 tests) 2034ms
+
+ Test Files  3 passed (3)
+      Tests  48 passed (48)
+   Start at  19:11:03
+   Duration  76.91s (transform 3.10s, setup 40ms, collect 4.35s, tests 71.70s, environment 1ms, prepare 178ms)
+

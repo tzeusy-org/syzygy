@@ -1,0 +1,96 @@
+{
+  "subject": "b873fc4c8c038a80738d3415adfa4652e706d1e5",
+  "parent": "02947eea982781b96d22048dc0f59082c5bc3bfb",
+  "tree": "9891deb89a2481f3257b6009f89f2d06c8ef9806",
+  "diffSha256": "43c510f5559ff6578154b100164934a2c6c96145aca67095f5297c5e98ed9afe",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.test.ts",
+      "sha256": "a3e371f7b7acd05bf9ca438c79b8909eb531f269f0ebf2716e7e21a567bbfad8"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sha256": "c4983d0d8d6d699e76fb1a1f18ca4f6731c31f98112150aaaf549b751a90606f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine.ts",
+      "sha256": "255559e51a52ce7bba0055b88eb97ba64835b1ebb6adc8d24860b5f094e339e4"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "focused.log",
+      "bytes": 2815,
+      "sha256": "4cef2715933369a5f9d6f88879d525a6bdb45cbbf44ed0abf01ec3f555538d56"
+    },
+    {
+      "path": "native-stop.log",
+      "bytes": 36043,
+      "sha256": "f523c57320fb48e73db2175d886d84c25df03a72b9b35155f2474060389a0563"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 3723,
+      "sha256": "b357f92e044e135f81c9da1a73b443c6a99dcd4b04a4a30744c7c6c296c16845"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ],
+  "inputTreeSha256": "bf7a519656bd544d0f7f20b13a799e4aea43c4f5c286370c390a777f831a89cd",
+  "profileRegistrySha256": "5c4a74518862d1f5f908c8fe17dc7e0ea5a8db03256333034f323d9ff7a25c81",
+  "nativeFailureManifestSha256": "78b83cf6d887d98df94d568ba6d6bc730fb0386d03ece18b47a36727ec8f0e21",
+  "nativeResumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true
+    }
+  ],
+  "freshDesignAudit": {
+    "sha256": "61e13adceabecda4d1e923322fc75cfd50936294b6e882840e16e94caebafa8a",
+    "events": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "launch-terminal"
+    ],
+    "terminal": {
+      "outcome": "inspection-failed",
+      "signal": "SIGTERM",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 2192,
+      "peakProcesses": 5,
+      "betweenSamples": "Unknown"
+    }
+  },
+  "executionRecordPresent": false,
+  "results": {
+    "focusedPassed": 48,
+    "focusedFiles": 3,
+    "nativeFailed": 1,
+    "nativeSkipped": 3,
+    "nativeDurationSeconds": 212.23
+  },
+  "scope": "The real public resume and native launches use an owned synthetic source and provider. Focused peer cases include the actual installed executable and a control that withdraws authority during its hash. Public recovery reaches fresh launch history and stops at inspection before delivery. The diagnostic phase of this exact run is unknown."
+}
