@@ -335,7 +335,10 @@ describe('check: figure fit', () => {
     expect(stored[0]!['figureFit']).toEqual({ textPx: 13, minTextPx: 11, viewports: [{ viewportPx: 1440, columnPx: 966 }, { viewportPx: 390, columnPx: 261 }], examined: 1, entries: [NUMBERS] });
     expect(JSON.stringify(stored[1]!['figureFit'])).toBe(JSON.stringify(stored[0]!['figureFit']));
     expect(stored[0]!['format']).toBe('polaris-dossier-check/1');
-    expect(first.figureFit).toEqual(stored[0]!['figureFit']);
+    // Version 2.9: the entry at 390 of a graph laid out 1048 px wide is `mechanism`-class advice, so the report leaves it out and counts it.
+    expect(first.figureFit).toEqual({ ...(stored[0]!['figureFit'] as object), entries: [] });
+    expect(first.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: 1, inRun: 1 });
+    expect(second.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: 1, inRun: 2 });
     // Advice only: it changes no outcome and is no finding.
     expect(first.outcome).toBe('passed');
     expect(first.findings).toEqual([]);
@@ -345,7 +348,10 @@ describe('check: figure fit', () => {
     const run = await briefedRun();
     writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push(wide('flow-1')); }));
     const result = report(await checkDraft(run, {}, deps()));
-    expect(result.figureFit?.entries).toEqual([{ diagram: 'flow-1', unknown: 'no figure layout was supplied to this check, so its width is not known' }]);
+    // Kept in the check record; on the report it is `mechanism`-class advice (`no-figure-layout`), counted and written to the run file.
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8')).figureFit.entries).toEqual([{ diagram: 'flow-1', unknown: 'no figure layout was supplied to this check, so its width is not known' }]);
+    expect(result.figureFit?.entries).toEqual([]);
+    expect(result.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: 1, inRun: 1 });
   });
 
   it('writes no figureFit for a draft that does not parse: its absence states nothing about fit', async () => {
@@ -355,6 +361,85 @@ describe('check: figure fit', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report).not.toHaveProperty('figureFit');
     expect(JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'))).not.toHaveProperty('figureFit');
+  });
+});
+
+// Advice classes and the run file (REQ-polaris-generation-034 version 2.9, syzygy-3efd.64). Expected entries and files are literals.
+describe('check: mechanism advice and run-advice.json', () => {
+  const wide = (id: string) => ({ ...DIAGRAM, id, disposition: { kind: 'produced', assetIds: [id] } });
+  const v4 = (diagrams: number) => mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; for (let i = 1; i <= diagrams; i++) d.diagrams.push(wide(`flow-${i}`)); });
+  const AT_390 = { diagram: 'flow-1', viewportPx: 390, laidOutPx: 1048, drawnPx: 860, columnPx: 261, textPx: 10.67, minTextPx: 11, failed: ['width', 'text-size'] };
+  const RULES = [{ id: 'no-figure-layout', version: 1 }, { id: 'graph-without-narrow-form', version: 1 }];
+  const runFile = (run: string): string => fs.readFileSync(path.join(run, 'run-advice.json'), 'utf8');
+
+  it('leaves a graph figure too wide at 390 off the report, keeps it in the record and its ledger, and writes it once for the run', async () => {
+    const run = await briefedRun();
+    const results = [];
+    for (let n = 0; n < 2; n++) {
+      writeDraft(run, v4(1));
+      results.push(report(await checkDraft(run, {}, deps({ layoutFigure: () => 1048 }))));
+    }
+    for (const [n, result] of results.entries()) {
+      const record = JSON.parse(fs.readFileSync(path.join(run, 'checks', `rev-${n}.json`), 'utf8'));
+      expect(record.figureFit.entries).toEqual([AT_390]);
+      expect(record).not.toHaveProperty('mechanismAdvice');
+      expect(result.figureFit).toEqual({ ...record.figureFit, entries: [] });
+      expect(result.figureFit?.examined).toBe(1);
+      // The report's ledger stays the record's, counting every entry.
+      expect(result.readingLedger).toEqual(record.readingLedger);
+      expect(result.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: 1, inRun: n + 1 });
+      // The report's entries and thisRevision together are the record's entries.
+      expect(result.figureFit!.entries.length + result.mechanismAdvice!.thisRevision).toBe(record.figureFit.entries.length);
+    }
+    expect(JSON.parse(runFile(run))).toEqual({ format: 'polaris-dossier-run-advice/1', runId: RUN_ID, rules: RULES, checkRecords: { read: 2, unreadable: 0 }, occurrences: 2,
+      advisories: [{ rule: 'graph-without-narrow-form', advice: AT_390, revisions: [0, 1] }] });
+    expect(runFile(run)).toBe(`${JSON.stringify(JSON.parse(runFile(run)), null, 2)}\n`);
+  });
+
+  it('keeps author-class entries on the report and in no run file, and routes a check given no layout to its run file', async () => {
+    // Laid out 1200 px: the entry at 1440 is `author`, the one at 390 `mechanism`. Laid out 400 px: the entry at 390 is `author`. A layout
+    // that fails is `author`.
+    const cases: [() => number, number, number][] = [[() => 1200, 1, 1], [() => 400, 1, 0], [() => { throw new Error('no'); }, 1, 0]];
+    for (const [layoutFigure, onReport, routed] of cases) {
+      const run = await briefedRun();
+      writeDraft(run, v4(1));
+      const result = report(await checkDraft(run, {}, deps({ layoutFigure })));
+      const record = JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8'));
+      expect(result.figureFit!.entries).toHaveLength(onReport);
+      expect(result.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: routed, inRun: routed });
+      expect(result.figureFit!.entries.length + routed).toBe(record.figureFit.entries.length);
+      expect(JSON.parse(runFile(run)).advisories).toHaveLength(routed);
+    }
+    const kept = (await (async () => { const run = await briefedRun(); writeDraft(run, v4(1)); return report(await checkDraft(run, {}, deps({ layoutFigure: () => 1200 }))); })()).figureFit!.entries;
+    expect(kept).toEqual([{ diagram: 'flow-1', viewportPx: 1440, laidOutPx: 1200, drawnPx: 1200, columnPx: 966, textPx: 13, minTextPx: 11, failed: ['width'] }]);
+    // A run given no layout: each entry is `no-figure-layout`, on no report and in its run file.
+    const run = await briefedRun();
+    writeDraft(run, v4(2));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.figureFit!.entries).toEqual([]);
+    expect(JSON.parse(runFile(run)).advisories).toEqual([
+      { rule: 'no-figure-layout', advice: { diagram: 'flow-1', unknown: 'no figure layout was supplied to this check, so its width is not known' }, revisions: [0] },
+      { rule: 'no-figure-layout', advice: { diagram: 'flow-2', unknown: 'no figure layout was supplied to this check, so its width is not known' }, revisions: [0] },
+    ]);
+  });
+
+  it('counts a record past the read bound unreadable, takes nothing from one without figureFit, and is read by no outcome', async () => {
+    const run = await briefedRun();
+    for (let n = 0; n < 3; n++) { writeDraft(run, v4(1)); report(await checkDraft(run, {}, deps({ layoutFigure: () => 1048 }))); }
+    // Revision 0 past the 16,777,216-byte bound (a sparse file: refused from its size alone); revision 1 without figureFit.
+    fs.truncateSync(path.join(run, 'checks', 'rev-0.json'), 16_777_217);
+    const one = JSON.parse(fs.readFileSync(path.join(run, 'checks', 'rev-1.json'), 'utf8'));
+    delete one.figureFit;
+    fs.writeFileSync(path.join(run, 'checks', 'rev-1.json'), `${JSON.stringify(one, null, 2)}\n`);
+    // A planted run file changes nothing: the next check passes and writes it afresh.
+    fs.writeFileSync(path.join(run, 'run-advice.json'), '{"planted": true}');
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; }));
+    const result = report(await checkDraft(run, {}, deps({ layoutFigure: () => 1048 })));
+    expect(result.outcome).toBe('passed');
+    expect(result.mechanismAdvice).toEqual({ file: 'run-advice.json', thisRevision: 0, inRun: 1 });
+    expect(JSON.parse(runFile(run))).toEqual({ format: 'polaris-dossier-run-advice/1', runId: RUN_ID, rules: RULES, checkRecords: { read: 3, unreadable: 1 }, occurrences: 1,
+      advisories: [{ rule: 'graph-without-narrow-form', advice: AT_390, revisions: [2] }] });
+    expect(fs.readdirSync(run).filter((name) => name.startsWith('.run-advice'))).toEqual([]);
   });
 });
 
@@ -1364,6 +1449,25 @@ describe('check: figure kinds (schema v7)', () => {
       { kind: 'figure-kind', at: '$.diagrams[0].nodes', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`, not `nodes`' },
       { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "seq-1": a sequence takes `participants` and `messages`; it lacks `messages`' },
       { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`, not `steps`' }]);
+  });
+
+  // Version 2.8 (syzygy-3efd.71), the scenario "Graph diagram with a missing or foreign member in schema v7": the byte-identity sentence's
+  // exception. A v7 graph diagram lacking `edges` reports figure-kind at the diagram and no schema finding at `edges`; one carrying `steps`
+  // reports figure-kind at `steps` and no field-version or schema finding there. The same two diagrams in a v6 draft report as v6 does.
+  const graphPair = () => {
+    const { edges: _edges, ...flowNoEdges } = homed({ kind: 'section', target: 'core-ideas' });
+    const dependency = { ...homed({ kind: 'section', target: 'core-ideas' }), id: 'dep-1', title: 'Dependencies', kind: 'dependency', disposition: { kind: 'produced', assetIds: ['dep-1'] },
+      nodes: [{ id: 'm1', label: 'App', epistemic: 'inferred', citations: [cite('c-m1')] }, { id: 'm2', label: 'Library', epistemic: 'inferred', citations: [cite('c-m2')] }],
+      edges: [{ id: 'y1', from: 'm1', to: 'm2', label: 'uses', epistemic: 'inferred', citations: [cite('c-y1')] }], steps: [] };
+    return [flowNoEdges, dependency];
+  };
+  it('reports a v7 graph diagram lacking edges or carrying steps as figure-kind alone, and the same pair in v6 as v6 does (version 2.8)', async () => {
+    expect(listed(await findingsOf(drafted(V7, ...graphPair())))).toEqual([
+      { kind: 'figure-kind', at: '$.diagrams[0]', detail: 'the diagram "flow-1": a flow diagram takes `nodes` and `edges`; it lacks `edges`' },
+      { kind: 'figure-kind', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": a dependency diagram takes `nodes` and `edges`, not `steps`' }]);
+    expect(listed(await findingsOf(drafted('polaris-dossier-local-draft-v6', ...graphPair())))).toEqual([
+      { kind: 'schema', at: '$.diagrams[0].edges', detail: 'is required' },
+      { kind: 'field-version', at: '$.diagrams[1].steps', detail: 'the diagram "dep-1": `steps` needs draft schema polaris-dossier-local-draft-v7' }]);
   });
 
   it('reports a count outside its bounds as a schema finding', async () => {

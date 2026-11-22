@@ -2,7 +2,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { CHECK_RECORD_FORMAT, collectCitations, declaredSessionId, nextRevision } from './check.js';
+import { collectCitations, declaredSessionId, nextRevision } from './check.js';
+import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -34,8 +35,9 @@ export function latestPassedDraft(run: string): { readonly ok: true; readonly re
   const revision = nextRevision(path.join(run, RUN_LAYOUT.checks)) - 1;
   if (revision < 0) return { ok: false, reason: 'no draft revision has been checked' };
   let check: unknown;
-  try { check = parseBoundedJson(fs.readFileSync(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`), 'utf8'), SUBJECT_JSON_LIMITS); } catch { check = undefined; }
-  if (!isRecord(check) || check['format'] !== CHECK_RECORD_FORMAT || check['revision'] !== revision) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
+  // Read under the one check-record bound (version 2.8), never the draft's own 4 MiB bound: the record carries more than the draft.
+  try { check = readCheckRecord(path.join(run, RUN_LAYOUT.checks, `rev-${revision}.json`)); } catch { check = undefined; }
+  if (!isCheckRecordOf(check, revision)) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
   if (check['outcome'] !== 'passed') return { ok: false, reason: `draft revision ${revision}, the latest checked, has open findings; only a passed revision is reviewed` };
   const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
   let bytes: Uint8Array;

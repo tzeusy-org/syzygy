@@ -21,7 +21,9 @@ function structure(rootFiles: number, units: readonly (readonly [string, number]
     ...units.map(([unit, files], i) => ({ id: `_tree-unit-${i + 1}`, fact: 'top-level-unit' as const, ...base, path: unit, count: files, to: null, ...mark(`_tree-unit-${i + 1}`) })),
     ...units.map(([unit], i) => ({ id: `_tree-contains-${i + 1}`, fact: 'contains' as const, ...base, path: unit, count: null, to: `_tree-unit-${i + 1}`, ...mark(`_tree-contains-${i + 1}`) })),
   ];
-  return { state: 'derived', revision: REV, recordRevision: REV, capturedAt: AT, recordText: '{}\n', sha256: SHA, currencyPolicy: null, facts, unitsNotListed };
+  const unitFiles = units.reduce((n, [, files]) => n + files, 0);
+  const tree = { files: rootFiles + unitFiles, rootFiles, unitsListed: units.length, unitFiles, unitsNotListed, secretPathsLeftOut: 0, submodules: 0 };
+  return { state: 'derived', revision: REV, recordRevision: REV, capturedAt: AT, recordText: '{}\n', sha256: SHA, currencyPolicy: null, facts, unitsNotListed, tree, countsMatch: true };
 }
 
 /** Every drawn group: its kind, its marking and the fact it draws. */

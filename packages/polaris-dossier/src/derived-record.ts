@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { parseBoundedJson, type LocalDerivedFact, type LocalDerivedStructure } from '@syzygy/polaris-generation-core/live';
+import { parseBoundedJson, type LocalDerivedFact, type LocalDerivedStructure, type LocalTreeCounts } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { TOP_LEVEL_UNIT } from './derive-rules.js';
 import { deriveTreeFacts, type TreeFact, type TreeFacts } from './derive.js';
@@ -62,6 +62,10 @@ export interface KeptRecord {
   readonly state: 'derived' | 'unknown';
   readonly facts: readonly TreeFact[];
   readonly unitsNotListed: number;
+  /** The record's own counts (version 2.9 compares them with the render's re-derivation, and never renders them); zero for an `unknown` record. */
+  readonly files: number;
+  readonly secretPathsLeftOut: number;
+  readonly submodules: number;
 }
 
 const count = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
@@ -110,7 +114,7 @@ export function readDerivedRecord(run: string, revision: number, expected: Recor
     const source = { repositoryId: expected.repositoryId, revision: doc['revision'], capturedAt: doc['capturedAt'] };
     const base = { text, sha256: sha256(bytes), revision: doc['revision'], capturedAt: doc['capturedAt'] };
     if (doc['state'] === 'unknown') {
-      return str(doc['why']) && encodeDerivedRecord(source, { why: doc['why'] }) === text ? { ...base, state: 'unknown', facts: [], unitsNotListed: 0 } : undefined;
+      return str(doc['why']) && encodeDerivedRecord(source, { why: doc['why'] }) === text ? { ...base, state: 'unknown', facts: [], unitsNotListed: 0, files: 0, secretPathsLeftOut: 0, submodules: 0 } : undefined;
     }
     if (doc['state'] !== 'derived' || !Array.isArray(doc['facts']) || !count(doc['unitsNotListed']) || !count(doc['files']) || !count(doc['secretPathsLeftOut']) || !count(doc['submodules'])) return undefined;
     const facts = doc['facts'].map(factOf);
@@ -118,7 +122,8 @@ export function readDerivedRecord(run: string, revision: number, expected: Recor
     const kept = facts as TreeFact[];
     if (kept.some((fact) => fact.fact !== 'tree-root' && expected.isSecretPath(fact.path))) return undefined;
     const rebuilt = encodeDerivedRecord(source, { files: doc['files'], secretPathsLeftOut: doc['secretPathsLeftOut'], submodules: doc['submodules'], facts: kept, unitsNotListed: doc['unitsNotListed'] });
-    return rebuilt === text ? { ...base, state: 'derived', facts: kept, unitsNotListed: doc['unitsNotListed'] } : undefined;
+    return rebuilt === text
+      ? { ...base, state: 'derived', facts: kept, unitsNotListed: doc['unitsNotListed'], files: doc['files'], secretPathsLeftOut: doc['secretPathsLeftOut'], submodules: doc['submodules'] } : undefined;
   } catch {
     return undefined;
   }
@@ -183,6 +188,13 @@ export async function derivedStructureAt(inputs: {
     return { state: 'unknown', revision: pinned, unknownReason: 'source-uncaptured-or-unreachable' };
   }
   const now = deriveTreeFacts(entries, isSecretPath);
+  // Version 2.8 (syzygy-3efd.67): the run directory is within the agent sessions' write reach, so a record is readable only where every
+  // fact names this render's own rule and version, and every path its unit and containment facts name is a unit path this render
+  // re-derives (a directory the tree does not hold, or one past the listing of 250, is not). Anything else is no readable record: nothing
+  // of it is drawn, listed, carried in `machine.json` or published, so no name or rule reaches the region that the render did not derive.
+  const derivedUnits = new Set(now.facts.filter((fact) => fact.fact === 'top-level-unit').map((fact) => fact.path));
+  const foreign = (fact: TreeFact): boolean => fact.rule !== TOP_LEVEL_UNIT.id || fact.ruleVersion !== TOP_LEVEL_UNIT.version || (fact.fact !== 'tree-root' && !derivedUnits.has(fact.path));
+  if (record.facts.some(foreign)) return { state: 'missing', revision: pinned, unknownReason: 'missing-evidence' };
   // `pinned-revision`: current exactly when the record names this render's revision and this render re-derives the same facts.
   const current = record.revision === pinned && sameFacts(record.facts, now.facts) && record.unitsNotListed === now.unitsNotListed;
   const facts: LocalDerivedFact[] = record.facts.map((fact) => {
@@ -199,5 +211,21 @@ export async function derivedStructureAt(inputs: {
     state: 'derived', revision: pinned, recordRevision: record.revision, capturedAt: record.capturedAt, recordText: record.text, sha256: record.sha256,
     currencyPolicy: policy === null ? null : { policyId: policy.policyId, policyVersion: policy.policyVersion, sha256: policy.sha256 },
     facts, unitsNotListed: record.unitsNotListed,
+    // Version 2.9 (syzygy-3efd.36): the directory map counts what this render re-derives from the tree, never the record's counts, which lie
+    // within the agent sessions' write reach and which currency does not compare; it says whether the record's three counts equal these.
+    tree: treeCounts(now),
+    countsMatch: record.files === now.files && record.secretPathsLeftOut === now.secretPathsLeftOut && record.submodules === now.submodules,
   };
+}
+
+/** The counts of a re-derivation of the tree (version 2.9): every blob entry is counted once, at the root, under a listed or an unlisted
+ * top-level directory, or as a secret-matching path, so `files - rootFiles - unitFiles - secretPathsLeftOut` is the files under the
+ * directories counted and not listed, and is never negative. */
+export function treeCounts(now: TreeFacts): LocalTreeCounts {
+  let rootFiles = 0, unitsListed = 0, unitFiles = 0;
+  for (const fact of now.facts) {
+    if (fact.fact === 'tree-root') rootFiles = fact.rootFiles;
+    else if (fact.fact === 'top-level-unit') { unitsListed += 1; unitFiles += fact.files; }
+  }
+  return { files: now.files, rootFiles, unitsListed, unitFiles, unitsNotListed: now.unitsNotListed, secretPathsLeftOut: now.secretPathsLeftOut, submodules: now.submodules };
 }

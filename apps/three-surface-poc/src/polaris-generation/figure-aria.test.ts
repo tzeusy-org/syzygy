@@ -15,6 +15,7 @@ const derived: LocalDerivedStructure = {
     { id: '_tree-unit-1', fact: 'top-level-unit', rule: 'top-level-unit', ruleVersion: 1, path: 'src', count: 9, to: null, epistemic: 'observed', unknownReason: null },
     { id: '_tree-contains-1', fact: 'contains', rule: 'top-level-unit', ruleVersion: 1, path: 'src', count: null, to: '_tree-unit-1', epistemic: 'observed', unknownReason: null },
   ],
+  tree: { files: 11, rootFiles: 2, unitsListed: 1, unitFiles: 9, unitsNotListed: 0, secretPathsLeftOut: 0, submodules: 0 }, countsMatch: true,
 };
 
 const SITES: readonly (readonly [string, () => ReturnType<typeof renderLocalDossier>['files']])[] = [

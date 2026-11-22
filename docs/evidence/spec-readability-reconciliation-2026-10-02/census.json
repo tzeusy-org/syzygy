@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 395,
+      "scenarios": 419,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1059,7 +1059,31 @@
             "Manifest facts stay Inferred",
             "More manifests than the member lists",
             "Unread files sorting first do not hide read ones",
-            "Pages and provider unchanged by manifest facts"
+            "Pages and provider unchanged by manifest facts",
+            "Largest manifest facts read back with the check",
+            "Derived record naming a directory not in the tree",
+            "Deep-dive page named per code point",
+            "Graph diagram with a missing or foreign member in schema v7",
+            "Records Syzygy wrote and the provider unchanged by the repairs",
+            "Directory map of a current record",
+            "Directory map counts are re-derived, never read from the record",
+            "Large directory map paginated, never shrunk",
+            "Directory map with no readable record",
+            "Unit map of a workspace",
+            "CI pipeline map of a workflow",
+            "Maps under a screen that admits no manifest",
+            "Maps never read the stored check record",
+            "Draft cannot reach or imitate a computed map",
+            "Provider mode has no computed maps",
+            "Graph figure too wide at 390 routed to the run file",
+            "Advice the author can act on stays in the packet",
+            "Unreadable check record in the run file",
+            "Passed draft whose check record would pass the read bound",
+            "Check record past the bound for a draft with findings",
+            "Inventory too large for its check record",
+            "Inventory check record read under the bound",
+            "Inventory check record past the earlier reader bound counts",
+            "Derived record kept but unusable told apart from none kept"
           ]
         },
         "REQ-polaris-generation-035": {

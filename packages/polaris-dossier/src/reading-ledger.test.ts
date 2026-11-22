@@ -109,6 +109,19 @@ describe('reading ledger', () => {
     expect(ledger.draft.unplacedUnits).toBe(0);
   });
 
+  it('names a deep dive\'s page per code point, as the renderer does: one _ for an astral character and one for a lone surrogate (version 2.8)', () => {
+    // The scenario "Deep-dive page named per code point" (syzygy-3efd.68). The identities are written as escapes: U+1F600 is the
+    // surrogate pair \ud83d\ude00, and \ud800 stands alone. Draft identities are ASCII in a valid draft; this one fails the schema. Two
+    // characters of the Basic Multilingual Plane outside the set give two `_`, never one.
+    const doc = { ...DRAFT, diagrams: [], deepDives: [dive('a\u{1F600}\ud800', 'One', 'core', [block('y1', 'One.')]), dive('Az09_.-', 'Two', 'core', [block('y2', 'Two words.')]), dive('x:/y', 'Three', 'core', [block('y3', 'Three.')])] };
+    const ledger = readingLedger(doc, { ...FIT, entries: [] }, { standards: 'polaris-reader-standards-v1', note: '', advisories: [] });
+    expect(ledger.pages.filter((p) => p.page.startsWith('deep-dives/')).map((p) => [p.page, p.units])).toEqual([
+      ['deep-dives/a__.html', ['deep-dive:a\u{1F600}\ud800']],
+      ['deep-dives/Az09_.-.html', ['deep-dive:Az09_.-']],
+      ['deep-dives/x__y.html', ['deep-dive:x:/y']],
+    ]);
+  });
+
   it('counts nothing in a part that is not of the expected form, and holds only the landing page for a draft that is not an object', () => {
     expect(readingLedger([1, 2], { ...FIT, entries: [] }, { standards: 'polaris-reader-standards-v1', note: '', advisories: [] })).toEqual({
       format: 'polaris-dossier-reading-ledger/1', wordsPerMinute: 200,
@@ -189,6 +202,25 @@ describe('reading difference', () => {
     });
     // Computed, never written: the state root holds only what the fixture wrote.
     expect(fs.readdirSync(path.join(self, 'checks'))).toEqual([]);
+  });
+
+  it('reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)', () => {
+    // An ASCII `pad` member sizes each record exactly; its size is checked against the literal before the difference runs.
+    const sized = (bytes: number): string => {
+      const empty = JSON.stringify({ ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER), pad: '' });
+      return JSON.stringify({ ...checkRecord('2026-11-22T10:00:00.000Z', EARLIER), pad: 'x'.repeat(bytes - empty.length) });
+    };
+    const outcome = (bytes: number) => {
+      const record = sized(bytes);
+      expect(Buffer.byteLength(record)).toBe(bytes);
+      const root = tempDir('reading-difference-');
+      const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+      runIn(root, id('a'), RUN_RECORD('kestrel'), { 0: record });
+      const difference = readingDifference(self, 'kestrel', NOW, LATER);
+      return [difference.state, difference.unreadableCheckRecords];
+    };
+    expect(outcome(16_777_216)).toEqual(['compared', 0]);
+    expect(outcome(16_777_217)).toEqual(['unknown', 1]);
   });
 
   it('is Unknown, never zero, where no earlier run of the repository holds a ledger, and counts what it could not read', () => {
