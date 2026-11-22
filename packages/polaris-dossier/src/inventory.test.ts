@@ -15,6 +15,7 @@ import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { buildInventoryBrief, checkInventory, inventoryBrief, inventoryOfRecord, openRun, type InventoryCheckResult } from './inventory.js';
 import { writeLaunchedMarker } from './launched.js';
+import { latestChecks, limitStop } from './polaris.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
@@ -146,7 +147,7 @@ const writeInventory = (dir: string, inventory: unknown): string => {
 };
 const neverProbe = { probe: async () => { throw new Error('the credential probe must not run after a brief that permits no execution'); } };
 const deps = (): CheckDeps => ({ sources: sources(), now: () => LATER, probe: neverProbe, loadScreen: async () => SCREEN });
-const passed = (result: InventoryCheckResult) => { if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`); return result.report; };
+const passed = (result: InventoryCheckResult) => { if (!result.ok) throw new Error(`refused at ${result.refusal.stage}: ${result.refusal.reason}`); if (!('quotations' in result.report)) throw new Error('the bounded form was written'); return result.report; };
 const listAll = (dir: string): string[] => fs.readdirSync(dir, { recursive: true, encoding: 'utf8' }).sort();
 const steps = (run: string): Record<string, unknown>[] => fs.readFileSync(path.join(run, 'steps.jsonl'), 'utf8').trim().split('\n').map((line) => JSON.parse(line));
 const SEC3 = (() => { const read = readSec3(REAL_ROOT); if (!read.ok) throw new Error(read.reason); return read.sec3; })();
@@ -497,6 +498,106 @@ describe('the inventory of record', () => {
     await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
     fs.writeFileSync(path.join(run, 'drafts', 'rev-1.json'), JSON.stringify({ sessionId: 'inventory-1' }));
     expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'inventory revision 0 declares the authoring session\'s identifier' });
+  });
+});
+
+// REQ-polaris-generation-034 version 2.10 (syzygy-3efd.74): the inventory check record is read under the one check-record bound by both of
+// its readers, Syzygy deciding whether the inventory counts and the supervisor's latest inventory check. Each fixture below is the record
+// inventory-check wrote, with a `pad` member sized to sit at a bound or one past it, its size checked against the literal first.
+describe('the inventory check record\'s read bound (version 2.10)', () => {
+  const recordOf = (run: string): string => path.join(run, 'inventory', 'checks', 'rev-0.json');
+  /** A run whose inventory counts, its check record of the given outcome, and that record parsed. */
+  const counted = async (): Promise<{ run: string; record: Record<string, unknown> }> => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    writeInventory(dir, validInventory());
+    passed(await checkInventory(run, {}, deps()));
+    await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
+    expect(await inventoryOfRecord(run, counting)).toMatchObject({ counts: true, revision: 0 });
+    return { run, record: JSON.parse(fs.readFileSync(recordOf(run), 'utf8')) };
+  };
+  const ofBytes = (record: Record<string, unknown>, bytes: number): string => {
+    const empty = Buffer.byteLength(JSON.stringify({ ...record, pad: '' }));
+    return JSON.stringify({ ...record, pad: 'x'.repeat(bytes - empty) });
+  };
+  /** Values as the test counts them, apart from the reader: the root and every value below it, never a key. */
+  const valuesIn = (value: unknown): number => 1 + (Array.isArray(value) ? value.reduce((n: number, item) => n + valuesIn(item), 0)
+    : value !== null && typeof value === 'object' ? Object.values(value).reduce((n: number, item) => n + valuesIn(item), 0) : 0);
+  const ofValues = (record: Record<string, unknown>, values: number): string => {
+    const own = valuesIn({ ...record, pad: [] });
+    return JSON.stringify({ ...record, pad: new Array<number>(values - own).fill(0) });
+  };
+  const readers = async (run: string) => ({
+    counts: await inventoryOfRecord(run, counting).then((of) => (of.counts ? { counts: true } : of)),
+    latest: ((latest) => (latest === null ? null : { n: latest.n, outcome: latest.doc['outcome'] }))(latestChecks(run).inventory),
+  });
+  const COUNTS = { counts: { counts: true }, latest: { n: 0, outcome: 'passed' } };
+  const UNREADABLE = { counts: { counts: false, why: 'the result of inventory revision 0 cannot be read' }, latest: null };
+
+  it('counts a record of 262,145 bytes, past the earlier 262,144-byte bound, and of 16,777,216, and refuses one of 16,777,217, in both readers', async () => {
+    const { run, record } = await counted();
+    for (const [bytes, expected] of [[262_145, COUNTS], [16_777_216, COUNTS], [16_777_217, UNREADABLE]] as const) {
+      const text = ofBytes(record, bytes);
+      expect(Buffer.byteLength(text)).toBe(bytes);
+      fs.writeFileSync(recordOf(run), text);
+      expect(await readers(run), String(bytes)).toEqual(expected);
+    }
+  });
+
+  it('counts a record of 4,097 values, past the earlier 4,096-value bound, and refuses one of 2,000,001 values or nested 17 levels, in both readers', async () => {
+    const { run, record } = await counted();
+    const past = ofValues(record, 4_097), over = ofValues(record, 2_000_001);
+    expect([valuesIn(JSON.parse(past)), valuesIn(JSON.parse(over))]).toEqual([4_097, 2_000_001]);
+    fs.writeFileSync(recordOf(run), past);
+    expect(await readers(run)).toEqual(COUNTS);
+    fs.writeFileSync(recordOf(run), over);
+    expect(await readers(run)).toEqual(UNREADABLE);
+    const deep = `${JSON.stringify(record).slice(0, -1)},"pad":${'['.repeat(16)}0${']'.repeat(16)}}`;
+    expect(deep.split('[').length - 1 - (JSON.stringify(record).split('[').length - 1)).toBe(16);
+    fs.writeFileSync(recordOf(run), deep);
+    expect(await readers(run)).toEqual(UNREADABLE);
+  });
+
+  it('refuses a directory, a FIFO and a device at the record\'s path without blocking, in both readers', async () => {
+    const { run } = await counted();
+    const plants: [string, (file: string) => void][] = [
+      ['a directory', (file) => fs.mkdirSync(file)],
+      ['a FIFO', (file) => execFileSync('mkfifo', [file])],
+      ['a symbolic link to /dev/zero', (file) => fs.symlinkSync('/dev/zero', file)],
+    ];
+    for (const [what, plant] of plants) {
+      fs.rmSync(recordOf(run), { recursive: true, force: true });
+      plant(recordOf(run));
+      expect(await readers(run), what).toEqual(UNREADABLE);
+    }
+  });
+
+  it('writes an inventory check record past the bound in its bounded form, with counts and completeness, and the inventory does not count', async () => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    writeInventory(dir, validInventory());
+    const result = await checkInventory(run, {}, { ...deps(), measureRecord: (text) => ({ bytes: Buffer.byteLength(text) + 16_777_216, values: 51, depth: 3 }) });
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const record = JSON.parse(fs.readFileSync(recordOf(run), 'utf8'));
+    expect(Object.keys(record)).toEqual(['format', 'runId', 'revision', 'supersedes', 'pinnedRevision', 'checkedAt', 'outcome', 'inventory', 'session', 'findings', 'screeningPolicy', 'credential', 'limits', 'counts', 'completeness', 'label']);
+    expect(record).toMatchObject({ format: 'polaris-dossier-inventory-check/1', outcome: 'findings', counts: 'only once the launch form of inventory session 1 is recorded', completeness: { label: 'Inferred' } });
+    expect(record.findings).toHaveLength(1);
+    expect(record.findings[0]).toMatchObject({ kind: 'check-record-bound', at: '$' });
+    expect(record.findings[0].detail).toMatch(/^the check record would take \d+ bytes, 51 values and 3 levels below its root, past the read bound of 16,777,216 bytes, 2,000,000 values and 16 levels; it would hold 1 verified quotations, 0 excluded quotations, 2 cited files and 0 other findings, which this record leaves out: quote and cite less, then check again$/u);
+    expect(result.report).toMatchObject({ outcome: 'findings', findingsLeftOut: [] });
+    await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
+    expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'inventory revision 0 has open findings' });
+  });
+
+  it('takes a record past the bound as no checked revision: the supervisor neither stops at the repair-cycle limit nor proceeds', async () => {
+    const { run, record } = await counted();
+    const refused = { ...record, outcome: 'findings' };
+    // Within the bound, a refused revision 0 under a limit of 0 stops the run; past it, the same revision is no checked revision.
+    fs.writeFileSync(recordOf(run), ofBytes(refused, 16_777_216));
+    expect(limitStop(null, latestChecks(run).inventory, 0, () => '')).toBe('blocked: inventory revision 0 was refused by check and all 0 repair cycles of the inventory are spent');
+    fs.writeFileSync(recordOf(run), ofBytes(refused, 16_777_217));
+    expect(limitStop(null, latestChecks(run).inventory, 0, () => '')).toBeNull();
+    expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'the result of inventory revision 0 cannot be read' });
   });
 });
 

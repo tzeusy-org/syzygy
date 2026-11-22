@@ -194,6 +194,35 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
 }
 
 describe('trusted URL artifact producer bridge', () => {
+  it('binds the broker one-minute helper default while refusing changed arguments or output', async () => {
+    for (const explicit of [false, true]) {
+      const f = fixture(); f.initialize();
+      const argv = ['dossier', 'await', f.dir('inventory'), ...(explicit ? ['--wait-minutes', '1'] : [])];
+      const brief = fs.readFileSync(path.join(f.dir('inventory'), 'inventory-brief.md'));
+      const response = { stdout: canonical({ command: 'await', format: 'polaris-dossier-await/1', outcome: 'delivered', role: 'inventory',
+        session: 1, round: 1, continuing: false, read: path.join(f.dir('inventory'), 'inventory-brief.md'), sha256: sha256(brief),
+        next: 'Own exact helper instructions.', label: 'Inferred', disclosures: [] }), stderr: '', exit: 0 };
+      f.replyQueue.push(response);
+      // This is the argv prepared by session-tools.command for either issued form.
+      await f.bridge.runDossier('inventory')(['dossier', 'await', f.dir('inventory'), '--wait-minutes', '1'], null);
+      expect(f.calls.at(-1)).toEqual(['dossier', 'await', `${f.dir('inventory')}/`, '--wait-minutes', '1', '--json']);
+      const reply = { ok: true, kind: 'dossier-result', ...response };
+      for (const changed of [['dossier', 'await', f.dir('inventory'), '--wait-minutes', '2'],
+        ['dossier', 'await', f.dir('inventory'), '--wait-minutes', '1', '--wait-minutes', '1'],
+        ['dossier', 'await', f.dir('inventory'), '--round', '2']]) {
+        await expect(f.bridge.toolReceipt('inventory', f.receipt('inventory', 'mcp__syzygy__dossier_step', { argv: changed }, reply), f.admission('inventory')))
+          .rejects.toThrow('url-run-artifacts-unavailable');
+      }
+      await expect(f.bridge.toolReceipt('inventory', f.receipt('inventory', 'mcp__syzygy__dossier_step', { argv },
+        { ...reply, stdout: response.stdout + ' ' }), f.admission('inventory'))).rejects.toThrow('url-run-artifacts-unavailable');
+      const raw = f.receipt('inventory', 'mcp__syzygy__dossier_step', { argv }, reply);
+      await f.bridge.toolReceipt('inventory', raw, f.admission('inventory'));
+      expect(f.bridge.metadata().pendingToolAudits).toBe(1);
+      f.bridge.committed('inventory', raw.id);
+      expect(f.bridge.metadata().pendingToolAudits).toBe(0);
+    }
+  });
+
   it('authenticates actual initial/core reads once, isolates returned bytes and reports deduplicated metadata only', () => {
     const f = fixture(), initial = f.produceInitial();
     const issued = JSON.parse(fs.readFileSync(path.join(f.run, 'brief.json'), 'utf8'));
@@ -310,7 +339,7 @@ describe('trusted URL artifact producer bridge', () => {
         async () => ++checkWaits < 4);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: checkReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: false, refusal: { stage: 'reverify', reason: 'the authenticated URL products are unavailable or changed' } });
         expect(checkWaits).toBe(4);
@@ -333,11 +362,11 @@ describe('trusted URL artifact producer bridge', () => {
       const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
-          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+          now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
           mechanismAdvice: { file: null, thisRevision: 1, inRun: 1 } } });
-        if (!result.ok) throw Error('own protected check');
+        if (!result.ok || result.report.outcome !== 'passed') throw Error('own protected check');
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
         expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
           expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
@@ -447,7 +476,7 @@ describe('trusted URL artifact producer bridge', () => {
         const reads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
         try {
           const result = await checkDraft(f.run, {}, { sources, openReader, productReads: reads,
-            now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
+            now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: () => 648,
             probe: { probe: async () => { throw Error('own check permits no execution'); } } });
           expect(result).toMatchObject({ ok: true, report: { revision, figureFit: { examined: 1, entries: [] },
             mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: revision + 1 } } });

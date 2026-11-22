@@ -18,7 +18,14 @@ import {
 // capability lifetime and bindings, not actual renderer installation or lineage.
 const gates = vi.hoisted(() => ({ reads: new WeakSet<object>(), renderers: new WeakSet<object>(),
   currentRenderer: vi.fn(async () => true), sources: vi.fn(async () => []) }));
-vi.mock('./url-operation-products.js', () => ({ isRunProductReads: (value: object) => gates.reads.has(value) }));
+vi.mock('./url-operation-products.js', () => ({
+  isRunProductReads: (value: object) => gates.reads.has(value),
+  protectedProductRecord: (reads: RunProductReads, selectedRun: string, file: string) => {
+    if (!gates.reads.has(reads) || reads.run !== selectedRun) throw new Error('own upstream read refused');
+    const bytes = reads.read(file);
+    return bytes === null ? undefined : JSON.parse(Buffer.from(bytes).toString());
+  },
+}));
 vi.mock('./url-runtime.js', () => ({ urlRendererCurrent: (value: object) => gates.renderers.has(value) && gates.currentRenderer() }));
 vi.mock('./url-rendered-source-proof.js', () => ({ verifyUrlRenderedSources: gates.sources }));
 
@@ -36,6 +43,7 @@ beforeAll(async () => {
 beforeEach(() => { gates.currentRenderer.mockReset().mockResolvedValue(true); gates.sources.mockReset().mockResolvedValue([]); });
 
 function fixture() {
+  const brief: Record<string, unknown> = {};
   let live = true, readsLive = true;
   const abort = new AbortController();
   const sourceAnchors = new Map<string, EvidenceAnchor>();
@@ -63,7 +71,7 @@ function fixture() {
     records: ['run.json', 'url-declaration.json', 'brief.json', 'checks/rev-0.json', 'drafts/rev-0.json']
       .map(path => ({ path, state: 'present', sha256: 'c'.repeat(64), originId: 'origin:product' })), selections: [] };
   const evidence = { metadata, receipts: [product] } as unknown as ProductReadEvidence;
-  const reads: RunProductReads = { run, read: () => null, select: () => [],
+  const reads: RunProductReads = { run, read: file => file === 'brief.json' ? Buffer.from(JSON.stringify(brief)) : null, select: () => [],
     readBatch: files => files.map(() => null), selectGroups: selectors => selectors.map(() => []), revalidate: () => {
     if (!readsLive) throw new Error('operation ended');
     return evidence;
@@ -88,7 +96,7 @@ function fixture() {
     screen: { ...screen }, renderer: loadedRenderer, ledger, scaffold, products: reads, current: () => live } as unknown as DesignProductOptions;
   const input: ProducedSiteInput = { ...binding, draftRevision: 0, products: evidence, input: { local, sources }, files,
     signal: abort.signal, packet: { bytes: packet.bytes, sha256: packet.sha256 }, sourceBodies: [] };
-  return { input, options, files, reads, evidence, parentMetadata, product, abort, revoke: () => { live = false; }, restore: () => { live = true; } };
+  return { input, options, files, reads, brief, evidence, parentMetadata, product, abort, revoke: () => { live = false; }, restore: () => { live = true; } };
 }
 async function validatedFixture() {
   const f = fixture(), capability = await validateUrlDesignProduct(f.input, f.options);
@@ -97,6 +105,21 @@ async function validatedFixture() {
 }
 
 describe('active URL design product capability', () => {
+  it('recomposes packet criteria from the authenticated brief standards and refuses standards drift', async () => {
+    const f = fixture();
+    const standards = { sha256: '623c8b83e2c2573502e15a02b33347c7f3f886da09b2e6356e65558ea480f2b4', packs: ['default@1'] };
+    f.brief.readerStandards = standards;
+    const packet = buildDesignPacket({ ...binding, audience: 'Own readers', files: f.files, standards });
+    if (!packet.ok) throw new Error('own composed standards refused');
+    expect(packet.bytes).not.toBe(f.input.packet.bytes);
+    const input = { ...f.input, packet: { bytes: packet.bytes, sha256: packet.sha256 } };
+    expect(await validateUrlDesignProduct(input, f.options)).not.toBeNull();
+    standards.sha256 = '0'.repeat(64);
+    expect(await validateUrlDesignProduct(input, f.options)).toBeNull();
+    delete f.brief.readerStandards;
+    expect(await validateUrlDesignProduct(input, f.options)).toBeNull();
+  });
+
   it('settles an active sample before screening and through the inert-view checks', async () => {
     const refused = fixture();
     const detector = vi.spyOn(refused.options.screen, 'screenSecrets');

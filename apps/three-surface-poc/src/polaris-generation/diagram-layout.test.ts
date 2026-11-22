@@ -8,7 +8,7 @@ const edge = (id: string, from: string, to: string) => ({ id, from, to });
  * (`.diagram-scroll` clientWidth, 2026-11-21, syzygy-3efd.19). */
 const STACK_COLUMN = 261;
 const WIDE_COLUMN = 966;
-const MEASURED_58 = { stacked: 118, narrowed: 7, narrowedNotes: 0, laneLabels: 2132, leaders: 1991, againstOwn: 0, slid: 288 };
+const MEASURED_58 = { stacked: 150, narrowed: 7, narrowedNotes: 0, laneLabels: 2258, leaders: 2109, againstOwn: 0, slid: 310 };
 const MEASURED_DAG12 = [261, 193];
 const place = (layout: ReturnType<typeof layoutDiagram>) => layout.nodes.map(({ id, layer, row, x, y }) => [id, layer, row, x, y]);
 
@@ -65,31 +65,54 @@ describe('layered left-to-right diagram layout', () => {
     expect(() => layoutDiagram([], [])).toThrow('empty-diagram');
   });
 
-  it('readable spacing continues a long chain on a lower band, its hand-off in the gap between the bands', () => {
+  // syzygy-3efd.66: one drawing serves every screen width, so a plain chain, 648 px or more left to right, is stacked to fit the phone's
+  // 261 px column: one node to a row, each step a straight drop down the column's centre, its label in the gap above its target.
+  it('readable spacing stacks a plain chain of five, one node to a row, each step a straight drop', () => {
     const layout = layoutDiagram(nodes('a', 'b', 'c', 'd', 'e'), [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('de', 'd', 'e')], READABLE_SPACING);
-    expect(place(layout)).toEqual([['a', 0, 0, 24, 24], ['b', 1, 0, 424, 24], ['c', 2, 0, 824, 24], ['d', 3, 0, 24, 168], ['e', 4, 0, 424, 168]]);
+    expect(place(layout)).toEqual([['a', 0, 0, 24, 24], ['b', 1, 0, 24, 146], ['c', 2, 0, 24, 268], ['d', 3, 0, 24, 390], ['e', 4, 0, 24, 512]]);
     expect(layout.edges.map(e => [e.id, e.d, e.labelX, e.labelY])).toEqual([
-      ['ab', 'M 224 52 C 323 52, 323 52, 422 52', 323, 52],
-      ['bc', 'M 624 52 C 723 52, 723 52, 822 52', 723, 52],
-      ['cd', 'M 924 80 C 924 123, 124 123, 124 166', 524, 123],
-      ['de', 'M 224 196 C 323 196, 323 196, 422 196', 323, 196],
+      ['ab', 'M 124 80 C 124 112, 124 112, 124 144', 124, 113],
+      ['bc', 'M 124 202 C 124 234, 124 234, 124 266', 124, 235],
+      ['cd', 'M 124 324 C 124 356, 124 356, 124 388', 124, 357],
+      ['de', 'M 124 446 C 124 478, 124 478, 124 510', 124, 479],
     ]);
-    expect([layout.width, layout.height]).toEqual([1048, 280]);
+    expect([layout.width, layout.height]).toEqual([248, 592]);
+  });
+
+  it('readable spacing stacks a chain of two and a small fan-out, and lays a single layer out as one column', () => {
+    const widths = (graph: readonly [readonly string[], readonly ReturnType<typeof edge>[]]) => {
+      const layout = layoutDiagram(nodes(...graph[0]), graph[1], READABLE_SPACING);
+      return [layout.width, new Set(layout.nodes.map(n => n.x)).size];
+    };
+    expect([
+      widths([['a', 'b'], [edge('ab', 'a', 'b')]]),
+      widths([['r', 'x', 'y', 'z'], [edge('rx', 'r', 'x'), edge('ry', 'r', 'y'), edge('rz', 'r', 'z')]]),
+      widths([['a', 'b', 'c'], []]),
+    ]).toEqual([[248, 1], [248, 1], [248, 1]]);
   });
 
   it('the widest readable edge label fits its gap, draws over the nodes and stays inert', () => {
     const label = 'twenty-two characters plus more than fit in three lines of this width, which ends in an ellipsis';
-    const svg = renderDiagramSvg({ nodes: [{ id: 'a', label: 'A', epistemic: 'inferred' }, { id: 'b', label: 'B', epistemic: 'inferred' }], edges: [{ id: 'ab', from: 'a', to: 'b', label, epistemic: 'inferred' }] }, 0, text => text, READABLE_SPACING);
+    const pair = { nodes: [{ id: 'a', label: 'A', epistemic: 'inferred' as const }, { id: 'b', label: 'B', epistemic: 'inferred' as const }], edges: [{ id: 'ab', from: 'a', to: 'b', label, epistemic: 'inferred' as const }] };
+    const boxOf = (markup: string) => {
+      const box = /<rect class="edge-label" x="([\d.]+)" y="[\d.]+" width="([\d.]+)"/u.exec(markup)!;
+      return [Number(box[1]), Number(box[2])] as const;
+    };
+    // Stacked (the form the site draws, syzygy-3efd.66): inside the nodes' 200 px column.
+    const [stackedLeft, stackedWidth] = boxOf(renderDiagramSvg(pair, 0, text => text, READABLE_SPACING));
+    expect(stackedLeft).toBeGreaterThanOrEqual(24);
+    expect(stackedLeft + stackedWidth).toBeLessThanOrEqual(224);
+    // Left to right, the form the label width was set for: inside the 200 px gap between the two nodes.
+    const svg = renderDiagramSvg(pair, 0, text => text, { ...READABLE_SPACING, stackWiderThan: Number.POSITIVE_INFINITY });
     assertInertSvg(svg);
-    const box = /<rect class="edge-label" x="([\d.]+)" y="[\d.]+" width="([\d.]+)"/u.exec(svg)!;
-    const [left, width] = [Number(box[1]), Number(box[2])];
+    const [left, width] = boxOf(svg);
     expect(left).toBeGreaterThanOrEqual(224);
     expect(left + width).toBeLessThanOrEqual(422);
     expect(svg.indexOf('<g class="edge-text')).toBeGreaterThan(svg.indexOf('<g class="node'));
     expect(svg.match(/<tspan/gu)!.length).toBe(1 + 1 + 3);
   });
 
-  describe('a readable diagram wider than three columns that is not a plain chain stacks top to bottom (syzygy-3efd.19)', () => {
+  describe('a readable diagram of two or more layers stacks top to bottom (syzygy-3efd.19, syzygy-3efd.66)', () => {
     const LONG_LABEL = 'twenty-two characters plus more than fit in three lines of this width, which ends in an ellipsis';
     const STACKED = {
       // A hub fanning out, one branch running on: four layers, so 1448 px left to right.
@@ -121,7 +144,7 @@ describe('layered left-to-right diagram layout', () => {
     };
     for (const [name, shape] of Object.entries(STACKED)) {
       it(`${name}: one node to a row, inside a 390 px and a 1440 px screen's column, no line, arrowhead or label on a node`, () => {
-        const wide = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY });
+        const wide = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, { ...READABLE_SPACING, stackWiderThan: Number.POSITIVE_INFINITY });
         expect(wide.width, 'wider than three columns left to right').toBeGreaterThan(1048);
         const layout = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, READABLE_SPACING);
         expect([layout.width, layout.height]).toEqual(shape.size);
@@ -153,7 +176,7 @@ describe('layered left-to-right diagram layout', () => {
         const edges = Array.from({ length: 1 + next(ids.length * 2) }, (_, i) => edge(`e${i}`, ids[next(ids.length)]!, ids[next(ids.length)]!));
         const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
         // Stacked: wider than three columns left to right and not a plain chain, so the readable form differs from both unbanded forms.
-        const leftToRight = layoutDiagram(ids.map(id => ({ id })), edges, { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY });
+        const leftToRight = layoutDiagram(ids.map(id => ({ id })), edges, { ...READABLE_SPACING, stackWiderThan: Number.POSITIVE_INFINITY });
         const layers = Math.max(...leftToRight.nodes.map(n => n.layer)) + 1;
         if (layers <= 3 || layout.nodes.some(n => n.x !== layout.nodes[0]!.x)) continue;
         stacked++;
@@ -239,7 +262,7 @@ describe('layered left-to-right diagram layout', () => {
       // is an upper bound). Before sliding and narrowing (the syzygy-3efd.19 layout, same seed) 7 of the 118 graphs were wider than the
       // column and 431 of the 2132 lane labels had no leader. Now none is wider; the labels with no leader that are not against their own
       // line are the measured remainder, in these random graphs (each named shape above gets every leader). A missing leader is honest; a
-      // wrong one would mislead.
+      // wrong one would mislead. Since syzygy-3efd.66 a graph of two or three layers stacks too, so the population is 150 graphs, not 118.
       expect({ stacked, narrowed, narrowedNotes, laneLabels, leaders, againstOwn, slid }).toEqual(MEASURED_58);
     }, 120_000);
 
@@ -272,32 +295,33 @@ describe('layered left-to-right diagram layout', () => {
       expect(labelBoxes.filter(l => l.left < aloneX + 173 && aloneX < l.right && l.top < aloneY + 56 + 40 && aloneY < l.bottom)).toEqual([]);
     });
 
-    it('keeps the default spacing and a plain chain as they were', () => {
+    it('keeps the default spacing as it was, and stacks a plain chain on the readable one', () => {
       const ids = ['n0', 'n1', 'n2', 'n3', 'n4'];
       const skip = [...ids.slice(1).map((id, i) => edge(`s${i}`, ids[i]!, id)), edge('skip', 'n0', 'n3')];
       expect(layoutDiagram(ids.map(id => ({ id })), skip).width).toBe(1528);
-      expect(layoutDiagram(ids.map(id => ({ id })), skip.slice(0, 4), READABLE_SPACING).width).toBe(1048);
+      expect(layoutDiagram(ids.map(id => ({ id })), skip.slice(0, 4)).width).toBe(1528);
+      expect(layoutDiagram(ids.map(id => ({ id })), skip.slice(0, 4), READABLE_SPACING).width).toBe(248);
     });
   });
 
   describe('readable spacing keeps every edge label off every node', () => {
     const chainOf = (n: number) => Array.from({ length: n }, (_, i) => `n${i}`);
     const steps = (ids: string[]) => ids.slice(1).map((id, i) => edge(`${ids[i]}-${id}`, ids[i]!, id));
-    // `stacked`: wider than three columns and not a plain chain, so laid out top to bottom one node to a row (syzygy-3efd.19).
-    const SHAPES: Record<string, { nodes: string[]; edges: ReturnType<typeof edge>[]; bands: number; stacked?: true }> = {
-      'plain chain': { nodes: chainOf(7), edges: steps(chainOf(7)), bands: 3 },
-      'chain with a loop back': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n2-n0', 'n2', 'n0')], bands: 1, stacked: true },
-      'chain with two loops': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n3-n0', 'n3', 'n0'), edge('n4-n1', 'n4', 'n1')], bands: 1, stacked: true },
-      'chain with a skip': { nodes: chainOf(7), edges: [...steps(chainOf(7)), edge('n0-n6', 'n0', 'n6')], bands: 1, stacked: true },
-      'fan across a band break': { nodes: ['a', 'b', 'c', 'd1', 'd2', 'd3'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd1'), edge('cd2', 'c', 'd2'), edge('cd3', 'c', 'd3')], bands: 1, stacked: true },
-      'loop over a tall middle layer': { nodes: ['a', 'm1', 'm2', 'm3', 'x'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xa', 'x', 'a')], bands: 1 },
-      'tall column before a band break': { nodes: ['a', 'm1', 'm2', 'm3', 'x', 'y', 'z'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xy', 'x', 'y'), edge('yz', 'y', 'z')], bands: 1, stacked: true },
-      'fan inside one band': { nodes: ['hub', 'x', 'y', 'z'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z')], bands: 1 },
-      'two skips from one node': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('ac', 'a', 'c'), edge('ad', 'a', 'd')], bands: 1, stacked: true },
-      'fan plus a skip': { nodes: ['hub', 'x', 'y', 'z', 'end'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z'), edge('xe', 'x', 'end'), edge('he', 'hub', 'end')], bands: 1 },
-      'crossing edges': { nodes: ['a', 'b', 'x', 'y'], edges: [edge('ax', 'a', 'x'), edge('ay', 'a', 'y'), edge('bx', 'b', 'x'), edge('by', 'b', 'y')], bands: 1 },
-      'parallel edges': { nodes: ['a', 'b'], edges: [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ab3', 'a', 'b')], bands: 1 },
-      'parallel edges across a band break': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd'), edge('cd2', 'c', 'd')], bands: 2 },
+    // Every shape has two or more layers, so the readable form stacks it top to bottom one node to a row (syzygy-3efd.19, syzygy-3efd.66).
+    const SHAPES: Record<string, { nodes: string[]; edges: ReturnType<typeof edge>[] }> = {
+      'plain chain': { nodes: chainOf(7), edges: steps(chainOf(7)) },
+      'chain with a loop back': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n2-n0', 'n2', 'n0')] },
+      'chain with two loops': { nodes: chainOf(5), edges: [...steps(chainOf(5)), edge('n3-n0', 'n3', 'n0'), edge('n4-n1', 'n4', 'n1')] },
+      'chain with a skip': { nodes: chainOf(7), edges: [...steps(chainOf(7)), edge('n0-n6', 'n0', 'n6')] },
+      'fan after a chain': { nodes: ['a', 'b', 'c', 'd1', 'd2', 'd3'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd1'), edge('cd2', 'c', 'd2'), edge('cd3', 'c', 'd3')] },
+      'loop over a tall middle layer': { nodes: ['a', 'm1', 'm2', 'm3', 'x'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xa', 'x', 'a')] },
+      'tall column then a chain': { nodes: ['a', 'm1', 'm2', 'm3', 'x', 'y', 'z'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xy', 'x', 'y'), edge('yz', 'y', 'z')] },
+      'small fan': { nodes: ['hub', 'x', 'y', 'z'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z')] },
+      'two skips from one node': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('ac', 'a', 'c'), edge('ad', 'a', 'd')] },
+      'fan plus a skip': { nodes: ['hub', 'x', 'y', 'z', 'end'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z'), edge('xe', 'x', 'end'), edge('he', 'hub', 'end')] },
+      'crossing edges': { nodes: ['a', 'b', 'x', 'y'], edges: [edge('ax', 'a', 'x'), edge('ay', 'a', 'y'), edge('bx', 'b', 'x'), edge('by', 'b', 'y')] },
+      'parallel edges': { nodes: ['a', 'b'], edges: [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ab3', 'a', 'b')] },
+      'parallel edges after a chain': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd'), edge('cd2', 'c', 'd')] },
     };
     const LONG = 'twenty-two characters plus more than fit in three lines of this width, which ends in an ellipsis';
     for (const [name, shape] of Object.entries(SHAPES)) {
@@ -305,9 +329,7 @@ describe('layered left-to-right diagram layout', () => {
         const render = { nodes: shape.nodes.map(id => ({ id, label: id, epistemic: 'inferred' as const })), edges: shape.edges.map(e => ({ ...e, label: LONG, epistemic: 'inferred' as const })) };
         const svg = renderDiagramSvg(render, 0, text => text, READABLE_SPACING);
         const layout = layoutDiagram(shape.nodes.map(id => ({ id })), shape.edges, READABLE_SPACING);
-        expect(new Set(layout.nodes.map(n => n.y - (n.y % 144))).size >= shape.bands, 'band count').toBe(true);
-        if (shape.stacked) expect(new Set(layout.nodes.map(n => n.x)).size === 1 && layout.width <= STACK_COLUMN, 'stacked in one column').toBe(true);
-        else if (shape.bands === 1) expect(layout.nodes.filter(n => n.layer > 0).every(n => n.x > 24), 'one band').toBe(true);
+        expect(new Set(layout.nodes.map(n => n.x)).size === 1 && layout.width <= STACK_COLUMN, 'stacked in one column').toBe(true);
         const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + layout.nodeWidth, top: n.y, bottom: n.y + 56 }));
         const labels = [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)].map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
         expect(labels).toHaveLength(shape.edges.length);
@@ -376,7 +398,7 @@ describe('layered left-to-right diagram layout', () => {
     // it would stack keeps one band here.
     const leftToRight = (ids: readonly string[], edges: readonly { id: string; from: string; to: string }[]) => {
       const laid = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
-      return ids.length > 1 && new Set(laid.nodes.map(n => n.x)).size === 1 ? { ...READABLE_SPACING, maxColumns: Number.POSITIVE_INFINITY } : READABLE_SPACING;
+      return ids.length > 1 && new Set(laid.nodes.map(n => n.x)).size === 1 ? { ...READABLE_SPACING, stackWiderThan: Number.POSITIVE_INFINITY } : READABLE_SPACING;
     };
     const leadersIn = (svg: string) => [...svg.split('<g class="edge ').slice(1).entries()].map(([i, group]) => {
       const body = group.split('</g>')[0]!;
@@ -495,7 +517,7 @@ describe('layered left-to-right diagram layout', () => {
     it('runs a leader the shortest way from its label\'s edge to a point of its own line that no other line runs through', () => {
       // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. Its leader's ends are literals.
       const fan = [edge('ab', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ac', 'a', 'c')];
-      const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, READABLE_SPACING);
+      const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, leftToRight(['a', 'b', 'c'], fan));
       const groups = leadersIn(svg);
       expect(groups[0]!.leader).toBeUndefined();
       expect(groups[1]!.leader).toEqual([336.9, 60.5, 341.9, 71]);
@@ -631,7 +653,7 @@ describe('figureLaidOutWidth (the layout check is handed)', () => {
     nodes: Array.from({ length: n }, (_, i) => ({ id: `n${i}`, label: `Node ${i}`, epistemic: 'inferred' as const })),
     edges: Array.from({ length: n - 1 }, (_, i) => ({ id: `e${i}`, from: `n${i}`, to: `n${i + 1}`, label: 'then', epistemic: 'inferred' as const })),
   });
-  it.each([[2, 648], [3, 1048], [6, 1048]])('equals the readable SVG\'s width attribute for a chain of %i nodes (%i px)', async (n, width) => {
+  it.each([[2, 248], [3, 248], [6, 248]])('equals the readable SVG\'s width attribute for a chain of %i nodes (%i px)', async (n, width) => {
     const { figureLaidOutWidth } = await import('./dossier-site.js');
     const figure = chain(n);
     const svg = renderDiagramSvg(figure, 0, (value) => value, READABLE_SPACING);
@@ -639,7 +661,7 @@ describe('figureLaidOutWidth (the layout check is handed)', () => {
     expect(figureLaidOutWidth(figure)).toBe(width);
   });
 
-  // Beyond chains: a fan-out with a back edge (layered) and a dense graph past the readable columns (stacked).
+  // Beyond chains: a fan-out with a back edge and a dense graph, both stacked; the dense one narrows its nodes to the column.
   const fan = { nodes: ['a', 'b', 'c', 'd'].map((id) => ({ id, label: id, epistemic: 'inferred' as const })),
     edges: [['a', 'b'], ['a', 'c'], ['b', 'd'], ['c', 'd'], ['d', 'a']].map(([from, to], i) => ({ id: `f${i}`, from: from!, to: to!, label: 'to', epistemic: 'inferred' as const })) };
   const dense = { nodes: Array.from({ length: 12 }, (_, i) => ({ id: `n${i}`, label: `Node ${i}`, epistemic: 'inferred' as const })),
@@ -651,6 +673,6 @@ describe('figureLaidOutWidth (the layout check is handed)', () => {
   });
   it('pins those two widths', async () => {
     const { figureLaidOutWidth } = await import('./dossier-site.js');
-    expect([figureLaidOutWidth(fan), figureLaidOutWidth(dense)]).toEqual([1048, 261]);
+    expect([figureLaidOutWidth(fan), figureLaidOutWidth(dense)]).toEqual([248, 261]);
   });
 });

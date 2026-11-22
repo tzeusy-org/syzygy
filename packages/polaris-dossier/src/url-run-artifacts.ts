@@ -750,6 +750,9 @@ function create(given: UrlRunArtifactsOptions) {
         const used = new Set<string>();
         for (let i = 3; i < args.length; i += 2) { const key = args[i], value = args[i + 1];
           if (!key || used.has(key) || (key === '--round' ? !/^[1-9][0-9]{0,5}$/u.test(value ?? '') : key !== '--wait-minutes' || value !== '1')) refuse(); used.add(key); }
+        // The broker adds this fixed bound before running a helper. Compare
+        // its prepared argv with the same issued call when the option is omitted.
+        if (!used.has('--wait-minutes')) args.push('--wait-minutes', '1');
       }
     }
     return args;
@@ -1385,7 +1388,9 @@ function create(given: UrlRunArtifactsOptions) {
       readLive(state); return result;
     } catch { closeRead(state); return refuse(); }
   }
-  /** Copy only identities of settled, independently bound producer files. */
+  /** Copy identities of settled, independently bound producer files. The
+   * supervisor calls this only once its owned writers and callbacks are
+   * confirmed stopped. The descriptor walk detects drift during the read. */
   function captureFrozenHistory(): UrlFrozenProductHistory {
     return snapshotWithAuthority(check => {
       if (!initial || sidecarBytes === null || producersInFlight || activeReads.size || pending.size || uncommitted.size || questions.size

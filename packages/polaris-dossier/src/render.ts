@@ -18,7 +18,7 @@ import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
-import { briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
+import { briefStandardsFromRecord, briefStandardsOf, buildDesignPacket, standardsInput } from './design-review.js';
 import { derivedStructureAt, readCurrencyPolicy, secretPathOf, type CurrencyPolicy } from './derived-record.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
@@ -277,7 +277,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const pendingInput = urlMode ? copyOrderedRenderValue({ local: built.local, sources: built.sources }) : null;
   const pending = draw(built.local);
   if (typeof pending === 'string') return refuse('render', pending);
-  const standards = briefStandardsOf(run);
+  const standards = urlMode ? briefStandardsFromRecord(briefRecord) : briefStandardsOf(run);
   const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
   if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
   const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now, productReads: products }, checkedDesign);
@@ -350,7 +350,7 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
         || !equalOrderedRenderValue(pendingInput, { local: rebuilt.local, sources: rebuilt.sources })) return null;
       const pending = draw(rebuilt.local, rebuilt.sources);
       if (typeof pending === 'string') return null;
-      const candidate = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
+      const candidate = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending, ...standardsInput(standards) });
       if (!candidate.ok || candidate.bytes !== reviewed.bytes) return null;
       const design = await designReviewOfRecord(opened, candidate, { sources: deps.sources, now: () => now, productReads: products });
       const designContinuation = design.counts
