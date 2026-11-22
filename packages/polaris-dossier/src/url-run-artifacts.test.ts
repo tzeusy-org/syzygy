@@ -39,20 +39,24 @@ const canonical = (v: unknown): string => encodeCanonicalJson(v, { maxBytes: 2_0
 const b = (v: unknown): Buffer => Buffer.from(canonical(v));
 const roles = ['author', 'inventory', 'fidelity', 'design'] as const;
 type Role = typeof roles[number];
-function fixture(source = 'Own pinned source.\n') {
+function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<string, string>> = {}, policyVersion: 'v1' | 'v2' = 'v1') {
   const root = tempDir('url-artifacts-'), runId = `run-${'c'.repeat(32)}`, run = path.join(root, runId), clone = path.join(root, 'own-source');
   fs.mkdirSync(run); const object = (kind: string, bytes: Buffer): string => {
     const raw = Buffer.concat([Buffer.from(`${kind} ${bytes.length}\0`), bytes]), id = createHash('sha1').update(raw).digest('hex');
     const file = path.join(clone, '.git/objects', id.slice(0, 2), id.slice(2)); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, deflateSync(raw)); return id;
   };
-  const blob = object('blob', Buffer.from(source)), tree = object('tree', Buffer.concat([Buffer.from('100644 own.ts\0'), Buffer.from(blob, 'hex')]));
+  const blob = object('blob', Buffer.from(source));
+  const sourceObjects = new Map([['own.ts', blob], ...Object.entries(extraFiles).map(([file, text]) => [file, object('blob', Buffer.from(text))] as const)]);
+  const tree = object('tree', Buffer.concat([...sourceObjects].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+    .flatMap(([file, id]) => [Buffer.from(`100644 ${file}\0`), Buffer.from(id, 'hex')])));
   const pin = object('commit', Buffer.from(`tree ${tree}\nauthor Own <own@example.invalid> 0 +0000\ncommitter Own <own@example.invalid> 0 +0000\n\nOwn.\n`));
-  const policyDoc = JSON.parse(fs.readFileSync(new URL('../../../.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json', import.meta.url), 'utf8'));
+  const policyPath = `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-${policyVersion}.json`;
+  const policyDoc = JSON.parse(fs.readFileSync(new URL(`../../../${policyPath}`, import.meta.url), 'utf8'));
   policyDoc.detectors.push({ id: 'own-marker', kind: 'literal-fragment', values: ['OWN_SECRET_CANARY'] });
   const basePolicyBytes = Buffer.from(JSON.stringify(policyDoc)), loaded = buildDossierScreen(basePolicyBytes, true, null, 'private'); if (!loaded.ok) throw Error(loaded.why);
   const parsed = parseRunConfig(JSON.stringify({ operator: 'own', agentTool: 'claude-code', agentToolVersion: '2.1.327', agentProvider: 'anthropic', model: 'claude-sonnet-4-6',
     deadline: 'PT1H', agentTokenBudget: 1000, agentTurnBudget: 10, maxRepairCycles: 2, maxQuestions: 1, audience: 'Own readers', operatorIsOwner: false })); if (!parsed.ok) throw Error('config');
-  const policy = { path: '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json', commit: 'a'.repeat(40), policyId: policyDoc.policyId, policyVersion: policyDoc.policyVersion, sha256: sha256(basePolicyBytes) };
+  const policy = { path: policyPath, commit: 'a'.repeat(40), policyId: policyDoc.policyId, policyVersion: policyDoc.policyVersion, sha256: sha256(basePolicyBytes) };
   const record = recordRunConfig(parsed.config, { repository: { url: 'own.example.invalid/source', repositoryId: 'own', role: 'observed-source' }, clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
     pinnedRevision: { commit: pin, label: 'own', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: policy, contentClasses: DOSSIER_CONTENT_CLASSES,
     visibility: { value: 'private', source: 'declaration', declaredBy: 'own', label: 'Inferred' }, governed: { kind: 'non-governed', because: ['own'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
@@ -100,7 +104,7 @@ function fixture(source = 'Own pinned source.\n') {
     sessions: { command: 'session-prompt', outcome: 'issued', role: 'all', run, sessions } as unknown as StartSessionsReport };
   };
   const bridge = createUrlRunArtifacts(options), initialize = () => bridge.registerInitial(produceInitial());
-  const admission = (role: Role, classes = ledger.metadata(initialReceipts[role]).classes): SessionAdmission => ({ digest: 'd'.repeat(64), bytes: 10, classes, originIds: ['session-profile:baseline', `origin:${role}-initial`, 'provider-response:1'] });
+  const admission = (role: Role, classes = ledger.metadata(initialReceipts[role]).classes): SessionAdmission => ({ digest: 'd'.repeat(64), bytes: 10, classes, originIds: [...ledger.metadata(initialReceipts[role]).originIds, 'provider-response:1'] });
   const receipt = (role: Role, toolName: SessionToolsReceipt['toolName'], toolInput: Record<string, unknown>, reply: unknown): SessionToolsReceipt => {
     const canonicalText = canonical(reply); return { binding: plans.find(p => p.role === role)!.profile.input.binding, id: `tool-${sha256(canonical([role, toolInput, reply]))}`, kind: 'tool-result', toolName, toolInput,
       canonicalText, digest: sha256(canonicalText), bytes: Buffer.byteLength(canonicalText), classes: ['project-documentation'], originIds: ['FORGED_TAGS_HAVE_NO_AUTHORITY'] };
@@ -181,7 +185,7 @@ function fixture(source = 'Own pinned source.\n') {
     await bridge.toolReceipt('fidelity', prepared.raw, prepared.admission);
     return prepared;
   };
-  return { root, run, runId, pin, blob, source, options, bridge, initialize, produceInitial, write, dir, ledger, admission, receipt, draft, inventory, writeDraft, checkDoc, replyQueue, calls, screen: loaded.screen, basePolicyBytes,
+  return { root, run, runId, pin, blob, source, sourceObjects, options, bridge, initialize, produceInitial, write, dir, ledger, admission, receipt, draft, inventory, writeDraft, checkDoc, replyQueue, calls, screen: loaded.screen, basePolicyBytes,
     commitInventory, commitCheck, producePacket, prepareFidelity, submitFidelity, verifyCurrent, stale: () => { current = false; } };
 }
 
@@ -199,7 +203,14 @@ describe('trusted URL artifact producer bridge', () => {
     expect(() => createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from('{}') })).toThrow();
   });
   it('reverifies the exact retained initialized bytes and sidecar under the protected bindings', async () => {
-    const f = fixture(), H = 'e'.repeat(64), core = encodeRunRecord(f.options.record.declared, f.options.record.subject);
+    // Both facts lie past the source-span ceiling; bare CR is also a manifest
+    // line terminator. A first-2000-LF-lines receipt cannot cover these values.
+    const manifest = `{\n${'\n'.repeat(2000)}"name":"own-uncited-package",\r"dependencies":{"own-uncited-dependency":"1.0.0"}\r}\n`;
+    const excludedManifest = '[package]\nname = "OWN_SECRET_CANARY"\n';
+    const f = fixture(undefined, { 'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest }, 'v2');
+    Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
+      citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
+    const H = 'e'.repeat(64), core = encodeRunRecord(f.options.record.declared, f.options.record.subject);
     const identity = urlSourceTransportIdentity('https://own.example.invalid/source'); if (!identity.ok) throw Error('own transport');
     const sourceTransport = { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
       acquisitionId: 'acq-0123456789abcdef0123456789abcdef', metadataClasses: ['code-structure'] as const, selectionOrigin: 'validated-destination-before-acquisition' as const,
@@ -260,6 +271,8 @@ describe('trusted URL artifact producer bridge', () => {
       } finally { checkReads.close(); }
 
       const draft = b(f.draft);
+      expect(checkDraftShape(localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }, 'home', 'absent'), f.draft)).toEqual([]);
+      expect(f.screen.screenBody(draft.toString())).toBeUndefined();
       const writeArgs = { path: 'drafts/next.json', content: draft.toString() };
       const written = f.receipt('author', 'mcp__syzygy__artifact_write', writeArgs,
         { ok: true, kind: 'artifact-written', path: writeArgs.path, sha256: sha256(draft) });
@@ -272,13 +285,32 @@ describe('trusted URL artifact producer bridge', () => {
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 0 } } });
         if (!result.ok) throw Error('own protected check');
+        expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
+        expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
+          expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
+          expect.objectContaining({ path: 'package.json', fact: 'dependency', name: 'own-uncited-dependency' }),
+        ]) });
+        if (result.report.manifestFacts?.state !== 'derived') throw Error('own manifest facts unavailable');
+        expect(result.report.manifestFacts.facts.every(fact => fact.lines[0] > 2000)).toBe(true);
+        expect(result.report.manifestFacts.recognizers.find(recognizer => recognizer.rule === 'cargo-manifest')?.files)
+          .toEqual([expect.objectContaining({ path: 'Cargo.toml', epistemic: 'unknown', unknownReason: 'secret-detector-match' })]);
         const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
         const argv = ['dossier', 'check', f.run];
         f.replyQueue.push(response);
         await expect(bridge.runDossier('author')(argv, null)).resolves.toEqual(response);
+        const origins = bridge.dossierOrigins('author')(argv, response);
+        expect(origins?.classes).toContain('code-content');
+        const body = f.ledger.plannedOrigins().find(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(manifest));
+        const structure = f.ledger.plannedOrigins().find(origin => origin.sha256 === sha256(canonical({ commit: f.pin, path: 'package.json',
+          objectId: f.sourceObjects.get('package.json'), start: 0, end: Buffer.byteLength(manifest) })));
+        expect(body).toMatchObject({ classes: ['code-content'] });
+        expect(structure).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'] });
+        expect(origins?.originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
+        expect(f.ledger.plannedOrigins().some(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(excludedManifest))).toBe(false);
         const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
         await bridge.toolReceipt('author', receipt, f.admission('author'));
         bridge.committed('author', receipt.id);
+        expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: { examined: 0 } } });
       } finally { authorReads.close(); }
     } finally { products.close(); }

@@ -284,6 +284,24 @@ function create(given: UrlOriginLedgerOptions) {
     if (treatment.kind !== 'admitted') fail(); safe(bytes, file); check();
     return { objectId: blob.id, bytes, raw, contentClass };
   }
+  function issueWholeSourceBody(file: string, body: Awaited<ReturnType<typeof verifiedSource>>, check: () => void): UrlWholeSourceBody {
+    const { objectId } = body;
+    const digest = sha256(body.bytes), identity = canonical([file, objectId, digest]); check();
+    // Reuse only after a fresh independent reread; an earlier capability cannot hide later object corruption.
+    const prior = wholeIdentities.get(identity); if (prior) return prior;
+    const bodyId = `origin:whole-body-${sha256(identity).slice(0, 32)}`;
+    const structuralBytes = Buffer.from(canonical({ commit: record.subject.pinnedRevision.commit, path: file, objectId, start: 0, end: body.bytes.length }));
+    safe(structuralBytes); check();
+    const structureId = `origin:whole-structure-${sha256(structuralBytes).slice(0, 32)}`;
+    issue(body.bytes, [body.contentClass], [], { id: bodyId, species: 'pinned-repository-body' }); check();
+    issue(structuralBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' }); check();
+    const receipt = issue(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId]);
+    const metadata: UrlWholeSourceBodyMetadata = deepFreeze({ origin: receipt, runId, sourceBindingSha256: sourceBindingSha256(record.subject),
+      path: file, objectId, pinnedCommit: record.subject.pinnedRevision.commit, policies: { baseSha256: screen.policySha256, originSha256: origin.sha256 },
+      range: { start: 0, end: body.bytes.length }, digest, bytes: body.bytes.length, classes: entry(receipt).classes });
+    check(); const capability = Object.freeze({}) as UrlWholeSourceBody;
+    wholeBodies.set(capability, metadata); wholeIdentities.set(identity, capability); return capability;
+  }
   async function verifyWholeSourceBody(input: { readonly path: string; readonly objectId: string; readonly bytes: Uint8Array }): Promise<UrlWholeSourceBody> {
     try {
       live(); if (!exact(input, ['path', 'objectId', 'bytes']) || !relative(input.path) || typeof input.objectId !== 'string'
@@ -292,21 +310,7 @@ function create(given: UrlOriginLedgerOptions) {
       return await sourceOperation(async check => {
         const body = await verifiedSource(file, check);
         if (body.objectId !== objectId || !Buffer.from(supplied).equals(body.bytes)) fail();
-        const digest = sha256(body.bytes), identity = canonical([file, objectId, digest]); check();
-        // Reuse only after a fresh independent reread; an earlier capability cannot hide later object corruption.
-        const prior = wholeIdentities.get(identity); if (prior) return prior;
-        const bodyId = `origin:whole-body-${sha256(identity).slice(0, 32)}`;
-        const structuralBytes = Buffer.from(canonical({ commit: record.subject.pinnedRevision.commit, path: file, objectId, start: 0, end: body.bytes.length }));
-        safe(structuralBytes); check();
-        const structureId = `origin:whole-structure-${sha256(structuralBytes).slice(0, 32)}`;
-        issue(body.bytes, [body.contentClass], [], { id: bodyId, species: 'pinned-repository-body' }); check();
-        issue(structuralBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' }); check();
-        const receipt = issue(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId]);
-        const metadata: UrlWholeSourceBodyMetadata = deepFreeze({ origin: receipt, runId, sourceBindingSha256: sourceBindingSha256(record.subject),
-          path: file, objectId, pinnedCommit: record.subject.pinnedRevision.commit, policies: { baseSha256: screen.policySha256, originSha256: origin.sha256 },
-          range: { start: 0, end: body.bytes.length }, digest, bytes: body.bytes.length, classes: entry(receipt).classes });
-        check(); const capability = Object.freeze({}) as UrlWholeSourceBody;
-        wholeBodies.set(capability, metadata); wholeIdentities.set(identity, capability); return capability;
+        return issueWholeSourceBody(file, body, check);
       });
     } catch { return fail(); }
   }
@@ -422,6 +426,19 @@ function create(given: UrlOriginLedgerOptions) {
     fixed: (name: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => { live(); const registered = registry.get(name), receipt = fixedReceipts.get(name); if (!registered || !receipt) return fail(); origins(receipt, bytes); return receipt; }),
     planRendererScaffold,
     sourceSpan: async (input: Parameters<typeof verifiedSpan>[0]): Promise<UrlOriginReceipt> => (await verifiedSpan(input)).receipt,
+    // Host-only lineage for a producer that derives values from an uncited
+    // complete blob. The path grants no role read or raw-composition exception.
+    sourceWhole: async (input: { readonly path: string }): Promise<UrlOriginReceipt> => {
+      try {
+        live(); if (!exact(input, ['path']) || !relative(input.path)) fail();
+        const file = input.path;
+        return await sourceOperation(async check => {
+          const body = await verifiedSource(file, check);
+          const capability = issueWholeSourceBody(file, body, check);
+          return inspectWholeSourceBody(capability).origin;
+        });
+      } catch { return fail(); }
+    },
     // Host-only complete-body verification. This is not a role tool or a raw-composition exemption.
     verifyWholeSourceBody, inspectWholeSourceBody: (capability: UrlWholeSourceBody) => guarded(() => inspectWholeSourceBody(capability)),
     compose: (bytes: Uint8Array, receipts: readonly UrlOriginReceipt[]) => guarded(() => derived(bytes, receipts)),

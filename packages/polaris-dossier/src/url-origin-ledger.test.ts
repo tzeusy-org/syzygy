@@ -110,6 +110,10 @@ describe('host-owned URL origin ledger', () => {
     expect(f.ledger.origins(whole.origin, pristine).classes).toEqual(['code-content', 'code-structure']);
     expect(Object.isFrozen(whole.range)).toBe(true); expect(JSON.stringify(whole)).not.toContain('tail');
     expect(await f.ledger.verifyWholeSourceBody({ path: f.file, objectId: f.blob, bytes: pristine })).toBe(capability);
+    expect(await f.ledger.sourceWhole({ path: f.file })).toBe(whole.origin);
+    expect(() => f.ledger.metadata({ ...whole.origin })).toThrow('url-origin-refused');
+    await expect(f.ledger.sourceWhole({ path: '../own.ts' })).rejects.toThrow('url-origin-refused');
+    await expect(f.ledger.sourceWhole({ path: f.file, bytes: pristine } as never)).rejects.toThrow('url-origin-refused');
     const span = await f.ledger.sourceSpan({ path: f.file, offset: 0, limit: 2000 });
     for (const forged of [{}, { ...capability }, whole, span, { path: f.file, objectId: f.blob, range: whole.range, digest: whole.digest }] as UrlWholeSourceBody[]) {
       expect(() => f.ledger.inspectWholeSourceBody(forged)).toThrow('url-origin-refused');
@@ -124,15 +128,18 @@ describe('host-owned URL origin ledger', () => {
     expect(() => f.ledger.bindArtifact({ role: 'design', path: 'packet.json', bytes: pristine, receipt: whole.origin })).toThrow('url-origin-refused');
     fs.writeFileSync(path.join(f.clone, '.git/objects', f.blob.slice(0, 2), f.blob.slice(2)), deflateSync(bytes('blob 3\0bad')));
     await expect(f.ledger.verifyWholeSourceBody({ path: f.file, objectId: f.blob, bytes: pristine })).rejects.toThrow('url-origin-refused');
+    await expect(f.ledger.sourceWhole({ path: f.file })).rejects.toThrow('url-origin-refused');
   });
   it('refuses whole-body tail secrets, private exclusions and public partial redaction while retaining actual base classes', async () => {
     const tail = fixture('Own safe first line.\n'.repeat(2100) + 'OWN_SECRET_CANARY\n');
     await expect(tail.ledger.verifyWholeSourceBody({ path: tail.file, objectId: tail.blob, bytes: bytes(tail.sourceText) })).rejects.toThrow('url-origin-refused');
+    await expect(tail.ledger.sourceWhole({ path: tail.file })).rejects.toThrow('url-origin-refused');
     const redactionText = 'Own before.\nhttps://own:OwnPassword@own.example.invalid/private\nOwn after.\n';
     for (const visibility of ['private', 'public'] as const) {
       const f = fixture(redactionText, 'README.md', visibility);
       expect(f.options.screen.screenTargetBody(redactionText, f.file).kind).toBe(visibility === 'public' ? 'redacted' : 'excluded');
       await expect(f.ledger.verifyWholeSourceBody({ path: f.file, objectId: f.blob, bytes: bytes(f.sourceText) })).rejects.toThrow('url-origin-refused');
+      await expect(f.ledger.sourceWhole({ path: f.file })).rejects.toThrow('url-origin-refused');
       await expect(f.ledger.verifyWholeSourceBody({ path: f.file, objectId: f.blob, bytes: bytes('Own surviving lines only.\n') })).rejects.toThrow('url-origin-refused');
     }
     for (const [file, contentClass] of [['README.md', 'project-documentation'], ['MANIFESTO.md', 'governance-text']] as const) {

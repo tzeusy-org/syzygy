@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import { urlStructureRecordShape, urlReadingLedgerShape, urlReadingDifferenceShape, urlManifestFactsShape } from './url-check-product-shape.js';
+import type { ManifestFacts } from './manifest-facts.js';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -497,6 +498,17 @@ function create(given: UrlRunArtifactsOptions) {
     if (!report || !report.committed || subject['file'] !== `drafts/rev-${document['revision']}.json`) refuse();
     const frozen = read(run, subject['file']); if (sha256(frozen) !== report.digest || frozen.length !== subject['bytes']) refuse();
     const sources = await sourceParents(doc['citedBlobs'], waitForCapture);
+    // The actual checker also derives manifest facts from bodies absent from
+    // citedBlobs. Preserve their complete screened source lineage in the reply.
+    const manifests = doc['manifestFacts'] as ManifestFacts | undefined;
+    const manifestPaths = manifests?.state === 'derived'
+      ? [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files.filter(file => file.epistemic === 'inferred').map(file => file.path)))] : [];
+    if (new Set([...inputParents, report.receipt, ...sources]).size + manifestPaths.length > limits.parents) refuse();
+    for (const file of manifestPaths) {
+      await waitForCapture();
+      sources.push(await ledger.sourceWhole({ path: file }));
+      live();
+    }
     await waitForCapture();
     const receipt = compose(stored, [...inputParents, report.receipt, ...sources]);
     const checked: Check = { path: `checks/rev-${document['revision']}.json`, revision: document['revision'], digest: sha256(stored), receipt, token, committed: false };
