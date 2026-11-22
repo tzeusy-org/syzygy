@@ -285,13 +285,16 @@ describe('trusted URL artifact producer bridge', () => {
         { ok: true, kind: 'artifact-written', path: writeArgs.path, sha256: sha256(draft) });
       await bridge.toolReceipt('author', written, f.admission('author'));
       bridge.committed('author', written.id);
+      // A directory at the optional sidecar path causes its rename to fail;
+      // the genuine producer still returns its checked result with file:null.
+      fs.mkdirSync(path.join(f.run, 'run-advice.json'));
       const authorReads = beginRunProductReads(f.run, bridge, 'author-check', Date.now() + 4000);
       try {
         const result = await checkDraft(f.run, {}, { sources, openReader, productReads: authorReads,
           now: () => readAt, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
           probe: { probe: async () => { throw Error('own check permits no execution'); } } });
         expect(result).toMatchObject({ ok: true, report: { outcome: 'passed', figureFit: { examined: 1, entries: [] },
-          mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: 1 } } });
+          mechanismAdvice: { file: null, thisRevision: 1, inRun: 1 } } });
         if (!result.ok) throw Error('own protected check');
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
         expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
@@ -345,6 +348,7 @@ describe('trusted URL artifact producer bridge', () => {
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });
         expect(f.ledger.origins(bridge.checkReceipt(0), storedBytes)).toBeDefined();
       } finally { authorReads.close(); }
+      fs.rmdirSync(path.join(f.run, 'run-advice.json'));
       for (const revision of [1, 2]) {
         f.draft.title = `Own dossier revision ${revision}`;
         const next = b(f.draft), args = { path: 'drafts/next.json', content: next.toString() };
@@ -358,7 +362,7 @@ describe('trusted URL artifact producer bridge', () => {
             now: () => readAt + revision * 1000, loadScreen: async () => ({ ok: true, screen: f.screen }), layoutFigure: site.figureLaidOutWidth,
             probe: { probe: async () => { throw Error('own check permits no execution'); } } });
           expect(result).toMatchObject({ ok: true, report: { revision, figureFit: { examined: 1, entries: [] },
-            mechanismAdvice: { thisRevision: 1, inRun: revision + 1 } } });
+            mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: revision + 1 } } });
           if (!result.ok) throw Error('own protected later check');
           const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 }, argv = ['dossier', 'check', f.run];
           if (revision === 2) {

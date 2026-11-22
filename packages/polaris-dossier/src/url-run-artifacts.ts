@@ -517,6 +517,8 @@ function create(given: UrlRunArtifactsOptions) {
         if (!checkShape(record, 'check', false) || record['revision'] !== prior.revision) refuse();
         inRun += uniqueCount(record);
       }
+      // file is the producer's Inferred advisory write report, shape-checked
+      // only: no origin receipt attests that write or the sidecar's existence.
       const advice = record(document['mechanismAdvice']);
       if (advice['thisRevision'] !== entries.length || advice['inRun'] !== inRun) refuse();
       if (fit !== undefined) projected['figureFit'] = { ...fit, entries: fit.entries.filter(entry => figureFitClass(entry) === 'author') };
