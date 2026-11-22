@@ -42,6 +42,24 @@ export function isCompletedUrlDesignExit(outcome: UrlSessionLaunchOutcome | 'Unk
   return outcome !== 'Unknown' && outcome.outcome === 'exited' && outcome.exitCode === 0 && outcome.signal === null
     && urlSessionStoppedCleanly(outcome);
 }
+type CompletedDesignSettlement = 'current' | 'settled' | 'refused';
+/** Cleanup can suspend after the independent verifier. Repeat that verifier
+ * exactly once when this check crossed the completed-child cleanup wait. */
+export async function checkUrlSessionCurrent(input: {
+  readonly settleCompletedDesign: () => Promise<CompletedDesignSettlement>;
+  readonly effectCurrent: () => boolean;
+  readonly current: () => boolean | Promise<boolean>;
+  readonly bindingChanged: () => void;
+}): Promise<boolean> {
+  if (await input.settleCompletedDesign() === 'refused' || !input.effectCurrent()) return false;
+  try {
+    if (await input.current() !== true) { input.bindingChanged(); return false; }
+    const settlement = await input.settleCompletedDesign();
+    if (settlement === 'refused' || !input.effectCurrent()) return false;
+    if (settlement === 'settled' && await input.current() !== true) { input.bindingChanged(); return false; }
+    return input.effectCurrent();
+  } catch { input.bindingChanged(); return false; }
+}
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
   | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
 interface LaunchHistoryPort {
@@ -242,27 +260,27 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     failure = reason;
     try { options.onFailure(reason); } catch { /* Failure never reopens the host. */ }
   };
-  const settleCompletedDesign = async (): Promise<boolean> => {
-    if (stopping || failure !== null) return false;
+  const settleCompletedDesign = async (): Promise<CompletedDesignSettlement> => {
+    if (stopping || failure !== null) return 'refused';
     const completed = completedDesign;
-    if (completed?.retired === true) return true;
+    if (completed?.retired === true) return 'current';
     // A live unhealthy transport still refuses immediately. Once a genuine
     // completed reviewer has exited, let its already-bounded cleanup publish
     // the actual outcome before deciding whether this health check can retire.
     const childIsLive: boolean = isUrlSessionProcess(completed?.child);
     if (completed === null || !completed.terminalConsumed() || hostHealth.get('design') !== completed.health
-      || completed.health?.() !== false || childIsLive) return true;
+      || completed.health?.() !== false || childIsLive) return 'current';
     try {
       const outcome = await completed.child.finished;
-      if (completedDesign === completed && completed.retired) return true;
+      if (completedDesign === completed && completed.retired) return 'settled';
       if (completedDesign !== completed || hostHealth.get('design') !== completed.health
         || !completed.terminalConsumed() || !isCompletedUrlDesignExit(outcome)) {
-        fail('role-ended'); return false;
+        fail('role-ended'); return 'refused';
       }
       completed.retired = true;
       hostHealth.delete('design');
-      return true;
-    } catch { fail('role-ended'); return false; }
+      return 'settled';
+    } catch { fail('role-ended'); return 'refused'; }
   };
   const effectCurrent = (): boolean => {
     if (stopping || failure !== null || !budget.current()) return false;
@@ -273,15 +291,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     return true;
   };
-  const current = async (): Promise<boolean> => {
-    if (!(await settleCompletedDesign()) || !effectCurrent()) return false;
-    try {
-      const valid = await options.current() === true;
-      if (!valid) { fail('binding-changed'); return false; }
-      return await settleCompletedDesign() && effectCurrent();
-    }
-    catch { fail('binding-changed'); return false; }
-  };
+  const current = (): Promise<boolean> => checkUrlSessionCurrent({ settleCompletedDesign, effectCurrent,
+    current: options.current, bindingChanged: () => fail('binding-changed') });
   if (!(await current())) throw new Error('url-run-sessions-unavailable');
   const audit = await createUrlSessionAudit({ parent: options.auditParent, name: options.auditName, binding,
     originPolicySha256: options.originPolicySha256, project: 'project:syzygy', pin: record.subject.pinnedRevision.commit,
@@ -364,8 +375,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       .map(([, child]) => child.waitForSample()));
     return settled.every(Boolean) && !stopping && failure === null;
   };
-  const waitForProductSamples = async (): Promise<boolean> => await settleCompletedDesign() && effectCurrent()
-    && (await waitForSamples()) && await settleCompletedDesign() && effectCurrent();
+  const waitForProductSamples = async (): Promise<boolean> => await settleCompletedDesign() !== 'refused' && effectCurrent()
+    && (await waitForSamples()) && await settleCompletedDesign() !== 'refused' && effectCurrent();
   const captures = new Map<ViewRole, { role: ViewRole; pid: number | 'Unknown'; startedAt: number | 'Unknown';
     finishedAt: number | 'Unknown'; outcome: UrlSessionLaunchOutcome | 'Unknown' }>(URL_ROLES.map(role => [role,
     { role, pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' }]));
@@ -588,7 +599,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           if (!orderedAttempt.terminalConsumed) return null;
           const completed = completedDesign;
           if (completed === null || !isCompletedUrlDesignExit(await completed.child.finished)
-            || !(await settleCompletedDesign())) { fail('role-ended'); return null; }
+            || await settleCompletedDesign() === 'refused') { fail('role-ended'); return null; }
           if (!(await orderedAttempt.close())) { fail('cleanup-unconfirmed'); return null; }
           orderedAttempt = null;
         }
