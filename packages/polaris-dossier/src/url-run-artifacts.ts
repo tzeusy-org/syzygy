@@ -1,6 +1,6 @@
 import type { UrlVerifiedRecoveryProducts } from './url-recovery-products.js';
-import { URL_ARTIFACT_LIMITS, launchFiles, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_FEEDBACK, PACKET_PATH,
-  productPopulation, type UrlProductSelector, type UrlFrozenProductHistory, type FrozenProductIdentity } from './url-frozen-product-history.js';
+import { URL_ARTIFACT_LIMITS, selectors, knownRecord, FROZEN_DRAFT_PATH, AUTHOR_FEEDBACK, PACKET_PATH,
+  productPopulation, verifyFrozenOriginProvenance, type UrlProductSelector, type UrlFrozenProductHistory, type FrozenProductIdentity } from './url-frozen-product-history.js';
 export { URL_ARTIFACT_LIMITS, verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
 export type { UrlProductSelector, UrlFrozenProductHistory } from './url-frozen-product-history.js';
 import * as fs from 'node:fs';
@@ -24,7 +24,7 @@ import { assertUrlOrderedDesignVerdictTerminal, orderedUrlDesignReviewParents, a
   isIssuedUrlDesignDeliveryView, type UrlCommittedLaunchHistory,
   type UrlCheckedDesignVerdict, type UrlDesignDeliveryView, type UrlDesignReviewProof } from './url-session-audit.js';
 import type { UrlRunDossier } from './url-run-sessions.js';
-import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
+import { URL_HELPER_LAUNCH_FILES, isUrlHelperLaunchFile } from './url-launch-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import type { createUrlRunOrigins } from './url-run-origins.js';
 import type { RecordedRunConfig } from './run-record.js';
@@ -178,6 +178,7 @@ function create(given: UrlRunArtifactsOptions) {
   const history = new Map<Role, UrlOriginReceipt[]>(ROLES.map(role => [role, [origins.initialReceipts[role]]]));
   const reports = new Map<string, Report>(), checks = new Map<number, Check>(), pending = new Map<Role, Pending>();
   const checkedProducts = new Map<string, Product>();
+  const launchAliases = new Map<string, string>();
   const authenticatedRecords = new Map<string, { readonly snapshot: ProductFileSnapshot; readonly receipt: UrlOriginReceipt; readonly committed: (check?: () => void) => boolean }>();
   const packetReceipts = new Map<string, UrlOriginReceipt>();
   const seen = new Map<Role, Set<string>>(ROLES.map(role => [role, new Set()]));
@@ -400,7 +401,7 @@ function create(given: UrlRunArtifactsOptions) {
       || history.pin !== pin || history.coreSha256 !== sha256(coreBytes)
       || project !== retainedDeclaration.observingProject || scope.originPolicySha256 !== retainedDeclaration.originPolicy.sha256
       || plans.get(role)?.profile !== history.plan.profile || canonical(declaredRole) !== canonical(history.plan.declaration)
-      || file !== URL_HELPER_LAUNCH_FILES[role] || authenticatedRecords.has(file)
+      || !isUrlHelperLaunchFile(role, file) || authenticatedRecords.has(file)
       || !prompt?.committed() || !promptStat || !Number.isSafeInteger(promptStat.dev) || !Number.isSafeInteger(promptStat.ino)
       || BigInt(promptStat.dev) !== history.promptIdentity.device || BigInt(promptStat.ino) !== history.promptIdentity.inode
       || !prompt.snapshot.bytes || sha256(prompt.snapshot.bytes) !== history.promptRecordSha256
@@ -435,6 +436,7 @@ function create(given: UrlRunArtifactsOptions) {
       return { receipt, snapshot };
     });
     retainRecord(file, bytes, receipt, stillCommitted, snapshot);
+    launchAliases.set(URL_HELPER_LAUNCH_FILES[role], file);
   }
   type Predicate = (v: unknown) => boolean;
   const lit = (...values: readonly unknown[]): Predicate => v => values.includes(v);
@@ -1022,7 +1024,7 @@ function create(given: UrlRunArtifactsOptions) {
     return copy(products.filter(p => input.recipients.includes(p.role as 'author' | 'inventory') && p.path === file));
   }
   type KnownRecord = ReturnType<typeof authenticatedRecords.get>;
-  interface ReadEntry { readonly snapshot: ProductFileSnapshot; readonly receipt: UrlOriginReceipt; readonly expected: KnownRecord; }
+  interface ReadEntry { readonly physical: string; readonly snapshot: ProductFileSnapshot; readonly receipt: UrlOriginReceipt; readonly expected: KnownRecord; }
   interface ReadState {
     readonly operation: UrlProductReadOperation; readonly deadline: number; readonly signal: AbortSignal | undefined;
     readonly entries: Map<string, ReadEntry>;
@@ -1165,19 +1167,20 @@ function create(given: UrlRunArtifactsOptions) {
   function captureRead(state: ReadState, file: string): ReadEntry {
     readLease(state);
     if (typeof file !== 'string' || !relative(file) || state.excludedOrdered.has(file)) refuse();
-    if ((file === 'launched.json' || /\.launch\.json$/u.test(file)) && (!launchFiles.includes(file) || !authenticatedRecords.has(file)))
+    const physical = launchAliases.get(file) ?? file;
+    if ((file === 'launched.json' || /\.launch\.json$/u.test(file)) && (!knownRecord(physical) || !authenticatedRecords.has(physical)))
       throw new Error('url-run-artifacts-unsupported-launch');
     if (!knownRecord(file)) refuse();
     const check = (): void => readLease(state);
     const previous = state.entries.get(file);
     if (previous) {
-      if (previous.expected !== authenticatedRecords.get(file) || previous.expected?.committed(check) === false) refuse();
+      if (previous.physical !== physical || previous.expected !== authenticatedRecords.get(physical) || previous.expected?.committed(check) === false) refuse();
       return previous;
     }
     if (state.entries.size >= limits.registrations) refuse();
     // A synchronous descriptor walk stays private until the enclosing read
     // validates current authority again. Sample the lease inside that walk.
-    const expected = expectedRecord(file, state), snapshot = snapshotProductFile(run, file, limits.itemBytes, check);
+    const expected = expectedRecord(physical, state), snapshot = snapshotProductFile(run, physical, limits.itemBytes, check);
     if (snapshot.bytes !== null) {
       if (state.bytes + snapshot.bytes.length > limits.readBytes || activeReadBytes + snapshot.bytes.length > limits.readBytes) refuse();
       state.bytes += snapshot.bytes.length; activeReadBytes += snapshot.bytes.length;
@@ -1195,7 +1198,7 @@ function create(given: UrlRunArtifactsOptions) {
         asBytes({ format: 'polaris-url-record-absence/1', runId, operation: state.operation, path: file, state: 'absent' }),
         [origins.roots.runControl, origins.roots.toolMetadata]);
     }
-    const entry = { snapshot, receipt, expected }; state.entries.set(file, entry); readLease(state); return entry;
+    const entry = { physical, snapshot, receipt, expected }; state.entries.set(file, entry); readLease(state); return entry;
   }
   function readProducts(context: UrlProductReadContext, files: readonly string[]): readonly UrlAuthenticatedProductRead[] {
     const state = contextState(context);
@@ -1260,8 +1263,8 @@ function create(given: UrlRunArtifactsOptions) {
       readLive(state);
       const check = (): void => readLease(state);
       for (const [file, entry] of state.entries) {
-        if (entry.expected !== authenticatedRecords.get(file) || entry.expected?.committed(check) === false) refuse();
-        const snapshot = snapshotProductFile(run, file, limits.itemBytes, check);
+        if ((launchAliases.get(file) ?? file) !== entry.physical || entry.expected !== authenticatedRecords.get(entry.physical) || entry.expected?.committed(check) === false) refuse();
+        const snapshot = snapshotProductFile(run, entry.physical, limits.itemBytes, check);
         if (!sameProductFile(entry.snapshot, snapshot)) refuse();
       }
       for (const [selector, selection] of state.selections) {
@@ -1282,7 +1285,7 @@ function create(given: UrlRunArtifactsOptions) {
         records: entries.map(([file, entry], index) => {
           const { id, digest } = metadata[index]!;
           const bytes = entry.snapshot.bytes;
-          return { path: file, state: bytes === null ? 'absent' : 'present',
+          return { path: file, ...(entry.physical === file ? {} : { physicalPath: entry.physical }), state: bytes === null ? 'absent' : 'present',
             sha256: bytes === null ? null : digest, bytes: bytes?.length ?? null, originId: id };
         }),
         selections: selections.map(([selector, selection], index) => ({
@@ -1364,6 +1367,7 @@ function create(given: UrlRunArtifactsOptions) {
         return { ...binding, snapshot };
       });
       const provenance = ledger.captureProvenance([...files.map(file => recordReceipts.get(file)!), ...artifacts.map(binding => binding.receipt)]);
+      verifyFrozenOriginProvenance(provenance.graph);
       for (const artifact of artifacts) assertProductFileUnchanged(directories.get(artifact.role)!, artifact.path, artifact.snapshot, check);
       return copy({ format: 'polaris-url-frozen-products/2', runId, coreSha256: sha256(coreBytes),
         declarationSha256: sha256(sidecarBytes), records: files.map((file, index) => ({ ...records.get(file)!, origin: provenance.keys[index]! })),
@@ -1454,6 +1458,11 @@ function create(given: UrlRunArtifactsOptions) {
           const digest = packet[1]!.slice('fidelity-packet-'.length);
           if (sha256(value.bytes) !== digest) refuse(); packetReceipts.set(`fidelity:${digest}`, value.receipt);
         }
+      }
+      for (const role of Object.keys(recovered.launches) as (keyof typeof URL_HELPER_LAUNCH_FILES)[]) {
+        const file = recovered.launches[role]!;
+        if (!authenticatedRecords.has(file) || !isUrlHelperLaunchFile(role, file)) refuse();
+        launchAliases.set(URL_HELPER_LAUNCH_FILES[role], file);
       }
       for (const item of stagedChecks) {
         checkedProducts.set(`${item.file}:${item.product.digest}`, item.product);
