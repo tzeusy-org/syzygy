@@ -458,6 +458,36 @@ export function registerSessionOrigin(state: SessionEgressState, input: SessionO
   return outcome(() => finish(registrationSteps(state, input)));
 }
 
+/** The pinned ordinary CLI counts one completed tool reply as plain text.
+ * The count query consumes no inference history, tool result or response slot. */
+export function validateSessionCountTokens(state: SessionEgressState, bytes: Uint8Array, replyId: string): SessionPolicyResult<{
+  readonly body: Uint8Array; readonly admission: SessionAdmission;
+}> {
+  return outcome(() => {
+    const s = snapshot(state), options = s.options, call = s.pendingCalls[0];
+    if (options.profile === undefined || options.binding.role === 'design' || s.awaitingResponse
+      || s.pendingCalls.length !== 1 || call === undefined) refuse('lifecycle-refused');
+    if (!(bytes instanceof Uint8Array) || bytes.byteLength > options.limits.maxBytes) refuse('invalid-input');
+    const receipt = s.receipts.find(candidate => candidate.kind === 'tool-result' && candidate.id === replyId
+      && candidate.toolUseId === call.id && candidate.toolName === call.name && !s.used.includes(candidate.id));
+    if (receipt === undefined) refuse('unknown-origin');
+    const body = Uint8Array.from(bytes);
+    const raw = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(body);
+    const request = record(parseBoundedJson(raw, options.limits));
+    const expected = { model: options.binding.model, tools: [], messages: [
+      { role: 'user', content: [{ type: 'text', text: receipt.canonicalText }] },
+    ] };
+    if (!same(request, expected, options.limits)) refuse('scaffolding-mismatch');
+    let matches: boolean;
+    try { matches = options.scanSecrets(raw); } catch { refuse('detector-failed'); }
+    if (matches) refuse('secret-excluded');
+    screen(request, options);
+    screen(parseBoundedJson(receipt.canonicalText, options.limits), options);
+    const classified = summary(request, [receipt], options);
+    return { body, admission: deepFreeze({ ...classified, digest: sha256(body), bytes: body.byteLength }) };
+  });
+}
+
 /** Let host resource polls run between whole detector calls. The caller
  * checks its single cursor on resumption and commits only the final result. */
 export async function registerSessionOriginWithPolling(state: SessionEgressState, input: SessionOrigin,

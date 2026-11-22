@@ -16,6 +16,7 @@ export const SESSION_PROFILE_TOOL_CHOICE = Object.freeze({ type: 'auto', disable
 /** This is a fabricated public marker, never a real credential. Host transport substitutes auth. */
 export const SESSION_PROFILE_SYNTHETIC_AUTHORIZATION = 'Bearer NONSECRET-SYNTHETIC-OAUTH-TOKEN-ONLY';
 export const SESSION_PROFILE_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,thinking-token-count-2026-05-13,effort-2025-11-24,extended-cache-ttl-2025-04-11';
+const COUNT_TOKENS_BETA = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01';
 const LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
 const CACHE = { type: 'ephemeral', ttl: '1h' } as const;
 const TOOL_DESCRIPTOR_DIGEST = '91876b623f527e1c293b55296f89c38a07a5a2774351be6a6094f948a8b7fe4a';
@@ -263,11 +264,14 @@ export function sessionProfileRemainingTokens(usage: unknown): SessionProfileRes
 /** The relay has already refused raw duplicates and discarded non-forwarded SDK/routing headers.
  * This validates its exact projected whitelist. Returns fixed protocol values; root injects auth.
  */
-export function sessionProfileProviderHeaders(profile: NativeSessionProfile, incoming: Readonly<Record<string, string>>): SessionProfileResult<{ readonly headers: Readonly<Record<string, string>> }> {
+export function sessionProfileProviderHeaders(profile: NativeSessionProfile, incoming: Readonly<Record<string, string>>,
+  route = '/v1/messages'): SessionProfileResult<{ readonly headers: Readonly<Record<string, string>> }> {
   return result('profile-headers-refused', () => {
     if (!isNativeSessionProfile(profile)) refuse('unsupported-session-profile');
+    const countTokens = route === '/v1/messages/count_tokens?beta=true';
+    if (countTokens ? !isSessionProfile(profile) : route !== '/v1/messages' && route !== '/v1/messages?beta=true') refuse('profile-headers-refused');
     const value = copy(incoming);
-    const fixed = { 'anthropic-version': '2023-06-01', 'anthropic-beta': SESSION_PROFILE_BETA, 'content-type': 'application/json', 'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli' };
+    const fixed = { 'anthropic-version': '2023-06-01', 'anthropic-beta': countTokens ? COUNT_TOKENS_BETA : SESSION_PROFILE_BETA, 'content-type': 'application/json', 'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli' };
     keys(value, ['authorization', ...Object.keys(fixed)], [], 'profile-headers-refused');
     if (value.authorization !== SESSION_PROFILE_SYNTHETIC_AUTHORIZATION || Object.entries(fixed).some(([key, expected]) => value[key] !== expected)) refuse('profile-headers-refused');
     return { headers: Object.freeze(fixed) };

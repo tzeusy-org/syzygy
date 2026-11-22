@@ -4,6 +4,24 @@ import { createUrlSessionBudget } from './url-session-budget.js';
 const admission = { digest: 'a'.repeat(64), bytes: 100, classes: ['governance-text'] as const, originIds: ['own:fixture'] };
 const usage = { inputTokens: 3, outputTokens: 5, cacheCreationInputTokens: 7, cacheReadInputTokens: 11 };
 describe('shared URL host budget capture', () => {
+  it('bounds a count exchange without recording its estimate as inference usage', () => {
+    const plan = { deadline: 100, turnBudget: 2, tokenBudget: 100, now: () => 1 };
+    const budget = createUrlSessionBudget(plan);
+    expect(budget.reserveCount('design', admission)).toBe(false);
+    expect(budget.reserveCount('author', admission)).toBe(true);
+    expect(budget.observeCount('author')).toBe(true);
+    expect(budget.snapshot()).toMatchObject({ requestReservations: 1, completeUsageReports: 0, reportedTokens: 'Unknown', pendingRoles: [] });
+    expect(budget.reserve('author', admission)).toBe(true);
+    expect(budget.observeUsage('author', usage)).toBe(true);
+    expect(budget.reserveCount('inventory', admission)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ requestReservations: 2, completeUsageReports: 1, reportedTokens: 26, reason: 'turn-budget' });
+    const wrongResponse = createUrlSessionBudget(plan);
+    expect(wrongResponse.reserveCount('author', admission)).toBe(true);
+    expect(wrongResponse.observeUsage('author', usage)).toBe(false);
+    const wrongRequest = createUrlSessionBudget(plan);
+    expect(wrongRequest.reserve('author', admission)).toBe(true);
+    expect(wrongRequest.observeCount('author')).toBe(false);
+  });
   it('consumes reservations across roles before replies, keeps missing usage Unknown and enforces the shared turn boundary', () => {
     const budget = createUrlSessionBudget({ deadline: 100, turnBudget: 2, tokenBudget: null, now: () => 1 });
     expect(budget.snapshot()).toMatchObject({ requestReservations: 0, reportedTokens: 'Unknown', uncapturedUsage: 'Unknown' });

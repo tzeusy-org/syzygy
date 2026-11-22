@@ -102,6 +102,23 @@ describe('installed Sonnet4.6 session profile', () => {
     ]) expect(sessionProfileRemainingTokens(value)).toMatchObject({ ok: false, code: 'profile-usage-refused' });
   });
 
+  it('projects only the pinned CLI count route with its own exact beta header', () => {
+    const p = profile();
+    const route = '/v1/messages/count_tokens?beta=true';
+    const beta = 'claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,context-management-2025-06-27,token-counting-2024-11-01';
+    const incoming = { ...headers(), 'anthropic-beta': beta };
+    expect(good(sessionProfileProviderHeaders(p, incoming, route)).headers).toEqual({
+      'content-type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-beta': beta,
+      'user-agent': 'claude-cli/2.1.327 (external, sdk-cli)', 'x-app': 'cli',
+    });
+    for (const alternate of ['/v1/messages/count_tokens', route + '&extra=true', '/v1/messages?beta=true']) {
+      expect(sessionProfileProviderHeaders(p, incoming, alternate)).toMatchObject({ ok: false, code: 'profile-headers-refused' });
+    }
+    expect(sessionProfileProviderHeaders(p, headers(), route)).toMatchObject({ ok: false, code: 'profile-headers-refused' });
+    expect(sessionProfileProviderHeaders(p, { ...incoming, authorization: 'Bearer NONSECRET_WRONG' }, route))
+      .toMatchObject({ ok: false, code: 'profile-headers-refused' });
+  });
+
   it('validates the exact projected header profile and emits no CLI auth/SDK/routing data', () => {
     const p = profile(), incoming = headers();
     expect(good(sessionProfileProviderHeaders(p, incoming)).headers).toEqual({

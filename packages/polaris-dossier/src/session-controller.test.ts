@@ -12,12 +12,16 @@ const binding = { run: 'own-fixture', role: 'author', sourceBinding: 'a'.repeat(
 const input = { path: 'README.md' };
 const call = { type: 'tool_use', id: 'toolu_own_1', name: 'mcp__syzygy__source_read', input };
 const result = { ok: true, text: 'NONSECRET-own-admitted-span' };
-function fixture(classes: readonly SessionContentClass[] = SESSION_CONTENT_CLASSES, issued = call) {
+const countQuery = { model: DEFAULT_SESSION_MODEL, tools: [], messages: [
+  { role: 'user', content: [{ type: 'text', text: canonical(result) }] },
+] };
+function fixture(classes: readonly SessionContentClass[] = SESSION_CONTENT_CLASSES, issued = call,
+  scanSecrets: (text: string) => boolean = value => value.includes('SYNTHETIC_SECRET_1907')) {
   const compiled = createSessionProfile({ binding, sessionId: '12345678-1234-4234-8234-123456789012', systemPrompt: 'Use the four bounded tools.',
     initialPrompt: 'Read the own fixture.', utcDate: '2026-11-19', kernelRelease: '6.0.0-own' });
   if (!compiled.ok) throw new Error(compiled.code);
   const profile = compiled.value.profile;
-  const controller = createSessionController({ profile, declaredClasses: classes, scanSecrets: value => value.includes('SYNTHETIC_SECRET_1907'),
+  const controller = createSessionController({ profile, declaredClasses: classes, scanSecrets,
     initialOrigin: { binding, id: 'initial:own', kind: 'initial-prompt', canonicalText: profile.input.initialPrompt,
       classes: ['project-documentation'], originIds: ['source:own'] },
     validateToolInput: (name, value) => name === issued.name && canonical(value) === canonical(issued.input) });
@@ -62,6 +66,10 @@ describe('single host cursor across request, response and broker effects', () =>
     const f = fixture(); f.pending();
     expect(f.controller.beginTool({ tool: 'source_read', input })).toBe(true);
     await f.controller.onReceipt(f.receipt()); expect(f.controller.completeTool(result)).toBe(true);
+    const countBytes = encode(countQuery), count = f.controller.requestCountTokens(countBytes);
+    expect(count).toEqual({ ok: true, body: countBytes, consumedToolResults: [],
+      admission: { digest: sha256(countBytes), bytes: countBytes.byteLength, classes: ['code-structure', 'project-documentation'],
+        originIds: ['blob:own1', 'tool:own1'] } });
     const messages = [f.profile.historicalInitialMessage, { role: 'assistant', content: [call] }, { role: 'user', content: [{ type: 'tool_result', tool_use_id: call.id,
       content: [{ type: 'text', text: canonical(result) + '\n' }, { type: 'text', text: sessionProfileReminderText(14_999_992) }], cache_control: { type: 'ephemeral', ttl: '1h' } }] }];
     const next = f.controller.request(f.request(messages));
@@ -70,6 +78,44 @@ describe('single host cursor across request, response and broker effects', () =>
     expect(next.admission.classes).toEqual(expect.arrayContaining(['derived-composites', 'project-documentation', 'code-structure', 'work-history']));
     expect(JSON.parse(Buffer.from(next.body).toString('utf8')).tool_choice).toEqual({ type: 'auto', disable_parallel_tool_use: true });
     expect(f.controller.response(f.response([{ type: 'text', text: 'Own fixture complete.' }]), 'application/json')).toEqual({ ok: true });
+  });
+
+  it('permits only the complete exact reply once, with no count authority before tool completion', async () => {
+    for (const query of [
+      { ...countQuery, model: 'unselected-model' }, { ...countQuery, tools: [{ type: 'unknown' }] },
+      { ...countQuery, metadata: {} }, { ...countQuery, messages: [countQuery.messages[0], countQuery.messages[0]] },
+      { ...countQuery, messages: [{ role: 'user', content: [{ type: 'text', text: canonical(result) + '\n' }] }] },
+      { ...countQuery, messages: [{ role: 'user', content: [{ type: 'text', text: canonical({ ...result, text: 'replacement' }) }] }] },
+    ]) {
+      const f = fixture(); f.pending();
+      expect(f.controller.beginTool({ tool: 'source_read', input })).toBe(true);
+      await f.controller.onReceipt(f.receipt()); expect(f.controller.completeTool(result)).toBe(true);
+      expect(f.controller.requestCountTokens(encode(query))).toEqual({ ok: false });
+    }
+    const beforeClose = fixture(); beforeClose.pending();
+    expect(beforeClose.controller.beginTool({ tool: 'source_read', input })).toBe(true);
+    await beforeClose.controller.onReceipt(beforeClose.receipt());
+    expect(beforeClose.controller.requestCountTokens(encode(countQuery))).toEqual({ ok: false });
+    const repeated = fixture(); repeated.pending();
+    expect(repeated.controller.beginTool({ tool: 'source_read', input })).toBe(true);
+    await repeated.controller.onReceipt(repeated.receipt()); expect(repeated.controller.completeTool(result)).toBe(true);
+    expect(repeated.controller.requestCountTokens(encode(countQuery)).ok).toBe(true);
+    expect(repeated.controller.requestCountTokens(encode(countQuery))).toEqual({ ok: false });
+  });
+
+  it('screens the exact count wire bytes and the decoded fields inside the registered reply', async () => {
+    const bytes = encode(countQuery);
+    const raw = new TextDecoder().decode(bytes);
+    expect(raw).not.toEqual(canonical(countQuery));
+    for (const detectedText of [raw, result.text]) {
+      let detect = false;
+      const f = fixture(SESSION_CONTENT_CLASSES, call, value => detect && value === detectedText);
+      f.pending();
+      expect(f.controller.beginTool({ tool: 'source_read', input })).toBe(true);
+      await f.controller.onReceipt(f.receipt()); expect(f.controller.completeTool(result)).toBe(true);
+      detect = true;
+      expect(f.controller.requestCountTokens(bytes)).toEqual({ ok: false });
+    }
   });
 
   it('starts no unsolicited or altered tool and poisons later admissions rather than resetting', () => {

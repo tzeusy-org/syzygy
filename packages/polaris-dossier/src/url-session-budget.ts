@@ -47,7 +47,7 @@ export function createUrlSessionBudget(input: {
   let reason: UrlBudgetSnapshot['reason'] = null, requests = 0, responses = 0, tokens = 0, lastInstant = 0;
   let designState: 'available' | 'held' | 'complete' | 'retired' = 'available';
   let heldDesignTurns = 0, designGeneration = 0;
-  const pending = new Map<ViewRole, string>();
+  const pending = new Map<ViewRole, 'messages' | 'count-tokens'>();
   const stop = (why: NonNullable<UrlBudgetSnapshot['reason']>): false => { reason ??= why; return false; };
   const current = (): boolean => {
     if (reason !== null) return false;
@@ -60,17 +60,17 @@ export function createUrlSessionBudget(input: {
     return true;
   };
   const tokenAvailable = (): boolean => tokenBudget === null || tokens < tokenBudget || stop('token-budget');
-  const consume = (role: ViewRole, admission: SessionAdmission): boolean => {
+  const consume = (role: ViewRole, admission: SessionAdmission, kind: 'messages' | 'count-tokens'): boolean => {
     if (!ROLES.includes(role) || pending.has(role) || admission === null || typeof admission !== 'object'
       || typeof admission.digest !== 'string' || !/^[a-f0-9]{64}$/u.test(admission.digest)
       || !positive(admission.bytes) || admission.bytes > 2_097_152 || !Number.isSafeInteger(requests + 1))
       return stop('invalid-reservation');
     requests++;
-    pending.set(role, admission.digest);
+    pending.set(role, kind);
     return true;
   };
   const observeUsage = (role: ViewRole, usage: SessionResponseUsage): boolean => {
-    if (!ROLES.includes(role) || !pending.has(role) || usage === null || typeof usage !== 'object'
+    if (!ROLES.includes(role) || pending.get(role) !== 'messages' || usage === null || typeof usage !== 'object'
       || Object.keys(usage).sort().join(',') !== 'cacheCreationInputTokens,cacheReadInputTokens,inputTokens,outputTokens'
       || !Object.values(usage).every(nonnegative)) return stop('invalid-usage');
     const reported = usage.inputTokens + usage.outputTokens + usage.cacheCreationInputTokens + usage.cacheReadInputTokens;
@@ -102,7 +102,7 @@ export function createUrlSessionBudget(input: {
       current: reservationCurrent,
       canSend,
       reserve: (admission: SessionAdmission): boolean => {
-        if (!canSend() || !consume('design', admission)) return false;
+        if (!canSend() || !consume('design', admission, 'messages')) return false;
         heldDesignTurns--;
         return true;
       },
@@ -121,18 +121,25 @@ export function createUrlSessionBudget(input: {
       },
     });
   };
+  const reserve = (role: ViewRole, admission: SessionAdmission, kind: 'messages' | 'count-tokens'): boolean => {
+    if (!current() || (role === 'design' && designState !== 'available' && designState !== 'complete')) return false;
+    if (role === 'design' && designState === 'complete') { designState = 'available'; designGeneration++; }
+    if (turnBudget !== null) {
+      if (designState === 'held' && requests + heldDesignTurns >= turnBudget) return false;
+      if (requests >= turnBudget) return stop('turn-budget');
+    }
+    if (!Number.isSafeInteger(requests + heldDesignTurns + 1)) return false;
+    return tokenAvailable() && consume(role, admission, kind);
+  };
   return Object.freeze({
     current,
     holdOrderedDesignTurns,
-    reserve: (role: ViewRole, admission: SessionAdmission): boolean => {
-      if (!current() || (role === 'design' && designState !== 'available' && designState !== 'complete')) return false;
-      if (role === 'design' && designState === 'complete') { designState = 'available'; designGeneration++; }
-      if (turnBudget !== null) {
-        if (designState === 'held' && requests + heldDesignTurns >= turnBudget) return false;
-        if (requests >= turnBudget) return stop('turn-budget');
-      }
-      if (!Number.isSafeInteger(requests + heldDesignTurns + 1)) return false;
-      return tokenAvailable() && consume(role, admission);
+    reserve: (role: ViewRole, admission: SessionAdmission): boolean => reserve(role, admission, 'messages'),
+    reserveCount: (role: ViewRole, admission: SessionAdmission): boolean => role !== 'design' && reserve(role, admission, 'count-tokens'),
+    observeCount: (role: ViewRole): boolean => {
+      if (pending.get(role) !== 'count-tokens') return stop('invalid-reservation');
+      pending.delete(role);
+      return current();
     },
     observeUsage: (role: ViewRole, usage: SessionResponseUsage): boolean =>
       (role !== 'design' || designState === 'available') && observeUsage(role, usage),

@@ -1,7 +1,8 @@
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import {
-  createSessionEgressPolicy, registerSessionOrigin, registerSessionOriginWithPolling, registerSessionResponse, validateSessionRequest, sessionProfileToolReminder,
+  createSessionEgressPolicy, registerSessionOrigin, registerSessionOriginWithPolling, registerSessionResponse,
+  validateSessionCountTokens, validateSessionRequest, sessionProfileToolReminder,
   SESSION_POLICY_LIMITS, type SessionAdmission, type SessionContentClass, type SessionOrigin, type SessionTool,
 } from './session-egress-policy.js';
 import { isSessionProfile, type SessionProfile } from './session-profile.js';
@@ -39,7 +40,9 @@ export function createSessionController(options: SessionControllerOptions) {
   const initial = registerSessionOrigin(compiled.value.state, options.initialOrigin);
   if (!initial.ok) throw new Error('invalid-session-controller');
   let state = initial.value.state, poisoned = false, executing = false, registering = false;
-  let pending: PendingTool | undefined, registeredReply: string | undefined;
+  let pending: PendingTool | undefined;
+  let registeredReply: { readonly id: string; readonly canonicalText: string } | undefined;
+  let countableReply: string | undefined;
   const refuse = (): typeof FAILURE => { poisoned = true; return FAILURE; };
   const matches = (tool: unknown, input: unknown): boolean => {
     try { return pending !== undefined && `mcp__syzygy__${String(tool)}` === pending.name && canonical(input) === canonical(pending.input); }
@@ -52,9 +55,19 @@ export function createSessionController(options: SessionControllerOptions) {
       const admitted = validateSessionRequest(state, bytes);
       if (!admitted.ok) return refuse();
       // Advance before audit/send; failed transport never rolls this cursor back.
+      countableReply = undefined;
       state = admitted.value.state;
       return { ok: true as const, body: admitted.value.body, admission: admitted.value.admission,
         consumedToolResults: admitted.value.consumedToolResults };
+    },
+    requestCountTokens: (bytes: Uint8Array) => {
+      if (poisoned || executing || pending !== undefined || countableReply === undefined) return refuse();
+      const replyId = countableReply;
+      // Reserve at most one query per checked reply, even if it later refuses.
+      countableReply = undefined;
+      const counted = validateSessionCountTokens(state, bytes, replyId);
+      if (!counted.ok) return refuse();
+      return { ok: true as const, body: counted.value.body, admission: counted.value.admission, consumedToolResults: [] };
     },
     response: (bytes: Uint8Array, contentType: string) => {
       if (poisoned || executing || pending !== undefined) return refuse();
@@ -102,13 +115,15 @@ export function createSessionController(options: SessionControllerOptions) {
         const registered = await registerSessionOriginWithPolling(result.value.state, { binding, id: `reminder:${call.id}`, kind: 'reminder',
           canonicalText: reminder.value.text, classes: reminder.value.classes, originIds: reminder.value.originIds, toolUseId: call.id }, isActive, waitForSample);
         if (!registered.ok || !isActive()) throw new Error('session-receipt-refused');
-        state = registered.value.state; registeredReply = canonicalText; registering = false;
+        state = registered.value.state; registeredReply = { id: receipt.id, canonicalText }; registering = false;
       } catch { refuse(); throw new Error('session-receipt-refused'); }
     },
     completeTool: (reply: unknown): boolean => {
+      const issued = registeredReply;
       let matchesReply = false;
-      try { matchesReply = registeredReply !== undefined && registeredReply === canonical(reply); } catch { /* Fixed failure below. */ }
-      if (poisoned || !executing || pending === undefined || !matchesReply) { refuse(); return false; }
+      try { matchesReply = issued !== undefined && issued.canonicalText === canonical(reply); } catch { /* Fixed failure below. */ }
+      if (poisoned || !executing || pending === undefined || issued === undefined || !matchesReply) { refuse(); return false; }
+      countableReply = issued.id;
       executing = false; pending = undefined; registeredReply = undefined; return true;
     },
   });
