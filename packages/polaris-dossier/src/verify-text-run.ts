@@ -110,7 +110,8 @@ export async function verifyTextInRun(runDir: string, request: VerifyTextRequest
     result = await verifyText(markdown, { pinned, screen, reader }, path.basename(textFile));
   } catch (cause) {
     if (cause instanceof GitObjectReadRefusal) return refuse('object-read', `an object at the pinned revision could not be read: ${cause.message}`);
-    throw cause;
+    // A text the checker could not turn into a subject the derivation accepts is refused, never a crash.
+    return refuse('derive', `the text could not be checked: ${cause instanceof Error ? cause.message : String(cause)}`);
   }
   if (outFile !== undefined) {
     try { fs.writeFileSync(outFile, result.annotated, { flag: 'wx', mode: 0o644 }); } catch (cause) {

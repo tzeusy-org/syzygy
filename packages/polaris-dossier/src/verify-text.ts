@@ -1,4 +1,4 @@
-import { lineCount, object } from '@syzygy/polaris-generation-core/live';
+import { QUOTE_LEAD_IN, lineCount, object } from '@syzygy/polaris-generation-core/live';
 import type { DraftSchemaWithDefs } from './draft-schema.js';
 import { deriveFindings, type DeriveInputs, type Derived, type SubjectRules } from './check-derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
@@ -27,6 +27,8 @@ export const CLAIM_OUTCOMES = ['quotation-verified', 'reference-unverified', 'pa
 export type ClaimOutcome = typeof CLAIM_OUTCOMES[number];
 
 /** File name extensions a bare name (no directory) must carry to count as a path: a bare `server.c` is a reference, `e.g.` is not. */
+/** Extensions a bare name carries in prose as often as in a file name (`Node.js`, `Vue.js`): a bare name with one needs code marks or lines. */
+const WEAK_EXTENSIONS: ReadonlySet<string> = new Set(['js', 'ts', 'in']);
 const BARE_EXTENSIONS: ReadonlySet<string> = new Set([
   'c', 'h', 'cc', 'cpp', 'cxx', 'hpp', 'hh', 'md', 'markdown', 'txt', 'rst', 'conf', 'cfg', 'ini', 'json', 'yaml', 'yml', 'toml', 'xml',
   'py', 'tcl', 'js', 'mjs', 'cjs', 'ts', 'tsx', 'jsx', 'rs', 'go', 'sh', 'bash', 'lua', 'rb', 'java', 'kt', 'mk', 'cmake', 'html', 'css',
@@ -38,7 +40,8 @@ export const VERIFY_TEXT_DISCLOSURES: readonly string[] = [
   'A claim is a paragraph, a list item or a table row outside fenced code; a reference is a repository path, optionally with lines (path:N, path:N-M, path#LN-LM, "path, lines N-M"); a quotation is a double-quoted span (straight or curly) outside code spans.',
   'A quotation is checked only against the files its own claim names; a quotation in a claim that names no file is counted unanchored, never searched for.',
   'A path the screen withholds is reported withheld and never read; a quotation resting on withheld lines of a redacted file is withheld too, and so is a quotation found in no resolving file of a claim that also names a withheld path.',
-  `Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, or a slashed name with neither an extension nor lines. A bare name without a slash is one only with lines, as a dotfile in code marks, or with one of these extensions: ${[...BARE_EXTENSIONS].join(', ')}. A quotation holds at least one letter or digit.`,
+  `Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, or a slashed name with neither an extension nor lines. A bare name without a slash is one only with lines, as a dotfile in code marks, or with one of these extensions: ${[...BARE_EXTENSIONS].join(', ')}; with ${[...WEAK_EXTENSIONS].join(', ')} (\`Node.js\` in prose) only in code marks or with lines. A path written both with lines and alone is checked for both. Lines below 1 or past ${Number.MAX_SAFE_INTEGER} name nothing.`,
+  'A quotation holds at least one letter or digit and may wrap across lines of its claim; a straight-quoted span inside a curly-quoted one is part of it. Backslash escapes are not interpreted. A quotation that itself contains the dossier lead-in ("The project states:") cannot be checked and counts as not found.',
 ];
 
 /** A line range, 1-based and inclusive, as written. */
@@ -48,6 +51,8 @@ export interface TextReference {
   readonly path: string;
   /** The ranges written after the path; empty for a reference to the whole file. */
   readonly ranges: readonly LineRange[];
+  /** Present when the path is written with lines and also alone: the whole file is checked as well as the ranges. */
+  readonly wholeFile?: true;
 }
 
 export interface TextClaim {
@@ -63,8 +68,8 @@ export interface TextClaim {
 
 export interface ExtractedText {
   readonly claims: readonly TextClaim[];
-  /** Lines that are no claim: headings, fenced code (fences included) and table separator rows. */
-  readonly skipped: { readonly headingLines: number; readonly fencedLines: number; readonly tableSeparatorLines: number };
+  /** Lines that are no claim: headings, fenced code (fences included), table header rows and table separator rows. */
+  readonly skipped: { readonly headingLines: number; readonly fencedLines: number; readonly tableHeaderLines: number; readonly tableSeparatorLines: number };
 }
 
 export type ReferenceState = 'resolves' | 'missing' | 'lines-missing' | 'withheld';
@@ -77,6 +82,8 @@ export interface CheckedReference {
    * withheld by name or resolves to no single blob. */
   readonly path: string | null;
   readonly ranges: readonly LineRange[];
+  /** Present when the text also names the whole file beside its ranges. */
+  readonly wholeFile?: true;
   readonly state: ReferenceState;
 }
 
@@ -115,8 +122,8 @@ const DASH = '[-–—]';
 const COLON_LINES = new RegExp(`^:(\\d+)(?:${DASH}(\\d+))?(?!\\w|\\.\\d)`, 'u');
 const ANCHOR_LINES = /^#L(\d+)(?:-L?(\d+))?/u;
 const WORD_LINES = new RegExp(`^,?\\s*\\(?\\s*lines?\\s+(\\d+)(?:\\s*${DASH}\\s*(\\d+))?\\)?`, 'u');
-const STRAIGHT_QUOTE = /"([^"\n]+)"/gu;
-const CURLY_QUOTE = /“([^”\n]+)”/gu;
+const STRAIGHT_QUOTE = /"([^"]+)"/gu;
+const CURLY_QUOTE = /“([^”]+)”/gu;
 const HAS_WORD = /[\p{L}\p{N}]/u;
 
 /** Split a Markdown text into claims and extract each claim's references and quotations. */
@@ -125,8 +132,9 @@ export function extractClaims(markdown: string): ExtractedText {
   const units: { start: number; end: number; text: string[] }[] = [];
   let open: { start: number; end: number; text: string[] } | null = null;
   let fence: string | null = null;
-  let headingLines = 0, fencedLines = 0, tableSeparatorLines = 0;
+  let headingLines = 0, fencedLines = 0, tableHeaderLines = 0, tableSeparatorLines = 0;
   const close = (): void => { if (open !== null) units.push(open); open = null; };
+  const tableBody = new Set<{ start: number; end: number; text: string[] }>();
   lines.forEach((line, i) => {
     const number = i + 1;
     const fenceMatch = FENCE.exec(line);
@@ -140,11 +148,19 @@ export function extractClaims(markdown: string): ExtractedText {
     if (HEADING.test(line)) { close(); headingLines += 1; return; }
     if (TABLE_ROW.test(line)) {
       close();
-      if (TABLE_SEPARATOR.test(line)) { tableSeparatorLines += 1; return; }
+      if (TABLE_SEPARATOR.test(line)) {
+        tableSeparatorLines += 1;
+        // The row right above a separator is the table's header: labels, not a claim.
+        const header = units[units.length - 1];
+        if (header !== undefined && header.end === number - 1 && TABLE_ROW.test(header.text[0]!) && !tableBody.has(header)) { units.pop(); tableHeaderLines += 1; }
+        tableBody.add(units[units.length - 1]!);
+        return;
+      }
       units.push({ start: number, end: number, text: [line] });
       return;
     }
-    if (LIST_ITEM.test(line)) close();
+    // A list marker starts a new claim, unless a quotation of the open claim is still open: then it is a wrapped line of that quotation.
+    if (LIST_ITEM.test(line) && !(open !== null && quotationOpen(open.text.join('\n')))) close();
     if (open === null) open = { start: number, end: number, text: [line] };
     else { open.end = number; open.text.push(line); }
   });
@@ -154,7 +170,7 @@ export function extractClaims(markdown: string): ExtractedText {
       const text = unit.text.join('\n');
       return { index: k + 1, startLine: unit.start, endLine: unit.end, references: referencesIn(text), quotations: quotationsIn(text) };
     }),
-    skipped: { headingLines, fencedLines, tableSeparatorLines },
+    skipped: { headingLines, fencedLines, tableHeaderLines, tableSeparatorLines },
   };
 }
 
@@ -180,7 +196,7 @@ const inside = (spans: readonly [number, number][], at: number): boolean => span
 /** The path references of one claim, in order, each path once with every range written after any of its mentions. */
 export function referencesIn(text: string): TextReference[] {
   const spans = codeSpans(text);
-  const found = new Map<string, LineRange[]>();
+  const found = new Map<string, { ranges: LineRange[]; alone: boolean }>();
   for (const match of text.matchAll(PATH_RUN)) {
     let token = match[0];
     const at = match.index;
@@ -201,13 +217,15 @@ export function referencesIn(text: string): TextReference[] {
     const bareExtension = segments.length === 1 && pathText.startsWith('.') && extension !== undefined && pathText === `.${extension}` && BARE_EXTENSIONS.has(extension.toLowerCase());
     // A bare dotfile (`.env`, `.gitignore`) is a path when written as code.
     const dotfile = segments.length === 1 && pathText.startsWith('.') && inside(spans, at);
-    const isPath = bareExtension ? false : dotfile || (extension !== undefined ? slash || BARE_EXTENSIONS.has(extension.toLowerCase()) || ranges.length > 0 : slash && ranges.length > 0);
+    const known = extension === undefined ? false : WEAK_EXTENSIONS.has(extension.toLowerCase()) ? inside(spans, at) : BARE_EXTENSIONS.has(extension.toLowerCase());
+    const isPath = bareExtension ? false : dotfile || (extension !== undefined ? slash || known || ranges.length > 0 : slash && ranges.length > 0);
     if (!isPath) continue;
-    const known = found.get(pathText);
-    if (known === undefined) found.set(pathText, [...ranges]);
-    else for (const range of ranges) if (!known.some((k) => k.start === range.start && k.end === range.end)) known.push(range);
+    const entry = found.get(pathText) ?? { ranges: [] as LineRange[], alone: false };
+    found.set(pathText, entry);
+    if (ranges.length === 0) entry.alone = true;
+    for (const range of ranges) if (!entry.ranges.some((k) => k.start === range.start && k.end === range.end)) entry.ranges.push(range);
   }
-  return [...found].map(([path, ranges]) => ({ path, ranges }));
+  return [...found].map(([path, { ranges, alone }]) => (alone && ranges.length > 0 ? { path, ranges, wholeFile: true as const } : { path, ranges }));
 }
 
 /** The line ranges written right after a path: `:N`, `:N-M`, `#LN-LM`, or one or more `, lines N-M`. A closing backtick may sit between. */
@@ -230,10 +248,24 @@ export function quotationsIn(text: string): string[] {
   const spans = codeSpans(text);
   const masked = [...text].map((char, i) => (inside(spans, i) ? ' ' : char)).join('');
   const found: { at: number; inner: string }[] = [];
-  for (const pattern of [STRAIGHT_QUOTE, CURLY_QUOTE]) {
-    for (const match of masked.matchAll(pattern)) if (HAS_WORD.test(match[1]!)) found.push({ at: match.index, inner: match[1]! });
+  const curly: [number, number][] = [];
+  for (const match of masked.matchAll(CURLY_QUOTE)) {
+    curly.push([match.index, match.index + match[0].length]);
+    if (HAS_WORD.test(match[1]!)) found.push({ at: match.index, inner: match[1]! });
   }
+  // A straight-quoted span inside a curly quotation is part of that quotation, not one of its own.
+  const straight = masked.replace(CURLY_QUOTE, (whole) => ' '.repeat(whole.length));
+  for (const match of straight.matchAll(STRAIGHT_QUOTE)) if (HAS_WORD.test(match[1]!)) found.push({ at: match.index, inner: match[1]! });
   return found.sort((a, b) => a.at - b.at).map((entry) => entry.inner);
+}
+
+/** Whether a quotation opened in a claim's text so far is still open: an odd count of straight quotes, or a curly open without its close. */
+function quotationOpen(text: string): boolean {
+  const spans = codeSpans(text);
+  const masked = [...text].map((char, i) => (inside(spans, i) ? ' ' : char)).join('');
+  const curlyLeft = masked.replace(CURLY_QUOTE, '');
+  if (curlyLeft.includes('“')) return true;
+  return (curlyLeft.match(/"/gu)?.length ?? 0) % 2 === 1;
 }
 
 // ---- verification through the dossier check's derivation ----
@@ -282,6 +314,8 @@ async function derive(pinned: string, blocks: readonly SyntheticBlock[], inputs:
   return derived;
 }
 
+const validLine = (n: number): boolean => Number.isSafeInteger(n) && n >= 1;
+
 /** The finding kinds a synthetic subject may draw: the reference and quotation faults this module reads back. */
 const EXPECTED_FINDINGS: ReadonlySet<string> = new Set(['path-absent', 'range-invalid', 'range-beyond-blob',
   'quotation-empty', 'quotation-elided', 'quotation-not-in-cited-file', 'quotation-outside-range']);
@@ -314,20 +348,28 @@ export async function verifyClaims(extracted: ExtractedText, inputs: DeriveInput
   const stateOf = (path: string): 'missing' | 'withheld' | 'admitted' => (absent.has(path) ? 'missing' : linesOf.has(path) ? 'admitted' : 'withheld');
 
   // Pass 2: every range of every admitted reference, and every quotation against every range of every admitted reference of its claim.
+  // A range below line 1 or past the largest safe integer names no lines; it is a fault here and never reaches the derivation, whose
+  // schema would refuse it. A quotation holding the lead-in would split the synthetic lead-in in two; it is not found, never derived.
   const blocks: SyntheticBlock[] = [];
+  const faultOf = new Map<string, string>();
+  const rangesOf = (reference: { readonly path: string; readonly ranges: readonly LineRange[]; readonly wholeFile?: true }): LineRange[] => {
+    const lines = linesOf.get(reference.path) ?? 0;
+    const whole = lines === 0 ? [] : [{ start: 1, end: lines }];
+    return reference.ranges.length === 0 ? whole : reference.wholeFile === true ? [...reference.ranges, ...whole] : [...reference.ranges];
+  };
   resolvedClaims.forEach((claim, c) => {
     claim.references.forEach((reference, r) => {
       if (stateOf(reference.path) !== 'admitted') return;
-      const lines = linesOf.get(reference.path)!;
-      const ranges = reference.ranges.length > 0 ? reference.ranges : lines === 0 ? [] : [{ start: 1, end: lines }];
-      ranges.forEach((range, k) => {
+      rangesOf(reference).forEach((range, k) => {
+        if (!validLine(range.start) || !validLine(range.end)) { faultOf.set(`c${c}r${r}k${k}`, 'range-invalid'); return; }
         blocks.push({ id: `c${c}r${r}k${k}`, path: reference.path, start: range.start, end: range.end });
-        claim.quotations.forEach((quote, q) => blocks.push({ id: `c${c}r${r}k${k}q${q}`, path: reference.path, start: range.start, end: range.end, quote }));
+        claim.quotations.forEach((quote, q) => {
+          if (!quote.includes(QUOTE_LEAD_IN)) blocks.push({ id: `c${c}r${r}k${k}q${q}`, path: reference.path, start: range.start, end: range.end, quote });
+        });
       });
     });
   });
   const second = blocks.length === 0 ? null : await derive(inputs.pinned, blocks, inputs);
-  const faultOf = new Map<string, string>();
   for (const finding of second?.findings ?? []) {
     if (finding.citationId !== undefined && (finding.kind === 'range-invalid' || finding.kind === 'range-beyond-blob')) faultOf.set(finding.citationId.slice(0, -2), finding.kind);
     else if (finding.blockId !== undefined) faultOf.set(finding.blockId, finding.kind);
@@ -339,20 +381,22 @@ export async function verifyClaims(extracted: ExtractedText, inputs: DeriveInput
     const references = claim.references.map((reference, r): CheckedReference => {
       const state = stateOf(reference.path);
       const named = !isSecretPath(reference.path) && !isSecretPath(reference.written);
-      const shown = { written: named ? reference.written : null, path: named && state !== 'missing' ? reference.path : null };
-      if (state !== 'admitted') return { ...shown, ranges: reference.ranges, state };
+      const shown = { written: named ? reference.written : null, path: named && state !== 'missing' ? reference.path : null,
+        ranges: reference.ranges, ...(reference.wholeFile === true ? { wholeFile: true as const } : {}) };
+      if (state !== 'admitted') return { ...shown, state };
       const beyond = reference.ranges.some((_, k) => faultOf.has(`c${c}r${r}k${k}`));
-      return { ...shown, ranges: reference.ranges, state: beyond ? 'lines-missing' : 'resolves' };
+      return { ...shown, state: beyond ? 'lines-missing' : 'resolves' };
     });
     if (claim.references.length === 0) {
       return { index: claim.index, startLine: claim.startLine, endLine: claim.endLine, outcome: 'unanchored', references, quotations: [], uncheckedQuotations: claim.quotations.length };
     }
-    const quotations = claim.quotations.map((_, q): QuotationState => {
+    const quotations = claim.quotations.map((quote, q): QuotationState => {
+      if (quote.includes(QUOTE_LEAD_IN)) return 'not-found';
       let withheld = false, tried = false;
       for (const [r, reference] of claim.references.entries()) {
         if (references[r]!.state === 'withheld') { withheld = true; continue; }
         if (references[r]!.state !== 'resolves') continue;
-        const ranges = reference.ranges.length > 0 ? reference.ranges.length : (linesOf.get(reference.path) ?? 0) === 0 ? 0 : 1;
+        const ranges = rangesOf(reference).length;
         for (let k = 0; k < ranges; k++) {
           const id = `c${c}r${r}k${k}q${q}`;
           tried = true;
@@ -394,7 +438,11 @@ const describeRange = (range: LineRange): string => (range.start === range.end ?
  * section with the tally and, for each claim that names a file or quotes, what each reference and quotation came to. A withheld path
  * whose name screening withholds is never named in the section. */
 export function annotateText(markdown: string, verified: VerifiedText, heading: { readonly pinned: string; readonly file: string }): string {
-  const lines = markdown.split(/\r\n|\r|\n/u);
+  // Each line keeps its own terminator (LF, CRLF or CR), so the copy differs from the text only by the markers and the section.
+  const parts = markdown.split(/(\r\n|\r|\n)/u);
+  const lines = parts.filter((_, i) => i % 2 === 0);
+  const ends = parts.filter((_, i) => i % 2 === 1);
+  const eol = ends[0] ?? '\n';
   const lastOf = new Map(verified.claims.map((claim) => [claim.endLine, claim]));
   const out = lines.map((text, i) => {
     const claim = lastOf.get(i + 1);
@@ -415,7 +463,7 @@ export function annotateText(markdown: string, verified: VerifiedText, heading: 
     if (claim.references.length === 0 && claim.uncheckedQuotations === 0) continue;
     section.push(`- C${claim.index} (line ${claim.startLine}): ${claim.outcome}`);
     for (const reference of claim.references) {
-      const where = reference.ranges.length === 0 ? 'whole file' : reference.ranges.map(describeRange).join(', ');
+      const where = reference.ranges.length === 0 ? 'whole file' : [...reference.ranges.map(describeRange), ...(reference.wholeFile === true ? ['whole file'] : [])].join(', ');
       const named = reference.written === null ? '(a path screening withholds by name)'
         : reference.path !== null && reference.path !== reference.written ? `\`${reference.written}\` (\`${reference.path}\`)` : `\`${reference.written}\``;
       section.push(`  - reference ${named}, ${where}: ${reference.state}`);
@@ -423,7 +471,8 @@ export function annotateText(markdown: string, verified: VerifiedText, heading: 
     claim.quotations.forEach((state, q) => section.push(`  - quotation ${q + 1}: ${state}`));
     if (claim.uncheckedQuotations > 0) section.push(`  - ${claim.uncheckedQuotations} quotation(s) not checked: the claim names no file`);
   }
-  return `${out.join('\n').replace(/\n*$/u, '')}\n${section.join('\n')}\n`;
+  const body = out.map((text, i) => text + (ends[i] ?? '')).join('').replace(/(\r\n|\r|\n)*$/u, '');
+  return `${body}${eol}${section.join(eol)}${eol}`;
 }
 
 /** Extract, verify and annotate one text. */

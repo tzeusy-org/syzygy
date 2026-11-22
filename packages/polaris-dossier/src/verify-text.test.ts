@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,6 +59,33 @@ const check = async (markdown: string) => {
   return { ...result, read };
 };
 
+// A body screening retains as redacted-span (check.test.ts's P-110 fixture): line 1 carries a password, so lines 1 and 2 are withheld.
+const SECRET_VALUE = `${'s3cr'.repeat(3)}`;
+const CONFIG = `// ${['pass', 'word'].join('')} = "${SECRET_VALUE}"\n// The port is fixed.\nint port = 6379;\n`;
+const REDACTING = ((load) => { if (!load.ok) throw new Error(load.why); return load.screen; })(buildDossierScreen(new TextEncoder().encode(JSON.stringify({
+  policyId: 'fixture-public-source', policyVersion: '4', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
+  publicSourceScope: {
+    contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.h', '.txt'] }] },
+    scopeDetectors: LIVE_POLICY.publicSourceScope.scopeDetectors,
+    sourceVisibility: LIVE_POLICY.publicSourceScope.sourceVisibility,
+    secretRedaction: { ...LIVE_POLICY.publicSourceScope.secretRedaction, redactedClasses: ['code-content'] },
+  },
+})), false, null, 'public'));
+const checkRedacted = async (markdown: string) => {
+  const read: string[] = [];
+  // A redacted body is re-verified against its object id, so the entry carries the git blob id of the bytes.
+  const bytes = new TextEncoder().encode(CONFIG);
+  const id = createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
+  const entries: TreeEntry[] = [{ path: 'src/config.c', mode: '100644', id }];
+  const reader = {
+    revision: PINNED, algorithm: 'sha1', listTree: async () => entries,
+    readBlobs: async (paths: readonly string[]) => paths.map((wanted) => { read.push(wanted); return { ...entries[0]!, bytes }; }),
+  } as unknown as PinnedObjectReader;
+  const result = await verifyText(markdown, { pinned: PINNED, screen: REDACTING, reader }, 'answer.md');
+  expect(result.annotated).not.toContain(SECRET_VALUE);
+  return { ...result, read: [...new Set(read)] };
+};
+
 const SIX = [
   'Kestrel holds data in memory: "keeps every key in memory" (`src/kestrel.c:1-3`).',
   '',
@@ -113,6 +141,31 @@ describe('verify a free-form text: the six outcomes', () => {
     expect(annotated.split(absent).length - 1).toBe(1);
   });
 
+  it('counts lines below 1 or past the largest safe integer as path-missing, without a crash', async () => {
+    const { verified } = await check('See `src/kestrel.c:0`.\n\nAnd src/kestrel.c:99999999999999999999 too.\n\nAnd "keeps every key" at src/kestrel.c:0-1.');
+    expect(verified.claims.map((claim) => [claim.outcome, claim.references[0]!.state])).toEqual([
+      ['path-missing', 'lines-missing'], ['path-missing', 'lines-missing'], ['path-missing', 'lines-missing'],
+    ]);
+  });
+
+  it('counts a quotation that holds the dossier lead-in as not found, without deriving it', async () => {
+    const { verified } = await check('It "The project states: keeps every key" (`src/kestrel.c:1`).');
+    expect(verified.claims[0]).toMatchObject({ outcome: 'quotation-not-found', quotations: ['not-found'] });
+  });
+
+  it('checks a path written with lines and alone against the whole file as well', async () => {
+    const { verified } = await check('It "keeps every key in memory" (`src/kestrel.c:4`, and see src/kestrel.c).');
+    expect(verified.claims[0]).toMatchObject({ outcome: 'quotation-verified', references: [{ path: 'src/kestrel.c', ranges: [{ start: 4, end: 4 }], wholeFile: true, state: 'resolves' }] });
+    const narrow = await check('It "keeps every key in memory" (`src/kestrel.c:4`).');
+    expect(narrow.verified.claims[0]!.outcome).toBe('quotation-not-found');
+  });
+
+  it('withholds a quotation resting on a withheld line of a redacted body, and verifies one from a retained line', async () => {
+    const { verified, read } = await checkRedacted('Ports: "The port is fixed." (`src/config.c:2`).\n\nAnd "int port = 6379;" (`src/config.c:3`).');
+    expect(verified.claims.map((claim) => [claim.outcome, claim.quotations])).toEqual([['withheld', ['withheld']], ['quotation-verified', ['verified']]]);
+    expect(read).toEqual(['src/config.c']);
+  });
+
   it('flips a verified quotation to not found when one quoted character is mutated', async () => {
     const before = await check('It "keeps every key in memory" (`src/kestrel.c:1`).');
     const after = await check('It "keeps everY key in memory" (`src/kestrel.c:1`).');
@@ -154,15 +207,33 @@ describe('extraction', () => {
     expect(referencesIn('see https://example.org/x/y.html, www.example.org/a.html, git@host.example/src/a.c, /etc/redis.conf, `*.c`, `*_test.c`, the `.c` files, `tests/unit`, e.g. this, and obj.encoding')).toEqual([]);
   });
   it('merges repeated mentions of one path', () => {
-    expect(referencesIn('`src/a.c:1` and later src/a.c:2 and src/a.c')).toEqual([{ path: 'src/a.c', ranges: [{ start: 1, end: 1 }, { start: 2, end: 2 }] }]);
+    expect(referencesIn('`src/a.c:1` and later src/a.c:2 and src/a.c')).toEqual([{ path: 'src/a.c', ranges: [{ start: 1, end: 1 }, { start: 2, end: 2 }], wholeFile: true }]);
+    expect(referencesIn('`src/a.c:1` and later src/a.c:2')).toEqual([{ path: 'src/a.c', ranges: [{ start: 1, end: 1 }, { start: 2, end: 2 }] }]);
+  });
+  it('takes a bare js, ts or in name only in code marks or with lines', () => {
+    expect(referencesIn('Built on Node.js, with `server.js`, Vue.js and app.ts:3 and configure.in')).toEqual([
+      { path: 'server.js', ranges: [] }, { path: 'app.ts', ranges: [{ start: 3, end: 3 }] },
+    ]);
   });
   it('reads straight and curly quotations outside code spans', () => {
     expect(quotationsIn('It says "one two" and “three” but not `"four"` nor "--"')).toEqual(['one two', 'three']);
   });
+  it('reads a straight-quoted span inside a curly quotation as part of it', () => {
+    expect(quotationsIn('It says “outer "inner" text” here')).toEqual(['outer "inner" text']);
+  });
+  it('reads a quotation wrapped across lines, and keeps a wrapped list-marker line in its claim', () => {
+    const extracted = extractClaims('- It "keeps every key\n  in memory" (src/kestrel.c:1-2).\n- next item\n\nIt says "a quote that wraps onto\n- a line that looks like a list item" here.\n');
+    expect(extracted.claims.map((claim) => [claim.startLine, claim.endLine, claim.quotations])).toEqual([
+      [1, 2, ['keeps every key\n  in memory']],
+      [3, 3, []],
+      [5, 6, ['a quote that wraps onto\n- a line that looks like a list item']],
+    ]);
+    expect(extractClaims('It says \u201ca curly quote wraps\n- onto a list-like line\u201d here.\n').claims.map((claim) => [claim.startLine, claim.endLine])).toEqual([[1, 2]]);
+  });
   it('splits claims by paragraph, list item and table row, skipping headings, fences and separators', () => {
     const extracted = extractClaims('# Title\n\nPara one\ncontinues.\n- item a\n- item b\n\n| h | i |\n|---|---|\n| r | s |\n\n```\ncode src/x.c:1\n```\n');
-    expect(extracted.claims.map((claim) => [claim.startLine, claim.endLine])).toEqual([[3, 4], [5, 5], [6, 6], [8, 8], [10, 10]]);
-    expect(extracted.skipped).toEqual({ headingLines: 1, fencedLines: 3, tableSeparatorLines: 1 });
+    expect(extracted.claims.map((claim) => [claim.startLine, claim.endLine])).toEqual([[3, 4], [5, 5], [6, 6], [10, 10]]);
+    expect(extracted.skipped).toEqual({ headingLines: 1, fencedLines: 3, tableHeaderLines: 1, tableSeparatorLines: 1 });
   });
 });
 
@@ -175,19 +246,25 @@ describe('the annotated copy', () => {
     expect(lines.slice(0, 5)).toEqual([
       'One `src/kestrel.c:1`. [verify C1: reference-unverified]',
       '',
-      '| a | b [verify C2: unanchored] |',
+      '| a | b |',
       '|---|---|',
-      '| x | `src/none.c` [verify C3: path-missing] |',
+      '| x | `src/none.c` [verify C2: path-missing] |',
     ]);
     expect(annotated).toContain('| path-missing | 1 |');
-    expect(annotated).toContain('| total | 3 |');
+    expect(annotated).toContain('| total | 2 |');
     expect(annotated).toContain(`Checked against the pinned revision ${PINNED}; text answer.md.`);
   });
   it('is a pure function of the text and the result', () => {
     const empty = { claims: [], tally: { 'quotation-verified': 0, 'reference-unverified': 0, 'path-missing': 0, 'quotation-not-found': 0, unanchored: 0, withheld: 0 },
       items: { references: { resolves: 0, missing: 0, 'lines-missing': 0, withheld: 0 }, quotations: { verified: 0, 'not-found': 0, withheld: 0, 'no-file': 0, unanchored: 0 } },
-      skipped: { headingLines: 0, fencedLines: 0, tableSeparatorLines: 0 } } as const;
+      skipped: { headingLines: 0, fencedLines: 0, tableHeaderLines: 0, tableSeparatorLines: 0 } } as const;
     expect(annotateText('x', empty, { pinned: PINNED, file: 'f' })).toBe(annotateText('x', empty, { pinned: PINNED, file: 'f' }));
+  });
+  it('keeps each line terminator of the text, CRLF included', async () => {
+    const { reader } = treeReader();
+    const { annotated } = await verifyText('One `src/kestrel.c:1`.\r\nstill one.\r\n\r\nTwo.\r\n', { pinned: PINNED, screen: SCREEN, reader }, 'answer.md');
+    expect(annotated.startsWith('One `src/kestrel.c:1`.\r\nstill one. [verify C1: reference-unverified]\r\n\r\nTwo. [verify C2: unanchored]\r\n\r\n---\r\n')).toBe(true);
+    expect(annotated.replace(/\r\n/gu, '')).not.toContain('\n');
   });
 });
 

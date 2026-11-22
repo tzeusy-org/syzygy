@@ -47,10 +47,11 @@ async function main() {
   if (!/^[0-9a-f]{40}$/u.test(commit ?? '') || typeof manifest.policy?.sha256 !== 'string' || configuration?.subject?.commit !== commit) refuse('the manifest names no commit, policy digest or screen configuration');
   const out = args.has('--out') ? path.resolve(args.get('--out')) : undefined;
   if (out !== undefined && (fs.existsSync(out) || inside(fs.realpathSync(ROOT), path.join(fs.realpathSync(path.dirname(out)), path.basename(out))))) refuse('--out must name a new file outside this checkout');
+  if (!args.has('--policy-file') && !/^[0-9a-f]{40}$/u.test(manifest.policyBlob ?? '')) refuse('the manifest names no policy blob id (40 hexadecimal characters)');
   const policy = args.has('--policy-file') ? fs.readFileSync(args.get('--policy-file'))
     : execFileSync('git', ['-C', ROOT, 'cat-file', 'blob', manifest.policyBlob], { stdio: ['ignore', 'pipe', 'pipe'] });
   if (sha256(policy) !== manifest.policy.sha256) refuse('the policy bytes do not hash to the digest the pilot bound');
-  for (const module of ['screen.js', 'git-object-reader.js', 'verify-text.js']) if (!fs.existsSync(path.join(DIST, module))) refuse(`packages/polaris-dossier/dist/${module} is absent; run \`npm run build\` first`);
+  for (const module of ['screen.js', 'git-object-reader.js', 'verify-text.js', 'verify-text-run.js']) if (!fs.existsSync(path.join(DIST, module))) refuse(`packages/polaris-dossier/dist/${module} is absent; run \`npm run build\` first`);
   const { buildDossierScreen } = await import(pathToFileURL(path.join(DIST, 'screen.js')).href);
   const { openPinnedObjectReader } = await import(pathToFileURL(path.join(DIST, 'git-object-reader.js')).href);
   const { verifyText } = await import(pathToFileURL(path.join(DIST, 'verify-text.js')).href);
@@ -58,8 +59,14 @@ async function main() {
   if (!load.ok) refuse(`the screen was refused: ${load.why}`);
   if (load.screen.policySha256 !== manifest.policy.sha256 || load.screen.policyVersion !== manifest.policy.policyVersion) refuse('the screen reports another policy than the pilot bound');
   const textFile = path.resolve(args.get('--text'));
+  const { VERIFY_TEXT_MAX_BYTES } = await import(pathToFileURL(path.join(DIST, 'verify-text-run.js')).href);
+  let stats;
+  try { stats = fs.statSync(textFile); } catch { refuse(`the text ${textFile} cannot be read`); }
+  if (!stats.isFile()) refuse(`the text ${textFile} is not a regular file`);
+  if (stats.size > VERIFY_TEXT_MAX_BYTES) refuse(`the text ${textFile} is larger than the ${VERIFY_TEXT_MAX_BYTES}-byte text bound`);
   const bytes = fs.readFileSync(textFile);
-  const markdown = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  let markdown;
+  try { markdown = new TextDecoder('utf-8', { fatal: true }).decode(bytes); } catch { refuse(`the text ${textFile} is not strict UTF-8`); }
   const reader = openPinnedObjectReader({ gitDir: path.resolve(args.get('--clone')), revision: commit });
   const { verified, annotated } = await verifyText(markdown, { pinned: commit, screen: load.screen, reader }, path.basename(textFile));
   if (out !== undefined) fs.writeFileSync(out, annotated, { flag: 'wx', mode: 0o644 });
