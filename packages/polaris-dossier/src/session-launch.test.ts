@@ -372,7 +372,9 @@ async function runNativeOrderedFixture(scenario: OrderedScenario) {
   orderedSession = createOrderedDesignSession({ profile, plan, principal, writer, budget, screening,
     work: { runtimeSha256: sha256('owned runtime'), enforcement: { runtimeSha256: sha256('owned runtime'), workerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : sha256('owned test adapter'),
       operations: { request: operationEnvelope, response: operationEnvelope, tool: operationEnvelope, audit: operationEnvelope, terminal: operationEnvelope },
-      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 }, remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 10_000_000 : 3_000_000_000) - workerCpu,
+      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
+      // Allow the retirement audit while still refusing the entire transfer.
+      remainingRunCpuMicroseconds: () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 64_000_000 : 3_000_000_000) - workerCpu,
       cpuMicroseconds, chargeScreenCpuMicroseconds: value => { workerCpu += value; } },
     ...(scenario === 'insufficient-shape' ? { requestMaxBytes: 16_384 } : {}), relay: () => relay, envelope: () => view.bytes,
     current: () => true, assertCurrent: () => {}, stageVerdict: async ({ stdin, assertCurrent }) => {
@@ -746,7 +748,8 @@ describe('prepared private CLI launch',()=>{
       expect(observed.orderedRecords.slice(-6).map(record => record.kind)).toEqual([
         'acknowledgment-receipt', 'request-admitted', 'send-attempt', 'send-outcome', 'response-admitted', 'eligible',
       ]);
-      expect(observed.workerCpu).toBe(60_000_000);
+      // Five requests and five responses reserve 18 million microseconds apiece.
+      expect(observed.workerCpu).toBe(180_000_000);
       expect(observed.work).toMatchObject({ state: 'complete', used: { request: 4, response: 4, tool: 4, audit: 23, terminal: 1 } });
       expect(observed.terminal, evidence).toMatchObject({ packetSha256: observed.plan.manifest.originalSha256 });
       expect(observed.budget).toMatchObject({ state: 'open', heldDesignTurns: 0, requestReservations: 5, completeUsageReports: 5, reportedTokens: 35 });

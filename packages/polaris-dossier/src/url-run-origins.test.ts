@@ -4,7 +4,6 @@ import os from 'node:os';
 import { createHash } from 'node:crypto';
 import { createRequire, syncBuiltinESMExports } from 'node:module';
 import { deflateSync } from 'node:zlib';
-import ts from 'typescript';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
@@ -17,10 +16,10 @@ import { createUrlRunOrigins, type UrlRunOriginsOptions } from './url-run-origin
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const cleanup: string[] = [];
 afterAll(async () => { for (const dir of cleanup.reverse()) await fs.rm(dir, { recursive: true, force: true }); });
-async function fixture(sourceBodies: Record<string, string> = { 'MANIFESTO.md': 'Own declared purpose.\n', 'README.md': 'Own project overview.\n', 'own.ts': 'export const own = 1;\n' }) {
+async function fixture(supportImages: ReadonlyMap<string, Buffer>, sourceBodies: Record<string, string> = { 'MANIFESTO.md': 'Own declared purpose.\n', 'README.md': 'Own project overview.\n', 'own.ts': 'export const own = 1;\n' }) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'uro-')); cleanup.push(root);
   const run = path.join(root, 'own-run'), parent = path.join(root, 'views'), hidden = path.join(root, 'protected'), support = path.join(root, 'support'), clone = path.join(hidden, 'own-source');
-  for (const dir of [run, parent, hidden, support]) await fs.mkdir(dir, { mode: 0o700 });
+  for (const dir of [run, parent, hidden, support, path.join(root, 'design-support')]) await fs.mkdir(dir, { mode: 0o700 });
   const object = async (kind: string, body: Buffer): Promise<string> => {
     const raw = Buffer.concat([Buffer.from(`${kind} ${body.length}\0`), body]), digest = createHash('sha1').update(raw).digest('hex');
     const file = path.join(clone, '.git/objects', digest.slice(0, 2), digest.slice(2)); await fs.mkdir(path.dirname(file), { recursive: true }); await fs.writeFile(file, deflateSync(raw)); return digest;
@@ -34,11 +33,11 @@ async function fixture(sourceBodies: Record<string, string> = { 'MANIFESTO.md': 
   const parsed = parseRunConfig(JSON.stringify({ operator: 'own-operator', agentTool: 'claude-code', agentToolVersion: '2.1.327', agentProvider: 'anthropic', model: 'claude-sonnet-4-6', deadline: 'PT1H', agentTurnBudget: 20, maxRepairCycles: 2, maxQuestions: 1, audience: 'Own readers', operatorIsOwner: false })); if (!parsed.ok) throw Error('config');
   const record = recordRunConfig(parsed.config, { repository: { url: 'own.example.invalid/source', repositoryId: 'own-source', role: 'observed-source' }, clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' }, pinnedRevision: { commit: pin, label: 'own', pinnedAt: '2026-11-19T00:00:00.000Z' }, screeningPolicy: policy, contentClasses: DOSSIER_CONTENT_CLASSES,
     visibility: { value: 'private', source: 'conservative-default', declaredBy: 'conservative default', label: 'Inferred' }, governed: { kind: 'unstated', because: ['Own fixture.'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
-  const supportSha256 = {} as Record<'session-bridge.js' | 'session-mcp.js', string>;
-  for (const name of ['session-bridge', 'session-mcp'] as const) {
-    const source = await fs.readFile(new URL(`./${name}.ts`, import.meta.url), 'utf8'), compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022, sourceMap: false } }).outputText;
-    await fs.writeFile(path.join(support, `${name}.js`), compiled, { mode: 0o600 }); supportSha256[`${name}.js`] = sha256(compiled);
-  }
+  for (const [file, bytes] of supportImages) await fs.writeFile(path.join(root, file), bytes, { mode: 0o600 });
+  const supportSha256 = {
+    'session-bridge.js': sha256(supportImages.get('support/session-bridge.js')!),
+    'session-mcp.js': sha256(supportImages.get('support/session-mcp.js')!),
+  };
   const node = await fs.realpath(process.execPath), canaries = ['source', 'auth', 'audit'].map(name => path.join(hidden, name));
   for (const file of canaries) await fs.writeFile(file, 'OWN SYNTHETIC CANARY');
   const planning: UrlRolePlanningOptions = { run, record, screen: loaded.screen, sessionDirectories: { author: run, inventory: path.join(root, 'inventory'), fidelity: path.join(root, 'fidelity'), design: path.join(root, 'design') }, cliExecutable: await fs.realpath(path.join(os.homedir(), '.local/share/claude/versions/2.1.327')), parent, protectedPaths: [run, hidden], canaries, current: () => true, audit: () => { throw Error('No CLI launch permitted'); }, now: Date.now(),
@@ -49,7 +48,15 @@ async function fixture(sourceBodies: Record<string, string> = { 'MANIFESTO.md': 
   return { options, run, root, clone, sourceBodies };
 }
 let own: Awaited<ReturnType<typeof fixture>>, codeOnly: Awaited<ReturnType<typeof fixture>>;
-beforeAll(async () => { own = await fixture(); codeOnly = await fixture({ 'own.ts': 'export const own = 1;\n' }); }, 30_000);
+beforeAll(async () => {
+  const root = new URL('../../../', import.meta.url);
+  const { compileDossierSessionSupport } = await import(new URL('scripts/compile_dossier_session_support.mjs', root).href) as {
+    compileDossierSessionSupport(read: (name: string) => Promise<Buffer>): Promise<ReadonlyMap<string, Buffer>>;
+  };
+  const supportImages = await compileDossierSessionSupport(name => fs.readFile(new URL(name, root)));
+  own = await fixture(supportImages);
+  codeOnly = await fixture(supportImages, { 'own.ts': 'export const own = 1;\n' });
+}, 30_000);
 
 describe('initial URL run provenance from genuine native preparations', () => {
   it('keeps four initial prompts on exactly three fixed parents and preserves required declaration aliases', async () => {
