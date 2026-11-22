@@ -362,6 +362,19 @@ describe('makefile version 1', () => {
   it('reads exactly build and test from the scenario fixture', () => {
     expect(facts(recognizeMakefile(F['makeScenario']!))).toEqual([['make-target', 2, 2, 'build'], ['make-target', 4, 4, 'test']]);
   });
+  it('keeps recipe context across conditional-directive lines, so recipe text inside a conditional is never a rule (scenario "Makefile recipe inside a conditional")', () => {
+    expect(facts(recognizeMakefile('build:\nifdef V\n\tscp out host:/srv\nendif\n'))).toEqual([['make-target', 1, 1, 'build']]);
+    expect(facts(recognizeMakefile('build:\nifeq ($(X),1)\n\t@echo "mode: one"\nendif\n'))).toEqual([['make-target', 1, 1, 'build']]);
+    expect(facts(recognizeMakefile('build:\n\techo start\nifeq ($(V),1)\n\tscp out host:/srv\nelse\n\tcp out /srv\nendif\n'))).toEqual([['make-target', 1, 1, 'build']]);
+    // An ordinary line still ends it.
+    expect(facts(recognizeMakefile('build:\nA = 1\n\tscp out host:/srv\n'))).toBe('syntax');
+  });
+  it('refuses a tab-led line that is no recipe line as syntax (scenario "Makefile tab-led line that is no recipe line")', () => {
+    expect(facts(recognizeMakefile('A = 1\n\tscp out host:/srv\nbuild:\n'))).toBe('syntax');
+    expect(facts(recognizeMakefile('build:\n\tscp out host:/srv\nA = 1\n'))).toEqual([['make-target', 1, 1, 'build']]);
+    // A continuation line belongs to its logical line, whatever it begins with.
+    expect(facts(recognizeMakefile('SRC = a \\\n\tb\nbuild: $(SRC)\n'))).toEqual([['make-target', 3, 3, 'build']]);
+  });
   it('takes no fact from a target-specific assignment, and no recipe follows one', () => {
     expect(facts(recognizeMakefile('all: x\nprog: CFLAGS = -O2\n'))).toEqual([['make-target', 1, 1, 'all']]);
     expect(facts(recognizeMakefile('prog: CFLAGS = -O2\n\techo\n'))).toBe('syntax');
