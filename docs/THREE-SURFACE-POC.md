@@ -244,7 +244,23 @@ selected item's text. The size-only comparison and choice rationale are in
      and nothing is written to the configured Butlers repository.
    - Lifting it needs a dated owner act naming the write, then a
      registry-entry amendment, then a fresh implementation authorization.
-4. Trajectory's board shows two separately honest fields for a work item, not
+4. Trajectory opens with five answers, before the scope statement and the
+   board, each counted over every served work item rather than the board's
+   selection (`trajectory.answers` on the machine answer):
+   - what remains: the served count for each tracker status (the tracker's
+     items only, not checked against materialization records);
+   - what is running: how many items the tracker marks `in_progress`, as
+     the tracker's claim, with liveness `activity-undetermined` because no
+     staleness bound is declared;
+   - what changed and what it cost: Unknown, with reason and route;
+   - verified against intent: three separate counts, never added together.
+     They are the items with no traceable warrant; the materialized work on
+     the default branch, each with reconciliation evidence absent; and
+     orphaned work, which is not checked, so its count is Unknown.
+
+   When work items are not observed, all five still render, each Unknown.
+
+   The board then shows two separately honest fields for a work item, not
    one:
    - the worker-change observer's state, saying only what git showed on the
      bounded seam: "External worker: No commit observed", "Commit observed,
