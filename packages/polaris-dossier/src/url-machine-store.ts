@@ -1,4 +1,4 @@
-import { constants, renameSync } from 'node:fs';
+import { constants, lstatSync, realpathSync, renameSync, type Stats } from 'node:fs';
 import { mkdir, open, realpath, lstat, rmdir, unlink, opendir, type FileHandle } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { AsyncLocalStorage } from 'node:async_hooks';
@@ -284,15 +284,22 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       if (await authorize() !== true) throw refused();
       clock();
     };
+    const verifyRootIdentity = (actualRoot: Stats, actualHome: Stats): void => {
+      if (!actualRoot.isDirectory() || (actualRoot.mode & 0o077) !== 0 || actualRoot.uid !== rootStat.uid
+        || !actualHome.isDirectory() || actualRoot.dev !== rootStat.dev || actualRoot.ino !== rootStat.ino
+        || actualHome.dev !== homeStat.dev || actualHome.ino !== homeStat.ino) throw refused();
+    };
+    const verifyNamedRoots = (): void => {
+      charge();
+      verifyRootIdentity(lstatSync(options.protectedRoot), lstatSync(canonicalRoot));
+      if (realpathSync(options.protectedRoot) !== options.protectedRoot || realpathSync(canonicalRoot) !== canonicalRoot) throw refused();
+    };
     const anchored = async (publicationClock?: () => number): Promise<void> => {
       if (publicationClock !== undefined) publicationClock();
       else if (currentAsync === undefined) live();
       else await liveAsync(currentAsync);
-      const [actualRoot, actualHome] = await Promise.all([lstat(options.protectedRoot), lstat(canonicalRoot)]);
-      if (!actualRoot.isDirectory() || (actualRoot.mode & 0o077) !== 0 || actualRoot.uid !== rootStat.uid
-        || !actualHome.isDirectory() || actualRoot.dev !== rootStat.dev || actualRoot.ino !== rootStat.ino
-        || actualHome.dev !== homeStat.dev || actualHome.ino !== homeStat.ino
-        || await realpath(options.protectedRoot) !== options.protectedRoot || await realpath(canonicalRoot) !== canonicalRoot) throw refused();
+      verifyRootIdentity(...await Promise.all([lstat(options.protectedRoot), lstat(canonicalRoot)]));
+      if (await realpath(options.protectedRoot) !== options.protectedRoot || await realpath(canonicalRoot) !== canonicalRoot) throw refused();
       if (publicationClock !== undefined) publicationClock();
       else if (currentAsync === undefined) live();
       else await liveAsync(currentAsync);
@@ -385,21 +392,23 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
     setupCurrent();
-    type PublishBoundary = { readonly current: (() => boolean) | undefined };
+    type StagedBoundary = { readonly current: (() => boolean) | undefined; readonly allocation?: true };
     type StoreOperation = (lease: {
       check: () => number;
       checkWork: () => number;
+      reverify: () => Promise<void>;
       anchored: () => Promise<void>;
       state: () => Promise<StoreState>;
       write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
     }) => Promise<void>;
     const withLock = async (deadline: number, operation: StoreOperation,
-      operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, publication?: PublishBoundary): Promise<boolean> => {
+      operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging?: StagedBoundary): Promise<boolean> => {
       const began = performance.now();
       let active = true, held = false, uncertain = false;
       const pending = new Set<Promise<unknown>>();
+      const allocation = staging?.allocation === true;
       const checkDeadline = (): number => {
-        if (!active || (publication?.current !== undefined && publication.current() !== true)) throw refused();
+        if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
         const now = clock();
         if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
         return now;
@@ -409,26 +418,29 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         live();
         return checkDeadline();
       };
-      // A publication has only one trusted caller and exposes no intermediate
-      // read or grant. Check its lease during private I/O and require fresh
-      // full authority at each lifecycle checkpoint and each durable rename.
-      const publicationClock = publication === undefined ? undefined : checkDeadline;
-      const checkWork = publicationClock ?? check;
-      const verifyAnchors = () => anchored(publicationClock);
+      // Staging exposes no intermediate read or grant. Check its lease during
+      // private I/O and require full authority at durable and release boundaries.
+      const stagingClock = staging === undefined ? undefined : checkDeadline;
+      const checkWork = stagingClock ?? check;
+      const verifyAnchors = () => anchored(stagingClock);
       const checkAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
         checkDeadline();
         await liveAsync(authorize);
         checkDeadline();
       };
+      const reverify = async (): Promise<void> => {
+        if (currentAsync === undefined) check();
+        else await checkAsync(currentAsync);
+      };
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
-        if (currentAsync === undefined || publication !== undefined) checkWork();
+        if (currentAsync === undefined || staging !== undefined) checkWork();
         else await checkAsync(currentAsync);
         checkDeadline(); charge();
         const promise = start();
         pending.add(promise);
         try {
           const value = await promise;
-          if (currentAsync === undefined || publication !== undefined) checkWork();
+          if (currentAsync === undefined || staging !== undefined) checkWork();
           else await checkAsync(currentAsync);
           checkDeadline();
           return value;
@@ -448,7 +460,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             const actual = await io(() => readFile(file, Math.max(bytes.byteLength, predecessor?.byteLength ?? 0), true));
             if (actual === null ? predecessor !== null : predecessor === null || !actual.equals(Buffer.from(predecessor))) throw refused();
           }
+          if (allocation) await reverify();
           check();
+          if (allocation) { verifyNamedRoots(); checkDeadline(); }
           // No asynchronous scheduling gap between currentness and publication.
           // POSIX cannot predicate rename on expiry or preempt a stalled syscall.
           // A failed post-boundary check leaves a pending, non-authorizing anchor.
@@ -462,11 +476,12 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           await unlink(temporary).catch(() => {});
         }
       };
-      let timer: ReturnType<typeof setTimeout> | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined, completed = false;
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
         for (;;) {
           check(); await io(verifyAnchors);
+          if (allocation) await reverify();
           try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
           catch (error) {
             if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
@@ -474,8 +489,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           }
         }
         await io(() => heldRoot.sync());
+        if (allocation) await reverify();
         await io(census);
-        await operation({ check, checkWork, anchored: verifyAnchors, state: () => io(() => readState(publicationClock)), write });
+        await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(stagingClock)), write });
         check();
       });
       activeWork.add(work);
@@ -486,21 +502,27 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); },
             Math.max(1, Math.min(operationRemaining, deadline - clock())));
         })]);
-        return true;
-      } catch { uncertain = true; return false; }
+        completed = true;
+      } catch { uncertain = true; }
       finally {
         clearTimeout(timer); active = false;
         // An unresolved operation leaves a durable lock. No successor steals it.
         if (held && !uncertain && pending.size === 0) {
           await rmdir(`${base}/lock`).catch(() => { uncertain = true; });
-          await heldRoot.sync().catch(() => {});
+          await heldRoot.sync().catch(() => { if (allocation) uncertain = true; });
         }
       }
+      return completed && (!allocation || !uncertain);
     };
     const allocateClient = async (deadline: number) => {
+      const began = performance.now();
+      // Allocation creates a never-issued slot. Its full async checks bracket
+      // the protected state and the durable write, where no client is yet live.
+      const staging: StagedBoundary | undefined = currentAsync === undefined ? undefined : { allocation: true, current: undefined };
       let issued: { readonly clientId: string; readonly witnessSha256: string } | null = null;
-      const finished = await withLock(deadline, async ({ check, state, write }) => {
+      const finished = await withLock(deadline, async ({ check, reverify, state, write }) => {
         const current = await state();
+        if (staging !== undefined) await reverify();
         if (current.clients.length >= URL_MACHINE_STORE_LIMITS.clients) throw refused();
         const clientId = opaque();
         if (current.used.includes(clientId) || current.clients.some(entry => entry.clientId === clientId)) throw refused();
@@ -512,12 +534,26 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await write(`${base}/state.json`, bytes);
         validatedState = { sha256: sha256(bytes), value: next };
         if (!equal(await state(), next)) throw refused();
+        if (staging !== undefined) await reverify();
         check(); issued = { clientId, witnessSha256 };
-      });
-      return finished ? issued : null;
+      }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging);
+      if (!finished || currentAsync === undefined) return finished ? issued : null;
+      // Final admission includes cleanup and uses only the original time left.
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const until = began + URL_MACHINE_STORE_LIMITS.operationMilliseconds;
+      try {
+        const remaining = Math.min(until - performance.now(), deadline - clock());
+        if (remaining <= 0 || !(await Promise.race([currentAsync(), new Promise<false>(resolve => {
+          timer = setTimeout(() => resolve(false), remaining);
+        })]))) return null;
+        if (performance.now() >= until || clock() >= deadline || live() >= deadline) return null;
+        verifyNamedRoots();
+        return performance.now() < until && clock() < deadline ? issued : null;
+      } catch { return null; }
+      finally { clearTimeout(timer); }
     };
     const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineLifecycleLease) => Promise<void>,
-      effectProfile?: NativeSessionProfile, publication?: PublishBoundary): Promise<boolean> => {
+      effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)
         ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
