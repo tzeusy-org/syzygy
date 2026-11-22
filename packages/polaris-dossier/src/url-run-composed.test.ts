@@ -915,6 +915,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             expect(execution.supervisorCapture.roles.every(role => role.pid === 'Unknown')).toBe(true);
             expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(coldFinals[0]!)).toThrow();
           } else {
+            expect(relayRoles).toEqual([...launchesBeforeResume, 'design']);
+            expect([author.count(), inv.count(), fidelity.count()]).toEqual(forwardsBeforeResume.slice(0, 3));
             expect(deliveryReproductions).toEqual([[0, 0], [1, 1]]);
             const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
             expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
