@@ -243,6 +243,7 @@ describe('active URL design product capability', () => {
     Object.assign(admitted.reads, { waitForSample: wait });
     expect(await validateUrlDesignProduct(admitted.input, admitted.options)).not.toBeNull();
     expect(wait).toHaveBeenCalledTimes(7);
+    expect(gates.sources).toHaveBeenCalledWith(admitted.input, admitted.options.record, admitted.options.ledger, wait);
   });
 
   it.each([1, 2] as const)('retires an inert-view capability when read sample %i refuses', async refusedAt => {

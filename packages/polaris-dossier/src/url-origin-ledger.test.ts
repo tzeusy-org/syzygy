@@ -219,8 +219,26 @@ describe('host-owned URL origin ledger', () => {
     expect(sources.at(-1)?.body).toContain('Own terminal source text.');
     const source = { path: f.file, objectId: f.blob, raw, redacted: false };
     const input = { runId, pinnedRevision: f.commit, input: { sources }, sourceBodies: [source], signal: new AbortController().signal };
-    const full = await verifyUrlRenderedSources(input, record, f.ledger);
+    const sequence: string[] = [];
+    const ledger = {
+      verifyWholeSourceBody: async (request: Parameters<typeof f.ledger.verifyWholeSourceBody>[0]) => {
+        sequence.push('verify');
+        return f.ledger.verifyWholeSourceBody(request);
+      },
+      inspectWholeSourceBody: (capability: Parameters<typeof f.ledger.inspectWholeSourceBody>[0]) => {
+        sequence.push('inspect');
+        return f.ledger.inspectWholeSourceBody(capability);
+      },
+    };
+    const full = await verifyUrlRenderedSources(input, record, ledger, async () => { sequence.push('sample'); });
+    expect(sequence).toEqual(['sample', 'verify', 'sample', 'inspect']);
     expect(full).toEqual([expect.objectContaining({ path: f.file, digest: sha256(raw), range: { start: 0, end: Buffer.byteLength(raw) } })]);
+    sequence.length = 0;
+    await expect(verifyUrlRenderedSources(input, record, ledger, async () => {
+      sequence.push('sample');
+      if (sequence.includes('verify')) throw new Error('owned sample expired');
+    })).rejects.toThrow('owned sample expired');
+    expect(sequence).toEqual(['sample', 'verify', 'sample']);
     const last = sources.at(-1)!;
     const incorrect = [sources.slice(0, -1), [...sources].reverse(), [...sources, last],
       [...sources.slice(0, -1), { ...last, body: 'Own different tail.' }],

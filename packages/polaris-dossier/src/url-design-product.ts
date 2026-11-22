@@ -183,7 +183,7 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
     if (!leaseCurrent()) return null;
     const screened = screenUrlRenderedSite(subject.files, screening);
     if (!screened.ok || !live()) return null;
-    const verified = await verifyUrlRenderedSources(input, record, ledger);
+    const verified = await verifyUrlRenderedSources(input, record, ledger, products.waitForSample);
     if (products.waitForSample !== undefined) await products.waitForSample();
     if (!live() || verified.some(body => body.policies.originSha256 !== declaration.originPolicy.sha256)) return null;
     const parents = [...new Set([scaffold, ...checked.receipts, ...verified.map(body => body.origin)])];

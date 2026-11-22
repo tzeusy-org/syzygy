@@ -16,6 +16,7 @@ export async function verifyUrlRenderedSources(
     readonly sourceBodies: readonly { readonly path: string; readonly objectId: string; readonly raw: string | null; readonly redacted: boolean }[] },
   record: RecordedRunConfig,
   ledger: WholeBodyVerifier,
+  waitForSample?: () => Promise<void>,
 ): Promise<readonly UrlWholeSourceBodyMetadata[]> {
   const { subject } = record, sources = input.input.sources;
   if (input.signal.aborted || input.pinnedRevision !== subject.pinnedRevision.commit
@@ -37,6 +38,9 @@ export async function verifyUrlRenderedSources(
   const sourceBinding = sourceBindingSha256(subject), verified: UrlWholeSourceBodyMetadata[] = [];
   let checkedBytes = 0;
   for (const body of input.sourceBodies) {
+    // Source verification and capability inspection each check live authority.
+    // Settle pending samples between these bounded groups of checks.
+    if (waitForSample !== undefined) await waitForSample();
     const pieces = byPath.get(body.path);
     if (input.signal.aborted || pieces === undefined || body.redacted || body.raw === null
       || Buffer.byteLength(body.raw) > URL_ORIGIN_LEDGER_LIMITS.itemBytes) return refuse();
@@ -45,6 +49,8 @@ export async function verifyUrlRenderedSources(
     checkedBytes += bytes.length;
     if (checkedBytes > URL_ORIGIN_LEDGER_LIMITS.bytes) return refuse();
     const capability = await ledger.verifyWholeSourceBody({ path: body.path, objectId: body.objectId, bytes });
+    if (waitForSample !== undefined) await waitForSample();
+    if (input.signal.aborted) return refuse();
     const exact = ledger.inspectWholeSourceBody(capability);
     if (input.signal.aborted || exact.runId !== input.runId || exact.pinnedCommit !== input.pinnedRevision || exact.sourceBindingSha256 !== sourceBinding
       || exact.path !== body.path || exact.objectId !== body.objectId || exact.bytes !== bytes.length || exact.digest !== sha256(bytes)
