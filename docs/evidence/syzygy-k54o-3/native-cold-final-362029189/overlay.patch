@@ -1,0 +1,84 @@
+--- a/packages/polaris-dossier/src/render.ts
++++ b/packages/polaris-dossier/src/render.ts
+@@ -177,6 +177,10 @@
+ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRender,
+   checkedDesign?: UrlDesignRenderContinuation): Promise<RenderResult> {
+   const now = deps.now();
++  const trace = (phase: string, info: Record<string, boolean | number> = {}): void => {
++    if (checkedDesign !== undefined) process.stderr.write(`F3-COLD ${JSON.stringify({ phase, at: Date.now(), remaining: checkedDesign.deadline - Date.now(), ...info })}\n`);
++  };
++  trace('render-enter');
+   let logRun: string | undefined;
+   const refuse = (stage: RenderStage, reason: string, extra: Partial<RenderRefusal> = {}): RenderResult => {
+     if (logRun !== undefined) logStep(logRun, 'render', now, { outcome: 'refused', stage, reason });
+@@ -370,6 +374,7 @@
+     };
+     // URL reproduction shares the already-issued read deadline: it receives no
+     // fresh allowance after the initial draw, and cannot outlive the run.
++    trace('producer-budget');
+     const producerMilliseconds = urlMode
+       ? Math.max(0, Math.min(URL_PRODUCT_READ_MILLISECONDS.render, products!.deadline - Date.now()))
+       : RENDER_PRODUCER_MILLISECONDS;
+@@ -382,21 +387,29 @@
+     try {
+       const admitted = await Promise.race([
+         Promise.resolve().then(async () => {
++          trace('reproduce-enter');
+           const rebuilt = await reproduce(abort.signal);
+-          if (rebuilt === null || expired()) return false;
++          const late = expired();
++          trace('reproduce-return', { rebuilt: rebuilt !== null, late });
++          if (rebuilt === null || late) return false;
+           const usedPaths = new Set(rebuilt.input.sources.filter(source => !source.exclusion.excluded).map(source => source.path));
++          trace('revalidate-enter');
++          const evidence = products?.revalidate();
++          trace('revalidate-return');
+           return deps.admitProducedSite!({ run, runId, pinnedRevision: pinned, draftRevision: draftRev.revision,
+-            ...(products === undefined ? {} : { products: products.revalidate() }),
++            ...(evidence === undefined ? {} : { products: evidence }),
+             input: rebuilt.input, files: new Map(files), signal: abort.signal, packet: { bytes: published.bytes, sha256: published.sha256 },
+             sourceBodies: [...rebuilt.derived.admitted].filter(([repositoryPath]) => !urlMode || usedPaths.has(repositoryPath))
+               .map(([repositoryPath, blob]) => ({ path: repositoryPath, objectId: blob.objectId,
+                 raw: blob.withheld === undefined ? blob.raw : null, redacted: blob.withheld !== undefined })) });
+         }),
+-        new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, producerMilliseconds); }),
++        new Promise<false>(resolve => { timer = setTimeout(() => { trace('producer-timer'); abort.abort(); resolve(false); }, producerMilliseconds); }),
+       ]);
+-      if (admitted !== true || expired()) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
++      const late = expired();
++      trace('producer-return', { admitted, late });
++      if (admitted !== true || late) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
+       completed = true;
+-    } catch { return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
++    } catch { trace('producer-threw'); return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
+     finally { clearTimeout(timer); if (!completed) abort.abort(); }
+   }
+ 
+--- a/packages/polaris-dossier/src/polaris.ts
++++ b/packages/polaris-dossier/src/polaris.ts
+@@ -1227,16 +1227,25 @@
+   async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | null> {
+     const first = await finalContinuation(verdict, reviewedSite);
+     if (first === null) return null;
++    const trace = (phase: string, proof: typeof first, result?: boolean): void => {
++      process.stderr.write(`F3-COLD ${JSON.stringify({ phase, at: Date.now(), remaining: proof.deadline - Date.now(), ...(result === undefined ? {} : { result }) })}\n`);
++    };
++    trace('factory-returned', first);
+     const firstReads = beginRunProductReads(run, context.artifacts, 'render', Math.min(deadline, first.deadline));
+     const capture = (reads: RunProductReads, proof: typeof first) => {
+       let metadata: UrlDesignProductMetadata | null = null;
+       return {
+         get metadata() { return metadata; },
+         admit: async (input: ProducedSiteInput) => {
++          trace('validate-enter', proof);
+           const product = await validate(reads, input);
++          trace('validate-return', proof, product !== null);
+           const inspected = product === null ? null : await inspectUrlDesignProduct(product, binding);
++          trace('inspect-return', proof, inspected !== null);
+           if (inspected === null) return false;
++          trace('assert-final-enter', proof);
+           assertUrlFinalDesignProduct(proof, inspected);
++          trace('assert-final-return', proof);
+           metadata = inspected;
+           return true;
+         },

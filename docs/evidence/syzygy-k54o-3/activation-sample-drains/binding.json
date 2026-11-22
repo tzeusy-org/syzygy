@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-11-22T12:39:41.964468+00:00",
+  "subject": "5b3d9ae430ba9c6c2b5b4310681fa53720aefadd",
+  "parent": "e08502b9c510fae4e4565f44d6529cb1009a73f4",
+  "tree": "3cfb691c1fba074253736141a7a71933cc65d4dd",
+  "diffCommand": [
+    "git",
+    "diff",
+    "--no-ext-diff",
+    "e08502b9c510fae4e4565f44d6529cb1009a73f4",
+    "5b3d9ae430ba9c6c2b5b4310681fa53720aefadd"
+  ],
+  "diffSha256": "f741ad976eb68629bb5a151d1a075fb75ea2f98515cffebb97e5a369d15ed8bd",
+  "sourceDigests": [
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "8edcd9c6d5486b0e38c7241136544fbed20da24a225e6466cbe793f61da47320"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "live-ordered-current-REVIEW-RAW.md",
+      "bytes": 1577,
+      "sha256": "1fc246d0976a5379ed78f504e9eaab9fa195d1c105d6693b2a64b8f5099b50b9"
+    },
+    {
+      "path": "native-after-drain.json",
+      "bytes": 448,
+      "sha256": "bb6da61ee23bb90b6cc82fe97f69c1618f920d92c885a77e37b7f00e34f3d75c"
+    },
+    {
+      "path": "native-stop-56febf0e0.log",
+      "bytes": 38584,
+      "sha256": "f99f62f404b00887f4ec2c0a3717d280fea38c58cc68342dba4421ae0b80b46a"
+    },
+    {
+      "path": "source-review-RAW.md",
+      "bytes": 1486,
+      "sha256": "df43f1fe811893cabf7cf4249956e19584d6ab6cccae275c63d1e2ac09c1f9ee"
+    }
+  ],
+  "scope": {
+    "exactNative": "56febf0e0 passed recovery, round two delivery and the first protected inference-forward audit, then stopped on transport health. No provider forward or Execution Record was captured.",
+    "nextSource": "5b3d9ae43 adds a drain at each awaitable ordered delivery check for a live child. Independent source PASS. Native acceptance pending."
+  }
+}

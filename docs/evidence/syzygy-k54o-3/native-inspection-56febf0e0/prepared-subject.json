@@ -1,0 +1,65 @@
+{
+  "baseCommit": "56febf0e01a173864fc7dad76c93bd3db5604270",
+  "baseTree": "301f077796633ca0b7de35ab97588e7f65625248",
+  "baseSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "16e5751856768c2c56c88226e233f9e71259ee1bcee2aff488fec451144d0bc0",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-design-product.ts": "af45237606eecd398186fd69f6621641c5655ce2d4499967507b8ae853e4926c",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "c4983d0d8d6d699e76fb1a1f18ca4f6731c31f98112150aaaf549b751a90606f",
+    "packages/polaris-dossier/src/url-machine-store.ts": "1f8016ff5a44be5d169fe4504a1067fc9a4b8a7dd080a97a07521061ce712796",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "d48dab193902acf6208cf089f38eb31ec36e8ddcd07db2eaa9a643bc01cfba16",
+    "packages/polaris-dossier/src/url-run-machine.ts": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "7046919c17855ce3f2ebc1f4b5b01855dc6c8cd3c1d5075a4e86868e05c2f623",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "5befb57d366ca6611b0cc9c5e08e7bbaa43819ef1d69e2770d695dd87fc37aa0",
+    "packages/polaris-dossier/src/url-session-audit.ts": "01296446a6260959658cd35e2af62ed7a44cc870c5b4a05f5f8e20f93a9a5c31",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "be9cfea3e96ed75d9a7ca22702bcba0df5b9547cfab49f922644dabd9348de2a",
+    "packages/polaris-dossier/src/url-run-composed.testkit.ts": "748f848bdcf4f8a862266cd8ddfd8db1191ea20d470b0b0334f17b36e1f21fc9"
+  },
+  "instrumentedSourceFiles": {
+    "packages/polaris-dossier/src/policy-snapshot.ts": "c2efaa40553168953da45d1368585eaf6dffe65d94adcaa244d34807640fb5a4",
+    "packages/polaris-dossier/src/session-launch.ts": "d4b406cbb865368dfbb7101a3b2be7d0dfa3f8c5c3ea2969ef2403a71d893a76",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "f944451b59412f64d51d8a63c3a67c533fe7fc48e662e800dca2cd51852a30dc",
+    "packages/polaris-dossier/src/session-relay.ts": "26e9e713515f458fe72b45e570a169abeb1f89994d36bf724142875fdbd803b9",
+    "packages/polaris-dossier/src/url-design-product.ts": "ede5fb22967255674b94bca55e3cacf0abc56fd3b06d2bacadbd6d520a0971fa",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "09bf7764cadcd2a19d85dfdaa42555cd2517f7f9b9f5081f1d9617508ed37604",
+    "packages/polaris-dossier/src/url-machine-store.ts": "2b3b3edf21826dce2d403f4d0d8507b5f9ea12b300caf5b6ba10e1ce54aeae9d",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "ad90ab920c201ba10f4543acd3c0b9ba616123ac56796496ac63243c18acbb99",
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "3966979a6e1c7da04007629bdae9c987c4b0b02bcdc2955148debc9250bbc871",
+    "packages/polaris-dossier/src/url-run-machine.ts": "edf88b070408eca54ca28d438524b02ad22d5478b3413531e9a8c292717dab24",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "06b3b78abc0824717a50c6b86af5e2c90b18326ee08af62cfc8b72aa8bb579b2",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "a7f6d00f29e7a49510b739eee819ca85a03e7926bfb00f8e11f7d2c7997b10cd",
+    "packages/polaris-dossier/src/url-session-audit.ts": "973f7ab0db8ab41ff8774656af1817643a0c754bf53c78a0c80723f231116aa2"
+  },
+  "priorNativeEvidenceByDigest": [
+    {
+      "file": "f3-56febf0e0-stop.log",
+      "sha256": "f99f62f404b00887f4ec2c0a3717d280fea38c58cc68342dba4421ae0b80b46a",
+      "bytes": 38584
+    },
+    {
+      "file": "f3-56febf0e0-stop-cut.json",
+      "sha256": "9db243293e124cc894d7c32552d8ba560af3aad24f9560bcd522e47e95f4f617",
+      "bytes": 137296
+    },
+    {
+      "file": "f3-56febf0e0-stop-cut.json.failure.json",
+      "sha256": "0ccdc657c0463af0323fdfff882e0e1a499aacccf78a2b25804edd32d57fec18",
+      "bytes": 40318
+    }
+  ],
+  "preparedArtifacts": [
+    {
+      "file": "overlay.patch",
+      "sha256": "43173103218076c85789720f67f30520031c2566d80841307dbd8cf36c053162",
+      "bytes": 122309
+    },
+    {
+      "file": "project.py",
+      "sha256": "aaf38217a0ded9ab0bb6fbe82e4deb2aca4a88c61331bf4a8a0708f04b1cee03",
+      "bytes": 24573
+    }
+  ]
+}

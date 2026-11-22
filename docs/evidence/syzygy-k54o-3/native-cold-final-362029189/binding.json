@@ -1,0 +1,37 @@
+{
+  "subject": "362029189f44e2f4e6bcc045832e6b35f21e52d9",
+  "tree": "0e65be7052e483a06a1b2e935b4277b8211731e9",
+  "command": "npx --no-install vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-run-composed.test.ts -t 'pipeline to eligible-stop-resume$'",
+  "result": {
+    "exit": 1,
+    "failed": 1,
+    "skipped": 3,
+    "vitestSeconds": 222.69,
+    "testSeconds": 219.51
+  },
+  "originalLogSha256": "ff287d9ff69756d0a2960429284ebe66aee4fd88c3019fa7fb9ab46dfe9a7882",
+  "retainedDiagnosticRows": 36,
+  "coldRows": 11,
+  "cold": {
+    "proofRemainingAtRenderEntry": 4777,
+    "preparationMilliseconds": 2957,
+    "revalidateMilliseconds": 173,
+    "validationMilliseconds": 1647,
+    "remainingAtRefusal": -2,
+    "admitted": false,
+    "continuationIssued": true
+  },
+  "artifacts": [
+    {
+      "path": "overlay.patch",
+      "bytes": 5370,
+      "sha256": "58bb5997e4d63624eb6669339f606c5f095bed265c42f4f917398614c257d116"
+    },
+    {
+      "path": "trace.log",
+      "bytes": 2856,
+      "sha256": "411068f18523c1f8bddc77b5e84f2f7169c8bd0529d3847c67ae56cc8c216b12"
+    }
+  ],
+  "limits": "The trace contains 25 live and 11 cold observations. These measurements describe the instrumented run. The uninstrumented 362 public case independently refused before final site storage."
+}

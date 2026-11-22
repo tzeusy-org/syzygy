@@ -1,0 +1,17 @@
+{
+  "subject": "56febf0e01a173864fc7dad76c93bd3db5604270",
+  "auditSha256": "cc2dcde07bd069c49c976be454e1c3d563c4581ae02d38bf2a0d8a3d11331c2e",
+  "designEvents": {
+    "declaration": 1,
+    "launch-attempt": 1,
+    "launch-history": 1,
+    "design-delivery": 1,
+    "machine-peer": 1
+  },
+  "lastEvent": {
+    "kind": "machine-peer",
+    "event": "machine-peer-effect",
+    "operation": "inference-forward"
+  },
+  "executionRecordPresent": false
+}
