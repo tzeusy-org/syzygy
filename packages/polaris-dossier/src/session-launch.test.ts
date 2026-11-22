@@ -1,3 +1,5 @@
+import { unlinkSync, writeFileSync } from 'node:fs';
+import * as fsPromises from 'node:fs/promises';
 import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import * as net from 'node:net';
@@ -1058,7 +1060,7 @@ describe('prepared private CLI launch',()=>{
     const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
     const retained = 'own-retained-entry';
     const work = f.launch.view.workDirectory;
-    let rootOpens = 0, removed = 0, retainedOnRetry = false;
+    let rootOpens = 0, seeded = 0, removed = 0, missing = 0, otherResults = 0, retainedOnRetry = false;
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
       if (rootOpens > 0) completedSamples.push(rootOpens);
@@ -1070,17 +1072,28 @@ describe('prepared private CLI launch',()=>{
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
     const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
 
-    filesystem.beforeOpen = async file => {
-      if (file === work) rootOpens++;
-    };
-    filesystem.beforeLstat = async file => {
-      if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
+    const open = fsPromises.open, lstat = fsPromises.lstat;
+    const countOpen = vi.spyOn(fsPromises, 'open').mockImplementation((...args) => {
+      if (args[0] === work) rootOpens++;
+      return open(...args);
+    });
+    const removeAfterEnumeration = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
+      const file = args[0];
+      if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return lstat(...args);
       const name = path.basename(file);
-      if (disappearing.includes(name)) {
-        await unlink(file);
-        removed++;
-      } else if (name === retained && rootOpens === 2) retainedOnRetry = true;
-    };
+      if (name === retained && rootOpens === 2) retainedOnRetry = true;
+      if (!disappearing.includes(name)) return lstat(...args);
+      // The census enumerated this owned entry. Remove it in the same turn,
+      // then observe the genuine descriptor-relative lstat's refusal.
+      unlinkSync(file);
+      removed++;
+      const result = lstat(...args);
+      void result.then(() => { otherResults++; }, (error: NodeJS.ErrnoException) => {
+        if (error.code === 'ENOENT') missing++;
+        else otherResults++;
+      });
+      return result;
+    });
     // Start one real census after the native tool enters and the fixtures are
     // in place. Its monotonic clock and inspection deadline remain real.
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
@@ -1091,15 +1104,22 @@ describe('prepared private CLI launch',()=>{
       cleanup.push(child.stop);
       try {
         expect(await Promise.race([toolEntered, child.finished.then(result => result.outcome)])).toBe(true);
-        await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
+        for (const name of [...disappearing, retained]) {
+          writeFileSync(path.join(work, name), 'owned', { flag: 'wx' });
+          seeded++;
+        }
         vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
         const completed = expected === 'exited';
-        expect(await child.waitForSample(), `work roots opened: ${rootOpens}, entries removed: ${removed}`).toBe(completed);
+        const current = await child.waitForSample(), inspection = inspect();
+        const diagnostic = JSON.stringify({ rootOpens, seeded, removed, missing, otherResults,
+          sample: inspection.firstRefusal ?? inspection.latest });
+        expect(current, diagnostic).toBe(completed);
+        expect(seeded).toBe(disappearingEntries + 1);
         expect(rootOpens).toBe(completed ? 2 : 1);
         expect(removed).toBe(disappearingEntries);
+        expect({ missing, otherResults }, diagnostic).toEqual({ missing: disappearingEntries, otherResults: 0 });
         expect(retainedOnRetry).toBe(completed);
         expect(completedSamples).toEqual(completed ? [2] : []);
-        const inspection = inspect();
         expect(inspection.latest).toMatchObject({ ordinal: 1, phases: { storage: { outcome: completed ? 'accepted' : 'rejected' } } });
         if (completed) expect(inspection.firstRefusal).toBeUndefined();
         else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'operation-rejected' });
@@ -1110,7 +1130,11 @@ describe('prepared private CLI launch',()=>{
         releaseTool();
         await child.stop();
       }
-    } finally { vi.useRealTimers(); }
+    } finally {
+      removeAfterEnumeration.mockRestore();
+      countOpen.mockRestore();
+      vi.useRealTimers();
+    }
   }, 15000);
 
   it.each([
