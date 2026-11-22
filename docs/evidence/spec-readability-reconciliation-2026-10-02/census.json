@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 26,
-      "scenarios": 34,
+      "scenarios": 35,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -396,7 +396,8 @@
         "POC-REQ-043": {
           "name": "Activity is never rendered as satisfaction",
           "scenarios": [
-            "Closed but unverified"
+            "Closed but unverified",
+            "Closed is the tracker's word, not done"
           ]
         },
         "POC-REQ-050": {

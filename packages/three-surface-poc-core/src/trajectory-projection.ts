@@ -2,12 +2,12 @@ import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items
 
 export const STATUS_TO_COLUMN = {
   open: 'Backlog',
-  in_progress: 'In Progress',
+  in_progress: 'Claimed',
   blocked: 'Blocked',
   deferred: 'Deferred',
   pinned: 'Pinned',
   hooked: 'Hooked',
-  closed: 'Done',
+  closed: 'Closed',
 } as const satisfies Record<WorkItemStatus, string>;
 
 export type TrajectoryColumn = (typeof STATUS_TO_COLUMN)[WorkItemStatus];
