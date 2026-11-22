@@ -134,6 +134,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/url-parent-adoption.git.test.ts',
   'packages/polaris-dossier/src/url-role-plan.test.ts',
   'packages/polaris-dossier/src/url-run-artifacts.test.ts',
+  'packages/polaris-dossier/src/url-run-machine.test.ts',
   'packages/polaris-dossier/src/url-run-origins.test.ts',
   'packages/polaris-dossier/src/url-run-sessions.test.ts',
   'packages/polaris-dossier/src/url-session-audit.test.ts',
