@@ -199,8 +199,8 @@ and rationale remain in the dated blocker packet.
 
 [Observed] The v1.6 record regenerates in both trees and its exact applied tree
 verifies at the predecessor baseline. On the successor design the recorder
-uses the D10 supersession path for the changed design. The proposed v1.7 aggregate subject names the earlier design
-baseline. Applying that proposal to this design would require recomposition
+uses the D10 supersession path for the changed design. The proposed v1.7 aggregate
+subject names the earlier design baseline. Applying that proposal to this design would require recomposition
 and a review decision under CC-REV-1 and CC-REV-4 based on the resulting
 semantic changes. The v1.7 builder verifies the
 unapplied historical candidate at the predecessor baseline
@@ -208,14 +208,14 @@ unapplied historical candidate at the predecessor baseline
 its original commit. [Inferred] A distinct design version identifies which
 interactive wording was adopted while retaining v1.6 as the recorded
 local-agent-mode specification version. The agent adoption log names the
-install commit and its revert command. The design version tag identifies
-the installed correction.
+install commit and its rollback command. The tag
+`polaris-dossier-local-agent-design-v1.8` identifies the installed correction.
 
 ## Review
 
 The independent review returned **REVISE** against
 `db78a1800fa8c5957e49db7d432b687fbbd1092f`. Its verbatim findings and both
-subject blob IDs are in [the raw review](interactive-handover-review-RAW.md).
+subject blob IDs are in [the raw review](../../reviews/R-DOSSIER-INTERACTIVE-HANDOVER-1-RAW.md).
 The disposition follows CC-REV-4.
 
 1. Give the two launch-form signatures and require the corresponding review
