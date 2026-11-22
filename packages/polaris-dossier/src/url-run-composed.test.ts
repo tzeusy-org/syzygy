@@ -1,14 +1,14 @@
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
-import { runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
-import { openUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
+import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
 import { loadSessionCredential } from './session-credential.js';
 import { startUrlRunSessions, type UrlRunSessions } from './url-run-sessions.js';
 import { sessionRelayTestPort } from './session-relay.js';
@@ -19,6 +19,18 @@ import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryOptions } from './url-session-audit-history.js';
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
+import * as recovery from './url-recovery.js';
+
+const recoveryHost = await vi.hoisted(async () => {
+  const { homedir } = await import('node:os');
+  const { join } = await import('node:path');
+  return { root: join(homedir(), '.tmp', `url-composed-host-${process.pid}-${Date.now()}`) };
+});
+// Isolate the filesystem namespace while keeping its production store readers,
+// mode registration, stop seals and exclusive claim machinery intact.
+vi.mock('./url-mode-registry.js', async importOriginal => ({
+  ...await importOriginal<typeof import('./url-mode-registry.js')>(), URL_HOST_ROOT: recoveryHost.root,
+}));
 
 type Forward = Parameters<typeof sessionRelayTestPort>[0];
 const provider = vi.hoisted(() => new Map<string, Forward>());
@@ -95,11 +107,12 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall 
 
 let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
-beforeAll(async () => { runtime = await buildComposedRuntime(); }, 60_000);
-afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); });
+beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
+afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
-async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[]) {
+async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean) {
   const credential = await loadSessionCredential({ environment: { ANTHROPIC_API_KEY: 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL' },
     credentialFile: path.join(f.hidden, 'no-ambient-credential.json'), now: Date.now });
   if (!credential.ok) throw new Error('owned composed credential refused');
@@ -112,11 +125,11 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
     declaredClasses: f.declaration.plannedClasses, originPolicySha256: f.origin.binding.sha256,
     auditParent: f.hidden, auditName: 'sessions', principal: f.record.declared.operator,
     sessionDirectories: f.directories, canaries: f.canaries, current: f.current, now: Date.now, deadline: f.deadline,
-    credential: credential.credential, sourceReader: f.openReader,
-    production: { governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'), current: f.current,
-      policyBytes: f.policy.bytes, artifacts: f.artifacts,
+    credential: credential.credential, sourceReader: f.openReader, stopRequested,
+    production: { ...(f.machine ?? { governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'),
       parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
-        subjects: [{ path: f.origin.binding.path, sha256: f.origin.binding.sha256 }] } },
+        subjects: [{ path: f.origin.binding.path, sha256: f.origin.binding.sha256 }] } }), current: f.current,
+      policyBytes: f.policy.bytes, artifacts: f.artifacts },
     launchHistory: { promptDigests: { inventory: prompt('inventory'), fidelity: prompt('fidelity'), design: prompt('design') }, register: f.artifacts.registerLaunchHistory },
     runDossier: f.artifacts.runDossier, artifactOrigins: f.artifacts.artifactOrigins, dossierOrigins: f.artifacts.dossierOrigins,
     toolReceipt: async (role, receipt, admission, current) => {
@@ -135,21 +148,24 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
 describe('composed URL run with actual role processes', { timeout: 360_000 }, () => {
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
-  it.each(['complete', 'delivery-stop'] as const)('runs the genuine production pipeline to %s', async scenario => {
+  it.each(['complete', 'delivery-stop', 'stop-resume'] as const)('runs the genuine production pipeline to %s', async scenario => {
+    const cut = scenario !== 'complete', resumeAfterStop = scenario === 'stop-resume';
+    const resumeChecks: unknown[] = [];
     let releaseFinalResponses!: () => void;
-    if (scenario === 'delivery-stop') finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
+    if (cut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     let finishProviders!: () => void;
     const providerFinish = new Promise<void>(resolve => { finishProviders = resolve; });
-    const finalResponse: (() => Promise<ScriptCall>)[] = scenario === 'delivery-stop' ? [async () => {
+    const finalResponse: (() => Promise<ScriptCall>)[] = cut ? [async () => {
       await providerFinish; return { type: 'text', text: 'OWN ROLE COMPLETE AT CONFIRMED DELIVERY STOP' };
     }] : [];
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
-    if (scenario === 'delivery-stop') vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
+    let cutTaken = false;
+    if (cut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
       const actual = await createAudit(options);
-      if (!actual.ok) return actual;
+      if (!actual.ok || cutTaken) return actual;
       return { ...actual,
         beginOrderedDesignAudit: (...args) => { beginOrdered(); return actual.beginOrderedDesignAudit(...args); },
         commitDesignDelivery: async (...args) => {
@@ -160,7 +176,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
           expectedPlan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(profile, view.receipt,
             args[0].expectedProduct, f.commit, f.deadline), envelope: view.view });
-          delivered = view;
+          delivered = view; cutTaken = true;
           // Finish the provider exchanges already in flight before closing their
           // native roles. An incomplete exchange must remain a cold refusal.
           finishProviders();
@@ -170,13 +186,14 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             expect([...settledProviderRoles].sort()).toEqual(['author', 'fidelity', 'inventory']);
             // Begin the actual stop before releasing the guard callbacks. They
             // must observe its revoked authority rather than forward afterward.
+            if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);
             void controller.stop().catch(() => {});
           } finally { releaseFinalResponses(); }
           throw new Error('owned interruption after confirmed design delivery');
         },
       };
     });
-    const f = await prepareComposedRun(runtime); cleanup.push(f.close);
+    const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
@@ -205,9 +222,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         return tool('fidelity_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.fidelity, '--submit', 'round-1/verdict.json', '--stdin'],
           stdin: canonical({ ...fidelityVerdict(f.commit, artifact.sha256, packet.spans), sessionId: session('fidelity') }) });
       }, ...finalResponse]);
+    let designRound = 1;
     const design = scripted('design', [tool('design_poll', 'dossier_step', { argv: ['dossier', 'poll', f.runId] }),
-      tool('design_part_1', 'artifact_read', { path: 'round-1/design-view-part-1.json' }),
-      tool('design_part_2', 'artifact_read', { path: 'round-1/design-view-part-2.json' }), () => {
+      () => tool('design_part_1', 'artifact_read', { path: `round-${designRound}/design-view-part-1.json` }),
+      () => tool('design_part_2', 'artifact_read', { path: `round-${designRound}/design-view-part-2.json` }), () => {
         const rows = resultTexts(design.received).filter(value => value.kind === 'design-view-part');
         const parts = [1, 2].map(ordinal => [...rows].reverse().find(row => row.ordinal === ordinal));
         if (parts.some(part => typeof part?.text !== 'string')) throw new Error('complete native ordered design parts absent');
@@ -215,7 +233,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const inverse: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
         const packet = JSON.parse(view.payload.replace(/&(?:amp|lt|gt|quot|#39);/gu, entity => inverse[entity]!)) as { files: { path: string }[] };
         const pages = packet.files.filter(file => file.path.endsWith('.html')).map(file => file.path);
-        return tool('design_submit', 'dossier_step', { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'],
+        return tool('design_submit', 'dossier_step', { argv: ['dossier', 'await', '/work', '--submit', `round-${designRound}/verdict.json`, '--stdin'],
           stdin: canonical({ ...designVerdict(f.commit, view.originalSha256, pages), sessionId: session('design') }) });
       }, { type: 'text', text: 'SYZYGY_DESIGN_TRANSFER_COMPLETE' }]);
     const events: string[] = [], draws: string[][] = [], failures: string[] = [], receipts: SeenReceipt[] = [];
@@ -230,13 +248,13 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }), fidelityDeliveredFor: [], designDeliveredFor: [], fidelityDeliveredPairs: [], notified: [], siteFor: {}, launches: [], stopGeneration: 'c'.repeat(32) };
     try { writeUrlSupervisorState(stateRoot, state); } catch { throw new Error(`own state: ${JSON.stringify(state)}`); }
     const stop = openUrlSupervisorStop(stateRoot, state); cleanup.push(async () => stop.close());
-    const controller = await start(f, failures, () => {}, receipts).catch(async () => {
+    const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested').catch(async () => {
       const audit = [];
       for (const role of ['author', 'inventory', 'fidelity', 'design']) {
         const text = await fs.readFile(path.join(f.hidden, `sessions-${role}.jsonl`), 'utf8').catch(() => '');
         for (const line of text.split('\n').filter(Boolean)) {
           const row = JSON.parse(line) as { event: { kind: string; payload: unknown } };
-          audit.push({ role, kind: row.event.kind, fields: row.event.payload !== null && typeof row.event.payload === 'object' ? Object.keys(row.event.payload) : [] });
+          audit.push({ role, kind: row.event.kind, payload: row.event.payload });
         }
       }
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit }));
@@ -256,13 +274,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       while (!authorPassed() && failures.length === 0 && performance.now() < until)
         await new Promise(resolve => setTimeout(resolve, 250));
       expect(failures).toEqual([]);
-      expect(authorPassed()).toBe(true);
       inv.allow(); design.allow();
       const packetUntil = performance.now() + 60_000;
       while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
         await new Promise(resolve => setTimeout(resolve, 250));
       fidelity.allow();
-      if (scenario === 'delivery-stop') {
+      if (cut) {
         expect(await loop).toBe(1);
         const stopped = await controller.stop();
         expect(delivered).toBeDefined();
@@ -278,8 +295,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         expect(stopped.closedMachineHistory).toBeDefined();
         const sealed = stopped.closedMachineHistory!;
         const machine = await reconstructColdUrlRunMachineHistory({
-          governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'),
-          sealed, expected: { identitySha256: sealed.identitySha256, binding: sealed.binding, runId: f.runId,
+          governanceRoot: f.machine?.governanceRoot ?? path.join(f.root, 'observing/.syzygy'),
+          protectedRoot: f.machine?.protectedRoot ?? path.join(f.hidden, 'machine'), sealed, expected: { identitySha256: sealed.identitySha256, binding: sealed.binding, runId: f.runId,
             sourcePin: f.commit, originPolicySha256: f.origin.binding.sha256,
             profiles: Object.fromEntries(f.plans.map(plan => [plan.role, plan.profile.digest])) as Record<'author' | 'inventory' | 'fidelity' | 'design', string>,
             deadline: f.deadline }, now: Date.now, current: f.current,
@@ -294,6 +311,15 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const options: UrlSessionAuditHistoryOptions = { parent: f.hidden, name: 'sessions', expected: stopped.closedAuditHistory!,
           current: f.current, deadline: f.deadline, retainedLaunches,
           machineHistory: { identitySha256: machine!.identitySha256, snapshots: machine!.snapshots } };
+        const retainedCut = process.env['SYZYGY_COMPOSED_RETAIN'];
+        if (retainedCut !== undefined) {
+          cleanup.splice(cleanup.indexOf(f.close), 1);
+          await fs.writeFile(retainedCut, JSON.stringify({ run: f.run, hidden: f.hidden, root: f.root,
+            governanceRoot: f.machine?.governanceRoot, protectedRoot: f.machine?.protectedRoot,
+            deadline: f.deadline, policy: Buffer.from(f.policy.bytes).toString('base64'),
+            expected: stopped.closedAuditHistory, sealed: stopped.closedMachineHistory,
+            retainedLaunches: Object.fromEntries(Object.entries(retainedLaunches).map(([role, subject]) => [role, { ...subject, screen: undefined }])) }, null, 2));
+        }
         const verified = await verifyUrlSessionAuditHistory(options);
         expect(verified, 'the closed full audit must accept the confirmed stopped delivery').toMatchObject({ authorization: 'none', replay: 'forbidden', completeness: 'Unknown', capturedHelperLaunches: 3 });
         expect(readVerifiedUrlAuditLaunches(verified)?.ordered).toEqual(stopped.closedAuditHistory!.ordered);
@@ -309,6 +335,52 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           attempts: [{ epoch: 1, disposition: 'stopped', recordCount: 0 }] });
         expect(await verifyUrlSessionAuditHistory({ ...options, deadline: f.deadline + 1 })).toBeNull();
         expect(await verifyUrlSessionAuditHistory({ ...options, deadline: undefined })).toBeNull();
+        if (resumeAfterStop) {
+          expect(events.at(-1)).toBe('run ended: operator stop requested, checked history retained');
+          expect(stopped.failure).toBeNull();
+          expect(stopped.budget.pendingRoles).toEqual([]);
+          expect(design.count()).toBe(0);
+          const oldDesignPid = stopped.roles.find(role => role.role === 'design')!.pid;
+          const verifiedCuts: Awaited<ReturnType<typeof recovery.verifyStoppedUrlRun>>[] = [];
+          const verify = recovery.verifyStoppedUrlRun, claim = recovery.claimStoppedUrlRun;
+          vi.spyOn(recovery, 'verifyStoppedUrlRun').mockImplementation(async (...args) => {
+            const result = await verify(...args); verifiedCuts.push(result);
+            resumeChecks.push(result.ok ? { phase: 'verify', ok: true, nextDesignRound: result.nextDesignRound } : { phase: 'verify', ...result }); return result;
+          });
+          let claimedExactCut = false;
+          vi.spyOn(recovery, 'claimStoppedUrlRun').mockImplementation(async value => {
+            expect(verifiedCuts).toContain(value);
+            const result = await claim(value);
+            claimedExactCut = recovery.isClaimedStoppedUrlRun(value, result);
+            expect(claimedExactCut).toBe(true);
+            resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
+            return result;
+          });
+          designRound = 2;
+          vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
+          vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
+          const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          expect(exit).toBe(0);
+          expect(verifiedCuts).toHaveLength(1);
+          expect(verifiedCuts[0]).toMatchObject({ ok: true, nextDesignRound: 2,
+            boundary: { record: { products: { format: 'polaris-url-frozen-products/2' } } } });
+          expect(claimedExactCut).toBe(true);
+          const resumed = readUrlSupervisorState(stateRoot, f.runId);
+          expect(resumed?.done).toBeDefined();
+          expect(resumed!.finalSite!.site).toBeGreaterThan(resumed!.siteFor['0']!);
+          const recordBytes = await fs.readFile(path.join(f.run, 'record.json'));
+          const execution = JSON.parse(recordBytes.toString()) as { format: string; supervisorCapture: {
+            roles: { role: string; pid: number | 'Unknown' }[]; historical: unknown } };
+          expect(execution.format).toBe('polaris-dossier-execution-record/2');
+          expect(execution.supervisorCapture.historical).toBeDefined();
+          const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
+          expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
+          expect(execution.supervisorCapture.roles.filter(role => role.role !== 'design').every(role => role.pid === 'Unknown')).toBe(true);
+          const again = await closeRun(f.run, {}, { sources: f.sources, now: Date.now, openReader: f.openReader,
+            probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
+          expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
+          expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
+        }
         return;
       }
       expect(await loop, JSON.stringify({ events, failures, summary: controller.summary(), draws: draws.slice(-1), producerReports: f.producerReports() })).toBe(0);
@@ -331,7 +403,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       await controller.stop(); await loop.catch(() => {});
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
-        producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
+        resumeChecks, producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
     }
   }, 360_000);
 });

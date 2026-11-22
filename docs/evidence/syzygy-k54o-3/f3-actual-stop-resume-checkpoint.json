@@ -1,0 +1,85 @@
+{
+  "label": "Observed",
+  "subject": {
+    "commit": "fe2ef52f28daea2075c6d7723c26c6e9bd8d66d3",
+    "files": {
+      "packages/polaris-dossier/src/url-run-composed.test.ts": "d4d309c3be58615759cf488886535592329fbef753b4c3659d499ae8f80b2f17",
+      "packages/polaris-dossier/src/url-run-composed.testkit.ts": "a5f2fd9e220252673562e463c1d9a52e193216444ed5770d27ccc81e35ba984f",
+      "packages/polaris-dossier/src/polaris.ts": "d12b5f4f1822a359f81853d9321c4054a17c667032d5075526155d1c0f799c3c",
+      "packages/polaris-dossier/src/url-recovery.ts": "f1dec97ee20392e6c3becd63dc6278677098492a2385229588f62b1915039844",
+      "packages/polaris-dossier/src/url-session-audit-history.ts": "291fa3fbea6169e9e9e1e1ec0bccf5407831de3ad6d0340901a6d2fa6699758d",
+      "packages/polaris-dossier/src/url-machine-store.ts": "b93c94a73fa2a9a13c86ba5384817846d9cca0720199d0a8e6eaebf35c5b0b79",
+      "packages/polaris-dossier/src/session-profile.ts": "1d401d51c0cd7c84837a27b53506ff086eaa59d302b03c6f33e3115851a62a14"
+    },
+    "runtimeManifestSha256": "cc26f92ec1200cee0bbf73497585bf67358a71e7157fa819980822ebd8d5cec4",
+    "runtimeInputTreeSha256": "dcdb94caaee14d2499c33ded8d547bcab0a6e9473573bb208959cecb58e5a650"
+  },
+  "command": "SYZYGY_COMPOSED_RETAIN=/home/orca/.tmp/f3-stop-resume-fifth-cut.json TMPDIR=/home/orca/.tmp npx vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t stop-resume",
+  "outcome": {
+    "vitest": "1 failed,2 skipped; final-record acceptance remains open",
+    "durationSeconds": 172.17,
+    "sourceBytesUnchanged": true,
+    "operatorStop": "checked history retained",
+    "auditDirectoryMode": "0o700",
+    "fullColdAuditAndDeadlineNegativeChecks": "passed before public resume",
+    "publicResume": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      }
+    ],
+    "remainingFailure": "new audit bootstrap failed before fresh design launch; exact failing guard remains Unknown",
+    "newAudit": "three empty ordinary role segments; no design segment",
+    "finalRecordProduced": false,
+    "finalRecordNameExistsSecondCheck": false,
+    "newAuditSegments": [
+      {
+        "file": "sessions-author.jsonl",
+        "bytes": 0
+      },
+      {
+        "file": "sessions-fidelity.jsonl",
+        "bytes": 0
+      },
+      {
+        "file": "sessions-inventory.jsonl",
+        "bytes": 0
+      }
+    ]
+  },
+  "auditFiles": {
+    "author": {
+      "sha256": "0568981bfbbf41e7fbd4f137ae4a245a6eec065eea7aab73214d792396bf7a50",
+      "bytes": 202048,
+      "records": 118
+    },
+    "inventory": {
+      "sha256": "581b298363f42df224465b10d2e3b9c340b142d011605fd550e620e3a9bc63c7",
+      "bytes": 171864,
+      "records": 103
+    },
+    "fidelity": {
+      "sha256": "53bda9109747bf05c511c5685d5998b4980cd1353ddb9155abb1a79b12d44166",
+      "bytes": 138343,
+      "records": 68
+    },
+    "design": {
+      "sha256": "6dbe56a46ab515c78d22233a43e6e9e9d67f9df440c749090d1cf97272bb0968",
+      "bytes": 7548,
+      "records": 5
+    }
+  },
+  "logSha256": "d918a979e33dc0ed62495f39f970f900ce9fd1f5fcf3f40a07359f2965efe96a",
+  "localRetainedSource": "f3-stop-resume-fifth-source.json",
+  "localRetainedCut": "f3-stop-resume-fifth-cut.json",
+  "limitations": [
+    "Controlled provider callback schedule at confirmed design-delivery cut.",
+    "Public verifier and genuine exact claim passed; no fresh native process or final record is claimed."
+  ]
+}
