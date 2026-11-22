@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import path from 'node:path';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { acquireUrlRecoveryClaim, isUrlRecoveryClaim, readUrlStoppedBoundary, readUrlStoppedBoundaryChain } from './url-stopped-run.js';
 
@@ -136,4 +136,65 @@ describe('retained URL stop expectation', () => {
     g.write({ ...g.record, stoppedAt: 1100 });
     expect(other.current()).toBe(false); expect(other.consume()).toBe(false); expect(other.release()).toBe(true);
   });
+
+  it('checks the clock and exact stop bytes on every held claim use', () => {
+    const f = stoppedFixture(); f.write(); const boundary = f.load()!;
+    let now = 2000;
+    const input = { root: f.root, expected: f.expected, sha256: boundary.sha256,
+      now: () => now, current: () => true };
+    const claim = acquireUrlRecoveryClaim(input)!;
+    expect(claim.consume()).toBe(true);
+    expect(claim.current()).toBe(true);
+    for (const invalid of [999, 2000.5, Number.NaN, 5000]) {
+      now = invalid;
+      expect(claim.current()).toBe(false);
+    }
+    now = 2000;
+    expect(claim.current()).toBe(true);
+    const previousSize = fs.statSync(f.file).size;
+    f.write({ ...f.record, stoppedAt: 1100 });
+    expect(fs.statSync(f.file).size).toBe(previousSize);
+    expect(f.load()?.record.stoppedAt).toBe(1100);
+    expect(claim.current()).toBe(false);
+    expect(claim.release()).toBe(true);
+  });
+
+  it('rejects replacement of the named slot during the exact byte comparison', () => {
+    const f = stoppedFixture(); f.write(); const boundary = f.load()!;
+    const claim = acquireUrlRecoveryClaim({ root: f.root, expected: f.expected, sha256: boundary.sha256,
+      now: () => 2000, current: () => true })!;
+    expect(claim.consume()).toBe(true);
+    const bytes = fs.readFileSync(f.file), equals = Buffer.prototype.equals;
+    let replaced = false;
+    const comparison = vi.spyOn(Buffer.prototype, 'equals').mockImplementation(function (this: unknown, ...args: unknown[]) {
+      if (!Buffer.isBuffer(this) || !(args[0] instanceof Uint8Array)) throw new Error('unexpected byte comparison');
+      const result = equals.call(this, args[0]);
+      if (!replaced && result && this.length === bytes.length) {
+        replaced = true;
+        fs.renameSync(f.file, `${f.file}.old`);
+        fs.writeFileSync(f.file, bytes, { mode: 0o600 });
+      }
+      return result;
+    });
+    try { expect(claim.current()).toBe(false); }
+    finally { comparison.mockRestore(); }
+    expect(replaced).toBe(true);
+    expect(f.load()).toEqual(boundary);
+    expect(claim.release()).toBe(true);
+  });
+
+  it('requires a complete genuine initial boundary match before issuing a claim', () => {
+    const f = stoppedFixture(); f.write();
+    const input = { root: f.root, expected: f.expected, now: () => 2000, current: () => true };
+    expect(acquireUrlRecoveryClaim({ ...input, sha256: 'f'.repeat(64) })).toBeNull();
+    fs.writeFileSync(f.file, '{"record":{}}\n');
+    expect(acquireUrlRecoveryClaim({ ...input, sha256: sha256(canonical(f.record)) })).toBeNull();
+    f.write();
+    const claim = acquireUrlRecoveryClaim({ ...input, sha256: f.load()!.sha256 })!;
+    expect(claim.consume()).toBe(true);
+    expect(claim.current()).toBe(true);
+    expect(claim.release()).toBe(true);
+    expect(claim.current()).toBe(false);
+  });
+
 });
