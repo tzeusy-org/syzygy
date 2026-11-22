@@ -551,7 +551,7 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
   try {
     const checked = verified.checkedContext, run = previous.run;
     const current = (): boolean => claim.current() && checked.current();
-    const sessionCurrent = async (): Promise<boolean> => current() && await checked.policyCurrent() && current();
+    const sessionCurrent = async (): Promise<boolean> => current();
     const generation = randomBytes(16).toString('hex');
     const directories: Readonly<Record<ViewRole, string>> = { author: run, inventory: sessionDirectory(run, 1),
       fidelity: reviewSessionDirectory(run, 'fidelity', 1), design: reviewSessionDirectory(run, 'design', 1) };

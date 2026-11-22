@@ -1,0 +1,16 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-stop-cut-regression
+
+ ✓ |integration| packages/polaris-dossier/src/url-parent-adoption.git.test.ts (6 tests) 3748ms
+   ✓ URL parent adoption on the observing Git checkout > requires the actual direct default and version refs at startup and during a run  671ms
+   ✓ URL parent adoption on the observing Git checkout > accepts an unrelated advance and refuses a reverted-and-restored parent  684ms
+   ✓ URL parent adoption on the observing Git checkout > refuses a missing local policy blob without invoking the promisor transport  313ms
+   ✓ URL parent adoption on the observing Git checkout > keeps an appended retirement effective when a later commit removes it  673ms
+   ✓ URL parent adoption on the observing Git checkout > accepts edits to another adoption while detecting a changed URL adoption after restoration  920ms
+   ✓ URL parent adoption on the observing Git checkout > honors an explicit withdrawal between landing and recording the adoption  484ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  16:34:25
+   Duration  5.06s (transform 475ms, setup 16ms, collect 527ms, tests 3.75s, environment 0ms, prepare 88ms)
+

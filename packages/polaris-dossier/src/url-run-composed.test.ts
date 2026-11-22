@@ -162,8 +162,27 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
-    let cutTaken = false;
+    let cutTaken = false, resumeGuardsChecked = false;
     if (cut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
+      if (cutTaken && resumeAfterStop && !resumeGuardsChecked) {
+        // Exercise the exact callback supplied by the public resumed producer,
+        // while its genuine consumed claim is held and before any audit write.
+        const policyFile = path.join(f.observer!.root, f.policy.binding.path);
+        const policyBytes = await fs.readFile(policyFile);
+        try {
+          await fs.appendFile(policyFile, '\n');
+          expect(await options.current()).toBe(false);
+        } finally { await fs.writeFile(policyFile, policyBytes); }
+        expect(await options.current()).toBe(true);
+        const lock = path.join(recoveryHost.root, `${sha256(f.run)}.recovery.lock`);
+        const withdrawn = `${lock}.controlled-withdrawal`;
+        await fs.rename(lock, withdrawn);
+        try { expect(await options.current()).toBe(false); }
+        finally { await fs.rename(withdrawn, lock); }
+        expect(await options.current()).toBe(true);
+        resumeGuardsChecked = true;
+        resumeChecks.push({ phase: 'resumed-guards', policyWithdrawal: 'refused', claimWithdrawal: 'refused' });
+      }
       const actual = await createAudit(options);
       if (!actual.ok || cutTaken) return actual;
       return { ...actual,
