@@ -182,10 +182,9 @@ export function referencesIn(text: string): TextReference[] {
   for (const match of text.matchAll(PATH_RUN)) {
     let token = match[0];
     const at = match.index;
-    // A URL's path starts with `//` and is dropped below as absolute; a host after `@` or `www.` is no repository path either.
-    if (text[at - 1] === '@' || /^www\./iu.test(token)) continue;
-    // An absolute path, or a glob (`*_test.c`), names no one file of the repository.
-    if (token.startsWith('/') || /[*?]$/u.test(text.slice(0, at))) continue;
+    // A host after `@` or `www.` is no repository path, and a glob (`*_test.c`) names no one file. An absolute path and a URL's
+    // `//host/...` have an empty first segment, which the segment rule below drops.
+    if (text[at - 1] === '@' || /^www\./iu.test(token) || /[*?]$/u.test(text.slice(0, at))) continue;
     while (/[.\-+]$/u.test(token)) token = token.slice(0, -1);
     const end = at + token.length;
     if (token.endsWith('/') || token.length === 0) continue;
