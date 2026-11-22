@@ -30,6 +30,7 @@ import { createOrderedDesignSession, isOrderedDesignSession, isProductionOrdered
 import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
+import { selectResumedRolesAfterSample } from './url-run-sessions.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
   prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
@@ -1004,7 +1005,14 @@ describe('prepared private CLI launch',()=>{
         const ended = child.finished.then(() => false);
         expect(await Promise.race([enteredCensus, ended])).toBe(true);
         expect(await Promise.race([enteredVerification, ended])).toBe(true);
+        const selectRoles = vi.fn(() => {
+          expect(confirm.mock.calls).toEqual([[true]]);
+          return ['fidelity'] as const;
+        });
+        const selection = selectResumedRolesAfterSample(child.waitForSample, selectRoles);
         const sample = child.waitForSample();
+        await Promise.resolve();
+        expect(selectRoles).not.toHaveBeenCalled();
         expect(confirm).not.toHaveBeenCalled();
         if (disposition === 'timed-out') {
           releaseCensus();
@@ -1044,6 +1052,9 @@ describe('prepared private CLI launch',()=>{
             outcome: disposition === 'current' ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
           });
         }
+        expect(await selection).toEqual(disposition === 'current'
+          ? { kind: 'selected', roles: ['fidelity'] } : { kind: 'inspection-refused' });
+        expect(selectRoles).toHaveBeenCalledTimes(disposition === 'current' ? 1 : 0);
       } finally {
         releaseCensus();
         resolveVerification(true);

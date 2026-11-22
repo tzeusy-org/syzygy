@@ -172,6 +172,18 @@ function selectResumeRoles(checks: ResumeStageChecks, eligibleDesign: readonly E
 /** Pure fixture seam; supplies no claim, process, receipt or effect authority. */
 export const urlRunResumeRolesTestPort = selectResumeRoles;
 
+/** Wait for the live inspection before the synchronous authenticated stage read. */
+export async function selectResumedRolesAfterSample(
+  waitForSamples: () => Promise<boolean>, readRoles: () => readonly ViewRole[],
+): Promise<{ readonly kind: 'inspection-refused' } | { readonly kind: 'stages-unavailable' }
+  | { readonly kind: 'selected'; readonly roles: readonly ViewRole[] }> {
+  if (!(await waitForSamples())) return { kind: 'inspection-refused' };
+  // A producer may have frozen its check immediately before its receipt
+  // commits. Defer activation while that bounded stage read is unavailable.
+  try { return { kind: 'selected', roles: readRoles() }; }
+  catch { return { kind: 'stages-unavailable' }; }
+}
+
 /** One supervisor owns fresh role processes, typed operator input, cumulative
  * reservation ledger and safe durable audit. Claimed continuation keeps old
  * captures historical. Raw CLI streams and tool/question text are never stored. */
@@ -693,11 +705,10 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     const continueCurrent = async (): Promise<boolean> => {
       if (!(await current())) return false;
       if (resume !== undefined) {
-        let roles: readonly ViewRole[];
-        // A producer may have frozen its check immediately before its receipt
-        // commits. Defer activation while that bounded stage read is unavailable.
-        try { roles = resumeRoles(); } catch { return current(); }
-        try { for (const role of roles) await launchRole(role); }
+        const selection = await selectResumedRolesAfterSample(waitForSamples, resumeRoles);
+        if (selection.kind === 'inspection-refused') return false;
+        if (selection.kind === 'stages-unavailable') return current();
+        try { for (const role of selection.roles) await launchRole(role); }
         catch { fail('launch-unavailable'); return false; }
       }
       return current();
