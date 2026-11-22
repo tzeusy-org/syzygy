@@ -2,32 +2,35 @@
   "format": "mutation-run/1",
   "bead": "syzygy-3efd.69",
   "date": "2026-11-22",
-  "ranAt": "c8b34a9f9bf18383c831bd3bf50a742ce296051c",
+  "ranAt": "2026-11-22T09:08:02+00:00",
+  "commit": "911e2d001cd857468605f10c639ff9d241f2b59d",
+  "project": "unit",
+  "timeoutSec": 900,
   "subject": {
-    "commit": "c8b34a9f9bf18383c831bd3bf50a742ce296051c",
+    "commit": "911e2d001cd857468605f10c639ff9d241f2b59d",
     "branch": "agent/syzygy-3efd.69-impl",
     "fileSha256": {
-      "packages/polaris-dossier/src/policy-snapshot.ts": "6ba1a40d7a43ea7888188880c9c47c6bbd85c98749022c254f6a3bc44162ed20",
-      "packages/polaris-dossier/src/reverify.ts": "ab92601abfcf4daf143e00c86cae2594a420bfe25b73c20ddcbd1f5622d4b1fe",
-      "packages/polaris-dossier/src/screen.ts": "378aae1f8503cd118e0e2dff95379294f2e1dcd8adba68d2994933d03413dd9e",
+      "packages/polaris-dossier/src/policy-snapshot.ts": "cd5d999aec5e643b9e4da58be9a96a5dbf22cc649fa7e8e022765f9b7f5520b7",
+      "packages/polaris-dossier/src/reverify.ts": "5e9700a8300ff5b14cb81e8c187e271b5fe5d0fc7292ae322aacc3ebbe3c4081",
+      "packages/polaris-dossier/src/screen.ts": "cb799214accc93fd2110c7e67bb19ad4cd71b1b6b16c10df703acca076a7eeab",
       "packages/polaris-generation-core/src/public-source-classification.ts": "098d10c2776e7cf4b4269c9718cfb930f6949841da0e4a24ee8c87824117651f"
     },
     "testFileSha256": {
       "packages/polaris-dossier/src/screen-source-reach-v2.test.ts": "b3092c7f4ca9a416c183edeb70d74d347aba1d9e6aef69506bec71063f08edb8",
-      "packages/polaris-dossier/src/screen-source-readmission-v3.test.ts": "6c3b6ac03cdab7887a7fd96407f9d565b03bfe6ea7235d5f7f88e5cae2b465e2",
-      "packages/polaris-dossier/src/start-gates.test.ts": "3adad7d887e23082e40071e5a72ea954e36889844414b68cba2d5f3d2eb4e15d"
+      "packages/polaris-dossier/src/screen-source-readmission-v3.test.ts": "5697aabd95fdb7d004452e0a350665c2315dd5071c640e9734be2b0ec3feb94f",
+      "packages/polaris-dossier/src/start-gates.test.ts": "4fe898a2e7ae898be1c898232b80c021a446ea72449d58cd671dcfda84c439a9"
     }
   },
-  "command": "python3 scripts/rule6_mutation_runner.py SPEC.json OUT.json; each mutant runs npx vitest run --project <project> <tests> (named per mutant below)",
-  "method": "each mutant replaces old with new exactly once in file (the spec generator asserts each occurs exactly once), runs its tests, and the runner restores the file from git in a finally block; killed means at least one test ran and failed with a non-zero exit. Per-entry mutants drop one re-admitted entry, or append one left-out entry, where the classifier reads its Stage-2 list (public-source-classification.ts), since the policy file itself is governed and never edited; the three any-depth mutants admit docs-tree text under one left-out root at any depth; the detector mutants drop one configuration detector from the Stage-2 detectors (screen.ts); the code-change mutants undo the 3.0.0 binding, the bindable 2.0.0 path, the earlier-version test and the bound version in each restart explanation.",
+  "command": "this record is its own spec: python3 scripts/rule6_mutation_runner.py docs/evidence/syzygy-3efd-69/readmission-code-mutation-2026-11-22.json OUT.json, in a clean checkout of `commit`; each mutant runs npx vitest run --project <its project> <its tests>",
+  "method": "each mutant replaces old with new once in file, runs its tests, and the runner restores the file from git in a finally block; killed means at least one test ran and failed with a non-zero exit. Each old fragment occurs exactly once in its file at `commit` (oldOccurrencesAtCommit, counted when this record was written). Per-entry mutants drop one re-admitted entry, or append one left-out entry, where the classifier reads its Stage-2 list (public-source-classification.ts), since the policy file itself is governed and never edited; the three any-depth mutants admit docs-tree text under one left-out root at any depth; the detector mutants drop one configuration detector from the Stage-2 detectors (screen.ts); the code-change mutants undo the 3.0.0 binding, the bindable 2.0.0 path, the earlier-version test and the bound version in each restart explanation; the three marked `added` pin the scenario bodies review note 4 named.",
   "runner": {
     "path": "scripts/rule6_mutation_runner.py",
     "sha256": "1b404998373bbb866040714e0cc11ef81429ce2321f1b4d270a7f3ffa873d737",
     "helperSha256": "12d0ec8a95463664225bf4636a3edb4a506f018e0e06526d4ba04adea512e453"
   },
-  "total": 73,
-  "killed": 73,
-  "killedByAssertion": 73,
+  "total": 76,
+  "killed": 76,
+  "killedByAssertion": 76,
   "notKilled": [],
   "byGroup": {
     "readmitted": {
@@ -49,18 +52,31 @@
     "code-change": {
       "total": 12,
       "killed": 12
+    },
+    "added": {
+      "total": 3,
+      "killed": 3
     }
   },
-  "firstRun": {
-    "ranAt": "3f3c1698bb4eaed41889d50d9b13f5aaf44bedcc",
-    "record": "the runner log only (one line per mutant: id, outcome, failed-test count); its JSON output was overwritten by this run",
-    "total": 73,
-    "killed": 72,
-    "notKilled": [
-      "screen-loader-restart-unbound"
-    ],
-    "repair": "screen-loader-restart-unbound survived: no test reached screenLoaderOf with a run bound to 1.0.0 or 2.0.0. The commit after it adds that test (screen-source-readmission-v3.test.ts, \"the step screen loader for a run bound to an earlier version\"), and this run re-ran every mutant at that commit."
-  },
+  "earlierRuns": [
+    {
+      "commit": "3f3c1698bb4eaed41889d50d9b13f5aaf44bedcc",
+      "finishedAt": "not recorded (its JSON output was overwritten; its log alone survives)",
+      "total": 73,
+      "killed": 72,
+      "notKilled": [
+        "screen-loader-restart-unbound"
+      ],
+      "repair": "c8b34a9f added the step screen loader test for runs bound to 1.0.0 and 2.0.0"
+    },
+    {
+      "commit": "c8b34a9f",
+      "record": "docs/evidence/syzygy-3efd-69/readmission-code-mutation-2026-11-22.json as first committed (bd469110)",
+      "total": 73,
+      "killed": 73,
+      "superseded": "review notes 1-4: the record lacked `project`, so it was not a runnable spec; three restart fragments changed wording"
+    }
+  ],
   "mutants": [
     {
       "id": "readmitted-dropped-governanceTextExtensions-.mdx",
@@ -73,7 +89,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -83,7 +99,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'governance-text/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-governanceTextExtensions-.adoc",
@@ -96,7 +114,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 2,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -110,7 +128,9 @@
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-governanceTextExtensions-.asciidoc",
@@ -123,7 +143,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -133,7 +153,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'governance-text/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-proseExtensions-.adoc",
@@ -145,8 +167,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 2,
-      "totalTests": 126,
+      "failedTests": 4,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -158,9 +180,19 @@
         {
           "test": "version 2.0.0 outcomes preserved every path keeps version 2.0.0's outcome under 3.0.0 unless 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-proseExtensions-.asciidoc",
@@ -173,7 +205,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -183,7 +215,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'project-documentation/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-configurationExtensions-.hcl",
@@ -195,8 +229,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 4,
-      "totalTests": 126,
+      "failedTests": 8,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -216,9 +250,27 @@
         {
           "test": "version 2.0.0 outcomes preserved every path keeps version 2.0.0's outcome under 3.0.0 unless 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-configurationExtensions-.proto",
@@ -230,8 +282,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -247,9 +299,19 @@
         {
           "test": "configuration detectors under private visibility in api/service.proto, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-configurationExtensions-.cmake",
@@ -261,8 +323,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -278,9 +340,19 @@
         {
           "test": "configuration detectors under private visibility in cmake/deps.cmake, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-configurationExtensions-.mk",
@@ -292,8 +364,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -309,9 +381,19 @@
         {
           "test": "configuration detectors under private visibility in build/rules.mk, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-configurationExtensions-.Dockerfile",
@@ -324,7 +406,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 3,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -342,7 +424,9 @@
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.cxx",
@@ -355,7 +439,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -365,7 +449,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.hxx",
@@ -378,7 +464,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -388,7 +474,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.scala",
@@ -400,8 +488,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 2,
-      "totalTests": 126,
+      "failedTests": 4,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -413,9 +501,19 @@
         {
           "test": "version 2.0.0 outcomes preserved every path keeps version 2.0.0's outcome under 3.0.0 unless 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.sc",
@@ -428,7 +526,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -438,7 +536,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.kts",
@@ -450,8 +550,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -467,9 +567,19 @@
         {
           "test": "configuration detectors under private visibility in app/build.gradle.kts, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.groovy",
@@ -482,7 +592,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -492,7 +602,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.gradle",
@@ -505,7 +617,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 3,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -523,7 +635,9 @@
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.clj",
@@ -536,7 +650,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -546,7 +660,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.cljs",
@@ -559,7 +675,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -569,7 +685,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.cljc",
@@ -582,7 +700,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -592,7 +710,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.ex",
@@ -604,8 +724,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -613,9 +733,19 @@
         {
           "test": "the re-admission screen 3.0.0 languageExtensions .ex places its path at Stage 2; version 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.exs",
@@ -628,7 +758,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -638,7 +768,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.erl",
@@ -651,7 +783,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -661,7 +793,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.hrl",
@@ -674,7 +808,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -684,7 +818,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.hs",
@@ -697,7 +833,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -707,7 +843,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.ml",
@@ -720,7 +858,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -730,7 +868,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.mli",
@@ -743,7 +883,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -753,7 +893,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.fs",
@@ -766,7 +908,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -776,7 +918,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.fsx",
@@ -789,7 +933,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -799,7 +943,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.dart",
@@ -812,7 +958,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -822,7 +968,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.R",
@@ -834,8 +982,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -843,9 +991,19 @@
         {
           "test": "the re-admission screen 3.0.0 languageExtensions .R places its path at Stage 2; version 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.jl",
@@ -858,7 +1016,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -868,7 +1026,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.m",
@@ -881,7 +1041,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -891,7 +1051,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.mm",
@@ -904,7 +1066,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -914,7 +1076,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.pl",
@@ -927,7 +1091,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -937,7 +1101,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.pm",
@@ -950,7 +1116,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -960,7 +1126,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.ps1",
@@ -973,7 +1141,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -983,7 +1151,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.psm1",
@@ -996,7 +1166,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1006,7 +1176,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.zig",
@@ -1018,8 +1190,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1027,9 +1199,19 @@
         {
           "test": "the re-admission screen 3.0.0 languageExtensions .zig places its path at Stage 2; version 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.nim",
@@ -1042,7 +1224,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1052,7 +1234,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-languageExtensions-.elm",
@@ -1065,7 +1249,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1075,7 +1259,9 @@
           "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-sourceFileNames-Containerfile",
@@ -1087,8 +1273,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1104,9 +1290,19 @@
         {
           "test": "configuration detectors under private visibility in tools/Containerfile, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-sourceFileNames-CMakeLists.txt",
@@ -1118,8 +1314,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1135,9 +1331,19 @@
         {
           "test": "configuration detectors under private visibility in src/CMakeLists.txt, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "readmitted-dropped-sourceFileNamePrefixes-Containerfile.",
@@ -1149,8 +1355,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 7,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1166,9 +1372,27 @@
         {
           "test": "configuration detectors under private visibility in tools/Containerfile.dev, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ] to deeply equal [ [ 'CMakeLists.txt', \u2026(1) ], \u2026(11) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
         }
       ],
-      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited"
+      "note": "drops one re-admitted entry where the screen reads its list; the policy file is governed and never edited",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-configurationExtensions-.mak",
@@ -1180,8 +1404,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1189,9 +1413,19 @@
         {
           "test": "the re-admission screen 3.0.0 .mak, left out, stays indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ \u2026(7) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ \u2026(7) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-configurationExtensions-.dockerfile",
@@ -1204,7 +1438,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1214,7 +1448,9 @@
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-languageExtensions-.hh",
@@ -1227,7 +1463,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1237,7 +1473,9 @@
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-languageExtensions-.cts",
@@ -1250,7 +1488,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1260,7 +1498,9 @@
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-languageExtensions-.r",
@@ -1272,8 +1512,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1281,9 +1521,19 @@
         {
           "test": "the re-admission screen 3.0.0 .r, left out, stays indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-languageExtensions-.vb",
@@ -1295,8 +1545,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 3,
-      "totalTests": 126,
+      "failedTests": 5,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1312,9 +1562,19 @@
         {
           "test": "version 2.0.0 outcomes preserved every path keeps version 2.0.0's outcome under 3.0.0 unless 2.0.0 left it indeterminate",
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-sourceFileNames-makefile",
@@ -1326,8 +1586,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1335,9 +1595,19 @@
         {
           "test": "the re-admission screen 3.0.0 makefile, left out, stays indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-admitted-sourceFileNames-GNUmakefile",
@@ -1349,8 +1619,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 3,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1358,9 +1628,19 @@
         {
           "test": "the re-admission screen 3.0.0 GNUmakefile, left out, stays indeterminate",
           "firstErrorLine": "AssertionError: expected [ 'code-content/2', 'code-content/2' ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the twelve are code-content at Stage 2, and the seven stay indeterminate",
+          "firstErrorLine": "AssertionError: expected [ [ 'build.mak', \u2026(1) ], \u2026(6) ] to deeply equal [ [ 'build.mak', \u2026(1) ], \u2026(6) ]"
         }
       ],
-      "note": "appends one left-out entry where the screen reads its list"
+      "note": "appends one left-out entry where the screen reads its list",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-any-depth-docs",
@@ -1373,7 +1653,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 3,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1391,7 +1671,9 @@
           "firstErrorLine": "AssertionError: expected [ [ 'README.md', \u2026(1) ], \u2026(27) ] to deeply equal [ [ 'README.md', \u2026(1) ], \u2026(27) ]"
         }
       ],
-      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)"
+      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-any-depth-doc",
@@ -1404,7 +1686,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1414,7 +1696,9 @@
           "firstErrorLine": "AssertionError: expected [ 'project-documentation/1', \u2026(1) ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
         }
       ],
-      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)"
+      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "left-out-any-depth-documentation",
@@ -1427,7 +1711,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1437,7 +1721,9 @@
           "firstErrorLine": "AssertionError: expected [ 'project-documentation/1', \u2026(1) ] to deeply equal [ 'unknown-extraction-class', \u2026(1) ]"
         }
       ],
-      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)"
+      "note": "admits docs-tree text under one root at any depth (docTreeRootsAnyDepth, left out)",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-config-credential-key",
@@ -1450,7 +1736,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 2,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1464,7 +1750,9 @@
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ [ 'config/app.json', \u2026(1) ], \u2026(5) ]"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-kubernetes-secret-kind",
@@ -1477,7 +1765,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 20,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1563,7 +1851,9 @@
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-hcl-secret-variable-default",
@@ -1575,8 +1865,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 20,
-      "totalTests": 126,
+      "failedTests": 22,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1660,9 +1950,19 @@
         {
           "test": "configuration detectors under private visibility in app/build.gradle.kts, each detector form excludes the body whole, and an inert body is admitted",
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-dockerfile-secret-env",
@@ -1675,7 +1975,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 20,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1761,7 +2061,9 @@
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-netrc-machine-password",
@@ -1774,7 +2076,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 20,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1860,7 +2162,9 @@
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "configuration-detector-dropped-authorization-header-credential",
@@ -1873,7 +2177,7 @@
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
       "failedTests": 20,
-      "totalTests": 126,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -1959,7 +2263,9 @@
           "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
         }
       ],
-      "note": "drops one configuration detector from the Stage-2 detectors"
+      "note": "drops one configuration detector from the Stage-2 detectors",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "new-runs-bind-2.0.0",
@@ -1999,17 +2305,19 @@
         },
         {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a run bound to 2.0.0 continues under it, never under 3.0.0",
-          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-YWb5sT -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
+          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-Weim3t -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
         },
         {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, removed, refuses with the restart explanation and changes no file of the run",
-          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-5McrOK -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
+          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-osa7bO -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
         },
         {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
-          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-d1GBaJ -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
+          "firstErrorLine": "Error: Command failed: git -C /tmp/dossier-records-3VloZ2 -c user.name=t -c user.email=t@example.invalid commit -qm version 2.0.0 policy"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "new-runs-version-2.0.0",
@@ -2043,7 +2351,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "2.0.0-not-bindable",
@@ -2074,7 +2384,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "earlier-means-1.0.0-only",
@@ -2100,7 +2412,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "restart-names-1.0.0-always",
@@ -2126,7 +2440,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "reverify-earlier-ignored",
@@ -2160,7 +2476,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "reverify-unreadable-restart-unbound",
@@ -2172,39 +2490,51 @@
       ],
       "command": "npx vitest run --project integration packages/polaris-dossier/src/start-gates.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
+      "failedTests": 2,
       "totalTests": 77,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
       "failures": [
         {
+          "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, removed, refuses with the restart explanation and changes no file of the run",
+          "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
+        },
+        {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, removed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "reverify-changed-restart-unbound",
       "file": "packages/polaris-dossier/src/reverify.ts",
-      "old": "restartExplanation('the committed predecessor identity, version or bytes differ from this run binding', bound)",
-      "new": "restartExplanation('the committed predecessor identity, version or bytes differ from this run binding')",
+      "old": "restartExplanation('the committed policy identity, version or bytes differ from this run binding', bound)",
+      "new": "restartExplanation('the committed policy identity, version or bytes differ from this run binding')",
       "tests": [
         "packages/polaris-dossier/src/start-gates.test.ts"
       ],
       "command": "npx vitest run --project integration packages/polaris-dossier/src/start-gates.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
+      "failedTests": 2,
       "totalTests": 77,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
       "failures": [
         {
+          "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, changed, refuses with the restart explanation and changes no file of the run",
+          "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
+        },
+        {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(3) } to match object { ok: false, refusals: [ { \u2026(2) } ] }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "screen-load-earlier-ignored",
@@ -2238,7 +2568,9 @@
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "screen-load-unreadable-restart-unbound",
@@ -2250,39 +2582,51 @@
       ],
       "command": "npx vitest run --project integration packages/polaris-dossier/src/start-gates.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
+      "failedTests": 2,
       "totalTests": 77,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
       "failures": [
         {
+          "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, removed, refuses with the restart explanation and changes no file of the run",
+          "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+        },
+        {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, removed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "screen-load-changed-restart-unbound",
       "file": "packages/polaris-dossier/src/screen.ts",
-      "old": "restartExplanation('the committed predecessor bytes differ from this run binding', bound)",
-      "new": "restartExplanation('the committed predecessor bytes differ from this run binding')",
+      "old": "restartExplanation('the committed policy bytes differ from this run binding', bound)",
+      "new": "restartExplanation('the committed policy bytes differ from this run binding')",
       "tests": [
         "packages/polaris-dossier/src/start-gates.test.ts"
       ],
       "command": "npx vitest run --project integration packages/polaris-dossier/src/start-gates.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
+      "failedTests": 2,
       "totalTests": 77,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
       "failures": [
         {
+          "test": "the declared-source policy successor 2.0.0 and runs bound to its predecessor a step of a run bound to the predecessor, changed, refuses with the restart explanation and changes no file of the run",
+          "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+        },
+        {
           "test": "the declared-source policy 3.0.0 and runs bound to version 2.0.0 a step of a run bound to 2.0.0, changed, refuses with the restart explanation and changes no file of the run",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
         }
-      ]
+      ],
+      "project": "integration",
+      "oldOccurrencesAtCommit": 1
     },
     {
       "id": "screen-loader-restart-unbound",
@@ -2294,8 +2638,8 @@
       ],
       "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
       "outcome": "killed",
-      "failedTests": 1,
-      "totalTests": 126,
+      "failedTests": 2,
+      "totalTests": 132,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -2303,8 +2647,196 @@
         {
           "test": "the step screen loader for a run bound to an earlier version bound to .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v2.json, refuses with the restart explanation",
           "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
+        },
+        {
+          "test": "the step screen loader for a run bound to an earlier version bound to .syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v1.json, refuses with the restart explanation",
+          "firstErrorLine": "AssertionError: expected { ok: false, \u2026(1) } to deeply equal { ok: false, \u2026(1) }"
         }
-      ]
+      ],
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1
+    },
+    {
+      "id": "prefix-exclusion-dropped",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": " && !stage.prefixExcludedExtensions.some(entry => fold(name).endsWith(entry));",
+      "new": ";",
+      "tests": [
+        "packages/polaris-dossier/src/screen-source-readmission-v3.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 132,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "the re-admission scenario under public visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
+        },
+        {
+          "test": "the re-admission scenario under private visibility a Containerfile. name ending in a documentation extension is documentation, never code-content",
+          "firstErrorLine": "AssertionError: expected [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ] to deeply equal [ [ 'Containerfile.md', \u2026(1) ], \u2026(2) ]"
+        }
+      ],
+      "note": "drops prefixExcludedExtensions: a Containerfile. name ending in a documentation extension would be placed by the prefix",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1,
+      "added": "after review note 4: pins the re-admission scenario bodies (the Gradle assignment, Containerfile.md)"
+    },
+    {
+      "id": "stage2-body-redacted",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "const redacted = found?.stage === 2 ? redactBody(",
+      "new": "const redacted = found?.stage === 3 ? redactBody(",
+      "tests": [
+        "packages/polaris-dossier/src/screen-source-readmission-v3.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
+      "outcome": "killed",
+      "failedTests": 24,
+      "totalTests": 132,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "configuration detectors under public visibility in infra/main.hcl, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in api/service.proto, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in cmake/deps.cmake, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in build/rules.mk, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in images/app.Dockerfile, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in tools/Containerfile, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in src/CMakeLists.txt, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in tools/Containerfile.dev, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in app/build.gradle, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in app/build.gradle.kts, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in infra/main.hcl, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in api/service.proto, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in cmake/deps.cmake, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in build/rules.mk, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in images/app.Dockerfile, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in tools/Containerfile, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in src/CMakeLists.txt, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in tools/Containerfile.dev, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in app/build.gradle, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "configuration detectors under private visibility in app/build.gradle.kts, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ \u2026(6) ]"
+        },
+        {
+          "test": "version 2.0.0 outcomes preserved the literals written for version 2.0.0 agree with a run of the version-2.0.0 screen",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ [ 'config/app.json', \u2026(1) ], \u2026(5) ]"
+        },
+        {
+          "test": "version 2.0.0 outcomes preserved every path keeps version 2.0.0's outcome under 3.0.0 unless 2.0.0 left it indeterminate",
+          "firstErrorLine": "AssertionError: expected [ \u2026(6) ] to deeply equal [ [ 'config/app.json', \u2026(1) ], \u2026(5) ]"
+        },
+        {
+          "test": "the re-admission scenario under public visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+        },
+        {
+          "test": "the re-admission scenario under private visibility the HCL variable default and the Gradle key = \"value\" assignment are excluded whole, never retained as redacted-span",
+          "firstErrorLine": "AssertionError: expected { kind: 'admitted' } to deeply equal { kind: 'excluded', \u2026(1) }"
+        }
+      ],
+      "note": "a Stage-2 body is redacted under the visibility rules instead of excluded whole (the Gradle and HCL scenario bodies)",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1,
+      "added": "after review note 4: pins the re-admission scenario bodies (the Gradle assignment, Containerfile.md)"
+    },
+    {
+      "id": "gradle-dropped-scenario",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "out[field] = Object.freeze([...value]);",
+      "new": "out[field] = Object.freeze([...value].filter(entry => !(field === 'languageExtensions' && entry === '.gradle')));",
+      "tests": [
+        "packages/polaris-dossier/src/screen-source-readmission-v3.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/screen-source-readmission-v3.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 132,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "the re-admission screen 3.0.0 languageExtensions .gradle places its path at Stage 2; version 2.0.0 left it indeterminate",
+          "firstErrorLine": "AssertionError: expected [ 'unknown-extraction-class', \u2026(1) ] to deeply equal [ 'code-content/2', \u2026(1) ]"
+        },
+        {
+          "test": "configuration detectors under public visibility in app/build.gradle, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        },
+        {
+          "test": "configuration detectors under private visibility in app/build.gradle, each detector form excludes the body whole, and an inert body is admitted",
+          "firstErrorLine": "AssertionError: expected 'unknown-extraction-class' to be 'code-content/2' // Object.is equality"
+        }
+      ],
+      "note": "app/build.gradle unplaced: its assignment body would no longer be screened as Stage 2",
+      "project": "unit",
+      "oldOccurrencesAtCommit": 1,
+      "added": "after review note 4: pins the re-admission scenario bodies (the Gradle assignment, Containerfile.md)"
     }
   ]
 }
