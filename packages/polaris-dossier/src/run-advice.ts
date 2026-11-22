@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { CHECK_RECORD_LIMITS, isCheckRecordOf, readCheckRecord } from './check-record-read.js';
+import { CHECK_RECORD_LIMITS, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import type { FigureFitEntry } from './figure-fit.js';
 import { MECHANISM_RULES, mechanismRuleOf, type MechanismRuleId } from './reader-advice.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
@@ -109,8 +109,8 @@ export function readRunAdvice(run: string): RunAdvice | null {
   const file = path.join(run, RUN_ADVICE_FILE);
   let text: string;
   try {
-    if (fs.statSync(file).size > RUN_ADVICE_LIMITS.maxBytes) throw new BoundedJsonError('byte-limit');
-    text = fs.readFileSync(file, 'utf8');
+    // The reader rule (syzygy-3efd.76): a FIFO, a device, a directory or a file past the bound is no run file.
+    text = readBoundedFile(file, RUN_ADVICE_LIMITS.maxBytes).toString('utf8');
   } catch { return null; }
   try {
     const doc: unknown = parseBoundedJson(text, RUN_ADVICE_LIMITS);

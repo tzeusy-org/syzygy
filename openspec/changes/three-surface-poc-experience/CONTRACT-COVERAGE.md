@@ -185,7 +185,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-22 | A join is never reconstructed by similarity, interpolation or inference | covered — Amendment row; the fixture-title counterexample observes the title case | POC-REQ-014 |
 | RFC8-22 | Everything downstream of a broken link renders with provenance degraded accordingly | **Unknown** — Amendment row; the POC renders no link downstream of the work item, and no requirement observes degraded downstream provenance | — |
 | RFC8-23 | A work item with no traceable warrant renders Unknown-provenance: counted over the served set, filterable within Trajectory's rendered selection, never green, its route resolvable by supplying a warrant stated beside the count | covered — Amendment row; the oracle decides the count, the narrowed board over the rendered selection, the Unknown encoding against POC-REQ-060's table, and the resolution statement by literal match; POC-REQ-044's fifth answer states the same count, n of N served | POC-REQ-014, POC-REQ-044 |
-| RFC8-23 | Unknown-provenance items outside Trajectory's rendered selection are filterable | **Unknown** — Amendment row; POC-REQ-042 lets Trajectory render a selection, so items outside it are counted on Trajectory but not rendered, and no requirement observes filtering them | — |
+| RFC8-23 | Unknown-provenance items outside Trajectory's rendered selection are filterable | covered — Amendment row (views); `governing-intent=unknown` pages every item carrying the Unknown in ascending id, each page linked with its count, and the oracle checks the pages hold exactly those items. Was Unknown | POC-REQ-042 |
 | RFC8-23 | Unknown-provenance work is never silently pooled into warranted work | **Unknown** — Amendment row; no served item is warranted, so the oracle has no warranted population to keep it apart from | — |
 | RFC8-23 | Unknown-provenance is never an ingest rejection | **Unknown** — Amendment row; POC-REQ-014's denominator is the served set, so an item dropped before serving is invisible to its oracle | — |
 | RFC8-23 | A substrate-side warrant-field edit is an annotation, not a competing warrant | **Unknown** — Amendment row; the POC reads no warrant field | — |
@@ -245,8 +245,8 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-18 | The rest of the V1 measure set (effort and complexity tier, active compute time, blocked time, tokens, API cost, attempts, review rounds, CI time, rework, touched components) renders, each with its source and evidence class | **Unknown** — Amendment row (elapsed time); none is read, and the cost answer states them Unknown | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **171 consequence rows over 86 clauses — 122 covered,
-49 Unknown.**
+table"]`: **171 consequence rows over 86 clauses — 123 covered,
+48 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed

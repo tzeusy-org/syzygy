@@ -227,6 +227,26 @@ ceilings still apply to the encoded bodies, whose size also depends on each
 selected item's text. The size-only comparison and choice rationale are in
 `docs/evidence/syzygy-blbu-trajectory-selection-2026-10-20.json`.
 
+**Trajectory views.** Every served item is reachable (`syzygy-t3jk.18`,
+POC-REQ-042). `GET /trajectory` (and its tailnet mount) takes a closed
+parameter set: `status` (one of the seven tracker statuses),
+`governing-intent=unknown` and `page` (a positive integer). Any parameter
+gives a view: the matching items in ascending id, 250 per page, its scope
+sentence naming the page, the page count and the matching count, with
+rendered plus excluded equal to the total. No parameter gives the default
+selection above. Another name, a repeated name, a value outside its set, a
+page that is not a positive integer or a page past the last is refused with
+HTTP 400 and a JSON body naming the parameter, the reason and the allowed
+set. Every page carries real links to the default selection, every item by
+id, each status and the governing-intent Unknown with their whole-population
+counts, and the previous and next page. The machine answer takes no
+parameter: `trajectory.narrowing` declares the parameter set, page size and
+order, so a checker recomputes any page from `workItems.items`. When the
+work-item population is Unknown, a well-formed view renders the Unknown
+board. The largest page of the 640-item test fixture (250 fixture cards,
+none with a worker-change badge) measured about 427 KB, about 1.5 KB per
+card, under half the 2 MB human ceiling.
+
 **Steps.**
 
 1. Open the printed human URL. Polaris shows the purpose and governing intent
