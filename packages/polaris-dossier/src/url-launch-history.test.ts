@@ -16,7 +16,7 @@ import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, readRunR
 import { buildDossierScreen } from './screen.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
 import { prepareUrlRolePlans, prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
-import { inspectUrlLaunchHistory, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
+import { inspectUrlLaunchHistory, urlHelperLaunchFile, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
 import { assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
   inspectCommittedUrlLaunchHistory, isIssuedUrlDesignDeliveryView } from './url-session-audit.js';
 import * as sessionAudit from './url-session-audit.js';
@@ -617,6 +617,16 @@ describe('URL stored launch history', () => {
       expect(record.promptSha256).not.toBe(record.actualInputPacketSha256);
       const text = fs.readFileSync(result.file!, 'utf8'); expect(text).not.toContain('Observed'); expect(text).not.toContain(promptText); expect(text).not.toContain(input.plan.profile.input.initialPrompt);
       await expect(writeUrlLaunchHistory(input)).rejects.toThrow('url-launch-history-unavailable');
+      const successor = await writeUrlLaunchHistory({ ...input, generation: 'a'.repeat(64), capture: { pid: 5678, startedAt: input.capture.startedAt } });
+      try {
+        expect(successor.file).toBe(path.join(input.run, urlHelperLaunchFile(input.plan.role as UrlLaunchHistoryRole, 'a'.repeat(64))));
+        expect(fs.readFileSync(result.file!, 'utf8')).toBe(text);
+        expect(inspectUrlLaunchHistory(successor.capability!).file).toBe(path.relative(input.run, successor.file!));
+        expect(JSON.parse(fs.readFileSync(successor.file!, 'utf8')).capture.pid).toBe(5678);
+        await expect(writeUrlLaunchHistory({ ...input, generation: 'a'.repeat(64) })).rejects.toThrow('url-launch-history-unavailable');
+        expect(fs.readFileSync(result.file!, 'utf8')).toBe(text);
+      } finally { fs.rmSync(successor.file!, { force: true }); }
+
     }
   });
   it('issues an opaque capability for exact durable bytes and refuses a same-byte prompt replacement', async () => {
