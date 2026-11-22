@@ -773,3 +773,36 @@ verification rules and points here for the incidents.*
   sweep of the in-force CC-SPEC/CC-IMPACT policy text finds zero mentions of
   it." Semantic specification content versus mutable lifecycle tracker is a
   decision to make, measure and record — never one to assume from a filename.
+
+## F3 runtime lifecycle and composed authority (2026-11-22)
+
+- [Observed] A product context closed before its deadline could first be
+  inspected after that deadline. Clock-only inference called it expiry and
+  offered renewal. The backend now retains the first terminal cause; its
+  delayed-observation controls and selected faults are retained in
+  [the read-lifetime evidence](../../../docs/evidence/syzygy-k54o-3/backend-lease-mutations/).
+  [Inferred] Lifetime classification belongs to the context that observes
+  closure; a later clock comparison cannot reconstruct why it closed.
+- [Observed] Completed-child cleanup introduced an await after a successful
+  independent policy check. A subsequent budget/health check did not repeat
+  that independent check. The
+  [successor review](../../../docs/evidence/syzygy-k54o-3/completed-health-successor-review-2026-11-22-RAW.md)
+  reads the repair and its deferred-cleanup regression. [Inferred] Trace
+  which predicates remain current across each newly introduced await, rather
+  than treating any final currentness check as proof of every predicate.
+- [Observed] Eight genuine resumed client allocations made 360 authority
+  callbacks. They succeeded, but their callbacks consumed 36,342 ms of
+  36,576 ms total and left one five-second allocation only 260 ms. The
+  caller composed the same full claim check twice; the separate generic
+  run and claim predicates were both necessary. The
+  [frozen trace](../../../docs/evidence/syzygy-k54o-3/genuine-resume-allocation-trace/)
+  retains the measurements and their initial-fixture limits. [Inferred]
+  Measure the composed guard path under genuine recovery authority; a cheap
+  fixture flag cannot establish its latency. Remove identical work at its
+  owning composition without caching authorization across awaits.
+- [Observed] An eligible-recovery failure occurred before its cut assertion;
+  fixture cleanup removed the artifacts needed to identify its transport
+  subreason. The composed fixture now retains failure artifacts after real
+  bounded cleanup whenever retention is requested, independently of whether
+  the planned cut was reached. [Inferred] Failure evidence must survive the
+  earliest refusal, not only the expected checkpoint.

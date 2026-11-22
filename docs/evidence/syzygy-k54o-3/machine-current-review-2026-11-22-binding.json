@@ -1,0 +1,12 @@
+{
+  "subjectCommit": "236df7ecd971048a97069f2629ef2e03e2dad902",
+  "verdict": "PASS",
+  "raw": "machine-current-review-2026-11-22-RAW.md",
+  "rawSha256": "66fdb4c3ba481bd3f1797befdac6f81adf38529bfa8e8514d072b8becd35731c",
+  "files": {
+    "packages/polaris-dossier/src/polaris.ts": "2e1de984243f73736efa4b954a26bba541c6a332ca195c2559a3243ccb763e01",
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": "1b594ccdff9065fcaebe8908aeed210ac25ea269a3391787080a33e502c35614",
+    "packages/polaris-dossier/src/url-run-machine.ts": "191270378c1803bb127914ab396367c8edefa4f6f9788a03695d8a7f99a014da"
+  },
+  "limit": "Independent source-only review; focused test/mutation evidence retained separately. Public recovery acceptance remains pending."
+}
