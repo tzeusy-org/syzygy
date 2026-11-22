@@ -49,7 +49,7 @@ interface CrossLink {
 async function runtimeCrossLinks(page: BrowserPage): Promise<{ readonly all: number; readonly unmarked: number; readonly links: readonly CrossLink[] }> {
   return page.evaluate(`(() => {
     const route = /^\\/(?:butlers-syzygy\\/)?(?:polaris|trajectory|orrery)(?:#|$)/;
-    const all = [...document.querySelectorAll('a[href]')].filter(a => !a.closest('.site-nav') && route.test(a.getAttribute('href') || ''));
+    const all = [...document.querySelectorAll('a[href]')].filter(a => !a.closest('.site-nav, .view-nav') && route.test(a.getAttribute('href') || ''));
     const marked = [...document.querySelectorAll('a[data-cross-surface-class]')];
     return { all: all.length, unmarked: all.filter(a => !a.hasAttribute('data-cross-surface-class')).length,
       links: marked.map(a => ({ href: a.getAttribute('href'), className: a.dataset.crossSurfaceClass,

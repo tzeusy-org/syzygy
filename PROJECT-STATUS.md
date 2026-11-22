@@ -185,7 +185,7 @@ authority and no model yet called on the current path.
     syzygy-5dhm.71) lands with it.
     *(2026-11-22: the predecessor figure "445 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Verify-text amendment 2.16](openspec/changes/dossier-verify-text) is agent-adopted in A-49.
+    [Verify-text amendment 2.16](openspec/changes/dossier-verify-text) is agent-adopted in A-50.
     It replaces REQ-polaris-generation-033 (6 to 10 scenarios: the `syzygy dossier verify` command, which checks a
     free-form text's references and quotations against a run's pinned revision); its implementation (syzygy-5dhm.23) lands with it.
     *(2026-11-22: the predecessor figure "463 scenarios" is superseded by that
