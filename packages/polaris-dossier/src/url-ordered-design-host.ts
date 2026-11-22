@@ -147,8 +147,9 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     started = true;
     if (controller) clearTimeout(activationTimer);
     const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
+      healthy: () => !closing && !failed && relay!.healthy(),
       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
-    hosts.set(host, { profile, current: () => !closing && !failed && started });
+    hosts.set(host, { profile, current: () => !closing && !failed && started && relay!.healthy() });
     return host;
   } catch { await close(); throw refused(); }
 }

@@ -245,8 +245,10 @@ describe('actual composed host controller, broker and checked relay', () => {
 
   it('revokes an already audited prospective tool after a later relay server failure', async () => {
     const f = await fixture(), host = await f.start();
+    expect(host.healthy?.()).toBe(true);
     expect((await send(host, f.request())).status).toBe(200);
     f.failRelayServer();
+    expect(host.healthy?.()).toBe(false);
     const reply = await invoke(host, { tool: 'artifact_read', input: call.input });
     expect(reply.ok).toBe(false); expect(f.counts().artifactReads).toBe(0);
     expect(f.events).not.toContain('tool-attempt'); expect(f.events).not.toContain('tool-receipt');

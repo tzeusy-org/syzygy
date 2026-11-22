@@ -133,12 +133,14 @@ describe('production ordered host activation', () => {
   });
 
   it('refuses same-UID raw broker and HTTP connections without authenticated peer authority', async () => {
-    const f = await fixture(); await f.start();
+    const f = await fixture(), host = await f.start();
+    expect(host.healthy?.()).toBe(true);
     for (const [socketPath, bytes] of [[f.brokerSocket, '{"tool":"dossier_step","input":{}}\n'],
       [f.relaySocket, 'POST /v1/messages HTTP/1.1\r\nHost: owned\r\nContent-Length: 2\r\n\r\n{}']] as const) {
       await new Promise<void>(resolve => { const socket = connect(socketPath); socket.on('error', () => {});
         socket.once('connect', () => socket.end(bytes)); socket.once('close', () => resolve()); });
     }
     expect(f.accepts()).toBe(2); expect(f.callbacks()).toBe(0); expect(f.stored).toHaveLength(0);
+    expect(host.healthy?.()).toBe(false);
   });
 });

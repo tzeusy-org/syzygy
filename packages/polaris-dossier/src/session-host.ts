@@ -45,6 +45,7 @@ export interface SessionHostOptions {
 }
 export interface SessionHost {
   readonly brokerSocket: string; readonly relaySocket: string;
+  readonly healthy?: () => boolean;
   close(): Promise<{ readonly pendingInvocations: number; readonly termination: 'settled' | 'Unknown' }>;
 }
 type RelayStart = typeof startSessionRelay;
@@ -172,6 +173,6 @@ async function start(input: SessionHostOptions, relayStart: RelayStart, fixture:
       if (!mediated.ok) { poison(); throw new Error('session-host-unavailable'); }
     }, poison, input.brokerLimits, input.machine?.broker);
     if (!(await current())) throw new Error('session-host-unavailable');
-    return Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, close });
+    return Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, close, healthy: live });
   } catch { await close(); throw new Error('session-host-unavailable'); }
 }
