@@ -1,0 +1,207 @@
+{
+  "subjectCommit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "subjectTree": "981ac5a4193032c043bfd7b233883e5726eba35d",
+  "fixture": {
+    "exitCode": 1,
+    "selectedElapsedMilliseconds": 285489,
+    "suiteTestsElapsedMilliseconds": 287540,
+    "totalElapsedMilliseconds": 291470,
+    "failed": 1,
+    "skipped": 3,
+    "watchdogMilliseconds": 540000,
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "designForwardsTotal": 0,
+    "executionRecord": false
+  },
+  "initialAudits": {
+    "author": {
+      "records": 118,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "machine-peer": 68,
+        "relay": 28,
+        "usage": 7,
+        "other": 12,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "0db6a607299d1b5ed58bc359df16d5a2f510b5c03b0bf16abdea5b36b4ca5c68",
+      "bytes": 202048
+    },
+    "inventory": {
+      "records": 103,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "machine-peer": 58,
+        "relay": 24,
+        "other": 11,
+        "usage": 6,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "57712943a9e29e41d0f1490e629d21eca6a53af814a83793be601d57928743cb",
+      "bytes": 171864
+    },
+    "fidelity": {
+      "records": 68,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "machine-peer": 38,
+        "relay": 16,
+        "usage": 4,
+        "other": 6,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "00c71a4c3ec529c0caf7df93832ceb3d3f2ee5a96c999a6f895795e62c1ef739",
+      "bytes": 138343
+    },
+    "design": {
+      "records": 5,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "design-delivery": 1,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "stopped",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "2a9080e14999873d420265710c213a5bdc73dc0f1dae81857ad7ce11c65a05a0",
+      "bytes": 7548
+    }
+  },
+  "freshAudits": {
+    "author": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "7cc4eaef4fec69f0b2d9d67da6cd26bde2380867f2dfbf5ec4b97af7ff9263d8",
+      "bytes": 1185
+    },
+    "inventory": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "c91251b3e3faa50c2588186c99366f444c02bf909e89b4139983ee2791117756",
+      "bytes": 1253
+    },
+    "fidelity": {
+      "records": 1,
+      "kinds": {
+        "declaration": 1
+      },
+      "sha256": "716f35be2733a436483313d886be911dca1bcd81014a7f445f2c7862780b15f5",
+      "bytes": 1251
+    },
+    "design": {
+      "records": 4,
+      "kinds": {
+        "declaration": 1,
+        "launch-attempt": 1,
+        "launch-history": 1,
+        "launch-terminal": 1
+      },
+      "terminal": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "pendingInvocations": 0
+      },
+      "sha256": "0d9ccfad0bcf46dfca3f38ace6adc17ed1e8a095bff94aa8d272aed1527dff5f",
+      "bytes": 5275
+    }
+  },
+  "retainedStore": {
+    "initialTerminalClientPopulation": {
+      "revoked": 7,
+      "never-issued": 1
+    },
+    "anchorsAtEnd": {
+      "committed": 7,
+      "never-issued": 9
+    },
+    "archiveEntries": 39,
+    "stateSha256": "c1c6d2c664aebd09f6d1537ecd1ea12e901e0167076073a13ce9c578782c37b8",
+    "archiveSha256": "29e9c78e918c28076ea1980acdda85e7c74b4989df32987b48b7910ef1fc841f",
+    "stateLastModifiedNs": 1795357337709736179,
+    "archiveLastModifiedNs": 1795357198512169725,
+    "retainedLockDirectories": 1,
+    "lockLastModifiedNs": 1795357397945544948,
+    "freshTerminalAuditLastModifiedNs": 1795357398707555181
+  },
+  "retainedOriginalArtifactsByDigest": {
+    "cut": "2a9d84611de97e8602519ded39fc3087b5615b55d5fb22b6f1cce82028ec39e6",
+    "failureManifest": "243ada48797d6c75f1773ad577de245c3f8980c9ddd08a43022f58d00aca541e",
+    "nativeLog": "17d9f8ad3c69cb0d01ee582157ef1d4eee6e31b8496c8d2449a65cb4552889aa",
+    "trace": "930abe67eb124208054696ef83619dbca6f87768a4c4b91aaae8a158b9582a00"
+  },
+  "portableArtifactsByDigest": {
+    "overlay.patch": "a8a109bb44664c183bfa63838ed7597d4ce97d2e9395e050efd376b7a4455010",
+    "source-binding.json": "8de442e3ae4c98b9c555a9840e631049df5c4f307a56c9863009c528db2f490b",
+    "project.py": "06c0bac1d78512210c72344f20f3b2f3733b2847919eba0da8e8228290e45646",
+    "trace.jsonl": "930abe67eb124208054696ef83619dbca6f87768a4c4b91aaae8a158b9582a00",
+    "projection.json": "ee8ac62ddbf2389238cd784e8ac7a90993f455935f6e6b6a69ad607b600a252b",
+    "prior-store-witness.json": "a8011458894baa04419822c479aef570562dd3f610129cd098724fef41ff3a68"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "subjectCommit": "7ea0d30543207d07f5d14641ce8164f3da57958c",
+  "subjectTree": "981ac5a4193032c043bfd7b233883e5726eba35d",
+  "beforeSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": "79a30d748606c2b621209a77a6cbb37716cdfb0531c551a603bef9a78c88bbbd",
+    "packages/polaris-dossier/src/session-launch.ts": "f867296c11e4501220dafcfebc57374a65b93608d1cab4604d7125f16ad492a9",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "6e97c572d7cfda33b2a46c466e3be65232611cdb5b066922cbb29740e4c9165c",
+    "packages/polaris-dossier/src/session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "c0a49ed4238823d5ea600e417255362c0942844aa9d43f8426752e7332de533e",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "f999e7d0183f2187db676805d1978681d822198620e10938d7ebec229989f24e",
+    "packages/polaris-dossier/src/url-run-machine.ts": "62b517503741a70eaa24195d9a3f3a7d15ebed5680aa84f7de0c40d166f5c835",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "a09d782c01b7b04a4abf2c265667ebf1f4caae33688f5beb9cf5832e0067b2c7"
+  },
+  "afterSourceSha256": {
+    "packages/polaris-dossier/src/session-broker.ts": "4ba90afb728536259800ddddcc8b4a693a5b31030ab0d2c929d94358e47b4fd6",
+    "packages/polaris-dossier/src/session-launch.ts": "ff9d536e3b1057d5121650906b1f7296347ae542e97189d73d611492466943a2",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "02951332a7bc5ffe4963757f810c4d1b5398db0ed890432c00fd3697f8159ae4",
+    "packages/polaris-dossier/src/session-relay.ts": "e6fb22a833801e9ac9cd9fa148b69865ab3ac6d2db79de91a8872473fa8b6197",
+    "packages/polaris-dossier/src/url-ordered-design-host.ts": "dca0d97a3a16e54bfceb58a39cb61ae90efe8a8cda29f18108ec6bf134f2be95",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "372587928212c1c3f60b9244e3779e1d56efbb91376d6c579eca6c49fd30b4ee",
+    "packages/polaris-dossier/src/url-run-machine.ts": "87d2519fb90b904b74ee4e3de3a3cb94c314460a260ca41fae681033e97a3e3b",
+    "packages/polaris-dossier/src/url-run-sessions.ts": "cfa99602feb37f09dd4f57f7df2e92b81e8267241c3c8dde18d36bea927123c4"
+  },
+  "preparedArtifactsSha256": {
+    "overlay.patch": "a8a109bb44664c183bfa63838ed7597d4ce97d2e9395e050efd376b7a4455010",
+    "project.py": "06c0bac1d78512210c72344f20f3b2f3733b2847919eba0da8e8228290e45646"
+  },
+  "priorBootstrapBindingSha256": "76f5a7c9d5a045728a26b7f7a5c8c62c678772c73d23c87b5505c7f7e4fb1273",
+  "fixture": {
+    "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "selectedTest": "runs the genuine production pipeline to stop-resume",
+    "testWatchdogMilliseconds": 540000,
+    "sampleInspectionMilliseconds": 1000,
+    "rawCaptureMilliseconds": 5000,
+    "hostActivationMilliseconds": 20000,
+    "relayMilliseconds": 180000,
+    "brokerMilliseconds": 85000
+  }
+}

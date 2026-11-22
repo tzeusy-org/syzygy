@@ -1,0 +1,283 @@
+{
+  "traceSha256": "930abe67eb124208054696ef83619dbca6f87768a4c4b91aaae8a158b9582a00",
+  "eventCount": 447,
+  "resumedSpawns": [
+    {
+      "component": "sampler",
+      "launch": 2,
+      "stage": "child",
+      "event": "spawn",
+      "elapsed": 0,
+      "at": 266362.714478
+    }
+  ],
+  "firstResumedFailure": {
+    "component": "supervisor",
+    "stage": "failure",
+    "event": "role-ended",
+    "resumed": true,
+    "at": 272666.376235
+  },
+  "freshLaunchWindow": {
+    "start": {
+      "component": "host",
+      "host": 2,
+      "stage": "activation-cutoff",
+      "event": "scheduled",
+      "at": 263935.371664
+    },
+    "end": {
+      "component": "sampler",
+      "launch": 2,
+      "stage": "child",
+      "event": "inspection-failed",
+      "elapsed": 0,
+      "at": 272587.947554
+    },
+    "connectionIntervals": [
+      {
+        "connection": 33,
+        "edge": "relay",
+        "phases": {
+          "capture": {
+            "boundMs": 5000,
+            "events": [
+              {
+                "component": "connection",
+                "edge": "relay",
+                "connection": 33,
+                "stage": "capture-port",
+                "event": "return",
+                "detail": "accepted",
+                "bound": 0,
+                "at": 271825.938148,
+                "elapsedSincePhaseMs": 4828.548
+              },
+              {
+                "component": "connection",
+                "edge": "relay",
+                "connection": 33,
+                "stage": "capture",
+                "event": "return",
+                "detail": "accepted",
+                "bound": 0,
+                "at": 271825.96021,
+                "elapsedSincePhaseMs": 4828.57
+              }
+            ]
+          },
+          "authorize": {
+            "boundMs": 175171.39876100002,
+            "events": [
+              {
+                "component": "connection",
+                "edge": "relay",
+                "connection": 33,
+                "stage": "authorize",
+                "event": "return",
+                "detail": "refused",
+                "bound": 0,
+                "at": 272728.368383,
+                "elapsedSincePhaseMs": 902.391
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "chronology": [
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "activation-cutoff",
+        "event": "scheduled",
+        "at": 263935.371664,
+        "msFromSpawn": -2427.343
+      },
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "ready",
+        "event": "return",
+        "at": 264694.652655,
+        "msFromSpawn": -1668.062
+      },
+      {
+        "component": "sampler",
+        "launch": 2,
+        "stage": "child",
+        "event": "spawn",
+        "elapsed": 0,
+        "at": 266362.714478,
+        "msFromSpawn": 0.0
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "raw",
+        "event": "begin",
+        "at": 266997.33218,
+        "msFromSpawn": 634.618
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "open",
+        "event": "begin",
+        "detail": "none",
+        "bound": 180000,
+        "at": 266997.388958,
+        "msFromSpawn": 634.674
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "capture",
+        "event": "begin",
+        "detail": "none",
+        "bound": 5000,
+        "at": 266997.39012,
+        "msFromSpawn": 634.676
+      },
+      {
+        "component": "machine",
+        "edge": "inference-bridge",
+        "stage": "accept",
+        "event": "begin",
+        "at": 266997.439764,
+        "msFromSpawn": 634.725
+      },
+      {
+        "component": "machine",
+        "edge": "inference-bridge",
+        "stage": "native-capture",
+        "event": "begin",
+        "at": 267281.525208,
+        "msFromSpawn": 918.811
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "capture-port",
+        "event": "return",
+        "detail": "accepted",
+        "bound": 0,
+        "at": 271825.938148,
+        "msFromSpawn": 5463.224
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "capture",
+        "event": "return",
+        "detail": "accepted",
+        "bound": 0,
+        "at": 271825.96021,
+        "msFromSpawn": 5463.246
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "authorize",
+        "event": "begin",
+        "detail": "none",
+        "bound": 175171.39876100002,
+        "at": 271825.977242,
+        "msFromSpawn": 5463.263
+      },
+      {
+        "component": "machine",
+        "edge": "inference-bridge",
+        "stage": "authorize",
+        "event": "begin",
+        "at": 271826.0874,
+        "msFromSpawn": 5463.373
+      },
+      {
+        "component": "machine",
+        "edge": "inference-bridge",
+        "stage": "authorize-publish",
+        "event": "begin",
+        "at": 271886.09,
+        "msFromSpawn": 5523.376
+      },
+      {
+        "component": "sampler",
+        "launch": 2,
+        "stage": "sample-operation",
+        "event": "refused",
+        "elapsed": 1076.336503999948,
+        "at": 272587.890537,
+        "msFromSpawn": 6225.176
+      },
+      {
+        "component": "sampler",
+        "launch": 2,
+        "stage": "child",
+        "event": "inspection-failed",
+        "elapsed": 0,
+        "at": 272587.947554,
+        "msFromSpawn": 6225.233
+      },
+      {
+        "component": "host",
+        "host": 2,
+        "stage": "close",
+        "event": "begin",
+        "at": 272665.777574,
+        "msFromSpawn": 6303.063
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "close",
+        "event": "poison",
+        "at": 272666.015423,
+        "msFromSpawn": 6303.301
+      },
+      {
+        "component": "supervisor",
+        "stage": "failure",
+        "event": "role-ended",
+        "resumed": true,
+        "at": 272666.376235,
+        "msFromSpawn": 6303.662
+      },
+      {
+        "component": "relay",
+        "role": "design",
+        "relay": 5,
+        "stage": "raw",
+        "event": "closed",
+        "at": 272687.787836,
+        "msFromSpawn": 6325.073
+      },
+      {
+        "component": "machine",
+        "edge": "inference-bridge",
+        "stage": "authorize-publish",
+        "event": "refused",
+        "at": 272728.329389,
+        "msFromSpawn": 6365.615
+      },
+      {
+        "component": "connection",
+        "edge": "relay",
+        "connection": 33,
+        "stage": "authorize",
+        "event": "return",
+        "detail": "refused",
+        "bound": 0,
+        "at": 272728.368383,
+        "msFromSpawn": 6365.654
+      }
+    ]
+  }
+}

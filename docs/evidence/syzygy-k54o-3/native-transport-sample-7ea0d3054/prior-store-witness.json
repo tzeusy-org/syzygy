@@ -1,0 +1,11 @@
+{
+  "priorBootstrapBindingSha256": "76f5a7c9d5a045728a26b7f7a5c8c62c678772c73d23c87b5505c7f7e4fb1273",
+  "retainedStore": {
+    "stateSha256": "f1629d676a29ef0f0b4827a5560880d99fbdea453ce74ad770cc7cffc1d10140",
+    "archiveSha256": "47457ec33408a4964a88730508a8926b10324255a56347255285553e302d2f3b",
+    "clientSlots": 16,
+    "committed": 8,
+    "neverIssued": 8,
+    "archiveEntries": 40
+  }
+}
