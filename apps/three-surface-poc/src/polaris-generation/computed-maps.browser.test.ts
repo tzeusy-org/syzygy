@@ -45,7 +45,8 @@ const FORMS = `[...document.querySelectorAll("figure.computed-map")].map(f => {
 })`;
 
 // syzygy-3efd.36 (REQ-polaris-generation-034 version 2.9): a map page opened from disk with the pages' own CSP. At 1440 px each map figure
-// shows its drawing unscaled; at 390 px its text form at 13 px, switched by the container query, with no script and no sideways scroll.
+// shows its drawing unscaled; at 390 px a figure wider than the 261 px column shows its text form at 13 px, switched by the container
+// query, and a narrower one its drawing, unscaled, with no script and no sideways scroll.
 it.skipIf(executable === undefined)('switches each map figure to its text form below its laid-out width, never scaling the drawing', async () => {
   if (!executable) throw Error('Browser required');
   const directory = await mkdtemp(join(tmpdir(), 'polaris-computed-maps-browser-'));
@@ -70,9 +71,15 @@ it.skipIf(executable === undefined)('switches each map figure to its text form b
         await page.setViewport(390, 900);
         await page.navigate(url);
         expect(await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), map).toBe(true);
-        const narrow = await page.evaluate(FORMS) as { drawing: boolean; list: boolean; box: number; overflow: boolean; items: number; font: string }[];
-        for (const figure of narrow) expect(figure, map).toMatchObject({ drawing: false, list: true, box: 261, overflow: false, font: '13px' });
-        expect(narrow.map((figure) => figure.items), map).toEqual(map === 'directories' ? [12, 12, 6] : [2]);
+        const narrow = await page.evaluate(FORMS) as { width: number; drawing: boolean; list: boolean; box: number; svg: number | null; overflow: boolean; items: number; font: string }[];
+        // The CI map's plain chain of three jobs is stacked, 248 px wide, since syzygy-3efd.66, so at 390 px its drawing fits the column
+        // and shows, unscaled; the directory map's figures (648 px) switch to their text form.
+        expect(narrow.map((figure) => figure.width), map).toEqual(map === 'directories' ? [648, 648, 648] : [248]);
+        for (const figure of narrow) {
+          expect(figure, map).toMatchObject(figure.width <= 261 ? { drawing: true, list: false, box: 261, svg: figure.width, overflow: false }
+            : { drawing: false, list: true, box: 261, overflow: false, font: '13px' });
+        }
+        expect(narrow.map((figure) => figure.items), map).toEqual(map === 'directories' ? [12, 12, 6] : [0]);
         expect(await page.evaluate('document.scripts.length'), map).toBe(0);
       }
       // The boundary on the directory map: a forms box exactly W wide shows the drawing, one 1 px narrower the text form.

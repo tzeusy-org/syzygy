@@ -31,12 +31,32 @@ import { isNativeSessionProfile } from './session-profile.js';
 import { encodeRunRecord, readRunRecord } from './run-record.js';
 import { readEffectiveRunDeclaration, type UrlRunDeclaration } from './url-run-record.js';
 import type { ProtectedUrlRunContext } from './effective-run-record.js';
-import { snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
+import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
 
 type Role = 'author' | 'inventory' | 'fidelity' | 'design';
 type Origins = Pick<Awaited<ReturnType<typeof createUrlRunOrigins>>, 'ledger' | 'roots' | 'initialReceipts' | 'schemaDocuments'>;
 const ROLES: readonly Role[] = ['author', 'inventory', 'fidelity', 'design'];
 const launchFiles: readonly string[] = Object.values(URL_HELPER_LAUNCH_FILES);
+const selectors: Readonly<Record<UrlProductSelector, { readonly directory: string; readonly pattern: RegExp }>> = Object.freeze({
+  'author-checks': { directory: 'checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
+  'author-drafts': { directory: 'drafts', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
+  'inventory-checks': { directory: 'inventory/checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
+  'inventory-revisions': { directory: 'inventory', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
+  'fidelity-verdicts': { directory: 'reviews', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
+  'design-verdicts': { directory: 'reviews', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
+  'fidelity-checks': { directory: 'reviews/checks', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
+  'design-checks': { directory: 'reviews/checks', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
+  'fidelity-deliveries': { directory: 'reviews', pattern: /^fidelity-session-1\.delivery-([1-9][0-9]*)\.json$/u },
+  'design-deliveries': { directory: 'reviews', pattern: /^design-session-1\.delivery-([1-9][0-9]*)\.json$/u },
+});
+const knownRecord = (file: string): boolean => {
+  if (['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json',
+    'inventory/session-1.json', 'reviews/fidelity-session-1.json', 'reviews/design-session-1.json', ...launchFiles].includes(file)) return true;
+  const match = /^(?:checks|drafts|inventory|inventory\/checks)\/rev-(0|[1-9][0-9]*)\.json$/u.exec(file)
+    ?? /^reviews\/(?:checks\/)?(?:fidelity|design)-verdict-(0|[1-9][0-9]*)\.json$/u.exec(file)
+    ?? /^reviews\/(?:fidelity|design)-session-1\.delivery-([1-9][0-9]*)\.json$/u.exec(file);
+  return match !== null && integer(Number(match[1]));
+};
 const JSON_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
 export const URL_ARTIFACT_LIMITS = Object.freeze({ itemBytes: 1_048_576, readBytes: 8_388_608, registrations: 1024, parents: 128 });
 type Limits = { readonly [K in keyof typeof URL_ARTIFACT_LIMITS]: number };
@@ -76,6 +96,15 @@ export interface UrlProducedArtifact {
   readonly originId: string; readonly classes: readonly SessionContentClass[];
 }
 export interface UrlOrderedDesignVerdictStage { readonly checked: UrlCheckedDesignVerdict; readonly sha256: string; }
+
+interface FrozenProductIdentity {
+  readonly path: string; readonly bytes: number; readonly sha256: string;
+}
+export interface UrlFrozenProductHistory {
+  readonly format: 'polaris-url-frozen-products/1';
+  readonly runId: string; readonly coreSha256: string; readonly declarationSha256: string;
+  readonly records: readonly FrozenProductIdentity[];
+}
 interface Report {
   readonly role: Role; readonly digest: string; readonly projection: string; readonly receipt: UrlOriginReceipt;
   readonly packet: string | null; readonly token: string; committed: boolean;
@@ -110,6 +139,88 @@ const sameStat = (a: fs.Stats, b: fs.Stats): boolean => a.dev === b.dev && a.ino
   && a.size === b.size && a.mtimeMs === b.mtimeMs && a.ctimeMs === b.ctimeMs;
 
 type FidelityPacketRegistration = { readonly kind: 'fidelity'; readonly round: number; readonly packetSha256: string };
+
+const FROZEN_DRAFT_PATH = 'drafts/next.json';
+const AUTHOR_FEEDBACK = /^feedback\/(?:fidelity|design)-verdict-(?:0|[1-9][0-9]*)\.json$/u;
+const PACKET_DIRECTORY = /^fidelity-packet-[a-f0-9]{64}$/u;
+const PACKET_PATH = /^reviews\/(fidelity-packet-[a-f0-9]{64})\/(packet\.json|packet\.sha256)$/u;
+
+function productPopulation(run: string, expected: readonly string[], check: () => void): void {
+  const directories = new Map<string, ProductNameSnapshot>();
+  const names = (directory: string): readonly string[] => {
+    let snapshot = directories.get(directory);
+    if (snapshot === undefined) {
+      snapshot = snapshotProductNames(run, directory, 4096, check);
+      directories.set(directory, snapshot);
+    }
+    return snapshot.names;
+  };
+  for (const { directory, pattern } of Object.values(selectors)) {
+    const prefix = `${directory}/`, files = names(directory).filter(name => pattern.test(name)).map(name => prefix + name);
+    const known = expected.filter(file => file.startsWith(prefix) && pattern.test(file.slice(prefix.length)));
+    if (files.length !== known.length || known.some(file => !files.includes(file))) refuse();
+  }
+  for (const file of [...launchFiles, FROZEN_DRAFT_PATH]) {
+    if (names(path.dirname(file)).includes(path.basename(file)) !== expected.includes(file)) refuse();
+  }
+  const feedback = names('feedback').map(name => `feedback/${name}`).filter(file => AUTHOR_FEEDBACK.test(file));
+  const expectedFeedback = expected.filter(file => AUTHOR_FEEDBACK.test(file));
+  if (feedback.length !== expectedFeedback.length || expectedFeedback.some(file => !feedback.includes(file))) refuse();
+  const packets = new Set(expected.flatMap(file => {
+    const match = PACKET_PATH.exec(file); return match === null ? [] : [match[1]!];
+  }));
+  const observed = names('reviews').filter(name => PACKET_DIRECTORY.test(name));
+  if (observed.length !== packets.size || observed.some(name => !packets.has(name))) refuse();
+  for (const packet of packets) {
+    const directory = `reviews/${packet}`;
+    const packetFiles = ['packet.json', 'packet.sha256'];
+    const actual = names(directory);
+    if (actual.length !== packetFiles.length || packetFiles.some(name => !actual.includes(name) || !expected.includes(`${directory}/${name}`))) refuse();
+  }
+}
+
+/** Recheck an independent snapshot of the frozen run files, including the
+ * complete stage filename populations. The caller supplies the protected
+ * expectation; a digest learned from the file under test is insufficient. */
+export function verifyUrlFrozenProductHistory(run: string, given: UrlFrozenProductHistory, current: () => boolean):
+  { readonly kind: 'verified-frozen-products'; readonly authorization: 'none'; readonly records: number } | null {
+  try {
+    const deadline = performance.now() + 5000;
+    const check = (): void => { if (performance.now() >= deadline) refuse(); };
+    if (current() !== true) refuse();
+    const expected = copy(given);
+    if (!keys(expected, ['format', 'runId', 'coreSha256', 'declarationSha256', 'records'])
+      || expected.format !== 'polaris-url-frozen-products/1' || expected.runId !== path.basename(run)
+      || !hex(expected.coreSha256) || !hex(expected.declarationSha256) || !Array.isArray(expected.records)
+      || expected.records.length > URL_ARTIFACT_LIMITS.registrations) refuse();
+    const paths: string[] = []; let totalBytes = 0;
+    for (const record of expected.records) {
+      if (!keys(record, ['path', 'bytes', 'sha256']) || !relative(record.path)
+        || (record.path !== FROZEN_DRAFT_PATH && !knownRecord(record.path) && !PACKET_PATH.test(record.path) && !AUTHOR_FEEDBACK.test(record.path)) || !hex(record.sha256)
+        || typeof record.bytes !== 'number' || !Number.isSafeInteger(record.bytes) || record.bytes < 1 || record.bytes > URL_ARTIFACT_LIMITS.itemBytes
+        || (paths.length > 0 && paths.at(-1)! >= record.path)) refuse();
+      totalBytes += record.bytes;
+      if (totalBytes > URL_ARTIFACT_LIMITS.readBytes) refuse();
+      paths.push(record.path);
+    }
+    if (!['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json', 'inventory/session-1.json',
+      'reviews/fidelity-session-1.json', 'reviews/design-session-1.json'].every(file => paths.includes(file))
+      || expected.records.find(record => record.path === 'run.json')?.sha256 !== expected.coreSha256
+      || expected.records.find(record => record.path === 'url-declaration.json')?.sha256 !== expected.declarationSha256) refuse();
+    productPopulation(run, paths, check);
+    const snapshots = new Map<string, ProductFileSnapshot>();
+    for (const expectedFile of expected.records) {
+      const observed = snapshotProductFile(run, expectedFile.path, expectedFile.bytes, check);
+      if (observed.bytes === null || observed.bytes.length !== expectedFile.bytes || sha256(observed.bytes) !== expectedFile.sha256) refuse();
+      snapshots.set(expectedFile.path, observed);
+    }
+    productPopulation(run, paths, check);
+    for (const [file, observed] of snapshots) assertProductFileUnchanged(run, file, observed, check);
+    if (current() !== true) refuse();
+    check();
+    return Object.freeze({ kind: 'verified-frozen-products', authorization: 'none', records: paths.length });
+  } catch { return null; }
+}
 
 /** Trusted producer bridge. It reads fixed products and keeps opaque receipts plus metadata in
  * working memory; it writes nothing. A self-consistent stored hash is never producer authentication.
@@ -168,7 +279,7 @@ function create(given: UrlRunArtifactsOptions) {
   const packetReceipts = new Map<string, UrlOriginReceipt>();
   const seen = new Map<Role, Set<string>>(ROLES.map(role => [role, new Set()]));
   const uncommitted = new Map<string, { role: Role; reports: Report[]; checks: Check[]; products: Product[];
-    designRead?: UrlOriginReceipt; designVerdict?: UrlCheckedDesignVerdict }>();
+    designRead?: UrlOriginReceipt; designVerdict?: UrlCheckedDesignVerdict; draftWriteSha256?: string }>();
   const designReads = new Map<string, UrlOriginReceipt>();
   const orderedPendingFiles = new Map<string, NonNullable<ReturnType<typeof authenticatedRecords.get>>>();
   const orderedStages = new WeakMap<UrlOrderedDesignVerdictStage, { captured: Pending; proof: UrlDesignReviewProof; consumed: boolean }>();
@@ -177,6 +288,11 @@ function create(given: UrlRunArtifactsOptions) {
   const adapters = new Map(ROLES.map(role => { let admission: SessionAdmission | null = null;
     return [role, { set: (next: SessionAdmission) => { admission = next; }, adapter: ledger.hostAdapter({ binding: plans.get(role)!.profile.input.binding, admittedRequest: () => admission }) }] as const; }));
   let readBytes = 0, registrations = 0, initial = false;
+  let producersInFlight = 0, lastCommittedDraft: string | null = null;
+  async function duringProducer<T>(work: () => Promise<T>): Promise<T> {
+    producersInFlight++;
+    try { return await work(); } finally { producersInFlight--; }
+  }
   let activeDesign: { file: string; bytes: Uint8Array; origins: SessionToolOrigins; parents: readonly UrlOriginReceipt[]; current: () => void } | undefined;
   const roleOf = (role: Role): void => { live(); if (!ROLES.includes(role)) refuse(); };
   const roleParents = (role: Role) => {
@@ -643,7 +759,7 @@ function create(given: UrlRunArtifactsOptions) {
   }
   function runner(role: Role): UrlRunDossier {
     roleOf(role); const actual = actualRunner(role); if (typeof actual !== 'function') refuse();
-    return async (argv, stdin, review, awaitProductRead) => {
+    return (argv, stdin, review, awaitProductRead) => duringProducer(async () => {
       const waitForCapture = async (): Promise<void> => {
         await yieldToPoll();
         if (awaitProductRead !== undefined && !(await awaitProductRead())) refuse();
@@ -724,7 +840,7 @@ function create(given: UrlRunArtifactsOptions) {
           products: [...capturedChecks, ...capturedProducts], digest: sha256(encoded), ...(designVerdict ? { designVerdict } : {}) });
         return response;
       } catch { pending.delete(role); return refuse(); }
-    };
+    });
   }
   async function stageOrderedDesignVerdict(argv: readonly string[], stdin: Uint8Array, proof: UrlDesignReviewProof,
     awaitCurrent?: () => Promise<boolean>): Promise<UrlOrderedDesignVerdictStage> {
@@ -925,7 +1041,7 @@ function create(given: UrlRunArtifactsOptions) {
       if (canonical(reply) !== raw.canonicalText || reply['ok'] !== true) refuse();
       const captured = pending.get(role); let receipt: UrlOriginReceipt, designRead: UrlOriginReceipt | undefined;
       const newReports: Report[] = [], newChecks: Check[] = [], newProducts: Product[] = [];
-      let designVerdict: UrlCheckedDesignVerdict | undefined;
+      let designVerdict: UrlCheckedDesignVerdict | undefined, draftWriteSha256: string | undefined;
       if (artifact) {
         if (canonical(raw.classes) !== canonical([...artifact.origins.classes].sort())
           || canonical(raw.originIds) !== canonical([...artifact.origins.originIds].sort())) refuse();
@@ -975,13 +1091,14 @@ function create(given: UrlRunArtifactsOptions) {
         if (raw.toolName === 'mcp__syzygy__artifact_write') {
           if (!text(raw.toolInput['content'])) refuse(); const payloadBytes = Buffer.from(raw.toolInput['content']);
           const report = reportPayload(role, payloadBytes, admittedParents, raw.id); newReports.push(report);
-          bind(role, 'drafts/next.json', payloadBytes, report.receipt);
+          bind(role, FROZEN_DRAFT_PATH, payloadBytes, report.receipt); draftWriteSha256 = report.digest;
         }
       }
       remember(role, receipt); seen.get(role)!.add(raw.id);
       if (uncommitted.size >= limits.registrations || uncommitted.has(raw.id)) refuse(); uncommitted.set(raw.id, { role,
         reports: newReports, checks: newChecks, products: newProducts,
-        ...(designRead ? { designRead } : {}), ...(designVerdict ? { designVerdict } : {}) }); live();
+        ...(designRead ? { designRead } : {}), ...(designVerdict ? { designVerdict } : {}),
+        ...(draftWriteSha256 === undefined ? {} : { draftWriteSha256 }) }); live();
       return designVerdict;
     } catch { return refuse(); }
   }
@@ -1032,26 +1149,6 @@ function create(given: UrlRunArtifactsOptions) {
     clearTimeout(state.timer); if (state.abort) state.signal?.removeEventListener('abort', state.abort);
     state.entries.clear(); state.selections.clear(); activeReads.delete(state);
   }
-  const selectors: Readonly<Record<UrlProductSelector, { readonly directory: string; readonly pattern: RegExp }>> = Object.freeze({
-    'author-checks': { directory: 'checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-    'author-drafts': { directory: 'drafts', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-    'inventory-checks': { directory: 'inventory/checks', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-    'inventory-revisions': { directory: 'inventory', pattern: /^rev-(0|[1-9][0-9]*)\.json$/u },
-    'fidelity-verdicts': { directory: 'reviews', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
-    'design-verdicts': { directory: 'reviews', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
-    'fidelity-checks': { directory: 'reviews/checks', pattern: /^fidelity-verdict-(0|[1-9][0-9]*)\.json$/u },
-    'design-checks': { directory: 'reviews/checks', pattern: /^design-verdict-(0|[1-9][0-9]*)\.json$/u },
-    'fidelity-deliveries': { directory: 'reviews', pattern: /^fidelity-session-1\.delivery-([1-9][0-9]*)\.json$/u },
-    'design-deliveries': { directory: 'reviews', pattern: /^design-session-1\.delivery-([1-9][0-9]*)\.json$/u },
-  });
-  const knownRecord = (file: string): boolean => {
-    if (['run.json', 'url-declaration.json', 'brief.json', 'brief.md', 'draft.schema.json',
-      'inventory/session-1.json', 'reviews/fidelity-session-1.json', 'reviews/design-session-1.json', ...launchFiles].includes(file)) return true;
-    const match = /^(?:checks|drafts|inventory|inventory\/checks)\/rev-(0|[1-9][0-9]*)\.json$/u.exec(file)
-      ?? /^reviews\/(?:checks\/)?(?:fidelity|design)-verdict-(0|[1-9][0-9]*)\.json$/u.exec(file)
-      ?? /^reviews\/(?:fidelity|design)-session-1\.delivery-([1-9][0-9]*)\.json$/u.exec(file);
-    return match !== null && integer(Number(match[1]));
-  };
   const readLease = (state: ReadState): void => {
     if (state.cancelled || state.signal?.aborted || Date.now() >= state.deadline) { closeRead(state); refuse(); }
   };
@@ -1291,8 +1388,66 @@ function create(given: UrlRunArtifactsOptions) {
       readLive(state); return result;
     } catch { closeRead(state); return refuse(); }
   }
+  /** Copy identities of settled, independently bound producer files. The
+   * supervisor calls this only once its owned writers and callbacks are
+   * confirmed stopped. The descriptor walk detects drift during the read. */
+  function captureFrozenHistory(): UrlFrozenProductHistory {
+    return snapshotWithAuthority(check => {
+      if (!initial || sidecarBytes === null || producersInFlight || activeReads.size || pending.size || uncommitted.size || questions.size
+        || orderedPendingFiles.size || activeDesign !== undefined) refuse();
+      const records = new Map<string, FrozenProductIdentity>();
+      const observed = new Map<string, ProductFileSnapshot>();
+      let totalBytes = 0;
+      const readFrozen = (file: string): ProductFileSnapshot & { bytes: Uint8Array } => {
+        if (observed.has(file) || totalBytes >= limits.readBytes) refuse();
+        const actual = snapshotProductFile(run, file, Math.min(limits.itemBytes, limits.readBytes - totalBytes), check);
+        if (actual.bytes === null) refuse();
+        totalBytes += actual.bytes.length;
+        observed.set(file, actual);
+        records.set(file, { path: file, bytes: actual.bytes.length, sha256: sha256(actual.bytes) });
+        return { ...actual, bytes: actual.bytes };
+      };
+      for (const [file, expected] of authenticatedRecords) {
+        if (!knownRecord(file) || !expected.committed(check)) refuse();
+        const actual = readFrozen(file);
+        if (!sameProductFile(expected.snapshot, actual)) refuse();
+        ledger.origins(expected.receipt, actual.bytes);
+      }
+      for (const [file, bytes] of [['run.json', coreBytes], ['url-declaration.json', sidecarBytes]] as const) {
+        const actual = observed.get(file) ?? readFrozen(file);
+        if (actual.bytes === null || !Buffer.from(actual.bytes).equals(bytes)) refuse();
+      }
+      if (lastCommittedDraft !== null) {
+        const draft = readFrozen(FROZEN_DRAFT_PATH);
+        if (records.get(FROZEN_DRAFT_PATH)?.sha256 !== lastCommittedDraft
+          || ledger.artifactOrigins('author', FROZEN_DRAFT_PATH, draft.bytes) === null) refuse();
+      }
+      for (const feedback of products) {
+        if (feedback.role !== 'author' || !AUTHOR_FEEDBACK.test(feedback.path)) continue;
+        const stored = readFrozen(feedback.path);
+        if (records.get(feedback.path)?.sha256 !== feedback.sha256
+          || ledger.artifactOrigins('author', feedback.path, stored.bytes) === null) refuse();
+      }
+      for (const [packet, receipt] of packetReceipts) {
+        const digest = packet.slice('fidelity:'.length);
+        if (packet !== `fidelity:${digest}` || !hex(digest)) refuse();
+        const directory = `reviews/fidelity-packet-${digest}`, packetPath = `${directory}/packet.json`;
+        const stored = readFrozen(packetPath);
+        if (records.get(packetPath)?.sha256 !== digest) refuse();
+        ledger.origins(receipt, stored.bytes);
+        const digestFile = readFrozen(`${directory}/packet.sha256`);
+        if (!Buffer.from(digestFile.bytes).equals(Buffer.from(`${digest}  packet.json\n`))) refuse();
+      }
+      const files = [...records.keys()].sort();
+      if (files.length > limits.registrations) refuse();
+      productPopulation(run, files, check);
+      for (const [file, snapshot] of observed) assertProductFileUnchanged(run, file, snapshot, check);
+      return copy({ format: 'polaris-url-frozen-products/1', runId, coreSha256: sha256(coreBytes),
+        declarationSha256: sha256(sidecarBytes), records: files.map(file => records.get(file)!) });
+    });
+  }
   return Object.freeze({
-    beginRead, readProduct, readProducts, selectProducts, selectProductGroups, revalidateRead, openDesignArtifact,
+    beginRead, readProduct, readProducts, selectProducts, selectProductGroups, revalidateRead, openDesignArtifact, captureFrozenHistory,
     latestStageCheck: (role: Role) => stageChecks([role])[role],
     latestStageChecks: () => stageChecks(ROLES),
     isReadLeaseOpen: (context: UrlProductReadContext): boolean => {
@@ -1302,18 +1457,22 @@ function create(given: UrlRunArtifactsOptions) {
     },
     cancelRead: (context: UrlProductReadContext): void => { const state = readContexts.get(context); if (!state) refuse(); closeRead(state); },
     registerInitial: (input: Parameters<typeof initialProducts>[0]) => { try { return initialProducts(input); } catch { return refuse(); } },
-    registerLaunchHistory: async (...args: Parameters<typeof registerLaunchHistory>) => { try { await registerLaunchHistory(...args); } catch { return refuse(); } },
-    registerPacket: async (input: FidelityPacketRegistration, waitForSamples?: () => Promise<boolean>) => {
+    registerLaunchHistory: (...args: Parameters<typeof registerLaunchHistory>) => duringProducer(async () => {
+      try { await registerLaunchHistory(...args); } catch { return refuse(); }
+    }),
+    registerPacket: (input: FidelityPacketRegistration, waitForSamples?: () => Promise<boolean>) => duringProducer(async () => {
       try { return await packet(input, waitForSamples); } catch { return refuse(); }
-    },
+    }),
     registerFeedback: (input: Parameters<typeof feedback>[0]) => { try { return feedback(input); } catch { return refuse(); } },
-    runDossier: runner, stageOrderedDesignVerdict, commitOrderedDesignVerdict,
+    runDossier: runner,
+    stageOrderedDesignVerdict: (...args: Parameters<typeof stageOrderedDesignVerdict>) => duringProducer(() => stageOrderedDesignVerdict(...args)),
+    commitOrderedDesignVerdict,
     artifactOrigins: (role: Role) => { roleOf(role); return (file: string, bytes: Uint8Array): SessionToolOrigins | null => {
       try { roleOf(role); if (!initial) return null; return ledger.artifactOrigins(role, file, bytes); } catch { return null; } }; },
     dossierOrigins: (role: Role) => { roleOf(role); return (argv: readonly string[], response: BrokerResponse): SessionToolOrigins | null => {
       try { const found = pending.get(role); if (!found || canonical(normalize(argv, role)) !== found.argv || sha256(canonical(response)) !== found.digest) return null;
         return ledger.origins(found.receipt, asBytes(response)); } catch { return null; } }; },
-    toolReceipt,
+    toolReceipt: (...args: Parameters<typeof toolReceipt>) => duringProducer(() => toolReceipt(...args)),
     committed: (role: Role, id: string): void => { roleOf(role); const found = uncommitted.get(id); if (!found || found.role !== role) refuse();
       if (found.designVerdict) {
         const { number, checkSha256, verdictSha256 } = found.designVerdict;
@@ -1325,6 +1484,7 @@ function create(given: UrlRunArtifactsOptions) {
         }
       }
       if (found.designRead) designReads.set(id, found.designRead);
+      if (found.draftWriteSha256 !== undefined) lastCommittedDraft = found.draftWriteSha256;
       for (const report of found.reports) report.committed = true; for (const check of found.checks) check.committed = true;
       for (const product of found.products) product.committed = true; uncommitted.delete(id); },
     hasCommittedReport: (role: Role, digest: string): boolean => { try { roleOf(role); return hex(digest) && reports.get(`${role}:${digest}`)?.committed === true; } catch { return false; } },

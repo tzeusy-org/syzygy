@@ -3,12 +3,12 @@ import { mkdir, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
-import { sha256 } from '@syzygy/support';
+import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import type { UrlSessionProcess } from './session-launch.js';
 import { createSessionMachineTransport, type SessionMachineTransport } from './session-machine-transport.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
-import type { UrlMachineClientContext, UrlMachineClientKind, UrlMachineClientRecord, UrlMachineOperation } from './url-machine-instance.js';
+import { publishUrlMachineLifecycle, type UrlMachineLifecycleResult, type UrlMachineLifecycleSnapshot } from './url-machine-lifecycle.js';
+import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineClientKind, type UrlMachineClientRecord, type UrlMachineOperation } from './url-machine-instance.js';
 import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
@@ -25,10 +25,14 @@ const refuse = (): Error => new Error('url-run-machine-unavailable');
 const scopes = (role: ViewRole, kind: UrlMachineClientKind): readonly UrlMachineOperation[] => kind === 'inference-bridge'
   ? ['inference-forward'] : role === 'author' ? ['source_read', 'artifact_read', 'artifact_write', 'dossier_step']
     : role === 'inventory' ? ['source_read', 'artifact_read', 'dossier_step'] : ['artifact_read', 'dossier_step'];
+type Head = Extract<UrlMachineLifecycleResult, { ok: true }>['receipt'];
+type NeverIssued = Extract<UrlMachineLifecycleSnapshot['anchor'], { kind: 'never-issued' }>;
+type Terminal = { readonly kind: 'revoked'; readonly head: Head } | NeverIssued;
 interface Client {
+  readonly witnessSha256: string;
   readonly context: UrlMachineClientContext;
   record: UrlMachineClientRecord | null;
-  digest: string | null;
+  head: Head | null;
 }
 export interface UrlRunMachineOptions {
   readonly governanceRoot: string;
@@ -48,6 +52,22 @@ export interface UrlRunMachineOptions {
   readonly launch: (role: ViewRole) => UrlSessionProcess | undefined;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
   readonly chargeNativeCpuMicroseconds?: (capacity: number) => void;
+}
+
+export interface UrlRunMachineClosedHistory {
+  readonly kind: 'closed-url-run-machine-history'; readonly authorization: 'none'; readonly replay: 'forbidden';
+  readonly identitySha256: string; readonly binding: Head['binding']; readonly observedAt: number;
+  readonly clients: readonly { readonly context: UrlMachineClientContext; readonly terminal: Terminal }[];
+}
+const closedHistories = new WeakMap<object, UrlRunMachineClosedHistory>();
+const issuedHistories = new WeakSet<UrlRunMachineClosedHistory>();
+/** Only the exact successfully closed producer result can retrieve this data.
+ * It records historical retirement, never authority for a subsequent effect. */
+export function readUrlRunMachineClosedHistory(value: unknown): UrlRunMachineClosedHistory | null {
+  return isRecord(value) ? closedHistories.get(value) ?? null : null;
+}
+export function isUrlRunMachineClosedHistory(value: unknown): value is UrlRunMachineClosedHistory {
+  return isRecord(value) && issuedHistories.has(value as unknown as UrlRunMachineClosedHistory);
 }
 
 /** The supervisor allocates endpoint identities before launch. The first actual
@@ -92,22 +112,62 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     // The store's parent authority remains live solely to publish retirement.
     for (const peer of peers) closeUrlMachinePeer(peer);
     return closed = serialize(async () => {
-    let retired = true;
-    // Keep the trusted parent checks alive until each one-way retirement is
-    // durable. A failed/expired publication never becomes a successful close.
-    for (const client of clients.values()) if (client.record !== null) {
+      let retired = clients.size === URL_ROLES.length * 2, confirmedAt = 0;
+      const history: { readonly context: UrlMachineClientContext; readonly terminal: Terminal }[] = [];
+      // The parent authority remains alive for retirement and protected
+      // readback. Live effect authority was already withdrawn synchronously.
+      for (const client of clients.values()) {
+        if (client.record !== null) {
+          try {
+            const now = input.now(), previous = client.record;
+            const next = { ...previous, revision: previous.revision + 1, revokedAt: new Date(now).toISOString() };
+            const result = await publishUrlMachineLifecycle({ context: { ...client.context, now }, binding,
+              expected: { revision: previous.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, store);
+            if (!result.ok) retired = false;
+            else { client.record = next; client.head = result.receipt; }
+          } catch { retired = false; }
+        }
+        let terminal: Terminal | undefined;
+        try {
+          const verified = await store.exclusive(client.context.clientId, input.deadline, async lease => {
+            const snapshot = await lease.read();
+            if (!snapshot || !lease.current()) return;
+            if (client.record === null) {
+              if (snapshot.anchor.kind !== 'never-issued' || snapshot.anchor.clientId !== client.context.clientId
+                || snapshot.anchor.witnessSha256 !== client.witnessSha256 || snapshot.canonical !== null
+                || snapshot.projection !== null || snapshot.audit !== null) return;
+              terminal = snapshot.anchor;
+            } else {
+              if (client.head === null || snapshot.anchor.kind !== 'committed' || snapshot.canonical === null
+                || !canonical(snapshot.anchor.head).equals(canonical(client.head))
+                || !canonical(snapshot.audit).equals(canonical(client.head))
+                || !canonical(snapshot.projection).equals(canonical(client.head.record))) return;
+              const read = readUrlMachineClient(snapshot.canonical, { ...client.context, now: lease.now() });
+              if (!read.ok || read.record.revokedAt === null || read.sha256 !== client.head.record.sha256) return;
+              terminal = { kind: 'revoked', head: client.head };
+            }
+            if (!lease.current()) { terminal = undefined; return; }
+            confirmedAt = Math.max(confirmedAt, lease.now());
+          });
+          if (!verified || terminal === undefined) retired = false;
+          else history.push({ context: client.context, terminal });
+        } catch { retired = false; }
+      }
+      stopped = true;
+      try { await store.close(); } catch { retired = false; }
+      let observedAt = 0;
       try {
-      const now = input.now(), previous = client.record;
-      const next = { ...previous, revision: previous.revision + 1, revokedAt: new Date(now).toISOString() };
-      const result = await publishUrlMachineLifecycle({ context: { ...client.context, now }, binding,
-        expected: { revision: previous.revision, sha256: client.digest! }, next: canonical(next) }, store);
-      if (!result.ok) retired = false;
-      else { client.record = next; client.digest = result.receipt.record.sha256; }
+        observedAt = input.now();
+        if (!input.current() || !Number.isSafeInteger(observedAt) || observedAt < confirmedAt || observedAt >= input.deadline) retired = false;
       } catch { retired = false; }
-    }
-    stopped = true;
-    try { await store.close(); } catch { retired = false; }
-    return { lifecycle: retired ? 'retired' : 'Unknown' };
+      if (history.length !== URL_ROLES.length * 2) retired = false;
+      const result = Object.freeze({ lifecycle: retired ? 'retired' as const : 'Unknown' as const });
+      if (retired) {
+        const evidence = deepFreeze({ kind: 'closed-url-run-machine-history' as const, authorization: 'none' as const, replay: 'forbidden' as const,
+          identitySha256: store.identitySha256, binding, observedAt, clients: history });
+        issuedHistories.add(evidence); closedHistories.set(result, evidence);
+      }
+      return result;
     });
   };
   try {
@@ -115,10 +175,10 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     for (const plan of input.plans) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
       const slot = await store.allocateClient(input.deadline);
       if (slot === null || !current()) throw refuse();
-      const context: UrlMachineClientContext = Object.freeze({ clientId: slot.clientId, policySha256: input.originPolicySha256,
+      const context: UrlMachineClientContext = deepFreeze({ clientId: slot.clientId, policySha256: input.originPolicySha256,
         sourcePin: input.pin, runId: input.runId, role: plan.role, kind, allowedScopes: scopes(plan.role, kind),
         profileSha256: plan.profile.digest, now: input.now(), deadline: input.deadline });
-      const client: Client = { context, record: null, digest: null };
+      const client: Client = { context, witnessSha256: slot.witnessSha256, record: null, head: null };
       const key = `${plan.role}/${kind}`;
       if (clients.has(key)) throw refuse();
       clients.set(key, client);
@@ -162,9 +222,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             : { ...old, revision: old.revision + 1,
               instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
           const published = await publishUrlMachineLifecycle({ context: { ...context, now }, binding,
-            expected: old === null ? null : { revision: old.revision, sha256: client.digest! }, next: canonical(next) }, store);
+            expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, store);
           if (!published.ok) return false;
-          client.record = next; client.digest = published.receipt.record.sha256;
+          client.record = next; client.head = published.receipt;
           return current();
           }); } finally {
             if (!permitted) { peers.delete(peer); closeUrlMachinePeer(peer); }

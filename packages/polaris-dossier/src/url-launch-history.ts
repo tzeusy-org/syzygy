@@ -4,22 +4,26 @@ import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { readRunRecord, sourceBindingSha256 } from './run-record.js';
+import { URL_RUN_SIDECAR } from './effective-run-record.js';
 import { RUN_ID } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
 import { urlSessionViewFor } from './session-url-view.js';
 import { URL_CLI_PROGRAM } from './session-launch.js';
 import type { DossierScreen } from './screen.js';
+import type { SessionBinding } from './session-egress-policy.js';
+import { readEffectiveRunDeclaration, type UrlRoleDeclaration } from './url-run-record.js';
 
 export const URL_LAUNCH_HISTORY_FORMAT = 'polaris-dossier-url-launch-history/1';
 const BOUNDS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 };
 const canonical = (v: unknown): string => encodeCanonicalJson(v, BOUNDS);
 const hex = (v: unknown): v is string => typeof v === 'string' && /^[a-f0-9]{64}$/u.test(v);
 const positive = (v: unknown): v is number => Number.isSafeInteger(v) && Number(v) > 0;
-const refuse = (): never => { throw new Error('url-launch-history-unavailable'); };
+function refuse(): never { throw new Error('url-launch-history-unavailable'); }
+interface LaunchCapture { readonly pid: number | 'Unknown'; readonly startedAt: number | 'Unknown' }
 export interface UrlLaunchHistoryOptions {
   readonly run: string; readonly runId: string; readonly plan: UrlRolePlan; readonly compatiblePromptSha256: string;
-  readonly capture: { readonly pid: number | 'Unknown'; readonly startedAt: number | 'Unknown' };
+  readonly capture: LaunchCapture;
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
 }
 export type UrlLaunchHistoryRole = Exclude<UrlRolePlan['role'], 'author'>;
@@ -63,6 +67,51 @@ function readRegular(anchor: string, name: string): { readonly bytes: Buffer; re
 }
 const matchesFile = (expected: ReturnType<typeof readRegular>, found: ReturnType<typeof readRegular>): boolean =>
   unchanged(expected.stat, found.stat) && expected.bytes.equals(found.bytes);
+const parse = (bytes: Uint8Array): unknown => parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), BOUNDS);
+
+async function requireCurrent(current: UrlLaunchHistoryOptions['current']): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    if (await Promise.race([Promise.resolve().then(current), new Promise<false>(resolve => { timer = setTimeout(() => resolve(false), 1000); })]) !== true) refuse();
+  } finally { clearTimeout(timer); }
+}
+function screenHistory(value: unknown, screenBody: DossierScreen['screenBody'], screenSecrets: DossierScreen['screenSecrets']): void {
+  const fields: string[] = [], values: string[] = [];
+  const visit = (item: unknown): void => {
+    if (typeof item === 'string') { fields.push(item); values.push(item); }
+    else if (typeof item === 'number' || typeof item === 'boolean') values.push(String(item));
+    else if (Array.isArray(item)) for (const child of item) visit(child);
+    else if (isRecord(item)) for (const [key, child] of Object.entries(item)) { fields.push(key); visit(child); }
+  };
+  visit(value);
+  for (const text of [canonical(value), ...fields, fields.join(''), values.join(''), values.join('\n'), values.join(' ')])
+    if (screenBody(text) !== undefined || screenSecrets(text) !== undefined) refuse();
+}
+function verifyPromptSubject(prompt: unknown, role: UrlLaunchHistoryRole, runId: string, pin: string, directory: string,
+  compatiblePromptSha256: string): asserts prompt is Record<string, unknown> {
+  const inventory = role === 'inventory';
+  if (!isRecord(prompt) || prompt.format !== 'polaris-dossier-session-prompt/2' || prompt.role !== (inventory ? 'inventory' : 'review')
+    || prompt.runId !== runId || prompt.session !== 1 || prompt.pinnedRevision !== pin || (!inventory && prompt.kind !== role)
+    || typeof prompt.prompt !== 'string' || prompt.promptSha256 !== compatiblePromptSha256
+    || sha256(prompt.prompt) !== compatiblePromptSha256 || prompt.directory !== directory) refuse();
+}
+function historyRecord(subject: {
+  readonly runId: string; readonly role: UrlRolePlan['role']; readonly promptSha256: string; readonly directory: string;
+  readonly executable: string; readonly binding: SessionBinding; readonly declaration: UrlRoleDeclaration;
+}, capture: LaunchCapture) {
+  const { runId, role, promptSha256, directory, executable, binding, declaration } = subject;
+  const roleFields = role === 'author' ? { role: 'author' as const } : {
+    role: role === 'inventory' ? 'inventory' as const : 'review' as const, ...(role === 'inventory' ? {} : { kind: role }), session: 1 };
+  return { format: URL_LAUNCH_HISTORY_FORMAT, runId, ...roleFields,
+    form: { value: 'syzygy-launched', declaredBy: 'syzygy', label: 'Inferred' }, promptSha256,
+    actualInputPacketSha256: declaration.inputPacketSha256, sessionId: declaration.sessionId, binding,
+    executable, executableSha256: declaration.executableSha256, commandSha256: declaration.commandSha256,
+    instructionSha256: declaration.instructionSha256, viewSha256: declaration.viewSha256, compiledProfileSha256: declaration.compiledProfileSha256,
+    scaffoldSha256: declaration.scaffoldSha256, mcpSha256: declaration.mcpSha256, configurationSha256: declaration.configurationSha256, directory,
+    capture: { pid: capture.pid, startedAt: capture.startedAt === 'Unknown' ? 'Unknown' : isoOf(capture.startedAt),
+      unknownReason: capture.pid === 'Unknown' || capture.startedAt === 'Unknown' ? 'runtime-capture-unavailable' : null, label: 'Inferred' },
+    label: 'Inferred' };
+}
 
 /** Compatible history only, never a live launch attestation or recovery proof.
  * The genuine host plan supplies identities; the runtime supplies its bounded
@@ -81,22 +130,8 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     const initial = fs.fstatSync(root, { bigint: true }), anchor = `/proc/self/fd/${root}`;
     if (!initial.isDirectory() || initial.uid !== BigInt(process.getuid?.() ?? -1)) return refuse();
     const check = async (): Promise<void> => {
-      let timer: ReturnType<typeof setTimeout> | undefined;
-      try { if (await Promise.race([Promise.resolve().then(current), new Promise<false>(resolve => { timer = setTimeout(() => resolve(false), 1000); })]) !== true) return refuse(); }
-      finally { clearTimeout(timer); }
+      await requireCurrent(current);
       if (fs.realpathSync(run) !== run || !same(initial, fs.lstatSync(run, { bigint: true })) || !same(initial, fs.fstatSync(root!, { bigint: true }))) return refuse();
-    };
-    const safe = (v: unknown): void => {
-      const fields: string[] = [], values: string[] = [];
-      const visit = (item: unknown): void => {
-        if (typeof item === 'string') { fields.push(item); values.push(item); }
-        else if (typeof item === 'number' || typeof item === 'boolean') values.push(String(item));
-        else if (Array.isArray(item)) for (const child of item) visit(child);
-        else if (isRecord(item)) for (const [key, child] of Object.entries(item)) { fields.push(key); visit(child); }
-      };
-      visit(v);
-      for (const value of [canonical(v), ...fields, fields.join(''), values.join(''), values.join('\n'), values.join(' ')])
-        if (screenBody(value) !== undefined || screenSecrets(value) !== undefined) return refuse();
     };
     await check();
     const base = readRegular(anchor, 'run.json'), read = readRunRecord(new TextDecoder('utf-8', { fatal: true }).decode(base.bytes));
@@ -109,35 +144,22 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
       || !plan.profile.input.initialPrompt.includes(canonical(['dossier', 'poll', isOrderedDesignSessionProfile(plan.profile) ? runId : run]))
       || declaration.viewSha256 !== sha256(canonical(urlSessionViewFor(plan.view))) || declaration.executableSha256 !== URL_CLI_PROGRAM.sha256
       || [declaration.commandSha256, declaration.configurationSha256, declaration.scaffoldSha256, declaration.mcpSha256].some(value => !hex(value))) return refuse();
-    const helperRole = plan.role === 'inventory' ? 'inventory' : 'review';
     const directory = plan.role === 'author' ? run : `${run}.sessions/${plan.role === 'inventory' ? 'session' : plan.role}-1`;
     let prompt: ReturnType<typeof readRegular> | undefined, helperInitial: fs.BigIntStats | undefined, child = '', promptName = '';
-    const roleFields = plan.role === 'author' ? { role: 'author' as const } : { role: helperRole, ...(plan.role === 'inventory' ? {} : { kind: plan.role }), session: 1 };
     if (plan.role !== 'author') {
       child = plan.role === 'inventory' ? 'inventory' : 'reviews';
       helper = fs.openSync(path.join(anchor, child), directoryFlags);
       helperInitial = fs.fstatSync(helper, { bigint: true }); if (!helperInitial.isDirectory() || helperInitial.uid !== initial.uid) return refuse();
       promptName = `${plan.role === 'inventory' ? '' : `${plan.role}-`}session-1.json`;
       prompt = readRegular(`/proc/self/fd/${helper}`, promptName);
-      const parsed = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(prompt.bytes), BOUNDS);
-      if (!isRecord(parsed) || parsed['format'] !== 'polaris-dossier-session-prompt/2' || parsed['role'] !== helperRole || parsed['runId'] !== runId || parsed['session'] !== 1
-        || parsed['pinnedRevision'] !== read.record.subject.pinnedRevision.commit
-        || plan.role !== 'inventory' && parsed['kind'] !== plan.role || typeof parsed['prompt'] !== 'string'
-        || parsed['promptSha256'] !== compatiblePromptSha256 || sha256(parsed['prompt']) !== compatiblePromptSha256
-        || parsed['directory'] !== path.relative(path.dirname(run), directory)) return refuse();
-      safe(parsed);
+      const parsed = parse(prompt.bytes);
+      verifyPromptSubject(parsed, plan.role, runId, read.record.subject.pinnedRevision.commit, path.relative(path.dirname(run), directory), compatiblePromptSha256);
+      screenHistory(parsed, screenBody, screenSecrets);
       if (!plan.profile.input.initialPrompt.includes(canonical(['dossier', 'await', isOrderedDesignSessionProfile(plan.profile) ? '/work' : directory]))) return refuse();
     }
-    const record = deepFreeze({ format: URL_LAUNCH_HISTORY_FORMAT, runId, ...roleFields,
-      form: { value: 'syzygy-launched', declaredBy: 'syzygy', label: 'Inferred' }, promptSha256: compatiblePromptSha256,
-      actualInputPacketSha256: sha256(plan.profile.input.initialPrompt), sessionId: plan.profile.input.sessionId, binding,
-      executable: plan.view.cliExecutable, executableSha256: URL_CLI_PROGRAM.sha256, commandSha256: declaration.commandSha256,
-      instructionSha256: declaration.instructionSha256, viewSha256: declaration.viewSha256, compiledProfileSha256: declaration.compiledProfileSha256,
-      scaffoldSha256: declaration.scaffoldSha256, mcpSha256: declaration.mcpSha256, configurationSha256: declaration.configurationSha256, directory,
-      capture: { pid: capture.pid, startedAt: capture.startedAt === 'Unknown' ? 'Unknown' : isoOf(capture.startedAt),
-        unknownReason: capture.pid === 'Unknown' || capture.startedAt === 'Unknown' ? 'runtime-capture-unavailable' : null, label: 'Inferred' },
-      label: 'Inferred' });
-    safe({ run, record }); await check();
+    const record = deepFreeze(historyRecord({ runId, role: plan.role, promptSha256: compatiblePromptSha256, directory,
+      executable: plan.view.cliExecutable, binding, declaration }, capture));
+    screenHistory({ run, record }, screenBody, screenSecrets); await check();
     if (!matchesFile(base, readRegular(anchor, 'run.json'))) return refuse();
     if (plan.role === 'author') return { file: null, record, capability: null };
     if (helper === undefined || prompt === undefined || helperInitial === undefined) return refuse();
@@ -185,4 +207,130 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     return { file, record, capability };
   } catch { return refuse(); }
   finally { if (helper !== undefined) fs.closeSync(helper); if (root !== undefined) fs.closeSync(root); }
+}
+
+export interface UrlRetainedLaunchHistoryExpected {
+  readonly file: string; readonly recordSha256: string; readonly recordBytes: number;
+  readonly promptRecordSha256: string; readonly promptSha256: string; readonly sessionId: string;
+}
+export interface UrlRetainedLaunchHistoryOptions {
+  readonly run: string; readonly runId: string; readonly role: UrlLaunchHistoryRole;
+  /** Exact launch-history payload independently verified in the protected audit. */
+  readonly expected: UrlRetainedLaunchHistoryExpected;
+  /** Independently pinned subject and role identities. */
+  readonly coreSha256: string; readonly declarationSha256: string; readonly pin: string;
+  readonly roleDeclaration: UrlRoleDeclaration; readonly executable: string;
+  readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
+}
+declare const retainedHistoryBrand: unique symbol;
+export interface VerifiedRetainedUrlLaunchHistory {
+  readonly [retainedHistoryBrand]: true;
+  readonly authorization: 'none'; readonly replay: 'forbidden';
+  readonly role: UrlLaunchHistoryRole; readonly sessionId: string; readonly pin: string;
+  readonly runId: string; readonly sourceBindingSha256: string; readonly policySha256: string;
+  readonly recordSha256: string; readonly promptRecordSha256: string; readonly promptSha256: string;
+}
+const verifiedRetainedHistory = new WeakSet<VerifiedRetainedUrlLaunchHistory>();
+export function isVerifiedRetainedUrlLaunchHistory(value: unknown): value is VerifiedRetainedUrlLaunchHistory {
+  return typeof value === 'object' && value !== null && verifiedRetainedHistory.has(value as VerifiedRetainedUrlLaunchHistory);
+}
+
+const EXPECTED_FIELDS = ['file', 'recordSha256', 'recordBytes', 'promptRecordSha256', 'promptSha256', 'sessionId'];
+const PROMPT_FIELDS = ['format', 'role', 'runId', 'pinnedRevision', 'session', 'directory', 'prompt', 'promptSha256'];
+const OPTIONAL_PROMPT_FIELDS = ['kind', 'mode', 'issuedAt', 'brief', 'executionRule', 'stageStatement', 'packet', 'commands', 'context', 'label'];
+const fields = (value: unknown, required: readonly string[], optional: readonly string[] = []): value is Record<string, unknown> =>
+  isRecord(value) && required.every(key => Object.hasOwn(value, key)) && Object.keys(value).every(key => required.includes(key) || optional.includes(key));
+const absolute = (value: unknown): value is string => typeof value === 'string' && Buffer.byteLength(value) <= 4096
+  && path.isAbsolute(value) && path.resolve(value) === value;
+function recordedCapture(value: unknown): LaunchCapture {
+  if (!isRecord(value) || !isRecord(value.capture)) refuse();
+  const { pid, startedAt } = value.capture;
+  if (pid !== 'Unknown' && !positive(pid)) refuse();
+  if (startedAt === 'Unknown') return { pid, startedAt };
+  if (typeof startedAt !== 'string') refuse();
+  const milliseconds = Date.parse(startedAt);
+  if (!positive(milliseconds) || isoOf(milliseconds) !== startedAt) refuse();
+  return { pid, startedAt: milliseconds };
+}
+
+/** Verify retained compatible history against already verified protected
+ * expectations. This issues no writer capability or current launch authority. */
+export async function verifyRetainedUrlLaunchHistory(given: UrlRetainedLaunchHistoryOptions): Promise<VerifiedRetainedUrlLaunchHistory> {
+  let root: number | undefined, helper: number | undefined;
+  try {
+    const { run, runId, role, coreSha256, declarationSha256, pin, executable, current } = given;
+    const { policySha256, screenBody, screenSecrets } = given.screen;
+    const expected = parseBoundedJson(canonical(given.expected), BOUNDS);
+    const expectedRole = canonical(given.roleDeclaration);
+    if (!absolute(run) || path.basename(run) !== runId || !RUN_ID.test(runId) || !Object.hasOwn(URL_HELPER_LAUNCH_FILES, role)
+      || !absolute(executable) || !hex(coreSha256) || !hex(declarationSha256) || !hex(policySha256)
+      || typeof pin !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(pin)
+      || !fields(expected, EXPECTED_FIELDS) || typeof expected.file !== 'string' || expected.file !== URL_HELPER_LAUNCH_FILES[role]
+      || !hex(expected.recordSha256) || !positive(expected.recordBytes) || expected.recordBytes > BOUNDS.maxBytes
+      || !hex(expected.promptRecordSha256) || !hex(expected.promptSha256) || typeof expected.sessionId !== 'string'
+      || [current, screenBody, screenSecrets].some(fn => typeof fn !== 'function')) refuse();
+
+    await requireCurrent(current);
+    if (fs.realpathSync(run) !== run) refuse();
+    const rootFd = fs.openSync(run, directoryFlags);
+    root = rootFd;
+    const rootStat = fs.fstatSync(rootFd, { bigint: true }), anchor = `/proc/self/fd/${rootFd}`;
+    if (!rootStat.isDirectory() || rootStat.uid !== BigInt(process.getuid?.() ?? -1)) refuse();
+    const child = path.dirname(expected.file), launchName = path.basename(expected.file);
+    const childPath = path.join(anchor, child);
+    const helperFd = fs.openSync(childPath, directoryFlags);
+    helper = helperFd;
+    const helperStat = fs.fstatSync(helperFd, { bigint: true }), helperAnchor = `/proc/self/fd/${helperFd}`;
+    if (!helperStat.isDirectory() || helperStat.uid !== rootStat.uid) refuse();
+    const checkDirectories = (): void => {
+      if (fs.realpathSync(run) !== run || !same(rootStat, fs.lstatSync(run, { bigint: true })) || !same(rootStat, fs.fstatSync(rootFd, { bigint: true }))
+        || !same(helperStat, fs.lstatSync(childPath, { bigint: true })) || !same(helperStat, fs.fstatSync(helperFd, { bigint: true }))) refuse();
+    };
+    checkDirectories();
+    const promptName = launchName.replace(/\.launch\.json$/u, '.json');
+    const files = [[anchor, 'run.json'], [anchor, URL_RUN_SIDECAR], [helperAnchor, launchName], [helperAnchor, promptName]] as const;
+    const read = ([parent, name]: typeof files[number]): ReturnType<typeof readRegular> => {
+      const file = readRegular(parent, name);
+      if (file.stat.uid !== rootStat.uid) refuse();
+      return file;
+    };
+    const core = read(files[0]), sidecar = read(files[1]), launch = read(files[2]), prompt = read(files[3]);
+    if ((launch.stat.mode & 0o7777n) !== 0o600n || sha256(core.bytes) !== coreSha256 || sha256(sidecar.bytes) !== declarationSha256
+      || launch.bytes.length !== expected.recordBytes || sha256(launch.bytes) !== expected.recordSha256
+      || sha256(prompt.bytes) !== expected.promptRecordSha256) refuse();
+    const matched = readEffectiveRunDeclaration(core.bytes, sidecar.bytes, { runId, expectedSidecarSha256: declarationSha256 });
+    if (!matched.ok || matched.effective.kind !== 'url') refuse();
+    const subject = matched.effective.declaration, declaration = subject.roles.find(item => item.role === role);
+    if (subject.pinnedCommit !== pin || subject.basePolicy.sha256 !== policySha256 || !declaration || canonical(declaration) !== expectedRole
+      || declaration.sessionId !== expected.sessionId || declaration.executableSha256 !== URL_CLI_PROGRAM.sha256) refuse();
+
+    const directory = `${run}.sessions/${role === 'inventory' ? 'session' : role}-1`;
+    const parsedPrompt = parse(prompt.bytes);
+    if (!fields(parsedPrompt, PROMPT_FIELDS, OPTIONAL_PROMPT_FIELDS) || (role === 'inventory' && Object.hasOwn(parsedPrompt, 'kind'))) refuse();
+    verifyPromptSubject(parsedPrompt, role, runId, pin, path.relative(path.dirname(run), directory), expected.promptSha256);
+    const parsedLaunch = parse(launch.bytes);
+    const binding: SessionBinding = { run: runId, role, sourceBinding: subject.sourceBindingSha256, policy: subject.basePolicy.sha256,
+      provider: subject.inference.provider, model: subject.inference.model };
+    const exactRecord = historyRecord({ runId, role, promptSha256: expected.promptSha256, directory, executable, binding, declaration }, recordedCapture(parsedLaunch));
+    if (!launch.bytes.equals(Buffer.from(canonical(exactRecord) + '\n'))) refuse();
+    screenHistory(parsedPrompt, screenBody, screenSecrets);
+    screenHistory({ run, record: exactRecord }, screenBody, screenSecrets);
+
+    checkDirectories();
+    await requireCurrent(current);
+    checkDirectories();
+    if (![core, sidecar, launch, prompt].every((prior, index) => matchesFile(prior, read(files[index]!)))) refuse();
+    checkDirectories();
+    const verified = Object.freeze({ authorization: 'none', replay: 'forbidden', role, sessionId: declaration.sessionId, pin, runId,
+      sourceBindingSha256: subject.sourceBindingSha256, policySha256, recordSha256: expected.recordSha256, promptRecordSha256: expected.promptRecordSha256,
+      promptSha256: expected.promptSha256 }) as VerifiedRetainedUrlLaunchHistory;
+    verifiedRetainedHistory.add(verified);
+    return verified;
+  } catch { return refuse(); }
+  finally {
+    let closed = true;
+    try { if (helper !== undefined) fs.closeSync(helper); } catch { closed = false; }
+    try { if (root !== undefined) fs.closeSync(root); } catch { closed = false; }
+    if (!closed) refuse();
+  }
 }

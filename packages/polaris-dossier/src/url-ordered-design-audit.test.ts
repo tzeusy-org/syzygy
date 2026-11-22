@@ -4,6 +4,9 @@ import { sha256 } from '@syzygy/support';
 import { createOrderedDesignSessionProfile } from './session-profile.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
 import { verifyOrderedDesignAuditPrefix, verifyOrderedDesignTerminalEvidence, type OrderedDesignAuditEvent, type OrderedDesignAuditReference } from './url-ordered-design-audit.js';
+import { sealOrderedDesignHistoryAttempt, verifySealedOrderedDesignAuditHistory, type OrderedDesignHistoryRow } from './url-ordered-design-audit-history.js';
+import * as sessionAudit from './url-session-audit.js';
+import type { UrlDesignProductMetadata } from './url-design-product.js';
 import { isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 
 const encode = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 65_536, maxNodes: 4096, maxDepth: 12 });
@@ -15,6 +18,15 @@ const deadline = '2026-11-22T00:30:00.000Z';
 const start = Date.parse('2026-11-22T00:00:00.000Z');
 const originalText = 'Own audit fixture. '.repeat(2100);
 const packet = bytes(originalText);
+const verdictText = '{"owned":"verdict"}';
+const checkText = '{"owned":"check"}';
+const checked = { number: 1, verdictSha256: sha256(verdictText), checkSha256: sha256(checkText) };
+const product: Pick<UrlDesignProductMetadata, 'renderer' | 'parents'> = {
+  renderer: { format: 'polaris-url-installed-renderer/1', sourceEntry: 'first-party-renderer',
+    programSha256: sha256('own producer'), programBytes: 12, inputTreeSha256: sha256('own input tree'),
+    manifestSha256: sha256('own manifest'), profileRegistrySha256: sha256('own registry') },
+  parents: [{ id: 'own-parent', digest: sha256('own parent'), bytes: 10, classes: ['code-structure'], originIds: [] }],
+};
 const input = {
   binding: { policy: sha256('own base policy'), run: 'own-run', role: 'design', sourceBinding: sha256('own source binding'),
     provider: 'anthropic', model: 'claude-sonnet-4-6' },
@@ -35,7 +47,7 @@ interface Event {
 /** Synthetic held archive of safe metadata, built independently of the reader.
  * Hashing a mutation and its descendants keeps them canonical and correctly
  * chained, so failures exercise protocol verification instead of hash drift. */
-function archive(mutate?: (event: Event, occurrence: number, index: number) => void) {
+function archive(mutate?: (event: Event, occurrence: number, index: number) => void, epoch = 1, nativeStdin = verdictText) {
   const compiled = createOrderedDesignSessionProfile(input);
   if (!compiled.ok) throw new Error('own profile unavailable');
   const profile = compiled.value.profile, principal = 'operator:own';
@@ -44,12 +56,12 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
     originalSha256: packet.sha256, payload: originalText, payloadBytes: packet.bytes, payloadSha256: packet.sha256,
   }));
   const plan = planOrderedDesignBytes({ envelope, envelopeSha256: sha256(envelope), original: packet,
-    fileCount: 1, pageCount: 1, parents: [sha256('own parent')], instructionProfileSha256: sha256(input.systemPrompt),
+    fileCount: 1, pageCount: 1, parents: product.parents.map(digest), instructionProfileSha256: sha256(input.systemPrompt),
     limits: { partBytes: 32768, partCount: 2, replyBytes: 45000, preparedBytes: 4096 },
     binding: { basePolicySha256: input.binding.policy, deadline, encoding: 'html-entities-five/1', originPolicySha256: sha256('own origin policy'),
-      originalReceiptSha256: sha256('own original receipt'), pin: 'c'.repeat(40), producerSha256: sha256('own producer'),
-      profileSha256: profile.digest, project: 'own-project', provider: 'anthropic', role: 'design', round: 1, run: input.binding.run,
-      session: input.sessionId, transferEpoch: 1 } });
+      originalReceiptSha256: sha256(`own original receipt ${epoch}`), pin: 'c'.repeat(40), producerSha256: sha256('own producer'),
+      profileSha256: profile.digest, project: 'own-project', provider: 'anthropic', role: 'design', round: epoch, run: input.binding.run,
+      session: input.sessionId, transferEpoch: epoch } });
   const attemptSha256 = digest({ manifestSha256: plan.manifestSha256, sourceBinding: input.binding.sourceBinding, principal });
   const records: Buffer[] = [];
   const occurrences = new Map<string, number>();
@@ -84,10 +96,10 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
         stopReason: next === null ? 'end_turn' : 'tool_use', textBlocks: next === null ? 1 : 0, tool: next } });
     return { admission, sendAttempt, sendOutcome, response };
   };
-  const first = tool('toolu_first_owned', artifact, { path: 'round-1/design-view-part-1.json' });
-  const second = tool('toolu_second_owned', artifact, { path: 'round-1/design-view-part-2.json' });
-  const verdictBody = bytes('{"owned":"verdict"}');
-  const submit = tool('toolu_submit_owned', step, { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'], stdin: '{"owned":"verdict"}' });
+  const first = tool('toolu_first_owned', artifact, { path: `round-${epoch}/design-view-part-1.json` });
+  const second = tool('toolu_second_owned', artifact, { path: `round-${epoch}/design-view-part-2.json` });
+  const verdictBody = bytes(verdictText);
+  const submit = tool('toolu_submit_owned', step, { argv: ['dossier', 'await', '/work', '--submit', `round-${epoch}/verdict.json`, '--stdin'], stdin: nativeStdin });
   const preparedExchange = exchange(1, first);
   const firstReceipt = add('part-receipt', { ordinal: 1, issuedBy: preparedExchange.response, call: first,
     reply: { sha256: plan.replies[0]!.sha256, bytes: plan.replies[0]!.bytes } });
@@ -100,7 +112,7 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
   const completion = add('delivery-completed', { prepared, preparedExchange,
     parts: [{ receipt: firstReceipt, ...firstExchange }, { receipt: secondReceipt, ...secondExchange }],
     finalAdmission: secondExchange.admission, verdictResponse: secondExchange.response, verdictCall: submit });
-  const checkedVerdictSha256 = sha256('own independently validated verdict record');
+  const checkedVerdictSha256 = digest(checked);
   const stage = add('verdict-staged', { completion, issuedBy: secondExchange.response, verdictCall: submit, packet,
     checkedVerdictSha256, verdict: verdictBody });
   const ackText = encode({ exit: 0, kind: 'dossier-result', ok: true, stderr: '',
@@ -113,7 +125,7 @@ function archive(mutate?: (event: Event, occurrence: number, index: number) => v
   wrappers[3] = wrapper;
   const terminal = add('eligible', { completion, stage, acknowledgment, wrapper, ...exchange(4, null) });
   return { evidence: { profile, plan, principal, asOf: start + 50, records, terminal },
-    expected: { terminal, completion, stage, checkedVerdictSha256, verdict: verdictBody, packetSha256: packet.sha256 } };
+    expected: { terminal, completion, stage, checkedVerdictSha256, verdict: verdictBody, packetSha256: packet.sha256 }, envelope };
 }
 const changed = { id: 'other-event', sha256: sha256('other event') };
 const fields = (value: unknown): Record<string, unknown> => value as Record<string, unknown>;
@@ -289,5 +301,152 @@ describe('protected ordered design terminal evidence verifier', () => {
       { profile: structuredClone(evidence.profile) },
       { plan: structuredClone(evidence.plan) },
     ]) expect(verifyOrderedDesignTerminalEvidence({ ...evidence, ...changes })).toBeNull();
+  });
+});
+
+function sealedFixture(epoch = 1, nativeStdin = verdictText) {
+  const { evidence, expected, envelope } = archive(undefined, epoch, nativeStdin);
+  const { profile, plan, principal, records } = evidence, binding = plan.manifest.binding;
+  const receipt = { eventSha256: binding.originalReceiptSha256, identity: {
+    state: 'prepared', site: 50, round: epoch, sessionId: input.sessionId, draftRevision: 1, original: packet, payload: packet,
+    view: { ...bytes(envelope.toString()), encoding: 'html-entities-five/1', format: 'polaris-dossier-url-design-inert-view/1' },
+    files: 1, pages: 1, rendererSha256: digest(product.renderer), basePolicySha256: binding.basePolicySha256,
+    originPolicySha256: binding.originPolicySha256, registryProfileSha256: sha256('own registry'), policyBindingsSha256: sha256('own policies'),
+    launchEventSha256: sha256('own launch'), parentCount: product.parents.length, parentsSha256: digest(product.parents),
+    inputsSha256: sha256('own inputs'), storedPopulationSha256: sha256('own population'),
+  } } as sessionAudit.UrlDesignDeliveryAuditRecord;
+  const delivery: sessionAudit.UrlDesignDeliveryView = { receipt, view: envelope, parents: [] };
+  const proof = { ordered: { manifestSha256: plan.manifestSha256, completion: expected.completion }, round: epoch,
+    sessionId: input.sessionId, packet: { sha256: packet.sha256 }, verdictCallId: 'toolu_submit_owned',
+    verdictInputSha256: digest({ argv: ['dossier', 'await', '/work', '--submit', `round-${epoch}/verdict.json`, '--stdin'], stdin: verdictText }),
+  } as sessionAudit.UrlDesignReviewProof;
+  const continuation = { delivery: receipt, binding: { runId: binding.run, pinnedRevision: binding.pin },
+    checked, verdictEventSha256: sha256(`own verdict event ${epoch}`) } as sessionAudit.UrlDesignRenderContinuation;
+  // Only the live product-check seam is controlled. The bounded canonical
+  // transcript, terminal joins and returned historical result use real code.
+  const authenticate = () => {
+    vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryViewCurrent').mockImplementation(value => {
+      if (value !== delivery) throw new Error('test delivery is not genuine');
+    });
+    vi.spyOn(sessionAudit, 'assertUrlDesignRenderContinuationCurrent').mockImplementation(value => {
+      if (value !== continuation) throw new Error('test continuation is not genuine');
+    });
+    vi.spyOn(sessionAudit, 'assertUrlOrderedDesignVerdictTerminal').mockImplementation((observedProof, observedChecked, terminal) => {
+      if (observedProof !== proof || observedChecked !== checked || terminal !== expected) throw new Error('test terminal is not genuine');
+    });
+  };
+  const scope = { binding: profile.input.binding, profileSha256: profile.digest, originPolicySha256: binding.originPolicySha256 };
+  const row = (kind: string, payload: unknown, sha256: string): OrderedDesignHistoryRow =>
+    ({ sha256, event: { kind, role: 'design', scope, payload } });
+  const deliveryRow = row('design-delivery', receipt.identity, receipt.eventSha256);
+  const inner = records.map(record => row('design-ordered', JSON.parse(record.toString()), sha256('outer:' + record.toString())));
+  const verdict = row('ordered-design-verdict', { deliverySha256: receipt.eventSha256, checked, terminal: expected }, continuation.verdictEventSha256);
+  const eligible = { profile, plan, principal, product, delivery, disposition: { kind: 'eligible' as const, proof, continuation, terminal: expected,
+    verdictBytes: Buffer.from(verdictText), checkBytes: Buffer.from(checkText) } };
+  const prepared = JSON.parse(records[0]!.toString()) as Event;
+  const retirement = { ...prepared, id: `own-retired-${epoch}`, at: new Date(start + 1).toISOString(), kind: 'retired',
+    previous: { id: prepared.id, sha256: sha256(records[0]!) }, payload: { reason: 'interrupted' } };
+  const retired = { ...eligible, disposition: { kind: 'retired' as const, terminal: { id: retirement.id, sha256: digest(retirement) } } };
+  const retireRow = row('design-ordered', retirement, sha256('outer:' + encode(retirement)));
+  const subject = { project: binding.project, pin: binding.pin, principal, deadline: binding.deadline };
+  return { authenticate, evidence, eligible, retired, subject, attemptSha256: prepared.attemptSha256,
+    eligibleRows: [deliveryRow, ...inner, verdict], retiredRows: [deliveryRow, inner[0]!, retireRow] };
+}
+
+describe('sealed ordered design audit history', () => {
+  it('requires genuine scoped producers and exact frozen artifact bytes before issuing a seal', () => {
+    const fixture = sealedFixture();
+    const { eligible, retired } = fixture;
+    expect(sealOrderedDesignHistoryAttempt(eligible)).toBeNull();
+    expect(sealOrderedDesignHistoryAttempt(retired)).toBeNull();
+    fixture.authenticate();
+    try {
+      expect(sealOrderedDesignHistoryAttempt({ ...eligible, delivery: { ...eligible.delivery } })).toBeNull();
+      expect(sealOrderedDesignHistoryAttempt({ ...eligible, product: { ...product, parents: [] } })).toBeNull();
+      for (const disposition of [{ ...eligible.disposition, verdictBytes: Buffer.from(verdictText + '\n') },
+        { ...eligible.disposition, checkBytes: Buffer.from(checkText + '\n') }, { ...eligible.disposition, proof: { ...eligible.disposition.proof } },
+        { ...eligible.disposition, continuation: { ...eligible.disposition.continuation } }]) {
+        expect(sealOrderedDesignHistoryAttempt({ ...eligible, disposition })).toBeNull();
+      }
+      expect(sealOrderedDesignHistoryAttempt(eligible)).not.toBeNull();
+    } finally { vi.restoreAllMocks(); }
+  });
+
+  it('verifies a closed transcript and joined verdict without reopening a live cursor', () => {
+    const fixture = sealedFixture();
+    fixture.authenticate();
+    let seal;
+    try { seal = sealOrderedDesignHistoryAttempt(fixture.eligible); } finally { vi.restoreAllMocks(); }
+    if (seal === null) throw new Error('missing fixture seal');
+    const given = { rows: fixture.eligibleRows, attempts: [seal], subject: fixture.subject, asOf: Date.parse(deadline) + 1 };
+    const verified = verifySealedOrderedDesignAuditHistory(given);
+    expect(verified).toMatchObject({
+      kind: 'verified-ordered-design-audit-history', authorization: 'none', replay: 'forbidden',
+      attempts: [{ epoch: 1, attemptSha256: fixture.attemptSha256, disposition: 'eligible', recordCount: 23 }],
+    });
+    expect(Object.isFrozen(verified?.attempts[0])).toBe(true);
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, attempts: [{ ...seal }] })).toBeNull();
+    for (const key of ['project', 'pin', 'principal', 'deadline'] as const) {
+      expect(verifySealedOrderedDesignAuditHistory({ ...given, subject: { ...given.subject, [key]: 'wrong' } })).toBeNull();
+    }
+    for (const length of [2, 15, 23, 24]) {
+      expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: given.rows.slice(0, length) })).toBeNull();
+    }
+    const last = given.rows.at(-1)!;
+    for (const altered of [
+      { ...last, sha256: sha256('substitute checked verdict row') },
+      { ...last, event: { ...last.event, payload: { ...fields(last.event.payload), deliverySha256: sha256('other delivery') } } },
+      { ...last, event: { ...last.event, payload: { ...fields(last.event.payload), terminal: { ...fixture.eligible.disposition.terminal, stage: changed } } } },
+      { ...last, event: { ...last.event, payload: { ...fields(last.event.payload), checked: { ...checked, number: 2 } } } },
+    ]) {
+      expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: [...given.rows.slice(0, -1), altered] })).toBeNull();
+    }
+  });
+
+  it('rejects a linked transcript for a different native verdict submission', () => {
+    const fixture = sealedFixture(1, '{"different":"native submission"}');
+    expect(verifyOrderedDesignTerminalEvidence(fixture.evidence)).not.toBeNull();
+    fixture.authenticate();
+    let seal;
+    try { seal = sealOrderedDesignHistoryAttempt(fixture.eligible); } finally { vi.restoreAllMocks(); }
+    if (seal === null) throw new Error('missing fixture seal');
+    expect(verifySealedOrderedDesignAuditHistory({ rows: fixture.eligibleRows, attempts: [seal],
+      subject: fixture.subject, asOf: fixture.evidence.asOf })).toBeNull();
+  });
+
+  it('retains a properly anchored retirement and refuses pending or ambiguous epochs', () => {
+    const first = sealedFixture(), second = sealedFixture(2);
+    first.authenticate();
+    let one;
+    try { one = sealOrderedDesignHistoryAttempt(first.retired); } finally { vi.restoreAllMocks(); }
+    second.authenticate();
+    let two;
+    try { two = sealOrderedDesignHistoryAttempt(second.eligible); } finally { vi.restoreAllMocks(); }
+    if (one === null || two === null) throw new Error('missing fixture seal');
+    const given = { rows: [...first.retiredRows, ...second.eligibleRows], attempts: [one, two], subject: first.subject, asOf: first.evidence.asOf };
+    expect(verifySealedOrderedDesignAuditHistory(given)?.attempts).toEqual([
+      { epoch: 1, attemptSha256: first.attemptSha256, disposition: 'retired', recordCount: 2 },
+      { epoch: 2, attemptSha256: second.attemptSha256, disposition: 'eligible', recordCount: 23 },
+    ]);
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: second.eligibleRows, attempts: [two] })).toBeNull();
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, attempts: [two, one] })).toBeNull();
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, attempts: [one, one] })).toBeNull();
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: given.rows.slice(0, -1) })).toBeNull();
+    const [delivery, prepared, retired] = first.retiredRows;
+    expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: [delivery!, prepared!, retired!, delivery!], attempts: [one] })).toBeNull();
+    const originalRetirement = retired!.event.payload as Event;
+    for (const payload of [{ ...originalRetirement, previous: changed }, { ...originalRetirement, at: deadline },
+      { ...originalRetirement, at: new Date(start - 1).toISOString() }, { ...originalRetirement, id: (prepared!.event.payload as Event).id },
+      { ...originalRetirement, kind: 'eligible' }, { ...originalRetirement, payload: { reason: 'invented' } }]) {
+      first.authenticate();
+      let changedSeal;
+      try {
+        changedSeal = sealOrderedDesignHistoryAttempt({ ...first.retired,
+          disposition: { kind: 'retired', terminal: { id: payload.id, sha256: digest(payload) } } });
+      } finally { vi.restoreAllMocks(); }
+      if (changedSeal === null) throw new Error('missing retirement digest fixture');
+      expect(verifySealedOrderedDesignAuditHistory({ ...given, rows: [delivery!, prepared!, { ...retired!, event: { ...retired!.event, payload } }],
+        attempts: [changedSeal], asOf: Date.parse(deadline) + 1 })).toBeNull();
+    }
   });
 });

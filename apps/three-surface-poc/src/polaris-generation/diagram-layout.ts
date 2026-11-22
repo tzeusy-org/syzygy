@@ -14,9 +14,8 @@ import type { EpistemicMarking } from '@syzygy/polaris-generation-core/live';
  * - Forward edges are cubic curves from the source's right side to the target's
  *   left side. Back edges are curves drawn below the layers, each one lower
  *   than the last.
- * - On a spacing with a column limit, a plain chain longer than the limit
- *   continues on bands below; any other diagram longer than the limit is
- *   stacked top to bottom instead (`stackDiagram`).
+ * - On a spacing with a stacking width, a diagram whose layered form would be
+ *   wider than it is stacked top to bottom instead (`stackDiagram`).
  */
 
 const NODE_WIDTH = 200;
@@ -38,12 +37,14 @@ const LEADER_EDGE_STOPS = 16;
 /** An arrowhead as drawn: the marker's 10-unit triangle at `markerWidth` 8 in stroke units, on an edge stroked 2 wide (1.6 px a unit),
  * its tip one unit past the line's end (`refX` 9). The hover's wider stroke draws it larger; at rest it is this size. */
 const ARROW_UNIT = 1.6;
+/** The narrowest box a dossier gives a diagram: 261 px on a 390 px screen, measured in Chrome on the reading fixture (syzygy-3efd.19). */
+const STACK_COLUMN = 261;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
   readonly gapX: number; readonly gapY: number;
-  /** Columns before the layers continue on a band below; the vertical gap between bands; both unused while every layer fits on one band. */
-  readonly maxColumns: number; readonly bandGap: number;
+  /** The widest a layered diagram may be: one whose layers would lay out wider is stacked top to bottom instead (`stackDiagram`). */
+  readonly stackWiderThan: number;
   /** An edge label's wrap and the width one of its characters is assumed to take. */
   readonly edgeChars: number; readonly edgeLines: number; readonly charWidth: number;
   /** Draw edge labels above everything, lines still behind the nodes, so at rest a line never strikes through a node's text or a label; a label under the pointer draws its line above both. */
@@ -51,10 +52,11 @@ export interface DiagramSpacing {
   /** How much lower each further back edge runs. */
   readonly backEdgeStep: number;
 }
-export const DEFAULT_SPACING: DiagramSpacing = { gapX: 120, gapY: 40, maxColumns: Number.POSITIVE_INFINITY, bandGap: 0, edgeChars: 18, edgeLines: 2, charWidth: 7.4, labelsOnTop: false, backEdgeStep: 30 };
+export const DEFAULT_SPACING: DiagramSpacing = { gapX: 120, gapY: 40, stackWiderThan: Number.POSITIVE_INFINITY, edgeChars: 18, edgeLines: 2, charWidth: 7.4, labelsOnTop: false, backEdgeStep: 30 };
 /** An operator-agent dossier's diagrams: the widest edge label (22 characters: 186 px) fits its 198 px gap, three-line labels on adjacent
- * rows of a fan-out stay clear of each other, and a long plain chain continues on the next band instead of scrolling sideways (syzygy-pdja.1). */
-export const READABLE_SPACING: DiagramSpacing = { gapX: 200, gapY: 64, maxColumns: 3, bandGap: 88, edgeChars: 22, edgeLines: 3, charWidth: 7.9, labelsOnTop: true, backEdgeStep: 56 };
+ * rows of a fan-out stay clear of each other (syzygy-pdja.1), and any diagram of two or more layers, at least 648 px laid out left to right,
+ * is stacked to fit the phone's column, because the one drawing serves every screen width (syzygy-3efd.66). */
+export const READABLE_SPACING: DiagramSpacing = { gapX: 200, gapY: 64, stackWiderThan: STACK_COLUMN, edgeChars: 22, edgeLines: 3, charWidth: 7.9, labelsOnTop: true, backEdgeStep: 56 };
 
 interface LayoutNodeInput { readonly id: string }
 interface LayoutEdgeInput { readonly id: string; readonly from: string; readonly to: string }
@@ -72,7 +74,7 @@ const num = (value: number): string => String(Math.round(value * 10) / 10);
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly LayoutEdgeInput[], spacing: DiagramSpacing = DEFAULT_SPACING): DiagramLayout {
-  const { gapX, gapY, maxColumns, bandGap } = spacing;
+  const { gapX, gapY } = spacing;
   if (nodes.length === 0) throw new Error('empty-diagram');
   const index = new Map<string, number>();
   nodes.forEach((node, i) => {
@@ -132,38 +134,21 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     keyed.forEach(({ i }, r) => { row[i] = r; });
     members[l] = keyed.map(({ i }) => i);
   }
-  // Bands are for a plain chain: one node to a layer and only one-layer steps, so a hand-off between bands crosses nothing. A loop, a skip
-  // or a tall column would put a line or a label on a node on a band break, so such a diagram is stacked top to bottom instead.
-  const tooWide = Number.isFinite(maxColumns) && layerCount > maxColumns;
-  const wraps = tooWide && !back.some(Boolean)
-    && members.every(m => m.length === 1) && ends.every(end => layer[end.to]! === layer[end.from]! + 1);
-  if (tooWide && !wraps) return stackDiagram(nodes, edges, ends, back, layer, row, members, spacing);
-  const columns = wraps ? maxColumns : Number.POSITIVE_INFINITY;
-  const bandOf = (l: number): number => Math.floor(l / columns);
+  // The one drawing serves every screen width, so a diagram whose layers would not fit the phone's column is stacked top to bottom: on the
+  // readable spacing, every diagram of two or more layers, a plain chain and a small fan-out among them (syzygy-3efd.66).
+  const width = MARGIN * 2 + layerCount * NODE_WIDTH + (layerCount - 1) * gapX;
+  if (width > spacing.stackWiderThan) return stackDiagram(nodes, edges, ends, back, layer, row, members, spacing);
   const columnHeight = (count: number): number => count * NODE_HEIGHT + (count - 1) * gapY;
-  const bandHeight = new Map<number, number>();
-  members.forEach((m, l) => bandHeight.set(bandOf(l), Math.max(bandHeight.get(bandOf(l)) ?? 0, columnHeight(m.length))));
-  const bandTop = new Map<number, number>();
-  let nextTop = MARGIN;
-  for (const [band, height] of bandHeight) { bandTop.set(band, nextTop); nextTop += height + bandGap; }
-  const contentBottom = nextTop - bandGap;
+  const contentHeight = Math.max(...members.map(m => columnHeight(m.length)));
+  const contentBottom = MARGIN + contentHeight;
   const laidNodes: LaidOutNode[] = nodes.map((node, i) => {
-    const band = bandOf(layer[i]!);
-    const offset = (bandHeight.get(band)! - columnHeight(members[layer[i]!]!.length)) / 2;
-    return { id: node.id, layer: layer[i]!, row: row[i]!, x: MARGIN + (layer[i]! % columns) * (NODE_WIDTH + gapX), y: bandTop.get(band)! + offset + row[i]! * (NODE_HEIGHT + gapY) };
+    const offset = (contentHeight - columnHeight(members[layer[i]!]!.length)) / 2;
+    return { id: node.id, layer: layer[i]!, row: row[i]!, x: MARGIN + layer[i]! * (NODE_WIDTH + gapX), y: MARGIN + offset + row[i]! * (NODE_HEIGHT + gapY) };
   });
 
   let backCount = 0;
   const laidEdges: LaidOutEdge[] = edges.map((edge, e) => {
     const from = laidNodes[ends[e]!.from]!, to = laidNodes[ends[e]!.to]!;
-    if (!back[e] && bandOf(from.layer) !== bandOf(to.layer)) {
-      // The hand-off to a later band leaves the node's foot and enters the next node's head, its label in the gap between the bands.
-      const x1 = from.x + NODE_WIDTH / 2, y1 = from.y + NODE_HEIGHT, x2 = to.x + NODE_WIDTH / 2, y2 = to.y - 2;
-      const dy = (y2 - y1) / 2;
-      return { id: edge.id, from: edge.from, to: edge.to, back: false,
-        d: `M ${num(x1)} ${num(y1)} C ${num(x1)} ${num(y1 + dy)}, ${num(x2)} ${num(y2 - dy)}, ${num(x2)} ${num(y2)}`,
-        labelX: (x1 + x2) / 2, labelY: (y1 + y2) / 2 };
-    }
     if (!back[e]) {
       const x1 = from.x + NODE_WIDTH, y1 = from.y + NODE_HEIGHT / 2, x2 = to.x - 2, y2 = to.y + NODE_HEIGHT / 2;
       const dx = (x2 - x1) / 2;
@@ -186,7 +171,7 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
   });
   const lowestBackEdge = backCount === 0 ? contentBottom + (spacing.labelsOnTop ? 32 : 24) : contentBottom + BACK_EDGE_DROP + (backCount - 1) * spacing.backEdgeStep;
   return {
-    width: MARGIN * 2 + Math.min(layerCount, columns) * NODE_WIDTH + (Math.min(layerCount, columns) - 1) * gapX,
+    width,
     height: Math.ceil(lowestBackEdge + MARGIN),
     nodeWidth: NODE_WIDTH,
     nodes: laidNodes,
@@ -200,14 +185,12 @@ const LANE_STEP = 8;
 const LANE_STEP_LEAST = 4;
 /** The narrowest a stacked node gets when its lanes, at the least step, still outgrow `STACK_COLUMN`: past that the diagram scrolls. */
 const NODE_WIDTH_LEAST = 120;
-/** The narrowest box a dossier gives a diagram: 261 px on a 390 px screen, measured in Chrome on the reading fixture (syzygy-3efd.19). */
-const STACK_COLUMN = 261;
 /** Where a lane edge leaves its source's side and enters its target's, measured down from the node's top. */
 const LANE_EXIT = 20;
 const LANE_ENTRY = 36;
 
 /**
- * A diagram wider than the readable column that is not a plain chain, stacked top to bottom one node to a row, so it is no wider than one
+ * A diagram whose layers would lay out wider than the readable spacing's stacking width, stacked top to bottom one node to a row, so it is no wider than one
  * node and its side lanes: 248 px with up to two lanes a side, and inside `STACK_COLUMN` with up to twelve lanes in all, the lanes drawn
  * closer as they grow (syzygy-3efd.19). Past that the nodes narrow to fit, down to `NODE_WIDTH_LEAST` (syzygy-3efd.58), which no
  * graph of sixteen nodes reaches (at most sixteen lane groups a side, 68 px at the least step, leaving 125 px); only past that does it scroll in its own box, as any too-wide diagram does. Rows are in a topological

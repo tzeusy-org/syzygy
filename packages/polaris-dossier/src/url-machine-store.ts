@@ -1,12 +1,14 @@
 import { constants, renameSync } from 'node:fs';
-import { mkdir, open, realpath, lstat, rmdir, unlink, type FileHandle } from 'node:fs/promises';
+import { mkdir, open, realpath, lstat, rmdir, unlink, opendir, type FileHandle } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { identifyUrlMachineLifecycleRecord } from './url-machine-lifecycle.js';
+import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS, type UrlMachineArchive, type UrlMachineArchivePointer } from './url-machine-archive.js';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
-import { URL_MACHINE_CLIENT_LIMITS } from './url-machine-instance.js';
+import { readUrlMachineClient, URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext } from './url-machine-instance.js';
 
 type Expected = Parameters<UrlMachineLifecycleLease['advance']>[0];
 type AuditStep = Extract<UrlMachineLifecycleStep, { kind: 'audit' }>;
@@ -20,7 +22,8 @@ interface Entry {
   readonly audit: readonly AuditStep['event'][];
 }
 interface StoreState {
-  readonly format: 'url-machine-store-state/1';
+  readonly format: 'url-machine-store-state/1' | 'url-machine-store-state/2';
+  readonly archive?: UrlMachineArchivePointer;
   readonly rootId: string;
   readonly used: readonly string[];
   readonly runs: readonly { readonly runId: string; readonly clients: readonly string[] }[];
@@ -32,7 +35,7 @@ interface StoreIdentity {
   readonly canonicalRoot: string;
 }
 // At most 256 canonical files (64 KiB), 256 projections (16 KiB), an 8 MiB
-// state, 16 KiB identity and one in-flight 8 MiB temporary fit this disk cap.
+// state, 16 KiB identity, a 10 MB archive and one 10 MB temporary fit this cap.
 // A crash retains the lock, so temporary files cannot accumulate across runs.
 export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
   clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648, operationMilliseconds: 5000, lockMilliseconds: 1000 });
@@ -72,6 +75,8 @@ export interface UrlMachineStoreHistory {
   readonly canonical: Uint8Array;
   readonly head: Head;
   readonly events: readonly AuditStep['event'][];
+  /** Exact retained revisions only; legacy omissions remain unavailable. */
+  readonly revisions: readonly { readonly revision: number; readonly canonical: Uint8Array }[];
 }
 const historyReaders = new WeakMap<UrlMachineStore, (clientId: string, expected: Head, deadline: number) => Promise<UrlMachineStoreHistory | null>>();
 /** A genuine retained/reopened adapter supplies history under the existing
@@ -127,7 +132,9 @@ function auditValid(events: readonly unknown[], clientId: string, witnessSha256:
   return true;
 }
 function stateValid(value: unknown, rootId: string): value is StoreState {
-  if (!fields(value, ['format', 'rootId', 'used', 'runs', 'clients']) || value.format !== 'url-machine-store-state/1' || value.rootId !== rootId
+  if (!isRecord(value) || !(value.format === 'url-machine-store-state/1'
+    ? fields(value, ['format', 'rootId', 'used', 'runs', 'clients'])
+    : value.format === 'url-machine-store-state/2' && fields(value, ['format', 'rootId', 'used', 'runs', 'clients', 'archive']) && isUrlMachineArchivePointer(value.archive)) || value.rootId !== rootId
     || !Array.isArray(value.used) || value.used.length > URL_MACHINE_STORE_LIMITS.identities || !value.used.every(digest)
     || new Set(value.used).size !== value.used.length || !Array.isArray(value.runs) || value.runs.length > URL_MACHINE_STORE_LIMITS.clients
     || !Array.isArray(value.clients) || value.clients.length > URL_MACHINE_STORE_LIMITS.clients) return false;
@@ -194,12 +201,15 @@ async function initialize(options: UrlMachineStoreOptions, check: () => void): P
     handle = await open(options.protectedRoot, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
     const rootId = opaque();
     const identity: StoreIdentity = { format: 'url-machine-store/1', rootId, canonicalRoot };
-    for (const name of ['identity.json', 'state.json']) {
+    const archive = encodeUrlMachineArchive({ format: 'url-machine-canonical-history/1', rootId, entries: [] });
+    const initial: StoreState = { format: 'url-machine-store-state/2', rootId, used: [], runs: [], clients: [],
+      archive: { sha256: sha256(archive), bytes: archive.length, records: 0, legacy: [] } };
+    for (const name of ['identity.json', 'canonical-history.json', 'state.json']) {
       check();
       const file = await open(`/proc/self/fd/${handle.fd}/${name}`, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600);
       try {
         check();
-        await file.writeFile(canonical(name === 'identity.json' ? identity : { format: 'url-machine-store-state/1', rootId, used: [], runs: [], clients: [] }));
+        await file.writeFile(name === 'canonical-history.json' ? archive : canonical(name === 'identity.json' ? identity : initial));
         check(); await file.sync(); check();
       } finally { await file.close(); }
     }
@@ -299,15 +309,56 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     if (!fields(identity, ['format', 'rootId', 'canonicalRoot']) || identity.format !== 'url-machine-store/1'
       || !digest(identity.rootId) || identity.canonicalRoot !== canonicalRoot) throw refused();
     const rootId = identity.rootId;
+    let validatedArchive: { key: string; value: UrlMachineArchive } | undefined;
+    let validatedState: { sha256: string; value: StoreState } | undefined;
+    const archiveKeys = new WeakMap<StoreState, string>();
+    const readArchive = async (state: StoreState): Promise<{ bytes: Buffer | null; value: UrlMachineArchive | null }> => {
+      const bytes = await readFile(`${base}/canonical-history.json`, URL_MACHINE_ARCHIVE_LIMITS.bytes, true);
+      if (state.format === 'url-machine-store-state/1') {
+        if (bytes !== null) throw refused();
+        return { bytes: null, value: null };
+      }
+      if (bytes === null || !state.archive || bytes.length !== state.archive.bytes || sha256(bytes) !== state.archive.sha256) throw refused();
+      // Cache only semantic decoding, bound to exact physical bytes, pointer and
+      // complete lifecycle history. Every read still verifies the actual file.
+      let key = archiveKeys.get(state);
+      if (key === undefined) {
+        key = sha256(canonical({ pointer: state.archive, clients: state.clients.filter(item => item.audit.length > 0)
+          .map(item => ({ clientId: item.clientId, audit: item.audit })) }));
+        archiveKeys.set(state, key);
+      }
+      if (validatedArchive?.key === key) return { bytes, value: validatedArchive.value };
+      const value = readUrlMachineArchive(bytes, state.archive, rootId, state.clients, live());
+      if (value === null) throw refused();
+      validatedArchive = { key, value };
+      return { bytes, value };
+    };
+    const census = async (): Promise<void> => {
+      charge();
+      const directory = await opendir(base);
+      let count = 0;
+      for await (const item of directory) {
+        charge();
+        if (++count > URL_MACHINE_STORE_LIMITS.clients + 5 || item.name.startsWith('canonical-history') && item.name !== 'canonical-history.json') throw refused();
+      }
+    };
     const readState = async (): Promise<StoreState> => {
       await anchored();
       const id = await readFile(`${base}/identity.json`, 16_384);
       if (id === null || sha256(id) !== expectedIdentitySha256) throw refused();
       const bytes = await readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes);
-      const state = bytes === null ? null : decode(bytes);
-      if (!stateValid(state, rootId)) throw refused();
+      if (bytes === null) throw refused();
+      const digest = sha256(bytes);
+      if (validatedState?.sha256 !== digest) {
+        const decoded = decode(bytes);
+        if (!stateValid(decoded, rootId)) throw refused();
+        validatedState = { sha256: digest, value: decoded };
+      }
+      const state = validatedState.value;
+      await readArchive(state);
       return state;
     };
+    await census();
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
     setupCurrent();
@@ -339,7 +390,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           await io(() => held.writeFile(bytes)); await io(() => held.sync());
           check(); await io(anchored);
           if (predecessor !== undefined) {
-            const actual = await io(() => readFile(file, URL_MACHINE_CLIENT_LIMITS.maxBytes, true));
+            const actual = await io(() => readFile(file, Math.max(bytes.byteLength, predecessor?.byteLength ?? 0), true));
             if (actual === null ? predecessor !== null : predecessor === null || !actual.equals(Buffer.from(predecessor))) throw refused();
           }
           check();
@@ -368,6 +419,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           }
         }
         await io(() => heldRoot.sync());
+        await io(census);
         await operation(check, () => io(readState), write);
         check();
       });
@@ -399,7 +451,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         const entry: Entry = { clientId, witnessSha256, anchor: { kind: 'never-issued', clientId, witnessSha256 }, audit: [] };
         const next: StoreState = { ...current, clients: [...current.clients, entry] };
         if (!stateValid(next, rootId)) throw refused();
-        await write(`${base}/state.json`, Buffer.from(canonical(next)));
+        const bytes = Buffer.from(canonical(next));
+        await write(`${base}/state.json`, bytes);
+        validatedState = { sha256: sha256(bytes), value: next };
         if (!equal(await state(), next)) throw refused();
         check(); issued = { clientId, witnessSha256 };
       });
@@ -410,6 +464,38 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       return withLock(deadline, async (check, state, write) => {
         let phase = 0;
         const order = ['reserve', 'publish', 'synchronize', 'audit', 'commit'];
+        let prepared: { canonical: Buffer; head: Head; runId: string; newIdentities: readonly string[]; archive: Buffer; predecessor: Buffer | null; pointer: UrlMachineArchivePointer } | null = null;
+        const preflightCanonical: NonNullable<UrlMachineLifecycleLease['preflightCanonical']> = async (candidate, proposedHead) => {
+          check();
+          if (phase !== 0 || prepared !== null || !head(proposedHead) || proposedHead.record.clientId !== clientId) return false;
+          const bytes = Buffer.from(candidate), current = await state(), entry = current.clients.find(item => item.clientId === clientId);
+          if (!entry || (entry.anchor.kind !== 'never-issued' && entry.anchor.kind !== 'committed') || sha256(bytes) !== proposedHead.record.sha256) return false;
+          const prior = await readArchive(current);
+          const raw = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), URL_MACHINE_CLIENT_LIMITS);
+          if (!isRecord(raw)) return false;
+          const last = entry.audit.at(-1);
+          const checked = readUrlMachineClient(bytes, { clientId, policySha256: String(raw.policySha256), profileSha256: last?.profileSha256 ?? String((raw.instances as { verifier?: { profileSha256?: string } }[] | undefined)?.[0]?.verifier?.profileSha256),
+            sourcePin: String(raw.sourcePin), runId: String(raw.runId), role: raw.role as UrlMachineClientContext['role'], kind: raw.kind as UrlMachineClientContext['kind'], allowedScopes: raw.scopes as UrlMachineClientContext['allowedScopes'], now: live(), deadline });
+          if (!checked.ok || !equal(identifyUrlMachineLifecycleRecord(checked.record, checked.sha256), proposedHead.record)
+            || !Buffer.from(encodeCanonicalJson(checked.record, URL_MACHINE_CLIENT_LIMITS)).equals(bytes)) return false;
+          const legacy = current.archive?.legacy ?? current.clients.flatMap(item => {
+            const prior = item.audit.at(-1); return prior ? [{ clientId: item.clientId, revision: prior.next.revision, sha256: prior.next.sha256 }] : [];
+          });
+          const entries = [...(prior.value?.entries ?? []), { clientId, revision: checked.record.revision, sha256: checked.sha256, record: checked.record }];
+          let archive: Buffer;
+          try { archive = encodeUrlMachineArchive({ format: 'url-machine-canonical-history/1', rootId, entries }); } catch { return false; }
+          const active = current.clients.reduce((total, item) => {
+            const latest = item.clientId === clientId ? checked.record : entries.filter(value => value.clientId === item.clientId).at(-1)?.record;
+            if (item.clientId !== clientId && item.audit.length === 0) return total;
+            return total + (latest === undefined || latest.revokedAt === null ? 1 : 0);
+          }, 0);
+          if (!urlMachineArchiveCapacity(archive.length, current.clients.reduce((total, item) => total + item.audit.length, 1), active)) return false;
+          prepared = { canonical: bytes, head: deepFreeze(proposedHead), runId: checked.record.runId,
+            newIdentities: entry.anchor.kind === 'never-issued' ? [clientId, checked.record.issuanceId, checked.record.instances[0]!.instanceId]
+              : checked.record.instances.slice(entry.anchor.head.record.generation).map(value => value.instanceId), archive, predecessor: prior.bytes,
+            pointer: { sha256: sha256(archive), bytes: archive.length, records: entries.length, legacy } };
+          check(); return true;
+        };
         const read = async (): Promise<UrlMachineLifecycleSnapshot | null> => {
           check();
           const current = await state(), entry = current.clients.find(client => client.clientId === clientId);
@@ -430,7 +516,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         };
         const advance: UrlMachineLifecycleLease['advance'] = async (expected, step) => {
           check();
-          if (step.kind !== order[phase]) return false;
+          if (step.kind !== order[phase] || prepared === null) return false;
           const before = await read();
           if (before === null || !equal(expected, { canonicalSha256: before.canonical === null ? null : sha256(before.canonical),
             projection: before.projection, anchor: before.anchor, audit: before.audit })) return false;
@@ -439,14 +525,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           let nextEntry: Entry = entry;
           let nextState: StoreState = current;
           if (step.kind === 'reserve') {
-            if (!anchor(step.anchor, clientId) || step.anchor.kind !== 'pending' || step.newIdentities.length > 3
+            if (!anchor(step.anchor, clientId) || step.anchor.kind !== 'pending' || step.anchor.intentSha256 !== prepared.head.auditSha256 || !equal(step.newIdentities, prepared.newIdentities) || step.newIdentities.length > 3
               || step.newIdentities.some(id => !digest(id) || current.used.includes(id)) || new Set(step.newIdentities).size !== step.newIdentities.length
               || current.used.length + step.newIdentities.length > URL_MACHINE_STORE_LIMITS.identities) return false;
             if (entry.anchor.kind === 'never-issued' && (step.newIdentities.length !== 3 || !step.newIdentities.includes(clientId) || step.newClient === null)) return false;
             if (entry.anchor.kind === 'committed' && (step.newIdentities.length > 1 || step.newClient !== null)) return false;
             let runs = current.runs;
             if (step.newClient !== null) {
-              if (step.newClient.limit !== 16 || !/^run-[a-f0-9]{32}$/u.test(step.newClient.runId)) return false;
+              if (step.newClient.runId !== prepared.runId || step.newClient.limit !== 16 || !/^run-[a-f0-9]{32}$/u.test(step.newClient.runId)) return false;
               const run = runs.find(run => run.runId === step.newClient!.runId);
               if (run?.clients.includes(clientId) || (run?.clients.length ?? 0) >= 16) return false;
               runs = [...runs.filter(run => run.runId !== step.newClient!.runId), { runId: step.newClient.runId, clients: [...(run?.clients ?? []), clientId] }];
@@ -454,28 +540,32 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             nextEntry = { ...entry, anchor: step.anchor };
             nextState = { ...current, used: [...current.used, ...step.newIdentities], runs };
           } else if (step.kind === 'publish') {
-            if (!(step.canonical instanceof Uint8Array) || step.canonical.byteLength < 1 || step.canonical.byteLength > URL_MACHINE_CLIENT_LIMITS.maxBytes) return false;
+            if (!(step.canonical instanceof Uint8Array) || !prepared.canonical.equals(Buffer.from(step.canonical))) return false;
             await write(`${home}/${clientId}.json`, step.canonical, before.canonical);
           } else if (step.kind === 'synchronize') {
-            if (!projection(step.projection) || step.projection.clientId !== clientId || before.canonical === null || sha256(before.canonical) !== step.projection.sha256) return false;
+            if (!equal(step.projection, prepared.head.record) || !projection(step.projection) || step.projection.clientId !== clientId || before.canonical === null || sha256(before.canonical) !== step.projection.sha256) return false;
             await write(`${base}/projection-${clientId}.json`, Buffer.from(canonical(step.projection)));
           } else if (step.kind === 'audit') {
-            if (!head(step.head) || !equal(step.head, auditHead(step.event)) || entry.anchor.kind !== 'pending'
+            if (!head(step.head) || !equal(step.head, prepared.head) || !equal(step.head, auditHead(step.event)) || entry.anchor.kind !== 'pending'
               || entry.anchor.intentSha256 !== step.head.auditSha256 || !equal(before.projection, step.head.record)) return false;
+            await write(`${base}/canonical-history.json`, prepared.archive, prepared.predecessor);
+            nextState = { ...current, format: 'url-machine-store-state/2', archive: prepared.pointer };
             nextEntry = { ...entry, audit: [...entry.audit, step.event] };
           } else {
-            if (!anchor(step.anchor, clientId) || step.anchor.kind !== 'committed' || !equal(step.anchor.head, before.audit)) return false;
+            if (!anchor(step.anchor, clientId) || step.anchor.kind !== 'committed' || !equal(step.anchor.head, before.audit) || !equal(step.anchor.head, prepared.head)) return false;
             nextEntry = { ...entry, anchor: step.anchor };
           }
           if (step.kind === 'reserve' || step.kind === 'audit' || step.kind === 'commit') {
             nextState = { ...nextState, clients: current.clients.map(client => client.clientId === clientId ? nextEntry : client) };
             if (!stateValid(nextState, rootId)) return false;
-            await write(`${base}/state.json`, Buffer.from(canonical(nextState)));
+            const bytes = Buffer.from(canonical(nextState));
+            await write(`${base}/state.json`, bytes);
+            validatedState = { sha256: sha256(bytes), value: nextState };
           }
           check(); phase++;
           return true;
         };
-        await operation(Object.freeze({ now: () => live(), current: () => { try { check(); return true; } catch { return false; } }, read, advance }));
+        await operation(Object.freeze({ now: () => live(), current: () => { try { check(); return true; } catch { return false; } }, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
       });
     };
@@ -504,7 +594,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         const last = await lease.read();
         if (!lease.current() || last?.anchor.kind !== 'committed' || last.canonical === null
           || !equal(last.anchor.head, heldExpected) || !Buffer.from(last.canonical).equals(Buffer.from(first.canonical))) return;
-        result = Object.freeze({ identitySha256: expectedIdentitySha256, observedAt: lease.now(), canonical: Uint8Array.from(last.canonical),
+        const archive = await readArchive(state);
+        const revisions = archive.value?.entries.filter(value => value.clientId === clientId).map(value => ({ revision: value.revision,
+          canonical: Uint8Array.from(Buffer.from(encodeCanonicalJson(value.record, URL_MACHINE_CLIENT_LIMITS))) })) ?? [];
+        if (!lease.current()) return;
+        result = Object.freeze({ revisions, identitySha256: expectedIdentitySha256, observedAt: lease.now(), canonical: Uint8Array.from(last.canonical),
           head: deepFreeze(entry.anchor.head), events: deepFreeze(entry.audit) });
       });
       return completed ? result : null;

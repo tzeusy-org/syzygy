@@ -43,7 +43,7 @@ import { readUrlParentAdoption, URL_PARENT_TAG, type UrlParentAdoption } from '.
 import { loadUrlDossierRenderer, readUrlRuntime, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
 import { verifySupportedUrlCli, URL_CLI_PROGRAM } from './session-launch.js';
 import { URL_HOST_ROOT, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
-import { createUrlRunDeclaration, URL_PROFILE_ID, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
+import { createUrlRunDeclaration, URL_PROFILE_ID, URL_ROLES, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
 import { GIT_MEMORY_LIMITS } from './git-memory-transport.js';
 import { GIT_MEMORY_PACK_LIMITS } from './git-memory-pack.js';
 import { GIT_MEMORY_WORKER_LIMITS } from './git-memory-worker.js';
@@ -57,10 +57,13 @@ import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { verifyStoppedUrlRun } from './url-recovery.js';
+import { retainUrlStoppedBoundary } from './url-stopped-run.js';
+import { isUrlRunMachineClosedHistory } from './url-run-machine.js';
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
 import { askUrlSessionQuestion } from './url-question-ui.js';
-import { readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
@@ -208,18 +211,15 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   if (options.model !== DEFAULT_SESSION_MODEL) return refuse('This URL session model has no supported restricted profile. Use --model claude-sonnet-4-6 or omit --model; no model was substituted.');
   if (options.authorSkipPermissions) return refuse('URL sessions require their fixed restricted tools. Omit --author-skip-permissions.');
   if (options.mode === 'supervise') return supervise(options, ports);
-  // start or resume: check the host, then hand over to a supervisor inside tmux.
+  if (options.mode === 'resume') {
+    const state = readState(options.stateRoot, options.run!);
+    if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
+    return refuse(await stoppedRunRefusal(state, ports));
+  }
   const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });
   if (tmux.status !== 0) return refuse('tmux is required for the attended view; install it, or use `syzygy dossier init` for an operator-started run');
   const view = viewProbeRefusal();
   if (view !== null) return refuse(`${view}. A launched run needs session views (REQ-042).`);
-  if (options.mode === 'resume') {
-    const state = readState(options.stateRoot, options.run!);
-    if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-    if (state.done) return refuse(`run ${state.runId} is closed`);
-    if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
-    if (tmuxHas(state.tmuxSession)) return refuse(`run ${state.runId} still has a supervisor view. Inspect it with syzygy polaris --attach ${state.runId}.`);
-  }
   let limits: string[] = [];
   if (options.mode === 'start' && options.missingLimits.length > 0) {
     if (!process.stdin.isTTY) return refuse(`run limits are required when there is no terminal to ask: give ${options.missingLimits.join(' ')}`);
@@ -237,7 +237,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     const prepared = await preparePolarisStart({ ...options, ...(audience === undefined ? {} : { audience }) }, ports);
     if (!prepared.ok) return refuse(prepared.reason);
   }
-  const name = options.mode === 'resume' ? readState(options.stateRoot, options.run!)!.tmuxSession : `polaris-${Date.now().toString(36)}`;
+  const name = `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
   // Only fixed host metadata crosses tmux's explicit environment boundary.
   // Authentication remains in the host credential adapter; never place a
@@ -343,6 +343,7 @@ interface PreparedUrlRun {
   readonly basePolicyBytes: Uint8Array;
   readonly machine: { readonly governanceRoot: string; readonly protectedRoot: string; readonly parent: UrlParentAdoption };
   readonly openReader: ReturnType<typeof bindUrlSourceReader>;
+  readonly sourceStore: UrlSourceStore;
   readonly initializedCoreBytes: Uint8Array;
   readonly effectiveDeclaration: NonNullable<Parameters<typeof createUrlRunArtifacts>[0]['effectiveDeclaration']>;
   readonly initial: { brief: BriefReport; sessions: StartSessionsReport };
@@ -351,7 +352,7 @@ const preparedUrlRuns = new Map<string, PreparedUrlRun>();
 type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
 interface CheckedSupervisor {
   readonly prepared: Pick<PreparedUrlRun, 'record' | 'effectiveDeclaration' | 'screen' | 'renderer' | 'origins'
-    | 'current' | 'openReader' | 'directories'>;
+    | 'current' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore'>;
   readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions; readonly stop: UrlSupervisorStop;
 }
 async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
@@ -517,6 +518,15 @@ class Screen {
   }
 }
 
+async function stoppedRunRefusal(state: SupervisorState, ports: CliPorts): Promise<string> {
+  const now = ports.now ?? Date.now;
+  if (state.done !== undefined) return `run ${state.runId} is closed`;
+  if (now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return `run ${state.runId} is past its deadline`;
+  const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now });
+  return verified.ok ? 'The retained stop boundary was reverified. The checked role continuation is unavailable.'
+    : `The retained run has no re-established checked recovery boundary (${verified.code}). Preserve its original pin and records.`;
+}
+
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
   const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
   if (options.run !== undefined && previous === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
@@ -529,7 +539,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   };
   let state: SupervisorState;
   if (previous !== null) {
-    return fail('The retained run has no re-established checked recovery boundary. Preserve its original pin and records; no role or uncertain request was replayed.');
+    return fail(await stoppedRunRefusal(previous, ports));
   } else {
     if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
     const set = await setUp(options, ports, screen);
@@ -538,12 +548,22 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   }
   saveState(options.stateRoot, state);
   const prepared = preparedUrlRuns.get(state.run);
-  if (prepared !== undefined) {
-    try { await prepareSupervisorArtifacts(state.run, prepared, ports); }
-    catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
-    return fail('The checked stage progression and launch-history composition is not ready; no inference role was launched.');
+  if (prepared === undefined) return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
+  preparedUrlRuns.delete(state.run);
+  let artifacts: UrlArtifacts;
+  try { artifacts = await prepareSupervisorArtifacts(state.run, prepared, ports); }
+  catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
+  let stop: UrlSupervisorStop;
+  try { stop = openUrlSupervisorStop(options.stateRoot, state); }
+  catch { return fail('The owned supervisor stop control could not be opened; no inference role was launched.'); }
+  try {
+    const runtime = await startPreparedSupervisor(state, prepared, artifacts, screen, ports, stop);
+    return await runUrlSupervisorLoop(options.stateRoot, ports, state, screen, { prepared, artifacts, runtime, stop });
+  } catch {
+    return fail('The checked session controller or a supervised stage failed. Inspect the retained audit for captured outcomes and cleanup.');
+  } finally {
+    try { stop.close(); } catch { /* The failed control provides no cleanup evidence. */ }
   }
-  return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
 }
 
 export interface SupervisorSourceInput {
@@ -798,7 +818,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
     current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
     basePolicyBytes: Uint8Array.from(policy.bytes),
     machine: { governanceRoot: path.join(policyRoot, '.syzygy'), protectedRoot: path.join(attemptDirectory, 'machine-lifecycle'), parent: adoption },
-    openReader, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
+    openReader, sourceStore: store, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
       declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
     }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
   // The compatible supervisor record carries identities only. Role prompts
@@ -963,7 +983,7 @@ export function endScreen(runId: string, run: string, phase: string, closed: boo
 
 /** The latest check record of the draft and of the inventory in a run directory (either null when none was written). */
 export function latestChecks(run: string): { readonly draft: CheckRecord; readonly inventory: CheckRecord } {
-  // The draft's record is read under the one check-record bound (version 2.8); one past it reads as no record, never passed or refused.
+  // Draft and inventory display checks use the shared check-record bound. The URL supervisor uses authenticated stage products.
   return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 
@@ -1016,14 +1036,26 @@ export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number)
   return parts.length > 0 ? parts.join('; ') : 'the reviewer declared it not ready';
 }
 
-function cleanupConfirmed(summary: UrlRunSessionsSummary): boolean {
-  return summary.roles.length === 4 && summary.roles.every(role => role.outcome !== 'Unknown'
-    && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
-    && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0)
-    && summary.hosts.length === 4 && summary.hosts.every(host => host.termination === 'settled' && host.pendingInvocations === 0)
-    && summary.control.termination === 'settled' && summary.control.pendingCallbacks === 0
-    && summary.machine?.lifecycle === 'retired'
-    && !summary.audit.poisoned && summary.audit.tail === 'durable-prefix' && summary.audit.termination === 'closed';
+function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: boolean): boolean {
+  const machine = summary.closedMachineHistory;
+  const audit = summary.closedAuditHistory;
+  if (!isUrlRunMachineClosedHistory(machine) || summary.machine?.lifecycle !== 'retired'
+    || summary.machine.identitySha256 !== machine.identitySha256 || !audit
+    || summary.audit.poisoned || summary.audit.tail !== 'durable-prefix' || summary.audit.termination !== 'closed'
+    || summary.control.termination !== 'settled' || summary.control.pendingCallbacks !== 0
+    || summary.roles.length !== URL_ROLES.length || new Set(summary.hosts.map(host => host.role)).size !== summary.hosts.length) return false;
+  const design = summary.roles[URL_ROLES.indexOf('design')];
+  const designClients = machine.clients.filter(client => client.context.role === 'design');
+  const unstartedDesign = allowUnstartedDesign && design?.outcome === 'Unknown' && design.pid === 'Unknown'
+    && design.startedAt === 'Unknown' && design.finishedAt === 'Unknown' && audit.roles.design.records === 1
+    && designClients.length === 2 && designClients.every(client => client.terminal.kind === 'never-issued');
+  const activeRoles: readonly ViewRole[] = unstartedDesign ? URL_ROLES.filter(role => role !== 'design') : URL_ROLES;
+  return summary.hosts.length === activeRoles.length
+    && summary.hosts.every(host => activeRoles.includes(host.role) && host.termination === 'settled' && host.pendingInvocations === 0)
+    && summary.roles.every((role, index) => role.role === URL_ROLES[index]
+      && (unstartedDesign && role.role === 'design' || role.outcome !== 'Unknown'
+        && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
+        && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0));
 }
 
 async function deliverFeedback(context: CheckedSupervisor, run: string, review: 'fidelity' | 'design', number: number,
@@ -1307,12 +1339,20 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
   }
   const stopped = await context.runtime.stop();
-  const cleaned = cleanupConfirmed(stopped);
-  if (cleaned) state.stopped ??= isoOf(Date.now());
   let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
   try { finalStop = context.stop.close(); }
   catch { phase = 'stop control unavailable'; }
-  if (finalStop === 'requested') phase = 'operator stop requested';
+  const cleaned = cleanupConfirmed(stopped, finalStop === 'requested');
+  if (cleaned) state.stopped ??= isoOf(Date.now());
+  if (finalStop === 'requested') {
+    const retained = cleaned && state.stopGeneration !== undefined && state.declarationSha256 !== undefined
+      && retainUrlStoppedBoundary({ root: URL_HOST_ROOT, auditDirectory: context.prepared.auditDirectory,
+        subject: { run, runId: state.runId, generation: state.stopGeneration, sourceStore: context.prepared.sourceStore,
+          coreSha256: effectiveDeclaration.declaration.baseRunSha256, declarationSha256: state.declarationSha256,
+          sourcePin: record.subject.pinnedRevision.commit, deadline },
+        settled: stopped, now: ports.now ?? Date.now, current, capture: context.artifacts.captureFrozenHistory });
+    phase = retained ? 'operator stop requested, checked history retained' : 'operator stop requested, recovery history unavailable';
+  }
   if (final !== null && finalStop === 'ready') {
     const result = final;
     phase = 'final render produced, run closure unconfirmed';

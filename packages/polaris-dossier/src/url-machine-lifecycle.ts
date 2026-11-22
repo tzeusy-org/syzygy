@@ -72,6 +72,8 @@ export interface UrlMachineLifecycleLease {
   now(): number;
   current(): boolean;
   read(): Promise<UrlMachineLifecycleSnapshot | null>;
+  /** Optional capacity preflight, held under this same exclusive transaction. */
+  preflightCanonical?(canonical: Uint8Array, head: CommitIdentity): Promise<boolean>;
   /** Compare the entire tuple inside the protected operation. A successful
    * reserve also consumes the asserted never-issued witness and atomically
    * reserves every new ID across slots and charges a new client to its run,
@@ -180,6 +182,10 @@ async function publish(lease: UrlMachineLifecycleLease, input: UrlMachineLifecyc
       : { kind: 'committed' as const, head: previous },
     audit: previous }) as StateIdentity;
   if (!equal(before, expected)) return refuse('state');
+
+  if (lease.preflightCanonical !== undefined) {
+    if (current() === null || await lease.preflightCanonical(Buffer.from(input.next), head) !== true || current() === null) return refuse('publication');
+  }
 
   const reserved = Object.freeze({ ...expected, anchor: pending });
   const published = Object.freeze({ ...reserved, canonicalSha256: next.sha256 });

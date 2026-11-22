@@ -112,14 +112,14 @@ describe('read-only protected audit history', () => {
     const f = await fixture(), before = ROLES.map(role => fs.readFileSync(f.file(role)));
     expect(await verifyUrlSessionAuditHistory(f.options)).toEqual({ kind: 'verified-local-audit-history', authorization: 'none', replay: 'forbidden',
       completeness: 'Unknown', records: 17, bytes: f.expected.durableBytes, tipSha256: f.expected.tipSha256,
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 1, capturedCountExchanges: 0, capturedHelperLaunches: 0, capturedMachineEffects: 0, capturedReportedTokens: 3 });
     expect(ROLES.map(role => fs.readFileSync(f.file(role)))).toEqual(before);
   });
 
   it('joins a checked count estimate to its completed tool and separately verifies the Messages continuation', async () => {
     const f = await fixture(undefined, 'complete-tool');
     expect(await verifyUrlSessionAuditHistory(f.options)).toMatchObject({ authorization: 'none', replay: 'forbidden', completeness: 'Unknown',
-      capturedLaunchTerminals: 4, capturedCompleteExchanges: 2, capturedCountExchanges: 1 });
+      capturedLaunchTerminals: 4, capturedCompleteExchanges: 2, capturedCountExchanges: 1, capturedReportedTokens: 6 });
   });
 
   it.each(['count-without-continuation', 'count-repeated', 'count-with-usage', 'count-wrong-origin', 'different-consumed-receipt'] as const)
