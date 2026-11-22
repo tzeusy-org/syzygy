@@ -72,13 +72,14 @@ function fixture() {
     records: ['run.json', 'url-declaration.json', 'brief.json', 'checks/rev-0.json', 'drafts/rev-0.json']
       .map(path => ({ path, state: 'present', sha256: 'c'.repeat(64), originId: 'origin:product' })), selections: [] };
   const evidence = { metadata, receipts: [product] } as unknown as ProductReadEvidence;
+  let terminal: 'retired' | 'expired' | undefined;
   const reads: RunProductReads = { run, read: file => file === 'brief.json' ? Buffer.from(JSON.stringify(brief)) : null, select: () => [],
     readBatch: files => files.map(() => null), selectGroups: selectors => selectors.map(() => []), revalidate: () => {
     if (!readsLive) throw new Error('operation ended');
     return evidence;
   }, isLeaseOpen: () => readsLive,
-    leaseState: () => !readsLive ? 'retired' : Date.now() >= metadata.deadline ? 'expired' : 'open',
-    close: () => { readsLive = false; } };
+    leaseState: () => { terminal ??= !readsLive ? 'retired' : Date.now() >= metadata.deadline ? 'expired' : undefined; return terminal ?? 'open'; },
+    close: () => { terminal ??= 'retired'; readsLive = false; } };
   gates.reads.add(reads);
   const loadedRenderer = { renderer, identity: { format: 'polaris-url-installed-renderer/1', sourceEntry: 'own.ts', programSha256: 'd'.repeat(64),
     programBytes: 10, inputTreeSha256: 'e'.repeat(64), manifestSha256: 'f'.repeat(64), profileRegistrySha256: '1'.repeat(64) } };
@@ -163,6 +164,17 @@ describe('active URL design product capability', () => {
     expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
     const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + 1);
     try {
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: () => {}, refresh })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
+  it('refuses an operation closed before its deadline when first observed after that deadline', async () => {
+    const f = await validatedFixture(), refresh = vi.fn(async () => true);
+    f.reads.close();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(f.evidence.metadata.deadline + 1);
+    try {
+      expect(urlDesignProductLeaseState(f.capability).state).toBe('retired');
       expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: () => {}, refresh })).toBe(false);
       expect(refresh).not.toHaveBeenCalled();
     } finally { clock.mockRestore(); }
