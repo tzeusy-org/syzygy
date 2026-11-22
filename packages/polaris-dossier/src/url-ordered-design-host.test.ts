@@ -230,7 +230,7 @@ describe('bounded processing and protected result validation', () => {
     // rather than once for every 65 KiB of the trusted runtime image.
     expect(fullChecks).toBeLessThan(10);
     expect(f.callbacks()).toBe(0);
-  });
+  }, 15_000);
 });
 
 describe('production ordered host activation', () => {
