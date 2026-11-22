@@ -1,9 +1,10 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectCitations, declaredSessionId, nextRevision } from './check.js';
-import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
+import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
+import { DRAFT_MAX_BYTES } from './check-model.js';
 import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -41,7 +42,12 @@ export function latestPassedDraft(run: string): { readonly ok: true; readonly re
   if (check['outcome'] !== 'passed') return { ok: false, reason: `draft revision ${revision}, the latest checked, has open findings; only a passed revision is reviewed` };
   const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
   let bytes: Uint8Array;
-  try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${errno(cause)})` }; }
+  // Read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): check froze at most that many.
+  try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), DRAFT_MAX_BYTES)); } catch (cause) {
+    const why = cause instanceof NotARegularFileError ? 'not a regular file'
+      : cause instanceof BoundedJsonError && cause.code === 'byte-limit' ? `larger than ${DRAFT_MAX_BYTES} bytes` : errno(cause);
+    return { ok: false, reason: `the frozen draft ${frozen} cannot be read (${why})` };
+  }
   const draft = isRecord(check['draft']) ? check['draft'] : {};
   if (draft['file'] !== frozen || draft['sha256'] !== sha256(bytes)) return { ok: false, reason: `the frozen draft ${frozen} is not the bytes its check recorded` };
   return { ok: true, revision, bytes };

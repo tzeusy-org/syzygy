@@ -24,11 +24,22 @@ export class NotARegularFileError extends Error {
  * size past the bound, before any byte is read; and at most `maxBytes + 1` bytes are read from the descriptor, so a file grown after its
  * size was taken is refused too. Throws `NotARegularFileError`, `BoundedJsonError('byte-limit')` or the open's own error. */
 export function readBoundedFile(file: string, maxBytes: number): Buffer {
+  return readRegularFile(file, () => maxBytes);
+}
+
+/** The bytes of the regular file at `file`, read by the same rule with its own size, as its opened descriptor gives it, for the bound: for
+ * a file no stated bound covers (close's digest of every stored file). A file grown after its size was taken is refused. */
+export function readFileAsSized(file: string): Buffer {
+  return readRegularFile(file, (size) => size);
+}
+
+function readRegularFile(file: string, boundOf: (size: number) => number): Buffer {
   // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open.
   const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY);
   try {
     const stats = fs.fstatSync(fd);
     if (!stats.isFile()) throw new NotARegularFileError();
+    const maxBytes = boundOf(stats.size);
     if (stats.size > maxBytes) throw new BoundedJsonError('byte-limit');
     const limit = maxBytes + 1;
     let buffer = Buffer.allocUnsafe(Math.min(stats.size + 1, limit));

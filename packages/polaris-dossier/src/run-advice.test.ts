@@ -87,17 +87,26 @@ describe('the run file', () => {
     fs.writeFileSync(file, text + ' '.repeat(16_777_216 - Buffer.byteLength(text)));
     expect(fs.statSync(file).size).toBe(16_777_216);
     expect(() => JSON.parse(fs.readFileSync(file, 'utf8'))).not.toThrow();
-    // Refused from its size alone: no byte of the file is read.
+    // Refused from its size alone: no byte of the file is read. At the bound it is read whole, from one descriptor (the reader
+    // rule, syzygy-3efd.76).
     const reads = (): number => {
       let n = 0;
-      const restore = patchFs('readFileSync', (original) => ((target: fs.PathOrFileDescriptor, ...rest: unknown[]) => {
-        if (target === file) n += 1;
-        return (original as (...args: unknown[]) => unknown)(target, ...rest);
+      const opened = new Set<number>();
+      const restoreOpen = patchFs('openSync', (original) => ((target: fs.PathLike, ...rest: unknown[]) => {
+        const fd = (original as (...args: unknown[]) => number)(target, ...rest);
+        opened.delete(fd);
+        if (target === file) opened.add(fd);
+        return fd;
       }) as typeof original);
-      try { readRunAdvice(run); } finally { restore(); }
+      const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+        const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+        if (opened.has(fd)) n += read;
+        return read;
+      }) as typeof original);
+      try { readRunAdvice(run); } finally { restoreRead(); restoreOpen(); }
       return n;
     };
-    expect(reads()).toBe(1);
+    expect(reads()).toBe(16_777_216);
     fs.truncateSync(file, 16_777_217);
     expect(readRunAdvice(run)).toBeNull();
     expect(reads()).toBe(0);

@@ -1,4 +1,4 @@
-# Dossier verify: a free-form text checked against the pinned revision — version 2.16
+# Dossier verify: a free-form text checked against the pinned revision — version 2.17
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit, no change to secret detection or SEC-5's fail-closed rule (the command uses the run's screen unchanged and reads no withheld body), no foreign repository write, no exposure, release or multi-user use.
 

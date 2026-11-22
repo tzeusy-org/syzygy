@@ -83,3 +83,7 @@ The reviewer also found no retained record for the "66 references missing" figur
 ## Rebuilt as version 2.16
 
 [Observed] Version 2.15 was taken on the default branch by the index and task routes amendment (A-48), so the change is renumbered 2.16 after merging the default branch. No later version than 2.1 replaces REQ-033 there either (the predecessor still hashes to `e30836f9…a865`), so the requirement block is rebuilt from the same predecessor bytes; only the header line names the new version.
+
+## Rebuilt as version 2.17
+
+[Observed] Version 2.16 was taken on the default branch by the page subsections amendment (A-50, a MODIFIED REQ-034), so the change is renumbered 2.17 after merging the default branch. That amendment does not touch REQ-033, and no later version than 2.1 replaces it, so the requirement block is rebuilt from the same predecessor bytes; only the header line names the new version.

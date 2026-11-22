@@ -7,6 +7,8 @@ import { executionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { errno, logStep, openRun, readRecord } from './inventory.js';
+import { readBriefRecord } from './run-dir.js';
+import { readBoundedFile, readFileAsSized } from './check-record-read.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { latestPassedDraft, type ReviewDeps } from './review.js';
@@ -122,7 +124,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const secret = (value: string): boolean => screenLoad.screen.screenBody(value) === 'secret-detector-match';
 
-  const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
+  const brief = readBriefRecord(run);
   const stored = storedFiles(run);
   const record = {
     format: EXECUTION_RECORD_FORMAT,
@@ -228,7 +230,21 @@ function breachLog(run: string): readonly unknown[] {
   });
 }
 
-/** Every regular file under the run directory, with its size and digest; the record itself is not yet written. */
+/** The read bound of a stored file a stated rule bounds (REQ-polaris-generation-034, syzygy-3efd.76): the brief record, 262,144 bytes; the
+ * draft check is given and every frozen draft revision, 4,194,304; the run file and every draft or inventory check record, 16,777,216; a
+ * derived record, 4,194,304. Every other stored file is read under its own size as its descriptor gives it. */
+export function storedFileBound(rel: string): number | undefined {
+  if (rel === 'brief.json') return 262_144;
+  if (/^drafts\/(?:next|rev-(?:0|[1-9][0-9]*))\.json$/u.test(rel)) return 4_194_304;
+  if (rel === 'run-advice.json') return 16_777_216;
+  if (/^(?:inventory\/)?checks\/rev-(?:0|[1-9][0-9]*)\.json$/u.test(rel)) return 16_777_216;
+  if (/^derived\/rev-(?:0|[1-9][0-9]*)\.json$/u.test(rel)) return 4_194_304;
+  return undefined;
+}
+
+/** Every regular file under the run directory, with its size and digest; the record itself is not yet written. Each is read by the reader
+ * rule, opened once without blocking: a listed entry that is not a regular file when opened, one past its bound, and one grown after its
+ * size was taken are counted in `notListed`, never digested, as an entry that cannot be read always was. */
 function storedFiles(run: string): { readonly files: readonly { readonly path: string; readonly bytes: number; readonly sha256: string }[]; readonly notListed: number } {
   const files: { path: string; bytes: number; sha256: string }[] = [];
   let notListed = 0;
@@ -240,8 +256,10 @@ function storedFiles(run: string): { readonly files: readonly { readonly path: s
       if (entry.isDirectory()) { walk(full); continue; }
       if (!entry.isFile() || files.length >= MAX_STORED_FILES) { notListed++; continue; }
       try {
-        const bytes = fs.readFileSync(full);
-        files.push({ path: path.relative(run, full).split(path.sep).join('/'), bytes: bytes.byteLength, sha256: sha256(bytes) });
+        const rel = path.relative(run, full).split(path.sep).join('/');
+        const bound = storedFileBound(rel);
+        const bytes = bound === undefined ? readFileAsSized(full) : readBoundedFile(full, bound);
+        files.push({ path: rel, bytes: bytes.byteLength, sha256: sha256(bytes) });
       } catch { notListed++; }
     }
   };

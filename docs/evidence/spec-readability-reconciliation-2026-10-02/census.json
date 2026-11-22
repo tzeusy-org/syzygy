@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 467,
+      "scenarios": 473,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -991,11 +991,7 @@
             "Conservative visibility preserves exclusions",
             "Legacy continuation is explicit",
             "Disclosures name actual evidence",
-            "URL projection does not inherit a false local dispatch reason",
-            "Verify gives each claim one of six outcomes",
-            "Verify never reads or names a withheld path",
-            "Verify's quotation check is check's",
-            "Verify writes nothing into a run"
+            "URL projection does not inherit a false local dispatch reason"
           ]
         },
         "REQ-polaris-generation-034": {
@@ -1148,7 +1144,17 @@
             "Block a secret detector matches names nothing",
             "Much-cited file listed once with a count",
             "Route step covers an inventory entry",
-            "Provider mode unchanged by the finding pages"
+            "Provider mode unchanged by the finding pages",
+            "Subsections with answers, headings and a contents list",
+            "An answer of more than one sentence",
+            "Subsections in an earlier schema",
+            "A draft without subsections renders as today",
+            "Subsection titles and withheld subsections",
+            "Makefile recipe inside a conditional",
+            "Makefile tab-led line that is no recipe line",
+            "Makefile continuation lines and define bodies",
+            "Makefile directive lines are never rules",
+            "Brief v14 states subsections"
           ]
         },
         "REQ-polaris-generation-035": {
