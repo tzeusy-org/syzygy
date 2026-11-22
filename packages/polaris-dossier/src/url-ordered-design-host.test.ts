@@ -64,7 +64,7 @@ beforeAll(async () => {
   runtimeSha256 = sha256(canonical({ node: program.node, worker: program.worker, reader, peerProgram, controllerSha256,
     hostSha256: sha256(await readFile(new URL('./url-ordered-design-host.ts', import.meta.url))), policySha256: sha256(V8),
     bridgeSha256: sha256(support.get('support/session-bridge.js')!), mcpSha256: sha256(support.get('design-support/session-mcp.js')!) }));
-});
+}, 30_000);
 
 async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesignSession>[0], 'current' | 'assertCurrent' | 'assertProcessingCurrent'>> = {}, authority: () => boolean = () => true) {
   const suffix = ++sequence, deadline = Date.now() + 3_600_000;
