@@ -7,6 +7,7 @@ import path from 'node:path';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, sha256 } from '@syzygy/support';
 import type { SessionHost } from './session-host.js';
+import { isOrderedDesignHostFor } from './url-ordered-design-host.js';
 import { isNativeSessionProfile, isOrderedDesignSessionProfile, isSessionProfile, URL_CLI_PROGRAM, type NativeSessionProfile } from './session-profile.js';
 import { probeUrlSessionView, URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor,
   verifyUrlSessionViewInputs, type UrlSessionViewInputs } from './session-url-view.js';
@@ -330,9 +331,10 @@ function processArgs(args: readonly string[], limits: UrlLaunchLimits): string[]
 export async function launchRestrictedUrlSession(input: { readonly preparation: UrlSessionPreparation; readonly host: SessionHost }): Promise<UrlSessionProcess> {
   const state = preparations.get(input.preparation), host = input.host;
   if (!state) throw refused(); preparations.delete(input.preparation);
-  // Ordered preparation is independently pinned for offline conformance.
-  // The native production host still implements only ordinary admission.
-  if (!isSessionProfile(state.profile)) throw refused();
+  // Ordered launches require this factory's exact selected host. Reject a
+  // copied object before inspecting any caller-controlled host properties.
+  if (!isSessionProfile(state.profile) && (!isOrderedDesignSessionProfile(state.profile)
+    || !isOrderedDesignHostFor(host, state.profile))) throw refused();
   const { view, limits } = state;
   if (!host || typeof host.close !== 'function' || host.brokerSocket !== path.join(view.inputs.brokerSocketDirectory, 'b.sock')
     || host.relaySocket !== path.join(view.inputs.relaySocketDirectory, 'r.sock')) throw refused();

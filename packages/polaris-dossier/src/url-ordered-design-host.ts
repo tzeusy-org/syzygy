@@ -32,9 +32,11 @@ export interface OrderedDesignHost extends SessionHost {
   readonly relay: SessionRelay;
   readTerminal(): ReturnType<Controller['readTerminal']>;
 }
-const hosts = new WeakMap<OrderedDesignHost, OrderedDesignSessionProfile>();
-export const isOrderedDesignHostFor = (host: unknown, profile: OrderedDesignSessionProfile): boolean =>
-  host !== null && typeof host === 'object' && hosts.get(host as OrderedDesignHost) === profile;
+const hosts = new WeakMap<OrderedDesignHost, { readonly profile: OrderedDesignSessionProfile; readonly current: () => boolean }>();
+export const isOrderedDesignHostFor = (host: unknown, profile: OrderedDesignSessionProfile): boolean => {
+  const selected = host !== null && typeof host === 'object' ? hosts.get(host as OrderedDesignHost) : undefined;
+  return selected !== undefined && selected.profile === profile && selected.current();
+};
 const refused = (): Error => new Error('url-ordered-design-host-unavailable');
 const canonical = (value: unknown): string => encodeCanonicalJson(value, SESSION_POLICY_LIMITS);
 
@@ -146,7 +148,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (controller) clearTimeout(activationTimer);
     const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
-    hosts.set(host, profile);
+    hosts.set(host, { profile, current: () => !closing && !failed && started });
     return host;
   } catch { await close(); throw refused(); }
 }
