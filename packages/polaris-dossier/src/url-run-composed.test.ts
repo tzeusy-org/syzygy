@@ -1,0 +1,337 @@
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
+import { sha256 } from '@syzygy/support';
+import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
+import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
+import { closeRun } from './close.js';
+import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
+import { runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
+import { openUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
+import { loadSessionCredential } from './session-credential.js';
+import { startUrlRunSessions, type UrlRunSessions } from './url-run-sessions.js';
+import { sessionRelayTestPort } from './session-relay.js';
+import type { UrlRuntime } from './url-runtime.js';
+import * as sessionAudit from './url-session-audit.js';
+import { orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
+import { isOrderedDesignSessionProfile } from './session-profile.js';
+import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
+import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryOptions } from './url-session-audit-history.js';
+import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
+
+type Forward = Parameters<typeof sessionRelayTestPort>[0];
+const provider = vi.hoisted(() => new Map<string, Forward>());
+const relayRoles = vi.hoisted(() => [] as string[]);
+const settledProviderRoles = vi.hoisted(() => new Set<string>());
+const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null }));
+const relayObservations = vi.hoisted(() => [] as { role: string; event: string; route: string | null }[]);
+// Keep the real host, machine mediation, policy, audit and relay. Replace only
+// the relay's compiled provider boundary; this fixture performs no network send.
+vi.mock('./session-relay.js', async importOriginal => {
+  const actual = await importOriginal<typeof import('./session-relay.js')>();
+  return { ...actual, startSessionRelay: (...args: Parameters<typeof actual.startSessionRelay>) => {
+    relayRoles.push(args[1].binding.role);
+    const selected = provider.get(args[1].binding.role);
+    if (selected === undefined) throw new Error('owned composed provider not selected');
+    const ports = args[2];
+    return actual.sessionRelayTestPort(selected)(args[0], args[1], { ...ports,
+      current: async () => {
+        const barrier = settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
+        if (barrier === null) return ports.current();
+        if (!(await ports.current())) return false;
+        // This post-audit guard is outside machine-store mediation. Holding an
+        // audit callback would retain its exclusive lease and block other roles.
+        await barrier;
+        return ports.current();
+      }, audit: async (event, context) => {
+      relayObservations.push({ role: args[1].binding.role, event: event.event, route: event.route });
+      await ports.audit(event, context);
+      if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn') {
+        settledProviderRoles.add(args[1].binding.role);
+        // The next guard may wait only after this genuine durable append.
+      }
+    } }, args[3], args[4]);
+  } };
+});
+
+type Fixture = Awaited<ReturnType<typeof prepareComposedRun>>;
+type Tool = { readonly type: 'tool_use'; readonly id: string; readonly name: string; readonly input: Record<string, unknown> };
+const canonical = (value: unknown) => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
+const tool = (id: string, name: string, input: Record<string, unknown>): Tool => ({ type: 'tool_use', id: `toolu_owned_${id}`, name: `mcp__syzygy__${name}`, input });
+const waitForAbort = (signal: AbortSignal): Promise<never> => new Promise((_, reject) => {
+  if (signal.aborted) reject(new Error('owned provider stopped'));
+  else signal.addEventListener('abort', () => reject(new Error('owned provider stopped')), { once: true });
+});
+type ScriptCall = Tool | { type: 'text'; text: string };
+function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall | Promise<ScriptCall>))[]) {
+  const received: unknown[] = [];
+  let count = 0, countQueries = 0, allow!: () => void;
+  const gate = new Promise<void>(resolve => { allow = resolve; });
+  const forward: Forward = async input => {
+    if (input.route.includes('count_tokens')) {
+      countQueries++;
+      return { status: 200, contentType: 'application/json', body: Buffer.from('{"input_tokens":24000}'), requestFlushed: true };
+    }
+    await Promise.race([gate, waitForAbort(input.signal)]);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    received.push(JSON.parse(Buffer.from(input.body).toString()));
+    const next = calls[count++];
+    const call = typeof next === 'function' ? await Promise.race([Promise.resolve(next()), waitForAbort(input.signal)]) : next;
+    if (call === undefined) return waitForAbort(input.signal);
+    const event = (type: string, value: Record<string, unknown>) => `event: ${type}\ndata: ${JSON.stringify({ type, ...value })}\n\n`;
+    const body = event('message_start', { message: { id: `msg_owned_${role}_${count}`, type: 'message', role: 'assistant', model: 'claude-sonnet-4-6',
+      content: [], stop_reason: null, stop_sequence: null, usage: { input_tokens: 3, output_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } } })
+      + event('content_block_start', { index: 0, content_block: call.type === 'tool_use' ? { ...call, input: {} } : { type: 'text', text: '' } })
+      + event('content_block_delta', { index: 0, delta: call.type === 'tool_use' ? { type: 'input_json_delta', partial_json: canonical(call.input) } : { type: 'text_delta', text: call.text } })
+      + event('content_block_stop', { index: 0 })
+      + event('message_delta', { delta: { stop_reason: call.type === 'tool_use' ? 'tool_use' : 'end_turn', stop_sequence: null }, usage: { output_tokens: 4 } })
+      + event('message_stop', {});
+    return { status: 200, contentType: 'text/event-stream', body: Buffer.from(body), requestFlushed: true };
+  };
+  provider.set(role, forward);
+  return { allow, received, count: () => count, countQueries: () => countQueries };
+}
+
+let runtime: UrlRuntime;
+const cleanup: (() => Promise<unknown>)[] = [];
+beforeAll(async () => { runtime = await buildComposedRuntime(); }, 60_000);
+afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; vi.restoreAllMocks(); });
+
+type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
+async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[]) {
+  const credential = await loadSessionCredential({ environment: { ANTHROPIC_API_KEY: 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL' },
+    credentialFile: path.join(f.hidden, 'no-ambient-credential.json'), now: Date.now });
+  if (!credential.ok) throw new Error('owned composed credential refused');
+  const prompt = (role: 'inventory' | 'fidelity' | 'design') => {
+    const session = f.sessions.sessions.find(item => role === 'inventory' ? item.role === 'inventory' : item.role === 'review' && item.kind === role);
+    if (!session) throw new Error('owned composed helper prompt absent');
+    return session.promptSha256;
+  };
+  return startUrlRunSessions({ run: f.run, record: f.record, screen: f.screen, plans: f.plans, runtime,
+    declaredClasses: f.declaration.plannedClasses, originPolicySha256: f.origin.binding.sha256,
+    auditParent: f.hidden, auditName: 'sessions', principal: f.record.declared.operator,
+    sessionDirectories: f.directories, canaries: f.canaries, current: f.current, now: Date.now, deadline: f.deadline,
+    credential: credential.credential, sourceReader: f.openReader,
+    production: { governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'), current: f.current,
+      policyBytes: f.policy.bytes, artifacts: f.artifacts,
+      parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
+        subjects: [{ path: f.origin.binding.path, sha256: f.origin.binding.sha256 }] } },
+    launchHistory: { promptDigests: { inventory: prompt('inventory'), fidelity: prompt('fidelity'), design: prompt('design') }, register: f.artifacts.registerLaunchHistory },
+    runDossier: f.artifacts.runDossier, artifactOrigins: f.artifacts.artifactOrigins, dossierOrigins: f.artifacts.dossierOrigins,
+    toolReceipt: async (role, receipt, admission, current) => {
+      const result = await f.artifacts.toolReceipt(role, receipt, admission, current);
+      receipts.push({ role, id: receipt.id, digest: receipt.digest, bytes: receipt.bytes, toolName: receipt.toolName,
+        inputSha256: sha256(canonical(receipt.toolInput)), committed: false });
+      return result;
+    }, toolReceiptCommitted: (role, id) => {
+      f.artifacts.committed(role, id);
+      const receipt = receipts.find(receipt => receipt.role === role && receipt.id === id); if (receipt) receipt.committed = true;
+    },
+    ask: async () => { throw new Error('owned composed run asks no question'); }, onFailure: reason => { failures.push(reason); onFailure(reason); },
+  });
+}
+
+describe('composed URL run with actual role processes', { timeout: 360_000 }, () => {
+  // The stop variant controls callback scheduling at one captured cut; it does
+  // not claim that arbitrary practical stops have complete provider exchanges.
+  it.each(['complete', 'delivery-stop'] as const)('runs the genuine production pipeline to %s', async scenario => {
+    let releaseFinalResponses!: () => void;
+    if (scenario === 'delivery-stop') finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
+    let finishProviders!: () => void;
+    const providerFinish = new Promise<void>(resolve => { finishProviders = resolve; });
+    const finalResponse: (() => Promise<ScriptCall>)[] = scenario === 'delivery-stop' ? [async () => {
+      await providerFinish; return { type: 'text', text: 'OWN ROLE COMPLETE AT CONFIRMED DELIVERY STOP' };
+    }] : [];
+    let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
+    let expectedPlan: OrderedDesignPlan | undefined;
+    const beginOrdered = vi.fn();
+    const createAudit = sessionAudit.createUrlSessionAudit;
+    if (scenario === 'delivery-stop') vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
+      const actual = await createAudit(options);
+      if (!actual.ok) return actual;
+      return { ...actual,
+        beginOrderedDesignAudit: (...args) => { beginOrdered(); return actual.beginOrderedDesignAudit(...args); },
+        commitDesignDelivery: async (...args) => {
+          // The actual issuer confirms the delivery before this interruption.
+          // No writer, lease, receipt or history is synthesized by the test.
+          const view = await actual.commitDesignDelivery(...args);
+          const profile = f.plans.find(plan => plan.role === 'design')!.profile;
+          if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
+          expectedPlan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(profile, view.receipt,
+            args[0].expectedProduct, f.commit, f.deadline), envelope: view.view });
+          delivered = view;
+          // Finish the provider exchanges already in flight before closing their
+          // native roles. An incomplete exchange must remain a cold refusal.
+          finishProviders();
+          try {
+            const until = performance.now() + 5_000;
+            while (settledProviderRoles.size < 3 && performance.now() < until) await new Promise(resolve => setTimeout(resolve, 5));
+            expect([...settledProviderRoles].sort()).toEqual(['author', 'fidelity', 'inventory']);
+            // Begin the actual stop before releasing the guard callbacks. They
+            // must observe its revoked authority rather than forward afterward.
+            void controller.stop().catch(() => {});
+          } finally { releaseFinalResponses(); }
+          throw new Error('owned interruption after confirmed design delivery');
+        },
+      };
+    });
+    const f = await prepareComposedRun(runtime); cleanup.push(f.close);
+    const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
+    const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
+    const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
+      ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
+        schemaVersion: 'polaris-dossier-local-draft-v7', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
+      tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...finalResponse]);
+    const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
+      tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),
+      tool('inventory_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory, '--submit', 'inventory.json', '--stdin'],
+        stdin: canonical({ ...inventory(f.commit), sessionId: session('inventory') }) }), ...finalResponse]);
+    const resultTexts = (requests: readonly unknown[]): Record<string, unknown>[] => {
+      const results: Record<string, unknown>[] = [];
+      const visit = (value: unknown): void => {
+        if (typeof value === 'string') { try { const doc = JSON.parse(value); if (doc && typeof doc === 'object') results.push(doc); } catch { /* Native reminder or ordinary prose. */ } }
+        else if (Array.isArray(value)) for (const child of value) visit(child);
+        else if (value && typeof value === 'object') for (const child of Object.values(value)) visit(child);
+      };
+      for (const request of requests) visit(request);
+      return results;
+    };
+    const fidelity = scripted('fidelity', [tool('fidelity_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.fidelity] }),
+      tool('fidelity_packet', 'artifact_read', { path: 'round-1/packet.json' }), () => {
+        const artifact = resultTexts(fidelity.received).reverse().find(value => value.kind === 'artifact' && value.path === 'round-1/packet.json');
+        if (typeof artifact?.text !== 'string' || typeof artifact.sha256 !== 'string') throw new Error('complete native fidelity packet absent');
+        const packet = JSON.parse(artifact.text) as { spans: { id: string; path: string; startLine: number }[] };
+        return tool('fidelity_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.fidelity, '--submit', 'round-1/verdict.json', '--stdin'],
+          stdin: canonical({ ...fidelityVerdict(f.commit, artifact.sha256, packet.spans), sessionId: session('fidelity') }) });
+      }, ...finalResponse]);
+    const design = scripted('design', [tool('design_poll', 'dossier_step', { argv: ['dossier', 'poll', f.runId] }),
+      tool('design_part_1', 'artifact_read', { path: 'round-1/design-view-part-1.json' }),
+      tool('design_part_2', 'artifact_read', { path: 'round-1/design-view-part-2.json' }), () => {
+        const rows = resultTexts(design.received).filter(value => value.kind === 'design-view-part');
+        const parts = [1, 2].map(ordinal => [...rows].reverse().find(row => row.ordinal === ordinal));
+        if (parts.some(part => typeof part?.text !== 'string')) throw new Error('complete native ordered design parts absent');
+        const view = JSON.parse(parts.map(part => part!.text).join('')) as { originalSha256: string; payload: string };
+        const inverse: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
+        const packet = JSON.parse(view.payload.replace(/&(?:amp|lt|gt|quot|#39);/gu, entity => inverse[entity]!)) as { files: { path: string }[] };
+        const pages = packet.files.filter(file => file.path.endsWith('.html')).map(file => file.path);
+        return tool('design_submit', 'dossier_step', { argv: ['dossier', 'await', '/work', '--submit', 'round-1/verdict.json', '--stdin'],
+          stdin: canonical({ ...designVerdict(f.commit, view.originalSha256, pages), sessionId: session('design') }) });
+      }, { type: 'text', text: 'SYZYGY_DESIGN_TRANSFER_COMPLETE' }]);
+    const events: string[] = [], draws: string[][] = [], failures: string[] = [], receipts: SeenReceipt[] = [];
+    const stateRoot = path.dirname(f.run);
+    const state: SupervisorState = { format: 'polaris-supervisor/2', mode: f.declaration.mode, declarationSha256: sha256(f.effectiveDeclaration.bytes),
+      run: f.run, runId: f.runId, tmuxSession: 'polaris-owncomposed', clone: f.record.subject.clone.path, url: f.declaration.sourceTransport.originalLocator,
+      model: f.record.declared.model, authorSkipPermissions: false, briefIssuedAt: Date.parse(f.brief.issuedAt), deadlineSeconds: f.record.declared.deadline.seconds,
+      sessions: ['author', 'inventory', 'fidelity', 'design'].map(role => {
+        const issued = role === 'author' ? f.brief : f.sessions.sessions.find(item => role === 'inventory' ? item.role === role : item.kind === role)!;
+        return { role: role as 'author' | 'inventory' | 'fidelity' | 'design', session: 1, directory: f.directories[role as keyof typeof f.directories],
+          prompt: '', promptSha256: role === 'author' ? sha256(f.plans[0]!.profile.input.initialPrompt) : (issued as { promptSha256: string }).promptSha256, allowedTools: null };
+      }), fidelityDeliveredFor: [], designDeliveredFor: [], fidelityDeliveredPairs: [], notified: [], siteFor: {}, launches: [], stopGeneration: 'c'.repeat(32) };
+    try { writeUrlSupervisorState(stateRoot, state); } catch { throw new Error(`own state: ${JSON.stringify(state)}`); }
+    const stop = openUrlSupervisorStop(stateRoot, state); cleanup.push(async () => stop.close());
+    const controller = await start(f, failures, () => {}, receipts).catch(async () => {
+      const audit = [];
+      for (const role of ['author', 'inventory', 'fidelity', 'design']) {
+        const text = await fs.readFile(path.join(f.hidden, `sessions-${role}.jsonl`), 'utf8').catch(() => '');
+        for (const line of text.split('\n').filter(Boolean)) {
+          const row = JSON.parse(line) as { event: { kind: string; payload: unknown } };
+          audit.push({ role, kind: row.event.kind, fields: row.event.payload !== null && typeof row.event.payload === 'object' ? Object.keys(row.event.payload) : [] });
+        }
+      }
+      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit }));
+    }); cleanup.push(controller.stop);
+    const loop = runUrlSupervisorLoop(stateRoot, f.ports, state, { event: message => events.push(message), draw: lines => draws.push([...lines]) }, {
+      prepared: { record: f.record, roles: f.plans, effectiveDeclaration: f.effectiveDeclaration, screen: f.screen, renderer: f.renderer, origins: f.origins,
+        current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
+      artifacts: f.artifacts, runtime: controller, stop,
+    });
+    author.allow();
+    try {
+      const authorPassed = () => {
+        try { return f.artifacts.latestStageCheck('author')?.record.outcome === 'passed'; }
+        catch (error) { if (error instanceof Error && error.message === 'url-run-artifacts-unavailable') return false; throw error; }
+      };
+      const until = performance.now() + 60_000;
+      while (!authorPassed() && failures.length === 0 && performance.now() < until)
+        await new Promise(resolve => setTimeout(resolve, 250));
+      expect(failures).toEqual([]);
+      expect(authorPassed()).toBe(true);
+      inv.allow(); design.allow();
+      const packetUntil = performance.now() + 60_000;
+      while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
+        await new Promise(resolve => setTimeout(resolve, 250));
+      fidelity.allow();
+      if (scenario === 'delivery-stop') {
+        expect(await loop).toBe(1);
+        const stopped = await controller.stop();
+        expect(delivered).toBeDefined();
+        expect(expectedPlan).toBeDefined();
+        expect(beginOrdered).not.toHaveBeenCalled();
+        expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'design-ordered': 0 } });
+        expect(stopped.closedAuditHistory?.ordered).toEqual([{
+          profileInput: f.plans.find(plan => plan.role === 'design')!.profile.input,
+          plan: expectedPlan, principal: f.record.declared.operator,
+          scope: stopped.closedAuditHistory!.declarations.design.scope,
+          receipt: delivered!.receipt, disposition: { kind: 'stopped', tip: null },
+        }]);
+        expect(stopped.closedMachineHistory).toBeDefined();
+        const sealed = stopped.closedMachineHistory!;
+        const machine = await reconstructColdUrlRunMachineHistory({
+          governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'),
+          sealed, expected: { identitySha256: sealed.identitySha256, binding: sealed.binding, runId: f.runId,
+            sourcePin: f.commit, originPolicySha256: f.origin.binding.sha256,
+            profiles: Object.fromEntries(f.plans.map(plan => [plan.role, plan.profile.digest])) as Record<'author' | 'inventory' | 'fidelity' | 'design', string>,
+            deadline: f.deadline }, now: Date.now, current: f.current,
+        });
+        expect(machine, 'the real clean-close machine seal must reconstruct').not.toBeNull();
+        const retainedLaunches: NonNullable<UrlSessionAuditHistoryOptions['retainedLaunches']> = Object.fromEntries(
+          f.plans.filter(plan => plan.role !== 'author').map(plan => [plan.role, {
+            run: f.run, runId: f.runId, coreSha256: f.declaration.baseRunSha256,
+            declarationSha256: sha256(f.effectiveDeclaration.bytes), roleDeclaration: plan.declaration,
+            executable: plan.view.cliExecutable, screen: f.screen,
+          }]));
+        const options: UrlSessionAuditHistoryOptions = { parent: f.hidden, name: 'sessions', expected: stopped.closedAuditHistory!,
+          current: f.current, deadline: f.deadline, retainedLaunches,
+          machineHistory: { identitySha256: machine!.identitySha256, snapshots: machine!.snapshots } };
+        const verified = await verifyUrlSessionAuditHistory(options);
+        expect(verified, 'the closed full audit must accept the confirmed stopped delivery').toMatchObject({ authorization: 'none', replay: 'forbidden', completeness: 'Unknown', capturedHelperLaunches: 3 });
+        expect(readVerifiedUrlAuditLaunches(verified)?.ordered).toEqual(stopped.closedAuditHistory!.ordered);
+        expect(readVerifiedUrlAuditLaunches(verified)?.ordered[0]!.disposition).toEqual({ kind: 'stopped', tip: null });
+        const rows = (await fs.readFile(path.join(f.hidden, 'sessions-design.jsonl'), 'utf8')).trim().split('\n')
+          .map(line => JSON.parse(line)).filter(row => ['design-delivery', 'design-ordered', 'ordered-design-verdict'].includes(row.event.kind));
+        expect(rows.map(row => row.event.kind)).toEqual(['design-delivery']);
+        const coldOrdered = verifyColdOrderedDesignAuditHistory({ rows, attempts: stopped.closedAuditHistory!.ordered!,
+          profileSha256: f.plans.find(plan => plan.role === 'design')!.profile.digest, firstEpoch: 1,
+          subject: { project: 'project:syzygy', pin: f.commit, principal: f.record.declared.operator,
+            deadline: new Date(f.deadline).toISOString() }, asOf: Date.now() });
+        expect(coldOrdered, 'a delivery without an ordered prefix must remain stopped and noncounting').toMatchObject({ authorization: 'none', replay: 'forbidden',
+          attempts: [{ epoch: 1, disposition: 'stopped', recordCount: 0 }] });
+        expect(await verifyUrlSessionAuditHistory({ ...options, deadline: f.deadline + 1 })).toBeNull();
+        expect(await verifyUrlSessionAuditHistory({ ...options, deadline: undefined })).toBeNull();
+        return;
+      }
+      expect(await loop, JSON.stringify({ events, failures, summary: controller.summary(), draws: draws.slice(-1), producerReports: f.producerReports() })).toBe(0);
+      expect(state.done).toBeDefined(); expect(state.finalSite!.site).toBeGreaterThan(state.siteFor['0']!);
+      expect(controller.summary().roles.every(role => role.pid !== 'Unknown')).toBe(true);
+      expect(failures).toEqual([]);
+      const recordFile = path.join(f.run, 'record.json'), recordBytes = await fs.readFile(recordFile);
+      const execution = JSON.parse(recordBytes.toString()) as { format: string; supervisorCapture: { roles: unknown[] } };
+      expect(execution.format).toBe('polaris-dossier-execution-record/2');
+      expect(execution.supervisorCapture.roles).toHaveLength(4);
+      const again = await closeRun(f.run, {}, { sources: f.sources, now: Date.now, openReader: f.openReader,
+        probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
+      expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
+      expect(await fs.readFile(recordFile)).toEqual(recordBytes);
+      const evidenceFile = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
+      if (evidenceFile !== undefined) await fs.writeFile(evidenceFile, JSON.stringify({ inputTreeSha256: runtime.inputTreeSha256,
+        profileRegistrySha256: runtime.profileRegistrySha256, profiles: f.plans.map(plan => ({ role: plan.role, id: plan.profile.id, sha256: plan.profile.digest })),
+        recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles, requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } }, null, 2));
+    } catch (error) {
+      await controller.stop(); await loop.catch(() => {});
+      throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
+        roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
+        producerReports: f.producerReports(), reads: f.productReadReports(), relayObservations, receipts }));
+    }
+  }, 360_000);
+});
