@@ -1,5 +1,5 @@
 {
-  "commit": "d2b84f57f32fc1fb9f288ca235c440f92e4a7dc7",
+  "commit": "95496cc064d301cb69eff1676cd06ebf20fdd8d3",
   "file": "packages/polaris-dossier/src/verify-text.ts",
   "test": "packages/polaris-dossier/src/verify-text.test.ts",
   "command": "npx vitest run packages/polaris-dossier/src/verify-text.test.ts",
@@ -10,9 +10,9 @@
       "new": "    if (false) close();\n",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 33ms",
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 12ms",
-        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 11ms"
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 36ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 13ms",
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 4ms"
       ]
     },
     {
@@ -21,7 +21,7 @@
       "new": "if (false) { close(); headingLines += 1; return; }",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 14ms"
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 16ms"
       ]
     },
     {
@@ -30,8 +30,8 @@
       "new": "    if (false) {\n      close();",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 19ms",
-        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 4ms"
+        "\u00d7 extraction > splits claims by paragraph, list item and table row, skipping headings, fences and separators 25ms",
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 3ms"
       ]
     },
     {
@@ -40,7 +40,7 @@
       "new": "if (/^www\\./iu.test(token) ||",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 9ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 16ms"
       ]
     },
     {
@@ -49,7 +49,7 @@
       "new": "if (text[at - 1] === '@' ||",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 15ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 9ms"
       ]
     },
     {
@@ -67,7 +67,7 @@
       "new": "segments.some((segment) => segment === '.' || segment === '..')",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 12ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 11ms"
       ]
     },
     {
@@ -76,7 +76,7 @@
       "new": "const isPath = false ? false :",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 13ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 9ms"
       ]
     },
     {
@@ -85,7 +85,7 @@
       "new": "const dotfile = false;",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 22ms"
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 17ms"
       ]
     },
     {
@@ -94,7 +94,7 @@
       "new": "true",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 20ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 12ms"
       ]
     },
     {
@@ -103,7 +103,7 @@
       "new": ": slash);",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 15ms"
+        "\u00d7 extraction > takes no URL, absolute path, glob, bare extension, directory, abbreviation or unknown bare name as a path 9ms"
       ]
     },
     {
@@ -112,10 +112,10 @@
       "new": "const colon = ANCHOR_LINES.exec(tail);",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 14ms",
-        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 8ms",
-        "\u00d7 extraction > reads every reference form 3ms",
-        "\u00d7 extraction > merges repeated mentions of one path 2ms"
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 18ms",
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 3ms",
+        "\u00d7 extraction > reads every reference form 4ms",
+        "\u00d7 extraction > merges repeated mentions of one path 3ms"
       ]
     },
     {
@@ -124,7 +124,7 @@
       "new": "const colon = COLON_LINES.exec(tail);",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > reads every reference form 12ms"
+        "\u00d7 extraction > reads every reference form 11ms"
       ]
     },
     {
@@ -142,7 +142,7 @@
       "new": "const masked = text;",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > reads straight and curly quotations outside code spans 11ms"
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 10ms"
       ]
     },
     {
@@ -151,7 +151,7 @@
       "new": "found.push",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > reads straight and curly quotations outside code spans 10ms"
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 8ms"
       ]
     },
     {
@@ -160,7 +160,7 @@
       "new": "for (const pattern of [STRAIGHT_QUOTE])",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 extraction > reads straight and curly quotations outside code spans 9ms"
+        "\u00d7 extraction > reads straight and curly quotations outside code spans 8ms"
       ]
     },
     {
@@ -169,7 +169,7 @@
       "new": "found = candidates.length >= 1 ? candidates[0]! : written;",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 13ms"
+        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 10ms"
       ]
     },
     {
@@ -178,7 +178,7 @@
       "new": "const candidates = [written];",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 14ms"
+        "\u00d7 verify a free-form text: the six outcomes > resolves a bare or partial name to the one blob ending with it, and leaves an ambiguous one missing 15ms"
       ]
     },
     {
@@ -187,8 +187,9 @@
       "new": "absent.has(path) ? 'missing' : 'admitted'",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 21ms",
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 5ms"
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 22ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 6ms",
+        "\u00d7 verify a free-form text: the six outcomes > withholds, rather than calls not found, a quotation its claim may rest on a withheld path for 2ms"
       ]
     },
     {
@@ -197,16 +198,26 @@
       "new": "state: 'resolves' }",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 24ms"
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 11ms"
       ]
     },
     {
       "mutant": "secret-name-hidden",
-      "old": "const named = !(state === 'withheld' && isSecretPath(reference.path));",
+      "old": "const named = !isSecretPath(reference.path) && !isSecretPath(reference.written);",
       "new": "const named = true;",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 21ms"
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 17ms",
+        "\u00d7 verify a free-form text: the six outcomes > never names a path a secret detector matches, even when no blob has it 2ms"
+      ]
+    },
+    {
+      "mutant": "secret-name-written-form",
+      "old": "const named = !isSecretPath(reference.path) && !isSecretPath(reference.written);",
+      "new": "const named = !(state === 'withheld' && isSecretPath(reference.path));",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 verify a free-form text: the six outcomes > never names a path a secret detector matches, even when no blob has it 20ms"
       ]
     },
     {
@@ -224,7 +235,8 @@
       "new": "if (references[r]!.state === 'withheld') { continue; }",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 17ms"
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 18ms",
+        "\u00d7 verify a free-form text: the six outcomes > withholds, rather than calls not found, a quotation its claim may rest on a withheld path for 9ms"
       ]
     },
     {
@@ -233,8 +245,9 @@
       "new": "false ? 'path-missing'",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 27ms",
-        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 5ms",
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 33ms",
+        "\u00d7 verify a free-form text: the six outcomes > never names a path a secret detector matches, even when no blob has it 10ms",
+        "\u00d7 verify a free-form text: the six outcomes > reports lines past the end of a file as path-missing, not as resolving 9ms",
         "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 2ms"
       ]
     },
@@ -244,8 +257,8 @@
       "new": "false ? 'quotation-not-found'",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 23ms",
-        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 9ms"
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 26ms",
+        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 4ms"
       ]
     },
     {
@@ -254,8 +267,9 @@
       "new": "false ? 'withheld'",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 22ms",
-        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 8ms"
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 31ms",
+        "\u00d7 verify a free-form text: the six outcomes > never reads a withheld path, and never prints its body 14ms",
+        "\u00d7 verify a free-form text: the six outcomes > withholds, rather than calls not found, a quotation its claim may rest on a withheld path for 11ms"
       ]
     },
     {
@@ -264,9 +278,9 @@
       "new": "'reference-unverified'",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 24ms",
-        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 4ms",
-        "\u00d7 verify a free-form text: the six outcomes > checks a quotation against every file its claim names, verified when any holds it 4ms"
+        "\u00d7 verify a free-form text: the six outcomes > gives each fixture claim its outcome, with a literal tally 26ms",
+        "\u00d7 verify a free-form text: the six outcomes > flips a verified quotation to not found when one quoted character is mutated 5ms",
+        "\u00d7 verify a free-form text: the six outcomes > checks a quotation against every file its claim names, verified when any holds it 9ms"
       ]
     },
     {
@@ -285,7 +299,18 @@
       "new": "return false && trimmed.endsWith('|')",
       "outcome": "killed",
       "failingTests": [
-        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 12ms"
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 10ms"
+      ]
+    },
+    {
+      "mutant": "out-realpath",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "forbidden.some((dir) => inside(dir, outFile) || inside(dir, outReal))",
+      "new": "forbidden.some((dir) => inside(dir, outFile))",
+      "outcome": "killed",
+      "failingTests": [
+        "\u00d7 the annotated copy > marks each claim in place, inside a table row, and closes with the tally 14ms",
+        "\u00d7 syzygy dossier verify > refuses an --out reached through a symbolic link into the run 6ms"
       ]
     }
   ]
