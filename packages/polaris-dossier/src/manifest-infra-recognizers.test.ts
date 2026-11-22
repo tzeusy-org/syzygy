@@ -373,7 +373,20 @@ describe('makefile version 1', () => {
     expect(facts(recognizeMakefile('A = 1\n\tscp out host:/srv\nbuild:\n'))).toBe('syntax');
     expect(facts(recognizeMakefile('build:\n\tscp out host:/srv\nA = 1\n'))).toEqual([['make-target', 1, 1, 'build']]);
     // A continuation line belongs to its logical line, whatever it begins with.
+    expect(facts(recognizeMakefile('SRCS = a.c \\\n\tb.c\n'))).toEqual([]);
+    expect(facts(recognizeMakefile('build: a \\\n\tb\n'))).toEqual([['make-target', 1, 2, 'build']]);
     expect(facts(recognizeMakefile('SRC = a \\\n\tb\nbuild: $(SRC)\n'))).toEqual([['make-target', 3, 3, 'build']]);
+    // A define body is never read, tab-led or not, before any rule; an assignment or comment that is tab-led outside a rule is syntax.
+    expect(facts(recognizeMakefile('define RUN\n\techo x\nendef\nbuild:\n'))).toEqual([['make-target', 4, 4, 'build']]);
+    expect(facts(recognizeMakefile('\tFOO = 1\n'))).toBe('syntax');
+    expect(facts(recognizeMakefile('\t# c\n'))).toBe('syntax');
+    // A line of white space alone is blank, a tab-led one included.
+    expect(facts(recognizeMakefile('A = 1\n\t \nbuild:\n'))).toEqual([['make-target', 3, 3, 'build']]);
+  });
+  it('takes no rule from a conditional-directive line or a directive line, and a separator before an operator after `;` makes a rule', () => {
+    expect(facts(recognizeMakefile('ifeq (x,a:b)\nendif\n'))).toEqual([]);
+    expect(facts(recognizeMakefile('vpath %.c src:lib\nexport A\ninclude a:b.mk\n'))).toEqual([]);
+    expect(facts(recognizeMakefile('a: b ; echo x=1\n'))).toEqual([['make-target', 1, 1, 'a']]);
   });
   it('takes no fact from a target-specific assignment, and no recipe follows one', () => {
     expect(facts(recognizeMakefile('all: x\nprog: CFLAGS = -O2\n'))).toEqual([['make-target', 1, 1, 'all']]);

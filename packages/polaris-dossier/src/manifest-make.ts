@@ -8,9 +8,12 @@ import type { RawFact, Recognized } from './manifest-model.js';
  * - A recipe line is a physical line that begins with a tab and follows a rule's logical line or another recipe line, with only blank
  *   lines, comment lines, conditional-directive lines and recipe lines between; it is never read. A conditional-directive line is a
  *   logical line not beginning with a tab whose first word is `ifeq`, `ifneq`, `ifdef`, `ifndef`, `else` or `endif`, so recipe text
- *   inside a conditional is never read as a rule (spec 2.15, syzygy-3efd.81). A tab-led line that is no recipe line is `syntax`; the
- *   test is made on a logical line's first physical line, a continuation line belonging to its logical line.
+ *   inside a conditional is never read as a rule (syzygy-3efd.81). A logical line that begins with a tab, is no recipe line and is not
+ *   inside a `define` body is `syntax`; a continuation line belongs to its logical line. A blank line (empty or white space only) is
+ *   blank, whatever it begins with.
  * - A `define` body runs to its matching `endef` and is never read.
+ * - A conditional-directive line, and a line whose first word is a directive this reader reads, is never a rule (`ifeq (x,a:b)`,
+ *   `vpath %.c src:lib`).
  * - A rule is a logical line holding a `:` outside a variable reference (`$(...)`, `${...}`) that is not part of an assignment operator,
  *   with no assignment operator before it outside a variable reference (`A := b: c` is an assignment). Its targets are the words before
  *   its separator (`:` or `::`); a word holding `%` or `$`, and a word that begins with `.` and holds no `/` (a special target or a suffix
@@ -19,7 +22,7 @@ import type { RawFact, Recognized } from './manifest-model.js';
  * - Directives read: `include`, `-include`, `sinclude`, `override`, `export`, `unexport`, `private`, `vpath`, `undefine`, `define` and
  *   `endef`, `ifeq`, `ifneq`, `ifdef`, `ifndef`, `else` and `endif`; assignment operators `=`, `:=`, `::=`, `:::=`, `?=`, `+=` and `!=`.
  *
- * Faults: a recipe line before the first rule and any other tab-led line that is no recipe line, a `define` with no matching `endef`, an `else`,
+ * Faults: a tab-led logical line that is no recipe line and is outside a `define` body, a `define` with no matching `endef`, an `else`,
  * `endif` or `endef` with nothing open, a conditional still open at the end, an unbalanced variable reference, and a logical line that is
  * none of a comment, a rule, an assignment, a directive and a recipe line and does not begin with `$(` or `${`, are `syntax`; a logical
  * line beginning with `$(` or `${` that is neither a rule nor an assignment (a function call such as `$(eval ...)`, which may declare a
@@ -158,6 +161,8 @@ export function recognizeMakefile(text: string): Recognized {
       if (name === '.RECIPEPREFIX') beyond = true;
       continue;
     }
+    // A line whose first word is a directive this reader reads is never a rule (`vpath %.c src:lib`, `export A`).
+    if (DIRECTIVES.includes(firstWord(content))) continue;
     if (found.colon >= 0) {
       const after = found.colon + found.colonWidth;
       const tail = scan(content, after, semicolonOf(content, after));
