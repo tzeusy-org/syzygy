@@ -68,6 +68,21 @@ export interface UrlOrderedAttemptOptions {
   };
 }
 
+/** A full check may itself reach the original product expiry. Only that
+ * failure may request one genuine reproduction; an open but changed proof refuses.
+ * The refresh port owns same-delivery verification and shared pending capacity. */
+export async function checkUrlOrderedProductCurrent(input: {
+  readonly leaseOpen: () => boolean;
+  readonly assertCurrent: () => void;
+  readonly refresh: () => Promise<boolean>;
+}): Promise<boolean> {
+  if (input.leaseOpen()) {
+    try { input.assertCurrent(); return true; }
+    catch { if (input.leaseOpen()) return false; }
+  }
+  return input.refresh();
+}
+
 /** A new process and protected epoch for one review round. Binding sockets does
  * not activate the controller: actual launch history and a freshly reproduced
  * checked delivery are committed before the one-use activation resolves. */
@@ -103,22 +118,23 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
   };
   const current = async (): Promise<boolean> => {
     if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
-    if (delivery !== null && render !== null && isUrlDesignProductLeaseOpen(render.product)) {
-      try { assertCurrent(); return true; } catch { return false; }
-    }
     // Bootstrap has no controller yet; activation still gates every send/tool.
     if (delivery === null) return true;
-    return renewing ??= (async () => {
-      const next = await input.reproduce();
-      if (next === null) return false;
-      let adopted = false;
-      try {
-        if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
-        const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
-        const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
-        assertCurrent(); return true;
-      } finally { if (!adopted) next.close(); }
-    })().finally(() => { renewing = null; });
+    return checkUrlOrderedProductCurrent({
+      leaseOpen: () => render !== null && isUrlDesignProductLeaseOpen(render.product),
+      assertCurrent,
+      refresh: () => renewing ??= (async () => {
+        const next = await input.reproduce();
+        if (next === null) return false;
+        let adopted = false;
+        try {
+          if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
+          const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
+          const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
+          assertCurrent(); return true;
+        } finally { if (!adopted) next.close(); }
+      })().finally(() => { renewing = null; }),
+    });
   };
   const consumeTerminal = async (): Promise<boolean> => {
     if (consumedTerminal) return true;
