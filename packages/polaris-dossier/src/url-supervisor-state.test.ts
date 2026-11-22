@@ -197,7 +197,7 @@ describe('generation-bound URL supervisor stop requests', () => {
       expect(requested.at(-1)).toBe(0x31);
       expect(fs.statSync(f.offer).ino).toBe(initial.ino);
       expect(fs.readFileSync(f.file)).toEqual(stateBytes);
-    } finally { expect(control.close()).toBe('requested'); }
+    } finally { control.close(); }
     expect(control.close()).toBe('requested');
     expect(() => control.status()).toThrow(STOP_ERROR);
     expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
@@ -243,6 +243,20 @@ describe('generation-bound URL supervisor stop requests', () => {
       expect(control.close()).toBe('requested');
     } finally { restore(); }
     expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+  });
+
+  it('refuses to confirm a write after the named offer retires even while its state remains live', () => {
+    const f = stopFixture(), control = openUrlSupervisorStop(f.root, f.active);
+    let retirement: 'ready' | 'requested' | undefined;
+    const restore = patchFs('writeSync', original => ((...args: unknown[]) => {
+      if (args[3] === 1) retirement = control.close();
+      return Reflect.apply(original, fs, args);
+    }) as typeof fs.writeSync);
+    try {
+      expect(() => requestUrlSupervisorStop(f.root, f.active)).toThrow(STOP_ERROR);
+      expect(retirement).toBe('ready');
+      expect(readUrlSupervisorState(f.root, f.runId)).toEqual(f.active);
+    } finally { restore(); control.close(); }
   });
 
   it('refuses an invalid root after offer retirement instead of reporting readiness', () => {
