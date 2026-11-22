@@ -1,0 +1,938 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-22T08:33:18.223Z",
+  "commit": "47e82edc7c45320fea9e5d262e8a42bced1c54b7",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "e86655233e20ea680e2ba80bd0bccd0df4ee98d0c81a7c09303e414dc8732485",
+    "packages/polaris-dossier/src/manifest-cmake.ts": "3361053b7d4a4060883430330850763026edbdb1bbba21f69de5c1e0f6a1043f",
+    "packages/polaris-dossier/src/manifest-compose.ts": "3dca2ce67b8bea3303df4227296cd90b2969aa06ffe1c80164c40823d546016b",
+    "packages/polaris-dossier/src/manifest-facts.ts": "0295b4747d9df6f94e2b576502c9dc43cc67862c2cdbb3316e635e68a5a77121",
+    "packages/polaris-dossier/src/manifest-kubernetes.ts": "94317d63be5aa17ae0aefe50200b5efbbfe1e8b76ce383a8ba83772589bd7740",
+    "packages/polaris-dossier/src/manifest-make.ts": "a53a5b1e1584716f377274c9dee29df6d422c7f727a4478b6dfc5b3643d8cb69",
+    "packages/polaris-dossier/src/manifest-terraform.ts": "9e582931f79faf19f2c1124c06286fe76e824f0357e0ad8ac5354ea7616f37c8",
+    "packages/polaris-dossier/src/manifest-yaml.ts": "b1f1d6a58a0b2549022e5724f30468c2337b272d63d233c49cc58b14e1ece7be"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/manifest-infra-recognizers.test.ts packages/polaris-dossier/src/manifest-infra-facts.test.ts packages/polaris-dossier/src/manifest-facts.test.ts apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 5 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 300 s. The unmutated baseline runs first and must pass.",
+  "testFiles": [
+    "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts",
+    "packages/polaris-dossier/src/manifest-infra-facts.test.ts",
+    "packages/polaris-dossier/src/manifest-facts.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts",
+    "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "tests": 91,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "compose-basename-dropped",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "'compose.override.yaml', ",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 names exactly the eight Compose file names, never a workflow path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "compose-workflow-not-excluded",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "isComposeBasename(path) && !isWorkflowPath(path)",
+      "new": "isComposeBasename(path)",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 names exactly the eight Compose file names, never a workflow path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "compose-no-service-fact",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "walk.add('service', entry.lines, service);",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 writes a port mapping without published as its target, and keeps a hexadecimal integer's text"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "compose-image-not-read",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "walk.add('service-image', image.lines, service, image.value.value)",
+      "new": "void 0",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "compose-integer-port-dropped",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "if (node.kind === 'other' && node.int !== undefined) return node.int;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 writes a port mapping without published as its target, and keeps a hexadecimal integer's text"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "compose-published-order",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "`${publishedText}:${targetText}`",
+      "new": "`${targetText}:${publishedText}`",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "compose-missing-target-accepted",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "if (target === undefined) { walk.fieldType = true; continue; }",
+      "new": "if (target === undefined) continue;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 refuses a wrong-typed services, service, image, port, port mapping or depends_on as field-type"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "compose-depends-map-dropped",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "for (const dependency of value.entries) { const to = walk.keyOf(dependency.key); if (to !== undefined) walk.add('service-depends-on', dependency.lines, service, to); }",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "compose-depends-on-not-read",
+      "file": "packages/polaris-dossier/src/manifest-compose.ts",
+      "old": "|| (p.length === 3 && p[0] === 'services' && p[2] === 'depends_on')",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 refuses a repeated key in a depends_on mapping as duplicate-key, a mapping it reads"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-directory-dropped",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "'kustomize'",
+      "new": "'kustomise'",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 names YAML files under a conventional directory, never under templates, a workflow path or a Compose file name"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-templates-kept",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "|| directories.includes('templates')",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Kubernetes objects across documents, a values file Inferred with zero facts, and no Helm template (scenario \"Kubernetes objects across documents\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 names YAML files under a conventional directory, never under templates, a workflow path or a Compose file name"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "kubernetes-compose-kept",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "&& !isComposeBasename(path)",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 names YAML files under a conventional directory, never under templates, a workflow path or a Compose file name"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-single-document",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "readYaml(text, true)",
+      "new": "readYaml(text)",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Kubernetes objects across documents, a values file Inferred with zero facts, and no Helm template (scenario \"Kubernetes objects across documents\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 reads a stream: an object with a name, one without, an empty document, one that is no object and a mapping with no kind"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-null-name-empty",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "let name: string | null = null;",
+      "new": "let name: string | null = '';",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Kubernetes objects across documents, a values file Inferred with zero facts, and no Helm template (scenario \"Kubernetes objects across documents\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 reads a stream: an object with a name, one without, an empty document, one that is no object and a mapping with no kind"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-metadata-not-read",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "(p.length === 1 && p[0] === 'metadata')",
+      "new": "false",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 refuses a repeated name or kind as duplicate-key, an anchor as beyond-reader, and a malformed or empty file as syntax"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "kubernetes-missing-apiversion-taken",
+      "file": "packages/polaris-dossier/src/manifest-kubernetes.ts",
+      "old": "if (apiVersion === undefined || kind === undefined) continue;\n    const apiOk = walk.is(apiVersion.value, 'string');",
+      "new": "if (kind === undefined) continue;\n    const apiOk = apiVersion === undefined || walk.is(apiVersion.value, 'string');",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 takes no fact from a document lacking apiVersion, whatever else it holds"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "terraform-tfvars-matched",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "/^.+\\.tf$/u",
+      "new": "/^.+\\.tf(?:vars)?$/u",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Terraform resources and modules and never reads a variable or state file (scenario \"Terraform resources and modules, ...\")",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder sums to the tree: secret paths, candidates and the rest, by place (scenario \"Coverage remainder sums to the tree\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 names .tf files only, never .tf.json, .tfvars, .tfstate or a lock file"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "terraform-depth-unbounded",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (depth > MAX_DEPTH) beyond = true;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 reads blocks nested 256 deep and refuses 257 as beyond-reader"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "terraform-depth-off-by-one",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "depth > MAX_DEPTH",
+      "new": "depth >= MAX_DEPTH",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 reads blocks nested 256 deep and refuses 257 as beyond-reader"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "terraform-module-duplicate-syntax",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (body.block?.type === 'module') duplicateKey = true; else fail();",
+      "new": "fail();",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: malformed files and the read limit names each malformed infrastructure file Unknown, unparsed, with its fault, never as declaring nothing (scenario \"Malformed infrastructure file ...\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 refuses a module repeating an attribute as duplicate-key, and a module or resource of the wrong form as field-type"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "terraform-resource-labels",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (block.labels.length !== 2) { fieldType = true; return; }",
+      "new": "if (block.labels.length < 2) { fieldType = true; return; }",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 refuses a resource of three labels as field-type, reads past a // comment, and takes field-type before beyond-reader"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "terraform-module-template-source",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (block.labels.length !== 1 || block.source?.literal === undefined)",
+      "new": "if (block.labels.length !== 1 || block.source === undefined)",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 refuses a module repeating an attribute as duplicate-key, and a module or resource of the wrong form as field-type"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "terraform-escape-dollar",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if ((c === '$' || c === '%') && text[i + 1] === c && text[i + 2] === '{') { out += `${c}{`; i += 3; continue; }",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 decodes a module source's escapes, reads strings nested in a template, and never reads a heredoc body as a block"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "terraform-heredoc-untrimmed",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (line.trim() === id) return;",
+      "new": "if (line === id) return;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 reads top-level resource and module blocks beside skipped blocks, comments and a heredoc that looks like a block"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "terraform-slash-comment",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (c === '#' || (c === '/' && text[i + 1] === '/'))",
+      "new": "if (c === '#')",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 refuses a resource of three labels as field-type, reads past a // comment, and takes field-type before beyond-reader"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "terraform-fault-order",
+      "file": "packages/polaris-dossier/src/manifest-terraform.ts",
+      "old": "if (fieldType) return { ok: false, parseFault: 'field-type' };",
+      "new": "if (fieldType && !beyond) return { ok: false, parseFault: 'field-type' };",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > terraform-configuration version 1 refuses a resource of three labels as field-type, reads past a // comment, and takes field-type before beyond-reader"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "makefile-basename",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "'GNUmakefile'",
+      "new": "'GNUMakefile'",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the bound policy names CMake lists and the other makefile names Unknown and unread under 1.0.0 and 2.0.0 (scenario \"CMake lists and other makefile names ...\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 names exactly Makefile, makefile and GNUmakefile"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-recipe-read",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (physical.startsWith('\\t') && inRecipe) continue;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads one fact per distinct literal target, at its first rule, and none from special, pattern, variable or recipe targets",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads exactly build and test from the scenario fixture"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-pattern-target",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "/[%$]/u.test(target) || ",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads one fact per distinct literal target, at its first rule, and none from special, pattern, variable or recipe targets",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads exactly build and test from the scenario fixture"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-special-target",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "|| (target.startsWith('.') && !target.includes('/'))",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads one fact per distinct literal target, at its first rule, and none from special, pattern, variable or recipe targets",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads exactly build and test from the scenario fixture"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-not-distinct",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (seen.has(target)) continue;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads one fact per distinct literal target, at its first rule, and none from special, pattern, variable or recipe targets",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads exactly build and test from the scenario fixture"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-target-specific",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (tail.op >= 0) continue;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 takes no fact from a target-specific assignment, and no recipe follows one"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-recipeprefix",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (name === '.RECIPEPREFIX') beyond = true;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a function call and an assignment to .RECIPEPREFIX as beyond-reader"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-eval-syntax",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (content.startsWith('$(') || content.startsWith('${')) { beyond = true; continue; }",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a function call and an assignment to .RECIPEPREFIX as beyond-reader"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-conditional-open",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (conditionals > 0) syntax = true;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a recipe before any rule, an unmatched define, endif, endef or else, an open conditional, an unbalanced reference and stray words as syntax"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-continuation-parity",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "% 2 === 1",
+      "new": "% 2 === 0",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Make targets, and names a function call beyond-reader and a recipe before any rule syntax (scenario \"Make targets\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads one fact per distinct literal target, at its first rule, and none from special, pattern, variable or recipe targets",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 reads exactly build and test from the scenario fixture",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 takes no fact from a target-specific assignment, and no recipe follows one",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a function call and an assignment to .RECIPEPREFIX as beyond-reader",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a recipe before any rule, an unmatched define, endif, endef or else, an open conditional, an unbalanced reference and stray words as syntax"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-assignment-colon",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (found.op >= 0 && (found.colon < 0 || found.op < found.colon))",
+      "new": "if (found.op >= 0 && found.colon < 0)",
+      "killed": false,
+      "explanation": "Equivalent: scan() stops recording a separator once it has found an assignment operator, so op < colon never holds while colon >= 0; the clause the mutant drops can never decide.",
+      "killedBy": null,
+      "failedTests": [],
+      "seconds": 2
+    },
+    {
+      "id": "makefile-define-open",
+      "file": "packages/polaris-dossier/src/manifest-make.ts",
+      "old": "if (depth > 0) syntax = true;",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > makefile version 1 refuses a recipe before any rule, an unmatched define, endif, endef or else, an open conditional, an unbalanced reference and stray words as syntax"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-case",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "const command = name!.toLowerCase();",
+      "new": "const command = name!;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-no-argument",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "if (args.length === 0) { fieldType = true; continue; }",
+      "new": "if (args.length === 0) continue;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 refuses a target command with no argument as field-type, and reads an empty file as Inferred with zero facts"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-library-kind",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "add_library: 'library'",
+      "new": "add_library: 'executable'",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-custom-dropped",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": ", add_custom_target: 'custom'",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-bracket-newline",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "return content.startsWith('\\r\\n') ? content.slice(2) : isNewline(content[0]) ? content.slice(1) : content;",
+      "new": "return content;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 drops a bracket argument's first line end, as cmake-language(7) states, keeping its later ones"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-quoted-continuation",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "if (isNewline(text[i + 1])) { i += 2; continue; }",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-escaped-semicolon",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "if (e === ';') return '\\\\;';",
+      "new": "if (e === ';') return ';';",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-last-line",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "last: lineOf(i - 1)",
+      "new": "last: lineOf(nameStart)",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 reads a project and targets of the three kinds with quoted, bracket and unquoted arguments, wherever they stand",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 drops a bracket argument's first line end, as cmake-language(7) states, keeping its later ones"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "cmake-unclosed-paren",
+      "file": "packages/polaris-dossier/src/manifest-cmake.ts",
+      "old": "if (c === undefined) fail();",
+      "new": "if (c === undefined) break;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > cmake-lists version 1 refuses an unterminated quoted or bracket argument, bracket comment or parenthesis, a bad escape and text not an invocation as syntax"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "yaml-second-document",
+      "file": "packages/polaris-dossier/src/manifest-yaml.ts",
+      "old": "if (documents > 1 && !multi) beyond = true;",
+      "new": "if (documents > 1) beyond = true;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Kubernetes objects across documents, a values file Inferred with zero facts, and no Helm template (scenario \"Kubernetes objects across documents\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > kubernetes-manifest version 1 reads a stream: an object with a name, one without, an empty document, one that is no object and a mapping with no kind"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "yaml-integer-text",
+      "file": "packages/polaris-dossier/src/manifest-yaml.ts",
+      "old": "INTEGER.test(plain) ? { kind: 'other', lines, int: plain } : ",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Compose services, images, ports and dependencies (scenario \"Compose services, images, ports and dependencies\")",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 reads services, an image as written, ports in their three forms and depends_on in both forms (scenario fixture)",
+        "packages/polaris-dossier/src/manifest-infra-recognizers.test.ts > compose-file version 1 writes a port mapping without published as its target, and keeps a hexadecimal integer's text"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-format",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "'polaris-dossier-manifest-facts/2'",
+      "new": "'polaris-dossier-manifest-facts/1'",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-facts.test.ts > manifestFacts: workspace manifests (scenario \"Workspace manifests read into the check record\") derives the member under policy 2.0.0: the ten recognizer entries in order, each file Inferred with its count, the facts in order"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-read-limit",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "export const INFRA_READ_LIMIT = 100;",
+      "new": "export const INFRA_READ_LIMIT = 250;",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: malformed files and the read limit reads and lists the first 100 of 110 .tf files, and counts the other 10 Unknown over-read-limit (scenario \"Infrastructure files past the read limit\")",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: malformed files and the read limit keeps 250 for the recognizers of version 2.7 beside 100 for the infrastructure recognizers"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-compose-not-set-apart",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "{ rule: COMPOSE_FILE, matches: isComposePath, setsApart: true,",
+      "new": "{ rule: COMPOSE_FILE, matches: isComposePath, setsApart: false,",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 sets apart a Compose file, a manifest and a Makefile under a test, vendored or generated path, never naming it"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-remainder-old-rules",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "const candidate = MANIFEST_RECOGNIZERS.some(",
+      "new": "const candidate = MANIFEST_RECOGNIZERS.slice(0, 5).some(",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Kubernetes objects across documents, a values file Inferred with zero facts, and no Helm template (scenario \"Kubernetes objects across documents\")",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 records Terraform resources and modules and never reads a variable or state file (scenario \"Terraform resources and modules, ...\")",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the five infrastructure recognizers under declared-source policy 2.0.0 sets apart a Compose file, a manifest and a Makefile under a test, vendored or generated path, never naming it",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder sums to the tree: secret paths, candidates and the rest, by place (scenario \"Coverage remainder sums to the tree\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-remainder-secret-counted",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "if (secretOrUnder(segments, isSecretPath)) { secretPathsLeftOut++; continue; }",
+      "new": "if (secretOrUnder(segments, isSecretPath)) { secretPathsLeftOut++; }",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-facts.test.ts > manifestFacts: excluded or withheld blob never read reads none of the paths its dispositions exclude: secret, set apart, denied, indeterminate, unconsented, symbolic link, unciteable",
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder sums to the tree: secret paths, candidates and the rest, by place (scenario \"Coverage remainder sums to the tree\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-remainder-place-limit",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "ordered.slice(0, CENSUS_LISTED_LIMIT), rest = ordered.slice(CENSUS_LISTED_LIMIT)",
+      "new": "ordered.slice(0, 260), rest = ordered.slice(260)",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder lists the root and the first 250 of 260 top-level directories, and sums the other 10"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-remainder-shown-path",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "CONTROL.test(segment) ? shownPath(segment) : segment",
+      "new": "CONTROL.test(segment) ? segment : segment",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder shows a top-level directory that is not citable in the census form"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "driver-remainder-unsorted",
+      "file": "packages/polaris-dossier/src/manifest-facts.ts",
+      "old": "[...directories].sort(([a], [b]) => byCodeUnit(a, b))",
+      "new": "[...directories]",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/manifest-infra-facts.test.ts > manifestFacts, infrastructure recognizers: the coverage remainder orders places by the raw segment in code-unit order, not by the listing's order"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-remainder-missing-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${mapSection('directories', 'Directory map', derivedUnknownSentence(derived))}${remainder}`",
+      "new": "mapSection('directories', 'Directory map', derivedUnknownSentence(derived))",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the coverage remainder on the directory map's page (infrastructure recognizers) ends with the places it counts and does not list, and stands beside the directory map's Not established. sentence"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-rule-list-commas",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${rules.slice(0, -1).join(', ')} and ${rules[rules.length - 1]}`",
+      "new": "rules.join(', ')",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) holds its note, coverage line, no figure, every declared fact in Syzygy's words, and its closing list (scenario \"Infrastructure map rendered\")",
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the coverage remainder on the directory map's page (infrastructure recognizers) states the counts and one item per place, after the computed-map section (scenario \"Coverage remainder on the directory map's page\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-remainder-more-always",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "r.placesNotListed === 0 ? ''",
+      "new": "r.placesNotListed < 0 ? ''",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the coverage remainder on the directory map's page (infrastructure recognizers) states the counts and one item per place, after the computed-map section (scenario \"Coverage remainder on the directory map's page\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-infrastructure-files-word",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "map === 'infrastructure' ? 'infrastructure files' : 'manifest files'",
+      "new": "'manifest files'",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) holds its note, coverage line, no figure, every declared fact in Syzygy's words, and its closing list (scenario \"Infrastructure map rendered\")"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-infra-rule-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "'makefile', 'cmake-lists']",
+      "new": "'makefile']",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) holds its note, coverage line, no figure, every declared fact in Syzygy's words, and its closing list (scenario \"Infrastructure map rendered\")",
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) words every infrastructure fact kind, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-kubernetes-no-name",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "typeof fact['name'] === 'string'\n      ? `Kubernetes",
+      "new": "true\n      ? `Kubernetes",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) words every infrastructure fact kind, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "site-cmake-kind-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`CMake ${value(fact, 'targetKind')} target ${value(fact, 'target')}.`",
+      "new": "`CMake target ${value(fact, 'target')}.`",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) words every infrastructure fact kind, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-machine-remainder",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "remainder: derivedMember === undefined ? null : derivedMember.remainder,",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map states a zero-fact file, an Unknown member and the empty lists in Syzygy's words",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site carries computedMaps in the machine view beside derivedStructure, each member as the render derived it"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "site-infra-map-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "  { map: 'infrastructure', path: 'maps/infrastructure.html', title: 'Infrastructure map' },\n",
+      "new": "",
+      "killed": true,
+      "explanation": null,
+      "killedBy": "tests",
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the directory map holds the region's note, a coverage line that partitions the files, three figures of at most twelve directories and the list of every fact",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > the unit map states a zero-fact file, an Unknown member and the empty lists in Syzygy's words",
+        "apps/three-surface-poc/src/polaris-generation/dossier-computed-maps.test.ts > computed maps on the site carries computedMaps in the machine view beside derivedStructure, each member as the render derived it",
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) holds its note, coverage line, no figure, every declared fact in Syzygy's words, and its closing list (scenario \"Infrastructure map rendered\")",
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) words every infrastructure fact kind, a null Kubernetes name and a zero-fact file, and lists an over-read-limit count",
+        "apps/three-surface-poc/src/polaris-generation/dossier-infrastructure-map.test.ts > the infrastructure map (infrastructure recognizers) says No candidate file where its five recognizers have none"
+      ],
+      "seconds": 2
+    }
+  ],
+  "summary": {
+    "mutants": 66,
+    "killed": 65,
+    "survived": 1,
+    "survivedExplained": 1
+  }
+}
