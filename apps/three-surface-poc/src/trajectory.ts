@@ -28,12 +28,12 @@ export const TRAJECTORY_TAILNET_PATH = `${TAILNET_MOUNT_PREFIX}/trajectory` as c
 
 const COLUMN_ORDER: readonly TrajectoryColumn[] = [
   'Backlog',
-  'In Progress',
+  'Claimed',
   'Blocked',
   'Deferred',
   'Pinned',
   'Hooked',
-  'Done',
+  'Closed',
 ];
 
 function timeOffsetPercent(
@@ -65,9 +65,9 @@ function laneBar(
 }
 
 const WORKER_CHANGE_STATE_LABEL = {
-  planned: 'Planned',
-  active: 'Active',
-  'changed-or-merged': 'Changed / merged',
+  planned: 'No commit observed',
+  active: 'Commit observed, not on the default branch',
+  'changed-or-merged': 'Commit on the default branch',
 } as const;
 
 function verificationBadge(
@@ -123,6 +123,20 @@ function workerChangeBadge(
     ${detail === '' ? '' : `<span class="worker-change-detail">${detail}</span>`}
     ${verificationBadge(model, workerChange.beadId, verification, governingIntentId)}
   </div>`;
+}
+
+/** RFC8-2(b), RFC8-15, RFC8-30: closure in the tracker is never completion.
+ * One standing sentence, derived from the rendered items (never a constant),
+ * says how many are closed and that verification is Unknown for each of them
+ * (machine twin: trajectory.rendered[] status 'closed' and verification). It
+ * is not a new Unknown disclosure: each card keeps its own. */
+function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
+  const closed = rendered.filter((item) => item.status === 'closed');
+  const unverified = closed.filter((item) => item.verification === 'unknown').length;
+  return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
+        <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; each card carries its own disclosure and route.
+      </p>`;
 }
 
 function itemVerification(model: PocModel, itemId: string): string {
@@ -279,6 +293,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.
       </p>
+      ${closureNotice(trajectory.rendered)}
       ${governingIntentRegion(model, trajectory.rendered)}
       ${titlesWithheldRegion(model)}
       ${demonstratedCallout}

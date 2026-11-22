@@ -388,6 +388,11 @@ DECLARED_SOURCE_SPEC = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/proposed/polaris-gen
 DECLARED_SOURCE_UNION = f"{CHANGES}/{DECLARED_SOURCE_CHANGE}/GOVERNING-DEPENDENCIES.json"
 AGENT_ADOPTIONS = f"{DECISIONS}/AGENT-ADOPTIONS.md"
 DECLARED_SOURCE_ROW = 'A-4'
+# The closure-wording amendment (syzygy-t3jk.14) adds one POC-REQ-043
+# Scenario. R3 expects it exactly when its adoption row is in the tree, so a
+# tree from before the amendment (the P115 signed selftest's frozen core)
+# keeps its 26 / 34 census.
+CLOSURE_WORDING_TAG = 'three-surface-poc-closure-wording-amendment-v1.0'
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
 DECLARED_SOURCE_SUBJECTS = {
@@ -562,19 +567,19 @@ CORR_SUBJECTS = {
     CORR_SPEC: "376f27c0261120d0238d0d4a6685fe08b19ff03a9d00fcb4a6702349f64834c3",
 }
 CORR_BOUND_PARTS = len(CORR_SUBJECTS)
-# The v2.12 infrastructure-recognizers amendment (syzygy-3efd.26): one MODIFIED
+# The v2.12 coverage-precheck amendment (syzygy-5dhm.28): one MODIFIED
 # REQ-polaris-generation-034 after v2.11, pending until its own VIS-4 ledger
 # row, found by its tag as v2.11's is.
-INFRA_CHANGE = "dossier-infrastructure-recognizers"
-INFRA_HOME = f"{CHANGES}/{INFRA_CHANGE}"
-INFRA_SPEC = f"{INFRA_HOME}/proposed/polaris-generation/spec.md"
-INFRA_UNION = f"{INFRA_HOME}/GOVERNING-DEPENDENCIES.json"
-INFRA_TAG = "polaris-dossier-infrastructure-recognizers-v2.12"
-INFRA_STATUS_PREFIX = f"[Infrastructure recognizers amendment 2.12]({INFRA_HOME})"
-INFRA_SUBJECTS = {
-    INFRA_SPEC: "f50435e796c6852359ad73936550bd8f3f6f3511aa0b928661042f4249d6b48e",
+COVERAGE_CHANGE = "dossier-coverage-precheck"
+COVERAGE_HOME = f"{CHANGES}/{COVERAGE_CHANGE}"
+COVERAGE_SPEC = f"{COVERAGE_HOME}/proposed/polaris-generation/spec.md"
+COVERAGE_UNION = f"{COVERAGE_HOME}/GOVERNING-DEPENDENCIES.json"
+COVERAGE_TAG = "polaris-dossier-coverage-precheck-v2.12"
+COVERAGE_STATUS_PREFIX = f"[Coverage pre-check amendment 2.12]({COVERAGE_HOME})"
+COVERAGE_SUBJECTS = {
+    COVERAGE_SPEC: "995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287",
 }
-INFRA_BOUND_PARTS = len(INFRA_SUBJECTS)
+COVERAGE_BOUND_PARTS = len(COVERAGE_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -1013,12 +1018,12 @@ def corr_disposition(root, rows):
     return None
 
 
-def is_infra_row(line):
-    """A ledger row claiming the v2.12 infrastructure-recognizers amendment, well formed or not."""
+def is_coverage_row(line):
+    """A ledger row claiming the v2.12 coverage-precheck amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
-    tag = f"`{INFRA_TAG}`"
+    tag = f"`{COVERAGE_TAG}`"
     if len(cells) == 7 and cells[6] == tag:
         return True
     if len(cells) != 7 and tag in cells:
@@ -1026,19 +1031,19 @@ def is_infra_row(line):
     if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
         return False
     snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
-    return all(f"]({snapshot}{path})" in cells[3] for path in INFRA_SUBJECTS)
+    return all(f"]({snapshot}{path})" in cells[3] for path in COVERAGE_SUBJECTS)
 
 
-def infra_rows(root):
+def coverage_rows(root):
     return [[cell.strip() for cell in line.split("|")[1:-1]]
-            for line in adoption_table_rows(root) if is_infra_row(line)]
+            for line in adoption_table_rows(root) if is_coverage_row(line)]
 
 
-def infra_disposition(root, rows):
+def coverage_disposition(root, rows):
     if len(rows) == 1 and len(rows[0]) == 7:
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
-        return recorded_disposition(root, identity, commit.strip("`"), INFRA_TAG,
-                                    INFRA_SUBJECTS, plain_revert=True)
+        return recorded_disposition(root, identity, commit.strip("`"), COVERAGE_TAG,
+                                    COVERAGE_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -1806,7 +1811,7 @@ def corr_binding(root):
     return (None if records or subjects else read_text(root, CORR_SPEC), records, subjects)
 
 
-def infra_binding(root):
+def coverage_binding(root):
     """Read v2.12's published composition: pending until its row, like v2.11.
 
     The row names the installing commit (a plain commit, so its revert may
@@ -1814,34 +1819,34 @@ def infra_binding(root):
     predecessor is v2.11's text of REQ-polaris-generation-034, so v2.11 must
     itself be in force.
     """
-    rows = infra_rows(root)
-    if not rows or infra_disposition(root, rows):
+    rows = coverage_rows(root)
+    if not rows or coverage_disposition(root, rows):
         return None, [], []
     records, subjects = [], []
     if corr_binding(root)[0] is None:
-        records.append("infrastructure recognizers: prior v2.11 spec corrections adoption is unavailable")
+        records.append("coverage precheck: prior v2.11 spec corrections adoption is unavailable")
     if len(rows) != 1 or len(rows[0]) != 7:
-        records.append("infrastructure recognizers: expected one seven-column agent adoption row")
+        records.append("coverage precheck: expected one seven-column agent adoption row")
     else:
         identity, date, commit, changed, reason, revert, tag = rows[0]
         landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
         if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
                 or not valid_adoption_date(date)
-                or not landed or tag != f"`{INFRA_TAG}`" or not reason):
-            records.append("infrastructure recognizers: malformed adoption identity, date, commit, reason or tag")
+                or not landed or tag != f"`{COVERAGE_TAG}`" or not reason):
+            records.append("coverage precheck: malformed adoption identity, date, commit, reason or tag")
         if landed:
             oid = landed.group(1)
             if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
-                records.append("infrastructure recognizers: revert does not name the landed commit")
-            for rel in INFRA_SUBJECTS:
+                records.append("coverage precheck: revert does not name the landed commit")
+            for rel in COVERAGE_SUBJECTS:
                 snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
                 if f"]({snapshot})" not in changed:
-                    records.append(f"infrastructure recognizers: adoption row does not name `{rel}`")
-    for rel, digest in INFRA_SUBJECTS.items():
+                    records.append(f"coverage precheck: adoption row does not name `{rel}`")
+    for rel, digest in COVERAGE_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"infrastructure recognizers: `{rel}` differs from the reviewed v2.12 subject")
-    return (None if records or subjects else read_text(root, INFRA_SPEC), records, subjects)
+            subjects.append(f"coverage precheck: `{rel}` differs from the reviewed v2.12 subject")
+    return (None if records or subjects else read_text(root, COVERAGE_SPEC), records, subjects)
 
 
 def url_source_contract_findings(root):
@@ -2334,15 +2339,15 @@ def check_outcomes(root, report):
         subjects_seen += CORR_BOUND_PARTS
     r1 += corr_records
     r2 += corr_subjects
-    infra_retired_by = infra_disposition(root, infra_rows(root))
-    infra_amendment, infra_records, infra_subjects = infra_binding(root)
-    if infra_retired_by:
+    coverage_retired_by = coverage_disposition(root, coverage_rows(root))
+    coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+    if coverage_retired_by:
         records += 2
-    elif infra_amendment is not None or infra_records or infra_subjects:
+    elif coverage_amendment is not None or coverage_records or coverage_subjects:
         records += 1
-        subjects_seen += INFRA_BOUND_PARTS
-    r1 += infra_records
-    r2 += infra_subjects
+        subjects_seen += COVERAGE_BOUND_PARTS
+    r1 += coverage_records
+    r2 += coverage_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -2368,8 +2373,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.10 inactive by {bounds_retired_by}"
     if corr_retired_by:
         retirement += f"; v2.11 inactive by {corr_retired_by}"
-    if infra_retired_by:
-        retirement += f"; v2.12 inactive by {infra_retired_by}"
+    if coverage_retired_by:
+        retirement += f"; v2.12 inactive by {coverage_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
                f"{len(CHILDREN)} children and {len(additions)} installed Polaris "
                "additions; digest acts: phrase = manifest sha256 and in the "
@@ -2391,8 +2396,8 @@ def check_outcomes(root, report):
                "pending until recorded; computed maps: one v2.9 row over effective "
                "v2.8, pending until recorded; record bounds: one v2.10 row over "
                "effective v2.9, pending until recorded; spec corrections: one v2.11 row "
-               "over effective v2.10, pending until recorded; infrastructure recognizers: one v2.12 "
-               "row over effective v2.11, pending until recorded" + retirement)
+               "over effective v2.10, pending until recorded; coverage precheck: one v2.12 row "
+               "over effective v2.11, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -3158,16 +3163,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, corr_amendment)
                 pa += extra_a
                 pb += extra_b
-        infra_amendment, infra_records, infra_subjects = infra_binding(root)
-        findings += infra_records + infra_subjects
-        if infra_amendment is not None:
-            if (corr_amendment is None or bounds_amendment is None or maps_amendment is None or repairs_amendment is None
-                    or manifests_amendment is None or kinds_amendment is None or ledger_amendment is None
-                    or derived_amendment is None or figure_amendment is None or amendment is None):
-                findings.append("POLARIS: infrastructure recognizers requires effective spec corrections v2.11")
+        coverage_amendment, coverage_records, coverage_subjects = coverage_binding(root)
+        findings += coverage_records + coverage_subjects
+        if coverage_amendment is not None:
+            if (corr_amendment is None or bounds_amendment is None or maps_amendment is None or repairs_amendment is None or manifests_amendment is None
+                    or kinds_amendment is None or ledger_amendment is None or derived_amendment is None
+                    or figure_amendment is None or amendment is None):
+                findings.append("POLARIS: coverage precheck requires effective spec corrections v2.11")
             else:
-                a, extra_a = compose_figure_by_id(a, infra_amendment)
-                b, extra_b = compose_figure_by_name(b, infra_amendment)
+                a, extra_a = compose_figure_by_id(a, coverage_amendment)
+                b, extra_b = compose_figure_by_name(b, coverage_amendment)
                 pa += extra_a
                 pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
@@ -3331,15 +3336,23 @@ def polaris_expected(root, findings):
                                                 findings.append("POLARIS spec corrections: methods disagree or change identities")
                                             n_scen += sum(len(row["scenarios"]) for row in cor_a.values()) - sum(
                                                 len(row["scenarios"]) for row in bnd_a.values())
-                                            infra_amendment, _records, _subjects = infra_binding(root)
-                                            if infra_amendment is not None:
-                                                inf_a, pa = compose_figure_by_id(cor_a, infra_amendment)
-                                                inf_b, pb = compose_figure_by_name(cor_b, infra_amendment)
-                                                if pa or pb or inf_a != inf_b or set(inf_a) != set(cor_a):
-                                                    findings.append("POLARIS infrastructure recognizers: methods disagree or change identities")
-                                                n_scen += sum(len(row["scenarios"]) for row in inf_a.values()) - sum(
+                                            coverage_amendment, _records, _subjects = coverage_binding(root)
+                                            if coverage_amendment is not None:
+                                                cov_a, pa = compose_figure_by_id(cor_a, coverage_amendment)
+                                                cov_b, pb = compose_figure_by_name(cor_b, coverage_amendment)
+                                                if pa or pb or cov_a != cov_b or set(cov_a) != set(cor_a):
+                                                    findings.append("POLARIS coverage precheck: methods disagree or change identities")
+                                                n_scen += sum(len(row["scenarios"]) for row in cov_a.values()) - sum(
                                                     len(row["scenarios"]) for row in cor_a.values())
     return n_req, n_scen, ids
+
+
+def closure_wording_adopted(root):
+    """True when an adoption row names the POC change and the amendment's tag."""
+    text = read_text(root, AGENT_ADOPTIONS) or ""
+    return any(line.startswith("| A-") and CLOSURE_WORDING_TAG in line
+               and "three-surface-poc-experience" in line
+               for line in text.split("\n"))
 
 
 def check_census(root, report):
@@ -3349,7 +3362,8 @@ def check_census(root, report):
     signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
-        totals["POC"] = (26, 34)
+        closure_wording = closure_wording_adopted(root)
+        totals["POC"] = (26, 35 if closure_wording else 34)
     for family, (n_req, n_scen) in totals.items():
         reqs = pop.get(family, {})
         got = (len(reqs), sum(len(r["scenarios"]) for r in reqs.values()))
@@ -3359,7 +3373,7 @@ def check_census(root, report):
                             f"scenarios, expected {n_req} / {n_scen}")
         literal = EXPECTED.get(family)
         if family == "POC" and signed_reference:
-            literal = {**literal, "014": 8}
+            literal = {**literal, "014": 8, **({"043": 2} if closure_wording else {})}
         if literal is not None:
             prefix = f"{family}-REQ-"
             have = {k[len(prefix):]: len(v["scenarios"]) for k, v in reqs.items()}
@@ -3489,9 +3503,9 @@ def check_generated(root, pop, report):
     corr_amendment, _records, _subjects = corr_binding(root)
     if corr_amendment is not None:
         files += tracked(root, CORR_HOME)
-    infra_amendment, _records, _subjects = infra_binding(root)
-    if infra_amendment is not None:
-        files += tracked(root, INFRA_HOME)
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    if coverage_amendment is not None:
+        files += tracked(root, COVERAGE_HOME)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
@@ -3544,7 +3558,7 @@ def check_generated(root, pop, report):
                        (reach_amendment, REACH_UNION), (manifests_amendment, MANIFESTS_UNION),
                        (repairs_amendment, REPAIRS_UNION), (maps_amendment, MAPS_UNION),
                        (bounds_amendment, BOUNDS_UNION), (corr_amendment, CORR_UNION),
-                       (infra_amendment, INFRA_UNION)):
+                       (coverage_amendment, COVERAGE_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -3833,24 +3847,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls spec corrections v2.11 adopted while it is not in force")
         if any(CORR_TAG in line and "Agent adoption" in line for line in rows.get(CORR_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls spec corrections v2.11 adopted while it is not in force")
-    infra_amendment, _records, _subjects = infra_binding(root)
-    infra_fields = [line.strip() for line in visible_route_lines(status)
-                    if line.strip().startswith(INFRA_STATUS_PREFIX)]
-    if infra_amendment is not None:
+    coverage_amendment, _records, _subjects = coverage_binding(root)
+    coverage_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(COVERAGE_STATUS_PREFIX)]
+    if coverage_amendment is not None:
         examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and INFRA_TAG in line
-                   for line in rows.get(INFRA_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route infrastructure recognizers v2.12 "
+        if not any(Path(AGENT_ADOPTIONS).name in line and COVERAGE_TAG in line
+                   for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route coverage precheck v2.12 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = infra_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or infra_fields != [f"{INFRA_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route infrastructure recognizers v2.12 and its adoption {identity}")
-    elif INFRA_CHANGE in changes:
+        identity = coverage_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or coverage_fields != [f"{COVERAGE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route coverage precheck v2.12 and its adoption {identity}")
+    elif COVERAGE_CHANGE in changes:
         examined += 2
-        if any("is agent-adopted" in field for field in infra_fields):
-            findings.append(f"`{STATUS}` calls infrastructure recognizers v2.12 adopted while it is not in force")
-        if any(INFRA_TAG in line and "Agent adoption" in line for line in rows.get(INFRA_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls infrastructure recognizers v2.12 adopted while it is not in force")
+        if any("is agent-adopted" in field for field in coverage_fields):
+            findings.append(f"`{STATUS}` calls coverage precheck v2.12 adopted while it is not in force")
+        if any(COVERAGE_TAG in line and "Agent adoption" in line for line in rows.get(COVERAGE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls coverage precheck v2.12 adopted while it is not in force")
     reach_amendment, _records, _subjects = reach_binding(root)
     reach_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(REACH_STATUS_PREFIX)]
@@ -4069,7 +4083,7 @@ def inputs(root):
     paths |= {MAPS_UNION, *MAPS_SUBJECTS}
     paths |= {BOUNDS_UNION, *BOUNDS_SUBJECTS}
     paths |= {CORR_UNION, *CORR_SUBJECTS}
-    paths |= {INFRA_UNION, *INFRA_SUBJECTS}
+    paths |= {COVERAGE_UNION, *COVERAGE_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -4440,15 +4454,14 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_maps = any(is_maps_row(line) for line in original.splitlines())
     had_bounds = any(is_bounds_row(line) for line in original.splitlines())
     had_corr = any(is_corr_row(line) for line in original.splitlines())
-    had_infra = any(is_infra_row(line) for line in original.splitlines())
+    had_coverage = any(is_coverage_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
                             and not is_ledger_row(line) and not is_kinds_row(line)
                             and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                             and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -4461,7 +4474,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_infra
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -4474,7 +4487,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (MAPS_BOUND_PARTS if had_maps else 0)
             - (BOUNDS_BOUND_PARTS if had_bounds else 0)
             - (CORR_BOUND_PARTS if had_corr else 0)
-            - (INFRA_BOUND_PARTS if had_infra else 0))
+            - (COVERAGE_BOUND_PARTS if had_coverage else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -4871,8 +4884,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_ledger_row(line) and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5008,8 +5020,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5140,8 +5151,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       if not is_ledger_row(line) and not is_kinds_row(line)
                       and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5270,8 +5280,7 @@ def kinds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_kinds_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5400,8 +5409,7 @@ def manifests_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5530,8 +5538,7 @@ def repairs_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_repairs_row(line) and not is_maps_row(line)
                       and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5659,8 +5666,7 @@ def maps_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_maps_row(line) and not is_bounds_row(line)
-                      and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5857,8 +5863,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_bounds_row(line) and not is_corr_row(line)
-                      and not is_infra_row(line))
+                      if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5985,7 +5990,7 @@ def corr_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_corr_row(line) and not is_infra_row(line))
+                      if not is_corr_row(line) and not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6095,9 +6100,9 @@ def corr_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == kin_pop), False)
 
 
-def infra_cases(tmp, base, witnesses, failures):
+def coverage_cases(tmp, base, witnesses, failures):
     """The v2.12 pending-to-adopted transition over v2.11, its ledger and byte guards, and the predecessor guard."""
-    original = read_text(base, INFRA_SPEC)
+    original = read_text(base, COVERAGE_SPEC)
     if original is None or corr_binding(base)[0] is None:
         return
 
@@ -6108,98 +6113,98 @@ def infra_cases(tmp, base, witnesses, failures):
         if not caught:
             failures.append(name)
 
-    tree = Path(tmp) / "infrastructure-recognizers"
+    tree = Path(tmp) / "coverage-precheck"
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_infra_row(line))
+                      if not is_coverage_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
     ident = FIGURE_REPLACES[0]
-    held = (infra_binding(tree) == (None, [], []) and not pending_findings
+    held = (coverage_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == 110)
-    record("infra-pending", AGENT_ADOPTIONS, "<no v2.12 row>", "<unchanged>",
+    record("coverage-pending", AGENT_ADOPTIONS, "<no v2.12 row>", "<unchanged>",
            "landed package alone keeps v2.12 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
-    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{INFRA_SPEC}) "
-           f"| Selftest | `git revert {oid}` | `{INFRA_TAG}` |\n")
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{COVERAGE_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{COVERAGE_TAG}` |\n")
     ledger.write_text(pending + row)
     current_pop, current_findings = census(tree)
     current = current_pop["POLARIS"]
-    held = (infra_binding(tree) == (original, [], []) and not current_findings
+    held = (coverage_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 123
+            and len(current[ident]["scenarios"]) == 117
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("infra-adopted", AGENT_ADOPTIONS, "<no v2.12 row>", row,
-           "v2.12 replaces exactly 034 (110 to 123 scenarios)", current_findings, held, True)
+    record("coverage-adopted", AGENT_ADOPTIONS, "<no v2.12 row>", row,
+           "v2.12 replaces exactly 034 (110 to 117 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
-                           ("wrong-tag", INFRA_TAG, INFRA_TAG + "-wrong"),
+                           ("wrong-tag", COVERAGE_TAG, COVERAGE_TAG + "-wrong"),
                            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
-                           ("missing-spec-link", f"/blob/{oid}/{INFRA_SPEC})", f"/blob/other/{INFRA_SPEC})"),
+                           ("missing-spec-link", f"/blob/{oid}/{COVERAGE_SPEC})", f"/blob/other/{COVERAGE_SPEC})"),
                            ("bad-date", "2026-11-21", "2026-99-21"),
                            ("no-reason", "| Selftest |", "|  |")):
         assert old in row
         ledger.write_text(pending + row.replace(old, new, 1))
-        effective, r1, r2 = infra_binding(tree)
-        record(f"infra-{name}", AGENT_ADOPTIONS, old, new,
+        effective, r1, r2 = coverage_binding(tree)
+        record(f"coverage-{name}", AGENT_ADOPTIONS, old, new,
                "R1 refusal with no effective amendment", r1 + r2,
                effective is None and bool(r1) and not r2, False)
 
     veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
     ledger.write_text(pending + row + veto)
     pop, found = census(tree)
-    held = (infra_disposition(tree, infra_rows(tree)) == "A-1000" and not found
+    held = (coverage_disposition(tree, coverage_rows(tree)) == "A-1000" and not found
             and pop["POLARIS"] == predecessor)
-    record("infra-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.11 034", found, held, True)
+    record("coverage-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.11 034", found, held, True)
     prior_row = next((line for line in pending.splitlines(keepends=True) if is_corr_row(line)), None)
     if prior_row is not None:
         no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_corr_row(line))
         ledger.write_text(no_prior + row)
-        effective, r1, r2 = infra_binding(tree)
-        record("infra-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+        effective, r1, r2 = coverage_binding(tree)
+        record("coverage-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
                "R1 refusal while v2.11 is not in force", r1 + r2,
                effective is None and any("prior v2.11" in f for f in r1), False)
 
     ledger.write_text(pending + row)
-    for rel in INFRA_SUBJECTS:
+    for rel in COVERAGE_SUBJECTS:
         subject = tree / rel
         previous = subject.read_bytes()
         subject.write_bytes(previous + b"\n")
-        effective, r1, r2 = infra_binding(tree)
+        effective, r1, r2 = coverage_binding(tree)
         subject.write_bytes(previous)
-        record(f"infra-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+        record(f"coverage-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
                "R2 refusal with no effective amendment", r1 + r2,
                effective is None and not r1 and bool(r2), False)
-    union = tree / INFRA_UNION
+    union = tree / COVERAGE_UNION
     previous = union.read_text()
     assert '"REQ-polaris-generation-014"' in previous
     union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
     report = Report()
     check_generated(tree, current_pop, report)
     union.write_text(previous)
-    record("infra-union-changed", INFRA_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
-           report.findings.get("R4", []), any(INFRA_UNION in f for f in report.findings.get("R4", [])), False)
+    record("coverage-union-changed", COVERAGE_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(COVERAGE_UNION in f for f in report.findings.get("R4", [])), False)
     status = tree / STATUS
     previous = status.read_text()
     status.write_text("\n".join(line for line in previous.split("\n")
-                                if not line.strip().startswith(INFRA_STATUS_PREFIX)))
+                                if not line.strip().startswith(COVERAGE_STATUS_PREFIX)))
     report = Report()
     check_routes(tree, current_pop, report)
     status.write_text(previous)
-    record("infra-status-route-missing", STATUS, INFRA_STATUS_PREFIX, "", "R5 refusal",
+    record("coverage-status-route-missing", STATUS, COVERAGE_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("infrastructure recognizers v2.12" in f for f in report.findings.get("R5", [])), False)
+           any("coverage precheck v2.12" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)
     claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
-    adopted_status = any(line.strip().startswith(INFRA_STATUS_PREFIX) and "is agent-adopted" in line
+    adopted_status = any(line.strip().startswith(COVERAGE_STATUS_PREFIX) and "is agent-adopted" in line
                          for line in previous.split("\n"))
-    record("infra-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+    record("coverage-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
            "R5 refuses an adopted route while the row is missing", claims,
            bool(claims) if adopted_status else not claims, not adopted_status)
     ledger.write_text(pending + row)
@@ -6208,7 +6213,7 @@ def infra_cases(tmp, base, witnesses, failures):
         ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
         ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
         ("renamed", "### Requirement: Agent brief and mechanically checked draft",
-         "### Requirement: Agent brief and infrastructure recognizers"),
+         "### Requirement: Agent brief and coverage precheck"),
         ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
     ]
     kin_pop = predecessor
@@ -6217,7 +6222,7 @@ def infra_cases(tmp, base, witnesses, failures):
         mutant = original.replace(old, new, 1)
         a, ida = compose_figure_by_id(kin_pop, mutant)
         b, names = compose_figure_by_name(kin_pop, mutant)
-        record(f"infra-compose-{name}", INFRA_SPEC, old, new,
+        record(f"coverage-compose-{name}", COVERAGE_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
@@ -6775,7 +6780,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     maps_cases(tmp, base, witnesses, failures)
     bounds_cases(tmp, base, witnesses, failures)
     corr_cases(tmp, base, witnesses, failures)
-    infra_cases(tmp, base, witnesses, failures)
+    coverage_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the

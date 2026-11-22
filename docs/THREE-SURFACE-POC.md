@@ -246,9 +246,14 @@ selected item's text. The size-only comparison and choice rationale are in
      registry-entry amendment, then a fresh implementation authorization.
 4. Trajectory's board shows two separately honest fields for a work item, not
    one:
-   - the worker-change observer's state ("External worker: Planned / Active /
-     Changed / merged", tracking real git activity against it);
-   - its independent Bead status.
+   - the worker-change observer's state, saying only what git showed on the
+     bounded seam: "External worker: No commit observed", "Commit observed,
+     not on the default branch" or "Commit on the default branch";
+   - its independent Bead status, in a column whose heading never uses a
+     word for done: closed items sit under "Closed" and claimed items under
+     "Claimed". One notice above the board says how many rendered
+     items are closed and that closed is not verified: verification is
+     Unknown for each of them (`trajectory-closure-notice`).
    - An ingested, operator-reported test-run artifact (see below) for the
      governing seam renders as "Verification: Not verified by Syzygy —
      operator-reported (report-fact): …", never as Verified (RFC5-19); absent

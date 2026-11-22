@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 26,
-      "scenarios": 34,
+      "scenarios": 35,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -396,7 +396,8 @@
         "POC-REQ-043": {
           "name": "Activity is never rendered as satisfaction",
           "scenarios": [
-            "Closed but unverified"
+            "Closed but unverified",
+            "Closed is the tracker's word, not done"
           ]
         },
         "POC-REQ-050": {
@@ -600,7 +601,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 436,
+      "scenarios": 430,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1088,19 +1089,13 @@
             "Unknown files counted and not listed on a manifest map",
             "Reading difference of a bounded check record",
             "Readable layout stacks every graph of two or more layers",
-            "Compose services, images, ports and dependencies",
-            "Kubernetes objects across documents",
-            "Terraform resources and modules, variable and state files never read",
-            "Make targets",
-            "CMake lists and other makefile names Unknown under the bound policy",
-            "Malformed infrastructure file is Unknown, never empty",
-            "Infrastructure files past the read limit",
-            "Coverage remainder sums to the tree",
-            "Coverage remainder on the directory map's page",
-            "Infrastructure map rendered",
-            "Provider mode unchanged by infrastructure recognizers",
-            "Bounded form of a draft that does not parse",
-            "Draft, frozen revisions and run file read under their bounds"
+            "Uncovered inventory entry listed before review",
+            "Entry covered by overlapping lines or a named path",
+            "Compared advice names its rule, its inventory and its counts",
+            "Justified omission recorded by the author",
+            "No inventory of record gives Unknown coverage",
+            "Omission record in an earlier schema or malformed",
+            "Secret-matching path of an entry not named"
           ]
         },
         "REQ-polaris-generation-035": {
