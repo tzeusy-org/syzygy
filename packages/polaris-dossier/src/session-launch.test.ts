@@ -940,32 +940,59 @@ describe('prepared private CLI launch',()=>{
     const f = await launchFixture();
     const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
     const retained = 'own-retained-entry';
-    const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
     const work = f.launch.view.workDirectory;
-    let seeded = false, removed = 0, inspectedRetained = false;
+    let toolHeld = false, rootOpens = 0, removed = 0;
+    const completedSamples: number[] = [];
+    const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
+      if (rootOpens > 0) completedSamples.push(rootOpens);
+      return true;
+    } });
+    let releaseTool!: () => void;
+    const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+    const host = await f.start({ beforeTool: () => {
+      toolHeld = true;
+      return heldTool;
+    } });
+    let observeRetry!: (observed: true) => void;
+    const retryObserved = new Promise<true>(resolve => { observeRetry = resolve; });
+
     filesystem.beforeOpen = async file => {
-      if (file !== work || seeded) return;
-      seeded = true;
-      // The launch requires an empty view. Seed at the first sample's open,
-      // before its directory enumeration can observe a partial fixture.
+      if (file !== work || !toolHeld) return;
+      rootOpens++;
+      if (rootOpens !== 1) return;
+      // Seed the work directory after the CLI is waiting for its tool result.
       await Promise.all([...disappearing, retained].map(name => writeFile(path.join(work, name), 'owned')));
     };
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
-      if (disappearing.includes(path.basename(file))) {
+      const name = path.basename(file);
+      if (disappearing.includes(name)) {
         await unlink(file);
         removed++;
-      } else if (path.basename(file) === retained && removed) {
-        inspectedRetained = true;
-      }
+      } else if (name === retained && rootOpens === 2) observeRetry(true);
     };
-    const child = await launchRestrictedUrlSession({ preparation, host });
-    cleanup.push(child.stop);
-    const outcome = await child.finished;
-    expect(removed).toBe(disappearingEntries);
-    expect(outcome).toMatchObject({ outcome: expected, exitCode: expected === 'exited' ? 0 : null,
-      groupTermination: 'confirmed', toolTermination: 'settled' });
-    if (expected === 'exited') expect(inspectedRetained).toBe(true);
+    try {
+      const child = await launchRestrictedUrlSession({ preparation, host: {
+        ...host, close: () => { releaseTool(); return host.close(); },
+      } });
+      cleanup.push(child.stop);
+      if (expected === 'exited') {
+        expect(await Promise.race([retryObserved, child.finished.then(() => false)])).toBe(true);
+        expect(await child.waitForSample()).toBe(true);
+        expect(rootOpens).toBe(2);
+        // A subsequent sample cannot stand in for the retry in this one.
+        expect(completedSamples).toEqual([2]);
+        releaseTool();
+      }
+      const outcome = await child.finished;
+      expect(removed).toBe(disappearingEntries);
+      expect(outcome).toMatchObject({ outcome: expected, exitCode: expected === 'exited' ? 0 : null,
+        groupTermination: 'confirmed', toolTermination: 'settled' });
+      if (expected === 'inspection-failed') {
+        expect(rootOpens).toBe(1);
+        expect(completedSamples).toEqual([]);
+      }
+    } finally { releaseTool(); }
   }, 15000);
 
   it.each([
