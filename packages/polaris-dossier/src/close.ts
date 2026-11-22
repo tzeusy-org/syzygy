@@ -53,6 +53,8 @@ export interface CloseDeps extends ReviewDeps {
   readonly admitRecord?: () => boolean;
   /** The stopped supervisor's own captures. Ordinary close has no such source. */
   readonly urlSupervisorCapture?: Pick<UrlRunSessionsSummary, 'roles'> & {
+    readonly historical?: { readonly settledRoles: readonly string[];
+      readonly auditCuts: readonly { readonly tipSha256: string; readonly records: number }[] };
     readonly audit: Pick<UrlRunSessionsSummary['audit'], 'tipSha256' | 'durableRecords' | 'providerReceipts' | 'completeness'> & {
       readonly relayEvents: Pick<UrlRunSessionsSummary['audit']['relayEvents'], 'send-attempt' | 'send-outcome'>;
     };
@@ -168,6 +170,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
         label: 'Inferred',
         basis: 'retained from the local URL supervisor after process and audit teardown',
         roles: capture.roles,
+        ...(capture.historical === undefined ? {} : { historical: capture.historical }),
         protectedAudit: {
           capturedAt: isoOf(now),
           locator: url.storage.protectedAudit.locator,

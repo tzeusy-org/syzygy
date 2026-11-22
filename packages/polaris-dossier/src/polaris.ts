@@ -30,8 +30,8 @@ import { beginRunProductReads, UrlProductReadRefusal, type RunProductReads } fro
 import { inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
   type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { renderRun, reproduceUrlRender, type ProducedSiteInput } from './render.js';
-import { assertUrlFinalDesignProduct } from './url-session-audit.js';
-import { checkStoredUrlRender } from './url-stored-render.js';
+import { assertUrlFinalDesignProduct, recoverUrlDesignRenderContinuation } from './url-session-audit.js';
+import { checkStoredUrlRender, readStoredUrlRenderOutput } from './url-stored-render.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js';
 import type { AcquisitionProcessLimits } from './acquisition-process.js';
@@ -49,16 +49,17 @@ import { GIT_MEMORY_PACK_LIMITS } from './git-memory-pack.js';
 import { GIT_MEMORY_WORKER_LIMITS } from './git-memory-worker.js';
 import type { GitSshAuthentication } from './git-memory-ssh.js';
 import { bindCurrentEffectiveUrlRun, effectiveUrlProjection, readEffectiveRunRecord, URL_RUN_SIDECAR } from './effective-run-record.js';
-import { prepareUrlRolePlans, type UrlRolePlan } from './url-role-plan.js';
+import { prepareUrlRolePlans, restoreUrlRolePlans, type UrlRolePlan } from './url-role-plan.js';
 import { createUrlRunOrigins } from './url-run-origins.js';
 import { sessionDirectory, sessionsRoot } from './run-dir.js';
 import { reviewSessionDirectory } from './review-model.js';
 import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
-import { createUrlRunArtifacts } from './url-run-artifacts.js';
+import { createUrlRunArtifacts, type UrlRestoredFrozenProducts } from './url-run-artifacts.js';
 import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
-import { verifyStoppedUrlRun } from './url-recovery.js';
-import { retainUrlStoppedBoundary } from './url-stopped-run.js';
+import { readVerifiedUrlAuditLaunches } from './url-session-audit-history.js';
+import { claimStoppedUrlRun, isClaimedStoppedUrlRun, verifyStoppedUrlRun } from './url-recovery.js';
+import { retainUrlStoppedBoundary, type UrlRecoveryClaim } from './url-stopped-run.js';
 import { isUrlRunMachineClosedHistory } from './url-run-machine.js';
 import { loadSessionCredential } from './session-credential.js';
 import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-control.js';
@@ -211,10 +212,13 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   if (options.model !== DEFAULT_SESSION_MODEL) return refuse('This URL session model has no supported restricted profile. Use --model claude-sonnet-4-6 or omit --model; no model was substituted.');
   if (options.authorSkipPermissions) return refuse('URL sessions require their fixed restricted tools. Omit --author-skip-permissions.');
   if (options.mode === 'supervise') return supervise(options, ports);
+  let resumedState: SupervisorState | undefined;
   if (options.mode === 'resume') {
     const state = readState(options.stateRoot, options.run!);
     if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-    return refuse(await stoppedRunRefusal(state, ports));
+    const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
+    if (!verified.ok) return refuse(`The stopped run could not re-establish its checked recovery boundary (${verified.code}).`);
+    resumedState = state;
   }
   const tmux = spawnSync('tmux', ['-V'], { encoding: 'utf8' });
   if (tmux.status !== 0) return refuse('tmux is required for the attended view; install it, or use `syzygy dossier init` for an operator-started run');
@@ -237,7 +241,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     const prepared = await preparePolarisStart({ ...options, ...(audience === undefined ? {} : { audience }) }, ports);
     if (!prepared.ok) return refuse(prepared.reason);
   }
-  const name = `polaris-${Date.now().toString(36)}`;
+  const name = resumedState?.tmuxSession ?? `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
   // Only fixed host metadata crosses tmux's explicit environment boundary.
   // Authentication remains in the host credential adapter; never place a
@@ -245,7 +249,10 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   const passed: Record<string, string> = { [STATE_ROOT_ENV]: options.stateRoot, HOME: os.homedir(),
     PATH: `${path.dirname(process.execPath)}:/usr/bin:/bin`, LANG: 'C.UTF-8' };
   const envArgs = Object.entries(passed).flatMap(([key, value]) => ['-e', `${key}=${value}`]);
-  const started = spawnSync('tmux', ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50', ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });
+  const retained = resumedState !== undefined && spawnSync('tmux', ['has-session', '-t', name], { stdio: 'ignore' }).status === 0;
+  const tmuxStart = retained ? ['new-window', '-d', '-t', name, '-n', `resume-${Date.now().toString(36)}`]
+    : ['new-session', '-d', '-s', name, '-n', 'run', '-x', '220', '-y', '50'];
+  const started = spawnSync('tmux', [...tmuxStart, ...envArgs, '--', process.execPath, MAIN, 'polaris', ...forward], { stdio: 'inherit' });
   if (started.status !== 0) return refuse('tmux could not start the run\'s session');
   spawnSync('tmux', ['set-option', '-t', name, 'remain-on-exit', 'on'], { stdio: 'ignore' });
   process.stdout.write(`Started the Polaris supervisor in tmux session ${name}. See that session for role startup and run status.\n  attach: tmux attach -t ${name}   (inside tmux: tmux switch-client -t ${name})\n  stop:   syzygy polaris --stop <run>\n`);
@@ -333,6 +340,11 @@ export async function preparePolarisStart(
   return result;
 }
 
+type VerifiedStoppedRun = Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { ok: true }>;
+interface UrlContinuation {
+  readonly verified: VerifiedStoppedRun; readonly claim: UrlRecoveryClaim;
+  readonly initial: UrlRestoredFrozenProducts['initial'];
+}
 interface PreparedUrlRun {
   readonly record: RecordedRunConfig; readonly screen: DossierScreen; readonly runtime: UrlRuntime;
   readonly renderer: UrlLoadedRenderer;
@@ -346,17 +358,25 @@ interface PreparedUrlRun {
   readonly sourceStore: UrlSourceStore;
   readonly initializedCoreBytes: Uint8Array;
   readonly effectiveDeclaration: NonNullable<Parameters<typeof createUrlRunArtifacts>[0]['effectiveDeclaration']>;
-  readonly initial: { brief: BriefReport; sessions: StartSessionsReport };
+  readonly initial?: { brief: BriefReport; sessions: StartSessionsReport };
+  readonly continuation?: UrlContinuation;
 }
 const preparedUrlRuns = new Map<string, PreparedUrlRun>();
 type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
 interface CheckedSupervisor {
   readonly prepared: Pick<PreparedUrlRun, 'record' | 'effectiveDeclaration' | 'screen' | 'renderer' | 'origins'
-    | 'current' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore'>;
+    | 'current' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore' | 'roles' | 'continuation'>;
   readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions; readonly stop: UrlSupervisorStop;
 }
 async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  if (!prepared.initial) throw new Error('url-supervisor-unavailable');
+  const artifacts = supervisorArtifacts(run, prepared, ports, Date.parse(prepared.initial.brief.deadlineEndsAt));
+  await artifacts.registerInitial(prepared.initial);
+  if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
+  return artifacts;
+}
+function supervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts, originalDeadline: number): UrlArtifacts {
   const artifacts: UrlArtifacts = createUrlRunArtifacts({ run, record: prepared.record, origins: prepared.origins,
     roles: prepared.roles, current: prepared.current, helpText: DOSSIER_USAGE,
     statusProjection: effectiveUrlProjection(prepared.record, prepared.effectiveDeclaration.declaration),
@@ -367,7 +387,7 @@ async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun,
       const operation = argv[1] === 'check' ? 'author-check'
         : argv[1] === 'await' ? (role === 'inventory' ? 'inventory-check' : 'review-check') : undefined;
       const products = operation === undefined ? undefined
-        : beginRunProductReads(run, artifacts, operation, Date.parse(prepared.initial.brief.deadlineEndsAt), awaitProductRead);
+        : beginRunProductReads(run, artifacts, operation, originalDeadline, awaitProductRead);
       try {
         if (review !== undefined) {
           if (role !== 'design' || !products || !stdin) throw new Error('url-supervisor-unavailable');
@@ -387,8 +407,6 @@ async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun,
         return { stdout: result.stdout, stderr: result.stderr, exit: result.exit };
       } finally { products?.close(); }
     } });
-  await artifacts.registerInitial(prepared.initial);
-  if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
   return artifacts;
 }
 
@@ -398,12 +416,13 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
   screen: Screen, ports: CliPorts, stop: UrlSupervisorStop): Promise<UrlRunSessions> {
   if (!(await prepared.sessionCurrent())) throw new Error('url-supervisor-unavailable');
   const compatible = (role: 'inventory' | 'fidelity' | 'design'): string => {
-    const selected = prepared.initial.sessions.sessions.filter(session => role === 'inventory'
+    const selected = prepared.initial?.sessions.sessions.filter(session => role === 'inventory'
       ? session.role === 'inventory' : session.role === 'review' && session.kind === role);
-    if (selected.length !== 1) throw new Error('url-supervisor-unavailable');
+    if (selected === undefined || selected.length !== 1) throw new Error('url-supervisor-unavailable');
     return selected[0]!.promptSha256;
   };
-  const promptDigests = { inventory: compatible('inventory'), fidelity: compatible('fidelity'), design: compatible('design') };
+  const promptDigests = prepared.continuation?.initial.helperPromptDigests
+    ?? { inventory: compatible('inventory'), fidelity: compatible('fidelity'), design: compatible('design') };
   const loaded = await loadSessionCredential({ environment: {
     ...(process.env['CLAUDE_CODE_OAUTH_TOKEN'] === undefined ? {} : { CLAUDE_CODE_OAUTH_TOKEN: process.env['CLAUDE_CODE_OAUTH_TOKEN'] }),
     ...(process.env['ANTHROPIC_API_KEY'] === undefined ? {} : { ANTHROPIC_API_KEY: process.env['ANTHROPIC_API_KEY'] }),
@@ -416,6 +435,7 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
       current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
       stopRequested: () => stop.status() === 'requested',
+      ...(prepared.continuation === undefined ? {} : { resume: { verified: prepared.continuation.verified, claim: prepared.continuation.claim } }),
       credential: loaded.credential, sourceReader: prepared.openReader,
       production: { ...prepared.machine, current: prepared.current, policyBytes: prepared.basePolicyBytes, artifacts },
       launchHistory: { promptDigests, register: artifacts.registerLaunchHistory }, runDossier: artifacts.runDossier,
@@ -518,14 +538,76 @@ class Screen {
   }
 }
 
-async function stoppedRunRefusal(state: SupervisorState, ports: CliPorts): Promise<string> {
-  const now = ports.now ?? Date.now;
-  if (state.done !== undefined) return `run ${state.runId} is closed`;
-  if (now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return `run ${state.runId} is past its deadline`;
-  const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now });
-  return verified.ok ? 'The retained stop boundary was reverified. The checked role continuation is unavailable.'
-    : `The retained run has no re-established checked recovery boundary (${verified.code}). Preserve its original pin and records.`;
+/** Rebuild process-local products and plans under one consumed exclusive
+ * claim. No old receipt, CLI process or machine instance is revived. */
+async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPorts): Promise<{
+  readonly state: SupervisorState; readonly prepared: PreparedUrlRun; readonly artifacts: UrlArtifacts;
+  readonly claim: UrlRecoveryClaim;
+}> {
+  const verified = await verifyStoppedUrlRun(previous, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
+  if (!verified.ok) throw new Error(`url-recovery-${verified.code}`);
+  const claim = await claimStoppedUrlRun(verified);
+  if (claim === null) throw new Error('url-recovery-ownership');
+  try {
+    const checked = verified.checkedContext, run = previous.run;
+    const current = (): boolean => claim.current() && checked.current();
+    const sessionCurrent = async (): Promise<boolean> => current() && await checked.policyCurrent() && current();
+    const generation = randomBytes(16).toString('hex');
+    const directories: Readonly<Record<ViewRole, string>> = { author: run, inventory: sessionDirectory(run, 1),
+      fidelity: reviewSessionDirectory(run, 'fidelity', 1), design: reviewSessionDirectory(run, 'design', 1) };
+    const machineAttempt = path.join(URL_HOST_ROOT, 'acquisitions', verified.boundary.record.machineAttempt);
+    const canaries = ['source', 'authentication', 'audit'].map(name => path.join(machineAttempt, 'canaries', name));
+    const roles = await restoreUrlRolePlans({ run, record: verified.record, screen: checked.screen, runtime: checked.runtime,
+      retained: verified.boundary.record.roles, declarations: checked.effective.declaration.roles, generation, sessionDirectories: directories,
+      canaries, current: sessionCurrent });
+    if (roles === null || !(await sessionCurrent())) throw new Error('url-recovery-role-plan');
+    const renderer = await loadUrlDossierRenderer(checked.runtime);
+    if (renderer === null || !(await sessionCurrent())) throw new Error('url-recovery-renderer');
+    const origins = await createUrlRunOrigins({ runId: previous.runId, record: verified.record, screen: checked.screen,
+      basePolicyBytes: checked.policy.bytes, originPolicy: { binding: checked.origin.binding, bytes: checked.origin.bytes },
+      current, roles, sourceStore: checked.sourceStore, renderer });
+    if (boundedCanonical(origins.plannedOrigins) !== boundedCanonical(checked.effective.declaration.plannedOrigins))
+      throw new Error('url-recovery-origin-registry');
+    const initializedCoreBytes = Buffer.from(boundedHostText(path.join(run, 'run.json'), 2_097_152));
+    if (sha256(initializedCoreBytes) !== checked.effective.declaration.baseRunSha256 || !current()) throw new Error('url-recovery-core');
+    const host = cliGateSources(ports).effectiveRunDeclaration?.(run, previous.runId);
+    const sidecarBytes = Buffer.from(boundedHostText(path.join(run, URL_RUN_SIDECAR), 2_097_152));
+    if (host?.kind !== 'url' || host.context.expectedSidecarSha256 !== previous.declarationSha256
+      || sha256(sidecarBytes) !== previous.declarationSha256 || !current()) throw new Error('url-recovery-declaration');
+    const auditDirectory = fs.mkdtempSync(path.join(URL_HOST_ROOT, 'acquisitions', 'attempt-'));
+    const preparedBase: PreparedUrlRun = { record: verified.record, screen: checked.screen, runtime: checked.runtime,
+      renderer, roles, origins, current, sessionCurrent, directories, canaries, auditDirectory,
+      originPolicySha256: checked.origin.binding.sha256, basePolicyBytes: Uint8Array.from(checked.policy.bytes),
+      machine: { governanceRoot: path.join(cliGateSources(ports).recordsRoot, '.syzygy'),
+        protectedRoot: path.join(machineAttempt, 'machine-lifecycle'), parent: checked.adoption },
+      openReader: checked.openReader, sourceStore: checked.sourceStore, initializedCoreBytes,
+      effectiveDeclaration: { declaration: checked.effective.declaration, bytes: sidecarBytes, context: { ...host.context, expectedSidecarSha256: previous.declarationSha256! } } };
+    const artifacts = supervisorArtifacts(run, preparedBase, ports, checked.deadline);
+    const restored = await artifacts.restoreFrozenProducts(verified.products, sessionCurrent);
+    if (restored.initial.briefIssuedAt !== new Date(previous.briefIssuedAt).toISOString()
+      || restored.initial.deadline !== checked.deadline || !(await sessionCurrent())) throw new Error('url-recovery-initial');
+    const prepared: PreparedUrlRun = { ...preparedBase, continuation: { verified, claim, initial: restored.initial } };
+    // Saved supervisor controls are display state. Rebuild progress only from
+    // the restored checked products and genuine cold audit, so editing a JSON
+    // notification/site map cannot skip an unfinished stage.
+    const checks = artifacts.latestStageChecks();
+    const fidelityPacket = checks.fidelity?.record['packet'];
+    const fidelityPair = isRecord(fidelityPacket) && typeof fidelityPacket['draftRevision'] === 'number'
+      && typeof fidelityPacket['inventoryRevision'] === 'number'
+      ? `${fidelityPacket['draftRevision']}/${fidelityPacket['inventoryRevision']}` : undefined;
+    const siteFor: Record<string, number> = {};
+    for (const audit of verified.verifiedAudits) for (const attempt of readVerifiedUrlAuditLaunches(audit)?.ordered ?? []) {
+      if (attempt.disposition.kind === 'eligible') siteFor[String(attempt.receipt.identity.draftRevision)] = attempt.receipt.identity.site;
+    }
+    const state: SupervisorState = { ...previous, stopGeneration: generation, launches: [], notified: [], siteFor,
+      fidelityDeliveredFor: [], designDeliveredFor: [], fidelityDeliveredPairs: fidelityPair === undefined ? [] : [fidelityPair] };
+    delete state.pendingRepair;
+    delete state.stopped;
+    delete state.finalSite;
+    return { state, prepared, artifacts, claim };
+  } catch (error) { claim.release(); throw error; }
 }
+
 
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
   const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
@@ -537,32 +619,34 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     screen.draw(['The run stopped. Read the reason below.', 'A retained tmux view is for inspection; it does not establish live agent work.']);
     return 1;
   };
-  let state: SupervisorState;
-  if (previous !== null) {
-    return fail(await stoppedRunRefusal(previous, ports));
-  } else {
-    if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
-    const set = await setUp(options, ports, screen);
-    if (typeof set === 'string') return fail(set);
-    state = set;
-  }
-  saveState(options.stateRoot, state);
-  const prepared = preparedUrlRuns.get(state.run);
-  if (prepared === undefined) return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
-  preparedUrlRuns.delete(state.run);
-  let artifacts: UrlArtifacts;
-  try { artifacts = await prepareSupervisorArtifacts(state.run, prepared, ports); }
-  catch { return fail('The actual issued artifact products could not be bound to their checked producers; no inference role was launched.'); }
-  let stop: UrlSupervisorStop;
-  try { stop = openUrlSupervisorStop(options.stateRoot, state); }
-  catch { return fail('The owned supervisor stop control could not be opened; no inference role was launched.'); }
+  let recoveryClaim: UrlRecoveryClaim | null = null;
+  let stop: UrlSupervisorStop | undefined;
   try {
+    let state: SupervisorState, prepared: PreparedUrlRun, artifacts: UrlArtifacts;
+    if (previous !== null) {
+      const restored = await prepareStoppedSupervisor(previous, ports);
+      state = restored.state; prepared = restored.prepared; artifacts = restored.artifacts; recoveryClaim = restored.claim;
+    } else {
+      if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
+      const set = await setUp(options, ports, screen);
+      if (typeof set === 'string') return fail(set);
+      state = set;
+      const initial = preparedUrlRuns.get(state.run);
+      if (initial === undefined) return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
+      preparedUrlRuns.delete(state.run); prepared = initial;
+      artifacts = await prepareSupervisorArtifacts(state.run, prepared, ports);
+    }
+    saveState(options.stateRoot, state);
+    stop = openUrlSupervisorStop(options.stateRoot, state);
     const runtime = await startPreparedSupervisor(state, prepared, artifacts, screen, ports, stop);
     return await runUrlSupervisorLoop(options.stateRoot, ports, state, screen, { prepared, artifacts, runtime, stop });
-  } catch {
-    return fail('The checked session controller or a supervised stage failed. Inspect the retained audit for captured outcomes and cleanup.');
+  } catch (error) {
+    const detail = error instanceof Error && /^url-recovery-[a-z-]+$/u.test(error.message) ? ` (${error.message})` : '';
+    return fail(`The checked session controller or a supervised stage failed${detail}. Inspect the retained audit for captured outcomes and cleanup.`);
   } finally {
-    try { stop.close(); } catch { /* The failed control provides no cleanup evidence. */ }
+    try { stop?.close(); }
+    catch { /* The failed control provides no cleanup evidence. */ }
+    finally { recoveryClaim?.release(); }
   }
 }
 
@@ -718,7 +802,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const initialized = readRunRecord(baseText);
   const opened = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
   if (!initialized.ok || !opened.ok || opened.effective.kind !== 'operator' || opened.core.subject.pinnedRevision.commit !== chosen.identifier
-    || opened.core.subject.clone.path !== clone || sha256(boundedHostText(path.join(run, RUN_LAYOUT.config), 65_536)) !== baseSha256)
+    || opened.core.subject.clone.path !== clone || sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) !== baseSha256)
     return 'The new compatible run record could not be independently bound.';
   const record = initialized.record;
   const placement = placementSubjectOf(record.subject);
@@ -728,7 +812,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   let checkBoundRun: (() => boolean) | undefined, originalDeadline: number | undefined;
   const deadlineCurrent = (): boolean => originalDeadline === undefined || (ports.now ?? Date.now)() < originalDeadline;
   const recordCurrent = (): boolean => checkBoundRun?.()
-    ?? sha256(boundedHostText(path.join(run, RUN_LAYOUT.config), 65_536)) === baseSha256;
+    ?? sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) === baseSha256;
   const currentRun = (): boolean => {
     try { return deadlineCurrent() && currentPolicies() && recordCurrent() && deadlineCurrent(); }
     catch { return false; }
@@ -1036,7 +1120,7 @@ export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number)
   return parts.length > 0 ? parts.join('; ') : 'the reviewer declared it not ready';
 }
 
-function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: boolean): boolean {
+function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: boolean, recovery?: UrlContinuation): boolean {
   const machine = summary.closedMachineHistory;
   const audit = summary.closedAuditHistory;
   if (!isUrlRunMachineClosedHistory(machine) || summary.machine?.lifecycle !== 'retired'
@@ -1044,16 +1128,22 @@ function cleanupConfirmed(summary: UrlRunSessionsSummary, allowUnstartedDesign: 
     || summary.audit.poisoned || summary.audit.tail !== 'durable-prefix' || summary.audit.termination !== 'closed'
     || summary.control.termination !== 'settled' || summary.control.pendingCallbacks !== 0
     || summary.roles.length !== URL_ROLES.length || new Set(summary.hosts.map(host => host.role)).size !== summary.hosts.length) return false;
-  const design = summary.roles[URL_ROLES.indexOf('design')];
-  const designClients = machine.clients.filter(client => client.context.role === 'design');
-  const unstartedDesign = allowUnstartedDesign && design?.outcome === 'Unknown' && design.pid === 'Unknown'
-    && design.startedAt === 'Unknown' && design.finishedAt === 'Unknown' && audit.roles.design.records === 1
-    && designClients.length === 2 && designClients.every(client => client.terminal.kind === 'never-issued');
-  const activeRoles: readonly ViewRole[] = unstartedDesign ? URL_ROLES.filter(role => role !== 'design') : URL_ROLES;
+  const historical = recovery !== undefined && isClaimedStoppedUrlRun(recovery.verified, recovery.claim)
+    ? recovery.verified : undefined;
+  const earlierClients = new Set(historical?.boundary.record.machine.clients.map(client => client.context.clientId) ?? []);
+  const unstarted = new Set<ViewRole>();
+  for (const role of summary.roles) {
+    const clients = machine.clients.filter(client => client.context.role === role.role && !earlierClients.has(client.context.clientId));
+    const eligible = role.role === 'design' && allowUnstartedDesign || historical?.historicallySettledRoles.includes(role.role) === true;
+    if (eligible && role.outcome === 'Unknown' && role.pid === 'Unknown' && role.startedAt === 'Unknown' && role.finishedAt === 'Unknown'
+      && audit.roles[role.role].records === 1 && clients.length === 2 && clients.every(client => client.terminal.kind === 'never-issued'))
+      unstarted.add(role.role);
+  }
+  const activeRoles: readonly ViewRole[] = URL_ROLES.filter(role => !unstarted.has(role));
   return summary.hosts.length === activeRoles.length
     && summary.hosts.every(host => activeRoles.includes(host.role) && host.termination === 'settled' && host.pendingInvocations === 0)
     && summary.roles.every((role, index) => role.role === URL_ROLES[index]
-      && (unstartedDesign && role.role === 'design' || role.outcome !== 'Unknown'
+      && (unstarted.has(role.role) || role.outcome !== 'Unknown'
         && role.outcome.viewTermination === 'view-exited' && role.outcome.groupTermination === 'confirmed'
         && role.outcome.toolTermination === 'settled' && role.outcome.pendingInvocations === 0));
 }
@@ -1106,8 +1196,30 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   type FinalRender = { readonly path: string; readonly record: NonNullable<SupervisorState['finalSite']>; readonly output: UrlDesignProductMetadata['output'] };
   let final: FinalRender | null = null;
 
+  async function finalContinuation(number: number, site: number) {
+    const live = await context.runtime.prepareFinalRender(number, site);
+    if (live !== null) return live;
+    const recovery = context.prepared.continuation;
+    if (recovery === undefined || !isClaimedStoppedUrlRun(recovery.verified, recovery.claim)) return null;
+    const attempts = recovery.verified.verifiedAudits.flatMap(audit => readVerifiedUrlAuditLaunches(audit)?.ordered ?? []);
+    const last = attempts.at(-1);
+    if (last?.disposition.kind !== 'eligible' || last.disposition.checked.number !== number || last.receipt.identity.site !== site) return null;
+    const current = (): boolean => isClaimedStoppedUrlRun(recovery.verified, recovery.claim) && context.prepared.current();
+    const output = readStoredUrlRenderOutput(run, site, last.receipt.identity.storedPopulationSha256, current);
+    if (output === null) return null;
+    const reads = beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples);
+    let product: ValidatedUrlDesignProduct | null = null;
+    try {
+      const reproduced = await reproduceUrlRender(run, { ...renderDeps, productReads: reads,
+        admitProducedSite: async input => { product = await validate(reads, input); return product !== null; } },
+      { path: path.join(run, RUN_LAYOUT.site, String(site)), output });
+      if (!reproduced || product === null || !reads.isLeaseOpen() || !current()) return null;
+      return await recoverUrlDesignRenderContinuation({ verified: recovery.verified, claim: recovery.claim, product, number, site });
+    } finally { reads.close(); }
+  }
+
   async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | null> {
-    const first = await context.runtime.prepareFinalRender(verdict, reviewedSite);
+    const first = await finalContinuation(verdict, reviewedSite);
     if (first === null) return null;
     const firstReads = beginRunProductReads(run, context.artifacts, 'render', Math.min(deadline, first.deadline));
     const capture = (reads: RunProductReads, proof: typeof first) => {
@@ -1132,7 +1244,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     const metadata = captured.metadata;
     if (metadata === null || metadata.draftRevision !== draft || rendered.report.draftRevision !== draft
       || !rendered.report.designReview.counts || rendered.report.designReview.packetSha256 !== metadata.original.sha256) return null;
-    const next = await context.runtime.prepareFinalRender(verdict, reviewedSite);
+    const next = await finalContinuation(verdict, reviewedSite);
     if (next === null || next.verdictEventSha256 !== first.verdictEventSha256) return null;
     const reads = beginRunProductReads(run, context.artifacts, 'render', Math.min(deadline, next.deadline));
     try {
@@ -1150,7 +1262,11 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   }
   let phase = 'drafting';
   const maxRepairCycles = context.prepared.record.declared.maxRepairCycles;
-  const announcedDesignSites = new Set<number>();
+  let nextDesignRound = context.prepared.continuation?.verified.nextDesignRound ?? 1;
+  const announcedDesignSites = new Set<number>(context.prepared.continuation === undefined ? []
+    : context.prepared.continuation.verified.verifiedAudits.flatMap(audit =>
+      (readVerifiedUrlAuditLaunches(audit)?.ordered ?? []).filter(attempt => attempt.disposition.kind === 'eligible')
+        .map(attempt => attempt.receipt.identity.site)));
   for (;;) {
     if (!(await context.runtime.current()) || !(await context.runtime.waitForProductSamples())) {
       try { phase = context.stop.status() === 'requested' ? 'operator stop requested' : 'checked session boundary unavailable'; }
@@ -1284,7 +1400,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
           phase = 'rendered site input reproduction unavailable';
           break;
         }
-        const round = announcedDesignSites.size + 1;
+        const round = nextDesignRound;
         const checkedView = await context.runtime.prepareDesignDelivery(confirmed.product, metadata, sitePath, round,
           { reproduce, open: context.artifacts.openDesignArtifact }).finally(confirmed.close);
         if (checkedView === null) {
@@ -1294,6 +1410,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         const preparedSite = checkedView.receipt.identity.site;
         state.siteFor[String(passedDraft)] = preparedSite;
         announcedDesignSites.add(preparedSite);
+        nextDesignRound++;
         saveState(stateRoot, state);
         screen.event(`prepared design round ${round} for the reviewer`);
       }
@@ -1342,7 +1459,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
   try { finalStop = context.stop.close(); }
   catch { phase = 'stop control unavailable'; }
-  const cleaned = cleanupConfirmed(stopped, finalStop === 'requested');
+  const cleaned = cleanupConfirmed(stopped, finalStop === 'requested', context.prepared.continuation);
   if (cleaned) state.stopped ??= isoOf(Date.now());
   if (finalStop === 'requested') {
     const retained = cleaned && state.stopGeneration !== undefined && state.declarationSha256 !== undefined
@@ -1350,7 +1467,8 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         subject: { run, runId: state.runId, generation: state.stopGeneration, sourceStore: context.prepared.sourceStore,
           coreSha256: effectiveDeclaration.declaration.baseRunSha256, declarationSha256: state.declarationSha256,
           sourcePin: record.subject.pinnedRevision.commit, deadline },
-        settled: stopped, now: ports.now ?? Date.now, current, capture: context.artifacts.captureFrozenHistory });
+        settled: stopped, plans: context.prepared.roles,
+        ...(context.prepared.continuation === undefined ? {} : { predecessor: context.prepared.continuation.verified.boundary }), now: ports.now ?? Date.now, current, capture: context.artifacts.captureFrozenHistory });
     phase = retained ? 'operator stop requested, checked history retained' : 'operator stop requested, recovery history unavailable';
   }
   if (final !== null && finalStop === 'ready') {
@@ -1359,7 +1477,12 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     if (stopped.failure === null && stopped.budget.reason === null && state.stopped !== undefined && cleaned && current() && Date.now() < deadline) {
       const close = await closeRun(run, {}, {
         ...renderDeps,
-        urlSupervisorCapture: stopped,
+        urlSupervisorCapture: { ...stopped,
+          ...(context.prepared.continuation === undefined ? {} : { historical: {
+            settledRoles: context.prepared.continuation.verified.historicallySettledRoles,
+            auditCuts: context.prepared.continuation.verified.verifiedAudits.map(audit => ({ tipSha256: audit.tipSha256, records: audit.records })),
+          } }),
+        },
         admitRecord: () => current() && context.runtime.withinCpuBudget()
           && checkStoredUrlRender(run, result.path, result.output, () => Date.now() < deadline) === result.record.site
           && current() && context.runtime.withinCpuBudget() && Date.now() < deadline,

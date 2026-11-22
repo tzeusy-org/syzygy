@@ -211,7 +211,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     catch { fail('binding-changed'); return false; }
   };
   if (!(await current())) throw new Error('url-run-sessions-unavailable');
-  const audit = await createUrlSessionAudit({ parent: options.auditParent, name: options.auditName, binding, deadline: options.deadline,
+  const audit = await createUrlSessionAudit({ parent: options.auditParent, name: options.auditName, binding,
     originPolicySha256: options.originPolicySha256, project: 'project:syzygy', pin: record.subject.pinnedRevision.commit,
     principal: options.principal, profiles: plans.map(plan => plan.profile), declaredClasses: options.declaredClasses,
     screen: options.screen, deadline: options.deadline, firstDesignRound: resume?.verified.nextDesignRound ?? 1,
