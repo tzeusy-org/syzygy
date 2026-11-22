@@ -75,10 +75,13 @@ interface ProductEntry {
 const validated = new WeakMap<ValidatedUrlDesignProduct, ProductEntry>();
 // Preserve the original operation deadline and irreversible retirement even
 // after a failed inspection removes the materializing capability entry.
-const lifetimes = new WeakMap<ValidatedUrlDesignProduct, { readonly deadline: number; readonly authorityCurrent: () => boolean; retired: boolean }>();
+const lifetimes = new WeakMap<ValidatedUrlDesignProduct, { readonly deadline: number; readonly authorityCurrent: () => boolean; readonly backendState: RunProductReads['leaseState']; retired: boolean }>();
 function retireProduct(capability: ValidatedUrlDesignProduct): void {
   const lifetime = lifetimes.get(capability);
-  if (lifetime && Date.now() < lifetime.deadline) lifetime.retired = true;
+  if (lifetime) {
+    try { if (lifetime.backendState() !== 'expired') lifetime.retired = true; }
+    catch { lifetime.retired = true; }
+  }
   validated.delete(capability);
 }
 export function urlDesignProductLeaseState(capability: ValidatedUrlDesignProduct):
@@ -88,7 +91,10 @@ export function urlDesignProductLeaseState(capability: ValidatedUrlDesignProduct
   try { if (!lifetime.authorityCurrent()) lifetime.retired = true; }
   catch { lifetime.retired = true; }
   if (lifetime.retired) { validated.delete(capability); return { state: 'retired', deadline: lifetime.deadline }; }
-  if (Date.now() >= lifetime.deadline) return { state: 'expired', deadline: lifetime.deadline };
+  let backend: ReturnType<RunProductReads['leaseState']> = 'Unknown';
+  try { backend = lifetime.backendState(); } catch { /* Missing lifecycle is retired, never timed expiry. */ }
+  if (backend === 'expired') return { state: 'expired', deadline: lifetime.deadline };
+  if (backend !== 'open') { lifetime.retired = true; validated.delete(capability); return { state: 'retired', deadline: lifetime.deadline }; }
   try { if (validated.get(capability)?.leaseCurrent() === true) return { state: 'open', deadline: lifetime.deadline }; }
   catch { /* A failed lease predicate retires the original capability. */ }
   lifetime.retired = true; validated.delete(capability);
@@ -215,7 +221,7 @@ export async function validateUrlDesignProduct(input: ProducedSiteInput, options
     // Copying can itself cross the deadline. Publish only after a fresh cheap
     // lease sample, with no await between that sample and publication.
     if (!leaseCurrent()) return null;
-    const lifetime = { deadline, authorityCurrent: current, retired: false };
+    const lifetime = { deadline, authorityCurrent: current, backendState: products.leaseState, retired: false };
     signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
     lifetimes.set(capability, lifetime);
     validated.set(capability, entry);
