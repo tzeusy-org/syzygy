@@ -78,7 +78,8 @@ def current_bytes(
     overrides: dict[pathlib.Path, bytes] | None = None,
 ) -> dict[pathlib.Path, bytes]:
     overrides = overrides or {}
-    installed_bytes = predecessor_bytes() if installed() else {}
+    files, _message, _findings = installed_verdict()
+    installed_bytes = predecessor_bytes(files) if files is not None else {}
     values: dict[pathlib.Path, bytes] = {}
     for rel in SUBJECTS:
         if rel in overrides:
@@ -138,8 +139,12 @@ def _reverse(base: pathlib.Path, patch: pathlib.Path, *, zero_context=False) -> 
         raise ValueError(f"{patch.name} does not reverse: {done.stderr.strip()}")
 
 
-def installed_bytes_at(root: pathlib.Path = ROOT) -> dict[pathlib.Path, bytes]:
+def installed_bytes_at(root: pathlib.Path = ROOT,
+                       files: dict[str, bytes] | None = None) -> dict[pathlib.Path, bytes]:
     """The subjects as this successor installed them.
+
+    ``files`` ({path: bytes}) replaces the tree's subject bytes as the start
+    point (the subjects as D10 found them, see ``installed_verdict``).
 
     The tree with each later sign-off's patches reversed, newest first, but
     only a later sign-off whose record exists and whose every manifest row
@@ -152,7 +157,8 @@ def installed_bytes_at(root: pathlib.Path = ROOT) -> dict[pathlib.Path, bytes]:
         for rel in SUBJECTS:
             target = base / rel
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes((root / rel).read_bytes())
+            target.write_bytes((root / rel).read_bytes() if files is None
+                               else files[rel.as_posix()])
         for record, manifest, proposed in reversed(LATER_SIGNOFFS):
             is_reference = record.name == "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-AMENDMENT-SIGNOFF-v1.0.md"
             if is_reference:
@@ -174,7 +180,7 @@ def installed_bytes_at(root: pathlib.Path = ROOT) -> dict[pathlib.Path, bytes]:
         return {rel: (base / rel).read_bytes() for rel in SUBJECTS}
 
 
-def predecessor_bytes() -> dict[pathlib.Path, bytes]:
+def predecessor_bytes(files: dict[str, bytes] | None = None) -> dict[pathlib.Path, bytes]:
     """The signed predecessor, rebuilt by reverse-applying the exact patches.
 
     After sign-off the working tree carries the successor rows (and any later
@@ -183,7 +189,7 @@ def predecessor_bytes() -> dict[pathlib.Path, bytes]:
     """
     with tempfile.TemporaryDirectory() as directory:
         base = pathlib.Path(directory)
-        for rel, data in installed_bytes_at().items():
+        for rel, data in installed_bytes_at(files=files).items():
             target = base / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
@@ -405,17 +411,58 @@ def check(
     return findings, proposed
 
 
-def installed() -> bool:
-    """True once every signed subject carries its manifest row (after sign-off)."""
+def installed(files: dict[str, bytes] | None = None) -> bool:
+    """True once every signed subject carries its manifest row (after sign-off).
+
+    Over the tree, or over ``files`` ({path: bytes}) when given.
+    """
     if not (ROOT / MANIFEST).is_file():
         return False
     rows = {path: digest for digest, path in
             ROW_RE.findall((ROOT / MANIFEST).read_text(encoding="utf-8"))}
     try:
-        reached = {rel.as_posix(): sha256(data) for rel, data in installed_bytes_at().items()}
-    except ValueError:
+        reached = {rel.as_posix(): sha256(data)
+                   for rel, data in installed_bytes_at(files=files).items()}
+    except (ValueError, KeyError):
         return False
     return rows == reached and bool(rows)
+
+
+INSTALLED = ("three-surface POC readability successor installed: all 6 signed "
+             "subjects carry their manifest rows")
+INSTALLED_AS_D10_FOUND = (
+    "three-surface POC readability successor installed: all 6 signed subjects carried "
+    "their manifest rows as D10 found them, and every later change to the POC change "
+    "is adopted by an AGENT-ADOPTIONS.md row")
+NOT_REACHED = "the six POC subjects no longer reach this successor's installed rows"
+
+
+def installed_verdict() -> tuple[dict[str, bytes] | None, str | None, list[str]]:
+    """(files, message, findings) for the installed successor.
+
+    ``files`` are the subject bytes it is checked over: the tree's when they
+    reach its rows. Under D10 the POC specification is an agent's to amend
+    (VIS-4, CC-REV-2): when the tree no longer reaches the rows, they are the
+    subjects as D10 found them, accepted only when every later change is
+    adopted by an AGENT-ADOPTIONS.md row (``d10_supersession.amendment``; its
+    predicate is stated there). A missing row is a finding. Without D10, or
+    when not installed even as D10 found it, ``files`` is None and the
+    candidate check runs, as before.
+    """
+    tree = {rel.as_posix(): (ROOT / rel).read_bytes() for rel in SUBJECTS
+            if (ROOT / rel).is_file()}
+    if installed():
+        return tree, INSTALLED, []
+    import d10_supersession
+    found = d10_supersession.amendment(ROOT)
+    if found is None:
+        return None, None, []
+    files, missing = found
+    if missing:
+        return None, None, [NOT_REACHED, *missing]
+    if installed(files):
+        return files, INSTALLED_AS_D10_FOUND, []
+    return None, None, []
 
 
 def subject_digests(base: pathlib.Path) -> dict[str, str]:
@@ -600,6 +647,47 @@ def cli_apply_regression() -> tuple[bool, dict[str, object]]:
     }
 
 
+def installed_verdict_cases() -> list[tuple[str, bool]]:
+    """Both arms of ``installed_verdict``: the real bytes, then injected D10 states."""
+    global installed
+    import contextlib
+    import io
+    import d10_supersession
+    cases: list[tuple[str, bool]] = []
+    files, _message, findings = installed_verdict()
+    cases.append(("installed rows reached (over the tree, or as D10 found them)",
+                  files is not None and not findings))
+    if files is not None:
+        cases.append(("installed over the reached subject bytes", installed(files)))
+        amended = dict(files)
+        amended[SPEC.as_posix()] = amended[SPEC.as_posix()].replace(b" SHALL ", b" SHALL, as amended, ", 1)
+        cases.append(("an amended specification does not reach the installed rows",
+                      amended != files and not installed(amended)))
+    tree = {rel.as_posix(): b"fixture\n" for rel in SUBJECTS}
+    real_installed, real_amendment = installed, d10_supersession.amendment
+    try:
+        installed = lambda files=None: files is not None  # noqa: E731
+        d10_supersession.amendment = lambda root=ROOT, change=None: None
+        cases.append(("without D10 the old candidate check runs", installed_verdict() == (None, None, [])))
+        d10_supersession.amendment = lambda root=ROOT, change=None: (tree, ["missing adoption row: fixture"])
+        verdict = installed_verdict()
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = main(["--check"])
+        cases.append(("D10 with no adoption row fails, naming the missing row",
+                      verdict == (None, None, [NOT_REACHED, "missing adoption row: fixture"])
+                      and code == 1 and "missing adoption row: fixture" in out.getvalue()))
+        d10_supersession.amendment = lambda root=ROOT, change=None: (tree, [])
+        cases.append(("D10 with the row: installed as D10 found it",
+                      installed_verdict() == (tree, INSTALLED_AS_D10_FOUND, [])))
+        installed = lambda files=None: False  # noqa: E731
+        cases.append(("D10 with the row but no installed history: the candidate check runs",
+                      installed_verdict() == (None, None, [])))
+    finally:
+        installed, d10_supersession.amendment = real_installed, real_amendment
+    return cases
+
+
 def selftest(evidence_path: pathlib.Path | None = None) -> int:
     findings, proposed = check()
     if findings or proposed is None:
@@ -632,6 +720,7 @@ def selftest(evidence_path: pathlib.Path | None = None) -> int:
     cli_caught, cli_evidence = cli_apply_regression()
     cases.append(("public CLI refusal kills historical serial apply", cli_caught))
     cases.append(("deterministic regeneration", proposed_bytes() == proposed_bytes()))
+    cases.extend(installed_verdict_cases())
     failed = [name for name, caught in cases if not caught]
     for name, caught in cases:
         print(f"selftest: {name}: {'caught' if caught else 'SURVIVED'}")
@@ -730,10 +819,15 @@ def main(argv: list[str]) -> int:
     if not args.check:
         print("refusing: choose --check, --selftest, --diff or --write")
         return 2
-    if installed():
-        print("three-surface POC readability successor installed: all 6 signed "
-              "subjects carry their manifest rows")
+    _files, message, findings = installed_verdict()
+    if message is not None:
+        print(message)
         return 0
+    if findings:
+        print("THREE-SURFACE POC READABILITY INSTALLED-ROW FINDINGS:")
+        for finding in findings:
+            print(f"  {finding}")
+        return 1
     findings, proposed = check()
     if findings:
         print("THREE-SURFACE POC READABILITY CANDIDATE FINDINGS:")
