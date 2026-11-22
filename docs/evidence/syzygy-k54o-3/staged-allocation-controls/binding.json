@@ -1,0 +1,196 @@
+{
+  "commit": "71983d7c8a33b5dddb42b3b1c0b12f44f5f01f6c",
+  "targetSha256": "0b34b3989c5055f4d401dca8945f504f410c94003935adafb5c836ad79d13983",
+  "results": [
+    {
+      "id": "baseline",
+      "old": null,
+      "new": null,
+      "exit": 0,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "allocates an unissued slot within the original bound|withholds the reserved slot when cleanup crosses|refuses allocation on async authority withdrawal |refuses independent synchronous withdrawal|named root is replaced|contention clears|clipped allocation deadline"
+      ],
+      "logSha256": "127b2a02d2e0bf895cce992db1c1b65bc01dbcbef6cd0abfc7c68a52b5bb81bb"
+    },
+    {
+      "id": "restore-per-io-authority",
+      "old": "    const staging: StagedBoundary | undefined = currentAsync === undefined ? undefined : { allocation: true, current: undefined };",
+      "new": "    const staging: StagedBoundary | undefined = undefined;",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "allocates an unissued slot within the original bound"
+      ],
+      "logSha256": "9114c91dff9ec954a41d029332185833f0200d60d5c830d46f30e63deb07f5d5"
+    },
+    {
+      "id": "omit-prelock-async-veto",
+      "old": "            await reverify(); check(); verifyNamedRoots(); checkDeadline();\n            if (contended",
+      "new": "            check(); verifyNamedRoots(); checkDeadline();\n            if (contended",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "refuses allocation on async authority withdrawal before-lock$"
+      ],
+      "logSha256": "84699380281d8958f136c34ef4d0f202e95903140fa1faebe52bf9ec4c5c63d5"
+    },
+    {
+      "id": "omit-prelock-sync-veto",
+      "old": "            await reverify(); check(); verifyNamedRoots(); checkDeadline();\n            if (contended",
+      "new": "            await reverify(); verifyNamedRoots(); checkDeadline();\n            if (contended",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "refuses independent synchronous withdrawal during async allocation before-lock$"
+      ],
+      "logSha256": "13a7f6d666424c648719ad8ddbe566a35bda6ade073cd2ec0e5a04e0f297dc9c"
+    },
+    {
+      "id": "omit-precommit-veto",
+      "old": "          if (allocation) await reverify();\n          check();\n          if (allocation)",
+      "new": "          check();\n          if (allocation)",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "refuses allocation on async authority withdrawal after-anchor-check$"
+      ],
+      "logSha256": "ce37e01ad7d41738d29d089449f85867dcfc4d17c7d4d0d3a98dfb04254e287d"
+    },
+    {
+      "id": "omit-rename-named-root",
+      "old": "          if (allocation) { verifyNamedRoots(); checkDeadline(); }",
+      "new": "          if (allocation) checkDeadline();",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "named root is replaced"
+      ],
+      "logSha256": "17c1ae9cc7200109bbcb66dd93239e598c3d84a7d62a8ac9f6a6d7c0f5789b58"
+    },
+    {
+      "id": "omit-readback-veto",
+      "old": "        if (!equal(await state(), next)) throw refused();\n        if (staging !== undefined) await reverify();",
+      "new": "        if (!equal(await state(), next)) throw refused();",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "refuses allocation on async authority withdrawal after-readback$"
+      ],
+      "logSha256": "0d7cb6ac8568450f9f89ad0e6a6a75a2a763a9488245e95ac5398379e4f4ca6a"
+    },
+    {
+      "id": "omit-return-veto",
+      "old": "          await rmdir(`${base}/lock`); await heldRoot.sync();\n          await reverify(); check(); verifyNamedRoots(); checkDeadline();",
+      "new": "          await rmdir(`${base}/lock`); await heldRoot.sync();\n          check(); verifyNamedRoots(); checkDeadline();",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "refuses allocation on async authority withdrawal after-cleanup$"
+      ],
+      "logSha256": "08b870eb96dee165ed334c56f28474a1159a16cb35ec201d56201f61813548ed"
+    },
+    {
+      "id": "omit-return-bounds",
+      "old": "          await rmdir(`${base}/lock`); await heldRoot.sync();\n          await reverify(); check(); verifyNamedRoots(); checkDeadline();",
+      "new": "          await rmdir(`${base}/lock`); await heldRoot.sync();",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "withholds the reserved slot when cleanup crosses"
+      ],
+      "logSha256": "b83fd204c74c41b390d9de91095cef660b3147b180df91e1598323d68f2e4300"
+    },
+    {
+      "id": "omit-contention-before-retry",
+      "old": "            if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();",
+      "new": "            // Owned contention fault: retry without asking the clock.",
+      "exit": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "contention clears"
+      ],
+      "logSha256": "b8fe5c988d6110f50f3df30fe41476232b169c09e3f80acc5035716c32c6c43e"
+    }
+  ]
+}

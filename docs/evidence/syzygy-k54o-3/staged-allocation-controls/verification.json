@@ -1,0 +1,10 @@
+{
+  "subject": "71983d7c8a33b5dddb42b3b1c0b12f44f5f01f6c",
+  "logSha256": {
+    "f3-71983d7c8-allocator-typecheck.log": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "f3-71983d7c8-allocator-focused.log": "9089d76d947c592c6bd68f40036eeaa59785f984b75855719ec4bfbd9b3de551",
+    "f3-allocator-predecessor-red.log": "eab8b1866f768227019ec07be43d903d1c8b7889310e09c04c35f5e7353aad97"
+  },
+  "predecessor": "1690e09d56566637979451af67cfe0a179b36ea3",
+  "predecessorTestOverlay": "first five allocation controls from df10e086d test"
+}

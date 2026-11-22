@@ -1,0 +1,82 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (33 tests | 2 failed | 31 skipped) 73ms
+   ↓ protected URL machine lifecycle files > bounds unprofiled effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordinary effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordered effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry
+   ↓ protected URL machine lifecycle files > prevents publication after original-deadline during a declared ordered effect
+   ↓ protected URL machine lifecycle files > prevents publication after revocation during a declared ordered effect
+   ↓ protected URL machine lifecycle files > publishes through actual files, reopens the store, and refuses canonical plus projection rollback after revocation
+   ↓ protected URL machine lifecycle files > publishes through the trusted store with one checked clock at each lifecycle boundary
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when parent-withdrawn during a private write
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when connection-closed during a private write
+   ↓ protected URL machine lifecycle files > awaits fresh authority around real protected filesystem work
+   × protected URL machine lifecycle files > allocates an unissued slot within the original bound when fresh policy checks have a cost 46ms
+     → expected null not to be null
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal before-lock
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal before-rename
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal after-readback
+   × protected URL machine lifecycle files > withholds the reserved slot when cleanup crosses the allocation deadline 25ms
+     → expected { …(2) } to be null
+   ↓ protected URL machine lifecycle files > checks authority after protected state I/O before using it to open the client
+   ↓ protected URL machine lifecycle files > discards filesystem results when authority outlasts the exclusive deadline
+   ↓ protected URL machine lifecycle files > never reinitializes an existing store and refuses missing state, identity mismatch, or symlinked authority
+   ↓ protected URL machine lifecycle files > refuses a replaced protected-root pathname even while its original descriptor remains open
+   ↓ protected URL machine lifecycle files > serializes independent adapters and accepts exactly one publication for one expected predecessor
+   ↓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process
+   ↓ protected URL machine lifecycle files > preserves pending evidence and the unstealable lock after an interrupted transaction
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with omitted-preflight
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-intent
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-bytes
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-id-reservation
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-run
+   ↓ protected URL machine lifecycle files > retains pending evidence when the new pack reached disk but its state pointer did not
+   ↓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters
+   ↓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished
+   ↓ protected URL machine lifecycle files > fails closed when an operation exhausts its finite I/O-call ceiling
+   ↓ protected URL machine lifecycle files > refuses expired, backward-clock and revoked host leases before canonical publication
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-store.test.ts > protected URL machine lifecycle files > allocates an unissued slot within the original bound when fresh policy checks have a cost
+AssertionError: expected null not to be null
+ ❯ packages/polaris-dossier/src/url-machine-store.test.ts:234:29
+    232|       measuring = true;
+    233|       const allocated = await reopened!.allocateClient(f.options.deadl…
+    234|       expect(allocated).not.toBeNull();
+       |                             ^
+    235|       const state = JSON.parse(await readFile(path.join(f.options.prot…
+    236|       expect(state.clients).toEqual([expect.objectContaining({ clientI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-store.test.ts > protected URL machine lifecycle files > withholds the reserved slot when cleanup crosses the allocation deadline
+AssertionError: expected { …(2) } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "clientId": "9292d776cdd3332063d7f5e2c6dfb65671853866b165cce15848120010cf32ee",
+  "witnessSha256": "114de55035d349a12eca6507d9c4ef94d31c78d3614c1aa635b707fa94ada284",
+}
+
+ ❯ packages/polaris-dossier/src/url-machine-store.test.ts:273:66
+    271|     try {
+    272|       filesystem.afterSync = file => { if (file === f.options.protecte…
+    273|       expect(await reopened!.allocateClient(f.options.deadline)).toBeN…
+       |                                                                  ^
+    274|       expect(rootSyncs).toBe(3);
+    275|       const state = JSON.parse(await readFile(path.join(f.options.prot…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 31 skipped (33)
+   Start at  21:46:15
+   Duration  1.74s (transform 875ms, setup 19ms, collect 1.05s, tests 73ms, environment 0ms, prepare 134ms)
+

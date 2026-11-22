@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ✓ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (40 tests) 5209ms
+   ✓ protected URL machine lifecycle files > returns at the clipped allocation deadline while its late cleanup still owns the descriptor  1013ms
+   ✓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process  1209ms
+   ✓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters  943ms
+   ✓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished  369ms
+
+ Test Files  1 passed (1)
+      Tests  40 passed (40)
+   Start at  21:59:45
+   Duration  6.10s (transform 456ms, setup 16ms, collect 587ms, tests 5.21s, environment 0ms, prepare 57ms)
+
