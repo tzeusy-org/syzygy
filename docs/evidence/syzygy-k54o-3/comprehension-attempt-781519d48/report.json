@@ -1,0 +1,51 @@
+{
+  "format": "syzygy-f3-comprehension-limitation/1",
+  "subjectCommit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+  "before": {
+    "kind": "historical pilot third grading, not a fresh reader",
+    "record": "docs/evidence/pursuit-2026-11-21b/pilot/result3.json",
+    "arm": "D",
+    "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+    "overallShare": 0.333,
+    "perKind": {
+      "purpose": 0.58,
+      "structure": 0.29,
+      "mechanism": 0.37,
+      "rationale": 0.31,
+      "change": 0.04,
+      "limits": 0.42
+    }
+  },
+  "after": {
+    "overallShare": null,
+    "perKind": {
+      "purpose": null,
+      "structure": null,
+      "mechanism": null,
+      "rationale": null,
+      "change": null,
+      "limits": null
+    },
+    "status": "Unknown",
+    "reason": "The genuine current render command refuses this retained legacy run, so no matching after artifact or fresh-reader answers exist. The retained artifact is not silently migrated or granted new authority."
+  },
+  "comparison": "Unavailable; no rise, drop or regression claim",
+  "artifacts": [
+    {
+      "path": "docs/evidence/syzygy-k54o-3/comprehension-attempt-781519d48/preparation.json",
+      "sha256": "14eeb9b3ea1b064f506dce62caed03cd0957745dbee427ab6a07b35c8cd06825"
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/comprehension-attempt-781519d48/commands.txt",
+      "sha256": "c4cf37e9c5afa2e1331bef570fa0468078f4aee43aa3bb9a549c98cf6c1182e7"
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/comprehension-attempt-781519d48/render-result.json",
+      "sha256": "24bf0c6a96da7ae58d2755ea028c18c9b5fbbc70acb7def7bc2e31edad4dd555"
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/comprehension-attempt-781519d48/metadata-diagnosis.json",
+      "sha256": "b3a4416fb0c3aaf1e6b7003ad132f002a39bc18946d9f1acb803e89e1e9c01dc"
+    }
+  ]
+}

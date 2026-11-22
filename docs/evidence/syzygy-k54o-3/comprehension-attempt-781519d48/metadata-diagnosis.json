@@ -1,0 +1,28 @@
+[
+  {
+    "run": "/home/orca/.local/state/syzygy-dossier/run-658f2f90470f73eea1dc1d90209c5ef7",
+    "base": {
+      "ok": false,
+      "legacy": true,
+      "detail": "legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed"
+    },
+    "effective": {
+      "ok": false,
+      "code": "mode-binding",
+      "reason": "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+    }
+  },
+  {
+    "run": "/home/orca/.tmp/f3-comprehension-781519d48/private-state/run-658f2f90470f73eea1dc1d90209c5ef7",
+    "base": {
+      "ok": false,
+      "legacy": true,
+      "detail": "legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed"
+    },
+    "effective": {
+      "ok": false,
+      "code": "mode-binding",
+      "reason": "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+    }
+  }
+]

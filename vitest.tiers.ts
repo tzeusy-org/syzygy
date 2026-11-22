@@ -97,6 +97,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/git-memory-transport.test.ts',
   'packages/polaris-dossier/src/git-memory-worker.test.ts',
   'packages/polaris-dossier/src/git-object-reader.test.ts',
+  'packages/polaris-dossier/src/inventory-coverage-flow.test.ts',
   'packages/polaris-dossier/src/inventory.test.ts',
   'packages/polaris-dossier/src/launch-store.test.ts',
   'packages/polaris-dossier/src/launch-write-consent.test.ts',

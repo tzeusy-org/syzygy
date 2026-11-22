@@ -314,6 +314,7 @@ function sealedFixture(epoch = 1, nativeStdin = verdictText) {
     originPolicySha256: binding.originPolicySha256, registryProfileSha256: sha256('own registry'), policyBindingsSha256: sha256('own policies'),
     launchEventSha256: sha256('own launch'), parentCount: product.parents.length, parentsSha256: digest(product.parents),
     inputsSha256: sha256('own inputs'), storedPopulationSha256: sha256('own population'),
+    semanticParentsSha256: sha256('own semantic parents'), semanticInputsSha256: sha256('own semantic inputs'),
   } } as sessionAudit.UrlDesignDeliveryAuditRecord;
   const delivery: sessionAudit.UrlDesignDeliveryView = { receipt, view: envelope, parents: [] };
   const proof = { ordered: { manifestSha256: plan.manifestSha256, completion: expected.completion }, round: epoch,

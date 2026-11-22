@@ -1,0 +1,83 @@
+{
+  "format": "url-design-capacity-diagnostic/1",
+  "label": "Observed",
+  "capturedAt": "2026-11-22T07:03:58.565691+00:00",
+  "subject": {
+    "predecessorSourceCommit": "769016dc6",
+    "sourceState": "isolated checkout with temporary failure-stage diagnostic; no clean-commit claim",
+    "nativeFailureLogSha256": "7ccf2e7c49763e490a1d079b7e5f1f8937a3bfd742cef626ab962bfbe3dc0e62",
+    "screenFailureLogSha256": "87dbd8db98fa4ef33544b975203078a64aab54beb894857cd3585567fe16fb39"
+  },
+  "native": {
+    "stage": "plan",
+    "reason": "url-ordered-design-plan-refused",
+    "liveProductLease": true,
+    "profileId": "claude-2.1.327-sonnet46/ordered-design-3",
+    "registryProfileSha256": "8a04c52035377c1bacdb62e407559a5217e1321aa10976001f1467eaa4885bf3",
+    "packet": {
+      "bytes": 566940,
+      "sha256": "7ba33f646538b497e71c15d5bd6ba91dc5f29cd404a9721784cfb35e1130df0c"
+    },
+    "payload": {
+      "bytes": 646825,
+      "sha256": "89af13ed7f77eeaee001680c6e3da70f2908a9573ac5f119296f342f066a065b"
+    },
+    "view": {
+      "bytes": 656819,
+      "encoding": "html-entities-five/1",
+      "format": "polaris-dossier-url-design-inert-view/1",
+      "sha256": "581b96ecd78a60b249f51ba556c7c51210feaddef01b25423fce77a9058a79e3"
+    },
+    "files": 16,
+    "pages": 13,
+    "parents": 24
+  },
+  "predecessorBounds": {
+    "partBytes": 32768,
+    "partCount": 2,
+    "replyBytes": 45000,
+    "workerCpuSeconds": 2,
+    "workerWallMilliseconds": 5000
+  },
+  "screenTermination": {
+    "screenDiagnostic": "request",
+    "failed": false,
+    "status": 137,
+    "signal": null,
+    "outputBytes": 0
+  },
+  "successor": {
+    "capacityCommit": "a12084261",
+    "screeningCapacityCommit": "7d98e7159",
+    "profileId": "claude-2.1.327-sonnet46/ordered-design-5",
+    "partBytes": 400000,
+    "partCount": 2,
+    "replyBytes": 490000,
+    "inlineCatalogueCharacters": 500000,
+    "requestBytes": 2097152,
+    "workerCpuSeconds": 8,
+    "workerWallMilliseconds": 20000,
+    "chargedWorkerCpuMicroseconds": 18000000,
+    "operationCpuMicroseconds": 64000000,
+    "operationWallMilliseconds": 30000,
+    "nativeMcpOutputTokens": 490000
+  },
+  "scope": "Complete exact packet retained. Successor is bounded below pinned native persistence ceiling; full native verification pending. All byte/node/detector ceilings, secret predicates and fail-closed checks remain unchanged.",
+  "nativePersistenceObserved": {
+    "label": "Observed",
+    "cliVersion": "2.1.327",
+    "cliBytes": 372904464,
+    "cliSha256": "343c744baa14bfd38286a7cb90871051f04379956da6c5b803a9e66019a76ac9",
+    "logSha256": "5d234c02b35790d3d4b4214bffde985715157bbf58682fc2a93fa50a5c32ac96",
+    "nextRequestBytes": 7088,
+    "lastResultContentType": "string",
+    "lastResultCharacters": 2316,
+    "lastResultFlags": [
+      "token",
+      "persisted-output"
+    ],
+    "pinnedNativePersistenceCeilingCharacters": 500000,
+    "sourceInspection": "MCP catalogue maximum is min(declared hint, native constant500000); unmodified pinned CLI",
+    "policyOutcome": "invalid-input; no subsequent provider send"
+  }
+}

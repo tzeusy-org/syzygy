@@ -306,6 +306,7 @@ describe('protected URL design delivery audit', () => {
       view: { sha256: sha256(view), bytes: view.byteLength, format: URL_DESIGN_VIEW_FORMAT, encoding: URL_DESIGN_VIEW_ENCODING },
       basePolicy: planning.options.record.subject.screeningPolicy, originPolicy,
       profile: { id: URL_PROFILE_ID, sha256: renderer.profileRegistrySha256 },
+      semanticParentsSha256: sha256('own upstream semantic parents'), semanticInputsSha256: sha256('own upstream semantic inputs'),
       products: { operation: 'render', deadline, snapshotBytes: 0, records: [], selections: [] },
       parents: mode.startsWith('ordered') ? [JSON.parse(JSON.stringify(ledger.metadata(parent)))] : [{ id: 'origin:OWN_RAW_PARENT_ID', digest: '7'.repeat(64), bytes: 9, classes: ['code-content'], originIds: [] }],
       output: { files: 1, pages: 1, bytes: Buffer.byteLength(content),

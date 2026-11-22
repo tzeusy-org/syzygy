@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts (51 tests | 41 skipped) 3205ms
+   ✓ trusted URL artifact producer bridge > restores sealed product provenance into a genuinely fresh ledger and can freeze another stop  721ms
+   ✓ trusted URL artifact producer bridge > takes a recovery capability before the first await so two fresh ledgers cannot race its transfer  542ms
+   ✓ trusted URL artifact producer bridge > refuses claim drift during nominal product recovery  302ms
+   ✓ trusted URL artifact producer bridge > refuses source drift during nominal product recovery  300ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed | 41 skipped (51)
+   Start at  15:34:49
+   Duration  6.80s (transform 2.35s, setup 10ms, collect 3.07s, tests 3.20s, environment 0ms, prepare 87ms)
+

@@ -21,6 +21,7 @@ import { readingDifference, readingLedger, type ReadingDifference, type ReadingL
 import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
+import { inventoryCoverageAdvice, type InventoryCoverageAdvice } from './inventory-coverage.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { CHECK_RECORD_LIMITS } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
@@ -96,10 +97,10 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-/** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
+/** `screenCensus` (`census.ts`), `structureRecord` (`derive.ts`), `readerAdvice` (`reader-advice.ts`), `reviewReach` (`review-reach.ts`) and `inventoryCoverageAdvice` (`inventory-coverage.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
 /** The record part is the record written: the full record, or its bounded form (version 2.10), whose report adds `findingsLeftOut`. */
-export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[] };
+export type SubjectReport<R extends object> = (R | BoundedCheckRecord<R>) & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly structureRecord?: StructureRecord; readonly readerAdvice?: ReaderAdvice; readonly figureFit?: FigureFit; readonly readingLedger?: ReadingLedger; readonly readingDifference?: ReadingDifference; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility; readonly mechanismAdvice?: MechanismAdvice; readonly findingsLeftOut?: readonly CheckFinding[]; readonly inventoryCoverageAdvice?: InventoryCoverageAdvice };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -282,6 +283,10 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
     findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
   }
 
+  // Protected reads must finish before the new producer files enter the checked population.
+  const protectedCoverage = products !== undefined && plan.command === 'check' && parseFault === null
+    ? await inventoryCoverageAdvice(run, doc, { ...(deps.inventoryOfRecord ? { inventoryOfRecord: deps.inventoryOfRecord } : {}),
+      sources: deps.sources, now: started, productReads: products, isSecretPath: secretPathOf(screen) }) : undefined;
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,
   // before the draft is frozen, so the revision is not spent.
@@ -372,11 +377,17 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
+  // The inventory entries no block of this draft covers (syzygy-5dhm.28), from the inventory of record as it reads now.
+  const coverage = protectedCoverage ?? (plan.command === 'check' && parseFault === null
+    ? await inventoryCoverageAdvice(run, doc, { ...(deps.inventoryOfRecord ? { inventoryOfRecord: deps.inventoryOfRecord } : {}), sources: deps.sources, now: started,
+      isSecretPath: secretPathOf(screen) })
+    : undefined);
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),
     ...(advice === undefined ? {} : { readerAdvice: advice }), ...(difference === undefined ? {} : { readingDifference: difference }), ...(reach === undefined ? {} : { reviewReach: reach }),
     ...(visibility === null ? {} : { reviewVisibility: visibility }),
+    ...(coverage === undefined ? {} : { inventoryCoverageAdvice: coverage }),
   } };
 }
 

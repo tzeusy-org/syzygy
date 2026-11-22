@@ -1,0 +1,22 @@
+{
+  "format": "syzygy-f3-review-binding/1",
+  "subjectCommit": "713f654a539eb2a76af528c70dd64757ac7dd042",
+  "raw": "docs/evidence/syzygy-k54o-3/processing-guard-review-2026-11-22-RAW.md",
+  "rawSha256": "65bb0a45aea1eb5327f7ec68785f1c448e30da00948cea7c3af0291a43e91eb1",
+  "verdict": "PASS",
+  "scope": "Delta0bbe23770, split bounded processing checks and full product release validation; source inspection only. Native normal/claimed-stop acceptance remains Unknown.",
+  "subjectFiles": [
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "sha256": "995ce5c4626596e6cbd2d91b47186c1225268dfff67789bdd8981e3d9067186e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "4ce9198c11cf340e2f06d6aca28dde34e103bad0383d3307bb72e8c94b878e83"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-host.test.ts",
+      "sha256": "2124db69e8a7bb2ee42271af05991bd65a74c4dfc6ae5061ba13856e1d81e4b6"
+    }
+  ]
+}

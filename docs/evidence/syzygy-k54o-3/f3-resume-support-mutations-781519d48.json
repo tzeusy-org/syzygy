@@ -1,0 +1,254 @@
+{
+  "subject": {
+    "commit": "781519d484235acb2b81cfcb317c93f7e03cf9b9",
+    "branch": "HEAD",
+    "fileSha256": {
+      "packages/polaris-dossier/src/url-session-budget.ts": "4aab2f6ab455f5d85e57e281b890ae8b2c7774c97fef3b6940f8bf011141e11b",
+      "packages/polaris-dossier/src/url-stopped-run.ts": "e0364064d6ff1612dfaa2d9201335e3a5363747dbdd1cca4b66db8f286a2c80e"
+    },
+    "testFileSha256": {
+      "packages/polaris-dossier/src/url-session-budget.test.ts": "5643a59c87fd7e1982249ee0b794f318570fd44634ee3f4e51f165f80c5aa2f0",
+      "packages/polaris-dossier/src/url-stopped-run.test.ts": "0cb884e02d9020172321635fbd5fa07e20257496933422582e0a7762ed14f78f"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "1b404998373bbb866040714e0cc11ef81429ce2321f1b4d270a7f3ffa873d737",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "unit",
+  "helperSha256": "12d0ec8a95463664225bf4636a3edb4a506f018e0e06526d4ba04adea512e453",
+  "ranAt": "2026-11-22T07:33:25+00:00",
+  "mutants": [
+    {
+      "id": "resume-request-lifetime-reset",
+      "file": "packages/polaris-dossier/src/url-session-budget.ts",
+      "old": "requests = resume?.spend.requestReservations ?? 0",
+      "new": "requests = 0",
+      "tests": [
+        "packages/polaris-dossier/src/url-session-budget.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-session-budget.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 9,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "shared URL host budget capture continues verified lifetime spend once, preserves Unknown counts and never renews the deadline or limits",
+          "firstErrorLine": "AssertionError: expected { state: 'open', reason: null, \u2026(9) } to match object { requestReservations: 2, \u2026(4) }"
+        }
+      ]
+    },
+    {
+      "id": "resume-token-lifetime-reset",
+      "file": "packages/polaris-dossier/src/url-session-budget.ts",
+      "old": "tokens = typeof resume?.spend.reportedTokens === 'number' ? resume.spend.reportedTokens : 0",
+      "new": "tokens = 0",
+      "tests": [
+        "packages/polaris-dossier/src/url-session-budget.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-session-budget.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 9,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "shared URL host budget capture continues verified lifetime spend once, preserves Unknown counts and never renews the deadline or limits",
+          "firstErrorLine": "AssertionError: expected { state: 'open', reason: null, \u2026(9) } to match object { requestReservations: 2, \u2026(4) }"
+        }
+      ]
+    },
+    {
+      "id": "resume-budget-token-reuse",
+      "file": "packages/polaris-dossier/src/url-session-budget.ts",
+      "old": "if (resume !== undefined) resumes.delete(resume);",
+      "new": "// mutant permits the same resume token twice",
+      "tests": [
+        "packages/polaris-dossier/src/url-session-budget.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-session-budget.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 9,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "shared URL host budget capture continues verified lifetime spend once, preserves Unknown counts and never renews the deadline or limits",
+          "firstErrorLine": "AssertionError: expected [Function] to throw an error"
+        }
+      ]
+    },
+    {
+      "id": "resume-deadline-renewal",
+      "file": "packages/polaris-dossier/src/url-session-budget.ts",
+      "old": "resume.deadline !== deadline",
+      "new": "false",
+      "tests": [
+        "packages/polaris-dossier/src/url-session-budget.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-session-budget.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 9,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "shared URL host budget capture continues verified lifetime spend once, preserves Unknown counts and never renews the deadline or limits",
+          "firstErrorLine": "AssertionError: expected [Function] to throw an error"
+        }
+      ]
+    },
+    {
+      "id": "stopped-slot-generation-omitted",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "${sha256(run)}.${generation}.stopped.json",
+      "new": "${sha256(run)}.stopped.json",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation reads the exact private stopped slot before the original deadline",
+          "firstErrorLine": "AssertionError: expected null to deeply equal { record: { \u2026(18) }, \u2026(1) }"
+        },
+        {
+          "test": "retained URL stop expectation keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles",
+          "firstErrorLine": "TypeError: Cannot read properties of null (reading 'sha256')"
+        },
+        {
+          "test": "retained URL stop expectation holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay",
+          "firstErrorLine": "TypeError: Cannot read properties of null (reading 'sha256')"
+        },
+        {
+          "test": "retained URL stop expectation never steals a stale or replaced lock, and invalidates a holder when its stop bytes change",
+          "firstErrorLine": "TypeError: Cannot read properties of null (reading 'sha256')"
+        }
+      ]
+    },
+    {
+      "id": "stopped-chain-limit-bypass",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "export const URL_STOPPED_HISTORY_LIMIT = 64;",
+      "new": "export const URL_STOPPED_HISTORY_LIMIT = 65;",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles",
+          "firstErrorLine": "AssertionError: expected [ { record: { \u2026(18) }, \u2026(1) }, \u2026(64) ] to be null"
+        }
+      ]
+    },
+    {
+      "id": "stopped-attempt-reuse",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "if (attempts.has(boundary.record.attempt)) return null;",
+      "new": "// mutant permits reused audit attempts",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation keeps repeat stops in distinct immutable generations and rejects broken links, changed subjects and cycles",
+          "firstErrorLine": "AssertionError: expected [ { record: { \u2026(18) }, \u2026(1) }, \u2026(1) ] to be null"
+        }
+      ]
+    },
+    {
+      "id": "recovery-before-durable-consumption",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "current: () => consumedStat !== undefined && heldCurrent()",
+      "new": "current: heldCurrent",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "recovery-consumed-generation-replay",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "fs.lstatSync(consumed); return false;",
+      "new": "fs.lstatSync(consumed); return true;",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation holds a real protected exclusive recovery lease, consumes once and permits a later generation without replay",
+          "firstErrorLine": "AssertionError: expected { current: [Function current], \u2026(2) } to be null"
+        }
+      ]
+    },
+    {
+      "id": "recovery-replaced-lock",
+      "file": "packages/polaris-dossier/src/url-stopped-run.ts",
+      "old": "&& sameIdentity(lockStat, fs.lstatSync(lock, { bigint: true }))",
+      "new": "&& true",
+      "tests": [
+        "packages/polaris-dossier/src/url-stopped-run.test.ts"
+      ],
+      "command": "npx vitest run --project unit packages/polaris-dossier/src/url-stopped-run.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 5,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "retained URL stop expectation never steals a stale or replaced lock, and invalidates a holder when its stop bytes change",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ]
+    }
+  ]
+}

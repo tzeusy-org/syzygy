@@ -81,6 +81,7 @@ function fixture() {
     programBytes: 10, inputTreeSha256: 'e'.repeat(64), manifestSha256: 'f'.repeat(64), profileRegistrySha256: '1'.repeat(64) } };
   gates.renderers.add(loadedRenderer);
   const ledger = {
+    semanticProvenance: () => sha256('own upstream semantic provenance'),
     metadata(parent: UrlOriginReceipt): UrlOriginMetadata {
       if (!live || !parentMetadata.has(parent)) throw new Error('unknown parent');
       return structuredClone(parentMetadata.get(parent)!);

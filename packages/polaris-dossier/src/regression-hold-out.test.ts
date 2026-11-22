@@ -37,8 +37,10 @@ function filesUnder(relative: string): string[] {
  * kind of file is classified here before it can sit unsearched. */
 const FILE_KINDS: Readonly<Record<string, 'searched' | 'test-support'>> = {
   '.test.ts': 'test-support',
+  '.test.c': 'test-support',
   '.testkit.ts': 'test-support',
   '.ts': 'searched',
+  '.c': 'searched',
   '.json': 'searched',
   '.md': 'searched',
 };
@@ -80,6 +82,8 @@ describe('the regression key is held out of authoring text', () => {
     expect(kindOf('packages/polaris-dossier/src/brief.ts')).toBe('searched');
     expect(kindOf('packages/polaris-dossier/src/brief.test.ts')).toBe('test-support');
     expect(kindOf('packages/polaris-dossier/src/launch.testkit.ts')).toBe('test-support');
+    expect(kindOf('packages/polaris-dossier/src/session-peer.c')).toBe('searched');
+    expect(kindOf('packages/polaris-dossier/src/session-peer-lifetime.test.c')).toBe('test-support');
     expect(kindOf('packages/polaris-dossier/src/shape-packs/default.json')).toBe('searched');
     expect(kindOf('packages/polaris-dossier/src/notes.txt')).toBe('unclassified');
     expect(kindOf('packages/polaris-dossier/src/render.css')).toBe('unclassified');

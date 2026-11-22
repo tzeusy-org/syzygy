@@ -1,0 +1,20 @@
+{
+  "command": "render",
+  "outcome": "refused",
+  "stage": "reverify",
+  "reason": "the pinned revision could not be verified again, so nothing is rendered",
+  "reasons": [
+    "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+  ],
+  "refusals": [
+    {
+      "code": "record-invalid",
+      "reason": "The run mode cannot be matched to its protected URL binding; preserve the run and restore its checked host declaration or restart it."
+    }
+  ],
+  "disclosures": [
+    "the Syzygy checkout and local run records lie within the agent sessions write reach; stored history and declarations remain Inferred",
+    "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+    "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+  ]
+}
