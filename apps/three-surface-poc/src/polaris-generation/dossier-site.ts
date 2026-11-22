@@ -1257,8 +1257,15 @@ function manifestPage(map: 'units' | 'ci', title: string, member: DerivedManifes
   const coverage = `<p class="map-coverage" data-epistemic="inferred">${escape(clauses.join(' '))}</p>`;
   const unknownFiles = recognizers.flatMap(r => r.files.filter(file => file.epistemic === 'unknown'));
   const word = (file: LocalManifestFileEntry): string => `${file.unknownReason ?? ''}${file.unknownReason === 'unparsed' && file.parseFault !== null ? `, ${file.parseFault}` : ''}`;
-  const unknownList = unknownFiles.length > 0
-    ? unknownFiles.map(file => `<li data-epistemic="unknown" data-unknown-reason="${manifestUnknownReason(file)}" data-manifest-path="${escape(file.path)}" data-manifest-file-reason="${escape(word(file))}">${escape(`${file.path}: Unknown, no facts taken (${word(file)}).`)}</li>`).join('')
+  // Version 2.11: a recognizer's `unknown` counts every Unknown file, listed or not, so the
+  // difference from the Unknown entries it lists is the exact count of Unknown files left unlisted.
+  const unknownNotListed = recognizers.reduce((sum, r) => sum + r.unknown - r.files.filter(file => file.epistemic === 'unknown').length, 0);
+  const listed = unknownFiles.map(file => `<li data-epistemic="unknown" data-unknown-reason="${manifestUnknownReason(file)}" data-manifest-path="${escape(file.path)}" data-manifest-file-reason="${escape(word(file))}">${escape(`${file.path}: Unknown, no facts taken (${word(file)}).`)}</li>`).join('');
+  const remainder = unknownNotListed > 0
+    ? `<li>${unknownNotListed === 1 ? '1 file whose facts are Unknown is counted and not listed.' : `${unknownNotListed} files whose facts are Unknown are counted and not listed.`}</li>`
+    : '';
+  const unknownList = listed !== '' || remainder !== ''
+    ? `${listed}${remainder}`
     : `<li>${recognizers.every(r => r.candidates === 0) ? 'No candidate file.' : 'Every candidate file not left out or set apart was read for facts.'}</li>`;
   return mapSection(map, title, `${note}${coverage}${body}<h2>Files whose facts are Unknown</h2><ul class="map-unknown-files">${unknownList}</ul>`);
 }

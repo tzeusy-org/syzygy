@@ -339,9 +339,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const leftOut = full ? {} : { findingsLeftOut: findings };
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
-  // The difference from the previous run of this repository: computed now from the state root, never written to any file; for a bounded
-  // form, as for a check whose record carries no ledger.
-  const difference = plan.command === 'check' ? readingDifference(run, subject.repository.repositoryId, isoOf(started), full ? ledger : undefined) : undefined;
+  // The difference from the previous run of this repository: computed now from the state root, never written to any file. A bounded form
+  // keeps no ledger, so it is Unknown in the bounded form's own words, never the not-parse words (version 2.11).
+  const difference = plan.command === 'check' ? readingDifference(run, subject.repository.repositoryId, isoOf(started), full ? ledger : 'bounded') : undefined;
   // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
   const reach = plan.command === 'check' && parseFault === null
     ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
