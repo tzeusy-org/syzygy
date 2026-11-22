@@ -1,0 +1,235 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-beads-looper-20261114-54ebc9f1/d10-f3-final-verification
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts (51 tests | 1 failed | 50 skipped) 609ms
+   ↓ trusted URL artifact producer bridge > pins logical launch reads to the latest independently committed physical generation and retains old bytes
+   ↓ trusted URL artifact producer bridge > restores sealed product provenance into a genuinely fresh ledger and can freeze another stop
+   ↓ trusted URL artifact producer bridge > takes a recovery capability before the first await so two fresh ledgers cannot race its transfer
+   ↓ trusted URL artifact producer bridge > refuses the first failed resource check before importing historical provenance
+   ↓ trusted URL artifact producer bridge > withdraws recovery on claim loss after an awaited resource check
+   ↓ trusted URL artifact producer bridge > refuses copy drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses json drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses file drift during nominal product recovery
+   × trusted URL artifact producer bridge > refuses boundary drift during nominal product recovery 604ms
+     → promise resolved "{ artifacts: [ { …(6) }, …(9) ], …(1) }" instead of rejecting
+   ↓ trusted URL artifact producer bridge > refuses claim drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses source drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > refuses ledger-run drift during nominal product recovery
+   ↓ trusted URL artifact producer bridge > binds the broker one-minute helper default while refusing changed arguments or output
+   ↓ trusted URL artifact producer bridge > authenticates actual initial/core reads once, isolates returned bytes and reports deduplicated metadata only
+   ↓ trusted URL artifact producer bridge > reverifies the exact retained initialized bytes and sidecar under the protected bindings
+   ↓ trusted URL artifact producer bridge > selects exact committed check/report sets and refuses missing, unknown higher, uncommitted or mutated products
+   ↓ trusted URL artifact producer bridge > captures verified absence but never treats unknown inserted records or unsupported species as absent
+   ↓ trusted URL artifact producer bridge > reuses fresh proofs for the same render inputs and separates changed paths and read operations
+   ↓ trusted URL artifact producer bridge > refuses changed bytes, hash rewrites, rename replacements and unsafe filesystem identities after an admitted read
+   ↓ trusted URL artifact producer bridge > binds helper check/report/delivery reads to actual committed producer lineage
+   ↓ trusted URL artifact producer bridge > lets resource polls run before binding a submitted verdict and consumes its pending capture once
+   ↓ trusted URL artifact producer bridge > rejects fake/cross-bridge contexts, expired/aborted/current-lost reads, and bounded excess contexts
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded record read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded record batch read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded selection read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded selection batch read
+   ↓ trusted URL artifact producer bridge > checks current authority before and after the bounded revalidation read
+   ↓ trusted URL artifact producer bridge > binds actual initial products, refuses unknown or changed bytes and retains metadata only
+   ↓ trusted URL artifact producer bridge > publishes no initial artifact when the last helper prompt fails verification
+   ↓ trusted URL artifact producer bridge > refuses a helper whose issued report and record agree on the wrong role
+   ↓ trusted URL artifact producer bridge > refuses symlinks, hardlinks, oversized bytes, changed records and decoded secret/active products
+   ↓ trusted URL artifact producer bridge > authenticates source bodies independently and admits draft reports only after actual receipt audit commit
+   ↓ trusted URL artifact producer bridge > never counts a stored check under an unrelated source-read audit commit
+   ↓ trusted URL artifact producer bridge > captures real component bytes, checks source/payload identity, and refuses counting before durable commit
+   ↓ trusted URL artifact producer bridge > preserves checked findings and binds waiting reports to the requested helper round and exit
+   ↓ trusted URL artifact producer bridge > screens actual control replies and retains original question source classes without persisting the exchange
+   ↓ trusted URL artifact producer bridge > captures genuine schema-bound submitted evidence and full packet source/report lineage, including trailing json normalization
+   ↓ trusted URL artifact producer bridge > preserves the committed author check if staging its paired draft fails
+   ↓ trusted URL artifact producer bridge > polls only the latest exact paired committed product without issuing receipts
+   ↓ trusted URL artifact producer bridge > stops fidelity packet construction before a protected population read when its sample fails
+   ↓ trusted URL artifact producer bridge > refuses render fidelity input reads before the verdict census when an active sample fails
+   ↓ trusted URL artifact producer bridge > refuses a whole stage poll if authority changes during its last descriptor read
+   ↓ trusted URL artifact producer bridge > stops packet registration before the next protected read when an active sample fails
+   ↓ trusted URL artifact producer bridge > keeps every round artifact unavailable when validating its schema file fails
+   ↓ trusted URL artifact producer bridge > requires the exact committed passing inventory check for its packet revision
+   ↓ trusted URL artifact producer bridge > refuses a byte-identical packet replacement between capture and binding
+   ↓ trusted URL artifact producer bridge > refuses a packet after replacement of an exact committed check, even with equal bytes
+   ↓ trusted URL artifact producer bridge > refuses active content even in a verified source span embedded in an otherwise valid composition
+   ↓ trusted URL artifact producer bridge > accepts exact help and an actual own-run status report while bounding limits and refusing response drift
+   ↓ trusted URL artifact producer bridge > binds review feedback only from a committed exact verdict and matching committed check, to the two fixed recipient roots
+   ↓ trusted URL artifact producer bridge > records the current policy refusal for an actual own fixture rendered by the installed renderer
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-artifacts.test.ts > trusted URL artifact producer bridge > refuses boundary drift during nominal product recovery
+AssertionError: promise resolved "{ artifacts: [ { …(6) }, …(9) ], …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "artifacts": [
++     {
++       "bytes": 43,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-abdb0cba7386ebb62937f387ef86b731",
++       "path": "brief.md",
++       "role": "author",
++       "sha256": "ef2b3a83fd0979f89940a4ec11c17cf4c015c82dde21db6944b70579b551401b",
++     },
++     {
++       "bytes": 88175,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-ea0f4446c1c2f065c025da1a6228e80f",
++       "path": "draft.schema.json",
++       "role": "author",
++       "sha256": "14a1cec706343a79e5e6e0bc1fe3a174b763668b782e1c1248c43f67b3ff961f",
++     },
++     {
++       "bytes": 896,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-45a17190f0fab85d1f63d0b32c5cd03e",
++       "path": "brief.json",
++       "role": "author",
++       "sha256": "23398424efba4b151d7edba75185e9a842094af092939b22ce1ce335f8aafd76",
++     },
++     {
++       "bytes": 48,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-a07993d86b038669c8a78390591e1d77",
++       "path": "inventory-brief.md",
++       "role": "inventory",
++       "sha256": "5291808434c6455114db5a4feb3837f3fc8830561a50ee07983b18ebc91d95d4",
++     },
++     {
++       "bytes": 2323,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-1e4a0082f0488c2ededbd2ced14811ce",
++       "path": "drafts/next.json",
++       "role": "author",
++       "sha256": "300843935525f208a1e83df7eb9206fe1a8379bcde1d92585832acc544c8ec42",
++     },
++     {
++       "bytes": 1514,
++       "classes": [
++         "code-content",
++         "code-structure",
++         "derived-composites",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-3040bd855dd0dfc1f77e4e8d44d09bd3",
++       "path": "checks/rev-0.json",
++       "role": "author",
++       "sha256": "b064b42eec57ffd37571952f05fb55a095c50a6a2e1ab14282eacedd920edf29",
++     },
++     {
++       "bytes": 445,
++       "classes": [
++         "code-structure",
++         "derived-composites",
++         "evidence-content",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-97c689f038c0e2b648ccecba24309028",
++       "path": "inventory.json",
++       "role": "inventory",
++       "sha256": "4e03b18e81605736f2dc6d3ebf2e64907af8a515efd6dd4659351f2260de85eb",
++     },
++     {
++       "bytes": 15991,
++       "classes": [
++         "code-content",
++         "code-structure",
++         "derived-composites",
++         "evidence-content",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-b5378be8cda6eccccab86935ee97e171",
++       "path": "round-1/packet.json",
++       "role": "fidelity",
++       "sha256": "70d5e405c505ef344ff8ac5a6efd7e52f8560b2d336786cc957f3d6002f7467d",
++     },
++     {
++       "bytes": 78,
++       "classes": [
++         "code-content",
++         "code-structure",
++         "derived-composites",
++         "evidence-content",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-4d79aa1d60e1682a4ecda2ed1c0f3062",
++       "path": "round-1/packet.sha256",
++       "role": "fidelity",
++       "sha256": "bdc06b0adaffe631e67c3ada23fa60664a74512e6b1cdd4005b3dc43adf7fa9b",
++     },
++     {
++       "bytes": 673,
++       "classes": [
++         "code-content",
++         "code-structure",
++         "derived-composites",
++         "evidence-content",
++         "governance-text",
++         "work-history",
++       ],
++       "originId": "origin:item-235b1a29f239f4ceda3703d53ccd64fe",
++       "path": "round-1/verdict.json",
++       "role": "fidelity",
++       "sha256": "43291aa3d65ee93376bb6deababfaf1c74c468d33c5cdd140a56536c04fa4b95",
++     },
++   ],
++   "initial": {
++     "briefIssuedAt": "2026-11-19T00:00:00.000Z",
++     "deadline": 1795046470000,
++     "helperPromptDigests": {
++       "design": "7af5c0f8e068929988c901153a5ecfaab39b9d6ce1fef262502b5e47c7ec1a13",
++       "fidelity": "72ee2296a9e0ea617c5e1940250ce0e962e89825e8832ae5e144b8c1663634c8",
++       "inventory": "d06957332ff5edff45cd5a2813c5a2b6ed1fac8578e1d1ec094061d71b35f079",
++     },
++   },
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-artifacts.test.ts:408:63
+    406|     if (fault === 'claim') f.stale();
+    407|     if (fault === 'source') fs.writeFileSync(path.join(f.options.recor…
+    408|     await expect(next.bridge.restoreFrozenProducts(capability)).reject…
+       |                                                               ^
+    409|     expect(() => next.bridge.latestStageChecks()).toThrow('url-run-art…
+    410|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 50 skipped (51)
+   Start at  15:35:50
+   Duration  4.33s (transform 2.41s, setup 18ms, collect 3.15s, tests 609ms, environment 0ms, prepare 91ms)
+
