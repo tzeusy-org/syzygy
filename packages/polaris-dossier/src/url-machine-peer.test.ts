@@ -180,6 +180,15 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     else expect(f.peer).not.toBeNull();
   });
 
+  it('refuses the peer when local authority is withdrawn during an installed image read', async () => {
+    let checks = 0;
+    const readImageCurrent = vi.fn(() => ++checks < 4);
+    const f = await fixture('live', undefined, { effectCurrent: () => true, readImageCurrent });
+    expect(f.peer).toBeNull();
+    expect(readImageCurrent).toHaveBeenCalledTimes(4);
+    expect(readImageCurrent.mock.results.at(-1)?.value).toBe(false);
+  });
+
   it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {
     const calls = nativeObservations.calls, before = calls().length, syncBefore = nativeObservations.synchronous().length, charges: number[] = [];
     let denied = false;
