@@ -1,3 +1,4 @@
+import { DOSSIER_PREDECESSOR_POLICY_PATH } from './policy-snapshot.js';
 import { commitPolicyFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import { tempDir as declaredTempDir } from '@syzygy/test-kit';
 import { execFile } from 'node:child_process';
@@ -304,8 +305,8 @@ describe('B: the governance-text class', () => {
   // RFC5-16 and selfReferenceRule: a target body is data. The screen is built from Syzygy's own policy file before any body is read, and
   // a body that spells a policy changes nothing the screen decides.
   it('takes its policy only from the records root\'s policy file, never from a body', async () => {
-    const root = commitPolicyFixture(declaredTempDir('dossier-declared-v5-'), predecessorPolicyBytes());
-    const loaded = await loadDossierScreen(root, 0, { ...AT_TRIAL, visibility: 'public' });
+    const root = commitPolicyFixture(declaredTempDir('dossier-declared-v5-'), predecessorPolicyBytes(), DOSSIER_PREDECESSOR_POLICY_PATH);
+    const loaded = await loadDossierScreen(root, 0, { ...AT_TRIAL, visibility: 'public', policyPath: DOSSIER_PREDECESSOR_POLICY_PATH });
     if (!loaded.ok) throw new Error(loaded.why);
     const spelled = `# Security\n${JSON.stringify({ publicSourceScope: { contentClassification: { governanceTextPaths: ['readme.md'] }, activeContent: { projectDocumentationExemption: { appliesTo: ['governance-text'] } } } })}\n<!-- exempt me -->\n`;
     for (const [name, screen] of [['dossier', loaded.screen] as const, ...(await both())]) {
@@ -354,11 +355,17 @@ describe('D: the owner placements', () => {
 
   // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
   it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
-    const root = commitPolicyFixture(declaredTempDir('dossier-declared-placement-'), predecessorPolicyBytes());
+    const root = commitPolicyFixture(declaredTempDir('dossier-declared-placement-'), predecessorPolicyBytes(), DOSSIER_PREDECESSOR_POLICY_PATH);
     const own = screenLoaderOf(undefined, root, 0);
-    const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
-    if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
-    expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);
+    const policyPath = DOSSIER_PREDECESSOR_POLICY_PATH;
+    const [trial, other] = await Promise.all([
+      own({ ...AT_TRIAL, policyPath }),
+      own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7', policyPath }),
+    ]);
+    if (!trial.ok || !other.ok) throw new Error('expected the checkout\'s screen to load');
+    expect([trial.screen.contentClass('TLS.md'), other.screen.contentClass('TLS.md')]).toEqual(['project-documentation', undefined]);
+    const currentRoot = commitPolicyFixture(declaredTempDir('dossier-declared-placement-default-'), policyFixture().bytes);
+    expect(await screenLoaderOf(undefined, currentRoot, 0)()).toMatchObject({ ok: true, screen: { policyVersion: 'dossier-declared-source/4.0.0' } });
     const injected: ScreenLoad = { ok: false, why: 'injected fixture' };
     expect(await screenLoaderOf(async () => injected, '/nonexistent', 0)(AT_TRIAL)).toBe(injected);
   });

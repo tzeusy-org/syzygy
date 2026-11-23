@@ -89,11 +89,23 @@ export function makeClone(dir: string): { readonly clone: string; readonly commi
   return { clone: consentedClone(origin, commit, path.join(dir, 'kestrel')), commit };
 }
 
-const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
-export const FIXTURE_POLICY = new TextEncoder().encode(JSON.stringify({
-  policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-  publicSourceScope: { sourceVisibility: LIVE_POLICY.publicSourceScope.sourceVisibility, contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
-}));
+function fullRunPolicy(): Uint8Array {
+  const document = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH), 'utf8'));
+  const rules = document.publicSourceScope.contentClassification.rules as
+    { id?: string; class: string; sourceExtensions: string[]; documentSuffixes: string[]; docTreeExtensions: string[]; licenseTreeSuffixes: string[] }[];
+  const baseline = rules.filter(rule => rule.id === undefined);
+  const code = baseline.find(rule => rule.class === 'code-content');
+  const documentation = baseline.find(rule => rule.class === 'project-documentation');
+  if (code === undefined || documentation === undefined) throw new Error('Full-run fixture policy has no baseline class rules');
+  // This synthetic run's .txt citation is code-content. Keep the policy's code and documentation extensions disjoint.
+  code.sourceExtensions.push('.txt');
+  documentation.documentSuffixes = documentation.documentSuffixes.filter(suffix => suffix !== '.txt');
+  documentation.docTreeExtensions = documentation.docTreeExtensions.filter(suffix => suffix !== '.txt');
+  documentation.licenseTreeSuffixes = documentation.licenseTreeSuffixes.filter(suffix => suffix !== '.txt');
+  return new TextEncoder().encode(JSON.stringify(document));
+}
+
+const FIXTURE_POLICY = fullRunPolicy();
 export const FIXTURE_SCREEN = buildDossierScreen(FIXTURE_POLICY, false, null, 'public');
 
 export function fixtureSources(commit: string): GateSources {
@@ -292,13 +304,13 @@ export function declaredSubjectFixture(bytes: Uint8Array = defaultPolicy()) {
 }
 
 /** A synthetic Syzygy policy checkout with no act records. Only fixture bytes are committed. */
-export function commitPolicyFixture(root: string, bytes: Uint8Array): string {
+export function commitPolicyFixture(root: string, bytes: Uint8Array, policyPath = DOSSIER_POLICY_PATH): string {
   gitInitFromEmptyTemplate(root, ['-b', 'main']);
-  const file = path.join(root, DOSSIER_POLICY_PATH);
+  const file = path.join(root, policyPath);
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, bytes);
   const git = (...args: string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
-  git('add', DOSSIER_POLICY_PATH);
+  git('add', policyPath);
   git('-c', 'user.name=fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-q', '-m', 'fixture policy');
   return root;
 }

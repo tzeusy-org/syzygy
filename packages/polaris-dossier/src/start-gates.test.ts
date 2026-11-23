@@ -188,7 +188,7 @@ async function init(setup: Setup = {}): Promise<{ result: InitResult; readerOpen
 const refusal = (result: InitResult) => (result.ok ? null : result.refusal);
 
 describe('init: a declared pinned source', () => {
-  it('writes one /2 record without launch records or clone writes', async () => {
+  it('writes one /2 record and the disclosure companion without launch records or clone writes', async () => {
     const { result, clone, stateRoot, root } = await init({ clone: cloneAt(commits.U) });
     const policyPath = '.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json';
     const committed = gitIn(root, 'rev-parse', 'HEAD');
@@ -200,7 +200,7 @@ describe('init: a declared pinned source', () => {
       screeningPolicy: { path: policyPath, commit: committed, policyId: 'polaris-butlers-project-shape-secrets',
         policyVersion: 'dossier-declared-source/4.0.0', sha256: createHash('sha256').update(exactBytes).digest('hex') } });
     expect(Object.keys(result.report.subject).filter(key => key.toLowerCase().includes('repository'))).toEqual(['repository']);
-    expect(fs.readdirSync(result.report.run)).toEqual(['run.json']);
+    expect(fs.readdirSync(result.report.run).sort()).toEqual(['raw-read-disclosure.json', 'run.json']);
     expect(fs.readdirSync(stateRoot)).toHaveLength(1);
     expect(JSON.parse(fs.readFileSync(path.join(result.report.run, 'run.json'), 'utf8')).format).toBe('polaris-dossier-run/2');
     expect(gitIn(clone, 'status', '--porcelain', '--ignored')).toBe('');

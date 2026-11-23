@@ -544,7 +544,7 @@ describe('brief: the permitting arm off, whatever the launched marker', () => {
 
 describe('brief: refused', () => {
   const nothingWritten = (run: string): void => {
-    expect(fs.readdirSync(run)).toEqual(['run.json']);
+    expect(fs.readdirSync(run).sort()).toEqual(['raw-read-disclosure.json', 'run.json']);
   };
 
   it('refuses an unavailable committed policy and writes no brief', async () => {

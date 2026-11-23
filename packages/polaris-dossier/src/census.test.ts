@@ -1,3 +1,4 @@
+import { DOSSIER_PREDECESSOR_POLICY_PATH } from './policy-snapshot.js';
 import { tempDir } from '@syzygy/test-kit';
 import { commitPolicyFixture, policyFixture, predecessorPolicyBytes } from './full-run.testkit.js';
 import * as fs from 'node:fs';
@@ -214,7 +215,8 @@ describe('withheldCensus under the screening scope version 6', () => {
   ])('loads the checkout\'s own screen for the placement subject at the $name when no loader is given', async ({ commit, expectedUnknown }) => {
     const listing = () => ({ listTree: async () => V6_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
     const loaded = await loadCensus({ clonePath: '/nonexistent/clone', pinned: commit, consented: ['code-content', 'project-documentation', 'governance-text'],
-      recordsRoot: commitPolicyFixture(tempDir('dossier-census-policy-'), predecessorPolicyBytes()), now: 0, placement: { repository: 'repository:redis-redis', commit, visibility: 'public' } },
+      recordsRoot: commitPolicyFixture(tempDir('dossier-census-policy-'), predecessorPolicyBytes(), DOSSIER_PREDECESSOR_POLICY_PATH),
+      now: 0, placement: { repository: 'repository:redis-redis', commit, visibility: 'public', policyPath: DOSSIER_PREDECESSOR_POLICY_PATH } },
       // Version 8 asks the pair's visibility; the decision is injected (public, as the Redis consent states), so no process runs here.
       { openReader: listing });
     if (!loaded.ok) throw new Error('expected the census to load');

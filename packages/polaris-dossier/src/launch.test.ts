@@ -1111,7 +1111,7 @@ describe('declared local init and retained acquisition interruption behavior', (
       get launch(): never { throw new Error('legacy launch adapter touched'); } });
     if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report.subject.clone.path).toBe(fs.realpathSync(clone)); expect(result.report.subject.pinnedRevision.commit).toBe(commit);
-    expect(fs.readdirSync(result.report.run)).toEqual(['run.json']); expect(fs.existsSync(path.join(stateRoot, 'copies'))).toBe(false); expect(listing(clone)).toEqual(before);
+    expect(fs.readdirSync(result.report.run).sort()).toEqual(['raw-read-disclosure.json', 'run.json']); expect(fs.existsSync(path.join(stateRoot, 'copies'))).toBe(false); expect(listing(clone)).toEqual(before);
   });
 
   it('keeps the strict clone check and never substitutes a copy when it refuses', async () => {
