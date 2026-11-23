@@ -1,12 +1,12 @@
 # Design: nested groups drawn as boxes within boxes
 
-[Inferred] Version 2.23 of REQ-polaris-generation-034, for syzygy-3efd.31. It is drafted on `agent/syzygy-3efd.29` at `1980eb0c`, over the version 2.20 text (`dossier-hero-figure`, row A-54), and installed on `main` at `82290fb9`, where that text merged (#913). The code of versions 2.16, 2.19 and 2.20 (schemas v8 to v10) has not landed at that commit: `main`'s draft schema is v7 and its brief is v13. Every code site named in D9 must be re-located on the base the implementation starts from.
+[Inferred] Version 2.23 of REQ-polaris-generation-034, for syzygy-3efd.31. It was drafted on `agent/syzygy-3efd.29` at `1980eb0c`, over the version 2.20 text (`dossier-hero-figure`, row A-54), and installed on `main` at `82290fb9`, where that text merged (#913). Before adoption it was rebuilt over the version 2.22 text (`dossier-readers-edition`, row A-56) by the same anchored script, every anchor matching once. The code of versions 2.16, 2.19 and 2.20 (schemas v8 to v10) has not landed at that commit: `main`'s draft schema is v7 and its brief is v13. Every code site named in D9 must be re-located on the base the implementation starts from.
 
 ## D1. The version label
 
 [Observed] Drafted as 2.21, when tags on this line ran to `polaris-dossier-relation-types-v2.19` and version 2.20 was adopted (A-54, `polaris-dossier-hero-figure-v2.20`) and no branch on `origin` carried "Candidate version 2.21".
-- [Observed] Before adoption, verify text (REQ-polaris-generation-033, A-55, #902) landed as 2.21 with tag `polaris-dossier-verify-text-v2.21`, and `origin/agent/syzygy-5dhm.136` (`dossier-readers-edition`) carries "Candidate version 2.22", a MODIFIED REQ-polaris-generation-034 over 2.20's text (178 to 183 scenarios), not yet landed.
-- [Inferred] The labels are one dossier-wide sequence, so this version is relabelled 2.23, tag `polaris-dossier-containment-figure-v2.23`. It composes over 2.20 as on `main`. 2.22 and 2.23 both amend REQ-034 over 2.20: whichever lands second merges over the other, rebuilding its complete MODIFIED text on the first's.
+- [Observed] Before adoption, verify text (REQ-polaris-generation-033, A-55, #902) landed as 2.21 with tag `polaris-dossier-verify-text-v2.21`, and `origin/agent/syzygy-5dhm.136` (`dossier-readers-edition`) carries "Candidate version 2.22", a MODIFIED REQ-polaris-generation-034 over 2.20's text (178 to 183 scenarios); it then landed first, as A-56 (`polaris-dossier-readers-edition-v2.22`).
+- [Inferred] The labels are one dossier-wide sequence, so this version is relabelled 2.23, tag `polaris-dossier-containment-figure-v2.23`. 2.22 landed first, so 2.23 is rebuilt on 2.22's complete MODIFIED text and composes after it (183 to 193 scenarios). 2.22 adds no brief or schema, so brief v17 and schema v11 follow 2.20's v16 and v10. Where the text says a draft of schema v10 or earlier keeps its findings and bytes, it now names version 2.22, which renders every draft (the "About this run" fold); the hero rule it cites stays 2.20's.
 - [Observed] The review below read the text as 2.21; its finding numbers and quotations refer to that label.
 - Brief and schema continue from 2.20: brief v17, schema v11.
 
@@ -76,7 +76,7 @@
 
 [Inferred] Order of findings:
 - `unit-reference` and `relation-challenged` reuse 2.19's kinds and details, adjusted to "nesting" and "groups".
-- They follow every finding 2.20 reports, so no earlier finding moves.
+- They follow every finding 2.22 reports, so no earlier finding moves.
 
 ## D7. Rendering
 
@@ -100,7 +100,7 @@ A v11 draft with no containment renders as v10 would. Drafts of schema v10 and e
 
 ## D9. What the code change must do
 
-[Inferred] On a base where versions 2.16 to 2.20 have landed:
+[Inferred] On a base where versions 2.16 to 2.22 have landed:
 - `packages/polaris-dossier/src/draft-schema.ts`: schema v11, with the `containment` kind and the recursive group form.
 - `check-derive.ts`:
   - the figure-kind extension;
@@ -140,7 +140,7 @@ A v11 draft with no containment renders as v10 would. Drafts of schema v10 and e
 - F1 (blocking), which page carries which style rules. Repaired.
   - 2.5's carrier sentence is amended in place, declared in `SEMANTIC-DELTA.md`: since 2.23 the container query rules on the `figure-forms` box go on a page with a produced sequence, swimlane or containment figure, and the stepper's other rules stay as 2.5 states.
   - 2.23's render paragraph now says the outline's own rules (text size, indent, borders) go only on a page with a containment, so a containment-only page carries no stepper rules and a page with no containment no outline rules.
-  - Scenario "Containment fits at both widths" now names both pages: a containment-only page and a swimlane-only page. Extended rather than added, so the census stays at 188.
+  - Scenario "Containment fits at both widths" now names both pages: a containment-only page and a swimlane-only page. Extended rather than added, so the review's ten scenarios stay ten (188 over 2.20, 193 over 2.22).
 - F2 (blocking), groups past level 3. Repaired.
   - A group below level 4 raises no `containment-depth` finding, and no group at level 4 or below raises `unit-reference`.
   - A containment with a `containment-depth` finding has no nesting decided (F4), so no `relation-challenged` finding can come from it.

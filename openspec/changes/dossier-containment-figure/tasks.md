@@ -1,7 +1,7 @@
 ## Delivery
 
 - [x] Read the figure-kind, layout, fit and witness text and the fact kinds the code derives (`agent/syzygy-3efd.29` at `1980eb0c`).
-- [x] Draft the complete MODIFIED REQ-polaris-generation-034 on the version 2.20 text by an anchored script, and generate its semantic delta from the bytes.
+- [x] Draft the complete MODIFIED REQ-polaris-generation-034 on the version 2.20 text by an anchored script (rebuilt on the version 2.22 text before adoption), and generate its semantic delta from the bytes.
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`cont_cases`).
 - [x] One independent fresh-context review (CC-REV-4), raw retained, findings dispositioned (`design.md`, "Review").
 - [x] Append the agent-adoption row naming the installing commit.
