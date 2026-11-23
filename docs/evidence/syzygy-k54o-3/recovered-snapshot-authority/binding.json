@@ -1,0 +1,47 @@
+{
+  "label": "Observed",
+  "commit": "9bcfe6fd12d3bd3b7510cab91a7bc52d4c4bc36f",
+  "parent": "c7395ebde1cb2e065fffff9a8005355aab5591aa",
+  "files": {
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "8158045a63ceae38be74daa64a4215a60dd7c60e5e0ee916c4fa23eefbd886a4",
+    "packages/polaris-dossier/src/url-run-artifacts.test.ts": "60aae665f730c2cd150ed6fd5d89f34a961ec66aee86a1b07d943a0665f84126"
+  },
+  "closedFocusedSuite": {
+    "passed": 72,
+    "total": 72,
+    "logSha256": "edfe1478d7f1f7fbe3368470cdf2dca23bbcc5c22dfddacf16f80b0cef51c2a6"
+  },
+  "typecheck": {
+    "result": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "sourceReviews": {
+    "SOURCE-REVIEW-RAW.md": "c47be5529a960f2bdf86d5c7dde45a994fc8daec10d8e7e63d725dd297e26f00",
+    "SOURCE-INITIAL-REVIEW-RAW.md": "c0babd915b2ae33a671d3ad81fd67f802ff51ccad67c859c3c55dbed827d73ee"
+  },
+  "selectedFaults": [
+    {
+      "predicate": "pre-read-authority",
+      "commit": "9bcfe6fd12d3bd3b7510cab91a7bc52d4c4bc36f",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "    live();\n    const result = read(check);",
+      "new": "    const result = read(check);",
+      "selectedTests": 2,
+      "failed": 2,
+      "skipped": 70,
+      "testLogSha256": "344cf54736c45a346b4dca78440ec84832c882da8ed8988bf4b17e9199be1838"
+    },
+    {
+      "predicate": "sticky-recovery-refusal",
+      "commit": "9bcfe6fd12d3bd3b7510cab91a7bc52d4c4bc36f",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "} catch { recoveryFailed = true; return refuse(); }",
+      "new": "} catch { return refuse(); }",
+      "selectedTests": 2,
+      "failed": 2,
+      "skipped": 70,
+      "testLogSha256": "1a08089168180148fcdee7f67c6968455b1eaf23f06832a5e5213cff472d8d03"
+    }
+  ],
+  "remainingUnknown": "The new source has not completed native end-to-end Stop/Resume. The hosted machine-creation refusal is separate."
+}

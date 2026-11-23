@@ -1,0 +1,407 @@
+{
+  "label": "Observed",
+  "baseCommit": "fcca0387081b053aee7624dcd87814fad0b82e44",
+  "diagnosticOverlaySha256": "40ff4de1d0233740b61e74c45f1acd552c570f81bd99393935f9ab9b24c49000",
+  "logSha256": "6618463f9e63fdcc31f374656d72ffa56b673551fedb63f425186d7267fde0ee",
+  "retainedFixtureSha256": "56b925b7684e3a1775e139457066ee28f4ff9e16c425b21fff29ad16d6c3bd24",
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "bootstrap": {
+    "restore-plans": {
+      "startedMs": 88229.496253,
+      "settledMs": 94451.281806,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 94515.814402,
+      "settledMs": 94814.352049,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 94870.900777,
+      "settledMs": 99342.747499,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 99938.902996,
+      "settledMs": 149702.313503,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 150162.409549,
+      "settledMs": 180297.055869,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 152040.130522,
+      "settledMs": 179913.885036,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 152448.704623,
+      "settledMs": 153263.901811,
+      "outcome": "accepted"
+    }
+  },
+  "productElapsedMsFromEntry": {
+    "restore-origins-start": 0,
+    "restore-origins-accepted": 13571,
+    "snapshot-subjects-complete": 26820,
+    "initial-products-start": 27107,
+    "initial-products-complete": 31928,
+    "restored-local-bindings": 36560,
+    "fidelity-packets-complete": 44073,
+    "latest-checks-complete": 44402,
+    "final-descriptors-complete": 49046,
+    "sealed-revalidation-start": 49207,
+    "sealed-revalidation-complete": 49704
+  },
+  "machineOperations": [
+    {
+      "elapsedMs": 0,
+      "ordinal": 1,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 1,
+      "ordinal": 1,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 2063,
+      "ordinal": 1,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 2156,
+      "ordinal": 1,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 2,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 2,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 2096,
+      "ordinal": 2,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 2197,
+      "ordinal": 2,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 3,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 3,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 2115,
+      "ordinal": 3,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 2185,
+      "ordinal": 3,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 4,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 4,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 1909,
+      "ordinal": 4,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 1990,
+      "ordinal": 4,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 5,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 5,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 1810,
+      "ordinal": 5,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 1890,
+      "ordinal": 5,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 6,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 6,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 1980,
+      "ordinal": 6,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 2085,
+      "ordinal": 6,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 7,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 7,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 1705,
+      "ordinal": 7,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 1778,
+      "ordinal": 7,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 8,
+      "stage": "retained-start"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 8,
+      "stage": "retained-store-read-start"
+    },
+    {
+      "elapsedMs": 1759,
+      "ordinal": 8,
+      "stage": "retained-store-read-accepted"
+    },
+    {
+      "elapsedMs": 1835,
+      "ordinal": 8,
+      "stage": "retained-accepted"
+    },
+    {
+      "elapsedMs": 135,
+      "ordinal": 8,
+      "stage": "retained-final-current-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 1,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1506,
+      "ordinal": 1,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 2,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1169,
+      "ordinal": 2,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 3,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1157,
+      "ordinal": 3,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 4,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1236,
+      "ordinal": 4,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 5,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1164,
+      "ordinal": 5,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 6,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1531,
+      "ordinal": 6,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 7,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1397,
+      "ordinal": 7,
+      "stage": "fresh-accepted"
+    },
+    {
+      "elapsedMs": 0,
+      "ordinal": 8,
+      "stage": "fresh-start"
+    },
+    {
+      "elapsedMs": 1167,
+      "ordinal": 8,
+      "stage": "fresh-accepted"
+    }
+  ],
+  "transport": {
+    "ordinal": 1,
+    "stages": {
+      "open": {
+        "startedMs": 145329.169,
+        "settledMs": 150349.671,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 145329.34,
+        "settledMs": 150360.764,
+        "outcome": "refused"
+      },
+      "capture": {
+        "startedMs": 145722.661,
+        "settledMs": 150360.708,
+        "outcome": "refused"
+      }
+    },
+    "boundMs": 180000,
+    "kind": "inference-bridge"
+  },
+  "laterSampleRefusal": {
+    "ordinal": 6,
+    "phases": {
+      "process": {
+        "startedMs": 0.04124799999408424,
+        "settledMs": 128.22150300000794,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.057708999986061826,
+        "settledMs": 114.62234899998293,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.05944199999794364,
+        "settledMs": 137.53424899998936,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 137.54304600000614,
+        "settledMs": 137.6181280000019,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 137.7165039999818
+    }
+  },
+  "remainingUnknown": "The first blocking peer-capture predicate. Hosted rejection during machine creation occurred in an earlier run and is independently unresolved."
+}

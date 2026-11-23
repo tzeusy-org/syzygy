@@ -1,0 +1,38 @@
+{
+  "label": "Observed",
+  "commit": "c7395ebde1cb2e065fffff9a8005355aab5591aa",
+  "selectedCase": "eligible-stop-resume",
+  "logSha256": "06a0ac7955d2b13e3de6e15611b0ec1d400c2dd1a22099276187da8d2a592c34",
+  "retainedFixtureSha256": "dd5ad656f067b609da24c268b4af971e07c6f6a23df97b8af9ea15a73b070fc3",
+  "elapsedMs": 68942,
+  "failure": "transport-unavailable",
+  "resumeChecks": [],
+  "fidelityPacketDeliveryObserved": false,
+  "forwardsPastFixtureGate": {
+    "author": 7,
+    "inventory": 1,
+    "fidelity": 0,
+    "design": 0
+  },
+  "relayEvents": {
+    "author": {
+      "attempt-allowed": 7,
+      "send-attempt": 6,
+      "send-outcome": 6,
+      "response-admitted": 6,
+      "transport-failed": 1
+    },
+    "inventory": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1,
+      "response-admitted": 1
+    },
+    "fidelity": {
+      "attempt-allowed": 1,
+      "send-attempt": 1
+    },
+    "design": {}
+  },
+  "remainingUnknown": "The first operational predicate that refused before the checked Fidelity packet arrived."
+}
