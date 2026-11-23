@@ -238,6 +238,55 @@ async function readDesignAuditKinds(file: string | undefined) {
   } catch { return { status: 'unavailable' }; }
 }
 
+// Observe the genuine result and return the same promise to its original caller.
+function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejected: () => void): Promise<T> {
+  try {
+    const original = call();
+    void original.then(settled, rejected);
+    return original;
+  } catch (error) { rejected(); throw error; }
+}
+
+type PrepareNativeRole = typeof sessionLaunch.prepareRestrictedUrlSession;
+type RoleInspection = NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>;
+type RoleSample = () => ResumeSample | undefined;
+
+async function observeRoleLaunches(
+  prepareWithTrace?: (prepare: PrepareNativeRole, input: Parameters<PrepareNativeRole>[0],
+    remember: (result: sessionLaunch.UrlSessionPreparation, sample?: RoleSample) => void) => ReturnType<PrepareNativeRole>,
+  observeDesignLaunch?: (inspect: RoleInspection, sample: RoleSample,
+    child: Awaited<ReturnType<typeof sessionLaunch.launchRestrictedUrlSession>>) => void,
+) {
+  const { prepareRestrictedUrlSession: prepare, launchRestrictedUrlSession: launch } =
+    await vi.importActual<typeof sessionLaunch>('./session-launch.js');
+  const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, {
+    role: string; inspect: RoleInspection; sample?: RoleSample;
+  }>();
+  const roleInspections = new Map<string, RoleInspection>();
+  vi.mocked(sessionLaunch.prepareRestrictedUrlSession).mockImplementation(input => {
+    const role = input.profile.input.binding.role;
+    const remember = (result: sessionLaunch.UrlSessionPreparation, sample?: RoleSample) => {
+      const inspect = sessionLaunch.observeUrlSessionInspectionForTest(result);
+      if (inspect !== null) preparations.set(result, { role, inspect, sample });
+    };
+    return prepareWithTrace === undefined
+      ? observe(() => prepare(input), remember, () => {})
+      : prepareWithTrace(prepare, input, remember);
+  });
+  vi.mocked(sessionLaunch.launchRestrictedUrlSession).mockImplementation(input => {
+    const preparation = preparations.get(input.preparation);
+    if (preparation === undefined) return launch(input);
+    return observe(() => launch(input), child => {
+      roleInspections.set(preparation.role, preparation.inspect);
+      if (preparation.sample !== undefined) observeDesignLaunch?.(preparation.inspect, preparation.sample, child);
+    }, () => {});
+  });
+  return () => Object.fromEntries([...roleInspections].map(([role, inspect]) => {
+    const { samples, firstRefusal } = inspect();
+    return [role, { samples, firstRefusal }];
+  }));
+}
+
 async function observeDesignRun(run: string, traceInference = false) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
@@ -290,13 +339,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   let latestSample: ResumeSample | undefined, lastConfirmed: ResumeSample | undefined;
   let firstSampleRefusal: ResumeSample | undefined;
   let terminal: { atMs: number; outcome: sessionLaunch.UrlSessionLaunchOutcome['outcome']; latestSample?: ResumeSample } | undefined;
-  let finishedInspection: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>> | undefined;
-  const roleInspections = new Map<string, NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>>();
-  const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, {
-    role: string;
-    inspect: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>;
-    sample?: () => ResumeSample | undefined;
-  }>();
+  let finishedInspection: RoleInspection | undefined;
 
   function snapshotSample(sample: ResumeSample | undefined): ResumeSample | undefined {
     return sample === undefined ? undefined : { ...sample, verify: { ...sample.verify },
@@ -318,15 +361,6 @@ async function observeDesignRun(run: string, traceInference = false) {
     socketLinks.set(socket, connection);
     if (connections.length < 12) connections.push(connection);
     return connection;
-  }
-
-  // Observe the genuine result and return the same promise to its original caller.
-  function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejected: () => void): Promise<T> {
-    try {
-      const original = call();
-      void original.then(settled, rejected);
-      return original;
-    } catch (error) { rejected(); throw error; }
   }
 
   type InferenceBoundary = 'parent-current' | 'kernel-peer' | 'peer-audit';
@@ -678,16 +712,9 @@ async function observeDesignRun(run: string, traceInference = false) {
     }, () => { mcpReads.rejected++; mcpReadRefusedMs ??= clock(); });
   });
 
-  const { prepareRestrictedUrlSession: prepare, launchRestrictedUrlSession: launch } =
-    await vi.importActual<typeof sessionLaunch>('./session-launch.js');
-  vi.mocked(sessionLaunch.prepareRestrictedUrlSession).mockImplementation(input => {
+  const roleInspections = await observeRoleLaunches((prepare, input, remember) => {
     const authority = input.inspectionAuthority;
-    const role = input.profile.input.binding.role;
-    const trace = (result: sessionLaunch.UrlSessionPreparation, sample?: () => ResumeSample | undefined) => {
-      const inspected = sessionLaunch.observeUrlSessionInspectionForTest(result);
-      if (inspected !== null) preparations.set(result, { role, inspect: inspected, sample });
-    };
-    if (authority === undefined) return observe(() => prepare(input), trace, () => {});
+    if (authority === undefined) return observe(() => prepare(input), remember, () => {});
     let activeSample: ResumeSample | undefined;
     const verified = (sample: ResumeSample, outcome: ResumeObservation) => {
       Object.assign(sample.verify, { settledMs: clock(), outcome });
@@ -730,30 +757,18 @@ async function observeDesignRun(run: string, traceInference = false) {
           }
         }
       },
-    } }), result => trace(result, () => snapshotSample(activeSample)), () => {});
-  });
-
-  vi.mocked(sessionLaunch.launchRestrictedUrlSession).mockImplementation(input => {
-    const preparation = preparations.get(input.preparation);
-    if (preparation === undefined) return launch(input);
-    return observe(() => launch(input), child => {
-      roleInspections.set(preparation.role, preparation.inspect);
-      const sampleForPreparation = preparation.sample;
-      if (sampleForPreparation === undefined) return;
-      finishedInspection = preparation.inspect;
-      inspectedLaunches++;
-      void child.finished.then(outcome => {
-        terminal = { atMs: clock(), outcome: outcome.outcome, latestSample: sampleForPreparation() };
-      }, () => {});
+    } }), result => remember(result, () => snapshotSample(activeSample)), () => {});
+  }, (inspect, sample, child) => {
+    finishedInspection = inspect;
+    inspectedLaunches++;
+    void child.finished.then(outcome => {
+      terminal = { atMs: clock(), outcome: outcome.outcome, latestSample: sample() };
     }, () => {});
   });
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
-    roleInspections: Object.fromEntries([...roleInspections].map(([role, inspect]) => {
-      const { samples, firstRefusal } = inspect();
-      return [role, { samples, firstRefusal }];
-    })),
+    roleInspections: roleInspections(),
     launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
       hostActivation, hostCurrent, firstRefusedHostCurrent } } : {}),
@@ -1015,6 +1030,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     });
     const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
     if (eligibleStop || scenario === 'delivery-stop') initialDiagnostic = await observeDesignRun(f.run, eligibleStop);
+    const initialDesignDiagnostic = initialDiagnostic;
+    const initialRoleInspections = initialDesignDiagnostic === undefined
+      ? await observeRoleLaunches()
+      : () => initialDesignDiagnostic().roleInspections;
     const writeEvidence = async (result: Record<string, unknown>) => {
       const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
       if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
@@ -1096,10 +1115,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit,
-        initialRoleInspections: initialDiagnostic?.().roleInspections }));
+        initialRoleInspections: initialRoleInspections() }));
     }); cleanup.push(controller.stop);
-    if (initialDiagnostic !== undefined)
-      expect(Object.keys(initialDiagnostic().roleInspections)).toEqual(['author', 'inventory', 'fidelity']);
+    expect(Object.keys(initialRoleInspections())).toEqual(['author', 'inventory', 'fidelity']);
     expect(handoffStates[0]).toBe('unknown');
     function beginOwnedStop() {
       try {
@@ -1378,13 +1396,13 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence,
-          initialDesignAudit, initialRoleInspections: initialDiagnostic?.().roleInspections,
+          initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
-        initialRoleInspections: initialDiagnostic?.().roleInspections,
+        initialRoleInspections: initialRoleInspections(),
         resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
