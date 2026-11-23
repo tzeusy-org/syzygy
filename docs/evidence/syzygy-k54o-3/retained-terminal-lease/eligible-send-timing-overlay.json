@@ -1,0 +1,57 @@
+{
+  "label": "Observed",
+  "base": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+  "case": "eligible-stop-resume",
+  "overlaySha256": "ef87b7883c378fde9979497d359147591f0b0ce69c123e93570a6394cd011bfc",
+  "testLogSha256": "42760477c730e00ebc2281ab826b0a8e42084754ded53b7c49416a818200beca",
+  "failureManifestSha256": "d8f7587fd0bd9ce92a36f203d3ae7148fa18784ea10210ef485ca9fc859c776d",
+  "relay": {
+    "role": "author",
+    "limitMs": 180000,
+    "outcome": "caught",
+    "marks": [
+      {
+        "phase": "ingress-ended",
+        "ms": 2200.188
+      },
+      {
+        "phase": "request-mediation",
+        "ms": 2201.288
+      },
+      {
+        "phase": "request-decision",
+        "ms": 4557.003
+      },
+      {
+        "phase": "header-projection",
+        "ms": 4557.293
+      },
+      {
+        "phase": "attempt-audit",
+        "ms": 5470.173
+      },
+      {
+        "phase": "attempt-audit-committed",
+        "ms": 7937.744
+      },
+      {
+        "phase": "send-mediation",
+        "ms": 7939.928
+      },
+      {
+        "phase": "forward-invoked",
+        "ms": 8753.646
+      },
+      {
+        "phase": "send-audit",
+        "ms": 8768.032
+      },
+      {
+        "phase": "caught",
+        "ms": 10046.576
+      }
+    ]
+  },
+  "result": "The Author relay invoked the provider forward and entered the send-attempt audit boundary before the exception. This instrumented replay reached an earlier boundary than the separate Author receipt-registration refusal.",
+  "remainingUnknown": "The predicate that refused inside send-attempt audit and the predicate that refused in the earlier receipt registration replay remain unidentified."
+}

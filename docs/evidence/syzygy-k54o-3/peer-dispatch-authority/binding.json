@@ -1,0 +1,62 @@
+{
+  "label": "Observed",
+  "base": "53631e3007c36e73aa0c548c85feb50d9dda0f99",
+  "testedCommit": "5bf7f5301d653988b6fafecbd2af3e4fce744733",
+  "diffSha256": "941ab4d93ebab01e34a77958c3e45633b440c3b020a7a806fcdaaf4b2a2b1aff",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-peer.ts": "1e97b5de3a7ceeff91ef6c38a322e29aa54a5d3053420ffb1513600012559ebf",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "a398d91cbefea4f43e6bf4bcc1fa7cd8afc151c68612de92d682a97e4ba8b519",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts": "a019a3acf654fe8098ecdfc670e305833ce26dfe4d75f52ad373f96d4c1c1bb3"
+  },
+  "parsedModuleFingerprintSha256": "52e3d00394a601f11b49380dfc234a97ca2fc7a348c976d441a5b0d2121d2374",
+  "review": {
+    "verdict": "PASS",
+    "file": "REVIEW-RAW.md",
+    "sha256": "69cb5f63fd3958f3a48cf368d4886527cf124fd533ef40885c4c967c8cade43f"
+  },
+  "validation": {
+    "focused": {
+      "files": 3,
+      "passed": 48,
+      "total": 48,
+      "logSha256": "6d0b295ceaa794acbfc8ef8bfcbb824a6247a93b6e396d3985beefa2cdf11567"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "faults": [
+    {
+      "name": "restore the exact predecessor peer source",
+      "commit": "5bf7f5301d653988b6fafecbd2af3e4fce744733",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "failed": 1,
+      "passed": 1,
+      "skipped": 14,
+      "logSha256": "fe409c86c34ff14a8514efeba5ab6ddcafa65830847a6beb0453f1231dea586a",
+      "patchSha256": "8cbde9125df911f860d6dd1c935b08a28dce06a7ddc963c9a3d0cbb5b2bb5539",
+      "old": {
+        "revision": "5bf7f5301d653988b6fafecbd2af3e4fce744733",
+        "sha256": "1e97b5de3a7ceeff91ef6c38a322e29aa54a5d3053420ffb1513600012559ebf"
+      },
+      "new": {
+        "revision": "53631e300",
+        "sha256": "44696cec6494cfa84ad167242a2323e85ac61b2c4b5eac7c6d0503e0ac2af368"
+      }
+    },
+    {
+      "name": "omit the final full authority check from current",
+      "commit": "5bf7f5301d653988b6fafecbd2af3e4fce744733",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "failed": 2,
+      "passed": 0,
+      "skipped": 14,
+      "logSha256": "4fd59dfed5c949e8de431d6ed980364a78e1f813daeded344664ce93c57cf2b7",
+      "patchSha256": "9cab5697c59f2ebaa925c94f030d78d7ef4ae3c37213dbccb422c13345e3bba4",
+      "old": "  // Recheck full effect authority with the exact peer just before dispatch.\n  check(state);\n  const { options } = state;",
+      "new": "  const { options } = state;"
+    }
+  ],
+  "remainingUnknown": "The focused controls exercise real native dispatch and refusal. Composed recovery and hosted latency on this exact revision require separate evidence."
+}
