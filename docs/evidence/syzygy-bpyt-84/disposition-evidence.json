@@ -38,6 +38,34 @@
       }
     ]
   },
+  "criterion6ConfiguredBudgetComparison": {
+    "historicalConfiguration": {
+      "path": "vitest.config.ts",
+      "gitBlob": "5f12579806c57f7eaaa46a139f8ff905b5252dc9",
+      "sha256": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+      "bytes": 2589
+    },
+    "historicalReportedIntegrationBudget": {
+      "project": "integration",
+      "testTimeout": 5000,
+      "hookTimeout": 10000,
+      "maxWorkers": 6
+    },
+    "currentConfiguration": {
+      "path": "vitest.config.ts",
+      "gitBlob": "7cf918bc1253228318e9116f0a37fc3e1b6b089d",
+      "sha256": "f1dbdaab5fe74bc5b67ada7ca2fb517fb6a62abd5e7b8d0b3a1189f34c049189",
+      "bytes": 3115
+    },
+    "currentConfigurationLine": 44,
+    "currentConfigurationIntroducedBy": "8eeddaadf4925414a623f67b7a300b97da14d033",
+    "currentConfiguredIntegrationTestTimeoutMs": 30000,
+    "currentConfiguredIntegrationHookTimeoutMs": 30000,
+    "retainedLocalSiteTimeoutMs": 25000,
+    "originalCriterion6NamedDefaultMs": 5000,
+    "meaning": "The current configured tier default is higher than the retained site-local timeout.",
+    "currentEffectiveRuntimeIdentityAndOriginalCriterionDisposition": "Unknown"
+  },
   "authorityAndPriorEvidence": [
     {
       "path": ".syzygy/governance/decisions/OWNER-DIRECTION-SYZYGY-BPYT-33-SCOPE-EXCEPTION-2026-11-07.md",
