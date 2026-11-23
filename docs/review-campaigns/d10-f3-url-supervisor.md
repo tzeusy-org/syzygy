@@ -3,7 +3,7 @@
 ## Patterns
 
 - `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN|D11-RUNTIME-INITIAL|D11-RUNTIME-SUCCESSOR)-REVIEW-RAW\.md`
-- `F3-(D11-LAUNCHER|D11-RENDER-PRODUCER|MANIFEST-PROVENANCE)-REVIEW-RAW\.md`
+- `F3-(D11-LAUNCHER|D11-RENDER-PRODUCER|D11-RENDER-RESTART|MANIFEST-PROVENANCE|MANIFEST-CLOSURE|MANIFEST-GIT-PATHS)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -42,3 +42,9 @@
 [Observed] The manifest provenance review records `FAIL` (`F3-MANIFEST-PROVENANCE-REVIEW-RAW.md:3`) at `e7eda3cb4`. The independent pinned-tree projection rejected a forged coverage place and refused cold recovery with a missing subtree. A screened but unparsed infrastructure manifest lacked a corresponding source receipt.
 
 [Observed] The D11 render producer review records `FAIL` (`F3-D11-RENDER-PRODUCER-REVIEW-RAW.md:3`) at `fff29511`. A checked producer could refuse after the disclosure changed, hiding the restart reason and allowing a primary render step to be appended.
+
+[Observed] The D11 render restart review records `PASS` (`F3-D11-RENDER-RESTART-REVIEW-RAW.md:3`) at `d82c0b916`. The exact restart reason survives accepted, refused and failed producer attempts after a disclosure change. Eight focused tests passed.
+
+[Observed] The manifest closure review records `FAIL` (`F3-MANIFEST-CLOSURE-REVIEW-RAW.md:3`) at `499b45d68`. The corrected check requires the exact direct coverage origin. It could still refuse an otherwise admissible unparsed manifest whose directory name contains a space.
+
+[Observed] The whole-source Git path review records `PASS` (`F3-MANIFEST-GIT-PATHS-REVIEW-RAW.md:3`) at `249928866`. An admitted malformed manifest under a Git directory with a space keeps its exact whole-source provenance and verified frozen graph. The role source-span case remains refused.
