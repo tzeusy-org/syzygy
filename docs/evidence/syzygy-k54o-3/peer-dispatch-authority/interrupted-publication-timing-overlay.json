@@ -1,0 +1,83 @@
+{
+  "label": "Observed",
+  "base": "2270ec7d94122b5e82247a50701e58856aa20580",
+  "case": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 245919
+  },
+  "overlaySha256": "1cf7a361665a1c993fe3a1f359a8d1b01e1280910009d0a50b0a9c17cf249319",
+  "testLogSha256": "6ff0da97c3a269f27dfc3ccef86741a454971d9a002aa58d25cdd00a93273e0f",
+  "failureManifestSha256": "31e1d3accb6623bf11de7128bb512455f572e9ac2afe2545d5f3b8b7c34dec32",
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "record": {
+    "runDirectEntriesExamined": 14,
+    "recordJsonLstatFound": false
+  },
+  "connection": {
+    "kind": "inference-bridge",
+    "stages": {
+      "open": {
+        "outcome": "refused",
+        "elapsedMs": 9905.106
+      },
+      "accept": {
+        "outcome": "accepted",
+        "elapsedMs": 4793.434
+      },
+      "capture": {
+        "outcome": "accepted",
+        "elapsedMs": 4712.92
+      },
+      "authorize": {
+        "outcome": "refused",
+        "elapsedMs": 5111.132
+      }
+    }
+  },
+  "sampleCounts": {
+    "started": 12,
+    "verified": 12,
+    "verifyRefused": 0,
+    "verifyRejected": 0,
+    "confirmed": 11,
+    "confirmRefused": 1,
+    "confirmRejected": 0
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 12,
+    "phases": {
+      "process": {
+        "startedMs": 0.04514500001096167,
+        "settledMs": 300.0122210000118,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.09659299999475479,
+        "settledMs": 266.1885220000113,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.0985660000005737,
+        "settledMs": 301.0090140000102,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 301.0155359999917,
+        "settledMs": 391.0048700000043,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 391.06414200001745
+    }
+  },
+  "remainingUnknown": "Peer capture accepted and authorizing the peer refused before the last launcher sample's synchronous confirmation. The private store publication step that refused is unknown. This replay did not reproduce the separate storage census timeout."
+}
