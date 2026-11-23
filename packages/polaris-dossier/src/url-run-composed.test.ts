@@ -16,7 +16,7 @@ import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop
 import { loadSessionCredential } from './session-credential.js';
 import * as runSessions from './url-run-sessions.js';
 import type { UrlRunSessions } from './url-run-sessions.js';
-import { sessionRelayTestPort } from './session-relay.js';
+import { sessionRelayTestPort, type SessionRelayPorts } from './session-relay.js';
 import type { UrlRuntime } from './url-runtime.js';
 import * as sessionAudit from './url-session-audit.js';
 import { isUrlDesignProductLeaseOpen } from './url-design-product.js';
@@ -30,11 +30,13 @@ import * as runMachine from './url-run-machine.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
+import * as sessionPeer from './session-peer.js';
 import * as policySnapshot from './policy-snapshot.js';
 import * as sessionBroker from './session-broker.js';
 import * as orderedHost from './url-ordered-design-host.js';
 import * as orderedBounds from './url-ordered-design-bounds.js';
 import * as orderedSession from './url-ordered-design-session.js';
+import * as orderedScreen from './url-ordered-design-screen.js';
 import * as orderedWork from './url-ordered-design-work-budget.js';
 import * as orderedWriter from './url-ordered-design-writer.js';
 
@@ -56,6 +58,12 @@ const settledProviderRoles = vi.hoisted(() => new Set<string>());
 const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null,
   afterEndTurn: null as ((role: string) => void) | null }));
 const relayObservations = vi.hoisted(() => [] as { role: string; event: string; route: string | null }[]);
+type ResumeRelayProbe = {
+  current(call: SessionRelayPorts['current']): ReturnType<SessionRelayPorts['current']>;
+  response(call: () => ReturnType<SessionRelayPorts['response']>): ReturnType<SessionRelayPorts['response']>;
+  audit(event: Parameters<SessionRelayPorts['audit']>[0]['event']): void;
+};
+const resumeRelayProbes = vi.hoisted(() => new WeakMap<machineTransport.SessionMachineTransport, ResumeRelayProbe>());
 // Keep the real host, machine mediation, policy, audit and relay. Replace only
 // the relay's compiled provider boundary; this fixture performs no network send.
 vi.mock('./session-relay.js', async importOriginal => {
@@ -64,11 +72,13 @@ vi.mock('./session-relay.js', async importOriginal => {
     relayRoles.push(args[1].binding.role);
     const selected = provider.get(args[1].binding.role);
     if (selected === undefined) throw new Error('owned composed provider not selected');
-    const ports = args[2];
+    const ports = args[2], probe = args[4] === undefined ? undefined : resumeRelayProbes.get(args[4]);
     return actual.sessionRelayTestPort(selected)(args[0], args[1], { ...ports,
+      ...(probe === undefined ? {} : { response: (...responseArgs: Parameters<SessionRelayPorts['response']>) =>
+        probe.response(() => ports.response(...responseArgs)) }),
       current: async () => {
         const barrier = args[1].binding.role !== 'design' && settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
-        if (barrier === null) return ports.current();
+        if (barrier === null) return probe === undefined ? ports.current() : probe.current(() => ports.current());
         if (!(await ports.current())) return false;
         // This post-audit guard is outside machine-store mediation. Holding an
         // audit callback would retain its exclusive lease and block other roles.
@@ -76,6 +86,7 @@ vi.mock('./session-relay.js', async importOriginal => {
         return ports.current();
       }, audit: async (event, context) => {
       relayObservations.push({ role: args[1].binding.role, event: event.event, route: event.route });
+      probe?.audit(event.event);
       await ports.audit(event, context);
       if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn') {
         settledProviderRoles.add(args[1].binding.role);
@@ -208,7 +219,7 @@ async function readDesignAuditKinds(file: string | undefined) {
   } catch { return { status: 'unavailable' }; }
 }
 
-async function observeDesignRun(run: string) {
+async function observeDesignRun(run: string, traceFirstResponse = false) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
   type AppendStage = 'audit-authority' | 'attempt-authority' | 'stat' | 'read' | 'write' | 'sync';
@@ -294,6 +305,61 @@ async function observeDesignRun(run: string) {
     } catch (error) { rejected(); throw error; }
   }
 
+  type InferenceBoundary = 'parent-current' | 'kernel-peer' | 'peer-audit';
+  type InferenceStep = {
+    mediate: ResumeStamp;
+    effect?: ResumeStamp;
+    firstEffectGuardRefusalMs?: number;
+    boundaries: Array<{ phase: InferenceBoundary; timing: ResumeStamp }>;
+  };
+  type ResponseStep = { step: 'relay-current' | 'controller-current' | 'product-assertion' | 'screening-worker' | 'response'; timing: ResumeStamp };
+  const inferenceSteps: InferenceStep[] = [], responseSteps: ResponseStep[] = [];
+  const inferenceScope = new AsyncLocalStorage<InferenceStep>();
+  const responseScope = new AsyncLocalStorage<true>();
+  let firstSendOutcome: number | undefined;
+  const responseAudits: Array<{ event: Parameters<SessionRelayPorts['audit']>[0]['event']; atMs: number }> = [];
+  function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
+    const settle = (outcome: ResumeObservation) => { Object.assign(stamp, { settledMs: clock(), outcome }); };
+    const completed = (value: Awaited<T>) => settle(accepted(value) ? 'accepted' : 'refused');
+    try {
+      const original = call();
+      if (original instanceof Promise) void original.then(completed, () => settle('rejected'));
+      else completed(original as Awaited<T>);
+      return original;
+    } catch (error) { settle('rejected'); throw error; }
+  }
+  function inferencePhase<T>(phase: InferenceBoundary, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
+    const step = inferenceScope.getStore();
+    if (step === undefined || step.boundaries.length >= 12) return call();
+    const timing = { startedMs: clock() };
+    step.boundaries.push({ phase, timing });
+    return timed(timing, call, accepted);
+  }
+  function responsePhase<T>(step: ResponseStep['step'], call: () => T, accepted: (value: Awaited<T>) => boolean): T {
+    if (firstSendOutcome === undefined || responseSteps.length >= 24) return call();
+    const timing = { startedMs: clock() };
+    responseSteps.push({ step, timing });
+    return timed(timing, call, accepted);
+  }
+  const relayProbe: ResumeRelayProbe = {
+    current: call => responsePhase('relay-current', call, value => value === true),
+    response: call => firstSendOutcome === undefined || responseSteps.some(row => row.step === 'response') ? call()
+      : responseScope.run(true, () => responsePhase('response', call, result => result.ok)),
+    audit(event) {
+      if (event === 'send-outcome') firstSendOutcome ??= clock();
+      if (firstSendOutcome !== undefined && responseAudits.length < 8) responseAudits.push({ event, atMs: clock() });
+    },
+  };
+  if (traceFirstResponse) {
+    const kernelPeer = sessionPeer.captureKernelUnixPeerAsync;
+    vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
+      inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
+    const screen = orderedScreen.runOrderedDesignScreen;
+    vi.spyOn(orderedScreen, 'runOrderedDesignScreen').mockImplementation(input => responseScope.getStore() === true
+      ? responsePhase('screening-worker', () => screen(input), result => result.ok)
+      : screen(input));
+  }
+
   const firstBrokerInvocation = new AsyncLocalStorage<true>();
   const orderedBrokers = new WeakSet<machineTransport.SessionMachineTransport>();
   const brokerStages: Partial<Record<ResumeBrokerStage, ResumeStamp>> = {};
@@ -333,15 +399,18 @@ async function observeDesignRun(run: string) {
   const startHost = orderedHost.startOrderedDesignHost;
   vi.spyOn(orderedHost, 'startOrderedDesignHost').mockImplementation(input => {
     orderedBrokers.add(input.brokerMachine);
+    if (traceFirstResponse) resumeRelayProbes.set(input.relayMachine, relayProbe);
     return startHost({ ...input, current: () => brokerPhase('host-current', () => input.current(), value => value === true) });
   });
   const createOrderedSession = orderedSession.createOrderedDesignSession;
   vi.spyOn(orderedSession, 'createOrderedDesignSession').mockImplementation(input => createOrderedSession({
     ...input,
-    current: () => brokerPhase(brokerStages['tool-before-plan-current'] === undefined
-      ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true),
-    assertCurrent: () => brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
-      ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
+    current: () => responseScope.getStore() === true ? responsePhase('controller-current', input.current, value => value === true)
+      : brokerPhase(brokerStages['tool-before-plan-current'] === undefined
+        ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true),
+    assertCurrent: () => responseScope.getStore() === true ? responsePhase('product-assertion', input.assertCurrent, () => true)
+      : brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
+        ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
   }));
   const createOrderedWriter = orderedWriter.createOrderedDesignAuditWriter;
   vi.spyOn(orderedWriter, 'createOrderedDesignAuditWriter').mockImplementation((context, store, observeRead) => {
@@ -367,6 +436,16 @@ async function observeDesignRun(run: string) {
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
   vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
+    if (traceFirstResponse && operation === 'inference-forward'
+      && peerLinks.get(peer)?.kind === 'inference-bridge' && inferenceSteps.length < 12) {
+      const step: InferenceStep = { mediate: { startedMs: clock() }, boundaries: [] };
+      inferenceSteps.push(step);
+      const invoke = () => mediatePeer(peer, operation, current => {
+        const stamp = step.effect = { startedMs: clock() };
+        return timed(stamp, () => effect(current), () => true);
+      });
+      return timed(step.mediate, () => firstSendOutcome === undefined ? invoke() : inferenceScope.run(step, invoke), result => result.ok);
+    }
     if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect);
     return brokerPhase('mediate-peer', () => mediatePeer(peer, operation, current =>
       brokerPhase('host-action', () => effect(current), () => true)), result => result.ok);
@@ -436,7 +515,17 @@ async function observeDesignRun(run: string) {
     if (options.context.role !== 'design') return capture(options);
     const connection = link(options.socket);
     connection.kind = options.context.kind;
-    return transport(connection, 'capture', () => capture(options), value => {
+    const selected = traceFirstResponse && connection.kind === 'inference-bridge' ? {
+      ...options,
+      current: () => inferencePhase('parent-current', () => options.current(), value => value === true),
+      audit: (event: machinePeer.UrlMachinePeerAudit) => inferencePhase('peer-audit', () => options.audit(event), () => true),
+      ...(options.effectCurrent === undefined ? {} : { effectCurrent() {
+        const value = options.effectCurrent!(), step = inferenceScope.getStore();
+        if (!value && step !== undefined) step.firstEffectGuardRefusalMs ??= clock();
+        return value;
+      } }),
+    } : options;
+    return transport(connection, 'capture', () => capture(selected), value => {
       if (value !== null && connection.kind === 'mcp-shim') firstMcpPeer ??= value;
       return value !== null;
     });
@@ -520,6 +609,7 @@ async function observeDesignRun(run: string) {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
+    ...(traceFirstResponse ? { firstInferenceResponse: { firstSendOutcome, inferenceSteps, responseSteps, responseAudits } } : {}),
     orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
@@ -982,7 +1072,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumedControllers.push(runtime);
             return runtime;
           });
-          if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run);
+          if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run, true);
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
