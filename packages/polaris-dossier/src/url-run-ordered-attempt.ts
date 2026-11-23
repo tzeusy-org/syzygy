@@ -297,12 +297,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         } finally { fresh.close(); }
       },
     });
-    if (!(await current())) throw refused();
-    // The host independently rechecks the delivery when activation resolves.
-    // Let any sampler started during the bootstrap check finish first.
+    // Let any sampler started during delivery finish before activating the host.
     await yieldToPoll();
     if (!(await input.waitForSamples())) throw refused();
     assertProcessingCurrent(); activate(controller);
+    // The host checks the complete delivery within its original activation deadline.
+    if (!(await host.waitForActivation())) throw refused();
     return Object.freeze({ delivery, launch, host, child, close,
       consumeTerminal,
       get terminalConsumed() { return consumedTerminal; },

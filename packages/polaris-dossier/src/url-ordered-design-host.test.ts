@@ -243,7 +243,16 @@ describe('bounded processing and protected result validation', () => {
 
 describe('production ordered host activation', () => {
   it('binds native prepared listeners before activation and gates terminal access until the genuine bounded controller arrives', async () => {
-    const f = await fixture(), host = await f.start();
+    const f = await fixture();
+    let releaseAuthority!: (accepted: boolean) => void, startedChecking!: () => void;
+    const authority = new Promise<boolean>(resolve => { releaseAuthority = resolve; });
+    const checking = new Promise<void>(resolve => { startedChecking = resolve; });
+    let holdAuthority = false;
+    const host = await f.start(undefined, () => {
+      if (!holdAuthority) return true;
+      startedChecking();
+      return authority;
+    });
     await access(f.brokerSocket); await access(f.relaySocket);
     expect(isOrderedDesignHostFor(host, f.profile)).toBe(true);
     expect(isOrderedDesignHostFor({ ...host }, f.profile)).toBe(false);
@@ -252,20 +261,36 @@ describe('production ordered host activation', () => {
     void terminal.catch(() => {});
     await new Promise(resolve => setTimeout(resolve, 20));
     expect(settled).toBe(false); expect(f.callbacks()).toBe(0);
+    holdAuthority = true;
+    let activated = false;
+    const activation = host.waitForActivation().then(value => { activated = true; return value; });
     f.activate(f.controller);
+    await checking;
+    await new Promise<void>(resolve => setImmediate(resolve));
+    expect(activated).toBe(false);
+    expect(settled).toBe(false);
+    releaseAuthority(true);
+    await expect(activation).resolves.toBe(true);
     await expect(terminal).rejects.toThrow('url-ordered-design-session-refused');
     expect(f.callbacks()).toBe(0);
   });
 
-  it.each(['deadline', 'rejection', 'copied-controller', 'foreign-profile'] as const)('closes both endpoints on %s without granting a callback', async reason => {
-    const f = await fixture(), host = await f.start(reason === 'deadline' ? Date.now() + 1500 : undefined);
+  it.each(['deadline', 'rejection', 'copied-controller', 'foreign-profile', 'delivery-refusal'] as const)('closes both endpoints on %s without granting a callback', async reason => {
+    const f = await fixture();
+    let current = true;
+    const host = await f.start(reason === 'deadline' ? Date.now() + 1500 : undefined, () => current);
     if (reason === 'rejection') f.reject(new Error('owned activation refused'));
     if (reason === 'copied-controller') f.activate({ ...f.controller });
     if (reason === 'foreign-profile') f.activate((await fixture()).controller);
+    if (reason === 'delivery-refusal') {
+      current = false;
+      f.activate(f.controller);
+    }
+    await expect(host.waitForActivation()).resolves.toBe(false);
     await absent(f.brokerSocket); await absent(f.relaySocket);
     await expect(host.readTerminal()).rejects.toThrow('url-ordered-design-host-unavailable');
     f.activate(f.controller);
-    if (reason === 'deadline') {
+    if (reason === 'deadline' || reason === 'delivery-refusal') {
       await expect.poll(() => f.stored.length).toBe(1);
       expect(JSON.parse(await readFile(f.stored[0]!, 'utf8')).kind).toBe('retired');
     } else expect(f.stored).toHaveLength(0);

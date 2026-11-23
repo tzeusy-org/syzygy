@@ -31,6 +31,8 @@ export interface OrderedDesignHostOptions {
 }
 export interface OrderedDesignHost extends SessionHost {
   readonly relay: SessionRelay;
+  /** True after the genuine controller and its current delivery have been accepted. */
+  waitForActivation(): Promise<boolean>;
   readTerminal(): ReturnType<Controller['readTerminal']>;
 }
 const hosts = new WeakMap<OrderedDesignHost, { readonly profile: OrderedDesignSessionProfile; readonly current: () => boolean }>();
@@ -70,6 +72,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (started) clearTimeout(activationTimer);
     return true;
   }), cancelled]).catch(() => { poison(); cancelActivation(); if (started) void close(); return false; });
+  const waitForActivation = async (): Promise<boolean> => await active && !closing && !failed;
   const current = async (): Promise<boolean> => await active && !closing && !failed
     && await input.current() === true && !closing && !failed;
   const selectedController = (): Controller => { if (!controller || closing || failed) throw refused(); return controller; };
@@ -149,7 +152,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
     started = true;
     if (controller) clearTimeout(activationTimer);
-    const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close,
+    const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close, waitForActivation,
       healthy: () => !closing && !failed && relay!.healthy(),
       readTerminal: async () => { if (!(await current())) throw refused(); return selectedController().readTerminal(); } });
     hosts.set(host, { profile, current: () => !closing && !failed && started && relay!.healthy() });
