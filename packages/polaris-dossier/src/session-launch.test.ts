@@ -53,6 +53,7 @@ const filesystem = vi.hoisted(() => ({
   beforeLstat: undefined as ((file: unknown) => Promise<void>) | undefined,
   afterLstatStart: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
   beforeOpen: undefined as ((file: unknown) => Promise<void>) | undefined,
+  beforeClose: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
   taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
   storageListing: undefined as { directory: string; afterFirstFile: () => void } | undefined,
 }));
@@ -92,7 +93,15 @@ vi.mock('node:fs/promises', async importOriginal => {
     },
     open: async (...args: Parameters<typeof actual.open>) => {
       if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(args[0]);
-      return actual.open(...args);
+      const handle = await actual.open(...args), beforeClose = filesystem.beforeClose;
+      if (beforeClose !== undefined) {
+        const close = handle.close.bind(handle);
+        handle.close = async () => {
+          try { await beforeClose(args[0]); }
+          finally { await close(); }
+        };
+      }
+      return handle;
     },
   };
 });
@@ -100,6 +109,7 @@ afterEach(async () => {
   filesystem.beforeLstat = undefined;
   filesystem.afterLstatStart = undefined;
   filesystem.beforeOpen = undefined;
+  filesystem.beforeClose = undefined;
   filesystem.taskListing = undefined;
   filesystem.storageListing = undefined;
   for (const stop of cleanup.splice(0).reverse()) await stop();
@@ -231,7 +241,7 @@ async function isolateStorageRoots(view: UrlSessionLaunchOptions['view'], workOp
     if (file === view.workDirectory) { workOpened(); return open(work, ...options); }
     return open(file, ...options);
   });
-  return { work, restore: () => observation.mockRestore() };
+  return { home, work, restore: () => observation.mockRestore() };
 }
 
 async function privateLaunchOptions(root: string, profile: NativeSessionProfile, role: 'author' | 'design',
@@ -1069,6 +1079,73 @@ describe('prepared private CLI launch',()=>{
     const outcome = await child.finished;
     expect(heldAtStop).toBe(true);
     expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, groupTermination: 'confirmed' });
+  }, 15_000);
+
+  it.each(['current-close', 'failed-close'] as const)('overlaps the next storage root and joins a %s before publishing or retrying', async disposition => {
+    const f = await launchFixture();
+    const confirm = vi.fn((current: boolean) => current);
+    const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: { verify: () => true, confirm } });
+    const inspection = observeUrlSessionInspectionForTest(preparation)!;
+    let toolEntered!: (entered: true) => void, releaseTool!: () => void;
+    let closeEntered!: (entered: true) => void, releaseClose!: () => void;
+    let workEntered!: (entered: true) => void, missingObserved!: (entered: true) => void;
+    const enteredTool = new Promise<true>(resolve => { toolEntered = resolve; });
+    const enteredClose = new Promise<true>(resolve => { closeEntered = resolve; });
+    const enteredWork = new Promise<true>(resolve => { workEntered = resolve; });
+    const missing = new Promise<true>(resolve => { missingObserved = resolve; });
+    const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+    const heldClose = new Promise<void>(resolve => { releaseClose = resolve; });
+    const host = await f.start({ beforeTool: () => { toolEntered(true); return heldTool; } });
+    let workOpens = 0;
+    const census = await isolateStorageRoots(f.launch.view, () => { workOpens++; workEntered(true); });
+    const entry = 'owned-census-file', lstat = fsPromises.lstat;
+    const fault = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
+      const file = args[0];
+      if (disposition !== 'failed-close' || typeof file !== 'string' || !file.startsWith('/proc/self/fd/') || path.basename(file) !== entry) return lstat(...args);
+      unlinkSync(file);
+      return lstat(...args).catch((error: NodeJS.ErrnoException) => {
+        if (error.code === 'ENOENT') missingObserved(true);
+        throw error;
+      });
+    });
+    filesystem.beforeClose = file => {
+      if (file !== census.home) return;
+      closeEntered(true);
+      return heldClose.then(() => {
+        if (disposition === 'failed-close') throw new Error('owned storage close failure');
+      });
+    };
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      const child = await launchRestrictedUrlSession({ preparation, host: { ...host, close: () => { releaseTool(); return host.close(); } } });
+      cleanup.push(child.stop);
+      try {
+        const ended = child.finished.then(() => false);
+        expect(await Promise.race([enteredTool, ended])).toBe(true);
+        writeFileSync(path.join(census.work, entry), 'owned');
+        vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
+        const sample = child.waitForSample();
+        expect(await Promise.race([enteredClose, ended])).toBe(true);
+        expect(await Promise.race([enteredWork, ended])).toBe(true);
+        if (disposition === 'failed-close') expect(await Promise.race([missing, ended])).toBe(true);
+        expect(inspection().latest?.phases.storage?.outcome).toBeUndefined();
+        expect(confirm).not.toHaveBeenCalled();
+        releaseClose();
+        expect(await sample).toBe(disposition === 'current-close');
+        expect(workOpens).toBe(1);
+        if (disposition === 'failed-close') {
+          expect(confirm).not.toHaveBeenCalled();
+          expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
+        } else {
+          expect(confirm).toHaveBeenCalledExactlyOnceWith(true);
+          expect((await child.stop()).sampledStorageBytes).toBe(5);
+        }
+      } finally { releaseClose(); releaseTool(); await child.stop(); }
+    } finally {
+      vi.useRealTimers();
+      fault.mockRestore();
+      census.restore();
+    }
   }, 15_000);
 
   it('refuses a task census when an opened listing disappears partway through', async () => {

@@ -277,13 +277,31 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
 
 const STORAGE_STAT_BATCH = 4;
 const STORAGE_CENSUS_RESTARTS = 2;
+const STORAGE_MAX_DEPTH = 32;
 /** Descriptor-anchored, entry/depth/time bounded logical-file census. Symlink,
  * special and multiply linked entries fail closed; it is sampled, not a quota. */
 async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void): Promise<number> {
   let bytes = 0, entries = 0;
   const entryDisappeared = Symbol();
+  const closing: Promise<void>[] = [];
+  let closeFailed = false;
+  const drainCloses = async (): Promise<void> => {
+    await Promise.all(closing.splice(0));
+    if (closeFailed) throw refused();
+  };
+  const checkCensus = (): void => {
+    if (closeFailed) throw refused();
+    check();
+  };
   const walk = async (file: string, depth: number): Promise<void> => {
-    check(); if (depth > 32 || ++entries > limits.entries) throw refused();
+    checkCensus();
+    if (depth > STORAGE_MAX_DEPTH || ++entries > limits.entries) throw refused();
+    // At maximum depth the ancestors and the next anchor already use the
+    // former descriptor bound. Drain a previous sibling before opening it.
+    if (depth === STORAGE_MAX_DEPTH && closing.length !== 0) {
+      await drainCloses();
+      checkCensus();
+    }
     const handle = await open(file, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW).catch((error: NodeJS.ErrnoException) => {
       // An enumerated child can disappear between lstat and open. Roots
       // must remain available, and other open errors still stop inspection.
@@ -295,14 +313,14 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
       const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
       const inspect = async (): Promise<void> => {
         if (batch.length === 0) return;
-        check();
+        checkCensus();
         const children = batch.splice(0);
         const samples = await Promise.allSettled(children.map(child => child.sample));
-        check();
+        checkCensus();
         const disappeared = (sample: PromiseSettledResult<Stats>): boolean =>
           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
         for (const [index, sample] of samples.entries()) {
-          check();
+          checkCensus();
           try {
             if (sample.status === 'rejected') throw disappeared(sample) ? entryDisappeared : sample.reason;
             const stat = sample.value;
@@ -333,7 +351,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
           await inspect();
           if (bytes > limits.storageBytes) return;
         }
-        check();
+        checkCensus();
         if (++entries > limits.entries) throw refused();
         const child = path.join(base, item.name), sample = lstat(child);
         void sample.catch(() => {}); // The batch handles failures after settling.
@@ -346,15 +364,24 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
       if (batch.length !== 0) await inspect();
     } finally {
       if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));
-      await handle.close();
+      // Its iterator and all anchored reads have settled. Start closing now
+      // and let one other directory use the time before joining both closes.
+      closing.push(handle.close().catch(() => { closeFailed = true; }));
+      if (closing.length === 2) await drainCloses();
     }
   };
   const measure = async (): Promise<number> => {
-    for (const root of roots) {
-      await walk(root, 0);
-      if (bytes > limits.storageBytes) break;
+    try {
+      for (const root of roots) {
+        await walk(root, 0);
+        if (bytes > limits.storageBytes) break;
+      }
+      return bytes;
+    } finally {
+      // A failed close defeats even a complete count or a disappearance that
+      // would otherwise be retried. All started closes are joined in either case.
+      await drainCloses();
     }
-    return bytes;
   };
   for (let restart = 0; ; restart++) {
     try { return await measure(); }
