@@ -526,7 +526,8 @@ async function observeInterruptedResume(run: string) {
 }
 
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
-async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean) {
+async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean,
+  handoffStates: ('unknown' | 'reached')[]) {
   const credential = await loadSessionCredential({ environment: { ANTHROPIC_API_KEY: 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL' },
     credentialFile: path.join(f.hidden, 'no-ambient-credential.json'), now: Date.now });
   if (!credential.ok) throw new Error('owned composed credential refused');
@@ -542,7 +543,11 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
     credential: credential.credential, sourceReader: f.openReader, stopRequested,
     authorHandoff: {
       current: () => readRawReadDisclosure(f.run, f.record.declared.agentProvider) !== null,
-      reached: () => recordRawReadHandoff(f.run, f.record.declared.agentProvider, 'reached'),
+      record: handoff => {
+        const written = recordRawReadHandoff(f.run, f.record.declared.agentProvider, handoff);
+        if (written) handoffStates.push(handoff);
+        return written;
+      },
     },
     production: { ...(f.machine ?? { governanceRoot: path.join(f.root, 'observing/.syzygy'), protectedRoot: path.join(f.hidden, 'machine'),
       parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
@@ -783,7 +788,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }), fidelityDeliveredFor: [], designDeliveredFor: [], fidelityDeliveredPairs: [], notified: [], siteFor: {}, launches: [], stopGeneration: 'c'.repeat(32) };
     try { writeUrlSupervisorState(stateRoot, state); } catch { throw new Error(`own state: ${JSON.stringify(state)}`); }
     const stop = openUrlSupervisorStop(stateRoot, state); cleanup.push(async () => stop.close());
-    const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested').catch(async () => {
+    const handoffFile = path.join(f.run, 'raw-read-disclosure.json');
+    expect(JSON.parse(await fs.readFile(handoffFile, 'utf8'))).toEqual({
+      schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'not-reached',
+    });
+    const handoffStates: ('unknown' | 'reached')[] = [];
+    const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
       const audit = [];
       for (const role of ['author', 'inventory', 'fidelity', 'design']) {
         const text = await fs.readFile(path.join(f.hidden, `sessions-${role}.jsonl`), 'utf8').catch(() => '');
@@ -795,9 +805,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit }));
     }); cleanup.push(controller.stop);
-    expect(JSON.parse(await fs.readFile(path.join(f.run, 'raw-read-disclosure.json'), 'utf8'))).toEqual({
-      schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'reached',
-    });
+    expect(handoffStates[0]).toBe('unknown');
     function beginOwnedStop() {
       try {
         if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);
@@ -850,6 +858,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       while (!authorPassed() && failures.length === 0 && performance.now() < until)
         await new Promise(resolve => setTimeout(resolve, 250));
       expect(failures).toEqual([]);
+      expect(handoffStates).toEqual(['unknown', 'reached']);
+      expect(JSON.parse(await fs.readFile(handoffFile, 'utf8'))).toEqual({
+        schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'reached',
+      });
       inv.allow(); design.allow();
       const packetUntil = performance.now() + 60_000;
       while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)

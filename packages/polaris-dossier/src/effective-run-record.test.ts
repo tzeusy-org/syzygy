@@ -320,7 +320,8 @@ describe('effective host run readers', () => {
     const briefText = fs.readFileSync(path.join(run, 'brief.md'), 'utf8');
     expect(briefText).toContain('URL-supervised local CLI through checked transport relay');
     expect(briefText).toContain('model selection origin supported-default');
-    expect(briefText).toContain('source_read');
+    expect(briefText).toContain('Source access: host-verified pinned objects through source_read; the host clone is not mounted in the role view.');
+    expect(briefText).toContain("The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider.");
     const status = runStatus(run, () => LATER, url.authority);
     expect(status.ok).toBe(true);
     if (!status.ok) throw new Error('own URL status refused');

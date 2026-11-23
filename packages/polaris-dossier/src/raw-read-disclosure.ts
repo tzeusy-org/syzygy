@@ -9,7 +9,7 @@ import { assertProductFileUnchanged, snapshotProductFile } from './url-product-r
 const VERSION = 'polaris-dossier-raw-read-disclosure/1';
 const LIMITS = { maxBytes: 65_536, maxNodes: 16, maxDepth: 2 };
 const FILE = RUN_LAYOUT.rawReadDisclosure;
-const RISK = "The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider.";
+export const RAW_READ_DISCLOSURE_RISK = "The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider.";
 export const RAW_READ_DISCLOSURE_REFUSAL = 'REQ-polaris-generation-033 requires a valid raw-read disclosure before this step. Start a new run with syzygy dossier init or syzygy polaris <url>.';
 
 export interface RawReadDisclosure {
@@ -51,7 +51,7 @@ export function describeRawReadDisclosure(disclosure: RawReadDisclosure | null):
   return {
     authorHandoff: disclosure?.authorHandoff ?? 'Unknown',
     label: disclosure === null || disclosure.authorHandoff === 'unknown' ? 'Unknown' : 'Inferred',
-    risk: RISK,
+    risk: RAW_READ_DISCLOSURE_RISK,
     uncapturedTransmissions: 'Unknown',
   };
 }

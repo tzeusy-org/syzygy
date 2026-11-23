@@ -10,7 +10,7 @@ import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
 import { decideExecutionRule, type ExecutionChoice } from './execution-rule.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
-import { opensOf } from './fs-patch.testkit.js';
+import { opensOf, patchFs } from './fs-patch.testkit.js';
 import { GitObjectReadRefusal, type PinnedObjectReader } from './git-object-reader.js';
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig, type RunConfig } from './run-config.js';
@@ -33,6 +33,7 @@ const sha = (text: string): string => createHash('sha256').update(text, 'utf8').
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
+const D11_BRIEF_RULE = "The dossier authoring session's own reads of the raw clone are unscreened. A secret from that clone may reach the run's declared provider. Send content only to the provider declared for this run. Syzygy applies the bound screening policy to its Git reads, checked tools and relay traffic, and artifacts written back to Syzygy. Preserve its exclusions and private metadata protections. Your read account is self-reported. Transmissions outside checked channels are Unknown.";
 
 const SUBJECT: RunSubject = {
   repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis', role: 'observed-source' },
@@ -113,6 +114,22 @@ describe('brief: issued', () => {
     const result = await reverifyPinnedRevision(run, ports.sources, NOW, { openReader: tree() });
     expect(result).toMatchObject({ ok: false, refusals: expect.arrayContaining([{ code: 'source-changed', reason: expect.any(String) }]) });
   });
+  it('publishes no handoff files when the disclosure transition cannot be recorded', async () => {
+    const run = runDirectory(), companion = 'raw-read-disclosure.json';
+    const before = new Map(fs.readdirSync(run).map(name => [name, read(run, name)]));
+    let transitionAttempted = false;
+    const restore = patchFs('renameSync', rename => (from, to) => {
+      if (path.basename(String(to)) !== companion) return rename(from, to);
+      transitionAttempted = true;
+      throw Object.assign(new Error('fixture refusal'), { code: 'EIO' });
+    });
+    try {
+      const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
+      expect(transitionAttempted).toBe(true);
+      expect(result).toMatchObject({ ok: false, refusal: { stage: 'raw-read-disclosure', reason: expect.stringContaining('Start a new run') } });
+      expect(new Map(fs.readdirSync(run).map(name => [name, read(run, name)]))).toEqual(before);
+    } finally { restore(); }
+  });
   it('writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version', async () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
@@ -145,8 +162,8 @@ describe('brief: issued', () => {
     expect(brief).not.toContain('Version: `polaris-reader-standards-v1`');
     expect(brief).toContain('Read them before you outline: write every page as an abstraction tree, and give the technology choices their table.');
     // The heading's digest is the reference file's; the carried, re-levelled text says it does not hash to it (R-PDJA-17-STANDARDS-1 note 1).
-    expect(brief).toContain('SEC-2 and SEC-5 bind your own reads and sends');
-    expect(brief).toContain('Never send secrets or unclassifiable content.');
+    expect(brief).toContain(D11_BRIEF_RULE);
+    expect(brief).not.toContain('SEC-2 and SEC-5 bind your own reads and sends');
     expect(brief).toContain('Eligible content classes: code-content, project-documentation, governance-text');
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
@@ -367,7 +384,7 @@ const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ reado
 };
 
 describe('brief: shape packs (version 2.4)', () => {
-  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph and task-routes section', async () => {
+  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, task-routes section and D11 rule', async () => {
     const { run, brief, record } = await briefOf(['src/server.c', 'README.md']);
     const golden: string = JSON.parse(fs.readFileSync(BRIEF_V10_GOLDEN, 'utf8')).brief;
     const schemaSha = sha(read(run, 'draft.schema.json'));
@@ -376,6 +393,7 @@ describe('brief: shape packs (version 2.4)', () => {
     swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v13`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
       `- Draft schema: \`polaris-dossier-local-draft-v7\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
+    swap('SEC-2 and SEC-5 bind your own reads and sends: use only content classified and screened under the bound screening policy for this run, preserve its exclusions and private metadata protections, and send content only to the declared provider for this run. Never send secrets or unclassifiable content. A provider declaration grants no screening exception. Your read account and tool transmissions are self-reported, never observed compliance.', D11_BRIEF_RULE);
     const sections = lines.findIndex((line) => line.startsWith('Write one section per topic, in this order, each section\'s `id` the topic\'s id'));
     expect(sections).toBeGreaterThan(-1);
     // Brief v11 (version 2.4) added the thesis paragraph; brief v12 (version 2.5) the figure-kinds paragraph immediately after it.

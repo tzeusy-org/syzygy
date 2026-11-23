@@ -63,7 +63,7 @@ export async function checkUrlSessionCurrent(input: {
   } catch { input.bindingChanged(); return false; }
 }
 type Failure = 'binding-changed' | 'launch-unavailable' | 'audit-unavailable' | 'control-unavailable' | 'role-ended'
-  | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget';
+  | 'transport-unavailable' | 'provenance-unavailable' | 'cleanup-unconfirmed' | 'cpu-budget' | 'raw-read-disclosure-unavailable';
 interface LaunchHistoryPort {
   readonly promptDigests: Readonly<Record<UrlLaunchHistoryRole, string>>;
   readonly register: (history: UrlCommittedLaunchHistory, waitForSamples: () => Promise<boolean>) => void | Promise<void>;
@@ -89,8 +89,8 @@ export interface UrlRunSessionsOptions {
   readonly current: () => boolean | Promise<boolean>; readonly now: () => number; readonly deadline: number;
   /** Host operator request. It closes effects while preserving cleanup audit writes. */
   readonly stopRequested?: () => boolean;
-  /** Bound only by the supervisor. Record actual native Author launch. */
-  readonly authorHandoff?: { readonly current: () => boolean; readonly reached: () => boolean };
+  /** Bound by the supervisor to the exact run and its declared provider. */
+  readonly authorHandoff?: { readonly current: () => boolean; readonly record: (state: 'unknown' | 'reached') => boolean };
   readonly credential: SessionCredential;
   readonly resume?: {
     readonly verified: Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { readonly ok: true }>;
@@ -480,7 +480,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         if (plan === undefined || (ordered && role === 'design')) throw new Error('url-run-sessions-unavailable');
         const scope = audit.scope(role);
         const disclosure = role === 'author' ? options.authorHandoff : undefined;
-        let handingOff = disclosure !== undefined;
+        let handingOff = disclosure !== undefined, confirmedHandoff = false;
+        const refuseDisclosure = (): never => {
+          fail('raw-read-disclosure-unavailable');
+          throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
+        };
         const launchCurrent = disclosure === undefined ? current : async (): Promise<boolean> =>
           await current() && (!handingOff || disclosure.current());
         if (!(await current())) throw new Error();
@@ -543,6 +547,14 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
                 budget.uncertainAttempt(role); fail('transport-unavailable');
               }
             } catch { fail('audit-unavailable'); throw new Error('url-run-sessions-unavailable'); }
+            // A genuine Messages admission binds the pinned Author prompt to a
+            // kernel-authenticated role request. The relay has yet to forward it.
+            if (disclosure !== undefined && !confirmedHandoff && machine !== undefined
+              && event.event === 'attempt-allowed' && event.route === 'messages') {
+              if (sessionMachineEffectCurrent() !== true) throw new Error('url-run-sessions-unavailable');
+              if (!disclosure.record('reached')) refuseDisclosure();
+              confirmedHandoff = true;
+            }
           },
           beforeTool: async event => {
             try { await audit.append({ kind: 'before-tool', role, scope,
@@ -595,9 +607,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         processes.set(role, child);
         const capture = captures.get(role)!;
         rememberTerminal(role, child, () => false);
-        if (disclosure?.reached() === false) {
-          fail('provenance-unavailable'); throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
-        }
+        // A launcher handle alone cannot establish the Author handoff.
+        if (disclosure?.record('unknown') === false) refuseDisclosure();
         if (role !== 'author' && launchHistory !== undefined) {
           try {
             if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();

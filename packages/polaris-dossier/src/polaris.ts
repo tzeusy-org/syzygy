@@ -444,7 +444,7 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
       current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
       stopRequested: () => stop.status() === 'requested',
-      authorHandoff: { current: disclosureCurrent, reached: () => recordRawReadHandoff(state.run, provider, 'reached') },
+      authorHandoff: { current: disclosureCurrent, record: handoff => recordRawReadHandoff(state.run, provider, handoff) },
       ...(prepared.continuation === undefined ? {} : { resume: { verified: prepared.continuation.verified, claim: prepared.continuation.claim } }),
       credential: loaded.credential, sourceReader: prepared.openReader,
       // The machine independently checks the exact held continuation claim at
@@ -454,9 +454,14 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       launchHistory: { promptDigests, register: artifacts.registerLaunchHistory }, runDossier: artifacts.runDossier,
       artifactOrigins: artifacts.artifactOrigins, dossierOrigins: artifacts.dossierOrigins,
       toolReceipt: artifacts.toolReceipt, toolReceiptCommitted: artifacts.committed, ask: askUrlSessionQuestion,
-      onFailure: reason => { screen.event(`checked session stopped: ${reason}`); },
+      onFailure: reason => { screen.event(reason === 'raw-read-disclosure-unavailable'
+        ? RAW_READ_DISCLOSURE_REFUSAL : `checked session stopped: ${reason}`); },
     });
-  } catch { loaded.credential.close(); throw new Error('url-supervisor-unavailable'); }
+  } catch (cause) {
+    loaded.credential.close();
+    if (cause instanceof Error && cause.message === RAW_READ_DISCLOSURE_REFUSAL) throw cause;
+    throw new Error('url-supervisor-unavailable');
+  }
 }
 const boundedCanonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 function metadataAdmitted(value: unknown, screen: DossierScreen): boolean {

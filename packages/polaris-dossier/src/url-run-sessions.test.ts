@@ -143,8 +143,12 @@ describe('one root lifecycle for four restricted URL roles', () => {
     } finally { await runtime.stop(); }
   });
   it('prepares before each actual host, captures safe receipts and usage, and closes each owned process before audit', async () => {
-    const f = await runtimeFixture(), runtime = await f.start(f.options);
+    const f = await runtimeFixture(), handoffs: string[] = [];
+    const runtime = await f.start({ ...f.options, authorHandoff: {
+      current: () => true, record: (handoff) => { handoffs.push(handoff); return true; },
+    } });
     try {
+    expect(handoffs).toEqual(['unknown']);
     expect(f.calls).toEqual(URL_ROLES.flatMap(role => [`prepare:${role}`, `host:${role}`, `launch:${role}`]));
     expect(await runtime.publish('design', { event: 'design-round-prepared', round: 1, path: 'round-1/design-view.json',
       packetSha256: 'a'.repeat(64), viewSha256: 'b'.repeat(64) } as never)).toBe(false);
@@ -156,6 +160,7 @@ describe('one root lifecycle for four restricted URL roles', () => {
       credentialIdentity: 'Unknown', exposureMode: 'private-local-cli', governingRule: 'GOVERNANCE-SIMPLIFICATION-D10', admission,
       received: { digest: 'a'.repeat(64), bytes: 100 }, route: 'messages', consumedToolResults: [], response: null, status: null } as const;
     await host.audit({ ...exchange, event: 'attempt-allowed', outcome: 'allowed' });
+    expect(handoffs).toEqual(['unknown']);
     await host.audit({ ...exchange, event: 'send-attempt', outcome: 'attempted' });
     await host.audit({ ...exchange, event: 'send-outcome', outcome: 'local-request-flushed' });
     expect(host.observeUsage({ inputTokens: 3, outputTokens: 5, cacheCreationInputTokens: 2, cacheReadInputTokens: 1 })).toBe(true);

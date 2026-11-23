@@ -7,7 +7,7 @@ import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
 import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, TASK_ROUTE_MAX, TASK_ROUTE_MIN, TASK_ROUTE_STEP_MAX, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule, type PermittingArm } from './execution-rule.js';
-import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
+import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { launchedMarkerState } from './launched.js';
 import type { Outcome } from './outcome.js';
@@ -22,7 +22,7 @@ import { deriveStructure } from './derive.js';
 import { secretPathOf } from './derived-record.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
 import { placementSubjectOf, screenLoaderOf, type ScreenLoader } from './screen.js';
-import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
+import { RAW_READ_DISCLOSURE_REFUSAL, RAW_READ_DISCLOSURE_RISK, readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { selectShapePacks, shapePackSha256, type ShapePack } from './shape-packs.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
@@ -164,7 +164,9 @@ export function renderBrief(input: BriefInput): string {
     ...(input.effective?.kind === 'url'
       ? effectiveUrlDisclosures({ subject }, input.effective.declaration).map(item => `${item.text} [${item.label}]`)
       : [`Declared provider: ${declared.agentProvider}. Eligible content classes: ${subject.contentClasses.join(', ')} (declarations, Inferred; not an account of transmission).`]),
-    SOURCE_SCREENING_RULE,
+    [RAW_READ_DISCLOSURE_RISK, 'Send content only to the provider declared for this run.',
+      'Syzygy applies the bound screening policy to its Git reads, checked tools and relay traffic, and artifacts written back to Syzygy. Preserve its exclusions and private metadata protections.',
+      'Your read account is self-reported. Transmissions outside checked channels are Unknown.'].join(' '),
     '',
     input.effective?.kind === 'url' ? 'Use the sessionId in the checked author role prompt for every draft.' : SESSION_ID_RULE('draft'),
     '',
@@ -423,18 +425,18 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     stageStatement: issuedBriefStatement({ role: 'authoring' }, copy.copy !== null),
     label: 'Inferred',
   };
-  if (readRawReadDisclosure(run, declared.agentProvider) === null) return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+  // For an operator handoff, record the uncertainty before any of the brief
+  // files becomes available. URL handoff is recorded by the native supervisor.
+  const disclosureCurrent = checked.effective?.kind === 'url'
+    ? readRawReadDisclosure(run, declared.agentProvider) !== null
+    : recordRawReadHandoff(run, declared.agentProvider, 'unknown');
+  if (!disclosureCurrent) return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
   try {
     fs.writeFileSync(path.join(run, RUN_LAYOUT.brief), briefText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.draftSchema), schemaText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.briefRecord), `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `the brief could not be written (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'}); any file already written stays, and the run cannot be briefed again`);
-  }
-  // The operator can now hand the brief to an external agent. Syzygy cannot
-  // establish whether that session was actually reached.
-  if (checked.effective?.kind !== 'url' && !recordRawReadHandoff(run, declared.agentProvider, 'unknown')) {
-    return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
   }
   return {
     ok: true,
