@@ -157,6 +157,12 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
 type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
+type ResumeAuditSetup = ResumeStamp & {
+  declarations?: number;
+  pendingFilesystemOperations?: number;
+  pendingCallbacks?: number;
+  authority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number; longestMs: number };
+};
 type ResumeConnection = {
   ordinal: number;
   boundMs?: number;
@@ -814,6 +820,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
+    let resumeAuditSetup: ResumeAuditSetup | undefined;
     let eligiblePhase = 'fixture';
     let eligibleProgress: () => Record<string, unknown> = () => ({});
     if (eligibleStop) {
@@ -944,7 +951,40 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         resumeChecks.push({ phase: 'resumed-guards', policyWithdrawal: 'refused', claimWithdrawal: 'refused' });
       }
       const resumedAudit = cutTaken;
-      const actual = await createAudit(options);
+      const setup: ResumeAuditSetup | undefined = resumedAudit && scenario === 'stop-resume'
+        ? resumeAuditSetup = { startedMs: performance.now(), authority: {
+          started: 0, accepted: 0, refused: 0, rejected: 0, totalMs: 0, longestMs: 0,
+        } }
+        : undefined;
+      const actual = await createAudit(setup === undefined ? options : { ...options, current: () => {
+        if (setup.outcome !== undefined) return options.current();
+        const authority = setup.authority, started = performance.now();
+        authority.started++;
+        const record = (outcome: ResumeObservation): void => {
+          if (setup.outcome !== undefined) return;
+          const elapsed = performance.now() - started;
+          authority[outcome]++;
+          authority.totalMs += elapsed;
+          authority.longestMs = Math.max(authority.longestMs, elapsed);
+        };
+        try {
+          const current = options.current();
+          if (typeof current === 'boolean') record(current ? 'accepted' : 'refused');
+          else void current.then(value => record(value ? 'accepted' : 'refused'), () => record('rejected'));
+          return current;
+        } catch (error) {
+          record('rejected');
+          throw error;
+        }
+      } }).catch(error => {
+        if (setup !== undefined) Object.assign(setup, { settledMs: performance.now(), outcome: 'rejected' });
+        throw error;
+      });
+      if (setup !== undefined) {
+        const { declarations, pendingCallbacks, pendingFilesystemOperations } = actual.summary();
+        Object.assign(setup, { settledMs: performance.now(), outcome: actual.ok ? 'accepted' : 'refused',
+          declarations, pendingCallbacks, pendingFilesystemOperations });
+      }
       if (!actual.ok) return actual;
       if (resumedAudit && scenario === 'stop-resume') resumedDesignAudit = path.join(options.parent, `${options.name}-design.jsonl`);
       return { ...actual,
@@ -1289,7 +1329,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeDiagnostic: resumeDiagnostic?.(),
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
             launchesBeforeResume, launchesAfterResume: [...relayRoles],
@@ -1334,7 +1374,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence,
           initialDesignAudit, initialRoleInspections: initialDiagnostic?.().roleInspections,
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
       }
@@ -1342,7 +1382,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialDiagnostic?.().roleInspections,
-        resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
+        resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
