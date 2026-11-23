@@ -493,7 +493,7 @@ describe('trusted URL artifact producer bridge', () => {
       expect(readsAtWithdrawal).toBeDefined();
       expect(snapshot.mock.calls).toHaveLength(readsAtWithdrawal!);
       f.verifyCurrent.withImplementation(() => true, () => {
-        expect(() => bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
+        expect(() => bridge.metadata()).toThrow('url-run-artifacts-unavailable');
       });
     } finally {
       snapshot.mockRestore();
