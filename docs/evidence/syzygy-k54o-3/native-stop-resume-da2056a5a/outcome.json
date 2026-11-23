@@ -1,0 +1,297 @@
+{
+  "subject": {
+    "commit": "da2056a5a40ad12128418714149dc4ca57728c08",
+    "hostedMergeTree": "fed7ea1f8ef7c77c468de354dc50cdabc2920cf6",
+    "filesSha256": {
+      "packages/polaris-dossier/src/session-launch.ts": "03c3d863298b3e18498ed42d678cfde33342e2a545dbb3ae0b56fb3eefab26f8",
+      "packages/polaris-dossier/src/url-run-sessions.ts": "972d462e3d1d891047c673a122b71d906945ffb76779d391692b5c1d869f6416",
+      "packages/polaris-dossier/src/url-session-audit.ts": "145c864cb8114e832b5cdd8aecf139dd80d3933475a6eb2258290d0f0287e03a",
+      "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "f6fe7e4095912d9ad92e699089e3892389c1fb0cb790f73d9a1856f05a855ad9",
+      "packages/polaris-dossier/src/url-run-composed.test.ts": "c29ca3847e2e420bf04349ae05a71c8e502ad58317738c6d9df09fac0a04e811",
+      "packages/polaris-dossier/src/url-ordered-design-host.ts": "d7f897700fba6f94487016a29aad4096ee752a38a694fa29928c3f701e98f6ee"
+    }
+  },
+  "hostedJob": {
+    "jobId": 137316382145,
+    "runId": 45057465334,
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45057465334/job/137316382145",
+    "startedAt": "2026-11-22T18:54:03Z",
+    "testStepCompletedAt": "2026-11-22T19:06:07Z",
+    "conclusion": "failure",
+    "logSha256": "e0a86b5ea6ac8bbe648e5fe44ecabde0adbfe9586e30da5a2f260ac428a979ce"
+  },
+  "suite": {
+    "files": 137,
+    "passed": 3854,
+    "failed": 2,
+    "skipped": 3
+  },
+  "cases": [
+    {
+      "name": "complete",
+      "outcome": "passed",
+      "milliseconds": 107989
+    },
+    {
+      "name": "delivery-stop",
+      "outcome": "passed",
+      "milliseconds": 63722
+    },
+    {
+      "name": "stop-resume",
+      "outcome": "failed",
+      "milliseconds": 316051
+    },
+    {
+      "name": "eligible-stop-resume",
+      "outcome": "failed",
+      "milliseconds": 92047
+    }
+  ],
+  "publicInterruptedRecovery": {
+    "resumedExit": {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    },
+    "authenticatedConnections": [
+      {
+        "ordinal": 1,
+        "stages": {
+          "open": {
+            "startedMs": 85051.787,
+            "settledMs": 90971.773,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 85051.916,
+            "settledMs": 88063.783,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 85236.874,
+            "settledMs": 88063.736,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 88063.937,
+            "settledMs": 90971.632,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 180000,
+        "kind": "inference-bridge"
+      },
+      {
+        "ordinal": 2,
+        "stages": {
+          "open": {
+            "startedMs": 199857.27,
+            "settledMs": 203615.079,
+            "outcome": "accepted"
+          },
+          "accept": {
+            "startedMs": 199857.449,
+            "settledMs": 201850.233,
+            "outcome": "accepted"
+          },
+          "capture": {
+            "startedMs": 200001.92,
+            "settledMs": 201850.192,
+            "outcome": "accepted"
+          },
+          "authorize": {
+            "startedMs": 201850.337,
+            "settledMs": 203614.899,
+            "outcome": "accepted"
+          }
+        },
+        "boundMs": 85000,
+        "kind": "mcp-shim"
+      }
+    ],
+    "samples": {
+      "started": 300,
+      "verified": 300,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 299,
+      "confirmRefused": 1,
+      "confirmRejected": 0
+    },
+    "firstRefusal": {
+      "ordinal": 300,
+      "phases": {
+        "process": {
+          "startedMs": 0.05846799997380003,
+          "settledMs": 385.97391299996525,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.09540299995569512,
+          "settledMs": 144.76027599995723,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.09708599996520206,
+          "settledMs": 388.93767499999376,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 388.9434239999973,
+          "settledMs": 424.8416679999791,
+          "outcome": "refused"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "authority-refused",
+        "elapsedMs": 424.9307929999777
+      }
+    },
+    "broker": {
+      "invocations": 1,
+      "firstPeerInvocations": 1,
+      "faultMs": 228937.958,
+      "stages": {
+        "invoke": {
+          "startedMs": 206413.335,
+          "settledMs": 228937.907,
+          "outcome": "rejected"
+        },
+        "host-current": {
+          "startedMs": 206413.431,
+          "settledMs": 216771.726,
+          "outcome": "accepted"
+        },
+        "mediate-peer": {
+          "startedMs": 216771.891,
+          "settledMs": 228937.782,
+          "outcome": "refused"
+        },
+        "host-action": {
+          "startedMs": 220056.099,
+          "settledMs": 228900.633,
+          "outcome": "rejected"
+        },
+        "tool-before-plan-current": {
+          "startedMs": 220180.987,
+          "settledMs": 220985.22,
+          "outcome": "accepted"
+        },
+        "transfer-bounds": {
+          "startedMs": 221436.78,
+          "settledMs": 221570.934,
+          "outcome": "accepted"
+        },
+        "plan-work-hold": {
+          "startedMs": 221571.123,
+          "settledMs": 221571.885,
+          "outcome": "accepted"
+        },
+        "create-work-budget": {
+          "startedMs": 221571.924,
+          "settledMs": 221572.293,
+          "outcome": "accepted"
+        },
+        "tool-before-audit-guard": {
+          "startedMs": 221572.435,
+          "settledMs": 222015.219,
+          "outcome": "accepted"
+        },
+        "prepared-store-append": {
+          "startedMs": 223869.497,
+          "settledMs": 228899.813,
+          "outcome": "rejected"
+        }
+      }
+    },
+    "retainedAuditKinds": {
+      "status": "read",
+      "count": 20,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:dossier_step",
+        "ordered:prepared"
+      ]
+    }
+  },
+  "eligibleColdRecovery": {
+    "resumeChecks": [],
+    "failures": [
+      "transport-unavailable"
+    ],
+    "closed": true,
+    "poisoned": true,
+    "designDelivery": 1,
+    "orderedDesignVerdict": 0,
+    "retainedAuditKinds": {
+      "status": "read",
+      "count": 61,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "omitted",
+        "machine-peer:inference-forward",
+        "ordered:send-outcome",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "ordered:response-admitted",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:artifact_read",
+        "ordered:part-receipt",
+        "machine-peer:inference-forward"
+      ]
+    }
+  }
+}
