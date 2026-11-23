@@ -1224,7 +1224,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   type FinalRender = { readonly path: string; readonly record: NonNullable<SupervisorState['finalSite']>; readonly output: UrlDesignProductMetadata['output'] };
   let final: FinalRender | null = null;
 
-  async function finalContinuation(number: number, site: number) {
+  async function finalContinuation(number: number, site: number): Promise<UrlDesignRenderContinuationFactory | typeof RAW_READ_DISCLOSURE_REFUSAL | null> {
     const live = await context.runtime.prepareFinalRender(number, site);
     if (live !== null) return live;
     const recovery = context.prepared.continuation;
@@ -1244,7 +1244,8 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       const reproduced = await reproduceUrlRender(run, { ...renderDeps, productReads: reads,
         admitProducedSite: async input => { product = await validate(reads, input); return product !== null; } },
       { path: path.join(run, RUN_LAYOUT.site, String(site)), output });
-      if (!reproduced || product === null || !reads.isLeaseOpen() || !current()) return null;
+      if (!reproduced.ok) return reproduced.refusal.stage === 'disclosure' ? RAW_READ_DISCLOSURE_REFUSAL : null;
+      if (product === null || !reads.isLeaseOpen() || !current()) return null;
       return await prepareRecoveredUrlDesignRenderContinuation({ verified, claim, product, number, site });
     } finally { reads.close(); }
   }
@@ -1276,6 +1277,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       };
     };
     const firstFactory = await finalContinuation(verdict, reviewedSite);
+    if (firstFactory === RAW_READ_DISCLOSURE_REFUSAL) return firstFactory;
     if (firstFactory === null) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
     const firstReads = beginRunProductReads(run, context.artifacts, 'render', deadline);
     const captured = capture(firstReads, firstFactory);
@@ -1289,6 +1291,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     if (metadata === null || metadata.draftRevision !== draft || rendered.report.draftRevision !== draft
       || !rendered.report.designReview.counts || rendered.report.designReview.packetSha256 !== metadata.original.sha256) return null;
     const nextFactory = await finalContinuation(verdict, reviewedSite);
+    if (nextFactory === RAW_READ_DISCLOSURE_REFUSAL) return nextFactory;
     if (nextFactory === null) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
     const reads = beginRunProductReads(run, context.artifacts, 'render', deadline);
     try {
@@ -1296,7 +1299,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       const subject = { path: rendered.report.site, output: metadata.output };
       const verified = await reproduceUrlRender(run, { ...renderDeps, productReads: reads, admitProducedSite: reproduced.admit }, subject, reproduced.prepare);
       const next = reproduced.continuation;
-      if (!verified) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
+      if (!verified.ok) return verified.refusal.stage === 'disclosure' ? RAW_READ_DISCLOSURE_REFUSAL : null;
       if (next === null || reproduced.metadata === null || !sameReproducedUrlDesignProduct(metadata, reproduced.metadata)) return null;
       const site = checkStoredUrlRender(run, subject.path, subject.output, () => Date.now() < next.deadline && reads.isLeaseOpen());
       if (site === null || site <= reviewedSite) return null;
@@ -1437,7 +1440,11 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
                 reproduced = await validate(reads, input);
                 return reproduced !== null;
               } }, subject);
-            if (!verified || reproduced === null || !reads.isLeaseOpen()) return null;
+            if (!verified.ok) {
+              if (verified.refusal.stage === 'disclosure') screen.event(RAW_READ_DISCLOSURE_REFUSAL);
+              return null;
+            }
+            if (reproduced === null || !reads.isLeaseOpen()) return null;
             opened = true;
             return { product: reproduced, close: reads.close };
           } finally { if (!opened) reads.close(); }

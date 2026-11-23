@@ -159,12 +159,8 @@ const EXCLUSION_REASON: Readonly<Record<ScreenExclusion, GenerationExclusionReas
 type DesignContinuationSource = UrlDesignRenderContinuation
   | ((input: { readonly deadline: number; readonly packetSha256: string }) => Promise<UrlDesignRenderContinuation | null>);
 
-export async function renderRun(runDir: string, deps: RenderDeps, designContinuation?: DesignContinuationSource): Promise<RenderResult> {
-  try { return await render(runDir, deps, undefined, designContinuation); }
-  catch (cause) {
-    if (!(cause instanceof UrlProductReadRefusal)) throw cause;
-    return { ok: false, refusal: { command: 'render', outcome: 'refused', stage: 'reverify', reason: cause.message, disclosures: DISCLOSURES } };
-  }
+export function renderRun(runDir: string, deps: RenderDeps, designContinuation?: DesignContinuationSource): Promise<RenderResult> {
+  return renderWithRefusal(runDir, deps, undefined, designContinuation);
 }
 
 type StoredUrlRender = { readonly path: string; readonly output: Parameters<typeof checkStoredUrlRender>[2] };
@@ -172,11 +168,16 @@ type StoredUrlRender = { readonly path: string; readonly output: Parameters<type
 /** Host-only fresh reconstruction. Compare with the exact stored site without
  * allocating a site number or writing a render step, including on refusal. */
 export async function reproduceUrlRender(runDir: string, deps: RenderDeps, site: StoredUrlRender,
-  designContinuation?: DesignContinuationSource): Promise<boolean> {
-  try { return (await render(runDir, deps, structuredClone(site), designContinuation)).ok; }
+  designContinuation?: DesignContinuationSource): Promise<RenderResult> {
+  return renderWithRefusal(runDir, deps, structuredClone(site), designContinuation);
+}
+
+async function renderWithRefusal(runDir: string, deps: RenderDeps, site?: StoredUrlRender,
+  designContinuation?: DesignContinuationSource): Promise<RenderResult> {
+  try { return await render(runDir, deps, site, designContinuation); }
   catch (cause) {
-    if (cause instanceof UrlProductReadRefusal) return false;
-    throw cause;
+    if (!(cause instanceof UrlProductReadRefusal)) throw cause;
+    return { ok: false, refusal: { command: 'render', outcome: 'refused', stage: 'reverify', reason: cause.message, disclosures: DISCLOSURES } };
   }
 }
 

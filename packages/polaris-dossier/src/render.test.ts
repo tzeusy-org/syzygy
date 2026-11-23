@@ -32,7 +32,7 @@ import { designVerdictSchemaDocument } from './draft-schema.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, RENDER_PRODUCER_MILLISECONDS, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { NO_RENDERER, RENDER_PRODUCER_MILLISECONDS, redactedExtent, redactionDetails, renderRun, reproduceUrlRender, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -469,6 +469,36 @@ describe('render', () => {
       expect(machine.disclosure).toContainEqual({ id: 'url-capture-scope', label: 'Unknown',
         text: expect.stringContaining('capture completeness are Unknown') });
     } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
+  it('preserves the disclosure restart result when the handoff changes during stored site reproduction', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const deadline = LATER + 60_000;
+    const renderReads = beginRunProductReads(f.run, f.artifacts, 'render', deadline);
+    try {
+      const built = await renderRun(f.run, { ...f.deps, productReads: renderReads, admitProducedSite: async () => true });
+      if (!built.ok) throw Error(built.refusal.reason);
+      renderReads.close();
+      const before = readSite(built.report.site);
+      const population = [...before].map(([path, text]) => ({ path, bytes: Buffer.byteLength(text), sha256: sha256(text) }));
+      const stored = { path: built.report.site, output: { files: population.length, pages: built.report.pages,
+        bytes: population.reduce((total, file) => total + file.bytes, 0), population } };
+      const stepLog = path.join(f.run, 'steps.jsonl'), steps = fs.readFileSync(stepLog);
+      const reads = beginRunProductReads(f.run, f.artifacts, 'render', deadline);
+      const admitProducedSite = vi.fn(async () => {
+        fs.writeFileSync(path.join(f.run, 'raw-read-disclosure.json'), rawReadCompanion('unknown'));
+        return true;
+      });
+      try {
+        expect(await reproduceUrlRender(f.run, { ...f.deps, productReads: reads, admitProducedSite }, stored))
+          .toMatchObject({ ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE } });
+        expect(admitProducedSite).toHaveBeenCalledTimes(1);
+        expect(readSite(stored.path)).toEqual(before);
+        expect(fs.readFileSync(stepLog)).toEqual(steps);
+      } finally { reads.close(); }
+    } finally { renderReads.close(); vi.useRealTimers(); }
   }, 60_000);
 
   it('aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time', async () => {
