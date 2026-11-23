@@ -1,4 +1,4 @@
-# Dossier verify text 2.17
+# Dossier verify text 2.21
 
 ## Patterns
 
@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-[Observed] Review 1 records `REVISE` (`syzygy-5dhm-23/R-VERIFY-TEXT-SPEC-1-RAW.md:3`) with two blocking findings (F1, F2) and eight advisory (F3 to F10). All ten were repaired in the spec, `SEMANTIC-DELTA.md`, `proposal.md`, `design.md` (section "Review (R-VERIFY-TEXT-SPEC-1)" there gives each disposition) and, for F2 and F5, the implementation; none was overruled and no confirmation round was run (one non-gating review under D10), so the adopted spec digest differs from the reviewed one (`ad6e597ddc3b6dccce7fb5692e863e6535659db7651ee2b2942cff071d2bf3ed`); no review has read the repaired bytes. The review read the change as version 2.14; it was renumbered 2.15 when 2.14 was taken by another adoption, 2.16 when 2.15 was and 2.17 when 2.16 was, each changing only the spec's header line (`design.md`, "Rebuilt as version 2.15", "Rebuilt as version 2.16" and "Rebuilt as version 2.17"). The code-review corrections later added words to the paragraph; no review has read those bytes either.
+[Observed] Review 1 records `REVISE` (`syzygy-5dhm-23/R-VERIFY-TEXT-SPEC-1-RAW.md:3`) with two blocking findings (F1, F2) and eight advisory (F3 to F10). All ten were repaired in the spec, `SEMANTIC-DELTA.md`, `proposal.md`, `design.md` (section "Review (R-VERIFY-TEXT-SPEC-1)" there gives each disposition) and, for F2 and F5, the implementation; none was overruled and no confirmation round was run (one non-gating review under D10), so the adopted spec digest differs from the reviewed one (`ad6e597ddc3b6dccce7fb5692e863e6535659db7651ee2b2942cff071d2bf3ed`); no review has read the repaired bytes. The review read the change as version 2.14; it was renumbered 2.15 when 2.14 was taken by another adoption, 2.16 when 2.15 was and 2.17 when 2.16 was, each changing only the spec's header line (`design.md`, "Rebuilt as version 2.15", "Rebuilt as version 2.16" and "Rebuilt as version 2.17"), and 2.21 when the default branch's 2.17 and 2.18 replaced REQ-033 beneath it, which merged its insertions onto version 2.18's requirement block (`design.md`, "Rebuilt as version 2.21"). The code-review corrections later added words to the paragraph; no review has read those bytes either.
