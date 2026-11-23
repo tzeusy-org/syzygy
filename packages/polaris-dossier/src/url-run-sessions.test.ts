@@ -153,24 +153,31 @@ describe('one root lifecycle for four restricted URL roles', () => {
     expect(f.failures).toEqual(['raw-read-disclosure-unavailable']);
     expect(f.credentialClosed()).toBe(true);
   });
-  it('withholds Author spawn if a successful disclosure write crosses the run deadline', async () => {
-    const f = await runtimeFixture(), handoffs: string[] = [];
-    const deadline = f.options.deadline;
-    let now = Date.now();
-    const refusal = await f.start({ ...f.options, now: () => now, authorHandoff: {
-      current: () => true,
-      record: handoff => {
-        handoffs.push(handoff);
-        now = deadline;
-        return true;
-      },
-    } }).catch((error: unknown) => error);
-    expect(handoffs).toEqual(['unknown']);
-    expect(f.calls).toEqual(['prepare:author', 'host:author', 'host-close:author']);
-    expect(refusal).toMatchObject({ message: 'url-session-launch-refused' });
-    expect(f.failures).toEqual([]);
-    expect(f.credentialClosed()).toBe(true);
-  });
+  it.each(['run deadline', 'operator stop', 'deadline during final stop check'] as const)(
+    'withholds Author spawn after a successful disclosure write on %s', async condition => {
+      const f = await runtimeFixture(), handoffs: string[] = [];
+      const deadline = f.options.deadline;
+      let now = Date.now(), markerWritten = false;
+      const refusal = await f.start({ ...f.options, now: () => now, stopRequested: () => {
+        if (!markerWritten) return false;
+        if (condition === 'deadline during final stop check') now = deadline;
+        return condition === 'operator stop';
+      }, authorHandoff: {
+        current: () => true,
+        record: handoff => {
+          handoffs.push(handoff);
+          markerWritten = true;
+          if (condition === 'run deadline') now = deadline;
+          return true;
+        },
+      } }).catch((error: unknown) => error);
+      expect(handoffs).toEqual(['unknown']);
+      expect(f.calls).toEqual(['prepare:author', 'host:author', 'host-close:author']);
+      expect(refusal).toMatchObject({ message: 'url-session-launch-refused' });
+      expect(f.failures).toEqual([]);
+      expect(f.credentialClosed()).toBe(true);
+    },
+  );
   it('prepares before each actual host, captures safe receipts and usage, and closes each owned process before audit', async () => {
     const f = await runtimeFixture(), handoffs: string[] = [];
     const runtime = await f.start({ ...f.options, authorHandoff: {
