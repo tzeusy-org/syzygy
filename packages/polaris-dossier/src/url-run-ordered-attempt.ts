@@ -138,7 +138,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       refresh: async () => {
         const pending = renewing ??= (async () => {
           if (!processingCurrent()) return false;
-          try { assertUrlDesignDeliveryReceiptCurrent(delivery!); }
+          try { assertUrlDesignDeliveryReceiptCurrent(delivery!, processingCurrent, observeRead); }
           catch { return false; }
           if (!processingCurrent()) return false;
           const next = await input.reproduce();

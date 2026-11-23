@@ -284,7 +284,8 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
 }
 
 describe('protected URL design delivery audit', () => {
-  it.each(['valid', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal'] as const)(
+  it.each(['valid', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal',
+    'renew-launch-drift', 'renew-receipt-drift'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
     if (mode.startsWith('ordered')) plans = orderedPlans;
     const { originPolicy, ledger, artifactOptions, initial } = productFixture(mode.startsWith('ordered'));
@@ -382,7 +383,7 @@ describe('protected URL design delivery audit', () => {
       });
       const duplicate = audit.commitDesignDelivery(request);
       await expect(duplicate).rejects.toThrow('url-session-audit-refused');
-      if (mode !== 'valid' && !mode.startsWith('ordered')) {
+      if (mode !== 'valid' && !mode.startsWith('ordered') && !mode.startsWith('renew-')) {
         await expect(first).rejects.toThrow('url-session-audit-refused');
         if (mode === 'sample-refusal') {
           expect(sampledDurability).toEqual([0, 0, 1]);
@@ -394,6 +395,24 @@ describe('protected URL design delivery audit', () => {
         const delivered = await first;
         expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         const sealed = delivered.receipt;
+        const authorized = () => true;
+        if (mode.startsWith('renew-')) {
+          const reproducedView = await audit.readDesignDeliveryView(sealed, reproduced);
+          const clock = vi.spyOn(Date, 'now').mockReturnValue(reproducedMetadata.products.deadline + 1);
+          try {
+            const observedRead = vi.fn();
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, () => false, observedRead)).toThrow('url-session-audit-refused');
+            expect(observedRead).not.toHaveBeenCalled();
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized, observedRead)).not.toThrow();
+            expect(observedRead).toHaveBeenCalled();
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(reproducedView, authorized)).not.toThrow();
+            if (mode === 'renew-launch-drift') fs.utimesSync(historyPath('design'), 1, 1);
+            else fs.appendFileSync(segment('design'), '\n');
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).toThrow('url-session-audit-refused');
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(reproducedView, authorized)).toThrow('url-session-audit-refused');
+          } finally { clock.mockRestore(); }
+          return;
+        }
         if (mode.startsWith('ordered')) {
           if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile missing');
           const planInput = { envelope: view, envelopeSha256: sha256(view), original: metadata.original,
@@ -527,13 +546,13 @@ describe('protected URL design delivery audit', () => {
         expect(delivered).toStrictEqual(expected);
         expect(isIssuedUrlDesignDeliveryView(delivered)).toBe(true);
         expect(isIssuedUrlDesignDeliveryView({ ...delivered })).toBe(false);
-        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).not.toThrow();
-        expect(() => assertUrlDesignDeliveryReceiptCurrent({ ...delivered })).toThrow('url-session-audit-refused');
+        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).not.toThrow();
+        expect(() => assertUrlDesignDeliveryReceiptCurrent({ ...delivered }, authorized)).toThrow('url-session-audit-refused');
         expect(() => assertUrlDesignDeliveryViewCurrent(delivered)).not.toThrow();
         expect(() => assertUrlDesignDeliveryViewCurrent({ ...delivered })).toThrow('url-session-audit-refused');
         delivered.view[0] = delivered.view[0]! ^ 1;
         expect(() => assertUrlDesignDeliveryViewCurrent(delivered)).toThrow('url-session-audit-refused');
-        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).toThrow('url-session-audit-refused');
+        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).toThrow('url-session-audit-refused');
         delivered.view[0] = view[0]!;
         await expect(audit.readDesignDeliveryView(sealed, token)).resolves.toStrictEqual(expected);
         await expect(other.audit.readDesignDeliveryView(sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
@@ -545,7 +564,7 @@ describe('protected URL design delivery audit', () => {
         await expect(audit.readDesignDeliveryView(sealed, token)).rejects.toThrow('url-session-audit-refused');
         const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + 1);
         try {
-          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).not.toThrow();
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).not.toThrow();
           await expect(validate(audit, sealed, token)).rejects.toThrow('url-session-audit-refused');
           await expect(validate(audit, sealed, reproduced)).resolves.toBeUndefined();
           readView = view.map(byte => byte ^ 1);
@@ -628,8 +647,8 @@ describe('protected URL design delivery audit', () => {
           await expect(validate(audit, sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
           reproducedMetadata = exact;
           await expect(validate(audit, sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
-          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).toThrow('url-session-audit-refused');
-          expect(() => assertUrlDesignDeliveryReceiptCurrent(exactView)).toThrow('url-session-audit-refused');
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).toThrow('url-session-audit-refused');
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(exactView, authorized)).toThrow('url-session-audit-refused');
         } finally { clock.mockRestore(); }
       }
       expect(audit.summary().captured['design-delivery']).toBe(1);

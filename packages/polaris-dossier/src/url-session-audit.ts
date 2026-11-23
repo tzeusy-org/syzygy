@@ -113,7 +113,9 @@ export interface UrlDesignDeliveryView {
   readonly parents: UrlInertDesignProduct['parents'];
 }
 const authenticatedDesignViews = new WeakMap<UrlDesignDeliveryView, {
-  readonly current: () => void; readonly receiptCurrent: () => void; readonly product: WeakRef<ValidatedUrlDesignProduct>;
+  readonly current: () => void;
+  readonly receiptCurrent: (current: () => boolean, observeRead?: (bytes: number) => void) => void;
+  readonly product: WeakRef<ValidatedUrlDesignProduct>;
 }>();
 
 /** Establish that the audit issued this exact envelope before accessing its fields. */
@@ -129,8 +131,10 @@ function checkedIssuedDeliveryView(delivery: UrlDesignDeliveryView) {
 }
 
 /** Check the retained receipt before spending capacity on a replacement. */
-export function assertUrlDesignDeliveryReceiptCurrent(delivery: UrlDesignDeliveryView): void {
-  checkedIssuedDeliveryView(delivery).receiptCurrent();
+export function assertUrlDesignDeliveryReceiptCurrent(delivery: UrlDesignDeliveryView, current: () => boolean,
+  observeRead?: (bytes: number) => void): void {
+  if (!current()) throw refused();
+  checkedIssuedDeliveryView(delivery).receiptCurrent(current, observeRead);
 }
 
 /** Check a protected, still-current handoff at its next local use. */
@@ -1049,6 +1053,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       readonly prepared: WeakRef<ValidatedUrlDesignProduct>;
       readonly verify: (product: ValidatedUrlDesignProduct, material?: UrlDesignProductMetadata, observeRead?: (bytes: number) => void) => Promise<() => void>;
       readonly verifyStored: (current: () => boolean, observeRead?: (bytes: number) => void) => void;
+      readonly verifyReceipt: (current: () => boolean, observeRead?: (bytes: number) => void) => void;
     }>();
     const designReviewDeliveries = new WeakMap<UrlDesignReviewProof, UrlDesignDeliveryAuditRecord>();
     const committedDesignReviews = new WeakSet<UrlDesignReviewProof>();
@@ -1081,7 +1086,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const current = await record.verify(product, material.metadata, observeRead);
       currentDesignRecord(receipt);
       if (!isUrlDesignProductLeaseOpen(product)) throw refused();
-      authenticatedDesignViews.set(delivery, { current, receiptCurrent: () => { currentDesignRecord(receipt); }, product: new WeakRef(product) });
+      authenticatedDesignViews.set(delivery, { current, receiptCurrent: record.verifyReceipt, product: new WeakRef(product) });
       return delivery;
     };
     const commitDesignArtifactRead: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignArtifactRead'] = async (view, given) => {
@@ -1336,12 +1341,29 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         if (before.deadline !== after.deadline || !equal(before.identity, after.identity)) throw refused();
         const result = copy({ eventSha256: event.digest, identity: after.identity }) as UrlDesignDeliveryAuditRecord;
         const delivery = deliveryView(result, material);
+        const verifyLaunch = (): void => {
+          if (inspectCommittedUrlLaunchHistory(launch).eventSha256 !== attempt.eventSha256) throw refused();
+        };
+        const verifyReceipt = (current: () => boolean, observeRead?: (bytes: number) => void): void => {
+          currentDesignRecord(result);
+          if (!current()) throw refused();
+          try {
+            verifyLaunch();
+            if (!current()) throw refused();
+            verifyDurableEvent('design', event, observeRead);
+          } catch {
+            if (current()) designRetired = true;
+            throw refused();
+          }
+          if (!current()) throw refused();
+          currentDesignRecord(result);
+        };
         const verifyStored = (current: () => boolean, observeRead?: (bytes: number) => void,
           preserveFailure?: (cause: unknown) => boolean): void => {
           if (!current()) throw refused();
           try {
-            if (inspectCommittedUrlLaunchHistory(launch).eventSha256 !== attempt.eventSha256
-              || checkStoredUrlRender(run, sitePath, after.output, current, preserveFailure) !== after.identity.site) throw refused();
+            verifyLaunch();
+            if (checkStoredUrlRender(run, sitePath, after.output, current, preserveFailure) !== after.identity.site) throw refused();
             verifyDurableEvent('design', event, observeRead);
           } catch (cause) {
             if (preserveFailure?.(cause)) throw cause;
@@ -1373,7 +1395,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
             verify(checked, active, observeRead);
           };
         }
-        designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verify: async (candidate, material, observeRead) => {
+        designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verifyReceipt, verify: async (candidate, material, observeRead) => {
           // The receipt survives its operation lease. A later act needs a newly
           // validated product whose full identity still matches the recorded one.
           const currentMaterial = material ?? (candidate === preparedProduct.deref()
@@ -1385,7 +1407,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           return checkDelivery(checked, candidate, observeRead);
         } });
         authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product),
-          receiptCurrent: () => { currentDesignRecord(result); }, product: preparedProduct });
+          receiptCurrent: verifyReceipt, product: preparedProduct });
         capturedDeliveries.set(result.eventSha256, result);
         if (orderedDesignProfile !== null && input.deadline !== undefined) {
           const plan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(orderedDesignProfile, result,
