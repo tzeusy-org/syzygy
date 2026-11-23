@@ -1,4 +1,4 @@
-import { mkdirSync, rmdirSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readlinkSync, rmdirSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
 import * as fsPromises from 'node:fs/promises';
 import { mkdir, mkdtemp, rm, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -53,23 +53,27 @@ const filesystem = vi.hoisted(() => ({
   beforeLstat: undefined as ((file: unknown) => Promise<void>) | undefined,
   beforeOpen: undefined as ((file: unknown) => Promise<void>) | undefined,
   taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
+  storageListing: undefined as { directory: string; afterFirstFile: () => void } | undefined,
 }));
 vi.mock('node:fs/promises', async importOriginal => {
   const actual = await importOriginal<typeof import('node:fs/promises')>();
   return {
     ...actual,
     opendir: (...args: Parameters<typeof actual.opendir>) => {
-      const listing = filesystem.taskListing;
-      if (listing === undefined || args[0] !== listing.procPath) return actual.opendir(...args);
-      return actual.opendir(listing.fixturePath, args[1]).then(dir => {
-        const afterFirstTask = listing.afterFirstTask;
-        if (afterFirstTask === undefined) return dir;
+      const task = args[0] === filesystem.taskListing?.procPath ? filesystem.taskListing : undefined;
+      const storage = filesystem.storageListing;
+      const observeStorage = storage !== undefined && typeof args[0] === 'string' && args[0].startsWith('/proc/self/fd/')
+        && readlinkSync(args[0]) === storage.directory;
+      const afterFirst = observeStorage ? storage.afterFirstFile : task?.afterFirstTask;
+      if (task === undefined && afterFirst === undefined) return actual.opendir(...args);
+      return actual.opendir(task?.fixturePath ?? args[0], args[1]).then(dir => {
+        if (afterFirst === undefined) return dir;
         const iterate = dir[Symbol.asyncIterator].bind(dir);
         dir[Symbol.asyncIterator] = async function* () {
           let first = true;
-          for await (const task of iterate()) {
-            yield task;
-            if (first) { first = false; afterFirstTask(); }
+          for await (const entry of iterate()) {
+            yield entry;
+            if (first) { first = false; afterFirst(); }
           }
           return undefined;
         };
@@ -90,6 +94,7 @@ afterEach(async () => {
   filesystem.beforeLstat = undefined;
   filesystem.beforeOpen = undefined;
   filesystem.taskListing = undefined;
+  filesystem.storageListing = undefined;
   for (const stop of cleanup.splice(0).reverse()) await stop();
 });
 const call = { type: 'tool_use', id: 'toolu_own_artifact', name: 'mcp__syzygy__artifact_read', input: { path: 'brief.md' } };
@@ -960,7 +965,7 @@ describe('prepared private CLI launch',()=>{
     let procPath: string | undefined;
     const storedFiles = new Set(Array.from({ length: 6 }, (_, index) => `own-batched-file-${index}`));
     let completedHold = false, processReadsBeforeTimeout = 0, storageReadsBeforeTimeout = 0;
-    let readsAfterFirstTask: number | undefined;
+    let readsAfterFirstTask: number | undefined, readsAfterFirstStoredFile: number | undefined;
     let earlyCallbackAt: number | undefined, scheduledAt: number | undefined, stoppingAt: number | undefined;
     filesystem.beforeOpen = async file => {
       if (procPath === undefined || typeof file !== 'string' || !file.startsWith(`${procPath}/`)) return;
@@ -991,6 +996,7 @@ describe('prepared private CLI launch',()=>{
     // Populate the previously verified empty directory before the sampling timer can run.
     mkdirSync(fixtureStorage);
     for (const file of storedFiles) writeFileSync(path.join(fixtureStorage, file), 'owned');
+    filesystem.storageListing = { directory: fixtureStorage, afterFirstFile: () => { readsAfterFirstStoredFile = storageReadsBeforeTimeout; } };
     const signalGroup = process.kill;
     const signal = vi.spyOn(process, 'kill').mockImplementation((pid, name) => {
       if (pid === -child.pid && name === 'SIGTERM') stoppingAt ??= performance.now();
@@ -1015,6 +1021,7 @@ describe('prepared private CLI launch',()=>{
       const outcome = await child.finished;
       expect(intervals.mock.calls.map(call => call[1])).toContain(200);
       expect(storageReadsBeforeTimeout).toBe(4);
+      expect(readsAfterFirstStoredFile).toBe(1);
       expect(readsAfterFirstTask).toBe(1);
       expect(processReadsBeforeTimeout).toBe(4);
       expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, peakProcesses: null, groupTermination: 'confirmed' });

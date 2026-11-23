@@ -290,13 +290,14 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
       if (depth > 0 && error.code === 'ENOENT') throw entryDisappeared;
       throw error;
     });
+    const batch: { file: string; sample: Promise<Stats> }[] = [];
     try {
       const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
-      const batch: string[] = [];
       const inspect = async (): Promise<void> => {
         if (batch.length === 0) return;
         check();
-        const samples = await Promise.allSettled(batch.map(child => lstat(child)));
+        const children = batch.splice(0);
+        const samples = await Promise.allSettled(children.map(child => child.sample));
         check();
         const disappeared = (sample: PromiseSettledResult<Stats>): boolean =>
           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
@@ -305,7 +306,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
           try {
             if (sample.status === 'rejected') throw disappeared(sample) ? entryDisappeared : sample.reason;
             const stat = sample.value;
-            if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
+            if (stat.isDirectory()) await walk(children[index]!.file, depth + 1);
             else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
             else throw refused();
           } catch (error) {
@@ -324,25 +325,29 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
           }
           if (!Number.isSafeInteger(bytes) || bytes > limits.storageBytes) return;
         }
-        batch.length = 0;
       };
       for await (const item of iterator) {
-        check();
         // Recurse in directory order. Dirent type only schedules reads.
         // The descriptor-relative lstat still decides the entry's type.
         if (!item.isFile()) {
           await inspect();
           if (bytes > limits.storageBytes) return;
         }
+        check();
         if (++entries > limits.entries) throw refused();
-        batch.push(path.join(base, item.name));
+        const child = path.join(base, item.name), sample = lstat(child);
+        void sample.catch(() => {}); // The batch handles failures after settling.
+        batch.push({ file: child, sample });
         if (!item.isFile() || batch.length === STORAGE_STAT_BATCH || entries === limits.entries) {
           await inspect();
           if (bytes > limits.storageBytes) return;
         }
       }
       if (batch.length !== 0) await inspect();
-    } finally { await handle.close(); }
+    } finally {
+      if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));
+      await handle.close();
+    }
   };
   const measure = async (): Promise<number> => {
     for (const root of roots) {
