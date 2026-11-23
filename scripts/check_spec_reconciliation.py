@@ -604,19 +604,6 @@ COVERAGE_SUBJECTS = {
     COVERAGE_SPEC: "995c2ec47619567a86a5899eacbe3b1cf96a652686af4bfa7cd51e0ea1841287",
 }
 COVERAGE_BOUND_PARTS = len(COVERAGE_SUBJECTS)
-# The v2.17 verify-text amendment (syzygy-5dhm.23): one MODIFIED
-# REQ-polaris-generation-033 (the `syzygy dossier verify` command) after its
-# URL declared-source v2.1 text, pending until its own VIS-4 ledger row.
-VERIFY_CHANGE = "dossier-verify-text"
-VERIFY_HOME = f"{CHANGES}/{VERIFY_CHANGE}"
-VERIFY_SPEC = f"{VERIFY_HOME}/proposed/polaris-generation/spec.md"
-VERIFY_UNION = f"{VERIFY_HOME}/GOVERNING-DEPENDENCIES.json"
-VERIFY_TAG = "polaris-dossier-verify-text-v2.17"
-VERIFY_STATUS_PREFIX = f"[Verify-text amendment 2.17]({VERIFY_HOME})"
-VERIFY_SUBJECTS = {
-    VERIFY_SPEC: "5dc279236d8faea4d54896227b78314b50b2d1b37a240739cdbba1a748c82115",
-}
-VERIFY_BOUND_PARTS = len(VERIFY_SUBJECTS)
 # The v2.14 infrastructure-recognizers amendment (syzygy-3efd.26, .76, .79): one
 # MODIFIED REQ-polaris-generation-034 after v2.12, pending until its own VIS-4
 # ledger row, found by its tag as v2.12's is.
@@ -659,6 +646,58 @@ SUBSEC_SUBJECTS = {
     SUBSEC_SPEC: "eb02516147a08c2b21a1ddeca4bc1527e9c7f21fb0bcf62bbee35f9b059fcdbc",
 }
 SUBSEC_BOUND_PARTS = len(SUBSEC_SUBJECTS)
+# The v2.19 relation-types amendment (syzygy-3efd.28): one MODIFIED
+# REQ-polaris-generation-034 after v2.16, pending until its own VIS-4 ledger
+# row, found by its tag as v2.16's is.
+RELTYPE_CHANGE = "dossier-relation-types"
+RELTYPE_HOME = f"{CHANGES}/{RELTYPE_CHANGE}"
+RELTYPE_SPEC = f"{RELTYPE_HOME}/proposed/polaris-generation/spec.md"
+RELTYPE_UNION = f"{RELTYPE_HOME}/GOVERNING-DEPENDENCIES.json"
+RELTYPE_TAG = "polaris-dossier-relation-types-v2.19"
+RELTYPE_STATUS_PREFIX = f"[Relation types amendment 2.19]({RELTYPE_HOME})"
+RELTYPE_SUBJECTS = {
+    RELTYPE_SPEC: "f6d60b603bd7cc819aca86ae3d1a6de037ecb7717ca1fe214619f646c97afd9c",
+}
+RELTYPE_BOUND_PARTS = len(RELTYPE_SUBJECTS)
+# The v2.20 hero-figure amendment (syzygy-3efd.29): one MODIFIED
+# REQ-polaris-generation-034 after v2.19, pending until its own VIS-4 ledger
+# row, found by its tag as v2.19's is.
+HERO_CHANGE = "dossier-hero-figure"
+HERO_HOME = f"{CHANGES}/{HERO_CHANGE}"
+HERO_SPEC = f"{HERO_HOME}/proposed/polaris-generation/spec.md"
+HERO_UNION = f"{HERO_HOME}/GOVERNING-DEPENDENCIES.json"
+HERO_TAG = "polaris-dossier-hero-figure-v2.20"
+HERO_STATUS_PREFIX = f"[Hero figure amendment 2.20]({HERO_HOME})"
+HERO_SUBJECTS = {
+    HERO_SPEC: "fcf271f84c03570cfbb8447d3370ae26c4ea75a54211b1677148b607e940d36b",
+}
+HERO_BOUND_PARTS = len(HERO_SUBJECTS)
+
+RAW_READ_CHANGE = "dossier-raw-read-disclosure"
+RAW_READ_HOME = f"{CHANGES}/{RAW_READ_CHANGE}"
+RAW_READ_SPEC = f"{RAW_READ_HOME}/proposed/polaris-generation/spec.md"
+RAW_READ_UNION = f"{RAW_READ_HOME}/GOVERNING-DEPENDENCIES.json"
+RAW_READ_TAG = "polaris-dossier-raw-read-disclosure-v2.17"
+RAW_READ_ROUTE = f"[Raw-read disclosure amendment 2.17]({RAW_READ_HOME})"
+RAW_READ_REPLACES = tuple(POLARIS_ID + number for number in ("033", "036", "046"))
+RAW_READ_SUBJECTS = {
+    RAW_READ_SPEC: "a53432d787d857185b76193aa614c47d42eca39b3f9c22857935b61127ff5517",
+    ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json":
+        "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
+}
+# The v2.18 run-tree read-bounds amendment (syzygy-3efd.80): MODIFIED
+# REQ-polaris-generation-033 after v2.17 and -035 and -048 after v2.1, pending
+# until its own VIS-4 ledger row, found by its tag as v2.17's is.
+TREEREAD_CHANGE = "dossier-run-tree-read-bounds"
+TREEREAD_HOME = f"{CHANGES}/{TREEREAD_CHANGE}"
+TREEREAD_SPEC = f"{TREEREAD_HOME}/proposed/polaris-generation/spec.md"
+TREEREAD_UNION = f"{TREEREAD_HOME}/GOVERNING-DEPENDENCIES.json"
+TREEREAD_TAG = "polaris-dossier-run-tree-read-bounds-v2.18"
+TREEREAD_ROUTE = f"[Run-tree read bounds amendment 2.18]({TREEREAD_HOME})"
+TREEREAD_REPLACES = tuple(POLARIS_ID + number for number in ("033", "035", "048"))
+TREEREAD_SUBJECTS = {
+    TREEREAD_SPEC: "84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5",
+}
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -1157,35 +1196,6 @@ def coverage_disposition(root, rows):
     return None
 
 
-def is_verify_row(line):
-    """A ledger row claiming the v2.17 verify-text amendment, well formed or not."""
-    if not line.startswith("|"):
-        return False
-    cells = [cell.strip() for cell in line.split("|")[1:-1]]
-    tag = f"`{VERIFY_TAG}`"
-    if len(cells) == 7 and cells[6] == tag:
-        return True
-    if len(cells) != 7 and tag in cells:
-        return True
-    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
-        return False
-    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
-    return all(f"]({snapshot}{path})" in cells[3] for path in VERIFY_SUBJECTS)
-
-
-def verify_rows(root):
-    return [[cell.strip() for cell in line.split("|")[1:-1]]
-            for line in adoption_table_rows(root) if is_verify_row(line)]
-
-
-def verify_disposition(root, rows):
-    if len(rows) == 1 and len(rows[0]) == 7:
-        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
-        return recorded_disposition(root, identity, commit.strip("`"), VERIFY_TAG,
-                                    VERIFY_SUBJECTS, plain_revert=True)
-    return None
-
-
 def is_infra_row(line):
     """A ledger row claiming the v2.14 infrastructure-recognizers amendment, well formed or not."""
     if not line.startswith("|"):
@@ -1271,6 +1281,62 @@ def subsec_disposition(root, rows):
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), SUBSEC_TAG,
                                     SUBSEC_SUBJECTS, plain_revert=True)
+    return None
+
+def is_reltype_row(line):
+    """A ledger row claiming the v2.19 relation-types amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{RELTYPE_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in RELTYPE_SUBJECTS)
+
+
+def reltype_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_reltype_row(line)]
+
+
+def reltype_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), RELTYPE_TAG,
+                                    RELTYPE_SUBJECTS, plain_revert=True)
+    return None
+
+def is_hero_row(line):
+    """A ledger row claiming the v2.20 hero-figure amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{HERO_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in HERO_SUBJECTS)
+
+
+def hero_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_hero_row(line)]
+
+
+def hero_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), HERO_TAG,
+                                    HERO_SUBJECTS, plain_revert=True)
     return None
 
 
@@ -2114,44 +2180,6 @@ def coverage_binding(root):
     return (None if records or subjects else read_text(root, COVERAGE_SPEC), records, subjects)
 
 
-def verify_binding(root):
-    """Read v2.17's published composition: pending until its row, like v2.12.
-
-    The row names the installing commit (a plain commit, so its revert may
-    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
-    predecessor is v2.1's text of REQ-polaris-generation-033 (the URL
-    declared-source run), so v2.1 must itself be in force.
-    """
-    rows = verify_rows(root)
-    if not rows or verify_disposition(root, rows):
-        return None, [], []
-    records, subjects = [], []
-    if url_source_binding(root)[0] is None:
-        records.append("verify text: prior v2.1 URL declared-source adoption is unavailable")
-    if len(rows) != 1 or len(rows[0]) != 7:
-        records.append("verify text: expected one seven-column agent adoption row")
-    else:
-        identity, date, commit, changed, reason, revert, tag = rows[0]
-        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
-        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
-                or not valid_adoption_date(date)
-                or not landed or tag != f"`{VERIFY_TAG}`" or not reason):
-            records.append("verify text: malformed adoption identity, date, commit, reason or tag")
-        if landed:
-            oid = landed.group(1)
-            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
-                records.append("verify text: revert does not name the landed commit")
-            for rel in VERIFY_SUBJECTS:
-                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
-                if f"]({snapshot})" not in changed:
-                    records.append(f"verify text: adoption row does not name `{rel}`")
-    for rel, digest in VERIFY_SUBJECTS.items():
-        body = read_bytes(root, rel)
-        if body is None or sha(body) != digest:
-            subjects.append(f"verify text: `{rel}` differs from the reviewed v2.17 subject")
-    return (None if records or subjects else read_text(root, VERIFY_SPEC), records, subjects)
-
-
 def infra_binding(root):
     """Read v2.14's published composition: pending until its row, like v2.12.
 
@@ -2267,6 +2295,183 @@ def subsec_binding(root):
         if body is None or sha(body) != digest:
             subjects.append(f"page subsections: `{rel}` differs from the reviewed v2.16 subject")
     return (None if records or subjects else read_text(root, SUBSEC_SPEC), records, subjects)
+
+def reltype_binding(root):
+    """Read v2.19's published composition: pending until its row, like v2.14.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.16's text of REQ-polaris-generation-034, so v2.16 must
+    itself be in force.
+    """
+    rows = reltype_rows(root)
+    if not rows or reltype_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if subsec_binding(root)[0] is None:
+        records.append("relation types: prior v2.16 page subsections adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("relation types: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{RELTYPE_TAG}`" or not reason):
+            records.append("relation types: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("relation types: revert does not name the landed commit")
+            for rel in RELTYPE_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"relation types: adoption row does not name `{rel}`")
+    for rel, digest in RELTYPE_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"relation types: `{rel}` differs from the reviewed v2.19 subject")
+    return (None if records or subjects else read_text(root, RELTYPE_SPEC), records, subjects)
+
+def hero_binding(root):
+    """Read v2.20's published composition: pending until its row, like v2.14.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.19's text of REQ-polaris-generation-034, so v2.19 must
+    itself be in force.
+    """
+    rows = hero_rows(root)
+    if not rows or hero_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if reltype_binding(root)[0] is None:
+        records.append("hero figure: prior v2.19 relation types adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("hero figure: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{HERO_TAG}`" or not reason):
+            records.append("hero figure: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("hero figure: revert does not name the landed commit")
+            for rel in HERO_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"hero figure: adoption row does not name `{rel}`")
+    for rel, digest in HERO_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"hero figure: `{rel}` differs from the reviewed v2.20 subject")
+    return (None if records or subjects else read_text(root, HERO_SPEC), records, subjects)
+
+
+def is_raw_read_row(line):
+    """A tag or a link to the subject at this row's own commit claims adoption."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    if f"`{RAW_READ_TAG}`" in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{RAW_READ_SPEC})" in cells[3]
+
+
+def raw_read_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_raw_read_row(line)]
+
+
+def raw_read_binding(root):
+    """The successor composes only with a valid adoption over its reviewed bytes."""
+    rows = raw_read_rows(root)
+    if not rows:
+        return None, [], []
+    if len(rows) != 1 or len(rows[0]) != 7:
+        return None, ["raw-read disclosure: expected one seven-column adoption row"], []
+    identity, date, commit, changed, reason, revert, tag = rows[0]
+    oid = commit.strip("`")
+    if recorded_disposition(root, identity, oid, RAW_READ_TAG, RAW_READ_SUBJECTS, plain_revert=True):
+        return None, [], []
+    records = []
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+            or not valid_adoption_date(date)
+            or not re.fullmatch(r"`[0-9a-f]{40}`", commit)
+            or tag != f"`{RAW_READ_TAG}`" or not reason):
+        records.append("raw-read disclosure: malformed adoption identity, date, commit, reason or tag")
+    if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+        records.append("raw-read disclosure: revert does not name its adoption commit")
+    for rel in RAW_READ_SUBJECTS:
+        snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+        if f"]({snapshot})" not in changed:
+            records.append(f"raw-read disclosure: adoption row does not name `{rel}`")
+    if url_source_binding(root)[0] is None or readmit_binding(root)[0] is None:
+        records.append("raw-read disclosure: URL source v2.1 and source policy v3 must be effective")
+    subjects = []
+    for rel, digest in RAW_READ_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"raw-read disclosure: `{rel}` differs from the reviewed subject")
+    return (None if records or subjects else read_text(root, RAW_READ_SPEC), records, subjects)
+
+
+def is_treeread_row(line):
+    """A tag or a link to the subject at this row's own commit claims adoption."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    if f"`{TREEREAD_TAG}`" in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{TREEREAD_SPEC})" in cells[3]
+
+
+def treeread_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_treeread_row(line)]
+
+
+def treeread_binding(root):
+    """The successor composes only with a valid adoption over its reviewed bytes, after
+    the raw-read disclosure v2.17 (033's predecessor) and URL source v2.1 (035's and 048's)."""
+    rows = treeread_rows(root)
+    if not rows:
+        return None, [], []
+    if len(rows) != 1 or len(rows[0]) != 7:
+        return None, ["run-tree read bounds: expected one seven-column adoption row"], []
+    identity, date, commit, changed, reason, revert, tag = rows[0]
+    oid = commit.strip("`")
+    if recorded_disposition(root, identity, oid, TREEREAD_TAG, TREEREAD_SUBJECTS, plain_revert=True):
+        return None, [], []
+    records = []
+    if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+            or not valid_adoption_date(date)
+            or not re.fullmatch(r"`[0-9a-f]{40}`", commit)
+            or tag != f"`{TREEREAD_TAG}`" or not reason):
+        records.append("run-tree read bounds: malformed adoption identity, date, commit, reason or tag")
+    if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+        records.append("run-tree read bounds: revert does not name its adoption commit")
+    for rel in TREEREAD_SUBJECTS:
+        snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+        if f"]({snapshot})" not in changed:
+            records.append(f"run-tree read bounds: adoption row does not name `{rel}`")
+    if url_source_binding(root)[0] is None or raw_read_binding(root)[0] is None:
+        records.append("run-tree read bounds: URL source v2.1 and raw-read disclosure v2.17 must be effective")
+    subjects = []
+    for rel, digest in TREEREAD_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"run-tree read bounds: `{rel}` differs from the reviewed subject")
+    return (None if records or subjects else read_text(root, TREEREAD_SPEC), records, subjects)
 
 
 def url_source_contract_findings(root):
@@ -2768,15 +2973,6 @@ def check_outcomes(root, report):
         subjects_seen += COVERAGE_BOUND_PARTS
     r1 += coverage_records
     r2 += coverage_subjects
-    verify_retired_by = verify_disposition(root, verify_rows(root))
-    verify_amendment, verify_records, verify_subjects = verify_binding(root)
-    if verify_retired_by:
-        records += 2
-    elif verify_amendment is not None or verify_records or verify_subjects:
-        records += 1
-        subjects_seen += VERIFY_BOUND_PARTS
-    r1 += verify_records
-    r2 += verify_subjects
     infra_retired_by = infra_disposition(root, infra_rows(root))
     infra_amendment, infra_records, infra_subjects = infra_binding(root)
     if infra_retired_by:
@@ -2804,6 +3000,24 @@ def check_outcomes(root, report):
         subjects_seen += SUBSEC_BOUND_PARTS
     r1 += subsec_records
     r2 += subsec_subjects
+    reltype_retired_by = reltype_disposition(root, reltype_rows(root))
+    reltype_amendment, reltype_records, reltype_subjects = reltype_binding(root)
+    if reltype_retired_by:
+        records += 2
+    elif reltype_amendment is not None or reltype_records or reltype_subjects:
+        records += 1
+        subjects_seen += RELTYPE_BOUND_PARTS
+    r1 += reltype_records
+    r2 += reltype_subjects
+    hero_retired_by = hero_disposition(root, hero_rows(root))
+    hero_amendment, hero_records, hero_subjects = hero_binding(root)
+    if hero_retired_by:
+        records += 2
+    elif hero_amendment is not None or hero_records or hero_subjects:
+        records += 1
+        subjects_seen += HERO_BOUND_PARTS
+    r1 += hero_records
+    r2 += hero_subjects
     readmit_retired_by = readmit_disposition(root, readmit_rows(root))
     readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
     if readmit_retired_by:
@@ -2813,6 +3027,18 @@ def check_outcomes(root, report):
         subjects_seen += READMIT_BOUND_PARTS
     r1 += readmit_records
     r2 += readmit_subjects
+    raw_read_amendment, raw_read_records, raw_read_subjects = raw_read_binding(root)
+    if raw_read_amendment is not None or raw_read_records or raw_read_subjects:
+        records += 1
+        subjects_seen += len(RAW_READ_SUBJECTS)
+    r1 += raw_read_records
+    r2 += raw_read_subjects
+    treeread_amendment, treeread_records, treeread_subjects = treeread_binding(root)
+    if treeread_amendment is not None or treeread_records or treeread_subjects:
+        records += 1
+        subjects_seen += len(TREEREAD_SUBJECTS)
+    r1 += treeread_records
+    r2 += treeread_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -2840,14 +3066,16 @@ def check_outcomes(root, report):
         retirement += f"; v2.11 inactive by {corr_retired_by}"
     if coverage_retired_by:
         retirement += f"; v2.12 inactive by {coverage_retired_by}"
-    if verify_retired_by:
-        retirement += f"; v2.17 inactive by {verify_retired_by}"
     if infra_retired_by:
         retirement += f"; v2.14 inactive by {infra_retired_by}"
     if findpages_retired_by:
         retirement += f"; v2.15 inactive by {findpages_retired_by}"
     if subsec_retired_by:
         retirement += f"; v2.16 inactive by {subsec_retired_by}"
+    if reltype_retired_by:
+        retirement += f"; v2.19 inactive by {reltype_retired_by}"
+    if hero_retired_by:
+        retirement += f"; v2.20 inactive by {hero_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -2877,9 +3105,9 @@ def check_outcomes(root, report):
                "policy, pending until recorded; infrastructure recognizers: one v2.14 "
                "row over effective v2.12, pending until recorded; index and task routes: "
                "one v2.15 row over effective v2.14, pending until recorded; page subsections: "
-               "one v2.16 row over effective v2.15, pending until recorded; verify text: "
-               "one v2.17 row "
-               "over effective v2.1's 033, pending until recorded" + retirement)
+               "one v2.16 row over effective v2.15, pending until recorded; relation types: "
+               "one v2.19 row over effective v2.16, pending until recorded; hero figure: "
+               "one v2.20 row over effective v2.19, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -3277,7 +3505,6 @@ def compose_url_source_by_name(current, text):
 
 
 FIGURE_REPLACES = (POLARIS_ID + "034",)
-VERIFY_REPLACES = (POLARIS_ID + "033",)
 
 
 def compose_figure_by_id(current, text, replaces=FIGURE_REPLACES):
@@ -3668,16 +3895,6 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, coverage_amendment)
                 pa += extra_a
                 pb += extra_b
-        verify_amendment, verify_records, verify_subjects = verify_binding(root)
-        findings += verify_records + verify_subjects
-        if verify_amendment is not None:
-            if url_amendment is None or amendment is None:
-                findings.append("POLARIS: verify text requires effective URL declared-source v2.1")
-            else:
-                a, extra_a = compose_figure_by_id(a, verify_amendment, VERIFY_REPLACES)
-                b, extra_b = compose_figure_by_name(b, verify_amendment, VERIFY_REPLACES)
-                pa += extra_a
-                pb += extra_b
         infra_amendment, infra_records, infra_subjects = infra_binding(root)
         findings += infra_records + infra_subjects
         if infra_amendment is not None:
@@ -3712,6 +3929,40 @@ def census(root):
             else:
                 a, extra_a = compose_figure_by_id(a, subsec_amendment)
                 b, extra_b = compose_figure_by_name(b, subsec_amendment)
+                pa += extra_a
+                pb += extra_b
+        raw_read_amendment, raw_read_records, raw_read_subjects = raw_read_binding(root)
+        findings += raw_read_records + raw_read_subjects
+        if raw_read_amendment is not None:
+            a, extra_a = compose_figure_by_id(a, raw_read_amendment, RAW_READ_REPLACES)
+            b, extra_b = compose_figure_by_name(b, raw_read_amendment, RAW_READ_REPLACES)
+            pa += extra_a
+            pb += extra_b
+        treeread_amendment, treeread_records, treeread_subjects = treeread_binding(root)
+        findings += treeread_records + treeread_subjects
+        if treeread_amendment is not None:
+            a, extra_a = compose_figure_by_id(a, treeread_amendment, TREEREAD_REPLACES)
+            b, extra_b = compose_figure_by_name(b, treeread_amendment, TREEREAD_REPLACES)
+            pa += extra_a
+            pb += extra_b
+        reltype_amendment, reltype_records, reltype_subjects = reltype_binding(root)
+        findings += reltype_records + reltype_subjects
+        if reltype_amendment is not None:
+            if subsec_amendment is None:
+                findings.append("POLARIS: relation types requires effective page subsections v2.16")
+            else:
+                a, extra_a = compose_figure_by_id(a, reltype_amendment)
+                b, extra_b = compose_figure_by_name(b, reltype_amendment)
+                pa += extra_a
+                pb += extra_b
+        hero_amendment, hero_records, hero_subjects = hero_binding(root)
+        findings += hero_records + hero_subjects
+        if hero_amendment is not None:
+            if reltype_amendment is None:
+                findings.append("POLARIS: hero figure requires effective relation types v2.19")
+            else:
+                a, extra_a = compose_figure_by_id(a, hero_amendment)
+                b, extra_b = compose_figure_by_name(b, hero_amendment)
                 pa += extra_a
                 pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
@@ -3794,14 +4045,6 @@ def polaris_expected(root, findings):
             n_req += 1
             n_scen += sum(len(row["scenarios"]) for row in url_a.values()) - sum(
                 len(row["scenarios"]) for row in after_a.values())
-            verify_amendment, _records, _subjects = verify_binding(root)
-            if verify_amendment is not None:
-                ver_a, pa = compose_figure_by_id(url_a, verify_amendment, VERIFY_REPLACES)
-                ver_b, pb = compose_figure_by_name(url_b, verify_amendment, VERIFY_REPLACES)
-                if pa or pb or ver_a != ver_b or set(ver_a) != set(url_a):
-                    findings.append("POLARIS verify text: methods disagree or change identities")
-                n_scen += sum(len(row["scenarios"]) for row in ver_a.values()) - sum(
-                    len(row["scenarios"]) for row in url_a.values())
             after_a, after_b = url_a, url_b
         reach_amendment, _records, _subjects = reach_binding(root)
         if reach_amendment is not None:
@@ -3923,6 +4166,51 @@ def polaris_expected(root, findings):
                                                                 findings.append("POLARIS page subsections: methods disagree or change identities")
                                                             n_scen += sum(len(row["scenarios"]) for row in sub_a.values()) - sum(
                                                                 len(row["scenarios"]) for row in fin_a.values())
+                                                            reltype_amendment, _records, _subjects = reltype_binding(root)
+                                                            if reltype_amendment is not None:
+                                                                rel_a, pa = compose_figure_by_id(sub_a, reltype_amendment)
+                                                                rel_b, pb = compose_figure_by_name(sub_b, reltype_amendment)
+                                                                if pa or pb or rel_a != rel_b or set(rel_a) != set(sub_a):
+                                                                    findings.append("POLARIS relation types: methods disagree or change identities")
+                                                                n_scen += sum(len(row["scenarios"]) for row in rel_a.values()) - sum(
+                                                                    len(row["scenarios"]) for row in sub_a.values())
+                                                                hero_amendment, _records, _subjects = hero_binding(root)
+                                                                if hero_amendment is not None:
+                                                                    hero_a, pa = compose_figure_by_id(rel_a, hero_amendment)
+                                                                    hero_b, pb = compose_figure_by_name(rel_b, hero_amendment)
+                                                                    if pa or pb or hero_a != hero_b or set(hero_a) != set(rel_a):
+                                                                        findings.append("POLARIS hero figure: methods disagree or change identities")
+                                                                    n_scen += sum(len(row["scenarios"]) for row in hero_a.values()) - sum(
+                                                                        len(row["scenarios"]) for row in rel_a.values())
+    raw_read_amendment, _records, _subjects = raw_read_binding(root)
+    if raw_read_amendment is not None:
+        # Only 033, 036 and 046 move. Use their effective predecessors, independent
+        # of the scenario census and the amendments to 034.
+        prior_texts = (url_source_binding(root)[0], amendment, readmit_binding(root)[0])
+        for ident, prior_text in zip(RAW_READ_REPLACES, prior_texts, strict=True):
+            prior = {i[0]: len(s) for _kind, i, _name, s in _polaris_blocks_regex(prior_text)
+                     if len(i) == 1}
+            current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(raw_read_amendment)
+                       if len(b["ids"]) == 1}
+            if ident not in prior or ident not in current:
+                findings.append(f"POLARIS raw-read disclosure: cannot count predecessor and successor for {ident}")
+            else:
+                n_scen += current[ident] - prior[ident]
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    if treeread_amendment is not None:
+        # Only 033, 035 and 048 move: 033 after the raw-read disclosure v2.17,
+        # 035 and 048 after URL source v2.1.
+        url_text = url_source_binding(root)[0]
+        prior_texts = (raw_read_amendment, url_text, url_text)
+        current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(treeread_amendment)
+                   if len(b["ids"]) == 1}
+        for ident, prior_text in zip(TREEREAD_REPLACES, prior_texts, strict=True):
+            prior = {i[0]: len(s) for _kind, i, _name, s in _polaris_blocks_regex(prior_text or "")
+                     if len(i) == 1}
+            if ident not in prior or ident not in current:
+                findings.append(f"POLARIS run-tree read bounds: cannot count predecessor and successor for {ident}")
+            else:
+                n_scen += current[ident] - prior[ident]
     return n_req, n_scen, ids
 
 
@@ -4094,9 +4382,6 @@ def check_generated(root, pop, report):
     coverage_amendment, _records, _subjects = coverage_binding(root)
     if coverage_amendment is not None:
         files += tracked(root, COVERAGE_HOME)
-    verify_amendment, _records, _subjects = verify_binding(root)
-    if verify_amendment is not None:
-        files += tracked(root, VERIFY_HOME)
     infra_amendment, _records, _subjects = infra_binding(root)
     if infra_amendment is not None:
         files += tracked(root, INFRA_HOME)
@@ -4106,12 +4391,24 @@ def check_generated(root, pop, report):
     subsec_amendment, _records, _subjects = subsec_binding(root)
     if subsec_amendment is not None:
         files += tracked(root, SUBSEC_HOME)
+    reltype_amendment, _records, _subjects = reltype_binding(root)
+    if reltype_amendment is not None:
+        files += tracked(root, RELTYPE_HOME)
+    hero_amendment, _records, _subjects = hero_binding(root)
+    if hero_amendment is not None:
+        files += tracked(root, HERO_HOME)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
     readmit_amendment, _records, _subjects = readmit_binding(root)
     if readmit_amendment is not None:
         files += tracked(root, READMIT_HOME)
+    raw_read_amendment, _records, _subjects = raw_read_binding(root)
+    if raw_read_amendment is not None:
+        files += tracked(root, RAW_READ_HOME)
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    if treeread_amendment is not None:
+        files += tracked(root, TREEREAD_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -4165,7 +4462,10 @@ def check_generated(root, pop, report):
                        (readmit_amendment, READMIT_UNION), (infra_amendment, INFRA_UNION),
                         (findpages_amendment, FINDPAGES_UNION),
                         (subsec_amendment, SUBSEC_UNION),
-                        (verify_amendment, VERIFY_UNION)):
+                        (reltype_amendment, RELTYPE_UNION),
+                        (hero_amendment, HERO_UNION),
+                        (raw_read_amendment, RAW_READ_UNION),
+                        (treeread_amendment, TREEREAD_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -4472,24 +4772,6 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls coverage precheck v2.12 adopted while it is not in force")
         if any(COVERAGE_TAG in line and "Agent adoption" in line for line in rows.get(COVERAGE_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls coverage precheck v2.12 adopted while it is not in force")
-    verify_amendment, _records, _subjects = verify_binding(root)
-    verify_fields = [line.strip() for line in visible_route_lines(status)
-                     if line.strip().startswith(VERIFY_STATUS_PREFIX)]
-    if verify_amendment is not None:
-        examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and VERIFY_TAG in line
-                   for line in rows.get(VERIFY_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route verify text v2.17 "
-                            f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = verify_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or verify_fields != [f"{VERIFY_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route verify text v2.17 and its adoption {identity}")
-    elif VERIFY_CHANGE in changes:
-        examined += 2
-        if any("is agent-adopted" in field for field in verify_fields):
-            findings.append(f"`{STATUS}` calls verify text v2.17 adopted while it is not in force")
-        if any(VERIFY_TAG in line and "Agent adoption" in line for line in rows.get(VERIFY_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls verify text v2.17 adopted while it is not in force")
     infra_amendment, _records, _subjects = infra_binding(root)
     infra_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(INFRA_STATUS_PREFIX)]
@@ -4544,6 +4826,72 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls page subsections v2.16 adopted while it is not in force")
         if any(SUBSEC_TAG in line and "Agent adoption" in line for line in rows.get(SUBSEC_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls page subsections v2.16 adopted while it is not in force")
+    raw_read_amendment, _records, _subjects = raw_read_binding(root)
+    raw_read_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(RAW_READ_ROUTE)]
+    if raw_read_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and RAW_READ_TAG in line
+                   for line in rows.get(RAW_READ_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route raw-read disclosure to its adoption and tag")
+        identity = raw_read_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or raw_read_fields != [f"{RAW_READ_ROUTE} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route raw-read disclosure and its adoption {identity}")
+    elif RAW_READ_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in raw_read_fields):
+            findings.append(f"`{STATUS}` calls raw-read disclosure adopted while it is not in force")
+        if any(RAW_READ_TAG in line and "Agent adoption" in line for line in rows.get(RAW_READ_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls raw-read disclosure adopted while it is not in force")
+    treeread_amendment, _records, _subjects = treeread_binding(root)
+    treeread_fields = [line.strip() for line in visible_route_lines(status)
+                       if line.strip().startswith(TREEREAD_ROUTE)]
+    if treeread_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and TREEREAD_TAG in line
+                   for line in rows.get(TREEREAD_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route run-tree read bounds to its adoption and tag")
+        identity = treeread_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or treeread_fields != [f"{TREEREAD_ROUTE} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route run-tree read bounds and its adoption {identity}")
+    elif TREEREAD_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in treeread_fields):
+            findings.append(f"`{STATUS}` calls run-tree read bounds adopted while it is not in force")
+        if any(TREEREAD_TAG in line and "Agent adoption" in line for line in rows.get(TREEREAD_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls run-tree read bounds adopted while it is not in force")
+    reltype_amendment, _records, _subjects = reltype_binding(root)
+    reltype_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
+    if reltype_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and RELTYPE_TAG in line
+                   for line in rows.get(RELTYPE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route relation types v2.19 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = reltype_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or reltype_fields != [f"{RELTYPE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route relation types v2.19 and its adoption {identity}")
+    elif RELTYPE_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in reltype_fields):
+            findings.append(f"`{STATUS}` calls relation types v2.19 adopted while it is not in force")
+    hero_amendment, _records, _subjects = hero_binding(root)
+    hero_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(HERO_STATUS_PREFIX)]
+    if hero_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and HERO_TAG in line
+                   for line in rows.get(HERO_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route hero figure v2.20 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = hero_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or hero_fields != [f"{HERO_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route hero figure v2.20 and its adoption {identity}")
+    elif HERO_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in hero_fields):
+            findings.append(f"`{STATUS}` calls hero figure v2.20 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -4782,10 +5130,13 @@ def inputs(root):
     paths |= {BOUNDS_UNION, *BOUNDS_SUBJECTS}
     paths |= {CORR_UNION, *CORR_SUBJECTS}
     paths |= {COVERAGE_UNION, *COVERAGE_SUBJECTS}
-    paths |= {VERIFY_UNION, *VERIFY_SUBJECTS}
     paths |= {INFRA_UNION, *INFRA_SUBJECTS}
     paths |= {FINDPAGES_UNION, *FINDPAGES_SUBJECTS}
     paths |= {SUBSEC_UNION, *SUBSEC_SUBJECTS}
+    paths |= {RELTYPE_UNION, *RELTYPE_SUBJECTS}
+    paths |= {HERO_UNION, *HERO_SUBJECTS}
+    paths |= {RAW_READ_UNION, *RAW_READ_SUBJECTS}
+    paths |= {TREEREAD_UNION, *TREEREAD_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -5160,8 +5511,11 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_infra = any(is_infra_row(line) for line in original.splitlines())
     had_findpages = any(is_findpages_row(line) for line in original.splitlines())
     had_subsec = any(is_subsec_row(line) for line in original.splitlines())
+    had_reltype = any(is_reltype_row(line) for line in original.splitlines())
+    had_hero = any(is_hero_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
-    had_verify = any(is_verify_row(line) for line in original.splitlines())
+    had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
+    had_treeread = any(is_treeread_row(line) for line in original.splitlines())
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -5169,9 +5523,9 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_reach_row(line) and not is_manifests_row(line) and not is_repairs_row(line) and not is_maps_row(line)
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
-                      and not is_readmit_row(line)
+                      and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -5184,7 +5538,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_verify
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_raw_read - had_treeread
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -5202,7 +5556,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (INFRA_BOUND_PARTS if had_infra else 0)
             - (FINDPAGES_BOUND_PARTS if had_findpages else 0)
             - (SUBSEC_BOUND_PARTS if had_subsec else 0)
-            - (VERIFY_BOUND_PARTS if had_verify else 0))
+            - (RELTYPE_BOUND_PARTS if had_reltype else 0)
+            - (HERO_BOUND_PARTS if had_hero else 0)
+            - (len(RAW_READ_SUBJECTS) if had_raw_read else 0)
+            - (len(TREEREAD_SUBJECTS) if had_treeread else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -5329,7 +5686,8 @@ def url_source_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_url_source_row(line) and not is_verify_row(line))
+                      if not is_url_source_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5601,7 +5959,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5739,7 +6097,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -5872,7 +6230,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6003,7 +6361,7 @@ def kinds_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6134,7 +6492,7 @@ def manifests_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6265,7 +6623,7 @@ def repairs_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6395,7 +6753,7 @@ def maps_cases(tmp, base, witnesses, failures):
                       if not is_maps_row(line) and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6594,7 +6952,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6723,7 +7081,7 @@ def corr_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6852,7 +7210,7 @@ def coverage_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6980,7 +7338,7 @@ def infra_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7107,7 +7465,7 @@ def findpages_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_verify_row(line))
+                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7253,7 +7611,7 @@ def subsec_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_subsec_row(line))
+                      if not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7363,10 +7721,10 @@ def subsec_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == kin_pop), False)
 
 
-def verify_cases(tmp, base, witnesses, failures):
-    """The v2.17 pending-to-adopted transition over v2.1's 033, its ledger and byte guards, and the predecessor guard."""
-    original = read_text(base, VERIFY_SPEC)
-    if original is None or url_source_binding(base)[0] is None:
+def reltype_cases(tmp, base, witnesses, failures):
+    """The v2.19 pending-to-adopted transition over v2.16, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, RELTYPE_SPEC)
+    if original is None or subsec_binding(base)[0] is None:
         return
 
     def record(name, rel, old, new, expect, found, caught, stood):
@@ -7376,98 +7734,98 @@ def verify_cases(tmp, base, witnesses, failures):
         if not caught:
             failures.append(name)
 
-    tree = Path(tmp) / "verify-text"
+    tree = Path(tmp) / "relation-types"
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_verify_row(line))
+                      if not is_reltype_row(line) and not is_hero_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
-    ident = VERIFY_REPLACES[0]
-    held = (verify_binding(tree) == (None, [], []) and not pending_findings
-            and len(predecessor[ident]["scenarios"]) == 6)
-    record("verify-pending", AGENT_ADOPTIONS, "<no v2.17 row>", "<unchanged>",
-           "landed package alone keeps v2.17 pending", pending_findings, held, True)
+    ident = FIGURE_REPLACES[0]
+    held = (reltype_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 158)
+    record("reltype-pending", AGENT_ADOPTIONS, "<no v2.19 row>", "<unchanged>",
+           "landed package alone keeps v2.19 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
-    row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{VERIFY_SPEC}) "
-           f"| Selftest | `git revert {oid}` | `{VERIFY_TAG}` |\n")
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{RELTYPE_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{RELTYPE_TAG}` |\n")
     ledger.write_text(pending + row)
     current_pop, current_findings = census(tree)
     current = current_pop["POLARIS"]
-    held = (verify_binding(tree) == (original, [], []) and not current_findings
+    held = (reltype_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 10
+            and len(current[ident]["scenarios"]) == 168
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("verify-adopted", AGENT_ADOPTIONS, "<no v2.17 row>", row,
-           "v2.17 replaces exactly 033 (6 to 10 scenarios)", current_findings, held, True)
+    record("reltype-adopted", AGENT_ADOPTIONS, "<no v2.19 row>", row,
+           "v2.19 replaces exactly 034 (158 to 168 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
-                           ("wrong-tag", VERIFY_TAG, VERIFY_TAG + "-wrong"),
+                           ("wrong-tag", RELTYPE_TAG, RELTYPE_TAG + "-wrong"),
                            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
-                           ("missing-spec-link", f"/blob/{oid}/{VERIFY_SPEC})", f"/blob/other/{VERIFY_SPEC})"),
-                           ("bad-date", "2026-11-22", "2026-99-22"),
+                           ("missing-spec-link", f"/blob/{oid}/{RELTYPE_SPEC})", f"/blob/other/{RELTYPE_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
                            ("no-reason", "| Selftest |", "|  |")):
         assert old in row
         ledger.write_text(pending + row.replace(old, new, 1))
-        effective, r1, r2 = verify_binding(tree)
-        record(f"verify-{name}", AGENT_ADOPTIONS, old, new,
+        effective, r1, r2 = reltype_binding(tree)
+        record(f"reltype-{name}", AGENT_ADOPTIONS, old, new,
                "R1 refusal with no effective amendment", r1 + r2,
                effective is None and bool(r1) and not r2, False)
 
     veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
     ledger.write_text(pending + row + veto)
     pop, found = census(tree)
-    held = (verify_disposition(tree, verify_rows(tree)) == "A-1000" and not found
+    held = (reltype_disposition(tree, reltype_rows(tree)) == "A-1000" and not found
             and pop["POLARIS"] == predecessor)
-    record("verify-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.1 033", found, held, True)
-    prior_row = next((line for line in pending.splitlines(keepends=True) if is_url_source_row(line)), None)
+    record("reltype-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.16 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_subsec_row(line)), None)
     if prior_row is not None:
-        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_url_source_row(line))
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_subsec_row(line))
         ledger.write_text(no_prior + row)
-        effective, r1, r2 = verify_binding(tree)
-        record("verify-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
-               "R1 refusal while v2.1 is not in force", r1 + r2,
-               effective is None and any("prior v2.1" in f for f in r1), False)
+        effective, r1, r2 = reltype_binding(tree)
+        record("reltype-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.16 is not in force", r1 + r2,
+               effective is None and any("prior v2.16" in f for f in r1), False)
 
     ledger.write_text(pending + row)
-    for rel in VERIFY_SUBJECTS:
+    for rel in RELTYPE_SUBJECTS:
         subject = tree / rel
         previous = subject.read_bytes()
         subject.write_bytes(previous + b"\n")
-        effective, r1, r2 = verify_binding(tree)
+        effective, r1, r2 = reltype_binding(tree)
         subject.write_bytes(previous)
-        record(f"verify-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+        record(f"reltype-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
                "R2 refusal with no effective amendment", r1 + r2,
                effective is None and not r1 and bool(r2), False)
-    union = tree / VERIFY_UNION
+    union = tree / RELTYPE_UNION
     previous = union.read_text()
-    assert '"REQ-polaris-generation-017"' in previous
-    union.write_text(previous.replace('"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', 1))
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
     report = Report()
     check_generated(tree, current_pop, report)
     union.write_text(previous)
-    record("verify-union-changed", VERIFY_UNION, '"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', "R4 refusal",
-           report.findings.get("R4", []), any(VERIFY_UNION in f for f in report.findings.get("R4", [])), False)
+    record("reltype-union-changed", RELTYPE_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(RELTYPE_UNION in f for f in report.findings.get("R4", [])), False)
     status = tree / STATUS
     previous = status.read_text()
     status.write_text("\n".join(line for line in previous.split("\n")
-                                if not line.strip().startswith(VERIFY_STATUS_PREFIX)))
+                                if not line.strip().startswith(RELTYPE_STATUS_PREFIX)))
     report = Report()
     check_routes(tree, current_pop, report)
     status.write_text(previous)
-    record("verify-status-route-missing", STATUS, VERIFY_STATUS_PREFIX, "", "R5 refusal",
+    record("reltype-status-route-missing", STATUS, RELTYPE_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("verify text v2.17" in f for f in report.findings.get("R5", [])), False)
+           any("relation types v2.19" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)
     claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
-    adopted_status = any(line.strip().startswith(VERIFY_STATUS_PREFIX) and "is agent-adopted" in line
+    adopted_status = any(line.strip().startswith(RELTYPE_STATUS_PREFIX) and "is agent-adopted" in line
                          for line in previous.split("\n"))
-    record("verify-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+    record("reltype-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
            "R5 refuses an adopted route while the row is missing", claims,
            bool(claims) if adopted_status else not claims, not adopted_status)
     ledger.write_text(pending + row)
@@ -7475,18 +7833,146 @@ def verify_cases(tmp, base, witnesses, failures):
     cases = [
         ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
         ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
-        ("renamed", "### Requirement: Operator-agent authoring mode",
-         "### Requirement: Operator-agent authoring mode and verify"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and relation types"),
         ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
     ]
+    kin_pop = predecessor
     for name, old, new in cases:
         assert old in original, name
         mutant = original.replace(old, new, 1)
-        a, ida = compose_figure_by_id(predecessor, mutant, VERIFY_REPLACES)
-        b, names = compose_figure_by_name(predecessor, mutant, VERIFY_REPLACES)
-        record(f"verify-compose-{name}", VERIFY_SPEC, old, new,
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"reltype-compose-{name}", RELTYPE_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
-               bool(ida and names and a == b == predecessor), False)
+               bool(ida and names and a == b == kin_pop), False)
+
+
+def hero_cases(tmp, base, witnesses, failures):
+    """The v2.20 pending-to-adopted transition over v2.19, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, HERO_SPEC)
+    if original is None or reltype_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "hero-figure"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_hero_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (hero_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 168)
+    record("hero-pending", AGENT_ADOPTIONS, "<no v2.20 row>", "<unchanged>",
+           "landed package alone keeps v2.20 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{HERO_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{HERO_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (hero_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 178
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("hero-adopted", AGENT_ADOPTIONS, "<no v2.20 row>", row,
+           "v2.20 replaces exactly 034 (168 to 178 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", HERO_TAG, HERO_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{HERO_SPEC})", f"/blob/other/{HERO_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = hero_binding(tree)
+        record(f"hero-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (hero_disposition(tree, hero_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("hero-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.19 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_reltype_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_reltype_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = hero_binding(tree)
+        record("hero-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.19 is not in force", r1 + r2,
+               effective is None and any("prior v2.19" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in HERO_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = hero_binding(tree)
+        subject.write_bytes(previous)
+        record(f"hero-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / HERO_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("hero-union-changed", HERO_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(HERO_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(HERO_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("hero-status-route-missing", STATUS, HERO_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("hero figure v2.20" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(HERO_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("hero-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and hero figure"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"hero-compose-{name}", HERO_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
 
 
 def reach_cases(tmp, base, witnesses, failures):
@@ -7506,7 +7992,8 @@ def reach_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reach_row(line) and not is_readmit_row(line))
+                      if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7617,6 +8104,149 @@ def reach_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == predecessor), False)
 
 
+def raw_read_cases(tmp, base, witnesses, failures):
+    spec = read_text(base, RAW_READ_SPEC)
+    if spec is None or readmit_binding(base)[0] is None:
+        return
+    tree = Path(tmp) / RAW_READ_CHANGE
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_raw_read_row(line) and not is_treeread_row(line))
+    ledger.write_text(pending)
+    before, findings = census(tree)
+    oid = "0123456789abcdef" * 2 + "01234567"
+    links = " ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel})"
+                     for rel in RAW_READ_SUBJECTS)
+    row = (f"| A-999 | 2026-11-23 | `{oid}` | {links} | Selftest | "
+           f"`git revert {oid}` | `{RAW_READ_TAG}` |\n")
+
+    def record(case, path, old, new, outcome, observed, passed):
+        witnesses.append({"mutant": "raw-read-" + case, "path": path, "old": old, "new": new,
+                          "expected": outcome, "failed": observed,
+                          "outcome": ("held" if outcome == "PASS" else "killed") if passed else "SURVIVED"})
+        if not passed:
+            failures.append("raw-read-" + case)
+
+    record("pending", AGENT_ADOPTIONS, "<no adoption>", "<unchanged>", "PASS", findings,
+           not findings and raw_read_binding(tree) == (None, [], []))
+    ledger.write_text(pending + row)
+    after, findings = census(tree)
+    before, after = before["POLARIS"], after["POLARIS"]
+    changes = {ident for ident in before if before[ident] != after.get(ident)}
+    delta = sum(len(req["scenarios"]) for req in after.values()) - sum(len(req["scenarios"]) for req in before.values())
+    record("adopted", AGENT_ADOPTIONS, "<no adoption>", row, "PASS", findings,
+           not findings and raw_read_binding(tree) == (spec, [], [])
+           and set(before) == set(after) and changes == set(RAW_READ_REPLACES) and delta == 5)
+
+    later_oid = "2" * 40
+    citation = (f"| A-1000 | 2026-11-23 | `{later_oid}` | {links} | Citation only | "
+                f"`git revert {later_oid}` | — |\n")
+    ledger.write_text(pending + row + citation)
+    record("later-citation", AGENT_ADOPTIONS, row, row + citation, "PASS", [],
+           raw_read_binding(tree) == (spec, [], []))
+    veto = citation.replace(links, "Veto A-999 " + links)
+    ledger.write_text(pending + row + veto)
+    record("linked-veto", AGENT_ADOPTIONS, row, row + veto, "PASS", [],
+           raw_read_binding(tree) == (None, [], []))
+
+    for case, old, new in (
+            ("duplicate-row", row, row + row),
+            ("wrong-tag", RAW_READ_TAG, RAW_READ_TAG + "-wrong"),
+            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+            ("missing-policy-link", links.split()[1], "")):
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = raw_read_binding(tree)
+        record(case, AGENT_ADOPTIONS, old, new, "R1 refuses", r1 + r2,
+               effective is None and bool(r1) and not r2)
+    ledger.write_text(pending + row)
+    for rel in RAW_READ_SUBJECTS:
+        path = tree / rel
+        original = path.read_bytes()
+        path.write_bytes(original + b"\n")
+        effective, r1, r2 = raw_read_binding(tree)
+        path.write_bytes(original)
+        record("changed-" + Path(rel).name, rel, "<end of file>", "\\n", "R2 refuses", r1 + r2,
+               effective is None and not r1 and len(r2) == 1 and rel in r2[0])
+
+
+TREEREAD_SCENARIOS_ADDED = 7
+
+
+def treeread_cases(tmp, base, witnesses, failures):
+    """The v2.18 pending-to-adopted transition over v2.17 and v2.1, its ledger and byte
+    guards, and the predecessor guard (no raw-read disclosure v2.17, no composition)."""
+    spec = read_text(base, TREEREAD_SPEC)
+    if spec is None or raw_read_binding(base)[0] is None or url_source_binding(base)[0] is None:
+        return
+    tree = Path(tmp) / TREEREAD_CHANGE
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_treeread_row(line))
+    ledger.write_text(pending)
+    before, findings = census(tree)
+    oid = "0123456789abcdef" * 2 + "89abcdef"
+    links = " ".join(f"[subject](https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel})"
+                     for rel in TREEREAD_SUBJECTS)
+    row = (f"| A-998 | 2026-11-23 | `{oid}` | {links} | Selftest | "
+           f"`git revert {oid}` | `{TREEREAD_TAG}` |\n")
+
+    def record(case, path, old, new, outcome, observed, passed):
+        witnesses.append({"mutant": "run-tree-read-bounds-" + case, "path": path, "old": old, "new": new,
+                          "expected": outcome, "failed": observed,
+                          "outcome": ("held" if outcome == "PASS" else "killed") if passed else "SURVIVED"})
+        if not passed:
+            failures.append("run-tree-read-bounds-" + case)
+
+    record("pending", AGENT_ADOPTIONS, "<no adoption>", "<unchanged>", "PASS", findings,
+           not findings and treeread_binding(tree) == (None, [], []))
+    ledger.write_text(pending + row)
+    after, findings = census(tree)
+    before, after = before["POLARIS"], after["POLARIS"]
+    changes = {ident for ident in before if before[ident] != after.get(ident)}
+    delta = sum(len(req["scenarios"]) for req in after.values()) - sum(len(req["scenarios"]) for req in before.values())
+    record("adopted", AGENT_ADOPTIONS, "<no adoption>", row, "PASS", findings,
+           not findings and treeread_binding(tree) == (spec, [], [])
+           and set(before) == set(after) and changes == set(TREEREAD_REPLACES)
+           and delta == TREEREAD_SCENARIOS_ADDED)
+
+    later_oid = "3" * 40
+    citation = (f"| A-1001 | 2026-11-23 | `{later_oid}` | {links} | Citation only | "
+                f"`git revert {later_oid}` | — |\n")
+    ledger.write_text(pending + row + citation)
+    record("later-citation", AGENT_ADOPTIONS, row, row + citation, "PASS", [],
+           treeread_binding(tree) == (spec, [], []))
+    veto = citation.replace(links, "Veto A-998 " + links)
+    ledger.write_text(pending + row + veto)
+    record("linked-veto", AGENT_ADOPTIONS, row, row + veto, "PASS", [],
+           treeread_binding(tree) == (None, [], []))
+
+    for case, old, new in (
+            ("duplicate-row", row, row + row),
+            ("wrong-tag", TREEREAD_TAG, TREEREAD_TAG + "-wrong"),
+            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+            ("missing-spec-link", links, "")):
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = treeread_binding(tree)
+        record(case, AGENT_ADOPTIONS, old, new, "R1 refuses", r1 + r2,
+               effective is None and bool(r1) and not r2)
+    without_predecessor = "".join(line for line in pending.splitlines(keepends=True) if not is_raw_read_row(line))
+    ledger.write_text(without_predecessor + row)
+    effective, r1, r2 = treeread_binding(tree)
+    record("no-raw-read-predecessor", AGENT_ADOPTIONS, "<raw-read v2.17 row>", "<absent>", "R1 refuses", r1 + r2,
+           effective is None and any("must be effective" in finding for finding in r1))
+    ledger.write_text(pending + row)
+    for rel in TREEREAD_SUBJECTS:
+        path = tree / rel
+        original = path.read_bytes()
+        path.write_bytes(original + b"\n")
+        effective, r1, r2 = treeread_binding(tree)
+        path.write_bytes(original)
+        record("changed-" + Path(rel).name, rel, "<end of file>", "\\n", "R2 refuses", r1 + r2,
+               effective is None and not r1 and len(r2) == 1 and rel in r2[0])
+
+
 def readmit_cases(tmp, base, witnesses, failures):
     """The v2.13 pending-to-adopted transition over v2.6, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, READMIT_SPEC)
@@ -7634,7 +8264,8 @@ def readmit_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_readmit_row(line))
+                      if not is_readmit_row(line) and not is_raw_read_row(line)
+                      and not is_treeread_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8171,13 +8802,16 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     bounds_cases(tmp, base, witnesses, failures)
     corr_cases(tmp, base, witnesses, failures)
     coverage_cases(tmp, base, witnesses, failures)
-    verify_cases(tmp, base, witnesses, failures)
     infra_cases(tmp, base, witnesses, failures)
     findpages_cases(tmp, base, witnesses, failures)
     subsec_cases(tmp, base, witnesses, failures)
+    reltype_cases(tmp, base, witnesses, failures)
+    hero_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)
+    raw_read_cases(tmp, base, witnesses, failures)
+    treeread_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

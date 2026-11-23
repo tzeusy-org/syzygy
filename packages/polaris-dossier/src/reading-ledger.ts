@@ -3,7 +3,8 @@ import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
 import { readCheckRecord } from './check-record-read.js';
 import type { FigureFit } from './figure-fit.js';
-import { proseWords, type ReaderAdvice, type ReaderStandardId } from './reader-advice.js';
+import { containerProseWords, proseWords, type ReaderAdvice, type ReaderStandardId } from './reader-advice.js';
+import { hasHomeForm } from './draft-schema.js';
 import { readRunRecord } from './run-record.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
@@ -48,11 +49,6 @@ const minutes = (words: number): number => Math.ceil(words / WORDS_PER_MINUTE);
 /** A deep dive's page: its identity with every code point outside `A-Z`, `a-z`, `0-9`, `_`, `.` and `-` replaced by one `_`, the rule
  * by which the renderer names that page (`deepDivePath`); a surrogate pair is one code point, and so is a lone surrogate (version 2.8). */
 export const deepDivePage = (id: string): string => `deep-dives/${id.replace(/[^A-Za-z0-9_.-]/gu, '_')}.html`;
-/** The draft schemas whose diagrams name a `home` (v5 and later). */
-const HOME_SCHEMAS = new Set(['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7']);
-
-/** The words of one container's own prose (a section's or deep dive's paragraphs), counted as RS-19 counts them. */
-const containerWords = (container: Readonly<Record<string, unknown>>): number => list(container['paragraphs']).reduce<number>((sum, entry) => sum + proseWords(entry), 0);
 
 /** One page's or the draft's tally, filled as units, figures and advice are placed. */
 class Tally {
@@ -114,7 +110,7 @@ export function readingLedger(subject: unknown, fit: FigureFit, advice: ReaderAd
   }
   sections.forEach((section, i) => {
     if (!produced(section)) return;
-    const words = containerWords(section);
+    const words = containerProseWords(doc, section, 'sections');
     draft.proseWords += words;
     const at = sectionPages[i]!;
     if (at === null) { unplacedUnits += 1; return; }
@@ -124,7 +120,7 @@ export function readingLedger(subject: unknown, fit: FigureFit, advice: ReaderAd
   });
   dives.forEach((dive, i) => {
     if (!produced(dive)) return;
-    const words = containerWords(dive);
+    const words = containerProseWords(doc, dive, 'deepDives');
     draft.proseWords += words;
     const entry = page(divePages[i]!);
     entry.units.push(`deep-dive:${text(dive['id']) ?? ''}`);
@@ -133,7 +129,7 @@ export function readingLedger(subject: unknown, fit: FigureFit, advice: ReaderAd
 
   // Figures: a produced diagram, on the page of its home (v5 and later) or of its `sectionId` section. A figure homed on a deep dive with
   // no page sits where that deep dive's section's figures do; one whose section is not produced or is unplaced is on no page.
-  const homesInHome = HOME_SCHEMAS.has(text(doc['schemaVersion']) ?? '');
+  const homesInHome = hasHomeForm(doc['schemaVersion']);
   const diagrams = list(doc['diagrams']);
   const figurePage = (diagram: Readonly<Record<string, unknown>>): string | null => {
     if (!homesInHome) return pageOfSectionId(text(diagram['sectionId']));

@@ -72,6 +72,27 @@ describe('reader advice: the counted standards', () => {
     ]);
   });
 
+  it('RS-19: counts a v8 section\'s subsection answers and paragraphs as its own prose, and an earlier draft\'s subsections never (version 2.16)', () => {
+    const w = (n: number) => Array.from({ length: n }, () => 'w').join(' ');
+    const sub = (answer: number, paragraph: number) => ({ id: 'q', title: 'Q', answer: { text: w(answer) }, paragraphs: [{ text: w(paragraph), children: [{ text: 'w' }] }, { kind: 'table', rows: [] }] });
+    const doc = (schemaVersion: string) => ({ schemaVersion, sections: [{ ...section('a', 100), subsections: [sub(50, 49), sub(50, 50)] }],
+      deepDives: [{ ...section('dd', 10), sectionId: 'a', subsections: [sub(400, 0), sub(0, 0)] }], diagrams: [diagram('a')] });
+    expect(readerAdvice(doc('polaris-dossier-local-draft-v8')).advisories).toEqual([
+      { standard: 'RS-19', at: '$.sections[0].paragraphs', detail: expect.stringMatching(/^301 words of its own prose, past about 300:/u) },
+    ]);
+    for (const version of ['polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v2', undefined]) expect(readerAdvice(doc(version as string)).advisories, String(version)).toEqual([]);
+  });
+
+  it('RS-17: reads a sequence\'s messages in a v8 draft as in a v7 one, and never in an earlier draft (version 2.16)', () => {
+    const at = (file: string) => [{ path: file }];
+    const doc = (schemaVersion: string) => ({ schemaVersion, sections: [section('a', 5)], deepDives: [], diagrams: [{ id: 'seq-1', home: { kind: 'section', target: 'a' }, kind: 'sequence',
+      participants: [{ id: 'pt1', citations: at('src/a.c') }, { id: 'pt2', citations: at('src/a.c') }], messages: [{ id: 'msg1', from: 'pt1', to: 'pt2', citations: at('src/b.c') }] }] });
+    const rs17 = (version: string) => readerAdvice(doc(version)).advisories.filter((a) => a.standard === 'RS-17').map((a) => a.at);
+    expect(rs17('polaris-dossier-local-draft-v8')).toEqual(['$.diagrams[0].messages[0]']);
+    expect(rs17('polaris-dossier-local-draft-v7')).toEqual(['$.diagrams[0].messages[0]']);
+    expect(rs17('polaris-dossier-local-draft-v6')).toEqual([]);
+  });
+
   it('RS-14: more than three deep dives, at the list', () => {
     const dives = (n: number) => Array.from({ length: n }, (_, i) => ({ ...section(`d${i}`, 5), sectionId: 'a' }));
     expect(readerAdvice({ sections: [section('a', 5)], diagrams: [diagram('a')], deepDives: dives(3) }).advisories).toEqual([]);

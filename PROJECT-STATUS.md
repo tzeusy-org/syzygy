@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 477 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 505 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -191,10 +191,27 @@ authority and no model yet called on the current path.
     recipe-context correction of syzygy-3efd.81); its code is not yet landed.
     *(2026-11-22: the predecessor figure "463 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Verify-text amendment 2.17](openspec/changes/dossier-verify-text) is agent-adopted in A-51.
-    It replaces REQ-polaris-generation-033 (6 to 10 scenarios: the `syzygy dossier verify` command, which checks a
-    free-form text's references and quotations against a run's pinned revision); its implementation (syzygy-5dhm.23) lands with it.
+    [Raw-read disclosure amendment 2.17](openspec/changes/dossier-raw-read-disclosure) is agent-adopted in A-51.
+    It updates REQ-polaris-generation-033, -036 and -046 and binds the version 4.0.0 declared-source policy.
+    The disclosure and policy binding require runtime delivery in F-3.
     *(2026-11-23: the predecessor figure "473 scenarios" is superseded by that
+    amendment. All 39 identities remain.)*
+    [Relation types amendment 2.19](openspec/changes/dossier-relation-types) is agent-adopted in A-52.
+    It replaces REQ-polaris-generation-034 again (158 to 168 scenarios: draft schema v9 with a relation type on every
+    graph arrow and a unit on a node, rule `relation-witness` with the `relation-challenged` and `unit-reference`
+    findings, brief v15); only `top-level-unit` may witness at this version, and its code is not yet landed.
+    *(2026-11-23: the predecessor figure "478 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Run-tree read bounds amendment 2.18](openspec/changes/dossier-run-tree-read-bounds) is agent-adopted in A-53.
+    It replaces REQ-polaris-generation-033, -035 and -048 (9 to 12, 37 to 40 and 27 to 28 scenarios): every run-tree
+    file they state is read under a stated bound by the version 2.10 reader rule; its code is not yet landed.
+    *(2026-11-23: the predecessor figure "488 scenarios" is superseded by that
+    amendment. All 39 identities remain.)*
+    [Hero figure amendment 2.20](openspec/changes/dossier-hero-figure) is agent-adopted in A-54.
+    It replaces REQ-polaris-generation-034 again (168 to 178 scenarios: draft schema v10 with a required `hero`, an
+    overview figure of a graph kind or a declared omission with its reason, the `hero` finding, brief v16); it departs
+    from v1.7's owner-signed "a missing hero is no repair finding" (its row says why), and its code is not yet landed.
+    *(2026-11-23: the predecessor figure "495 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
