@@ -1,0 +1,449 @@
+{
+  "bead": "syzygy-3efd.29",
+  "subject": "ad0b0e1614226b12d9eab327a8d238caff038116",
+  "contract": "A-54, REQ-polaris-generation-034 v2.20; design D8 and verification rule 6",
+  "denominator": 22,
+  "assertionKills": 22,
+  "cases": [
+    {
+      "id": "hero-required",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "return hasHeroForm(doc['schemaVersion'])\n      ?",
+      "new": "return false\n      ?",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "exclusive-hero-form",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "sourceSha256": "d2c4b6ef370b08bff4a7c15a8ed017a68156e42e37527e536ce40ad52e047d5e",
+      "old": "Object.keys(hero).length !== 1",
+      "new": "Object.keys(hero).length > 2",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 11,
+      "mutantFailed": 2,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "hero-reference-is-text",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "if (typeof hero.value !== 'string') return",
+      "new": "if (typeof hero.value !== 'string' && typeof hero.value !== 'number') return",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "hero-reference-exists",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "if (!isRecord(diagram)) return [{ kind: 'unresolved-reference', at, detail: 'no diagram has the identity named by `hero.figure`' }];",
+      "new": "if (!isRecord(diagram)) return [];",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "hero-home-is-overview",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "if (!isRecord(home) || home['kind'] !== 'overview' || Object.keys(home).length !== 1) {",
+      "new": "if (false) {",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 11,
+      "mutantFailed": 2,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "hero-kind-is-graph",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "if (membersOfKind(diagram['kind'])?.[0] !== 'nodes') {",
+      "new": "if (false) {",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 11,
+      "mutantFailed": 2,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "omission-carries-claim",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "isRecord(hero.value) && hero.value['label'] === 'non-normative'",
+      "new": "false",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "malformed-omission-at-own-path",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "error.path === '$.hero' && hero?.form === 'omitted'",
+      "new": "error.path === '$.hero.other' && hero?.form === 'omitted'",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "earlier-version-finding",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "return [{ kind: 'field-version', at: '$.hero', detail:",
+      "new": "return [{ kind: 'schema', at: '$.hero', detail:",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "omission-on-overview-ledger",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "sourceSha256": "45185be0c8af9e4626e4757f016abb933b051dcf59700d6a858a48bd408ba2e3",
+      "old": "['hero-omission', hero?.form === 'omitted' ? hero.value : undefined]",
+      "new": "['hero-omission', undefined]",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "hero-identity-screening",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "sourceSha256": "d2c4b6ef370b08bff4a7c15a8ed017a68156e42e37527e536ce40ad52e047d5e",
+      "old": "return typeof id === 'string' && matched(id);",
+      "new": "return false;",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/check.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 13,
+      "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "published-schema-requires-hero",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "sourceSha256": "d2c4b6ef370b08bff4a7c15a8ed017a68156e42e37527e536ce40ad52e047d5e",
+      "old": "['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD])",
+      "new": "['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD, 'hero'])",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/draft-schema.test.ts",
+        "-t",
+        "published hero"
+      ],
+      "baselinePassed": 1,
+      "mutantPassed": 0,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "overview-hero-precedes-other-figures",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "const overviewDrawn = lead + overviewDiagrams",
+      "new": "const overviewDrawn = overviewDiagrams",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 1,
+      "mutantFailed": 4,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "graph-hero-marker",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "<figure${asHero ? heroFigureAttribute : ''}",
+      "new": "<figure",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 3,
+      "mutantFailed": 2,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "omission-hero-marker",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "<div data-hero=\"omitted\"><p class=\"hero-omitted\">",
+      "new": "<div><p class=\"hero-omitted\">",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "fidelity-requires-omission-entry",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "old": "out.push(claim('$.hero.omitted', hero.value));",
+      "new": "void hero.value;",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "fidelity-explains-omission",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "sourceSha256": "6d80c855c9fb7c0e67fa437940927f6e1802c72fcf72bd1d60d012e53b62c44b",
+      "old": "hero ? 'the introduction, any declared hero omission' : 'the introduction'",
+      "new": "'the introduction'",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "questions-in-header-before-hero",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "hero === undefined ? unresolved : draft.unresolved.length === 0 ? ''",
+      "new": "hero !== undefined ? unresolved : draft.unresolved.length === 0 ? ''",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "omitted-graph-notice-marker",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "return notice(from, d0.id, d0.disposition, asHero);",
+      "new": "return notice(from, d0.id, d0.disposition);",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "machine-identity-withheld-with-draft",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "diagram: !withheld && hero.form === 'figure' ? hero.diagram : null",
+      "new": "diagram: hero.form === 'figure' ? hero.diagram : null",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "machine-rendered-state",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "sourceSha256": "62bd18f82455bca47b75cf83c92a049dc41546dc8f664ae74bccea792d003d34",
+      "old": "rendered: heroRendered }",
+      "new": "rendered: true }",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "overview hero"
+      ],
+      "baselinePassed": 5,
+      "mutantPassed": 4,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "v16-brief-includes-only-hero-paragraph",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "sourceSha256": "33f60913883030b67bae67037203bb15a69bf56022e2660cac1b4fd4f087b716",
+      "old": "    '',\n    HERO_PARAGRAPH,",
+      "new": "",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/brief.test.ts",
+        "-t",
+        "server entry selects"
+      ],
+      "baselinePassed": 1,
+      "mutantPassed": 0,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    }
+  ]
+}
