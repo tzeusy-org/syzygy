@@ -1,0 +1,114 @@
+{
+  "fixtureReviewedCommit": "39437fda40b27a406ffe3a4b7465377538ecd3b1",
+  "reviewSha256": {
+    "F3-NATIVE-INSPECTION-INITIAL-REVIEW-RAW.md": "c261ab28b0b76a6b8b3c23dc91e3c9facec6e5f0abf8f469199c58c72a3c9792",
+    "F3-NATIVE-INSPECTION-REVIEW-RAW.md": "d0d2e822cd324e22dfe68f483d9a20e5c32db8c22c7589178d30655f00e5bb78"
+  },
+  "localTraceSubjectCommit": "ec4950b50d89aa7c7fe25ec5ea2419c4a77ad9af",
+  "inputTreeSha256": "a2f1fd27189fef35e2fb1116265604ba61b5c3af1cf070109861fa3d0d543b02",
+  "profileRegistrySha256": "3d9810414fe94aae4c7106a794852bb7b6fc1e6953e8220253db38466af61aee",
+  "scenario": "eligible-stop-resume",
+  "artifacts": {
+    "eligible-stop-resume.log": "bd0a03f70528365d11695c5c4424440abd830e8172500c46fae12ce65c5249c7",
+    "eligible-retained.failure.json": "ea329a0f273402cc707704bd93dd22f364fb385341656896d5690821be305976"
+  },
+  "summary": {
+    "firstRecordedRelayFailure": {
+      "role": "fidelity",
+      "event": "transport-failed",
+      "route": "messages"
+    },
+    "roleInspections": {
+      "author": {
+        "samples": 108,
+        "firstRefusal": {
+          "ordinal": 108,
+          "phases": {
+            "process": {
+              "startedMs": 0.011150999998790212,
+              "settledMs": 49.56365399999777,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.01939699999638833,
+              "settledMs": 57.65426999999909,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 57.66360799998802,
+              "settledMs": 57.67474899999797,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 57.6886749999976
+          }
+        }
+      },
+      "inventory": {
+        "samples": 72,
+        "firstRefusal": {
+          "ordinal": 72,
+          "phases": {
+            "process": {
+              "startedMs": 0.013254999998025596,
+              "settledMs": 48.79000299998734,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.02267299999948591,
+              "settledMs": 53.74491899998975,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 53.74842499999795,
+              "settledMs": 53.75061899999855,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 53.75628999999026
+          }
+        }
+      },
+      "fidelity": {
+        "samples": 40,
+        "firstRefusal": {
+          "ordinal": 40,
+          "phases": {
+            "process": {
+              "startedMs": 0.04182900000887457,
+              "settledMs": 52.521839000008185,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.07453100000566337,
+              "settledMs": 53.489786999998614,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 53.49609900001087,
+              "settledMs": 53.501840000011725,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 53.59269099999801
+          }
+        }
+      }
+    },
+    "confirmedDesignDeliveries": 0,
+    "publicResumeStarted": false,
+    "failures": [
+      "transport-unavailable"
+    ]
+  },
+  "limits": "Intermediate diagnostic captured real initial ordinary launch samples. Its resumed role attachment could also include restored preparations, which the reviewed fixture corrects. The internal cause of Fidelity transport failure remains Unknown. No native recovery witness."
+}
