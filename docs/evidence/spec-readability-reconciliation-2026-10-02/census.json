@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 478,
+      "scenarios": 488,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1157,7 +1157,17 @@
             "Makefile tab-led line that is no recipe line",
             "Makefile continuation lines and define bodies",
             "Makefile directive lines are never rules",
-            "Brief v14 states subsections"
+            "Brief v14 states subsections",
+            "Arrow witnessed by a fact of its identical type",
+            "A fact of another relation type never witnesses",
+            "Complete coverage with no witnessing fact",
+            "Partial coverage is Unknown, never a finding",
+            "Relation types and unit forms outside the lists",
+            "A unit that names no unit of its kind",
+            "An arrow the draft does not assert is never upgraded or challenged",
+            "A witness needs a fact that renders Observed",
+            "Earlier schemas and the provider keep their bytes",
+            "Brief v15 states relation types"
           ]
         },
         "REQ-polaris-generation-035": {
