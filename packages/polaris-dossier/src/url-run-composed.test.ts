@@ -28,6 +28,10 @@ import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSes
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
 import * as runMachine from './url-run-machine.js';
+import * as machineStore from './url-machine-store.js';
+import * as rolePlan from './url-role-plan.js';
+import * as urlRuntime from './url-runtime.js';
+import * as runOrigins from './url-run-origins.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
@@ -831,10 +835,19 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
+    type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'start-sessions' | 'open-store' | 'create-machine';
+    const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
+    const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
+      const stamp: ResumeStamp = { startedMs: performance.now() };
+      resumeBootstrap[phase] = stamp;
+      const settled = (outcome: ResumeObservation) => Object.assign(stamp, { settledMs: performance.now(), outcome });
+      return observe(invoke, value => { settled(accepts(value) ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
+    };
     const liveFinalPreparations: Array<'accepted' | 'refused'> = [];
     let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
+    let resumeAuditEnteredMs: number | undefined;
     let resumeAuditSetup: ResumeAuditSetup | undefined;
     let eligiblePhase = 'fixture';
     let eligibleProgress: () => Record<string, unknown> = () => ({});
@@ -843,7 +856,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
       }, 340_000).unref();
@@ -925,6 +938,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const createAudit = sessionAudit.createUrlSessionAudit;
     let cutTaken = false, resumeGuardsChecked = false;
     if (stoppingCut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
+      if (cutTaken && resumeAfterStop) resumeAuditEnteredMs ??= performance.now();
       if (cutTaken && resumeAfterStop && !resumeGuardsChecked) {
         // Exercise the exact callback supplied by the public resumed producer,
         // while its genuine consumed claim is held and before any audit write.
@@ -966,7 +980,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         resumeChecks.push({ phase: 'resumed-guards', policyWithdrawal: 'refused', claimWithdrawal: 'refused' });
       }
       const resumedAudit = cutTaken;
-      const setup: ResumeAuditSetup | undefined = resumedAudit && scenario === 'stop-resume'
+      const setup: ResumeAuditSetup | undefined = resumedAudit && resumeAfterStop
         ? resumeAuditSetup = { startedMs: performance.now(), authority: {
           started: 0, accepted: 0, refused: 0, rejected: 0, totalMs: 0, longestMs: 0,
         } }
@@ -1287,12 +1301,23 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             claimedExactCut = recovery.isClaimedStoppedUrlRun(value, result);
             expect(claimedExactCut).toBe(true);
             resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
+            const restore = rolePlan.restoreUrlRolePlans, load = urlRuntime.loadUrlDossierRenderer, origins = runOrigins.createUrlRunOrigins;
+            vi.spyOn(rolePlan, 'restoreUrlRolePlans').mockImplementationOnce((...args) =>
+              observeBootstrap('restore-plans', () => restore(...args), value => value !== null));
+            vi.spyOn(urlRuntime, 'loadUrlDossierRenderer').mockImplementationOnce((...args) =>
+              observeBootstrap('load-renderer', () => load(...args), value => value !== null));
+            vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce((...args) =>
+              observeBootstrap('create-origins', () => origins(...args), () => true));
             return result;
           });
           const createMachine = runMachine.createUrlRunMachine;
           const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean; asyncCurrent: boolean; asyncWithdrawn: boolean }[] = [];
           vi.spyOn(runMachine, 'createUrlRunMachine').mockImplementationOnce(async options => {
-            const machine = await createMachine(options);
+            const open = machineStore.openUrlMachineStore;
+            const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce((...args) =>
+              observeBootstrap('open-store', () => open(...args), value => value !== null));
+            const machine = await observeBootstrap('create-machine', () => createMachine(options), () => true)
+              .finally(() => openObservation.mockRestore());
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             const current = machine.current(), claimChecks = checkClaim.mock.calls.length;
             checkClaim.mockRestore();
@@ -1314,7 +1339,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           const resumedControllers: UrlRunSessions[] = [];
           const startResumed = runSessions.startUrlRunSessions;
           vi.spyOn(runSessions, 'startUrlRunSessions').mockImplementationOnce(async (...args) => {
-            const runtime = await startResumed(...args);
+            const runtime = await observeBootstrap('start-sessions', () => startResumed(...args), () => true);
             resumedControllers.push(runtime);
             return runtime;
           });
@@ -1329,6 +1354,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                 : { role, outcome: outcome.outcome, exitCode: outcome.exitCode, signal: outcome.signal }) ?? [] });
           }
           expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true, asyncCurrent: true, asyncWithdrawn: true }]);
+          if (exit === 0) {
+            expect(Object.keys(resumeBootstrap)).toEqual(['restore-plans', 'load-renderer', 'create-origins',
+              'start-sessions', 'create-machine', 'open-store']);
+            expect(Object.values(resumeBootstrap).every(stamp => stamp.outcome === 'accepted')).toBe(true);
+          }
           expect(exit).toBe(0);
           expect(verifiedCuts).toHaveLength(1);
           expect(verifiedCuts[0]).toMatchObject({ ok: true, nextDesignRound: 2,
@@ -1367,7 +1397,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeAuditEnteredMs,
+            resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
             launchesBeforeResume, launchesAfterResume: [...relayRoles],
@@ -1412,7 +1443,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeAuditEnteredMs,
+          resumeAuditSetup, resumeDiagnostic: resumeEvidence,
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
       }
@@ -1420,7 +1452,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
+        resumeChecks, resumeBootstrap, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
