@@ -1,0 +1,126 @@
+{
+  "answers": [
+    {
+      "id": "Q01",
+      "answer": "Redis is an in-memory key-value and data structure server. It keeps keys and typed values such as strings, lists and sorted sets primarily in RAM, with optional disk persistence. It serves latency-sensitive applications such as caches, session stores, job and priority queues, pub/sub and streams, and full-text and vector search.",
+      "where": "index.md:19–49, poles/1.md:63–75, understanding.md:9–39"
+    },
+    {
+      "id": "Q02",
+      "answer": "RDB saves a point-in-time dump of the entire dataset at configured save points. A crash can cost minutes of writes, depending on those points. AOF logs writes for replay, with durability depending on its fsync policy. The everysec policy can lose about one second of writes. When both are enabled, startup uses AOF.",
+      "where": "glossary.md:3–25, understanding.md:69, deep-dives/mechanism-deep-dive.md:21–29"
+    },
+    {
+      "id": "Q03",
+      "answer": "The background I/O service's purpose, job types and ordering guarantee are not stated. The dossier describes optional I/O threads for socket reads, parsing and writes and a forked child for snapshots.",
+      "where": "poles/3.md:77,95, deep-dives/mechanism-deep-dive.md:21"
+    },
+    {
+      "id": "Q04",
+      "answer": "The modules API lets shared libraries extend Redis with commands and data types. The dossier describes startup loading through a loadmodule configuration line. How to load one into an already running server and how a custom type saves and restores its data are not stated.",
+      "where": "index.md:57, poles/1.md:57,127–129, discovery.md:97–103"
+    },
+    {
+      "id": "Q05",
+      "answer": "The ae.c loop waits for ready file descriptors and dispatches their events. On TCP listener readiness, connSocketAcceptHandler delegates to acceptCommonHandler, which creates a client. Its readQueryFromClient callback fills the query buffer. processInputBuffer parses complete commands and hands them to command processing, which can execute them and fill the output buffer. Before the loop sleeps again, beforeSleep flushes the AOF when enabled and sends queued replies. aeMain repeats this cycle. Additional event-loop phases and the detailed timer-dispatch order are not stated.",
+      "where": "glossary.md:27–33, poles/2.md:79–95, deep-dives/mechanism-deep-dive.md:25"
+    },
+    {
+      "id": "Q06",
+      "answer": "The keyspace is in RAM, and each binary-safe string key names a typed value. In cluster mode keys are split across 16,384 slots. The containers for keys and expirations, how those containers change in cluster mode, and how the key name is physically stored relative to the value are not stated.",
+      "where": "poles/1.md:63,115–117, poles/3.md:97"
+    },
+    {
+      "id": "Q07",
+      "answer": "A type is the kind of value a key holds, such as string, list, set, hash or sorted set. The difference between type and encoding, why both are maintained, and who chooses a value's encoding are not stated. The overview does give one example of a compact hash layout that shares field names across keys with the same schema.",
+      "where": "poles/1.md:63,99–101, index.md:79–81"
+    },
+    {
+      "id": "Q08",
+      "answer": "The dossier mentions src/cluster.h for slot mapping and names src/cluster.c and src/cluster_legacy.c. The division of responsibilities is not stated. It describes mapping a key's name by CRC16 into one of 16,384 slots. A command for a locally owned slot can be served locally, while command processing redirects the client if the keys belong to another node. Multi-key commands require a shared slot. Detailed slot calculation exceptions and routing cases are not stated.",
+      "where": "discovery.md:37–39,81,101, glossary.md:75–79, poles/2.md:89, poles/3.md:97"
+    },
+    {
+      "id": "Q09",
+      "answer": "readQueryFromClient reads socket bytes into the query buffer. processInputBuffer parses inline or multibulk arguments and hands a complete request to processCommandAndResetClient. processCommand looks up the command, checks ACLs and cluster ownership, tries eviction under maxmemory, and can reject writes after persistence errors. A memory-growing write can fail when nothing can be evicted. A command inside MULTI is queued. Otherwise call invokes the handler against memory and the reply is buffered. Executed writes go through alsoPropagate and propagateNow to the AOF buffer when enabled and to the replica stream when applicable. Before replies are sent, beforeSleep writes the AOF buffer. The sync policy controls disk durability, and replication is asynchronous.",
+      "where": "poles/2.md:81–95, deep-dives/mechanism-deep-dive.md:25,31, understanding.md:69–79, poles/3.md:89–93"
+    },
+    {
+      "id": "Q10",
+      "answer": "The AOF consists of a base snapshot and incremental command files ordered by a manifest. Propagated writes are appended to a memory buffer and flushed in beforeSleep. The rewrite sequence and how the manifest changes while writes continue are not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md:25–27"
+    },
+    {
+      "id": "Q11",
+      "answer": "The replica connects with SYNC or PSYNC, handled by syncCommand. If the missing recent writes are still in the master's backlog after a short disconnect, partial resync sends those writes so the replica can catch up. Full resync copies the whole dataset. The exact acceptance tests and the full-resync transfer and loading steps are not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md:31, glossary.md:43–65"
+    },
+    {
+      "id": "Q12",
+      "answer": "The dossier mentions key expiration. The mechanisms that remove expired keys, the background cost controls, and how expiration is propagated to replicas or written to the AOF are not stated.",
+      "where": "index.md:29–31, deep-dives/mechanism-deep-dive.md:25–33 (general write propagation)"
+    },
+    {
+      "id": "Q13",
+      "answer": "The configuration excerpt describes LRU, LFU, LRM and volatile-TTL eviction as using approximate randomized algorithms. The reason for choosing this over exact LRU order, the sampling or victim-selection procedure and its costs are not stated.",
+      "where": "poles/3.md:93, glossary.md:35–41"
+    },
+    {
+      "id": "Q14",
+      "answer": "The reasons for incremental resizing, the reasons for discouraging resizing during a background save or rewrite, and the costs of each choice are not stated. The dossier does describe background snapshots using a forked child.",
+      "where": "deep-dives/mechanism-deep-dive.md:19–21 (snapshot child only)"
+    },
+    {
+      "id": "Q15",
+      "answer": "The mostly single-threaded event loop keeps the core design simple. One slow command delays other clients on that instance. Optional I/O threads handle socket reads, parsing and writes. They are disabled by default, and the dossier reports advice to use them only when there is a real performance issue and at least four cores. It also says threaded I/O is unsupported for TLS. Background snapshotting uses a forked process.",
+      "where": "poles/1.md:79–87, poles/3.md:77,95,99"
+    },
+    {
+      "id": "Q16",
+      "answer": "More frequent fsync trades disk work for a smaller loss window. The dossier identifies everysec as a compromise with about one second of writes at risk. The server buffers writes and flushes in beforeSleep so the log is written before queued replies go out. The other policy details and the durability given up by the background-save mitigation are not stated.",
+      "where": "understanding.md:69, glossary.md:19–25, poles/3.md:89, deep-dives/mechanism-deep-dive.md:25"
+    },
+    {
+      "id": "Q17",
+      "answer": "The dossier identifies processCommand as the command lookup point and call as the caller of the command's proc handler. The command table definition, how it is installed in the running server and the metadata needed when adding a command are not stated.",
+      "where": "poles/2.md:89–91"
+    },
+    {
+      "id": "Q18",
+      "answer": "The dossier cites redis.conf for documented settings. The code location for adding a parameter and the declarations that determine runtime mutability, the default and change callbacks are not stated.",
+      "where": "discovery.md:59–67, sources/index.md:21–23"
+    },
+    {
+      "id": "Q19",
+      "answer": "The conversion thresholds and where to tune or change the compact representations of hashes, sets, sorted sets and lists are not stated.",
+      "where": "index.md:75–81 (mentions compact hashes only)"
+    },
+    {
+      "id": "Q20",
+      "answer": "The dossier identifies the event loop library in src/ae.c and the TCP accept handler in src/socket.c. The plug-in points for a new OS readiness backend and a new client transport are not stated.",
+      "where": "glossary.md:27–33, poles/2.md:83–85, poles/3.md:73"
+    },
+    {
+      "id": "Q21",
+      "answer": "At maxmemory the server tries eviction under maxmemory-policy. If no key can be evicted, writes that need memory get errors. The default noeviction policy returns write errors at the limit. Which memory is excluded from accounting and which instances are exempt are not stated.",
+      "where": "understanding.md:79, glossary.md:35–41, poles/3.md:93"
+    },
+    {
+      "id": "Q22",
+      "answer": "By default, a failed background snapshot causes Redis to stop accepting writes so the failure is noticed. The startup response to a damaged AOF and what happens when the data file cannot be loaded at all are not stated.",
+      "where": "deep-dives/mechanism-deep-dive.md:21–29"
+    },
+    {
+      "id": "Q23",
+      "answer": "Replication is asynchronous. Acknowledged writes can be lost on failover, and a replica may lag. The operator can make the master refuse writes without enough connected replicas within a configured lag window, limiting exposure without guaranteeing that a specific write reaches that many replicas. How a disconnected replica responds to clients is not stated.",
+      "where": "understanding.md:69, poles/3.md:91, deep-dives/mechanism-deep-dive.md:31–33"
+    },
+    {
+      "id": "Q24",
+      "answer": "Cluster mode shards keys into 16,384 slots, redirects commands for keys owned elsewhere and permits multi-key operations only for keys in the same slot. Restrictions on logical databases and the availability impact of unserved slots are not stated.",
+      "where": "poles/3.md:97"
+    }
+  ],
+  "minutes_felt": 5,
+  "notes": "The overview, request path and persistence deep dive made the main behavior easy to find. Finding the limits of the available detail took longer because the source and name indexes mostly pointed to citations and file names."
+}

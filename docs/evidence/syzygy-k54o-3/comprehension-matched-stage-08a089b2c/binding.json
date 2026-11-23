@@ -1,0 +1,135 @@
+{
+  "format": "syzygy.f3-comprehension-matched-stage/1",
+  "before": {
+    "commit": "f6b2b674f7f38312778e98ac4ae58f4f21a09032",
+    "runId": "run-6d5534c1dc1867bfd6a8dea3045d35d3",
+    "siteStage": 0,
+    "commandOutcomes": {
+      "init": "initialized",
+      "brief": "issued",
+      "check": "passed",
+      "render": "rendered"
+    },
+    "draft": {
+      "file": "drafts/rev-0.json",
+      "sha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+      "bytes": 93863
+    },
+    "screeningPolicy": {
+      "policyId": "polaris-butlers-project-shape-secrets",
+      "policyVersion": "dossier-declared-source/3.0.0",
+      "sha256": "1b9726884376922805fc8ebd973bdb4dc25ff54464264cdb995662806117a16e"
+    },
+    "fidelityCounts": false,
+    "designCounts": false,
+    "renderedPages": 49,
+    "renderedQuotations": 9,
+    "readerPages": 21,
+    "readerWords": 21305,
+    "sourcePagesExcluded": 28,
+    "readerPageSha256": {
+      "appendix.md": "354a8e0c43d4d87d25d4b3c7730803809087c8e987f8c52d70b3b239486d07f3",
+      "clarifications.md": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+      "contents.md": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+      "deep-dives/mechanism-deep-dive.md": "861368c9d0f756cacf2dcc65ea21eaf6ea40423a6418f1fddec5ae68816276ea",
+      "discovery.md": "2cf10fd0cbbbd11612296acbb077442b03e2f277e6a357e92861cf12c71098d8",
+      "executions.md": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+      "find-by-task.md": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+      "glossary.md": "81ca0b3619c164d46422a1d1ad191650ce67587c74c026762a15cd193fd0da7b",
+      "index.md": "11173f896e1c9aca729e4768c1616e631a4e094d5fa1d055aef8c5c36d68456f",
+      "maps/ci.md": "8c54c118e1cb9cb8d65c2ab41aaf29c6d9b539535b8fe7fdf67869dc5584b718",
+      "maps/directories.md": "1b7a8702523f5ce0ec886e580fef0c8538c113c6799414c1b7c0af8b3d2c2c09",
+      "maps/infrastructure.md": "221839917811879e33d087ead75d43cea829eaf403cd12ec0cd38dd1d8419225",
+      "maps/units.md": "951c1ff13f21ed5191cb3eeaee8aa9df11b134cd03d94d2bd77f415372505b59",
+      "name-index.md": "27e1ad691aa39474104f86d903f81bb585bea25214f36c8ce94d129bc4b75917",
+      "poles/1.md": "b9aa0b6338b6547e23afec39605aa2a3c0de496c214a7910106da8e253059cd1",
+      "poles/2.md": "6a148ed946415dcdbf29425d632f0610b4b680102176f0e8a79a265dd363d026",
+      "poles/3.md": "e9e96b4a579a096affa857a94ee0c85342cd700f6b9e3ecb8aa446c798072f7e",
+      "review.md": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+      "size-report.md": "31a7ac51d33e806d952dbd056fef92b74772b4452ea79cdc204f92d4c4812f07",
+      "sources/index.md": "b9b4d21b3c7284aa8197e11c0afa4bead0bd84bd824bddad3b50bf63c541ba33",
+      "understanding.md": "c4acaabc85bd9ca72cc8f996695c9f61c4068953c9df0b479e0f68a271f79b32"
+    }
+  },
+  "after": {
+    "commit": "08a089b2c7427009fe6ef6593ccc676b4bd8f6c6",
+    "runId": "run-e7e3166e95dfbedf80d41d7a6b534639",
+    "siteStage": 0,
+    "commandOutcomes": {
+      "init": "initialized",
+      "brief": "issued",
+      "check": "passed",
+      "render": "rendered"
+    },
+    "draft": {
+      "file": "drafts/rev-0.json",
+      "sha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+      "bytes": 93863
+    },
+    "screeningPolicy": {
+      "policyId": "polaris-butlers-project-shape-secrets",
+      "policyVersion": "dossier-declared-source/4.0.0",
+      "sha256": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9"
+    },
+    "fidelityCounts": false,
+    "designCounts": false,
+    "renderedPages": 49,
+    "renderedQuotations": 9,
+    "readerPages": 21,
+    "readerWords": 21329,
+    "sourcePagesExcluded": 28,
+    "readerPageSha256": {
+      "appendix.md": "540a0c88255def84efa60e9fde29a60ec40cea1b00175874a76d168e6954b54f",
+      "clarifications.md": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+      "contents.md": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+      "deep-dives/mechanism-deep-dive.md": "861368c9d0f756cacf2dcc65ea21eaf6ea40423a6418f1fddec5ae68816276ea",
+      "discovery.md": "2cf10fd0cbbbd11612296acbb077442b03e2f277e6a357e92861cf12c71098d8",
+      "executions.md": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+      "find-by-task.md": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+      "glossary.md": "81ca0b3619c164d46422a1d1ad191650ce67587c74c026762a15cd193fd0da7b",
+      "index.md": "2085e75833d6efbdf3e6c389f11587a2117073eaea3d1a7c0896765ecc4afdac",
+      "maps/ci.md": "eb88fcd50c72016caf4fdcca61fb27874b8a7f3d632d4f261d99c09d6e5c6dbc",
+      "maps/directories.md": "0beabe2c325b6f0a6334d1ae6aca5a7a64e9598b2d3f14d21ee8731fbe34e262",
+      "maps/infrastructure.md": "4dcdbf409b52e0217d0c338671a8126851ca41e0973e532ab1d30cecfa9bc30d",
+      "maps/units.md": "7795bcf4556b5fa1dc752732bf5ae3b9e42fcc645073a9400b5cafd5b418ce31",
+      "name-index.md": "27e1ad691aa39474104f86d903f81bb585bea25214f36c8ce94d129bc4b75917",
+      "poles/1.md": "b9aa0b6338b6547e23afec39605aa2a3c0de496c214a7910106da8e253059cd1",
+      "poles/2.md": "6a148ed946415dcdbf29425d632f0610b4b680102176f0e8a79a265dd363d026",
+      "poles/3.md": "e9e96b4a579a096affa857a94ee0c85342cd700f6b9e3ecb8aa446c798072f7e",
+      "review.md": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+      "size-report.md": "74154362f9f07138769c43bae7f796719d4f911766389d5a32a46719e253b692",
+      "sources/index.md": "b9b4d21b3c7284aa8197e11c0afa4bead0bd84bd824bddad3b50bf63c541ba33",
+      "understanding.md": "c4acaabc85bd9ca72cc8f996695c9f61c4068953c9df0b479e0f68a271f79b32"
+    }
+  },
+  "source": {
+    "repository": "redis/redis",
+    "revision": "498ecd0d6d007db11ddb3aea9428552598a78622"
+  },
+  "sharedInputSha256": {
+    "draft": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "runConfig": "84b1976143d5b2b653d86193f5c9ea0330b3b0ec3b7e7afdeeca742e86a45068"
+  },
+  "gradingInputSha256": {
+    "questions": "690a186772d1d495fe25c5caa66ef8d107bf97f83be15f55cdbecd9925826a7d",
+    "key": "0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690",
+    "blinded": "75a2a06b57efced98d16fb97d06e1c72299598babf141356491bf3f605ccc116",
+    "labelDraw": "3369676ab06962515bd844c6cb1ae96f56499abd469553b5a006f2cbce33e1d7"
+  },
+  "evidenceSha256": {
+    "answers-after.json": "c83cc63bc3e3696b60e4dadd8ecc0af38368d3e7355e1668408f1c96fcd16c7e",
+    "answers-before.json": "c2da40af99af046e72406770c1fae989d199db85018d3929fe4ffb028a2ee78d",
+    "grades.json": "a0425a719b967eb14accb802bd55af18d19e1b4d6ee71783b88c81ac6e5566f3",
+    "labels.json": "a8193e6671362dbc71690bfb3e267f60391094bab6a62f358570839da064572f",
+    "totals.json": "3fe05a05712607d4445105af97998f25dfd416fe8109fee69be41f689af2b1e0"
+  },
+  "changedReaderPages": [
+    "appendix.md",
+    "index.md",
+    "maps/ci.md",
+    "maps/directories.md",
+    "maps/infrastructure.md",
+    "maps/units.md",
+    "size-report.md"
+  ]
+}

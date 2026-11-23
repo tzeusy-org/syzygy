@@ -1,0 +1,90 @@
+{
+  "after": {
+    "overall": {
+      "earned": 22.0,
+      "facts": 81,
+      "wrong": 0,
+      "share": 0.271605
+    },
+    "purpose": {
+      "earned": 5.0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.384615
+    },
+    "structure": {
+      "earned": 4.0,
+      "facts": 14,
+      "wrong": 0,
+      "share": 0.285714
+    },
+    "mechanism": {
+      "earned": 5.5,
+      "facts": 15,
+      "wrong": 0,
+      "share": 0.366667
+    },
+    "rationale": {
+      "earned": 3.5,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.269231
+    },
+    "change": {
+      "earned": 0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.0
+    },
+    "limits": {
+      "earned": 4.0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.307692
+    }
+  },
+  "before": {
+    "overall": {
+      "earned": 21.0,
+      "facts": 81,
+      "wrong": 0,
+      "share": 0.259259
+    },
+    "purpose": {
+      "earned": 5.0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.384615
+    },
+    "structure": {
+      "earned": 3.5,
+      "facts": 14,
+      "wrong": 0,
+      "share": 0.25
+    },
+    "mechanism": {
+      "earned": 5.5,
+      "facts": 15,
+      "wrong": 0,
+      "share": 0.366667
+    },
+    "rationale": {
+      "earned": 3.0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.230769
+    },
+    "change": {
+      "earned": 0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.0
+    },
+    "limits": {
+      "earned": 4.0,
+      "facts": 13,
+      "wrong": 0,
+      "share": 0.307692
+    }
+  }
+}
