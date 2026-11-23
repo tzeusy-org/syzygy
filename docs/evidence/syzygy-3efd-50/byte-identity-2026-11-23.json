@@ -1,0 +1,354 @@
+{
+ "format": "byte-identity-comparison/1",
+ "subject": {
+  "before": "50f2259c73b392633eedea0751816464aadb7a46",
+  "after": "4c354faf839c9a6e26f1fa0819b5c5d14f33d742"
+ },
+ "dumps": {
+  "before": "fa21171b843cf909226c347d815316d7278a47322a3d0fb872e7c4ce3d1f43fc",
+  "after": "88d1c3808d70d0e68d6de95fe433ad7b8f5335cf8d15bd5a3087b0dd347e2de8"
+ },
+ "method": "Each dump is written by the describe block in byte-identity-dump-block.ts.txt, appended for the run to packages/polaris-dossier/src/render.test.ts in a checkout of the named commit and removed after it (run with SUBSEC_DUMP=<file>). It checks and, where the check passes, renders a draft of each schema v2 to v7 in three variants (plain, carrying `subsections`, and a sequence figure before v7) and hashes every file of the run directory but run.json. The record lists, per variant, the outcome and every file whose bytes differ, and, where findings differ, each differing pair.",
+ "population": {
+  "variants": 18,
+  "files": 321
+ },
+ "variants": [
+  {
+   "variant": "polaris-dossier-local-draft-v2/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 31,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 31,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "checks/rev-0.json",
+    "draft.schema.json"
+   ],
+   "differingFindings": [
+    {
+     "before": {
+      "kind": "schema",
+      "at": "$.sections[0].subsections",
+      "detail": "is not a field of this form"
+     },
+     "after": {
+      "kind": "field-version",
+      "at": "$.sections[0].subsections",
+      "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+     }
+    }
+   ]
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/sequence-early",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md",
+    "draft.schema.json"
+   ],
+   "differingFindings": null
+  }
+ ]
+}
