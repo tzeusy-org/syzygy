@@ -6,6 +6,7 @@ import { USAGE_NOT_RECORDED } from './close.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
  * required, read from the run directory. Status reads and writes nothing else. Everything it reports
@@ -67,10 +68,10 @@ export type StatusResult =
 const KNOWN_ENTRIES: ReadonlySet<string> = new Set(Object.values(RUN_LAYOUT));
 
 /** The agent usage the Execution Record carries, in words: the operator's declared figure, or not recorded. Never zero. */
-function closedUsage(file: string): string {
+export function closedUsage(file: string): string {
   let usage: unknown;
   try {
-    const record = parseBoundedJson(fs.readFileSync(file, 'utf8'), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
+    const record = parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.closeRecord), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
     usage = record.agentUsage;
   } catch {
     return `${NOT_RECORDED}; the Execution Record cannot be read`;
@@ -100,9 +101,9 @@ export function runStatus(runDir: string, now: () => number = Date.now): StatusR
   if (!stats.isDirectory()) return { ok: false, reason: `${run} is not a run directory` };
   let configText: string;
   try {
-    configText = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8');
+    configText = readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord);
   } catch (cause) {
-    return { ok: false, reason: `${run} holds no readable ${RUN_LAYOUT.config} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+    return { ok: false, reason: `${run} holds no readable ${RUN_LAYOUT.config} (${readCause(cause, RUN_TREE_BOUNDS.runRecord)})` };
   }
   const record = readRunRecord(configText);
   if (!record.ok) return { ok: false, reason: record.detail, ...(record.refusals ? { refusals: record.refusals } : {}) };

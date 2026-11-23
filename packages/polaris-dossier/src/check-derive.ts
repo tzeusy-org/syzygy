@@ -2,8 +2,9 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, RELATION_FIELD, UNIT_FIELD, hasRelationForm, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
+import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { DEFAULT_POLE_LIMIT } from './run-config.js';
@@ -244,6 +245,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const tree = new Map<string, TreeEntry>();
   for (const entry of await inputs.reader.listTree()) if (BLOB_MODES.has(entry.mode)) tree.set(entry.path, entry);
   const citations = collectCitations(doc);
+  const isSecretPath = secretPathOf(inputs.screen);
   const blobs = new Map<string, BlobState>();
   const toRead: TreeEntry[] = [];
   for (const { value } of citations) {
@@ -251,7 +253,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     if (cited === undefined || blobs.has(cited)) continue;
     const entry = tree.get(cited);
     if (entry === undefined) { blobs.set(cited, { state: 'absent' }); continue; }
-    const outcome = inputs.screen.screenPath(cited);
+    const outcome = inputs.screen.screenPath(cited) ?? (isSecretPath(cited) ? 'secret-detector-match' : undefined);
     if (outcome !== undefined) { blobs.set(cited, { state: 'excluded', outcome }); continue; }
     toRead.push(entry);
   }
@@ -270,7 +272,6 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
         : { state: 'admitted', entry: blob, raw, lines: lineCount(raw), tracked: null });
   }
   const firstCited = [...new Set(citations.flatMap(({ value }) => (text(value['path']) === undefined ? [] : [text(value['path'])!])))];
-  const isSecretPath = secretPathOf(inputs.screen);
   const citedBlobs: CitedBlob[] = firstCited.map((cited) => [cited, blobs.get(cited)!] as const).flatMap(([cited, state]): CitedBlob[] => {
     if (state.state === 'absent') return [];
     if (state.state === 'admitted') {
@@ -539,7 +540,7 @@ function subsectionName(subsection: Readonly<Record<string, unknown>>, at: strin
  * section's `subsections`, in place of the schema finding at that path. */
 function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
   for (const at of subsectionFieldVersionPaths(doc)) {
-    add({ kind: 'field-version', at, detail: `\`${SUBSECTIONS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    add({ kind: 'field-version', at, detail: `\`${SUBSECTIONS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V8}` });
   }
   subsectionsOf(doc, (subsection, at) => {
     const answer = subsection['answer'];
@@ -554,16 +555,116 @@ function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (findi
   });
 }
 
+/** Whether a diagram is drawn as a graph of `nodes` and `edges` at its draft's version: every diagram before v7, and from v7 one whose kind
+ * is not `sequence` or `swimlane`. */
+const graphDiagram = (doc: Readonly<Record<string, unknown>>, diagram: Readonly<Record<string, unknown>>): boolean =>
+  !hasFigureKindForm(doc['schemaVersion']) || (diagram['kind'] !== 'sequence' && diagram['kind'] !== 'swimlane');
+
+/** Each graph diagram's nodes and edges (records only), in draft order, with their JSON paths. */
+function graphElements(doc: Readonly<Record<string, unknown>>, visit: (member: 'nodes' | 'edges', element: Readonly<Record<string, unknown>>, at: string, diagram: Readonly<Record<string, unknown>>, i: number) => void): void {
+  list(doc['diagrams']).forEach((diagram, i) => {
+    if (!isRecord(diagram) || !graphDiagram(doc, diagram)) return;
+    for (const member of ['nodes', 'edges'] as const) {
+      list(diagram[member]).forEach((element, j) => { if (isRecord(element)) visit(member, element, `$.diagrams[${i}].${member}[${j}]`, diagram, i); });
+    }
+  });
+}
+
+/** The paths at which a draft of schema v8 or earlier carries a graph edge's `relation` or a graph node's `unit`, each a field-version
+ * finding (version 2.19), in draft order: each diagram's nodes, then its edges. */
+function relationFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  if (hasRelationForm(doc['schemaVersion'])) return [];
+  const out: string[] = [];
+  graphElements(doc, (member, element, at) => {
+    const field = member === 'nodes' ? UNIT_FIELD : RELATION_FIELD;
+    if (Object.hasOwn(element, field)) out.push(`${at}.${field}`);
+  });
+  return out;
+}
+
+/** Relation types (REQ-polaris-generation-034 version 2.19). In an earlier draft: `field-version` at a graph edge's `relation` and a graph
+ * node's `unit`, in place of the schema finding at that path. In a v9 draft: a `schema` finding at a unit's directory name, name, job key
+ * or service key past 256 code units, which the schema's code-point bound passes. */
+function relationStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+  for (const at of relationFieldVersionPaths(doc)) {
+    add({ kind: 'field-version', at, detail: `\`${at.endsWith(UNIT_FIELD) ? UNIT_FIELD : RELATION_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+  }
+  if (!hasRelationForm(doc['schemaVersion'])) return;
+  graphElements(doc, (member, element, at) => {
+    if (member !== 'nodes' || !isRecord(element[UNIT_FIELD])) return;
+    const unit = element[UNIT_FIELD];
+    for (const key of ['path', 'name', 'job', 'service']) {
+      const value = unit[key];
+      if (key === 'path' && unit['kind'] !== 'top-level-directory') continue;
+      if (typeof value === 'string' && value.length > UNIT_TEXT_LIMIT && [...value].length <= UNIT_TEXT_LIMIT) {
+        add({ kind: 'schema', at: `${at}.${UNIT_FIELD}.${key}`, detail: `must be 1 to ${UNIT_TEXT_LIMIT} code units; is ${value.length}` });
+      }
+    }
+  });
+}
+
+/** A node or edge as a finding names it (version 2.19): by its identity, or by its path where it has none. */
+const elementName = (noun: 'node' | 'edge', element: Readonly<Record<string, unknown>>, at: string): string =>
+  (typeof element['id'] === 'string' ? `the ${noun} ${JSON.stringify(element['id'])}` : `the ${noun} at ${at}`);
+
+/** What rule `relation-witness` gives each edge of a v9 draft's produced graph diagrams, and which of its nodes' units name no unit of
+ * their kind, in draft order. */
+export interface RelationDecisions {
+  readonly units: readonly { readonly at: string; readonly name: string; readonly kind: string; readonly fault: UnitFault }[];
+  readonly edges: readonly { readonly at: string; readonly id: string; readonly name: string; readonly relation: RelationType; readonly decision: WitnessDecision }[];
+}
+
+/** Rule `relation-witness` version 1 over a v9 draft (version 2.19): `asserted` says whether the draft asserts an edge (labelled Inferred and
+ * not a withheld item), `tree` is the blob test's view of the pinned tree (undefined where it could not be listed), and `facts` the facts
+ * the caller derived. A unit is tested only where it is one of the six forms; an edge is decided only in a produced graph diagram. Empty for
+ * any other draft. */
+export function relationDecisions(doc: Readonly<Record<string, unknown>>, asserted: (edge: Readonly<Record<string, unknown>>) => boolean, tree: UnitTree | undefined, facts: WitnessInputs): RelationDecisions {
+  const units: RelationDecisions['units'][number][] = [], edges: RelationDecisions['edges'][number][] = [];
+  if (!hasRelationForm(doc['schemaVersion'])) return { units, edges };
+  const ends = new Map<Readonly<Record<string, unknown>>, Map<string, EdgeEnd>>();
+  graphElements(doc, (member, element, at, diagram) => {
+    if (member !== 'nodes') return;
+    const unit = unitOf(element[UNIT_FIELD]);
+    const fault = unit === undefined ? undefined : unitFault(unit, tree);
+    if (unit !== undefined && fault !== undefined) units.push({ at: `${at}.${UNIT_FIELD}`, name: elementName('node', element, at), kind: unit.kind, fault });
+    const own = ends.get(diagram) ?? new Map<string, EdgeEnd>();
+    if (typeof element['id'] === 'string' && !own.has(element['id'])) own.set(element['id'], unit === undefined ? undefined : { unit, invalid: fault !== undefined });
+    ends.set(diagram, own);
+  });
+  graphElements(doc, (member, element, at, diagram) => {
+    if (member !== 'edges' || !isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced' || typeof element['id'] !== 'string') return;
+    const relation = element[RELATION_FIELD] as RelationType;
+    const own = ends.get(diagram);
+    const end = (key: string): EdgeEnd => (typeof element[key] === 'string' ? own?.get(element[key] as string) : undefined);
+    edges.push({ at, id: element['id'], name: elementName('edge', element, at), relation, decision: decideWitness({ asserted: asserted(element), relation, from: end('from'), to: end('to') }, facts) });
+  });
+  return { units, edges };
+}
+
+/** Check's findings of version 2.19, reported after every finding version 2.16 reports: a `unit-reference` finding per unit that names no
+ * unit of its kind, in draft order of the nodes, then a `relation-challenged` finding per challenged edge, in draft order. No detail names a
+ * unit's path or name. */
+export function relationFindings(decisions: RelationDecisions): CheckFinding[] {
+  return [
+    ...decisions.units.map(({ at, name, kind, fault }): CheckFinding => ({ kind: 'unit-reference', at, detail: `${name}: its ${kind} unit names no unit of that kind: ${UNIT_FAULT_WORDS[fault]}` })),
+    ...decisions.edges.flatMap(({ at, name, relation, decision }): CheckFinding[] => (decision.state !== 'challenged' ? [] : [{ kind: 'relation-challenged', at,
+      detail: `${name}, relation ${relation}: no ${decision.factKind} fact joins this edge's two units in what rule ${decision.rule} version ${decision.ruleVersion} derived at the pinned revision; correct the arrow, its relation or its units` }])),
+  ];
+}
+
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
   const current = localDraftSchema(parameters);
-  const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent');
-  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent');
-  const unnamedRoot = localDraftSchema(parameters, 'home', 'required', 'unnamed').root;
-  const unnamed = { root: (unnamedRoot as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs };
-  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent');
-  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent');
+  const v8 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'absent');
+  const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent', 'absent');
+  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent', 'absent');
+  // The graph form with every kind permitted, with a v9 graph's `relation` and `unit` (version 2.19) or without them (v7 and v8).
+  const unnamedOf = (relations: 'taken' | 'absent'): DraftSchemaWithDefs => ({
+    root: (localDraftSchema(parameters, 'home', 'required', 'unnamed', 'taken', relations).root as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs });
+  const unnamedV9 = unnamedOf('taken'), unnamedV8 = unnamedOf('absent');
+  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent', 'absent');
+  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent', 'absent');
   const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
   return {
     noun: 'draft',
@@ -576,6 +677,9 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const doc = isRecord(subject) ? subject : {};
       // A section's `subsections` in a v7 or earlier draft: a field-version finding in place of the schema finding at that path (version 2.16).
       const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
+      // A graph edge's `relation` or a graph node's `unit` in a v8 or earlier draft: likewise (version 2.19).
+      const relationPaths = new Set(relationFieldVersionPaths(doc));
+      const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path);
       if (hasFigureKindForm(version)) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
@@ -586,16 +690,17 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           if (match === null || !error.detail.startsWith('matches none of the permitted forms')) return undefined;
           const diagram = diagrams[Number(match[1])];
           if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
-          return checkShape(unnamed, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
+          return checkShape(hasRelationForm(version) ? unnamedV9 : unnamedV8, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
         };
-        return { schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : v7, reported: { test: (path) => standing.has(path) || subsectionPaths.has(path) }, replaced };
+        const schema = version === LOCAL_DRAFT_SCHEMA_VERSION ? current : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
+        return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
       const [schema, also] = version === LOCAL_DRAFT_SCHEMA_VERSION_V6 ? [v6, null] : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? [v5, v5Reported] : [v4, v4Reported];
-      return { schema, reported: { test: (path) => fieldVersion.has(path) || subsectionPaths.has(path) || (also !== null && also.test(path)) } };
+      return { schema, reported: { test: (path) => fieldVersion.has(path) || fieldVersioned(path) || (also !== null && also.test(path)) } };
     },
     maxQuestions,
-    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); },
+    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); relationStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };

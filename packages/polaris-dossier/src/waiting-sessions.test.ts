@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -10,6 +11,7 @@ import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
 import { deliverToWaiting, deliveryUsageNote, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, specNamesVersion, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 import { tempDir } from '@syzygy/test-kit';
+import { installReadLog } from './fs-patch.testkit.js';
 
 // Only directory enumeration is controllable, to verify candidate eligibility in both orders at the filesystem boundary.
 vi.mock('node:fs', async (importOriginal) => {
@@ -903,6 +905,73 @@ describe('delivery to a waiting review session', () => {
     const fid = path.join(h.sessions, 'fidelity-1');
     tamper(fid, h.run);
     expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({ outcome: 'refused', stage: 'rehash' });
+  });
+
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): the run directory's delivery record is read before any round file and states
+  // the packet's bound; each round file is read by the reader rule under its bound.
+  const roundReason = (words: string): string => `round 1 cannot be read (${words}); stop, and tell the operator`;
+  it.each<[string, (fid: string, run: string) => string]>([
+    ['a packet past the packetBytes its delivery record states', (fid, run) => {
+      const stated = readJson(path.join(run, 'reviews', 'fidelity-session-1.delivery-1.json'))['packetBytes'] as number;
+      fs.appendFileSync(path.join(fid, 'round-1', 'packet.json'), ' ');
+      return roundReason(`larger than ${stated} bytes`);
+    }],
+    ['a FIFO at packet.json', (fid) => { const file = path.join(fid, 'round-1', 'packet.json'); fs.rmSync(file); execFileSync('mkfifo', [file]); return roundReason('not a regular file'); }],
+    ['a directory at delivery.json', (fid) => { const file = path.join(fid, 'round-1', 'delivery.json'); fs.rmSync(file); fs.mkdirSync(file); return roundReason('not a regular file'); }],
+    ['a delivery.json past 65,536 bytes', (fid) => { fs.appendFileSync(path.join(fid, 'round-1', 'delivery.json'), ' '.repeat(65_536)); return roundReason('larger than 65536 bytes'); }],
+    ['a packet.sha256 past 78 bytes', (fid) => { fs.appendFileSync(path.join(fid, 'round-1', 'packet.sha256'), ' '); return roundReason('larger than 78 bytes'); }],
+    ['a FIFO at packet.json and no readable delivery record, which refuses before any round file is read', (fid, run) => {
+      const file = path.join(fid, 'round-1', 'packet.json'); fs.rmSync(file); execFileSync('mkfifo', [file]);
+      const record = path.join(run, 'reviews', 'fidelity-session-1.delivery-1.json'); fs.rmSync(record); fs.mkdirSync(record);
+      return 'round 1\'s packet.json does not hash to the digest in delivery.json, packet.sha256 and the delivery record Syzygy wrote; do not read it: stop, and tell the operator';
+    }],
+  ])('refuses a round holding %s with the stated words (syzygy-3efd.80)', async (_name, plant) => {
+    const h = await harness();
+    await readyForReview(h);
+    await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
+    const fid = path.join(h.sessions, 'fidelity-1');
+    const reason = plant(fid, h.run);
+    expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({ outcome: 'refused', stage: 'rehash', reason });
+  });
+
+  it('reads the packet under its own size where a readable delivery record states no packetBytes (syzygy-3efd.80)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
+    const fid = path.join(h.sessions, 'fidelity-1');
+    const record = path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json');
+    const { packetBytes: _dropped, ...legacy } = readJson(record);
+    write(record, legacy);
+    expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({ outcome: 'delivered', round: 1 });
+  });
+
+  it('refuses a stated but invalid packetBytes before reading the round files (syzygy-3efd.80)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
+    const fid = path.join(h.sessions, 'fidelity-1');
+    const record = path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json');
+    write(record, { ...readJson(record), packetBytes: null });
+    const reads = installReadLog(fid);
+    try {
+      expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({
+        outcome: 'refused',
+        stage: 'rehash',
+        reason: "round 1's packet.json does not hash to the digest in delivery.json, packet.sha256 and the delivery record Syzygy wrote; do not read it: stop, and tell the operator",
+      });
+      expect(reads.log.opened).toEqual([]);
+    } finally {
+      reads.restore();
+    }
+  });
+
+  it('refuses an inventory brief that is a FIFO with the stated words, without blocking (syzygy-3efd.80)', async () => {
+    const h = await harness();
+    await h.cli(['session-prompt', h.run, 'all']);
+    const file = path.join(h.sessions, 'session-1', 'inventory-brief.md');
+    fs.rmSync(file);
+    execFileSync('mkfifo', [file]);
+    expect((await h.cli(['await', `${path.join(h.sessions, 'session-1')}/`])).doc).toMatchObject({ outcome: 'refused', stage: 'rehash', reason: 'the inventory brief cannot be read (not a regular file)' });
   });
 
   it('takes no new tool, version or model for a waiting session (mutant: let --tool through)', async () => {

@@ -44,6 +44,9 @@ export type CheckFindingKind =
   | 'figure-kind' | 'figure-unused'
   // Version 2.16 (schema v8): a subsection answer that is non-normative or more than one sentence.
   | 'subsection-answer'
+  // Version 2.19 (schema v9): a node's unit that names no unit of its kind, and an edge rule `relation-witness` challenges.
+  | 'unit-reference'
+  | 'relation-challenged'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

@@ -10,6 +10,7 @@ import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, 
 import type { RunConfig } from './run-config.js';
 import { readRunRecord, type RunSubject } from './run-record.js';
 import { RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** A run step's opening, step log, stored-record reader and the sessions root's paths; split out of `inventory.ts` unchanged. */
 
@@ -65,7 +66,7 @@ export async function openRun(runDir: string, sources: GateSources, now: number,
 /** Append one entry to the run's step log; a failure to append changes no result. */
 export function logStep(run: string, step: string, at: number, entry: Record<string, unknown>): void {
   try {
-    const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
+    const stored = readRunRecord(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
     if (!stored.ok && stored.legacy) return;
     fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
   } catch { /* the step log is a convenience within the agent's reach */ }
@@ -84,10 +85,12 @@ export function readBriefRecord(run: string): Readonly<Record<string, unknown>> 
   } catch { return undefined; }
 }
 
-/** A stored record, parsed within bounds, or undefined. */
+/** A stored record (a review check, prompt, launch-form or delivery record Syzygy writes under `inventory/` or `reviews/`), read by the
+ * reader rule under 262,144 bytes (REQ-polaris-generation-035 version 2.18) and parsed within bounds, or undefined: a record that is not a
+ * regular file or is past the bound is one that does not parse. */
 export function readRecord(file: string): Readonly<Record<string, unknown>> | undefined {
   try {
-    const value = parseBoundedJson(fs.readFileSync(file, 'utf8'), RECORD_JSON_LIMITS);
+    const value = parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.record), RECORD_JSON_LIMITS);
     return isRecord(value) ? value : undefined;
   } catch { return undefined; }
 }

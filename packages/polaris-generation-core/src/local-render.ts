@@ -260,6 +260,15 @@ export type LocalManifestFacts =
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
+/** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form; `evidence` is present
+ * for a witnessed edge alone: Syzygy's words for the relation, the witnessing fact's kind, and the revision and digest of the record it is
+ * a fact of. */
+export interface LocalEdgeRelation {
+  readonly relation: string;
+  readonly witness: { readonly state: 'witnessed' | 'challenged' | 'unknown'; readonly reason: string | null; readonly fact: string | null; readonly rule: string | null; readonly ruleVersion: number | null };
+  readonly evidence?: { readonly words: string; readonly factKind: string; readonly revision: string; readonly recordSha256: string };
+}
+
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No
    * part of it renders while the draft layer is Unknown. */
@@ -298,6 +307,9 @@ export interface LocalRenderInput {
   /** The declared manifest facts this render derived itself (version 2.9), from which the unit map and the CI pipeline map are drawn. The
    * three computed map pages render only where this and `derivedStructure` are both present; `syzygy dossier render` always supplies both. */
   readonly manifestFacts?: LocalManifestFacts;
+  /** A schema-v9 draft's graph edges (REQ-polaris-generation-034 version 2.19), by edge id: each edge's relation and the witness state rule
+   * `relation-witness` gives it at this render. Absent for every earlier draft, so its pages and machine view keep their bytes. */
+  readonly edgeRelations?: ReadonlyMap<string, LocalEdgeRelation>;
   /** A schema-v6 draft's `thesisBasis` (REQ-polaris-generation-034 version 2.4): what the authoring session says its introduction rests
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
