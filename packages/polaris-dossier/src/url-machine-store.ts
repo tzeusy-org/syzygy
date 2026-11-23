@@ -432,6 +432,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const pending = new Set<Promise<unknown>>();
       const allocation = staging?.allocation === true;
       const stagedPublication = staging !== undefined && !allocation;
+      const joinedTerminalLock = terminalRead && currentAsync !== undefined;
       const checkDeadline = (): number => {
         if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
         const now = clock();
@@ -483,6 +484,23 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           return value;
         } finally { pending.delete(promise); }
       };
+      const syncAndCensus = async (): Promise<void> => {
+        charge();
+        const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);
+        if (synced.status === 'rejected') throw synced.reason;
+        if (scanned.status === 'rejected') throw scanned.reason;
+      };
+      const lateTerminalLock = () => contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds;
+      const releaseLateTerminalLock = async (): Promise<void> => {
+        check();
+        verifyNamedRoots();
+        checkDeadline();
+        // Submit cleanup under the checked authority before yielding.
+        await rmdir(`${base}/lock`);
+        held = false;
+        checkDeadline();
+        await heldRoot.sync();
+      };
       const write = async (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null): Promise<void> => {
         charge(bytes.byteLength);
         checkWork(); await io(verifyAnchorsDuringIo);
@@ -530,7 +548,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
           }
           try {
-            await io(() => {
+            await io(async () => {
               if (terminalRead) {
                 // The protected read has no publication. Check the named
                 // roots and full authority in the same turn as lock submission.
@@ -539,46 +557,46 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
                 checkDeadline();
                 if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
               }
-              return mkdir(`${base}/lock`, { mode: 0o700 });
+              await mkdir(`${base}/lock`, { mode: 0o700 });
+              if (!joinedTerminalLock) return;
+              held = true;
+              // This authority sample follows mkdir and gates starting the
+              // joined sync and census in the same continuation.
+              await reverify();
+              if (lateTerminalLock()) {
+                await releaseLateTerminalLock();
+                return;
+              }
+              checkDeadline();
+              charge();
+              await syncAndCensus();
             });
+            if (joinedTerminalLock && !held) return false;
             held = true;
             break;
           } catch (error) {
-            if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
+            if (held || (error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
             contended = true;
             await new Promise(resolve => setTimeout(resolve, 10));
           }
         }
-        // A queued retry can acquire after its contention window. Confirm the
-        // named lock's authority before cleanup and before any protected read.
-        if (terminalRead && contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) {
-          check();
-          verifyNamedRoots();
-          checkDeadline();
-          // Submit cleanup under the checked authority before yielding.
-          await rmdir(`${base}/lock`);
-          held = false;
-          checkDeadline();
-          await heldRoot.sync();
+        if (terminalRead && !joinedTerminalLock && lateTerminalLock()) {
+          await releaseLateTerminalLock();
           return false;
         }
         if (allocation) {
           check();
           if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
         }
-        if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {
-          // The held lock's sync and the private census are independent.
-          // Join both and recheck authority before any client state read.
-          await io(async () => {
-            charge();
-            const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);
-            if (synced.status === 'rejected') throw synced.reason;
-            if (scanned.status === 'rejected') throw scanned.reason;
-          });
-        } else {
-          await io(() => heldRoot.sync());
-          if (allocation) { await reverify(); check(); }
-          await io(census);
+        if (!joinedTerminalLock) {
+          if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {
+            // Join both operations before any client state read.
+            await io(syncAndCensus);
+          } else {
+            await io(() => heldRoot.sync());
+            if (allocation) { await reverify(); check(); }
+            await io(census);
+          }
         }
         // Bracket the complete private state read, including its named roots,
         // with I/O authority. The client read still starts after that check.
