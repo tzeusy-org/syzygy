@@ -16,6 +16,9 @@ import { REVIEW_CHECKS, REVIEW_CHECK_FORMAT, type ReviewCheckRecord, type Review
 import { DESIGN_PACKET_DISCLOSURES, PACKET_DISCLOSURES, buildFidelityPacket, buildStoredDesignPacket, parseSubject, writePacket } from './review-packet.js';
 import { derivedBlocking, nextVerdictNumber, standingBySubject, validateVerdict } from './review-verdict.js';
 import { isWithheldItem } from './withheld-items.js';
+import { BoundedJsonError } from '@syzygy/polaris-generation-core/live';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 export { FIDELITY_PACKET_FORMAT, REVIEW_CHECK_FORMAT, PACKET_FILE, PACKET_DIGEST_FILE, VERDICT_FILE, REVIEW_KINDS, isReviewKind, REVIEW_CHECKS, packetDirName, verdictFileName, reviewSessionDirName, reviewPromptRecordName, reviewLaunchRecordName, reviewSessionDirectory, latestReviewSession } from './review-model.js';
 export type { ReviewKind, PacketSpan, SpanRedaction, SpanCitation, PacketBuild, ReviewDeps, ReviewProblemKind, ReviewProblem, ReviewCheckRecord, ReviewCheckResult, ReviewObserved, ReviewInferred } from './review-model.js';
 export { fidelityCriteria, latestPassedDraft, buildFidelityPacket, writePacket, buildStoredDesignPacket } from './review-packet.js';
@@ -133,11 +136,14 @@ export async function reviewCheck(runDir: string, request: { readonly verdictFil
   const file = request.verdictFile === undefined ? path.join(reviewSessionDirectory(run, kind, session), VERDICT_FILE) : path.resolve(request.verdictFile);
   let bytes: Uint8Array;
   try {
-    const stats = fs.statSync(file);
-    if (!stats.isFile()) return refuse('verdict', `${file} is not a regular file`, undefined, run);
-    if (stats.size > VERDICT_MAX_BYTES) return refuse('verdict', `${file} is larger than the ${VERDICT_MAX_BYTES}-byte verdict bound`, undefined, run);
-    bytes = new Uint8Array(fs.readFileSync(file));
-  } catch (cause) { return refuse('verdict', `the verdict ${file} cannot be read (${errno(cause)})`, undefined, run); }
+    // The reader rule (REQ-polaris-generation-035 version 2.18): one non-blocking open, a regular file only, at most one byte past the
+    // bound read; a verdict past the bound by its size or by bytes read after its size was taken gets the same words.
+    bytes = new Uint8Array(readBoundedFile(file, VERDICT_MAX_BYTES));
+  } catch (cause) {
+    if (cause instanceof NotARegularFileError) return refuse('verdict', `${file} is not a regular file`, undefined, run);
+    if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return refuse('verdict', `${file} is larger than the ${VERDICT_MAX_BYTES}-byte verdict bound`, undefined, run);
+    return refuse('verdict', `the verdict ${file} cannot be read (${errno(cause)})`, undefined, run);
+  }
 
   const verdict = parseSubject(bytes);
   const notJson: ReviewProblem[] = [{ kind: 'not-json', at: '$', detail: 'the verdict is not one bounded UTF-8 JSON object' }];
@@ -246,7 +252,7 @@ async function latestCheckedVerdict(
   if (check['outcome'] !== 'validated') return no(`${kind} verdict ${number} failed validation`);
   const frozen = path.join(RUN_LAYOUT.reviews, verdictFileName(kind, number));
   let bytes: Uint8Array;
-  try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${errno(cause)})`); }
+  try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.verdict)); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.verdict)})`); }
   const recorded = isRecord(check['verdict']) ? check['verdict'] : {};
   if (recorded['file'] !== frozen || recorded['sha256'] !== sha256(bytes)) return no(`the frozen verdict ${frozen} is not the bytes its check recorded`);
   const verdict = parseSubject(bytes);

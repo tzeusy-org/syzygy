@@ -17,15 +17,18 @@ import { figureFitClass, readerAdvice, type ReaderAdvice } from './reader-advice
 import { RUN_ADVICE_FILE, computeRunAdvice, mechanismEntries, writeRunAdvice } from './run-advice.js';
 import { figureFit, type FigureFit } from './figure-fit.js';
 import { readingDifference, readingLedger, type ReadingDifference, type ReadingLedger } from './reading-ledger.js';
-import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
+import { isWithheldElement, reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
-import { deriveStructure, deriveTreeFacts, structureUnknown, type StructureRecord } from './derive.js';
+import { deriveStructure, deriveTreeFacts, secretOrUnder, structureUnknown, type StructureRecord, type TreeFacts } from './derive.js';
 import { inventoryCoverageAdvice, type InventoryCoverageAdvice } from './inventory-coverage.js';
 import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-record.js';
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
-import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
+import { type Derived, type SubjectRules, deriveFindings, draftRules, relationDecisions, relationFindings } from './check-derive.js';
+import { hasRelationForm } from './draft-schema.js';
+import { BLOB_MODES } from './git-object-reader.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
 export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
@@ -154,7 +157,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const { noun } = plan;
   const log = (entry: Record<string, unknown>): void => {
     try {
-      const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
+      const stored = readRunRecord(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
       if (!stored.ok && stored.legacy) return;
       fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: STEP_LOG_FORMAT, step: plan.command, at: isoOf(started), ...entry })}\n`, { mode: 0o600 });
     } catch { /* the step log is a convenience within the agent's reach; a failure to append changes no result */ }
@@ -231,7 +234,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // manifest through a second reader on the same clone whose object bound is 1 MiB, one call per file. They are kept in the draft's check
   // record (`manifestFacts`), never in an inventory check record, and derived whether or not the draft parses.
   let screenCensus: ScreenCensusReport | undefined, structureRecord: StructureRecord | undefined, derivedRecord: string | undefined;
-  let manifestFacts: ManifestFacts | undefined;
+  let manifestFacts: ManifestFacts | undefined, treeFacts: TreeFacts | undefined;
+  let listedEntries: Awaited<ReturnType<typeof reader.listTree>> | undefined;
   if (plan.command === 'check') {
     // `capturedAt` is the instant this check listed the tree: taken once the listing returns, or once it is refused.
     const source = (): { repositoryId: string; revision: string; capturedAt: string } => ({ repositoryId: subject.repository.repositoryId, revision: pinned, capturedAt: isoOf(deps.now()) });
@@ -242,7 +246,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       const listed = source();
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(entries, screen, checked.contentClasses) });
       structureRecord = deriveStructure(entries, isSecretPath);
-      derivedRecord = encodeDerivedRecord(listed, deriveTreeFacts(entries, isSecretPath));
+      treeFacts = deriveTreeFacts(entries, isSecretPath);
+      derivedRecord = encodeDerivedRecord(listed, treeFacts);
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
       screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
@@ -250,6 +255,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       derivedRecord = encodeDerivedRecord(source(), { why: `the pinned tree could not be listed (${cause.reason})` });
       manifestFacts = manifestFactsUnknown(cause.reason);
     }
+    listedEntries = entries;
     if (entries !== undefined) {
       const manifestReader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned, maxObjectBytes: MANIFEST_BLOB_LIMIT });
       manifestFacts = await deriveManifestFacts({
@@ -260,6 +266,22 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   if (credential.required && !credential.passed) {
     findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
+  }
+  // Version 2.19 (syzygy-3efd.28): after every finding version 2.16 reports, the `unit-reference` findings and then the `relation-challenged`
+  // findings of a v9 draft, from the tree this check listed, the structure facts and the manifest facts it derived. The states of the edges
+  // are decided only for a draft with no schema finding; an `unknown` state is never a finding. Check reads no currency policy for them.
+  if (plan.command === 'check' && parseFault === null && isRecord(doc) && hasRelationForm(doc['schemaVersion'])) {
+    const isSecretPath = secretPathOf(screen);
+    const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
+    const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
+    const reach = { citedBlobs, admitted, screen, consented: checked.contentClasses };
+    const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !isWithheldElement(edge, reach),
+      listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
+        structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
+        manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
+        hidden,
+      });
+    findings.push(...relationFindings(findings.some((finding) => finding.kind === 'schema') ? { ...decisions, edges: [] } : decisions));
   }
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);

@@ -19,6 +19,14 @@ export class NotARegularFileError extends Error {
   }
 }
 
+/** Why a bounded read refused a regular file: past `bound`, by its size or by bytes read after its size was taken. A `BoundedJsonError`
+ * of code `byte-limit`, as every reader already tests, carrying the bound it was read under (for a file read under its own size, that size). */
+export class PastBoundError extends BoundedJsonError {
+  constructor(readonly bound: number) {
+    super('byte-limit');
+  }
+}
+
 /** The bytes of the regular file at `file`, read under `maxBytes` by the rule of version 2.10: the path is opened once, without blocking
  * and following a symbolic link; anything whose descriptor is not a regular file (a directory, a device, a FIFO) is refused, and so is a
  * size past the bound, before any byte is read; and at most `maxBytes + 1` bytes are read from the descriptor, so a file grown after its
@@ -40,7 +48,7 @@ function readRegularFile(file: string, boundOf: (size: number) => number): Buffe
     const stats = fs.fstatSync(fd);
     if (!stats.isFile()) throw new NotARegularFileError();
     const maxBytes = boundOf(stats.size);
-    if (stats.size > maxBytes) throw new BoundedJsonError('byte-limit');
+    if (stats.size > maxBytes) throw new PastBoundError(maxBytes);
     const limit = maxBytes + 1;
     let buffer = Buffer.allocUnsafe(Math.min(stats.size + 1, limit));
     let total = 0;
@@ -55,7 +63,7 @@ function readRegularFile(file: string, boundOf: (size: number) => number): Buffe
       if (read === 0) break;
       total += read;
     }
-    if (total > maxBytes) throw new BoundedJsonError('byte-limit');
+    if (total > maxBytes) throw new PastBoundError(maxBytes);
     return buffer.subarray(0, total);
   } finally {
     fs.closeSync(fd);

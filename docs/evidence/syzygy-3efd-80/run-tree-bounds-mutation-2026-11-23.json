@@ -1,0 +1,789 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-23T04:50:57.858Z",
+  "commit": "70c0cc29ac6f4161facbbb03af877d13c825e6a5",
+  "subject": {
+    "packages/polaris-dossier/src/check-record-read.ts": "5ca19d83195d8faaf9d6b75b449049c280c02753638f894c3c131aeb6863eb21",
+    "packages/polaris-dossier/src/check.ts": "675b1eba11f4455cc45aeb7519cfd523605311ea816ac750daf2d96c8b216301",
+    "packages/polaris-dossier/src/close.ts": "9bf772d864b26522bee836f780a29fec877bf12bb0d3ba3b243ab1afe2831615",
+    "packages/polaris-dossier/src/credential-probe.ts": "43d30856499a836bd08cf968f93506e107eebae8a7f3c01a758f604cfc36a7ec",
+    "packages/polaris-dossier/src/design-review.ts": "682f5ebf29633f8d8e9a921ea0cc3702e07e54c4ccddc640aabf8cc54ca78937",
+    "packages/polaris-dossier/src/execution-choice.ts": "e5f26bdcf379cbc27dc9b71cd7a021e23172f351dee94acec3dd88e47b05ec64",
+    "packages/polaris-dossier/src/inventory-coverage.ts": "167c3e98b743b13460bd76fbc9faf1a96048dc66df1ee99eb551994d873be198",
+    "packages/polaris-dossier/src/inventory.ts": "66d6029699a9e8af213e2cb4a9acafd9d255d6149c322b66f9baaa6336cb8d22",
+    "packages/polaris-dossier/src/polaris.ts": "69763dfed47a8ee6ba8f52f66e00fc852159b27bb4789a3b6d8e40886afb6b91",
+    "packages/polaris-dossier/src/reading-ledger.ts": "f93a27a28a7bcbdbebb050f4ef0a07c26c670bf1185fc3445bd8c5a873c4e147",
+    "packages/polaris-dossier/src/render.ts": "4ecd6d4248741d276b4511a8b7f2cc09bfd3c103fc25cb70b9d4dce959edef4b",
+    "packages/polaris-dossier/src/reverify.ts": "d1266d9842f87710810976066a8561f202ae72a31ab497076aa80924597026a9",
+    "packages/polaris-dossier/src/review-packet.ts": "bd05bd16ed32e2de9abbc9aac92576890b8f28dcbd2618af4ba110e94a4bff21",
+    "packages/polaris-dossier/src/review.ts": "754c60473313063f1dc7d69850231db32950b299ac91a066f3b8efbb9a216e5b",
+    "packages/polaris-dossier/src/run-dir.ts": "b4349b6c3142e45440048baac747cd45bd565c8fe2fa8d9df74e414e22e14b52",
+    "packages/polaris-dossier/src/run-tree-read.ts": "0fd3134d548a34b831eb342415ab92cb04d34c38ba4a015c664647fe01df8de5",
+    "packages/polaris-dossier/src/session-statement.ts": "be6837b7001861192f32184a07af7a6736c349aed47da4f64433f82c9e61953f",
+    "packages/polaris-dossier/src/status.ts": "eefeb6ca3159280598c50d3c2c577852cbae08303a4a9267cc73f977370d5eb9",
+    "packages/polaris-dossier/src/waiting-sessions.ts": "de5eea1d3dcfbecc63278bebcd10f968c79a4157915fdeeab994b129c0e81d78"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/run-tree-readers.test.ts packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/review.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/reading-ledger.test.ts packages/polaris-dossier/src/status.test.ts packages/polaris-dossier/src/close.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 7 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 120 s (killedBy \"timeout\": a reader that blocks on a FIFO cannot be interrupted by vitest's own test timeout). The unmutated baseline runs first and must pass.",
+  "testFiles": [
+    "packages/polaris-dossier/src/run-tree-readers.test.ts",
+    "packages/polaris-dossier/src/waiting-sessions.test.ts",
+    "packages/polaris-dossier/src/review.test.ts",
+    "packages/polaris-dossier/src/inventory.test.ts",
+    "packages/polaris-dossier/src/reading-ledger.test.ts",
+    "packages/polaris-dossier/src/status.test.ts",
+    "packages/polaris-dossier/src/close.test.ts"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "tests": 464,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "bound-run-record",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "runRecord: 65_536,",
+      "new": "runRecord: 65_537,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'logStep (REQ-033: a step appends no s…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'logStep (REQ-033: a step appends no s…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readMaxRepairCycles (REQ-033: the URL…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readMaxRepairCycles (REQ-033: the URL…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run.json one byte past 65,536 bytes with the stated words"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bound-log",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "log: 16_777_216,",
+      "new": "log: 16_777_217,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-execution-choice",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "executionChoice: 8_192,",
+      "new": "executionChoice: 8_193,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-close-record",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "closeRecord: 16_777_216,",
+      "new": "closeRecord: 16_777_217,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'closedUsage (REQ-033: syzygy dossier …' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'closedUsage (REQ-033: syzygy dossier …' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-verdict",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "verdict: 4_194_304,",
+      "new": "verdict: 4_194_305,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > review-check counts no review from a frozen verdict that is a file past 4,194,304 bytes, with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readVerdict (REQ-035: the URL supervi…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readVerdict (REQ-035: the URL supervi…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'blockingWhy (REQ-035: the URL supervi…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'blockingWhy (REQ-035: the URL supervi…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-inventory",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "inventory: 4_194_304,",
+      "new": "inventory: 4_194_305,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory.test.ts > the inventory of record counts no inventory from a frozen revision that is a file past 4,194,304 bytes, with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "bound-record",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "record: 262_144,",
+      "new": "record: 262_145,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readRecord (REQ-035: review check, pr…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readRecord (REQ-035: review check, pr…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readReviewCheck (REQ-035: the URL sup…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readReviewCheck (REQ-035: the URL sup…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-round-delivery",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "roundDelivery: 65_536,",
+      "new": "roundDelivery: 65_537,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a delivery.json past 65,536 bytes with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-digest-line",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "packetDigestLine: 78,",
+      "new": "packetDigestLine: 79,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a packet.sha256 past 78 bytes with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "bound-supervisor-state",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "supervisorState: 16_777_216,",
+      "new": "supervisorState: 16_777_217,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "cause-not-regular",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "if (cause instanceof NotARegularFileError) return 'not a regular file';",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory.test.ts > the inventory of record counts no inventory from a frozen revision that is a FIFO, with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/review.test.ts > review-check counts no review from a frozen verdict that is a FIFO, with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/review.test.ts > review-check builds no fidelity packet from a frozen inventory that is a FIFO when the packet reads it, though a regular file when counted (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a FIFO with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a symbolic link to /dev/zero with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a directory with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the other readers of run.json check refuses with record-invalid and the stated words, and appends no step-log entry",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the other readers of run.json render refuses with the stated words, and appends no step-log entry",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a FIFO at packet.json with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a directory at delivery.json with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses an inventory brief that is a FIFO with the stated words, without blocking (syzygy-3efd.80)"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "cause-past-bound",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "if (cause instanceof PastBoundError) return `larger than ${cause.bound} bytes`;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the bound a refusal names names the size a file read under its own size had when opened, once it grows while read",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the bound a refusal names names the bound a file past it by its size was refused under, with no bound given to the words"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "cause-absent",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "old": "=== 'ENOENT';",
+      "new": "=== 'ENOENT-not';",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was close takes an absent step log and an absent breach log as empty logs, as before",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the execution-rule reader takes an absent choice as absent, as before",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the supervisor takes a state path holding nothing as no earlier state, and a state that does not parse as unreadable"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "close-old-reader",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "readBoundedText(path.join(run, name), RUN_TREE_BOUNDS.log)",
+      "new": "fs.readFileSync(path.join(run, name), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "close-unreadable-as-empty",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "return { ok: false, why: `${name} cannot be read",
+      "new": "return { ok: true, lines: [] }; return { ok: false, why: `${name} cannot be read",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "close-breaches-as-none",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (!read.ok) return [{ unreadable: true, why: read.why, label: 'Unknown' }];",
+      "new": "if (!read.ok) return [];",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'breachLog (REQ-033: close reads crede…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "close-steps-inferred",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (!read.ok) return { label: 'Unknown', basis",
+      "new": "if (!read.ok) return { label: 'Inferred', basis",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'stepInstants (REQ-033: close reads st…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "reverify-old-reader",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "text = readBoundedText(path.join(path.resolve(runDir), RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord);",
+      "new": "text = fs.readFileSync(path.join(path.resolve(runDir), RUN_LAYOUT.config), 'utf8');",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "reverify-errno-words",
+      "file": "packages/polaris-dossier/src/reverify.ts",
+      "old": "(${readCause(cause, RUN_TREE_BOUNDS.runRecord)})",
+      "new": "(${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a FIFO with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a symbolic link to /dev/zero with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run whose run.json is a directory with record-invalid and the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the reverification refuses a run.json one byte past 65,536 bytes with the stated words",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the other readers of run.json check refuses with record-invalid and the stated words, and appends no step-log entry",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the other readers of run.json render refuses with the stated words, and appends no step-log entry"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "status-old-reader",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "configText = readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord);",
+      "new": "configText = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8');",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "status-errno-words",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "(${readCause(cause, RUN_TREE_BOUNDS.runRecord)})",
+      "new": "(${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'runStatus (REQ-033: syzygy dossier st…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "status-close-record-old-reader",
+      "file": "packages/polaris-dossier/src/status.ts",
+      "old": "parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.closeRecord)",
+      "new": "parseBoundedJson(fs.readFileSync(file, 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "check-log-old-reader",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "logstep-old-reader",
+      "file": "packages/polaris-dossier/src/run-dir.ts",
+      "old": "readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "render-old-reader",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "readBoundedText(path.join(runDir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "statement-old-reader",
+      "file": "packages/polaris-dossier/src/session-statement.ts",
+      "old": "readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "ledger-old-reader",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "readBoundedText(path.join(dir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(dir, RUN_LAYOUT.config), 'utf8')",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [],
+      "seconds": 12
+    },
+    {
+      "id": "supervisor-limit-old-reader",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)",
+      "new": "fs.readFileSync(path.join(run, 'run.json'), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "credential-old-reader",
+      "file": "packages/polaris-dossier/src/credential-probe.ts",
+      "old": "text = readBoundedText(file, LIST_MAX_BYTES);",
+      "new": "text = fs.readFileSync(file, 'utf8');",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "credential-stat-then-read",
+      "file": "packages/polaris-dossier/src/credential-probe.ts",
+      "old": "text = readBoundedText(file, LIST_MAX_BYTES);",
+      "new": "{ const stat = fs.statSync(file); if (!stat.isFile()) return { ok: false, why: `${file} is not a regular file` }; if (stat.size > LIST_MAX_BYTES) return { ok: false, why: `${file} is larger than ${LIST_MAX_BYTES} bytes` }; text = fs.readFileSync(file, 'utf8'); }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' reads a file of exactly its bound, to its end and no further",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'credentialListFromFile (REQ-033: the …' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "choice-old-reader",
+      "file": "packages/polaris-dossier/src/execution-choice.ts",
+      "old": "text = readBoundedText(file, RUN_TREE_BOUNDS.executionChoice);",
+      "new": "text = fs.readFileSync(file, 'utf8');",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "choice-errno-words",
+      "file": "packages/polaris-dossier/src/execution-choice.ts",
+      "old": "(${readCause(cause, RUN_TREE_BOUNDS.executionChoice)})",
+      "new": "(${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'readExecutionChoice (REQ-033: the exe…' refuses a directory at its path without blocking or reading a byte"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "record-old-reader",
+      "file": "packages/polaris-dossier/src/run-dir.ts",
+      "old": "parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.record), RECORD_JSON_LIMITS)",
+      "new": "parseBoundedJson(fs.readFileSync(file, 'utf8'), RECORD_JSON_LIMITS)",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "submitted-verdict-stat-then-read",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "bytes = new Uint8Array(readBoundedFile(file, VERDICT_MAX_BYTES));",
+      "new": "{ const stats = fs.statSync(file); if (!stats.isFile()) return refuse('verdict', `${file} is not a regular file`, undefined, run); if (stats.size > VERDICT_MAX_BYTES) return refuse('verdict', `${file} is larger than the ${VERDICT_MAX_BYTES}-byte verdict bound`, undefined, run); bytes = new Uint8Array(fs.readFileSync(file)); }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > review-check refuses a verdict file that is a FIFO, without blocking, and one grown past 4,194,304 bytes after its size was taken (syzygy-3efd.80)"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "frozen-verdict-old-reader",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.verdict)",
+      "new": "fs.readFileSync(path.join(run, frozen))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "frozen-verdict-errno-words",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "(${readCause(cause, RUN_TREE_BOUNDS.verdict)})",
+      "new": "(${errno(cause)})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/review.test.ts > review-check counts no review from a frozen verdict that is a FIFO, with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/review.test.ts > review-check counts no review from a frozen verdict that is a file past 4,194,304 bytes, with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "frozen-inventory-old-reader",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.inventory)",
+      "new": "fs.readFileSync(path.join(run, frozen))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "frozen-inventory-errno-words",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "(${readCause(cause, RUN_TREE_BOUNDS.inventory)})",
+      "new": "(${errno(cause)})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory.test.ts > the inventory of record counts no inventory from a frozen revision that is a FIFO, with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/inventory.test.ts > the inventory of record counts no inventory from a frozen revision that is a file past 4,194,304 bytes, with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "stored-brief-old-reader",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "readFileAsSized(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE)).toString('utf8')",
+      "new": "fs.readFileSync(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE), 'utf8')",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "packet-inventory-old-reader",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "readBoundedFile(path.join(run, counted.file), RUN_TREE_BOUNDS.inventory)",
+      "new": "fs.readFileSync(path.join(run, counted.file))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "coverage-inventory-old-reader",
+      "file": "packages/polaris-dossier/src/inventory-coverage.ts",
+      "old": "readBoundedFile(path.join(path.resolve(runDir), counted.file), RUN_TREE_BOUNDS.inventory)",
+      "new": "fs.readFileSync(path.join(path.resolve(runDir), counted.file))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "site-page-old-reader",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "bytes = readBoundedFile(full, SITE_MAX_BYTES - total);",
+      "new": "bytes = fs.readFileSync(full);",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "site-page-not-regular-words",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "if (cause instanceof NotARegularFileError) return `${relative} in site ${number} is not a regular file`;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): readLatestSite (the design packet reads each page file) refuses a page file that is a regular file when listed and a FIFO when opened, reading no byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): readLatestSite (the design packet reads each page file) refuses a page file that is a regular file when listed and a symbolic link to /dev/zero when opened, reading no byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): readLatestSite (the design packet reads each page file) refuses a page file that is a regular file when listed and a directory when opened, reading no byte"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "await-record-not-first",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "if (record === undefined) return mismatch();",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a FIFO at packet.json and no readable delivery record, which refuses before any round file is read with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "await-packet-own-size",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "readBoundedFile(packetFile, packetBound)",
+      "new": "readFileAsSized(packetFile)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a packet past the packetBytes its delivery record states with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "await-legacy-not-own-size",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "packetBound === undefined ? readFileAsSized(packetFile) :",
+      "new": "packetBound === undefined ? readBoundedFile(packetFile, 0) :",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session reads the packet under its own size where a readable delivery record states no packetBytes (syzygy-3efd.80)"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "await-delivery-old-reader",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "readBoundedText(path.join(roundDir, DELIVERY_FILE), RUN_TREE_BOUNDS.roundDelivery)",
+      "new": "fs.readFileSync(path.join(roundDir, DELIVERY_FILE), 'utf8')",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a directory at delivery.json with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "await-digest-old-reader",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "readBoundedText(path.join(roundDir, PACKET_DIGEST_FILE), RUN_TREE_BOUNDS.packetDigestLine)",
+      "new": "fs.readFileSync(path.join(roundDir, PACKET_DIGEST_FILE), 'utf8')",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a packet.sha256 past 78 bytes with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "await-brief-old-reader",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "readFileAsSized(path.join(directory, INVENTORY_BRIEF_FILE))",
+      "new": "fs.readFileSync(path.join(directory, INVENTORY_BRIEF_FILE))",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "await-errno-words",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "cannot be read (${readCause(cause, bound)})",
+      "new": "cannot be read (${errno(cause)})",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a packet past the packetBytes its delivery record states with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a FIFO at packet.json with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a directory at delivery.json with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a delivery.json past 65,536 bytes with the stated words (syzygy-3efd.80)",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session refuses a round holding a packet.sha256 past 78 bytes with the stated words (syzygy-3efd.80)"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "supervisor-review-check-unbounded",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "export const readReviewCheck = (file: string): unknown => readRecord(file);",
+      "new": "export const readReviewCheck = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "supervisor-verdict-old-reader",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "const doc: unknown = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict));",
+      "new": "const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8'));",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "supervisor-blocking-why-old-reader",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "doc = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict)) as",
+      "new": "doc = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')) as",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "state-old-reader",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "text = readBoundedText(statePath(stateRoot, runId), RUN_TREE_BOUNDS.supervisorState);",
+      "new": "text = fs.readFileSync(statePath(stateRoot, runId), 'utf8');",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "state-unparsed-as-absent",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "return isAbsent(cause) ? 'absent' : 'unreadable';",
+      "new": "return 'absent';",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a file one byte past its bound from its size alone, reading no byte of it",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a file grown past its bound after its size was taken, reading at most one byte past the bound",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a FIFO at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a symbolic link to /dev/zero at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): 'loadState (REQ-048: the supervisor\\'s…' refuses a directory at its path without blocking or reading a byte",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): syzygy polaris over a state it cannot read --supervise refuses a run whose state is a FIFO, without blocking, and writes nothing there"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "state-non-object-accepted",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "return isRecord(doc) ? doc as unknown as SupervisorState : 'unreadable';",
+      "new": "return doc as unknown as SupervisorState;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): what stays as it was the supervisor takes a state path holding nothing as no earlier state, and a state that does not parse as unreadable"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "supervise-unreadable-started-afresh",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "if (loaded === 'unreadable') return refuse(`no launched run ${options.run} under ${options.stateRoot}`);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): syzygy polaris over a state it cannot read --supervise refuses a run whose state is a FIFO, without blocking, and writes nothing there"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "past-bound-carries-no-bound",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "if (stats.size > maxBytes) throw new PastBoundError(maxBytes);",
+      "new": "if (stats.size > maxBytes) throw new BoundedJsonError('byte-limit');",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/run-tree-readers.test.ts > the run-tree reader rule (syzygy-3efd.80): the bound a refusal names names the bound a file past it by its size was refused under, with no bound given to the words"
+      ],
+      "seconds": 13
+    }
+  ],
+  "summary": {
+    "mutants": 58,
+    "killed": 58,
+    "survived": 0
+  }
+}

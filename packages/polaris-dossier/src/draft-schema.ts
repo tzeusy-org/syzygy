@@ -3,6 +3,7 @@ import {
   DIAGRAM_KINDS, FIGURE_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
 } from '@syzygy/polaris-generation-core/live';
 import { EXECUTION_SCOPES } from './execution-flags.js';
+import { RELATION_TYPES, UNIT_TEXT_LIMIT } from './relation-witness.js';
 
 /** The local-agent draft schema (REQ-polaris-generation-034; design "The local-agent draft schema").
  *
@@ -41,8 +42,12 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V7 = 'polaris-dossier-local-draft-v7';
 /** v8 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): a section may carry `subsections`, two to twelve, each a short title, a
  * one-sentence answer and its paragraphs. Everything else is v7; a v7 or earlier draft still checks and renders as before, and
  * `subsections` in one is field-version. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v8';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V8 = 'polaris-dossier-local-draft-v8';
+/** v9 (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): every edge of a graph diagram carries `relation`, one of the eleven
+ * relation types, and a graph node may carry `unit`, one of the six unit forms. Everything else is v8; a v8 or earlier draft still checks and
+ * renders as before, and `relation` or `unit` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v9';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
@@ -51,8 +56,13 @@ export const hasHomeForm = (version: unknown): boolean => version === LOCAL_DRAF
 export const hasThesisBasisForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || hasFigureKindForm(version);
 /** Whether a draft's version has the figure kinds `sequence` and `swimlane`: v7 and every later version. */
 export const hasFigureKindForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V7 || hasSubsectionForm(version);
-/** Whether a draft's version lets a section carry `subsections`: v8 (version 2.16). */
-export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** Whether a draft's version lets a section carry `subsections`: v8 (version 2.16) and every later version. */
+export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V8 || hasRelationForm(version);
+/** Whether a draft's graph edges carry `relation` and its graph nodes may carry `unit`: v9 (version 2.19). */
+export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** The members only a v9 graph diagram's edges and nodes carry, each a field-version finding in an earlier draft (version 2.19). */
+export const RELATION_FIELD = 'relation';
+export const UNIT_FIELD = 'unit';
 /** The bounds of a v8 section's `subsections` and of one subsection's `paragraphs`. */
 export const SUBSECTION_BOUNDS = Object.freeze({ subsections: [2, 12] as const, paragraphs: [0, 30] as const });
 export const SUBSECTIONS_FIELD = 'subsections';
@@ -131,6 +141,8 @@ const citations = (minItems: number): DraftSchema => list(ref('citation'), minIt
 const reason = ref('unknownReason');
 /** A short presentation label: a caption, column, title, term, card label or summary. */
 const presentationLabel: DraftSchema = { type: 'string', minLength: 1, maxLength: 120 };
+/** A unit's directory name, dependency name, job key or service key (v9). */
+const unitText: DraftSchema = { type: 'string', minLength: 1, maxLength: UNIT_TEXT_LIMIT };
 
 /** The one form a quotation takes, stated in a brief and in its schema's `quotations` description alike. `check` and `inventory-check`
  * count only this form; quoted text without the lead-in is the agent's prose. */
@@ -216,6 +228,16 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   // A subsection (v8, version 2.16): a short title naming the question it answers, its answer in a paragraph form (whether that answer is
   // Inferred or Unknown and one sentence is `check`'s `subsection-answer` rule, which names it), and zero to thirty paragraphs.
   subsection: object({ id: handle, title: presentationLabel, answer: ref('paragraph'), paragraphs: list(ref('content'), ...SUBSECTION_BOUNDS.paragraphs) }),
+  // A unit (v9, version 2.19): the one unit of the pinned repository a graph node stands for, by the keys the derived facts carry. A
+  // directory name, name, job key or service key is 1 to 256 code units; the schema bounds code points, and `check` adds the code-unit bound.
+  unit: { oneOf: [
+    object({ kind: one('repository-root') }),
+    object({ kind: one('top-level-directory'), path: unitText }),
+    object({ kind: one('package-manifest'), path: repoPath }),
+    object({ kind: one('dependency-name'), name: unitText }),
+    object({ kind: one('workflow-job'), path: repoPath, job: unitText }),
+    object({ kind: one('compose-service'), path: repoPath, service: unitText }),
+  ] },
 });
 
 export interface DraftSchemaParameters {
@@ -231,9 +253,11 @@ export interface DraftSchemaParameters {
  * v5 and earlier, whose findings stay those of the version before). `figureKinds` says whether a diagram may be a `sequence` or `swimlane`
  * with its own members (schema v7 and later; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges` only (schema v6
  * and earlier); `unnamed` is the form `check` reads a diagram naming no kind against. `subsections` says whether a section may carry
- * `subsections` (schema v8, what the brief publishes; version 2.16) or has no such member (schema v7 and earlier). */
+ * `subsections` (schema v8 and later; version 2.16) or has no such member (schema v7 and earlier). `relations` says whether a graph edge
+ * carries its required `relation` and a graph node may carry `unit` (schema v9, what the brief publishes; version 2.19) or neither (schema
+ * v8 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
-  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
+  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   const graph = (kind: Schema): Record<string, Schema> => ({
@@ -243,8 +267,13 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     id: handle, title: text,
     ...(diagramForm === 'home' ? { home: object({ kind: choice(DIAGRAM_HOME_KINDS), target: handle }, ['target']) } : { sectionId: handle }),
     kind, relationship: text,
-    nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
-    edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
+    // v9 (version 2.19): a graph edge carries `relation`, one of the eleven relation types, and a graph node may carry `unit`.
+    nodes: list(relations === 'taken'
+      ? object({ id: handle, label: text, epistemic, citations: citations(1), unit: ref('unit') }, ['unit'])
+      : object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
+    edges: list(relations === 'taken'
+      ? object({ id: handle, from: handle, to: handle, relation: choice(RELATION_TYPES), label: text, epistemic, citations: citations(1) })
+      : object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
     disposition: ref('disposition'),
   });
   // v7 (version 2.5): one form per kind, each naming its kind, so a graph diagram's faults are reported against the graph form exactly as

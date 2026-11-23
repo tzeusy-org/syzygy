@@ -17,6 +17,8 @@ import {
 } from './review.js';
 import type { ScreenLoader } from './screen.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { readBoundedFile, readFileAsSized } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** Pre-started waiting sessions (owner direction `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`; the candidate v1.2 of
  * `polaris-dossier-local-agent-mode`, REQ-polaris-generation-035 as amended there).
@@ -601,7 +603,8 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     const brief = prompt['brief'];
     const expected = isRecord(brief) && typeof brief['sha256'] === 'string' ? brief['sha256'] : undefined;
     let bytes: Uint8Array;
-    try { bytes = new Uint8Array(fs.readFileSync(path.join(directory, INVENTORY_BRIEF_FILE))); } catch (cause) { return refuse('rehash', `the inventory brief cannot be read (${errno(cause)})`); }
+    // Read under its own size (REQ-polaris-generation-035 version 2.18): Syzygy records the brief's digest, not its size.
+    try { bytes = new Uint8Array(readFileAsSized(path.join(directory, INVENTORY_BRIEF_FILE))); } catch (cause) { return refuse('rehash', `the inventory brief cannot be read (${readCause(cause)})`); }
     if (expected === undefined || sha256(bytes) !== expected) return refuse('rehash', `${INVENTORY_BRIEF_FILE} does not hash to the digest Syzygy recorded when it wrote it; stop, and tell the operator`);
     logStep(run, 'await', startedAt, { outcome: 'delivered', role: 'inventory', session: role.session, round });
     return { ok: true, report: {
@@ -642,19 +645,30 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const at = deps.now();
   const reopened = await openRun(run, deps.sources, at, what, deps.openReader ? { openReader: deps.openReader } : {});
   if (!reopened.ok) return refuse(reopened.stage, reopened.reason, reopened.reasons, reopened.refusals);
-  let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
-  try {
-    delivery = parseBoundedJson(fs.readFileSync(path.join(roundDir, DELIVERY_FILE), 'utf8'), DELIVERY_JSON_LIMITS);
-    packetBytes = new Uint8Array(fs.readFileSync(path.join(roundDir, PACKET_FILE)));
-    digestLine = fs.readFileSync(path.join(roundDir, PACKET_DIGEST_FILE), 'utf8');
-  } catch (cause) { return refuse('rehash', `round ${round} cannot be read (${errno(cause)}); stop, and tell the operator`); }
-  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
-  const actual = sha256(packetBytes);
-  const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
-  if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record === undefined || record['packetSha256'] !== actual) {
+  const mismatch = (): AwaitResult => {
     logStep(run, 'await', at, { outcome: 'refused', stage: 'rehash', role: 'review', kind: role.kind, session: role.session, round });
     return refuse('rehash', `round ${round}'s ${PACKET_FILE} does not hash to the digest in ${DELIVERY_FILE}, ${PACKET_DIGEST_FILE} and the delivery record Syzygy wrote; do not read it: stop, and tell the operator`);
-  }
+  };
+  // The run directory's delivery record is read first, before any round file (REQ-polaris-generation-035 version 2.18): it states the
+  // packet's bound, and where it cannot be read the command refuses without reading a round file.
+  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
+  if (record === undefined) return mismatch();
+  const packetBound = record['packetBytes'];
+  if (packetBound !== undefined && (typeof packetBound !== 'number' || !Number.isSafeInteger(packetBound) || packetBound < 0)) return mismatch();
+  let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
+  const unreadable = (cause: unknown, bound?: number): AwaitResult =>
+    refuse('rehash', `round ${round} cannot be read (${readCause(cause, bound)}); stop, and tell the operator`);
+  try { delivery = parseBoundedJson(readBoundedText(path.join(roundDir, DELIVERY_FILE), RUN_TREE_BOUNDS.roundDelivery), DELIVERY_JSON_LIMITS); }
+  catch (cause) { return unreadable(cause, RUN_TREE_BOUNDS.roundDelivery); }
+  try {
+    const packetFile = path.join(roundDir, PACKET_FILE);
+    packetBytes = new Uint8Array(packetBound === undefined ? readFileAsSized(packetFile) : readBoundedFile(packetFile, packetBound));
+  } catch (cause) { return unreadable(cause, packetBound); }
+  try { digestLine = readBoundedText(path.join(roundDir, PACKET_DIGEST_FILE), RUN_TREE_BOUNDS.packetDigestLine); }
+  catch (cause) { return unreadable(cause, RUN_TREE_BOUNDS.packetDigestLine); }
+  const actual = sha256(packetBytes);
+  const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
+  if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record['packetSha256'] !== actual) return mismatch();
   logStep(run, 'await', at, { outcome: 'delivered', role: 'review', kind: role.kind, session: role.session, round, packetSha256: actual });
   const verdictFile = path.join(roundDirName(round), 'verdict.json');
   return { ok: true, report: {
