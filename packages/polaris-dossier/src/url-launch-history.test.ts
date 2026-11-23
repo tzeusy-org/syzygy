@@ -696,6 +696,35 @@ describe('protected URL design delivery audit', () => {
 });
 
 describe('URL stored launch history', () => {
+  it('checks the live sample before starting the independent writer authority deadline', async () => {
+    const input = options('design'), calls: string[] = [];
+    const waitForSample = async (): Promise<boolean> => {
+      if (calls.length === 0) await new Promise<void>(resolve => setTimeout(resolve, 650));
+      calls.push('sample');
+      return true;
+    };
+    const current = async (): Promise<boolean> => {
+      if (calls.length === 1) await new Promise<void>(resolve => setTimeout(resolve, 550));
+      calls.push('authority');
+      return true;
+    };
+    const result = await writeUrlLaunchHistory({ ...input, waitForSample, current });
+    expect(calls).toEqual(['sample', 'authority', 'sample', 'authority', 'sample', 'authority', 'sample', 'authority']);
+    expect(inspectUrlLaunchHistory(result.capability!).sha256).toBe(sha256(fs.readFileSync(result.file!)));
+  });
+
+  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s under its existing limit', async stage => {
+    const input = options('design');
+    const stalled = new Promise<boolean>(() => {});
+    const waitForSample = vi.fn(() => stage === 'sample' ? stalled : true);
+    const current = vi.fn(() => stage === 'authority' ? stalled : true);
+    await expect(writeUrlLaunchHistory({ ...input, waitForSample: async () => waitForSample(), current }))
+      .rejects.toThrow('url-launch-history-unavailable');
+    expect(waitForSample).toHaveBeenCalledTimes(1);
+    expect(current).toHaveBeenCalledTimes(stage === 'authority' ? 1 : 0);
+    expect(fs.existsSync(historyPath('design'))).toBe(false);
+  });
+
   it.each(['complete', 'withdraw-file', 'withdraw-directory', 'replace-directory', 'sync-error'] as const)(
     'waits for the held file and directory flush in order and handles %s', async outcome => {
       const input = options('design'), file = historyPath('design'), directory = path.dirname(file), moved = directory + '.held';

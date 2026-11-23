@@ -27,6 +27,8 @@ export interface UrlLaunchHistoryOptions {
   readonly capture: LaunchCapture;
   /** Immutable physical successor slot, selected only by the recovering host. */
   readonly generation?: string;
+  /** Join the live role sample before checking independent run authority. */
+  readonly waitForSample?: () => Promise<boolean>;
   readonly screen: DossierScreen; readonly current: () => boolean | Promise<boolean>;
 }
 export type UrlLaunchHistoryRole = Exclude<UrlRolePlan['role'], 'author'>;
@@ -138,19 +140,21 @@ function historyRecord(subject: {
  * capture. Only an actual issued helper prompt may bind its legacy prompt slot. */
 export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
   if (!isPreparedUrlRolePlan(given.plan)) return refuse();
-  const { run, runId, plan, compatiblePromptSha256, current } = given, capture = { ...given.capture };
+  const { run, runId, plan, compatiblePromptSha256, current, waitForSample } = given, capture = { ...given.capture };
   const screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
   const sync = promisify(fs.fsync);
   let root: number | undefined, helper: number | undefined;
   try {
     if (!path.isAbsolute(run) || path.resolve(run) !== run || path.basename(run) !== runId || !RUN_ID.test(runId)
       || fs.realpathSync(run) !== run || !hex(compatiblePromptSha256) || typeof current !== 'function'
+      || (waitForSample !== undefined && typeof waitForSample !== 'function')
       || [screenBody, screenSecrets].some(f => typeof f !== 'function')
       || capture.pid !== 'Unknown' && !positive(capture.pid) || capture.startedAt !== 'Unknown' && !positive(capture.startedAt)) return refuse();
     root = fs.openSync(run, directoryFlags);
     const initial = fs.fstatSync(root, { bigint: true }), anchor = `/proc/self/fd/${root}`;
     if (!initial.isDirectory() || initial.uid !== BigInt(process.getuid?.() ?? -1)) return refuse();
     const check = async (): Promise<void> => {
+      if (waitForSample !== undefined) await requireCurrent(waitForSample);
       await requireCurrent(current);
       if (fs.realpathSync(run) !== run || !same(initial, fs.lstatSync(run, { bigint: true })) || !same(initial, fs.fstatSync(root!, { bigint: true }))) return refuse();
     };

@@ -256,7 +256,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         return input.waitForSamples();
       };
       const written = await writeUrlLaunchHistory({ run: input.run, runId: path.basename(input.run), plan: input.plan,
-        screen: input.screen, current: async () => await waitForNativeSample() && await input.current(),
+        screen: input.screen, waitForSample: waitForNativeSample, current: input.current,
         compatiblePromptSha256: input.compatiblePromptSha256,
         ...(input.generation === undefined ? {} : { generation: input.generation }),
         capture: { pid: child.pid, startedAt: input.now() } });
