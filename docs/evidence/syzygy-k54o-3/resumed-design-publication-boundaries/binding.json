@@ -1,0 +1,110 @@
+{
+  "sourceSubjects": [
+    {
+      "commit": "101e9000f1ffc21516ca5c572ba0a1696ac847cf",
+      "base": "9c1ef5ef4fc6cd857d780862b57e99d207e3a3da",
+      "tree": "eab7c965ce52be08a11bdd24df5d1b6032890fc1",
+      "patchSha256": "6511a6b6cb9fe52fa59aaad9368172e749d9490b25309f8afc96187127a1d4a5",
+      "review": {
+        "raw": "docs/reviews/F3-RESUMED-INERT-PREPARATION-REVIEW-RAW.md",
+        "sha256": "eccdee6ab164db16374e1deda21c5b07bb769b5065bd180855d4dec4cc273af4",
+        "verdict": "PASS",
+        "scope": "source only"
+      }
+    },
+    {
+      "commit": "1556516293f2179f0a1e740dd13e348b43dad9e7",
+      "base": "101e9000f1ffc21516ca5c572ba0a1696ac847cf",
+      "tree": "c75cfa6e78e7b1cf0ff8534d9548c23ba2765fec",
+      "patchSha256": "9c32739721a0b858ae45bd5455a6bfb7911c53a1d81c30d3ec10d2a0122b2bbc",
+      "review": {
+        "raw": "docs/reviews/F3-STAGED-PUBLICATION-IO-BOUNDARIES-REVIEW-RAW.md",
+        "sha256": "28a6f397773a9b4945311f598535e992176f275f383fd1f6a0f8ab708fe12318",
+        "verdict": "PASS",
+        "scope": "source only"
+      }
+    }
+  ],
+  "nativeDiagnostics": [
+    {
+      "case": "interrupted Resume",
+      "sourceCommit": "edd7de0c41597100ae6ff17471b1839e172753ca",
+      "overlay": {
+        "file": "diagnostic.patch",
+        "sha256": "a9a6c80446a5bff963fc0e3df9ea64021656cb9f8f52473dddb476ecdc61eb31"
+      },
+      "log": {
+        "file": "stop.log",
+        "sha256": "5b1b9a64151c95b25116319b42447917ce33b48f63813ee0d064f68453ca3bb5"
+      },
+      "observed": [
+        "launch history committed and registered",
+        "Design delivery durable",
+        "Design activation accepted with 816 ms on its 20 s deadline",
+        "first native peer capture and reattestation accepted",
+        "fresh client pending after canonical record and projection publication",
+        "lifecycle audit remains absent",
+        "zero new Design sends and no Execution Record"
+      ]
+    },
+    {
+      "case": "interrupted Resume",
+      "sourceCommit": "edd7de0c41597100ae6ff17471b1839e172753ca",
+      "overlay": {
+        "file": "diagnostic.patch",
+        "sha256": "024d2b3c973f7a3640f304f77b5d758ec44db426575bd42b07ec7240bcbc6fb8"
+      },
+      "log": {
+        "file": "stop.log",
+        "sha256": "74e4ec80e3e311f527cb8f26b74ff50889b92e2e09934d131bd0c9e3c697c0e0"
+      },
+      "observed": [
+        "protected Design delivery append reached disk",
+        "the protected read after append exceeded the 30 s lease",
+        "Design activation refused",
+        "no Execution Record"
+      ]
+    },
+    {
+      "case": "interrupted Resume",
+      "sourceCommit": "edd7de0c41597100ae6ff17471b1839e172753ca",
+      "overlay": {
+        "file": "diagnostic.patch",
+        "sha256": "98ff0aed7f0963e0619f0c74bb2a0f66599dc069dc2c076557926b804c56cb8a"
+      },
+      "log": {
+        "file": "stop.log",
+        "sha256": "cd9d414e9109dd0ae71cced47b1a61c56c5bbdfc3821d75c925759970f4fec78"
+      },
+      "observed": [
+        "launch-history file and directory syncs accepted",
+        "native verification, storage and process checks accepted",
+        "the sixth native confirmation completed after its 1000 ms deadline",
+        "Design activation and machine publication were not reached",
+        "no Execution Record"
+      ]
+    }
+  ],
+  "instrumentedFocusedChecks": {
+    "overlay": {
+      "file": "diagnostic.patch",
+      "sha256": "98ff0aed7f0963e0619f0c74bb2a0f66599dc069dc2c076557926b804c56cb8a"
+    },
+    "batch": {
+      "file": "focused.log",
+      "sha256": "1207dabe29f6ff98b9356d708a4eb310e354f53ce6fc8437c968aae450550726",
+      "passed": 135,
+      "nativeSuiteSetupFailed": 1,
+      "skipped": 7
+    },
+    "isolatedNativeRetry": {
+      "file": "run-machine-retry.log",
+      "sha256": "3b443fec2ae9e654948f20fee03fb1d43ef291e567646a83e35b35c26cfe2a01",
+      "passed": 7
+    }
+  },
+  "limits": {
+    "executionRecords": "Unknown for interrupted and eligible cold Resume",
+    "firstPublicationCause": "Unknown after on-disk pending reservation and projection, before durable audit"
+  }
+}

@@ -1,0 +1,5 @@
+[Observed] **Source review PASS** for `101e9000f1ffc21516ca5c572ba0a1696ac847cf`, tree `eab7c965ce52be08a11bdd24df5d1b6032890fc1`. REQ-035 permits local reuse of sealed material under its live identity and currentness checks. Delivery issuance still verifies the product, launch, stored site, and durable audit event. Activation rechecks the issued view and its live inputs. The read observer counts the durable audit bytes at issuance and on subsequent checks. Only genuine expiry of that exact product can trigger renewal.
+
+[Observed] Early preparation is limited to the first resumed Design attempt that needs fresh launch history. The original one-use preparation, launch revalidation, host deadline, and render lease still apply under REQ-048.
+
+[Unknown] Reliable availability and final cold Resume remain unproven. Earlier preparation shifts reproduction onto the preparation’s 20-second lifetime. One native replay reached activation, and another expired during the protected read after append. This was a source-only review.
