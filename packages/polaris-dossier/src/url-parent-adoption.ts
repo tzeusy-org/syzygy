@@ -26,8 +26,10 @@ const INSTALLED_CLAUSES = [
 ] as const;
 const CONTRACT_SUBJECT = REVIEWED_SUBJECTS[1][0];
 const MAX_SUBJECT_BYTES = 2_097_152;
+const MAX_BLOB_HEADER_BYTES = 128;
 const MAX_PARENT_REVISIONS = 64;
 const CONTRACT_FILES = [...new Set(INSTALLED_CLAUSES.map(([file]) => `${GOVERNANCE}/contracts/rfcs/${file}`))];
+const CURRENT_FILES = [...REVIEWED_SUBJECTS.map(([file]) => file), ...CONTRACT_FILES];
 const LEDGER_HEADER = '| Id | Date | Commit | What changed | Why | Revert | Tag |';
 const LEDGER_DIVIDER = '|---|---|---|---|---|---|---|';
 const NEXT_CLAUSE = /^\*\*RFC[0-9]+-[0-9]+(?:\([a-z]\))?(?:\.|\s+[—-])/mu;
@@ -176,12 +178,37 @@ export function readUrlParentAdoption(
     const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
     Object.assign(env, { GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_OPTIONAL_LOCKS: '0', GIT_NO_LAZY_FETCH: '1' });
     const deadline = performance.now() + 10_000;
-    const git = (...args: string[]): Buffer => {
+    const runGit = (args: readonly string[], batch?: { readonly input: string; readonly maxBuffer: number }): Buffer => {
       const remaining = Math.floor(deadline - performance.now());
       if (remaining <= 0) throw new Error('URL parent probe deadline');
-      return execFileSync('git', ['--no-replace-objects', '-C', root, ...args], {
-        env, maxBuffer: MAX_SUBJECT_BYTES, timeout: remaining, stdio: ['ignore', 'pipe', 'pipe'],
+      const result = execFileSync('git', ['--no-replace-objects', '-C', root, ...args], {
+        env, maxBuffer: MAX_SUBJECT_BYTES, timeout: remaining, ...batch, stdio: [batch === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'],
       });
+      if (performance.now() >= deadline) throw new Error('URL parent probe deadline');
+      return result;
+    };
+    const git = (...args: string[]): Buffer => runGit(args);
+    // Requests name exact immutable objects. Bound both the complete response
+    // and every blob, and require one complete frame per requested path.
+    const blobs = (commit: string, files: readonly string[]): ReadonlyMap<string, Buffer> => {
+      const response = runGit(['cat-file', '--batch-command'], {
+        input: files.map(file => `contents ${commit}:${file}\n`).join(''),
+        maxBuffer: files.length * (MAX_SUBJECT_BYTES + MAX_BLOB_HEADER_BYTES + 2),
+      });
+      const result = new Map<string, Buffer>();
+      let offset = 0;
+      for (const file of files) {
+        const lineEnd = response.indexOf(10, offset);
+        if (lineEnd < 0 || lineEnd - offset > MAX_BLOB_HEADER_BYTES) throw new Error('URL parent blob header');
+        const fields = /^(?:[0-9a-f]{40}|[0-9a-f]{64}) blob (0|[1-9][0-9]*)$/u.exec(response.toString('latin1', offset, lineEnd));
+        const bytes = Number(fields?.[1]);
+        const start = lineEnd + 1, end = start + bytes;
+        if (!Number.isSafeInteger(bytes) || bytes > MAX_SUBJECT_BYTES || response[end] !== 10) throw new Error('URL parent blob frame');
+        result.set(file, response.subarray(start, end));
+        offset = end + 1;
+      }
+      if (offset !== response.length) throw new Error('URL parent blob population');
+      return result;
     };
     const refs = parseUrlParentRefs(git(...URL_PARENT_REF_ARGS));
     if (refs === null) return null;
@@ -219,7 +246,7 @@ export function readUrlParentAdoption(
     if (ledgerRevisions.length > MAX_PARENT_REVISIONS) return null;
     let seen = previous !== undefined;
     for (const commit of [historyStart, ...ledgerRevisions.reverse()]) {
-      const rows = ledgerRows(utf8(show(commit, URL_PARENT_RECORD)));
+      const rows = commit === defaultCommit ? currentRows : ledgerRows(utf8(show(commit, URL_PARENT_RECORD)));
       if (rows === null || urlParentRetired(rows, authority)) return null;
       if (!rows.some(row => row[6] === TAG_CELL)) {
         if (seen) return null;
@@ -230,18 +257,23 @@ export function readUrlParentAdoption(
       seen = true;
     }
     if (!seen) return null;
+    const landedFiles = blobs(landedCommit, CURRENT_FILES);
+    const defaultFiles = defaultCommit === landedCommit ? landedFiles : blobs(defaultCommit, CURRENT_FILES);
     const subjects: { path: string; sha256: string }[] = [];
     for (const [file, digest] of REVIEWED_SUBJECTS) {
-      if (sha256(show(landedCommit, file)) !== digest || sha256(show(defaultCommit, file)) !== digest) return null;
+      if (sha256(landedFiles.get(file)!) !== digest || sha256(defaultFiles.get(file)!) !== digest) return null;
       subjects.push({ path: file, sha256: digest });
     }
-    const reviewed = utf8(show(landedCommit, CONTRACT_SUBJECT));
-    if (!installedClausesMatch(reviewed, file => utf8(show(landedCommit, file)))) return null;
+    const reviewed = utf8(landedFiles.get(CONTRACT_SUBJECT)!);
+    if (!installedClausesMatch(reviewed, file => utf8(landedFiles.get(file)!))) return null;
     const revisions = changed(MAX_PARENT_REVISIONS + 1, CONTRACT_FILES);
-    if (revisions.length > MAX_PARENT_REVISIONS || revisions.some(commit =>
-      !installedClausesMatch(reviewed, file => utf8(show(commit, file))))) return null;
+    if (revisions.length > MAX_PARENT_REVISIONS) return null;
+    for (const commit of revisions) {
+      const files = commit === defaultCommit ? defaultFiles : blobs(commit, CONTRACT_FILES);
+      if (!installedClausesMatch(reviewed, file => utf8(files.get(file)!))) return null;
+    }
     if (!installedClausesMatch(reviewed, file => {
-      const raw = show(defaultCommit, file);
+      const raw = defaultFiles.get(file)!;
       subjects.push({ path: file, sha256: sha256(raw) });
       return utf8(raw);
     })) return null;

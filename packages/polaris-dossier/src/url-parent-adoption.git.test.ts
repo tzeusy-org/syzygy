@@ -3,7 +3,7 @@ import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmS
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH, DOSSIER_READMISSION_POLICY_PATH,
   DOSSIER_URL_ORIGIN_POLICY_PATH, readCommittedPolicy, readCommittedUrlOriginPolicy,
@@ -81,6 +81,17 @@ function fixture() {
 }
 
 describe('URL parent adoption on the observing Git checkout', { timeout: 30_000 }, () => {
+  it('verifies the same parent within the aggregate deadline under fixed Git startup latency', () => {
+    const { root, origin, binding } = fixture();
+    const shim = scratch();
+    const program = execFileSync('/bin/sh', ['-c', 'command -v git'], { encoding: 'utf8' }).trim();
+    writeFileSync(join(shim, 'git'), `#!/bin/sh\n/bin/sleep 0.42\nexec '${program.replaceAll("'", "'\\''")}' "$@"\n`,
+      { mode: 0o755 });
+    vi.stubEnv('PATH', `${shim}:${process.env['PATH'] ?? ''}`);
+    try { expect(readUrlParentAdoption(root, origin.sha256)).toEqual(binding); }
+    finally { vi.unstubAllEnvs(); }
+  });
+
   it('keeps the A-14 overlay over the exact retained or current base', async () => {
     const { root, binding, base, origin } = fixture();
     const old = readCommittedPolicy(root, DOSSIER_READMISSION_POLICY_PATH);
@@ -130,6 +141,21 @@ describe('URL parent adoption on the observing Git checkout', { timeout: 30_000 
     run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
     expect(readUrlParentAdoption(root, origin.sha256, binding)).toBeNull();
     expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
+  });
+
+  it('refuses an intervening amendment to an installed clause after its bytes are restored', () => {
+    const { root, run, binding, origin } = fixture();
+    const file = `${GOVERNANCE}/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md`;
+    const original = readFileSync(join(root, file), 'utf8');
+    const changed = original.replace('\n**RFC3-16(b).', '\n**RFC3-16(b). Intervening change.');
+    expect(changed).not.toBe(original);
+    writeFileSync(join(root, file), changed);
+    run('commit', '-qam', 'Change installed clause');
+    writeFileSync(join(root, file), original);
+    run('commit', '-qam', 'Restore installed clause');
+    run('update-ref', URL_PARENT_DEFAULT_REF, 'HEAD');
+    expect(readUrlParentAdoption(root, origin.sha256)).toBeNull();
+    expect(readUrlParentAdoption(root, origin.sha256, binding)).toBeNull();
   });
 
   it('refuses a missing local policy blob without invoking the promisor transport', () => {
