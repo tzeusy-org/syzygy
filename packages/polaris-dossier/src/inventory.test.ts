@@ -10,7 +10,7 @@ import { issueBrief } from './brief.js';
 import type { CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
-import { opensOf } from './fs-patch.testkit.js';
+import { opensOf, underReadCase, type ReadCase } from './fs-patch.testkit.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { buildInventoryBrief, checkInventory, inventoryBrief, inventoryOfRecord, openRun, type InventoryCheckResult } from './inventory.js';
@@ -459,21 +459,26 @@ describe('the inventory of record', () => {
     expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'the frozen inventory inventory/rev-0.json is not the bytes its check recorded' });
   });
 
-  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): every frozen inventory revision is read by the reader rule under 4,194,304 bytes.
-  it.each<[string, (file: string) => void, string]>([
-    ['a FIFO', (file) => execFileSync('mkfifo', [file]), 'not a regular file'],
-    ['a file past 4,194,304 bytes', (file) => fs.writeFileSync(file, ' '.repeat(4_194_305)), 'larger than 4194304 bytes'],
-  ])('counts no inventory from a frozen revision that is %s, with the stated words (syzygy-3efd.80)', async (_what, plant, words) => {
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): every frozen inventory revision is read by the reader rule under 4,194,304
+  // bytes, in every case of the Case line (2.18 code review, note 2). A regular file is NUL bytes, so one at the bound is read whole and
+  // then fails the digest its check recorded.
+  it.each<[ReadCase, number[], string]>([
+    ['a FIFO', [0], 'cannot be read (not a regular file)'],
+    ['a symbolic link to /dev/zero', [0], 'cannot be read (not a regular file)'],
+    ['a directory', [0], 'cannot be read (not a regular file)'],
+    ['one byte past its bound', [0], 'cannot be read (larger than 4194304 bytes)'],
+    ['grown past its bound after its size was taken', [4_194_305], 'cannot be read (larger than 4194304 bytes)'],
+    ['exactly at its bound', [4_194_304], 'is not the bytes its check recorded'],
+  ])('reads a frozen revision under 4,194,304 bytes: %s (syzygy-3efd.80)', async (kase, reads, words) => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);
     writeInventory(dir, validInventory());
     passed(await checkInventory(run, {}, deps()));
     await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
     expect((await inventoryOfRecord(run, counting)).counts).toBe(true);
-    const frozen = path.join(run, 'inventory', 'rev-0.json');
-    fs.rmSync(frozen);
-    plant(frozen);
-    expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: `the frozen inventory inventory/rev-0.json cannot be read (${words})` });
+    let record: unknown;
+    expect(await underReadCase(kase, path.join(run, 'inventory', 'rev-0.json'), 4_194_304, async () => { record = await inventoryOfRecord(run, counting); })).toEqual(reads);
+    expect(record).toEqual({ counts: false, why: `the frozen inventory inventory/rev-0.json ${words}` });
   });
 
   it('does not count an inventory with findings, or a launch record altered to another form', async () => {
@@ -685,12 +690,19 @@ describe('inventory-brief', () => {
     expect(await inventoryBrief(run, hand)).toMatchObject({ ok: true, report: { storedCopy: 'differs' } });
   });
 
-  it('reports a stored copy that is a FIFO as absent, without blocking (syzygy-3efd.80)', async () => {
+  // The stored copy is read under its own size when opened: anything it cannot read is reported absent, without blocking.
+  it.each<[ReadCase, number[], string]>([
+    ['a FIFO', [0], 'absent'],
+    ['a symbolic link to /dev/zero', [0], 'absent'],
+    ['a directory', [0], 'absent'],
+    ['grown past its bound after its size was taken', [101], 'absent'],
+    ['exactly at its bound', [100], 'differs'],
+  ])('reads the stored copy of the brief under its own size: %s (syzygy-3efd.80)', async (kase, reads, storedCopy) => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);
-    fs.rmSync(path.join(dir, 'inventory-brief.md'));
-    execFileSync('mkfifo', [path.join(dir, 'inventory-brief.md')]);
-    expect(await inventoryBrief(run, hand)).toMatchObject({ ok: true, report: { storedCopy: 'absent' } });
+    let result: unknown;
+    expect(await underReadCase(kase, path.join(dir, 'inventory-brief.md'), 100, async () => { result = await inventoryBrief(run, hand); })).toEqual(reads);
+    expect(result).toMatchObject({ ok: true, report: { storedCopy } });
   });
 
   it('never opens the launched marker, at the hand-over or after it, where recording a launch form opens it once (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)', async () => {

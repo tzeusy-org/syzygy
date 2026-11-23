@@ -10,6 +10,7 @@ import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live'
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
+import { createCredentialProbe } from './credential-probe.js';
 import { buildDesignPacket, designCriteria } from './design-review.js';
 import { composeReaderStandards } from './reader-standards.js';
 import { DEFAULT_PACK } from './shape-packs.js';
@@ -276,6 +277,47 @@ describe('render', () => {
     const before = fs.readdirSync(run).sort();
     expect(await renderRun(run, renderDeps({ renderer: undefined }))).toMatchObject({ ok: false, refusal: { command: 'render', outcome: 'refused', stage: 'renderer', reason: NO_RENDERER } });
     expect(fs.readdirSync(run).sort()).toEqual(before);
+  });
+
+  it.each(['declaration', 'source', 'undetermined'] as const)('renders a %s refusal as Unknown and an independent readable observation as Observed', async (cause) => {
+    const run = await prepared();
+    const file = path.join(run, 'brief.json');
+    const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+    fs.writeFileSync(file, JSON.stringify({ ...record, executionRule: { arm: 'permitting' } }));
+    const source = {
+      describe: 'fixture credential list',
+      list: () => cause === 'source'
+        ? { ok: false as const, why: 'the fixture credential list could not be read' }
+        : { ok: true as const, paths: ['/fixture/listed.token'] },
+    };
+    const probe = createCredentialProbe(source, () => cause === 'undetermined' ? { opened: false, code: 'EIO' } : { opened: true, regularFile: true }, [],
+      cause === 'declaration' ? [{ adapter: 'fixture-adapter', credentials: ['/fixture/unlisted.token'] }] : []);
+    const result = await renderRun(run, renderDeps({ probe }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const instruction = 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.';
+    const explanation = {
+      declaration: 'The adapter-credential check at this render refused the configuration because a configured typed adapter declares a credential the repository\'s adapter-credential list does not hold: fixture-adapter: /fixture/unlisted.token, and the count of adapter credential files opened for reading was 1.',
+      source: 'The adapter-credential check at this render refused the configuration because the fixture credential list could not be read (source: fixture credential list).',
+      undetermined: 'The adapter-credential check at this render ended without a definite result because the read attempt could not decide for: /fixture/listed.token.',
+    }[cause];
+    const site = readSite(result.report.site);
+    const machine = JSON.parse(site.get('machine.json')!);
+    const disclosures = machine.disclosure.filter((item: { id: string }) => item.id.startsWith('adapter-credential'));
+    expect(disclosures).toEqual([
+      { id: 'adapter-credential', label: 'Unknown', text: `${explanation} ${instruction}` },
+      ...(cause === 'declaration' ? [{
+        id: 'adapter-credential-readable', label: 'Observed',
+        text: `At this render an adapter credential was readable as the operator's user: the count of adapter credential files opened for reading was 1. ${instruction}`,
+      }] : []),
+    ]);
+    const appendix = site.get('appendix.html')!;
+    expect(appendix).toContain('<li data-disclosure-id="adapter-credential" data-label="Unknown">');
+    expect(appendix.includes('<li data-disclosure-id="adapter-credential-readable" data-label="Observed">')).toBe(cause === 'declaration');
+    const findings = fs.readFileSync(path.join(run, 'credential-breaches.jsonl'), 'utf8').trimEnd().split('\n').map((line) => JSON.parse(line));
+    expect(findings.map((finding) => [finding.kind, finding.step, finding.instruction])).toEqual([
+      [cause === 'undetermined' ? 'adapter-credential-undetermined' : 'adapter-credential-configuration-refused', 'render', instruction],
+      ...(cause === 'declaration' ? [['adapter-credential-readable', 'render', instruction]] : []),
+    ]);
   });
 
   it('renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor', async () => {

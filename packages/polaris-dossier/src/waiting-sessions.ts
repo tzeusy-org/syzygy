@@ -312,19 +312,30 @@ export const DELIVERY_DISCLOSURES = [
   `A round after the first is delivered to a session that reviewed an earlier revision: it has seen its own earlier verdict, which may anchor this one. The review page discloses it (${WAIT_MODE_DIRECTION}).`,
 ];
 
+interface DeliveryRefusal {
+  readonly command: 'session-prompt';
+  readonly outcome: 'refused';
+  readonly stage: 'write';
+  readonly reason: string;
+  readonly disclosures: readonly string[];
+}
+
 /** Deliver a built packet to a waiting review session as its next round: the run's delivery record first, then the session's
  * `round-N/` files, `delivery.json` last and by rename, so a waiting slice never sees a partial round. */
 export function deliverToWaiting(
   run: string, runId: string, kind: ReviewKind, waiting: WaitingSession, built: { readonly bytes: string; readonly sha256: string },
   packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined,
-): { readonly ok: true; readonly report: DeliveryReport } | { readonly ok: false; readonly reason: string } {
+): Outcome<DeliveryReport, DeliveryRefusal> {
+  const refuse = (reason: string): Outcome<DeliveryReport, DeliveryRefusal> => ({
+    ok: false, refusal: { command: 'session-prompt', outcome: 'refused', stage: 'write', reason, disclosures: DELIVERY_DISCLOSURES },
+  });
   const { session } = waiting;
   const relative = waiting.record['directory'];
-  if (typeof relative !== 'string') return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names no directory` };
+  if (typeof relative !== 'string') return refuse(`the prompt record of waiting ${kind} session ${session} names no directory`);
   const directory = path.join(path.dirname(run), relative);
-  if (path.dirname(directory) !== sessionsRoot(run)) return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root` };
+  if (path.dirname(directory) !== sessionsRoot(run)) return refuse(`the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root`);
   const resolved = resolveSessionDirectory(sessionsRoot(run), directory);
-  if (!resolved.ok) return { ok: false, reason: resolved.reason };
+  if (!resolved.ok) return refuse(resolved.reason);
   // `afterCheck` is a test seam, run in the window between the check and the writes; every write for the session goes through `resolved.real`.
   afterCheck();
   const earlier = deliveries(run, kind, session);
@@ -345,7 +356,7 @@ export function deliverToWaiting(
     fs.writeFileSync(pending, `${JSON.stringify({ format: DELIVERY_FORMAT, kind, runId, session, round, packetSha256: built.sha256 }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
     fs.renameSync(pending, path.join(roundDir, DELIVERY_FILE));
   } catch (cause) {
-    return { ok: false, reason: `round ${round} could not be delivered to waiting ${kind} session ${session} (${errno(cause)}); anything already written stays, and the next delivery takes the next round` };
+    return refuse(`round ${round} could not be delivered to waiting ${kind} session ${session} (${errno(cause)}); anything already written stays, and the next delivery takes the next round`);
   }
   logStep(run, 'session-prompt', now, { outcome: 'delivered', role: 'review', kind, session, round, packetSha256: built.sha256 });
   return { ok: true, report: {

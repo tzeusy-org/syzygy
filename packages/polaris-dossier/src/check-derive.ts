@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
+import { checkShape, ref, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
@@ -582,6 +582,9 @@ function relationFieldVersionPaths(doc: Readonly<Record<string, unknown>>): stri
   return out;
 }
 
+/** A schema fault at or below a graph node's `unit`: the unit's own path, as group 1. */
+const UNIT_FAULT_PATH = /^(\$\.diagrams\[\d+\]\.nodes\[\d+\]\.unit)(?:\..*|\[.*)?$/u;
+
 /** Relation types (REQ-polaris-generation-034 version 2.19). In an earlier draft: `field-version` at a graph edge's `relation` and a graph
  * node's `unit`, in place of the schema finding at that path. In a v9 draft: a `schema` finding at a unit's directory name, name, job key
  * or service key past 256 code units, which the schema's code-point bound passes. */
@@ -590,16 +593,18 @@ function relationStructure(doc: Readonly<Record<string, unknown>>, add: (finding
     add({ kind: 'field-version', at, detail: `\`${at.endsWith(UNIT_FIELD) ? UNIT_FIELD : RELATION_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V9}` });
   }
   if (!hasRelationForm(doc['schemaVersion'])) return;
+  // Only a unit the schema passes (one of the six forms, each text within 256 code points) is tested here, so a unit gets one schema
+  // finding at most, at the node's `unit`, naming its first text past the bound.
   graphElements(doc, (member, element, at) => {
-    if (member !== 'nodes' || !isRecord(element[UNIT_FIELD])) return;
-    const unit = element[UNIT_FIELD];
-    for (const key of ['path', 'name', 'job', 'service']) {
-      const value = unit[key];
-      if (key === 'path' && unit['kind'] !== 'top-level-directory') continue;
-      if (typeof value === 'string' && value.length > UNIT_TEXT_LIMIT && [...value].length <= UNIT_TEXT_LIMIT) {
-        add({ kind: 'schema', at: `${at}.${UNIT_FIELD}.${key}`, detail: `must be 1 to ${UNIT_TEXT_LIMIT} code units; is ${value.length}` });
-      }
-    }
+    const unit = member === 'nodes' ? unitOf(element[UNIT_FIELD]) : undefined;
+    if (unit === undefined) return;
+    const texts = (['path', 'name', 'job', 'service'] as const).flatMap((key) => {
+      const value = (unit as Readonly<Record<string, unknown>>)[key];
+      return typeof value === 'string' && (key !== 'path' || unit.kind === 'top-level-directory') ? [[key, value] as const] : [];
+    });
+    if (texts.some(([, value]) => [...value].length > UNIT_TEXT_LIMIT)) return;
+    const over = texts.find(([, value]) => value.length > UNIT_TEXT_LIMIT);
+    if (over !== undefined) add({ kind: 'schema', at: `${at}.${UNIT_FIELD}`, detail: `\`${over[0]}\` must be 1 to ${UNIT_TEXT_LIMIT} code units; is ${over[1].length}` });
   });
 }
 
@@ -701,6 +706,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
   const unnamedOf = (relations: 'taken' | 'absent'): DraftSchemaWithDefs => ({
     root: (localDraftSchema(parameters, 'home', 'required', 'unnamed', 'taken', relations).root as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs });
   const unnamedV9 = unnamedOf('taken'), unnamedV8 = unnamedOf('absent');
+  // The detail the generic check gives a unit that names none of the six forms, read from the schema rather than restated.
+  const unitFormsDetail = checkShape({ root: ref('unit'), defs: current.defs }, {})[0]!.detail;
   const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent', 'absent');
   const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent', 'absent');
   const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
@@ -724,7 +731,7 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
         // read against the graph form with every kind permitted instead, each at its own path, as v6 reports them.
         const diagrams = list(doc['diagrams']);
-        const replaced = (error: { readonly path: string; readonly detail: string }) => {
+        const unnamed = (error: { readonly path: string; readonly detail: string }) => {
           const hero = heroOf(doc);
           if (error.path === '$.hero' && hero?.form === 'omitted') {
             // The outer sum reports at the member. Preserve the paragraph's own schema failures at its real path.
@@ -737,6 +744,16 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
           return checkShape(hasRelationForm(version) ? unnamedV9 : unnamedV8, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
         };
+        // A v9 or later node's `unit` of any other form or carrying any other member is one schema finding at the node's `unit` (version 2.19),
+        // whatever fault within it the generic check names: each fault below a unit is reported once, at the unit, with the oneOf detail.
+        const unitsReported = new Set<string>();
+        const replaced = !hasRelationForm(version) ? unnamed : (error: { readonly path: string; readonly detail: string }) => (unnamed(error) ?? [error]).flatMap((fault) => {
+          const unit = UNIT_FAULT_PATH.exec(fault.path)?.[1];
+          if (unit === undefined) return [fault];
+          if (unitsReported.has(unit)) return [];
+          unitsReported.add(unit);
+          return [{ path: unit, detail: unitFormsDetail }];
+        });
         const schema = hasHeroForm(version) ? current : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
         return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }

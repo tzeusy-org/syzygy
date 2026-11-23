@@ -40,9 +40,25 @@ export interface ExecutionChoiceSource {
   readonly choiceFor: (runDir: string) => Promise<{ readonly state: 'ok'; readonly choice: ExecutionChoice } | { readonly state: 'absent' | 'refused'; readonly why: string }>;
 }
 
+export type CredentialFindingKind =
+  | 'adapter-credential-readable'
+  | 'adapter-credential-configuration-refused'
+  | 'adapter-credential-undetermined';
+
+export type CredentialProbeOutcome =
+  | { readonly passed: true; readonly checked: number; readonly source: string }
+  | {
+    readonly passed: false;
+    readonly why: string;
+    /** Older injected probes have no recorded basis. Their refusal remains undetermined. */
+    readonly kind?: CredentialFindingKind;
+    /** Positive file count when a separate configuration failure also refused the probe. */
+    readonly readableAlongsideRefusal?: number;
+  };
+
 export interface CredentialProbe {
   /** An operating-system read attempt, as the operator's user, of every credential Syzygy's configuration holds for its typed adapters. */
-  readonly probe: () => Promise<{ readonly passed: true; readonly checked: number; readonly source: string } | { readonly passed: false; readonly why: string }>;
+  readonly probe: () => Promise<CredentialProbeOutcome>;
 }
 
 export interface PermittingArm {

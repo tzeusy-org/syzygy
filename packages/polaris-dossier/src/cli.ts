@@ -298,7 +298,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'one', noun: 'the repository URL' },
     run: async ({ positional: [url] }, ctx) => {
       const result = await preflight(url!, ctx.sources(), ctx.now());
-      if (!result.ok) return ctx.refused({ command: 'preflight', outcome: 'refused', reason: result.reason });
+      if (!result.ok) return ctx.refused(result.refusal);
       return ctx.report(result.report, result.report.outcome === 'ready' ? EXIT.clean : EXIT.refused);
     },
   },
@@ -470,7 +470,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     args: { kind: 'one', noun: RUN },
     run: ({ positional: [run] }, ctx) => {
       const result = runStatus(run!, ctx.now);
-      if (!result.ok) return ctx.refused({ command: 'status', outcome: 'refused', reason: result.reason, ...(result.refusals ? { refusals: result.refusals } : {}) });
+      if (!result.ok) return ctx.refused(result.refusal);
       return ctx.report(result.report, EXIT.clean);
     },
   },

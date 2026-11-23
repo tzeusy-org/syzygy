@@ -160,7 +160,8 @@ export type ManifestFactsInput =
 export interface WitnessInputs {
   readonly structure: StructureFacts;
   readonly manifest: ManifestFactsInput;
-  /** Whether a unit's path is one a secret detector matches or the screen denies: such an end makes coverage partial. */
+  /** Whether a unit's path is one a secret detector matches or the screen denies: such an end of a recognizer's relation makes coverage
+   * partial. Coverage for `contains` never reads it: its three counts decide it alone. */
   readonly hidden: (repositoryPath: string) => boolean;
 }
 
@@ -182,15 +183,16 @@ function joiningFact(relation: Witnessable, from: Unit, to: Unit, inputs: Witnes
   })?.id;
 }
 
-/** Whether coverage is complete, so that the absence of a joining fact is a challenge: for `contains`, the structure record derived with no
- * secret path left out, no submodule and no unit unlisted; for a recognizer's relation, the member derived with no fact unlisted and the
- * source unit's path a listed file entry of that recognizer, Inferred and dropping no value. An end at a hidden path makes it partial. */
+/** Whether coverage is complete, so that the absence of a joining fact is a challenge: for `contains`, exactly the structure record derived
+ * with no secret path left out, no submodule and no unit unlisted; for a recognizer's relation, the member derived with no fact unlisted and
+ * the source unit's path a listed file entry of that recognizer, Inferred and dropping no value, where an end at a hidden path (a
+ * `package-manifest`, `workflow-job` or `compose-service` unit's, the kinds the hidden-path rule names) makes it partial. */
 function coverageComplete(relation: Witnessable, from: Unit, to: Unit, inputs: WitnessInputs, rule: RuleId): boolean {
-  if ([pathOf(from), pathOf(to)].some((at) => at !== undefined && inputs.hidden(at))) return false;
   if (relation === 'contains') {
     const s = inputs.structure;
     return s.state === 'derived' && s.secretPathsLeftOut === 0 && s.submodules === 0 && s.unitsNotListed === 0;
   }
+  if ([pathOf(from), pathOf(to)].some((at) => at !== undefined && inputs.hidden(at))) return false;
   const m = inputs.manifest;
   if (m.state !== 'derived' || m.factsNotListed !== 0) return false;
   const source = pathOf(from);

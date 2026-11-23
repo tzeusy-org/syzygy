@@ -3,6 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { BoundedJsonError } from '@syzygy/polaris-generation-core/live';
 import { checkDraft } from './check.js';
 import { readBoundedFile, readFileAsSized } from './check-record-read.js';
 import { breachLog, stepInstants } from './close.js';
@@ -10,7 +11,7 @@ import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
 import { readExecutionChoice } from './execution-choice.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
-import { opensOf, patchFs } from './fs-patch.testkit.js';
+import { READ_CASES, growOnceSized, opensOf, patchFs, trackReads, underReadCase } from './fs-patch.testkit.js';
 import { blockingWhy, loadState, readMaxRepairCycles, readReviewCheck, readVerdict, runPolarisCli } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
@@ -62,33 +63,15 @@ const logPadded = (line: string, bytes: number): string => {
 
 /** The bytes `run` reads from `subject`, one total per time it opens it. */
 const bytesReadFrom = (subject: string, run: () => void): number[] => {
-  const opened = new Map<number, number>();
-  const totals: number[] = [];
-  const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
-    const fd = (original as (...args: unknown[]) => number)(file, ...rest);
-    opened.delete(fd);
-    if (file === subject) { opened.set(fd, totals.length); totals.push(0); }
-    return fd;
-  }) as typeof original);
-  const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
-    const read = (original as (...args: unknown[]) => number)(fd, ...rest);
-    const index = opened.get(fd);
-    if (index !== undefined) totals[index]! += read;
-    return read;
-  }) as typeof original);
-  try { run(); } finally { restoreRead(); restoreOpen(); }
-  return totals;
+  const reads = trackReads(subject);
+  try { run(); } finally { reads.restore(); }
+  return reads.totals;
 };
 
 /** Runs `run` while `subject` grows by a mebibyte once a descriptor's size is taken at exactly `bound` bytes. */
 const grownAfterSize = (subject: string, bound: number, run: () => void): void => {
-  let grown = false;
-  const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
-    const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
-    if (!grown && stats.isFile() && stats.size === bound) { grown = true; fs.appendFileSync(subject, '\n'.repeat(1_048_576)); }
-    return stats;
-  }) as typeof original);
-  try { run(); } finally { restore(); }
+  const growth = growOnceSized(subject, bound);
+  try { run(); } finally { growth.restore(); }
 };
 
 const PLANTS: readonly [string, (file: string) => void][] = [
@@ -119,7 +102,7 @@ const READERS: readonly Reader[] = [
   {
     name: 'runStatus (REQ-033: syzygy dossier status reads run.json)', bound: RUN_RECORD_BOUND, file: 'run.json',
     atBound: (bytes) => padded('[]', bytes),
-    read: (run) => { const result = runStatus(run); return result.ok ? 'ok' : result.reason.startsWith(`${run} holds no readable run.json`) ? result.reason : 'parsed'; },
+    read: (run) => { const result = runStatus(run); return result.ok ? 'ok' : result.refusal.reason.startsWith(`${run} holds no readable run.json`) ? result.refusal.reason : 'parsed'; },
     readAtBound: 'parsed',
     pastBound: ({ run }: { run: string }) => `${run} holds no readable run.json (larger than 65536 bytes)`,
     notRegular: ({ run }: { run: string }) => `${run} holds no readable run.json (not a regular file)`,
@@ -334,6 +317,48 @@ describe('the run-tree reader rule (syzygy-3efd.80): readLatestSite (the design 
     fs.writeFileSync(page, '<!doctype html>');
     expect(readLatestSite(run)).toEqual({ ok: true, number: 0, directory: path.join(run, 'site', '0'), files: new Map([['index.html', '<!doctype html>']]) });
   });
+
+  // The site's bound of 67,108,864 bytes, less the page files read before this one (finding 1 of the 2.18 code review): the first page
+  // is read under the whole bound, the next under what remains. Each regular file is sparse, so the 64 MiB costs no disk.
+  const sitePages = (pages: readonly [string, number][]): { run: string; files: string[] } => {
+    const run = tempDir('run-tree-read-site-bound-');
+    const dir = path.join(run, 'site', '0');
+    fs.mkdirSync(dir, { recursive: true });
+    const files = pages.map(([name, bytes]) => { const file = path.join(dir, name); fs.writeFileSync(file, ''); fs.truncateSync(file, bytes); return file; });
+    return { run, files };
+  };
+
+  it('refuses a one-page site whose page is one byte past 67,108,864 bytes, reading no byte of it', () => {
+    const { run, files } = sitePages([['index.html', 67_108_865]]);
+    let seen: unknown;
+    expect(bytesReadFrom(files[0]!, () => { seen = readLatestSite(run); })).toEqual([0]);
+    expect(seen).toEqual({ ok: false, reason: 'site 0 is larger than 67108864 bytes' });
+  });
+
+  it('reads a second page under what the first left of the bound: one byte past what remains is refused, reading no byte of it', () => {
+    const { run, files } = sitePages([['a.html', 1_000], ['b.html', 67_107_865]]);
+    let seen: unknown, first: number[] = [];
+    const second = bytesReadFrom(files[1]!, () => { first = bytesReadFrom(files[0]!, () => { seen = readLatestSite(run); }); });
+    expect(first).toEqual([1_000]);
+    expect(second).toEqual([0]);
+    expect(seen).toEqual({ ok: false, reason: 'site 0 is larger than 67108864 bytes' });
+  });
+
+  it('reads a second page of exactly what the first left of the bound, to its end', () => {
+    const { run, files } = sitePages([['a.html', 1_000], ['b.html', 67_107_864]]);
+    let seen: ReturnType<typeof readLatestSite> | undefined;
+    expect(bytesReadFrom(files[1]!, () => { seen = readLatestSite(run); })).toEqual([67_107_864]);
+    expect(seen?.ok && [...seen.files.keys()]).toEqual(['a.html', 'b.html']);
+    expect(seen?.ok && seen.files.get('b.html')!.length).toBe(67_107_864);
+  });
+
+  it('refuses a second page grown past what remains after its size was taken, reading one byte past what remains', () => {
+    const { run, files } = sitePages([['a.html', 1_000], ['b.html', 67_107_864]]);
+    let seen: unknown, reads: number[] = [];
+    grownAfterSize(files[1]!, 67_107_864, () => { reads = bytesReadFrom(files[1]!, () => { seen = readLatestSite(run); }); });
+    expect(reads).toEqual([67_107_865]);
+    expect(seen).toEqual({ ok: false, reason: 'site 0 is larger than 67108864 bytes' });
+  });
 });
 
 // The other readers of run.json, each on a run whose run.json is a FIFO: every one gives its outcome for a run record it cannot read, and
@@ -400,6 +425,28 @@ describe('the run-tree reader rule (syzygy-3efd.80): syzygy polaris over a state
   });
 });
 
+// Scenario "Supervisor state read under its bound" names --resume: past the tmux and view probes, a state it cannot read refuses it with
+// the stated words, without blocking, and writes nothing there (2.18 code review, note 10).
+it('--resume refuses a run whose state is a FIFO, after the tmux and view probes, without blocking, and writes nothing there', async () => {
+  const root = tempDir('run-tree-read-resume-');
+  const state = path.join(root, 'run-a.supervisor.json');
+  execFileSync('mkfifo', [state]);
+  launchProbe.mockImplementation(() => ({ status: 0, stdout: 'done\n' }));
+  vi.stubEnv('TMUX', undefined);
+  const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+  try {
+    expect(await runPolarisCli(['--resume', 'run-a', '--state-root', root])).toBe(1);
+    expect(stderr).toHaveBeenLastCalledWith(`syzygy polaris: refused: no launched run run-a under ${root}\n`);
+    expect(launchProbe.mock.calls.map((call) => [call[0], call[1][0]])).toEqual([['tmux', '-V'], ['bwrap', '--version'], ['bwrap', '--unshare-all']]);
+    expect(fs.lstatSync(state).isFIFO()).toBe(true);
+    expect(fs.readdirSync(root)).toEqual(['run-a.supervisor.json']);
+  } finally {
+    stderr.mockRestore();
+    vi.unstubAllEnvs();
+    launchProbe.mockReset();
+  }
+});
+
 it('resumes a live view using the supervisor state it already read', async () => {
   const root = tempDir('run-tree-read-resume-');
   const state = path.join(root, 'run-a.supervisor.json');
@@ -426,16 +473,26 @@ it('resumes a live view using the supervisor state it already read', async () =>
 });
 
 // Check's inventory-coverage advice reads the frozen inventory of record under 4,194,304 bytes: one it cannot read is an Unknown advice.
+// Every case of the Case line (2.18 code review, note 2); a regular file is NUL bytes, so one at the bound is read whole and then compared.
 describe('the run-tree reader rule (syzygy-3efd.80): the inventory-coverage advice', () => {
-  it.each(PLANTS)('is Unknown, without blocking, where the frozen inventory is %s', async (_what, plant) => {
+  it.each<[(typeof READ_CASES)[number], number[], string]>([
+    ['a FIFO', [0], 'the inventory of record could not be read or compared (NotARegularFileError)'],
+    ['a symbolic link to /dev/zero', [0], 'the inventory of record could not be read or compared (NotARegularFileError)'],
+    ['a directory', [0], 'the inventory of record could not be read or compared (NotARegularFileError)'],
+    ['one byte past its bound', [0], 'the inventory of record could not be read or compared (BoundedJsonError)'],
+    ['grown past its bound after its size was taken', [4_194_305], 'the inventory of record could not be read or compared (BoundedJsonError)'],
+    ['exactly at its bound', [4_194_304], 'the frozen inventory inventory/rev-0.json changed after it was counted'],
+  ])('reads the frozen inventory under 4,194,304 bytes: %s', async (kase, reads, why) => {
     const run = tempDir('run-tree-read-coverage-');
     fs.mkdirSync(path.join(run, 'inventory'));
-    plant(path.join(run, 'inventory', 'rev-0.json'));
-    const advice = await inventoryCoverageAdvice(run, {}, {
-      inventoryOfRecord: async () => ({ counts: true, file: 'inventory/rev-0.json', sha256: 'a'.repeat(64), revision: 0 }) as never,
-      sources: {} as never, now: 0, isSecretPath: () => false,
-    });
-    expect(advice).toMatchObject({ state: 'unknown', why: 'the inventory of record could not be read or compared (NotARegularFileError)' });
+    let advice: unknown;
+    expect(await underReadCase(kase, path.join(run, 'inventory', 'rev-0.json'), 4_194_304, async () => {
+      advice = await inventoryCoverageAdvice(run, {}, {
+        inventoryOfRecord: async () => ({ counts: true, file: 'inventory/rev-0.json', sha256: 'a'.repeat(64), revision: 0 }) as never,
+        sources: {} as never, now: 0, isSecretPath: () => false,
+      });
+    })).toEqual(reads);
+    expect(advice).toMatchObject({ state: 'unknown', why });
   });
 });
 
@@ -455,5 +512,10 @@ describe('the run-tree reader rule (syzygy-3efd.80): the bound a refusal names',
     let cause: unknown;
     try { readBoundedFile(file, 5); } catch (error) { cause = error; }
     expect(readCause(cause)).toBe('larger than 5 bytes');
+  });
+
+  it('names the error code, never an undefined bound, for a byte-limit refusal that carries no bound when the caller gives none', () => {
+    expect(readCause(new BoundedJsonError('byte-limit'))).toBe('byte-limit');
+    expect(readCause(new BoundedJsonError('byte-limit'), 7)).toBe('larger than 7 bytes');
   });
 });

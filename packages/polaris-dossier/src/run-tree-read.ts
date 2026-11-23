@@ -34,7 +34,8 @@ export const RUN_TREE_BOUNDS = Object.freeze({
 export function readCause(cause: unknown, bound?: number): string {
   if (cause instanceof NotARegularFileError) return 'not a regular file';
   if (cause instanceof PastBoundError) return `larger than ${cause.bound} bytes`;
-  if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return `larger than ${bound} bytes`;
+  // A byte-limit refusal that does not carry its bound names the bound the caller gives; with none given, the words are the code itself.
+  if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return bound === undefined ? cause.code : `larger than ${bound} bytes`;
   return (cause as NodeJS.ErrnoException | undefined)?.code ?? 'unknown-error';
 }
 

@@ -479,8 +479,7 @@ async function deliverReview(
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
-  const delivered = deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now);
-  return delivered.ok ? delivered : refuse('write', delivered.reason);
+  return deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now);
 }
 
 export interface LaunchFormRequest {
