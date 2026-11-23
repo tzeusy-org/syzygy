@@ -647,8 +647,8 @@ describe('protected URL session audit', () => {
   });
 
   it.each([
-    { cost: 150, ok: true, declarations: 4, checks: 26 },
-    { cost: 250, ok: false, declarations: 2, checks: 20 },
+    { cost: 320, ok: true, declarations: 4, checks: 14 },
+    { cost: 380, ok: false, declarations: 3, checks: 14 },
   ])('keeps one setup cutoff through all declarations at $cost ms per check', async ({ cost, ok, declarations, checks }) => {
     const f = fixture();
     let elapsed = 0;
@@ -662,6 +662,28 @@ describe('protected URL session audit', () => {
       expect(result.summary()).toMatchObject({ declarations, durableRecords: declarations, limits: { milliseconds: 5_000 } });
       expect(current).toHaveBeenCalledTimes(checks);
     } finally { vi.useRealTimers(); }
+  });
+
+  it('does not count a declaration when its final prefix read withdraws setup authority', async () => {
+    const f = fixture(), p = await prototype(), read = p.read, sync = p.sync;
+    let withdrawn = false;
+    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: Parameters<FileHandle['read']>) {
+      const result = await read.apply(this, args);
+      if (!withdrawn && fs.fstatSync(this.fd).isFile() && result.bytesRead > 0) {
+        withdrawn = true;
+        f.revoke();
+      }
+      return result;
+    });
+    const syncs = vi.spyOn(p, 'sync').mockImplementation(async function(this: FileHandle) { return sync.call(this); });
+    const result = await createUrlSessionAudit(f.options);
+    if (result.ok) writers.push(result);
+    expect(withdrawn).toBe(true);
+    expect(syncs).toHaveBeenCalledTimes(3);
+    expect(result.ok).toBe(false);
+    expect(result.summary()).toMatchObject({ poisoned: true, declarations: 0, durableRecords: 0, tail: 'Unknown' });
+    expect(fs.statSync(f.file('author')).size).toBeGreaterThan(0);
+    expect(fs.statSync(f.file('inventory')).size).toBe(0);
   });
 
   it('does not open private audit files after initial authority refusal', async () => {

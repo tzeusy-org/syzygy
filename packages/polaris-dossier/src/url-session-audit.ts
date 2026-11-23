@@ -788,8 +788,10 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       }
       const intent: ManagedAppend = { role, prefix: Buffer.concat([segment.prefix, bytes]), full: null };
       try {
-        const tail = await io(deadline, async (): Promise<SegmentPrefix> => {
-          // Each sample after a filesystem stage also admits the next stage.
+        const append = async (): Promise<SegmentPrefix> => {
+          // The private declarations use the original setup cutoff. The
+          // checked append still samples authority before writing and before
+          // syncing its new bytes, and again after checking the complete tail.
           await inspectIdentities(deadline);
           await checkEffectCurrent(deadline);
           verifyAppendNames(deadline);
@@ -810,13 +812,17 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           intent.full = full;
           await checkEffectCurrent(deadline);
           await segment.file.sync();
-          await checkEffectCurrent(deadline);
+          // Setup already synced and verified these four private names. The
+          // directory sync changes no name, and a stale declaration cannot
+          // become a counted prefix or expose a writer without the final check.
+          if (declaration) checkBoundary(); else await checkEffectCurrent(deadline);
           await directory.sync();
-          await checkEffectCurrent(deadline);
+          if (declaration) checkBoundary(); else await checkEffectCurrent(deadline);
           await inspectIdentities(deadline, { ...full, role });
-          if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
+          if (declaration || checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
           return full;
-        });
+        };
+        const tail = declaration ? await setupIo(append) : await io(deadline, append);
         verifyAppendNames(deadline, { ...tail, role });
         checkBoundary();
         segment.prefix = tail.prefix; segment.modified = tail.modified; segment.changed = tail.changed;
