@@ -22,5 +22,18 @@
     "logSha256": "2f725a902562e7ba89012e70d8328aa9821eb700000533d05e37f2a7f5c2ce0f",
     "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
   },
-  "nativeRecoveryAcceptance": "Unknown"
+  "nativeRecoveryAcceptance": "Unknown",
+  "reviewedTypecheck": {
+    "subject": "07902e4c59b0f9dc3fa14feb1063dc9c83e6f257",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "passed": true
+  },
+  "ownedDeliveryStop": {
+    "subject": "516d56f69c5943dd414d4f9d13fd98a61d6cbada",
+    "logSha256": "699678ef5586985413387f0654dadc877baacd6990cc722d3e564e8b3aa6394d",
+    "fixtureSha256": "19ea5c088cee829016269bda1bc763e26372eafad37154c7ca9329fad1c11ff7",
+    "outcome": "failed",
+    "reason": "role-ended",
+    "renderStarted": false
+  }
 }
