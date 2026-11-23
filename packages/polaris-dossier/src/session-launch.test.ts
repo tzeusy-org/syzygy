@@ -56,7 +56,7 @@ const filesystem = vi.hoisted(() => ({
   beforeClose: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
   afterClose: undefined as ((file: unknown) => void) | undefined,
   taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
-  storageListing: undefined as { directory: string; afterFirstFile: () => void } | undefined,
+  storageListing: undefined as { directory: string; afterFirstFile?: () => void; beforeClose?: () => Promise<void> } | undefined,
 }));
 vi.mock('node:fs/promises', async importOriginal => {
   const actual = await importOriginal<typeof import('node:fs/promises')>();
@@ -64,12 +64,28 @@ vi.mock('node:fs/promises', async importOriginal => {
     ...actual,
     opendir: (...args: Parameters<typeof actual.opendir>) => {
       const task = args[0] === filesystem.taskListing?.procPath ? filesystem.taskListing : undefined;
-      const storage = filesystem.storageListing;
-      const observeStorage = storage !== undefined && typeof args[0] === 'string' && args[0].startsWith('/proc/self/fd/')
-        && readlinkSync(args[0]) === storage.directory;
-      const afterFirst = observeStorage ? storage.afterFirstFile : task?.afterFirstTask;
-      if (task === undefined && afterFirst === undefined) return actual.opendir(...args);
+      const configured = filesystem.storageListing;
+      const storage = configured !== undefined && typeof args[0] === 'string' && args[0].startsWith('/proc/self/fd/')
+        && readlinkSync(args[0]) === configured.directory ? configured : undefined;
+      if (task === undefined && storage === undefined) return actual.opendir(...args);
       return actual.opendir(task?.fixturePath ?? args[0], args[1]).then(dir => {
+        if (storage !== undefined) {
+          const { afterFirstFile, beforeClose } = storage;
+          if (afterFirstFile !== undefined) {
+            const read = dir.read.bind(dir);
+            let reads = 0;
+            dir.read = (async () => {
+              if (reads++ === 1) afterFirstFile();
+              return read();
+            }) as typeof dir.read;
+          }
+          if (beforeClose !== undefined) {
+            const close = dir.close.bind(dir);
+            dir.close = (async () => { try { await beforeClose(); } finally { await close(); } }) as typeof dir.close;
+          }
+          return dir;
+        }
+        const afterFirst = task?.afterFirstTask;
         if (afterFirst === undefined) return dir;
         const iterate = dir[Symbol.asyncIterator].bind(dir);
         dir[Symbol.asyncIterator] = async function* () {
@@ -1154,6 +1170,75 @@ describe('prepared private CLI launch',()=>{
       census.restore();
     }
   }, 15_000);
+
+  it.each(['closed', 'close-failed', 'tail-directory'] as const)(
+    'joins the storage listing at EOF for %s while keeping the anchor for tail recursion', async disposition => {
+      const f = await launchFixture();
+      const confirm = vi.fn((current: boolean) => current);
+      const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: { verify: () => true, confirm } });
+      const observation = observeUrlSessionInspectionForTest(preparation)!;
+      let toolEntered!: (entered: true) => void, releaseTool!: () => void;
+      let listingEntered!: (entered: true) => void, releaseListing!: () => void;
+      let anchorClosed!: (closed: true) => void;
+      const enteredTool = new Promise<true>(resolve => { toolEntered = resolve; });
+      const enteredListing = new Promise<true>(resolve => { listingEntered = resolve; });
+      const closedAnchor = new Promise<true>(resolve => { anchorClosed = resolve; });
+      const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+      const heldListing = new Promise<void>(resolve => { releaseListing = resolve; });
+      const host = await f.start({ beforeTool: () => { toolEntered(true); return heldTool; } });
+      let workOpens = 0;
+      const census = await isolateStorageRoots(f.launch.view, () => { workOpens++; });
+      filesystem.storageListing = { directory: census.home, beforeClose: () => {
+        listingEntered(true);
+        return heldListing.then(() => {
+          if (disposition === 'close-failed') throw new Error('owned listing close failure');
+        });
+      } };
+      filesystem.afterClose = file => { if (file === census.home) anchorClosed(true); };
+      const tail = 'owned-home-entry', lstat = fsPromises.lstat;
+      const replaceTail = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
+        const [file] = args;
+        if (disposition === 'tail-directory' && typeof file === 'string' && file.startsWith('/proc/self/fd/') && path.basename(file) === tail) {
+          unlinkSync(file);
+          mkdirSync(file);
+          writeFileSync(path.join(file, 'owned-child'), 'tail');
+        }
+        return lstat(...args);
+      });
+      vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+      try {
+        const child = await launchRestrictedUrlSession({ preparation, host: { ...host, close: () => { releaseTool(); return host.close(); } } });
+        cleanup.push(child.stop);
+        try {
+          const ended = child.finished.then(() => false);
+          expect(await Promise.race([enteredTool, ended])).toBe(true);
+          writeFileSync(path.join(census.work, 'owned-entry'), 'owned');
+          if (disposition === 'tail-directory') writeFileSync(path.join(census.home, tail), 'directory follows');
+          vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
+          const sample = child.waitForSample();
+          expect(await Promise.race([enteredListing, ended])).toBe(true);
+          if (disposition === 'tail-directory') {
+            const poll = new Promise<false>(resolve => setImmediate(() => resolve(false)));
+            expect(await Promise.race([closedAnchor, poll])).toBe(false);
+          } else expect(await Promise.race([closedAnchor, ended])).toBe(true);
+          expect(workOpens).toBe(0);
+          expect(confirm).not.toHaveBeenCalled();
+          expect(observation().latest?.phases.storage?.outcome).toBeUndefined();
+          releaseListing();
+          expect(await sample).toBe(disposition !== 'close-failed');
+          if (disposition !== 'close-failed') {
+            expect(workOpens).toBe(1);
+            expect(confirm).toHaveBeenCalledExactlyOnceWith(true);
+            expect((await child.stop()).sampledStorageBytes).toBe(disposition === 'tail-directory' ? 9 : 5);
+          } else {
+            expect(workOpens).toBe(0);
+            expect(confirm).not.toHaveBeenCalled();
+            expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
+          }
+        } finally { releaseListing(); releaseTool(); await child.stop(); }
+      } finally { vi.useRealTimers(); replaceTail.mockRestore(); census.restore(); }
+    }, 15_000,
+  );
 
   it('refuses a task census when an opened listing disappears partway through', async () => {
     const f = await launchFixture();

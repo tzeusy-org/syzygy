@@ -309,6 +309,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
       throw error;
     });
     const batch: { file: string; sample: Promise<Stats> }[] = [];
+    let listingClose: Promise<void> | undefined;
     try {
       checkCensus();
       const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
@@ -345,29 +346,46 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
           if (!Number.isSafeInteger(bytes) || bytes > limits.storageBytes) return;
         }
       };
-      for await (const item of iterator) {
-        // Recurse in directory order. Dirent type only schedules reads.
-        // The descriptor-relative lstat still decides the entry's type.
-        if (!item.isFile()) {
-          await inspect();
-          if (bytes > limits.storageBytes) return;
+      let reachedEnd = false, processingEntry = false, entryFailed = false;
+      try {
+        for (let item = await iterator.read(); item !== null; item = await iterator.read()) {
+          processingEntry = true;
+          // Recurse in directory order. Dirent type only schedules reads.
+          // The descriptor-relative lstat still decides the entry's type.
+          if (!item.isFile()) {
+            await inspect();
+            if (bytes > limits.storageBytes) return;
+          }
+          checkCensus();
+          if (++entries > limits.entries) throw refused();
+          const child = path.join(base, item.name), sample = lstat(child);
+          void sample.catch(() => {}); // The batch handles failures after settling.
+          batch.push({ file: child, sample });
+          if (!item.isFile() || batch.length === STORAGE_STAT_BATCH || entries === limits.entries) {
+            await inspect();
+            if (bytes > limits.storageBytes) return;
+          }
+          processingEntry = false;
         }
-        checkCensus();
-        if (++entries > limits.entries) throw refused();
-        const child = path.join(base, item.name), sample = lstat(child);
-        void sample.catch(() => {}); // The batch handles failures after settling.
-        batch.push({ file: child, sample });
-        if (!item.isFile() || batch.length === STORAGE_STAT_BATCH || entries === limits.entries) {
-          await inspect();
-          if (bytes > limits.storageBytes) return;
-        }
+        reachedEnd = true;
+      } catch (error) {
+        entryFailed = processingEntry;
+        throw error;
+      } finally {
+        const close = iterator.close();
+        // At EOF without a tail batch, the independent iterator and anchor
+        // can close together. A tail stat can still require the held anchor.
+        if (reachedEnd && batch.length === 0) listingClose = close.catch(() => { closeFailed = true; });
+        else if (entryFailed) await close.catch(() => {}); // Preserve the existing entry refusal.
+        else await close;
       }
       if (batch.length !== 0) await inspect();
     } finally {
       if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));
-      // Its iterator and all anchored reads have settled. Start closing now
+      // Its enumeration and anchored reads have settled. Start closing now
       // and let one other directory use the time before joining both closes.
       closing.push(handle.close().catch(() => { closeFailed = true; }));
+      if (listingClose !== undefined) await listingClose;
       if (closing.length === 2) await drainCloses();
     }
   };
