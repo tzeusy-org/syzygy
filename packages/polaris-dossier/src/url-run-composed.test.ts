@@ -1105,17 +1105,34 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       designBegins: beginOrdered.mock.calls.length, designBeginsAfterResume: resumedBegins.mock.calls.length });
     eligiblePhase = 'start';
     const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
+      const inspections = initialRoleInspections();
       const audit = [];
+      const auditReadFailures: { role: string; reason: 'file-unavailable' | 'incomplete-row' | 'invalid-row' }[] = [];
       for (const role of ['author', 'inventory', 'fidelity', 'design']) {
-        const text = await fs.readFile(path.join(f.hidden, `sessions-${role}.jsonl`), 'utf8').catch(() => '');
-        for (const line of text.split('\n').filter(Boolean)) {
-          const row = JSON.parse(line) as { event: { kind: string; payload: unknown } };
-          audit.push({ role, kind: row.event.kind, payload: row.event.payload });
+        const text = await fs.readFile(path.join(f.hidden, `sessions-${role}.jsonl`), 'utf8').catch(() => null);
+        if (text === null) {
+          auditReadFailures.push({ role, reason: 'file-unavailable' });
+          continue;
+        }
+        const lines = text.split('\n');
+        if (lines.pop() !== '') auditReadFailures.push({ role, reason: 'incomplete-row' });
+        for (const line of lines) {
+          try {
+            const row: unknown = JSON.parse(line);
+            if (!isRecord(row) || !isRecord(row.event) || typeof row.event.kind !== 'string') {
+              auditReadFailures.push({ role, reason: 'invalid-row' });
+              break;
+            }
+            audit.push({ role, kind: row.event.kind, payload: row.event.payload });
+          } catch {
+            auditReadFailures.push({ role, reason: 'invalid-row' });
+            break;
+          }
         }
       }
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
-      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit,
-        initialRoleInspections: initialRoleInspections() }));
+      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, auditReadFailures, initialDesignAudit,
+        initialRoleInspections: inspections }));
     }); cleanup.push(controller.stop);
     expect(Object.keys(initialRoleInspections())).toEqual(['author', 'inventory', 'fidelity']);
     expect(handoffStates[0]).toBe('unknown');
