@@ -225,8 +225,8 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     render = reproduced;
     if (reproduced === null || !(await input.current())) throw refused();
     const renderCurrent = () => isUrlDesignProductLeaseOpen(reproduced.product);
-    // Reproduction can spend the earlier preparation's entire lifetime.
-    // Any replacement still probes the exact view before real sockets bind.
+    // Reproduction can leave too little setup time for host binding and the
+    // launch checks. A replacement probes the exact view before binding.
     const preparation = resumedPreparation === undefined ? await prepare()
       : await finishUrlSessionPreparation(resumedPreparation, async expectedDirectoryIdentities => {
         if (!renderCurrent()) throw refused();

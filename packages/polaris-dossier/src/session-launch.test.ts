@@ -856,7 +856,10 @@ describe('prepared private CLI launch',()=>{
     await expect(launchRestrictedUrlSession({preparation,host})).rejects.toThrow('url-session-launch-refused');
   },20000);
 
-  it('reprobes an expired unused preparation before real host binding and spawns only the fresh one', async () => {
+  it.each([
+    { state: 'short-lived', elapsed: URL_LAUNCH_LIMITS.setupMilliseconds * 3 / 4 },
+    { state: 'expired', elapsed: URL_LAUNCH_LIMITS.setupMilliseconds + 1 },
+  ])('reprobes a $state unused preparation before binding and spawns only the fresh one', async ({ elapsed }) => {
     const f = await launchFixture();
     const prepare = vi.fn((expectedDirectoryIdentities?: readonly string[]) => prepareRestrictedUrlSession({
       ...f.launch, ...(expectedDirectoryIdentities === undefined ? {} : { expectedDirectoryIdentities }),
@@ -867,7 +870,7 @@ describe('prepared private CLI launch',()=>{
     expect(prepare).toHaveBeenCalledTimes(1);
 
     const now = performance.now.bind(performance);
-    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + URL_LAUNCH_LIMITS.setupMilliseconds + 1);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + elapsed);
     try {
       const preparation = await finishUrlSessionPreparation(earlier, prepare);
       expect(preparation).not.toBe(earlier);

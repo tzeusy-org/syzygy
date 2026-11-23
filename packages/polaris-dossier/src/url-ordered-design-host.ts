@@ -25,7 +25,7 @@ export interface OrderedDesignHostOptions {
   readonly brokerMachine: SessionMachineTransport;
   readonly relayMachine: SessionMachineTransport;
   readonly current: () => boolean | Promise<boolean>;
-  /** Extra same-turn authority when an expired early preparation was replaced. */
+  /** Extra same-turn authority when an early preparation was replaced. */
   readonly startupCurrent?: () => boolean;
   /** Checked product parents and host scaffolding, independently of role text. */
   readonly admit: (checks: OrderedDesignRequestChecks, replies: readonly ReplyIdentity[]) => SessionAdmission;

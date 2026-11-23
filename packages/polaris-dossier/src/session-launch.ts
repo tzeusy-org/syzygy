@@ -297,13 +297,14 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
   return receipt;
 }
 
-/** Select an unused preparation before binding the real host. An expired
- * preparation may be replaced by another complete inert probe. */
+/** Select an unused preparation before binding the real host. Reserve the
+ * latter half of the setup window for host binding and launch verification.
+ * A preparation with less time left gets a complete inert reprobe. */
 export async function finishUrlSessionPreparation(earlier: UrlSessionPreparation,
   prepare: (expectedDirectoryIdentities: readonly string[]) => Promise<UrlSessionPreparation>): Promise<UrlSessionPreparation> {
   const prepared = preparations.get(earlier);
   if (prepared === undefined) throw refused();
-  if (performance.now() < prepared.expires) return earlier;
+  if (prepared.expires - performance.now() > prepared.limits.setupMilliseconds / 2) return earlier;
   preparations.delete(earlier);
   inspectionTraces.delete(earlier);
   const replacement = await prepare(prepared.directories);
