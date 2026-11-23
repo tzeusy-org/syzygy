@@ -205,18 +205,23 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       && hostResult.status === 'fulfilled' && hostResult.value?.termination === 'settled' && hostResult.value.pendingInvocations === 0;
   })();
   try {
-    // The private render may perform synchronous policy and product checks.
-    // Complete it before starting the design process and its resource sampler.
-    // Delivery below still rechecks the live product and the actual launch.
+    const prepare = async () => {
+      const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
+        expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
+        current: input.current, audit: payload => input.audit.append({ kind: 'launch-attempt', role: 'design', scope, payload }),
+        ...(input.inspectionAuthority === undefined ? {} : { inspectionAuthority: input.inspectionAuthority }),
+        canaries: input.canaries, hostLoopbackPort: input.probePort });
+      if (preparation.commandSha256 !== input.plan.declaration.commandSha256
+        || preparation.viewSha256 !== input.plan.declaration.viewSha256) throw refused();
+      return preparation;
+    };
+    // The first resumed Design launch registers fresh history before delivery.
+    // Finish its inert namespace probe before starting the protected render lease.
+    const firstResumedLaunch = input.generation !== undefined && input.firstLaunch === null;
+    const resumedPreparation = firstResumedLaunch ? await prepare() : undefined;
     render = await input.reproduce();
     if (render === null || !(await input.current())) throw refused();
-    const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
-      expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
-      current: input.current, audit: payload => input.audit.append({ kind: 'launch-attempt', role: 'design', scope, payload }),
-      ...(input.inspectionAuthority === undefined ? {} : { inspectionAuthority: input.inspectionAuthority }),
-      canaries: input.canaries, hostLoopbackPort: input.probePort });
-    if (preparation.commandSha256 !== input.plan.declaration.commandSha256
-      || preparation.viewSha256 !== input.plan.declaration.viewSha256) throw refused();
+    const preparation = resumedPreparation ?? await prepare();
     let admission: SessionAdmission | null = null;
     host = await startOrderedDesignHost({ controller: activation, activationDeadline: Math.min(input.deadline, input.now() + 20_000),
       profile, subject: { binding: profile.input.binding, project: 'project:syzygy', pin: input.pin, principal: input.principal },
