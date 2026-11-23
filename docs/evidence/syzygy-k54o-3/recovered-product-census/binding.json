@@ -1,0 +1,61 @@
+{
+  "adoption": "A-155",
+  "review": {
+    "commit": "b45b3c7c9cf8bf097176e811b479c7b415b205d6",
+    "tree": "d03825c8fcf32d6d0e8a8cd43a82bd7dd96a4bb9",
+    "base": "9e2093d0cc825ad3209c635155f830ef8ff856b9",
+    "reviewDiffSha256": "f4af7e0eb4a1c85f576a25d158b785c6866147a1233fb2c8c99e4e642e8c7831",
+    "fullIndexDiffSha256": "4cdae5de6d5e820561a7fd0fa656f61be9aa3a5c8b68c361ac374b91e1e56636",
+    "source": "packages/polaris-dossier/src/url-run-artifacts.ts",
+    "sourceSha256": "a8deb4dd7a9af30a9dc48ddc4af71204375f9b4ca0626fc7de3c4ca8c52c836e",
+    "raw": "docs/reviews/F3-RECOVERED-PRODUCT-CENSUS-REVIEW-RAW.md",
+    "rawSha256": "c78ff19bcee0bec167c9ec93bc17f57c4aa288ed9160eee27231b0a6422f9d4e",
+    "verdict": "PASS"
+  },
+  "comparison": {
+    "method": "Read-only descriptor and committed-policy observation with the retained eligible fixture population, two runs of each callback placement.",
+    "scriptSha256": "c12a3cd27728d1063a97d407366bbd7eace6ba4b18a17bd90c8874d27594388b",
+    "subject": "03109e3806100d53e103ab6f800105ac6000c4351d564ed1c3e09a361f32a3d9",
+    "records": 23,
+    "results": [
+      {
+        "name": "per-descriptor",
+        "samples": 69,
+        "ms": 2424.841
+      },
+      {
+        "name": "bracketed",
+        "samples": 2,
+        "ms": 108.533
+      },
+      {
+        "name": "bracketed",
+        "samples": 2,
+        "ms": 82.383
+      },
+      {
+        "name": "per-descriptor",
+        "samples": 69,
+        "ms": 3236.988
+      }
+    ]
+  },
+  "verification": {
+    "subject": "b45b3c7c9cf8bf097176e811b479c7b415b205d6",
+    "typecheck": "passed",
+    "focused": [
+      {
+        "tier": "unit",
+        "passed": 20,
+        "logSha256": "1ff07b39e1c1c35c84e2033104dec31cb0f52032ee609c37afb245c4577a483a"
+      },
+      {
+        "tier": "integration",
+        "passed": 72,
+        "logSha256": "70fcd694e767325efde50d5eaf8f709321c707ca7150ea4a375600e9c908bbf3"
+      }
+    ],
+    "nativeReplay": "refused before Design delivery or recovery",
+    "durableResume": "Unknown"
+  }
+}
