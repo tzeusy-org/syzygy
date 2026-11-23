@@ -1,0 +1,101 @@
+{
+  "bead": "syzygy-bpyt.64",
+  "finding": "PR #548 independent round-2 N1",
+  "subjectCommit": "54113438184e62c9754f8e72c5f5f52bba72fbd5",
+  "reviewedCommit": "4d92ac9518dd60cdd124525c3e36c086ccd5e425",
+  "review": {
+    "path": "docs/reviews/R-GP-IMPL-OBJECT-ISO-HELPERS-2-RAW.md",
+    "sha256": "2693097ed4d5929d979d03944c39b45bba471e815dac034430727b505554590c"
+  },
+  "repair": {
+    "path": "docs/evidence/object-iso-helpers-review-2026-10-28/r2/tools/sm4-fix-lines.txt",
+    "sha256": "823d7ef698cb546a2f717d06496d5926b05d065c4c33c0c23599af2aec4d146e",
+    "addedLines": 3
+  },
+  "strictPredecessor": {
+    "commit": "945c13f9a222e995003cbd7bfc8fe5a8090a138a",
+    "sha256": "fbcee6fc821dfb35f7461f0fa5cbab4eb7e828d9eef1d866cd48b8db51adb942",
+    "successorAddedLines": 8
+  },
+  "tool": {
+    "path": "docs/evidence/syzygy-bpyt-64/site-equivalence.mjs",
+    "sha256": "f0725ee9ef46f225bf917fd38c136c42036364d97d0eb54ce2e30fb3064cf7ff"
+  },
+  "replay": {
+    "path": "docs/evidence/syzygy-bpyt-64/build-record.py",
+    "sha256": "3132fc0619b28fa24ec8756b8923387bc48a7820a04107763a87f5c8db87011f"
+  },
+  "historicalPair": {
+    "base": "81862261ddbc2b3c8e8481851f3c27129217d477",
+    "head": "22142d9f8731f1494258bfaa6b58ab0c24a2e607",
+    "reportSha256": "7864c27fb50eb2ef483e8ff63cb5a8804879572258b6f4c8161af5fdde007726",
+    "changedSourceFiles": 22,
+    "modified": 20,
+    "equal": 19,
+    "notEqual": [
+      "packages/polaris-dossier/src/iso-of.ts",
+      "packages/support/src/index.ts",
+      "packages/support/src/is-record.ts"
+    ]
+  },
+  "controls": [
+    {
+      "generation": "SM4",
+      "subjectCommit": "2d9039bbde4371ce9eb7ed3fb0c3315ff3a76818",
+      "selftestExit": 0,
+      "pairExit": 1
+    },
+    {
+      "generation": "successor",
+      "subjectCommit": "54113438184e62c9754f8e72c5f5f52bba72fbd5",
+      "selftestExit": 0,
+      "pairExit": 1
+    }
+  ],
+  "mutations": [
+    {
+      "id": "R2-M4-iso-import-first-line-only",
+      "generation": "SM4",
+      "subjectCommit": "2d9039bbde4371ce9eb7ed3fb0c3315ff3a76818",
+      "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+      "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+      "new": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/, '');",
+      "mutatedSha256": "e7998fd746d26623f2538aa2b513f2ebbc7dc78ce6393854a4fc4baba0ccaec9",
+      "selftestExit": 0,
+      "failedAssertion": null
+    },
+    {
+      "id": "R2-M5-iso-import-any-source",
+      "generation": "SM4",
+      "subjectCommit": "2d9039bbde4371ce9eb7ed3fb0c3315ff3a76818",
+      "toolSha256": "121a3d57cfc8eb5375858b80ba1ec84fdf2d62ee8098979253d12fd37809ac00",
+      "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+      "new": "out = out.replace(/^import \\{ isoOf \\} from '[^']*';\\n/m, '');",
+      "mutatedSha256": "ba9e86c0c39231a9025673b9a6b0505bf1c2024f5e3092824cbcc586687871c0",
+      "selftestExit": 0,
+      "failedAssertion": null
+    },
+    {
+      "id": "R2-M4-iso-import-first-line-only",
+      "generation": "successor",
+      "subjectCommit": "54113438184e62c9754f8e72c5f5f52bba72fbd5",
+      "toolSha256": "f0725ee9ef46f225bf917fd38c136c42036364d97d0eb54ce2e30fb3064cf7ff",
+      "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+      "new": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/, '');",
+      "mutatedSha256": "319b9d605dfe9aa35603292a5d7e4742dae04d3420bebb568c687dbf6438e87b",
+      "selftestExit": 1,
+      "failedAssertion": "Error: selftest: an isoOf import after another import is equal"
+    },
+    {
+      "id": "R2-M5-iso-import-any-source",
+      "generation": "successor",
+      "subjectCommit": "54113438184e62c9754f8e72c5f5f52bba72fbd5",
+      "toolSha256": "f0725ee9ef46f225bf917fd38c136c42036364d97d0eb54ce2e30fb3064cf7ff",
+      "old": "out = out.replace(/^import \\{ isoOf \\} from '\\.\\/iso-of\\.js';\\n/m, '');",
+      "new": "out = out.replace(/^import \\{ isoOf \\} from '[^']*';\\n/m, '');",
+      "mutatedSha256": "fb114597f7604df06ff0b809011216b11eb5f3fc759ac2197ba8fa9f7b23c02b",
+      "selftestExit": 1,
+      "failedAssertion": "Error: selftest: an isoOf imported from another module is not equal"
+    }
+  ]
+}
