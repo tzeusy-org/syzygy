@@ -1,0 +1,55 @@
+{
+  "subject": "1630803a340616695f6cf0f96cc9e62e68f10c4b",
+  "base": "7f85af89436078516a98e040ae1a5673fee820a7",
+  "fullBinaryDiffSha256": "3486b323f60a02fab80b7a87458b2b46554829cfee1a5b9b81e17a670f464c22",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-RESUMED-ORIGIN-METADATA-REVIEW-RAW.md",
+    "rawSha256": "2abf1ebf9fc51d5f21383854432656a24a993e4cca7bc0491e4dd02a507a131d"
+  },
+  "validation": {
+    "typecheck": "passed",
+    "originLedger": {
+      "passed": 21,
+      "total": 21
+    },
+    "runOrigins": {
+      "passed": 6,
+      "total": 6
+    }
+  },
+  "mutations": {
+    "nested_current": {
+      "before": [
+        "      assertSubject(lookup(receipt), bytes);",
+        "      return receipt;"
+      ],
+      "after": [
+        "      origins(receipt, bytes);",
+        "      return receipt;"
+      ],
+      "failed": 1,
+      "skipped": 20,
+      "total": 21,
+      "logSha256": "a486361b264878ff89020d47a9113aa146b8f6149fb1450ea7fc503c4ff3e20a",
+      "subject": "1630803a340616695f6cf0f96cc9e62e68f10c4b"
+    },
+    "omit_exact_subject": {
+      "before": [
+        "      assertSubject(lookup(receipt), bytes);",
+        "      return receipt;"
+      ],
+      "after": [
+        "      return receipt;"
+      ],
+      "failed": 1,
+      "skipped": 20,
+      "total": 21,
+      "logSha256": "2da762a516a88cbb2fadf71d2a6e60b09dfc404fc965b66aa7fe51430c5ab6e8",
+      "subject": "1630803a340616695f6cf0f96cc9e62e68f10c4b"
+    }
+  },
+  "timedPredecessor": "docs/evidence/syzygy-k54o-3/native-recovery-14e7ea4b5/timed-publication-replay.json",
+  "nativeLatency": "Unknown"
+}

@@ -1,0 +1,59 @@
+{
+  "subject": "756bf2752c6fe5bfbe417f81036ed1ac6b28e34a",
+  "base": "1630803a340616695f6cf0f96cc9e62e68f10c4b",
+  "fullBinaryDiffSha256": "dfb7e57c3feef7b1e06f8140d7585b1819271aa490686b7ddb20057e5a1cf13c",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-RESUMED-DESIGN-PEER-ACTIVATION-REVIEW-RAW.md",
+    "rawSha256": "cde7d299f4a745c22dbae21c6fbfd4eaf5aad31b059369adfe505d738087130a"
+  },
+  "validation": {
+    "typecheck": {
+      "outcome": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "focusedIntegration": {
+      "passed": 63,
+      "total": 63,
+      "logSha256": "9c9e0008f51e179116eb105d040905255bf9ed23f856bd209bf94b0bc8efa24a"
+    },
+    "sourceGuard": {
+      "passed": 11,
+      "total": 11,
+      "logSha256": "0f9096ab934f413920750fa6341982781f20f7de66df1ec30a78e228989479c3"
+    }
+  },
+  "mutations": {
+    "ignore_activation": {
+      "before": [
+        "    if (!(await waitForActivation(state.options.launch)) || !stillOpening()) return false;"
+      ],
+      "after": [
+        "    void waitForActivation(state.options.launch);",
+        "    if (!stillOpening()) return false;"
+      ],
+      "failed": 1,
+      "skipped": 20,
+      "total": 21,
+      "logSha256": "6356868cfe8a22c040bb345ec93f89699c6723093a54b9a76744f8443d2b62f5",
+      "subject": "756bf2752c6fe5bfbe417f81036ed1ac6b28e34a"
+    },
+    "skip_reattestation": {
+      "before": [
+        "    await current(state, true);",
+        "    return stillOpening();"
+      ],
+      "after": [
+        "    return stillOpening();"
+      ],
+      "failed": 1,
+      "skipped": 20,
+      "total": 21,
+      "logSha256": "9197c55a110c921a8e818fe78f03f9e4321e18a6529196f0a929985fe5c1093f",
+      "subject": "756bf2752c6fe5bfbe417f81036ed1ac6b28e34a"
+    }
+  },
+  "predecessor": "docs/evidence/syzygy-k54o-3/native-recovery-7f85af894/local-native-pair.json",
+  "nativeLatency": "Unknown"
+}

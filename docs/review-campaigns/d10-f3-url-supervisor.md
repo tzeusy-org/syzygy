@@ -24,6 +24,8 @@
 - `F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW\.md`
 - `F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW\.md`
 - `F3-(LAUNCHER-FIXTURE-CLOSE|RESUME-SLOT-BATCH)-REVIEW-RAW\.md`
+- `F3-RESUMED-ORIGIN-METADATA-REVIEW-RAW\.md`
+- `F3-RESUMED-DESIGN-PEER-ACTIVATION-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -110,3 +112,7 @@
 [Observed] The native launcher fixture close review records `PASS` (`F3-LAUNCHER-FIXTURE-CLOSE-REVIEW-RAW.md:1`) for `882119cbc`. Refused samples release the held tool after the host revokes authority.
 
 [Observed] The Resume slot batch review records `PASS` (`F3-RESUME-SLOT-BATCH-REVIEW-RAW.md:1`) for `81d08b251`. A-128 publishes the complete selected set of never-issued endpoints in one checked state update.
+
+[Observed] The resumed origin metadata review records `PASS` (`F3-RESUMED-ORIGIN-METADATA-REVIEW-RAW.md:1`) at `1630803a3`. A-129 preserves exact fixed receipt subjects and the before-and-after currentness of the role prompt batch. Twenty-seven focused integration tests and two fault controls passed. [Unknown] Hosted timing at this checkpoint.
+
+[Observed] The resumed Design activation review records `PASS` (`F3-RESUMED-DESIGN-PEER-ACTIVATION-REVIEW-RAW.md:1`) at `756bf2752`. A-130 waits for the exact activated host before freshly attesting the captured peer and entering protected publication. Sixty-three focused integration cases and 11 source-guard cases passed. [Unknown] Native replay at this checkpoint.

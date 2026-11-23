@@ -1,0 +1,294 @@
+{
+  "base": "14e7ea4b506777c164eff24b93101daa5c1b81a9",
+  "baseTree": "70318a7544f2edc2311ed5deb8c5a8582139d4c2",
+  "overlaySha256": "dd4b9a016338a0568230799bc6ecc5f5e697a9e3ea1b3c9fca1200619ed67a1d",
+  "logSha256": "ad1fc6d9139cca34bc6fd56c6881008631414672380d5fe06eabb740fec37e00",
+  "scenario": "stop-resume",
+  "recordPresent": false,
+  "originCreation": {
+    "outcome": "accepted",
+    "elapsed": 4367.069515999989,
+    "stage": "registry",
+    "phases": {
+      "validation": {
+        "checks": 1,
+        "checkMs": 60.865981000009924,
+        "falseChecks": 0
+      },
+      "fixed": {
+        "checks": 29,
+        "checkMs": 1489.579955000052,
+        "falseChecks": 0,
+        "at": 61.82490399997914
+      },
+      "tree": {
+        "checks": 7,
+        "checkMs": 454.0557600000175,
+        "falseChecks": 0,
+        "at": 1597.080002999981
+      },
+      "classify": {
+        "checks": 0,
+        "checkMs": 0,
+        "falseChecks": 0,
+        "at": 2062.903293999989
+      },
+      "representatives": {
+        "checks": 29,
+        "checkMs": 1857.8995900000155,
+        "falseChecks": 0,
+        "at": 2063.636509999982
+      },
+      "scaffold": {
+        "checks": 2,
+        "checkMs": 151.37364099998376,
+        "falseChecks": 0,
+        "at": 3934.441605
+      },
+      "registry": {
+        "checks": 2,
+        "checkMs": 133.00534900001367,
+        "falseChecks": 0,
+        "at": 4232.8729849999945
+      }
+    }
+  },
+  "allocations": [
+    {
+      "result": "accepted",
+      "elapsed": 1450.3031699999992,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 1159.1076710000052,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 1326.4376359999878,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 1372.0780540000123,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 1344.6267679999874,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 1320.2570770000166,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 4331.478066000011,
+      "pending": 0
+    },
+    {
+      "result": "accepted",
+      "elapsed": 4000.0490859999845,
+      "pending": 0
+    }
+  ],
+  "protectedPublication": {
+    "mode": "publication",
+    "result": "refused",
+    "elapsed": 5041.038620000007,
+    "pending": 0,
+    "parts": [
+      {
+        "phase": "before-lock-anchors",
+        "start": 166.21146600000793,
+        "end": 169.43599299999187
+      },
+      {
+        "phase": "mkdir-lock",
+        "start": 170.72098300000653,
+        "end": 170.93799300002865
+      },
+      {
+        "phase": "locked-root-sync",
+        "start": 172.20706200000132,
+        "end": 1717.8797170000034
+      },
+      {
+        "phase": "locked-census",
+        "start": 1719.5421310000238,
+        "end": 1773.542014000006
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 1881.329170000041,
+        "end": 2056.6257840000326
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 2262.870134000026,
+        "end": 2265.608903000015
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 2475.769567999989,
+        "end": 3763.6462560000364
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 3767.5588740000385,
+        "end": 3817.925188000023
+      },
+      {
+        "phase": "write-anchors",
+        "start": 3825.3566890000366,
+        "end": 3827.713736000005
+      },
+      {
+        "phase": "open-temp",
+        "start": 3828.5098010000074,
+        "end": 3829.3447199999937
+      },
+      {
+        "phase": "write-temp",
+        "start": 3830.244380999997,
+        "end": 3831.071124000009
+      },
+      {
+        "phase": "sync-temp",
+        "start": 3831.914649000042,
+        "end": 3960.9075910000247
+      },
+      {
+        "phase": "write-anchors",
+        "start": 3962.4523020000197,
+        "end": 3992.1265300000086
+      },
+      {
+        "phase": "rename",
+        "start": 4080.8432470000116,
+        "end": 4080.950349999999
+      },
+      {
+        "phase": "sync-renamed",
+        "start": 4081.460263999994,
+        "end": 4221.88264700002
+      },
+      {
+        "phase": "state-readback",
+        "start": 4222.731061000028,
+        "end": 4227.48187399999
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 4338.368130000017,
+        "end": 4432.761900999991
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 4522.321071000013,
+        "end": 4534.960179000045
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 4540.928072999988,
+        "end": 4550.207939999993
+      },
+      {
+        "phase": "write-anchors",
+        "start": 4551.985791000014,
+        "end": 4554.331577000034
+      },
+      {
+        "phase": "open-temp",
+        "start": 4555.591038000013,
+        "end": 4556.364370000025
+      },
+      {
+        "phase": "write-temp",
+        "start": 4557.594737000007,
+        "end": 4558.432350000017
+      },
+      {
+        "phase": "sync-temp",
+        "start": 4559.677946000011,
+        "end": 4651.4932210000115
+      },
+      {
+        "phase": "write-anchors",
+        "start": 4652.836381000001,
+        "end": 4654.598602999991
+      },
+      {
+        "phase": "other",
+        "start": 4655.443811000034,
+        "end": 4656.187047000043
+      },
+      {
+        "phase": "rename",
+        "start": 4753.733369000023,
+        "end": 4753.78467600001
+      },
+      {
+        "phase": "sync-renamed",
+        "start": 4754.341287999996,
+        "end": 4812.704752999998
+      },
+      {
+        "phase": "state-readback",
+        "start": 4813.7514120000415,
+        "end": 4817.974366999988
+      },
+      {
+        "phase": "state-snapshot",
+        "start": 4929.0596880000085,
+        "end": 4939.587213999999
+      }
+    ]
+  },
+  "completedPublicationMillisecondsByPhase": {
+    "before-lock-anchors": 3.2245269999839365,
+    "mkdir-lock": 0.21701000002212822,
+    "locked-root-sync": 1545.6726550000021,
+    "locked-census": 53.99988299998222,
+    "state-snapshot": 1643.1186570000136,
+    "write-anchors": 36.13928299996769,
+    "open-temp": 1.6082509999978356,
+    "write-temp": 1.6643560000229627,
+    "sync-temp": 220.80821699998342,
+    "rename": 0.15840999997453764,
+    "sync-renamed": 198.78584800002864,
+    "state-readback": 8.973767999908887,
+    "other": 0.7432360000093468
+  },
+  "peerConnection": {
+    "ordinal": 1,
+    "stages": {
+      "open": {
+        "startedMs": 142118.124,
+        "settledMs": 150611.662,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 142118.241,
+        "settledMs": 145479.333,
+        "outcome": "accepted"
+      },
+      "capture": {
+        "startedMs": 142201.716,
+        "settledMs": 145479.3,
+        "outcome": "accepted"
+      },
+      "authorize": {
+        "startedMs": 145479.438,
+        "settledMs": 150611.564,
+        "outcome": "refused"
+      }
+    },
+    "boundMs": 180000,
+    "kind": "inference-bridge"
+  },
+  "scope": "Owned timing-only overlay. This run does not establish the first refusing predicate in either hosted eligible Resume."
+}
