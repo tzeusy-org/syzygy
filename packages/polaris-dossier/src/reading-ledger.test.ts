@@ -204,6 +204,7 @@ describe('reading difference', () => {
     expect(fs.readdirSync(path.join(self, 'checks'))).toEqual([]);
   });
 
+  // syzygy-tp79: writing and reading a 16 MiB record ran past the 5 s default at load 45; the only unit-tier test of that size.
   it('reads an earlier check record of 16,777,216 bytes and counts one of 16,777,217 unreadable, under the one check-record bound (version 2.8)', () => {
     // An ASCII `pad` member sizes each record exactly; its size is checked against the literal before the difference runs.
     const sized = (bytes: number): string => {
@@ -221,7 +222,7 @@ describe('reading difference', () => {
     };
     expect(outcome(16_777_216)).toEqual(['compared', 0]);
     expect(outcome(16_777_217)).toEqual(['unknown', 1]);
-  });
+  }, 30_000);
 
   it('is Unknown, never zero, where no earlier run of the repository holds a ledger, and counts what it could not read', () => {
     const root = tempDir('reading-difference-');
