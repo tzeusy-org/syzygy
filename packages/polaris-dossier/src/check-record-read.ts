@@ -31,19 +31,31 @@ export class PastBoundError extends BoundedJsonError {
  * and following a symbolic link; anything whose descriptor is not a regular file (a directory, a device, a FIFO) is refused, and so is a
  * size past the bound, before any byte is read; and at most `maxBytes + 1` bytes are read from the descriptor, so a file grown after its
  * size was taken is refused too. Throws `NotARegularFileError`, `BoundedJsonError('byte-limit')` or the open's own error. */
-export function readBoundedFile(file: string, maxBytes: number): Buffer {
-  return readRegularFile(file, () => maxBytes);
+export function readBoundedFile(file: string, maxBytes: number, options: BoundedReadOptions = {}): Buffer {
+  return readRegularFile(file, () => maxBytes, options.followLink ?? true);
 }
+
+/** How a bounded read treats a symbolic link at the path itself. By default it follows it, as every run-tree reader does; with `followLink`
+ * false (syzygy-3efd.83, the readers of an agent-writable clone's references and configuration, which refuse a link and never follow it)
+ * the open refuses a link at the last component, and that refusal is a `NotARegularFileError`, as a link is no regular file. */
+export interface BoundedReadOptions { readonly followLink?: boolean }
 
 /** The bytes of the regular file at `file`, read by the same rule with its own size, as its opened descriptor gives it, for the bound: for
  * a file no stated bound covers (close's digest of every stored file). A file grown after its size was taken is refused. */
 export function readFileAsSized(file: string): Buffer {
-  return readRegularFile(file, (size) => size);
+  return readRegularFile(file, (size) => size, true);
 }
 
-function readRegularFile(file: string, boundOf: (size: number) => number): Buffer {
-  // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open.
-  const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY);
+function readRegularFile(file: string, boundOf: (size: number) => number, followLink: boolean): Buffer {
+  // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open. O_NOFOLLOW, where asked: a link at
+  // the path is refused by the open itself (ELOOP), so no link swapped in after any earlier look at the path is followed.
+  let fd: number;
+  try {
+    fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY | (followLink ? 0 : fs.constants.O_NOFOLLOW));
+  } catch (cause) {
+    if (!followLink && (cause as NodeJS.ErrnoException).code === 'ELOOP') throw new NotARegularFileError();
+    throw cause;
+  }
   try {
     const stats = fs.fstatSync(fd);
     if (!stats.isFile()) throw new NotARegularFileError();
