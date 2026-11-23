@@ -1146,17 +1146,33 @@ describe('URL stored launch history', () => {
     const { audit, attempt, segment } = await auditFixture(fixture.originPolicy.sha256, `history-native-sample-${refusedSample}`);
     try {
       await attempt('design');
-      const before = fs.readFileSync(segment('design'));
-      let samples = 0;
+      const file = segment('design'), before = fs.readFileSync(file);
+      const probe = await open(file, 'r');
+      const prototype = Object.getPrototypeOf(probe) as { sync: FileHandle['sync'] };
+      await probe.close();
+      const sync = prototype.sync;
+      let fileSyncs = 0;
+      const syncSpy = vi.spyOn(prototype, 'sync').mockImplementation(async function(this: FileHandle) {
+        const target = fs.realpathSync(`/proc/self/fd/${this.fd}`) === file;
+        await sync.call(this);
+        if (target) fileSyncs++;
+      });
+      const samples: { bytes: number; fileSyncs: number }[] = [];
       const waitForSample = async () => {
-        samples++;
-        if (samples === 1) expect(fs.readFileSync(segment('design'))).toEqual(before);
-        if (samples === 3) expect(fs.statSync(segment('design')).size).toBeGreaterThan(before.length);
-        return samples !== refusedSample;
+        samples.push({ bytes: fs.statSync(file).size, fileSyncs });
+        return samples.length !== refusedSample;
       };
-      await expect(audit.commitLaunchHistory(capability, waitForSample)).rejects.toThrow('url-session-audit-refused');
-      expect(samples).toBe(refusedSample);
-      if (refusedSample === 1) expect(fs.readFileSync(segment('design'))).toEqual(before);
+      try {
+        await expect(audit.commitLaunchHistory(capability, waitForSample)).rejects.toThrow('url-session-audit-refused');
+      } finally { syncSpy.mockRestore(); }
+      expect(samples).toHaveLength(refusedSample);
+      expect(samples[0]).toEqual({ bytes: before.length, fileSyncs: 0 });
+      if (refusedSample === 1) expect(fs.readFileSync(file)).toEqual(before);
+      else {
+        const appendedBytes = fs.statSync(file).size;
+        expect(appendedBytes).toBeGreaterThan(before.length);
+        expect(samples.slice(1)).toEqual([{ bytes: appendedBytes, fileSyncs: 0 }, { bytes: appendedBytes, fileSyncs: 1 }]);
+      }
       expect(audit.summary()).toMatchObject({ poisoned: true, captured: { 'launch-attempt': 1, 'launch-history': 0 } });
     } finally { await audit.close(); }
   });
