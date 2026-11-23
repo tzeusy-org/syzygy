@@ -527,11 +527,11 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it('groups the named-root check and lock submission for a terminal read', async () => {
+  it('groups the terminal lock checks while retaining the five-second read deadline', async () => {
     const f = await fixture(), slot = await f.allocate();
     let elapsed = 0, measuring = false;
     const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
-      if (measuring) elapsed += 650;
+      if (measuring) elapsed += 760;
       return true;
     } }, f.store.identitySha256);
     if (reopened === null) throw new Error('fixture reopen refused');
@@ -549,7 +549,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       });
       expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(true);
       expect(verify).toHaveBeenCalledTimes(1);
-      expect(elapsed).toBe(4550);
+      expect(elapsed).toBe(4560);
     } finally { clock.mockRestore(); }
   });
 
