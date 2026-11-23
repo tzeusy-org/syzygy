@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import * as fs from 'node:fs/promises';
+import type { Server as HttpServer } from 'node:http';
 import path from 'node:path';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
@@ -13,7 +14,7 @@ import { RUN_LAYOUT } from './state-directory.js';
 import { readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './polaris.js';
-import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState } from './url-supervisor-state.js';
+import { openUrlSupervisorStop, readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
 import { loadSessionCredential } from './session-credential.js';
 import * as runSessions from './url-run-sessions.js';
 import type { UrlRunSessions } from './url-run-sessions.js';
@@ -73,6 +74,41 @@ const settledProviderRoles = vi.hoisted(() => new Set<string>());
 const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null,
   afterEndTurn: null as ((role: string) => void) | null }));
 const relayObservations = vi.hoisted(() => [] as { role: string; event: string; route: string | null }[]);
+type RelayInterruption = {
+  role: string;
+  event: 'socket-error' | 'response-closed';
+  atMs: number;
+  connectionMs: number;
+  responseMs: number | null;
+};
+const eligibleRelayTrace = vi.hoisted(() => ({
+  active: false,
+  interruptions: new Map<string, RelayInterruption>(),
+}));
+
+function observeEligibleRelay(role: string, server: HttpServer): void {
+  type Connection = { opened: number; request: number | null; finished: boolean };
+  const connections = new WeakMap<object, Connection>();
+  const interrupted = (connection: Connection, event: RelayInterruption['event']) => {
+    if (connection.finished || eligibleRelayTrace.interruptions.has(role)) return;
+    const atMs = performance.now();
+    eligibleRelayTrace.interruptions.set(role, { role, event, atMs,
+      connectionMs: atMs - connection.opened, responseMs: connection.request === null ? null : atMs - connection.request });
+  };
+  server.prependListener('connection', socket => {
+    const connection = { opened: performance.now(), request: null, finished: false };
+    connections.set(socket, connection);
+    socket.once('error', () => interrupted(connection, 'socket-error'));
+  });
+  server.prependListener('request', (request, response) => {
+    const connection = connections.get(request.socket);
+    if (connection === undefined) return;
+    connection.request = performance.now();
+    connection.finished = false;
+    response.once('finish', () => { connection.finished = true; });
+    response.once('close', () => interrupted(connection, 'response-closed'));
+  });
+}
 type ResumeRelayProbe = {
   current(call: SessionRelayPorts['current']): ReturnType<SessionRelayPorts['current']>;
   request(route: Parameters<SessionRelayPorts['request']>[2], call: () => ReturnType<SessionRelayPorts['request']>): ReturnType<SessionRelayPorts['request']>;
@@ -89,7 +125,10 @@ vi.mock('./session-relay.js', async importOriginal => {
     const selected = provider.get(args[1].binding.role);
     if (selected === undefined) throw new Error('owned composed provider not selected');
     const ports = args[2], probe = args[4] === undefined ? undefined : resumeRelayProbes.get(args[4]);
-    return actual.sessionRelayTestPort(selected)(args[0], args[1], { ...ports,
+    const observe = eligibleRelayTrace.active
+      ? (server: HttpServer) => observeEligibleRelay(args[1].binding.role, server)
+      : undefined;
+    return actual.sessionRelayTestPort(selected, observe)(args[0], args[1], { ...ports,
       ...(probe === undefined ? {} : {
         request: (...requestArgs: Parameters<SessionRelayPorts['request']>) => probe.request(requestArgs[2], () => ports.request(...requestArgs)),
         response: (...responseArgs: Parameters<SessionRelayPorts['response']>) => probe.response(() => ports.response(...responseArgs)),
@@ -157,7 +196,19 @@ let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
 beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
 afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
-afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await close(); provider.clear(); relayRoles.length = 0; relayObservations.length = 0; settledProviderRoles.clear(); finalResponseDelivery.wait = null; finalResponseDelivery.afterEndTurn = null; vi.restoreAllMocks(); vi.unstubAllEnvs(); });
+afterEach(async () => {
+  for (const close of cleanup.splice(0).reverse()) await close();
+  provider.clear();
+  relayRoles.length = 0;
+  relayObservations.length = 0;
+  eligibleRelayTrace.active = false;
+  eligibleRelayTrace.interruptions.clear();
+  settledProviderRoles.clear();
+  finalResponseDelivery.wait = null;
+  finalResponseDelivery.afterEndTurn = null;
+  vi.restoreAllMocks();
+  vi.unstubAllEnvs();
+});
 
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
@@ -862,6 +913,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     let resumeAuditEnteredMs: number | undefined;
     let resumeAuditSetup: ResumeAuditSetup | undefined;
     let eligiblePhase = 'fixture';
+    let firstRuntimeFailure: { reason: string; atMs: number } | undefined;
     let eligibleProgress: () => Record<string, unknown> = () => ({});
     if (eligibleStop) {
       // Emit one snapshot before Vitest can abort the test while an awaited production phase is pending.
@@ -870,6 +922,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
           resumeChecks: resumeChecks.length, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
+          firstRuntimeFailure, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
       }, 340_000).unref();
       onTestFinished(() => { clearTimeout(diagnostic); });
@@ -1054,7 +1107,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           // Confirm the earlier ordinary exchanges have durably settled, then
           // begin the real stop before releasing their final delivery guards.
           await settleOrdinaryResponses();
-          void beginOwnedStop().catch(() => {});
+          const { settlement } = await beginOwnedStop();
+          void settlement.catch(() => {});
           throw new Error('owned interruption after confirmed design delivery');
         },
       };
@@ -1152,7 +1206,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       providerFailures: failures.length, supervisorEvents: events.length, fidelityDeliveries: state.fidelityDeliveredPairs?.length,
       designBegins: beginOrdered.mock.calls.length, designBeginsAfterResume: resumedBegins.mock.calls.length });
     eligiblePhase = 'start';
-    const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
+    eligibleRelayTrace.active = eligibleStop;
+    const controller = await start(f, failures, reason => {
+      firstRuntimeFailure ??= { reason, atMs: performance.now() };
+    }, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
       const inspections = initialRoleInspections();
       const audit = [];
       const auditReadFailures: { role: string; reason: 'file-unavailable' | 'incomplete-row' | 'invalid-row' }[] = [];
@@ -1180,14 +1237,18 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, auditReadFailures, initialDesignAudit,
-        initialRoleInspections: inspections }));
+        initialRoleInspections: inspections, firstRuntimeFailure,
+        eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()] }));
     }); cleanup.push(controller.stop);
     expect(Object.keys(initialRoleInspections())).toEqual(['author', 'inventory', 'fidelity']);
     expect(handoffStates[0]).toBe('unknown');
-    function beginOwnedStop() {
+    async function beginOwnedStop() {
       try {
-        if (resumeAfterStop) requestUrlSupervisorStop(stateRoot, state);
-        return controller.stop();
+        if (resumeAfterStop) {
+          expect(await runPolarisCli(['--stop', f.run, '--state-root', stateRoot], f.ports)).toBe(0);
+          expect(stop.status()).toBe('requested');
+        }
+        return { settlement: controller.stop() };
       } finally { releaseFinalResponses(); }
     }
     const observedRuntime: UrlRunSessions = !eligibleStop ? controller : { ...controller,
@@ -1216,7 +1277,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         expect(finalSiteBeforeStop).toBeGreaterThan(state.siteFor['0']!);
         await settleOrdinaryResponses();
         cutTaken = true;
-        return beginOwnedStop();
+        return (await beginOwnedStop()).settlement;
       },
     };
     const initialSiteDescription = cut ? vi.spyOn(designProduct, 'describeCheckedUrlDesignProduct') : undefined;
@@ -1471,7 +1532,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             return runtime;
           });
           if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run, true);
-          eligiblePhase = 'public-resume';
+          eligiblePhase = 'supervised-resume';
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           eligiblePhase = 'verify-resumed-result';
           if (exit !== 0) {
@@ -1573,7 +1634,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs,
-          resumeAuditSetup, resumeDiagnostic: resumeEvidence,
+          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure,
+          eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
       }
@@ -1582,7 +1644,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
         resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
-        initialInference: initialDiagnostic?.().inference,
+        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure,
+        eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
     }
