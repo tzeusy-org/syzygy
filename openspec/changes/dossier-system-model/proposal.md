@@ -22,11 +22,11 @@
   - `view-duplicate`, `view-relationship`, `view-shape`, `model-unviewed`;
   - the 2.23 containment findings and `relation-challenged`, now on the model;
   - `field-version` in schema v11 and earlier.
-- Rule `relation-witness` version 1 decides each relationship and each parent once; every view shows the one state.
+- Rule `relation-witness` version 1 decides each relationship and each parent once, where a produced view shows it; every view shows the one state.
 - Rendering: a view renders as the v11 diagram its expansion gives. An element shared by two views keeps one label and marking, and its claim (anchor, citations, review entry) renders once; later figures link to it. A derived relationship renders in Syzygy's words, Observed only where witnessed. `machine.json` gains `model`.
-- A pure migration from schema v10 or v11 to v12; the migrated draft renders the same figure bytes.
+- A pure migration from schema v10 or v11 to v12; for a draft check passes, the migrated draft passes and renders the same figure bytes.
 - Brief `polaris-dossier-brief-v18`: brief v17 plus one paragraph, issuing schema v12.
-- Four predecessor sentences are amended to stay true: the Observed reservation, the never-upgraded exception, the brief-version list and the scenario on where Observed appears. Eleven scenarios are added, and the four Form lines are extended.
+- Five predecessor sentences are amended to stay true: the Observed reservation, the never-upgraded exception, the brief-version list, the scenario on where Observed appears and the scenario on which arrows are solid. Fourteen scenarios are added, and the four Form lines are extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged.
 

@@ -709,7 +709,7 @@ MODEL_UNION = f"{MODEL_HOME}/GOVERNING-DEPENDENCIES.json"
 MODEL_TAG = "polaris-dossier-system-model-v2.NN"
 MODEL_STATUS_PREFIX = f"[System model amendment 2.NN]({MODEL_HOME})"
 MODEL_SUBJECTS = {
-    MODEL_SPEC: "62f1a860dac012f9607067016093a2cb9cf7264b9e7ae1362480630012c996a3",
+    MODEL_SPEC: "21c4b0835116a41407b227c748a96a2e8468feb8343d9b07692101f4494ed47c",
 }
 MODEL_BOUND_PARTS = len(MODEL_SUBJECTS)
 
@@ -8799,11 +8799,11 @@ def model_cases(tmp, base, witnesses, failures):
     current = current_pop["POLARIS"]
     held = (model_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 204
+            and len(current[ident]["scenarios"]) == 207
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
     record("model-adopted", AGENT_ADOPTIONS, "<no v2.NN row>", row,
-           "v2.NN replaces exactly 034 (193 to 204 scenarios)", current_findings, held, True)
+           "v2.NN replaces exactly 034 (193 to 207 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", MODEL_TAG, MODEL_TAG + "-wrong"),
