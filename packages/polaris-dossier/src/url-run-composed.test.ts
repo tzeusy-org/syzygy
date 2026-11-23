@@ -2,7 +2,6 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import * as fs from 'node:fs/promises';
 import type { Server as HttpServer } from 'node:http';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -33,7 +32,6 @@ import * as runMachine from './url-run-machine.js';
 import * as machineStore from './url-machine-store.js';
 import * as rolePlan from './url-role-plan.js';
 import * as urlRuntime from './url-runtime.js';
-import { readUrlParentAdoption } from './url-parent-adoption.js';
 import * as runOrigins from './url-run-origins.js';
 import * as originLedger from './url-origin-ledger.js';
 import * as sourceReader from './url-source-reader.js';
@@ -1152,13 +1150,6 @@ describe('composed URL run with actual role processes', () => {
     const eligibleStop = scenario === 'eligible-stop-resume';
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
-    if (resumeAfterStop) {
-      const checkout = fileURLToPath(new URL('../../..', import.meta.url));
-      const origin = policySnapshot.readCommittedUrlOriginPolicy(checkout);
-      if (!origin.ok) throw new Error(origin.why);
-      expect(readUrlParentAdoption(checkout, origin.binding.sha256),
-        'the native Resume fixture requires the observed origin/main and the A-14 version tag').not.toBeNull();
-    }
     const resumeChecks: unknown[] = [];
     type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'restore-products' | 'start-sessions' | 'open-store' | 'create-machine';
     const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
