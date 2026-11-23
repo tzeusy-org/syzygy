@@ -445,11 +445,12 @@ describe('render', () => {
     } finally { reads.close(); vi.useRealTimers(); }
   }, 60_000);
 
-  it('lets an actual URL producer finish after six seconds within its original thirty-second context', async () => {
+  it('lets an actual URL producer cross thirty seconds within its original sixty-second context', async () => {
     const f = await preparedUrlRender();
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     vi.setSystemTime(LATER);
-    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 60_000);
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 120_000);
+    expect(reads.deadline).toBe(LATER + 60_000);
     let admit!: (value: boolean) => void, entered!: () => void, signal: AbortSignal | undefined;
     const held = new Promise<boolean>(resolve => { admit = resolve; }), reached = new Promise<void>(resolve => { entered = resolve; });
     const rendered = renderRun(f.run, { ...f.deps, productReads: reads, admitProducedSite: input => {
@@ -457,7 +458,7 @@ describe('render', () => {
     } });
     try {
       await Promise.race([reached, rendered.then(result => { throw Error(`URL producer never reached: ${JSON.stringify(result)}`); })]);
-      await vi.advanceTimersByTimeAsync(6000);
+      await vi.advanceTimersByTimeAsync(30_001);
       expect(signal?.aborted).toBe(false);
       expect(reads.isLeaseOpen()).toBe(true);
       expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);

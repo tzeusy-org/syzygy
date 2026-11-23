@@ -1057,30 +1057,30 @@ describe('trusted URL artifact producer bridge', () => {
       const expiring = begin(); f.bridge.readProduct(expiring, 'brief.json'); vi.advanceTimersByTime(4001); expect(() => f.bridge.revalidateRead(expiring)).toThrow();
       const clockOnly = begin(); f.bridge.readProduct(clockOnly, 'brief.json'); vi.setSystemTime(Date.now() + 4001); expect(() => f.bridge.revalidateRead(clockOnly)).toThrow();
       const now = Date.now();
-      for (const deadline of [NaN, Infinity, now, now + 30_001]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
+      for (const deadline of [NaN, Infinity, now, now + 60_001]) expect(() => f.bridge.beginRead({ operation: 'render', deadline })).toThrow();
     } finally { vi.useRealTimers(); }
     const held = Array.from({ length: 16 }, begin); expect(() => begin()).toThrow(); for (const cap of held) f.bridge.cancelRead(cap);
     const stale = begin(); f.bridge.readProduct(stale, 'brief.json'); await Promise.resolve(); f.stale(); expect(() => f.bridge.revalidateRead(stale)).toThrow();
   });
-  it('uses one fixed render deadline up to thirty seconds and leaves other operations at five seconds', () => {
+  it('uses one fixed render deadline up to sixty seconds and leaves other operations at five seconds', () => {
     const f = fixture(); f.initialize();
     vi.useFakeTimers();
     try {
-      const began = Date.now(), reads = beginRunProductReads(f.run, f.bridge, 'render', began + 60_000);
-      expect(reads.deadline).toBe(began + 30_000);
+      const began = Date.now(), reads = beginRunProductReads(f.run, f.bridge, 'render', began + 120_000);
+      expect(reads.deadline).toBe(began + 60_000);
       expect(Object.isFrozen(reads)).toBe(true);
       expect(isRunProductReads({ ...reads })).toBe(false);
       expect(reads.revalidate().metadata.deadline).toBe(reads.deadline);
-      vi.setSystemTime(began + 6000);
+      vi.setSystemTime(began + 30_001);
       expect(reads.read('brief.json')).not.toBeNull();
-      expect(reads.revalidate().metadata.deadline).toBe(began + 30_000);
+      expect(reads.revalidate().metadata.deadline).toBe(began + 60_000);
       for (const operation of ['review-packet', 'review-check', 'inventory-check', 'author-check'] as const) {
         expect(() => f.bridge.beginRead({ operation, deadline: Date.now() + 5001 })).toThrow();
         const short = beginRunProductReads(f.run, f.bridge, operation, began + 60_000);
         expect(short.deadline).toBe(Date.now() + 5000);
         short.close();
       }
-      expect(() => f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 30_001 })).toThrow();
+      expect(() => f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 60_001 })).toThrow();
       vi.setSystemTime(reads.deadline);
       expect(reads.leaseState()).toBe('expired');
       expect(() => reads.revalidate()).toThrow();

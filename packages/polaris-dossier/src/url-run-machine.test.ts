@@ -186,9 +186,9 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
   it('refuses changed numeric product limits before selecting a declared runtime', async () => {
     const file = path.join(installedRoot, 'packages/polaris-dossier/src/url-product-read-limits.ts');
     const original = await fs.readFile(file, 'utf8');
-    expect(original).toContain('render: 30_000');
+    expect(original).toContain('render: 60_000');
     try {
-      await fs.writeFile(file, original.replace('render: 30_000', 'render: 30_001'));
+      await fs.writeFile(file, original.replace('render: 60_000', 'render: 60_001'));
       expect(await readUrlRuntime(installedRoot)).toEqual({ ok: false, code: 'url-runtime-unavailable' });
     } finally { await fs.writeFile(file, original); }
     const restored = await readUrlRuntime(installedRoot);
