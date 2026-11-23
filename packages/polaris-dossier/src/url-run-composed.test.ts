@@ -118,6 +118,7 @@ type ResumeRelayProbe = {
   audit(event: Parameters<SessionRelayPorts['audit']>[0]['event'], call: () => ReturnType<SessionRelayPorts['audit']>): ReturnType<SessionRelayPorts['audit']>;
 };
 const resumeRelayProbes = vi.hoisted(() => new WeakMap<machineTransport.SessionMachineTransport, ResumeRelayProbe>());
+const initialAuthorSendProbe = vi.hoisted(() => ({ current: undefined as AuthorSendProbe | undefined }));
 // Keep the real host, machine mediation, policy, audit and relay. Replace only
 // the relay's compiled provider boundary; this fixture performs no network send.
 vi.mock('./session-relay.js', async importOriginal => {
@@ -127,32 +128,42 @@ vi.mock('./session-relay.js', async importOriginal => {
     const selected = provider.get(args[1].binding.role);
     if (selected === undefined) throw new Error('owned composed provider not selected');
     const ports = args[2], probe = args[4] === undefined ? undefined : resumeRelayProbes.get(args[4]);
+    const author = args[1].binding.role === 'author' ? initialAuthorSendProbe.current : undefined;
+    const forward: Forward = author === undefined ? selected : input => author.forward(() => selected(input));
+    const current = async () => {
+      const barrier = args[1].binding.role !== 'design' && settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
+      if (barrier === null) return probe === undefined ? ports.current() : probe.current(() => ports.current());
+      if (!(await ports.current())) return false;
+      // This post-audit guard is outside machine-store mediation. Holding an
+      // audit callback would retain its exclusive lease and block other roles.
+      await barrier;
+      return ports.current();
+    };
     const observe = eligibleRelayTrace.active
       ? (server: HttpServer) => observeEligibleRelay(args[1].binding.role, server)
       : undefined;
-    return actual.sessionRelayTestPort(selected, observe)(args[0], args[1], { ...ports,
+    return actual.sessionRelayTestPort(forward, observe)(args[0], args[1], { ...ports,
       ...(probe === undefined ? {} : {
         request: (...requestArgs: Parameters<SessionRelayPorts['request']>) => probe.request(requestArgs[2], () => ports.request(...requestArgs)),
         response: (...responseArgs: Parameters<SessionRelayPorts['response']>) => probe.response(() => ports.response(...responseArgs)),
       }),
-      current: async () => {
-        const barrier = args[1].binding.role !== 'design' && settledProviderRoles.has(args[1].binding.role) ? finalResponseDelivery.wait : null;
-        if (barrier === null) return probe === undefined ? ports.current() : probe.current(() => ports.current());
-        if (!(await ports.current())) return false;
-        // This post-audit guard is outside machine-store mediation. Holding an
-        // audit callback would retain its exclusive lease and block other roles.
-        await barrier;
-        return ports.current();
-      }, audit: async (event, context) => {
-      relayObservations.push({ role: args[1].binding.role, event: event.event, route: event.route });
-      if (probe === undefined) await ports.audit(event, context);
-      else await probe.audit(event.event, () => ports.audit(event, context));
-      if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn') {
-        settledProviderRoles.add(args[1].binding.role);
-        finalResponseDelivery.afterEndTurn?.(args[1].binding.role);
-        // The next guard may wait only after this genuine durable append.
-      }
-    } }, args[3], args[4]);
+      ...(author === undefined ? {} : {
+        providerHeaders: (...headerArgs: Parameters<SessionRelayPorts['providerHeaders']>) =>
+          author.headers(() => ports.providerHeaders(...headerArgs)),
+      }),
+      current: author === undefined ? current : () => author.current(current),
+      audit: async (event, context) => {
+        relayObservations.push({ role: args[1].binding.role, event: event.event, route: event.route });
+        if (author !== undefined) await author.audit(event.event, () => ports.audit(event, context));
+        else if (probe === undefined) await ports.audit(event, context);
+        else await probe.audit(event.event, () => ports.audit(event, context));
+        if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn') {
+          settledProviderRoles.add(args[1].binding.role);
+          finalResponseDelivery.afterEndTurn?.(args[1].binding.role);
+          // The next guard may wait only after this genuine durable append.
+        }
+      },
+    }, args[3], args[4]);
   } };
 });
 
@@ -203,6 +214,7 @@ afterEach(async () => {
   provider.clear();
   relayRoles.length = 0;
   relayObservations.length = 0;
+  initialAuthorSendProbe.current = undefined;
   eligibleRelayTrace.active = false;
   eligibleRelayTrace.interruptions.clear();
   settledProviderRoles.clear();
@@ -215,6 +227,27 @@ afterEach(async () => {
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
 type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
+type AuthorSendProbe = Pick<ResumeRelayProbe, 'current' | 'audit'> & {
+  headers(call: () => ReturnType<SessionRelayPorts['providerHeaders']>): ReturnType<SessionRelayPorts['providerHeaders']>;
+  forward(call: () => ReturnType<Forward>): ReturnType<Forward>;
+};
+type AuthorRefusalEvent = 'attempt-refused' | 'transport-failed';
+type AuthorMediation = ResumeStamp & {
+  effect?: ResumeStamp;
+  peerBoundaryRefusedMs?: number;
+  auditEvent?: 'attempt-allowed' | AuthorRefusalEvent;
+};
+type AuthorAttempt = {
+  ordinal: number;
+  allowedAudit: ResumeStamp;
+  allowedMediation?: AuthorMediation;
+  current?: ResumeStamp;
+  headers?: ResumeStamp;
+  forwardMs?: number;
+  followingMediations: AuthorMediation[];
+  refusalEvent?: AuthorRefusalEvent;
+  refusalAudit?: ResumeStamp;
+};
 type ResumeOriginPhase = 'register' | 'list-tree' | 'representative' | 'renderer';
 type ResumeOriginStep = ResumeStamp & {
   phase: ResumeOriginPhase;
@@ -316,6 +349,107 @@ function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejecte
     void original.then(settled, rejected);
     return original;
   } catch (error) { rejected(); throw error; }
+}
+
+function observeInitialAuthorSend() {
+  const peers = new WeakSet<machinePeer.UrlMachinePeer>();
+  const scope = new AsyncLocalStorage<AuthorMediation>();
+  let ordinal = 0;
+  // The Author relay admits one in-flight request. Stop sampling it when its
+  // send-attempt audit callback begins, before later response or delivery work.
+  let active: AuthorAttempt | undefined;
+  let first: { atMs: number; stage: 'allowed-audit' | 'current' | 'mediation' | 'refusal-audit'; attempt: AuthorAttempt } | undefined;
+  const start = (): ResumeStamp => ({ startedMs: performance.now() });
+  function record(stamp: ResumeStamp, outcome: ResumeObservation) {
+    Object.assign(stamp, { settledMs: performance.now(), outcome });
+  }
+  function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean,
+    failed?: () => void): T {
+    const complete = (value: Awaited<T>) => {
+      const ok = accepted(value);
+      record(stamp, ok ? 'accepted' : 'refused');
+      if (!ok) failed?.();
+    };
+    const reject = () => { record(stamp, 'rejected'); failed?.(); };
+    try {
+      const original = call();
+      if (original instanceof Promise) void original.then(complete, reject);
+      else complete(original as Awaited<T>);
+      return original;
+    } catch (error) { reject(); throw error; }
+  }
+  function refuse(attempt: AuthorAttempt, stage: NonNullable<typeof first>['stage']) {
+    first ??= { atMs: performance.now(), stage, attempt };
+  }
+  const capture = machinePeer.captureUrlMachinePeer;
+  const captureSpy = vi.spyOn(machinePeer, 'captureUrlMachinePeer').mockImplementation(options =>
+    options.context.role === 'author' && options.context.kind === 'inference-bridge'
+      ? observe(() => capture(options), peer => { if (peer !== null) peers.add(peer); }, () => {})
+      : capture(options));
+  const mediate = machinePeer.mediateUrlMachinePeer;
+  const mediateSpy = vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
+    if (operation !== 'inference-forward' || !peers.has(peer)) return mediate(peer, operation, effect);
+    const mediation: AuthorMediation = start();
+    const attempt = active;
+    // Allow room for send, send-attempt audit, and refusal audit mediation.
+    if (attempt !== undefined && attempt.followingMediations.length < 3) attempt.followingMediations.push(mediation);
+    const invoke = () => mediate(peer, operation, boundary => {
+      mediation.effect = start();
+      return timed(mediation.effect, () => effect(() => {
+        const current = boundary();
+        if (!current) mediation.peerBoundaryRefusedMs ??= performance.now();
+        return current;
+      }), () => true);
+    });
+    return timed(mediation, () => scope.run(mediation, invoke), result => result.ok, () => {
+      const failed = attempt ?? (active?.allowedMediation === mediation ? active : undefined);
+      if (failed !== undefined) refuse(failed, 'mediation');
+    });
+  });
+  initialAuthorSendProbe.current = {
+    audit(event, call) {
+      const mediation = scope.getStore();
+      if (event === 'attempt-allowed') {
+        if (mediation !== undefined) mediation.auditEvent = event;
+        const attempt = active = { ordinal: ++ordinal, allowedAudit: start(), allowedMediation: mediation, followingMediations: [] };
+        return timed(attempt.allowedAudit, call, () => true, () => refuse(attempt, 'allowed-audit'));
+      }
+      if (event === 'send-attempt') active = undefined;
+      if (active !== undefined && (event === 'attempt-refused' || event === 'transport-failed')) {
+        if (mediation !== undefined) mediation.auditEvent = event;
+        active.refusalEvent ??= event;
+        if (active.refusalAudit === undefined) {
+          active.refusalAudit = start();
+          refuse(active, 'refusal-audit');
+          return timed(active.refusalAudit, call, () => true);
+        }
+      }
+      return call();
+    },
+    current(call) {
+      const attempt = active;
+      if (attempt === undefined || attempt.current !== undefined) return call();
+      attempt.current = start();
+      return timed(attempt.current, call, value => value, () => refuse(attempt, 'current'));
+    },
+    headers(call) {
+      if (active === undefined || active.headers !== undefined) return call();
+      active.headers = start();
+      return timed(active.headers, call, value => value !== null);
+    },
+    forward(call) {
+      if (active !== undefined) active.forwardMs ??= performance.now();
+      return call();
+    },
+  };
+  return {
+    first: () => first,
+    stop() {
+      initialAuthorSendProbe.current = undefined;
+      mediateSpy.mockRestore();
+      captureSpy.mockRestore();
+    },
+  };
 }
 
 function observeResumedOrigins(
@@ -1303,6 +1437,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       designBegins: beginOrdered.mock.calls.length, designBeginsAfterResume: resumedBegins.mock.calls.length });
     eligiblePhase = 'start';
     eligibleRelayTrace.active = eligibleStop;
+    const initialAuthorSend = scenario === 'stop-resume' ? observeInitialAuthorSend() : undefined;
     const controller = await start(f, failures, reason => {
       firstRuntimeFailure ??= { reason, atMs: performance.now() };
     }, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
@@ -1333,7 +1468,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, auditReadFailures, initialDesignAudit,
-        initialRoleInspections: inspections, firstRuntimeFailure,
+        initialRoleInspections: inspections, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(),
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()] }));
     }); cleanup.push(controller.stop);
     expect(Object.keys(initialRoleInspections())).toEqual(['author', 'inventory', 'fidelity']);
@@ -1627,7 +1762,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             } finally { checkClaim.mockRestore(); }
             return runtime;
           });
-          if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run, true);
+          if (initialAuthorSend !== undefined) {
+            initialAuthorSend.stop();
+            resumeDiagnostic = await observeDesignRun(f.run, true);
+          }
           eligiblePhase = 'supervised-resume';
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           eligiblePhase = 'verify-resumed-result';
@@ -1730,7 +1868,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
-          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure,
+          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(),
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
@@ -1740,7 +1878,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
         resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
-        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure,
+        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(),
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
