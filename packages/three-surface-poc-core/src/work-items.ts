@@ -18,9 +18,9 @@ const WORK_ITEM_STATUSES = [
 
 export type WorkItemStatus = (typeof WORK_ITEM_STATUSES)[number];
 
-/** No title: a work-item title is free text no declared secret policy
- * covers, so the observation never reads it (SEC-5; owner answer of
- * 2026-10-20, `syzygy-jytt`). The observation's `titles` discloses that. */
+/** Work-item title omission is disclosed in `titles` and governed by SEC-5.
+ * Historical owner answer and successor scope:
+ * `.syzygy/governance/decisions/BEAD-TITLE-WITHHOLDING-RECORD-2026-10-20.md`. */
 export interface WorkItemFact {
   readonly id: string;
   readonly status: WorkItemStatus;
