@@ -1,0 +1,116 @@
+{
+  "adoption": "A-133",
+  "base": "9b8374f5374e66dc9ddc4925addd36d11d302250",
+  "sourceCommit": "3ee16e9556a25661c33d3c90a604758c082284cd",
+  "patchSha256": "1fd7b9794e674397cde1271dd7fc034c30c2696f052ce8f391723b9bbaf1fba2",
+  "productionBlob": "6c7e8cfde0c87d2af19e4bcfca4535c581644fd4",
+  "testBlob": "fad3c9dd768d9bc85e55e1abd65e9404c6d8028d",
+  "review": {
+    "path": "docs/reviews/F3-PRIVATE-AUDIT-ADJACENT-DECLARATIONS-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "a339cd76db9294a2c56879d1cef89d937fafce37b1bb2b3d7937de80ed7177c8",
+    "subjectSha256": "1fd7b9794e674397cde1271dd7fc034c30c2696f052ce8f391723b9bbaf1fba2"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "cases": 133,
+      "files": 2,
+      "sha256": "9066e943dfae9fdc7fd58940da91b7e8158a1349672255332f4ea58e6b193842"
+    },
+    "unit": {
+      "outcome": "passed",
+      "cases": 37,
+      "files": 1,
+      "sha256": "c13c774d8122d51f561c59448aae3bfd64caf02c6e3dfd987ebd4c6ce8dfc47a"
+    },
+    "directoryModeControl": {
+      "predecessorWithInheritedSetgid": {
+        "failed": 4,
+        "passed": 33,
+        "sha256": "27e72021d4f585465468aa95244168fc373277516300fcc25e41b3caeb56c725"
+      },
+      "candidateWithInheritedSetgid": {
+        "failed": 4,
+        "passed": 33,
+        "sha256": "1955b8c2477503ad9d51516ad1de981379456d9dbdeccbca8648987f1f359891"
+      },
+      "detail": "The cold reader requires exact 0700. The private test temp parent used for the passing rerun has no setgid inheritance."
+    },
+    "mutants": [
+      {
+        "id": "authority-after-screen",
+        "startMarker": "    const checkSetupBoundary",
+        "test": "refreshes authority before the first write after screening a later declaration",
+        "old": "      await inspectIdentities(setupDeadline);\n      await checkCurrent(setupDeadline);\n      for",
+        "new": "      await inspectIdentities(setupDeadline);\n      for",
+        "outcome": "detected",
+        "logSha256": "40353844b488bb11d9994809a771c7697ab475ad225b6ac291beb7f76ead6f5d"
+      },
+      {
+        "id": "authority-before-file-sync",
+        "startMarker": "    const checkSetupBoundary",
+        "test": "refreshes authority after writing a declaration and before syncing its bytes",
+        "old": "          await checkCurrent(setupDeadline);\n          await segments.get(role)!.file.sync();",
+        "new": "          await segments.get(role)!.file.sync();",
+        "outcome": "detected",
+        "logSha256": "8e2c45ef9870a19f3ff7b6f82d585e756817ed0a7c9a60ed7ef9a036a968786d"
+      },
+      {
+        "id": "authority-after-complete-prefix",
+        "startMarker": "    const checkSetupBoundary",
+        "test": "does not count a declaration when its final prefix read withdraws setup authority",
+        "old": "          await inspectIdentities(setupDeadline, { ...tail, role });\n          await checkCurrent(setupDeadline);",
+        "new": "          await inspectIdentities(setupDeadline, { ...tail, role });",
+        "outcome": "detected",
+        "logSha256": "9ced67170b9c7697042fb0651d217c9ec7f923ab82f4885cf7abecebcdc099a1"
+      },
+      {
+        "id": "identity-before-acknowledgment",
+        "startMarker": null,
+        "test": "rechecks a future segment name before acknowledging a freshly checked prefix",
+        "old": "      verifyAppendNames(deadline, { ...tail, role });\n      checkBoundary();",
+        "new": "      checkBoundary();",
+        "outcome": "detected",
+        "logSha256": "44040f4cc5369c421b6acb33e1835e375b7cb7c0dca76e713c59024622c69dd8"
+      },
+      {
+        "id": "extra-loop-check",
+        "startMarker": "    const checkSetupBoundary",
+        "test": "keeps one setup cutoff through all declarations at 440 ms per check",
+        "old": "      for (const row of declarationRows) {\n        const { role } = row;",
+        "new": "      for (const row of declarationRows) {\n        await checkCurrent(setupDeadline);\n        const { role } = row;",
+        "outcome": "detected",
+        "logSha256": "06ed04f1f3c6ddbf59ee5e2b5a6101785939a64729415c478a9ae6ddda808eda"
+      }
+    ]
+  },
+  "hostedMotivation": {
+    "revision": "2ae81cd45dca6bae661fd169c30d514084748a1d",
+    "mergeCommit": "4eab75f1aa54474299e51e447a5597b443742291",
+    "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45165568850/job/137663110175",
+    "logSha256": "e09fef999ece2fa80f10e4046fae2277894a92a5df6d63e5b02eeab1f4b7b9f5",
+    "setup": {
+      "startedMs": 726162.738511,
+      "authority": {
+        "started": 13,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 4619.3224700002465,
+        "longestMs": 423.64941299997736
+      },
+      "settledMs": 731197.553682,
+      "outcome": "refused",
+      "declarations": 3,
+      "pendingCallbacks": 1,
+      "pendingFilesystemOperations": 0
+    }
+  },
+  "changedRefusalEvidence": "All declarations are screened and the aggregate byte cap is checked before any write. A late-row screening or aggregate byte-cap refusal can leave zero rows where an earlier durable private prefix was possible.",
+  "remaining": "Exact native timing and completion on this successor are Unknown."
+}

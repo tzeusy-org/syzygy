@@ -1,0 +1,238 @@
+{
+  "revision": "9b8374f5374e66dc9ddc4925addd36d11d302250",
+  "tree": "c199478a380bbcc6c8aca4c2e2138a3bab8151eb",
+  "parents": [
+    "88a1077be708fbed545f1b969d3bee5277c28b17"
+  ],
+  "scenarios": {
+    "stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "stop-resume",
+          "result": "failed",
+          "ms": 235337
+        }
+      ],
+      "logSha256": "e44ce6589f18e098cfd5026f43690b198adc2019c7c916076a1da85d55062059",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "role-ended",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "inspection-failed",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 84978.378726,
+          "settledMs": 90852.63031,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 90912.381248,
+          "settledMs": 91219.364414,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 91273.116895,
+          "settledMs": 95195.93607,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 95754.858095,
+          "settledMs": 140682.01735,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 141313.687679,
+          "settledMs": 161317.055247,
+          "outcome": "accepted"
+        },
+        "create-machine": {
+          "startedMs": 143651.991569,
+          "settledMs": 160734.903162,
+          "outcome": "accepted"
+        },
+        "open-store": {
+          "startedMs": 144055.059156,
+          "settledMs": 144790.781656,
+          "outcome": "accepted"
+        }
+      },
+      "resumeAuditSetup": {
+        "startedMs": 141865.098413,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 1593.122458000027,
+          "longestMs": 188.8283479999809
+        },
+        "settledMs": 143649.418345,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "latestDesignAuditKinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "launch-terminal"
+      ],
+      "firstLaunchInspectionRefusal": {
+        "ordinal": 3,
+        "phases": {
+          "process": {
+            "startedMs": 0.04043600001023151,
+            "settledMs": 960.8229480000155,
+            "outcome": "accepted"
+          },
+          "verify": {
+            "startedMs": 0.09235399999306537,
+            "settledMs": 657.1210900000005,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.12296100001549348,
+            "settledMs": 962.3462160000054,
+            "outcome": "accepted"
+          },
+          "confirm": {
+            "startedMs": 962.3553229999961,
+            "settledMs": 1043.6072580000036,
+            "outcome": "accepted"
+          }
+        },
+        "refusal": {
+          "phase": "confirm",
+          "cause": "sample-deadline",
+          "elapsedMs": 1043.8370890000078
+        }
+      },
+      "firstProductSampleRefusal": null,
+      "initialRelayEvents": {
+        "author": {
+          "attempt-allowed": 7,
+          "send-attempt": 7,
+          "send-outcome": 7,
+          "response-admitted": 7
+        },
+        "inventory": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "fidelity": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        },
+        "design": {}
+      },
+      "observed": "Public Resume verified and consumed the cut. Product restoration, startup and resumed rendering reached the first Design launch. Its third resource sample completed storage, process and verification, then refused on the 1,000 ms cutoff after the final live authority confirmation."
+    },
+    "eligible-stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "eligible-stop-resume",
+          "result": "failed",
+          "ms": 87068
+        }
+      ],
+      "logSha256": "707fc56f8deca9ccc6a639a65e0ed4e29423f3b2cf302582f17c408ff1e0b31c",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [],
+      "resumeBootstrap": {},
+      "resumeAuditSetup": null,
+      "forwards": {
+        "author": 6,
+        "inventory": 0,
+        "fidelity": 0,
+        "design": 0
+      },
+      "latestDesignAuditKinds": [
+        "declaration"
+      ],
+      "firstLaunchInspectionRefusal": null,
+      "firstProductSampleRefusal": null,
+      "initialRelayEvents": {
+        "author": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 5,
+          "response-admitted": 5
+        },
+        "inventory": {
+          "attempt-allowed": 1,
+          "send-attempt": 1
+        },
+        "fidelity": {
+          "attempt-allowed": 1,
+          "send-attempt": 1
+        },
+        "design": {}
+      },
+      "observed": "The initial checked run captured six Author forwards and five admitted Author responses. Inventory and Fidelity reached their first send attempts. The trial did not reach checked Design eligibility or public Resume.",
+      "unknown": "The first predicate that prevented progression at the checked session boundary."
+    }
+  },
+  "sameTreeHostedMerge": "e048ee672833d7eee41241858ced271f558baf26",
+  "hostedIntegrationJob": "https://github.com/tzeusy-org/syzygy/actions/runs/45170529908/job/137679803055"
+}
