@@ -1,0 +1,109 @@
+{
+  "adoption": "A-148",
+  "source": {
+    "commit": "ca699c77a2c06c133e8943679dee33194b29acf5",
+    "tree": "38e1454add50642674530185461b457b01caa1e6",
+    "base": "cce8ae2107e73e145748c1488a3ca28f040a238f",
+    "integrationMerge": "1dd71e11ab592b89fa5fc22d708c71512ed0a57e",
+    "patchSha256": "3edc8677f4a18cf996470c817f8be2f22284f77644fa380dd0a36082d5094a27"
+  },
+  "review": {
+    "raw": "docs/reviews/F3-RESUMED-SANDBOX-REPROBE-REVIEW-RAW.md",
+    "sha256": "4ea90f827d0ae843f5a54bf5a9ee3755b9afdafb2c513b82767cf8277e29f926",
+    "verdict": "PASS",
+    "scope": "source and selected boundary tests"
+  },
+  "focusedChecks": {
+    "typecheck": {
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "vitest": {
+      "launch": {
+        "exit": 0,
+        "passed": 5,
+        "files": [
+          "session-launch.test.ts"
+        ],
+        "logSha256": "bfe14295c48e9bcfd2d59233df0af48f3406716bd9686b5853118d3fc0b57508"
+      },
+      "host": {
+        "exit": 0,
+        "passed": 3,
+        "files": [
+          "url-ordered-design-host.test.ts"
+        ],
+        "logSha256": "328a14bfcccaa6ec01111f798bb6eb2508355b1fd6e98db4c29073a31fd5a1c6"
+      },
+      "transport": {
+        "exit": 0,
+        "passed": 55,
+        "files": [
+          "session-url-view.test.ts",
+          "session-relay.test.ts",
+          "session-machine-transport.test.ts"
+        ],
+        "logSha256": "54397b028af1d1fe1d77b59403c6c1723aa443e9c4ac9d33fe8f7962d681cb40"
+      }
+    },
+    "selectedTotal": 63,
+    "deliberateFaults": [
+      {
+        "control": "probe-spawn-identity-guard-removed",
+        "subject": "ca699c77a2c06c133e8943679dee33194b29acf5",
+        "file": "packages/polaris-dossier/src/session-launch.ts",
+        "old": "probeUrlSessionView(view.inputs, canaries, port, confirmReplacementDirectories)",
+        "new": "probeUrlSessionView(view.inputs, canaries, port)",
+        "filter": "refuses a changed prepared directory 'after the first authority check'",
+        "exit": 1,
+        "selectedFailed": true,
+        "logSha256": "dfda03c98a1a2cb2154658927efda6f9bce144ab98d73101e7975dabbce1ab8d",
+        "failedTests": 1
+      },
+      {
+        "control": "replacement-issuance-check-removed",
+        "subject": "ca699c77a2c06c133e8943679dee33194b29acf5",
+        "file": "packages/polaris-dossier/src/session-launch.ts",
+        "old": "  if (ids === undefined || (expectedDirectories !== undefined && canonical(ids) !== canonical(expectedDirectories))) throw refused();",
+        "new": "  if (ids === undefined) throw refused();",
+        "filter": "refuses a changed prepared directory 'after the second authority check'",
+        "exit": 1,
+        "selectedFailed": true,
+        "logSha256": "8cce7f8e2cc978c5a48f1853ec8229b013d654feaafb7f422f8b4c712b76d386",
+        "failedTests": 1
+      },
+      {
+        "control": "one-time-expiry-retirement-removed",
+        "subject": "ca699c77a2c06c133e8943679dee33194b29acf5",
+        "file": "packages/polaris-dossier/src/session-launch.ts",
+        "old": "  preparations.delete(earlier);",
+        "new": "",
+        "filter": "reprobes an expired unused preparation",
+        "exit": 1,
+        "selectedFailed": true,
+        "logSha256": "e57f63394e9018f6c7485a35aa09ff68ff270d54e1d60a0d1dfe7bf423effec2",
+        "failedTests": 1
+      },
+      {
+        "control": "real-broker-prelisten-guard-removed",
+        "subject": "ca699c77a2c06c133e8943679dee33194b29acf5",
+        "file": "packages/polaris-dossier/src/session-broker.ts",
+        "old": "      if (startupCurrent !== undefined && startupCurrent() !== true) { failed(); return; }",
+        "new": "",
+        "filter": "withholds the next ordered Design socket when startup currentness expires after resolving the broker directory",
+        "exit": 1,
+        "selectedFailed": true,
+        "logSha256": "4d473ee3f1bc69b5105046fb7f68dbd56cdcbf024b7df05bba63d2c0003d806c",
+        "failedTests": 1
+      }
+    ]
+  },
+  "native": {
+    "qualifyingOutcome": "Unknown",
+    "diagnosticCommit": "9f4a42cbce0048488228c6b06ca46ecbd4a39a63",
+    "diagnosticSha256": "53b20ca7efacc4eea90b0005503833a50d4dd4db4dbed752d10a850ba266802c",
+    "preparationToLaunchMilliseconds": 26989.387,
+    "refusalMilliseconds": 0.894,
+    "originalPreparationMilliseconds": 20000
+  }
+}

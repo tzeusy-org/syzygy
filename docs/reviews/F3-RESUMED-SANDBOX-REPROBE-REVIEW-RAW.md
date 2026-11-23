@@ -1,0 +1,9 @@
+PASS
+
+[Observed] Reviewed `ca699c77a2c06c133e8943679dee33194b29acf5`, tree `38e1454add50642674530185461b457b01caa1e6`, against `cce8ae210`. `git diff --check` passed.
+
+- Only the first resumed Design launch can take the replacement path. It consumes the expired preparation before one bounded inert reprobe, then checks the replacement against the original profile, command, view, executable expectations, and directory identities. Both verification passes and cleanup check those identities. The inert listener and spawn check them again at invocation. [Replacement preparation](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/session-launch.ts:248) · [Inert spawn](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/session-url-view.ts:220)
+- The replacement path samples the original render lease immediately before each real socket listen and native spawn. Existing launch verification and activation checks still apply. [Resumed caller](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/url-run-ordered-attempt.ts:220) · [Relay](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/session-relay.ts:401) · [Broker](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/session-broker.ts:124) · [Native spawn](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/w/packages/polaris-dossier/src/session-launch.ts:544)
+- The focused logs report five launch tests and three host tests passed, including directory drift during reprobe and expiry after broker path resolution. [Launch results](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/launch.log) · [Host results](/home/orca/.tmp/f3-preparation-probe.kyyrB59F/host.log)
+
+[Unknown] End-to-end native Resume and durable close on this revision.
