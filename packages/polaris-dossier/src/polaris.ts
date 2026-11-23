@@ -53,7 +53,8 @@ import type { GitSshAuthentication } from './git-memory-ssh.js';
 import { bindCurrentEffectiveUrlRun, effectiveUrlProjection, readEffectiveRunRecord, URL_RUN_SIDECAR } from './effective-run-record.js';
 import { prepareUrlRolePlans, restoreUrlRolePlans, type UrlRolePlan } from './url-role-plan.js';
 import { createUrlRunOrigins } from './url-run-origins.js';
-import { sessionDirectory, sessionsRoot } from './run-dir.js';
+import { readRecord, sessionDirectory, sessionsRoot } from './run-dir.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 import { reviewSessionDirectory } from './review-model.js';
 import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
@@ -68,8 +69,9 @@ import type { UrlSessionAnswer, UrlSessionQuestionFrame } from './session-contro
 import { askUrlSessionQuestion } from './url-question-ui.js';
 import { openUrlSupervisorStop, readUrlSupervisorState, requestUrlSupervisorStop, writeUrlSupervisorState, type UrlSupervisorStop } from './url-supervisor-state.js';
 
-/** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
- * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
+export { loadUrlSupervisorState as loadState } from './url-supervisor-state.js';
+
+/** `syzygy polaris <url>`: the one-command dossier run under REQ-polaris-generation-048.
  *
  * The command opens a tmux session and runs a supervisor in its first window. The supervisor runs every `syzygy dossier` step itself, in
  * process, and starts the four agent sessions (author, inventory, fidelity review, design review), each in its own tmux window and its own
@@ -1013,9 +1015,17 @@ export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairS
 
 /** The verdict file a review check validated, or an empty object when it cannot be read. */
 export function readVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> {
-  if (!Number.isSafeInteger(n) || n < 0 || n > 999_999) return {};
-  try { const doc = parseBoundedJson(boundedHostText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 1_048_576),
-    { maxBytes: 1_048_576, maxNodes: 65_536, maxDepth: 32 }); return isRecord(doc) ? doc : {}; } catch { return {}; }
+  return readFrozenVerdict(run, kind, n) ?? {};
+}
+
+function readFrozenVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> | undefined {
+  if (!Number.isSafeInteger(n) || n < 0 || n > 999_999) return undefined;
+  const bound = RUN_TREE_BOUNDS.verdict;
+  try {
+    const doc = parseBoundedJson(boundedHostText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), bound),
+      { maxBytes: bound, maxNodes: 65_536, maxDepth: 32 });
+    return isRecord(doc) ? doc : undefined;
+  } catch { return undefined; }
 }
 
 /** At most this many entries are listed in one inventory repair message; the rest are counted. */
@@ -1096,7 +1106,9 @@ export function latestChecks(run: string): { readonly draft: CheckRecord; readon
   return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 
-function latestRecord(dir: string, pattern: RegExp, read?: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {
+export const readReviewCheck = readRecord;
+
+function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {
   const names: string[] = [];
   try {
     if (fs.realpathSync(dir) !== dir) return null;
@@ -1116,10 +1128,7 @@ function latestRecord(dir: string, pattern: RegExp, read?: (file: string) => unk
   }
   if (best === null) return null;
   try {
-    const file = path.join(dir, best.name);
-    const doc = read === undefined
-      ? parseBoundedJson(boundedHostText(file, 2_097_152), { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 })
-      : read(file);
+    const doc = read(path.join(dir, best.name));
     return isRecord(doc) ? { n: best.n, doc } : null;
   } catch { return null; }
 }
@@ -1131,11 +1140,19 @@ function paneState(state: SupervisorState, role: ViewRole): string {
   return dead === '1' ? `exited (${status})` : 'running';
 }
 
+export function readMaxRepairCycles(run: string): number {
+  try {
+    const record: unknown = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
+    return isRecord(record) && isRecord(record.declared) && typeof record.declared.maxRepairCycles === 'number'
+      ? record.declared.maxRepairCycles : Number.POSITIVE_INFINITY;
+  } catch { return Number.POSITIVE_INFINITY; }
+}
+
 /** Why a validated verdict is not ready, from its own rows: blocking findings, and rows the reviewer could not resolve (for instance
  * because screening withheld the cited span), which the author can repair only by citing evidence the review can see. */
 export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number): string {
-  let doc: Record<string, unknown>;
-  try { doc = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')) as Record<string, unknown>; } catch { return 'its verdict is unreadable'; }
+  const doc = readFrozenVerdict(run, kind, n);
+  if (doc === undefined) return 'its verdict is unreadable';
   const rows = (key: string): Record<string, unknown>[] => (Array.isArray(doc[key]) ? (doc[key] as Record<string, unknown>[]) : []);
   const blocking = rows('findings').filter((f) => f['severity'] === 'blocking').length;
   const unresolved = [...rows('blockSupport').filter((r) => r['verdict'] !== 'supported'), ...rows('inventoryAccuracy').filter((r) => r['accuracy'] !== 'accurate')].length;

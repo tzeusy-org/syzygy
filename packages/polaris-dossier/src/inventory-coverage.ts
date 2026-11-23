@@ -1,4 +1,3 @@
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -8,6 +7,8 @@ import { INVENTORY_OMISSIONS_SINCE } from './draft-schema.js';
 import type { GateSources } from './gate-sources.js';
 import type { InventoryOfRecord } from './inventory.js';
 import { protectedProduct, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
+import { readBoundedFile } from './check-record-read.js';
+import { RUN_TREE_BOUNDS } from './run-tree-read.js';
 
 /** Which entries of the independent inventory no block of the draft covers, told to the author at check time, before any reviewer is
  * asked (syzygy-5dhm.28, pursuit 2026-11-21b move R4 slice 1; REQ-polaris-generation-034 version 2.12).
@@ -165,7 +166,7 @@ export async function inventoryCoverageAdvice(runDir: string, draft: unknown, in
     if (inputs.productReads !== undefined && isRecord(draft) && draft['sessionId'] === counted.sessionId.value)
       return unknown(`no inventory counts: inventory revision ${counted.revision} declares the authoring session's identifier`);
     const bytes = inputs.productReads === undefined
-      ? new Uint8Array(fs.readFileSync(path.join(path.resolve(runDir), counted.file)))
+      ? readBoundedFile(path.join(path.resolve(runDir), counted.file), RUN_TREE_BOUNDS.inventory)
       : protectedProduct(inputs.productReads, runDir, counted.file);
     if (bytes === null) throw new UrlProductReadRefusal();
     if (sha256(bytes) !== counted.sha256) {

@@ -197,8 +197,9 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   // when no renderer is installed; do not append a step or inspect its sources.
   if (deps.productReads === undefined) {
     try {
-      const stored = readEffectiveRunRecord(runDir, deps.sources.effectiveRunDeclaration);
+      const stored = readEffectiveRunRecord(runDir, deps.sources?.effectiveRunDeclaration);
       if (!stored.ok && stored.legacy) return refuse('run', stored.reason);
+      if (!stored.ok && stored.baseRecordUnreadable) return refuse('reverify', stored.reason);
       if (stored.ok && readRawReadDisclosure(runDir, stored.core.declared.agentProvider) === null)
         return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
     } catch { /* existing missing-run / missing-renderer handling below */ }

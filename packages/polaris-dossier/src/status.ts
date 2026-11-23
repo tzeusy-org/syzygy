@@ -9,6 +9,7 @@ import { effectiveUrlProjection, readEffectiveRunRecord, URL_MODE_MARKERS, URL_R
 import type { UrlRunDeclaration } from './url-run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
  * required, read from the run directory. Status reads and writes nothing else. Everything it reports
@@ -72,10 +73,10 @@ export type StatusResult =
 const KNOWN_ENTRIES: ReadonlySet<string> = new Set(Object.values(RUN_LAYOUT));
 
 /** The agent usage the Execution Record carries, in words: the operator's declared figure, or not recorded. Never zero. */
-function closedUsage(file: string): string {
+export function closedUsage(file: string): string {
   let usage: unknown;
   try {
-    const record = parseBoundedJson(fs.readFileSync(file, 'utf8'), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
+    const record = parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.closeRecord), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
     usage = record.agentUsage;
   } catch {
     return `${NOT_RECORDED}; the Execution Record cannot be read`;

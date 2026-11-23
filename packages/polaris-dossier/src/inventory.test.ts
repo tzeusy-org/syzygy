@@ -460,6 +460,23 @@ describe('the inventory of record', () => {
     expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'the frozen inventory inventory/rev-0.json is not the bytes its check recorded' });
   });
 
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): every frozen inventory revision is read by the reader rule under 4,194,304 bytes.
+  it.each<[string, (file: string) => void, string]>([
+    ['a FIFO', (file) => execFileSync('mkfifo', [file]), 'not a regular file'],
+    ['a file past 4,194,304 bytes', (file) => fs.writeFileSync(file, ' '.repeat(4_194_305)), 'larger than 4194304 bytes'],
+  ])('counts no inventory from a frozen revision that is %s, with the stated words (syzygy-3efd.80)', async (_what, plant, words) => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    writeInventory(dir, validInventory());
+    passed(await checkInventory(run, {}, deps()));
+    await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
+    expect((await inventoryOfRecord(run, counting)).counts).toBe(true);
+    const frozen = path.join(run, 'inventory', 'rev-0.json');
+    fs.rmSync(frozen);
+    plant(frozen);
+    expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: `the frozen inventory inventory/rev-0.json cannot be read (${words})` });
+  });
+
   it('does not count an inventory with findings, or a launch record altered to another form', async () => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);
@@ -667,6 +684,14 @@ describe('inventory-brief', () => {
     expect(first.ok && first.report.brief).toBe(fs.readFileSync(path.join(dir, 'inventory-brief.md'), 'utf8'));
     fs.appendFileSync(path.join(dir, 'inventory-brief.md'), '\nRead the drafts too.\n');
     expect(await inventoryBrief(run, hand)).toMatchObject({ ok: true, report: { storedCopy: 'differs' } });
+  });
+
+  it('reports a stored copy that is a FIFO as absent, without blocking (syzygy-3efd.80)', async () => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    fs.rmSync(path.join(dir, 'inventory-brief.md'));
+    execFileSync('mkfifo', [path.join(dir, 'inventory-brief.md')]);
+    expect(await inventoryBrief(run, hand)).toMatchObject({ ok: true, report: { storedCopy: 'absent' } });
   });
 
   it('never opens the launched marker, at the hand-over or after it, where recording a launch form opens it once (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)', async () => {

@@ -103,7 +103,7 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
   const run = path.resolve(runDir), products = options.productReads;
   if (isRunProductReads(products) && products.run === run && products.waitForSample !== undefined) await products.waitForSample();
   const [coreBytes, sidecarBytes] = products === undefined ? [null, null] : protectedProductPair(products, run, RUN_LAYOUT.config, URL_RUN_SIDECAR);
-  const read = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
+  const read = readEffectiveRunRecord(run, sources?.effectiveRunDeclaration);
   if (!read.ok) {
     refusals.push({ code: 'record-invalid', reason: read.reason });
     return refuse();

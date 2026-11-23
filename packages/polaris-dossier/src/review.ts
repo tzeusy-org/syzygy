@@ -1,6 +1,7 @@
 import { checkedProductPopulation, isRunProductReads, protectedHelperPrompt, protectedProduct, protectedProductRecord, yieldForProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { BoundedJsonError } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { isoOf } from './iso-of.js';
 import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
@@ -19,6 +20,8 @@ import { derivedBlocking, nextVerdictNumber, standingBySubject, validateVerdict 
 import { isWithheldItem } from './withheld-items.js';
 import { assertUrlDesignRenderContinuationCurrent, assertUrlDesignReviewProofCurrent,
   type UrlDesignRenderContinuation, type UrlDesignReviewProof } from './url-session-audit.js';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 export { FIDELITY_PACKET_FORMAT, REVIEW_CHECK_FORMAT, PACKET_FILE, PACKET_DIGEST_FILE, VERDICT_FILE, REVIEW_KINDS, isReviewKind, REVIEW_CHECKS, packetDirName, verdictFileName, reviewSessionDirName, reviewPromptRecordName, reviewLaunchRecordName, reviewSessionDirectory, latestReviewSession } from './review-model.js';
 export type { ReviewKind, PacketSpan, SpanRedaction, SpanCitation, PacketBuild, ReviewDeps, ReviewProblemKind, ReviewProblem, ReviewCheckRecord, ReviewCheckResult, ReviewObserved, ReviewInferred } from './review-model.js';
 export { fidelityCriteria, latestPassedDraft, buildFidelityPacket, writePacket, buildStoredDesignPacket } from './review-packet.js';
@@ -179,11 +182,14 @@ async function checkOpenedReview(runDir: string, request: { readonly verdictFile
   else {
     const file = request.verdictFile === undefined ? path.join(reviewSessionDirectory(run, kind, session), VERDICT_FILE) : path.resolve(request.verdictFile);
     try {
-      const stats = fs.statSync(file);
-      if (!stats.isFile()) return refuse('verdict', `${file} is not a regular file`, undefined, run);
-      if (stats.size > VERDICT_MAX_BYTES) return refuse('verdict', `${file} is larger than the ${VERDICT_MAX_BYTES}-byte verdict bound`, undefined, run);
-      bytes = new Uint8Array(fs.readFileSync(file));
-    } catch (cause) { return refuse('verdict', `the verdict ${file} cannot be read (${errno(cause)})`, undefined, run); }
+      // REQ-polaris-generation-035 version 2.18 uses the same refusal for
+      // an oversized verdict and a verdict that grows past its bound.
+      bytes = new Uint8Array(readBoundedFile(file, VERDICT_MAX_BYTES));
+    } catch (cause) {
+      if (cause instanceof NotARegularFileError) return refuse('verdict', `${file} is not a regular file`, undefined, run);
+      if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return refuse('verdict', `${file} is larger than the ${VERDICT_MAX_BYTES}-byte verdict bound`, undefined, run);
+      return refuse('verdict', `the verdict ${file} cannot be read (${errno(cause)})`, undefined, run);
+    }
   }
 
   const verdict = parseSubject(bytes);
@@ -335,7 +341,7 @@ async function latestCheckedVerdict(
     bytes = protectedProduct(products, run, frozen);
     if (bytes === null) return no(`the frozen verdict ${frozen} is absent`);
   } else {
-    try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${errno(cause)})`); }
+    try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.verdict)); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.verdict)})`); }
   }
   const recorded = isRecord(check['verdict']) ? check['verdict'] : {};
   if (recorded['file'] !== frozen || recorded['sha256'] !== sha256(bytes)) return no(`the frozen verdict ${frozen} is not the bytes its check recorded`);

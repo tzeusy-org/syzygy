@@ -16,6 +16,7 @@ import { unitOf } from './relation-witness.js';
 import { placementSubjectOf, screenLoaderOf, secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 
 /** Building and writing the fidelity and design packets; split out of `review.ts` unchanged. */
 
@@ -112,7 +113,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     inventoryBytes = protectedProduct(deps.productReads, run, counted.file);
     if (inventoryBytes === null) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} is absent` };
   } else {
-    try { inventoryBytes = new Uint8Array(fs.readFileSync(path.join(run, counted.file))); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${errno(cause)})` }; }
+    try { inventoryBytes = new Uint8Array(readBoundedFile(path.join(run, counted.file), RUN_TREE_BOUNDS.inventory)); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})` }; }
   }
   if (sha256(inventoryBytes) !== counted.sha256) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} changed after it was counted` };
   const inventoryDoc = parseSubject(inventoryBytes);

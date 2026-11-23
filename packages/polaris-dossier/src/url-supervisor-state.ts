@@ -4,6 +4,7 @@ import { randomBytes } from 'node:crypto';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { decodeUtf8 } from '@syzygy/support';
 import { RUN_ID } from './state-directory.js';
+import { RUN_TREE_BOUNDS } from './run-tree-read.js';
 import { URL_ROLES, URL_RUN_MODE, URL_SUPPORTED_MODEL, urlSourceTransportIdentity } from './url-run-record.js';
 import type { SupervisorState } from './polaris.js';
 
@@ -16,6 +17,7 @@ const HEX = /^[a-f0-9]{64}$/u;
 const STOP_GENERATION = /^[a-f0-9]{32}$/u;
 const REVISION = /^(?:0|[1-9][0-9]{0,5})$/u;
 const JSON_LIMITS = URL_SUPERVISOR_STATE_LIMITS;
+const STATE_READ_LIMITS = Object.freeze({ ...JSON_LIMITS, maxBytes: RUN_TREE_BOUNDS.supervisorState });
 function refuse(): never { throw new Error('url-supervisor-state-unavailable'); }
 function fields(value: unknown, required: readonly string[], optional: readonly string[] = []): value is Record<string, unknown> {
   if (value === null || typeof value !== 'object' || Array.isArray(value)
@@ -89,7 +91,7 @@ const sameFile = (a: Stat, b: Stat): boolean => a.dev === b.dev && a.ino === b.i
 const sameShape = (a: Stat, b: Stat): boolean => sameFile(a, b) && a.nlink === b.nlink;
 const same = (a: Stat, b: Stat): boolean => sameShape(a, b) && a.mtimeNs === b.mtimeNs && a.ctimeNs === b.ctimeNs;
 const ownedFile = (stat: Stat): boolean => stat.isFile() && stat.uid === BigInt(process.getuid!()) && stat.nlink === 1n
-  && (stat.mode & 0o7777n) === 0o600n && stat.size > 0n && stat.size <= BigInt(JSON_LIMITS.maxBytes);
+  && (stat.mode & 0o7777n) === 0o600n && stat.size > 0n && stat.size <= BigInt(STATE_READ_LIMITS.maxBytes);
 interface Root { readonly name: string; readonly fd: number; readonly stat: Stat; readonly slot: string; readonly runId: string }
 function close(fd: number | undefined): boolean {
   try {
@@ -139,7 +141,7 @@ function readAt(root: Root): { readonly value: SupervisorState; readonly stat: S
     if (!same(before, fs.fstatSync(fd, { bigint: true })) || !same(before, fs.lstatSync(root.slot, { bigint: true }))) refuse();
     rootCurrent(root);
     const text = decodeUtf8(bytes); if (text === undefined) refuse();
-    const value: unknown = parseBoundedJson(text, JSON_LIMITS);
+    const value: unknown = parseBoundedJson(text, STATE_READ_LIMITS);
     if (!schema(value, root.name, root.runId)) refuse();
     return { value, stat: before };
   } finally { close(fd); }
@@ -148,9 +150,14 @@ function readAt(root: Root): { readonly value: SupervisorState; readonly stat: S
 /** Mutable Inferred host metadata only. No stored field proves current run authority,
  * actual launch, receipt, process identity or checked recovery. No bodies are stored. */
 export function readUrlSupervisorState(stateRoot: string, runId: string): SupervisorState | null {
+  const state = loadUrlSupervisorState(stateRoot, runId);
+  return typeof state === 'string' ? null : state;
+}
+
+export function loadUrlSupervisorState(stateRoot: string, runId: string): SupervisorState | 'absent' | 'unreadable' {
   let root: Root | undefined;
-  try { root = openRoot(stateRoot, runId); return readAt(root)?.value ?? null; }
-  catch { return null; }
+  try { root = openRoot(stateRoot, runId); return readAt(root)?.value ?? 'absent'; }
+  catch { return 'unreadable'; }
   finally { close(root?.fd); }
 }
 const immutable = (state: SupervisorState): string => encodeCanonicalJson(Object.fromEntries(REQUIRED

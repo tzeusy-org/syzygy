@@ -36,7 +36,7 @@ const LAUNCHER = 'the `syzygy polaris` launcher at run time; suite tests import 
 const EXEMPT: Readonly<Record<string, string>> = {
   "packages/polaris-dossier/src/polaris.ts 'tmux'": LAUNCHER,
   "packages/polaris-dossier/src/polaris.ts 'sh'": LAUNCHER,
-  "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal, called only by the launcher at run time; suite tests import only the pure view builders',
+  "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal is called by the launcher; its reader fixture replaces spawnSync and starts no process',
 };
 const DOSSIER = 'packages/polaris-dossier/src/';
 const PEER_MODULE = DOSSIER + 'session-peer.ts';

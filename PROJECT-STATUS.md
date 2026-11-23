@@ -1,6 +1,6 @@
 # Project status
 
-> **As-of: 2026-11-21 (governance regime under doctrine amendment D10 stated; the tables below keep their own cited dates, and their owner acts are history since D10).** To check whether that is still true, run
+> **As-of: 2026-11-24 (governance regime under doctrine amendment D10 stated; the tables below keep their own cited dates, and their owner acts are history since D10).** To check whether that is still true, run
 > `git log -1 --date=short --format='%h %ad' PROJECT-STATUS.md`: it names the
 > commit that last touched this page. **If its date is later than the As-of
 > above, someone edited this page without restating this line**, and the rows
@@ -204,7 +204,9 @@ authority and no model yet called on the current path.
     amendment; all 39 identities remain.)*
     [Run-tree read bounds amendment 2.18](openspec/changes/dossier-run-tree-read-bounds) is agent-adopted in A-53.
     It replaces REQ-polaris-generation-033, -035 and -048 (9 to 12, 37 to 40 and 27 to 28 scenarios): every run-tree
-    file they state is read under a stated bound by the version 2.10 reader rule; its code is not yet landed.
+    file they state is read under a stated bound by the version 2.10 reader rule. The implementation uses
+    the [shared bounded reader](packages/polaris-dossier/src/check-record-read.ts). Its
+    [delivery checklist](openspec/changes/dossier-run-tree-read-bounds/tasks.md) records the verification.
     *(2026-11-23: the predecessor figure "488 scenarios" is superseded by that
     amendment. All 39 identities remain.)*
     [Hero figure amendment 2.20](openspec/changes/dossier-hero-figure) is agent-adopted in A-54.

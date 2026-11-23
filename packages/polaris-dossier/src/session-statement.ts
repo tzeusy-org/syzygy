@@ -1,11 +1,11 @@
 import { protectedProduct, type RunProductReads } from './url-operation-products.js';
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord } from '@syzygy/support';
 import { type GateSources } from './gate-sources.js';
 import { AGENT_TOOLS } from './run-config.js';
 import { readRunRecord } from './run-record.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** Historical statement citation types remain readable by retained artifact schemas. New /2
  * prompts bind the supported tool and declared provider directly; they carry no statement grant. */
@@ -30,7 +30,7 @@ export async function recheckSessionStatement(
     if (bytes === null) return no(`the run record is absent when checking ${noun} declared provider`);
     text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
   } else {
-    try { text = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'); }
+    try { text = readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord); }
     catch { return no(`the run record cannot be read to check ${noun} declared provider`); }
   }
   const read = readRunRecord(text);

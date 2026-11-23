@@ -2,9 +2,11 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { encodeCanonicalJson, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
+import { NotARegularFileError, PastBoundError } from './check-record-read.js';
 import { restartExplanation, type PolicyBinding } from './policy-snapshot.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import type { RunConfigRefusal } from './run-config.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { readEffectiveRunDeclaration, URL_DECLARATION_LIMITS, type EffectiveRunDeclaration,
   type UrlRunDeclaration, type UrlRunDeclarationContext } from './url-run-record.js';
@@ -24,7 +26,7 @@ export type EffectiveRunReadResult =
   | { readonly ok: true; readonly run: string; readonly runId: string; readonly core: RecordedRunConfig;
     readonly effective: EffectiveRunDeclaration; readonly sidecarSha256: string | null }
   | { readonly ok: false; readonly code: EffectiveRunReadFailureCode; readonly reason: string;
-    readonly legacy?: true; readonly refusals?: readonly RunConfigRefusal[] };
+    readonly legacy?: true; readonly baseRecordUnreadable?: true; readonly refusals?: readonly RunConfigRefusal[] };
 type VerifiedUrlRecord = {
   readonly core: RecordedRunConfig;
   readonly effective: Extract<EffectiveRunDeclaration, { kind: 'url' }>;
@@ -66,7 +68,6 @@ export function effectiveUrlDisclosures(core: Pick<RecordedRunConfig, 'subject'>
   ];
 }
 
-const BASE_BYTES = 65_536;
 const refusal = (code: Exclude<EffectiveRunReadFailureCode, 'policy-binding'>): Extract<EffectiveRunReadResult, { ok: false }> => ({ ok: false, code, reason: {
   'run-unreadable': 'The run directory is not a canonical readable directory; preserve it and check its location.',
   'record-unreadable': 'Run metadata is missing, changed, excessive or not a regular non-symlink UTF-8 file; preserve it and check the recorded files.',
@@ -84,10 +85,17 @@ function entry(anchor: string, name: string): fs.Stats | null {
 function regularFile(anchor: string, name: string, maxBytes: number, optional: boolean): ReadFile | null {
   let fd: number;
   try { fd = fs.openSync(path.join(anchor, name), fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK); }
-  catch (cause) { if (optional && (cause as NodeJS.ErrnoException).code === 'ENOENT') return null; throw cause; }
+  catch (cause) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    if (optional && code === 'ENOENT') return null;
+    if (code === 'ELOOP') throw new NotARegularFileError();
+    throw cause;
+  }
   try {
     const before = fs.fstatSync(fd);
-    if (!before.isFile() || before.nlink !== 1 || before.size > maxBytes) throw new Error('metadata');
+    if (!before.isFile()) throw new NotARegularFileError();
+    if (before.nlink !== 1) throw new Error('metadata');
+    if (before.size > maxBytes) throw new PastBoundError(maxBytes);
     const bytes = Buffer.alloc(before.size + 1);
     let length = 0;
     while (length < bytes.length) {
@@ -96,7 +104,8 @@ function regularFile(anchor: string, name: string, maxBytes: number, optional: b
       length += count;
     }
     const after = fs.fstatSync(fd), current = entry(anchor, name);
-    if (length > maxBytes || length !== after.size || !stable(before, after) || current === null
+    if (length > maxBytes) throw new PastBoundError(maxBytes);
+    if (length !== after.size || !stable(before, after) || current === null
       || !current.isFile() || !stable(after, current)) throw new Error('metadata');
     return { bytes: bytes.subarray(0, length), stat: after };
   } finally { fs.closeSync(fd); }
@@ -116,7 +125,7 @@ export function mayAppendCompatibleStepLog(runDir: string): boolean {
   } catch { return false; }
   try {
     const initial = fs.fstatSync(directory), anchor = `/proc/self/fd/${directory}`;
-    const base = regularFile(anchor, RUN_LAYOUT.config, BASE_BYTES, false);
+    const base = regularFile(anchor, RUN_LAYOUT.config, RUN_TREE_BOUNDS.runRecord, false);
     if (base === null || !readRunRecord(new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(base.bytes)).ok) return false;
     return stillCurrent(anchor, RUN_LAYOUT.config, base) && stable(initial, fs.lstatSync(run)) && fs.realpathSync(run) === run;
   } catch { return false; }
@@ -194,7 +203,14 @@ function readRunRecordFiles(runDir: string, authority: EffectiveRunAuthority | u
     try { host = authority?.(run, runId); } catch { return refusal('mode-binding'); }
     if (authority !== undefined && host == null) return refusal('mode-binding');
     if (host?.kind === 'refused' || (host !== undefined && host.kind !== 'operator' && host.kind !== 'url')) return refusal('mode-binding');
-    const base = regularFile(anchor, RUN_LAYOUT.config, BASE_BYTES, false);
+    let base: ReadFile | null;
+    try { base = regularFile(anchor, RUN_LAYOUT.config, RUN_TREE_BOUNDS.runRecord, false); }
+    catch (cause) {
+      const why = readCause(cause, RUN_TREE_BOUNDS.runRecord);
+      if (host?.kind !== 'url' && why !== 'unknown-error') return { ok: false, code: 'record-unreadable', baseRecordUnreadable: true,
+        reason: `${run} holds no readable ${RUN_LAYOUT.config} (${why})` };
+      return refusal('record-unreadable');
+    }
     const sidecar = regularFile(anchor, URL_RUN_SIDECAR, URL_DECLARATION_LIMITS.maxBytes, true);
     if (base === null) return refusal('record-unreadable');
     const marker = URL_MODE_MARKERS.some(name => entry(anchor, name) !== null);

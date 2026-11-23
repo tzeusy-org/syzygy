@@ -6,7 +6,8 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
-import { readBoundedFile, readCheckRecord } from './check-record-read.js';
+import { readBoundedFile, readCheckRecord, readFileAsSized } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
@@ -23,7 +24,7 @@ import { placementSubjectOf } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
 import { briefCopyLines, type BriefCopy } from './launch-disclosure.js';
 import { issuedBriefStatement, type LaunchStatement } from './launch-statements.js';
-import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
+import { type OpenedRun, openRun, readRecord, sessionDirectory } from './run-dir.js';
 export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
 export type { OpenedRun } from './run-dir.js';
 
@@ -233,7 +234,8 @@ export async function inventoryBrief(runDir: string, deps: { readonly sources: G
   const built = await buildInventoryBrief(opened, session, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   let stored: string | undefined;
-  try { stored = fs.readFileSync(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE), 'utf8'); } catch { stored = undefined; }
+  // Read under its own size (REQ-polaris-generation-035 version 2.18): one it cannot read, a FIFO or a device among them, is `absent`.
+  try { stored = readFileAsSized(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE)).toString('utf8'); } catch { stored = undefined; }
   return { ok: true, report: {
     command: 'inventory-brief', outcome: 'rendered', run: opened.run, session, sha256: sha256(built.text),
     storedCopy: stored === undefined ? 'absent' : stored === built.text ? 'matches' : 'differs', brief: built.text, disclosures: BRIEF_DISCLOSURES,
@@ -418,7 +420,8 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
     bytes = protectedProduct(products, run, frozen);
     if (bytes === null) return no(`the frozen inventory ${frozen} is absent`);
   } else {
-    try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${errno(cause)})`); }
+    try { bytes = readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.inventory); }
+    catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})`); }
   }
   if (inventory['file'] !== frozen || inventory['sha256'] !== sha256(bytes)) return no(`the frozen inventory ${frozen} is not the bytes its check recorded`);
   if (products !== undefined) await yieldForProductReads(products, run);
