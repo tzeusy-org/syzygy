@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { constants, type Stats } from 'node:fs';
+import { constants, lstatSync, realpathSync, type Stats } from 'node:fs';
 import { chmod, lstat, open, opendir, readdir, realpath } from 'node:fs/promises';
 import { createServer, type Server, type Socket } from 'node:net';
 import path from 'node:path';
@@ -64,6 +64,8 @@ export interface UrlSessionLaunchOptions {
   readonly audit: (event: { readonly event: 'session-launch-attempt'; readonly profileSha256: string;
     readonly commandSha256: string; readonly viewSha256: string; readonly limits: UrlLaunchLimits }) => void | Promise<void>;
   readonly limits?: Partial<UrlLaunchLimits>;
+  /** Keep a replaced preparation bound to the original physical view. */
+  readonly expectedDirectoryIdentities?: readonly string[];
   readonly canaries: readonly string[];
   readonly hostLoopbackPort: number;
 }
@@ -192,13 +194,17 @@ export async function verifySupportedUrlCli(executable: string): Promise<boolean
     }, URL_LAUNCH_LIMITS.setupMilliseconds);
   } catch { return false; } finally { live = false; }
 }
+const viewDirectories = ({ inputs }: Prepared['view']): readonly string[] =>
+  [inputs.supportDirectory, inputs.homeDirectory, inputs.workDirectory, inputs.brokerSocketDirectory, inputs.relaySocketDirectory];
+const physicalDirectory = (dir: string, stat: Stats, resolved: string): string => {
+  if (resolved !== dir || !stat.isDirectory() || stat.uid !== process.getuid?.() || (stat.mode & 0o077) !== 0) throw refused();
+  return `${stat.dev}:${stat.ino}`;
+};
 async function directories(view: Prepared['view']): Promise<readonly string[]> {
   const identities: string[] = [];
-  for (const dir of [view.inputs.supportDirectory, view.inputs.homeDirectory, view.inputs.workDirectory,
-    view.inputs.brokerSocketDirectory, view.inputs.relaySocketDirectory]) {
+  for (const dir of viewDirectories(view)) {
     const stat = await lstat(dir);
-    if (await realpath(dir) !== dir || !stat.isDirectory() || stat.uid !== process.getuid?.() || (stat.mode & 0o077) !== 0) throw refused();
-    identities.push(`${stat.dev}:${stat.ino}`);
+    identities.push(physicalDirectory(dir, stat, await realpath(dir)));
   }
   return identities;
 }
@@ -221,6 +227,8 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
   const view = urlSessionViewFor(input.view), expected = deepFreeze(JSON.parse(canonical(input.expected))) as UrlSessionLaunchOptions['expected'];
   const limits: UrlLaunchLimits = Object.freeze({ ...URL_LAUNCH_LIMITS, ...input.limits });
   const canaries = Object.freeze([...input.canaries]), port = input.hostLoopbackPort;
+  const expectedDirectories = input.expectedDirectoryIdentities === undefined
+    ? undefined : Object.freeze([...input.expectedDirectoryIdentities]);
   if (profile.input.binding.role !== view.role || Object.keys(limits).length !== Object.keys(URL_LAUNCH_LIMITS).length
     || Object.entries(limits).some(([key, value]) => !Object.hasOwn(URL_LAUNCH_LIMITS, key) || !Number.isSafeInteger(value) || value <= 0
       || value > URL_LAUNCH_LIMITS[key as keyof UrlLaunchLimits])
@@ -239,23 +247,37 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
     viewSha256: sha256(canonical(view)), probe: 'owned-synthetic-namespace-probe-passed' as const });
   const began = performance.now(); let live = true;
   const check = (): void => { if (!live || performance.now() - began >= limits.setupMilliseconds) throw refused(); };
+  const confirmReplacementDirectories = expectedDirectories === undefined ? undefined : () => {
+    for (const [index, dir] of viewDirectories(view).entries()) {
+      check();
+      if (physicalDirectory(dir, lstatSync(dir), realpathSync(dir)) !== expectedDirectories[index]) throw refused();
+    }
+    check();
+  };
   const servers: Server[] = [], sockets = new Set<Socket>();
   let ids: readonly string[] | undefined;
   const authority = input.inspectionAuthority;
   const inspectionAuthority = authority === undefined ? undefined : { verify: authority.verify, confirm: authority.confirm };
-  const state = { view, expected, limits, profile, current, audit, inspectionAuthority, args, expires: began + limits.setupMilliseconds };
+  const state = { view, expected, limits, profile, current, audit, inspectionAuthority, args, expires: began + limits.setupMilliseconds,
+    ...(expectedDirectories === undefined ? {} : { directories: expectedDirectories }) };
   try {
     await bounded(async () => {
-      await directories(view); check();
+      const initialDirectories = await directories(view); check();
+      if (expectedDirectories !== undefined && canonical(initialDirectories) !== canonical(expectedDirectories)) throw refused();
       for (const [dir, name] of [[view.inputs.brokerSocketDirectory, 'b.sock'], [view.inputs.relaySocketDirectory, 'r.sock']] as const) {
         if ((await readdir(dir)).length !== 0) throw refused(); check();
         const server = createServer(socket => { sockets.add(socket); socket.on('error', () => {}); socket.once('close', () => sockets.delete(socket)); socket.end(); });
+        const socket = path.join(dir, name);
         servers.push(server); server.on('error', () => {});
-        await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(path.join(dir, name), resolve); }); check();
+        await new Promise<void>((resolve, reject) => {
+          server.once('error', reject);
+          confirmReplacementDirectories?.();
+          server.listen(socket, resolve);
+        }); check();
         await chmod(path.join(dir, name), 0o600); check();
       }
       await verify(state, check);
-      const probe = await probeUrlSessionView(view.inputs, canaries, port); check(); if (!probe.ok) throw refused();
+      const probe = await probeUrlSessionView(view.inputs, canaries, port, confirmReplacementDirectories); check(); if (!probe.ok) throw refused();
       await verify(state, check);
     }, limits.setupMilliseconds);
     check();
@@ -270,9 +292,31 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
       ids = await directories(view);
     }, limits.cleanupMilliseconds);
   }
-  if (ids === undefined) throw refused();
+  if (ids === undefined || (expectedDirectories !== undefined && canonical(ids) !== canonical(expectedDirectories))) throw refused();
   preparations.set(receipt, { ...state, directories: ids, expires: performance.now() + limits.setupMilliseconds });
   return receipt;
+}
+
+/** Select an unused preparation before binding the real host. An expired
+ * preparation may be replaced by another complete inert probe. */
+export async function finishUrlSessionPreparation(earlier: UrlSessionPreparation,
+  prepare: (expectedDirectoryIdentities: readonly string[]) => Promise<UrlSessionPreparation>): Promise<UrlSessionPreparation> {
+  const prepared = preparations.get(earlier);
+  if (prepared === undefined) throw refused();
+  if (performance.now() < prepared.expires) return earlier;
+  preparations.delete(earlier);
+  inspectionTraces.delete(earlier);
+  const replacement = await prepare(prepared.directories);
+  const fresh = preparations.get(replacement);
+  if (fresh === undefined || fresh.profile !== prepared.profile || performance.now() >= fresh.expires
+    || replacement.commandSha256 !== earlier.commandSha256 || replacement.viewSha256 !== earlier.viewSha256
+    || canonical(fresh.expected) !== canonical(prepared.expected)
+    || canonical(fresh.directories) !== canonical(prepared.directories)) {
+    preparations.delete(replacement);
+    inspectionTraces.delete(replacement);
+    throw refused();
+  }
+  return replacement;
 }
 
 const STORAGE_STAT_BATCH = 4;
@@ -482,7 +526,7 @@ function processArgs(args: readonly string[], limits: UrlLaunchLimits): string[]
 export async function launchRestrictedUrlSession(input: {
   readonly preparation: UrlSessionPreparation;
   readonly host: SessionHost;
-  /** Synchronous durable handoff marker, after verification and before releasing the spawn. */
+  /** Synchronous guard after verification and before releasing the spawn. */
   readonly beforeSpawn?: () => boolean;
 }): Promise<UrlSessionProcess> {
   const state = preparations.get(input.preparation), host = input.host;

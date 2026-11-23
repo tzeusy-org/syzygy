@@ -6,7 +6,8 @@ import { readSessionRelayAuditEvidence } from './session-relay.js';
 import type { SessionCredential } from './session-credential.js';
 import type { SessionAdmission, SessionContentClass } from './session-egress-policy.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
-import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOptions, type UrlSessionProcess } from './session-launch.js';
+import { finishUrlSessionPreparation, isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly,
+  type UrlSessionLaunchOptions, type UrlSessionProcess } from './session-launch.js';
 import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryReceiptCurrent, assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
@@ -205,12 +206,13 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       && hostResult.status === 'fulfilled' && hostResult.value?.termination === 'settled' && hostResult.value.pendingInvocations === 0;
   })();
   try {
-    const prepare = async () => {
+    const prepare = async (expectedDirectoryIdentities?: readonly string[]) => {
       const preparation = await prepareRestrictedUrlSession({ view: input.plan.view, profile,
         expected: { nodeSha256: input.runtime.worker.nodeSha256, supportSha256: profile.transcript.supportSha256 },
         current: input.current, audit: payload => input.audit.append({ kind: 'launch-attempt', role: 'design', scope, payload }),
         ...(input.inspectionAuthority === undefined ? {} : { inspectionAuthority: input.inspectionAuthority }),
-        canaries: input.canaries, hostLoopbackPort: input.probePort });
+        canaries: input.canaries, hostLoopbackPort: input.probePort,
+        ...(expectedDirectoryIdentities === undefined ? {} : { expectedDirectoryIdentities }) });
       if (preparation.commandSha256 !== input.plan.declaration.commandSha256
         || preparation.viewSha256 !== input.plan.declaration.viewSha256) throw refused();
       return preparation;
@@ -219,9 +221,20 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     // Finish its inert namespace probe before starting the protected render lease.
     const firstResumedLaunch = input.generation !== undefined && input.firstLaunch === null;
     const resumedPreparation = firstResumedLaunch ? await prepare() : undefined;
-    render = await input.reproduce();
-    if (render === null || !(await input.current())) throw refused();
-    const preparation = resumedPreparation ?? await prepare();
+    const reproduced = await input.reproduce();
+    render = reproduced;
+    if (reproduced === null || !(await input.current())) throw refused();
+    const renderCurrent = () => isUrlDesignProductLeaseOpen(reproduced.product);
+    // Reproduction can spend the earlier preparation's entire lifetime.
+    // Any replacement still probes the exact view before real sockets bind.
+    const preparation = resumedPreparation === undefined ? await prepare()
+      : await finishUrlSessionPreparation(resumedPreparation, async expectedDirectoryIdentities => {
+        if (!renderCurrent()) throw refused();
+        const fresh = await prepare(expectedDirectoryIdentities);
+        if (!renderCurrent()) throw refused();
+        return fresh;
+      });
+    const startupCurrent = resumedPreparation !== undefined && preparation !== resumedPreparation ? renderCurrent : undefined;
     let admission: SessionAdmission | null = null;
     host = await startOrderedDesignHost({ controller: activation, activationDeadline: Math.min(input.deadline, input.now() + 20_000),
       profile, subject: { binding: profile.input.binding, project: 'project:syzygy', pin: input.pin, principal: input.principal },
@@ -229,6 +242,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       relaySocket: path.join(input.plan.view.relaySocketDirectory, 'r.sock'),
       brokerMachine: input.machine.transport('design', 'mcp-shim'), relayMachine: input.machine.transport('design', 'inference-bridge'),
       current,
+      ...(startupCurrent === undefined ? {} : { startupCurrent }),
       admit: (checks, replies) => {
         assertCurrent();
         const parents = checks.resultWrappers.length === 0 ? [] : input.expectedProduct.parents;
@@ -250,7 +264,8 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn' && !(await consumeTerminal())) throw refused();
       },
     });
-    child = await launchRestrictedUrlSession({ preparation, host });
+    child = await launchRestrictedUrlSession({ preparation, host,
+      ...(startupCurrent === undefined ? {} : { beforeSpawn: startupCurrent }) });
     input.launched(child, host);
     let launch = input.firstLaunch;
     if (launch === null) {
@@ -273,7 +288,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     if (!(await input.current()) || !(await input.waitForSamples())) throw refused();
     // The commit issues the freshly checked view after its durable append.
     // Activation rechecks that exact view under the live role and run guards.
-    delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
+    delivery = await input.audit.commitDesignDelivery({ product: reproduced.product, expectedProduct: input.expectedProduct, launch,
       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin },
       input.waitForSamples, observeRead);
     const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);

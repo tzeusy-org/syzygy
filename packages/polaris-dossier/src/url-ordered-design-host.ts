@@ -25,6 +25,8 @@ export interface OrderedDesignHostOptions {
   readonly brokerMachine: SessionMachineTransport;
   readonly relayMachine: SessionMachineTransport;
   readonly current: () => boolean | Promise<boolean>;
+  /** Extra same-turn authority when an expired early preparation was replaced. */
+  readonly startupCurrent?: () => boolean;
   /** Checked product parents and host scaffolding, independently of role text. */
   readonly admit: (checks: OrderedDesignRequestChecks, replies: readonly ReplyIdentity[]) => SessionAdmission;
   readonly audit: (event: SessionAuditEvent) => void | Promise<void>;
@@ -54,6 +56,8 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     || input.activationDeadline <= Date.now() || input.activationDeadline - Date.now() > 2_147_483_647
     || canonical(input.subject.binding) !== canonical(input.profile.input.binding)) throw refused();
   const { profile } = input;
+  const startupCurrent = input.startupCurrent;
+  const startupRefused = (): boolean => startupCurrent !== undefined && startupCurrent() !== true;
   let controller: Controller | undefined;
   const replies = new Map<string, ReplyIdentity>();
   let broker: SessionBroker | undefined, relay: SessionRelay | undefined;
@@ -90,6 +94,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (await Promise.race([Promise.resolve(input.current()), cancelled]) !== true || closing || failed) throw refused();
     relay = await startRelay(input.relaySocket, input.subject, {
       current,
+      ...(startupCurrent === undefined ? {} : { startupCurrent }),
       request: async (bytes, _context, route) => {
         try {
           if (route === SESSION_COUNT_TOKENS_PATH) throw refused();
@@ -148,8 +153,9 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
         });
       });
       if (!result.ok) { poison(); throw refused(); }
-    }, poison, undefined, input.brokerMachine);
-    if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true) throw refused();
+    }, poison, undefined, input.brokerMachine, startupCurrent);
+    if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true
+      || startupRefused()) throw refused();
     started = true;
     if (controller) clearTimeout(activationTimer);
     const host = Object.freeze({ brokerSocket: input.brokerSocket, relaySocket: input.relaySocket, relay, close, waitForActivation,

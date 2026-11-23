@@ -192,17 +192,18 @@ async function connects(options) {
 /** Call only with an enumerated owned synthetic canary population and its owned host-loopback listener.
  * No external connection is attempted. Proof is limited to these canaries and the captured namespace/route facts.
  * A deadline refusal does not confirm helper termination; the host retains ownership of any residual process. */
-export async function probeUrlSessionView(input: UrlSessionViewInputs, canaries: readonly string[], hostLoopbackPort: number): Promise<UrlSessionProbe> {
-  const control = { stopped: false, stop: () => {} };
+export async function probeUrlSessionView(input: UrlSessionViewInputs, canaries: readonly string[], hostLoopbackPort: number,
+  beforeSpawn?: () => void): Promise<UrlSessionProbe> {
+  const control = { stopped: false, stop: () => {}, deadline: performance.now() + PROBE_MILLISECONDS };
   let timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<UrlSessionProbe>(resolve => { timer = setTimeout(() => {
     control.stopped = true; control.stop(); resolve({ ok: false, code: 'probe-bound-exceeded' });
   }, PROBE_MILLISECONDS); });
-  try { return await Promise.race([performProbe(input, canaries, hostLoopbackPort, control), deadline]); }
+  try { return await Promise.race([performProbe(input, canaries, hostLoopbackPort, control, beforeSpawn), deadline]); }
   finally { if (timer !== undefined) clearTimeout(timer); }
 }
 async function performProbe(input: UrlSessionViewInputs, canaries: readonly string[], hostLoopbackPort: number,
-  control: { stopped: boolean; stop: () => void }): Promise<UrlSessionProbe> {
+  control: { stopped: boolean; stop: () => void; deadline: number }, beforeSpawn?: () => void): Promise<UrlSessionProbe> {
   if (!Array.isArray(canaries) || canaries.length < 1 || canaries.length > 64 || !canaries.every(canonical)
     || new Set(canaries).size !== canaries.length || !Number.isSafeInteger(hostLoopbackPort) || hostLoopbackPort < 1 || hostLoopbackPort > 65535) return { ok: false, code: 'invalid-input' };
   canaries = Object.freeze([...canaries]);
@@ -219,7 +220,10 @@ async function performProbe(input: UrlSessionViewInputs, canaries: readonly stri
     return await new Promise<UrlSessionProbe>(resolve => {
       let terminal = false, bytes = 0, stdout = '';
       const finish = (result: UrlSessionProbe): void => { if (terminal) return; terminal = true; resolve(result); };
-      const child = spawn(URL_SESSION_BWRAP, [...urlSessionBwrapArgs(urlSessionViewFor(input)), '--', '/tool/node', '-e', PROBE, JSON.stringify([canaries, namespaces, hostLoopbackPort])],
+      const args = [...urlSessionBwrapArgs(urlSessionViewFor(input)), '--', '/tool/node', '-e', PROBE, JSON.stringify([canaries, namespaces, hostLoopbackPort])];
+      beforeSpawn?.();
+      if (beforeSpawn !== undefined && performance.now() >= control.deadline) { finish({ ok: false, code: 'probe-bound-exceeded' }); return; }
+      const child = spawn(URL_SESSION_BWRAP, args,
         { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'] });
       let breached = false;
       control.stop = () => { child.kill('SIGKILL'); };
