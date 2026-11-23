@@ -287,6 +287,8 @@ describe('main(argv, io): the P1 authority gate', () => {
       const configured = overlap === 'alias' ? '/alias/of/the/observer' : target;
       const h = harness({
         resolvePhysicalPath: (path) => path === OBSERVER_ROOT ? observer : target,
+      }, {
+        start: { started: false, failure: { kind: 'duplicate-route', detail: 'unexpected daemon startup' } },
       });
       expect(await main(['--repo', configured], fake.io, h.deps)).toBe(1);
       expect(fake.err()).toBe('syzygy POC: observer checkout overlaps the configured repository\n');
