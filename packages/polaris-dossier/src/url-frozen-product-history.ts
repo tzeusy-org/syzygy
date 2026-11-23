@@ -1,7 +1,8 @@
 import type { UrlOriginProvenance, UrlSemanticOriginDomain } from './url-origin-provenance.js';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
+import { urlManifestFactsShape } from './url-check-product-shape.js';
 import { URL_HELPER_LAUNCH_FILES, isUrlHelperLaunchFile } from './url-launch-history.js';
 import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
 
@@ -211,6 +212,23 @@ export function verifyUrlFrozenProductHistory(run: string, given: UrlFrozenProdu
     for (const expectedFile of expected.records) {
       const observed = snapshotProductFile(run, expectedFile.path, expectedFile.bytes, check);
       if (observed.bytes === null || observed.bytes.length !== expectedFile.bytes || sha256(observed.bytes) !== expectedFile.sha256) refuse();
+      if (expectedFile.path.startsWith('checks/')) {
+        const text = decodeUtf8(observed.bytes);
+        if (text === undefined) refuse();
+        const doc = parseBoundedJson(text, JSON_LIMITS);
+        if (!isRecord(doc)) refuse();
+        const manifest = doc['manifestFacts'];
+        if (manifest !== undefined) {
+          if (!isRecord(manifest) || !urlManifestFactsShape(manifest)) refuse();
+          if (manifest['state'] === 'derived') {
+            const remainder = canonical(manifest['remainder']);
+            const parents = nodes.get(expectedFile.origin)!.parents.map(key => nodes.get(key)!)
+              .filter(parent => parent.derivation.kind === 'source-manifest-remainder');
+            if (parents.length !== 1 || parents[0]!.metadata.digest !== sha256(remainder)
+              || parents[0]!.metadata.bytes !== Buffer.byteLength(remainder)) refuse();
+          }
+        }
+      }
       snapshots.set(expectedFile.path, observed);
     }
     const artifactSnapshots: { readonly root: string; readonly path: string; readonly snapshot: ProductFileSnapshot }[] = [];

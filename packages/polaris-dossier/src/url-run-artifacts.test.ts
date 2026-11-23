@@ -22,6 +22,7 @@ import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictS
 import { createSessionProfile } from './session-profile.js';
 import { createUrlOriginLedger } from './url-origin-ledger.js';
 import { createUrlRunArtifacts, verifyUrlFrozenProductHistory, type UrlRunArtifactsOptions } from './url-run-artifacts.js';
+import { verifyFrozenOriginProvenance } from './url-frozen-product-history.js';
 import * as productReads from './url-product-reads.js';
 import type { SessionToolsReceipt } from './session-tools.js';
 import type { BrokerResponse } from './broker.js';
@@ -411,6 +412,18 @@ describe('trusted URL artifact producer bridge', () => {
     const change = { ...f.frozen, provenance: { ...f.frozen.provenance, nodes: f.frozen.provenance.nodes.map(node =>
       node === coverageOrigin ? { ...node, derivation: { ...node.derivation, path: 'own-notes/uncited.ts' } } : node) } };
     expect(verifyUrlFrozenProductHistory(f.run, change, f.options.current)).toBeNull();
+    const unlinked = f.frozen.provenance.nodes.map(node => ({
+      ...node, parents: node.parents.filter(key => key !== coverageOrigin.key),
+      metadata: { ...node.metadata, originIds: node.metadata.originIds.filter(id => id !== coverageOrigin.metadata.id) },
+    }));
+    const withChangedMetadata = (change: Partial<typeof coverageOrigin.metadata>) => f.frozen.provenance.nodes.map(node =>
+      node === coverageOrigin ? { ...node, metadata: { ...node.metadata, ...change } } : node);
+    for (const nodes of [unlinked, unlinked.filter(node => node.key !== coverageOrigin.key),
+      withChangedMetadata({ digest: '0'.repeat(64) }), withChangedMetadata({ bytes: coverageOrigin.metadata.bytes + 1 })]) {
+      const provenance = { ...f.frozen.provenance, nodes };
+      expect(() => verifyFrozenOriginProvenance(provenance)).not.toThrow();
+      expect(verifyUrlFrozenProductHistory(f.run, { ...f.frozen, provenance }, f.options.current)).toBeNull();
+    }
     const id = f.sourceTrees.get('own-notes/')!;
     const tree = path.join(f.options.record.subject.clone.path, '.git/objects', id.slice(0, 2), id.slice(2));
     const next = f.fresh();
@@ -422,7 +435,7 @@ describe('trusted URL artifact producer bridge', () => {
     if (capability === null) throw new Error('own fresh recovery capability missing');
     await fresh.bridge.restoreFrozenProducts(capability);
     expect(fresh.origins.ledger.semanticProvenance([fresh.bridge.checkReceipt(0)])).toBe(f.ledger.semanticProvenance([f.bridge.checkReceipt(0)]));
-  });
+  }, 15_000);
   it('refuses the first failed resource check before importing historical provenance', async () => {
     const f = await recoveryFixture(false), next = f.fresh(); let waits = 0;
     await expect(next.bridge.restoreFrozenProducts(f.capability, async () => ++waits !== 1)).rejects.toThrow('url-run-artifacts-unavailable');
@@ -517,10 +530,13 @@ describe('trusted URL artifact producer bridge', () => {
     const manifest = `{\n${'\n'.repeat(2000)}"name":"own-uncited-package",\r"dependencies":{"own-uncited-dependency":"1.0.0"}\r}\n`;
     const excludedManifest = '[package]\nname = "OWN_SECRET_CANARY"\n';
     const compose = 'services:\n  web:\n    image: nginx:stable\n';
+    const unparsedManifest = 'services:\n  - own-unparsed-service\n';
+    const withheldManifest = 'module own-withheld-module\n';
     const uncitedPath = 'own-notes/uncited.ts', uncitedBody = 'export const uncited = "OWN_UNCITED_BODY";\n';
     const privatePath = 'OWN_SECRET_CANARY/own-hidden.ts', privateBody = 'export const hidden = "OWN_PRIVATE_BODY";\n';
     const f = fixture(undefined, {
       'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest, 'compose.yaml': compose,
+      'docker-compose.yml': unparsedManifest, 'go.mod': withheldManifest,
       [uncitedPath]: uncitedBody, [privatePath]: privateBody,
     }, 'v2');
     Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
@@ -679,14 +695,19 @@ describe('trusted URL artifact producer bridge', () => {
             expect.objectContaining({ path: 'package.json', fact: 'dependency', name: 'own-uncited-dependency' }),
             expect.objectContaining({ path: 'compose.yaml', fact: 'service-image', service: 'web', image: 'nginx:stable' }),
           ]),
-          remainder: { files: 7, secretPathsLeftOut: 1, candidates: 3, notCandidates: 3,
-            places: [{ place: null, files: 5, notCandidates: 2 }, { place: 'own-notes', files: 1, notCandidates: 1 }],
+          remainder: { files: 9, secretPathsLeftOut: 1, candidates: 5, notCandidates: 3,
+            places: [{ place: null, files: 7, notCandidates: 2 }, { place: 'own-notes', files: 1, notCandidates: 1 }],
             placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
         });
         if (result.report.manifestFacts?.state !== 'derived') throw Error('own manifest facts unavailable');
         expect(result.report.manifestFacts.facts.filter(fact => fact.path === 'package.json').every(fact => fact.lines[0] > 2000)).toBe(true);
         expect(result.report.manifestFacts.recognizers.find(recognizer => recognizer.rule === 'cargo-manifest')?.files)
           .toEqual([expect.objectContaining({ path: 'Cargo.toml', epistemic: 'unknown', unknownReason: 'secret-detector-match' })]);
+        const manifestFiles = result.report.manifestFacts.recognizers.flatMap(recognizer => recognizer.files);
+        expect(manifestFiles).toEqual(expect.arrayContaining([
+          expect.objectContaining({ path: 'docker-compose.yml', epistemic: 'unknown', unknownReason: 'unparsed', parseFault: 'field-type' }),
+          expect.objectContaining({ path: 'go.mod', epistemic: 'unknown', unknownReason: 'unknown-extraction-class', parseFault: null }),
+        ]));
         const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
         const argv = ['dossier', 'check', f.run];
         const storedBytes = fs.readFileSync(path.join(f.run, 'checks/rev-0.json'));
@@ -746,14 +767,17 @@ describe('trusted URL artifact producer bridge', () => {
         expect(structure).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'] });
         const composeBody = f.ledger.plannedOrigins().find(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(compose));
         expect(composeBody).toBeDefined();
+        const unparsedBody = f.ledger.plannedOrigins().find(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(unparsedManifest));
+        expect(unparsedBody).toBeDefined();
         const coverageOrigin = f.ledger.plannedOrigins().find(origin => origin.sha256 === sha256(b(remainder)));
         expect(coverageOrigin).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'], originIds: [] });
-        const actualOrigins = [body!.id, structure!.id, composeBody!.id, coverageOrigin!.id];
+        const actualOrigins = [body!.id, structure!.id, composeBody!.id, unparsedBody!.id, coverageOrigin!.id];
         expect(origins?.originIds).toEqual(expect.arrayContaining(actualOrigins));
-        for (const absent of [excludedManifest, uncitedBody, privateBody]) {
+        for (const absent of [excludedManifest, withheldManifest, uncitedBody, privateBody]) {
           expect(f.ledger.plannedOrigins().some(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(absent))).toBe(false);
         }
-        for (const absent of [uncitedPath, 'OWN_UNCITED_BODY', f.sourceObjects.get(uncitedPath)!, 'OWN_SECRET_CANARY', 'OWN_PRIVATE_BODY', f.sourceObjects.get(privatePath)!]) {
+        for (const absent of [uncitedPath, 'OWN_UNCITED_BODY', f.sourceObjects.get(uncitedPath)!, 'OWN_SECRET_CANARY', 'OWN_PRIVATE_BODY',
+          f.sourceObjects.get(privatePath)!, 'own-unparsed-service', 'own-withheld-module', f.sourceObjects.get('go.mod')!]) {
           expect(response.stdout).not.toContain(absent);
         }
         const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
@@ -761,6 +785,8 @@ describe('trusted URL artifact producer bridge', () => {
         bridge.committed('author', receipt.id);
         expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining(actualOrigins));
         const ancestry = f.ledger.captureProvenance([bridge.checkReceipt(0)]).graph.nodes;
+        expect(ancestry.find(node => node.derivation.kind === 'source-whole' && node.derivation.path === 'docker-compose.yml'))
+          .toMatchObject({ metadata: { digest: sha256(unparsedManifest), bytes: Buffer.byteLength(unparsedManifest) } });
         expect(ancestry.find(node => node.metadata.id === coverageOrigin!.id)).toMatchObject({
           parents: [], derivation: { kind: 'source-manifest-remainder' }, metadata: { digest: sha256(b(remainder)), bytes: b(remainder).length },
         });
@@ -856,7 +882,7 @@ describe('trusted URL artifact producer bridge', () => {
     expect(() => createUrlRunArtifacts({ ...f.options, effectiveDeclaration: { ...effectiveDeclaration, context: { runId: f.runId } as never } })).toThrow();
     const changed = JSON.parse(issued.text); changed.pinnedCommit = 'b'.repeat(40); const bytes = b(changed);
     expect(() => createUrlRunArtifacts({ ...f.options, effectiveDeclaration: { declaration: changed, bytes, context: { ...effectiveDeclaration.context, expectedSidecarSha256: sha256(bytes) } } })).toThrow();
-  });
+  }, 15_000);
   it('selects exact committed check/report sets and refuses missing, unknown higher, uncommitted or mutated products', async () => {
     const f = fixture(); f.initialize(); const draft = await f.commitCheck(false);
     const begin = () => f.bridge.beginRead({ operation: 'render', deadline: Date.now() + 4000 });

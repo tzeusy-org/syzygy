@@ -596,12 +596,13 @@ function create(given: UrlRunArtifactsOptions) {
       if (canonical(coverage) !== canonical(expected)) refuse();
     }
     const sources = await sourceParents(doc['citedBlobs'], waitForCapture);
-    // The actual checker also derives manifest facts from bodies absent from
-    // citedBlobs. Preserve their complete screened source lineage in the reply.
+    // A parse fault also comes from a whole screened body. Neither parsed
+    // values nor parser results may lose their source lineage.
     const facts = doc['manifestFacts'] as ManifestFacts | undefined;
     const manifests = facts?.state === 'derived' ? facts : undefined;
     const manifestPaths = manifests === undefined ? []
-      : [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files.filter(file => file.epistemic === 'inferred').map(file => file.path)))];
+      : [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files
+        .filter(file => file.epistemic === 'inferred' || file.unknownReason === 'unparsed').map(file => file.path)))];
     const manifestParents = manifestPaths.length + Number(manifests !== undefined);
     if (new Set([...inputParents, report.receipt, ...inventoryParents, ...sources]).size + manifestParents > limits.parents) refuse();
     if (manifests !== undefined) {
