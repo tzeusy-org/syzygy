@@ -7,7 +7,7 @@ import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { createUrlRunMachine, isUrlRunMachineClosedHistory, readUrlRunMachineClosedHistory, type UrlRunMachineOptions } from './url-run-machine.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
-import { openUrlMachineStore } from './url-machine-store.js';
+import * as machineStore from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
 import { URL_ORIGIN_POLICY_PATH, URL_ROLES } from './url-run-record.js';
@@ -125,7 +125,7 @@ describe('retained production machine closure evidence', () => {
       const result = await f.machine.close(); expect(result).toEqual({ lifecycle: 'Unknown' }); expect(readUrlRunMachineClosedHistory(result)).toBeNull();
       expect(await readFile(file)).toEqual(bytes); return;
     }
-    const store = await openUrlMachineStore({ ...f.options }, f.machine.identitySha256); if (!store) throw new Error('owned store refused');
+    const store = await machineStore.openUrlMachineStore({ ...f.options }, f.machine.identitySha256); if (!store) throw new Error('owned store refused');
     const context: UrlMachineClientContext = { clientId, policySha256: f.options.originPolicySha256, profileSha256: f.options.plans[0]!.profile.digest,
       sourcePin: f.options.pin, runId: f.options.runId, role: 'author', kind: 'mcp-shim', allowedScopes: ['artifact_read'], now: NOW, deadline: f.options.deadline };
     // This independently written synthetic record tests a protected-store
@@ -154,7 +154,7 @@ describe('same-store machine continuation seam', () => {
       // Independently retained synthetic sealed terminal over actual lifecycle
       // writes; this is historical data, never a captured peer/credential.
       const context = sealed.clients[0]!.context;
-      const store = await openUrlMachineStore(f.options, f.machine.identitySha256); if (!store) throw new Error('owned reopen refused');
+      const store = await machineStore.openUrlMachineStore(f.options, f.machine.identitySha256); if (!store) throw new Error('owned reopen refused');
       const first: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: context.clientId,
         issuanceId: id(30), revision: 1, projectId: 'project:syzygy', policySha256: context.policySha256, sourcePin: context.sourcePin,
         runId: context.runId, role: context.role, kind: context.kind, scopes: context.allowedScopes,
@@ -241,8 +241,48 @@ describe('same-store machine continuation seam', () => {
     expect(after.clients.slice(0, 8)).toEqual(before.clients); expect(await readFile(canonicalFile)).toEqual(canonicalBefore);
   });
 
+  it.each([0, 1, 2])('uses one held authority and time sample at each terminal boundary (refusal %i)', async refusal => {
+    const f = await closedFixture(true), stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const before = await readFile(stateFile);
+    const sampleTimes: (number | null)[] = [];
+    const separateClock = vi.fn(() => { throw new Error('unexpected unpaired clock read'); });
+    const separateCurrent = vi.fn(() => { throw new Error('unexpected unpaired authority check'); });
+    const open = machineStore.openUrlMachineStore;
+    vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce(async (...args) => {
+      const store = await open(...args);
+      if (store === null) return null;
+      let first = true;
+      return { ...store, exclusive: (clientId, deadline, operation, profile) => {
+        if (!first) return store.exclusive(clientId, deadline, operation, profile);
+        first = false;
+        return store.exclusive(clientId, deadline, lease => operation({
+          ...lease, current: separateCurrent, now: separateClock,
+          sampleCurrent: () => {
+            const actual = lease.sampleCurrent();
+            const sample = sampleTimes.length + 1 === refusal ? null : actual;
+            sampleTimes.push(sample);
+            return sample;
+          },
+        }), profile);
+      } };
+    });
+    const create = createUrlRunMachine({ ...f.options, requiredRoles: [], plans: [] });
+    if (refusal === 0) {
+      const resumed = await create;
+      cleanup.push(() => resumed.close());
+      expect(resumed.current()).toBe(true);
+      expect(sampleTimes).toEqual([NOW, NOW]);
+    } else {
+      await expect(create).rejects.toThrow('url-run-machine-unavailable');
+      expect(sampleTimes).toEqual(refusal === 1 ? [null] : [NOW, null]);
+    }
+    expect(separateCurrent).not.toHaveBeenCalled();
+    expect(separateClock).not.toHaveBeenCalled();
+    expect(await readFile(stateFile)).toEqual(before);
+  });
+
   it('refuses a changed protected retired head after genuine cold capture and never allocates around it', async () => {
-    const f = await closedFixture(true), old = f.history.clients[0]!, store = await openUrlMachineStore(f.options, f.machine.identitySha256);
+    const f = await closedFixture(true), old = f.history.clients[0]!, store = await machineStore.openUrlMachineStore(f.options, f.machine.identitySha256);
     if (!store || old.terminal.kind !== 'revoked') throw new Error('owned historical reopen refused');
     const canonicalFile = path.join(f.options.governanceRoot, 'governance/policies/dossier-machine-clients', `${old.context.clientId}.json`);
     const prior = JSON.parse(await readFile(canonicalFile, 'utf8')) as UrlMachineClientRecord;

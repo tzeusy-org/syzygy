@@ -1411,6 +1411,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                       if (!current) step.currentRefusals++;
                       return current;
                     },
+                    sampleCurrent: () => {
+                      const now = lease.sampleCurrent();
+                      step.currentChecks++;
+                      if (now === null) step.currentRefusals++;
+                      return now;
+                    },
                   })), profile), value => value);
                 },
                 close: () => observing

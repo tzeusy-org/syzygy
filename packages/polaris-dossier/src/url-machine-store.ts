@@ -65,10 +65,13 @@ export interface UrlMachineStoreOptions {
   /** The same fresh authority check around asynchronous filesystem work. */
   readonly currentAsync?: () => Promise<boolean>;
 }
+interface UrlMachineStoreLease extends UrlMachineLifecycleLease {
+  sampleCurrent(): number | null;
+}
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
    * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
-  exclusive(clientId: string, deadline: number, run: (lease: UrlMachineLifecycleLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
+  exclusive(clientId: string, deadline: number, run: (lease: UrlMachineStoreLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   /** Run only the trusted lifecycle publication protocol inside one held lock. */
   publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean): Promise<UrlMachineLifecycleResult>;
   readonly identitySha256: string;
@@ -555,7 +558,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging);
       return finished ? issued : null;
     };
-    const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineLifecycleLease) => Promise<void>,
+    const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineStoreLease) => Promise<void>,
       effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)

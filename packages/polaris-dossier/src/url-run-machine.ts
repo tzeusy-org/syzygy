@@ -136,7 +136,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     let confirmedAt: number | null = null;
     const verified = await store.exclusive(context.clientId, input.deadline, async lease => {
       const snapshot = await lease.read();
-      if (!snapshot || !lease.current()) return;
+      if (!snapshot) return;
+      const now = lease.sampleCurrent();
+      if (now === null) return;
       if (terminal.kind === 'never-issued') {
         if (snapshot.anchor.kind !== 'never-issued' || !canonical(snapshot.anchor).equals(canonical(terminal))
           || snapshot.canonical !== null || snapshot.projection !== null || snapshot.audit !== null) return;
@@ -145,10 +147,10 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           || !canonical(snapshot.anchor.head).equals(canonical(terminal.head))
           || !canonical(snapshot.audit).equals(canonical(terminal.head))
           || !canonical(snapshot.projection).equals(canonical(terminal.head.record))) return;
-        const read = readUrlMachineClient(snapshot.canonical, { ...context, now: lease.now() });
+        const read = readUrlMachineClient(snapshot.canonical, { ...context, now });
         if (!read.ok || read.record.revokedAt === null || read.sha256 !== terminal.head.record.sha256) return;
       }
-      if (lease.current()) confirmedAt = lease.now();
+      confirmedAt = lease.sampleCurrent();
     });
     return verified ? confirmedAt : null;
   };
