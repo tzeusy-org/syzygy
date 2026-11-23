@@ -202,11 +202,13 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
     let asyncCurrent = true;
+    const namedRootChecks: ('current' | 'root')[] = [];
     const current = vi.fn(f.options.current);
-    const currentAsync = vi.fn(async () => asyncCurrent);
+    const currentAsync = vi.fn(async () => { namedRootChecks.push('current'); return asyncCurrent; });
     const reopened = await openUrlMachineStore({ ...f.options, current, currentAsync }, f.store.identitySha256);
     expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
-    current.mockClear(); currentAsync.mockClear();
+    current.mockClear(); currentAsync.mockClear(); namedRootChecks.length = 0;
+    filesystem.afterLstat = file => { if (file === f.options.protectedRoot) namedRootChecks.push('root'); };
     expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => {
       expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
       expect(currentAsync.mock.calls.length).toBeGreaterThan(current.mock.calls.length);
@@ -215,6 +217,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(currentAsync.mock.calls).toHaveLength(asyncChecks);
       expect(current.mock.calls).toHaveLength(syncChecks + 1);
     })).toBe(true);
+    expect(namedRootChecks.slice(0, 3)).toEqual(['current', 'root', 'current']);
     filesystem.afterSync = file => { if (file === f.options.protectedRoot) asyncCurrent = false; };
     const run = vi.fn();
     expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, run)).toBe(false);

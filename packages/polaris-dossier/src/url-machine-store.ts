@@ -423,6 +423,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const stagingClock = staging === undefined ? undefined : checkDeadline;
       const checkWork = stagingClock ?? check;
       const verifyAnchors = () => anchored(stagingClock);
+      // The I/O wrapper supplies the enclosing authority checks for this read.
+      const verifyAnchorsDuringIo = () => anchored(checkDeadline);
       const checkAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
         checkDeadline();
         await liveAsync(authorize);
@@ -448,14 +450,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       };
       const write = async (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null): Promise<void> => {
         charge(bytes.byteLength);
-        checkWork(); await io(verifyAnchors);
+        checkWork(); await io(verifyAnchorsDuringIo);
         const parent = path.dirname(file), temporary = `${file}.new-${opaque()}`;
         let handle: FileHandle | undefined;
         try {
           await io(async () => { handle = await open(temporary, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600); });
           const held = handle!;
           await io(() => held.writeFile(bytes)); await io(() => held.sync());
-          checkWork(); await io(verifyAnchors);
+          checkWork(); await io(verifyAnchorsDuringIo);
           if (predecessor !== undefined) {
             const actual = await io(() => readFile(file, Math.max(bytes.byteLength, predecessor?.byteLength ?? 0), true));
             if (actual === null ? predecessor !== null : predecessor === null || !actual.equals(Buffer.from(predecessor))) throw refused();
@@ -480,7 +482,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
         for (;;) {
-          check(); await io(verifyAnchors);
+          check(); await io(verifyAnchorsDuringIo);
           if (allocation) {
             await reverify(); check(); verifyNamedRoots(); checkDeadline();
             if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
