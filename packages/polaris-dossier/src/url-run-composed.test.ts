@@ -934,8 +934,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       });
     }
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
-    let releaseAuthorReread: (() => void) | undefined;
-    const waitForFidelityPacket = eligibleStop ? new Promise<void>(resolve => { releaseAuthorReread = resolve; }) : undefined;
+    let fidelityPacketRegistered: (() => void) | undefined;
+    const waitForFidelityPacket = eligibleStop ? new Promise<void>(resolve => { fidelityPacketRegistered = resolve; }) : undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn(), resumedBegins = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
@@ -1084,8 +1084,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       for (const request of requests) visit(request);
       return results;
     };
+    const readFidelityPacket = () => tool('fidelity_packet', 'artifact_read', { path: 'round-1/packet.json' });
     const fidelity = scripted('fidelity', [tool('fidelity_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.fidelity] }),
-      tool('fidelity_packet', 'artifact_read', { path: 'round-1/packet.json' }), () => {
+      waitForFidelityPacket === undefined ? readFidelityPacket() : async () => {
+        await waitForFidelityPacket;
+        return readFidelityPacket();
+      }, () => {
         const artifact = resultTexts(fidelity.received).reverse().find(value => value.kind === 'artifact' && value.path === 'round-1/packet.json');
         if (typeof artifact?.text !== 'string' || typeof artifact.sha256 !== 'string') throw new Error('complete native fidelity packet absent');
         const packet = JSON.parse(artifact.text) as { spans: { id: string; path: string; startLine: number }[] };
@@ -1199,10 +1203,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const observedArtifacts: typeof f.artifacts = eligibleStop ? { ...f.artifacts,
       registerPacket: async (...args) => {
         const result = await f.artifacts.registerPacket(...args);
-        if (args[0].round === 1) {
-          releaseAuthorReread?.();
-          fidelity.allow();
-        }
+        if (args[0].round === 1) fidelityPacketRegistered?.();
         return result;
       },
     } : f.artifacts;
@@ -1231,7 +1232,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       });
       inv.allow(); design.allow();
       eligiblePhase = 'fidelity';
-      if (!eligibleStop) {
+      if (eligibleStop) {
+        // Let Fidelity poll while Inventory runs. Hold its packet read until
+        // the real producer has registered the checked packet.
+        fidelity.allow();
+      } else {
         const packetUntil = performance.now() + 60_000;
         while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
           await new Promise(resolve => setTimeout(resolve, 250));
