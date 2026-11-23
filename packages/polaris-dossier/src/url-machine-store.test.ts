@@ -400,6 +400,33 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(closed).toBe(true);
   });
 
+  it('confirms protected state and client bytes within five seconds of fresh authority checks', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    const revoked = { ...slot.record, revision: 2, revokedAt: new Date(NOW).toISOString() };
+    const publication = await slot.publish(revoked, { revision: 1, sha256: sha256(canon(slot.record)) });
+    if (!publication.ok) throw new Error('fixture retirement refused');
+    let elapsed = 0, measuring = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (measuring) elapsed += 400;
+      return true;
+    } }, f.store.identitySha256);
+    if (!reopened) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+    try {
+      measuring = true;
+      const finished = await reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+        expect(await lease.read()).toEqual({ canonical: canon(revoked), anchor: { kind: 'committed', head: publication.receipt },
+          audit: publication.receipt, projection: publication.receipt.record });
+        expect(lease.current()).toBe(true);
+      });
+      expect(finished).toBe(true);
+      expect(elapsed).toBe(4800);
+    } finally { clock.mockRestore(); }
+  });
+
   it('checks authority after protected state I/O before using it to open the client', async () => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);

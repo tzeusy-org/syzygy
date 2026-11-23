@@ -501,7 +501,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await io(() => heldRoot.sync());
         if (allocation) { await reverify(); check(); }
         await io(census);
-        await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(stagingClock)), write });
+        // Bracket the complete private state read, including its named roots,
+        // with I/O authority. The client read still starts after that check.
+        await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(checkDeadline)), write });
         check();
         if (allocation) {
           // The slot is durable. Keep lock cleanup and witness admission
