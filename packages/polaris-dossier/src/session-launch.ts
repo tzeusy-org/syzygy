@@ -302,10 +302,16 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
         for (const [index, sample] of samples.entries()) {
           check();
-          if (sample.status === 'rejected') {
-            if (!disappeared(sample)) throw sample.reason;
-            // The later reads have also settled. Honor a known refusal in
-            // this batch before retrying one observed disappearance.
+          try {
+            if (sample.status === 'rejected') throw disappeared(sample) ? entryDisappeared : sample.reason;
+            const stat = sample.value;
+            if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
+            else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
+            else throw refused();
+          } catch (error) {
+            if (error !== entryDisappeared) throw error;
+            // A missing entry or nested directory can request a retry. Honor
+            // any fatal result already settled for the rest of this batch.
             for (const later of samples.slice(index + 1)) {
               if (later.status === 'rejected') {
                 if (disappeared(later)) throw refused();
@@ -314,12 +320,8 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
               const stat = later.value;
               if (!stat.isDirectory() && (!stat.isFile() || stat.nlink !== 1)) throw refused();
             }
-            throw entryDisappeared;
+            throw error;
           }
-          const stat = sample.value;
-          if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
-          else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
-          else throw refused();
           if (!Number.isSafeInteger(bytes) || bytes > limits.storageBytes) return;
         }
         batch.length = 0;

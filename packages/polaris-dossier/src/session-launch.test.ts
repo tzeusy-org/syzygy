@@ -1171,15 +1171,16 @@ describe('prepared private CLI launch',()=>{
     { scenario: 'two missing entries in one batch', faults: [['ENOENT', 'ENOENT']], outcome: 'inspection-failed', walks: 1 },
     { scenario: 'one missing entry on each of two walks', faults: [['ENOENT'], ['ENOENT']], outcome: 'exited', walks: 3 },
     { scenario: 'a non-ENOENT fault after a missing entry in the retry', faults: [['ENOENT'], ['ENOENT', 'EACCES']], outcome: 'inspection-failed', walks: 2 },
+    { scenario: 'a sibling stat fault after a nested disappearance in the retry', faults: [['ENOENT'], ['EACCES']], outcome: 'inspection-failed', walks: 2, nestedFault: true },
     { scenario: 'the shared entry allowance consumed on the retry', faults: [['ENOENT']], outcome: 'inspection-failed', walks: 2, entries: 8 },
     { scenario: 'an oversized entry before a missing entry', faults: [['ENOENT']], outcome: 'storage-limit', walks: 1, oversizedBefore: true },
-  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries, oversizedBefore }) => {
+  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries, oversizedBefore, nestedFault }) => {
     const f = await launchFixture(entries === undefined ? {} : { entries });
     const names = new Set(Array.from({ length: 3 }, (_, index) => `own-census-entry-${index}`));
-    const retained = 'own-retained-entry';
+    const retained = 'own-retained-entry', nested = 'own-nested-vanishing-entry';
     const pending = faults.map(walk => [...walk]);
     const returned: string[] = [];
-    let rootOpens = 0, oversized = false;
+    let rootOpens = 0, oversized = false, converted = false;
     const retainedWalks = new Set<number>();
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
@@ -1203,7 +1204,14 @@ describe('prepared private CLI launch',()=>{
         truncateSync(file, URL_LAUNCH_LIMITS.storageBytes + 1);
         return lstat(...args);
       }
-      const fault = names.has(name) ? pending[rootOpens - 1]?.shift() : undefined;
+      if (nestedFault && rootOpens === 2 && !converted && names.has(name)) {
+        converted = true;
+        unlinkSync(file);
+        mkdirSync(file);
+        writeFileSync(path.join(file, nested), 'owned', { flag: 'wx' });
+        return lstat(...args);
+      }
+      const fault = name === nested ? 'ENOENT' : names.has(name) ? pending[rootOpens - 1]?.shift() : undefined;
       if (fault === undefined) return lstat(...args);
       // Observe real descriptor-relative ENOENT after removing the name. A
       // named synthetic access error exercises a non-transient rejection.
@@ -1230,7 +1238,9 @@ describe('prepared private CLI launch',()=>{
         const diagnostic = JSON.stringify({ rootOpens, pending, returned, sample: inspection.firstRefusal ?? inspection.latest });
         expect(current, diagnostic).toBe(completed);
         expect(rootOpens, diagnostic).toBe(walks);
-        expect([...returned].sort()).toEqual(faults.flat().sort());
+        const expectedFaults = faults.flat();
+        if (nestedFault) expectedFaults.push('ENOENT');
+        expect([...returned].sort()).toEqual(expectedFaults.sort());
         if (completed) expect(retainedWalks.has(walks)).toBe(true);
         expect(completedSamples).toEqual(completed ? [walks] : []);
         const censusAccepted = completed || outcome === 'storage-limit';
