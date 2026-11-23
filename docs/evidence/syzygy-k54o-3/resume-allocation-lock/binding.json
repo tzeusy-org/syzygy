@@ -1,0 +1,56 @@
+{
+  "subject": {
+    "commit": "991deec4a8be9e7847dee7b1b036a95e6a4ca4fd",
+    "binaryDiffSha256": "a5906ea5aa0ddd546fcee00ab001bbb56b562d7b8388ab42ca4257745c389dab"
+  },
+  "governance": [
+    "A-14",
+    "A-88",
+    "A-128"
+  ],
+  "review": {
+    "reviewedCommit": "b6aaf7832a5ea4f2df7e74f300b1b276e6226dfe",
+    "path": "docs/reviews/F3-RESUME-ALLOCATION-LOCK-REVIEW-RAW.md",
+    "sha256": "7223de7a2d1bee02e4c64ded1a68dfdc0250f8a2aeb435f531517e1457f51dee",
+    "verdict": "PASS"
+  },
+  "predecessor": {
+    "commit": "a196fa111132475adc3bda7e502a81bbbf88268e",
+    "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45268032201/job/138022213546",
+    "interruptedResumeAllocation": {
+      "count": 8,
+      "elapsedMs": 5187.754235,
+      "outcome": "refused",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1962.3710069999797
+      },
+      "runRemainingMs": 6766529
+    }
+  },
+  "verification": {
+    "typecheck": "passed",
+    "machineStore": {
+      "passed": 73,
+      "total": 73
+    },
+    "machineLifecycle": {
+      "passed": 36,
+      "total": 36
+    },
+    "negativeControls": [
+      {
+        "change": "Restore serialized fsync and census",
+        "failedAsExpected": 2
+      },
+      {
+        "change": "Drop the second async authority check",
+        "failedAsExpected": 2
+      }
+    ],
+    "nativeTiming": "Unknown"
+  }
+}
