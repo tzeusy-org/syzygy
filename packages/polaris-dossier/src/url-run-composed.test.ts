@@ -208,7 +208,7 @@ async function readDesignAuditKinds(file: string | undefined) {
   } catch { return { status: 'unavailable' }; }
 }
 
-async function observeInterruptedResume(run: string) {
+async function observeDesignRun(run: string) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
   type AppendStage = 'audit-authority' | 'attempt-authority' | 'stat' | 'read' | 'write' | 'sync';
@@ -218,7 +218,7 @@ async function observeInterruptedResume(run: string) {
     stages: Array<{ phase: AppendStage; timing: ResumeStamp }>;
   };
   const appendContext = new AsyncLocalStorage<AppendTrace>();
-  let latestAppend: AppendTrace | undefined, firstRefusedAppend: AppendTrace | undefined;
+  let preparedAppend: AppendTrace | undefined, latestAppend: AppendTrace | undefined, firstRefusedAppend: AppendTrace | undefined;
   function observeAppendStage<T>(phase: AppendStage, invoke: () => T, accepts: (value: Awaited<T>) => boolean): T {
     const trace = appendContext.getStore();
     if (trace === undefined || trace.stages.length >= 96) return invoke();
@@ -349,6 +349,7 @@ async function observeInterruptedResume(run: string) {
     vi.spyOn(store, 'append').mockImplementation(record => {
       const trace: AppendTrace = { kind: record.kind, timing: { startedMs: clock() }, stages: [] };
       latestAppend = trace;
+      if (record.kind === 'prepared') preparedAppend ??= trace;
       const pending = appendContext.run(trace, () => record.kind === 'prepared'
         ? brokerPhase('prepared-store-append', () => append.call(store, record), reader => typeof reader === 'function')
         : append.call(store, record));
@@ -519,7 +520,7 @@ async function observeInterruptedResume(run: string) {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
-    orderedAudit: { latestAppend, firstRefusedAppend },
+    orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
@@ -578,8 +579,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
-    let initialDiagnostic: Awaited<ReturnType<typeof observeInterruptedResume>> | undefined;
-    let resumeDiagnostic: Awaited<ReturnType<typeof observeInterruptedResume>> | undefined;
+    let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
+    let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
@@ -727,7 +728,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       };
     });
     const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
-    if (eligibleStop) initialDiagnostic = await observeInterruptedResume(f.run);
+    if (eligibleStop) initialDiagnostic = await observeDesignRun(f.run);
     const writeEvidence = async (result: Record<string, unknown>) => {
       const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
       if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
@@ -983,7 +984,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumedControllers.push(runtime);
             return runtime;
           });
-          if (scenario === 'stop-resume') resumeDiagnostic = await observeInterruptedResume(f.run);
+          if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run);
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
