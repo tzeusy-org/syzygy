@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 505,
+      "scenarios": 509,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -997,7 +997,11 @@
             "Checked relay evidence does not stand for raw-read traffic",
             "Run files read under their bounds",
             "Run record past its bound",
-            "Breach log that cannot be read is not recorded as none"
+            "Breach log that cannot be read is not recorded as none",
+            "Verify gives each claim one of six outcomes",
+            "Verify never reads or names a withheld path",
+            "Verify's quotation check is check's",
+            "Verify writes nothing into a run"
           ]
         },
         "REQ-polaris-generation-034": {

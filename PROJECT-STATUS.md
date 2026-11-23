@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 505 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 509 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -212,6 +212,11 @@ authority and no model yet called on the current path.
     overview figure of a graph kind or a declared omission with its reason, the `hero` finding, brief v16); it departs
     from v1.7's owner-signed "a missing hero is no repair finding" (its row says why), and its code is not yet landed.
     *(2026-11-23: the predecessor figure "495 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Verify-text amendment 2.21](openspec/changes/dossier-verify-text) is agent-adopted in A-55.
+    It replaces REQ-polaris-generation-033 again (12 to 16 scenarios: the `syzygy dossier verify` command, which checks a
+    free-form text's references and quotations against a run's pinned revision); its implementation (syzygy-5dhm.23) lands with it.
+    *(2026-11-23: the predecessor figure "505 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
