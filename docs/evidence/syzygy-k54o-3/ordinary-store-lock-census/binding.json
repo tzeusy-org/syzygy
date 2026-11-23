@@ -1,0 +1,69 @@
+{
+  "adoption": "A-135",
+  "base": "8388cf220a74abd813f8eeaeb6283c3c4ed710bf",
+  "sourceCommit": "2927f3c38f139124aadfab39fca521e1331d9c27",
+  "patchSha256": "2023388cc6c352d2cdb46ff76586d4e48b24fab6737e8b1fa81eb22887e242d0",
+  "productionBlob": "7c4e8e07f87f012d0e793c4bf507c092d7360eb8",
+  "testBlob": "fa239bc4680b12313debca7556fbde651148c388",
+  "review": {
+    "path": "docs/reviews/F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "00a223e83bd804336f61f75dc0a9f28a9284e3d4ddf85b285d1037adc8879729",
+    "subjectSha256": "2023388cc6c352d2cdb46ff76586d4e48b24fab6737e8b1fa81eb22887e242d0"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "cases": 81,
+      "files": 3,
+      "sha256": "72d85b54ca65aa87057542c024e669286231ea101b9f9d9c718331481c394d29"
+    },
+    "mutants": [
+      {
+        "id": "restore-serial-ordinary-lock",
+        "old": "if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {",
+        "new": "if (staging === undefined && currentAsync !== undefined) {",
+        "failedControls": 2,
+        "logSha256": "5d8c7683496d6b54e0f8ee98ba3ff970873fb7e4223c4841f5cbfc635b17c295"
+      },
+      {
+        "id": "overlap-unselected-locks",
+        "old": "if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {",
+        "new": "if (staging === undefined) {",
+        "failedControls": 2,
+        "logSha256": "dbe7760fc9df6204fd7865bf7ded6d590579103bd069d11ccbcd6fa91c2ccc61"
+      }
+    ]
+  },
+  "diagnosticMotivation": {
+    "base": "8388cf220a74abd813f8eeaeb6283c3c4ed710bf",
+    "overlayPatchSha256": "7f3d1be8c8c7f7b68cd4288cb198337cfa0eff46e95741ac4cbb644c321625d7",
+    "sourceLogSha256": "6cf40dffbe82d4faab14d34cd9c511f33e22d6d624cc51986e8ece2a5eacfa51",
+    "storeRefusal": {
+      "atMs": 86117.433912,
+      "elapsedMs": 1024.3420239999978,
+      "phase": "lock-mkdir",
+      "cause": "lock-contention-cutoff",
+      "attempts": 22,
+      "held": false,
+      "contended": true,
+      "pending": 0,
+      "resumed": false,
+      "staged": false,
+      "allocation": false
+    },
+    "nextRelayRefusal": {
+      "event": "mediation-refused",
+      "stage": "upstream-send",
+      "role": "author",
+      "atMs": 86118.170708,
+      "elapsedMs": 9325.542685000008
+    },
+    "holdingOperation": "Unknown"
+  },
+  "remaining": "Exact native latency and common successful revision for both Stop/Resume paths are Unknown."
+}

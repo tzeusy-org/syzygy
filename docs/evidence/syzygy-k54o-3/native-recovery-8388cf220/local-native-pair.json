@@ -1,0 +1,148 @@
+{
+  "revision": "8388cf220a74abd813f8eeaeb6283c3c4ed710bf",
+  "tree": "f473b1dc73658a5380be9c54c6da4fa690bc0a48",
+  "parent": "e93544ff4c4856ba75dae9e8b3e89e209fd6dbbf",
+  "cases": {
+    "stop-resume": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 276476,
+      "sourceLogSha256": "e5acf3aecf1ee609a673b4efd71669ee60583139463fe0324ce55e7490e92e06",
+      "reportedReasons": [],
+      "resume": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "role-ended",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "inspection-failed",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "auditEnd": [
+        "declaration",
+        "launch-attempt",
+        "launch-terminal"
+      ],
+      "firstLauncherRefusal": {
+        "ordinal": 2,
+        "phases": {
+          "process": {
+            "startedMs": 0.032091000000946224
+          },
+          "verify": {
+            "startedMs": 0.0656250000174623
+          },
+          "storage": {
+            "startedMs": 0.06953200002317317
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1121.3942390000157
+        }
+      },
+      "firstSampleRefusal": null,
+      "recordEvidence": "No successful execution record admission was reported.",
+      "resumedAuditSetup": {
+        "startedMs": 169358.448322,
+        "authority": {
+          "started": 11,
+          "accepted": 11,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 809.7055070000642,
+          "longestMs": 78.37801700001
+        },
+        "settledMs": 170280.11151,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "launchHistory": {
+        "write": {
+          "startedMs": 151019.193,
+          "settledMs": 153642.588,
+          "outcome": "rejected"
+        },
+        "syncs": [
+          {
+            "startedMs": 152746.945,
+            "settledMs": 153272.261,
+            "outcome": "accepted"
+          }
+        ]
+      }
+    },
+    "eligible-stop-resume": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 97438,
+      "sourceLogSha256": "2b602a8472be38126578c71ac2a13236d4982696c69ad8233a9627072d6e036d",
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "resume": [],
+      "forwards": {
+        "author": 7,
+        "inventory": 0,
+        "fidelity": 1,
+        "design": 0
+      },
+      "auditEnd": [
+        "declaration"
+      ],
+      "firstLauncherRefusal": null,
+      "firstSampleRefusal": null,
+      "recordEvidence": "No successful execution record admission was reported."
+    }
+  }
+}

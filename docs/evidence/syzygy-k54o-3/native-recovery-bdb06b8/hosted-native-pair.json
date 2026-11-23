@@ -1,0 +1,131 @@
+{
+  "revision": "bdb06b8b6bb4142e8877ed292adfb350b5f035d8",
+  "mergeCommit": "c1a278c26c7e824c09ae38b3766d3744789b4da1",
+  "mergeTree": "54f50e6583aeebeb5ed584cbdc89d4ba70527581",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45174764181/job/137694338373",
+  "logSha256": "9a2b8d480554d267ebd5c440d41b7d9a4354f84b35d56a3130032ba9c06d77ec",
+  "cases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 78017
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 63750
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 296577
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 283037
+    }
+  ],
+  "verification": {
+    "unit": "passed",
+    "e2e": "passed",
+    "governance": "passed",
+    "integration": "failed"
+  },
+  "deliveryStop": {
+    "firstRefusal": "protected rendered site evidence changed or expired",
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    }
+  },
+  "interrupted": {
+    "resume": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "transport-unavailable",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "exitCode": null,
+            "signal": "SIGTERM"
+          }
+        ]
+      }
+    ],
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "auditEnd": [
+      "declaration",
+      "launch-attempt",
+      "launch-terminal"
+    ],
+    "firstLauncherRefusal": {
+      "ordinal": 2,
+      "phases": {
+        "process": {
+          "startedMs": 0.03453200001968071
+        },
+        "verify": {
+          "startedMs": 0.07331200002226979
+        },
+        "storage": {
+          "startedMs": 0.08380099997157231
+        }
+      },
+      "refusal": {
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1020.5474529999774
+      }
+    }
+  },
+  "eligible": {
+    "lastSupervisorReport": "The checked session controller or a supervised stage failed.",
+    "preciseRefusal": "Unknown",
+    "details": "The available job log ends after the case result and generic supervisor report."
+  }
+}
