@@ -19,7 +19,7 @@ import type { UrlRunSessions } from './url-run-sessions.js';
 import { sessionRelayTestPort, type SessionRelayPorts } from './session-relay.js';
 import type { UrlRuntime } from './url-runtime.js';
 import * as sessionAudit from './url-session-audit.js';
-import { isUrlDesignProductLeaseOpen } from './url-design-product.js';
+import * as designProduct from './url-design-product.js';
 import { orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
@@ -35,6 +35,7 @@ import * as policySnapshot from './policy-snapshot.js';
 import * as sessionBroker from './session-broker.js';
 import * as orderedHost from './url-ordered-design-host.js';
 import * as orderedBounds from './url-ordered-design-bounds.js';
+import * as orderedAttempt from './url-run-ordered-attempt.js';
 import * as orderedSession from './url-ordered-design-session.js';
 import * as orderedScreen from './url-ordered-design-screen.js';
 import * as orderedWork from './url-ordered-design-work-budget.js';
@@ -310,6 +311,10 @@ async function observeDesignRun(run: string, traceInference = false) {
 
   type InferenceBoundary = 'parent-current' | 'kernel-peer' | 'peer-audit';
   type RelayPhase = 'request' | 'response' | 'controller-current' | 'product-assertion' | 'screening-worker' | 'admission';
+  type CurrentPhase = 'runtime-authority' | 'machine-effect' | 'machine-authority' | 'budget' | 'wait-for-samples'
+    | 'product-lease' | 'product-assertion' | 'delivery-assertion' | 'reproduce' | 'read-reproduced-delivery';
+  type CurrentStage = { phase: CurrentPhase; timing: ResumeStamp; lease?: ReturnType<typeof designProduct.urlDesignProductLeaseState>['state'] };
+  type CurrentTrace = ResumeStamp & { stages: CurrentStage[] };
   type InferenceStep = {
     ordinal: number;
     mediate: ResumeStamp;
@@ -320,13 +325,22 @@ async function observeDesignRun(run: string, traceInference = false) {
     route?: Parameters<SessionRelayPorts['request']>[2];
     audit?: { event: Parameters<SessionRelayPorts['audit']>[0]['event']; timing: ResumeStamp };
   };
-  const inferenceSteps: InferenceStep[] = [], relayCurrent: ResumeStamp[] = [];
+  const inferenceSteps: InferenceStep[] = [], relayCurrent: CurrentTrace[] = [];
+  const hostCurrent: CurrentTrace[] = [];
+  const currentScope = new AsyncLocalStorage<CurrentTrace>();
   const inferenceScope = new AsyncLocalStorage<InferenceStep>();
   const decisionScope = new AsyncLocalStorage<true>();
   let inferenceCount = 0;
   let firstRefusedInference: InferenceStep | undefined;
-  function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
-    const settle = (outcome: ResumeObservation) => { Object.assign(stamp, { settledMs: clock(), outcome }); };
+  let firstRefusedCurrent: CurrentTrace | undefined;
+  let firstRefusedHostCurrent: CurrentTrace | undefined;
+  let hostActivation: ResumeStamp | undefined;
+  function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean,
+    onSettled?: (outcome: ResumeObservation) => void): T {
+    const settle = (outcome: ResumeObservation) => {
+      Object.assign(stamp, { settledMs: clock(), outcome });
+      onSettled?.(outcome);
+    };
     const completed = (value: Awaited<T>) => settle(accepted(value) ? 'accepted' : 'refused');
     try {
       const original = call();
@@ -349,13 +363,24 @@ async function observeDesignRun(run: string, traceInference = false) {
     step.relay.push({ phase, timing });
     return timed(timing, call, accepted);
   }
+  function currentPhase<T>(phase: CurrentPhase, call: () => T, accepted: (value: Awaited<T>, stage: CurrentStage) => boolean): T {
+    const trace = currentScope.getStore();
+    if (trace === undefined || trace.stages.length >= 32) return call();
+    const stage = { phase, timing: { startedMs: clock() } };
+    trace.stages.push(stage);
+    return timed(stage.timing, call, value => accepted(value, stage));
+  }
+  function traceCurrent<T extends boolean | Promise<boolean>>(traces: CurrentTrace[], call: () => T,
+    refused: (trace: CurrentTrace) => void): T {
+    const timing: CurrentTrace = { startedMs: clock(), stages: [] };
+    if (traces.length >= 16) traces.splice(4, 1);
+    traces.push(timing);
+    return timed(timing, () => currentScope.run(timing, call), value => value === true, outcome => {
+      if (outcome !== 'accepted') refused(timing);
+    });
+  }
   const relayProbe: ResumeRelayProbe = {
-    current(call) {
-      const timing = { startedMs: clock() };
-      if (relayCurrent.length >= 16) relayCurrent.splice(4, 1);
-      relayCurrent.push(timing);
-      return timed(timing, call, value => value === true);
-    },
+    current: call => traceCurrent(relayCurrent, call, timing => { firstRefusedCurrent ??= timing; }),
     request(route, call) {
       const step = inferenceScope.getStore();
       if (step !== undefined) step.route = route;
@@ -371,6 +396,32 @@ async function observeDesignRun(run: string, traceInference = false) {
     },
   };
   if (traceInference) {
+    const startAttempt = orderedAttempt.startUrlOrderedAttempt;
+    vi.spyOn(orderedAttempt, 'startUrlOrderedAttempt').mockImplementation(input => startAttempt({
+      ...input,
+      current: () => currentPhase('runtime-authority', input.current, value => value === true),
+      waitForSamples: () => currentPhase('wait-for-samples', input.waitForSamples, value => value === true),
+      reproduce: () => currentPhase('reproduce', input.reproduce, value => value !== null),
+      machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
+      budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
+      audit: { ...input.audit, readDesignDeliveryView: (...args) =>
+        currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
+    }));
+    const effectCurrent = machineTransport.sessionMachineEffectCurrent;
+    vi.spyOn(machineTransport, 'sessionMachineEffectCurrent').mockImplementation(() =>
+      currentPhase('machine-effect', effectCurrent, value => value !== false));
+    const leaseState = designProduct.urlDesignProductLeaseState;
+    vi.spyOn(designProduct, 'urlDesignProductLeaseState').mockImplementation(product =>
+      currentPhase('product-lease', () => leaseState(product), (value, stage) => {
+        stage.lease = value.state;
+        return value.state === 'open';
+      }));
+    const leaseOpen = designProduct.isUrlDesignProductLeaseOpen;
+    vi.spyOn(designProduct, 'isUrlDesignProductLeaseOpen').mockImplementation(product =>
+      currentPhase('product-assertion', () => leaseOpen(product), value => value === true));
+    const assertDelivery = sessionAudit.assertUrlDesignDeliveryViewCurrent;
+    vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryViewCurrent').mockImplementation(delivery =>
+      currentPhase('delivery-assertion', () => assertDelivery(delivery), () => true));
     const kernelPeer = sessionPeer.captureKernelUnixPeerAsync;
     vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
       inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
@@ -419,8 +470,15 @@ async function observeDesignRun(run: string, traceInference = false) {
   const startHost = orderedHost.startOrderedDesignHost;
   vi.spyOn(orderedHost, 'startOrderedDesignHost').mockImplementation(input => {
     orderedBrokers.add(input.brokerMachine);
-    if (traceInference) resumeRelayProbes.set(input.relayMachine, relayProbe);
-    return startHost({ ...input, current: () => brokerPhase('host-current', () => input.current(), value => value === true),
+    if (traceInference) {
+      resumeRelayProbes.set(input.relayMachine, relayProbe);
+      hostActivation = { startedMs: clock() };
+      timed(hostActivation, () => input.controller, () => true);
+    }
+    return startHost({ ...input, current: () => brokerPhase('host-current', () =>
+      traceInference && currentScope.getStore() === undefined
+        ? traceCurrent(hostCurrent, () => input.current(), timing => { firstRefusedHostCurrent ??= timing; })
+        : input.current(), value => value === true),
       admit: (...args) => relayPhase('admission', () => input.admit(...args), () => true),
     });
   });
@@ -634,7 +692,8 @@ async function observeDesignRun(run: string, traceInference = false) {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
-    ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent } } : {}),
+    ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
+      hostActivation, hostCurrent, firstRefusedHostCurrent } } : {}),
     orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
@@ -689,7 +748,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
   // not claim that arbitrary practical stops have complete provider exchanges.
   // Interrupted recovery includes a cold claim and a second live exchange.
   // Allow time to observe both under host contention while the runtime enforces its own deadlines.
-  for (const scenario of ['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'] as const) it(`runs the genuine production pipeline to ${scenario}`, async () => {
+  for (const scenario of ['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'] as const) it(`runs the genuine production pipeline to ${scenario}`, async ({ onTestFinished }) => {
     const eligibleStop = scenario === 'eligible-stop-resume';
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
@@ -697,6 +756,19 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
+    let eligiblePhase = 'fixture';
+    let eligibleProgress: () => Record<string, unknown> = () => ({});
+    if (eligibleStop) {
+      // Emit one snapshot before Vitest can abort the test while an awaited production phase is pending.
+      const diagnostic = setTimeout(() => {
+        const inference = initialDiagnostic?.().inference;
+        console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
+          resumeChecks: resumeChecks.length, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
+          firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
+      }, 340_000).unref();
+      onTestFinished(() => { clearTimeout(diagnostic); });
+    }
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
@@ -735,7 +807,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         resumeChecks.push({ phase: 'cold-final-prepared', available: prepare !== null });
         if (prepare === null) return null;
         return request => {
-          expect(isUrlDesignProductLeaseOpen(input.product)).toBe(false);
+          expect(designProduct.isUrlDesignProductLeaseOpen(input.product)).toBe(false);
           const result = prepare(request);
           resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
           expect(result).not.toBeNull();
@@ -907,6 +979,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'not-reached',
     });
     const handoffStates: ('unknown' | 'reached')[] = [];
+    eligibleProgress = () => ({ settledOrdinaryRoles: [...settledProviderRoles], designForwards: design.count(),
+      finalProductAssertions, liveFinals: liveFinals.length, coldFinals: coldFinals.length, cutTaken, resumeGuardsChecked,
+      providerFailures: failures.length, supervisorEvents: events.length, fidelityDeliveries: state.fidelityDeliveredPairs?.length,
+      designBegins: beginOrdered.mock.calls.length, designBeginsAfterResume: resumedBegins.mock.calls.length });
+    eligiblePhase = 'start';
     const controller = await start(f, failures, () => {}, receipts, () => stop.status() === 'requested', handoffStates).catch(async () => {
       const audit = [];
       for (const role of ['author', 'inventory', 'fidelity', 'design']) {
@@ -964,6 +1041,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     if (stoppingCut) releaseProvider.get('author')!();
     author.allow();
     try {
+      eligiblePhase = 'author';
       const authorPassed = () => {
         try { return f.artifacts.latestStageCheck('author')?.record.outcome === 'passed'; }
         catch (error) { if (error instanceof Error && error.message === 'url-run-artifacts-unavailable') return false; throw error; }
@@ -977,12 +1055,15 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'reached',
       });
       inv.allow(); design.allow();
+      eligiblePhase = 'fidelity';
       const packetUntil = performance.now() + 60_000;
       while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
         await new Promise(resolve => setTimeout(resolve, 250));
       fidelity.allow();
       if (stoppingCut) {
+        eligiblePhase = 'initial-supervisor';
         expect(await loop).toBe(1);
+        eligiblePhase = 'stopped-history';
         const stopped = await controller.stop();
         expect(delivered).toBeDefined();
         expect(expectedPlan).toBeDefined();
@@ -1098,7 +1179,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             return runtime;
           });
           if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run, true);
+          eligiblePhase = 'public-resume';
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
+          eligiblePhase = 'verify-resumed-result';
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
             resumeChecks.push({ phase: 'resumed-exit', exit, failure: summary?.failure ?? 'Unknown',
@@ -1164,6 +1247,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       await writeEvidence({ recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles,
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
+      eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
       const initialDesignAudit = eligibleStop && resumeChecks.length === 0
         ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
