@@ -405,6 +405,27 @@ describe('trusted URL artifact producer bridge', () => {
     finally { release(); }
     await expect(work).resolves.toMatchObject({ initial: { deadline: expect.any(Number) } });
   });
+  it('checks cold origin authority for fresh observations and again before returning the sealed graph', async () => {
+    const f = await recoveryFixture(true, true);
+    const expected = { run: f.run, coreSha256: f.frozen.coreSha256, declarationSha256: f.frozen.declarationSha256 };
+    const reads = f.frozen.provenance.nodes.filter(({ derivation }) =>
+      ['fixed', 'renderer', 'source-span', 'source-whole', 'source-tree', 'source-manifest-remainder'].includes(derivation.kind));
+    expect(reads.length).toBeGreaterThan(0);
+    expect(reads.length).toBeLessThan(f.frozen.provenance.nodes.length);
+    expect(reads.some(({ derivation }) => derivation.kind === 'source-manifest-remainder')).toBe(true);
+    const getter = f.fresh().origins.ledger;
+    let waits = 0;
+    const restored = await getter.restoreFrozenOrigins(f.capability, expected, async () => { waits++; return true; });
+    expect(waits).toBe(reads.length + 1);
+    expect(restored.history.provenance).toEqual(f.frozen.provenance);
+
+    const next = f.fresh().origins.ledger, capability = f.issue();
+    if (capability === null) throw new Error('own fresh recovery capability missing');
+    waits = 0;
+    await expect(next.restoreFrozenOrigins(capability, expected, async () => ++waits <= reads.length))
+      .rejects.toThrow('url-origin-refused');
+    expect(waits).toBe(reads.length + 1);
+  }, 15_000);
   it('rechecks the uncited manifest remainder tree in a fresh ledger before restoring the check', async () => {
     const f = await recoveryFixture(false, true);
     const coverageOrigin = f.frozen.provenance.nodes.find(node => node.derivation.kind === 'source-manifest-remainder')!;

@@ -511,6 +511,10 @@ function create(given: UrlOriginLedgerOptions) {
     };
     for (const node of graph.nodes) {
       const d = node.derivation;
+      // These derivations are sealed history. They have no fresh receipt or
+      // read to authorize here. The transfer still revalidates the full graph.
+      if (d.kind === 'composition' || d.kind === 'source-reply' || d.kind === 'report'
+        || d.kind === 'authenticated-provider-output') continue;
       if (!(await waitForSamples())) fail(); live();
       if (d.kind === 'fixed' || d.kind === 'renderer') {
         const receipt = d.kind === 'fixed' ? fixedReceipts.get(d.id) : issuedById.get('origin:renderer-scaffold');
@@ -542,8 +546,6 @@ function create(given: UrlOriginLedgerOptions) {
         const digest = sha256(bytes);
         if (digest !== node.metadata.digest || bytes.length !== node.metadata.bytes || manifestRemainderOriginId(digest) !== node.metadata.id) fail();
       }
-      // Composition/report/provider nodes are protected historical derivation
-      // metadata. Their old capabilities are never recreated or exposed.
     }
     if (!(await waitForSamples())) fail(); transfer.revalidate();
     const restored = new Map<string, UrlOriginReceipt>();
