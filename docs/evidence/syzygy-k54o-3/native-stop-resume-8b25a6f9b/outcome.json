@@ -1,0 +1,119 @@
+{
+  "format": "syzygy-f3-hosted-recovery-observation/1",
+  "head": "8b25a6f9b9275d40450ed0d61e34e98a8a8d9018",
+  "checkout": "a026945d0c8e0513af6345ea235373b4cbb8911c",
+  "tree": "2961bb7a11f23bc4a23662be284a86eff7369b25",
+  "base": "01f97af681ac901346c5c57dc988998c80141a3b",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45103942638/job/137461605619",
+  "integrationLogSha256": "6404fb5d63997d526e7d5c12fb0c5eb4932a407c317b79c106ad775c09dfebf5",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "35ae17bdd63f80d4688f8018db83d416ecd512e083d9e80ee29fc3bf4634020c",
+    "packages/polaris-dossier/src/polaris.ts": "7f8306f771934a7ad47e3a7d758eb0bce1c2903904d904b29d0913b342d7ab0e",
+    "packages/polaris-dossier/src/session-launch.test.ts": "4ed55ad992be218637f660ac37b95e4d17b47233607139ef3b771fe73ba20d6d"
+  },
+  "files": {
+    "passed": 135,
+    "failed": 2
+  },
+  "tests": {
+    "passed": 3892,
+    "failed": 3,
+    "skipped": 3
+  },
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 87537
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 51862
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 70465
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 213270
+    }
+  ],
+  "publicStop": {
+    "status": "operator stop requested, recovery history unavailable",
+    "roles": {
+      "author": "stopped",
+      "inventory": "stopped",
+      "fidelity": "stopped",
+      "design": "stopped"
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "resumeChecks": 0
+  },
+  "eligibleStop": {
+    "status": "checked design render continuation unavailable",
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "roles": {
+      "author": "stopped",
+      "inventory": "stopped",
+      "fidelity": "stopped",
+      "design": "exited"
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 5
+    },
+    "resumeChecks": 0,
+    "auditTail": [
+      "relay:send-attempt",
+      "machine-peer:inference-forward",
+      "omitted",
+      "machine-peer:inference-forward",
+      "ordered:send-outcome",
+      "relay:send-outcome",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "ordered:response-admitted",
+      "ordered:eligible",
+      "usage",
+      "relay:response-admitted",
+      "ordered-design-verdict",
+      "machine-peer:inference-forward",
+      "launch-terminal"
+    ],
+    "orderedAppends": {
+      "preparedAppend": {
+        "kind": "prepared",
+        "timing": {
+          "startedMs": 97585.942,
+          "settledMs": 97914.113,
+          "outcome": "accepted"
+        }
+      },
+      "latestAppend": {
+        "kind": "eligible",
+        "timing": {
+          "startedMs": 198437.49,
+          "settledMs": 198666.043,
+          "outcome": "accepted"
+        }
+      }
+    }
+  },
+  "cadenceFixture": {
+    "expectedStorageReads": 4,
+    "observedStorageReads": 0
+  }
+}

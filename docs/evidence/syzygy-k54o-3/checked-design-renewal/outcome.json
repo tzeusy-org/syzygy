@@ -1,0 +1,34 @@
+{
+  "format": "syzygy-f3-checked-design-renewal-review/1",
+  "subject": "77ad941589725882a2327ccb78309d51acbd2aa2",
+  "basedOn": "8b25a6f9b9275d40450ed0d61e34e98a8a8d9018",
+  "review": {
+    "path": "docs/reviews/F3-CHECKED-DESIGN-RENEWAL-REVIEW-RAW.md",
+    "sha256": "3708daed67b2af42382de41637408c291c4bbf31975cc2fedb592d0c915bf171",
+    "verdict": "PASS",
+    "scope": "source"
+  },
+  "checks": {
+    "typecheck": {
+      "outputSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "exit": 0
+    },
+    "integration": {
+      "outputSha256": "8b9eb00865cf7a16736fe7db24c61ca79bfada4a8de44168f8e3ec68e8df73df",
+      "files": 2,
+      "passed": 155
+    },
+    "unit": {
+      "outputSha256": "0e4fa9400cd247c9590d00ba1907b95a842f10cfeceef68be94e4aaf76506fd9",
+      "files": 3,
+      "passed": 103
+    }
+  },
+  "fixtureFollowUp": {
+    "subject": "992090bf123aa0cb8eb08a2e7cb8cfdcec61ca5e",
+    "typecheckExit": 0,
+    "cadenceCasePassed": 1,
+    "cadenceLogSha256": "1e95481175b698bc22f06189b32b2cf9f110dc3b28b18f52dab3a04d9aec886f"
+  },
+  "nativeRecovery": "Unknown"
+}
