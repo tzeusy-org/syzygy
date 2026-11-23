@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 509,
+      "scenarios": 519,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1184,7 +1184,17 @@
             "Omission that makes no claim refused",
             "Hero not produced, or draft layer withheld",
             "Earlier schema keeps its bytes",
-            "Brief v16 asks for the hero"
+            "Brief v16 asks for the hero",
+            "Three-level containment laid out as boxes within boxes",
+            "Containment fits at both widths",
+            "Containment deeper than three levels refused",
+            "Containment over its size or with no nesting refused",
+            "Containment with members of another kind",
+            "Nesting witnessed by a contains fact",
+            "Nesting challenged where coverage is complete",
+            "Nesting of other units is Unknown, never a finding",
+            "Earlier schema keeps its bytes",
+            "Brief v17 states the containment kind"
           ]
         },
         "REQ-polaris-generation-035": {

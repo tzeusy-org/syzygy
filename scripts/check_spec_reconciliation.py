@@ -4378,14 +4378,6 @@ def polaris_expected(root, findings):
                                                                     findings.append("POLARIS relation types: methods disagree or change identities")
                                                                 n_scen += sum(len(row["scenarios"]) for row in rel_a.values()) - sum(
                                                                     len(row["scenarios"]) for row in sub_a.values())
-                                                                cont_amendment, _records, _subjects = cont_binding(root)
-                                                                if cont_amendment is not None:
-                                                                    cont_a, pa = compose_figure_by_id(rel_a, cont_amendment)
-                                                                    cont_b, pb = compose_figure_by_name(rel_b, cont_amendment)
-                                                                    if pa or pb or cont_a != cont_b or set(cont_a) != set(rel_a):
-                                                                        findings.append("POLARIS containment figure: methods disagree or change identities")
-                                                                    n_scen += sum(len(row["scenarios"]) for row in cont_a.values()) - sum(
-                                                                        len(row["scenarios"]) for row in rel_a.values())
                                                                 hero_amendment, _records, _subjects = hero_binding(root)
                                                                 if hero_amendment is not None:
                                                                     hero_a, pa = compose_figure_by_id(rel_a, hero_amendment)
@@ -4394,6 +4386,14 @@ def polaris_expected(root, findings):
                                                                         findings.append("POLARIS hero figure: methods disagree or change identities")
                                                                     n_scen += sum(len(row["scenarios"]) for row in hero_a.values()) - sum(
                                                                         len(row["scenarios"]) for row in rel_a.values())
+                                                                    cont_amendment, _records, _subjects = cont_binding(root)
+                                                                    if cont_amendment is not None:
+                                                                        cont_a, pa = compose_figure_by_id(hero_a, cont_amendment)
+                                                                        cont_b, pb = compose_figure_by_name(hero_b, cont_amendment)
+                                                                        if pa or pb or cont_a != cont_b or set(cont_a) != set(hero_a):
+                                                                            findings.append("POLARIS containment figure: methods disagree or change identities")
+                                                                        n_scen += sum(len(row["scenarios"]) for row in cont_a.values()) - sum(
+                                                                            len(row["scenarios"]) for row in hero_a.values())
     raw_read_amendment, _records, _subjects = raw_read_binding(root)
     if raw_read_amendment is not None:
         # Only 033, 036 and 046 move. Use their effective predecessors, independent
