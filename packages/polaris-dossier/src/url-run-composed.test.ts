@@ -1316,8 +1316,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             const open = machineStore.openUrlMachineStore;
             const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce((...args) =>
               observeBootstrap('open-store', () => open(...args), value => value !== null));
-            const machine = await observeBootstrap('create-machine', () => createMachine(options), () => true)
-              .finally(() => openObservation.mockRestore());
+            let machine: Awaited<ReturnType<typeof createMachine>>;
+            try {
+              machine = await observeBootstrap('create-machine', () => createMachine(options), () => true);
+            } finally {
+              openObservation.mockRestore();
+            }
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             const current = machine.current(), claimChecks = checkClaim.mock.calls.length;
             checkClaim.mockRestore();
