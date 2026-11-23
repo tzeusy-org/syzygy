@@ -1,0 +1,78 @@
+{
+  "label": "Observed",
+  "base": "c2c04fd74b554ef576122f0376a261d89b2a9b4c",
+  "sourceCommit": "23da3d5e4b512b0ad11fd8f6ceb350eb514c46da",
+  "testedCommit": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+  "files": {
+    "packages/polaris-dossier/src/url-run-machine.ts": "12ea70a0531af32492d4dc79c93233b4bd87cc01de7062a18d081087c9d89d53",
+    "packages/polaris-dossier/src/url-machine-store.ts": "1d452338bfcab21bdf8331959c138e436bb994cfd6577f5c88a1c671b0055338",
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": "9b6d8eed5c0b7c9b514a04f6a68102243b52c8fa7e54c93740c8017a4d80b205",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "35c246c1930a41b5413895a605b03687215515117801cd9d7a4c9718ff986be9"
+  },
+  "reviews": [
+    {
+      "verdict": "PASS",
+      "commit": "23da3d5e4b512b0ad11fd8f6ceb350eb514c46da",
+      "file": "REVIEW-SOURCE-RAW.md",
+      "sha256": "9e7665a945e8601153f18bd2bafdf6c60617bc12866e1218b16337048c9b244a"
+    },
+    {
+      "verdict": "PASS",
+      "commit": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+      "file": "REVIEW-TEST-RAW.md",
+      "sha256": "b067728dcaf48a4586e2c91d4d75a9a046422f3a16340a7433597fd5e1890cff"
+    }
+  ],
+  "validation": {
+    "unit": {
+      "passed": 36,
+      "total": 36,
+      "logSha256": "6e2965b51928692c193d06a96a879dbedd399340043619955f435cc8d9c15097"
+    },
+    "integration": {
+      "passed": 41,
+      "total": 41,
+      "logSha256": "026b33b8c9a79398eb9b83c6fbb760709a08a18b05fece4ca34f8799f1a9c2e6"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "faults": [
+    {
+      "name": "separate clock and currentness",
+      "commit": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+      "file": "packages/polaris-dossier/src/url-run-machine.ts",
+      "old": [
+        "      if (!snapshot) return;\n      const now = lease.sampleCurrent();\n      if (now === null) return;",
+        "        const read = readUrlMachineClient(snapshot.canonical, { ...context, now });",
+        "      confirmedAt = lease.sampleCurrent();"
+      ],
+      "new": [
+        "      if (!snapshot || !lease.current()) return;",
+        "        const read = readUrlMachineClient(snapshot.canonical, { ...context, now: lease.now() });",
+        "      if (lease.current()) confirmedAt = lease.now();"
+      ],
+      "failed": 3,
+      "passed": 0,
+      "skipped": 33,
+      "logSha256": "4816cfdbb266fe7726410c780f8e8aab55f9cb31206d87daa6dd424f76da5534",
+      "patchSha256": "2c26e80c2db2f53aa0619513774534071d70780b4c569e57f317c5d85d7b13ff"
+    },
+    {
+      "name": "reuse first sample as final confirmation",
+      "commit": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+      "file": "packages/polaris-dossier/src/url-run-machine.ts",
+      "old": "      confirmedAt = lease.sampleCurrent();",
+      "new": "      confirmedAt = now;",
+      "failed": 2,
+      "passed": 1,
+      "skipped": 33,
+      "logSha256": "bd81010d5a06eae5e293996e6da86153ef8dc9a33338bd4b6e924179cce11c29",
+      "patchSha256": "cb5d9602e054c42c119e1dcb1855ba8b6d55334df4f241e94ca3a8f56184bb37"
+    }
+  ],
+  "previousHostedEvidence": "../native-recovery-d3ac90ba8/hosted-integration.json",
+  "remainingUnknown": "The focused controls cover revoked terminals and fresh allocations on the split boundary. Full hosted margin and native recovery acceptance on the final revision remain unverified."
+}

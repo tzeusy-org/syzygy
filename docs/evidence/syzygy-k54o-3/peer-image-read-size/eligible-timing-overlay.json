@@ -1,0 +1,54 @@
+{
+  "label": "Observed",
+  "base": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+  "overlaySha256": "a12e80a3f486792dac6f8f72aa76520cb2770cbfd9c2601e76fe64e13707a72a",
+  "testLogSha256": "f1400bffa7f61f2992acded9b98cdfca142c9e12231f01aa8b587f295c6400d2",
+  "failureManifestSha256": "422ddaaaa0300f5126a8bc478361d4a9dfc5dc9cee671c8b45daf7ee974140b3",
+  "case": "eligible-stop-resume",
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "run ended: checked session boundary unavailable"
+  ],
+  "reportedReasons": [
+    "transport-unavailable"
+  ],
+  "resumeChecks": [],
+  "refusals": {
+    "tool handling refusal": {
+      "at": 163042,
+      "role": "author",
+      "phase": "register-receipt",
+      "tool": "artifact_read",
+      "code": "receipt-unavailable"
+    },
+    "host tool refusal": {
+      "at": 163044,
+      "role": "author",
+      "phase": "tool-invoke",
+      "tool": "artifact_read",
+      "code": "receipt-unavailable"
+    }
+  },
+  "authorProtectedAudit": {
+    "rows": 121,
+    "tail": [
+      {
+        "roleSequence": 119,
+        "kind": "machine-peer",
+        "operation": "artifact_read",
+        "event": "machine-peer-effect"
+      },
+      {
+        "roleSequence": 120,
+        "kind": "before-tool",
+        "tool": "artifact_read"
+      },
+      {
+        "roleSequence": 121,
+        "kind": "launch-terminal"
+      }
+    ]
+  },
+  "remainingUnknown": "This timing overlay places the Author refusal inside the receipt callback, before successful receipt registration and reply release. The failed predicate inside the callback is not identified."
+}
