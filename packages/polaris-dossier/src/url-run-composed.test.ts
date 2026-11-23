@@ -165,7 +165,7 @@ type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObse
 type ResumeStoreStep = ResumeStamp & {
   runRemainingMs: number;
   asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
-} & ({ kind: 'allocation' | 'close' } | {
+} & ({ kind: 'open' | 'allocation' | 'close' } | {
   // The transaction outcome is distinct from the caller's terminal comparison.
   kind: 'exclusive'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
 });
@@ -1394,7 +1394,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                 };
                 return observe(currentAsync, value => { settled(value ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
               } };
-              const store = await observeBootstrap('open-store', () => open(observedOptions, identity), value => value !== null);
+              const store = await observeBootstrap('open-store', () =>
+                observeStoreStep({ kind: 'open', ...startStoreStep() }, () => open(observedOptions, identity), value => value !== null), value => value !== null);
               if (store === null) return null;
               return Object.freeze<machineStore.UrlMachineStore>({ ...store,
                 allocateClient: deadline => observing
@@ -1506,7 +1507,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeAuditEnteredMs,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs,
             resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
