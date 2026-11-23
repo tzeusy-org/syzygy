@@ -2137,3 +2137,87 @@ describe('check: the reader rule for the draft and the brief record (syzygy-3efd
     nothingFrozen(run);
   });
 });
+
+describe('check: overview hero (schema v10)', () => {
+  const version = 'polaris-dossier-local-draft-v10';
+  const reason = { id: 'hero-reason', label: 'inferred', basis: 'source', text: 'The project describes one runtime process.', citations: [cite('c-hero-reason')], quotations: [] };
+  const heroFigure = (home: unknown, kind = 'flow') => {
+    const figure = homed(home);
+    if (kind === 'flow') return { ...figure, edges: figure.edges.map((edge) => ({ ...edge, relation: 'sends-to' })) };
+    const { nodes: _nodes, edges: _edges, ...shared } = figure;
+    return { ...shared, kind: 'sequence', participants: figure.nodes, messages: figure.edges };
+  };
+  const submit = async (change: (draft: Draft) => void) => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((draft) => { draft.schemaVersion = version; draft.thesisBasis = 'stated'; change(draft); }));
+    return report(await checkDraft(run, {}, deps()));
+  };
+
+  it.each([
+    [undefined, 'a v10 draft names its hero figure or declares it omitted with a reason'],
+    [null, 'MALFORMED'],
+    [{}, 'MALFORMED'],
+    [{ figure: 'flow-1', omitted: reason }, 'MALFORMED'],
+    [{ figure: 'flow-1', extra: true }, 'MALFORMED'],
+  ])('refuses a missing or malformed top-level hero %j', async (hero, detail) => {
+    const result = await submit((draft) => { if (hero !== undefined) draft.hero = hero; });
+    expect(result.outcome).toBe('findings');
+    expect(result.findings.filter(({ at }) => at === '$.hero')).toEqual([{
+      kind: 'hero', at: '$.hero',
+      detail: detail === 'MALFORMED' ? '`hero` is exactly one of {"figure": <diagram id>} and {"omitted": <claim block>}' : detail,
+    }]);
+  });
+
+  it.each([
+    [2, 'hero', '`hero.figure` names a diagram by its identity'],
+    ['missing', 'unresolved-reference', 'no diagram has the identity named by `hero.figure`'],
+  ])('refuses a figure reference %j with its own finding', async (value, kind, detail) => {
+    const result = await submit((draft) => { draft.hero = { figure: value }; });
+    expect(result.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual([{ kind, at: '$.hero.figure', detail }]);
+  });
+
+  it.each([
+    [{ kind: 'section', target: 'core-ideas' }, 'flow', ['flow-1: the hero is a figure homed on the overview']],
+    [{ kind: 'overview' }, 'sequence', ['flow-1: the hero is a figure of a graph kind']],
+    [{ kind: 'section', target: 'core-ideas' }, 'sequence', ['flow-1: the hero is a figure homed on the overview', 'flow-1: the hero is a figure of a graph kind']],
+  ] as const)("checks a referenced figure’s home and graph kind", async (home, kind, details) => {
+    const result = await submit((draft) => { draft.diagrams = [heroFigure(home, kind)]; draft.hero = { figure: 'flow-1' }; });
+    expect(result.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual(details.map((detail) => ({ kind: 'hero', at: '$.hero.figure', detail })));
+  });
+
+  it('uses a claim block for the omission and places its words in the overview ledger', async () => {
+    const result = await submit((draft) => { draft.hero = { omitted: reason }; });
+    expect(result.outcome).toBe('passed');
+    expect(result.findings).toEqual([]);
+    expect(result.readingLedger?.pages[0]).toMatchObject({
+      page: 'index.html', units: ['introduction', 'hero-omission', 'section:core-ideas'], proseWords: 50,
+    });
+    const nonNormative = await submit((draft) => { draft.hero = { omitted: { id: 'hero-reason', label: 'non-normative', text: 'Read on.' } }; });
+    expect(nonNormative.findings).toEqual([{ kind: 'hero', at: '$.hero.omitted', detail: "an omitted hero's reason is an Inferred or Unknown claim block" }]);
+    const presentation = await submit((draft) => { draft.hero = { omitted: STEPS }; });
+    expect(presentation.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual([{
+      kind: 'schema', at: '$.hero.omitted', detail: expect.any(String),
+    }]);
+  });
+
+  it('refuses either form with a detector-matched identity before writing a check record', async () => {
+    const id = SECRET_PATH.split('/').at(-1)!;
+    for (const hero of [{ figure: id }, { omitted: { ...reason, id } }]) {
+      const run = await briefedRun();
+      writeDraft(run, mutate((draft) => { draft.schemaVersion = version; draft.thesisBasis = 'stated'; draft.hero = hero; }));
+      const result = await checkDraft(run, {}, deps());
+      expect(result).toMatchObject({ ok: false, refusal: { stage: 'screen', reason: 'the hero identity is withheld by screening' } });
+      expect(JSON.stringify(result).includes(id)).toBe(false);
+      expect(fs.existsSync(path.join(run, 'checks', 'rev-0.json'))).toBe(false);
+    }
+  });
+
+  it('keeps the schema-v9 version finding and passes a legitimate v10 graph, including an undrawn diagram', async () => {
+    const earlier = await submit((draft) => { draft.schemaVersion = 'polaris-dossier-local-draft-v9'; draft.hero = { figure: 'flow-1' }; });
+    expect(earlier.findings).toEqual([{ kind: 'field-version', at: '$.hero', detail: '`hero` needs draft schema polaris-dossier-local-draft-v10' }]);
+    for (const disposition of [{ kind: 'produced', assetIds: ['flow-1'] }, { kind: 'omitted', reason: 'No useful drawing.', citations: [] }]) {
+      const result = await submit((draft) => { draft.diagrams = [{ ...heroFigure({ kind: 'overview' }), disposition }]; draft.hero = { figure: 'flow-1' }; });
+      expect(result.findings).toEqual([]);
+    }
+  });
+});

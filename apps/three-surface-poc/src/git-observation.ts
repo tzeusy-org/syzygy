@@ -3,15 +3,12 @@ import { realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { sha256 } from '@syzygy/support';
 
-// Test seam: exported for the tests; production code reaches it only inside this file.
-export const PWB_APPROVED_REPOSITORY_LOCATOR = '/home/tze/GitHub/butlers';
-
 export type PwbRepositoryBinding =
   | { readonly kind: 'bound'; readonly locator: string; readonly gitCommonDirectory: string }
   | { readonly kind: 'rejected'; readonly reason: 'locator-mismatched' | 'git-common-directory-mismatched' | 'binding-unreadable' };
 
 interface ResolvePwbRepositoryBindingOptions {
-  readonly approvedLocator?: string;
+  readonly approvedLocator: string;
   readonly realpath?: (path: string) => string;
   readonly runGit?: (root: string, args: readonly string[]) => string;
 }
@@ -36,12 +33,12 @@ function readGit(root: string, args: readonly string[]): string {
 
 export function resolvePwbRepositoryBinding(
   configuredLocator: string,
-  options: ResolvePwbRepositoryBindingOptions = {},
+  options: ResolvePwbRepositoryBindingOptions,
 ): PwbRepositoryBinding {
   const realpath = options.realpath ?? realpathSync;
   const runGit = options.runGit ?? readGit;
   try {
-    const approvedLocator = realpath(resolve(options.approvedLocator ?? PWB_APPROVED_REPOSITORY_LOCATOR));
+    const approvedLocator = realpath(resolve(options.approvedLocator));
     const locator = realpath(resolve(configuredLocator));
     if (locator !== approvedLocator) return { kind: 'rejected', reason: 'locator-mismatched' };
     const gitCommonDirectory = realpath(

@@ -9,12 +9,12 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
-import { relationDecisions } from './check-derive.js';
+import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm } from './draft-schema.js';
+import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -176,6 +176,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
+  if (hasWithheldHeroIdentity(doc, secretPathOf(screen))) return refuse('screen', 'the hero identity is withheld by screening');
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   let derived: Derived;
   try {
@@ -184,9 +185,11 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     if (cause instanceof GitObjectReadRefusal) return refuse('object-read', `an object at the pinned revision could not be read: ${cause.message}`, { objectRead: cause.toJSON() });
     throw cause;
   }
-  if (derived.findings.length > 0) {
-    return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${derived.findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
-      { reasons: derived.findings.map((finding) => `${finding.kind} at ${finding.at}`) });
+  const findings = [...derived.findings];
+  applyHeroFindings(doc, findings);
+  if (findings.length > 0) {
+    return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
+      { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
   }
 
   const review = await reviewOfRecord(opened, deps);
@@ -888,6 +891,10 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     designStatusItem(design, run),
   ];
 
+  const declaredHero = heroOf(doc);
+  const hero: LocalRenderInput['hero'] = declaredHero?.form === 'figure' && typeof declaredHero.value === 'string'
+    ? { form: 'figure', diagram: declaredHero.value }
+    : declaredHero?.form === 'omitted' ? { form: 'omitted', reason: paragraph(declaredHero.value) } : undefined;
   const editorial = draftLayer.state === 'editorial-draft';
   const pages = editorial ? [understandingPage, discoveryPage, clarificationsPage, executionsPage, reviewPage] : [discoveryPage, executionsPage, reviewPage];
   return {
@@ -903,6 +910,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         value: doc['thesisBasis'],
         lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && blocks.get(draft.introduction.id)?.withheld === undefined,
       } } : {}),
+      ...(hero === undefined ? {} : { hero }),
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
         whySection: doc['whySection'],

@@ -1,4 +1,4 @@
-
+import { execFileSync } from 'node:child_process';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 
@@ -94,10 +94,17 @@ describe('main.ts: the real entry end to end', () => {
     expect(result.exitCode).toBe(0);
   });
 
-  it('refuses a scratch directory that is not the registered repository, naming the gate, and exits 1', async () => {
+  it('names an absent grant from the observer checkout and exits 1', async () => {
+    const observer = tempDir('poc-main-observer-test-');
+    execFileSync('git', ['-C', observer, 'init', '-q']);
+    execFileSync('git', [
+      '-C', observer, '-c', 'user.name=POC fixture', '-c', 'user.email=poc@example.invalid',
+      '-c', 'commit.gpgsign=false', 'commit', '--allow-empty', '-qm', 'Fixture without a grant',
+    ]);
+    vi.spyOn(process, 'cwd').mockReturnValue(observer);
     const result = await runEntry(['--repo', scratch]);
 
-    expect(result.err).toMatch(/^syzygy POC: configured repository authority rejected \((locator-mismatched|binding-unreadable)\)\n$/);
+    expect(result.err).toBe('syzygy POC: configured repository authority rejected (body-read-not-admitted)\n');
     expect(result.out).toBe('');
     expect(result.exitCode).toBe(1);
   });
