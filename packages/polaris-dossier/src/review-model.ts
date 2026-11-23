@@ -10,6 +10,7 @@ import type { ReverifyRefusal } from './reverify.js';
 import { CLASS_NOT_CONSENTED } from './class-gate.js';
 import { type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS } from './run-tree-read.js';
 
 /** The review step's formats, file naming, packet, problem and check-result types; split out of `review.ts` unchanged. */
 
@@ -32,7 +33,8 @@ export const reviewLaunchRecordName = (kind: ReviewKind, n: number): string => `
 export const reviewSessionDirectory = (run: string, kind: ReviewKind, n: number): string => path.join(sessionsRoot(run), reviewSessionDirName(kind, n));
 
 export const SUBJECT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 });
-export const VERDICT_MAX_BYTES = 4 * 1024 * 1024;
+/** The verdict bound has one home, version 2.18's table (`RUN_TREE_BOUNDS.verdict`, 4,194,304 bytes). */
+export const VERDICT_MAX_BYTES = RUN_TREE_BOUNDS.verdict;
 export const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 export const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 

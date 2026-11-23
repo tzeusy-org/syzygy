@@ -157,6 +157,8 @@ export function readExecutionChoice(runDir: string): Awaited<ReturnType<Executio
   try {
     text = readBoundedText(file, RUN_TREE_BOUNDS.executionChoice);
   } catch (cause) {
+    // The plain ENOENT test, not close's `isMissingEntry`: a dangling link here has always read as no choice, and 2.18 bounds this read
+    // without changing what absence means for it, where REQ-033 makes close's dangling log Unknown (2.18 code review, note 9).
     return isNotFound(cause)
       ? { state: 'absent', why: `no ${RUN_LAYOUT.executionChoice} in the run directory` }
       : { state: 'refused', why: `${RUN_LAYOUT.executionChoice} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.executionChoice)})` };

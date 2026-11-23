@@ -21,7 +21,9 @@ import { buildDossierScreen, type ScreenLoad } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_LAYOUT } from './state-directory.js';
-import { patchFs } from './fs-patch.testkit.js';
+import { READ_CASES, growOnceSized, patchFs, placeReadCase, trackReads, underReadCase, type ReadCase } from './fs-patch.testkit.js';
+
+const FROZEN_AT_BOUND = 'is not the bytes its check recorded';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
@@ -585,32 +587,27 @@ describe('review-check', () => {
   });
 
   // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): the verdict given to review check and every frozen verdict are read by the
-  // reader rule under 4,194,304 bytes.
-  it('refuses a verdict file that is a FIFO, without blocking, and one grown past 4,194,304 bytes after its size was taken (syzygy-3efd.80)', async () => {
+  // reader rule under 4,194,304 bytes, in every case of the Case line (2.18 code review, note 2). A regular file is NUL bytes, so one at
+  // the bound is read to its end and then refused for what it holds.
+  const NOT_REGULAR = ['a FIFO', 'a symbolic link to /dev/zero', 'a directory'];
+  const readsFor = (kase: ReadCase): number[] => (NOT_REGULAR.includes(kase) || kase === 'one byte past its bound' ? [0] : kase === 'exactly at its bound' ? [4_194_304] : [4_194_305]);
+  it.each(READ_CASES)('reads the verdict given to review check under 4,194,304 bytes: %s, freezing nothing it refuses (syzygy-3efd.80)', async (kase) => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
     const file = path.join(dir, 'verdict.json');
-    execFileSync('mkfifo', [file]);
-    expect(await reviewCheck(run, {}, deps())).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason: `${file} is not a regular file` } });
-    fs.rmSync(file);
-    fs.writeFileSync(file, ' '.repeat(4_194_304));
-    let grown = false;
-    const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
-      const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
-      if (!grown && stats.isFile() && stats.size === 4_194_304) { grown = true; fs.appendFileSync(file, ' '); }
-      return stats;
-    }) as typeof original);
-    let result;
-    try { result = await reviewCheck(run, {}, deps()); } finally { restore(); }
-    expect(grown).toBe(true);
-    expect(result).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason: `${file} is larger than the 4194304-byte verdict bound` } });
+    let result: unknown;
+    expect(await underReadCase(kase, file, 4_194_304, async () => { result = await reviewCheck(run, {}, deps()); })).toEqual(readsFor(kase));
+    if (kase === 'exactly at its bound') {
+      // Read whole, then checked as any verdict is: NUL bytes are no verdict, so the check records a refused outcome.
+      expect(result).toMatchObject({ ok: true, report: { outcome: 'refused' } });
+      return;
+    }
+    const reason = NOT_REGULAR.includes(kase) ? `${file} is not a regular file` : `${file} is larger than the 4194304-byte verdict bound`;
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason } });
     expect(fs.existsSync(path.join(run, 'reviews', 'fidelity-verdict-0.json'))).toBe(false);
   });
 
-  it.each<[string, (file: string) => void, string]>([
-    ['a FIFO', (file) => execFileSync('mkfifo', [file]), 'not a regular file'],
-    ['a file past 4,194,304 bytes', (file) => fs.writeFileSync(file, ' '.repeat(4_194_305)), 'larger than 4194304 bytes'],
-  ])('counts no review from a frozen verdict that is %s, with the stated words (syzygy-3efd.80)', async (_what, plant, words) => {
+  it.each(READ_CASES)('reads a frozen verdict under 4,194,304 bytes: %s, counting no review from one it cannot read (syzygy-3efd.80)', async (kase) => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
     writeVerdict(dir, verdict(sha256(expectedPacket(run))));
@@ -618,23 +615,31 @@ describe('review-check', () => {
     await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
     expect((await reviewOfRecord(await opened(run), deps())).counts).toBe(true);
     const frozen = path.join(run, 'reviews', 'fidelity-verdict-0.json');
-    fs.rmSync(frozen);
-    plant(frozen);
-    expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: `the frozen verdict reviews/fidelity-verdict-0.json cannot be read (${words})` });
+    let record: unknown;
+    expect(await underReadCase(kase, frozen, 4_194_304, async () => { record = await reviewOfRecord(await opened(run), deps()); })).toEqual(readsFor(kase));
+    const words = NOT_REGULAR.includes(kase) ? 'cannot be read (not a regular file)' : kase === 'exactly at its bound' ? FROZEN_AT_BOUND : 'cannot be read (larger than 4194304 bytes)';
+    expect(record).toEqual({ counts: false, why: `the frozen verdict reviews/fidelity-verdict-0.json ${words}` });
   });
 
-  it('builds no fidelity packet from a frozen inventory that is a FIFO when the packet reads it, though a regular file when counted (syzygy-3efd.80)', async () => {
+  // The packet's own read (review-packet.ts) is told apart from the counting reads before it (inventory.ts, which the packet also calls)
+  // by the stack of the open: the case is placed at that open only, so every earlier read saw the regular file it counted.
+  const isPacketRead = (stack: string): boolean => stack.includes('review-packet.ts') && !/[/\\]inventory\.ts:/u.test(stack);
+  it.each(READ_CASES)('builds no fidelity packet from a frozen inventory that is %s when the packet reads it, though a regular file when counted (syzygy-3efd.80)', async (kase) => {
     const run = await prepared();
     const frozen = path.join(run, 'inventory', 'rev-0.json');
-    let opens = 0;
+    let placed = 0;
+    const growth = kase === 'grown past its bound after its size was taken' ? growOnceSized(frozen, 4_194_304) : undefined;
     const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
-      if (file === frozen && ++opens === 2) { fs.rmSync(frozen); execFileSync('mkfifo', [frozen]); }
+      if (file === frozen && placed === 0 && isPacketRead(new Error().stack ?? '')) { placed += 1; placeReadCase(kase, frozen, 4_194_304); }
       return (original as (...args: unknown[]) => number)(file, ...rest);
     }) as typeof original);
+    const reads = trackReads(frozen);
     let built;
-    try { built = await buildFidelityPacket(await opened(run), deps()); } finally { restore(); }
-    expect(opens).toBe(2);
-    expect(built).toEqual({ ok: false, stage: 'inventory', reason: 'the frozen inventory inventory/rev-0.json cannot be read (not a regular file)' });
+    try { built = await buildFidelityPacket(await opened(run), deps()); } finally { reads.restore(); restore(); growth?.restore(); }
+    expect(placed).toBe(1);
+    expect(reads.totals.at(-1)).toEqual(readsFor(kase)[0]);
+    const words = NOT_REGULAR.includes(kase) ? 'cannot be read (not a regular file)' : kase === 'exactly at its bound' ? 'changed after it was counted' : 'cannot be read (larger than 4194304 bytes)';
+    expect(built).toEqual({ ok: false, stage: 'inventory', reason: `the frozen inventory inventory/rev-0.json ${words}` });
   });
 
   it('validates a ready verdict with no blocking row', async () => {
