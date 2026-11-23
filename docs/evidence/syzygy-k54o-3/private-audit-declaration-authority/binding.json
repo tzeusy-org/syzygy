@@ -1,0 +1,52 @@
+{
+  "subject": "8e98a3764b3bbc67d1bab8b11eb72d7aef84dfa7",
+  "baseline": "7d44379ed78678ab54e5ba4d0b55538b2a25c64a",
+  "productionCommit": "acd887bd9b306833bad86e70dd72701714266f2e",
+  "source": "packages/polaris-dossier/src/url-session-audit.ts",
+  "review": {
+    "verdict": "PASS",
+    "sha256": "8e038778aea01f1ea0265318fee9d661687a6e39d07c1b4c98697babd77f95ee"
+  },
+  "focused": {
+    "passed": 149,
+    "total": 149,
+    "files": 2,
+    "logSha256": "cd51a609136fe65d17de92202fc60ecec2fdf6249e78d755bff388bc34174dda",
+    "typecheck": "passed"
+  },
+  "counterfactualControls": [
+    {
+      "name": "old-declaration-polling",
+      "testSelector": "keeps one setup cutoff through all declarations at 320 ms",
+      "diff": "old-declaration-polling.patch",
+      "diffSha256": "d10a15162f659ce334d55aee35d983ba301ca286bfd63c6e629d123e6b923b5f",
+      "logSha256": "53c59e521ccf47e380554387f4ff074c0f4a3acbfcd6801eed9009ff0b555f99",
+      "observedAssertion": "expected false to be true"
+    },
+    {
+      "name": "skip-declaration-final-authority",
+      "testSelector": "does not count a declaration",
+      "diff": "skip-declaration-final-authority.patch",
+      "diffSha256": "402f2f3d471ec8886c70a687fff2246c9896b091ff062456135479b2bc7ff67b",
+      "logSha256": "f8fa796919a83b85a6253ffcb9193e7fb73c1e2020c8a6d9f1ec6940cde53d7a",
+      "observedAssertion": "\"declarations\": 1"
+    }
+  ],
+  "checkCountForCompletePrivateSetup": {
+    "previous": 26,
+    "successor": 14
+  },
+  "ownedClockControls": [
+    {
+      "msPerCallback": 320,
+      "declarations": 4,
+      "result": "accepted"
+    },
+    {
+      "msPerCallback": 380,
+      "declarations": 3,
+      "result": "refused"
+    }
+  ],
+  "limits": "The controlled clock changes the test authority cost. The 5000 ms setup ceiling, original run wall deadline and both syncs remain. Hosted native acceptance is separate."
+}

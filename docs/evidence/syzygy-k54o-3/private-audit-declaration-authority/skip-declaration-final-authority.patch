@@ -1,0 +1,13 @@
+diff --git a/packages/polaris-dossier/src/url-session-audit.ts b/packages/polaris-dossier/src/url-session-audit.ts
+index 2da25d7bd..41530d881 100644
+--- a/packages/polaris-dossier/src/url-session-audit.ts
++++ b/packages/polaris-dossier/src/url-session-audit.ts
+@@ -819,7 +819,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
+           await directory.sync();
+           if (declaration) checkBoundary(); else await checkEffectCurrent(deadline);
+           await inspectIdentities(deadline, { ...full, role });
+-          if (declaration || checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
++          if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
+           return full;
+         };
+         const tail = declaration ? await setupIo(append) : await io(deadline, append);

@@ -15,6 +15,7 @@
 - `F3-EAGER-TASK-READS(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-SEALED-ORIGIN-GATE-REVIEW-RAW\.md`
 - `F3-RESUME-STAGE-TRACE(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-PRIVATE-AUDIT-DECLARATION-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -79,3 +80,5 @@
 [Observed] The cold origin gate review records `PASS` (`F3-SEALED-ORIGIN-GATE-REVIEW-RAW.md:1`) for `faa64c2ea`. It retains the exact checks around fresh input observations and the final handoff. A-108 records the adopted change and revert command.
 
 [Observed] The initial resume stage trace review records `BLOCK` (`F3-RESUME-STAGE-TRACE-INITIAL-REVIEW-RAW.md:1`) at `712458421` for introducing an extra promise into the machine timing path. The successor records `PASS` (`F3-RESUME-STAGE-TRACE-REVIEW-RAW.md:1`) at `acac67381`. It records the original call's outcome and keeps the store probe inside fresh machine creation.
+
+[Observed] The private audit declaration authority review records `PASS` (`F3-PRIVATE-AUDIT-DECLARATION-AUTHORITY-REVIEW-RAW.md:1`) at `8e98a3764`. A-109 retains both syncs and verifies exact authority before new bytes and after complete tail verification under the original setup deadline. The focused audit and history suites passed 149 cases.
