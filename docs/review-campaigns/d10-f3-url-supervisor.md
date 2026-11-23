@@ -32,6 +32,7 @@
 - `F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW\.md`
 - `F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW\.md`
 - `F3-CAPTURE-ACCEPT-AUTHORITY(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-DESIGN-PARENT-PROVENANCE-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -134,3 +135,5 @@
 [Observed] The ordinary store overlap review records `PASS` (`F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW.md:1`) at `2927f3c38`. A-135 joins the already-held root sync and private census before any state read for genuine ordinary profiled operations. Typecheck, 81 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.
 
 [Observed] The initial capture review records `REVISE` (`F3-CAPTURE-ACCEPT-AUTHORITY-INITIAL-REVIEW-RAW.md:1`) because the proposed interval crossed a listener descriptor observation. The corrected review records `PASS` (`F3-CAPTURE-ACCEPT-AUTHORITY-REVIEW-RAW.md:1`) at `055aa1f0d`. A-136 uses the actual capture entry's fresh check before the listener read. Independent source review, typecheck, 27 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.
+
+[Observed] The grouped Design parent read review records `PASS` (`F3-DESIGN-PARENT-PROVENANCE-REVIEW-RAW.md:1`) at `486196c41`. A-137 retains distinct allocated metadata and historical lineage results under two authority checks and keeps the product lease. Typecheck, 82 unit cases, 100 integration cases and four fault controls passed. [Unknown] Native timing for this subject.
