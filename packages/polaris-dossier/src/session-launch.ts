@@ -276,6 +276,7 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
 }
 
 const STORAGE_STAT_BATCH = 4;
+const STORAGE_CENSUS_RESTARTS = 2;
 /** Descriptor-anchored, entry/depth/time bounded logical-file census. Symlink,
  * special and multiply linked entries fail closed; it is sampled, not a quota. */
 async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void): Promise<number> {
@@ -341,12 +342,14 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
     }
     return bytes;
   };
-  try { return await measure(); }
-  catch (error) {
-    if (error !== entryDisappeared) throw error;
-    // Discard the partial count. Both walks share the original time and entry budgets.
-    bytes = 0;
-    return measure();
+  for (let restart = 0; ; restart++) {
+    try { return await measure(); }
+    catch (error) {
+      if (error !== entryDisappeared || restart === STORAGE_CENSUS_RESTARTS) throw error;
+      // Use only a complete count. Every walk shares the original time and
+      // entry budgets, including the attempts that observed a disappearance.
+      bytes = 0;
+    }
   }
 }
 async function taskChildren(task: string, check: () => void): Promise<readonly string[]> {
