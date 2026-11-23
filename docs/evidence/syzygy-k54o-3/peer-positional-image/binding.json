@@ -1,0 +1,50 @@
+{
+  "subject": "4fb27aa6e7e22e8278eebadc0bce6550fb27fa19",
+  "base": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "combinedSource": "fc9c34593a4d0f3fc39b36ab466bd57110e93c16",
+  "fullBinaryDiffSha256": "14116f599791353224e40cce46622422060c698d39d63b6c055c435c5a58918d",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawSha256": "3d3b7341d1c61e4ed547c0e5e30c84fcaa8b200b788d525b242813579b851aa0",
+    "rawPath": "docs/reviews/R-F3-PEER-POSITIONAL-IMAGE-RAW.md"
+  },
+  "typecheck": {
+    "outcome": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "focusedNative": {
+    "passed": 8,
+    "skipped": 9,
+    "testPopulation": 17,
+    "logSha256": "f7d42d06f409019dc2ff82bf90cc461724a69b4f50143b0ed5e20a673c5bc748"
+  },
+  "mutations": {
+    "early-image-close": {
+      "subject": "4fb27aa6e7e22e8278eebadc0bce6550fb27fa19",
+      "before": [
+        "      const [left, right] = await Promise.allSettled(["
+      ],
+      "after": [
+        "      const [left, right] = await Promise.all(["
+      ],
+      "patchSha256": "34c5d24f1ce461c9bf7f7c72152729a8eb865e7e9e6967f57083dcd542c2c668",
+      "logSha256": "bb986111bc719a5bbe5f12869d7700d847a3585c2af9dbb87b2e7a31cc3956de",
+      "failingAssertions": 1,
+      "firstAssertion": "expected 1 to be +0 // Object.is equality"
+    },
+    "image-hash-order": {
+      "subject": "4fb27aa6e7e22e8278eebadc0bce6550fb27fa19",
+      "before": [
+        "      hash.update(first.subarray(0, firstLength));"
+      ],
+      "after": [
+        "      hash.update(first.subarray(0, firstLength));"
+      ],
+      "patchSha256": "be951fee54c17ab4a8a98aed239bc8699b51da56775f4869339c461495101a8e",
+      "logSha256": "f2829518e9e16ca66b7470740383bd7d979a9ae4fd0df07ae6504f4389f9bd4b",
+      "failingAssertions": 1,
+      "firstAssertion": "expected null not to be null"
+    }
+  }
+}

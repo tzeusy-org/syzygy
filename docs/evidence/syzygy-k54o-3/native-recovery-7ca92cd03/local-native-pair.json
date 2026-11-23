@@ -1,0 +1,299 @@
+{
+  "testedCommit": "afc2bfbec4eca4835f3a12a7ef8bc698cc74bfa1",
+  "testedTree": "9b38b6891c39c470718378fe6de16e092b75d59d",
+  "publishedCommit": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "binding": "Local genuine native sandbox scenarios, separately selected against one clean source commit. The published commit adds adoption rows and evidence only.",
+  "scenarios": {
+    "eligible-stop-resume": {
+      "durationMilliseconds": 314582,
+      "caseResult": "failed",
+      "rawLogSha256": "aeab638392f003efee798fd1fedc8fcc2c5466aa91848fd3c7c7121dc3ae698a",
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "prepared design round 1 for the reviewer",
+        "run ended: checked session boundary unavailable"
+      ],
+      "relayForwards": {
+        "author": 8,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 2
+      },
+      "publicFailure": [
+        "transport-unavailable"
+      ],
+      "recordLstat": null,
+      "rootRecordNames": [],
+      "designAudit": {
+        "status": "read",
+        "count": 41,
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "relay:attempt-allowed",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "relay:send-attempt",
+          "machine-peer:inference-forward",
+          "omitted",
+          "machine-peer:inference-forward",
+          "ordered:send-outcome",
+          "relay:send-outcome",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "ordered:response-admitted",
+          "usage",
+          "relay:response-admitted",
+          "machine-peer:inference-forward",
+          "machine-peer:artifact_read",
+          "ordered:part-receipt",
+          "launch-terminal"
+        ]
+      },
+      "firstRoleInspectionRefusals": {
+        "author": {
+          "ordinal": 872,
+          "phases": {
+            "process": {
+              "startedMs": 0.0379819999798201,
+              "settledMs": 22.64392100000987,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.06558399996720254,
+              "settledMs": 26.49063999997452,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 26.498744999989867,
+              "settledMs": 27.286664000013843,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 27.312333000008948
+          }
+        },
+        "inventory": {
+          "ordinal": 866,
+          "phases": {
+            "process": {
+              "startedMs": 0.011250999988988042
+            },
+            "storage": {
+              "startedMs": 0.02002699999138713
+            }
+          },
+          "refusal": {
+            "phase": "storage",
+            "cause": "bounded-timeout",
+            "elapsedMs": 1012.9348369999789
+          }
+        },
+        "fidelity": {
+          "ordinal": 856,
+          "phases": {
+            "process": {
+              "startedMs": 0.009437999979127198
+            },
+            "storage": {
+              "startedMs": 0.022142000030726194
+            }
+          },
+          "refusal": {
+            "phase": "storage",
+            "cause": "bounded-timeout",
+            "elapsedMs": 1012.9214320000028
+          }
+        },
+        "design": {
+          "ordinal": 208,
+          "phases": {
+            "process": {
+              "startedMs": 0.039163999957963824
+            },
+            "storage": {
+              "startedMs": 0.0939669999643229
+            }
+          },
+          "refusal": {
+            "phase": "storage",
+            "cause": "bounded-timeout",
+            "elapsedMs": 1012.7985190000036
+          }
+        }
+      },
+      "orderedDesignBoundary": {
+        "startOffsetMilliseconds": 304528.691,
+        "outcome": "refused",
+        "selectedStages": [
+          {
+            "phase": "wait-for-samples",
+            "timing": {
+              "startedMs": 304532.651,
+              "settledMs": 305130.104,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "product-lease",
+            "timing": {
+              "startedMs": 305130.489,
+              "settledMs": 305130.761,
+              "outcome": "refused"
+            },
+            "lease": "expired"
+          },
+          {
+            "phase": "receipt-preflight",
+            "timing": {
+              "startedMs": 305131.161,
+              "settledMs": 305136.178,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "reproduce",
+            "timing": {
+              "startedMs": 305136.7,
+              "settledMs": 306679.743,
+              "outcome": "refused"
+            }
+          }
+        ]
+      }
+    },
+    "stop-resume": {
+      "durationMilliseconds": 256162,
+      "caseResult": "failed",
+      "rawLogSha256": "79f8d17c2bd4ee04e5beed15b2baa59d62adae28e83ae4d9cbe414567737f534",
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "relayForwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "publicFailure": [],
+      "recordLstat": null,
+      "rootRecordNames": [],
+      "resume": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "role-ended",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "inspection-failed",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "resumeAuditSetup": {
+        "startedMs": 156181.451677,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 948.5982269999804,
+          "longestMs": 89.69553900000756
+        },
+        "settledMs": 157244.728386,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "store": {
+        "open": {
+          "attempts": 1,
+          "accepted": 1
+        },
+        "exclusive": {
+          "attempts": 8,
+          "accepted": 8
+        },
+        "allocation": {
+          "attempts": 8,
+          "accepted": 8
+        }
+      },
+      "firstLauncherRefusal": {
+        "ordinal": 1,
+        "phases": {
+          "process": {
+            "startedMs": 0.050084999995306134,
+            "settledMs": 374.47591400000965,
+            "outcome": "accepted"
+          },
+          "verify": {
+            "startedMs": 0.11074000000371598,
+            "settledMs": 348.84960799998953,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.1316989999904763
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1076.854772999999
+        }
+      }
+    }
+  }
+}

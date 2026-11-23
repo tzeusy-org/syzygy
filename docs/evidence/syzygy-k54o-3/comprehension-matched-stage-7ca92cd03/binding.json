@@ -1,0 +1,105 @@
+{
+  "format": "syzygy-f3-matched-stage-reading-comparison/1",
+  "source": {
+    "url": "https://github.com/redis/redis",
+    "revision": "498ecd0d6d007db11ddb3aea9428552598a78622"
+  },
+  "inputs": {
+    "configSha256": "84b1976143d5b2b653d86193f5c9ea0330b3b0ec3b7e7afdeeca742e86a45068",
+    "draftSha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+    "questionKeySha256": "0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690",
+    "graderInputSha256": "b116aa61e012c7d87d24b6c94bee39b0c956ae41bde7951a21209743bf544193",
+    "captureScriptSha256": "f440687fc55ce71c5240d36ca938ecce568ca6207645dde99547655e46fd2d7a",
+    "readerExtractorSha256": "db5eb9f0d026258864de4847173e88a2e1948c035273e494d18c81ea9d3450f7"
+  },
+  "arms": {
+    "main": {
+      "commit": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+      "renderedPages": 46,
+      "readerPages": 21,
+      "readerWords": 19775,
+      "sourcePagesExcluded": 25,
+      "quotations": 2,
+      "draftRevision": 0,
+      "siteStage": 0,
+      "countedFidelity": false,
+      "countedDesign": false,
+      "renderReportSha256": "f2f824bb1615247b52fb6d37200f3ae457c4edc51e972178e5a7ad2c7a7e90ce",
+      "readerFilesSha256": {
+        "appendix.md": "195f6586eb724e5f99556d8a2f8427a97af050d8659212b3a0ec13989c3a05dd",
+        "clarifications.md": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+        "contents.md": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+        "deep-dives/mechanism-deep-dive.md": "78822818793902b33b05c804e880b413d0bdd0333302c4780de704c3c9ee28ea",
+        "discovery.md": "bb4082ee3ab1c6a40e348f3fb3d8be56470e59b584e6c41a7eb49e7421b7724c",
+        "executions.md": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+        "find-by-task.md": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+        "glossary.md": "e175bd66196a3d468a56b85504df6ae23ae24fab32fa4376411eb00a6d0b9e9e",
+        "index.md": "18caddff3fb646f07987934162e0b0e557a741164c310f2130d56251a1e4c518",
+        "maps/ci.md": "5c103d8a3e83c0abfd3f978a46047135f696db009c399c0137335967d10d9f3b",
+        "maps/directories.md": "2ba2ebb6dfd55f7d6227d47484ab7e0a9fd3be51c488aa858953014d30fe188a",
+        "maps/infrastructure.md": "221839917811879e33d087ead75d43cea829eaf403cd12ec0cd38dd1d8419225",
+        "maps/units.md": "951c1ff13f21ed5191cb3eeaee8aa9df11b134cd03d94d2bd77f415372505b59",
+        "name-index.md": "468b30808ec6aea7db9d3260abda9568559f2163edada72775ff70673f669271",
+        "poles/1.md": "261b906346882a38bdf4a7a40a2c085fd5d0a507ded66447d01c2c38fd088214",
+        "poles/2.md": "5046b871dfce27aaf95c2428f76945e0ff6834818a94ef639b5b70c8683b71a8",
+        "poles/3.md": "16679f8f3510449884ffafc52f13b40dd712a0ce2cd82d8e8d598c5c59720ea8",
+        "review.md": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+        "size-report.md": "4053105bcb81707d73fbcc7a78df9ba7e3da17b9ae39a70244f933ddbc9389ad",
+        "sources/index.md": "231de66af50b37679c7a2653a90d1f7cdfdbe66a83ed9ee973eac322bfca90be",
+        "understanding.md": "5633cf55c39d171d46ee0c8bfad10fd943526bfb7dfe3615835f3e9948c5e85e"
+      }
+    },
+    "candidate": {
+      "commit": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+      "renderedPages": 46,
+      "readerPages": 21,
+      "readerWords": 19799,
+      "sourcePagesExcluded": 25,
+      "quotations": 2,
+      "draftRevision": 0,
+      "siteStage": 0,
+      "countedFidelity": false,
+      "countedDesign": false,
+      "renderReportSha256": "77b82af05996fb35cd762282e09505c3c521abf901056862bcd9c0a116c32e80",
+      "readerFilesSha256": {
+        "appendix.md": "e7741357d6d28001a5c4a13fa2bba015258980ec1cf539e4149c2fe7ba22c08b",
+        "clarifications.md": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+        "contents.md": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+        "deep-dives/mechanism-deep-dive.md": "78822818793902b33b05c804e880b413d0bdd0333302c4780de704c3c9ee28ea",
+        "discovery.md": "bb4082ee3ab1c6a40e348f3fb3d8be56470e59b584e6c41a7eb49e7421b7724c",
+        "executions.md": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+        "find-by-task.md": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+        "glossary.md": "e175bd66196a3d468a56b85504df6ae23ae24fab32fa4376411eb00a6d0b9e9e",
+        "index.md": "9ec616366fc2577f9eef24e6b86a742e861005f055d54e55dc0f745409448e96",
+        "maps/ci.md": "0b8c3d916ed3a4f7a4ecd7ab969b3e9d69423871eec859767f0ed39d49f01590",
+        "maps/directories.md": "740b5828caf4ba35bc26b29afc58dc36628e7db23a64d0fd713cf64a4dd3bddc",
+        "maps/infrastructure.md": "4dcdbf409b52e0217d0c338671a8126851ca41e0973e532ab1d30cecfa9bc30d",
+        "maps/units.md": "7795bcf4556b5fa1dc752732bf5ae3b9e42fcc645073a9400b5cafd5b418ce31",
+        "name-index.md": "468b30808ec6aea7db9d3260abda9568559f2163edada72775ff70673f669271",
+        "poles/1.md": "261b906346882a38bdf4a7a40a2c085fd5d0a507ded66447d01c2c38fd088214",
+        "poles/2.md": "5046b871dfce27aaf95c2428f76945e0ff6834818a94ef639b5b70c8683b71a8",
+        "poles/3.md": "16679f8f3510449884ffafc52f13b40dd712a0ce2cd82d8e8d598c5c59720ea8",
+        "review.md": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+        "size-report.md": "8a59af76d12bf08b326f253f84f3ffc0fcc682b7b96e7e15ae0cfb8c9a1fd77a",
+        "sources/index.md": "231de66af50b37679c7a2653a90d1f7cdfdbe66a83ed9ee973eac322bfca90be",
+        "understanding.md": "5633cf55c39d171d46ee0c8bfad10fd943526bfb7dfe3615835f3e9948c5e85e"
+      }
+    }
+  },
+  "changedReaderPages": [
+    "appendix.md",
+    "index.md",
+    "maps/ci.md",
+    "maps/directories.md",
+    "maps/infrastructure.md",
+    "maps/units.md",
+    "size-report.md"
+  ],
+  "evidenceSha256": {
+    "answers-before.json": "9457c1c96c76285d8f3cb0e71906f72d7ca36a2bce9a5207c2f32ea2233cbd7b",
+    "answers-after.json": "2901f3c864675b8eb34ce6f20222bf36821b8b2c2fb01acb4a1e491215873c86",
+    "label-draw.bin": "864f7be7c7f20f32ae51dc1a6c49a5fa80942609d0e1ae1d49646b5eb7af68a4",
+    "labels.json": "82c2fcf89895ffee452c61290de29135580eeba1c5b42180a7321a1ac5754bde",
+    "grades.json": "99fc5b714312f9ee0389b9606897508b443fb87dc4616cb4009dc21cde1d1815"
+  }
+}

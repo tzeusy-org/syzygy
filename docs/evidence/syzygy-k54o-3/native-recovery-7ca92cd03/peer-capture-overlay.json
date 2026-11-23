@@ -1,0 +1,135 @@
+{
+  "base": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "statedScope": "Local diagnostic overlay, preserve genuine native launcher, transport, exact request and authority predicates. Timing observations only.",
+  "patchSha256": "8668150d38f89c15d79c39d182fc271f76eae9735704ebee550375625af8411a",
+  "logSha256": "dc37141aaf9349dd56f786e2b47d24e049bbfb080b266d88ab7099aa61b32c4f",
+  "case": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 229841
+  },
+  "captures": [
+    {
+      "began": 200926.697064,
+      "kind": "inference-bridge",
+      "result": "refused",
+      "elapsed": 5100.483103999984,
+      "timings": [
+        {
+          "phase": "first-parent-start",
+          "elapsed": 76.3058730000048
+        },
+        {
+          "phase": "first-parent-current",
+          "elapsed": 685.0251270000008
+        },
+        {
+          "phase": "kernel-current",
+          "elapsed": 724.3441029999813
+        },
+        {
+          "phase": "second-parent-current",
+          "elapsed": 1296.170757999993
+        },
+        {
+          "phase": "native-prepared",
+          "elapsed": 1370.5815089999815
+        },
+        {
+          "phase": "image-start",
+          "elapsed": 1470.5498110000044
+        },
+        {
+          "phase": "image-current",
+          "elapsed": 3387.3288259999827
+        },
+        {
+          "phase": "final-current-start",
+          "elapsed": 3388.0213249999797
+        }
+      ]
+    }
+  ],
+  "imageMilliseconds": 1916.779,
+  "elapsedAfterEnteringFinalCurrentMilliseconds": 1712.462,
+  "firstLauncherRefusal": {
+    "ordinal": 6,
+    "phases": {
+      "process": {
+        "startedMs": 0.04479499999433756,
+        "settledMs": 237.62521800000104,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.06489299997338094,
+        "settledMs": 141.62938499997836,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.06671600000117905,
+        "settledMs": 246.12286099998164,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 246.1333909999812,
+        "settledMs": 246.20704999999725,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 246.31233899999643
+    }
+  },
+  "resume": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ]
+}

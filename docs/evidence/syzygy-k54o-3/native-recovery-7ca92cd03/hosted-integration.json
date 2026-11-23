@@ -1,0 +1,183 @@
+{
+  "sourceHead": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "sourceTree": "c4d8865d47c8cfe9f3de8abf514f26e0cabea5f4",
+  "hostedCheckout": "bad5d7eee5386e3488ef496fb176960728fff4b4",
+  "hostedCheckoutTree": "c4d8865d47c8cfe9f3de8abf514f26e0cabea5f4",
+  "hostedBase": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45142588564/job/137585304900",
+  "jobLogSha256": "f0f4da80636b496812adbff337487f5a0f2ef6c98fa5797f904e845f9fc0e220",
+  "nativeCases": {
+    "complete": {
+      "case": "complete",
+      "result": "passed",
+      "ms": 110518
+    },
+    "delivery-stop": {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 96625
+    },
+    "stop-resume": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 503127
+    },
+    "eligible-stop-resume": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 306411
+    }
+  },
+  "retainedCaseDetails": {
+    "stop-resume": {
+      "supervisorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "auditSetup": {
+        "startedMs": 708292.938131,
+        "authority": {
+          "started": 14,
+          "accepted": 13,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 4767.268335999921,
+          "longestMs": 383.4905049999943
+        },
+        "settledMs": 713341.921994,
+        "outcome": "refused",
+        "declarations": 3,
+        "pendingCallbacks": 1,
+        "pendingFilesystemOperations": 0
+      },
+      "restoredProductsMilliseconds": 259229.513,
+      "machineStoreOperationsObserved": 0
+    },
+    "eligible-stop-resume": {
+      "supervisorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "prepared design round 1 for the reviewer",
+        "run ended: checked session boundary unavailable"
+      ],
+      "failure": "role-ended",
+      "designAudit": {
+        "status": "read",
+        "count": 83,
+        "kinds": [
+          "declaration",
+          "launch-attempt",
+          "launch-history",
+          "design-delivery",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "relay:attempt-allowed",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "relay:send-attempt",
+          "machine-peer:inference-forward",
+          "omitted",
+          "relay:send-outcome",
+          "machine-peer:inference-forward",
+          "machine-peer:inference-forward",
+          "ordered:response-admitted",
+          "usage",
+          "relay:response-admitted",
+          "machine-peer:inference-forward",
+          "machine-peer:dossier_step",
+          "ordered:delivery-completed",
+          "ordered:verdict-staged",
+          "ordered:acknowledgment-receipt",
+          "launch-terminal"
+        ]
+      },
+      "firstRoleInspectionRefusals": {
+        "author": null,
+        "inventory": {
+          "ordinal": 993,
+          "phases": {
+            "process": {
+              "startedMs": 0.011110999970696867,
+              "settledMs": 711.3900699999649,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.03248099994380027,
+              "settledMs": 1019.5733550000004,
+              "outcome": "accepted"
+            }
+          },
+          "refusal": {
+            "phase": "storage",
+            "cause": "sample-deadline",
+            "elapsedMs": 1019.8215899999486
+          }
+        },
+        "fidelity": {
+          "ordinal": 987,
+          "phases": {
+            "process": {
+              "startedMs": 0.015528999967500567,
+              "settledMs": 711.6508579999208,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.03327200002968311
+            }
+          },
+          "refusal": {
+            "phase": "storage",
+            "cause": "bounded-timeout",
+            "elapsedMs": 1020.4659149999497
+          }
+        },
+        "design": null
+      },
+      "resumedChecks": [],
+      "liveFinalPreparations": 0,
+      "liveFinals": 0
+    }
+  },
+  "integration": {
+    "passedTests": 3971,
+    "failedTests": 2,
+    "skippedTests": 3,
+    "testPopulation": 3976,
+    "passedFiles": 136,
+    "failedFiles": 1,
+    "filePopulation": 137
+  },
+  "otherJobs": {
+    "nodeUnit": "success",
+    "nodeE2e": "success",
+    "governanceAggregate": "success",
+    "nodeAggregate": "failure"
+  }
+}

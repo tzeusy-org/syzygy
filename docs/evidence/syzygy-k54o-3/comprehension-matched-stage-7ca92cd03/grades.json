@@ -1,0 +1,502 @@
+{
+  "grades": [
+    {
+      "id": "Q01",
+      "kind": "purpose",
+      "A": {
+        "facts": [
+          1,
+          1,
+          0.5
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          1,
+          1,
+          0.5
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q02",
+      "kind": "purpose",
+      "A": {
+        "facts": [
+          0.5,
+          0.5,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0.5,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q03",
+      "kind": "purpose",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q04",
+      "kind": "purpose",
+      "A": {
+        "facts": [
+          1,
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          1,
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q05",
+      "kind": "structure",
+      "A": {
+        "facts": [
+          0.5,
+          0.5,
+          0.5,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0.5,
+          0.5,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q06",
+      "kind": "structure",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q07",
+      "kind": "structure",
+      "A": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q08",
+      "kind": "structure",
+      "A": {
+        "facts": [
+          0,
+          0.5,
+          0,
+          1
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0.5,
+          0,
+          1
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q09",
+      "kind": "mechanism",
+      "A": {
+        "facts": [
+          0.5,
+          0.5,
+          1,
+          1
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0.5,
+          1,
+          1
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q10",
+      "kind": "mechanism",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q11",
+      "kind": "mechanism",
+      "A": {
+        "facts": [
+          0,
+          1,
+          0.5
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          1,
+          0.5
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q12",
+      "kind": "mechanism",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q13",
+      "kind": "rationale",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q14",
+      "kind": "rationale",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q15",
+      "kind": "rationale",
+      "A": {
+        "facts": [
+          1,
+          0.5,
+          0.5
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q16",
+      "kind": "rationale",
+      "A": {
+        "facts": [
+          0,
+          1,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          1,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q17",
+      "kind": "change",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q18",
+      "kind": "change",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q19",
+      "kind": "change",
+      "A": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q20",
+      "kind": "change",
+      "A": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q21",
+      "kind": "limits",
+      "A": {
+        "facts": [
+          0.5,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q22",
+      "kind": "limits",
+      "A": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q23",
+      "kind": "limits",
+      "A": {
+        "facts": [
+          1,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          1,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    },
+    {
+      "id": "Q24",
+      "kind": "limits",
+      "A": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      },
+      "B": {
+        "facts": [
+          0.5,
+          0,
+          0
+        ],
+        "wrong": 0
+      }
+    }
+  ]
+}

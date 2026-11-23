@@ -1,0 +1,100 @@
+{
+  "overall": {
+    "requiredFacts": 81,
+    "before": {
+      "earned": 19.0,
+      "wrong": 0,
+      "percent": 23.46
+    },
+    "after": {
+      "earned": 18.0,
+      "wrong": 0,
+      "percent": 22.22
+    },
+    "changePercentagePoints": -1.23
+  },
+  "purpose": {
+    "requiredFacts": 13,
+    "before": {
+      "earned": 5.0,
+      "wrong": 0,
+      "percent": 38.46
+    },
+    "after": {
+      "earned": 5.0,
+      "wrong": 0,
+      "percent": 38.46
+    },
+    "changePercentagePoints": 0.0
+  },
+  "structure": {
+    "requiredFacts": 14,
+    "before": {
+      "earned": 3.5,
+      "wrong": 0,
+      "percent": 25.0
+    },
+    "after": {
+      "earned": 3.0,
+      "wrong": 0,
+      "percent": 21.43
+    },
+    "changePercentagePoints": -3.57
+  },
+  "mechanism": {
+    "requiredFacts": 15,
+    "before": {
+      "earned": 4.5,
+      "wrong": 0,
+      "percent": 30.0
+    },
+    "after": {
+      "earned": 4.5,
+      "wrong": 0,
+      "percent": 30.0
+    },
+    "changePercentagePoints": 0.0
+  },
+  "rationale": {
+    "requiredFacts": 13,
+    "before": {
+      "earned": 3.0,
+      "wrong": 0,
+      "percent": 23.08
+    },
+    "after": {
+      "earned": 2.5,
+      "wrong": 0,
+      "percent": 19.23
+    },
+    "changePercentagePoints": -3.85
+  },
+  "change": {
+    "requiredFacts": 13,
+    "before": {
+      "earned": 0.5,
+      "wrong": 0,
+      "percent": 3.85
+    },
+    "after": {
+      "earned": 0.5,
+      "wrong": 0,
+      "percent": 3.85
+    },
+    "changePercentagePoints": 0.0
+  },
+  "limits": {
+    "requiredFacts": 13,
+    "before": {
+      "earned": 2.5,
+      "wrong": 0,
+      "percent": 19.23
+    },
+    "after": {
+      "earned": 2.5,
+      "wrong": 0,
+      "percent": 19.23
+    },
+    "changePercentagePoints": 0.0
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "subject": "9992cc2852270ffe2074122b507319cea94ac8e4",
+  "base": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "combinedSource": "fc9c34593a4d0f3fc39b36ab466bd57110e93c16",
+  "fullBinaryDiffSha256": "94e722ec3e3e1de46c953e292db6b1e3ccd733bb792ed2f228e4d4afa395d272",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawSha256": "ae2ebe6291cfe28963b11c592ceb5c8b188bfdb988ebe8f5c31af1449e5d11a8",
+    "rawPath": "docs/reviews/R-F3-STORAGE-LISTING-CLOSE-RAW.md"
+  },
+  "typecheck": {
+    "outcome": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "focusedNative": {
+    "passed": 44,
+    "skipped": 0,
+    "testPopulation": 44,
+    "logSha256": "47d9ad321243b3185daed0389be9d923a50e033483d95f741acb66ed10c96052"
+  },
+  "mutations": {
+    "serial-listing": {
+      "subject": "9992cc2852270ffe2074122b507319cea94ac8e4",
+      "before": [
+        "        if (reachedEnd && batch.length === 0) listingClose = close.catch(() => { closeFailed = true; });"
+      ],
+      "after": [
+        "        if (reachedEnd && batch.length === 0) await close;"
+      ],
+      "patchSha256": "c6031e4158b267a3a2778bb4d189bf9c1b57b3df157d799fc9267568718ae031",
+      "logSha256": "ab4f060388c5b2abd0d94b0bf146c55e5f866096c17341a2d020b2e5ece48b8a",
+      "failingAssertions": 1,
+      "firstAssertion": "expected false to be true // Object.is equality"
+    },
+    "skip-listing-join": {
+      "subject": "9992cc2852270ffe2074122b507319cea94ac8e4",
+      "before": [
+        "      if (listingClose !== undefined) await listingClose;"
+      ],
+      "after": [
+        "      void listingClose;"
+      ],
+      "patchSha256": "1d7de477c12a359d57009c9f5e878e150f84fbf674a19ae501a397ad492b89f7",
+      "logSha256": "b221bda4e2b57d454e6b8ba80c9ba20e5ea8dd2ebae5f076b2e93a2a70aa528c",
+      "failingAssertions": 1,
+      "firstAssertion": "expected 1 to be +0 // Object.is equality"
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "answers": [
+    {
+      "id": "Q01",
+      "answer": "Redis is a networked key-value database that keeps keys and typed values in RAM. It provides low-latency reads and writes for real-time applications, including caching, data-structure operations, and document and vector queries. Disk persistence is optional.",
+      "where": [
+        "index.md",
+        "understanding.md",
+        "poles/1.md"
+      ]
+    },
+    {
+      "id": "Q02",
+      "answer": "RDB saves a point-in-time snapshot. At configured save points, a forked child writes the snapshot while the parent keeps serving. AOF records propagated writes in a command log and flushes the buffer before replies. A snapshot alone can miss writes made after the last snapshot. The pages do not give the AOF crash-loss windows or say which file is loaded when both are enabled.",
+      "where": [
+        "deep-dives/mechanism-deep-dive.md",
+        "poles/3.md"
+      ]
+    },
+    {
+      "id": "Q03",
+      "answer": "The pages describe optional threads for reading, parsing, and writing client socket data, and a forked child for snapshots. They do not describe the separate background I/O service, its job categories, or its ordering guarantee.",
+      "where": [
+        "poles/3.md",
+        "understanding.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q04",
+      "answer": "Modules are shared libraries that extend Redis with commands and data types. The pages show startup loading with a `loadmodule` configuration line. They do not explain loading into an already running instance or the save and restore mechanism for module-defined types.",
+      "where": [
+        "poles/1.md",
+        "discovery.md",
+        "sources/index.md"
+      ]
+    },
+    {
+      "id": "Q05",
+      "answer": "`aeMain` repeats the event loop, waiting for ready file descriptors and dispatching their handlers. The TCP accept handler passes a new connection to the common accept code, which creates a client and installs its read callback. On a readable socket the callback buffers input, parses complete requests, and hands them to command processing. Before the loop waits again, `beforeSleep` flushes enabled AOF writes and sends pending client replies. The pages do not enumerate every phase of a turn.",
+      "where": [
+        "glossary.md",
+        "poles/2.md",
+        "deep-dives/mechanism-deep-dive.md"
+      ]
+    },
+    {
+      "id": "Q06",
+      "answer": "The keyspace is in RAM, with binary-safe string keys naming typed values. Cluster mode splits keys into 16,384 hash slots using the CRC16 of the key name. The pages do not identify the in-memory key and expiration containers, explain how they are organized per slot, or show where the key name is physically stored relative to the value.",
+      "where": [
+        "poles/1.md",
+        "poles/3.md",
+        "glossary.md",
+        "maps/directories.md"
+      ]
+    },
+    {
+      "id": "Q07",
+      "answer": "The type is the abstract data structure a key names and commands operate on, such as a string, list, or sorted set. The pages give a storage example in which compact hashes share field names, but they do not define the encoding field, explain the general purpose of the two fields, or identify who selects an encoding.",
+      "where": [
+        "index.md",
+        "poles/1.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q08",
+      "answer": "The pages describe CRC16 of the key name mapping it to one of 16,384 slots. A command for keys owned by another node is redirected, and a multi-key operation requires all keys to share a slot. The pages identify `src/cluster.h` for slot mapping and mention a separate cluster bus and `src/cluster_legacy.c`, but do not explain the code split, hash exceptions, or detailed routing rules.",
+      "where": [
+        "glossary.md",
+        "poles/2.md",
+        "poles/3.md",
+        "discovery.md"
+      ]
+    },
+    {
+      "id": "Q09",
+      "answer": "`readQueryFromClient` fills the client's query buffer. `processInputBuffer` parses multibulk or inline input and passes a complete command to `processCommandAndResetClient`. `processCommand` looks up the command, checks ACLs and cluster ownership, runs eviction under `maxmemory`, and checks for persistence errors that can refuse writes. A command in `MULTI` queues. Otherwise `call` invokes its `proc`, and the reply is buffered. `alsoPropagate` and `propagateNow` send the write to the enabled AOF buffer and any replica streams. `beforeSleep` flushes the AOF before sending replies. The exact disk sync timing is not shown.",
+      "where": [
+        "poles/2.md",
+        "poles/3.md",
+        "deep-dives/mechanism-deep-dive.md"
+      ]
+    },
+    {
+      "id": "Q10",
+      "answer": "The pages describe normal AOF writes going through a memory buffer and being flushed before the loop sleeps. They do not explain how a background AOF rewrite proceeds or how Redis tracks the constituent files while writes continue.",
+      "where": [
+        "deep-dives/mechanism-deep-dive.md",
+        "poles/3.md",
+        "sources/index.md"
+      ]
+    },
+    {
+      "id": "Q11",
+      "answer": "A replica connects with `SYNC` or `PSYNC`, handled by `syncCommand`. After a short disconnect, it can use `PSYNC` to resume from the backlog if the missed stream is still available. The alternative is a full copy. The pages do not give the precise eligibility checks or the transfer and catch-up steps for a full copy.",
+      "where": [
+        "deep-dives/mechanism-deep-dive.md",
+        "glossary.md",
+        "sources/index.md"
+      ]
+    },
+    {
+      "id": "Q12",
+      "answer": "The pages do not explain how TTL removal works, how any background expiry cycle bounds its work, or what gets propagated to replicas and the AOF when a key expires. They only describe ordinary write propagation.",
+      "where": [
+        "poles/2.md",
+        "poles/3.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q13",
+      "answer": "The command path runs eviction when `maxmemory` is configured, and the discovery report names `src/evict.c`. The supplied pages do not explain the reason for approximating LRU, how victims are chosen, or the approximation's costs.",
+      "where": [
+        "poles/2.md",
+        "poles/3.md",
+        "discovery.md"
+      ]
+    },
+    {
+      "id": "Q14",
+      "answer": "The pages describe a forked child saving a snapshot while the parent continues serving. They do not describe incremental hash-table resizing, the reason it is discouraged with a child active, or the cost of either choice.",
+      "where": [
+        "poles/3.md",
+        "deep-dives/mechanism-deep-dive.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q15",
+      "answer": "One thread executes commands to keep the core simple. Scaling across many simple, shared-nothing instances is suited to NUMA. Optional I/O threads perform socket reads, parsing, and writes. The dossier suggests using them on machines with at least four cores when there is a performance problem and says threaded I/O is unsupported for TLS. A slow command delays every client of its instance. Background snapshots use a forked child.",
+      "where": [
+        "poles/1.md",
+        "poles/3.md",
+        "understanding.md"
+      ]
+    },
+    {
+      "id": "Q16",
+      "answer": "Redis buffers propagated writes and flushes the buffer in `beforeSleep` so writes reach the AOF before client replies go out. This allows writes to be flushed together. The pages do not describe the sync policies or their durability trade-offs, or say what crash-loss window applies when syncing is mitigated during a background save.",
+      "where": [
+        "deep-dives/mechanism-deep-dive.md",
+        "poles/2.md",
+        "poles/3.md"
+      ]
+    },
+    {
+      "id": "Q17",
+      "answer": "The request path shows `processCommand` looking up a command and `call` invoking its `proc` handler. The pages do not say where built-in commands are defined, how the table reaches the server, or what metadata must be declared.",
+      "where": [
+        "poles/2.md",
+        "index.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q18",
+      "answer": "The dossier names `redis.conf` as documentation for operator settings, but its text is withheld. The pages do not identify the configuration registration code or explain how runtime mutability, defaults, and apply actions are set.",
+      "where": [
+        "discovery.md",
+        "sources/index.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q19",
+      "answer": "The release notes summary mentions compact hashes that store field names once for keys with a shared schema. The supplied pages do not identify where conversion thresholds for hashes, sets, sorted sets, or lists are implemented, or how to tune them.",
+      "where": [
+        "index.md",
+        "poles/1.md",
+        "name-index.md"
+      ]
+    },
+    {
+      "id": "Q20",
+      "answer": "The closest locations identified are the `ae.c` event-loop library for readiness handling and `src/socket.c` plus the common accept handler for TCP connections. The pages do not show the backend selection point or the transport interface and registration point, so they do not specify where to plug either addition in.",
+      "where": [
+        "glossary.md",
+        "poles/2.md",
+        "sources/index.md"
+      ]
+    },
+    {
+      "id": "Q21",
+      "answer": "The request path says Redis runs eviction when `maxmemory` is configured. The pages do not explain which policies or circumstances cause writes to fail at the limit, which memory is excluded, or which instances may bypass the limit.",
+      "where": [
+        "poles/2.md",
+        "poles/3.md",
+        "discovery.md"
+      ]
+    },
+    {
+      "id": "Q22",
+      "answer": "The request path says Redis can refuse writes after a persistence error. The pages do not say when a background snapshot failure triggers that behavior, how startup handles a damaged AOF, or what Redis does if the data file cannot be loaded.",
+      "where": [
+        "poles/2.md",
+        "poles/3.md",
+        "deep-dives/mechanism-deep-dive.md"
+      ]
+    },
+    {
+      "id": "Q23",
+      "answer": "Replication is asynchronous, so a successful write does not imply that a replica has received or durably stored it. The pages mention backlog replay after a short disconnect and Sentinel promotion, but do not specify the full consistency and durability limits, the operator controls that narrow exposure, or whether a disconnected replica serves or rejects client requests.",
+      "where": [
+        "understanding.md",
+        "poles/3.md",
+        "deep-dives/mechanism-deep-dive.md"
+      ]
+    },
+    {
+      "id": "Q24",
+      "answer": "Cluster mode distributes keys over 16,384 slots, redirects requests for keys on another node, and requires the keys of a multi-key operation to share a slot. The pages do not give the restrictions on logical databases or the availability behavior if some slots have no serving node.",
+      "where": [
+        "poles/1.md",
+        "poles/2.md",
+        "poles/3.md",
+        "glossary.md"
+      ]
+    }
+  ],
+  "notes": "Answers use the visible supplied pages, including draft claims marked Unknown where the dossier gives their text. Withheld passages and cited repository files were unavailable as evidence. Page paths are relative to the supplied corpus."
+}
