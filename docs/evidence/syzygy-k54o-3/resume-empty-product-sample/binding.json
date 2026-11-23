@@ -1,0 +1,87 @@
+{
+  "adoption": "A-132",
+  "base": "80edc4add15aeabf83b319c68ca4cce88af28f00",
+  "sourceCommit": "88a1077be708fbed545f1b969d3bee5277c28b17",
+  "patchSha256": "4f7f3504464d53d9d064aef96902e8f3b8f7e20a750ee2282e9f86272d73810b",
+  "productionBlob": "c79fb9864dd434211a166f532920c8a6ca840aa4",
+  "reviews": {
+    "initial": {
+      "path": "docs/reviews/F3-RESUME-EMPTY-PRODUCT-SAMPLE-INITIAL-REVIEW-RAW.md",
+      "verdict": "REVISE",
+      "sha256": "d7329e72baee3c8be819cd2d577d0a41584c15b4f066b5d596e8e0b2a2c8c2cb",
+      "subjectSha256": "6e2c3eaad0b58b2262f1d0a65f0ca75d7d91a4c8236a27235867701db86475d8"
+    },
+    "revised": {
+      "path": "docs/reviews/F3-RESUME-EMPTY-PRODUCT-SAMPLE-REVIEW-RAW.md",
+      "verdict": "PASS",
+      "sha256": "3fe5bd747c371fa4972f360f511546202808b79c7a7e190554bfeecd227ab3c5",
+      "subjectSha256": "4f7f3504464d53d9d064aef96902e8f3b8f7e20a750ee2282e9f86272d73810b"
+    }
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "sha256": "6e50432601900e1f88b568696c2c42ebd18394023ac4b36cd29039a054de4b5e",
+      "cases": 236,
+      "files": 3
+    },
+    "unit": {
+      "outcome": "passed",
+      "sha256": "c791b8166e1be664ffb4a9175cc8f625732b95e50698eb6701e6bd8f047291d4",
+      "cases": 118,
+      "files": 2
+    }
+  },
+  "tracedPredecessor": {
+    "sourceCommit": "2ae81cd45dca6bae661fd169c30d514084748a1d",
+    "overlaySha256": "1663d891b5cf3079717b358987957eb5a418cd1661a2233607efc6a855ec244a",
+    "nativeLogSha256": "0c376f36214f5a2c506ee4b1a3d8d4a13599bb2ee35a09fe0da50efca536cf43",
+    "resumedInitialRender": {
+      "began": 179576.741862,
+      "elapsedMs": 22499.750027000002,
+      "remainingMs": 7500,
+      "reads": {
+        "wait-live-sample": {
+          "count": 31,
+          "ms": 5428.799839000014,
+          "maxMs": 279.34619100001873
+        },
+        "wait-for-sample": {
+          "count": 31,
+          "ms": 5455.583988999948,
+          "maxMs": 283.66469700000016
+        },
+        "read-batch": {
+          "count": 1,
+          "ms": 164.33091699998477,
+          "maxMs": 164.33091699998477
+        },
+        "read": {
+          "count": 41,
+          "ms": 3588.5516830001143,
+          "maxMs": 190.66479400001117
+        },
+        "select-groups": {
+          "count": 10,
+          "ms": 2397.5482039999915,
+          "maxMs": 629.38246600001
+        },
+        "select": {
+          "count": 8,
+          "ms": 896.8822049999726,
+          "maxMs": 374.60354499999085
+        },
+        "revalidate": {
+          "count": 6,
+          "ms": 2393.970433999988,
+          "maxMs": 501.6238679999951
+        }
+      }
+    }
+  },
+  "limit": "The timing replay measured the predecessor. The exact native outcome and measured savings on the adopted successor remain Unknown."
+}
