@@ -6,7 +6,7 @@
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`subsec_cases`).
 - [x] One independent fresh-context review (CC-REV-4), raw retained, findings dispositioned (`design.md`, "Review").
 - [x] Append the agent-adoption row naming the installing commit (A-50).
-- [ ] Create the version tag `polaris-dossier-page-subsections-v2.16` at the installing commit once it is on the default branch.
-- [ ] Schema v8, the `subsection-answer` and `field-version` findings, and the figure-kind version predicate at every site `design.md` D8 names (`packages/polaris-dossier/src/`), with literal-case tests of rule `one-sentence-answer`.
-- [ ] Subsections, `h3` headings, the on-page contents list and their page-scoped style rules (`apps/three-surface-poc/src/polaris-generation/dossier-site.ts`), with render tests on literal ids, every stored draft re-rendered byte-identical and the provider golden unchanged.
-- [ ] Brief v14 (`packages/polaris-dossier/src/brief.ts`) and a recorded rule-6 mutation run.
+- [x] Create the version tag `polaris-dossier-page-subsections-v2.16` at the installing commit once it is on the default branch.
+- [x] Schema v8, the `subsection-answer` and `field-version` findings, and the figure-kind version predicate at every site `design.md` D8 names (`packages/polaris-dossier/src/`), with literal-case tests of rule `one-sentence-answer`.
+- [x] Subsections, `h3` headings, the on-page contents list and their page-scoped style rules (`apps/three-surface-poc/src/polaris-generation/dossier-site.ts`), with render tests on literal ids, every stored draft re-rendered byte-identical and the provider golden unchanged.
+- [x] Brief v14 (`packages/polaris-dossier/src/brief.ts`) and a recorded rule-6 mutation run (`docs/evidence/syzygy-3efd-50/`: 62 of 62 killed at `4c354faf` (r2) and 64 of 64 at `5ec834fd` (r3, after the review repairs), 3 equivalents recorded; byte comparison of 18 synthetic v2-v7 variants, 321 files, check records included; every other stored fixture is covered only by the unchanged literal suites and the provider golden's own test, not by that comparison).

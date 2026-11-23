@@ -42,6 +42,8 @@ export type CheckFindingKind =
   | 'thesis-basis'
   // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
   | 'figure-kind' | 'figure-unused'
+  // Version 2.16 (schema v8): a subsection answer that is non-normative or more than one sentence.
+  | 'subsection-answer'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

@@ -1,0 +1,1090 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-23T02:01:02.590Z",
+  "commit": "5ec834fd713433ea692222c7c73271de59192f62",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "0aa25a64631e90f916a00b77f1b43703ad244a772d9476fe2c1d48e88447fa09",
+    "packages/polaris-dossier/src/brief.ts": "419793f7d425961162ff6d86531c44a8cc5513801f3d26835c53d1d88d616bfa",
+    "packages/polaris-dossier/src/check-derive.ts": "f164c5fe4cc66ff17fd55ddd94f90dfabd86baac1ba53b53dd8b35fb8382c57b",
+    "packages/polaris-dossier/src/draft-schema.ts": "c80e04c2570145027a11d81b3e7bd1a1d1104abdf279cf3403f164a87d3ce0ae",
+    "packages/polaris-dossier/src/reader-advice.ts": "6b40d50d66b75913279eef932bddf4b4a93f12ee05bc038c6600a0b097cc0cae",
+    "packages/polaris-dossier/src/reading-ledger.ts": "96be9fe55ef71c780ae44f17a29dfa20663bb46ab05c4a5d1a44c697bf9df8de",
+    "packages/polaris-dossier/src/render.ts": "daa13a48c89a0506c15ef6f1f749a653aa8d483e17a42ae268a966b0de92d4ee",
+    "packages/polaris-generation-core/src/draft-model.ts": "434bdbe7b28a743a17538b2696dfbe1d89d8f5e773e5201ee6a682235e685d4f"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/draft-schema.test.ts",
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/brief.test.ts",
+      "packages/polaris-dossier/src/render.test.ts",
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/reading-ledger.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "packages/polaris-dossier/src/reader-advice.ts": [
+      "packages/polaris-dossier/src/reader-standards.test.ts",
+      "packages/polaris-dossier/src/reading-ledger.test.ts"
+    ],
+    "packages/polaris-dossier/src/reading-ledger.ts": [
+      "packages/polaris-dossier/src/reading-ledger.test.ts"
+    ],
+    "packages/polaris-generation-core/src/draft-model.ts": [
+      "packages/polaris-generation-core/src/provider-draft.test.ts",
+      "packages/polaris-generation-core/src/rendered-design.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 229,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 41,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 279,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 603,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "exitCode": 0,
+      "tests": 106,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "exitCode": 0,
+      "tests": 20,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 127,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "exitCode": 0,
+      "tests": 43,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "answer-inner-stop-allowed",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (/[.?!][)\\]'\\u2019]*\\s/u.test(stripped)) return false;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) names a subsection with no well-formed identity by its path",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"The daemon caches reads. It never writes.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"Reads are cached, e.g. on start.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"Reads are cached (on start.) It never writes.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It waits... then reads.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It reads. Then it writes.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It reads.\\nThen it writes.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It says \\\"one. two and stops.\" is one sentence: false",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"The users' list. More.\" is one sentence: false"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "answer-inner-stop-without-closers",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (/[.?!][)\\]'\\u2019]*\\s/u.test(stripped))",
+      "new": "if (/[.?!]\\s/u.test(stripped))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"Reads are cached (on start.) It never writes.\" is one sentence: false"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "answer-inner-stop-ascii-space-only",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (/[.?!][)\\]'\\u2019]*\\s/u.test(stripped))",
+      "new": "if (/[.?!][)\\]'\\u2019]*[ \\n]/u.test(stripped))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It reads. Then it writes.\" is one sentence: false"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-end-without-closers",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "return /[.?!][)\\]'\\u2019]*$/u.test(stripped)",
+      "new": "return /[.?!]$/u.test(stripped)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It caches (on start.)\" is one sentence: true",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It caches reads.’\" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-end-without-right-quote",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "return /[.?!][)\\]'\\u2019]*$/u.test(stripped)",
+      "new": "return /[.?!][)\\]']*$/u.test(stripped)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It caches reads.’\" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-end-any-character",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "return /[.?!][)\\]'\\u2019]*$/u.test(stripped)",
+      "new": "return /.$/u.test(stripped)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It caches reads\" is one sentence: false"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-quoted-text-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (let i = quotes[k]! + 1; i < quotes[k + 1]!; i++) removed.add(i);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"The cache is bounded, as The project states: \\\"Entries expire. Then they are fetched again.\\\"\" is one sentence: true",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It says \\\"one. two\\\" and stops.\" is one sentence: true",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It says \\\"x\\\" then \\\"y. z\\\" then ends.\" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-closing-quote-not-an-end",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": " || (kept.length > 0 && kept[kept.length - 1]!.closes);",
+      "new": ";",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It is \\\"fast.\\\"\" is one sentence: true",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It is \\\"fast\\\"\" is one sentence: true",
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"The cache is bounded, as The project states: \\\"Entries expire. Then they are fetched again.\\\"\" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-trailing-space-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "while (kept.length > 0 && white.test(kept[kept.length - 1]!.ch)) kept.pop();",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"  It caches reads.  \" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-unpaired-quote-closed-at-end",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const paired = quotes.length - (quotes.length % 2);",
+      "new": "if (quotes.length % 2 === 1) quotes.push(chars.length);\n  const paired = quotes.length;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > rule one-sentence-answer \"It ends.\\\" Then more.\" is one sentence: true"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-non-normative-passes",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (answer['label'] === 'non-normative') {",
+      "new": "if (false) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-sentence-unchecked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "} else if (typeof answer['text'] === 'string' && !oneSentenceAnswer(answer['text'])) {",
+      "new": "} else if (false) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) names a subsection with no well-formed identity by its path"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-named-by-path-always",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "checkShape({ root: handle, defs: {} }, id).length === 0 ? `the subsection",
+      "new": "false ? `the subsection",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-named-by-id-always",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "checkShape({ root: handle, defs: {} }, id).length === 0 ? `the subsection",
+      "new": "true ? `the subsection",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) names a subsection with no well-formed identity by its path"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "earlier-no-field-version",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "isRecord(section) && Object.hasOwn(section, SUBSECTIONS_FIELD) ? [`$.sections",
+      "new": "false ? [`$.sections",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "v8-field-version",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (hasSubsectionForm(doc['schemaVersion'])) return [];",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft whose section carries two subsections, and checks their claims as the section's",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reads a subsection's answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "earlier-schema-finding-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "fieldVersion.has(path) || subsectionPaths.has(path) || (also",
+      "new": "fieldVersion.has(path) || (also",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "v7-schema-finding-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "standing.has(path) || subsectionPaths.has(path) }",
+      "new": "standing.has(path) }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "earlier-subsections-read",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  if (!hasSubsectionForm(doc['schemaVersion'])) return;\n  list(section[SUBSECTIONS_FIELD])",
+      "new": "  list(section[SUBSECTIONS_FIELD])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "v7-read-as-v8",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : v7,",
+      "new": "schema: current,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "v8-read-as-v7",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : v7,",
+      "new": "schema: v7,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft whose section carries two subsections, and checks their claims as the section's",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reads a subsection's answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "v7-schema-takes-subsections",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent');",
+      "new": "const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "v6-figure-detail-names-v8",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "the kind \\`${diagram['kind']}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V7}",
+      "new": "the kind \\`${diagram['kind']}\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v6 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a polaris-dossier-local-draft-v5 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: figure kinds (schema v7) reports a v4 draft carrying a sequence as field-version, keeping the missing nodes and edges",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) keeps a v6 draft's figure-kind field-version naming schema v7"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "answer-not-a-block",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (isRecord(subsection['answer'])) out.push(claim(`${at}.answer`, subsection['answer']));",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "subsection-paragraphs-not-blocks",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "list(subsection['paragraphs']).forEach((entry, k) => contentClaims(",
+      "new": "list([]).forEach((entry, k) => contentClaims(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "subsection-title-not-a-label",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "subsectionsOf(doc, (subsection, at) => { if (typeof subsection['title'] === 'string') out.push(",
+      "new": "subsectionsOf(doc, (subsection, at) => { if (false) out.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "subsection-rule-not-run",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": " figureStructure(doc, add); subsectionStructure(doc, add); },",
+      "new": " figureStructure(doc, add); },",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 279,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports the scenario's first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) names a subsection with no well-formed identity by its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "subsections-min-1",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "subsections: [2, 12] as const",
+      "new": "subsections: [1, 12] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "subsections-max-13",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "subsections: [2, 12] as const",
+      "new": "subsections: [2, 13] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "subsection-paragraphs-min-1",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "paragraphs: [0, 30] as const",
+      "new": "paragraphs: [1, 30] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft whose section carries two subsections, and checks their claims as the section's",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reads a subsection's answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "subsection-paragraphs-max-31",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "paragraphs: [0, 30] as const",
+      "new": "paragraphs: [0, 31] as const",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "subsection-title-any-text",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "subsection: object({ id: handle, title: presentationLabel,",
+      "new": "subsection: object({ id: handle, title: text,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "subsections-required",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "disposition: ref('disposition') }, [SUBSECTIONS_FIELD])",
+      "new": "disposition: ref('disposition') })",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits a draft that follows every rule",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits a v3 draft carrying every rich element kind (syzygy-mea.10.5)",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema admits eight to fifteen task routes, a step naming where the dossier explains it, and a draft with none",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema allows zero clarifications when the limit is zero",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the thesis basis (v6) requires thesisBasis, one of stated, code-reading and none",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the thesis basis (v6) has no thesisBasis member in the form check applies to a v5 or earlier draft",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft holding a sequence diagram, and reads its thesis basis, as a v7 draft does",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) gives a v8 draft without subsections the findings the same v7 draft gets",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) draws a v8 draft's sequence figure as a v7 draft's, in its two forms",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list"
+      ],
+      "seconds": 45
+    },
+    {
+      "id": "subsection-form-in-v7",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;",
+      "new": "export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION || version === LOCAL_DRAFT_SCHEMA_VERSION_V7;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-19: counts a v8 section's subsection answers and paragraphs as its own prose, and an earlier draft's subsections never (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "figure-kinds-not-in-v8",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V7 || hasSubsectionForm(version);",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V7;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-17: reads a sequence's messages in a v8 draft as in a v7 one, and never in an earlier draft (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft whose section carries two subsections, and checks their claims as the section's",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reads a subsection's answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft holding a sequence diagram, and reads its thesis basis, as a v7 draft does",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) gives a v8 draft without subsections the findings the same v7 draft gets",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) draws a v8 draft's sequence figure as a v7 draft's, in its two forms",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "thesis-basis-not-in-v8",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || hasFigureKindForm(version);",
+      "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || version === LOCAL_DRAFT_SCHEMA_VERSION_V7;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 603,
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft whose section carries two subsections, and checks their claims as the section's",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reports a long title as schema and a marked-up title as label-markup, each at its title, and the list's bounds as schema",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) reads a subsection's answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) checks a subsection's answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) passes a v8 draft holding a sequence diagram, and reads its thesis basis, as a v7 draft does",
+        "packages/polaris-dossier/src/check.test.ts > check: subsections (schema v8) gives a v8 draft without subsections the findings the same v7 draft gets",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) draws a v8 draft's sequence figure as a v7 draft's, in its two forms",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    SUBSECTIONS_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 41,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph and task-routes section"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "rs19-subsections-in-v7",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (part !== 'sections' || !hasSubsectionForm(doc['schemaVersion'])) return own;",
+      "new": "if (part !== 'sections') return own;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 106,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-19: counts a v8 section's subsection answers and paragraphs as its own prose, and an earlier draft's subsections never (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "rs19-subsections-in-dives",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (part !== 'sections' || !hasSubsectionForm(doc['schemaVersion'])) return own;",
+      "new": "if (!hasSubsectionForm(doc['schemaVersion'])) return own;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 106,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-19: counts a v8 section's subsection answers and paragraphs as its own prose, and an earlier draft's subsections never (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "rs19-answer-uncounted",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "sum + proseWords(subsection['answer']) + list(",
+      "new": "sum + list(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 106,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-19: counts a v8 section's subsection answers and paragraphs as its own prose, and an earlier draft's subsections never (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "rs19-subsection-paragraphs-uncounted",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": " + list(subsection['paragraphs']).reduce<number>((inner, entry) => inner + proseWords(entry), 0) : sum)",
+      "new": " : sum)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 106,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-19: counts a v8 section's subsection answers and paragraphs as its own prose, and an earlier draft's subsections never (version 2.16)",
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "rs17-messages-not-in-v8",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (diagram['kind'] !== 'sequence' || !hasFigureKindForm(doc['schemaVersion'])) return;",
+      "new": "if (diagram['kind'] !== 'sequence' || doc['schemaVersion'] !== 'polaris-dossier-local-draft-v7') return;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 106,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards RS-17: reads a sequence's messages in a v8 draft as in a v7 one, and never in an earlier draft (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "ledger-section-subsections-uncounted",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "const words = containerProseWords(doc, section, 'sections');",
+      "new": "const words = containerProseWords(doc, section, 'deepDives');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "ledger-v8-homes-read-as-section-ids",
+      "file": "packages/polaris-dossier/src/reading-ledger.ts",
+      "old": "const homesInHome = hasHomeForm(doc['schemaVersion']);",
+      "new": "const homesInHome = ['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7'].includes(String(doc['schemaVersion']));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 20,
+      "failedTests": [
+        "packages/polaris-dossier/src/reading-ledger.test.ts > reading ledger counts a v8 section's subsection answers and paragraphs on its page, and an earlier draft's never (version 2.16)"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "handles-subsection-blocks-dropped",
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "old": ",\n      ...(s.subsections ?? []).flatMap(sub => [sub.answer, ...treeBlocks(sub.paragraphs)])])",
+      "new": "])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 43,
+      "failedTests": [
+        "packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation counts a subsection's answer and paragraphs as blocks and its identity as a handle, for a draft that carries them"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "handles-subsection-ids-dropped",
+      "file": "packages/polaris-generation-core/src/draft-model.ts",
+      "old": ", ...(s.subsections ?? []).map(sub => sub.id)]",
+      "new": "]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 43,
+      "failedTests": [
+        "packages/polaris-generation-core/src/provider-draft.test.ts > provider-local intermediate validation counts a subsection's answer and paragraphs as blocks and its identity as a handle, for a draft that carries them"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "model-subsections-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(subsectionRecords(section).length === 0 ? {} :",
+      "new": "...(true ? {} :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 127,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "section-title-over-own-paragraphs-only",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "const paragraphs = [...leaves(container['paragraphs']), ...leaves(subsectionRecords(container).flatMap(subsectionContent))];",
+      "new": "const paragraphs = leaves(container['paragraphs']);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 127,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-title-not-a-label-over-claims",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "title: over(subsectionContent(subsection), subsection['title'])",
+      "new": "title: text(subsection['title'])!",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 127,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-title-over-answer-only",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "title: over(subsectionContent(subsection), subsection['title'])",
+      "new": "title: over([subsection['answer']], subsection['title'])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 127,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "figure-kind-not-drawn-in-v8",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "(hasFigureKindForm(doc['schemaVersion']) && (diagram['kind'] === 'sequence'",
+      "new": "(doc['schemaVersion'] === 'polaris-dossier-local-draft-v7' && (diagram['kind'] === 'sequence'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 127,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) draws a v8 draft's sequence figure as a v7 draft's, in its two forms"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-h2",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<h3>${escape(sub.title)}</h3>",
+      "new": "<h2>${escape(sub.title)}</h2>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-answer-unwrapped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<div class=\"subsection-answer\">${paragraph(from, sub.answer, 'p')}</div>",
+      "new": "${paragraph(from, sub.answer, 'p')}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-paragraphs-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${sub.paragraphs.map(b => block(from, b)).join('')}</section>",
+      "new": "</section>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsections-after-deep-links",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${subsections}${dives ? `<ul class=\"deep-links\">${dives}</ul>` : ''}",
+      "new": "${dives ? `<ul class=\"deep-links\">${dives}</ul>` : ''}${subsections}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-css-everywhere",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${subsections ? SUBSECTION_CSS : ''}",
+      "new": "${SUBSECTION_CSS}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, contents list or their style on any page while the draft layer is withheld",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-css-nowhere",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${subsections ? SUBSECTION_CSS : ''}",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "subsection-page-not-marked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (subsections !== '') subsectionPages.add(from);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "contents-never",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "!shown.some(rendersSubsections) ? ''",
+      "new": "true ? ''",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "contents-always",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "!shown.some(rendersSubsections) ? ''",
+      "new": "false ? ''",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render: figure homes (schema v5) draws each figure once, on its home page: the overview after its introduction, a deep dive and a section ahead of their prose",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders a v8 draft without subsections byte for byte as the same v7 draft, on every page, with no subsection style or contents list"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "contents-unproduced-section-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "section.disposition.kind === 'produced' && (section.subsections ?? []).length > 0",
+      "new": "(section.subsections ?? []).length > 0",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders no subsection, list or style for a section that is not produced"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "contents-subsection-list-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`<ol>${section.subsections!.map(",
+      "new": "`<ol>${[].map(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "contents-not-on-landing",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${pageContents(onLanding)}${onLanding.map(",
+      "new": "`${onLanding.map(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) reads a section's title over its subsections' claims too, and a subsection's title over its paragraphs as well as its answer",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) escapes a section title in the contents list as its heading does"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "contents-lists-why-back-link",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const rendered = pole.sections.filter(id => id !== poleSpec!.whySection).map(",
+      "new": "const rendered = pole.sections.map(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 229,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) puts the contents list on a Pole page after its heading, with no item for the why back-link, no list in a section that renders no content, and subsections before deep-dive links"
+      ],
+      "seconds": 20
+    }
+  ],
+  "equivalent": [
+    {
+      "id": "answer-leading-space-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "while (kept.length > 0 && white.test(kept[0]!.ch)) kept.shift();",
+      "new": "",
+      "reason": "[Inferred] Equivalent by the rule: a leading white-space character has no terminator before it, so it cannot match the inner-stop pattern, and it is never the last character unless every character is white space, which neither ends with a terminator nor closes a quote either way. The rule states the removal; it changes no outcome."
+    },
+    {
+      "id": "contents-deferred-section-listed",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "!view.deferredSections.has(section.id) && ",
+      "new": "",
+      "reason": "[Inferred] Unreachable: deferredSections is non-empty only in provider mode (dossier-render.ts), whose draft passes validateDraftRecord, and the closed provider draft form refuses `subsections` (provider-draft.test.ts pins the refusal), so no deferred section carries a subsection. The local render passes an empty set."
+    },
+    {
+      "id": "model-subsections-of-earlier-draft",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "(hasSubsectionForm(doc['schemaVersion']) ? list(container['subsections']).filter(isRecord) : [])",
+      "new": "list(container['subsections']).filter(isRecord)",
+      "reason": "[Inferred] Unreachable through the render command: it renders only the latest passed draft, and a draft of schema v7 or earlier carrying `subsections` never passes (the field-version finding, pinned in check.test.ts). The guard keeps the model honest for any other caller."
+    }
+  ],
+  "summary": {
+    "mutants": 64,
+    "killed": 64,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 3
+  }
+}

@@ -10,7 +10,7 @@ import {
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, hasThesisBasisForm } from './draft-schema.js';
+import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasSubsectionForm, hasThesisBasisForm } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -648,7 +648,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   };
   // A v7 sequence or swimlane (version 2.5): its participants, lanes and steps are rendered as nodes are, its messages as edges are.
   const figureKind = (diagram: Readonly<Record<string, unknown>>): 'sequence' | 'swimlane' | undefined =>
-    (doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind'] : undefined);
+    (hasFigureKindForm(doc['schemaVersion']) && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind'] : undefined);
   const elementsOf = (diagram: Readonly<Record<string, unknown>>): unknown[] => {
     const kind = figureKind(diagram);
     return kind === 'sequence' ? [...list(diagram['participants']), ...list(diagram['messages'])]
@@ -659,8 +659,12 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return parts.length > 0 && parts.every((part) => withheldNote(part) !== undefined);
   };
   // A section's or deep dive's title over paragraphs and diagrams that are all withheld.
+  // A v8 section's subsections (version 2.16): their answers and paragraphs are the section's claims, so its title takes them in too.
+  const subsectionRecords = (container: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>>[] =>
+    (hasSubsectionForm(doc['schemaVersion']) ? list(container['subsections']).filter(isRecord) : []);
+  const subsectionContent = (subsection: Readonly<Record<string, unknown>>): unknown[] => [subsection['answer'], ...list(subsection['paragraphs'])];
   const containerTitle = (container: Readonly<Record<string, unknown>>, diagrams: readonly Readonly<Record<string, unknown>>[]): string => {
-    const paragraphs = leaves(container['paragraphs']);
+    const paragraphs = [...leaves(container['paragraphs']), ...leaves(subsectionRecords(container).flatMap(subsectionContent))];
     const held = paragraphs.every(Boolean) && diagrams.every(diagramHeld) && paragraphs.length + diagrams.length > 0;
     return held ? WITHHELD_LABEL : title(container['title']);
   };
@@ -678,7 +682,9 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const draft: DossierDraft = {
     title: title(doc['title']),
     introduction: paragraph(doc['introduction']),
-    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => placement(diagram).home === undefined && placement(diagram).sectionId === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
+    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => placement(diagram).home === undefined && placement(diagram).sectionId === section['id'])), paragraphs: tree(section['paragraphs']),
+      ...(subsectionRecords(section).length === 0 ? {} : { subsections: subsectionRecords(section).map((subsection) => ({ id: text(subsection['id'])!, title: over(subsectionContent(subsection), subsection['title']), answer: paragraph(subsection['answer']), paragraphs: tree(subsection['paragraphs']) })) }),
+      disposition: disposition(section['disposition']) })),
     diagrams: diagramRecords.map((diagram) => {
       const held = diagramHeld(diagram);
       const kind = figureKind(diagram);

@@ -79,6 +79,10 @@ own adoption binding verifies; each parser counts its one replacement (034).
 The index-and-task-routes version2.15 amendment follows version2.14 when its own
 adoption binding verifies; each parser counts its one replacement (034).
 
+The verify-text version2.21 amendment replaces 033 after the run-tree
+read-bounds version2.18 when its own adoption binding verifies; each parser
+counts its one replacement (033).
+
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
 
@@ -592,6 +596,15 @@ def subsec_amendment(root: Path) -> str | None:
     return text
 
 
+def hero_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.hero_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("hero figure adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def reltype_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -637,6 +650,16 @@ def treeread_amendment(root: Path) -> str | None:
     return text
 
 
+def verify_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.verify_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("verify text adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
@@ -660,7 +683,9 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.SUBSEC_SPEC, subsec_amendment(root)),
                         (adoption.RAW_READ_SPEC, raw_read_amendment(root)),
                         (adoption.TREEREAD_SPEC, treeread_amendment(root)),
-                        (adoption.RELTYPE_SPEC, reltype_amendment(root))):
+                        (adoption.VERIFY_SPEC, verify_amendment(root)),
+                        (adoption.RELTYPE_SPEC, reltype_amendment(root)),
+                        (adoption.HERO_SPEC, hero_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -712,14 +737,17 @@ def composition_inputs(root: Path) -> list[Path]:
     subsec_amendment(root)
     raw_read_amendment(root)
     treeread_amendment(root)
+    verify_amendment(root)
     reltype_amendment(root)
+    hero_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
-        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS,
+        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
+        *adoption.VERIFY_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
