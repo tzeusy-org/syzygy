@@ -811,6 +811,44 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
   });
 });
 
+it('screens graph units and citation paths together while preserving frozen bindings', async () => {
+  const hiddenPath = `${BOTH_PATH}/package.json`;
+  const hiddenName = BOTH_PATH.split('/')[1]!;
+  const units = [
+    { kind: 'top-level-directory', path: 'src' },
+    { kind: 'package-manifest', path: hiddenPath },
+    { kind: 'dependency-name', name: hiddenName },
+  ];
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v9';
+    d.thesisBasis = 'stated';
+    d.diagrams = [{
+      id: 'graph', title: 'Project units', kind: 'boundary', relationship: 'Related parts of the project.',
+      home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['graph'] },
+      nodes: units.map((unit, index) => ({
+        id: `n${index}`, label: `Node ${index}`, epistemic: 'inferred', citations: [cite(`c-n${index}`, index === 1 ? BOTH_PATH : undefined)], unit,
+      })),
+      edges: [{ id: 'e1', from: 'n0', to: 'n1', relation: 'relates-to', label: 'Related', epistemic: 'inferred', citations: [cite('c-e1')] }],
+    }];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes(hiddenName)).toBe(false);
+  const packet = JSON.parse(built.bytes);
+  expect(packet.draft.withheldDiagramUnits).toBe(2);
+  expect(packet.draft.withheldCitationPaths).toBe(1);
+  expect(packet.draft.document.diagrams[0].nodes[1].citations[0]).toMatchObject({ id: 'c-n1', path: null });
+  expect(packet.spans).toContainEqual(expect.objectContaining({ path: null, objectId: null, outcome: 'denied-path',
+    citedBy: [{ subject: 'draft', citationId: 'c-n1' }],
+  }));
+  expect(packet.draft.document.diagrams[0].nodes.map((node: Doc) => node.unit)).toEqual([units[0], undefined, undefined]);
+  const frozen = fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'));
+  expect(packet.draft.sha256).toBe(sha256(frozen));
+  const frozenNode = JSON.parse(frozen.toString()).diagrams[0].nodes[1];
+  expect(frozenNode.unit.path === hiddenPath).toBe(true);
+  expect(frozenNode.citations[0].path === BOTH_PATH).toBe(true);
+});
+
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
   it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });

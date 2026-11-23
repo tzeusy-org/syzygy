@@ -5,13 +5,14 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { NotARegularFileError, isCheckRecordOf, readBoundedFile, readCheckRecord } from './check-record-read.js';
 import { DRAFT_MAX_BYTES } from './check-model.js';
-import { DEFICIENT_SUBJECTS, VERDICT_QUOTATION_FORM, verdictSchemaDocument } from './draft-schema.js';
+import { DEFICIENT_SUBJECTS, UNIT_FIELD, VERDICT_QUOTATION_FORM, hasRelationForm, membersOfKind, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
 import { briefStandardsOf, buildDesignPacket, standardsInput, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
-import { placementSubjectOf, screenLoaderOf, secretPathOf, type ScreenExclusion } from './screen.js';
+import { unitOf } from './relation-witness.js';
+import { placementSubjectOf, screenLoaderOf, secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
 
@@ -60,6 +61,25 @@ export const parseSubject = (bytes: Uint8Array): Readonly<Record<string, unknown
   } catch { return undefined; }
 };
 
+/** Find graph nodes whose optional unit must be omitted from the review copy. The frozen draft remains the subject of the verdict. */
+function withheldDiagramUnits(draft: Readonly<Record<string, unknown>>, screen: DossierScreen): ReadonlySet<object> {
+  const withheld = new Set<object>();
+  if (!hasRelationForm(draft['schemaVersion'])) return withheld;
+  const isSecretPath = secretPathOf(screen);
+  for (const diagram of list(draft['diagrams'])) {
+    if (!isRecord(diagram) || membersOfKind(diagram['kind'])?.[0] !== 'nodes') continue;
+    for (const node of list(diagram['nodes'])) {
+      if (!isRecord(node) || !Object.hasOwn(node, UNIT_FIELD)) continue;
+      const unit = unitOf(node[UNIT_FIELD]);
+      if (unit === undefined || Object.entries(unit).some(([field, value]) => field !== 'kind'
+        && ((field === 'path' && isSecretPath(value)) || screen.screenBody(value) === 'secret-detector-match'))) {
+        withheld.add(node);
+      }
+    }
+  }
+  return withheld;
+}
+
 /** Build the fidelity packet from the current frozen subject, reading every cited span now. Pure of the stored packet: a packet on disk
  * is never read back. */
 export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true }>, deps: ReviewDeps): Promise<PacketBuild> {
@@ -83,6 +103,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
   const screen = screenLoad.screen;
+  const withheldUnits = withheldDiagramUnits(draftView, screen);
   const isSecretPath = secretPathOf(screen);
   const secretPaths = new Map<string, boolean>();
   const withheldCitations = new WeakSet<object>();
@@ -177,7 +198,8 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     runId,
     pinnedRevision: pinned,
     draft: { revision: draftRev.revision, sha256: sha256(draftRev.bytes), omitted: ['discovery'],
-      ...(withheldCount.draft === 0 ? {} : { withheldCitationPaths: withheldCount.draft }), document: draftView },
+      ...(withheldCount.draft === 0 ? {} : { withheldCitationPaths: withheldCount.draft }),
+      ...(withheldUnits.size === 0 ? {} : { withheldDiagramUnits: withheldUnits.size }), document: draftView },
     inventory: {
       revision: counted.revision, sha256: counted.sha256,
       // The inventory's coverage account is its session's own content for the reviewer to judge, never a verified read account.
@@ -190,8 +212,9 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     criteria: fidelityCriteria(run),
     verdictSchema: verdictSchemaDocument({ pinnedRevision: pinned }),
   };
-  // Keep the frozen originals for verdict validation. Only the packet copy loses the path values.
+  // Keep the frozen subjects of the verdict. Withholding applies to the serialized review copy.
   const bytes = `${JSON.stringify(packet, function (this: object, key, value: unknown) {
+    if (key === UNIT_FIELD && withheldUnits.has(this)) return undefined;
     return key === 'path' && withheldCitations.has(this) ? null : value;
   }, 2)}\n`;
   return {
