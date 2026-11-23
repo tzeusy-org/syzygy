@@ -1,0 +1,52 @@
+{
+  "subject": {
+    "commit": "a23848d45d8fea2e2bf2920053f53f1c9b242be9",
+    "binaryDiffSha256": "88d01c4f618f8e334662231facfe33f157687a5da77ac0fb7f82b64b4bd3419c"
+  },
+  "governance": [
+    "A-14",
+    "A-66",
+    "A-68",
+    "A-162",
+    "REQ-polaris-generation-035",
+    "REQ-polaris-generation-048",
+    "RFC3-16(d).5",
+    "RFC3-16(d).6"
+  ],
+  "review": {
+    "reviewedCommit": "1661994b0ef9da16130b581dc5f1bc1e6f5dd7c8",
+    "path": "docs/reviews/F3-DESIGN-ACTIVATION-LEASE-REVIEW-RAW.md",
+    "sha256": "bf01003dc011a17673af4a8ba1ff37259a2004a9921e477a18d88b588dfb042c",
+    "verdict": "PASS"
+  },
+  "observedPredecessor": {
+    "binding": "../render-lease/binding.json",
+    "evidence": "candidateReplay",
+    "configuredSeparateActivationMaximumMilliseconds": 20000
+  },
+  "verification": {
+    "typecheck": "passed",
+    "integration": [
+      {
+        "paths": [
+          "packages/polaris-dossier/src/session-launch.test.ts",
+          "packages/polaris-dossier/src/url-ordered-design-host.test.ts"
+        ],
+        "selector": "production ordered host activation|startup.*socket|bind.*startup|withholds native Author spawn",
+        "passed": 9,
+        "unselected": 61,
+        "total": 70
+      },
+      {
+        "paths": [
+          "packages/polaris-dossier/src/url-ordered-design-host.test.ts"
+        ],
+        "selector": "startup currentness expires",
+        "passed": 3,
+        "unselected": 18,
+        "total": 21
+      }
+    ],
+    "nativeCompletion": "Unknown"
+  }
+}
