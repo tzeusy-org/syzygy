@@ -189,33 +189,93 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     else expect(f.peer).toBeNull();
   });
 
-  it('pins the actual installed Node image with bounded asynchronous descriptor reads', async () => {
+  it('pins the actual Node image with ordered, bounded positional reads and detects a short read', async () => {
     filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
     const probe = await fs.open(await fs.realpath(process.execPath), 'r');
     const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
     await probe.close();
     const read = prototype.read;
-    const reads: { requested: number; received: number }[] = [];
-    let observing = false;
+    const chunkBytes = 4 * 1_048_576;
+    const reads: { position: number; requested: number; received: number }[] = [];
+    let observing = false, firstWaiting = false, overlapped = false;
+    let releaseFirst!: () => void;
+    const siblingStarted = new Promise<void>(resolve => { releaseFirst = resolve; });
     const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
       const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
+      if (held?.ino !== identity.ino || held.dev !== identity.dev) return read.apply(this, args);
+      const position = args[3] as number, requested = args[2] as number;
+      expect(Number.isSafeInteger(position)).toBe(true);
+      expect(requested).toBeGreaterThan(0);
+      expect(requested).toBeLessThanOrEqual(chunkBytes);
+      if (position === 0) {
+        firstWaiting = true;
+        let fallback: ReturnType<typeof setTimeout> | undefined;
+        try {
+          await Promise.race([siblingStarted, new Promise<void>(resolve => { fallback = setTimeout(resolve, 1500); })]);
+        } finally { clearTimeout(fallback); firstWaiting = false; }
+        // One real short read challenges completion of the exact first range.
+        args[2] = requested / 2;
+      } else if (position === chunkBytes) {
+        overlapped = firstWaiting;
+        releaseFirst();
+      }
       const result = await read.apply(this, args);
-      if (held?.ino === identity.ino && held.dev === identity.dev) reads.push({ requested: args[2] as number, received: result.bytesRead });
+      reads.push({ position, requested, received: result.bytesRead });
       return result;
     });
     try {
       const f = await fixture('live', undefined, { readImageCurrent: () => { observing = true; return true; } });
       expect(f.peer).not.toBeNull();
       expect(filesystemBoundary.largeSyncReads).toBe(0);
+      expect(overlapped).toBe(true);
       const size = Number(identity.size);
       let bytesRead = 0;
-      for (const { requested, received } of reads) {
-        expect(requested).toBe(Math.min(4 * 1_048_576, size + 1 - bytesRead));
+      for (const { position, received } of reads.sort((a, b) => a.position - b.position)) {
+        expect(position).toBe(bytesRead);
         bytesRead += received;
       }
+      expect(reads[0]).toEqual({ position: 0, requested: chunkBytes, received: chunkBytes / 2 });
       expect(bytesRead).toBe(size);
-      expect(reads.at(-1)?.received).toBe(0);
-    } finally { descriptor.mockRestore(); }
+      expect(reads.at(-1)).toEqual({ position: size, requested: 1, received: 0 });
+    } finally { releaseFirst(); descriptor.mockRestore(); }
+  });
+
+  it('holds the installed image descriptor until a submitted sibling settles after read failure', async () => {
+    const probe = await fs.open(await fs.realpath(process.execPath), 'r');
+    const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
+    await probe.close();
+    const read = prototype.read;
+    let observing = false, siblingFd: number | undefined;
+    let enteredSibling!: (entered: true) => void, releaseSibling!: () => void;
+    const siblingEntered = new Promise<true>(resolve => { enteredSibling = resolve; });
+    const heldSibling = new Promise<void>(resolve => { releaseSibling = resolve; });
+    const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
+      const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
+      if (held?.ino === identity.ino && held.dev === identity.dev) {
+        if (args[3] === 0) throw new Error('owned positional image read failure');
+        if (args[3] === 4 * 1_048_576) {
+          siblingFd = this.fd;
+          enteredSibling(true);
+          await heldSibling;
+        }
+      }
+      return read.apply(this, args);
+    });
+    let settled = false;
+    const capture = fixture('live', undefined, { readImageCurrent: () => { observing = true; return true; } })
+      .finally(() => { settled = true; });
+    try {
+      expect(await Promise.race([siblingEntered, capture.then(() => false)])).toBe(true);
+      await new Promise<void>(resolve => setImmediate(resolve));
+      expect(settled).toBe(false);
+      expect(fstatSync(siblingFd!, { bigint: true })).toMatchObject({ dev: identity.dev, ino: identity.ino });
+      releaseSibling();
+      expect((await capture).peer).toBeNull();
+    } finally {
+      releaseSibling();
+      await capture.catch(() => {});
+      descriptor.mockRestore();
+    }
   });
 
   it.each([false, true])('checks full authority at the installed image read boundaries (withdrawal: %s)', async withdrawn => {
