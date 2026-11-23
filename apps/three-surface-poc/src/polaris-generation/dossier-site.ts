@@ -253,6 +253,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // While the draft layer is Unknown no part of the draft renders: not its title, argument, assets, glossary or open questions.
   const withheld = local !== undefined && local.draftLayer.state === 'unknown';
   const title = withheld ? local!.withheldTitle : draft.title;
+  const hero = local?.hero;
+  const heroFigureAttribute = ' data-hero="figure"';
+  let heroRendered = false;
   if (view.review !== null) reviewVerdict(view.review);
   const support = new Map(view.review === null ? [] : (view.review as { blockSupport: { blockId: string; verdict: string }[] }).blockSupport.map(row => [row.blockId, row.verdict]));
   validateGenerationSources(input.sources);
@@ -574,8 +577,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (source === undefined) return escape(id);
     return sourcePaths.has(id) ? refs(from, [id]) : escape(source.path);
   }).join(', ');
-  const notice = (from: string, id: string, disposition: { kind: string; reason?: string; references?: string[] }): string =>
-    `<aside class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
+  const notice = (from: string, id: string, disposition: { kind: string; reason?: string; references?: string[] }, asHero = false): string =>
+    `<aside${asHero ? heroFigureAttribute : ''} class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
   // A schema-v9 draft's graph edges (version 2.19): each arrow and list item carries `data-relation`; a witnessed edge is Syzygy's statement
   // of the fact that witnesses it, not the draft's claim: drawn solid and Observed in Syzygy's words, with the fact's provenance in its
   // `data-witness-*` attributes, no claim anchor, and in none of the draft's counts. `machine.json` lists every such edge as drawn.
@@ -583,8 +586,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
   const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
     : ` data-witness-fact="${escape(relation.witness.fact!)}" data-witness-rule="${escape(relation.witness.rule!)}" data-witness-rule-version="${relation.witness.ruleVersion!}"`}`;
-  const diagram = (from: string, d0: DraftDiagram, index: number): string => {
-    if (d0.disposition.kind !== 'produced') return notice(from, d0.id, d0.disposition);
+  const diagram = (from: string, d0: DraftDiagram, index: number, asHero = false): string => {
+    if (d0.disposition.kind !== 'produced') return notice(from, d0.id, d0.disposition, asHero);
     if (d0.figure !== undefined) return kindedFigure(from, d0, d0.figure, index);
     // A witnessed edge is drawn in Syzygy's words and marked Observed; every other element keeps the draft's label and marking.
     const witnessed = (id: string): LocalEdgeRelation['evidence'] => relationOf(id)?.evidence;
@@ -617,7 +620,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         : renderDiagramSvg(d, index, escape, READABLE_SPACING, id => edgeAttrs.get(id) ?? '');
       assertInertSvg(svg);
     } catch {
-      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
+      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] }, asHero);
     }
     for (const entry of diagramRelationEdges) relationEdges.push(entry);
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
@@ -626,7 +629,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // An operator-agent figure is a fragment target, so the index can send a reader to it; it is never drawn inside a folded element.
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    return `<figure${asHero ? heroFigureAttribute : ''}${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -800,12 +803,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // outside it, carrying no label token, citation or anchor; none where the introduction or the draft layer is withheld.
     const thesisLine = local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE : '';
     const introduction = view.drafted ? `${thesisLine}${paragraph(from, draft.introduction, 'p')}` : '';
+    const overviewQuestions = hero === undefined ? unresolved : draft.unresolved.length === 0 ? ''
+      : `<div id="open-questions">${openQuestionClaims(from)}</div>`;
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
-    // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
-    const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
+    // The named hero or reasoned omission leads the overview's own figures. Other figures keep their draft order.
+    const overviewDiagrams = view.drafted
+      ? draft.diagrams.flatMap((entry, index) => entry.home?.kind === 'overview' ? [{ entry, index }] : []) : [];
+    const heroDiagram = hero?.form === 'figure' ? overviewDiagrams.find(({ entry }) => entry.id === hero.diagram) : undefined;
+    const lead = !view.drafted ? '' : hero?.form === 'omitted'
+      ? `<div data-hero="omitted"><p class="hero-omitted">The authoring session left out the overview figure, for the reason that follows.</p>${paragraph(from, hero.reason, 'p')}</div>`
+      : heroDiagram === undefined ? '' : diagram(from, heroDiagram.entry, heroDiagram.index, true);
+    heroRendered = lead !== '';
+    const overviewDrawn = lead + overviewDiagrams.filter((entry) => entry !== heroDiagram).map(({ entry, index }) => diagram(from, entry, index)).join('');
     const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${poleMap}${sections}${missingList}${derivedRegion}`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${overviewQuestions}</header>${overviewFigures}${poleMap}${sections}${missingList}${derivedRegion}`);
   }
 
   // --- find by task (the index-and-task-routes change): the draft's task routes, right after the overview in the reading order. A step is a claim block and
@@ -998,7 +1009,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ['withheld-excerpts', `Code excerpts withheld: ${counts.withheldExcerpts}.`],
       ['withheld-inventory-entries', counts.withheldInventoryEntries === null ? 'Inventory entries withheld: Unknown, since no fidelity review counts at this render.' : `Inventory entries withheld, rendered nowhere: ${counts.withheldInventoryEntries}.`],
     ];
-    const questions = openQuestionClaims(APPENDIX);
+    const questions = hero === undefined ? openQuestionClaims(APPENDIX) : !withheld && draft.unresolved.length > 0
+      ? `<p><a href="${href(APPENDIX, from, 'open-questions')}">Read the open questions in the overview.</a></p>` : '';
     add(APPENDIX, 1, 'Appendix', `<section id="appendix"><h1>Appendix</h1><p>${escape(runSentence)}</p>`
       + `<section id="appendix-disclosure" class="run-disclosure" aria-label="How this dossier was made"><h2>How this dossier was made</h2>${disclosureList(local.disclosure, escape)}<p>Syzygy can see only the marking: whether an unmarked claim rests on the agent's building or running of the project is the agent's report.</p></section>`
       + `<section id="appendix-counts"><h2>Counts</h2><ul>${countRows.map(([id, words]) => `<li data-count="${id}">${escape(words)}</li>`).join('')}<li data-count="unknown-claims">${escape(`Unknown claims in the argument: ${unknownClaims}.`)}</li><li data-count="open-questions">${escape(`Open questions: ${openQuestions}.`)}</li></ul></section>`
@@ -1044,6 +1056,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ...(local.effectiveRun === undefined ? {} : { effectiveRun: local.effectiveRun }),
       reviewStatus: local.reviewStatus,
       ...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),
+      ...(hero === undefined ? {} : { hero: { form: hero.form, diagram: !withheld && hero.form === 'figure' ? hero.diagram : null, rendered: heroRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.

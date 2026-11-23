@@ -26,8 +26,8 @@ import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
-import { type Derived, type SubjectRules, deriveFindings, draftRules, relationDecisions, relationFindings } from './check-derive.js';
-import { hasRelationForm } from './draft-schema.js';
+import { type Derived, type SubjectRules, applyHeroFindings, deriveFindings, draftRules, relationDecisions, relationFindings } from './check-derive.js';
+import { hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
 import { BLOB_MODES } from './git-object-reader.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
 export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
@@ -223,6 +223,9 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, started)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
+  if (isRecord(doc) && hasWithheldHeroIdentity(doc, secretPathOf(screen))) {
+    return refuse('screen', 'the hero identity is withheld by screening');
+  }
 
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   const findings: CheckFinding[] = [];
@@ -303,6 +306,8 @@ async function checkOpenSubject<R extends object, G>(runDir: string, file: strin
       });
     findings.push(...relationFindings(findings.some((finding) => finding.kind === 'schema') ? { ...decisions, edges: [] } : decisions));
   }
+
+  if (plan.command === 'check' && parseFault === null && isRecord(doc)) applyHeroFindings(doc, findings);
 
   // Protected reads must finish before the new producer files enter the checked population.
   const protectedCoverage = products !== undefined && plan.command === 'check' && parseFault === null

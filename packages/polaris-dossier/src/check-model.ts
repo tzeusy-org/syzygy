@@ -41,6 +41,7 @@ export type CheckFindingKind =
   | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole' | 'diagram-home'
   // Version 2.4 (schema v6): a `thesisBasis` its introduction does not fit.
   | 'thesis-basis'
+  | 'hero'
   // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
   | 'figure-kind' | 'figure-unused'
   // Version 2.16 (schema v8): a subsection answer that is non-normative or more than one sentence.

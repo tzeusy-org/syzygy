@@ -135,7 +135,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v15', schemaVersion: 'polaris-dossier-local-draft-v9',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v16', schemaVersion: 'polaris-dossier-local-draft-v10',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     expect(JSON.parse(read(run, 'raw-read-disclosure.json'))).toEqual({
@@ -146,7 +146,7 @@ describe('brief: issued', () => {
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v9\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -169,8 +169,8 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v15', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v9', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v16', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      schemaVersion: 'polaris-dossier-local-draft-v10', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -395,14 +395,14 @@ describe('brief: shape packs (version 2.4)', () => {
     const schemaSha = sha(read(run, 'draft.schema.json'));
     const lines = golden.split('\n');
     const swap = (from: string, to: string): void => { const at = lines.indexOf(from); expect(at).toBeGreaterThan(-1); lines[at] = to; };
-    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v15`');
+    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v16`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
-      `- Draft schema: \`polaris-dossier-local-draft-v9\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
+      `- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
     swap('SEC-2 and SEC-5 bind your own reads and sends: use only content classified and screened under the bound screening policy for this run, preserve its exclusions and private metadata protections, and send content only to the declared provider for this run. Never send secrets or unclassifiable content. A provider declaration grants no screening exception. Your read account and tool transmissions are self-reported, never observed compliance.', D11_BRIEF_RULE);
     const sections = lines.findIndex((line) => line.startsWith('Write one section per topic, in this order, each section\'s `id` the topic\'s id'));
     expect(sections).toBeGreaterThan(-1);
     // Brief v11 (version 2.4) added the thesis paragraph; brief v12 (version 2.5) the figure-kinds paragraph immediately after it.
-    lines.splice(sections + 1, 0, '', THESIS_PARAGRAPH, '', FIGURE_KINDS_PARAGRAPH, '', SUBSECTIONS_PARAGRAPH, '', RELATION_TYPES_PARAGRAPH);
+    lines.splice(sections + 1, 0, '', THESIS_PARAGRAPH, '', FIGURE_KINDS_PARAGRAPH, '', SUBSECTIONS_PARAGRAPH, '', RELATION_TYPES_PARAGRAPH, '', 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.');
     // Brief v14 (version 2.16) added the subsections paragraph immediately after the figure-kinds paragraph, and brief v15 (version 2.19) the
     // relation-types paragraph immediately after that.
     // Brief v13 added the task-routes section, between the Poles paragraph and the understanding record's heading.

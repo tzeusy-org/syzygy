@@ -2,6 +2,7 @@ import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import {
   DIAGRAM_KINDS, FIGURE_KINDS, QUOTE_LEAD_IN, checkShape, choice, handle, list, object, one, ref, refs, text, type Schema, type SchemaError, type SchemaWithDefs,
 } from '@syzygy/polaris-generation-core/live';
+import { isRecord } from '@syzygy/support';
 import { EXECUTION_SCOPES } from './execution-flags.js';
 import { RELATION_TYPES, UNIT_TEXT_LIMIT } from './relation-witness.js';
 
@@ -46,8 +47,10 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V8 = 'polaris-dossier-local-draft-v8';
 /** v9 (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): every edge of a graph diagram carries `relation`, one of the eleven
  * relation types, and a graph node may carry `unit`, one of the six unit forms. Everything else is v8; a v8 or earlier draft still checks and
  * renders as before, and `relation` or `unit` in one is field-version. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v9';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V9 = 'polaris-dossier-local-draft-v9';
+/** v10 (REQ-polaris-generation-034 version 2.20): one overview hero figure or a reasoned omission. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v10';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
@@ -59,7 +62,23 @@ export const hasFigureKindForm = (version: unknown): boolean => version === LOCA
 /** Whether a draft's version lets a section carry `subsections`: v8 (version 2.16) and every later version. */
 export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V8 || hasRelationForm(version);
 /** Whether a draft's graph edges carry `relation` and its graph nodes may carry `unit`: v9 (version 2.19). */
-export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);
+export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+
+/** Choose the v10 form without interpreting unchecked input or accepting extra members. */
+export function heroOf(doc: Readonly<Record<string, unknown>>): { readonly form: 'figure' | 'omitted'; readonly value: unknown } | undefined {
+  const hero = doc['hero'];
+  if (!hasHeroForm(doc['schemaVersion']) || !isRecord(hero) || Object.keys(hero).length !== 1) return undefined;
+  if (Object.hasOwn(hero, 'figure')) return { form: 'figure', value: hero['figure'] };
+  if (Object.hasOwn(hero, 'omitted')) return { form: 'omitted', value: hero['omitted'] };
+  return undefined;
+}
+/** A hero identity can reach a finding, the fidelity packet and both render forms. */
+export function hasWithheldHeroIdentity(doc: Readonly<Record<string, unknown>>, matched: (id: string) => boolean): boolean {
+  const hero = heroOf(doc);
+  const id = hero?.form === 'figure' ? hero.value : isRecord(hero?.value) ? hero.value['id'] : undefined;
+  return typeof id === 'string' && matched(id);
+}
 /** The members only a v9 graph diagram's edges and nodes carry, each a field-version finding in an earlier draft (version 2.19). */
 export const RELATION_FIELD = 'relation';
 export const UNIT_FIELD = 'unit';
@@ -249,6 +268,8 @@ export interface DraftSchemaParameters {
   readonly pinnedRevision: string;
   /** The declared clarification-question limit. */
   readonly maxQuestions: number;
+  /** Require the hero of the v10 authoring schema. Historical schemas omit it. */
+  readonly hero?: 'required';
 }
 
 /** The draft schema. `diagramForm` says how a diagram names its page: `home` (schema v5 and later, what the brief publishes) or
@@ -258,7 +279,7 @@ export interface DraftSchemaParameters {
  * with its own members (schema v7 and later; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges` only (schema v6
  * and earlier); `unnamed` is the form `check` reads a diagram naming no kind against. `subsections` says whether a section may carry
  * `subsections` (schema v8 and later; version 2.16) or has no such member (schema v7 and earlier). `relations` says whether a graph edge
- * carries its required `relation` and a graph node may carry `unit` (schema v9, what the brief publishes; version 2.19) or neither (schema
+ * carries its required `relation` and a graph node may carry `unit` (schema v9 and later; version 2.19) or neither (schema
  * v8 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
   figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
@@ -301,6 +322,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     sessionId,
     title: text,
     introduction: ref('paragraph'),
+    ...(parameters.hero === 'required' ? { hero: { oneOf: [object({ figure: handle }), object({ omitted: ref('paragraph') })] } } : {}),
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
     // A v8 section may carry `subsections` (version 2.16); in an earlier draft the member is a field-version finding (check-derive).
     sections: list(subsections === 'taken'
@@ -341,7 +363,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */
 export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<string, unknown> {
-  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', localDraftSchema(parameters));
+  return schemaDocument(LOCAL_DRAFT_SCHEMA_VERSION, 'Polaris dossier local-agent draft', localDraftSchema({ ...parameters, hero: 'required' }));
 }
 
 /** The local-agent inventory schema (REQ-polaris-generation-035, 006). The inventory session prepares it from the clone without the
