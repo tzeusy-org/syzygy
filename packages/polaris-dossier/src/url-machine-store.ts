@@ -377,9 +377,16 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     };
     const readStateSnapshot = async (publicationClock?: () => number) => {
       await anchored(publicationClock);
-      const id = await readFile(`${base}/identity.json`, 16_384);
-      if (id === null || sha256(id) !== expectedIdentitySha256) throw refused();
-      const bytes = await readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes);
+      // These exact private reads share the checked root and deadline.
+      // Join both before using either result or reading the archive.
+      const [identity, stateFile] = await Promise.allSettled([
+        readFile(`${base}/identity.json`, 16_384),
+        readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes),
+      ]);
+      if (identity.status === 'rejected') throw identity.reason;
+      if (identity.value === null || sha256(identity.value) !== expectedIdentitySha256) throw refused();
+      if (stateFile.status === 'rejected') throw stateFile.reason;
+      const bytes = stateFile.value;
       if (bytes === null) throw refused();
       const digest = sha256(bytes);
       if (validatedState?.sha256 !== digest) {

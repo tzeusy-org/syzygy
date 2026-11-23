@@ -24,6 +24,7 @@ const filesystem = vi.hoisted(() => ({
   afterLstat: undefined as ((file: string) => void) | undefined,
   afterRealpath: undefined as ((file: string) => void) | undefined,
   beforeMkdir: undefined as ((file: string) => void) | undefined,
+  beforeOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterOpen: undefined as ((file: string) => void) | undefined,
   afterClose: undefined as ((file: string) => void) | undefined,
 }));
@@ -41,7 +42,9 @@ vi.mock('node:fs/promises', async importOriginal => {
     filesystem.beforeMkdir?.(String(args[0]));
     return original.mkdir(...args);
   }, open: async (...args: Parameters<typeof original.open>) => {
-    const handle = await original.open(...args), file = String(args[0]);
+    const file = String(args[0]);
+    if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(file);
+    const handle = await original.open(...args);
     filesystem.afterOpen?.(file);
     const sync = handle.sync.bind(handle), close = handle.close.bind(handle);
     handle.sync = async () => { await sync(); await filesystem.afterSync?.(file); };
@@ -51,6 +54,7 @@ vi.mock('node:fs/promises', async importOriginal => {
 });
 afterEach(async () => {
   filesystem.afterSync = filesystem.afterLstat = filesystem.afterRealpath = filesystem.beforeMkdir = filesystem.afterOpen = filesystem.afterClose = undefined;
+  filesystem.beforeOpen = undefined;
   for (const clean of cleanup.splice(0).reverse()) await clean();
 });
 
@@ -428,6 +432,35 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
+  it('reads private state while identity is held and joins both before client access', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let signalIdentity!: () => void, releaseIdentity!: () => void;
+    const identityRequested = new Promise<void>(resolve => { signalIdentity = resolve; });
+    const identityHold = new Promise<void>(resolve => { releaseIdentity = resolve; });
+    let stateStarted = false, archiveStarted = false, clientStarted = false;
+    filesystem.beforeOpen = file => {
+      switch (path.basename(file)) {
+        case 'identity.json': signalIdentity(); return identityHold;
+        case 'state.json': stateStarted = true; return;
+        case 'canonical-history.json': archiveStarted = true; return;
+        case path.basename(slot.file): clientStarted = true;
+      }
+    };
+    const pending = f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
+    });
+    try {
+      await identityRequested;
+      expect(stateStarted).toBe(true);
+      expect(archiveStarted).toBe(false);
+      expect(clientStarted).toBe(false);
+    } finally { releaseIdentity(); }
+    expect(await pending).toBe(true);
+    expect(archiveStarted).toBe(true);
+    expect(clientStarted).toBe(true);
+  });
+
   it('checks authority after protected state I/O before using it to open the client', async () => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
@@ -571,7 +604,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     }
   });
 
-  it.each(['current-archive', 'replaced-archive'] as const)('preflights one checked snapshot and rechecks %s before reserve', async archiveState => {
+  it.each([['current', 0], ['changed after preflight', 2], ['changed after the reserve predecessor read', 3]] as const)(
+    'preflights one checked snapshot and rechecks the archive %s before reserve', async (_archiveState, replaceAfter) => {
     const f = await fixture(), slot = await f.allocate();
     const stateFile = path.join(f.options.protectedRoot, 'state.json');
     const pack = path.join(f.options.protectedRoot, 'canonical-history.json');
@@ -582,7 +616,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     filesystem.afterClose = file => {
       if (path.basename(file) !== 'canonical-history.json') return;
       archiveReads++;
-      if (archiveState === 'replaced-archive' && archiveReads === 2) {
+      if (archiveReads === replaceAfter) {
         writeFileSync(pack, canon({ ...archive, rootId: id() }));
       }
     };
@@ -590,8 +624,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       if (path.basename(file).startsWith('state.json.new-')) readsBeforeReserve ??= archiveReads;
     };
     const result = await f.store.publish({ context: slot.context, binding: slot.binding, expected: null, next: canon(slot.record) }, () => true);
-    if (archiveState === 'replaced-archive') {
-      expect(archiveReads).toBe(3);
+    if (replaceAfter !== 0) {
+      expect(archiveReads).toBe(replaceAfter + 1);
       expect(readsBeforeReserve).toBeUndefined();
       expect(result.ok).toBe(false);
       expect(await readFile(stateFile)).toEqual(originalState);
