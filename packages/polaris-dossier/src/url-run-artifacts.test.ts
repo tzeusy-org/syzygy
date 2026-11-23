@@ -1099,28 +1099,33 @@ describe('trusted URL artifact producer bridge', () => {
   it.each(['before gate', 'after accepted gate', 'after denied gate', 'after failed gate'] as const)(
     'reports the exact artifact sample cause %s through the owning read port', async kind => {
       const f = fixture(); f.initialize();
-      const deadline = Date.now() + 4000;
-      const other = beginRunProductReads(f.run, f.bridge, 'render', deadline);
-      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
-      let backendAtGate: ReturnType<typeof other.leaseState> | undefined;
-      const gate = vi.fn(async () => {
-        clock.mockReturnValue(deadline);
-        // Even an already expired backend cannot replace a gate denial.
-        backendAtGate = reads.leaseState();
-        if (kind === 'after failed gate') throw new Error('owned sample failed');
-        return kind === 'after accepted gate';
-      });
-      const reads = beginRunProductReads(f.run, f.bridge, 'render', deadline, gate);
+      // Drive expiry at the chosen boundary. The real poll turn can outlast
+      // a one-millisecond timer before the fixture reaches its sample gate.
+      vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
       try {
-        if (kind === 'before gate') setImmediate(() => clock.mockReturnValue(deadline));
-        const result = await reads.waitForSample!().catch(error => error as unknown);
-        const expired = kind === 'before gate' || kind === 'after accepted gate';
-        expect(result).toBeInstanceOf(UrlProductReadRefusal);
-        expect(isUrlProductReadExpiry(reads, result)).toBe(expired);
-        expect(isUrlProductReadExpiry(other, result)).toBe(false);
-        expect(gate).toHaveBeenCalledTimes(kind === 'before gate' ? 0 : 1);
-        expect(backendAtGate).toBe(kind === 'before gate' ? undefined : 'expired');
-      } finally { clock.mockRestore(); reads.close(); other.close(); }
+        const deadline = Date.now() + 4000;
+        const other = beginRunProductReads(f.run, f.bridge, 'render', deadline);
+        vi.setSystemTime(deadline - 1);
+        let backendAtGate: ReturnType<typeof other.leaseState> | undefined;
+        const gate = vi.fn(async () => {
+          vi.setSystemTime(deadline);
+          // Even an already expired backend cannot replace a gate denial.
+          backendAtGate = reads.leaseState();
+          if (kind === 'after failed gate') throw new Error('owned sample failed');
+          return kind === 'after accepted gate';
+        });
+        const reads = beginRunProductReads(f.run, f.bridge, 'render', deadline, gate);
+        try {
+          if (kind === 'before gate') setImmediate(() => vi.setSystemTime(deadline));
+          const result = await reads.waitForSample!().catch(error => error as unknown);
+          const expired = kind === 'before gate' || kind === 'after accepted gate';
+          expect(result).toBeInstanceOf(UrlProductReadRefusal);
+          expect(isUrlProductReadExpiry(reads, result)).toBe(expired);
+          expect(isUrlProductReadExpiry(other, result)).toBe(false);
+          expect(gate).toHaveBeenCalledTimes(kind === 'before gate' ? 0 : 1);
+          expect(backendAtGate).toBe(kind === 'before gate' ? undefined : 'expired');
+        } finally { reads.close(); other.close(); }
+      } finally { vi.useRealTimers(); }
     });
   it.each(['descriptor lease', 'record drift', 'descriptor failure', 'superseding failure'] as const)(
     'reports the exact revalidation cause for %s at the deadline', kind => {
