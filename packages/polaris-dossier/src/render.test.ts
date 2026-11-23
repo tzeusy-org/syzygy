@@ -296,7 +296,7 @@ describe('render', () => {
     if (!result.ok) throw new Error(result.refusal.reason);
     const instruction = 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.';
     const explanation = {
-      declaration: 'The adapter-credential check at this render refused the configuration because a configured typed adapter declares a credential the repository\'s adapter-credential list does not hold: fixture-adapter: /fixture/unlisted.token.',
+      declaration: 'The adapter-credential check at this render refused the configuration because a configured typed adapter declares a credential the repository\'s adapter-credential list does not hold: fixture-adapter: /fixture/unlisted.token, and the count of adapter credential files opened for reading was 1.',
       source: 'The adapter-credential check at this render refused the configuration because the fixture credential list could not be read (source: fixture credential list).',
       undetermined: 'The adapter-credential check at this render ended without a definite result because the read attempt could not decide for: /fixture/listed.token.',
     }[cause];
@@ -307,7 +307,7 @@ describe('render', () => {
       { id: 'adapter-credential', label: 'Unknown', text: `${explanation} ${instruction}` },
       ...(cause === 'declaration' ? [{
         id: 'adapter-credential-readable', label: 'Observed',
-        text: `At this render an adapter credential was readable as the operator's user: the count of listed adapter credential files opened for reading was 1. ${instruction}`,
+        text: `At this render an adapter credential was readable as the operator's user: the count of adapter credential files opened for reading was 1. ${instruction}`,
       }] : []),
     ]);
     const appendix = site.get('appendix.html')!;

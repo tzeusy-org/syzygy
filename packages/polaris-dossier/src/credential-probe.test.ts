@@ -179,9 +179,28 @@ describe('a configured adapter\'s credential declaration', () => {
     }
   });
 
-  it('refuses on the declaration, not the list source, when no list source is configured either', async () => {
+  it('reports both declaration and list refusals when no list source is configured', async () => {
     const probe = createCredentialProbe(credentialListFromEnv({}), absent, [], [{ adapter: 'fixture-scheduler', credentials: ['/x/scheduler.token'] }]);
-    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
+    expect(await probe.probe()).toEqual({
+      passed: false, kind: 'adapter-credential-configuration-refused',
+      why: `${REFUSAL}fixture-scheduler: /x/scheduler.token, and no credential list source is configured: set SYZYGY_DOSSIER_CREDENTIAL_LIST to a syzygy-adapter-credential-list/1 file (source: no credential list (SYZYGY_DOSSIER_CREDENTIAL_LIST is not set))`,
+    });
+    expect(opens).toEqual([]);
+  });
+
+  it('records an indeterminate configured-path attempt after refusing an unusable list', async () => {
+    const source: CredentialListSource = { describe: 'fixture list', list: () => ({ ok: false, why: 'the fixture list is malformed' }) };
+    const undecided: OpenForRead = (file) => { opens.push(file); return { opened: false, code: 'EIO' }; };
+    const probe = createCredentialProbe(source, undecided, ['/x/configured.token']);
+    expect(await probe.probe()).toEqual({
+      passed: false, kind: 'adapter-credential-configuration-refused',
+      why: 'the fixture list is malformed (source: fixture list), and the count of indeterminate adapter-credential read attempts was 1',
+    });
+    expect(opens).toEqual(['/x/configured.token']);
+    expect(probe.last()).toEqual({
+      source: 'fixture list, together with 1 credential path configured by typed adapters in this repository',
+      outcomes: [{ path: '/x/configured.token', outcome: 'unknown' }],
+    });
   });
 
   it('is not satisfied by the operator-declared list holding the path', async () => {
@@ -249,6 +268,9 @@ describe('the step hook every later step calls', () => {
 
   it('probes when the brief record cannot be read to say execution was not permitted', async () => {
     expect(await credentialStepCheck(runWith('b', '{not json'), 'render', failing, NOW)).toMatchObject({ required: true, passed: false });
-    expect(await credentialStepCheck(runWith('b', undefined), 'render', failing, NOW)).toMatchObject({ required: true, passed: false });
+    const legacy = { probe: async () => ({ passed: false as const, why: 'fixture refusal without a recorded basis' }) };
+    expect(await credentialStepCheck(runWith('b', undefined), 'render', legacy, NOW)).toMatchObject({
+      required: true, passed: false, finding: { kind: 'adapter-credential-undetermined', step: 'render' },
+    });
   });
 });

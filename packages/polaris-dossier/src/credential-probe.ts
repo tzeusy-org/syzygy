@@ -130,8 +130,8 @@ export const CONFIGURED_ADAPTER_DECLARATIONS: readonly AdapterCredentialDeclarat
 
 export const NO_ADAPTER_CREDENTIAL_DECLARED = 'no adapter credential declared; list operator-declared, Inferred';
 
-/** The probe `brief` and every later step call. It attempts the paths in the usable list and `configured` even when an adapter
- * declaration forces a refusal. An unset, unreadable or malformed list also forces a refusal. */
+/** The probe `brief` and every later step call. It attempts every configured path together with any paths from a usable list.
+ * A declaration mismatch or an unusable list still forces a refusal. */
 export function createCredentialProbe(
   source: CredentialListSource, open: OpenForRead = openForRead, configured: readonly string[] = CONFIGURED_ADAPTER_CREDENTIALS,
   adapters: readonly AdapterCredentialDeclaration[] = CONFIGURED_ADAPTER_DECLARATIONS,
@@ -142,30 +142,37 @@ export function createCredentialProbe(
     probe: async () => {
       const described = `${source.describe}, together with ${configured.length} credential path${configured.length === 1 ? '' : 's'} configured by typed adapters in this repository`;
       const unlisted = adapters.flatMap(({ adapter, credentials }) => credentials.filter((file) => !configured.includes(file)).map((file) => `${adapter}: ${file}`));
-      const declarationRefusal = unlisted.length === 0 ? undefined
-        : `a configured typed adapter declares a credential the repository's adapter-credential list does not hold: ${unlisted.join(', ')}`;
       const list = source.list();
-      if (!list.ok) {
-        last = { source: declarationRefusal === undefined ? source.describe : described, outcomes: [] };
-        return { passed: false, kind: 'adapter-credential-configuration-refused', why: declarationRefusal ?? `${list.why} (source: ${source.describe})` };
+      const configurationRefusals: string[] = [];
+      if (unlisted.length > 0) {
+        configurationRefusals.push(`a configured typed adapter declares a credential the repository's adapter-credential list does not hold: ${unlisted.join(', ')}`);
       }
-      const paths = [...new Set([...list.paths, ...configured])];
+      if (!list.ok) {
+        configurationRefusals.push(`${list.why} (source: ${source.describe})`);
+      }
+      const paths = [...new Set(list.ok ? [...list.paths, ...configured] : configured)];
       const outcomes = paths.map((file) => ({ path: file, outcome: classifyRead(open(file)) }));
-      last = { source: described, outcomes };
+      last = { source: list.ok || configured.length > 0 || unlisted.length > 0 ? described : source.describe, outcomes };
       const readable = outcomes.filter((entry) => entry.outcome === 'readable').map((entry) => entry.path);
-      if (declarationRefusal !== undefined) {
+      const unknown = outcomes.filter((entry) => entry.outcome === 'unknown').map((entry) => entry.path);
+      if (configurationRefusals.length > 0) {
+        if (readable.length > 0) configurationRefusals.push(readableCountReason(readable.length));
+        if (unknown.length > 0) configurationRefusals.push(`the count of indeterminate adapter-credential read attempts was ${unknown.length}`);
         return {
-          passed: false, kind: 'adapter-credential-configuration-refused', why: declarationRefusal,
+          passed: false, kind: 'adapter-credential-configuration-refused', why: configurationRefusals.join(', and '),
           ...(readable.length === 0 ? {} : { readableAlongsideRefusal: readable.length }),
         };
       }
       if (readable.length > 0) return { passed: false, kind: 'adapter-credential-readable', why: `adapter credentials readable by the operator's user: ${readable.join(', ')}` };
-      const unknown = outcomes.filter((entry) => entry.outcome === 'unknown').map((entry) => entry.path);
       if (unknown.length > 0) return { passed: false, kind: 'adapter-credential-undetermined', why: `the read attempt could not decide for: ${unknown.join(', ')}` };
       const disclosure = paths.length === 0 ? `${NO_ADAPTER_CREDENTIAL_DECLARED} (${described})` : described;
       return { passed: true, checked: outcomes.length, source: disclosure };
     },
   };
+}
+
+function readableCountReason(count: number): string {
+  return `the count of adapter credential files opened for reading was ${count}`;
 }
 
 export const CREDENTIAL_CHECK_DISCLOSURE = 'The adapter-credential check is an operating-system read attempt as the operator\'s user at the instant of each step; its list comes from the source it names, which the agent sessions can write. That no process the session started could read a credential between checks, after close or through privilege escalation is Inferred. An agent tool\'s permission or deny rule does not satisfy it.';
@@ -214,7 +221,7 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
     ...(result.readableAlongsideRefusal === undefined ? {} : {
       readableFinding: {
         ...finding, kind: 'adapter-credential-readable',
-        why: `the count of listed adapter credential files opened for reading was ${result.readableAlongsideRefusal}`,
+        why: readableCountReason(result.readableAlongsideRefusal),
       },
     }),
   };
