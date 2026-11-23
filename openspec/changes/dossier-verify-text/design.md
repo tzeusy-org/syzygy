@@ -1,0 +1,93 @@
+# Design: `syzygy dossier verify`
+
+One bead outcome (syzygy-5dhm.23) in one MODIFIED REQ-polaris-generation-033. The bead's design names `cli.ts`, `check.ts`, `git-object-reader.ts` and `screen.ts`; REQ-033 is the requirement that states the operator-agent command family and the rule that its local commands serve no route, so the new command is stated there. REQ-034 states the derivation the command reuses and is read, not changed.
+
+## Why a specification delta at all
+
+[Inferred] It adds a command to the `syzygy dossier` family, with a refusal, an output file and an exit status: specified behaviour under VIS-4, so a delta and an agent adoption row, not advice on an existing report.
+
+## One derivation, not two
+
+[Observed] `deriveFindings` already decides everything a reference or a quotation needs: whether a path is a blob at the pinned revision, the screen's decision (`screenPath`, then `screenTargetBody` on the bytes read), the retained text of a redacted body, the range rule, and the quotation normalisation and location (`locateQuote`). [Inferred] Writing a second walker over the same reader and screen would let the two drift; the bead forbids "a second hand-written filter". So `verify-text.ts` hands each reference and quotation to `deriveFindings` as one block of a synthetic subject (a closed schema of its own: a pinned revision and blocks, each one citation and at most one lead-in quotation), and reads the result back by block and citation identity. A finding kind other than the seven reference and quotation faults is a programming error and throws.
+
+[Observed] Two passes: the first cites each distinct path at line 1, which yields absent, excluded or admitted and an admitted file's line count (for a whole-file reference); the second cites every written range, or the whole file, and every quotation against every such range of every resolving file its claim names. A quotation is verified when any of them holds it.
+
+## What counts as a claim, a reference and a quotation
+
+- **Claim.** A paragraph, a list item or a table row, outside fenced code. Headings, fences and table separators are counted apart. [Inferred] These are the units a reader would mark right or wrong; a sentence split would cut a claim from its citation.
+- **Reference.** A run of path characters with a directory and an extension, or a bare name with a common source or document extension, or a bare dotfile written as code, or any of these followed by lines. Lines are written `path:N`, `path:N-M`, `path#LN-LM` or `path, lines N-M` (repeatable, which is how the dossier's own citations read as text). Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, a slashed name without an extension and without lines (usually a directory). [Inferred] The bare-name extension list keeps `e.g.` and `obj.encoding` from reading as missing files.
+- **Resolution.** [Inferred] A plain session writes `server.c` for `src/server.c`. A first scratch run over the pilot synthesis without resolution counted 66 references missing, most of them bare names; that run was not retained, so the figure is [Unknown] to a later reader. A written path resolves to itself, or to the one blob whose path ends with `/` and it; with several it stays unresolved and counts missing. [Inferred] Unique-suffix resolution credits the name only when it is unambiguous, and the annotated copy shows both forms.
+- **Disclosed.** The report's disclosures name the excluded forms and the bare-name extension list, so a reader can restate the grammar a tally rests on.
+- **Quotation.** A straight or curly double-quoted span outside code spans with at least one letter or digit. [Inferred] Backticked code is not a quotation: it is an identifier, and treating it as one would turn every symbol name into a "verified quotation" by coincidence.
+
+## Six outcomes and their precedence
+
+`path-missing`, `quotation-not-found`, `withheld`, `quotation-verified`, `reference-unverified`, `unanchored`. [Inferred] A fault comes first, so one wrong path or invented quotation is never hidden by a sibling that checks; withheld comes before verified, so a claim partly resting on what no reader can see is not counted as checked. A quotation located in no resolving file of a claim that also names a withheld path is withheld, not `quotation-not-found`: it may be in the file no reader can see, and calling it invented would be a claim nobody measured (VIS-2). A range past the file's end or an invalid range counts as `path-missing`: the reference names nothing that exists.
+
+## Withheld paths
+
+[Observed] The first pass consults the screen exactly as check does: a path the path screen excludes is never read; a body excluded by content screening is read by the screen and its bytes are not used; a redacted body contributes only its retained lines, and a quotation resting on a withheld line is withheld. A written or resolved path a secret detector matches (`secretPathOf`) is not named in the report or in the annotated copy's added text, whether or not a blob has it, as check's `pathLabel` names none in any finding; the copy still carries the input text, which is the reader's own bytes.
+
+## Nothing written into a run
+
+[Inferred] Stored runs are read-only evidence. The command refuses an `--out` inside the run directory or its `.agents`/`.sessions` siblings, decides containment on both the written and the real location (symbolic links resolved through every existing ancestor), refuses an existing `--out`, writes no revision, record or step-log line, and applies no deadline or repair-cycle limit, which spend a run's budget only when something is frozen.
+
+## Legacy runs
+
+[Observed] The pilot's stored run is a `polaris-dossier-run/1` record, and the command refuses it at re-verification as every step does. `scripts/dossier_verify_text.mjs` runs the same `verifyText` over the pilot manifest's commit, policy blob and screen configuration so the measurement does not wait for a new run; it is an operator script, not a second command.
+
+## Names fixed for the implementation
+
+`packages/polaris-dossier/src/verify-text.ts`: `extractClaims`, `referencesIn`, `quotationsIn`, `verifyClaims`, `annotateText`, `verifyText`, `CLAIM_OUTCOMES`, `VERIFY_TEXT_FORMAT`, `VERIFY_TEXT_DISCLOSURES`; `packages/polaris-dossier/src/verify-text-run.ts`: `verifyTextInRun`, `VERIFY_TEXT_MAX_BYTES`; `cli.ts`: the `verify` command; `scripts/dossier_verify_text.mjs`.
+
+## Review (R-VERIFY-TEXT-SPEC-1)
+
+[Observed] One fresh-reader review over spec digest `ad6e597ddc3b6dccce7fb5692e863e6535659db7651ee2b2942cff071d2bf3ed` recorded `REVISE` (`docs/reviews/syzygy-5dhm-23/R-VERIFY-TEXT-SPEC-1-RAW.md:3`): two blocking findings (F1, F2) and eight advisory (F3 to F10). All ten were repaired; none was overruled. Under D10 the review is one round and gates nothing, so no confirmation round was run and the adopted spec digest differs from the reviewed one.
+
+- **F1** (blocking, withheld versus not found). The implementation's rule is kept and now stated: a quotation located in no resolving file of a claim that names a withheld path is withheld. Added to the paragraph, the precedence's `quotation-not-found` entry and the withheld scenario; a fixture pins it.
+- **F2** (blocking, a detector-matched path named when no blob has it). Implementation repaired toward the spec: a reference is unnamed when its written or its resolved path matches a detector, whatever its state, as check's `pathLabel` is. The paragraph and the withheld scenario say so; a fixture and a mutant pin it.
+- **F3** (content-excluded body). The paragraph distinguishes the path screen (never read) from content screening (bytes used for nothing but that screening).
+- **F4** (grammar left to design). One sentence names the excluded forms and the letter-or-digit rule; the bare-name extension list is disclosed by the report rather than written into the requirement.
+- **F5** (symlinked `--out`). Implementation repaired: containment is decided on the real location too; a fixture and a mutant pin it.
+- **F6** (closing section). Now "each claim that names a file or quotes".
+- **F7** (Form block). One added line names verify's case, oracle and falsifier.
+- **F8** (quotation scenario). Now "one letter or digit … replaced by a different letter or digit", tied to check's own finding.
+- **F9** (proposal label). The "all 180 resolving" clause is now [Inferred] from the record's reading.
+- **F10** (usage error). The paragraph states that a malformed invocation is a usage error under the family's convention.
+
+The reviewer also found no retained record for the "66 references missing" figure; it is now labelled [Unknown] above.
+
+## Rebuilt as version 2.15
+
+[Observed] Version 2.14 was taken on the default branch by the infrastructure recognizers amendment (a MODIFIED REQ-034) while this change was under review, so the change is renumbered 2.15. Its predecessor is unchanged: no later version than 2.1 replaces REQ-033, so the requirement block is the same bytes; only the spec's header line names the new version, which changes the spec digest. The review above read the version 2.14 header.
+
+## Code review of the implementation (PR #902)
+
+[Observed] An independent code review of the branch at `9059262f8` found no secret leak and asked for corrections, which landed in `7107dc97b`. Each finding and what was done:
+
+- **M1** (untrusted text crashed the command). A range below line 1 or past the largest safe integer is a range fault before the derivation (the claim is `path-missing`); a quotation that itself holds the lead-in `The project states:` would split the synthetic lead-in, so it is not found and never derived; any other failure of the derivation is a `derive` refusal, never a crash. The first two have fixtures. [Inferred] The refusal is a backstop with no known input left that reaches it, so it has no unit fixture: reaching it needs a run that re-verifies, which is the integration tier.
+- **M2** (the withheld-line rule was untested). A redacted-span fixture (check's P-110 policy form) withholds a quotation from a withheld guard line and verifies one from a retained line; its mutant is in the record.
+- **M3** (wrapped quotations). A quotation may span the lines of its claim, and a line that starts with a list marker while a quotation of the open claim is still open stays in that claim. [Observed] Most generated Markdown is hard-wrapped: in the pilot's plain synthesis the line-bound reader had paired two quotations' inner quote marks and verified the span between them (`docs/evidence/syzygy-5dhm-23/verify-text-pilot-2026-11-22.json`, "beforeReviewCorrections").
+- **L1** A path written with lines and also alone is checked against its ranges and its whole file (`wholeFile` on the reference).
+- **L2** A bare `js`, `ts` or `in` name (`Node.js` in prose) is a reference only in code marks or with lines.
+- **L3** A table's header row, the row above its separator, is not a claim; it is counted with the skipped lines.
+- **L4** A straight-quoted span inside a curly quotation is part of it. Backslash escapes are not interpreted; the disclosures say so.
+- **L6** The operator script refuses a text that is not a regular file, is over the command's bound or is not strict UTF-8, and a manifest whose policy blob id is not 40 hexadecimal characters.
+- **L7** The mutation record is re-run at `a6d006cc5`, a commit on the branch: 49 mutants, one for each corrected predicate among them (L5 and N1 included), all killed. The earlier record attributed the linked-`--out` mutant to an unrelated test because the script left the last `verify-text.ts` mutant in place while it mutated `verify-text-run.ts`; the script now restores it first, and the mutant fails only its own test.
+- **L8** The annotated copy keeps each line's own terminator (LF, CRLF or CR) and closes in the text's first one.
+- **N1** (from the recheck, introduced by M3). An unpaired quote mark (an inch mark, a stray quote) merged every later list item into one claim up to the next blank line. A list-marker line now stays in the open claim only when it closes the quotation the claim left open; otherwise it starts its own claim, as before M3. Fixtures: an inch-mark list and a stray curly quote. Both pilot tallies are unchanged by it.
+- **L5** `--out` was refused only inside this run and its session directories. It is now also refused under any path segment named like a run (`run-` and 32 hexadecimal characters, with or without `.agents` or `.sessions`) and under the records root, each decided on the written and the real location; the paragraph says so.
+- **L9** Two steps were quadratic on bounded input: masking code spans tested every character against every span, and resolving a written name filtered the whole tree listing once per name. Both are now one pass: the mask is built span by span (keeping UTF-16 offsets, which the code-point walk it replaces did not), and names resolve through an index of blobs by base name. [Inferred] Two smaller costs remain, noted and not changed: `codeSpans` scans the rest of the text for each unclosed backtick run, and an open quotation is re-measured at each list-marker line of its claim; both are bounded by the 4 MiB text.
+- **L10** The adoption row will name the commit that carries the adopted bytes on this branch; the branch is merged with a merge commit so that commit stays reachable from the default branch, as earlier rows' were. The pursuit report (`docs/pursuits/2026-11-21b-vision-pursuit.md`, "R2 slice 1: first measurement") carries the two pilot tallies before and after these corrections.
+
+## Rebuilt as version 2.16
+
+[Observed] Version 2.15 was taken on the default branch by the index and task routes amendment (A-48), so the change is renumbered 2.16 after merging the default branch. No later version than 2.1 replaces REQ-033 there either (the predecessor still hashes to `e30836f9…a865`), so the requirement block is rebuilt from the same predecessor bytes; only the header line names the new version.
+
+## Rebuilt as version 2.17
+
+[Observed] Version 2.16 was taken on the default branch by the page subsections amendment (A-50, a MODIFIED REQ-034), so the change is renumbered 2.17 after merging the default branch. That amendment does not touch REQ-033, and no later version than 2.1 replaces it, so the requirement block is rebuilt from the same predecessor bytes; only the header line names the new version.
+
+## Rebuilt as version 2.21
+
+[Observed] While this change waited, the default branch adopted four versions: raw-read disclosure 2.17 (A-51, a MODIFIED REQ-033, -036 and -046), run-tree read bounds 2.18 (A-53, a MODIFIED REQ-033, -035 and -048), relation types 2.19 (A-52) and hero figure 2.20 (A-54), the last two MODIFIED REQ-034 only. This is the first rebuild whose predecessor moved: REQ-033 is now version 2.18's text (9 scenarios after 2.17, 12 after 2.18), so the change is renumbered 2.21 and its requirement block is a three-way merge of this change's insertions (over version 2.1's block) onto version 2.18's block. The merge is insertion-only: a script over the two blocks finds all 96 non-empty lines of version 2.18's block in order, its 12 scenarios, and this change's 14 added lines and 4 scenarios, and no other line. The verify paragraph stands after the "Operator-started local dossier commands" paragraph as before, ahead of version 2.17's disclosure paragraphs; the four scenarios follow version 2.18's last; the verify Form line follows version 2.18's Falsifier line. Version 2.18 added REQ-polaris-generation-048 to the warrants' `parent_requirements`, which `GOVERNING-DEPENDENCIES.json` now carries. The checker composes 2.21 after 2.18 and refuses it while 2.18 is not in force. [Inferred] The command's run record read goes through `reverifyPinnedRevision`, which version 2.18's bounded reader now serves; the text file it checks is the operator's input, not a run-tree file, and keeps its own 4 MiB bound. The retained spec review (`docs/reviews/syzygy-5dhm-23/R-VERIFY-TEXT-SPEC-1-RAW.md`) read the version 2.14 bytes over version 2.1's REQ-033, not these.

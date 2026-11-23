@@ -150,7 +150,9 @@ describe('dossier network module boundaries', () => {
   const files = fs.readdirSync(src).filter(name => name.endsWith('.ts') && !name.endsWith('.test.ts')).sort();
 
   it('finds each named transport and the ordinary command modules', () => {
-    expect(files).toEqual(expect.arrayContaining([...Object.keys(transport), 'cli.ts', 'init.ts', 'check.ts', 'render.ts', 'close.ts']));
+    expect(files).toEqual(expect.arrayContaining([
+      ...Object.keys(transport), 'cli.ts', 'init.ts', 'check.ts', 'render.ts', 'close.ts', 'verify-text-run.ts', 'verify-text.ts',
+    ]));
     expect(files.length).toBeGreaterThan(Object.keys(transport).length);
   });
 

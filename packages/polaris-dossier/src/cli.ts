@@ -25,6 +25,7 @@ import { pairVisibilityAt, type VisibilityOf } from './source-visibility-gate.js
 import { runStatus } from './status.js';
 import { packageUrlRunModeAuthority } from './url-mode-registry.js';
 import { awaitSession } from './waiting-sessions.js';
+import { verifyTextInRun } from './verify-text-run.js';
 import type { FigureLayout } from './figure-fit.js';
 
 /** The `syzygy dossier` command family (design "Command surface").
@@ -71,6 +72,15 @@ Commands:
                       the object store of the clone init recorded and re-hashed,
                       freeze it as revision N
                       and write checks/rev-N.json; exit 1 on any finding
+  verify <run> --text <file> [--out <file>]
+                      re-verify the pinned revision and check a free-form Markdown
+                      text against it: every path reference (with or without lines)
+                      and double-quoted span, through check's own derivation and the
+                      run's screen (a withheld path is never read); print a tally of
+                      claims by outcome (quotation-verified, reference-unverified,
+                      path-missing, quotation-not-found, unanchored, withheld) and,
+                      with --out, write an annotated copy there. Writes nothing into
+                      the run directory; exit 0 when checked, 1 when refused
   session-prompt <run> inventory|review|all [--kind <kind>] [--tool <tool>] [--tool-version <v>] [--model <m>] [--fresh]
                       at a hand-over: make the inventory session's directory under
                       <state root>/<run id>.sessions/, beside the run directory and
@@ -358,6 +368,16 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       // `reviewVisibility`, `screenCensus`, `structureRecord`, `readerAdvice`, `readingDifference`, `reviewReach` and `inventoryCoverageAdvice` are on the report already (`checkSubject`), never in the
       // stored record; `figureFit` and `readingLedger` are in both. The exit code reads the outcome alone.
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
+    },
+  },
+  verify: {
+    synopsis: 'verify <run> --text <file> [--out <file>]',
+    args: { kind: 'options', options: ['--text', '--out'], noun: RUN },
+    run: async ({ positional: [run], values }, ctx) => {
+      const textFile = values.get('--text'), outFile = values.get('--out');
+      if (textFile === undefined) return ctx.usageError('verify requires --text <file>');
+      const result = await verifyTextInRun(run!, { textFile, ...(outFile === undefined ? {} : { outFile }) }, ctx.deps('openReader', 'loadScreen'));
+      return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
   },
   'session-prompt': {
