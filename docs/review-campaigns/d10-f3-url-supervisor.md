@@ -37,6 +37,7 @@
 - `F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW\.md`
 - `F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW\.md`
 - `F3-LAUNCH-HISTORY-CENSUS-REVIEW-RAW\.md`
+- `F3-LAUNCH-WRITER-INDEPENDENT-DEADLINES-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -149,3 +150,5 @@
 [Observed] The transport callback review records `PASS` (`F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW.md:1`) at `033318cb7`. A-140 removes one repeated native authority check at transport callback entry. Typecheck, 127 integration cases and three fault controls passed. [Unknown] Effect on native lock timing.
 
 [Observed] The ordered launch-history review records `PASS` (`F3-LAUNCH-HISTORY-CENSUS-REVIEW-RAW.md:1`) at `8c0439e68`. A-142 orders pending native samples before the existing launch writer and audit authority checks. Typecheck and 167 integration cases passed. A native trial of the same production bytes registered the launch and durably recorded Design delivery before activation refused. [Unknown] End-to-end Resume.
+
+[Observed] The launch writer deadline review records `PASS` (`F3-LAUNCH-WRITER-INDEPENDENT-DEADLINES-REVIEW-RAW.md:1`) at `3b21fa66`. A-143 runs the ordered writer's live sample before the independent authority timer. Typecheck and 170 focused integration cases passed. A native trial of the same production source synced the file and directory, committed and registered launch history, and accepted protected peer capture before activation refused. [Unknown] End-to-end Resume.

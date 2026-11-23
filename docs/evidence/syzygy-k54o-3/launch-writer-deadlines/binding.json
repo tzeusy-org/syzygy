@@ -1,0 +1,200 @@
+{
+  "sourceCommit": "3b21fa661a4d13d9b07190185f805e3afffcfe99",
+  "base": "f6da338906bf04ed781d2cce037b7e9d4cf56965",
+  "patchSha256": "96eda316607960b273258008da422eb2785f36832e7e96f3bf32ada93e5df958",
+  "review": {
+    "path": "docs/reviews/F3-LAUNCH-WRITER-INDEPENDENT-DEADLINES-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "07c19a064c3463c5c4e932f39ca50018297824252d3ab9c279010bf8ae645716",
+    "subjectSha256": "96eda316607960b273258008da422eb2785f36832e7e96f3bf32ada93e5df958"
+  },
+  "checks": {
+    "typecheck": {
+      "passed": true,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "files": 2,
+      "passed": 170,
+      "logSha256": "74273b5e3bbf6f0c68f0ee383546c3696fbbf5a1b6a902bdfd7002bdb21c2376"
+    }
+  },
+  "diagnostics": [
+    {
+      "base": "fb46532250fb4476b45eb8cfcfe32f679be11cc0",
+      "patchSha256": "09ee946691ebb33bfa5716226f8792a94ecaec3d90de134f86dd1141deabadf8",
+      "logSha256": "3573094735cb38ed95155b15ae65cbae1298f4c230853ead727b5e101d57a7a4",
+      "writerRefusal": {
+        "startedMs": 170482.15,
+        "settledMs": 173362.128,
+        "outcome": "rejected"
+      },
+      "fileSync": {
+        "startedMs": 171907.352,
+        "settledMs": 172260.631,
+        "outcome": "accepted"
+      },
+      "afterFileSyncMilliseconds": 1101.497
+    },
+    {
+      "base": "fb46532250fb4476b45eb8cfcfe32f679be11cc0",
+      "patchSha256": "289356150bd6d02269df3fc398a3ce68d5374d59948e23286c0a1ce5056547a6",
+      "logSha256": "c5c8354613020606c569190abf73b65980cb64652ef87d6da960085319214d64",
+      "writerRefusal": {
+        "startedMs": 124640.217,
+        "settledMs": 127476.195,
+        "outcome": "rejected"
+      },
+      "fileSync": {
+        "startedMs": 126204.295,
+        "settledMs": 126453.535,
+        "outcome": "accepted"
+      },
+      "afterFileSyncMilliseconds": 1022.66,
+      "lastHealthyCensus": {
+        "ordinal": 4,
+        "verify": {
+          "startedMs": 126420.464,
+          "settledMs": 126895.517,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 126902.595,
+          "settledMs": 127029.08,
+          "outcome": "accepted"
+        }
+      },
+      "hostActivation": {
+        "startedMs": 120609.637,
+        "settledMs": 127572.601,
+        "outcome": "rejected"
+      },
+      "peerCapture": {
+        "startedMs": 125731.548,
+        "settledMs": 127671.424,
+        "outcome": "refused"
+      }
+    }
+  ],
+  "interpretation": "Both writers refused near the original one-second timer after file sync. In the latest trial a pending live sample completed before the writer refused. Host activation and protected peer capture refused afterwards. Sharing the authority timer with that sample is an inferred cause.",
+  "nativeTrial": {
+    "sourceCommit": "f3b641dc80d3d553c5645ef0dce233404166f3a9",
+    "differenceFromReviewedSource": [
+      "packages/polaris-dossier/src/url-launch-history.test.ts"
+    ],
+    "logSha256": "3cc53b57b651fed1bc8525102298da669e21c895e2aa36ee6b7cb51f2347f631",
+    "scenario": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 327286
+    },
+    "launchHistory": {
+      "write": {
+        "startedMs": 164124.982,
+        "settledMs": 167918.299,
+        "outcome": "accepted"
+      },
+      "syncs": [
+        {
+          "startedMs": 165425.091,
+          "settledMs": 165735.574,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 166985.254,
+          "settledMs": 167012.921,
+          "outcome": "accepted"
+        }
+      ],
+      "commit": {
+        "startedMs": 168624.191,
+        "settledMs": 171173.183,
+        "outcome": "accepted"
+      },
+      "register": {
+        "startedMs": 171173.29,
+        "settledMs": 172803.63,
+        "outcome": "accepted"
+      }
+    },
+    "firstPeer": {
+      "open": {
+        "startedMs": 164975.9,
+        "settledMs": 173440.786,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 164976.004,
+        "settledMs": 169360.674,
+        "outcome": "accepted"
+      },
+      "capture": {
+        "startedMs": 164976.266,
+        "settledMs": 169360.635,
+        "outcome": "accepted"
+      },
+      "authorize": {
+        "startedMs": 169360.808,
+        "settledMs": 173440.668,
+        "outcome": "refused"
+      }
+    },
+    "hostActivation": {
+      "startedMs": 159588.786,
+      "settledMs": 173440.29,
+      "outcome": "rejected"
+    },
+    "controlPhases": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      }
+    ],
+    "resumedExit": 1,
+    "resumedFailure": "role-ended",
+    "designForwards": 0,
+    "executionRecord": "not-written"
+  },
+  "mutationControls": [
+    {
+      "id": "joined-clock",
+      "commit": "3b21fa661a4d13d9b07190185f805e3afffcfe99",
+      "path": "packages/polaris-dossier/src/url-launch-history.ts",
+      "old": "      if (waitForSample !== undefined) await requireCurrent(waitForSample);\n      await requireCurrent(current);",
+      "new": "      await requireCurrent(async () => (waitForSample === undefined || await waitForSample()) && await current());",
+      "selected": 3,
+      "expectedFailures": 1,
+      "logSha256": "3b9819d228b5ee7588c5b760ff8b7f21ceafcfcdaa94ef22e9162ab9de7b98e7"
+    },
+    {
+      "id": "lengthened-clock",
+      "commit": "3b21fa661a4d13d9b07190185f805e3afffcfe99",
+      "path": "packages/polaris-dossier/src/url-launch-history.ts",
+      "old": "timer = setTimeout(() => resolve(false), 1000);",
+      "new": "timer = setTimeout(() => resolve(false), 1001);",
+      "selected": 3,
+      "expectedFailures": 2,
+      "logSha256": "77a5645b5bf28907523d73226901d9d82f5dec9c59df16fed29326c2c0b32d1a"
+    }
+  ]
+}
