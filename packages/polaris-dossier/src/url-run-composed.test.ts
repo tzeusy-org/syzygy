@@ -1059,7 +1059,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
-        schemaVersion: 'polaris-dossier-local-draft-v7', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
+        schemaVersion: 'polaris-dossier-local-draft-v8', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
       tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...finalResponse('author')]);
     const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
       tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),

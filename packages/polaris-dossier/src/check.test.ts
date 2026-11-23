@@ -7,6 +7,7 @@ import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, measureCheckRecord, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { latestPassedDraft } from './review.js';
+import { oneSentenceAnswer } from './check-derive.js';
 import { patchFs } from './fs-patch.testkit.js';
 import { runDossierCli } from './cli.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -1781,6 +1782,155 @@ describe('check: figure kinds (schema v7)', () => {
 // measured before it is written; past any of 16,777,216 bytes, 2,000,000 values or 16 levels, its bounded form is written instead. No
 // subject within its own bounds is shown to reach the value or depth arm, so those, and the exact byte bound, are reached through an
 // injected measure: the real measure with one of its three figures replaced.
+// REQ-polaris-generation-034 version 2.16 (syzygy-3efd.50): schema v8's subsections, rule `one-sentence-answer` version 1, and
+// `subsections` in an earlier draft. Expected values are literals written from the specification.
+describe('check: subsections (schema v8)', () => {
+  const V7 = 'polaris-dossier-local-draft-v7', V8 = 'polaris-dossier-local-draft-v8';
+  const answer = (id: string, text: string, over: Record<string, unknown> = {}) => ({ id, label: 'inferred', basis: 'source', text, citations: [cite(`c-${id}`, 'src/kestrel.c', 2, 3)], quotations: [], ...over });
+  const sub = (id: string, text: string, over: Record<string, unknown> = {}) => ({ id, title: `Question ${id}`, answer: answer(`${id}-a`, text), paragraphs: [], ...over });
+  const drafted = (version: string, subsections: unknown[] | undefined) => mutate((d) => { d.schemaVersion = version; if (/-v[678]$/.test(version)) d.thesisBasis = 'stated'; if (subsections !== undefined) d.sections[0].subsections = subsections; });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const listed = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }));
+  const MORE = 'an answer is one sentence (rule one-sentence-answer version 1): it ends with a full stop, question mark or exclamation mark, and no such mark followed by a space stands inside it outside a quotation; write "for example", not "e.g."';
+
+  it('passes a v8 draft whose section carries two subsections, and checks their claims as the section\'s', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', 'The daemon caches reads.', { paragraphs: [{ id: 'q1p', label: 'unknown', reason: 'missing-evidence', text: 'No source says for how long.', citations: [], children: [] }] }),
+      sub('q2', 'Snapshots are periodic.', { answer: { id: 'q2-a', label: 'unknown', reason: 'missing-evidence', text: 'No source says when.', citations: [] } })]));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+
+  it('reports the scenario\'s first, second, fourth and fifth answers as subsection-answer, and passes the third, whose full stops are quoted', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', 'The daemon caches reads. It never writes.'),
+      sub('q2', 'Reads are cached, e.g. on start.'),
+      sub('q3', 'The cache is bounded, as The project states: "Entries expire. Then they are fetched again."'),
+      sub('q4', 'Reads are cached (on start.) It never writes.'),
+      sub('q5', '', { answer: { id: 'q5-a', label: 'non-normative', text: 'Read on.' } })]));
+    expect(listed(result).filter((finding) => finding.kind === 'subsection-answer')).toEqual([
+      { kind: 'subsection-answer', at: '$.sections[0].subsections[0].answer', detail: `the subsection "q1": ${MORE}` },
+      { kind: 'subsection-answer', at: '$.sections[0].subsections[1].answer', detail: `the subsection "q2": ${MORE}` },
+      { kind: 'subsection-answer', at: '$.sections[0].subsections[3].answer', detail: `the subsection "q4": ${MORE}` },
+      { kind: 'subsection-answer', at: '$.sections[0].subsections[4].answer', detail: 'the subsection "q5": an answer is an inferred or unknown claim that answers the subsection\'s question, never non-normative' }]);
+    expect(result.outcome).toBe('findings');
+  });
+
+  it('names a subsection with no well-formed identity by its path', async () => {
+    const result = await findingsOf(drafted(V8, [sub('q1', 'One. Two.', { id: 'bad id' }), sub('q2', 'Fine.')]));
+    expect(listed(result).filter((finding) => finding.kind === 'subsection-answer')).toEqual([
+      { kind: 'subsection-answer', at: '$.sections[0].subsections[0].answer', detail: `the subsection $.sections[0].subsections[0]: ${MORE}` }]);
+  });
+
+  it('reports a long title as schema and a marked-up title as label-markup, each at its title, and the list\'s bounds as schema', async () => {
+    const long = 'x'.repeat(121);
+    const result = await findingsOf(drafted(V8, [sub('q1', 'Fine.', { title: long }), sub('q2', 'Fine.', { title: 'The `cache`' })]));
+    expect(listed(result)).toEqual([
+      { kind: 'schema', at: '$.sections[0].subsections[0].title', detail: 'must be 1 to 120 characters; is 121' },
+      { kind: 'label-markup', at: '$.sections[0].subsections[1].title', detail: 'a short label is plain text: no angle bracket (< or >), ampersand, backtick, Markdown link or image, or * or _ at a word edge' }]);
+    const one = await findingsOf(drafted(V8, [sub('q1', 'Fine.')]));
+    expect(listed(one)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections', detail: 'must hold 2 to 12 items; holds 1' }]);
+  });
+
+  it('reports subsections in a v7 or earlier draft as field-version in place of the schema finding, and reads nothing inside them', async () => {
+    for (const version of [V7, 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v2']) {
+      const result = await findingsOf(drafted(version, [sub('q1', 'One. Two.', { title: 'The `cache`' }), sub('q2', '', { answer: { id: 'q2-a', label: 'non-normative', text: 'Read on.' } }), { id: 'q3' }]));
+      expect(listed(result), version).toEqual([{ kind: 'field-version', at: '$.sections[0].subsections', detail: '`subsections` needs draft schema polaris-dossier-local-draft-v8' }]);
+    }
+  });
+
+  it('reads a subsection\'s answer and paragraphs as claims of the section: a citation of an absent file in either is path-absent at its path', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', 'The daemon caches reads.', { answer: answer('q1-a', 'The daemon caches reads.', { citations: [cite('c-q1-a', 'docs/absent.txt', 1, 1)] }) }),
+      sub('q2', 'Fine.', { paragraphs: [{ id: 'q2p', label: 'inferred', basis: 'source', text: 'It also writes.', citations: [cite('c-q2p', 'docs/absent.txt', 1, 1)], quotations: [], children: [] }] })]));
+    expect(listed(result).map(({ kind, at }) => ({ kind, at }))).toEqual([
+      { kind: 'path-absent', at: '$.sections[0].subsections[0].answer.citations[0].path' },
+      { kind: 'path-absent', at: '$.sections[0].subsections[1].paragraphs[0].citations[0].path' }]);
+  });
+
+  it('checks a subsection\'s answer and paragraphs as blocks: a quotation the cited file does not carry, and a quotation no citation names', async () => {
+    const result = await findingsOf(drafted(V8, [
+      sub('q1', '', { answer: answer('q1-a', 'The project states: "Kestrel never sleeps."', { quotations: ['c-elsewhere'] }) }),
+      sub('q2', 'Fine.', { paragraphs: [{ id: 'q2p', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-q2p', 'src/kestrel.c', 2, 3)], quotations: [], children: [] }] })]));
+    expect(listed(result)).toEqual([
+      { kind: 'quotation-citation', at: '$.sections[0].subsections[0].answer.quotations[0]', detail: 'the quotation names no citation of this block' },
+      { kind: 'quotation-count', at: '$.sections[0].subsections[1].paragraphs[0].quotations', detail: 'the text carries 1 quotation(s) and quotations names 0 citation(s); name one per quotation, in order' }]);
+  });
+
+  it('bounds the list at 12 subsections and a subsection at 30 paragraphs, each a schema finding at that list', async () => {
+    const many = await findingsOf(drafted(V8, Array.from({ length: 13 }, (_, k) => sub(`q${k}`, 'Fine.'))));
+    expect(listed(many)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections', detail: 'must hold 2 to 12 items; holds 13' }]);
+    const twelve = await findingsOf(drafted(V8, Array.from({ length: 12 }, (_, k) => sub(`q${k}`, 'Fine.'))));
+    expect(listed(twelve)).toEqual([]);
+    const paragraphs = (n: number) => Array.from({ length: n }, (_, k) => ({ id: `pp${k}`, label: 'non-normative', text: 'W.', children: [] }));
+    const long = await findingsOf(drafted(V8, [sub('q1', 'Fine.', { paragraphs: paragraphs(31) }), sub('q2', 'Fine.')]));
+    expect(listed(long)).toEqual([{ kind: 'schema', at: '$.sections[0].subsections[0].paragraphs', detail: 'must hold 0 to 30 items; holds 31' }]);
+    expect(listed(await findingsOf(drafted(V8, [sub('q1', 'Fine.', { paragraphs: paragraphs(30) }), sub('q2', 'Fine.')])))).toEqual([]);
+  });
+
+  it('passes a v8 draft holding a sequence diagram, and reads its thesis basis, as a v7 draft does', async () => {
+    const el = (id: string, label: string) => ({ id, label, epistemic: 'inferred', citations: [cite(`c-${id}`)] });
+    const sequence = { id: 'seq-1', title: 'Handshake', home: { kind: 'section', target: 'core-ideas' }, kind: 'sequence', relationship: 'Who asks whom.', disposition: { kind: 'produced', assetIds: ['seq-1'] },
+      participants: [el('pt1', 'Client'), el('pt2', 'Server')], messages: [{ ...el('msg1', 'asks'), from: 'pt1', to: 'pt2' }, { ...el('msg2', 'answers'), from: 'pt2', to: 'pt1' }] };
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = V8; d.thesisBasis = 'stated'; d.diagrams.push(sequence); }));
+    expect([result.outcome, listed(result)]).toEqual(['passed', []]);
+  });
+
+  it('keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = V7; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].subsections = [sub('q1', 'Fine.'), sub('q2', 'Fine.')]; }));
+    const plain = await findingsOf(mutate((d) => { d.schemaVersion = V7; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; }));
+    const absent = { kind: 'path-absent', at: '$.sections[0].paragraphs[1].citations[0].path', detail: `"docs/absent.txt" names no file at the pinned revision ${commit}` };
+    expect(listed(plain)).toEqual([absent]);
+    expect(listed(result)).toEqual([{ kind: 'field-version', at: '$.sections[0].subsections', detail: '`subsections` needs draft schema polaris-dossier-local-draft-v8' }, absent]);
+  });
+
+  it('gives a v8 draft without subsections the findings the same v7 draft gets', async () => {
+    const faulty = (version: string) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].paragraphs[0].quotations = []; });
+    const v8 = listed(await findingsOf(faulty(V8)));
+    expect(v8).toEqual(listed(await findingsOf(faulty(V7))));
+    expect(v8.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
+  });
+
+  it('keeps a v6 draft\'s figure-kind field-version naming schema v7', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v6'; d.thesisBasis = 'stated'; d.diagrams.push({ ...homed({ kind: 'section', target: 'core-ideas' }), kind: 'sequence' }); }));
+    expect(listed(result).find((finding) => finding.at === '$.diagrams[0].kind')).toEqual({ kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "flow-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' });
+  });
+});
+
+// Rule `one-sentence-answer` version 1 (version 2.16), case by case: literals.
+describe('rule one-sentence-answer', () => {
+  it.each([
+    ['The daemon caches reads.', true],
+    ['Does it cache?', true],
+    ['It caches!', true],
+    ['It caches (on start.)', true],
+    ['It is "fast."', true],
+    ['It is "fast"', true],
+    ['  It caches reads.  ', true],
+    ['It caches reads.\u2019', true],
+    ['The daemon caches reads. It never writes.', false],
+    ['Reads are cached, e.g. on start.', false],
+    ['Reads are cached (on start.) It never writes.', false],
+    ['It caches reads', false],
+    ['', false],
+    ['It waits... then reads.', false],
+    ['It reads.\u00a0Then it writes.', false],
+    ['It reads.\nThen it writes.', false],
+    ['The cache is bounded, as The project states: "Entries expire. Then they are fetched again."', true],
+    ['It says "one. two" and stops.', true],
+    ['It says "one. two and stops.', false],
+    ['It ends." Then more.', true],
+    ['It says "x" then "y. z" then ends.', true],
+    ['The users\' list.', true],
+    ['The users\' list. More.', false],
+  ])('%j is one sentence: %s', (value, expected) => {
+    expect(oneSentenceAnswer(value)).toBe(expected);
+  });
+});
+
 describe('check: the record within its read bound (version 2.10)', () => {
   const BOUNDED_KEYS = ['format', 'runId', 'revision', 'supersedes', 'pinnedRevision', 'checkedAt', 'outcome', 'draft', 'session', 'findings', 'screeningPolicy', 'credential', 'limits', 'label'];
   const measured = (over: Partial<{ bytes: number; values: number; depth: number }>) => (text: string) => ({ ...measureCheckRecord(text), ...over });

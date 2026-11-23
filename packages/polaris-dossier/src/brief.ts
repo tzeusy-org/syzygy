@@ -44,10 +44,14 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
+/** v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
+ * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v13';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v14';
+
+/** The paragraph brief v14 adds immediately after the figure-kinds paragraph, in the requirement's words (version 2.16). */
+export const SUBSECTIONS_PARAGRAPH = 'A section may also carry `subsections`, two to twelve, in reading order, when it answers more than one question. Each subsection has `id`, `title`, `answer` and `paragraphs`: `title` names the question in a short label; `answer` is one Inferred or Unknown claim block, with the members that form of a paragraph takes, whose `text` is one sentence that answers the question; and `paragraphs`, zero to thirty, hold what supports that answer, as a section\'s paragraphs do. Check counts a full stop, question mark or exclamation mark that a space follows, outside a quotation, as the end of a sentence, so write `for example`, not `e.g.`, in an answer. A section\'s own paragraphs open it, before its subsections. Syzygy renders each subsection under its own heading with its answer first, and lists the page\'s sections and subsections at the top of the page. A figure is never homed in a subsection, and a deep dive has none.';
 
 /** The paragraph brief v12 adds immediately after the thesis-basis paragraph, in the requirement's words. */
 export const FIGURE_KINDS_PARAGRAPH = 'A diagram\'s `kind` may also be `sequence` or `swimlane`, and each takes its own members in place of `nodes` and `edges`. Use a `sequence` when two to five components exchange messages in a fixed order, such as a request, the calls it causes and the reply: list the components in `participants`, left to right, each with `id`, `label`, `epistemic` and `citations` as a node has, and list one to thirty messages in `messages`, in the order they happen, each with `id`, `label`, `epistemic` and `citations` as an edge has, naming the participant that sends it in `from` and the one that receives it in `to` (the same one for a message to itself). Use a `swimlane` when two to five actors or components do a workflow\'s steps in turn: list them in `lanes`, left to right, each as a node, and list two to twenty steps in `steps`, in the order they are done, each with `id`, `label`, `epistemic` and `citations` and naming in `lane` the lane that does it; Syzygy draws an arrow from each step to the next, so the order of `steps` is a claim the steps\' citations must support. Every participant sends or receives a message and every lane holds a step. On a narrow screen Syzygy shows a sequence as a numbered list of its messages and a swimlane as a numbered list of its steps, each headed by its lane. Keep every other figure a graph of `nodes` and `edges` in one of the six graph kinds.';
@@ -183,6 +187,8 @@ export function renderBrief(input: BriefInput): string {
     THESIS_BASIS_PARAGRAPH,
     '',
     FIGURE_KINDS_PARAGRAPH,
+    '',
+    SUBSECTIONS_PARAGRAPH,
     '',
     '## Poles',
     '',
