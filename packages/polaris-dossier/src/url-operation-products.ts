@@ -5,6 +5,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { createUrlRunArtifacts, UrlProductReadOperation, UrlProductReadLeaseState, UrlProductSelector } from './url-run-artifacts.js';
 import { URL_HELPER_LAUNCH_FILES, type UrlLaunchHistoryRole } from './url-launch-history.js';
+import { UrlProductReadLeaseExpired } from './url-product-reads.js';
 
 type ArtifactBridge = ReturnType<typeof createUrlRunArtifacts>;
 export type ProductReadEvidence = ReturnType<ArtifactBridge['revalidateRead']>;
@@ -31,32 +32,53 @@ function guarded<T>(read: () => T): T {
 }
 
 const issued = new WeakSet<RunProductReads>();
+const expiredReads = new WeakMap<UrlProductReadRefusal, RunProductReads>();
 
 export function isRunProductReads(reads: RunProductReads | undefined): reads is RunProductReads {
   return reads !== undefined && issued.has(reads);
+}
+
+export function isUrlProductReadExpiry(reads: RunProductReads, cause: unknown): boolean {
+  return cause instanceof UrlProductReadRefusal && expiredReads.get(cause) === reads;
 }
 
 export function beginRunProductReads(run: string, artifacts: ArtifactBridge, operation: UrlProductReadOperation, deadline: number,
   awaitProductRead?: () => Promise<boolean>): RunProductReads {
   const endsAt = Math.min(deadline, Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation]);
   const context = guarded(() => artifacts.beginRead({ operation, deadline: endsAt }));
-  const reads = Object.freeze({
+  const refusedRead = (expired: boolean): never => {
+    const cause = new UrlProductReadRefusal();
+    if (expired) expiredReads.set(cause, reads);
+    throw cause;
+  };
+  const reads: RunProductReads = Object.freeze({
     run, deadline: endsAt,
     read: (file: string) => guarded(() => artifacts.readProduct(context, file).bytes),
     readBatch: (files: readonly string[]) => guarded(() => artifacts.readProducts(context, files).map(product => product.bytes)),
     select: (selector: UrlProductSelector) => guarded(() => artifacts.selectProducts(context, selector)),
     selectGroups: (selectors: readonly UrlProductSelector[]) => guarded(() => artifacts.selectProductGroups(context, selectors)),
-    revalidate: () => guarded(() => artifacts.revalidateRead(context)),
+    revalidate: () => {
+      try { return artifacts.revalidateRead(context); }
+      catch (error) { return refusedRead(error instanceof UrlProductReadLeaseExpired); }
+    },
     isLeaseOpen: () => artifacts.isReadLeaseOpen(context),
     leaseState: () => artifacts.readLeaseState(context),
     ...(awaitProductRead === undefined ? {} : { waitForSample: async () => {
+      let expired = false;
+      const checkLease = (): void => {
+        const state = artifacts.readLeaseState(context);
+        if (state === 'open') return;
+        expired = state === 'expired';
+        throw new UrlProductReadRefusal();
+      };
       try {
         await yieldToPoll();
-        if (!artifacts.isReadLeaseOpen(context) || !(await awaitProductRead()) || !artifacts.isReadLeaseOpen(context))
-          throw new UrlProductReadRefusal();
+        checkLease();
+        if (!(await awaitProductRead())) throw new UrlProductReadRefusal();
+        checkLease();
       } catch {
         artifacts.cancelRead(context);
-        throw new UrlProductReadRefusal();
+        return refusedRead(expired);
       }
     } }),
     close: () => artifacts.cancelRead(context),

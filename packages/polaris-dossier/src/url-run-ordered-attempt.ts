@@ -8,9 +8,10 @@ import type { SessionAdmission, SessionContentClass } from './session-egress-pol
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly, type UrlSessionLaunchOptions, type UrlSessionProcess } from './session-launch.js';
 import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
-import { assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
+import { assertUrlDesignDeliveryReceiptCurrent, assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
-import { isUrlDesignProductLeaseOpen, urlDesignProductLeaseState, type ValidatedUrlDesignProduct, type UrlDesignProductMetadata } from './url-design-product.js';
+import { isCheckedUrlDesignProductExpiry, isUrlDesignProductLeaseOpen, urlDesignProductLeaseState,
+  type ValidatedUrlDesignProduct, type UrlDesignProductMetadata } from './url-design-product.js';
 import { startOrderedDesignHost, type OrderedDesignHost } from './url-ordered-design-host.js';
 import { createOrderedDesignSession } from './url-ordered-design-session.js';
 import { assertSessionMachineEffectCurrent, sessionMachineEffectCurrent } from './session-machine-transport.js';
@@ -83,7 +84,7 @@ export async function checkUrlOrderedProductCurrent(input: {
   const state = urlDesignProductLeaseState(input.product).state;
   if (state === 'open') {
     try { input.assertCurrent(); return true; }
-    catch { if (urlDesignProductLeaseState(input.product).state !== 'expired') return false; }
+    catch (cause) { if (!isCheckedUrlDesignProductExpiry(input.product, cause)) return false; }
   } else if (state !== 'expired') return false;
   return input.refresh();
 }
@@ -112,13 +113,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     input.work.observeProtectedRead(bytes);
     controller?.reportAuditRead(bytes);
   };
-  const assertProcessingCurrent = (): void => {
-    if (closed || sessionMachineEffectCurrent() === false || delivery === null || render === null
-      || !input.budget.current() || !input.machine.current()) throw refused();
-  };
+  const processingCurrent = (): boolean => !closed && sessionMachineEffectCurrent() !== false
+    && delivery !== null && render !== null && input.budget.current() && input.machine.current()
+    && input.now() < input.deadline;
+  const assertProcessingCurrent = (): void => { if (!processingCurrent()) throw refused(); };
   const assertCurrent = (): void => {
     assertProcessingCurrent();
-    if (!isUrlDesignProductLeaseOpen(render!.product)) throw refused();
     assertUrlDesignDeliveryViewCurrent(delivery!);
   };
   const current = async (): Promise<boolean> => {
@@ -131,21 +131,36 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       await yieldToPoll();
       if (!(await input.waitForSamples())) return false;
     }
-    if (closed || render === null || sessionMachineEffectCurrent() === false || !input.machine.current()) return false;
+    if (!processingCurrent()) return false;
     return checkUrlOrderedProductCurrent({
-      product: render.product,
+      product: render!.product,
       assertCurrent,
-      refresh: () => renewing ??= (async () => {
-        const next = await input.reproduce();
-        if (next === null) return false;
-        let adopted = false;
-        try {
-          if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
-          const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
-          const previous = render; render = next; delivery = checked; adopted = true; previous?.close();
-          assertCurrent(); return true;
-        } finally { if (!adopted) next.close(); }
-      })().finally(() => { renewing = null; }),
+      refresh: async () => {
+        const pending = renewing ??= (async () => {
+          if (!processingCurrent()) return false;
+          try { assertUrlDesignDeliveryReceiptCurrent(delivery!); }
+          catch { return false; }
+          if (!processingCurrent()) return false;
+          const next = await input.reproduce();
+          if (next === null) return false;
+          let adopted = false;
+          try {
+            if (!(await input.current()) || !processingCurrent()) return false;
+            const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
+            if (!processingCurrent()) return false;
+            assertUrlDesignDeliveryViewCurrent(checked);
+            if (!processingCurrent()) return false;
+            const previous = render;
+            render = next;
+            delivery = checked;
+            adopted = true;
+            previous?.close();
+            return true;
+          } finally { if (!adopted) next.close(); }
+        })().finally(() => { renewing = null; });
+        // A joining caller has its own machine effect scope.
+        return await pending && processingCurrent() && isUrlDesignProductLeaseOpen(render!.product);
+      },
     });
   };
   const consumeTerminal = async (): Promise<boolean> => {

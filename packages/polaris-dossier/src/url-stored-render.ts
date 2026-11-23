@@ -89,6 +89,7 @@ export function readStoredUrlRenderOutput(
  * reported by the writer. The result is local evidence, not a delivery grant. */
 export function checkStoredUrlRender(
   run: string, reportPath: string, expected: UrlDesignProductMetadata['output'], current: () => boolean,
+  preserveFailure?: (cause: unknown) => boolean,
 ): number | null {
   try {
     const site = path.basename(reportPath), number = Number(site);
@@ -136,5 +137,8 @@ export function checkStoredUrlRender(
       || directories.some(item => !sameProductPath(item.captured, readNames(item.directory, item.expectedNames)))) return null;
     check();
     return number;
-  } catch { return null; }
+  } catch (cause) {
+    if (preserveFailure?.(cause)) throw cause;
+    return null;
+  }
 }

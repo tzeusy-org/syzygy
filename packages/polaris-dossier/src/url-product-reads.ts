@@ -16,7 +16,16 @@ export interface ProductNameSnapshot {
   readonly missingAt: number | null;
 }
 const bad = (): never => { throw new Error('url-product-read-unavailable'); };
-function guarded<T>(work: () => T): T { try { return work(); } catch { return bad(); } }
+/** Raised only by the owning artifact bridge's authenticated lease check. */
+export class UrlProductReadLeaseExpired extends Error {
+  constructor() { super('url-run-artifacts-unavailable'); }
+}
+function guarded<T>(work: () => T): T {
+  try { return work(); } catch (error) {
+    if (error instanceof UrlProductReadLeaseExpired) throw error;
+    return bad();
+  }
+}
 const relative = (s: string): boolean => typeof s === 'string' && s.length > 0 && s.length <= 4096 && !s.startsWith('/')
   && !/[\\\u0000-\u0020\u007f]/u.test(s) && s.split('/').every(p => p !== '' && p !== '.' && p !== '..');
 const identity = (s: fs.Stats): ProductPathIdentity => Object.freeze({ dev: s.dev, ino: s.ino, mode: s.mode });
@@ -54,11 +63,17 @@ export function snapshotProductFile(root: string, file: string, maximum: number,
     try {
       const stat = fs.fstatSync(fd);
       if (!stat.isFile() || stat.nlink !== 1 || stat.size < 1 || stat.size > maximum) bad();
-      const bytes = Buffer.alloc(stat.size); let offset = 0;
-      while (offset < bytes.length) { check(); const count = fs.readSync(fd, bytes, offset, bytes.length - offset, offset); if (!count) bad(); offset += count; }
-      check();
-      if (fs.readSync(fd, Buffer.alloc(1), 0, 1, offset) !== 0 || !same(stat, fs.fstatSync(fd)) || !same(stat, fs.lstatSync(name))) bad();
-      return { bytes, chain, missingAt: null, stat };
+      try {
+        const bytes = Buffer.alloc(stat.size); let offset = 0;
+        while (offset < bytes.length) { check(); const count = fs.readSync(fd, bytes, offset, bytes.length - offset, offset); if (!count) bad(); offset += count; }
+        check();
+        if (fs.readSync(fd, Buffer.alloc(1), 0, 1, offset) !== 0) bad();
+        return { bytes, chain, missingAt: null, stat };
+      } finally {
+        // A lease failure may interrupt the read before its final checkpoint.
+        // A changed leaf must supersede that failure just as a changed ancestor does.
+        if (!same(stat, fs.fstatSync(fd)) || !same(stat, fs.lstatSync(name))) bad();
+      }
     } finally { fs.closeSync(fd); }
   }));
 }

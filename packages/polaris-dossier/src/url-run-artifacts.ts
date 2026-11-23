@@ -39,7 +39,8 @@ import { isNativeSessionProfile } from './session-profile.js';
 import { encodeRunRecord, readRunRecord } from './run-record.js';
 import { readEffectiveRunDeclaration, type UrlRunDeclaration } from './url-run-record.js';
 import type { ProtectedUrlRunContext } from './effective-run-record.js';
-import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
+import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, UrlProductReadLeaseExpired,
+  type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
 
 type Role = 'author' | 'inventory' | 'fidelity' | 'design';
 interface InitialProductIdentities {
@@ -431,7 +432,10 @@ function create(given: UrlRunArtifactsOptions) {
         check?.();
         return inspectCommittedUrlLaunchHistory(committed).eventSha256 === eventSha256
           && prompt.committed(check) && promptCurrent(check);
-      } catch { return false; }
+      } catch (error) {
+        if (error instanceof UrlProductReadLeaseExpired) throw error;
+        return false;
+      }
     };
     // The initial inspection has already checked the exact durable audit
     // and issued files. Match the bridge's prompt snapshot before staging.
@@ -1081,7 +1085,8 @@ function create(given: UrlRunArtifactsOptions) {
     readonly entries: Map<string, ReadEntry>;
     readonly excludedOrdered: ReadonlyMap<string, NonNullable<ReturnType<typeof authenticatedRecords.get>>>;
     readonly selections: Map<UrlProductSelector, { readonly snapshot: ProductNameSnapshot; readonly names: readonly string[]; readonly receipt: UrlOriginReceipt }>;
-    terminal?: 'expired' | 'retired'; bytes: number; timer?: ReturnType<typeof setTimeout>; abort?: () => void;
+    terminal?: 'expired' | 'retired'; expiry?: UrlProductReadLeaseExpired;
+    bytes: number; timer?: ReturnType<typeof setTimeout>; abort?: () => void;
   }
   const readContexts = new WeakMap<UrlProductReadContext, ReadState>(), activeReads = new Set<ReadState>();
   const readProofs = new Map<string, { readonly path: Pick<ProductFileSnapshot, 'chain' | 'missingAt'>;
@@ -1106,9 +1111,12 @@ function create(given: UrlRunArtifactsOptions) {
     state.entries.clear(); state.selections.clear(); activeReads.delete(state);
   }
   const readLease = (state: ReadState): void => {
+    if (state.terminal === undefined) {
+      if (state.signal?.aborted) closeRead(state);
+      else if (Date.now() >= state.deadline) closeRead(state, 'expired');
+    }
+    if (state.terminal === 'expired' && !state.signal?.aborted) throw state.expiry ??= new UrlProductReadLeaseExpired();
     if (state.terminal !== undefined) refuse();
-    if (state.signal?.aborted) { closeRead(state); refuse(); }
-    if (Date.now() >= state.deadline) { closeRead(state, 'expired'); refuse(); }
   };
   const readLive = (state: ReadState): void => {
     readLease(state);
@@ -1351,7 +1359,11 @@ function create(given: UrlRunArtifactsOptions) {
           selector, records: selection.names, originId: metadata[entries.length + index]!.id,
         })) }) });
       readLive(state); return result;
-    } catch { closeRead(state); return refuse(); }
+    } catch (error) {
+      closeRead(state);
+      if (state.expiry !== undefined && error === state.expiry) throw error;
+      return refuse();
+    }
   }
   /** Copy identities of settled, independently bound producer files. The
    * supervisor calls this only once its owned writers and callbacks are

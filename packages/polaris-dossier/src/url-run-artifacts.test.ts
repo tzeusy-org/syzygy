@@ -35,7 +35,7 @@ import type { FigureLayout } from './figure-fit.js';
 import { generationSourcesForBody } from '@syzygy/polaris-generation-core/live';
 import { createUrlRunDeclaration, urlSourceTransportIdentity, URL_PROFILE_ID } from './url-run-record.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
-import { beginRunProductReads, isRunProductReads } from './url-operation-products.js';
+import { beginRunProductReads, isRunProductReads, isUrlProductReadExpiry, UrlProductReadRefusal } from './url-operation-products.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { checkDraft } from './check.js';
 import { buildFidelityPacket } from './review-packet.js';
@@ -1096,6 +1096,62 @@ describe('trusted URL artifact producer bridge', () => {
       expect(() => reads.revalidate()).toThrow();
     } finally { vi.useRealTimers(); }
   });
+  it.each(['before gate', 'after accepted gate', 'after denied gate', 'after failed gate'] as const)(
+    'reports the exact artifact sample cause %s through the owning read port', async kind => {
+      const f = fixture(); f.initialize();
+      const deadline = Date.now() + 4000;
+      const other = beginRunProductReads(f.run, f.bridge, 'render', deadline);
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+      let backendAtGate: ReturnType<typeof other.leaseState> | undefined;
+      const gate = vi.fn(async () => {
+        clock.mockReturnValue(deadline);
+        // Even an already expired backend cannot replace a gate denial.
+        backendAtGate = reads.leaseState();
+        if (kind === 'after failed gate') throw new Error('owned sample failed');
+        return kind === 'after accepted gate';
+      });
+      const reads = beginRunProductReads(f.run, f.bridge, 'render', deadline, gate);
+      try {
+        if (kind === 'before gate') setImmediate(() => clock.mockReturnValue(deadline));
+        const result = await reads.waitForSample!().catch(error => error as unknown);
+        const expired = kind === 'before gate' || kind === 'after accepted gate';
+        expect(result).toBeInstanceOf(UrlProductReadRefusal);
+        expect(isUrlProductReadExpiry(reads, result)).toBe(expired);
+        expect(isUrlProductReadExpiry(other, result)).toBe(false);
+        expect(gate).toHaveBeenCalledTimes(kind === 'before gate' ? 0 : 1);
+        expect(backendAtGate).toBe(kind === 'before gate' ? undefined : 'expired');
+      } finally { clock.mockRestore(); reads.close(); other.close(); }
+    });
+  it.each(['descriptor lease', 'record drift', 'descriptor failure', 'superseding failure'] as const)(
+    'reports the exact revalidation cause for %s at the deadline', kind => {
+      const f = fixture(); f.initialize();
+      const deadline = Date.now() + 4000, reads = beginRunProductReads(f.run, f.bridge, 'render', deadline);
+      expect(reads.read('brief.json')).not.toBeNull();
+      if (kind === 'record drift') fs.appendFileSync(path.join(f.run, 'brief.json'), ' ');
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+      const snapshot = productReads.snapshotProductFile;
+      const descriptor = vi.spyOn(productReads, 'snapshotProductFile').mockImplementationOnce((...args) => {
+        if (kind === 'record drift') {
+          const result = snapshot(...args);
+          clock.mockReturnValue(deadline);
+          return result;
+        }
+        clock.mockReturnValue(deadline);
+        if (kind === 'descriptor failure') throw new Error('owned descriptor refused');
+        if (kind === 'superseding failure') {
+          try { return snapshot(...args); } finally { throw new Error('owned descriptor cleanup refused'); }
+        }
+        return snapshot(...args);
+      });
+      try {
+        let result: unknown;
+        try { reads.revalidate(); } catch (error) { result = error; }
+        const expired = kind === 'descriptor lease';
+        expect(result).toBeInstanceOf(UrlProductReadRefusal);
+        expect(isUrlProductReadExpiry(reads, result)).toBe(expired);
+        expect(reads.leaseState()).toBe(expired || kind === 'superseding failure' ? 'expired' : 'retired');
+      } finally { descriptor.mockRestore(); clock.mockRestore(); reads.close(); }
+    });
   it.each(['record', 'record batch', 'selection', 'selection batch', 'revalidation'] as const)('checks current authority before and after the bounded %s read', (kind) => {
     const f = fixture(), current = vi.fn(() => true);
     const bridge = createUrlRunArtifacts({ ...f.options, current });

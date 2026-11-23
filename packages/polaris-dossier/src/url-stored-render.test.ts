@@ -145,6 +145,32 @@ describe('supervisor verification of stored URL renders', () => {
     expect(checks).toBe(5);
     expect(f.check()).toBe(2);
   });
+
+  it.each([false, true])('carries the original expiry unless descriptor cleanup detects drift: %s', replace => {
+    const f = fixture(), expiry = new productReads.UrlProductReadLeaseExpired();
+    const capture = productReads.snapshotProductFile;
+    let expired = false;
+    const snapshot = vi.spyOn(productReads, 'snapshotProductFile').mockImplementationOnce((root, file, maximum, check) => {
+      let checks = 0;
+      return capture(root, file, maximum, () => {
+        if (++checks === 2) {
+          if (replace) fs.writeFileSync(path.join(path.dirname(f.site), 'own-added'), 'owned new entry');
+          expired = true;
+        }
+        check();
+      });
+    });
+    const current = () => { if (expired) throw expiry; return true; };
+    const preserved = vi.fn((cause: unknown) => cause === expiry);
+    try {
+      const verify = () => checkStoredUrlRender(f.run, f.site, f.output, current, preserved);
+      if (replace) expect(verify()).toBeNull();
+      else expect(verify).toThrow(expiry);
+      expect(expired).toBe(true);
+      expect(preserved).toHaveBeenCalledTimes(1);
+      expect(preserved.mock.calls[0]?.[0] === expiry).toBe(!replace);
+    } finally { snapshot.mockRestore(); }
+  });
 });
 
 describe('read-only recovery of stored URL render metadata', () => {
@@ -213,7 +239,7 @@ describe('read-only recovery of stored URL render metadata', () => {
     expect(readStoredUrlRenderOutput(f.run, 2, digest, () => true)).toEqual(f.output);
   });
 
-  it('admits the byte ceiling and refuses the next byte or an over-limit file population', () => {
+  it('admits the byte ceiling and refuses the next byte or an over-limit file population', { timeout: 30_000 }, () => {
     const run = tempDir('stored-url-render-bounds-'), site = path.join(run, RUN_LAYOUT.site, '0');
     fs.mkdirSync(site, { recursive: true });
     const body = 'x'.repeat(2_097_152);

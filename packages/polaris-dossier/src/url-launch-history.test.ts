@@ -17,12 +17,14 @@ import { buildDossierScreen } from './screen.js';
 import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
 import { prepareUrlRolePlans, prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions, type UrlRolePlan } from './url-role-plan.js';
 import { inspectUrlLaunchHistory, urlHelperLaunchFile, URL_HELPER_LAUNCH_FILES, writeUrlLaunchHistory, type UrlLaunchHistoryRole } from './url-launch-history.js';
-import { assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
+import { assertUrlDesignDeliveryReceiptCurrent, assertUrlDesignDeliveryViewCurrent, assertUrlDesignReviewProofCurrent, createUrlSessionAudit,
   inspectCommittedUrlLaunchHistory, isIssuedUrlDesignDeliveryView } from './url-session-audit.js';
 import * as sessionAudit from './url-session-audit.js';
 import * as designProduct from './url-design-product.js';
 import { URL_DESIGN_VIEW_ENCODING, URL_DESIGN_VIEW_FORMAT } from './url-design-view.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
+import { beginRunProductReads, isUrlProductReadExpiry, UrlProductReadRefusal } from './url-operation-products.js';
+import * as productReads from './url-product-reads.js';
 import { createUrlOriginLedger, type UrlOriginReceipt } from './url-origin-ledger.js';
 import { SESSION_CONTENT_CLASSES } from './session-egress-policy.js';
 import type { SessionAuditEvent } from './session-relay.js';
@@ -332,6 +334,12 @@ describe('protected URL design delivery audit', () => {
           && Date.now() < reproducedMetadata.products.deadline);
     const inputs = vi.spyOn(designProduct, 'recheckUrlDesignProductInputs')
       .mockImplementation(product => inputCurrent && designProduct.isUrlDesignProductLeaseOpen(product));
+    const assertLease = vi.spyOn(designProduct, 'assertUrlDesignProductLeaseCurrent').mockImplementation(product => {
+      if (!designProduct.isUrlDesignProductLeaseOpen(product)) throw new Error('owned product lease unavailable');
+    });
+    const assertInputs = vi.spyOn(designProduct, 'assertUrlDesignProductInputsCurrent').mockImplementation(product => {
+      if (!designProduct.recheckUrlDesignProductInputs(product)) throw new Error('owned product input unavailable');
+    });
     const inspect = vi.spyOn(designProduct, 'inspectUrlDesignProduct');
     inspect.mockImplementation(async (product, address) => {
       if (address.run !== run || address.runId !== runId || address.pinnedRevision !== pinnedRevision) return null;
@@ -519,10 +527,13 @@ describe('protected URL design delivery audit', () => {
         expect(delivered).toStrictEqual(expected);
         expect(isIssuedUrlDesignDeliveryView(delivered)).toBe(true);
         expect(isIssuedUrlDesignDeliveryView({ ...delivered })).toBe(false);
+        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).not.toThrow();
+        expect(() => assertUrlDesignDeliveryReceiptCurrent({ ...delivered })).toThrow('url-session-audit-refused');
         expect(() => assertUrlDesignDeliveryViewCurrent(delivered)).not.toThrow();
         expect(() => assertUrlDesignDeliveryViewCurrent({ ...delivered })).toThrow('url-session-audit-refused');
         delivered.view[0] = delivered.view[0]! ^ 1;
         expect(() => assertUrlDesignDeliveryViewCurrent(delivered)).toThrow('url-session-audit-refused');
+        expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).toThrow('url-session-audit-refused');
         delivered.view[0] = view[0]!;
         await expect(audit.readDesignDeliveryView(sealed, token)).resolves.toStrictEqual(expected);
         await expect(other.audit.readDesignDeliveryView(sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
@@ -534,6 +545,7 @@ describe('protected URL design delivery audit', () => {
         await expect(audit.readDesignDeliveryView(sealed, token)).rejects.toThrow('url-session-audit-refused');
         const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + 1);
         try {
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).not.toThrow();
           await expect(validate(audit, sealed, token)).rejects.toThrow('url-session-audit-refused');
           await expect(validate(audit, sealed, reproduced)).resolves.toBeUndefined();
           readView = view.map(byte => byte ^ 1);
@@ -616,6 +628,8 @@ describe('protected URL design delivery audit', () => {
           await expect(validate(audit, sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
           reproducedMetadata = exact;
           await expect(validate(audit, sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered)).toThrow('url-session-audit-refused');
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(exactView)).toThrow('url-session-audit-refused');
         } finally { clock.mockRestore(); }
       }
       expect(audit.summary().captured['design-delivery']).toBe(1);
@@ -626,6 +640,8 @@ describe('protected URL design delivery audit', () => {
     } finally {
       read.mockRestore();
       inspect.mockRestore();
+      assertInputs.mockRestore();
+      assertLease.mockRestore();
       inputs.mockRestore();
       lease.mockRestore();
       await audit.close();
@@ -766,6 +782,46 @@ describe('URL stored launch history', () => {
       }
     } finally { await audit.close(); }
   });
+
+  it.each(['prompt lease', 'audit refusal', 'prompt drift'] as const)(
+    'preserves the captured Fidelity launch revalidation cause for %s at expiry', async kind => {
+      const { bridge, originPolicy } = productFixture();
+      const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `fidelity-lease-${kind.replace(' ', '-')}`);
+      const role = 'fidelity', run = planning.options.run, relative = URL_HELPER_LAUNCH_FILES[role];
+      try {
+        await attempt(role);
+        const launch = await writeUrlLaunchHistory(options(role));
+        const committed = await audit.commitLaunchHistory(launch.capability!);
+        await bridge.registerLaunchHistory(committed);
+        const deadline = Date.now() + 4000, reads = beginRunProductReads(run, bridge, 'render', deadline);
+        const bytes = fs.readFileSync(launch.file!);
+        expect(Buffer.from(reads.read(relative)!)).toEqual(bytes);
+        expect(reads.revalidate().metadata.records).toEqual([expect.objectContaining({ path: relative, sha256: sha256(bytes) })]);
+        const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+        const snapshot = productReads.snapshotProductFile, inspect = sessionAudit.inspectCommittedUrlLaunchHistory;
+        const prompt = path.relative(run, promptPath(role));
+        let crossed = false;
+        const expire = (): void => { crossed = true; clock.mockReturnValue(deadline); };
+        const descriptor = vi.spyOn(productReads, 'snapshotProductFile').mockImplementation((...args) => {
+          if (kind === 'prompt lease' && args[1] === prompt) expire();
+          return snapshot(...args);
+        });
+        const auditInspection = vi.spyOn(sessionAudit, 'inspectCommittedUrlLaunchHistory').mockImplementation(capability => {
+          try { return inspect(capability); } catch (error) { expire(); throw error; }
+        });
+        try {
+          if (kind === 'audit refusal') fs.appendFileSync(segment(role), ' ');
+          if (kind === 'prompt drift') fs.appendFileSync(promptPath(role), ' ');
+          let result: unknown;
+          try { reads.revalidate(); } catch (error) { result = error; }
+          expect(crossed).toBe(true);
+          expect(result).toBeInstanceOf(UrlProductReadRefusal);
+          const expired = kind === 'prompt lease';
+          expect(isUrlProductReadExpiry(reads, result)).toBe(expired);
+          expect(reads.leaseState()).toBe(expired ? 'expired' : 'retired');
+        } finally { auditInspection.mockRestore(); descriptor.mockRestore(); clock.mockRestore(); reads.close(); }
+      } finally { await audit.close(); }
+    });
 
   it('refuses a later writer and audit against a byte-identical replacement of the registered prompt', async () => {
     const { bridge, originPolicy } = productFixture();

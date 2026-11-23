@@ -7,10 +7,11 @@ import { buildDesignPacket } from './design-review.js';
 import { checkUrlOrderedProductCurrent } from './url-run-ordered-attempt.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 import type { ProducedSiteInput, DossierRenderer } from './render.js';
-import type { ProductReadEvidence, RunProductReads } from './url-operation-products.js';
+import { beginRunProductReads, type ProductReadEvidence, type RunProductReads } from './url-operation-products.js';
 import type { UrlOriginMetadata, UrlOriginReceipt } from './url-origin-ledger.js';
 import {
-  admitUrlDesignProduct, describeCheckedUrlDesignProduct, inspectUrlDesignProduct, readInertUrlDesignProduct, readUrlDesignProduct, recheckUrlDesignProductInputs,
+  admitUrlDesignProduct, describeCheckedUrlDesignProduct, inspectUrlDesignProduct, isUrlDesignProductLeaseOpen,
+  assertUrlDesignProductInputsCurrent, readInertUrlDesignProduct, readUrlDesignProduct, recheckUrlDesignProductInputs,
   sameReproducedUrlDesignProduct, validateUrlDesignProduct, urlDesignProductLeaseState,
   type DesignProductOptions, type ValidatedUrlDesignProduct,
 } from './url-design-product.js';
@@ -19,14 +20,19 @@ import {
 // capability lifetime and bindings, not actual renderer installation or lineage.
 const gates = vi.hoisted(() => ({ reads: new WeakSet<object>(), renderers: new WeakSet<object>(),
   currentRenderer: vi.fn(async () => true), sources: vi.fn(async () => []) }));
-vi.mock('./url-operation-products.js', () => ({
-  isRunProductReads: (value: object) => gates.reads.has(value),
-  protectedProductRecord: (reads: RunProductReads, selectedRun: string, file: string) => {
-    if (!gates.reads.has(reads) || reads.run !== selectedRun) throw new Error('own upstream read refused');
-    const bytes = reads.read(file);
-    return bytes === null ? undefined : JSON.parse(Buffer.from(bytes).toString());
-  },
-}));
+vi.mock('./url-operation-products.js', async importOriginal => {
+  const actual = await importOriginal<typeof import('./url-operation-products.js')>();
+  return {
+    ...actual,
+    isRunProductReads: (value: RunProductReads) => gates.reads.has(value) || actual.isRunProductReads(value),
+    protectedProductRecord: (reads: RunProductReads, selectedRun: string, file: string) => {
+      if (!gates.reads.has(reads)) return actual.protectedProductRecord(reads, selectedRun, file);
+      if (reads.run !== selectedRun) throw new Error('own upstream read refused');
+      const bytes = reads.read(file);
+      return bytes === null ? undefined : JSON.parse(Buffer.from(bytes).toString());
+    },
+  };
+});
 vi.mock('./url-runtime.js', () => ({ urlRendererCurrent: (value: object) => gates.renderers.has(value) && gates.currentRenderer() }));
 vi.mock('./url-rendered-source-proof.js', () => ({ verifyUrlRenderedSources: gates.sources }));
 
@@ -140,6 +146,33 @@ describe('active URL design product capability', () => {
     expect(refresh).not.toHaveBeenCalled();
   });
 
+  it('does not reproduce after delivery refusal that independently crosses the product deadline', async () => {
+    const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => true);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+    try {
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, refresh, assertCurrent: () => {
+        clock.mockReturnValue(deadline);
+        throw new Error('owned delivery digest drift');
+      } })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['other product', 'withdrawn signal'] as const)('does not reproduce after checked expiry from %s', async failure => {
+    const f = await validatedFixture(), other = failure === 'other product' ? await validatedFixture() : f;
+    const first = Math.min(f.evidence.metadata.deadline, other.evidence.metadata.deadline);
+    const last = Math.max(f.evidence.metadata.deadline, other.evidence.metadata.deadline);
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(first - 1), refresh = vi.fn(async () => true);
+    try {
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, refresh, assertCurrent: () => {
+        clock.mockReturnValue(last);
+        try { assertUrlDesignProductInputsCurrent(other.capability); }
+        finally { if (failure === 'withdrawn signal') f.abort.abort(); }
+      } })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
   it('never renews actual invalidator retirement, including after its original deadline', async () => {
     const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => true);
     const revalidate = f.reads.revalidate;
@@ -163,13 +196,71 @@ describe('active URL design product capability', () => {
     try {
       const assertCurrent = () => {
         now = deadline;
-        if (!recheckUrlDesignProductInputs(f.capability)) throw new Error('owned timed expiry');
+        assertUrlDesignProductInputsCurrent(f.capability);
       };
       expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent, refresh })).toBe(refreshed);
       expect(urlDesignProductLeaseState(f.capability).state).toBe('expired');
       expect(refresh).toHaveBeenCalledTimes(1);
     } finally { clock.mockRestore(); }
   });
+
+  it('preserves genuine expiry between the nominal and local lease samples', async () => {
+    const f = await validatedFixture(), before = await inspectUrlDesignProduct(f.capability, binding);
+    const replacement = fixture(30_000);
+    const replacementCapability = await validateUrlDesignProduct(replacement.input, replacement.options);
+    if (before === null || replacementCapability === null) throw new Error('owned fixture product unavailable');
+    const deadline = f.reads.deadline;
+    const clock = vi.spyOn(Date, 'now').mockReturnValueOnce(deadline - 1).mockReturnValue(deadline);
+    try {
+      const fullCheck = vi.fn(() => { throw new Error('expired product reached the full check'); });
+      const refresh = vi.fn(async () => {
+        expect(await readInertUrlDesignProduct(f.capability, binding)).toBeNull();
+        const after = await inspectUrlDesignProduct(replacementCapability, binding);
+        return after !== null && sameReproducedUrlDesignProduct(before, after) && recheckUrlDesignProductInputs(replacementCapability);
+      });
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: fullCheck, refresh })).toBe(true);
+      expect(urlDesignProductLeaseState(f.capability)).toEqual({ state: 'expired', deadline });
+      expect(fullCheck).not.toHaveBeenCalled();
+      expect(refresh).toHaveBeenCalledTimes(1);
+      expect(isUrlDesignProductLeaseOpen(f.capability)).toBe(false);
+      clock.mockReturnValue(deadline - 1);
+      expect(isUrlDesignProductLeaseOpen(f.capability)).toBe(false);
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['abort', 'revocation', 'operation-close', 'changed-signal', 'failed-lease-check'] as const)(
+    'retires %s concurrent with the deadline between lease samples', async kind => {
+      const f = fixture(), leaseState = f.reads.leaseState;
+      let afterOpen: (() => void) | undefined;
+      Object.assign(f.reads, { leaseState: () => {
+        const state = leaseState();
+        if (state === 'open') afterOpen?.();
+        return state;
+      } });
+      const capability = await validateUrlDesignProduct(f.input, f.options);
+      if (capability === null) throw new Error('owned fixture product unavailable');
+      const deadline = f.reads.deadline;
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+      try {
+        afterOpen = () => {
+          afterOpen = undefined;
+          if (kind === 'abort') f.abort.abort();
+          else if (kind === 'revocation') f.revoke();
+          else if (kind === 'operation-close') f.reads.close();
+          else if (kind === 'changed-signal') Object.assign(f.input, { signal: new AbortController().signal });
+          else {
+            Object.assign(f.reads, { isLeaseOpen: () => { clock.mockReturnValue(deadline); throw new Error('owned lease provider refused'); } });
+            return;
+          }
+          clock.mockReturnValue(deadline);
+        };
+        const refresh = vi.fn(async () => true), fullCheck = vi.fn();
+        expect(await checkUrlOrderedProductCurrent({ product: capability, assertCurrent: fullCheck, refresh })).toBe(false);
+        expect(urlDesignProductLeaseState(capability)).toEqual({ state: 'retired', deadline });
+        expect(fullCheck).not.toHaveBeenCalled();
+        expect(refresh).not.toHaveBeenCalled();
+      } finally { clock.mockRestore(); }
+    });
 
   it.each(['abort', 'revocation', 'operation-close'] as const)('never treats %s before the deadline as timed expiry', async kind => {
     const f = await validatedFixture(), deadline = f.evidence.metadata.deadline, refresh = vi.fn(async () => true);
@@ -181,6 +272,99 @@ describe('active URL design product capability', () => {
       expect(refresh).not.toHaveBeenCalled();
     } finally { clock.mockRestore(); }
   });
+
+  it.each([
+    ['at the deadline', 0, false],
+    ['after the deadline', 1, false],
+    ['after checked expiry', 1, true],
+  ] as const)('retains abort precedence %s', async (_label, offset, checkFirst) => {
+    const f = await validatedFixture(), deadline = f.reads.deadline;
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline + offset);
+    const refresh = vi.fn(async () => true);
+    try {
+      expect(f.reads.leaseState()).toBe('expired');
+      if (checkFirst) expect(urlDesignProductLeaseState(f.capability)).toEqual({ state: 'expired', deadline });
+      f.abort.abort();
+      expect(urlDesignProductLeaseState(f.capability)).toEqual({ state: 'retired', deadline });
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: vi.fn(), refresh })).toBe(false);
+      expect(refresh).not.toHaveBeenCalled();
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['binding', 'renderer', 'product drift', 'unknown read failure'] as const)(
+    'retains the %s refusal when the deadline is reached at the failing check', async kind => {
+      const f = await validatedFixture(), deadline = f.reads.deadline;
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1), refresh = vi.fn(async () => true);
+      try {
+        if (kind === 'binding') {
+          const different = { ...binding, get runId() { clock.mockReturnValue(deadline); return 'different-run'; } };
+          expect(await inspectUrlDesignProduct(f.capability, different)).toBeNull();
+        } else if (kind === 'renderer') {
+          gates.currentRenderer.mockImplementationOnce(async () => { clock.mockReturnValue(deadline); return false; });
+          expect(await inspectUrlDesignProduct(f.capability, binding)).toBeNull();
+        } else {
+          const revalidate = f.reads.revalidate;
+          Object.assign(f.reads, { revalidate: () => {
+            clock.mockReturnValue(deadline);
+            if (kind === 'unknown read failure') throw new Error('owned read unavailable');
+            const evidence = revalidate();
+            return { ...evidence, metadata: { ...evidence.metadata, snapshotBytes: 1 } };
+          } });
+          expect(recheckUrlDesignProductInputs(f.capability)).toBe(false);
+        }
+        expect(f.reads.leaseState()).toBe('expired');
+        expect(urlDesignProductLeaseState(f.capability)).toEqual({ state: 'retired', deadline });
+        expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: vi.fn(), refresh })).toBe(false);
+        expect(refresh).not.toHaveBeenCalled();
+      } finally { clock.mockRestore(); }
+    });
+
+  it('preserves genuine expiry after the renderer accepts but before a further product check', async () => {
+    const f = await validatedFixture(), deadline = f.reads.deadline;
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+    try {
+      gates.currentRenderer.mockImplementationOnce(async () => { clock.mockReturnValue(deadline); return true; });
+      expect(await inspectUrlDesignProduct(f.capability, binding)).toBeNull();
+      const refresh = vi.fn(async () => true);
+      expect(await checkUrlOrderedProductCurrent({ product: f.capability, assertCurrent: vi.fn(), refresh })).toBe(true);
+      expect(urlDesignProductLeaseState(f.capability)).toEqual({ state: 'expired', deadline });
+      expect(refresh).toHaveBeenCalledTimes(1);
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['before gate', 'after accepted gate', 'after denied gate', 'after failed gate', 'with product abort'] as const)(
+    'classifies the actual product port sample crossing the deadline %s', async kind => {
+      const f = fixture(30_000), deadline = f.evidence.metadata.deadline;
+      const bridge = {
+        beginRead: () => Object.freeze({ kind: 'url-product-read-context' }),
+        readProduct: (_context: object, file: string) => ({ bytes: f.reads.read(file) }),
+        revalidateRead: f.reads.revalidate,
+        isReadLeaseOpen: () => f.reads.leaseState() === 'open',
+        readLeaseState: f.reads.leaseState,
+        cancelRead: f.reads.close,
+      } as unknown as Parameters<typeof beginRunProductReads>[1];
+      const sample = vi.fn(async () => true);
+      const reads = beginRunProductReads(run, bridge, 'render', deadline, sample);
+      const capability = await validateUrlDesignProduct(f.input, { ...f.options, products: reads });
+      if (capability === null) throw new Error('owned fixture product unavailable');
+      sample.mockClear();
+      const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1), refresh = vi.fn(async () => true);
+      try {
+        if (kind === 'before gate') setImmediate(() => clock.mockReturnValue(deadline));
+        else sample.mockImplementationOnce(async () => {
+          clock.mockReturnValue(deadline);
+          if (kind === 'with product abort') f.abort.abort();
+          if (kind === 'after failed gate') throw new Error('owned sample unavailable');
+          return kind !== 'after denied gate';
+        });
+        const renewable = kind === 'before gate' || kind === 'after accepted gate';
+        expect(await inspectUrlDesignProduct(capability, binding)).toBeNull();
+        expect(sample).toHaveBeenCalledTimes(kind === 'before gate' ? 0 : 1);
+        expect(urlDesignProductLeaseState(capability)).toEqual({ state: renewable ? 'expired' : 'retired', deadline });
+        expect(await checkUrlOrderedProductCurrent({ product: capability, assertCurrent: vi.fn(), refresh })).toBe(renewable);
+        expect(refresh).toHaveBeenCalledTimes(renewable ? 1 : 0);
+      } finally { clock.mockRestore(); reads.close(); }
+    });
 
   it('refuses an operation closed before its deadline when first observed after that deadline', async () => {
     const f = await validatedFixture(), refresh = vi.fn(async () => true);
@@ -333,11 +517,17 @@ describe('active URL design product capability', () => {
   it('returns only the inert view and its provenance under an active render lease', async () => {
     const f = await validatedFixture();
     const full = (await readUrlDesignProduct(f.capability, binding))!;
-    const expected = { metadata: full.metadata, view: full.view, parents: full.parents };
-    const inert = await readInertUrlDesignProduct(f.capability, binding);
-    expect(inert).toStrictEqual(expected);
-    inert!.view.fill(0);
-    expect(await readInertUrlDesignProduct(f.capability, binding)).toStrictEqual(expected);
+    const checkInert = async () => {
+      const result = await readInertUrlDesignProduct(f.capability, binding);
+      expect(result).not.toBeNull();
+      const { view, ...provenance } = result!;
+      expect(provenance).toStrictEqual({ metadata: full.metadata, parents: full.parents });
+      expect(view).toBeInstanceOf(Uint8Array);
+      expect(Buffer.from(view).equals(full.view)).toBe(true);
+      return view;
+    };
+    (await checkInert()).fill(0);
+    await checkInert();
     f.reads.close();
     expect(await readInertUrlDesignProduct(f.capability, binding)).toBeNull();
   });

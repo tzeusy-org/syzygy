@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath } from './url-product-reads.js';
+import { snapshotProductFile, snapshotProductNames, sameProductFile, sameProductPath, UrlProductReadLeaseExpired } from './url-product-reads.js';
 
 describe('bounded product IO data snapshots (no provenance authority)', () => {
   it('captures exact regular bytes, bounded names, stable absence and path identity without following links', () => {
@@ -28,4 +28,34 @@ describe('bounded product IO data snapshots (no provenance authority)', () => {
     expect(() => snapshotProductFile(root, 'own/a.json', 32, () => { throw Error('own cancelled'); })).toThrow('url-product-read-unavailable');
     let calls = 0; expect(() => snapshotProductFile(root, 'own/a.json', 32, () => { if (++calls === 4) fs.appendFileSync(path.join(root, 'own/a.json'), 'changed'); })).toThrow();
   });
+
+  it.each(['unchanged', 'appended', 'rewritten'] as const)(
+    'checks the held leaf before preserving the final read checkpoint expiry when %s', change => {
+      const root = tempDir('url-product-leaf-expiry-');
+      const file = 'own/a.json', target = path.join(root, file);
+      fs.mkdirSync(path.dirname(target));
+      fs.writeFileSync(target, 'Own data.');
+      fs.utimesSync(target, 1, 1);
+      const before = fs.lstatSync(target), expiry = new UrlProductReadLeaseExpired();
+      let checks = 0;
+      let refusal: unknown;
+      try {
+        snapshotProductFile(root, file, 32, () => {
+          if (++checks !== 4) return;
+          if (change === 'appended') fs.appendFileSync(target, ' More data.');
+          if (change === 'rewritten') fs.writeFileSync(target, 'New data.');
+          throw expiry;
+        });
+      } catch (cause) { refusal = cause; }
+
+      const after = fs.lstatSync(target);
+      expect(checks).toBe(4);
+      expect(after.ino).toBe(before.ino);
+      if (change === 'unchanged') expect(refusal).toBe(expiry);
+      else {
+        expect(after.mtimeMs).toBeGreaterThan(before.mtimeMs);
+        expect(refusal).toMatchObject({ message: 'url-product-read-unavailable' });
+      }
+    },
+  );
 });

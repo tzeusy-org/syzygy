@@ -8,7 +8,8 @@ import { briefStandardsFromRecord, buildDesignPacket, standardsInput } from './d
 import type { ProducedSiteInput } from './render.js';
 import type { RecordedRunConfig } from './run-record.js';
 import { createUrlDesignViewWithPolling, URL_DESIGN_VIEW_ENCODING, URL_DESIGN_VIEW_FORMAT, type ValidatedUrlDesignView } from './url-design-view.js';
-import { isRunProductReads, protectedProductRecord, type RunProductReads } from './url-operation-products.js';
+import { isRunProductReads, isUrlProductReadExpiry, protectedProductRecord, type ProductReadEvidence, type RunProductReads } from './url-operation-products.js';
+import { UrlProductReadLeaseExpired } from './url-product-reads.js';
 import { URL_ORIGIN_LEDGER_LIMITS, type createUrlOriginLedger, type UrlOriginReceipt, type UrlOriginMetadata } from './url-origin-ledger.js';
 import { screenUrlRenderedSite } from './url-rendered-site-screen.js';
 import { verifyUrlRenderedSources } from './url-rendered-source-proof.js';
@@ -63,43 +64,56 @@ export interface UrlDesignProductRead {
   readonly parents: readonly UrlOriginReceipt[];
 }
 export type UrlInertDesignProduct = Pick<UrlDesignProductRead, 'metadata' | 'view' | 'parents'>;
+type ProductCheck = 'open' | 'expired' | 'retired';
+type ProductTermination = Exclude<ProductCheck, 'open'>;
 interface ProductEntry {
   readonly metadata: UrlDesignProductMetadata;
   readonly original: Uint8Array;
   readonly view: Uint8Array;
   readonly parents: readonly UrlOriginReceipt[];
   readonly rendererCurrent: () => Promise<boolean>;
-  readonly stable: () => boolean;
+  readonly stable: () => ProductCheck;
+  readonly checkLease: () => ProductCheck;
+  readonly readTermination: (cause: unknown) => ProductTermination;
   readonly leaseCurrent: () => boolean;
+  readonly signalCurrent: () => boolean;
   readonly waitForSample?: () => Promise<void>;
 }
 const validated = new WeakMap<ValidatedUrlDesignProduct, ProductEntry>();
-// Preserve the original operation deadline and irreversible retirement even
-// after a failed inspection removes the materializing capability entry.
-const lifetimes = new WeakMap<ValidatedUrlDesignProduct, { readonly deadline: number; readonly authorityCurrent: () => boolean; readonly backendState: RunProductReads['leaseState']; retired: boolean }>();
-function retireProduct(capability: ValidatedUrlDesignProduct): void {
+const checkedExpiryErrors = new WeakMap<Error, ValidatedUrlDesignProduct>();
+// Retain the terminal cause and original deadline after removing product material.
+const lifetimes = new WeakMap<ValidatedUrlDesignProduct, {
+  readonly deadline: number;
+  readonly signal: AbortSignal;
+  readonly authorityCurrent: () => boolean;
+  readonly backendState: RunProductReads['leaseState'];
+  termination?: ProductTermination;
+}>();
+function terminateProduct(capability: ValidatedUrlDesignProduct, cause: ProductTermination): ProductTermination {
   const lifetime = lifetimes.get(capability);
-  if (lifetime) {
-    try { if (lifetime.backendState() !== 'expired') lifetime.retired = true; }
-    catch { lifetime.retired = true; }
-  }
+  if (lifetime && lifetime.termination !== 'retired') lifetime.termination = cause;
   validated.delete(capability);
+  return lifetime?.termination ?? cause;
 }
 export function urlDesignProductLeaseState(capability: ValidatedUrlDesignProduct):
-  { readonly state: 'open' | 'expired' | 'retired'; readonly deadline: number } | { readonly state: 'Unknown' } {
+  { readonly state: ProductCheck; readonly deadline: number } | { readonly state: 'Unknown' } {
   const lifetime = lifetimes.get(capability);
   if (!lifetime) return { state: 'Unknown' };
-  try { if (!lifetime.authorityCurrent()) lifetime.retired = true; }
-  catch { lifetime.retired = true; }
-  if (lifetime.retired) { validated.delete(capability); return { state: 'retired', deadline: lifetime.deadline }; }
-  let backend: ReturnType<RunProductReads['leaseState']> = 'Unknown';
-  try { backend = lifetime.backendState(); } catch { /* Missing lifecycle is retired, never timed expiry. */ }
-  if (backend === 'expired') return { state: 'expired', deadline: lifetime.deadline };
-  if (backend !== 'open') { lifetime.retired = true; validated.delete(capability); return { state: 'retired', deadline: lifetime.deadline }; }
-  try { if (validated.get(capability)?.leaseCurrent() === true) return { state: 'open', deadline: lifetime.deadline }; }
-  catch { /* A failed lease predicate retires the original capability. */ }
-  lifetime.retired = true; validated.delete(capability);
-  return { state: 'retired', deadline: lifetime.deadline };
+  const { deadline, signal } = lifetime;
+  const entry = validated.get(capability);
+  const current = (): boolean => lifetime.termination !== 'retired' && lifetime.authorityCurrent()
+    && !signal.aborted && (entry === undefined || entry.signalCurrent());
+  try {
+    if (current()) {
+      const backend = lifetime.backendState();
+      // The deadline can pass after the first backend sample. The local lease
+      // check can confirm that cause while a refusal elsewhere retires it.
+      const checked = backend === 'open' ? entry?.checkLease() : backend;
+      if (checked === 'open' && validated.get(capability) === entry) return { state: 'open', deadline };
+      if (checked === 'expired' && current()) return { state: terminateProduct(capability, 'expired'), deadline };
+    }
+  } catch { /* A failed lease predicate retires the original capability. */ }
+  return { state: terminateProduct(capability, 'retired'), deadline };
 }
 
 const sameProducts = (left: NonNullable<ProducedSiteInput['products']>, right: NonNullable<ProducedSiteInput['products']>): boolean =>
@@ -129,9 +143,7 @@ export function validateUrlDesignProduct(input: ProducedSiteInput, options: Desi
   const { signal } = input, { current, products } = options;
   return checkUrlDesignProduct(input, options, (entry, deadline) => {
     const capability = Object.freeze({}) as ValidatedUrlDesignProduct;
-    const lifetime = { deadline, authorityCurrent: current, backendState: products.leaseState, retired: false };
-    signal.addEventListener('abort', () => { if (Date.now() < deadline) lifetime.retired = true; }, { once: true });
-    lifetimes.set(capability, lifetime);
+    lifetimes.set(capability, { deadline, signal, authorityCurrent: current, backendState: products.leaseState });
     validated.set(capability, entry);
     return capability;
   });
@@ -163,7 +175,15 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
     if (!Number.isSafeInteger(deadline)) return null;
     // A backend timer cannot interrupt synchronous comparison/copy work. Keep
     // the original lease deadline and signal available for cheap final samples.
-    const leaseCurrent = (): boolean => input.signal === signal && !signal.aborted && Date.now() < deadline && products.isLeaseOpen();
+    const signalCurrent = (): boolean => input.signal === signal && !signal.aborted;
+    const leaseCurrent = (): boolean => signalCurrent() && Date.now() < deadline && products.isLeaseOpen();
+    const checkLease = (): ProductCheck => {
+      if (leaseCurrent()) return 'open';
+      return signalCurrent() && products.leaseState() === 'expired' && current() && signalCurrent()
+        ? 'expired' : 'retired';
+    };
+    const readTermination = (cause: unknown): ProductTermination =>
+      isUrlProductReadExpiry(products, cause) && signalCurrent() && current() && signalCurrent() ? 'expired' : 'retired';
     if (!leaseCurrent()) return null;
     const checked = { metadata: copy(initial.metadata), receipts: [...initial.receipts] };
     const readable = new Set(checked.metadata.records.filter(item => item.state === 'present').map(item => item.path));
@@ -213,19 +233,22 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
     if (checkedView === null) return null;
     await waitForValidation();
     if (!leaseCurrent()) return null;
-    const stable = (): boolean => {
-      if (!live() || !isDeepStrictEqual(screen, screening)) return false;
-      const currentProducts = products.revalidate();
-      return isDeepStrictEqual(bindings, { record, declaration, renderer: renderer.identity, products: currentProducts.metadata })
+    const stable = (): ProductCheck => {
+      if (!live() || !isDeepStrictEqual(screen, screening)) return 'retired';
+      let currentProducts: ProductReadEvidence;
+      try { currentProducts = products.revalidate(); }
+      catch (error) { return readTermination(error); }
+      const unchanged = isDeepStrictEqual(bindings, { record, declaration, renderer: renderer.identity, products: currentProducts.metadata })
         && sameProducts(checked, currentProducts) && input.products !== undefined && sameProducts(input.products, checked)
         && equalOrderedRenderValue(subject, { run: input.run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
           input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies })
         && isDeepStrictEqual(parentMetadata, ledger.inspectMetadata(parentSubjects))
-        && semanticParentsSha256 === ledger.semanticProvenance(parents) && leaseCurrent();
+        && semanticParentsSha256 === ledger.semanticProvenance(parents);
+      return unchanged ? checkLease() : 'retired';
     };
     const rendererCurrent = (): Promise<boolean> => urlRendererCurrent(renderer);
     if (checkedView.files !== screened.files || checkedView.pages !== screened.pages
-      || !stable() || !(await rendererCurrent())) return null;
+      || stable() !== 'open' || !(await rendererCurrent())) return null;
     const population = [...subject.files].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
       .map(([file, body]) => ({ path: file, sha256: sha256(body), bytes: Buffer.byteLength(body) }));
     const metadata: UrlDesignProductMetadata = copy({ format: 'polaris-url-design-product-validation/1', lifetime: 'active-render-operation-only',
@@ -235,9 +258,9 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
       renderer: renderer.identity, basePolicy: declaration.basePolicy, originPolicy: declaration.originPolicy, profile: declaration.inference.profile,
       parents: parentMetadata, semanticParentsSha256, semanticInputsSha256, products: checked.metadata,
       output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
-    if (!stable()) return null;
+    if (stable() !== 'open') return null;
     const entry: ProductEntry = { metadata, original: Uint8Array.from(original), view: Uint8Array.from(checkedView.bytes),
-      parents, rendererCurrent, stable, leaseCurrent,
+      parents, rendererCurrent, stable, checkLease, readTermination, leaseCurrent, signalCurrent,
       ...(products.waitForSample === undefined ? {} : { waitForSample: products.waitForSample }) };
     // Copying can itself cross the deadline. Publish only after a fresh cheap
     // lease sample, with no await between that sample and publication.
@@ -254,23 +277,31 @@ async function withCurrentProduct<T>(capability: ValidatedUrlDesignProduct, expe
   if (entry === undefined) return null;
   const matching = (): boolean => expected.run === entry.metadata.run && expected.runId === entry.metadata.runId
     && expected.pinnedRevision === entry.metadata.pinnedRevision;
-  const current = (): boolean => matching() && validated.get(capability) === entry && entry.leaseCurrent();
+  let cause: ProductTermination = 'retired';
+  const checked = (result: ProductCheck): boolean => {
+    if (result === 'open') return true;
+    cause = result;
+    return false;
+  };
+  const current = (): boolean => matching() && checked(validated.get(capability) === entry
+    ? entry.checkLease() : lifetimes.get(capability)?.termination ?? 'retired');
   const waitForSample = entry.waitForSample;
   const currentAfterSample = async (): Promise<boolean> => {
-    await waitForSample?.();
+    try { await waitForSample?.(); }
+    catch (error) { return matching() && checked(entry.readTermination(error)); }
     return current();
   };
   try {
     if (current() && (waitForSample === undefined || await currentAfterSample())
-      && entry.stable() && await entry.rendererCurrent()
-      && (waitForSample === undefined || await currentAfterSample()) && entry.stable() && current()) {
+      && checked(entry.stable()) && await entry.rendererCurrent()
+      && (waitForSample === undefined ? current() : await currentAfterSample()) && checked(entry.stable()) && current()) {
       const value = materialize(entry);
       // Defensive copies may be costly too; an expired/aborted lease must
       // discard the prepared value before any host caller receives it.
       if (current()) return value;
     }
-  } catch { /* A failed currentness/identity check irreversibly retires this token. */ }
-  retireProduct(capability);
+  } catch { cause = 'retired'; }
+  terminateProduct(capability, cause);
   return null;
 }
 
@@ -284,15 +315,42 @@ export function isUrlDesignProductLeaseOpen(capability: ValidatedUrlDesignProduc
   return validated.get(capability)?.leaseCurrent() === true;
 }
 
+function refuseProductUse(capability: ValidatedUrlDesignProduct, expired: boolean): never {
+  if (!expired) throw new Error('url-design-product-unavailable');
+  const error = new UrlProductReadLeaseExpired();
+  checkedExpiryErrors.set(error, capability);
+  throw error;
+}
+
+/** This failure can only originate from the lease check on this product. */
+export function isCheckedUrlDesignProductExpiry(capability: ValidatedUrlDesignProduct, cause: unknown): boolean {
+  return cause instanceof Error && checkedExpiryErrors.get(cause) === capability
+    && urlDesignProductLeaseState(capability).state === 'expired';
+}
+
+export function assertUrlDesignProductLeaseCurrent(capability: ValidatedUrlDesignProduct): void {
+  if (!isUrlDesignProductLeaseOpen(capability)) {
+    refuseProductUse(capability, urlDesignProductLeaseState(capability).state === 'expired');
+  }
+}
+
 /** Recheck captured inputs at a synchronous release after full inspection. */
 export function recheckUrlDesignProductInputs(capability: ValidatedUrlDesignProduct): boolean {
   const entry = validated.get(capability);
   if (!entry) return false;
   try {
-    if (entry.leaseCurrent() && entry.stable()) return true;
-  } catch { /* A failed recheck retires the active capability. */ }
-  retireProduct(capability);
+    const lease = entry.checkLease();
+    const result = lease === 'open' ? entry.stable() : lease;
+    if (result === 'open') return true;
+    terminateProduct(capability, result);
+  } catch { terminateProduct(capability, 'retired'); }
   return false;
+}
+
+export function assertUrlDesignProductInputsCurrent(capability: ValidatedUrlDesignProduct): void {
+  if (!recheckUrlDesignProductInputs(capability)) {
+    refuseProductUse(capability, lifetimes.get(capability)?.termination === 'expired');
+  }
 }
 
 /** Host-only read of the inert member, without copying the original packet. */
