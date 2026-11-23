@@ -1,0 +1,78 @@
+{
+  "subject": "f91e4ca400f8575b42d15dbba91e035f6c4f58be",
+  "base": "3da2084174020d63141d7cf606afe02e6e5e5ac1",
+  "reviewCheckoutBase": "1630803a340616695f6cf0f96cc9e62e68f10c4b",
+  "fullBinaryDiffSha256": "528a89cb23b59d5398b10ff05b6a03d41c2e1e789b92369e42b819960e029959",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-LAUNCH-HISTORY-ASYNC-FLUSH-REVIEW-RAW.md",
+    "rawSha256": "84c6d4f72c1c69ed7668db8884e54825bc399bf564f4e88e5e7103d8a6e39a04"
+  },
+  "priorReview": {
+    "verdict": "REVISE",
+    "fullBinaryDiffSha256": "21938ac15bf7b5f542a9d5e0f1fa827a75e6c9fcc2df29383cace514ecd71455",
+    "rawPath": "docs/reviews/F3-LAUNCH-HISTORY-ASYNC-FLUSH-INITIAL-REVIEW-RAW.md",
+    "rawSha256": "0f816257ca5f9499961b95dd134b5f0101c7926e6aea2da5034c1affd4c5a9dc"
+  },
+  "validation": {
+    "typecheck": {
+      "outcome": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "passed": 67,
+      "total": 67,
+      "launchHistory": 49,
+      "sessionLifecycle": 18,
+      "logSha256": "da4df16721e8b2cd14eac1ed9a63bc6ebac0f4162a599e345e1187006ffa9a85"
+    }
+  },
+  "mutations": {
+    "skip_guard_before_directory_flush": {
+      "before": [
+        "      await sync(fd);",
+        "      await check();"
+      ],
+      "after": [
+        "      await sync(fd);"
+      ],
+      "failed": 1,
+      "skipped": 48,
+      "total": 49,
+      "logSha256": "2e71b78782c89f975217306bf9780e5a9ea0c2d2ee9030e5869b45bf931af276",
+      "subject": "f91e4ca400f8575b42d15dbba91e035f6c4f58be"
+    },
+    "skip_named_directory_after_file_flush": {
+      "before": [
+        "        || !same(helperIdentity, fs.lstatSync(path.join(anchor, child), { bigint: true }))",
+        "        || !same(helperIdentity, fs.fstatSync(helper, { bigint: true }))) return refuse();"
+      ],
+      "after": [
+        "        || !same(helperIdentity, fs.fstatSync(helper, { bigint: true }))) return refuse();"
+      ],
+      "failed": 1,
+      "skipped": 48,
+      "total": 49,
+      "logSha256": "786168e9f7110bcf6bad92caf9ceacaaa67e31283b3d0721f5879a39c6acedf8",
+      "subject": "f91e4ca400f8575b42d15dbba91e035f6c4f58be"
+    },
+    "skip_final_currentness": {
+      "before": [
+        "    await check();",
+        "    inspect();",
+        "    const capability"
+      ],
+      "after": [
+        "    inspect();",
+        "    const capability"
+      ],
+      "failed": 1,
+      "skipped": 48,
+      "total": 49,
+      "logSha256": "d294b9f76a0f3cdfbd9e2f88025b05c612ffa94430e180d296e09bd0c0d802fe",
+      "subject": "f91e4ca400f8575b42d15dbba91e035f6c4f58be"
+    }
+  },
+  "nativeLatency": "Unknown"
+}

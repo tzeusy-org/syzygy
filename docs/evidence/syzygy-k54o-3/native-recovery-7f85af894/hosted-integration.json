@@ -1,0 +1,283 @@
+{
+  "sourceHead": "7f85af89436078516a98e040ae1a5673fee820a7",
+  "sourceTree": "1642f633abecad259cb5919b2769c3fcf4b5e367",
+  "hostedCheckout": "bbbdf2cc12161d125240e39da8e5b8ff887dad87",
+  "hostedCheckoutTree": "1642f633abecad259cb5919b2769c3fcf4b5e367",
+  "hostedBase": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45159848189/job/137643455637",
+  "jobLogSha256": "6b0d1a1c5b2e27f40f441807377ebaadf9c81fe1ab71c91c5db4048481d89e33",
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 91073
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 81236
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 154232
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 298449
+    }
+  ],
+  "retainedCaseDetails": {
+    "stop-resume": {
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, recovery history unavailable"
+      ],
+      "stoppedEvidence": {
+        "failure": null,
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "Unknown",
+        "machineSealed": false,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "design",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          }
+        ]
+      },
+      "resumeChecks": [],
+      "resumeBootstrap": {}
+    },
+    "eligible-stop-resume": {
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "prepared design round 1 for the reviewer",
+        "run ended: checked session boundary unavailable"
+      ],
+      "stoppedEvidence": {
+        "failure": "transport-unavailable",
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "retired",
+        "machineSealed": true,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "design",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "inspection-failed",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "inspection-failed",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "inspection-failed",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "group": "confirmed",
+            "view": "view-exited"
+          }
+        ]
+      },
+      "resumeChecks": [],
+      "resumeBootstrap": {},
+      "designForwards": 5,
+      "eligibleAppend": {
+        "startedMs": 284954.521,
+        "settledMs": 285258.459,
+        "outcome": "accepted"
+      },
+      "firstRefusedInference": {
+        "ordinal": 44,
+        "mediate": {
+          "startedMs": 283059.905,
+          "settledMs": 286429.918,
+          "outcome": "refused"
+        },
+        "boundaries": [
+          {
+            "phase": "parent-current",
+            "timing": {
+              "startedMs": 283075.161,
+              "settledMs": 283075.83,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "kernel-peer",
+            "timing": {
+              "startedMs": 283078.724,
+              "settledMs": 283537.481,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "parent-current",
+            "timing": {
+              "startedMs": 283563.434,
+              "settledMs": 283568.667,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "kernel-peer",
+            "timing": {
+              "startedMs": 283570.817,
+              "settledMs": 283874.808,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-audit",
+            "timing": {
+              "startedMs": 283884.07,
+              "settledMs": 283893.143,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "parent-current",
+            "timing": {
+              "startedMs": 283895.478,
+              "settledMs": 283895.933,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "kernel-peer",
+            "timing": {
+              "startedMs": 283897.817,
+              "settledMs": 284206.065,
+              "outcome": "accepted"
+            }
+          }
+        ],
+        "relay": [],
+        "effect": {
+          "startedMs": 284228.957,
+          "settledMs": 286428.278,
+          "outcome": "rejected"
+        },
+        "audit": {
+          "event": "response-admitted",
+          "timing": {
+            "startedMs": 284234.009,
+            "settledMs": 286428.252,
+            "outcome": "rejected"
+          }
+        }
+      },
+      "firstTerminalPredicate": "Unknown"
+    }
+  },
+  "integration": {
+    "passedTests": 3983,
+    "failedTests": 2,
+    "skippedTests": 3,
+    "testPopulation": 3988,
+    "passedFiles": 136,
+    "failedFiles": 1,
+    "filePopulation": 137
+  },
+  "otherJobs": {
+    "nodeUnit": "success",
+    "nodeE2e": "success",
+    "nodeAggregate": "failure"
+  }
+}

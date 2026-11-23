@@ -26,6 +26,7 @@
 - `F3-(LAUNCHER-FIXTURE-CLOSE|RESUME-SLOT-BATCH)-REVIEW-RAW\.md`
 - `F3-RESUMED-ORIGIN-METADATA-REVIEW-RAW\.md`
 - `F3-RESUMED-DESIGN-PEER-ACTIVATION-REVIEW-RAW\.md`
+- `F3-LAUNCH-HISTORY-ASYNC-FLUSH(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -116,3 +117,5 @@
 [Observed] The resumed origin metadata review records `PASS` (`F3-RESUMED-ORIGIN-METADATA-REVIEW-RAW.md:1`) at `1630803a3`. A-129 preserves exact fixed receipt subjects and the before-and-after currentness of the role prompt batch. Twenty-seven focused integration tests and two fault controls passed. [Unknown] Hosted timing at this checkpoint.
 
 [Observed] The resumed Design activation review records `PASS` (`F3-RESUMED-DESIGN-PEER-ACTIVATION-REVIEW-RAW.md:1`) at `756bf2752`. A-130 waits for the exact activated host before freshly attesting the captured peer and entering protected publication. Sixty-three focused integration cases and 11 source-guard cases passed. [Unknown] Native replay at this checkpoint.
+
+[Observed] The initial launch history flush review records `REVISE` (`F3-LAUNCH-HISTORY-ASYNC-FLUSH-INITIAL-REVIEW-RAW.md:1`). The fault probe lost the held helper after it was renamed. The successor review records `PASS` (`F3-LAUNCH-HISTORY-ASYNC-FLUSH-REVIEW-RAW.md:1`) at `f91e4ca40`, where the probe matches device and inode. A-131 records the held-descriptor flush ordering, 67 focused tests and three fault controls. [Unknown] Exact native improvement.
