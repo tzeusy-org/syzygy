@@ -367,8 +367,11 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   const runId = path.basename(run);
   if (!RUN_ID.test(runId)) return refuse('run', `${run} is not a run directory: its name is not of the form run-<32 hex>`);
 
-  const checked = await reverifyPinnedRevision(run, deps.sources, deps.now(), deps.openReader === undefined ? {} : { openReader: deps.openReader });
+  const checked = await reverifyPinnedRevision(run, deps.sources, deps.now(), {
+    requireAuthorHandoffDisclosure: true, ...(deps.openReader === undefined ? {} : { openReader: deps.openReader }),
+  });
   if (!checked.ok) {
+    if (checked.refusals.some(item => item.code === 'raw-read-disclosure')) return refuse('raw-read-disclosure', RAW_READ_DISCLOSURE_REFUSAL);
     return { ok: false, refusal: {
       command: 'brief', outcome: 'refused', stage: 'reverify', reason: 'the pinned revision could not be verified again, so no brief is issued',
       reasons: checked.reasons, refusals: checked.refusals, ...(checked.objectRead ? { objectRead: checked.objectRead } : {}),

@@ -97,7 +97,8 @@ describe('brief: issued', () => {
     }
     const before = () => fs.readdirSync(run).sort().map(name => [name, fs.readFileSync(path.join(run, name))]);
     const retained = before();
-    expect(await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({
+    const openReader = () => { throw new Error('the historical source reader must remain closed'); };
+    expect(await issueBrief(run, { sources: sources(), openReader, now: () => NOW })).toMatchObject({
       ok: false, refusal: { stage: 'raw-read-disclosure', reason: expect.stringMatching(/REQ-polaris-generation-033.*syzygy dossier init/u) },
     });
     expect(before()).toEqual(retained);

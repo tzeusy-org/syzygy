@@ -1249,7 +1249,9 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     } finally { reads.close(); }
   }
 
-  async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | null> {
+  async function finalRender(draft: number, verdict: number, reviewedSite: number): Promise<FinalRender | typeof RAW_READ_DISCLOSURE_REFUSAL | null> {
+    const disclosureCurrent = () => readRawReadDisclosure(run, record.declared.agentProvider) !== null;
+    if (!disclosureCurrent()) return RAW_READ_DISCLOSURE_REFUSAL;
     const capture = (reads: RunProductReads, factory: UrlDesignRenderContinuationFactory, priorVerdictEvent?: string) => {
       let continuation: UrlDesignRenderContinuation | null = null;
       let metadata: UrlDesignProductMetadata | null = null;
@@ -1274,26 +1276,28 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       };
     };
     const firstFactory = await finalContinuation(verdict, reviewedSite);
-    if (firstFactory === null) return null;
+    if (firstFactory === null) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
     const firstReads = beginRunProductReads(run, context.artifacts, 'render', deadline);
     const captured = capture(firstReads, firstFactory);
     let rendered: Awaited<ReturnType<typeof renderRun>>;
     try { rendered = await renderRun(run, { ...renderDeps, productReads: firstReads, admitProducedSite: captured.admit }, captured.prepare); }
     finally { firstReads.close(); }
     const first = captured.continuation;
-    if (!rendered.ok || first === null) return null;
+    if (!rendered.ok) return rendered.refusal.stage === 'disclosure' ? RAW_READ_DISCLOSURE_REFUSAL : null;
+    if (first === null) return null;
     const metadata = captured.metadata;
     if (metadata === null || metadata.draftRevision !== draft || rendered.report.draftRevision !== draft
       || !rendered.report.designReview.counts || rendered.report.designReview.packetSha256 !== metadata.original.sha256) return null;
     const nextFactory = await finalContinuation(verdict, reviewedSite);
-    if (nextFactory === null) return null;
+    if (nextFactory === null) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
     const reads = beginRunProductReads(run, context.artifacts, 'render', deadline);
     try {
       const reproduced = capture(reads, nextFactory, first.verdictEventSha256);
       const subject = { path: rendered.report.site, output: metadata.output };
       const verified = await reproduceUrlRender(run, { ...renderDeps, productReads: reads, admitProducedSite: reproduced.admit }, subject, reproduced.prepare);
       const next = reproduced.continuation;
-      if (!verified || next === null || reproduced.metadata === null || !sameReproducedUrlDesignProduct(metadata, reproduced.metadata)) return null;
+      if (!verified) return disclosureCurrent() ? null : RAW_READ_DISCLOSURE_REFUSAL;
+      if (next === null || reproduced.metadata === null || !sameReproducedUrlDesignProduct(metadata, reproduced.metadata)) return null;
       const site = checkStoredUrlRender(run, subject.path, subject.output, () => Date.now() < next.deadline && reads.isLeaseOpen());
       if (site === null || site <= reviewedSite) return null;
       assertUrlFinalDesignProduct(next, reproduced.metadata);
@@ -1477,8 +1481,9 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       screen.event(`told the author: design verdict ${design!.n} blocks`);
     }
     if (fidelityState === 'ready' && designState === 'ready' && passedDraft !== null && design !== null && site !== null) {
-      try { final = await finalRender(passedDraft, design.n, site); }
-      catch { final = null; }
+      const result = await finalRender(passedDraft, design.n, site).catch(() => null);
+      if (result === RAW_READ_DISCLOSURE_REFUSAL) { phase = result; break; }
+      final = result;
       phase = final === null ? 'checked design render continuation unavailable' : 'final site verified, settling sessions';
       break;
     }
