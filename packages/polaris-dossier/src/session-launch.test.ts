@@ -1405,7 +1405,10 @@ describe('prepared private CLI launch',()=>{
     const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
     const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
+    const artifactRoot = path.join(f.root, 'own-run');
+    let artifactRootOpens = 0;
     const census = await isolateStorageRoots(f.launch.view, () => { rootOpens++; });
+    filesystem.beforeOpen = async file => { if (file === artifactRoot) artifactRootOpens++; };
     const lstat = fsPromises.lstat;
     const faultAfterEnumeration = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
       const file = args[0];
@@ -1439,7 +1442,12 @@ describe('prepared private CLI launch',()=>{
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
     try {
       const child = await launchRestrictedUrlSession({ preparation, host: {
-        ...host, close: () => { releaseTool(); return host.close(); },
+        ...host, close: () => {
+          // Revoke the held tool before releasing its fixture barrier.
+          const closing = host.close();
+          releaseTool();
+          return closing;
+        },
       } });
       cleanup.push(child.stop);
       try {
@@ -1462,11 +1470,12 @@ describe('prepared private CLI launch',()=>{
         else expect(inspection.firstRefusal?.refusal).toMatchObject({
           phase: 'storage', cause: outcome === 'storage-limit' ? 'resource-limit' : 'operation-rejected',
         });
-        releaseTool();
-        expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
-          groupTermination: 'confirmed', toolTermination: 'settled' });
+        if (completed) releaseTool();
+        const result = await child.finished;
+        expect(result, JSON.stringify({ result, artifactRootOpens })).toMatchObject({ outcome, exitCode: completed ? 0 : null,
+          groupTermination: 'confirmed', toolTermination: 'settled', pendingInvocations: 0 });
+        expect(artifactRootOpens).toBe(completed ? 1 : 0);
       } finally {
-        releaseTool();
         await child.stop();
       }
     } finally {
@@ -1491,6 +1500,8 @@ describe('prepared private CLI launch',()=>{
     const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
     const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
+    const artifactRoot = path.join(f.root, 'own-run');
+    let artifactRootOpens = 0;
     const retained = 'own-retained-dir-entry';
     const enumerated = new Set<string>();
     let rootOpens = 0, childRemovals = 0;
@@ -1503,6 +1514,7 @@ describe('prepared private CLI launch',()=>{
       if (name === retained) retainedWalks.add(rootOpens);
     };
     filesystem.beforeOpen = async file => {
+      if (file === artifactRoot) artifactRootOpens++;
       if (typeof file === 'string' && file.startsWith('/proc/self/fd/') && names.has(path.basename(file))) {
         expect(enumerated.has(path.basename(file))).toBe(true);
         rmdirSync(file);
@@ -1515,7 +1527,12 @@ describe('prepared private CLI launch',()=>{
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
     try {
       const child = await launchRestrictedUrlSession({ preparation, host: {
-        ...host, close: () => { releaseTool(); return host.close(); },
+        ...host, close: () => {
+          // Revoke the held tool before releasing its fixture barrier.
+          const closing = host.close();
+          releaseTool();
+          return closing;
+        },
       } });
       cleanup.push(child.stop);
       try {
@@ -1535,11 +1552,12 @@ describe('prepared private CLI launch',()=>{
         expect(childRemovals).toBe(removed);
         expect(rootOpens, diagnostic).toBe(rootReads);
         if (completed) expect(retainedWalks.has(rootReads)).toBe(true);
-        releaseTool();
-        expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
-          groupTermination: 'confirmed', toolTermination: 'settled' });
+        if (completed) releaseTool();
+        const result = await child.finished;
+        expect(result, JSON.stringify({ result, artifactRootOpens })).toMatchObject({ outcome, exitCode: completed ? 0 : null,
+          groupTermination: 'confirmed', toolTermination: 'settled', pendingInvocations: 0 });
+        expect(artifactRootOpens).toBe(completed ? 1 : 0);
       } finally {
-        releaseTool();
         await child.stop();
       }
     } finally {
