@@ -217,10 +217,10 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
         args[2] = requested / 2;
       } else if (position === chunkBytes) {
         overlapped = firstWaiting;
-        releaseFirst();
       }
       const result = await read.apply(this, args);
       reads.push({ position, requested, received: result.bytesRead });
+      if (position === chunkBytes) releaseFirst();
       return result;
     });
     try {
@@ -228,6 +228,7 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
       expect(f.peer).not.toBeNull();
       expect(filesystemBoundary.largeSyncReads).toBe(0);
       expect(overlapped).toBe(true);
+      expect(reads[0]?.position).toBe(chunkBytes);
       const size = Number(identity.size);
       let bytesRead = 0;
       for (const { position, received } of reads.sort((a, b) => a.position - b.position)) {
