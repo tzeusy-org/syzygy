@@ -37,7 +37,11 @@ export default defineConfig({
         // Refuses a process or a socket at the call, so a unit test cannot grow one unnoticed (syzygy-bpyt.4.3).
         setupFiles: [fileURLToPath(new URL('./vitest.unit-guard.setup.ts', import.meta.url))],
       }),
-      tier('integration', { include: [...INTEGRATION_TESTS] }),
+      // syzygy-tp79: this tier spawns processes and reads files of 4-16 MiB, so its tests run on the host's spare CPU. On a
+      // shared 12-core host at load 45-55, 14 of its 3,180 tests ran past the 5 s default (the slowest 22.2 s) and failed
+      // `npm run check:all` by timeout, never by a wrong result. A test that states its own budget keeps it.
+      // Its file teardown (vitest.setup.ts) removes the run's fixture trees; at load 46 one took past the 10 s hook default.
+      tier('integration', { include: [...INTEGRATION_TESTS], testTimeout: 30_000, hookTimeout: 30_000 }),
       tier('e2e', { include: [...E2E_TESTS] }),
       tier('live', { include: [...LIVE_TESTS] }),
     ],
