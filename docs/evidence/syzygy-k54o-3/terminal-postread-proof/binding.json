@@ -1,0 +1,77 @@
+{
+  "adoption": "A-147",
+  "source": {
+    "commit": "39c695c92213bbdab08bcf0f384ee46a11d1d19f",
+    "tree": "3eed522444c1dabed788532b8f6b4f4fc805a03d",
+    "base": "cce8ae2107e73e145748c1488a3ca28f040a238f",
+    "patchSha256": "89d40cf5458ee6ecb7b7ac5c424313ec22f1691af72b36f43f6d6bd52938293a"
+  },
+  "review": {
+    "raw": "docs/reviews/F3-TERMINAL-POSTREAD-PROOF-REVIEW-RAW.md",
+    "sha256": "aea566dd165675bf9ce38cae59a3f0157b71a6cb017ed376e210fe32cb8306a0",
+    "verdict": "PASS",
+    "scope": "source and focused terminal checks"
+  },
+  "focusedChecks": {
+    "typecheck": {
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "vitest": {
+      "exit": 0,
+      "files": [
+        "url-machine-store.test.ts",
+        "url-run-machine.test.ts",
+        "url-run-machine-close.test.ts",
+        "url-parent-adoption.test.ts"
+      ],
+      "passed": 125,
+      "logSha256": "504097e30ae695b622ec2949298b9573c6d37226928fc1fd3e5ce56bcf71ab08"
+    },
+    "deliberateFaults": [
+      {
+        "id": "previous-postread-bracket",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "groups the named-root check",
+        "sourceBase": "cce8ae2107e73e145748c1488a3ca28f040a238f",
+        "expectedFailedTests": 1,
+        "failedTests": 1,
+        "exit": 1,
+        "logSha256": "17b08dce3f8c3133d099502fc24fc1e332cc1d8f7a34ff1beab15665eac8ef9f"
+      },
+      {
+        "id": "no-postread-authority",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withholds a terminal snapshot",
+        "old": "await reverify();\n        check();\n        verifyNamedRoots();",
+        "new": "check();\n        verifyNamedRoots();",
+        "expectedFailedTests": 3,
+        "failedTests": 3,
+        "exit": 1,
+        "logSha256": "a53a64230d496ecbd5543454a6365a6a87fa1e7e75e47124fd24c7dc5f2e00b5"
+      },
+      {
+        "id": "no-postread-root-proof",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withholds a terminal snapshot.*root replaced",
+        "old": "check();\n        verifyNamedRoots();\n        checkDeadline();\n      } : () => anchored(stagingClock);",
+        "new": "check();\n        checkDeadline();\n      } : () => anchored(stagingClock);",
+        "expectedFailedTests": 1,
+        "failedTests": 1,
+        "exit": 1,
+        "logSha256": "301b66216c9c51c54b05206e1e4faee93aa5943c0820aa0e309d06703a356d9a"
+      }
+    ]
+  },
+  "native": {
+    "qualifyingOutcome": "Unknown",
+    "previousHostedCommit": "9ea2ce1b5a733d2f2891d766d0914f9dcea85b71",
+    "previousHostedIntegrationJob": 137898375779,
+    "previousFirstTerminalElapsedMilliseconds": 5058.182,
+    "previousAcceptedAsyncAuthorityChecks": 8,
+    "previousRefusedPairedSample": 2
+  }
+}
