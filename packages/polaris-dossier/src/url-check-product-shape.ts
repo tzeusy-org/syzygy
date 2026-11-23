@@ -1,4 +1,5 @@
 import { isRecord } from '@syzygy/support';
+import { MANIFEST_FACTS_FORMAT } from './manifest-facts.js';
 import { FACT_MEMBERS, type FactKind } from './manifest-model.js';
 
 type Predicate = (value: unknown) => boolean;
@@ -55,9 +56,13 @@ const fact: Predicate = value => {
   return object({ id: text, fact: one(value.fact), rule: text, ruleVersion: count, path: text, lines, epistemic: one('inferred'),
     ...Object.fromEntries(members.map(member => [member.name, nullable(text)])) })(value);
 };
-export const urlManifestFactsShape: Predicate = value => object({ format: one('polaris-dossier-manifest-facts/1'), state: one('unknown'), why: text })(value)
-  || object({ format: one('polaris-dossier-manifest-facts/1'), state: one('derived'),
+const manifestFormat = one(MANIFEST_FACTS_FORMAT);
+const remainder = object({ files: count, secretPathsLeftOut: count, candidates: count, notCandidates: count,
+  places: list(object({ place: nullable(text), files: count, notCandidates: count })),
+  placesNotListed: count, filesInPlacesNotListed: count, notCandidatesInPlacesNotListed: count });
+export const urlManifestFactsShape: Predicate = value => object({ format: manifestFormat, state: one('unknown'), why: text })(value)
+  || object({ format: manifestFormat, state: one('derived'),
     screeningPolicy: object({ policyId: text, policyVersion: text, sha256: value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value) }),
     recognizers: list(object({ rule: text, ruleVersion: count, label: one('inferred'), candidates: count, secretPathsLeftOut: count,
       setApart: count, inferred: count, unknown: count, valuesLeftOut: count, facts: count, files: list(manifestFile), filesNotListed: count })),
-    facts: list(fact), factsNotListed: count })(value);
+    facts: list(fact), factsNotListed: count, remainder })(value);

@@ -473,7 +473,10 @@ describe('trusted URL artifact producer bridge', () => {
     // line terminator. A first-2000-LF-lines receipt cannot cover these values.
     const manifest = `{\n${'\n'.repeat(2000)}"name":"own-uncited-package",\r"dependencies":{"own-uncited-dependency":"1.0.0"}\r}\n`;
     const excludedManifest = '[package]\nname = "OWN_SECRET_CANARY"\n';
-    const f = fixture(undefined, { 'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest }, 'v2');
+    const compose = 'services:\n  web:\n    image: nginx:stable\n';
+    const f = fixture(undefined, {
+      'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest, 'compose.yaml': compose,
+    }, 'v2');
     Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
       citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
     const site = await import(new URL('../../../apps/three-surface-poc/src/polaris-generation/dossier-site.ts', import.meta.url).href) as { figureLaidOutWidth: FigureLayout };
@@ -623,12 +626,18 @@ describe('trusted URL artifact producer bridge', () => {
         if (!result.ok || result.report.outcome !== 'passed') throw Error('own protected check');
         expect(result.report.inventoryCoverageAdvice).toMatchObject({ state: 'compared', inventory: { revision: 0, sha256: sha256(countedInventory.bytes) }, counts: { entries: 1, covered: 0, omitted: 0, uncovered: 1 }, uncovered: [{ entryId: 'own-purpose', paths: ['own.ts'], unnamedPaths: 0 }] });
         expect(result.report.citedBlobs.map(blob => blob.path)).toEqual(['README.md']);
-        expect(result.report.manifestFacts).toMatchObject({ state: 'derived', facts: expect.arrayContaining([
-          expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
-          expect.objectContaining({ path: 'package.json', fact: 'dependency', name: 'own-uncited-dependency' }),
-        ]) });
+        expect(result.report.manifestFacts).toMatchObject({
+          format: 'polaris-dossier-manifest-facts/2', state: 'derived',
+          facts: expect.arrayContaining([
+            expect.objectContaining({ path: 'package.json', fact: 'package', name: 'own-uncited-package' }),
+            expect.objectContaining({ path: 'package.json', fact: 'dependency', name: 'own-uncited-dependency' }),
+            expect.objectContaining({ path: 'compose.yaml', fact: 'service-image', service: 'web', image: 'nginx:stable' }),
+          ]),
+          remainder: { files: 5, secretPathsLeftOut: 0, candidates: 3, notCandidates: 2,
+            places: [{ place: null, files: 5, notCandidates: 2 }], placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
+        });
         if (result.report.manifestFacts?.state !== 'derived') throw Error('own manifest facts unavailable');
-        expect(result.report.manifestFacts.facts.every(fact => fact.lines[0] > 2000)).toBe(true);
+        expect(result.report.manifestFacts.facts.filter(fact => fact.path === 'package.json').every(fact => fact.lines[0] > 2000)).toBe(true);
         expect(result.report.manifestFacts.recognizers.find(recognizer => recognizer.rule === 'cargo-manifest')?.files)
           .toEqual([expect.objectContaining({ path: 'Cargo.toml', epistemic: 'unknown', unknownReason: 'secret-detector-match' })]);
         const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
@@ -677,12 +686,14 @@ describe('trusted URL artifact producer bridge', () => {
           objectId: f.sourceObjects.get('package.json'), start: 0, end: Buffer.byteLength(manifest) })));
         expect(body).toMatchObject({ classes: ['code-content'] });
         expect(structure).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'] });
-        expect(origins?.originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
+        const composeBody = f.ledger.plannedOrigins().find(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(compose));
+        expect(composeBody).toBeDefined();
+        expect(origins?.originIds).toEqual(expect.arrayContaining([body!.id, structure!.id, composeBody!.id]));
         expect(f.ledger.plannedOrigins().some(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(excludedManifest))).toBe(false);
         const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
         await bridge.toolReceipt('author', receipt, f.admission('author'));
         bridge.committed('author', receipt.id);
-        expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id]));
+        expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id, composeBody!.id]));
         const ancestry = f.ledger.captureProvenance([bridge.checkReceipt(0)]).graph.nodes;
         for (const digest of [sha256(countedInventory.bytes), sha256(countedInventory.checkedBytes), sha256(promptBytes), sha256(launchBytes)])
           expect(ancestry.some(node => node.metadata.digest === digest)).toBe(true);

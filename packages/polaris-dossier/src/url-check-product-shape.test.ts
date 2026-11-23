@@ -25,15 +25,24 @@ describe('current checked producer member projections', () => {
     expect(urlReadingDifferenceShape(difference)).toBe(true);
     expect(urlReadingDifferenceShape({ ...difference, pages: [{ ...difference.pages[0], invented: true }] })).toBe(false);
   });
-  it('admits actual empty manifest census and refuses unknown kinds or nested recognizer metadata', async () => {
+  it('admits current manifest facts and fails closed on a missing or malformed coverage remainder', async () => {
     const built = buildDossierScreen(policyFixture().bytes, true, null, 'private');
     if (!built.ok) throw new Error('owned screen missing');
     const record = await deriveManifestFacts({ entries: [], screen: built.screen, consented: null,
       read: async () => { throw new Error('empty census must read no blob'); } });
+    expect(record).toMatchObject({ format: 'polaris-dossier-manifest-facts/2' });
     expect(urlManifestFactsShape(record)).toBe(true);
-    expect(urlManifestFactsShape(manifestFactsUnknown('owned refusal'))).toBe(true);
+    const unknown = manifestFactsUnknown('owned refusal');
+    expect(urlManifestFactsShape(unknown)).toBe(true);
     if (record.state !== 'derived') throw new Error('owned census missing');
-    expect(record.recognizers).toHaveLength(5);
+    const { remainder, ...withoutRemainder } = record;
+    expect(record.recognizers).toHaveLength(10);
+    expect(urlManifestFactsShape(withoutRemainder)).toBe(false);
+    expect(urlManifestFactsShape({ ...withoutRemainder, format: 'polaris-dossier-manifest-facts/1' })).toBe(false);
+    expect(urlManifestFactsShape({ ...unknown, format: 'polaris-dossier-manifest-facts/1' })).toBe(false);
+    expect(urlManifestFactsShape({ ...unknown, remainder })).toBe(false);
+    expect(urlManifestFactsShape({ ...record, remainder: { ...remainder, places: [{ place: false, files: 0, notCandidates: 0 }] } })).toBe(false);
+    expect(urlManifestFactsShape({ ...record, remainder: { ...remainder, places: [{ ...remainder.places[0], extra: true }] } })).toBe(false);
     expect(urlManifestFactsShape({ ...record, recognizers: [{ ...record.recognizers[0], invented: true }] })).toBe(false);
     expect(urlManifestFactsShape({ ...record, facts: [{ fact: 'invented' }] })).toBe(false);
   });
