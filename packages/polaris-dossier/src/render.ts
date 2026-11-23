@@ -6,13 +6,17 @@ import * as path from 'node:path';
 import {
   backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
-  type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
+  type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
+import { relationDecisions } from './check-derive.js';
+import { secretOrUnder } from './derive.js';
+import { BLOB_MODES } from './git-object-reader.js';
+import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasSubsectionForm, hasThesisBasisForm } from './draft-schema.js';
+import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -283,16 +287,19 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     briefRecord, fidelityContinuation, rawReadDisclosure });
   if (!input.ok) return refuse(input.stage, input.reason);
   // URL renders read through the protected product bridge. Derived records
-  // and independently read manifest bodies need producer receipts there before
-  // they can supply facts to that mode's review packet.
-  const built = urlMode ? input : { ...input, local: { ...input.local,
-    derivedStructure: await derivedStructureAt({ run, revision: draftRev.revision, pinned,
+  // and manifest bodies need producer receipts to supply facts to the review packet.
+  let built = input;
+  if (!urlMode) {
+    const derivedStructure = await derivedStructureAt({ run, revision: draftRev.revision, pinned,
       repositoryId: subject.repository.repositoryId, reader, isSecretPath: secretPathOf(screen),
-      policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))() }),
-    // Re-derive operator-agent facts from the pinned tree and bounded reader,
-    // never from an agent-writable check record.
-    manifestFacts: await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader),
-  } };
+      policy: (deps.currencyPolicy ?? (() => readCurrencyPolicy(deps.sources.recordsRoot)))() });
+    // Re-derive operator-agent manifest facts from the pinned tree and bounded reader.
+    const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
+    const edgeRelations = hasRelationForm(doc['schemaVersion'])
+      ? await edgeRelationsAt({ doc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() })
+      : undefined;
+    built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, ...(edgeRelations === undefined ? {} : { edgeRelations }) } };
+  }
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput, sources = built.sources): ReadonlyMap<string, string> | string => {
@@ -513,6 +520,57 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   if (storedSite === undefined) logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
   else ensureStorageCurrent();
   return { ok: true, report };
+}
+
+/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 1 decided again
+ * from the derived structure the region states at this render (its facts, and the counts this render re-derives from the tree) and the
+ * render's own manifest member, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact
+ * renders Observed here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
+export async function edgeRelationsAt(inputs: {
+  readonly doc: Readonly<Record<string, unknown>>;
+  readonly derivedStructure: LocalDerivedStructure;
+  readonly manifestFacts: ManifestFacts;
+  readonly screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>;
+  readonly withheld: ReadonlyMap<string, unknown>;
+  readonly listTree: () => Promise<readonly Pick<TreeEntry, 'path' | 'mode'>[]>;
+}): Promise<ReadonlyMap<string, LocalEdgeRelation>> {
+  let blobs: ReadonlySet<string> | undefined;
+  try {
+    blobs = new Set((await inputs.listTree()).filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+  }
+  return renderedEdgeRelations(inputs, blobs);
+}
+
+function renderedEdgeRelations(inputs: {
+  readonly doc: Readonly<Record<string, unknown>>;
+  readonly derivedStructure?: LocalDerivedStructure;
+  readonly manifestFacts?: ManifestFacts;
+  readonly screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>;
+  readonly withheld: ReadonlyMap<string, unknown>;
+}, blobs?: ReadonlySet<string>): ReadonlyMap<string, LocalEdgeRelation> {
+  const { doc, derivedStructure: derived, manifestFacts, screen, withheld } = inputs;
+  const isSecretPath = secretPathOf(screen);
+  const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
+  const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? ''),
+    blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
+      structure: derived?.state === 'derived'
+        ? { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed }
+        : { state: 'unknown' },
+      manifest: manifestFacts?.state === 'derived' ? manifestFacts : { state: 'unknown' },
+      hidden,
+    });
+  const facts = derived?.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
+  return new Map(decisions.edges.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
+    const decision = witnessAtRender(checked, (factId) => facts.get(factId)?.epistemic === 'observed');
+    const witness = decision.state === 'witnessed'
+      ? { state: decision.state, reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion }
+      : { state: decision.state, reason: decision.reason, fact: null, rule: null, ruleVersion: null };
+    const evidence = decision.state === 'witnessed' && derived?.state === 'derived'
+      ? { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } : undefined;
+    return [id, { relation, witness, ...(evidence === undefined ? {} : { evidence }) }];
+  }));
 }
 
 /** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
@@ -1100,12 +1158,18 @@ export function buildLocalInput(inputs: BuildInputs): Built {
 
   const editorial = draftLayer.state === 'editorial-draft';
   const pages = editorial ? [understandingPage, discoveryPage, clarificationsPage, executionsPage, reviewPage] : [discoveryPage, executionsPage, reviewPage];
+  // Both URL draws and their reproduction project the authenticated v9 draft.
+  // An edge whose witness needs an unreceipted fact reports Unknown.
+  const edgeRelations = opened.effective?.kind === 'url' && hasRelationForm(doc['schemaVersion'])
+    ? renderedEdgeRelations({ doc, screen, withheld: withheldElements })
+    : undefined;
   return {
     ok: true,
     sources,
     local: {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
+      ...(edgeRelations === undefined ? {} : { edgeRelations }),
       authoring: { tool: declared.agentTool, model: declared.model },
       ...(opened.effective?.kind === 'url' ? { effectiveRun: effectiveUrlProjection({ subject }, opened.effective.declaration) } : {}),
       selectionReasons,

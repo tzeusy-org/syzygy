@@ -1367,9 +1367,21 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       await waitForFidelityPacket;
       return tool('recheck', 'artifact_read', { path: 'brief.md' });
     }];
+    const relationCitation = (id: string) => [{ id, path: 'src/kestrel.c', startLine: 1, endLine: 1 }];
+    const diagrams = stoppingCut ? [] : [{
+      id: 'repository-map', title: 'Repository layout', home: { kind: 'section', target: 'core-ideas' },
+      kind: 'boundary', relationship: 'The repository and its source directory.',
+      disposition: { kind: 'produced', assetIds: ['repository-map'] },
+      nodes: [
+        { id: 'repository', label: 'Repository', epistemic: 'inferred', unit: { kind: 'repository-root' }, citations: relationCitation('c-repository') },
+        { id: 'source', label: 'Source', epistemic: 'inferred', unit: { kind: 'top-level-directory', path: 'src' }, citations: relationCitation('c-source') },
+      ],
+      edges: [{ id: 'includes-src', from: 'repository', to: 'source', relation: 'contains', label: 'Includes the source',
+        epistemic: 'inferred', citations: relationCitation('c-includes-src') }],
+    }];
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
-        schemaVersion: 'polaris-dossier-local-draft-v8', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
+        schemaVersion: 'polaris-dossier-local-draft-v9', thesisBasis: 'stated', sessionId: session('author'), executions: [], diagrams }) }),
       tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...authorBeforeEligibleStop, ...finalResponse('author')]);
     const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
       tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),
@@ -1838,6 +1850,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       expect(state.done).toBeDefined(); expect(state.finalSite!.site).toBeGreaterThan(state.siteFor['0']!);
       expect(controller.summary().roles.every(role => role.pid !== 'Unknown')).toBe(true);
       expect(failures).toEqual([]);
+      const finalSite = path.join(f.run, RUN_LAYOUT.site, String(state.finalSite!.site));
+      const machine = JSON.parse(await fs.readFile(path.join(finalSite, 'machine.json'), 'utf8'));
+      expect(machine.edges).toMatchObject([{ id: 'includes-src', relation: 'contains', epistemic: 'inferred',
+        witness: { state: 'unknown', reason: 'facts-unknown', fact: null, rule: null, ruleVersion: null } }]);
+      expect(await fs.readFile(path.join(finalSite, 'index.html'), 'utf8')).toContain('data-relation="contains"');
       const recordFile = path.join(f.run, 'record.json'), recordBytes = await fs.readFile(recordFile);
       const execution = JSON.parse(recordBytes.toString()) as { format: string; supervisorCapture: { roles: unknown[] } };
       expect(execution.format).toBe('polaris-dossier-execution-record/2');
