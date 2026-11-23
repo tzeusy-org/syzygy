@@ -998,10 +998,8 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     'secret/kept': unnamed('secret-detector-match'), 'secret/held': unnamed('secret-detector-match'),
     'denied-and-secret/kept': named('denied-path'), 'denied-and-secret/held': named('denied-path'),
   };
-  // Three rows differ from MAIN, each only by a name withheld: the excluded Stage-2 file whose path a configuration detector matches as
-  // text, and both denied-and-secret files.
   const HEAD: Record<string, Row> = {
-    ...MAIN, 'stage-2-text-matched/held': unnamed('secret-detector-match'),
+    ...MAIN, 'stage-2-text-matched/kept': unnamed('secret-detector-match'), 'stage-2-text-matched/held': unnamed('secret-detector-match'),
     'denied-and-secret/kept': unnamed('denied-path'), 'denied-and-secret/held': unnamed('denied-path'),
   };
   // Per citation: [finding kind, whether its detail quotes the path]. A path-excluded body is never read, so its range is not checked.
@@ -1013,14 +1011,14 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     'secret/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', true]],
   };
   const HEAD_FINDINGS: Record<string, [string, boolean][]> = {
-    ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [['range-beyond-blob', false]], 'stage-2-text-matched/held': [['range-beyond-blob', false]],
+    ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [], 'stage-2-text-matched/held': [],
     'stage-2-text-matched/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', false]],
   };
-  /** Whether `now` shows, names or sends nothing `before` did not: every flag that says so may only go from true to false, the review
-   * reach only from reaching to withheld, and an outcome never changes. */
+  /** Whether `now` shows, names or sends nothing `before` did not. An admitted source can become secret-withheld. */
   const noLooser = (before: Row, now: Row): boolean => {
     const shows = (row: Row): boolean[] => [row.blob[0], row.blob[1], row.inStoredRecord, row.inReviewNote, row.textShown, row.pathOnAPage, row.span[0], row.span[1], row.span[3], !row.reachWithheld];
-    return shows(now).every((flag, i) => !flag || shows(before)[i]!) && now.blob[2] === before.blob[2] && now.span[2] === before.span[2];
+    const compatible = (was: string, is: string): boolean => was === is || (was === 'admitted' && is === 'secret-detector-match');
+    return shows(now).every((flag, i) => !flag || shows(before)[i]!) && compatible(before.blob[2], now.blob[2]) && compatible(before.span[2], now.span[2]);
   };
 
   it('shows, names and sends nothing the predecessor withheld, for every kind of path and both bodies', async () => {
@@ -1033,13 +1031,15 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
       const blobs = report.citedBlobs.slice(-CASES.length);
       expect(report.citedBlobs.slice(0, -CASES.length).map((blob) => blob.path)).toEqual(['src/kestrel.c', 'docs/notes.txt']);
       // Withheld from the review, counted: every file but the two admitted ones, named or by the fixed phrase.
-      expect((report.reviewVisibility?.withheld ?? []).map((w) => w.outcome)).toEqual(['secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path']);
+      expect((report.reviewVisibility?.withheld ?? []).map((w) => w.outcome)).toEqual(['secret-detector-match', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path']);
       const stored = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
       const rendered = await renderRun(run, renderDeps());
       if (!rendered.ok) throw new Error(rendered.refusal.reason);
       const files = readSite(rendered.report.site);
       const { review } = await handedPacket(run);
-      const spans = JSON.parse(fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8')).spans as { path: string | null; objectId: string | null; outcome: string; text?: string; citedBy: { citationId: string }[] }[];
+      const packetText = fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8');
+      expect(packetText.includes(KEYED)).toBe(false);
+      const spans = JSON.parse(packetText).spans as { path: string | null; objectId: string | null; outcome: string; text?: string; citedBy: { citationId: string }[] }[];
       // The planted body value reaches no page, record or span.
       expect([[...files.values()].some((page) => page.includes(BODY_TOKEN)), stored.includes(BODY_TOKEN), JSON.stringify(spans).includes(BODY_TOKEN)]).toEqual([false, false, false]);
       return Object.fromEntries(CASES.map((c, i): [string, Row] => {
@@ -1057,7 +1057,7 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     });
     expect(table).toEqual(HEAD);
     expect(Object.keys(HEAD).filter((name) => !noLooser(MAIN[name]!, HEAD[name]!))).toEqual([]);
-    expect(Object.keys(HEAD).filter((name) => JSON.stringify(HEAD[name]) !== JSON.stringify(MAIN[name]))).toEqual(['stage-2-text-matched/held', 'denied-and-secret/kept', 'denied-and-secret/held']);
+    expect(Object.keys(HEAD).filter((name) => JSON.stringify(HEAD[name]) !== JSON.stringify(MAIN[name]))).toEqual(['stage-2-text-matched/kept', 'stage-2-text-matched/held', 'denied-and-secret/kept', 'denied-and-secret/held']);
     // The comparison is not vacuous: it refuses the regression review 1 found (the excluded Stage-2 file's item text rendering).
     expect(noLooser(MAIN['stage-2-text-matched/held']!, { ...HEAD['stage-2-text-matched/held']!, textShown: true })).toBe(false);
   }, 120_000);
@@ -1071,7 +1071,7 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
       return Object.fromEntries(cites.map((c, i) => [c.name, findings.filter((f) => f.citationId === `c-tt-${i}`).map((f): [string, boolean] => [f.kind, f.detail.includes(c.file)])]));
     });
     expect(got).toEqual(HEAD_FINDINGS);
-    expect(Object.keys(HEAD_FINDINGS).filter((name) => HEAD_FINDINGS[name]!.some(([kind, quoted], i) => kind !== MAIN_FINDINGS[name]![i]![0] || (quoted && !MAIN_FINDINGS[name]![i]![1])) || HEAD_FINDINGS[name]!.length !== MAIN_FINDINGS[name]!.length)).toEqual([]);
+    expect(Object.keys(HEAD_FINDINGS).filter((name) => HEAD_FINDINGS[name]!.some(([kind, quoted], i) => kind !== MAIN_FINDINGS[name]![i]![0] || (quoted && !MAIN_FINDINGS[name]![i]![1])) || HEAD_FINDINGS[name]!.length > MAIN_FINDINGS[name]!.length)).toEqual([]);
   }, 120_000);
 });
 
@@ -2676,5 +2676,101 @@ describe('render: task routes and the generated index', () => {
     expect(machine.nameIndex.names.filter((entry) => entry.kind === 'identifier').map((entry) => entry.name)).toEqual(['main']);
     expect(pages).not.toContain('zqBesideName');
     expect(machine.nameIndex.names.filter((entry) => entry.kind === 'path').map((entry) => entry.name)).toEqual(['docs/notes.txt', 'src/kestrel.c']);
+  });
+});
+
+describe('render: overview hero (schema v10)', () => {
+  const version = 'polaris-dossier-local-draft-v10';
+  const figure = (id: string, disposition: Doc = { kind: 'produced', assetIds: [id] }): Doc => ({
+    id, title: id, kind: 'boundary', home: { kind: 'overview' }, relationship: 'Related parts of one system.',
+    nodes: [{ id: id + '-a', label: 'Client', epistemic: 'inferred', citations: [cite(id + '-ca', 'src/kestrel.c', 1, 1)] },
+      { id: id + '-b', label: 'Server', epistemic: 'inferred', citations: [cite(id + '-cb', 'src/kestrel.c', 1, 1)] }],
+    edges: [{ id: id + '-ab', from: id + '-a', to: id + '-b', label: 'Communicates', relation: 'relates-to', epistemic: 'inferred', citations: [cite(id + '-cab', 'src/kestrel.c', 1, 1)] }],
+    disposition,
+  });
+  const versioned = (hero?: Doc): Doc => ({ ...draft(), schemaVersion: hero === undefined ? 'polaris-dossier-local-draft-v9' : version,
+    thesisBasis: 'stated', ...(hero === undefined ? {} : { hero }), diagrams: [figure('overview-secondary'), figure('system-hero')] });
+  const rendered = async (doc: Doc, rend = renderDeps()) => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, rend);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const region = '<section id="overview-figures" data-reading-level="1" data-topics="">';
+
+  it.each([false, true])('places the named graph first after the header, including with open questions (%s)', async (openQuestion) => {
+    const doc = versioned({ figure: 'system-hero' });
+    if (openQuestion) doc.unresolved = [{ id: 'q-hero', question: 'Which protocol does the client use?', reason: 'No evidence.', citations: [] }];
+    const files = await rendered(doc);
+    const index = files.get('index.html')!;
+    expect(index).toContain('</header>' + region + '<figure data-hero="figure"');
+    const hero = index.indexOf('id="figure-system-hero"');
+    const secondary = index.indexOf('id="figure-overview-secondary"');
+    expect(hero).toBeGreaterThan(index.indexOf('id="block-intro"'));
+    expect(index.indexOf('id="block-intro"')).toBeGreaterThan(-1);
+    expect(secondary).toBeGreaterThan(hero);
+    if (openQuestion) {
+      const q = index.indexOf('Which protocol does the client use?');
+      expect(q).toBeGreaterThan(index.indexOf('id="block-intro"'));
+      expect(q).toBeLessThan(hero);
+      const appendix = files.get('appendix.html')!;
+      expect(appendix).toContain('<a href="index.html#open-questions">Read the open questions in the overview.</a>');
+      expect(appendix).not.toContain('Which protocol does the client use?');
+    }
+    expect([...files].filter(([, html]) => html.includes('id="figure-system-hero"')).map(([route]) => route)).toEqual(['index.html']);
+    expect(JSON.parse(files.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: 'system-hero', rendered: true });
+  });
+
+  it('renders the reasoned omission as its own overview claim and requires its own fidelity entry', async () => {
+    const id = 'hero-omission-reason';
+    const reason = { id, label: 'inferred', basis: 'source', text: 'A single process keeps the working keys.', citations: [cite('c-hero-reason', 'src/kestrel.c', 1, 1)], quotations: [] };
+    const doc = versioned({ omitted: reason });
+    doc.diagrams = [];
+    const unreviewed = await prepared(doc, false);
+    const { packet } = await handedPacket(unreviewed);
+    const criteria = JSON.parse(fs.readFileSync(path.join(packet.report.directory, 'packet.json'), 'utf8')).criteria;
+    expect(criteria.find((line: string) => line.startsWith('Support:'))).toContain('the introduction, any declared hero omission');
+    await expect(prepared(doc, true)).rejects.toThrow(/fixture verdict: .*hero-omission-reason/u);
+    const run = await prepared(doc, true, [{ blockId: id, verdict: 'supported', spanIds: [], reason: 'The source states it.', quotations: [] }], {
+      verdict: (value, spans) => {
+        value.blockSupport.find((row: Doc) => row.blockId === id).spanIds = spans.filter((span) => span.path === 'src/kestrel.c' && span.startLine === 1).slice(0, 1).map((span) => span.id);
+      },
+    });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(index).toContain('</header>' + region + '<div data-hero="omitted"><p class="hero-omitted">The authoring session left out the overview figure, for the reason that follows.</p>');
+    expect(index).toContain('id="block-hero-omission-reason">A single process keeps the working keys.');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.hero).toEqual({ form: 'omitted', diagram: null, rendered: true });
+    expect(machine.claims.filter((claim: Doc) => claim.id === id)).toEqual([expect.objectContaining({ id, page: 'index.html' })]);
+  });
+
+  it('marks a legitimate figure notice first and withholds the hero and its identity with the draft layer', async () => {
+    const doc = versioned({ figure: 'system-hero' });
+    doc.diagrams[1] = figure('system-hero', { kind: 'omitted', reason: 'No useful drawing.', citations: [] });
+    const capture = capturing();
+    const files = await rendered(doc, renderDeps({ renderer: capture.renderer }));
+    expect(files.get('index.html')).toContain(region + '<aside data-hero="figure" class="unresolved-asset" data-asset-disposition="omitted">');
+    expect(JSON.parse(files.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: 'system-hero', rendered: true });
+    const hidden = { state: 'unknown', reason: 'missing-declaration', why: ['fixture'] } as const;
+    const input = capture.inputs[0]!;
+    const hold = (local: typeof input.local) => renderLocalDossier({ ...input, local: { ...local, draftLayer: hidden } }).files;
+    const withheld = hold(input.local);
+    const { hero: _withoutHero, ...earlierInput } = input.local;
+    expect(withheld.get('index.html')).toBe(hold(earlierInput).get('index.html'));
+    expect(withheld.get('index.html')).not.toContain('data-hero');
+    expect(withheld.get('machine.json')).not.toContain('system-hero');
+    expect(JSON.parse(withheld.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: null, rendered: false });
+  });
+
+  it('does not add a hero member or marker to an earlier stored draft', async () => {
+    const files = await rendered(versioned());
+    const index = files.get('index.html')!;
+    expect(index).not.toContain('data-hero');
+    expect(JSON.parse(files.get('machine.json')!)).not.toHaveProperty('hero');
+    expect(index.indexOf('id="figure-overview-secondary"')).toBeGreaterThan(-1);
+    expect(index.indexOf('id="figure-system-hero"')).toBeGreaterThan(index.indexOf('id="figure-overview-secondary"'));
   });
 });

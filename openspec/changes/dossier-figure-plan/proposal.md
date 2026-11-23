@@ -5,26 +5,26 @@
 ## Why
 
 - [Observed] syzygy-3efd.40 (pursuit 2026-11-21 Q12, slice 1): "The author writes a figure plan before the prose: for each page, the one question a picture answers better than text, and the kind it needs. check advises when a figure carries too little information (a chain of three or fewer is a sentence), duplicates another, or mixes levels." Its exclusions: "advice in this slice, no gate; the page-type table is syzygy-3efd.41." Its first acceptance criterion: "A draft's figure plan validates and each planned figure is matched to a figure or a reasoned omission."
-- [Observed] REQ-034 version 2.22 asks for diagrams and checks each one's form, home, kind and fit, but nothing asks the author why a figure is there, and nothing tells the author when a figure says what a sentence would, repeats another, or puts a part beside a part of itself.
+- [Observed] REQ-034 version 2.23 asks for diagrams and checks each one's form, home, kind and fit, but nothing asks the author why a figure is there, and nothing tells the author when a figure says what a sentence would, repeats another, or puts a part beside a part of itself.
 - [Inferred] Planning the pictures before the prose puts each figure where it answers a question, and three exact, advisory predicates catch the three commonest ways a figure wastes the reader's attention without overruling the author.
 
 ## What changes
 
 [Observed] One MODIFIED requirement, REQ-polaris-generation-034 ("Agent brief and mechanically checked draft"), complete text in `proposed/polaris-generation/spec.md`:
 
-- Draft schema `polaris-dossier-local-draft-v11`: a required top-level `figurePlan`, one entry for the overview, each section and each deep dive:
+- Draft schema `polaris-dossier-local-draft-v12`: a required top-level `figurePlan`, one entry for the overview, each section and each deep dive:
   - a planned figure, `{"home", "question", "kind", "figure"}`, naming the diagram that answers the question, homed there and of that kind; or
   - `{"home", "omitted"}`, why the place has no planned figure.
 - Findings (repair findings, so a draft with one does not proceed to review):
   - `figure-plan` for a missing or non-list plan, a malformed entry, a place planned twice, a place left unplanned, and a planned figure homed elsewhere or of another kind;
   - `unresolved-reference` for a place or figure that names nothing;
-  - `field-version` for `figurePlan` in schema v10 and earlier.
+  - `field-version` for `figurePlan` in schema v11 and earlier.
 - Advice, on check's report alone as `figureAdvice`, gating nothing:
-  - `figure-information-floor`: a graph of at most three nodes and at most one edge fewer than its nodes, a swimlane of at most three steps, a sequence of at most two messages;
-  - `figure-duplicate`: a figure every key of which (boxes and arrows, by normalised label) another figure of its family also draws;
-  - `figure-mixed-levels`: a graph figure holding a node whose `unit` encloses another node's, with no `contains` arrow between them.
+  - `figure-information-floor`: a graph of at most three nodes and at most one edge fewer than its nodes, a swimlane of at most three steps, a sequence of at most two messages, a containment of at most three groups;
+  - `figure-duplicate`: a figure every key of which (boxes, arrows, steps and nestings, by normalised label) another figure of its family also draws;
+  - `figure-mixed-levels`: a graph or containment figure holding an element whose `unit` encloses another's, with no `contains` arrow between them (graph) or without drawing the second inside the first (containment).
 - The plan renders nowhere and no rendered byte moves.
-- Brief `polaris-dossier-brief-v17`: brief v16 plus one paragraph, issuing schema v11.
+- Brief `polaris-dossier-brief-v18`: brief v17 plus one paragraph, issuing schema v12.
 - In the predecessor text, the brief-version list and the accepted-schema list are extended. Eleven scenarios are added and the four Form lines are extended.
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged.
@@ -35,7 +35,7 @@
 - the page-type table and a required view per page type (syzygy-3efd.41);
 - any gate on a figure's content: the three rules advise only;
 - rendering the plan, or any reader-facing text from it;
-- a new figure kind, and the containment kind of syzygy-3efd.31 (`design.md` D1);
+- a new figure kind; the containment kind of version 2.23 is planned and advised on like any other (`design.md` D1, D6);
 - a new counted reader standard or a new version of `polaris-reader-standards-v1` (`design.md` D5);
 - any change to the provider mode or its golden;
 - any script in a rendered page.
