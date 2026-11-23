@@ -27,7 +27,7 @@ import { createUrlSessionBudget, type UrlBudgetSnapshot } from './url-session-bu
 import { readVerifiedUrlAuditLaunches, type UrlSessionAuditHistoryExpected } from './url-session-audit-history.js';
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import { createUrlRunMachine, readUrlRunMachineClosedHistory, type UrlRunMachineClosedHistory } from './url-run-machine.js';
-import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
+import { startUrlOrderedAttempt, UrlOrderedReproductionFailure } from './url-run-ordered-attempt.js';
 import type { OrderedDesignHost } from './url-ordered-design-host.js';
 import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
@@ -128,8 +128,8 @@ export interface UrlRunSessionsSummary {
 }
 export interface UrlRunSessions {
   publish(role: ViewRole, event: Exclude<UrlSessionControlEvent, { readonly event: 'design-round-prepared' }>): Promise<boolean>;
-  prepareDesignDelivery(product: ValidatedUrlDesignProduct, expectedProduct: UrlDesignProductMetadata,
-    sitePath: string, round: number, artifact: DesignArtifactPort): Promise<UrlDesignDeliveryView | null>;
+  prepareDesignDelivery(expectedProduct: UrlDesignProductMetadata,
+    sitePath: string, round: number, artifact: DesignArtifactPort): Promise<UrlDesignDeliveryView | 'reproduction-unavailable' | null>;
   prepareFinalRender(number: number, site: number): Promise<UrlDesignRenderContinuationFactory | null>;
   current(): Promise<boolean>;
   withinCpuBudget(): boolean;
@@ -659,9 +659,9 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     };
     for (const role of resumeRoles()) await launchRole(role);
     if (!ordered) probe.close();
-    const prepareDesignDelivery: UrlRunSessions['prepareDesignDelivery'] = async (product, expectedProduct, sitePath, round, artifact) => {
+    const prepareDesignDelivery: UrlRunSessions['prepareDesignDelivery'] = async (expectedProduct, sitePath, round, artifact) => {
       if (ordered) {
-        if (!(await current()) || launchHistory === undefined || machine === undefined || !isUrlDesignProductLeaseOpen(product)) return null;
+        if (!(await current()) || launchHistory === undefined || machine === undefined) return null;
         if (orderedAttempt !== null) {
           if (!orderedAttempt.terminalConsumed) return null;
           const completed = completedDesign;
@@ -706,10 +706,22 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
           launchedAttempt = orderedAttempt;
           preparedDesign = { receipt: orderedAttempt.delivery.receipt, artifact };
           return orderedAttempt.delivery;
-        } catch { work.release(); fail('launch-unavailable'); return null; }
+        } catch (cause) {
+          work.release();
+          if (cause instanceof UrlOrderedReproductionFailure) {
+            if (cause.failure !== null) throw cause.failure.cause;
+            return 'reproduction-unavailable';
+          }
+          fail('launch-unavailable');
+          return null;
+        }
       }
       if (designLaunch === null || !(await current())) return null;
+      const reproduced = await artifact.reproduce();
+      if (reproduced === null) return 'reproduction-unavailable';
+      const { product } = reproduced;
       try {
+        if (!(await current()) || !isUrlDesignProductLeaseOpen(product)) return null;
         const result = await audit.commitDesignDelivery({ product, expectedProduct, launch: designLaunch, sitePath, round, run,
           runId: binding.run, pinnedRevision: record.subject.pinnedRevision.commit }, waitForProductSamples);
         if (!(await current()) || !(await waitForProductSamples()) || !isUrlDesignProductLeaseOpen(product)) return null;
@@ -723,6 +735,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         preparedDesign = { receipt: result.receipt, artifact: { reproduce: artifact.reproduce, open: artifact.open } };
         return result;
       } catch { fail('audit-unavailable'); return null; }
+      finally { reproduced.close(); }
     };
     const publish = async (role: ViewRole, event: UrlSessionControlEvent): Promise<boolean> => {
       if (event.event === 'design-round-prepared' || !(await current())) return false;

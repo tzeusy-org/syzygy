@@ -1469,16 +1469,11 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
             return { product: reproduced, close: reads.close };
           } finally { if (!opened) reads.close(); }
         };
-        const confirmed = await reproduce();
-        if (confirmed === null) {
-          phase = 'rendered site input reproduction unavailable';
-          break;
-        }
         const round = nextDesignRound;
-        const checkedView = await context.runtime.prepareDesignDelivery(confirmed.product, metadata, sitePath, round,
-          { reproduce, open: context.artifacts.openDesignArtifact }).finally(confirmed.close);
-        if (checkedView === null) {
-          phase = 'protected rendered site evidence changed or expired';
+        const checkedView = await context.runtime.prepareDesignDelivery(metadata, sitePath, round,
+          { reproduce, open: context.artifacts.openDesignArtifact });
+        if (checkedView === 'reproduction-unavailable' || checkedView === null) {
+          phase = checkedView === 'reproduction-unavailable' ? 'rendered site input reproduction unavailable' : 'protected rendered site evidence changed or expired';
           break;
         }
         const preparedSite = checkedView.receipt.identity.site;

@@ -33,6 +33,12 @@ type Stage = Awaited<ReturnType<Artifacts['stageOrderedDesignVerdict']>>;
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const refused = (): Error => new Error('url-ordered-attempt-unavailable');
 
+export class UrlOrderedReproductionFailure extends Error {
+  constructor(readonly failure: { readonly cause: unknown } | null) {
+    super('url-ordered-reproduction-unavailable');
+  }
+}
+
 export interface UrlOrderedAttemptOptions {
   readonly run: string;
   readonly pin: string;
@@ -221,9 +227,12 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     // Finish its inert namespace probe before starting the protected render lease.
     const firstResumedLaunch = input.generation !== undefined && input.firstLaunch === null;
     const resumedPreparation = firstResumedLaunch ? await prepare() : undefined;
-    const reproduced = await input.reproduce();
+    let reproduced: UrlDesignReproduction | null;
+    try { reproduced = await input.reproduce(); }
+    catch (cause) { throw new UrlOrderedReproductionFailure({ cause }); }
+    if (reproduced === null) throw new UrlOrderedReproductionFailure(null);
     render = reproduced;
-    if (reproduced === null || !(await input.current())) throw refused();
+    if (!(await input.current())) throw refused();
     const renderCurrent = () => isUrlDesignProductLeaseOpen(reproduced.product);
     // Reproduction can leave too little setup time for host binding and the
     // launch checks. A replacement probes the exact view before binding.
@@ -337,5 +346,9 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       consumeTerminal,
       get terminalConsumed() { return consumedTerminal; },
     });
-  } catch { await close(); throw refused(); }
+  } catch (cause) {
+    await close();
+    if (cause instanceof UrlOrderedReproductionFailure) throw cause;
+    throw refused();
+  }
 }
