@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 514 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 524 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -226,6 +226,13 @@ authority and no model yet called on the current path.
     header, overview figures, Pole map, then sections, and every disclosure stays on its claim's page); its renderer change
     (syzygy-5dhm.136) lands with it.
     *(2026-11-24: the predecessor figure "509 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Containment figure amendment 2.23](openspec/changes/dossier-containment-figure) is agent-adopted in A-59.
+    It replaces REQ-polaris-generation-034 again (183 to 193 scenarios: draft schema v11 with the `containment` figure
+    kind, groups nested at most three levels deep and drawn as boxes within boxes, the `containment-depth`,
+    `containment-size` and `containment-flat` findings, nestings witnessed as `contains` edges, brief v17); its code is
+    not yet landed.
+    *(2026-11-24: the predecessor figure "514 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
