@@ -538,11 +538,12 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
-        // In an unstaged synchronous operation, io checks the same live
-        // authority immediately before submitting the first anchor read.
+        // Unstaged synchronous operations check authority before the first
+        // anchor read. A joined terminal read checks asynchronous authority in
+        // io, then synchronous authority and both named roots before mkdir.
         const synchronousAnchor = currentAsync === undefined && staging === undefined;
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline
-          || (!synchronousAnchor && deadline <= live())) throw refused();
+          || (!synchronousAnchor && !joinedTerminalLock && deadline <= live())) throw refused();
         for (;;) {
           if (!terminalRead) {
             if (!synchronousAnchor) check();

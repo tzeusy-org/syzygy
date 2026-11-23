@@ -650,11 +650,17 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it('groups the terminal lock checks while retaining the five-second read deadline', async () => {
+  it.each(['async', 'both'] as const)('groups the terminal lock checks within five seconds under %s authority latency', async latency => {
     const f = await fixture(), slot = await f.allocate();
-    let elapsed = 0, measuring = false;
-    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
-      if (measuring) elapsed += 760;
+    let elapsed = 0, measuring = false, syncChecks = 0, asyncChecks = 0;
+    const reopened = await openUrlMachineStore({ ...f.options, current: () => {
+      if (measuring) {
+        syncChecks++;
+        if (latency === 'both') elapsed += 365;
+      }
+      return f.options.current();
+    }, currentAsync: async () => {
+      if (measuring) { asyncChecks++; elapsed += latency === 'both' ? 365 : 760; }
       return true;
     } }, f.store.identitySha256);
     if (reopened === null) throw new Error('fixture reopen refused');
@@ -672,8 +678,33 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       });
       expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(true);
       expect(verify).toHaveBeenCalledTimes(1);
-      expect(elapsed).toBe(4560);
+      expect(asyncChecks).toBe(6);
+      expect(syncChecks).toBe(7);
+      expect(elapsed).toBe(latency === 'both' ? 4_745 : 4_560);
     } finally { clock.mockRestore(); }
+  });
+
+  it.each(['async', 'sync'] as const)('refuses terminal lock submission when %s authority is withdrawn', async authority => {
+    const f = await fixture(), slot = await f.allocate();
+    let revoke = false, asyncSample = false;
+    const reopened = await openUrlMachineStore({ ...f.options,
+      current: () => f.options.current() && !(authority === 'sync' && asyncSample),
+      currentAsync: async () => {
+        if (!revoke) return true;
+        asyncSample = true;
+        return authority !== 'async';
+      },
+    }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    const submit = vi.fn();
+    filesystem.beforeMkdir = submit;
+    const verify = vi.fn();
+    revoke = true;
+    expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(false);
+    expect(asyncSample).toBe(true);
+    expect(submit).not.toHaveBeenCalled();
+    expect(verify).not.toHaveBeenCalled();
   });
 
   it('refuses to submit the terminal lock census when authority sampling crosses the deadline', async () => {
