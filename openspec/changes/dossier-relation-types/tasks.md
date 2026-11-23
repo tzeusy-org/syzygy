@@ -8,4 +8,4 @@
 - [ ] Create the version tag `polaris-dossier-relation-types-v2.19` at the installing commit once it is on the default branch.
 - [x] Schema v9, the `field-version`, `unit-reference` and `relation-challenged` findings and rule `relation-witness` with its eligibility table (`packages/polaris-dossier/src/`), with literal-case tests of every scenario.
 - [x] Witnessed arrows, `data-relation` and `data-witness-*`, legend, tally and `machine.json` members (`render.ts`, `apps/three-surface-poc/src/polaris-generation/dossier-site.ts`), every stored draft re-rendered byte-identical and the provider golden unchanged.
-- [ ] Brief v15 (`packages/polaris-dossier/src/brief.ts`) and a recorded rule-6 mutation run.
+- [x] Brief v15 (`packages/polaris-dossier/src/brief.ts`) and a recorded rule-6 mutation run.
