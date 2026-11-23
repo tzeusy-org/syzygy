@@ -1,0 +1,98 @@
+{
+  "epistemic": "Observed",
+  "bead": "syzygy-epvo",
+  "currentSubject": {
+    "commit": "85a0a709ca2d38c7d79e5a8ff4e718d37e12d38c",
+    "test": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "testSha256": "a208069fc8eb76926510c8f24729293dc7253d761352e0652ffb00d7b8549ae0",
+    "packageLockSha256": "a7884de5e824029a290b5c2e96049195a3ea80ebe21fec835016842cfd618cd8",
+    "node": "v24.6.0",
+    "vitest": "3.2.7"
+  },
+  "historicalSubject": {
+    "pr": 562,
+    "merge": "43dfd9b0f4d69c3077650a426f84050e7608f38d",
+    "review": "docs/reviews/R-GP-IMPL-SEGMENT-FOLLOWUPS-1-RAW.md",
+    "reviewSha256": "97baa18f26925437231a43db1b4320cfb225acefe2f94ede96172edee3e26c8a",
+    "archivesByDist": {
+      "absent": {
+        "file": "docs/evidence/syzygy-bpyt-78/mutants-absent.json",
+        "sha256": "7e6764c088f3a522f8377b5cc49a37244de76be21ca72a4c17f91cb5c7cd0146",
+        "totalRows": 9,
+        "comparedPairs": [
+          {
+            "substringId": "RX4-require-not-a-node-condition",
+            "equalityId": "RX4E-require-not-a-node-condition-equality-form",
+            "identicalDefaultExpectedAndReceived": true,
+            "affectedAssertionsPerVariant": 1
+          },
+          {
+            "substringId": "R2-unread-target-claims-node-refuses",
+            "equalityId": "R2E-unread-target-claims-node-refuses-equality-form",
+            "identicalDefaultExpectedAndReceived": true,
+            "affectedAssertionsPerVariant": 1
+          }
+        ]
+      },
+      "present": {
+        "file": "docs/evidence/syzygy-bpyt-78/mutants-present.json",
+        "sha256": "5e4c6895dce4c091e448dc75f36bd4a52a66f52df39f19e316498da17ebcfb55",
+        "totalRows": 9,
+        "comparedPairs": [
+          {
+            "substringId": "RX4-require-not-a-node-condition",
+            "equalityId": "RX4E-require-not-a-node-condition-equality-form",
+            "identicalDefaultExpectedAndReceived": true,
+            "affectedAssertionsPerVariant": 1
+          },
+          {
+            "substringId": "R2-unread-target-claims-node-refuses",
+            "equalityId": "R2E-unread-target-claims-node-refuses-equality-form",
+            "identicalDefaultExpectedAndReceived": true,
+            "affectedAssertionsPerVariant": 1
+          }
+        ]
+      }
+    }
+  },
+  "syntheticFixture": {
+    "fixtureName": "reporter.test.mjs",
+    "fixtureSha256": "7b68d1651b4c419cb8a5812ff3777c94c1f32b33df5402924e6b863ae38e7f74",
+    "fixtureSource": "import { expect, test } from 'vitest';\n\nconst prefix =\n  'A synthetic workspace entry has a long diagnostic before its observed disposition. ' +\n  'The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. ';\nconst expected = prefix + 'The example loader refuses this target.';\nconst different = prefix + 'The example loader ignores this target.';\nconst appended = expected + ' Additional context follows.';\n\nfunction load(message) {\n  throw new Error(message);\n}\n\nfunction messageFrom(operation) {\n  try {\n    operation();\n  } catch (error) {\n    if (error instanceof Error) return error.message;\n    throw error;\n  }\n  throw new Error('Expected the synthetic operation to throw');\n}\n\ntest('substring exact-message control', () => {\n  expect(() => load(expected)).toThrow(expected);\n});\n\ntest('equality exact-message control', () => {\n  expect(messageFrom(() => load(expected))).toBe(expected);\n});\n\ntest('substring different final clause', () => {\n  expect(() => load(different)).toThrow(expected);\n});\n\ntest('equality different final clause', () => {\n  expect(messageFrom(() => load(different))).toBe(expected);\n});\n\ntest('substring extra context control', () => {\n  expect(() => load(appended)).toThrow(expected);\n});\n\ntest('equality extra context control', () => {\n  expect(messageFrom(() => load(appended))).toBe(expected);\n});\n",
+    "commands": [
+      "NO_COLOR=1 FORCE_COLOR=0 CI=1 ./node_modules/.bin/vitest run reporter.test.mjs --reporter=default",
+      "NO_COLOR=1 FORCE_COLOR=0 CI=1 ./node_modules/.bin/vitest run reporter.test.mjs --reporter=json --outputFile=reporter.json"
+    ],
+    "expectedExitCodes": [
+      1,
+      1
+    ],
+    "testStatuses": {
+      "substring exact-message control": "passed",
+      "equality exact-message control": "passed",
+      "substring different final clause": "failed",
+      "equality different final clause": "failed",
+      "substring extra context control": "passed",
+      "equality extra context control": "failed"
+    },
+    "defaultFailureRecords": {
+      "substring different final clause": {
+        "expected": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader refuses this target.",
+        "received": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader ignores this target."
+      },
+      "equality different final clause": {
+        "expected": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader refuses this target.",
+        "received": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader ignores this target."
+      },
+      "equality extra context control": {
+        "expected": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader refuses this target.",
+        "received": "A synthetic workspace entry has a long diagnostic before its observed disposition. The repeated context ensures a reporter that limits its assertion headline cannot show the final clause. The example loader refuses this target. Additional context follows."
+      }
+    },
+    "jsonFailureFirstLines": {
+      "substring different final clause": "AssertionError: expected [Function] to throw error including 'A synthetic workspace entry has a lon…' but got 'A synthetic workspace entry has a lon…'",
+      "equality different final clause": "AssertionError: expected 'A synthetic workspace entry has a lon…' to be 'A synthetic workspace entry has a lon…' // Object.is equality",
+      "equality extra context control": "AssertionError: expected 'A synthetic workspace entry has a lon…' to be 'A synthetic workspace entry has a lon…' // Object.is equality"
+    }
+  }
+}
