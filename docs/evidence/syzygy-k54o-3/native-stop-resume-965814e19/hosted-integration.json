@@ -1,0 +1,149 @@
+{
+  "subjectCommit": "965814e1988ef27f63ccbf154e48fb51eeef8139",
+  "checkedOutCommit": "7deec7e3712e28da771e9e515a021953a5890f77",
+  "tree": "06146983d596b79201099fad06eb68bb9050a81d",
+  "workflowRun": 45108190180,
+  "job": 137474850020,
+  "result": "failure",
+  "logSha256": "7efe2f082157a82a3a67359de4d31f504191d763c23744979af3bf6916f22478",
+  "normalizedTraceSha256": "f1b20b070fe0dbbc3263eb88f24b48f8166e88bedffb35cd35bbd72bbffaaf60",
+  "files": {
+    "passed": 135,
+    "failed": 2,
+    "total": 137
+  },
+  "tests": {
+    "passed": 3904,
+    "failed": 4,
+    "skipped": 3,
+    "total": 3911
+  },
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "failed",
+      "ms": 49683
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 81366
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 493139
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 250607
+    }
+  ],
+  "composedFailures": [
+    {
+      "reportedReasons": [
+        "role-ended"
+      ],
+      "resume": [],
+      "roles": {
+        "author": "inspection-failed",
+        "inventory": "inspection-failed",
+        "fidelity": "inspection-failed",
+        "design": "inspection-failed"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "auditEnd": []
+    },
+    {
+      "reportedReasons": [],
+      "resume": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "stopped"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "auditEnd": []
+    },
+    {
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "resume": [],
+      "roles": {
+        "author": "inspection-failed",
+        "inventory": "inspection-failed",
+        "fidelity": "inspection-failed",
+        "design": "inspection-failed"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 4
+      },
+      "auditEnd": [
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "omitted",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "ordered:response-admitted",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:dossier_step",
+        "ordered:delivery-completed",
+        "ordered:verdict-staged",
+        "ordered:acknowledgment-receipt",
+        "launch-terminal"
+      ]
+    }
+  ],
+  "publicResume": {
+    "connections": 0,
+    "auditReturnedSuccessfully": false,
+    "machineCreated": false,
+    "limits": "The audit wrapper recorded successful withdrawal controls and did not observe a successful audit result. The file observation only records that no successful audit returned."
+  },
+  "otherFailure": {
+    "file": "packages/polaris-dossier/src/session-launch.test.ts",
+    "line": 1228,
+    "assertion": "The actual storage inspection was expected to retry a vanished child while the process remained live."
+  }
+}
