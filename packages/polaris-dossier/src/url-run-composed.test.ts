@@ -1592,7 +1592,10 @@ describe('composed URL run with actual role processes', () => {
         try { return f.artifacts.latestStageCheck('author')?.record.outcome === 'passed'; }
         catch (error) { if (error instanceof Error && error.message === 'url-run-artifacts-unavailable') return false; throw error; }
       };
-      const until = performance.now() + 60_000;
+      // The eligible arm starts all three ordinary native roles before it
+      // waits for the checked Author draft. Leave room for the shared host
+      // to admit the write and check exchanges before opening Fidelity.
+      const until = performance.now() + (eligibleStop ? 120_000 : 60_000);
       while (!authorPassed() && failures.length === 0 && performance.now() < until)
         await new Promise(resolve => setTimeout(resolve, 250));
       expect(failures).toEqual([]);
@@ -1602,9 +1605,9 @@ describe('composed URL run with actual role processes', () => {
       });
       if (!eligibleStop) inv.allow();
       design.allow();
+      if (eligibleStop) expect(authorPassed(), 'checked Author draft before eligible Fidelity').toBe(true);
       eligiblePhase = 'fidelity';
       if (eligibleStop) {
-        expect(authorPassed()).toBe(true);
         // The real producer's registration releases the later packet read.
         fidelity.allow();
       } else {
