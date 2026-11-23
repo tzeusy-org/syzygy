@@ -278,6 +278,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
     const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
     const reach = { citedBlobs, admitted, screen, consented: checked.contentClasses };
+    // `isWithheldElement` is `isWithheldItem` (review-reach.ts), the predicate that enters an edge in the render's `withheldElements`, which
+    // `edgeRelationsAt` reads: check and render share one notion of a withheld edge.
     const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !isWithheldElement(edge, reach),
       listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },

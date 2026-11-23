@@ -584,32 +584,36 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // `data-witness-*` attributes, no claim anchor, and in none of the draft's counts. `machine.json` lists every such edge as drawn.
   const relationEdges: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
   const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
+  type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
   const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
-    : ` data-witness-fact="${escape(relation.witness.fact!)}" data-witness-rule="${escape(relation.witness.rule!)}" data-witness-rule-version="${relation.witness.ruleVersion!}"`}`;
-  const diagram = (from: string, d0: DraftDiagram, index: number, asHero = false): string => {
-    if (d0.disposition.kind !== 'produced') return notice(from, d0.id, d0.disposition, asHero);
-    if (d0.figure !== undefined) return kindedFigure(from, d0, d0.figure, index);
-    // A witnessed edge is drawn in Syzygy's words and marked Observed; every other element keeps the draft's label and marking.
-    const witnessed = (id: string): LocalEdgeRelation['evidence'] => relationOf(id)?.evidence;
-    const d: DraftDiagram = local?.edgeRelations === undefined ? d0
-      : { ...d0, edges: d0.edges.map(e => witnessed(e.id) === undefined ? e : { ...e, label: witnessed(e.id)!.words, epistemic: 'observed' as const, sourceIds: [] }) };
+    : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
+    if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
+    if (asDrafted.figure !== undefined) return kindedFigure(from, asDrafted, asDrafted.figure, index);
+    // `d` is the figure as drawn: a witnessed edge in Syzygy's words and marked Observed, every other element keeping the draft's label
+    // and marking.
+    const words = (id: string): string | undefined => relationOf(id)?.evidence?.words;
+    const d: DraftDiagram = local?.edgeRelations === undefined ? asDrafted
+      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said === undefined ? e : { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }; }) };
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
     const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
-    const witnessItem = (e: DraftDiagram['edges'][number], relation: LocalEdgeRelation, evidence: NonNullable<LocalEdgeRelation['evidence']>): string =>
-      `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
-      + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact!} (${evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule!} version ${relation.witness.ruleVersion!} at revision ${evidence.revision}; record sha256:${evidence.recordSha256}.`)}</span></li>`;
+    const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
+      `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
+      + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
     const diagramRelationEdges: typeof relationEdges = [];
     const edgeList = d.edges.map(e => {
       const relation = relationOf(e.id);
       if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
-      if (relation?.evidence !== undefined) return witnessItem(e, relation, relation.evidence);
+      if (relation?.evidence !== undefined) return witnessItem(e, relation);
       return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
     // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
+    // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
+    // identity of a rendered (passed) draft unique, so no node shares an edge's id.
     const edgeAttrs = new Map(d.edges.flatMap(e => {
       const relation = relationOf(e.id);
       return relation === undefined ? [] : [[e.id, `${witnessAttrs(relation)}${relation.evidence === undefined ? '' : ' data-epistemic="observed"'}`] as const];

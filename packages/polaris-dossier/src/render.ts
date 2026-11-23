@@ -301,6 +301,9 @@ export async function edgeRelationsAt(inputs: {
   } catch (cause) {
     if (!(cause instanceof GitObjectReadRefusal)) throw cause;
   }
+  // An edge is asserted where it is labelled Inferred and is no withheld item. `withheld` is the render's `withheldElements`, whose graph
+  // edges are keyed by bare id and entered by `isWithheldItem` (review-reach.ts), the predicate check's `isWithheldElement` applies, over
+  // the same frozen revision: one notion of a withheld edge in both.
   const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? ''),
     blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
@@ -310,13 +313,15 @@ export async function edgeRelationsAt(inputs: {
     });
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
   return new Map(decisions.edges.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
+    // At version 1 every eligible fact is a structure fact, so `facts` (the structure record's, as this render derives them) holds every
+    // fact a decision can name, and the evidence names that record; a fact found in no rendered record is not current.
     const decision = witnessAtRender(checked, (factId) => facts.get(factId)?.epistemic === 'observed');
-    const witness = decision.state === 'witnessed'
-      ? { state: decision.state, reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion }
-      : { state: decision.state, reason: decision.reason, fact: null, rule: null, ruleVersion: null };
-    const evidence = decision.state === 'witnessed' && derived.state === 'derived'
-      ? { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } : undefined;
-    return [id, { relation, witness, ...(evidence === undefined ? {} : { evidence }) }];
+    if (decision.state === 'witnessed' && derived.state === 'derived') {
+      return [id, { relation, witness: { state: 'witnessed', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
+        evidence: { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } }];
+    }
+    const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
+    return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
   }));
 }
 
