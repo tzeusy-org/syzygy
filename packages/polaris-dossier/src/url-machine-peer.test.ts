@@ -294,26 +294,28 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     else expect(f.peer).not.toBeNull();
   });
 
-  it('refuses before the next installed image read when the held read loses authority', async () => {
+  it('refuses the next positioned read after authority is lost during the first batch', async () => {
     const probe = await fs.open(await fs.realpath(process.execPath), 'r');
     const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
     await probe.close();
     const read = prototype.read;
-    let observing = false, imageReads = 0, current = true;
+    let observing = false, current = true;
+    const submits: { position: number; current: boolean }[] = [];
     const readImageCurrent = () => { observing = true; return current; };
     const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
       const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
+      if (held?.ino !== identity.ino || held.dev !== identity.dev) return read.apply(this, args);
+      const position = args[3] as number;
+      submits.push({ position, current });
+      if (position === 0) args[2] = 2 * 1_048_576;
       const result = await read.apply(this, args);
-      if (held?.ino === identity.ino && held.dev === identity.dev) {
-        imageReads++;
-        current = false;
-      }
+      if (position === 0) current = false;
       return result;
     });
     try {
       const f = await fixture('live', undefined, { effectCurrent: () => true, readImageCurrent });
       expect(f.peer).toBeNull();
-      expect(imageReads).toBe(1);
+      expect(submits).toEqual([{ position: 0, current: true }, { position: 4 * 1_048_576, current: true }]);
     } finally { descriptor.mockRestore(); }
   });
 
