@@ -30,12 +30,12 @@ const SHORT_COMMANDS = new Set(['git', 'mkfifo', 'bd', 'which', 'ss']);
 // command, each with why it cannot hold a worker near the 60s bound. An entry
 // that matches no call fails, so none outlives its call. Syzygy runs no
 // observed test suite (syzygy-hjuz: SEC-3, RFC5-18), so no entry may name one.
-const LAUNCHER = 'the `syzygy polaris` launcher at run time; suite tests import only its pure helpers (blockingWhy, toolPathsFor), and no suite test calls runPolarisCli';
+const LAUNCHER = 'the `syzygy polaris` launcher at run time; suite tests use its pure helpers or runPolarisCli with spawnSync replaced by a fixture that starts no process';
 const EXEMPT: Readonly<Record<string, string>> = {
   "packages/polaris-dossier/src/polaris.ts 'tmux'": LAUNCHER,
   "packages/polaris-dossier/src/polaris.ts 'sh'": LAUNCHER,
   "packages/polaris-dossier/src/polaris.ts claudeExecutable(": LAUNCHER,
-  "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal, called only by the launcher at run time; suite tests import only the pure view builders',
+  "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal is called by the launcher; its reader fixture replaces spawnSync and starts no process',
 };
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];

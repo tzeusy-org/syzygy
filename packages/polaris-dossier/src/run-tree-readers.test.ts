@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
@@ -10,7 +10,7 @@ import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
 import { readExecutionChoice } from './execution-choice.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
-import { opensOf, patchFs } from './fs-patch.testkit.js';
+import { READ_CASES, growOnceSized, opensOf, patchFs, trackReads, underReadCase } from './fs-patch.testkit.js';
 import { blockingWhy, loadState, readMaxRepairCycles, readReviewCheck, readVerdict, runPolarisCli } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
@@ -19,10 +19,16 @@ import { recheckSessionStatement } from './session-statement.js';
 import { readCause } from './run-tree-read.js';
 import { closedUsage, runStatus } from './status.js';
 
-vi.mock('node:child_process', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('node:child_process')>();
-  return { ...actual, spawnSync: vi.fn(actual.spawnSync) };
-});
+const { launchProbe } = vi.hoisted(() => ({
+  launchProbe: vi.fn((_command: string, _argv: string[], _options: unknown): { status: number; stdout: string } => {
+    throw new Error('unexpected launcher process in reader fixture');
+  }),
+}));
+
+vi.mock('node:child_process', async (importOriginal) => ({
+  ...await importOriginal<typeof import('node:child_process')>(),
+  spawnSync: launchProbe,
+}));
 
 // REQ-polaris-generation-033, -035 and -048 version 2.18 (syzygy-3efd.80): every run-tree file those requirements state is read by the
 // reader rule of version 2.10 under the bound the spec states. Every reader opens the path once without blocking, refuses anything whose
@@ -56,33 +62,15 @@ const logPadded = (line: string, bytes: number): string => {
 
 /** The bytes `run` reads from `subject`, one total per time it opens it. */
 const bytesReadFrom = (subject: string, run: () => void): number[] => {
-  const opened = new Map<number, number>();
-  const totals: number[] = [];
-  const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
-    const fd = (original as (...args: unknown[]) => number)(file, ...rest);
-    opened.delete(fd);
-    if (file === subject) { opened.set(fd, totals.length); totals.push(0); }
-    return fd;
-  }) as typeof original);
-  const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
-    const read = (original as (...args: unknown[]) => number)(fd, ...rest);
-    const index = opened.get(fd);
-    if (index !== undefined) totals[index]! += read;
-    return read;
-  }) as typeof original);
-  try { run(); } finally { restoreRead(); restoreOpen(); }
-  return totals;
+  const reads = trackReads(subject);
+  try { run(); } finally { reads.restore(); }
+  return reads.totals;
 };
 
 /** Runs `run` while `subject` grows by a mebibyte once a descriptor's size is taken at exactly `bound` bytes. */
 const grownAfterSize = (subject: string, bound: number, run: () => void): void => {
-  let grown = false;
-  const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
-    const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
-    if (!grown && stats.isFile() && stats.size === bound) { grown = true; fs.appendFileSync(subject, '\n'.repeat(1_048_576)); }
-    return stats;
-  }) as typeof original);
-  try { run(); } finally { restore(); }
+  const growth = growOnceSized(subject, bound);
+  try { run(); } finally { growth.restore(); }
 };
 
 const PLANTS: readonly [string, (file: string) => void][] = [
@@ -400,17 +388,22 @@ it('resumes a live view using the supervisor state it already read', async () =>
   fs.writeFileSync(state, JSON.stringify({
     format: 'polaris-supervisor/1', runId: 'run-a', tmuxSession: 'view-a', briefIssuedAt: Date.now(), deadlineSeconds: 600,
   }));
-  const spawn = vi.mocked(spawnSync);
-  spawn.mockReturnValue({ pid: 0, output: [], stdout: 'done\n', stderr: '', status: 0, signal: null });
+  launchProbe.mockImplementation(() => ({ status: 0, stdout: 'done\n' }));
   vi.stubEnv('TMUX', undefined);
   try {
     expect(await opensOf(state, async () => {
       expect(await runPolarisCli(['--resume', 'run-a', '--state-root', root])).toBe(0);
     })).toBe(1);
-    expect(spawn.mock.lastCall?.slice(0, 2)).toEqual(['tmux', ['attach', '-t', 'view-a']]);
+    expect(launchProbe.mock.calls).toEqual([
+      ['tmux', ['-V'], { encoding: 'utf8' }],
+      ['bwrap', ['--version'], { encoding: 'utf8' }],
+      ['bwrap', expect.arrayContaining(['--unshare-all', '/bin/sh', '-c']), { encoding: 'utf8' }],
+      ['tmux', ['has-session', '-t', 'view-a'], { stdio: 'ignore' }],
+      ['tmux', ['attach', '-t', 'view-a'], { stdio: 'inherit' }],
+    ]);
   } finally {
     vi.unstubAllEnvs();
-    spawn.mockRestore();
+    launchProbe.mockReset();
   }
 });
 
