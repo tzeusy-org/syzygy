@@ -71,6 +71,7 @@ vi.mock('node:fs/promises', async importOriginal => {
             yield task;
             if (first) { first = false; afterFirstTask(); }
           }
+          return undefined;
         };
         return dir;
       });
@@ -1009,6 +1010,46 @@ describe('prepared private CLI launch',()=>{
       timer.mockRestore();
       signal.mockRestore();
     }
+  }, 15000);
+
+  it('refuses a task census when an opened listing disappears partway through', async () => {
+    const f = await launchFixture();
+    const preparation = await prepareRestrictedUrlSession(f.launch);
+    const inspect = observeUrlSessionInspectionForTest(preparation)!;
+    const fixturePath = path.join(path.dirname(f.launch.view.workDirectory), 'own-incomplete-task-listing');
+    await mkdir(fixturePath);
+    await mkdir(path.join(fixturePath, '101'));
+    let enterTool!: (value: true) => void, releaseTool!: () => void;
+    const enteredTool = new Promise<true>(resolve => { enterTool = resolve; });
+    const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
+    const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      const child = await launchRestrictedUrlSession({ preparation, host: {
+        ...host, close: () => { releaseTool(); return host.close(); },
+      } });
+      cleanup.push(child.stop);
+      try {
+        expect(await Promise.race([enteredTool, child.finished.then(result => result.outcome)])).toBe(true);
+        const procPath = `/proc/${child.pid}/task`;
+        const vanished = () => Object.assign(new Error('synthetic vanished task listing'), { code: 'ENOENT' });
+        let childReads = 0;
+        filesystem.taskListing = { procPath, fixturePath, afterFirstTask: () => { throw vanished(); } };
+        filesystem.beforeOpen = async file => {
+          if (file !== `${procPath}/101/children`) return;
+          childReads++;
+          throw vanished();
+        };
+        vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
+        expect(await child.waitForSample()).toBe(false);
+        expect(childReads).toBe(1);
+        expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'process', cause: 'operation-rejected' });
+        expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', peakProcesses: null });
+      } finally {
+        releaseTool();
+        await child.stop();
+      }
+    } finally { vi.useRealTimers(); }
   }, 15000);
 
   it.each(['current', 'withdrawn', 'timed-out', 'census-timed-out', 'confirmation-expired'] as const)(

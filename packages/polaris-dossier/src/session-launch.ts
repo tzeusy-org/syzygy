@@ -381,8 +381,12 @@ async function descendants(pid: number, maximum: number, check: () => void): Pro
   while (pending.length) {
     check(); const next = pending.pop()!; if (seen.has(next)) continue; seen.add(next); if (seen.size > maximum) return seen.size;
     const taskRoot = `/proc/${next}/task`, batch: Promise<readonly string[]>[] = [];
+    const tasks = await opendir(taskRoot).catch((error: NodeJS.ErrnoException) => {
+      if (error.code === 'ENOENT') return null;
+      throw error;
+    });
+    if (tasks === null) continue;
     try {
-      const tasks = await opendir(taskRoot);
       // Each thread may own children. Open its file once enumerated, while the
       // task directory is still being read. Join the same fixed-size group and
       // apply its results in enumeration order under the shared deadline.
@@ -394,10 +398,10 @@ async function descendants(pid: number, maximum: number, check: () => void): Pro
         if (batch.length === TASK_READ_BATCH) await collect(batch);
       }
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-        await Promise.allSettled(batch);
-        throw error;
-      }
+      // An already-open listing may have omitted children before it failed.
+      // Join all started reads before refusing the incomplete census.
+      await Promise.allSettled(batch);
+      throw error;
     }
     if (batch.length !== 0) await collect(batch);
   }
