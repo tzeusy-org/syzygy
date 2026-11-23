@@ -117,9 +117,6 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
   const screen = screenLoad.screen;
-  if (hasWithheldHeroIdentity(draftView, secretPathOf(screen))) {
-    return { ok: false, stage: 'screen', reason: 'the hero identity is withheld by screening' };
-  }
   const withheldUnits = withheldDiagramUnits(draftView, screen);
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   const blobs = new Map<string, string>();
@@ -127,6 +124,9 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   const withheldOf = new Map<string, readonly number[]>();
   const outcomes = new Map<string, ScreenExclusion | 'absent'>();
   const tree = new Map<string, TreeEntry>();
+  if (hasWithheldHeroIdentity(draftView, secretPathOf(screen))) {
+    return { ok: false, stage: 'screen', reason: 'the hero identity is withheld by screening' };
+  }
   try {
     for (const entry of await reader.listTree()) if (BLOB_MODES.has(entry.mode)) tree.set(entry.path, entry);
     const toRead: string[] = [];
