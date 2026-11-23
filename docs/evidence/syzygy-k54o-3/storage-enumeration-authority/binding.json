@@ -1,0 +1,76 @@
+{
+  "label": "Observed",
+  "reviewedCommit": "06513cbd9c9f3ad60ea17a855e25e40b2af5867d",
+  "implementationCommit": "7b90605c44a5f99b53e1c553ac52982f1fdb6983",
+  "branchCommit": "4f7a2d224ef2330fa3527d7cb6260431f8fe5a48",
+  "identicalReviewedSourceAndTest": true,
+  "files": {
+    "packages/polaris-dossier/src/session-launch.ts": "4ff985f44d071310ef249cb9cfe9b2e120b2c31f7ee384e2e5d3f83e3889ad49",
+    "packages/polaris-dossier/src/session-launch.test.ts": "dc976e5d4cfb7b56d69503aca13f228d19c3e65195ba9b0083a4cc917d00b760"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "SOURCE-REVIEW-RAW.md",
+    "sha256": "dd8e92371fee3b7128bf6910331d21226c29d8680ad1db61f57cef421119ee4e"
+  },
+  "focusedNative": {
+    "passed": 15,
+    "skipped": 24,
+    "total": 39,
+    "logSha256": "9d2d65ba4eb7f9723764f70bdc7e42499e3c0725bfc39c00bef83049042aae51"
+  },
+  "precedingNativeSample": {
+    "file": "../machine-state-authority/local-interrupted-capture-profile.json",
+    "processPending": true,
+    "storagePending": true,
+    "freshVerification": "accepted",
+    "sampleElapsedMs": 1063.038
+  },
+  "selectedFaults": [
+    {
+      "name": "missing partial stat drain",
+      "commit": "06513cbd9c9f3ad60ea17a855e25e40b2af5867d",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "edits": [
+        {
+          "old": "      if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));\n",
+          "new": ""
+        }
+      ],
+      "expected": true,
+      "actual": false,
+      "failed": 1,
+      "skipped": 38,
+      "logSha256": "606b71130a6d2bc9d60bcf42aef131396fea7762f9a208ebc05c49b0a9faf13a"
+    },
+    {
+      "name": "deferred native stat submission",
+      "commit": "06513cbd9c9f3ad60ea17a855e25e40b2af5867d",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "edits": [
+        {
+          "old": "sample: Promise<Stats>",
+          "new": "sample: () => Promise<Stats>"
+        },
+        {
+          "old": "children.map(child => child.sample)",
+          "new": "children.map(child => child.sample())"
+        },
+        {
+          "old": "        const child = path.join(base, item.name), sample = lstat(child);\n        void sample.catch(() => {}); // The batch handles failures after settling.\n        batch.push({ file: child, sample });",
+          "new": "        const child = path.join(base, item.name);\n        batch.push({ file: child, sample: () => lstat(child) });"
+        },
+        {
+          "old": "      if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));\n",
+          "new": ""
+        }
+      ],
+      "expected": 1,
+      "actual": 0,
+      "failed": 1,
+      "skipped": 38,
+      "logSha256": "f75999639df624e0608aa3c9d8a4b0d60baefb2aae7852fd39ebc81e3d0811ca"
+    }
+  ],
+  "remainingUnknown": "Whether the pending census caused the composed refusal and whether this change keeps that sample within its deadline in a native Resume run."
+}
