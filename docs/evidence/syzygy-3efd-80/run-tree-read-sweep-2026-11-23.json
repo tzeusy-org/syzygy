@@ -161,7 +161,7 @@
       "call": "readFileSync",
       "text": "return { text: fs.readFileSync(file, 'utf8') };",
       "class": "not-run-tree",
-      "why": "the clone .git refs, not the run tree (the clone reader bounds them)"
+      "why": "outside the run tree: the clone .git HEAD and refs, which lie within the agent sessions write reach; readSmall does an lstat then a whole readFileSync, not covered by this version (a residual, with launch-clone.ts 83, design.md)"
     },
     {
       "site": "packages/polaris-dossier/src/close.ts:212",

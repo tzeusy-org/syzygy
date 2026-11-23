@@ -670,7 +670,7 @@ TREEREAD_TAG = "polaris-dossier-run-tree-read-bounds-v2.18"
 TREEREAD_ROUTE = f"[Run-tree read bounds amendment 2.18]({TREEREAD_HOME})"
 TREEREAD_REPLACES = tuple(POLARIS_ID + number for number in ("033", "035", "048"))
 TREEREAD_SUBJECTS = {
-    TREEREAD_SPEC: "a9e859c596cbd4bbda2d9a9259fea0dbbbfa9eb2cc2160fa4754f82643d82d51",
+    TREEREAD_SPEC: "84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5",
 }
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
@@ -7654,7 +7654,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
                effective is None and not r1 and len(r2) == 1 and rel in r2[0])
 
 
-TREEREAD_SCENARIOS_ADDED = 6
+TREEREAD_SCENARIOS_ADDED = 7
 
 
 def treeread_cases(tmp, base, witnesses, failures):
