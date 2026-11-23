@@ -468,6 +468,37 @@ describe('trusted URL artifact producer bridge', () => {
       .rejects.toThrow('url-run-artifacts-unavailable');
     expect(waits).toBe(2); expect(() => next.bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
   });
+  it.each(['run product', 'role artifact'] as const)('checks authority before opening a recovered %s', async kind => {
+    const f = await recoveryFixture(), origins = f.freshOrigins();
+    let originsRestored = false;
+    const ledger = { ...origins.ledger, restoreFrozenOrigins: async (...args: Parameters<typeof origins.ledger.restoreFrozenOrigins>) => {
+      const result = await origins.ledger.restoreFrozenOrigins(...args);
+      originsRestored = true;
+      return result;
+    } };
+    const bridge = createUrlRunArtifacts({ ...f.options, origins: { ...origins, ledger } });
+    const targetWait = kind === 'run product' ? 1 : f.frozen.records.length + 1;
+    let subjectWaits = 0;
+    const snapshot = vi.spyOn(productReads, 'snapshotProductFile');
+    let readsAtWithdrawal: number | undefined;
+    try {
+      await expect(bridge.restoreFrozenProducts(f.capability, async () => {
+        if (originsRestored && ++subjectWaits === targetWait) {
+          readsAtWithdrawal = snapshot.mock.calls.length;
+          f.stale();
+        }
+        return true;
+      })).rejects.toThrow('url-run-artifacts-unavailable');
+      expect(subjectWaits).toBe(targetWait);
+      expect(readsAtWithdrawal).toBeDefined();
+      expect(snapshot.mock.calls).toHaveLength(readsAtWithdrawal!);
+      f.verifyCurrent.withImplementation(() => true, () => {
+        expect(() => bridge.latestStageChecks()).toThrow('url-run-artifacts-unavailable');
+      });
+    } finally {
+      snapshot.mockRestore();
+    }
+  });
   it.each(['copy', 'json', 'file', 'boundary', 'claim', 'source', 'ledger-run'] as const)('refuses %s drift during nominal product recovery', async fault => {
     const f = await recoveryFixture(fault !== 'source');
     if (fault === 'ledger-run') { expect(() => f.fresh(`run-${'d'.repeat(32)}`)).toThrow('url-run-artifacts-unavailable'); return; }

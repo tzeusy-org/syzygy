@@ -1454,15 +1454,17 @@ function create(given: UrlRunArtifactsOptions) {
     try {
       const recovered = await ledger.restoreFrozenOrigins(capability, { run, coreSha256: sha256(coreBytes), declarationSha256: sha256(sidecarBytes) }, waitForSamples);
       const saved = new Map<string, { bytes: Uint8Array; receipt: UrlOriginReceipt; snapshot: ProductFileSnapshot }>();
+      // Each snapshot rechecks live authority immediately after the resource
+      // wait, before opening a protected descriptor and again before return.
       for (const product of recovered.history.records) {
-        if (!(await waitForSamples())) refuse(); live();
+        if (!(await waitForSamples())) refuse();
         const snapshot = snapshotRecord(run, product.path, product.bytes);
         if (snapshot.bytes === null || snapshot.bytes.length !== product.bytes || sha256(snapshot.bytes) !== product.sha256) refuse();
         saved.set(product.path, { bytes: snapshot.bytes, receipt: recovered.receipt(product.path, snapshot.bytes), snapshot });
       }
       const artifactBindings: ArtifactBinding[] = [];
       for (const product of recovered.history.artifacts) {
-        if (!(await waitForSamples())) refuse(); live();
+        if (!(await waitForSamples())) refuse();
         const snapshot = snapshotRecord(directories.get(product.role)!, product.path, product.bytes);
         if (snapshot.bytes === null || snapshot.bytes.length !== product.bytes || sha256(snapshot.bytes) !== product.sha256) refuse();
         artifactBindings.push({ role: product.role, path: product.path, bytes: snapshot.bytes,
