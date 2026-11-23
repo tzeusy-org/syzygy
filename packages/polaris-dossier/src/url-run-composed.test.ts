@@ -1703,6 +1703,7 @@ describe('composed URL run with actual role processes', () => {
           const launchesBeforeResume = [...relayRoles];
           const forwardsBeforeResume = [author.count(), inv.count(), fidelity.count(), design.count()];
           const oldDesignPid = stopped.roles.find(role => role.role === 'design')!.pid;
+          const resumedRenderAuthority = new AsyncLocalStorage<{ calls: number; totalMs: number }>();
           const verifiedCuts: Awaited<ReturnType<typeof recovery.verifyStoppedUrlRun>>[] = [];
           const verify = recovery.verifyStoppedUrlRun, claim = recovery.claimStoppedUrlRun;
           vi.spyOn(recovery, 'verifyStoppedUrlRun').mockImplementation(async (...args) => {
@@ -1724,8 +1725,15 @@ describe('composed URL run with actual role processes', () => {
             vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce(options =>
               observeBootstrap('create-origins', () => observeResumedOrigins(origins, options, resumeOriginSteps), () => true));
             const createArtifacts = runArtifacts.createUrlRunArtifacts;
-            vi.spyOn(runArtifacts, 'createUrlRunArtifacts').mockImplementationOnce((...args) => {
-              const bridge = createArtifacts(...args);
+            vi.spyOn(runArtifacts, 'createUrlRunArtifacts').mockImplementationOnce(options => {
+              const bridge = createArtifacts({ ...options, current: () => {
+                const trace = resumedRenderAuthority.getStore();
+                if (trace === undefined) return options.current();
+                const began = performance.now();
+                trace.calls++;
+                try { return options.current(); }
+                finally { trace.totalMs += performance.now() - began; }
+              } });
               return Object.freeze({ ...bridge, restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) =>
                 observeBootstrap('restore-products', () => bridge.restoreFrozenProducts(...restoreArgs), () => true) });
             });
@@ -1838,6 +1846,42 @@ describe('composed URL run with actual role processes', () => {
             resumeDiagnostic = await observeDesignRun(f.run, true);
           }
           eligiblePhase = 'supervised-resume';
+          const renderRun = rendering.renderRun;
+          vi.spyOn(rendering, 'renderRun').mockImplementation((run, deps, continuation) => {
+            const { admitProducedSite, productReads } = deps;
+            if (run !== f.run || admitProducedSite === undefined || productReads === undefined)
+              return renderRun(run, deps, continuation);
+            const began = performance.now();
+            const initialRemainingMs = productReads.deadline - Date.now();
+            const authority = { calls: 0, totalMs: 0 };
+            let admission: { entryMs: number; entryRemainingMs: number; outcome: ResumeObservation | 'pending'; settledMs?: number } | undefined;
+            const result = resumedRenderAuthority.run(authority, () => renderRun(run, { ...deps, admitProducedSite: input => {
+              const attempt: NonNullable<typeof admission> = { entryMs: performance.now() - began,
+                entryRemainingMs: productReads.deadline - Date.now(), outcome: 'pending' };
+              admission = attempt;
+              const settle = (outcome: ResumeObservation): void => {
+                attempt.outcome = outcome;
+                attempt.settledMs = performance.now() - began;
+              };
+              const checked = (accepted: boolean): void => settle(accepted === true ? 'accepted' : 'refused');
+              try {
+                const accepted = admitProducedSite(input);
+                if (accepted instanceof Promise) void accepted.then(checked, () => settle('rejected'));
+                else checked(accepted);
+                return accepted;
+              } catch (error) {
+                settle('rejected');
+                throw error;
+              }
+            } }, continuation));
+            void result.then(report => resumeChecks.push({ phase: 'resumed-render', initialRemainingMs,
+              elapsedMs: performance.now() - began, remainingMs: productReads.deadline - Date.now(),
+              admission: admission === undefined ? 'unreached' : { ...admission }, artifactAuthority: { ...authority },
+              outcome: report.ok ? 'rendered' : report.refusal.stage,
+              producerRefusal: !report.ok && report.refusal.reason === 'The rendered products were not admitted by the checked producer before storage.' }),
+            () => resumeChecks.push({ phase: 'resumed-render', outcome: 'rejected', elapsedMs: performance.now() - began }));
+            return result;
+          });
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           eligiblePhase = 'verify-resumed-result';
           if (exit !== 0) {
@@ -1862,10 +1906,12 @@ describe('composed URL run with actual role processes', () => {
           const resumed = readUrlSupervisorState(stateRoot, f.runId);
           expect(resumed?.done).toBeDefined();
           expect(resumed!.finalSite!.site).toBeGreaterThan(resumed!.siteFor['0']!);
+          expect(resumed!.finalSite!.draftRevision).toBe(0);
           const recordBytes = await fs.readFile(path.join(f.run, 'record.json'));
           const execution = JSON.parse(recordBytes.toString()) as { format: string; supervisorCapture: {
             roles: { role: string; pid: number | 'Unknown' }[]; historical: unknown } };
           expect(execution.format).toBe('polaris-dossier-execution-record/2');
+          expect(execution).toMatchObject({ pinnedRevisionAtClose: { commit: f.commit }, reportedCommands: { draftRevision: 0 } });
           expect(execution.supervisorCapture.historical).toBeDefined();
           if (eligibleStop) {
             expect(relayRoles).toEqual(launchesBeforeResume);
