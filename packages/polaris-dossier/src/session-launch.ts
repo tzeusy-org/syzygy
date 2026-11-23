@@ -300,15 +300,21 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
         check();
         const disappeared = (sample: PromiseSettledResult<Stats>): boolean =>
           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
+        const missing = samples.filter(disappeared).length;
+        if (missing !== 0) {
+          // All the reads already ran. A disappearance cannot hide another
+          // refusal or make an unsupported entry eligible for a retry.
+          for (const sample of samples) {
+            if (sample.status === 'rejected') {
+              if (!disappeared(sample)) throw sample.reason;
+            } else if (!sample.value.isDirectory() && (!sample.value.isFile() || sample.value.nlink !== 1)) throw refused();
+          }
+          if (missing !== 1) throw refused();
+          throw entryDisappeared;
+        }
         for (const [index, sample] of samples.entries()) {
           check();
-          if (sample.status === 'rejected') {
-            if (!disappeared(sample)) throw sample.reason;
-            // A second observed disappearance exhausts the retry even if
-            // both names vanished from the same batch.
-            if (samples.slice(index + 1).some(disappeared)) throw refused();
-            throw entryDisappeared;
-          }
+          if (sample.status === 'rejected') throw sample.reason;
           const stat = sample.value;
           if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
           else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;

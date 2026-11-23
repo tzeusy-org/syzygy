@@ -207,6 +207,21 @@ function pinnedNativeImage(): Promise<string> {
   })();
 }
 
+// Keep the native child and bounded sampler real, but direct the two
+// root opens to owned directories that the child cannot modify.
+async function isolateStorageRoots(view: UrlSessionLaunchOptions['view'], workOpened: () => void) {
+  const root = path.dirname(view.workDirectory);
+  const home = path.join(root, 'own-census-home'), work = path.join(root, 'own-census-work');
+  await Promise.all([mkdir(home), mkdir(work)]);
+  const open = fsPromises.open;
+  const observation = vi.spyOn(fsPromises, 'open').mockImplementation((file, ...options) => {
+    if (file === view.homeDirectory) return open(home, ...options);
+    if (file === view.workDirectory) { workOpened(); return open(work, ...options); }
+    return open(file, ...options);
+  });
+  return { work, restore: () => observation.mockRestore() };
+}
+
 async function privateLaunchOptions(root: string, profile: NativeSessionProfile, role: 'author' | 'design',
   audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary',
 ): Promise<UrlSessionLaunchOptions> {
@@ -1152,14 +1167,19 @@ describe('prepared private CLI launch',()=>{
   );
 
   it.each([
-    { disappearingEntries: 1, expected: 'exited' },
-    { disappearingEntries: 2, expected: 'inspection-failed' },
-  ])('bounds storage census retries with $disappearingEntries disappearing entries', async ({ disappearingEntries, expected }) => {
-    const f = await launchFixture();
-    const disappearing = Array.from({ length: disappearingEntries }, (_, index) => `own-disappearing-entry-${index}`);
+    { scenario: 'one missing entry', faults: [['ENOENT']], outcome: 'exited', walks: 2 },
+    { scenario: 'two missing entries in one batch', faults: [['ENOENT', 'ENOENT']], outcome: 'inspection-failed', walks: 1 },
+    { scenario: 'one missing entry on each of two walks', faults: [['ENOENT'], ['ENOENT']], outcome: 'exited', walks: 3 },
+    { scenario: 'a non-ENOENT fault after a missing entry in the retry', faults: [['ENOENT'], ['ENOENT', 'EACCES']], outcome: 'inspection-failed', walks: 2 },
+    { scenario: 'the shared entry allowance consumed on the retry', faults: [['ENOENT']], outcome: 'inspection-failed', walks: 2, entries: 8 },
+  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries }) => {
+    const f = await launchFixture(entries === undefined ? {} : { entries });
+    const names = new Set(Array.from({ length: 3 }, (_, index) => `own-census-entry-${index}`));
     const retained = 'own-retained-entry';
-    const work = f.launch.view.workDirectory;
-    let rootOpens = 0, seeded = 0, removed = 0, missing = 0, otherResults = 0, retainedOnRetry = false;
+    const pending = faults.map(walk => [...walk]);
+    const returned: string[] = [];
+    let rootOpens = 0;
+    const retainedWalks = new Set<number>();
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
       if (rootOpens > 0) completedSamples.push(rootOpens);
@@ -1170,27 +1190,21 @@ describe('prepared private CLI launch',()=>{
     const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
     const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
-
-    const open = fsPromises.open, lstat = fsPromises.lstat;
-    const countOpen = vi.spyOn(fsPromises, 'open').mockImplementation((...args) => {
-      if (args[0] === work) rootOpens++;
-      return open(...args);
-    });
-    const removeAfterEnumeration = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
+    const census = await isolateStorageRoots(f.launch.view, () => { rootOpens++; });
+    const lstat = fsPromises.lstat;
+    const faultAfterEnumeration = vi.spyOn(fsPromises, 'lstat').mockImplementation((...args) => {
       const file = args[0];
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return lstat(...args);
       const name = path.basename(file);
-      if (name === retained && rootOpens === 2) retainedOnRetry = true;
-      if (!disappearing.includes(name)) return lstat(...args);
-      // The census enumerated this owned entry. Remove it in the same turn,
-      // then observe the genuine descriptor-relative lstat's refusal.
-      unlinkSync(file);
-      removed++;
-      const result = lstat(...args);
-      void result.then(() => { otherResults++; }, (error: NodeJS.ErrnoException) => {
-        if (error.code === 'ENOENT') missing++;
-        else otherResults++;
-      });
+      if (name === retained) retainedWalks.add(rootOpens);
+      const fault = names.has(name) ? pending[rootOpens - 1]?.shift() : undefined;
+      if (fault === undefined) return lstat(...args);
+      // Observe real descriptor-relative ENOENT after removing the name. A
+      // named synthetic access error exercises a non-transient rejection.
+      if (fault === 'ENOENT') unlinkSync(file);
+      const result = fault === 'ENOENT' ? lstat(...args)
+        : Promise.reject(Object.assign(new Error('owned census access fault'), { code: fault }));
+      void result.then(() => { returned.push('accepted'); }, (error: NodeJS.ErrnoException) => { returned.push(error.code ?? 'unknown'); });
       return result;
     });
     // Start one real census after the native tool enters and the fixtures are
@@ -1203,35 +1217,29 @@ describe('prepared private CLI launch',()=>{
       cleanup.push(child.stop);
       try {
         expect(await Promise.race([toolEntered, child.finished.then(result => result.outcome)])).toBe(true);
-        for (const name of [...disappearing, retained]) {
-          writeFileSync(path.join(work, name), 'owned', { flag: 'wx' });
-          seeded++;
-        }
+        for (const name of [...names, retained]) writeFileSync(path.join(census.work, name), 'owned', { flag: 'wx' });
         vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
-        const completed = expected === 'exited';
+        const completed = outcome === 'exited';
         const current = await child.waitForSample(), inspection = inspect();
-        const diagnostic = JSON.stringify({ rootOpens, seeded, removed, missing, otherResults,
-          sample: inspection.firstRefusal ?? inspection.latest });
+        const diagnostic = JSON.stringify({ rootOpens, pending, returned, sample: inspection.firstRefusal ?? inspection.latest });
         expect(current, diagnostic).toBe(completed);
-        expect(seeded).toBe(disappearingEntries + 1);
-        expect(rootOpens).toBe(completed ? 2 : 1);
-        expect(removed).toBe(disappearingEntries);
-        expect({ missing, otherResults }, diagnostic).toEqual({ missing: disappearingEntries, otherResults: 0 });
-        expect(retainedOnRetry).toBe(completed);
-        expect(completedSamples).toEqual(completed ? [2] : []);
+        expect(rootOpens, diagnostic).toBe(walks);
+        expect([...returned].sort()).toEqual(faults.flat().sort());
+        if (completed) expect(retainedWalks.has(walks)).toBe(true);
+        expect(completedSamples).toEqual(completed ? [walks] : []);
         expect(inspection.latest).toMatchObject({ ordinal: 1, phases: { storage: { outcome: completed ? 'accepted' : 'rejected' } } });
         if (completed) expect(inspection.firstRefusal).toBeUndefined();
         else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'operation-rejected' });
         releaseTool();
-        expect(await child.finished).toMatchObject({ outcome: expected, exitCode: completed ? 0 : null,
+        expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
           groupTermination: 'confirmed', toolTermination: 'settled' });
       } finally {
         releaseTool();
         await child.stop();
       }
     } finally {
-      removeAfterEnumeration.mockRestore();
-      countOpen.mockRestore();
+      faultAfterEnumeration.mockRestore();
+      census.restore();
       vi.useRealTimers();
     }
   }, 15000);
@@ -1244,7 +1252,7 @@ describe('prepared private CLI launch',()=>{
     { missing: 'replaced child', directories: 1, outcome: 'inspection-failed', removed: 1, rootReads: 1 },
   ])('distinguishes $missing vanishing at directory open', async ({ missing, directories, outcome, removed, rootReads }) => {
     const f = await launchFixture();
-    const work = f.launch.view.workDirectory, names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
+    const names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
     const preparation = await prepareRestrictedUrlSession(f.launch);
     const inspect = observeUrlSessionInspectionForTest(preparation)!;
     let enterTool!: (entered: true) => void, releaseTool!: () => void;
@@ -1255,6 +1263,7 @@ describe('prepared private CLI launch',()=>{
     const enumerated = new Set<string>();
     let rootOpens = 0, childRemovals = 0;
     const retainedWalks = new Set<number>();
+    const census = await isolateStorageRoots(f.launch.view, () => { rootOpens++; });
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       const name = path.basename(file);
@@ -1262,10 +1271,7 @@ describe('prepared private CLI launch',()=>{
       if (name === retained) retainedWalks.add(rootOpens);
     };
     filesystem.beforeOpen = async file => {
-      if (file === work) {
-        rootOpens++;
-        if (rootOpens === 1 && missing === 'root') throw Object.assign(new Error('own missing work root'), { code: 'ENOENT' });
-      } else if (typeof file === 'string' && file.startsWith('/proc/self/fd/') && names.has(path.basename(file))) {
+      if (typeof file === 'string' && file.startsWith('/proc/self/fd/') && names.has(path.basename(file))) {
         expect(enumerated.has(path.basename(file))).toBe(true);
         rmdirSync(file);
         childRemovals++;
@@ -1282,8 +1288,11 @@ describe('prepared private CLI launch',()=>{
       cleanup.push(child.stop);
       try {
         expect(await Promise.race([toolEntered, child.finished.then(result => result.outcome)])).toBe(true);
-        for (const name of names) mkdirSync(path.join(work, name));
-        writeFileSync(path.join(work, retained), 'retained', { flag: 'wx' });
+        if (missing === 'root') rmdirSync(census.work);
+        else {
+          for (const name of names) mkdirSync(path.join(census.work, name));
+          writeFileSync(path.join(census.work, retained), 'retained', { flag: 'wx' });
+        }
         vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
         const current = await child.waitForSample();
         const observation = inspect();
@@ -1302,6 +1311,7 @@ describe('prepared private CLI launch',()=>{
         await child.stop();
       }
     } finally {
+      census.restore();
       vi.useRealTimers();
     }
   }, 60_000);
