@@ -1,0 +1,352 @@
+{
+  "head": "ee9d14880f9d3ab975f8d15ee459306a808875a4",
+  "hostedCheckoutWithIdenticalTree": "596f2e0f833effb082cd8b2b7b44c37d23e4747b",
+  "workflowJob": "https://github.com/tzeusy-org/syzygy/actions/runs/45127256808/job/137535556333",
+  "decodedConnectorLogSha256": "c988d7c1cd3ee3b3b80d6bf33584caaa4b015f4a56dfd029ae3232bdb93d9ec6",
+  "tests": {
+    "files": {
+      "passed": 135,
+      "failed": 2
+    },
+    "passed": 3960,
+    "failed": 4,
+    "skipped": 3
+  },
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 114373
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 109369
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 516455
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 80536
+    }
+  ],
+  "composedFailureObservations": [
+    {
+      "assertion": "expected undefined to be defined",
+      "reportedReasons": [],
+      "resume": [],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "stopped"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "relayEvents": {
+        "author": {
+          "attempt-allowed": 7,
+          "send-attempt": 7,
+          "send-outcome": 7,
+          "response-admitted": 7
+        },
+        "inventory": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "fidelity": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        },
+        "design": {}
+      },
+      "auditEnd": [],
+      "orderedAppends": {}
+    },
+    {
+      "assertion": "expected [] to deeply equal [ { current: true, \u2026(4) } ]",
+      "reportedReasons": [],
+      "resume": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "stopped"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "relayEvents": {
+        "author": {
+          "attempt-allowed": 7,
+          "send-attempt": 7,
+          "send-outcome": 7,
+          "response-admitted": 7
+        },
+        "inventory": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "fidelity": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        },
+        "design": {}
+      },
+      "auditEnd": [
+        "declaration"
+      ],
+      "orderedAppends": {}
+    },
+    {
+      "assertion": "expected undefined to be defined",
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "resume": [],
+      "roles": {
+        "author": "inspection-failed",
+        "inventory": "inspection-failed",
+        "fidelity": "inspection-failed",
+        "design": "Unknown"
+      },
+      "forwards": {
+        "author": 6,
+        "inventory": 1,
+        "fidelity": 1,
+        "design": 0
+      },
+      "relayEvents": {
+        "author": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "inventory": {
+          "attempt-allowed": 1,
+          "send-attempt": 1,
+          "send-outcome": 1,
+          "transport-failed": 1
+        },
+        "fidelity": {
+          "attempt-allowed": 1,
+          "send-attempt": 1,
+          "send-outcome": 1
+        },
+        "design": {}
+      },
+      "auditEnd": [
+        "declaration"
+      ],
+      "orderedAppends": {}
+    }
+  ],
+  "interruptedResumeStoreOperations": [
+    {
+      "kind": "open",
+      "outcome": "accepted",
+      "runRemainingMs": 6724117,
+      "asyncAuthority": {
+        "started": 4,
+        "accepted": 4,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1407.1379269998288
+      },
+      "elapsedMs": 3188.254
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6720583,
+      "asyncAuthority": {
+        "started": 13,
+        "accepted": 13,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 5890.081009999965
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "read": "rejected",
+      "elapsedMs": 5046.387
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6715537,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 2316.654653999838
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 3066.198
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6712470,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1775.21251699992
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2471.117
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6709999,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1756.36654800002
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2447.792
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6707551,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1823.1355179999955
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2530.574
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6705021,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1757.4007089999504
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2449.609
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6702571,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1779.5718030001735
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2477.971
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6700093,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1750.2323150000302
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2438.878
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "refused",
+      "runRemainingMs": 6697654,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1758.40293500002
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "elapsedMs": 2451.292
+    },
+    {
+      "kind": "close",
+      "outcome": "accepted",
+      "runRemainingMs": 6695203,
+      "asyncAuthority": {
+        "started": 0,
+        "accepted": 0,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 0
+      },
+      "elapsedMs": 0.188
+    }
+  ],
+  "otherFailedFile": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+  "otherFailure": "The machine peer source fingerprint was stale. The unchanged bounded /usr/bin/prlimit call no longer matched the whole-module fingerprint. The fingerprint was recalculated and the focused guard suite passed 11 tests."
+}
