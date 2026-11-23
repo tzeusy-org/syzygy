@@ -495,9 +495,14 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
-        if (!Number.isSafeInteger(deadline) || deadline > options.deadline || deadline <= live()) throw refused();
+        // In an unstaged synchronous operation, io checks the same live
+        // authority immediately before submitting the first anchor read.
+        const synchronousAnchor = currentAsync === undefined && staging === undefined;
+        if (!Number.isSafeInteger(deadline) || deadline > options.deadline
+          || (!synchronousAnchor && deadline <= live())) throw refused();
         for (;;) {
-          check(); await io(verifyAnchorsDuringIo);
+          if (!synchronousAnchor) check();
+          await io(verifyAnchorsDuringIo);
           if (allocation) {
             await reverify(); check(); verifyNamedRoots(); checkDeadline();
             if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();

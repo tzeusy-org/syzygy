@@ -125,6 +125,35 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
+  it.each([true, false])('takes one fresh synchronous parent sample before the first private anchor read when current is %s', async allowed => {
+    const profile = effectProfile(false), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    let granted = true;
+    const current = vi.fn(() => granted);
+    const reopened = await openUrlMachineStore({ ...f.options, current }, f.store.identitySha256);
+    if (reopened === null) throw new Error('owned machine store failed to reopen');
+    cleanup.push(() => reopened.close());
+    current.mockClear();
+    granted = allowed;
+    let checksAtFirstAnchor: number | undefined;
+    filesystem.afterLstat = file => {
+      if (file === f.options.protectedRoot) checksAtFirstAnchor ??= current.mock.calls.length;
+    };
+    const effect = vi.fn();
+    expect(await reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      effect();
+      expect(lease.sampleCurrent()).not.toBeNull();
+    }, profile)).toBe(allowed);
+    if (allowed) {
+      expect(checksAtFirstAnchor).toBe(1);
+      expect(effect).toHaveBeenCalledTimes(1);
+    } else {
+      expect(checksAtFirstAnchor).toBeUndefined();
+      expect(current).toHaveBeenCalledTimes(1);
+      expect(effect).not.toHaveBeenCalled();
+    }
+  });
+
   it('rejects copied, oversized and mismatched effect profiles before entry', async () => {
     const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
