@@ -31,6 +31,7 @@
 - `F3-PRIVATE-AUDIT-ADJACENT-DECLARATIONS-REVIEW-RAW\.md`
 - `F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW\.md`
 - `F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW\.md`
+- `F3-CAPTURE-ACCEPT-AUTHORITY(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -131,3 +132,5 @@
 [Observed] The synchronous store review records `PASS` (`F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW.md:1`) at `e93544ff4`. A-134 keeps one fresh authority sample immediately before the first named-root read in each unstaged synchronous attempt. Typecheck, 77 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.
 
 [Observed] The ordinary store overlap review records `PASS` (`F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW.md:1`) at `2927f3c38`. A-135 joins the already-held root sync and private census before any state read for genuine ordinary profiled operations. Typecheck, 81 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.
+
+[Observed] The initial capture review records `REVISE` (`F3-CAPTURE-ACCEPT-AUTHORITY-INITIAL-REVIEW-RAW.md:1`) because the proposed interval crossed a listener descriptor observation. The corrected review records `PASS` (`F3-CAPTURE-ACCEPT-AUTHORITY-REVIEW-RAW.md:1`) at `055aa1f0d`. A-136 uses the actual capture entry's fresh check before the listener read. Independent source review, typecheck, 27 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.

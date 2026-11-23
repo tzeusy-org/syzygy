@@ -1,0 +1,90 @@
+{
+  "adoption": "A-136",
+  "baseBeforeDisjointA135": "8388cf220a74abd813f8eeaeb6283c3c4ed710bf",
+  "sourceCommit": "055aa1f0da11950af78f1de02d1fd46cf49fc57b",
+  "patchSha256": "ca1d7b0a28293b3f3b95d1072f1727cfab493a752494a49a7d9f4627852d9147",
+  "productionBlob": "884e691ed5adee253393b385399e92df69cafea4",
+  "testBlob": "a749adf2288aa7483f11f072f6b00882b9c2688a",
+  "initialReview": {
+    "path": "docs/reviews/F3-CAPTURE-ACCEPT-AUTHORITY-INITIAL-REVIEW-RAW.md",
+    "verdict": "REVISE",
+    "sha256": "bcac87f8bb128a812854179d09a3413706db0b079e7f199e10c53a64cd047193",
+    "subjectSha256": "d35ed3716dba4ffa9bf2c93eaea2fed79a2fe9f1f3ad63b4032a54e4b375d11a",
+    "disposition": "Withdrawn. Its skipped sample followed a listener-descriptor read."
+  },
+  "review": {
+    "path": "docs/reviews/F3-CAPTURE-ACCEPT-AUTHORITY-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "7a1ee58cc5a7cc013dc5a5e20fdf9013670b93ab55e731e4353ddd12459a0c5a",
+    "subjectSha256": "ca1d7b0a28293b3f3b95d1072f1727cfab493a752494a49a7d9f4627852d9147"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "cases": 27,
+      "files": 2,
+      "sha256": "c828d3471ba8b10c1634fd91c428f27f01606f5ac5556cd5d80c3ec988d29ccc"
+    },
+    "mutants": [
+      {
+        "id": "restore-duplicate",
+        "file": "url-run-machine.ts",
+        "old": "if (launch === undefined || listener === null) return null;",
+        "new": "if (launch === undefined || listener === null || !current()) return null;",
+        "failedControls": 2,
+        "logSha256": "e1bd25d45a5827976b6dfc42736fbb0a71bf4041ff85ae477c612ea99356ed8b"
+      },
+      {
+        "id": "skip-capture-entry",
+        "file": "url-machine-peer.ts",
+        "old": "    if ((options.effectCurrent !== undefined && options.effectCurrent() !== true)\n      || !(options.socket instanceof Socket) || claimed.has(options.socket)",
+        "new": "    if (!(options.socket instanceof Socket) || claimed.has(options.socket)",
+        "failedControls": 2,
+        "logSha256": "e832ec178c3f74969e8e0715b1c6f6d0445bbca92ccd5376a99de961976beda9"
+      }
+    ]
+  },
+  "diagnosticMotivation": {
+    "base": "8388cf220a74abd813f8eeaeb6283c3c4ed710bf",
+    "overlayPatchSha256": "7f3d1be8c8c7f7b68cd4288cb198337cfa0eff46e95741ac4cbb644c321625d7",
+    "sourceLogSha256": "60111d4d9ec9f62508940e089bbbf6fbb99cfd05c47127330d9e06719a9fd5d3",
+    "confirmedLauncherSamples": 22,
+    "slowestElapsedMs": 833.860554999992,
+    "synchronousPolicy": {
+      "n": 7,
+      "totalMs": 556.9338240000361,
+      "longestMs": 89.94544999999925,
+      "firstMs": 195422.740428,
+      "lastMs": 196133.353389
+    },
+    "machineAuthority": {
+      "n": 4,
+      "totalMs": 326.2901899999997,
+      "longestMs": 89.95854500000132,
+      "firstMs": 195422.740428,
+      "lastMs": 195819.970691
+    },
+    "designDeliveryAudit": {
+      "status": "read",
+      "count": 5,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "launch-terminal"
+      ]
+    },
+    "hostActivation": {
+      "startedMs": 111200.876,
+      "settledMs": 129184.472,
+      "outcome": "rejected"
+    },
+    "activationRefusalPredicate": "Unknown"
+  },
+  "remaining": "The exact native latency and common successful revision for both Stop/Resume paths are Unknown."
+}
