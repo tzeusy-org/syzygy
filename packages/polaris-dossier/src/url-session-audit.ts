@@ -1,6 +1,7 @@
 import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, realpathSync } from 'node:fs';
 import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import path from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { RUN_LAYOUT } from './state-directory.js';
@@ -1390,11 +1391,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         appended = true;
         await checkSample();
         const material = await readInertUrlDesignProduct(product, binding);
-        if (!material) throw refused();
+        if (!material || !isDeepStrictEqual(reproduced, material.metadata)) throw refused();
         await checkSample();
-        const after = capture(material.metadata);
-        if (before.deadline !== after.deadline || !equal(before.identity, after.identity)) throw refused();
-        const result = copy({ eventSha256: event.digest, identity: after.identity }) as UrlDesignDeliveryAuditRecord;
+        const result = copy({ eventSha256: event.digest, identity: before.identity }) as UrlDesignDeliveryAuditRecord;
         const delivery = deliveryView(result, material);
         const verifyLaunch = (observeRead?: (bytes: number) => void): void => {
           if (inspectCommittedUrlLaunchHistory(launch, observeRead).eventSha256 !== attempt.eventSha256) throw refused();
@@ -1422,7 +1421,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           if (!current()) throw refused();
           try {
             verifyLaunch();
-            if (checkStoredUrlRender(run, sitePath, after.output, current, preserveFailure) !== after.identity.site) throw refused();
+            if (checkStoredUrlRender(run, sitePath, before.output, current, preserveFailure) !== before.identity.site) throw refused();
             verifyDurableEvent('design', event, observeRead);
           } catch (cause) {
             if (preserveFailure?.(cause)) throw cause;
@@ -1431,7 +1430,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           }
           if (!current()) throw refused();
         };
-        const verify = (checked: typeof after, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): void => {
+        const verify = (checked: typeof before, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): void => {
           const expired = (cause: unknown): boolean => isCheckedUrlDesignProductExpiry(candidate, cause);
           const current = (): boolean => {
             if (poisoned || closing || designRetired) return false;
@@ -1443,9 +1442,11 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           catch (cause) { if (expired(cause)) throw cause; throw refused(); }
         };
         await checkSample();
-        verify(after, product, observeRead);
+        // The post-append material matched the complete earlier metadata. Verify
+        // the launch, exact stored site and durable event at the release boundary.
+        verify(before, product, observeRead);
         const preparedProduct = new WeakRef(product);
-        function checkDelivery(checked: typeof after, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): () => void {
+        function checkDelivery(checked: typeof before, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): () => void {
           const ref = new WeakRef(candidate);
           return () => {
             currentDesignRecord(result);
@@ -1459,14 +1460,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           // validated product whose full identity still matches the recorded one.
           // The prepared capability supplies the same captured metadata on
           // each read. verify still checks the exact stored site at this use.
-          const checked = candidate === preparedProduct.deref() ? after
+          const checked = candidate === preparedProduct.deref() ? before
             : capture(material ?? await inspectUrlDesignProduct(candidate, binding));
           currentDesignRecord(result);
-          if (!equal(after.identity, checked.identity)) { designRetired = true; throw refused(); }
+          if (!equal(before.identity, checked.identity)) { designRetired = true; throw refused(); }
           verify(checked, candidate, observeRead);
           return checkDelivery(checked, candidate, observeRead);
         } });
-        authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product, observeRead),
+        authenticatedDesignViews.set(delivery, { current: checkDelivery(before, product, observeRead),
           receiptCurrent: verifyReceipt, product: preparedProduct });
         capturedDeliveries.set(result.eventSha256, result);
         if (orderedDesignProfile !== null && input.deadline !== undefined) {

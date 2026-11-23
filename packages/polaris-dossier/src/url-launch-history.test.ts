@@ -287,6 +287,7 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
 
 describe('protected URL design delivery audit', () => {
   it.each(['valid', 'prepared-site-drift', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal',
+    'material-drift', 'release-site-drift',
     'renew-launch-drift', 'renew-receipt-drift'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
     if (mode.startsWith('ordered')) plans = orderedPlans;
@@ -356,7 +357,9 @@ describe('protected URL design delivery audit', () => {
         || !designProduct.isUrlDesignProductLeaseOpen(product)) return null;
       if (mode === 'expiry') return null;
       if (mode === 'launch-drift') fs.utimesSync(historyPath('design'), 1, 1);
-      return { metadata: structuredClone(product === token ? metadata : reproducedMetadata), view: readView.slice(), parents: [parent] };
+      const checked = structuredClone(product === token ? metadata : reproducedMetadata);
+      return { metadata: mode === 'material-drift' ? { ...checked, draftRevision: checked.draftRevision + 1 } : checked,
+        view: readView.slice(), parents: [parent] };
     });
     try {
       await attempt('design');
@@ -382,6 +385,9 @@ describe('protected URL design delivery audit', () => {
       const first = audit.commitDesignDelivery(request, async () => {
         const count = audit.summary().captured['design-delivery'];
         sampledDurability.push(count);
+        if (mode === 'release-site-drift' && sampledDurability.length === 5) {
+          fs.writeFileSync(path.join(sitePath, 'index.html'), content.replace('OWN', 'NEW'));
+        }
         return mode !== 'sample-refusal' || count === 0;
       }, mode.startsWith('ordered') ? issuedDeliveryReads : undefined);
       const duplicate = audit.commitDesignDelivery(request);
@@ -392,6 +398,8 @@ describe('protected URL design delivery audit', () => {
           expect(sampledDurability).toEqual([0, 0, 1]);
           expect(read).not.toHaveBeenCalled();
         }
+        if (mode === 'material-drift') expect(sampledDurability).toEqual([0, 0, 1]);
+        if (mode === 'release-site-drift') expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         await expect(audit.commitDesignDelivery(request)).rejects.toThrow('url-session-audit-refused');
         await expect(audit.commitDesignDelivery({ ...request, round: round + 1 })).rejects.toThrow('url-session-audit-refused');
       } else {

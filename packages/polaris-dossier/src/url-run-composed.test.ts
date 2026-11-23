@@ -581,6 +581,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
   const designSetup: DesignSetup = {};
+  type DeliveryTrace = ResumeStamp & { samples: ResumeStamp[]; leaseOnRefusal?: string; remainingMs?: number };
+  let designDelivery: DeliveryTrace | undefined;
   type AppendStage = 'audit-authority' | 'attempt-authority' | 'stat' | 'read' | 'write' | 'sync';
   type AppendTrace = {
     kind: orderedWriter.OrderedDesignStoredRecord['kind'];
@@ -609,7 +611,22 @@ async function observeDesignRun(run: string, traceInference = false) {
     if (!audit.ok) return audit;
     const beginOrderedDesignAudit: typeof audit.beginOrderedDesignAudit = (plan, current, onRead) =>
       audit.beginOrderedDesignAudit(plan, () => observeAppendStage('attempt-authority', current, value => value === true), onRead);
-    return Object.freeze({ ...audit, beginOrderedDesignAudit });
+    const commitDesignDelivery: typeof audit.commitDesignDelivery = (request, sample, onRead) => {
+      const stamp: DeliveryTrace = { startedMs: clock(), samples: [] };
+      designDelivery = stamp;
+      const observeSample = sample === undefined ? undefined : () => {
+        const timing: ResumeStamp = { startedMs: clock() };
+        stamp.samples.push(timing);
+        return timed(timing, sample, checked => checked);
+      };
+      return timed(stamp, () => audit.commitDesignDelivery(request, observeSample, onRead), () => true, outcome => {
+        if (outcome === 'accepted') return;
+        const lease = designProduct.urlDesignProductLeaseState(request.product);
+        stamp.leaseOnRefusal = lease.state;
+        if ('deadline' in lease) stamp.remainingMs = lease.deadline - Date.now();
+      });
+    };
+    return Object.freeze({ ...audit, beginOrderedDesignAudit, commitDesignDelivery });
   });
   const descriptor = await fs.open(run, fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW);
   const prototype = Object.getPrototypeOf(descriptor) as Record<'read' | 'write' | 'sync' | 'stat', (...args: unknown[]) => Promise<unknown>>;
@@ -1061,7 +1078,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   }, { timing: designSetup, clock });
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
-    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, designSetup,
+    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, designSetup, designDelivery,
     launcherInspection: finishedInspection?.(),
     roleInspections: roleInspections(),
     launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
