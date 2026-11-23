@@ -165,7 +165,7 @@ type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObse
 type ResumeStoreStep = ResumeStamp & {
   runRemainingMs: number;
   asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
-} & ({ kind: 'open' | 'allocation' | 'close' } | {
+} & ({ kind: 'open' | 'close' } | { kind: 'allocation'; count: number } | {
   // The transaction outcome is distinct from the caller's terminal comparison.
   kind: 'exclusive'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
 });
@@ -1395,9 +1395,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                 observeStoreStep({ kind: 'open', ...startStoreStep() }, () => open(observedOptions, identity), value => value !== null), value => value !== null);
               if (store === null) return null;
               return Object.freeze<machineStore.UrlMachineStore>({ ...store,
-                allocateClient: deadline => observing
-                  ? observeStoreStep({ kind: 'allocation', ...startStoreStep() }, () => store.allocateClient(deadline), value => value !== null)
-                  : store.allocateClient(deadline),
+                allocateClients: (count, deadline) => observing
+                  ? observeStoreStep({ kind: 'allocation', count, ...startStoreStep() }, () => store.allocateClients(count, deadline), value => value?.length === count)
+                  : store.allocateClients(count, deadline),
                 exclusive: (id, deadline, run, profile) => {
                   if (!observing) return store.exclusive(id, deadline, run, profile);
                   const step: Extract<ResumeStoreStep, { kind: 'exclusive' }> = {
@@ -1430,6 +1430,14 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             } finally {
               observing = false;
               openObservation.mockRestore();
+            }
+            const allocations = resumeStoreSteps.filter(step => step.kind === 'allocation');
+            const count = options.plans.length * 2;
+            expect(allocations).toEqual(count === 0 ? [] : [expect.objectContaining({ count, outcome: 'accepted' })]);
+            if (allocations.length !== 0) {
+              expect(resumeStoreSteps.at(-1)).toBe(allocations[0]);
+              expect(resumeStoreSteps.slice(1, -1)).toHaveLength(options.resume!.history.clients.length);
+              expect(resumeStoreSteps.slice(1, -1).every(step => step.kind === 'exclusive' && step.read === 'accepted')).toBe(true);
             }
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             const current = machine.current(), claimChecks = checkClaim.mock.calls.length;

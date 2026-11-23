@@ -232,8 +232,13 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
       if (!(await input.reverify()) || !current()) throw refuse();
     }
     const transports = new Map<string, SessionMachineTransport>();
-    for (const plan of input.plans) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
-      const slot = await store.allocateClient(input.deadline);
+    const kinds = ['mcp-shim', 'inference-bridge'] as const;
+    const resumedSlots = resumed === undefined || input.plans.length === 0 ? []
+      : await store.allocateClients(input.plans.length * kinds.length, input.deadline);
+    if (resumedSlots === null) throw refuse();
+    let slotIndex = 0;
+    for (const plan of input.plans) for (const kind of kinds) {
+      const slot = resumed === undefined ? await store.allocateClient(input.deadline) : resumedSlots[slotIndex++] ?? null;
       if (slot === null || !current()) throw refuse();
       const context: UrlMachineClientContext = deepFreeze({ clientId: slot.clientId, policySha256: input.originPolicySha256,
         sourcePin: input.pin, runId: input.runId, role: plan.role, kind, allowedScopes: scopes(plan.role, kind),

@@ -276,6 +276,63 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
+  it('publishes a complete eight-slot allocation in one protected state update', async () => {
+    const f = await fixture(), oldSlot = await f.allocate();
+    expect((await oldSlot.publish()).ok).toBe(true);
+    const stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const archiveFile = path.join(f.options.protectedRoot, 'canonical-history.json');
+    const previousBytes = await readFile(stateFile), previous = JSON.parse(previousBytes.toString());
+    const archived = await readFile(archiveFile), canonical = await readFile(oldSlot.file);
+    const projected = await readFile(oldSlot.projection);
+    const names = (await readdir(f.options.protectedRoot)).sort();
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    let temporarySyncs = 0;
+    filesystem.afterSync = file => { if (path.basename(file).startsWith('state.json.new-')) temporarySyncs++; };
+    for (const count of [0, 1.5, 9]) expect(await reopened.allocateClients(count, f.options.deadline)).toBeNull();
+    expect(await readFile(stateFile)).toEqual(previousBytes);
+    const slots = await reopened.allocateClients(8, f.options.deadline);
+    if (!slots) throw new Error('complete allocation refused');
+    expect(slots).toHaveLength(8);
+    expect(new Set(slots.map(slot => slot.clientId)).size).toBe(8);
+    expect(new Set(slots.map(slot => slot.witnessSha256)).size).toBe(8);
+    expect(temporarySyncs).toBe(1);
+    expect(JSON.parse(await readFile(stateFile, 'utf8'))).toEqual({ ...previous, clients: [...previous.clients,
+      ...slots.map(slot => ({ ...slot, audit: [], anchor: { kind: 'never-issued', ...slot } }))] });
+    expect(await readFile(archiveFile)).toEqual(archived);
+    expect(await readFile(oldSlot.file)).toEqual(canonical);
+    expect(await readFile(oldSlot.projection)).toEqual(projected);
+    expect(await readdir(f.canonicalRoot)).toEqual([path.basename(oldSlot.file)]);
+    expect((await readdir(f.options.protectedRoot)).sort()).toEqual(names);
+  });
+
+  it.each(['before-rename', 'after-cleanup'] as const)('withholds every batched witness on withdrawal %s', async phase => {
+    const f = await fixture();
+    const stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const before = await readFile(stateFile), original = JSON.parse(before.toString());
+    let allowed = true, rootSyncs = 0;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => allowed }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    filesystem.afterSync = file => {
+      if (phase === 'before-rename' && path.basename(file).startsWith('state.json.new-')) allowed = false;
+      if (phase === 'after-cleanup' && file === f.options.protectedRoot && ++rootSyncs === 3) allowed = false;
+    };
+    expect(await reopened.allocateClients(8, f.options.deadline)).toBeNull();
+    expect(allowed).toBe(false);
+    const actual = await readFile(stateFile);
+    if (phase === 'before-rename') expect(actual).toEqual(before);
+    else {
+      const { clients } = JSON.parse(actual.toString());
+      expect(clients).toHaveLength(8);
+      expect(JSON.parse(actual.toString())).toEqual({ ...original, clients: clients.map(({ clientId, witnessSha256 }: { clientId: string; witnessSha256: string }) => ({
+        clientId, witnessSha256, audit: [], anchor: { kind: 'never-issued', clientId, witnessSha256 },
+      })) });
+    }
+    expect(await readdir(f.canonicalRoot)).toEqual([]);
+  });
+
   it.each(['before-lock', 'before-rename', 'after-anchor-check', 'after-readback', 'after-cleanup'] as const)('refuses allocation on async authority withdrawal %s', async phase => {
     const f = await fixture();
     let allowed = true, archiveReads = 0, rootSyncs = 0, temporarySynced = false;

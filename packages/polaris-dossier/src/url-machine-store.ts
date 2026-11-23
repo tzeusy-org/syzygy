@@ -35,6 +35,7 @@ interface StoreIdentity {
   readonly rootId: string;
   readonly canonicalRoot: string;
 }
+type AllocatedClient = { readonly clientId: string; readonly witnessSha256: string };
 // At most 256 canonical files (64 KiB), 256 projections (16 KiB), an 8 MiB
 // state, 16 KiB identity, a 10 MB archive and one 10 MB temporary fit this cap.
 // A crash retains the lock, so temporary files cannot accumulate across runs.
@@ -77,7 +78,9 @@ export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   readonly identitySha256: string;
   readonly protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown';
   /** Allocate a new slot durably. Absence alone never produces a witness. */
-  allocateClient(deadline: number): Promise<{ readonly clientId: string; readonly witnessSha256: string } | null>;
+  allocateClient(deadline: number): Promise<AllocatedClient | null>;
+  /** Allocate up to eight never-issued slots in one protected state publication. */
+  allocateClients(count: number, deadline: number): Promise<readonly AllocatedClient[] | null>;
   close(): Promise<void>;
 }
 export interface UrlMachineStoreHistory {
@@ -556,30 +559,39 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         }
       }
     };
-    const allocateClient = async (deadline: number) => {
-      // Allocation creates a never-issued slot. Its full async checks bracket
-      // the protected state and the durable write, where no client is yet live.
+    const allocateClients = async (count: number, deadline: number): Promise<readonly AllocatedClient[] | null> => {
+      if (!Number.isSafeInteger(count) || count < 1 || count > 8) return null;
+      // Full async checks bracket the protected state and durable write.
+      // Every new slot remains never-issued, even if a late check withholds the witnesses.
       const staging: StagedBoundary | undefined = currentAsync === undefined ? undefined : { allocation: true, current: undefined };
-      let issued: { readonly clientId: string; readonly witnessSha256: string } | null = null;
+      let issued: readonly AllocatedClient[] | null = null;
       const finished = await withLock(deadline, async ({ check, reverify, state, write }) => {
         const current = await state();
         if (staging !== undefined) { await reverify(); check(); }
-        if (current.clients.length >= URL_MACHINE_STORE_LIMITS.clients) throw refused();
-        const clientId = opaque();
-        if (current.used.includes(clientId) || current.clients.some(entry => entry.clientId === clientId)) throw refused();
-        const witnessSha256 = sha256(canonical({ rootId, clientId, nonce: opaque() }));
-        const entry: Entry = { clientId, witnessSha256, anchor: { kind: 'never-issued', clientId, witnessSha256 }, audit: [] };
-        const next: StoreState = { ...current, clients: [...current.clients, entry] };
+        if (current.clients.length + count > URL_MACHINE_STORE_LIMITS.clients) throw refused();
+        const occupied = new Set([...current.used, ...current.clients.map(entry => entry.clientId)]);
+        const entries: Entry[] = [];
+        for (let index = 0; index < count; index++) {
+          const clientId = opaque();
+          if (occupied.has(clientId)) throw refused();
+          occupied.add(clientId);
+          const witnessSha256 = sha256(canonical({ rootId, clientId, nonce: opaque() }));
+          entries.push({ clientId, witnessSha256, anchor: { kind: 'never-issued', clientId, witnessSha256 }, audit: [] });
+        }
+        const next: StoreState = { ...current, clients: [...current.clients, ...entries] };
         if (!stateValid(next, rootId)) throw refused();
         const bytes = Buffer.from(canonical(next));
         await write(`${base}/state.json`, bytes);
         validatedState = { sha256: sha256(bytes), value: next };
         if (!equal(await state(), next)) throw refused();
         if (staging !== undefined) await reverify();
-        check(); issued = { clientId, witnessSha256 };
+        check();
+        issued = entries.map(({ clientId, witnessSha256 }) => ({ clientId, witnessSha256 }));
       }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging);
       return finished ? issued : null;
     };
+    const allocateClient = async (deadline: number): Promise<AllocatedClient | null> =>
+      (await allocateClients(1, deadline))?.[0] ?? null;
     const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineStoreLease) => Promise<void>,
       effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
@@ -703,7 +715,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       }, operationMilliseconds, publication);
     };
     const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
-      allocateClient, exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),
+      allocateClient, allocateClients, exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),
       publish: (input: UrlMachineLifecyclePublication, stillOpening?: () => boolean) => publishUrlMachineLifecycle(input, {
         exclusive: (clientId, deadline, operation) => exclusive(clientId, deadline, operation, undefined, { current: stillOpening }),
       }),
