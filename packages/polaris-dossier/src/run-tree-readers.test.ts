@@ -119,7 +119,7 @@ const READERS: readonly Reader[] = [
   {
     name: 'runStatus (REQ-033: syzygy dossier status reads run.json)', bound: RUN_RECORD_BOUND, file: 'run.json',
     atBound: (bytes) => padded('[]', bytes),
-    read: (run) => { const result = runStatus(run); return result.ok ? 'ok' : result.reason.startsWith(`${run} holds no readable run.json`) ? result.reason : 'parsed'; },
+    read: (run) => { const result = runStatus(run); return result.ok ? 'ok' : result.refusal.reason.startsWith(`${run} holds no readable run.json`) ? result.refusal.reason : 'parsed'; },
     readAtBound: 'parsed',
     pastBound: ({ run }: { run: string }) => `${run} holds no readable run.json (larger than 65536 bytes)`,
     notRegular: ({ run }: { run: string }) => `${run} holds no readable run.json (not a regular file)`,
