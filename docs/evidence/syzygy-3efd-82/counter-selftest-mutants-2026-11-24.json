@@ -1,0 +1,31 @@
+{
+  "subject": "scripts/count_polaris_effective_scenarios.py",
+  "subjectSha256": "7091e3d8b3d1e569808c6e80338d7f3c9158cf69d95d5d8bd8c8d50a883ebb48",
+  "commit": "3f610a3575767564e86fa8eba566beaf160071ca",
+  "bead": "syzygy-3efd.82",
+  "command": "python3 scripts/count_polaris_effective_scenarios.py --selftest",
+  "rule": "AGENTS.md verification rule 6: each mutant applied alone to the subject at the commit; the selftest must fail",
+  "mutants": [
+    {
+      "id": "only-next-row",
+      "old": "    return [getattr(adoption, name) for name in names if name not in keep]",
+      "new": "    return [getattr(adoption, name) for name in names if name not in keep and name == \"is_url_source_row\"]",
+      "outcome": "killed",
+      "output": "FAIL: raw-read disclosure: URL source v2.1 and source policy v3 must be effective"
+    },
+    {
+      "id": "url-control-on-live-ledger",
+      "old": "    _project_ledger(fixture / adoption.AGENT_ADOPTIONS,\n                    _later_row_predicates(adoption, keep=(\"is_url_source_row\",)))",
+      "new": "    pass",
+      "outcome": "killed",
+      "output": "FAIL: scenario total mismatch: recomputed 524, expected 333 (PROJECT-STATUS.md assertion)"
+    },
+    {
+      "id": "raw-read-row-kept",
+      "old": "    return [getattr(adoption, name) for name in names if name not in keep]",
+      "new": "    return [getattr(adoption, name) for name in names if name not in keep and name != \"is_raw_read_row\"]",
+      "outcome": "killed",
+      "output": "FAIL: raw-read disclosure: URL source v2.1 and source policy v3 must be effective"
+    }
+  ]
+}
