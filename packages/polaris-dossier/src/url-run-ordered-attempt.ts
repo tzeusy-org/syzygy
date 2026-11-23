@@ -8,7 +8,7 @@ import type { SessionAdmission, SessionContentClass } from './session-egress-pol
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { finishUrlSessionPreparation, isUrlSessionProcess, launchRestrictedUrlSession, prepareRestrictedUrlSession, urlSessionStoppedCleanly,
   type UrlSessionLaunchOptions, type UrlSessionProcess } from './session-launch.js';
-import { planOrderedDesignBytes, orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
+import { orderedDesignPlanInputForDelivery } from './url-design-delivery.js';
 import { assertUrlDesignDeliveryReceiptCurrent, assertUrlDesignDeliveryViewCurrent, type UrlSessionAuditResult, type UrlCommittedLaunchHistory,
   type UrlDesignDeliveryView } from './url-session-audit.js';
 import { isCheckedUrlDesignProductExpiry, isUrlDesignProductLeaseOpen, urlDesignProductLeaseState,
@@ -301,7 +301,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin },
       input.waitForSamples, observeRead);
     const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
-    const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
+    const plan = input.audit.readPreparedOrderedDesignPlan(delivery, planInput);
     const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,
       inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
     const enforcement: OrderedDesignWorkEnforcement = { runtimeSha256: input.runtime.inputTreeSha256, workerSha256: program.worker.sha256,

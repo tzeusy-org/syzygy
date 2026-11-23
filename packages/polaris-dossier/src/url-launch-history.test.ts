@@ -7,6 +7,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { patchFs } from './fs-patch.testkit.js';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
+import * as designDelivery from './url-design-delivery.js';
 import { isOrderedDesignSessionProfile, sessionProfileReminderText } from './session-profile.js';
 import type { OrderedDesignAuditWriter } from './url-ordered-design-writer.js';
 import type { OrderedDesignAuditReference } from './url-ordered-design-audit.js';
@@ -218,12 +219,12 @@ function productFixture(orderedDesign = false) {
   return { bridge, ledger, originPolicy, artifactOptions, initial, current };
 }
 
-async function auditFixture(originPolicySha256: string, name: string, parent = planning.hidden, firstDesignRound?: number) {
+async function auditFixture(originPolicySha256: string, name: string, parent = planning.hidden, firstDesignRound?: number, deadline?: number) {
   const { role: _role, ...binding } = plans[0]!.profile.input.binding;
   const audit = await createUrlSessionAudit({ parent, name, binding, originPolicySha256, project: 'project:syzygy',
     pin: planning.options.record.subject.pinnedRevision.commit, principal: 'operator:own-fixture',
     profiles: plans.map(plan => plan.profile), declaredClasses: SESSION_CONTENT_CLASSES, screen: planning.options.screen, current: () => true,
-    ...(firstDesignRound === undefined ? {} : { firstDesignRound }) });
+    ...(firstDesignRound === undefined ? {} : { firstDesignRound }), ...(deadline === undefined ? {} : { deadline }) });
   if (!audit.ok) throw Error('fixture audit');
   const attempt = async (role: UrlLaunchHistoryRole, changes: { commandSha256?: string; viewSha256?: string } = {}) => {
     const { commandSha256, viewSha256, compiledProfileSha256 } = options(role).plan.declaration;
@@ -286,7 +287,7 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
 }
 
 describe('protected URL design delivery audit', () => {
-  it.each(['valid', 'prepared-site-drift', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal',
+  it.each(['valid', 'prepared-site-drift', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'ordered-plan-expiry', 'expiry', 'launch-drift', 'sample-refusal',
     'material-drift', 'release-site-drift',
     'renew-launch-drift', 'renew-receipt-drift'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
@@ -294,8 +295,9 @@ describe('protected URL design delivery audit', () => {
     const { originPolicy, ledger, artifactOptions, initial } = productFixture(mode.startsWith('ordered'));
     const firstDesignRound = mode === 'ordered-resumed' ? 2 : undefined;
     const round = firstDesignRound ?? 1;
-    const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `design-proof-${mode}`, undefined, firstDesignRound);
-    const other = await auditFixture(originPolicy.sha256, `other-proof-${mode}`, undefined, firstDesignRound);
+    const auditDeadline = mode.startsWith('ordered') ? Date.now() + 60_000 : undefined;
+    const { audit, attempt, segment } = await auditFixture(originPolicy.sha256, `design-proof-${mode}`, undefined, firstDesignRound, auditDeadline);
+    const other = await auditFixture(originPolicy.sha256, `other-proof-${mode}`, undefined, firstDesignRound, auditDeadline);
     const run = planning.options.run, runId = path.basename(run), pinnedRevision = planning.options.record.subject.pinnedRevision.commit;
     const site = 50, sitePath = path.join(run, 'site', String(site));
     const content = '<!doctype html><title>OWN UNEXPOSED RENDER</title>';
@@ -332,6 +334,12 @@ describe('protected URL design delivery audit', () => {
     const reproducedForReceipt = {} as designProduct.ValidatedUrlDesignProduct;
     let reproducedMetadata = { ...metadata, products: { ...metadata.products, deadline: deadline + 250 } };
     let originalOpen = true, reviewOpen = true, inputCurrent = true;
+    const compilePlan = designDelivery.planOrderedDesignBytes;
+    const expiryAfterPlanning = mode === 'ordered-plan-expiry' ? vi.spyOn(designDelivery, 'planOrderedDesignBytes').mockImplementation(input => {
+      const plan = compilePlan(input);
+      originalOpen = false;
+      return plan;
+    }) : undefined;
     const lease = vi.spyOn(designProduct, 'isUrlDesignProductLeaseOpen').mockImplementation(product =>
       product === token ? originalOpen && Date.now() < deadline
         : (product === reproduced || product === reproducedForReceipt || product === reviewed && reviewOpen)
@@ -392,6 +400,15 @@ describe('protected URL design delivery audit', () => {
       }, mode.startsWith('ordered') ? issuedDeliveryReads : undefined);
       const duplicate = audit.commitDesignDelivery(request);
       await expect(duplicate).rejects.toThrow('url-session-audit-refused');
+      if (mode === 'ordered-plan-expiry') {
+        await expect(first).rejects.toThrow('url-session-audit-refused');
+        expect(expiryAfterPlanning).toHaveBeenCalledTimes(1);
+        expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
+        expect((await audit.close()).captured['design-delivery']).toBe(1);
+        expect(audit.closedHistory()).not.toBeNull();
+        expect(audit.closedHistory()?.ordered).toBeUndefined();
+        return;
+      }
       if (mode !== 'valid' && mode !== 'prepared-site-drift' && !mode.startsWith('ordered') && !mode.startsWith('renew-')) {
         await expect(first).rejects.toThrow('url-session-audit-refused');
         if (mode === 'sample-refusal') {
@@ -453,11 +470,23 @@ describe('protected URL design delivery audit', () => {
           const planInput = { envelope: view, envelopeSha256: sha256(view), original: metadata.original,
             fileCount: 1, pageCount: 1, instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount, replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes },
             parents: metadata.parents.map(parent => sha256(encodeCanonicalJson(parent, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }))), binding: {
-              basePolicySha256: metadata.basePolicy.sha256, deadline: new Date(Date.now() + 30_000).toISOString(), encoding: URL_DESIGN_VIEW_ENCODING,
+              basePolicySha256: metadata.basePolicy.sha256, deadline: new Date(auditDeadline!).toISOString(), encoding: URL_DESIGN_VIEW_ENCODING,
               originPolicySha256: originPolicy.sha256, originalReceiptSha256: sealed.eventSha256, pin: pinnedRevision,
               producerSha256: metadata.renderer.programSha256, profileSha256: profile.digest, project: 'project:syzygy', provider: 'anthropic', role: 'design',
               round, run: runId, session: profile.input.sessionId, transferEpoch: round } } as const;
-          const plan = planOrderedDesignBytes(planInput);
+          const { envelope: _envelope, ...expectedPlanInput } = planInput;
+          const plan = audit.readPreparedOrderedDesignPlan(delivered, expectedPlanInput);
+          expect(plan).toEqual(planOrderedDesignBytes(planInput));
+          expect(() => audit.readPreparedOrderedDesignPlan({ ...delivered }, expectedPlanInput)).toThrow('url-session-audit-refused');
+          expect(() => other.audit.readPreparedOrderedDesignPlan(delivered, expectedPlanInput)).toThrow('url-session-audit-refused');
+          expect(() => audit.readPreparedOrderedDesignPlan(delivered, { ...expectedPlanInput, parents: [] })).toThrow('url-session-audit-refused');
+          const originalByte = delivered.view[0]!;
+          delivered.view[0] = originalByte ^ 1;
+          try { expect(() => audit.readPreparedOrderedDesignPlan(delivered, expectedPlanInput)).toThrow('url-session-audit-refused'); }
+          finally { delivered.view[0] = originalByte; }
+          originalOpen = false;
+          try { expect(() => audit.readPreparedOrderedDesignPlan(delivered, expectedPlanInput)).toThrow('url-session-audit-refused'); }
+          finally { originalOpen = true; }
           if (firstDesignRound !== undefined) {
             const stale = planOrderedDesignBytes({ ...planInput, binding: { ...planInput.binding, round: 1, transferEpoch: 1 } });
             expect(() => audit.beginOrderedDesignAudit(stale, () => true)).toThrow('url-session-audit-refused');
@@ -697,6 +726,7 @@ describe('protected URL design delivery audit', () => {
       expect(bytes).not.toContain(run);
     } finally {
       read.mockRestore();
+      expiryAfterPlanning?.mockRestore();
       inspect.mockRestore();
       assertInputs.mockRestore();
       assertLease.mockRestore();

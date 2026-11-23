@@ -386,6 +386,8 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
   readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability, waitForSample?: () => Promise<boolean>) => Promise<UrlCommittedLaunchHistory>;
   readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>,
     observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
+  readonly readPreparedOrderedDesignPlan: (view: UrlDesignDeliveryView,
+    expected: ReturnType<typeof orderedDesignPlanInputForDelivery>) => OrderedDesignPlan;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
   readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
   readonly commitDesignArtifactRead: (view: UrlDesignDeliveryView, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
@@ -1005,6 +1007,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     let nextOrderedEpoch = firstDesignRound;
     let previousOrdered: OrderedDesignAuditWriter | undefined;
     const capturedDeliveries = new Map<string, UrlDesignDeliveryAuditRecord>();
+    const preparedOrderedPlans = new WeakMap<UrlDesignDeliveryView, {
+      readonly inputSha256: string; readonly plan: OrderedDesignPlan;
+    }>();
     const eligibleOrdered = new WeakMap<OrderedDesignAuditWriter, UrlOrderedDesignHistoryExpected>();
     const orderedWriters = new WeakMap<OrderedDesignAuditWriter, { plan: OrderedDesignPlan; records: Array<{ record: OrderedDesignStoredRecord; read: (charge?: boolean) => Uint8Array }>; observeRead?: (bytes: number) => void }>();
     const beginOrderedDesignAudit: Extract<UrlSessionAuditResult, { ok: true }>['beginOrderedDesignAudit'] = (plan, attemptCurrent, observeRead) => {
@@ -1124,6 +1129,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       if (!record || poisoned || closing || designPending || designRetired || receipt.identity.round !== nextDesignRound - 1) throw refused();
       return record;
     }
+    const readPreparedOrderedDesignPlan: Extract<UrlSessionAuditResult, { ok: true }>['readPreparedOrderedDesignPlan'] = (view, expected) => {
+      currentDesignRecord(view.receipt);
+      const prepared = preparedOrderedPlans.get(view), product = checkedIssuedDeliveryView(view).product.deref();
+      if (prepared === undefined || product === undefined || prepared.inputSha256 !== designIdentityDigest(expected)
+        || !isUrlDesignProductLeaseOpen(product)) throw refused();
+      return prepared.plan;
+    };
     const revalidateDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['revalidateDesignDelivery'] = async (receipt, product) => {
       await currentDesignRecord(receipt).verify(product);
     };
@@ -1442,8 +1454,16 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           catch (cause) { if (expired(cause)) throw cause; throw refused(); }
         };
         await checkSample();
-        // The post-append material matched the complete earlier metadata. Verify
-        // the launch, exact stored site and durable event at the release boundary.
+        let ordered: { readonly inputSha256: string; readonly plan: OrderedDesignPlan; readonly history: UrlOrderedDesignHistoryExpected } | undefined;
+        if (orderedDesignProfile !== null && input.deadline !== undefined) {
+          const planInput = orderedDesignPlanInputForDelivery(orderedDesignProfile, result, material.metadata, input.pin, input.deadline, input.project);
+          const plan = planOrderedDesignBytes({ ...planInput, envelope: material.view });
+          ordered = { inputSha256: designIdentityDigest(planInput), plan,
+            history: copy({ profileInput: orderedDesignProfile.input, plan, principal: input.principal,
+              scope, receipt: result, disposition: { kind: 'stopped' as const, tip: null } }) };
+        }
+        // The post-append material matched the complete earlier metadata.
+        // Verify the launch, stored site and durable event after plan preparation.
         verify(before, product, observeRead);
         const preparedProduct = new WeakRef(product);
         function checkDelivery(checked: typeof before, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): () => void {
@@ -1470,11 +1490,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         authenticatedDesignViews.set(delivery, { current: checkDelivery(before, product, observeRead),
           receiptCurrent: verifyReceipt, product: preparedProduct });
         capturedDeliveries.set(result.eventSha256, result);
-        if (orderedDesignProfile !== null && input.deadline !== undefined) {
-          const plan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(orderedDesignProfile, result,
-            material.metadata, input.pin, input.deadline, input.project), envelope: material.view });
-          unstartedOrdered.set(result.eventSha256, copy({ profileInput: orderedDesignProfile.input, plan, principal: input.principal,
-            scope, receipt: result, disposition: { kind: 'stopped' as const, tip: null } }));
+        if (ordered !== undefined) {
+          preparedOrderedPlans.set(delivery, { inputSha256: ordered.inputSha256, plan: ordered.plan });
+          unstartedOrdered.set(result.eventSha256, ordered.history);
         }
         nextDesignRound++;
         return delivery;
@@ -1490,7 +1508,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     const append = async (event: UrlSessionAuditEvent): Promise<void> => { await enqueue(event, null); };
     return Object.freeze({ ok: true as const, scope: (role: ViewRole) => { const scope = scopes.get(role); if (!scope) poison(); return scope!; },
-      append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, revalidateDesignDelivery, readDesignDeliveryView,
+      append, appendMachinePeer, beginOrderedDesignAudit, commitLaunchHistory, commitDesignDelivery, readPreparedOrderedDesignPlan,
+      revalidateDesignDelivery, readDesignDeliveryView,
       commitDesignArtifactRead, readDesignReviewProof, readOrderedDesignReviewProof, commitOrderedDesignVerdict, commitDesignVerdict,
       readDesignRenderContinuation, prepareDesignRenderContinuation, close, closedHistory, summary });
   } catch {
