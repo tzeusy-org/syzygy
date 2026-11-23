@@ -35,6 +35,7 @@
 - `F3-DESIGN-PARENT-PROVENANCE-REVIEW-RAW\.md`
 - `F3-PEER-SAMPLE-ORDER(-R2)?-REVIEW-RAW\.md`
 - `F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW\.md`
+- `F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -143,3 +144,5 @@
 [Observed] The native sample review records `PASS` (`F3-PEER-SAMPLE-ORDER-R2-REVIEW-RAW.md:1` and `F3-PEER-SAMPLE-ORDER-REVIEW-RAW.md:1`) at `de1f64638`. A-138 moves one repeated full authority read after the already-pending launcher sample. Typecheck, seven exact focused cases and two fault controls passed. The identical production bytes passed 72 integration cases with the predecessor test assertion order. [Unknown] Native timing for this subject.
 
 [Observed] The prepared site review records `PASS` (`F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW.md:1`) at `34a644680`. A-139 uses one full stored site walk for the exact prepared view and retires the delivery when that walk detects drift. Typecheck, 165 integration cases and two fault controls passed. [Unknown] Native timing for this subject.
+
+[Observed] The transport callback review records `PASS` (`F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW.md:1`) at `033318cb7`. A-140 removes one repeated native authority check at transport callback entry. Typecheck, 127 integration cases and three fault controls passed. [Unknown] Effect on native lock timing.
