@@ -61,12 +61,18 @@ function workspaceMember(): LocalManifestFacts {
     fact(15, 'package', NPM, 'packages/b/package.json', 2, { name: 'b' }),
   ];
   return {
-    format: 'polaris-dossier-manifest-facts/1', state: 'derived', screeningPolicy: POLICY, facts, factsNotListed: 0,
+    format: 'polaris-dossier-manifest-facts/2', state: 'derived', screeningPolicy: POLICY, facts, factsNotListed: 0,
     recognizers: [
       recognizer(NPM, { candidates: 4, inferred: 3, unknown: 1, facts: 6, files: [file('package.json', 3), file('packages/a/package.json', 2), file('packages/b/package.json', 1), unknownFile('vendor-free/package.json', 'unparsed', 'syntax')] }),
       recognizer('cargo-manifest'), recognizer('python-project-manifest'), recognizer('go-module-manifest'),
       recognizer(WF, { candidates: 2, inferred: 1, unknown: 1, secretPathsLeftOut: 0, facts: 9, files: [file('.github/workflows/ci.yml', 9), unknownFile('.github/workflows/deploy.yml', 'class-not-consented')] }),
+      recognizer('compose-file'), recognizer('kubernetes-manifest'), recognizer('terraform-configuration'), recognizer('makefile'), recognizer('cmake-lists'),
     ],
+    remainder: {
+      files: 8, secretPathsLeftOut: 0, candidates: 6, notCandidates: 2,
+      places: [{ place: null, files: 2, notCandidates: 1 }, { place: '.github', files: 2, notCandidates: 0 }, { place: 'packages', files: 2, notCandidates: 0 }, { place: 'vendor-free', files: 2, notCandidates: 1 }],
+      placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0,
+    },
   };
 }
 
@@ -106,8 +112,8 @@ describe('the directory map', () => {
     expect(main).toContain(`<h2>Every derived fact</h2><ul class="derived-facts">${regionList}</ul></section>`);
     expect(main.match(/<li data-derived-id=/gu)).toHaveLength(61);
     // The region ends with the line linking the three maps, and the contents page lists them after Sources.
-    expect(index).toContain('</details></figure><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a>.</p></section>');
-    expect(files.get('contents.html')).toContain('<li><a href="sources/index.html">Sources</a></li><li><a href="maps/directories.html">Directory map</a></li><li><a href="maps/units.html">Unit map</a></li><li><a href="maps/ci.html">CI pipeline map</a></li></ol>');
+    expect(index).toContain('</details></figure><p class="derived-maps">Computed maps: <a href="maps/directories.html">Directory map</a> · <a href="maps/units.html">Unit map</a> · <a href="maps/ci.html">CI pipeline map</a> · <a href="maps/infrastructure.html">Infrastructure map</a>.</p></section>');
+    expect(files.get('contents.html')).toContain('<li><a href="sources/index.html">Sources</a></li><li><a href="maps/directories.html">Directory map</a></li><li><a href="maps/units.html">Unit map</a></li><li><a href="maps/ci.html">CI pipeline map</a></li><li><a href="maps/infrastructure.html">Infrastructure map</a></li></ol>');
     // A page of the site: the pages' navigation, the run's one sentence, the CSP, no script, at depth 1 of dossier.json.
     expect(page).toContain('<p class="run-sentence">');
     expect(page).toContain('<a href="../appendix.html">How this dossier was made');
@@ -220,17 +226,21 @@ describe('the unit map', () => {
     expect(units).not.toContain('<figure');
     expect(files.get('maps/units.html')).not.toContain('.map-forms');
     expect(sectionOf(files.get('maps/ci.html')!)).toContain('<ul class="map-unknown-files"><li>No candidate file.</li></ul>');
-    const unknown = site(structure(1, []), { format: 'polaris-dossier-manifest-facts/1', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+    const unknown = site(structure(1, []), { format: 'polaris-dossier-manifest-facts/2', state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
     for (const [path, map, title] of [['maps/units.html', 'units', 'Unit map'], ['maps/ci.html', 'ci', 'CI pipeline map']] as const) {
       expect(sectionOf(unknown.get(path)!)).toBe(`<section id="computed-map" data-map="${map}" data-reading-level="1" data-topics=""><h1>${title}</h1>`
         + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the manifest files at revision ${REV} declare is Unknown at this render: the pinned tree could not be listed.</p></section>`);
     }
+    // The infrastructure recognizers: the infrastructure map says `infrastructure files` where these say `manifest files`.
+    expect(sectionOf(unknown.get('maps/infrastructure.html')!)).toBe('<section id="computed-map" data-map="infrastructure" data-reading-level="1" data-topics=""><h1>Infrastructure map</h1>'
+      + `<p class="derived-unknown" data-epistemic="unknown" data-unknown-reason="source-uncaptured-or-unreachable"><span class="not-established">Not established.</span> What the infrastructure files at revision ${REV} declare is Unknown at this render: the pinned tree could not be listed.</p></section>`);
     expect(JSON.parse(unknown.get('machine.json')!).computedMaps).toEqual({
-      pages: ['maps/directories.html', 'maps/units.html', 'maps/ci.html'],
+      pages: ['maps/directories.html', 'maps/units.html', 'maps/ci.html', 'maps/infrastructure.html'],
       directories: { state: 'derived', figures: 0 },
-      manifests: { state: 'unknown', screeningPolicy: null, recognizers: [], factsNotListed: null },
+      manifests: { state: 'unknown', screeningPolicy: null, recognizers: [], factsNotListed: null, remainder: null },
       units: { figures: 0, facts: [], files: [] },
       ci: { figures: 0, facts: [], files: [] },
+      infrastructure: { figures: 0, facts: [], files: [] },
     });
   });
 
@@ -398,13 +408,21 @@ describe('computed maps on the site', () => {
     const keys = Object.keys(machine);
     expect(keys[keys.indexOf('derivedStructure') + 1]).toBe('computedMaps');
     const maps = machine['computedMaps'] as Record<string, Record<string, unknown>>;
-    expect(maps['pages']).toEqual(['maps/directories.html', 'maps/units.html', 'maps/ci.html']);
+    expect(Object.keys(maps)).toEqual(['pages', 'directories', 'manifests', 'units', 'ci', 'infrastructure']);
+    expect(maps['pages']).toEqual(['maps/directories.html', 'maps/units.html', 'maps/ci.html', 'maps/infrastructure.html']);
     expect(maps['directories']).toEqual({ state: 'derived', figures: 1 });
-    expect(maps['manifests']).toEqual({ state: 'derived', screeningPolicy: POLICY, factsNotListed: 0, recognizers: [
+    expect(Object.keys(maps['manifests']!)).toEqual(['state', 'screeningPolicy', 'recognizers', 'factsNotListed', 'remainder']);
+    expect(maps['manifests']).toEqual({ state: 'derived', screeningPolicy: POLICY, factsNotListed: 0, remainder: {
+      files: 8, secretPathsLeftOut: 0, candidates: 6, notCandidates: 2,
+      places: [{ place: null, files: 2, notCandidates: 1 }, { place: '.github', files: 2, notCandidates: 0 }, { place: 'packages', files: 2, notCandidates: 0 }, { place: 'vendor-free', files: 2, notCandidates: 1 }],
+      placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0,
+    }, recognizers: [
       { rule: NPM, ruleVersion: 1, label: 'inferred', candidates: 4, secretPathsLeftOut: 0, setApart: 0, inferred: 3, unknown: 1, valuesLeftOut: 0, facts: 6, filesNotListed: 0 },
       ...['cargo-manifest', 'python-project-manifest', 'go-module-manifest'].map((rule) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, filesNotListed: 0 })),
       { rule: WF, ruleVersion: 1, label: 'inferred', candidates: 2, secretPathsLeftOut: 0, setApart: 0, inferred: 1, unknown: 1, valuesLeftOut: 0, facts: 9, filesNotListed: 0 },
+      ...['compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'].map((rule) => ({ rule, ruleVersion: 1, label: 'inferred', candidates: 0, secretPathsLeftOut: 0, setApart: 0, inferred: 0, unknown: 0, valuesLeftOut: 0, facts: 0, filesNotListed: 0 })),
     ] });
+    expect(maps['infrastructure']).toEqual({ figures: 0, facts: [], files: [] });
     expect(maps['units']!['figures']).toBe(2);
     expect((maps['units']!['facts'] as { id: string }[]).map((f) => f.id)).toEqual(['_manifest-10', '_manifest-11', '_manifest-12', '_manifest-13', '_manifest-14', '_manifest-15']);
     expect((maps['units']!['files'] as { path: string }[]).map((f) => f.path)).toEqual(['package.json', 'packages/a/package.json', 'packages/b/package.json', 'vendor-free/package.json']);
@@ -412,7 +430,7 @@ describe('computed maps on the site', () => {
     expect((maps['ci']!['facts'] as { id: string }[])[0]).toEqual({ id: '_manifest-1', fact: 'workflow', rule: WF, ruleVersion: 1, path: '.github/workflows/ci.yml', lines: [1, 1], name: 'CI', epistemic: 'inferred' });
     // Two renders of one input give the same map pages and member.
     const again = site(structure(1, [['.github', 1], ['packages', 2]]), workspaceMember());
-    for (const path of ['maps/directories.html', 'maps/units.html', 'maps/ci.html', 'machine.json']) expect(again.get(path), path).toBe(files.get(path));
+    for (const path of ['maps/directories.html', 'maps/units.html', 'maps/ci.html', 'maps/infrastructure.html', 'machine.json']) expect(again.get(path), path).toBe(files.get(path));
   });
 
   it('gives every drawn element its fact\'s identity, every figure computed provenance, no script, and the map rules to map pages alone', () => {

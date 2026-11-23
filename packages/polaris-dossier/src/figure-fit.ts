@@ -1,5 +1,5 @@
 import { isRecord } from '@syzygy/support';
-import { FIGURE_BOUNDS, FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, membersOfKind } from './draft-schema.js';
+import { FIGURE_BOUNDS, FIGURE_MEMBERS, hasFigureKindForm, membersOfKind } from './draft-schema.js';
 
 /**
  * Figure fit (REQ-polaris-generation-034, dossier figure homes and fit 2.2; syzygy-3efd.20): whether each produced figure of a draft
@@ -87,8 +87,8 @@ export function drawnWidth(laidOut: number, column: number): number {
 export function figureFit(doc: unknown, layout: FigureLayout | undefined): FigureFit {
   const entries: FigureFitEntry[] = [];
   let examined = 0;
-  // Only a v7 draft has the figure kinds; in any other draft every diagram is laid out as a graph, as version 2.4 lays it out.
-  const v7 = isRecord(doc) && doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  // Only a v7 or later draft has the figure kinds; in any other draft every diagram is laid out as a graph, as version 2.4 lays it out.
+  const v7 = isRecord(doc) && hasFigureKindForm(doc['schemaVersion']);
   for (const diagram of list(isRecord(doc) ? doc['diagrams'] : undefined)) {
     if (!isRecord(diagram) || !isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced') continue;
     examined += 1;

@@ -100,13 +100,14 @@ describe('the check-record read bound (version 2.8)', () => {
     expect(seen).toEqual(UNREADABLE);
   });
 
+  // syzygy-8dzi: building and reading 2,000,001 values measured 5.4-7.2 s alone on a loaded host, past the 5 s default.
   it('reads a record of 2,000,000 values and refuses one of 2,000,001, in every reader', () => {
     const at = ofValues(2_000_000), past = ofValues(2_000_001);
     // Counted outside the reader: every value is a `0` in the pad array, or one of the eight others.
     expect([at.split(/[,[]0(?=[,\]])/u).length - 1 + 8, past.split(/[,[]0(?=[,\]])/u).length - 1 + 8]).toEqual([2_000_000, 2_000_001]);
     expect(readers(at)).toEqual(READ);
     expect(readers(past)).toEqual(UNREADABLE);
-  });
+  }, 30_000);
 
   it('reads a record with a value nested 16 levels below the root and refuses one nested 17, in every reader', () => {
     const at = ofDepth(16), past = ofDepth(17);

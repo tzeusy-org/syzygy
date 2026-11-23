@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 473,
+      "scenarios": 505,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -991,7 +991,13 @@
             "Conservative visibility preserves exclusions",
             "Legacy continuation is explicit",
             "Disclosures name actual evidence",
-            "URL projection does not inherit a false local dispatch reason"
+            "URL projection does not inherit a false local dispatch reason",
+            "Raw-read disclosure across a rendered dossier",
+            "Raw-read disclosure when there is no site",
+            "Checked relay evidence does not stand for raw-read traffic",
+            "Run files read under their bounds",
+            "Run record past its bound",
+            "Breach log that cannot be read is not recorded as none"
           ]
         },
         "REQ-polaris-generation-034": {
@@ -1154,7 +1160,27 @@
             "Makefile tab-led line that is no recipe line",
             "Makefile continuation lines and define bodies",
             "Makefile directive lines are never rules",
-            "Brief v14 states subsections"
+            "Brief v14 states subsections",
+            "Arrow witnessed by a fact of its identical type",
+            "A fact of another relation type never witnesses",
+            "Complete coverage with no witnessing fact",
+            "Partial coverage is Unknown, never a finding",
+            "Relation types and unit forms outside the lists",
+            "A unit that names no unit of its kind",
+            "An arrow the draft does not assert is never upgraded or challenged",
+            "A witness needs a fact that renders Observed",
+            "Earlier schemas and the provider keep their bytes",
+            "Brief v15 states relation types",
+            "Hero figure leads the overview after the thesis",
+            "Draft with neither hero nor omission refused",
+            "Declared omission renders its reason",
+            "Hero names a figure that cannot lead the overview",
+            "Hero names no diagram",
+            "Malformed hero refused",
+            "Omission that makes no claim refused",
+            "Hero not produced, or draft layer withheld",
+            "Earlier schema keeps its bytes",
+            "Brief v16 asks for the hero"
           ]
         },
         "REQ-polaris-generation-035": {
@@ -1196,7 +1222,10 @@
             "History projection, lifetime budget and retirement are fail closed",
             "Design verdict binds original and current representation separately",
             "Design view is not a decoded raw artifact channel",
-            "Supervised packet delivery uses only admitted MCP tools"
+            "Supervised packet delivery uses only admitted MCP tools",
+            "Review files read under their bounds",
+            "Frozen verdict past its bound",
+            "Delivered packet read under its recorded size"
           ]
         },
         "REQ-polaris-generation-036": {
@@ -1207,7 +1236,8 @@
             "No Observed not-read claim",
             "Syzygy reads require declared-source checks",
             "Consequential question asked in-session",
-            "Question limit reached"
+            "Question limit reached",
+            "Raw-reading disclosure does not admit prohibited source"
           ]
         },
         "REQ-polaris-generation-046": {
@@ -1225,7 +1255,8 @@
             "Credential paths denied before any read",
             "Predecessor outcomes preserved",
             "Agent text quoting a configuration secret refused",
-            "Run bound to an earlier policy not migrated"
+            "Run bound to an earlier policy not migrated",
+            "Policy successor preserves screening outcomes"
           ]
         },
         "REQ-polaris-generation-047": {
@@ -1286,7 +1317,8 @@
             "Strict tools and disabled customization are checked",
             "Unsupported thinking cannot be hidden by a signature",
             "Boundary and audit must survive resume",
-            "Verified default is explicit and unsupported model never falls back"
+            "Verified default is explicit and unsupported model never falls back",
+            "Supervisor state read under its bound"
           ]
         }
       }

@@ -175,17 +175,23 @@ describe('close (S10)', () => {
     const CJK = '\u4e00'.repeat(512), LONE = '\ud800'.repeat(256);
     const census = { path: `${JSON.stringify('\u0001'.repeat(512))} (9007199254740991 more code units)`, epistemic: 'unknown', unknownReason: 'path-not-citable', parseFault: null, facts: null, valuesLeftOut: null };
     const widest = {
-      format: 'polaris-dossier-manifest-facts/1', state: 'derived',
+      format: 'polaris-dossier-manifest-facts/2', state: 'derived',
       screeningPolicy: { policyId: 'x'.repeat(64), policyVersion: 'x'.repeat(64), sha256: '0'.repeat(64) },
-      recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow'].map((rule) => ({
+      recognizers: ['npm-package-manifest', 'cargo-manifest', 'python-project-manifest', 'go-module-manifest', 'github-actions-workflow',
+        'compose-file', 'kubernetes-manifest', 'terraform-configuration', 'makefile', 'cmake-lists'].map((rule, i) => ({
         rule, ruleVersion: 1, label: 'inferred', candidates: MAX, secretPathsLeftOut: MAX, setApart: MAX, inferred: MAX, unknown: MAX, valuesLeftOut: MAX, facts: MAX,
-        files: Array.from({ length: 250 }, () => census), filesNotListed: MAX,
+        files: Array.from({ length: i < 5 ? 250 : 100 }, () => census), filesNotListed: MAX,
       })),
       facts: Array.from({ length: 1000 }, (_, i) => ({
         id: `_manifest-${i + 1}`, fact: 'dependency', rule: 'python-project-manifest', ruleVersion: 1, path: CJK, lines: [1_048_577, 1_048_577],
         name: LONE, section: 'project.optional-dependencies', group: LONE, epistemic: 'inferred',
       })),
       factsNotListed: MAX,
+      remainder: {
+        files: MAX, secretPathsLeftOut: MAX, candidates: MAX, notCandidates: MAX,
+        places: Array.from({ length: 251 }, () => ({ place: census.path, files: MAX, notCandidates: MAX })),
+        placesNotListed: MAX, filesInPlacesNotListed: MAX, notCandidatesInPlacesNotListed: MAX,
+      },
     };
     let size = 0;
     const { run } = await fullRun({ beforeClose: (dir) => {
