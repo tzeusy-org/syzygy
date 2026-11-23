@@ -313,12 +313,14 @@ function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejecte
 type PrepareNativeRole = typeof sessionLaunch.prepareRestrictedUrlSession;
 type RoleInspection = NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>;
 type RoleSample = () => ResumeSample | undefined;
+type DesignSetup = { preparation?: ResumeStamp; launch?: ResumeStamp };
 
 async function observeRoleLaunches(
   prepareWithTrace?: (prepare: PrepareNativeRole, input: Parameters<PrepareNativeRole>[0],
     remember: (result: sessionLaunch.UrlSessionPreparation, sample?: RoleSample) => void) => ReturnType<PrepareNativeRole>,
   observeDesignLaunch?: (inspect: RoleInspection, sample: RoleSample,
     child: Awaited<ReturnType<typeof sessionLaunch.launchRestrictedUrlSession>>) => void,
+  observeDesignSetup?: { timing: DesignSetup; clock: () => number },
 ) {
   const { prepareRestrictedUrlSession: prepare, launchRestrictedUrlSession: launch } =
     await vi.importActual<typeof sessionLaunch>('./session-launch.js');
@@ -332,17 +334,30 @@ async function observeRoleLaunches(
       const inspect = sessionLaunch.observeUrlSessionInspectionForTest(result);
       if (inspect !== null) preparations.set(result, { role, inspect, sample });
     };
-    return prepareWithTrace === undefined
+    const invoke = () => prepareWithTrace === undefined
       ? observe(() => prepare(input), remember, () => {})
       : prepareWithTrace(prepare, input, remember);
+    if (role !== 'design' || observeDesignSetup === undefined) return invoke();
+    const { timing, clock } = observeDesignSetup;
+    const stamp: ResumeStamp = { startedMs: clock() };
+    timing.preparation = stamp;
+    return observe(invoke, () => Object.assign(stamp, { settledMs: clock(), outcome: 'accepted' }),
+      () => Object.assign(stamp, { settledMs: clock(), outcome: 'rejected' }));
   });
   vi.mocked(sessionLaunch.launchRestrictedUrlSession).mockImplementation(input => {
     const preparation = preparations.get(input.preparation);
     if (preparation === undefined) return launch(input);
+    const setup = preparation.role === 'design' ? observeDesignSetup : undefined;
+    const stamp: ResumeStamp | undefined = setup === undefined ? undefined : { startedMs: setup.clock() };
+    if (setup !== undefined) setup.timing.launch = stamp;
+    const settle = (outcome: ResumeObservation) => {
+      if (stamp !== undefined && setup !== undefined) Object.assign(stamp, { settledMs: setup.clock(), outcome });
+    };
     return observe(() => launch(input), child => {
+      settle('accepted');
       roleInspections.set(preparation.role, preparation.inspect);
       if (preparation.sample !== undefined) observeDesignLaunch?.(preparation.inspect, preparation.sample, child);
-    }, () => {});
+    }, () => settle('rejected'));
   });
   return () => Object.fromEntries([...roleInspections].map(([role, inspect]) => {
     const { samples, firstRefusal } = inspect();
@@ -353,6 +368,7 @@ async function observeRoleLaunches(
 async function observeDesignRun(run: string, traceInference = false) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
+  const designSetup: DesignSetup = {};
   type AppendStage = 'audit-authority' | 'attempt-authority' | 'stat' | 'read' | 'write' | 'sync';
   type AppendTrace = {
     kind: orderedWriter.OrderedDesignStoredRecord['kind'];
@@ -830,10 +846,11 @@ async function observeDesignRun(run: string, traceInference = false) {
     void child.finished.then(outcome => {
       terminal = { atMs: clock(), outcome: outcome.outcome, latestSample: sample() };
     }, () => {});
-  });
+  }, { timing: designSetup, clock });
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
-    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
+    latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, designSetup,
+    launcherInspection: finishedInspection?.(),
     roleInspections: roleInspections(),
     launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
