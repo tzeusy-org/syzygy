@@ -1,0 +1,64 @@
+{
+  "label": "Observed",
+  "base": "2270ec7d94122b5e82247a50701e58856aa20580",
+  "fixtureCorrection": "afc2bfbec4eca4835f3a12a7ef8bc698cc74bfa1",
+  "case": {
+    "case": "eligible-stop-resume",
+    "result": "failed",
+    "ms": 190358
+  },
+  "overlaySha256": "018899e9c5b8e64f4d74c1f5c9a0f95fec681c62ecc9fb855781ccc1c9ab290f",
+  "logSha256": "bcccb1e3ffa2bcf2a712cd8dca727729be04e8ce6d86e9a07a1959bc7315dbfa",
+  "failureManifestSha256": "f4e9a1a9f82d71655a2e75fca2427de82b4d54aeca1106626460785a237ca723",
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "run ended: checked session boundary unavailable"
+  ],
+  "registrationRefusal": {
+    "role": "author",
+    "active": true,
+    "code": "secret-excluded"
+  },
+  "reproduction": {
+    "scriptSha256": "1dcf0bee893ca77fbf8e31f66fa6f90839b5beb38e02623c7539013533d2acba",
+    "resultSha256": "86d7d92c99016b21d0ec20811fc02f9e6441acc45942088744f8ae9bbc53761f",
+    "label": "Observed",
+    "detectorCount": 14,
+    "results": [
+      {
+        "syntheticFixtureName": "author_recheck_brief",
+        "serializedDetectorIds": [],
+        "fieldMatches": 0,
+        "joinedDetectorIds": [
+          "config-credential-key"
+        ],
+        "originSha256": "b818cc257256d9f6f1b7e88ad5f467de2a4326b01722114b0711748effbc3c61"
+      },
+      {
+        "syntheticFixtureName": "recheck",
+        "serializedDetectorIds": [],
+        "fieldMatches": 0,
+        "joinedDetectorIds": [],
+        "originSha256": "26f86130166a44578b568260e726e609545f9e3a3829c3dcd31f13a961760e49"
+      },
+      {
+        "syntheticFixtureName": "author_poll",
+        "serializedDetectorIds": [],
+        "fieldMatches": 0,
+        "joinedDetectorIds": [
+          "config-credential-key"
+        ],
+        "originSha256": "04023a923d8e790236d6a045b7176555a342a843241049e7d8f993e9a44dc7ef"
+      },
+      {
+        "syntheticFixtureName": "brief",
+        "serializedDetectorIds": [],
+        "fieldMatches": 0,
+        "joinedDetectorIds": [],
+        "originSha256": "fca312a0be45c0e374d37d5e96c877a7ee29070c530892ccc34dd2f847a22766"
+      }
+    ]
+  },
+  "scope": "The owned provider fixture identifier changes. The application, provenance schema, and fail-closed detector are outside the patch."
+}

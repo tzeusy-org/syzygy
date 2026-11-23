@@ -1,0 +1,44 @@
+{
+  "label": "Observed",
+  "base": "e91d10d32123eb716ca90a3370d4bbb36c1df8d6",
+  "testedCommit": "4e0249e6d6b9b548b78a4102a38080b970ea1f8c",
+  "diffSha256": "b0baf1c1792c2e46503f4cbab98e523df489e89defffee2cfc3288adcc566dc2",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-store.ts": "1af75a5d9777cbe563caa605d3f637ef4fe7d8a7f5b9124dea4015fe5077cd32",
+    "packages/polaris-dossier/src/url-machine-store.test.ts": "84accee5944cfaa1d58100b70ca4c1279e5f72f827870210de2b83fd49004210"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "REVIEW-RAW.md",
+    "sha256": "90470873dd697133e92377f717cb46c65ed6e65434a735eb9de878c3909ec092"
+  },
+  "validation": {
+    "integration": {
+      "passed": 43,
+      "total": 43,
+      "logSha256": "6606060cc81ad587ab2fc83691c6b84944bd601888459bfef2d4caf8c3c47dd8"
+    },
+    "unit": {
+      "passed": 36,
+      "total": 36,
+      "logSha256": "8a60d818864917b6ce854e66c426ecc714d693aa2d3883f91fbe75108cc12d9f"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "fault": {
+    "name": "reread the physical archive after the checked preflight snapshot",
+    "commit": "4e0249e6d6b9b548b78a4102a38080b970ea1f8c",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "failed": 1,
+    "passed": 1,
+    "skipped": 41,
+    "old": "          const { state: current, archive: prior } = await stateSnapshot();",
+    "new": "          const current = await state();\n          const prior = await readArchive(current);",
+    "logSha256": "8c18fa44e1d8bf854dbebfa16a8e3718c4486de7fc073d7ad66eb168d5a6f3e3",
+    "patchSha256": "bbebd159666a77664194a98f18374032d8143024c89b4ccb29c224420402b29b"
+  },
+  "remainingUnknown": "Full composed recovery and the effect of the removed read on the duration of staged publication."
+}

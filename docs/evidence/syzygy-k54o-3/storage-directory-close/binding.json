@@ -1,0 +1,61 @@
+{
+  "label": "Observed",
+  "base": "0a189288a90b404dce58f836b971233fd3aae0a4",
+  "sourceCommit": "7c44ff3ed4c374109942f2e9e288c0baf13dc6dc",
+  "testedCommit": "e8e4578399ecfc06f237dba98b21b25099525f61",
+  "diffSha256": "16162bd5a6c5ada14bac406423bf199524f8c5712c31c6ec7e04ab63d0bc1cbc",
+  "files": {
+    "packages/polaris-dossier/src/session-launch.ts": "502cf2aa225a4a1ab492405655072a0588751b7772666d83bf3f0d22d931fdf4",
+    "packages/polaris-dossier/src/session-launch.test.ts": "e6654545f081926a530f94284a6cde624e1ead5d215cdcde3a847c8c2e2c3fdf"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "REVIEW-RAW.md",
+    "sha256": "9cd42df57fb75142c9f32d65e48be90fa85b3db41417907dcc9ec725277618e7"
+  },
+  "validation": {
+    "integration": {
+      "passed": 17,
+      "skipped": 24,
+      "total": 41,
+      "logSha256": "667720b53119e450b4b7b1f8645ad65281389951c167e3b9eb229da182b23308"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "faults": [
+    {
+      "name": "join immediately after each close",
+      "commit": "e8e4578399ecfc06f237dba98b21b25099525f61",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "      if (closing.length === 2) await drainCloses();",
+      "new": "      await drainCloses();",
+      "failed": 2,
+      "passed": 0,
+      "skipped": 39,
+      "logSha256": "2c35200be4046c7f99452bcb6469c40a083edccb86bf91930c22f833f9a29c70",
+      "patchSha256": "9d723819f3ce2a02d3510b51283df96f84e02384791568f70138d45f30dbbc10"
+    },
+    {
+      "name": "skip both the pair and final close barriers",
+      "commit": "e8e4578399ecfc06f237dba98b21b25099525f61",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": [
+        "      if (closing.length === 2) await drainCloses();",
+        "      // would otherwise be retried. All started closes are joined in either case.\n      await drainCloses();"
+      ],
+      "new": [
+        "",
+        "      // would otherwise be retried. All started closes are joined in either case."
+      ],
+      "failed": 1,
+      "passed": 1,
+      "skipped": 39,
+      "logSha256": "b509033cee5e2f78cf1f0bddeb43b78d7de8431cce16451d29640c77c18cabc6",
+      "patchSha256": "21d030b1e410e4850e59f88e0b9dc264efac2bd428a14a7fab2977822dd67cd6"
+    }
+  ],
+  "remainingUnknown": "The two close controls make live descriptor ordering and completion observable. Composed recovery and storage margin on the same final revision still require verification."
+}

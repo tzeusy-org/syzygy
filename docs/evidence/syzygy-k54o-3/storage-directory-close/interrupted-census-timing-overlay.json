@@ -1,0 +1,88 @@
+{
+  "label": "Observed",
+  "base": "2270ec7d94122b5e82247a50701e58856aa20580",
+  "case": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 273455
+  },
+  "overlaySha256": "5d88cbf00acfa9659adef0f4e583179fc50347d385916d5d36a75bee5666628d",
+  "testLogSha256": "8a4e601ffcbd082e9b87027ae6b42c2d37f0f90fce4927d57399c99669f4c5f1",
+  "failureManifestSha256": "819e1c6d99db397095cb513639628159db8ed0bcb142d12174b278c540061fc6",
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "launcherRefusal": {
+    "ordinal": 1,
+    "phases": {
+      "process": {
+        "startedMs": 0.040687000000616536,
+        "settledMs": 722.3199929999828,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.09357699999236502,
+        "settledMs": 432.2084009999817,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.11848400000599213
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "bounded-timeout",
+      "elapsedMs": 1286.2035340000002
+    }
+  },
+  "censusTiming": {
+    "phase": "storage",
+    "elapsedMs": 1286.387121000007,
+    "censusTiming": {
+      "depth": 2,
+      "entries": 11,
+      "restarts": 0,
+      "rootsComplete": 1,
+      "root": {
+        "started": 2,
+        "settled": 1,
+        "waitMs": 802.4392980000121,
+        "longestMs": 802.4392980000121
+      },
+      "open": {
+        "started": 5,
+        "settled": 5,
+        "waitMs": 56.53383000002941,
+        "longestMs": 35.67321300000185
+      },
+      "opendir": {
+        "started": 5,
+        "settled": 4,
+        "waitMs": 283.66884800003027,
+        "longestMs": 282.77413800000795
+      },
+      "enumerate": {
+        "started": 10,
+        "settled": 10,
+        "waitMs": 64.03329099997063,
+        "longestMs": 31.159565000009025
+      },
+      "statBatch": {
+        "started": 5,
+        "settled": 5,
+        "waitMs": 25.31386999998358,
+        "longestMs": 24.931317999988096
+      },
+      "close": {
+        "started": 4,
+        "settled": 4,
+        "waitMs": 392.26294500002405,
+        "longestMs": 285.9478250000102
+      }
+    }
+  },
+  "remainingUnknown": "The timed census refused during a directory open for enumeration, with one root and 11 entries observed. Per-operation figures sum elapsed waits. The figures do not isolate the underlying system scheduling or filesystem cost."
+}

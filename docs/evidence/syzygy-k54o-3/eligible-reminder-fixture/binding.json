@@ -1,0 +1,20 @@
+{
+  "label": "Observed",
+  "base": "e8e4578399ecfc06f237dba98b21b25099525f61",
+  "testedSubject": "afc2bfbec4eca4835f3a12a7ef8bc698cc74bfa1",
+  "diffSha256": "7468de6e62cbd82074f89cc927e3213ed62faf821321ea545258fcb4eb15a46a",
+  "fixture": {
+    "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+    "sha256": "7444e5faf16afe41bf62e31b80a4a84973cbdb8ccc6f492831b00d7e3f80bb84"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "REVIEW-RAW.md",
+    "sha256": "0546bfe5aa049fdd1377417658f89179b3851430ee0b2a96687c19e9985b16f3"
+  },
+  "diagnostic": {
+    "file": "../peer-dispatch-authority/eligible-reminder-policy-overlay.json",
+    "sha256": "44fe78546fcf931022d31f0de5cccdcfc520eed8118537a59c363a57269806e8"
+  },
+  "remainingUnknown": "The source-only fixture review establishes equivalent scheduling intent. The native test is the check of whether the run advances through eligible Stop and Resume."
+}

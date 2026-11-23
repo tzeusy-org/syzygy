@@ -1,0 +1,157 @@
+{
+  "label": "Observed",
+  "head": "2270ec7d94122b5e82247a50701e58856aa20580",
+  "hostedMergeCheckout": "aaa860d6323c63227245a877a96e830b0c03c984",
+  "sharedTree": "0e9101813f3e7b31651e143f4c4fb41093847a95",
+  "base": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "workflowJob": "https://github.com/tzeusy-org/syzygy/actions/runs/45138994700/job/137573433710",
+  "decodedConnectorLogSha256": "9a459202f601dc074e387221dcb6dde4029b3fae70406df91272be661b79b4c1",
+  "tests": {
+    "files": {
+      "passed": 136,
+      "failed": 1,
+      "total": 137
+    },
+    "passed": 3966,
+    "failed": 3,
+    "skipped": 3,
+    "total": 3972
+  },
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 110859
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 109194
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 518409
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 141969
+    }
+  ],
+  "refusals": {
+    "delivery-stop": {
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: protected rendered site evidence changed or expired"
+      ],
+      "reportedReasons": [],
+      "resumedChecks": [],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "completedToolReceipts": 14
+    },
+    "stop-resume": {
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "reportedReasons": [],
+      "resumedChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "completedToolReceipts": 14,
+      "auditSetup": {
+        "outcome": "refused",
+        "elapsedMs": 5107.337382000056,
+        "declarations": 3,
+        "authority": {
+          "started": 14,
+          "accepted": 13,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 4832.751220999984,
+          "longestMs": 383.589393000002
+        },
+        "pendingCallbacks": 1,
+        "pendingFilesystemOperations": 0
+      },
+      "bootstrap": {
+        "restore-plans": {
+          "outcome": "accepted",
+          "elapsedMs": 13330.852339999983
+        },
+        "load-renderer": {
+          "outcome": "accepted",
+          "elapsedMs": 349.70640600001207
+        },
+        "create-origins": {
+          "outcome": "accepted",
+          "elapsedMs": 29435.302929999947
+        },
+        "restore-products": {
+          "outcome": "accepted",
+          "elapsedMs": 266121.122714
+        },
+        "start-sessions": {
+          "outcome": "rejected",
+          "elapsedMs": 7805.250879999949
+        }
+      },
+      "storeOperations": []
+    },
+    "eligible-stop-resume": {
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "run ended: checked session boundary unavailable"
+      ],
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "resumedChecks": [],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 2,
+        "design": 0
+      },
+      "completedToolReceipts": 12
+    }
+  },
+  "remainingUnknown": "Delivery-stop refused during protected render evidence validation. Interrupted Resume refused audit setup before opening its machine store. Eligible Stop/Resume refused after Fidelity packet delivery. The lower predicate of each hosted refusal is not established from this log."
+}
