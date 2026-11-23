@@ -19,16 +19,7 @@ import { ROOT, readModule, resolve } from '../../../packages/polaris-generation-
 
 const TEST = /\.test\.ts$/u;
 const KIT = /\.testkit\.ts$/u;
-// Test support that is not named as a kit: each opens with a `Test support:` comment, and only tests import it. Other modules that
-// open so (test-model-fixture.ts and its kind) are imported by product modules, so they are product.
-const TEST_SUPPORT = [
-  'apps/three-surface-poc/src/test-deep-dive-markers.ts',
-  'apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts',
-  'apps/three-surface-poc/src/test-http-client.ts',
-  'packages/three-surface-poc-core/src/test-cleanup.ts',
-  'packages/three-surface-poc-core/src/test-frozen.ts',
-];
-const isTestSupport = (path: string): boolean => TEST.test(path) || KIT.test(path) || TEST_SUPPORT.includes(path);
+const isTestSupport = (path: string): boolean => TEST.test(path) || KIT.test(path);
 // The kits the product build keeps, each for the reader that takes it from dist.
 const BUILT_KITS = {
   'packages/polaris-dossier/src/full-run.testkit.ts': 'scripts/dossier_scale_measure.mjs imports its dist',
@@ -37,7 +28,7 @@ const BUILT_KITS = {
 // What each project's tsconfig.json excludes from its include, ["src"].
 const EXCLUDES: Readonly<Record<string, readonly string[]>> = {
   'apps/syzygy': ['src/**/*.test.ts'],
-  'apps/three-surface-poc': ['src/**/*.test.ts', 'src/polaris-generation/dossier-reading.testkit.ts', 'src/polaris-generation/synthetic-shapes.testkit.ts', 'src/test-deep-dive-markers.ts', 'src/test-fixture-sweep.global-setup.ts', 'src/test-http-client.ts'],
+  'apps/three-surface-poc': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],
   'packages/cap1-core': ['src/**/*.test.ts'],
   'packages/cap1-daemon': ['src/**/*.test.ts'],
   'packages/http-host': ['src/**/*.test.ts'],
@@ -45,7 +36,7 @@ const EXCLUDES: Readonly<Record<string, readonly string[]>> = {
   'packages/polaris-generation-consent': ['src/**/*.test.ts'],
   'packages/polaris-generation-core': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],
   'packages/support': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],
-  'packages/three-surface-poc-core': ['src/**/*.test.ts', 'src/test-cleanup.ts', 'src/test-frozen.ts'],
+  'packages/three-surface-poc-core': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],
 };
 const tracked = execFileSync('git', ['-C', ROOT, 'ls-files', '-z', '--', 'apps', 'packages'], { encoding: 'utf8' }).split('\0').filter((path) => path !== '');
 const manifest = JSON.parse(readModule('package.json')) as { readonly scripts: Readonly<Record<string, string>> };

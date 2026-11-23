@@ -10,8 +10,7 @@
   ],
   "exclude": [
     "src/**/*.test.ts",
-    "src/test-cleanup.ts",
-    "src/test-frozen.ts"
+    "src/**/*.testkit.ts"
   ],
   "references": [
     {

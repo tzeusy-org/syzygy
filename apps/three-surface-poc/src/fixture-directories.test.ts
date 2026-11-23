@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FIXTURE_PREFIX, removeFixturesOfDeadProcesses } from './fixture-directories.js';
-import removeFixturesOfKilledRuns from './test-fixture-sweep.global-setup.js';
+import removeFixturesOfKilledRuns from './test-fixture-sweep.global-setup.testkit.js';
 
 /** The inode of this process's PID namespace, read independently of the module under test; undefined without /proc. */
 function ownNamespace(): string | undefined {
@@ -272,7 +272,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
     vi.resetModules();
     vi.doMock('node:os', async (importOriginal) => ({ ...(await importOriginal<typeof import('node:os')>()), tmpdir: () => tmp }));
     try {
-      const { default: sweepOnce } = await import('./test-fixture-sweep.global-setup.js');
+      const { default: sweepOnce } = await import('./test-fixture-sweep.global-setup.testkit.js');
       sweepOnce();
     } finally {
       vi.doUnmock('node:os');
@@ -291,7 +291,7 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
     expect(config.test.projects).toHaveLength(4);
     for (const { test } of withSetup) {
       expect(test.globalSetup, test.name).toHaveLength(1);
-      expect(test.globalSetup?.[0]?.endsWith('/apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts'), test.name).toBe(true);
+      expect(test.globalSetup?.[0]?.endsWith('/apps/three-surface-poc/src/test-fixture-sweep.global-setup.testkit.ts'), test.name).toBe(true);
     }
   }, 30_000); // importing the config timed out at the 5 s default at load 95 (3f08143c)
 });
