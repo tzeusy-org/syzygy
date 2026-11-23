@@ -1,5 +1,5 @@
 import { commitPolicyFixture } from './full-run.testkit.js';
-import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
+import { DOSSIER_POLICY_PATH, DOSSIER_READMISSION_POLICY_PATH } from './policy-snapshot.js';
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -23,6 +23,8 @@ const execFileAsync = promisify(execFile);
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const LIVE = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, POLICY_PATH), 'utf8'));
+const DECLARED_POLICY = fs.readFileSync(path.join(REAL_ROOT, DOSSIER_POLICY_PATH));
+const DECLARED_SUBJECT = { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' } as const;
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const sha = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const policyOf = (scope: unknown = { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } }, over: Record<string, unknown> = {}): string =>
@@ -259,15 +261,13 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
       ...(policy.includes('governanceTextPaths') ? ['governance-text'] : [])]));
   });
 
-  // R-PR403-SCREEN-DOCS-1 finding 2: each screen decides the class prerequisite from the same records at the same `now`, so a class act
-  // not yet in force or a withdrawn one leaves both screens with the class unclassified; one that binds other module bytes no longer
-  // does (2026-11-22: an act's digest is history, not a lock, RFC3-16 as amended by D10).
+  // The legacy app still reads class acts, and RFC3-16 treats their module digests as historical. The dossier uses its committed policy.
   it.each<[string, ClassAct, boolean]>([
     ['in force', {}, true], ['absent', null, false], ['future', { date: '2026-10-08' }, false], ['withdrawn', { withdrawn: true }, false], ['different module: classified, its digest is history since D10 (readClassAct)', { argument: sha(`${MODULE_TEXT} `) }, true],
   ])('keeps legacy app class admission separate from the declared dossier policy: %s', async (_name, classAct, classified) => {
     const legacyRoot = recordsRoot(policyOf(DOC_SCOPE), undefined, classAct);
-    const dossierRoot = commitPolicyFixture(tempDir('dossier-class-only-'), encode(policyOf(DOC_SCOPE)));
-    const ours = await loadDossierScreen(dossierRoot, NOW, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
+    const dossierRoot = commitPolicyFixture(tempDir('dossier-class-only-'), DECLARED_POLICY);
+    const ours = await loadDossierScreen(dossierRoot, NOW, DECLARED_SUBJECT);
     if (!ours.ok) throw new Error(ours.why);
     const theirs = await checkoutAppScreen(legacyRoot, NOW);
     expect([ours.screen.projectDocumentation, theirs.projectDocumentation]).toEqual([true, classified]);
@@ -478,21 +478,34 @@ sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.
 });
 
 describe('the screen of the committed dossier policy', () => {
-  it('loads without an act and binds the exact policy bytes', async () => {
-    const policy = policyOf();
-    const root = commitPolicyFixture(tempDir('dossier-committed-screen-'), encode(policy));
-    const result = await loadDossierScreen(root, NOW, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
-    expect(result).toMatchObject({ ok: true, screen: { policyId: 'fixture', policyVersion: '1', policySha256: sha(policy) } });
+  it('loads the default v4 policy without an act and binds its exact bytes', async () => {
+    const root = commitPolicyFixture(tempDir('dossier-committed-screen-'), DECLARED_POLICY);
+    const result = await loadDossierScreen(root, NOW, DECLARED_SUBJECT);
+    expect(result).toMatchObject({ ok: true, screen: {
+      policyId: 'polaris-butlers-project-shape-secrets', policyVersion: 'dossier-declared-source/4.0.0',
+      policySha256: createHash('sha256').update(DECLARED_POLICY).digest('hex'),
+    } });
   });
-  it('refuses worktree policy drift and missing committed policy', async () => {
-    const root = commitPolicyFixture(tempDir('dossier-screen-changed-'), encode(policyOf()));
+  it('refuses worktree policy drift', async () => {
+    const root = commitPolicyFixture(tempDir('dossier-screen-changed-'), DECLARED_POLICY);
     fs.appendFileSync(path.join(root, DOSSIER_POLICY_PATH), ' ');
-    expect(await loadDossierScreen(root, NOW)).toMatchObject({ ok: false });
-    expect(await loadDossierScreen(tempDir('dossier-screen-missing-'), NOW)).toMatchObject({ ok: false });
+    expect(await loadDossierScreen(root, NOW)).toEqual({
+      ok: false, why: 'the dossier policy differs from its committed bytes; start only from a committed policy',
+    });
+  });
+  it('requires an explicit v3 binding when the checkout has only the v3 policy', async () => {
+    const bytes = fs.readFileSync(path.join(REAL_ROOT, DOSSIER_READMISSION_POLICY_PATH));
+    const root = commitPolicyFixture(tempDir('dossier-screen-v3-'), bytes, DOSSIER_READMISSION_POLICY_PATH);
+    expect(await loadDossierScreen(root, NOW, DECLARED_SUBJECT)).toEqual({
+      ok: false, why: 'the committed dossier screening policy cannot be read as bounded UTF-8 JSON',
+    });
+    const digest = createHash('sha256').update(bytes).digest('hex');
+    const result = await loadDossierScreen(root, NOW, { ...DECLARED_SUBJECT, policyPath: DOSSIER_READMISSION_POLICY_PATH, policySha256: digest });
+    expect(result).toMatchObject({ ok: true, screen: { policyVersion: 'dossier-declared-source/3.0.0', policySha256: digest } });
   });
   it('classifies documentation from the policy without a class act', async () => {
-    const root = commitPolicyFixture(tempDir('dossier-screen-doc-class-'), encode(policyOf(DOC_SCOPE)));
-    const result = await loadDossierScreen(root, 0, { repository: 'repository:fixture', commit: 'a'.repeat(40), visibility: 'public' });
+    const root = commitPolicyFixture(tempDir('dossier-screen-doc-class-'), DECLARED_POLICY);
+    const result = await loadDossierScreen(root, 0, DECLARED_SUBJECT);
     expect(result.ok && [result.screen.projectDocumentation, result.screen.contentClass('README.md'), result.screen.contentClass('src/server.c')])
       .toEqual([true, 'project-documentation', 'code-content']);
   });
