@@ -1,0 +1,139 @@
+{
+  "label": "Observed",
+  "base": "ee2377853e8ae04023b344bed7208dae126d410f",
+  "scenario": "stop-resume",
+  "subject": "Native composed fixture with timing observers in an isolated checkout",
+  "overlaySha256": "e74c812ab1f55d688a41d4d61307203b60f92367ce3b6c6dce57b3c2fa238ec2",
+  "testLogSha256": "81c389210574720ab7b728b8b570aec423804d4ad97dacc5b66ff4f62c1e6488",
+  "case": {
+    "outcome": "failed",
+    "elapsedMs": 273738
+  },
+  "initialDelivery": [
+    {
+      "outcome": "accepted",
+      "appended": true,
+      "marks": [
+        {
+          "phase": "before-metadata-sample",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "inspect-metadata",
+          "elapsedMs": 0
+        },
+        {
+          "phase": "before-capture-sample",
+          "elapsedMs": 487
+        },
+        {
+          "phase": "before-capture",
+          "elapsedMs": 487
+        },
+        {
+          "phase": "durable-append",
+          "elapsedMs": 505
+        },
+        {
+          "phase": "after-append-sample",
+          "elapsedMs": 536
+        },
+        {
+          "phase": "read-inert-product",
+          "elapsedMs": 542
+        },
+        {
+          "phase": "after-read-sample",
+          "elapsedMs": 973
+        },
+        {
+          "phase": "after-capture",
+          "elapsedMs": 973
+        },
+        {
+          "phase": "final-sample",
+          "elapsedMs": 990
+        },
+        {
+          "phase": "final-proof",
+          "elapsedMs": 990
+        },
+        {
+          "phase": "publish-delivery",
+          "elapsedMs": 1003
+        },
+        {
+          "phase": "plan-unstarted-ordered",
+          "elapsedMs": 1003
+        },
+        {
+          "phase": "accepted",
+          "elapsedMs": 1055
+        }
+      ],
+      "remainingMs": 23642
+    }
+  ],
+  "resumedFirstBridge": {
+    "parentChecks": [
+      {
+        "phase": "final-current",
+        "outcome": "accepted",
+        "elapsedMs": 934.958
+      },
+      {
+        "phase": "final-current",
+        "outcome": "accepted",
+        "elapsedMs": 670.262
+      }
+    ],
+    "openToCaptureMs": 100.022,
+    "captureMarks": [
+      {
+        "phase": "entry",
+        "ms": 0
+      },
+      {
+        "phase": "first-parent",
+        "ms": 123
+      },
+      {
+        "phase": "first-parent-accepted",
+        "ms": 1258
+      },
+      {
+        "phase": "kernel-read",
+        "ms": 1258
+      },
+      {
+        "phase": "second-parent",
+        "ms": 1321
+      },
+      {
+        "phase": "native-prepare",
+        "ms": 2195
+      },
+      {
+        "phase": "process-walk",
+        "ms": 2234
+      },
+      {
+        "phase": "pinned-executable",
+        "ms": 2352
+      }
+    ],
+    "installedImage": {
+      "reads": 82,
+      "bytes": 85983232,
+      "privateReadMs": 3566.6401200000255,
+      "hashMs": 48.595531000057235,
+      "guardMs": 45.81270099998801,
+      "lastAt": "between-reads",
+      "refusedBy": "local-effect"
+    },
+    "outerTimeoutMs": 5000.0,
+    "outerTimeoutObservedMs": 6110.984,
+    "captureRefusalAfterTransportTimeoutMs": 37.137
+  },
+  "limitation": "The observers can affect latency. The record identifies the first refusal on this run and does not establish final native acceptance."
+}

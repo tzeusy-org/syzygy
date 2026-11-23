@@ -1,0 +1,50 @@
+{
+  "label": "Observed",
+  "base": "d3ac90ba8440dff33ad9e51721aae99854ef18c9",
+  "reviewed": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-peer.ts": "44696cec6494cfa84ad167242a2323e85ac61b2c4b5eac7c6d0503e0ac2af368",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "e8b38a7773cbb1d9049eb5bd267bf3cde9d5474e9f8476cf27dac9d0aa0883f2",
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts": "a1530d433ce4f729c49f916a6adefb1a26f72b51f114c1f0925b09379415f380"
+  },
+  "reviews": [
+    {
+      "commit": "ba5da887872ec712e14fc9f55d265665d44d0a72",
+      "verdict": "FAIL",
+      "file": "REVIEW-INITIAL-RAW.md",
+      "sha256": "2fa7b404d1a0fe0b21620113a87289bd1999ccf0e2bf8c26a4ed2d6ce1675911"
+    },
+    {
+      "commit": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+      "verdict": "PASS",
+      "file": "REVIEW-FINAL-RAW.md",
+      "sha256": "76a7870909aa8289e5fc097742f946a47020b647936107f1a9bc5c894877dd18"
+    }
+  ],
+  "validation": {
+    "integration": {
+      "passed": 25,
+      "total": 25,
+      "files": 2,
+      "logSha256": "eeac14fbd0cd95c3efb5e95e3463281cc3c0c84310fb205a9509c810d8e02d5a"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "fault": {
+      "base": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "old": "handle.read(chunk, 0, Math.min(chunk.length, Number(before.size) + 1 - length), null)",
+      "new": "handle.read(chunk, 0, Math.min(length === 0 ? chunk.length : 1_048_576, Number(before.size) + 1 - length), null)",
+      "failed": 1,
+      "skipped": 13,
+      "diagnostic": "expected 1048576 to be 4194304",
+      "logSha256": "4835d604212d11cb51126e546924cc6e6acc7b2b7f08228d0d6adae0aadd401c",
+      "patchSha256": "da3932c7c93a50ddd3001d99a9c0e48863baac259aac65800d2b0dd699e7585c"
+    }
+  },
+  "precedingCaptureProfile": "../native-recovery-ee2377853/interrupted-timing-overlay.json",
+  "composedInterrupted": "local-interrupted.json",
+  "remainingUnknown": "The complete native interrupted replay refused during the first connection capture before authorization. The focused cases establish the exact bounded read shape and withdrawal behavior. Completion and the capture phase timing on the new revision remain unverified."
+}

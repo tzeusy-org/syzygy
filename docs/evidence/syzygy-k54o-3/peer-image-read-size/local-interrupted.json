@@ -1,0 +1,135 @@
+{
+  "label": "Observed",
+  "commit": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+  "testLogSha256": "61d214c00d94056cdc2699b94405c3c7075daaa2c7f08eaf554569bdf59861d8",
+  "failureManifestSha256": "4627b27af167982a95a6a0bc427f5d38baa2fcfe3c43ed6b3bec4c5a4dbdb823",
+  "case": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 241619
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "resumedAudit": {
+    "result": "accepted",
+    "elapsedMs": 1001.728,
+    "declarations": 4,
+    "acceptedAuthorityCallbacks": 14
+  },
+  "resumedAcceptedStoreOperations": {
+    "open": 1,
+    "exclusive": 8,
+    "allocation": 8
+  },
+  "connection": {
+    "kind": "inference-bridge",
+    "counts": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 0
+    },
+    "stages": {
+      "open": {
+        "outcome": "refused",
+        "elapsedMs": 5326.425
+      },
+      "accept": {
+        "outcome": "refused",
+        "elapsedMs": 5532.604
+      },
+      "capture": {
+        "outcome": "refused",
+        "elapsedMs": 5455.129
+      }
+    }
+  },
+  "providerForwards": {
+    "author": 7,
+    "inventory": 6,
+    "fidelity": 4,
+    "design": 0
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 7,
+    "phases": {
+      "process": {
+        "startedMs": 0.03325300000142306,
+        "settledMs": 249.42695599998115,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.04975499998545274,
+        "settledMs": 234.8961980000022,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.05200899997726083,
+        "settledMs": 259.7757129999809,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 259.78724399997736,
+        "settledMs": 259.8737479999836,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 259.99112999998033
+    }
+  },
+  "record": {
+    "runDirectEntriesExamined": 14,
+    "executionRecordLstatFound": false
+  }
+}
