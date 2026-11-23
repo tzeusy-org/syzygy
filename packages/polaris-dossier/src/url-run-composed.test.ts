@@ -33,6 +33,8 @@ import * as machineStore from './url-machine-store.js';
 import * as rolePlan from './url-role-plan.js';
 import * as urlRuntime from './url-runtime.js';
 import * as runOrigins from './url-run-origins.js';
+import * as originLedger from './url-origin-ledger.js';
+import * as sourceReader from './url-source-reader.js';
 import * as runArtifacts from './url-run-artifacts.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
@@ -213,6 +215,12 @@ afterEach(async () => {
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
 type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
+type ResumeOriginPhase = 'register' | 'list-tree' | 'representative' | 'renderer';
+type ResumeOriginStep = ResumeStamp & {
+  phase: ResumeOriginPhase;
+  operation?: ResumeStamp;
+  authority: { calls: number; refused: number; totalMs: number; longestMs: number };
+};
 type ResumeStoreStep = ResumeStamp & {
   runRemainingMs: number;
   asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
@@ -308,6 +316,76 @@ function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejecte
     void original.then(settled, rejected);
     return original;
   } catch (error) { rejected(); throw error; }
+}
+
+function observeResumedOrigins(
+  create: typeof runOrigins.createUrlRunOrigins,
+  options: Parameters<typeof create>[0],
+  steps: ResumeOriginStep[],
+): ReturnType<typeof create> {
+  const start = (phase: ResumeOriginPhase): ResumeOriginStep => {
+    const step = { phase, startedMs: performance.now(), authority: { calls: 0, refused: 0, totalMs: 0, longestMs: 0 } };
+    steps.push(step);
+    return step;
+  };
+  const settle = (step: ResumeStamp, outcome: ResumeObservation): void => {
+    Object.assign(step, { settledMs: performance.now(), outcome });
+  };
+  let phase = start('register');
+  let observing = true;
+  const begin = (name: Exclude<ResumeOriginPhase, 'register'>): ResumeOriginStep => {
+    settle(phase, 'accepted');
+    phase = start(name);
+    return phase;
+  };
+  const measure = <T>(step: ResumeOriginStep, invoke: () => Promise<T>): Promise<T> => {
+    const operation: ResumeStamp = { startedMs: performance.now() };
+    step.operation = operation;
+    return observe(invoke, () => { if (observing) settle(operation, 'accepted'); },
+      () => { if (observing) settle(operation, 'rejected'); });
+  };
+  const createLedger = originLedger.createUrlOriginLedger;
+  const ledgerSpy = vi.spyOn(originLedger, 'createUrlOriginLedger').mockImplementationOnce(given => {
+    const ledger = createLedger(given);
+    return Object.freeze({ ...ledger,
+      sourceSpan: input => observing ? measure(begin('representative'), () => ledger.sourceSpan(input)) : ledger.sourceSpan(input),
+      planRendererScaffold: renderer => observing ? measure(begin('renderer'), () => ledger.planRendererScaffold(renderer)) : ledger.planRendererScaffold(renderer),
+    });
+  });
+  const bindReader = sourceReader.bindUrlSourceReader;
+  const readerSpy = vi.spyOn(sourceReader, 'bindUrlSourceReader').mockImplementation(given => {
+    // The tree census uses its own binding. The ledger binds a separate byte
+    // reader for the representative source checks.
+    if (given.callObjects === undefined) return bindReader(given);
+    const step = begin('list-tree');
+    const open = bindReader(given);
+    return input => {
+      const reader = open(input);
+      return { ...reader,
+        listTree: () => measure(step, reader.listTree),
+      };
+    };
+  });
+  const finish = (outcome: ResumeObservation): void => {
+    observing = false;
+    settle(phase, outcome);
+    readerSpy.mockRestore();
+    ledgerSpy.mockRestore();
+  };
+  return observe(() => create({ ...options, current: () => {
+    if (!observing) return options.current();
+    const sample = phase.authority;
+    const started = performance.now();
+    sample.calls++;
+    let accepted = false;
+    try { accepted = options.current(); return accepted; }
+    finally {
+      const elapsed = performance.now() - started;
+      sample.totalMs += elapsed;
+      sample.longestMs = Math.max(sample.longestMs, elapsed);
+      if (!accepted) sample.refused++;
+    }
+  } }), () => finish('accepted'), () => finish('rejected'));
 }
 
 type PrepareNativeRole = typeof sessionLaunch.prepareRestrictedUrlSession;
@@ -916,6 +994,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const resumeChecks: unknown[] = [];
     type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'restore-products' | 'start-sessions' | 'open-store' | 'create-machine';
     const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
+    const resumeOriginSteps: ResumeOriginStep[] = [];
     const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
@@ -937,7 +1016,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRuntimeFailure, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
@@ -1436,8 +1515,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
               observeBootstrap('restore-plans', () => restore(...args), value => value !== null));
             vi.spyOn(urlRuntime, 'loadUrlDossierRenderer').mockImplementationOnce((...args) =>
               observeBootstrap('load-renderer', () => load(...args), value => value !== null));
-            vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce((...args) =>
-              observeBootstrap('create-origins', () => origins(...args), () => true));
+            vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce(options =>
+              observeBootstrap('create-origins', () => observeResumedOrigins(origins, options, resumeOriginSteps), () => true));
             const createArtifacts = runArtifacts.createUrlRunArtifacts;
             vi.spyOn(runArtifacts, 'createUrlRunArtifacts').mockImplementationOnce((...args) => {
               const bridge = createArtifacts(...args);
@@ -1604,7 +1683,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
             resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
@@ -1650,7 +1729,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
@@ -1660,7 +1739,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
+        resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference, firstRuntimeFailure,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
