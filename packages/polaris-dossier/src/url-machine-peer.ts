@@ -282,14 +282,13 @@ function check(state: PeerState): number {
   if (state.script !== null && !sameFile(state.script, fs.statSync(`${base}/root/tool/support/${path.basename(options.installed.script!)}`, { bigint: true }))) throw refused();
   return now;
 }
-async function parentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
+async function awaitParentCurrent(options: UrlMachinePeerOptions): Promise<boolean> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
     if (options.effectCurrent !== undefined && options.effectCurrent() !== true) return false;
-    const valid = await Promise.race([Promise.resolve().then(options.current), new Promise<false>(resolve => {
+    return await Promise.race([Promise.resolve().then(options.current), new Promise<false>(resolve => {
       timer = setTimeout(() => resolve(false), Math.max(1, Math.min(URL_MACHINE_PEER_LIMITS.setupMilliseconds, options.context.deadline - options.now())));
     })]);
-    return valid === true && (options.effectCurrent === undefined || options.effectCurrent() === true);
   } finally { clearTimeout(timer); }
 }
 async function current(state: PeerState, drainSample = false): Promise<number> {
@@ -299,7 +298,8 @@ async function current(state: PeerState, drainSample = false): Promise<number> {
   // The parent may drain the genuine launcher's in-flight resource sample.
   // Preserve current parent and sampled process authority before launching
   // the asynchronous helper; the event loop remains available during exec.
-  if (await parentCurrent(state.options) !== true) throw refused();
+  if (await awaitParentCurrent(state.options) !== true) throw refused();
+  // Recheck full effect authority with the exact peer just before dispatch.
   check(state);
   const { options } = state;
   const peerNow = await captureKernelUnixPeerAsync(options.socket, options.programs.peer, options.chargeNativeCpuMicroseconds);
@@ -326,13 +326,15 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
       || !Array.isArray(options.protectedPaths) || options.protectedPaths.length < 1 || options.protectedPaths.length > 64
       || options.protectedPaths.some(file => !safePath(file))) return null;
     claimed.add(options.socket);
-    if (await parentCurrent(options) !== true) return null;
+    if (await awaitParentCurrent(options) !== true
+      || (options.effectCurrent !== undefined && options.effectCurrent() !== true)) return null;
     const context = Object.freeze({ ...options.context, allowedScopes: Object.freeze([...options.context.allowedScopes]) });
     const selected = Object.freeze({ ...options, context, installed: Object.freeze({ ...options.installed }),
       binding: Object.freeze({ ...options.binding }), programs: Object.freeze({ peer: Object.freeze({ ...options.programs.peer }), reader: Object.freeze({ ...options.programs.reader }) }),
       protectedPaths: Object.freeze([...options.protectedPaths]) });
     const kernel = await captureKernelUnixPeerAsync(options.socket, selected.programs.peer, selected.chargeNativeCpuMicroseconds);
-    if (await parentCurrent(selected) !== true) throw refused();
+    if (await awaitParentCurrent(selected) !== true
+      || (selected.effectCurrent !== undefined && selected.effectCurrent() !== true)) throw refused();
     const prepared = await native(options.socket, selected.programs.reader, 'prepare', selected.chargeNativeCpuMicroseconds);
     if (!kernel || !prepared.identity || kernel.pid !== prepared.identity.pid || kernel.uid !== prepared.identity.uid || kernel.gid !== prepared.identity.gid) throw refused();
     const observed = prepared.identity;
@@ -407,7 +409,7 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
     if (++state.chunks > URL_MACHINE_PEER_LIMITS.chunks) throw refused();
     // current() yields after its fresh peer capture. Drain a sample that may
     // have started in that poll turn before the separate asynchronous read.
-    if (await parentCurrent(state.options) !== true) throw refused();
+    if (await awaitParentCurrent(state.options) !== true) throw refused();
     check(state);
     const result = await native(state.options.socket, state.options.programs.reader, 'read', state.options.chargeNativeCpuMicroseconds);
     if (result.identity !== null && !equal(result.identity, state.native)) throw refused();

@@ -169,6 +169,26 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     expect(modes).toEqual(['listener', 'listener']);
   });
 
+  it.each([true, false])('rechecks authority once at final native helper dispatch (current: %s)', async allowed => {
+    let verifierCalls = 0;
+    let effectChecks = 0;
+    const lastHelperChecks: number[] = [];
+    const f = await fixture('live', () => {
+      if (verifierCalls === 3) lastHelperChecks.push(effectChecks);
+    }, {
+      current: async () => { verifierCalls++; return true; },
+      effectCurrent: () => {
+        if (verifierCalls !== 3) return true;
+        effectChecks++;
+        return allowed;
+      },
+    });
+    expect(verifierCalls).toBe(3);
+    expect(lastHelperChecks).toEqual(allowed ? [1] : []);
+    if (allowed) expect(f.peer).not.toBeNull();
+    else expect(f.peer).toBeNull();
+  });
+
   it('pins the actual installed Node image with bounded asynchronous descriptor reads', async () => {
     filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
     const probe = await fs.open(await fs.realpath(process.execPath), 'r');
