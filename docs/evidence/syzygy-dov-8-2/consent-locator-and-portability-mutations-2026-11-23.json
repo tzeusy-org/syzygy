@@ -1,0 +1,72 @@
+{
+  "subject": "M8 consent-locator and portability debt predicates",
+  "commit": "9fe6ef178f205dde194e728f22359b4c5ab19b0f",
+  "epistemic": "Observed",
+  "mutations": [
+    {
+      "id": "no-live-grant",
+      "path": "apps/three-surface-poc/src/consent-locator.ts",
+      "sourceSha256": "e74e16d6a958d7b6986d54156da4a1eb96e987a92588bbe8ea9deb572fb0c27f",
+      "old": "if (!authority.admits) return { kind: 'rejected', reason: 'body-read-not-admitted' };",
+      "new": "if (false) return { kind: 'rejected', reason: 'body-read-not-admitted' };",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "filter": "refuses a modified consent locator",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "compiled-locator-fallback",
+      "path": "apps/three-surface-poc/src/consent-locator.ts",
+      "sourceSha256": "e74e16d6a958d7b6986d54156da4a1eb96e987a92588bbe8ea9deb572fb0c27f",
+      "old": "const locator = currentConsentLocator(artifact.bytes);",
+      "new": "const locator = '/built/in/locator';",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "filter": "derives the configured path",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "ambiguous-locator",
+      "path": "apps/three-surface-poc/src/consent-locator.ts",
+      "sourceSha256": "e74e16d6a958d7b6986d54156da4a1eb96e987a92588bbe8ea9deb572fb0c27f",
+      "old": "if (index < 0 || lines.slice(index + 1).some((line) => label.test(line))) return undefined;",
+      "new": "if (index < 0) return undefined;",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "filter": "refuses a missing or malformed declaration",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "wrong-target-git",
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "sourceSha256": "c794ecb9be74ffe3e906c467b81d0f1d0c007a62d02a1c7f9b4ae06db47302b5",
+      "old": "if (locator !== approvedLocator) return { kind: 'rejected', reason: 'locator-mismatched' };",
+      "new": "if (false) return { kind: 'rejected', reason: 'locator-mismatched' };",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/git-observation.test.ts",
+      "filter": "rejects a second Butlers-shaped repository",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "nul-denominator-shrinks",
+      "path": "apps/three-surface-poc/src/polaris-portability-debt.test.ts",
+      "sourceSha256": "432518b46319399826c39e859a59dd8534ab7ba8eb51006de3240165b64a18dc",
+      "old": "      decoded++;",
+      "new": "      if (text.includes('\\0')) continue;\n      decoded++;",
+      "tier": "unit",
+      "testFile": "apps/three-surface-poc/src/polaris-portability-debt.test.ts",
+      "filter": "counts NUL-bearing files",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    }
+  ]
+}
