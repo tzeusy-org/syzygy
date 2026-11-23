@@ -227,5 +227,33 @@
       "sha256": "09646ed11a5a329e7eb608581bc6b14a2d6b45c3f88985fc16ddf92efc804bc8"
     }
   },
-  "remainingScope": "Other live callers, historical-recorder dependencies, manifest, Git I/O, patch, report and selftest helpers. GT-1 remains open."
+  "remainingScope": "Other live callers, historical-recorder dependencies, manifest, Git I/O, patch, report and selftest helpers. GT-1 remains open.",
+  "mutation": {
+    "subjectCommit": "59139bbd33edc82e95477da89590683b4c4c329a",
+    "path": "scripts/syzygy_gov/digest.py",
+    "old": "return hashlib.sha256(data).hexdigest()",
+    "new": "return hashlib.sha256(data).hexdigest().upper()",
+    "checks": [
+      {
+        "arguments": [
+          "scripts/build_polaris_project_wide_contract_coverage.py",
+          "--check"
+        ],
+        "baselineExit": 0,
+        "mutantExit": 1,
+        "mutantStdoutMarker": "DRIFT: CONTRACT-COVERAGE.md",
+        "mutantStdoutSha256": "d5ba0c7e8cbb23dd9a6ffb92f49c4e534fd5545165cbba6cec1df42d88229b50"
+      },
+      {
+        "arguments": [
+          "scripts/build_polaris_dependency_unions.py",
+          "--selftest"
+        ],
+        "baselineExit": 0,
+        "mutantExit": 1,
+        "mutantStdoutMarker": "FAIL the installed union reverses to its signed predecessor",
+        "mutantStdoutSha256": "fc37fe2b2123aeff14017229b6b009a6b8e3495116ca102873c28a03c678d729"
+      }
+    ]
+  }
 }
