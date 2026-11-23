@@ -60,5 +60,44 @@
     "detectedFailures": 1,
     "logSha256": "d407cdf554a1ed006908e65a3bd8255cdb6cc16dd0e51d57e26687c0ae6537d6"
   },
-  "nativeSuccessorCompletion": "Unknown"
+  "nativeSuccessorCompletion": "Unknown",
+  "nativeSuccessor": {
+    "subjectCommit": "e1b7d513d0e49994955ada0f2d1f325485396bfc",
+    "traceSha256": "18e1f684279880ae39ef7b2465e91998b72d6e26846563d5e688938c47db59eb",
+    "scenario": "stop-resume",
+    "relayEffect": {
+      "startedMs": 112725.591,
+      "settledMs": 163259.085,
+      "outcome": "refused"
+    },
+    "peerChecks": [
+      {
+        "phase": "parent-current",
+        "timing": {
+          "startedMs": 112950.078,
+          "settledMs": 114042.427,
+          "outcome": "accepted"
+        }
+      },
+      {
+        "phase": "kernel-peer",
+        "timing": {
+          "startedMs": 114164.121,
+          "settledMs": 114203.998,
+          "outcome": "accepted"
+        }
+      }
+    ],
+    "effectCallbackReached": false,
+    "stopCutVerified": true,
+    "outcome": "transport-unavailable"
+  },
+  "focusedVerification": {
+    "subjectCommit": "686783e406bf9883c77a19f98f697054692a95cb",
+    "testFiles": 3,
+    "testsPassed": 118,
+    "testLogSha256": "d1296a7840227d57e42028e4639d6847d762aa3fea0052bc581e336fe3fa5826",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "governanceLogSha256": "2cf934eee4fcf5bf3f69c2ff7dbd5f4c52a5fe4e9d6a21d47df56a43ac6c073d"
+  }
 }

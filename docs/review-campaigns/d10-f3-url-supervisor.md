@@ -53,6 +53,7 @@
 - `F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW\.md`
 - `F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW\.md`
 - `F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW\.md`
+- `F3-DESIGN-PRODUCT-BEFORE-NATIVE-EFFECT-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -187,3 +188,5 @@
 [Observed] The native inspection-bound review records `PASS` (F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW.md:1) at `d7c8de9f4`. A-168 records the two-second inspection and history sample wait. Focused cases exercise completion beyond the old limit and refusal at the declared bound. [Unknown] Native Resume completion.
 
 [Observed] The consumed claim and bounded source review records `PASS` for `25bcf3f6c` and `00dcfb697` (F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW.md:1). A-169 checks the exact effective record at synchronous claim release. A-170 retains the original read timer, the source reader's live checks and final authority after screening. The focused predecessor controls detected stale run-record acceptance and a source read refusal under slow live samples. [Unknown] Native Resume completion.
+
+[Observed] The Design product preparation review records `PASS` for `e1b7d513d` (F3-DESIGN-PRODUCT-BEFORE-NATIVE-EFFECT-REVIEW-RAW.md:1). A-171 places checked same-delivery reproduction before the independently timed machine effect. The relay wiring control detects a missing preparation callback. The native interrupted replay reached preparation and refused before the first protected request callback. [Unknown] Native Resume closure.
