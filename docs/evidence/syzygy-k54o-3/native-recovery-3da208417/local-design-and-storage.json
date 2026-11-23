@@ -1,0 +1,133 @@
+{
+  "subjectCommit": "3da2084174020d63141d7cf606afe02e6e5e5ac1",
+  "subjectTree": "c20cc5cbe723330d3e6ed188c3dc01b4dcc0f201",
+  "diagnosticOverlaySha256": "3d057bcdb4030334a92ec271c3b54bc1c7e2de4990a4eac255c0beac5aa67a81",
+  "nativeLogSha256": "5c7730168520479d80e15450ddd0581eb9b9a0783f343adb703d3ae5e30adfc8",
+  "scenario": "stop-resume",
+  "exit": 1,
+  "attemptBoundaries": [
+    {
+      "phase": "commit-delivery",
+      "round": 1,
+      "resumed": false,
+      "elapsedMs": 10158.122138000006
+    },
+    {
+      "phase": "write-history",
+      "round": 2,
+      "resumed": true,
+      "elapsedMs": 31357.38083899999
+    }
+  ],
+  "storageBoundaries": [
+    {
+      "refusal": "operation",
+      "restart": 0,
+      "entries": 9
+    }
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "launchHistory": {
+    "write": {
+      "startedMs": 167858.229,
+      "settledMs": 170318.45,
+      "outcome": "rejected"
+    },
+    "syncs": [
+      {
+        "startedMs": 169245.067,
+        "settledMs": 169257.476,
+        "outcome": "accepted"
+      },
+      {
+        "startedMs": 169257.606,
+        "settledMs": 169265.347,
+        "outcome": "accepted"
+      }
+    ]
+  },
+  "firstStorageRefusal": {
+    "ordinal": 2,
+    "phases": {
+      "process": {
+        "startedMs": 0.03617899998789653
+      },
+      "verify": {
+        "startedMs": 0.0910320000257343
+      },
+      "storage": {
+        "startedMs": 0.09548000001814216
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "bounded-timeout",
+      "elapsedMs": 1414.1631059999927
+    }
+  },
+  "resumedDesignAudit": {
+    "status": "read",
+    "count": 3,
+    "kinds": [
+      "declaration",
+      "launch-attempt",
+      "launch-terminal"
+    ]
+  },
+  "resumedDesignTransport": {
+    "open": 1,
+    "accept": 1,
+    "capture": 1,
+    "authorize": 0
+  },
+  "limit": "The local replay includes temporary phase probes. The check that triggered the first missing storage completion is Unknown."
+}

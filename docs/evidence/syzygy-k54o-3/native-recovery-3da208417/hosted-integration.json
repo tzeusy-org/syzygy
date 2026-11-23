@@ -1,0 +1,560 @@
+{
+  "sourceHead": "3da2084174020d63141d7cf606afe02e6e5e5ac1",
+  "sourceTree": "c20cc5cbe723330d3e6ed188c3dc01b4dcc0f201",
+  "hostedCheckout": "ea875954dea183ebd60ce186baa7dda0cbd2e5fb",
+  "hostedCheckoutTree": "c20cc5cbe723330d3e6ed188c3dc01b4dcc0f201",
+  "hostedBase": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45162561723/job/137653614714",
+  "jobLogSha256": "f40f36dbe3f27d7cab292393b2584c866b7f8db96315fcbbf7edc1113215f3e7",
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "failed",
+      "ms": 9259
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 58507
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 294896
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 325146
+    }
+  ],
+  "integration": {
+    "files": 137,
+    "passedFiles": 136,
+    "failedFiles": 1,
+    "cases": 3993,
+    "passed": 3987,
+    "failed": 3,
+    "skipped": 3
+  },
+  "retainedCaseDetails": {
+    "complete": {
+      "failure": [
+        "role-ended"
+      ],
+      "inventoryFirstSampleRefusal": {
+        "ordinal": 1,
+        "phases": {
+          "process": {
+            "startedMs": 0.08186399999976857
+          },
+          "storage": {
+            "startedMs": 0.13127499999973224,
+            "settledMs": 4.158795999999711,
+            "outcome": "rejected"
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "operation-rejected",
+          "elapsedMs": 4.318030000000363
+        }
+      }
+    },
+    "stop-resume": {
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "stoppedEvidence": {
+        "failure": null,
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "retired",
+        "machineSealed": true,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "design",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          }
+        ]
+      },
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "Unknown"
+            }
+          ]
+        }
+      ],
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 159228.657689,
+          "settledMs": 166493.071543,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 166604.642372,
+          "settledMs": 166910.936648,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 167107.319838,
+          "settledMs": 175780.600724,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 177249.596903,
+          "settledMs": 267374.356791,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 268130.128502,
+          "settledMs": 297554.126059,
+          "outcome": "accepted"
+        },
+        "create-machine": {
+          "startedMs": 271328.444564,
+          "settledMs": 296728.473983,
+          "outcome": "accepted"
+        },
+        "open-store": {
+          "startedMs": 271869.123455,
+          "settledMs": 272985.402389,
+          "outcome": "accepted"
+        }
+      },
+      "resumeStoreSteps": [
+        {
+          "kind": "open",
+          "startedMs": 271869.16846,
+          "runRemainingMs": 7004769,
+          "asyncAuthority": {
+            "started": 4,
+            "accepted": 4,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 504.62011100008385
+          },
+          "settledMs": 272985.360692,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 273098.674367,
+          "runRemainingMs": 7003539,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1128.379171000095
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 275139.954281,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 275271.047345,
+          "runRemainingMs": 7001367,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1399.2592399999849
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 277659.86143,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 277786.561282,
+          "runRemainingMs": 6998851,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1617.4911859999993
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 280429.65331,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 280534.810633,
+          "runRemainingMs": 6996103,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1426.8268739999621
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 283229.610123,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 283365.473222,
+          "runRemainingMs": 6993272,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1460.7286980001372
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 286091.748862,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 286262.717443,
+          "runRemainingMs": 6990375,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1250.3090529998299
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 288637.42237,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 288785.141474,
+          "runRemainingMs": 6987853,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1376.0552099998458
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 291120.749367,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 291246.472181,
+          "runRemainingMs": 6985391,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1438.0251210000715
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 293665.933196,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "allocation",
+          "count": 8,
+          "startedMs": 293966.17233,
+          "runRemainingMs": 6982672,
+          "asyncAuthority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 709.3986999999033
+          },
+          "settledMs": 295821.337112,
+          "outcome": "accepted"
+        }
+      ],
+      "resumedDesign": {
+        "audit": {
+          "status": "read",
+          "count": 1,
+          "kinds": [
+            "declaration"
+          ]
+        },
+        "inspectedLaunches": 0,
+        "transportCounts": {
+          "open": 0,
+          "accept": 0,
+          "capture": 0,
+          "authorize": 0
+        }
+      },
+      "resumeAuditSetup": {
+        "startedMs": 269143.935993,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 2160.603395999875,
+          "longestMs": 171.7610299999942
+        },
+        "settledMs": 271325.953373,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "resumedCliResult": "render refused",
+      "resumedCliReason": "The rendered products were not admitted by the checked producer before storage."
+    },
+    "eligible-stop-resume": {
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "prepared design round 1 for the reviewer",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "stoppedEvidence": {
+        "failure": null,
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "retired",
+        "machineSealed": true,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "design",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "exited",
+            "group": "confirmed",
+            "view": "view-exited"
+          }
+        ]
+      },
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 549222.289056,
+          "settledMs": 563264.634617,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 563788.379797,
+          "settledMs": 564097.36498,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 564560.330986,
+          "settledMs": 595532.697832,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 599867.144791,
+          "settledMs": 690017.548082,
+          "outcome": "rejected"
+        }
+      },
+      "resumeStoreSteps": [],
+      "orderedAppends": {
+        "preparedAppend": {
+          "kind": "prepared",
+          "timing": {
+            "startedMs": 91307.276,
+            "settledMs": 91473.792,
+            "outcome": "accepted"
+          }
+        },
+        "latestAppend": {
+          "kind": "eligible",
+          "timing": {
+            "startedMs": 155446.641,
+            "settledMs": 155626.597,
+            "outcome": "accepted"
+          }
+        }
+      }
+    }
+  },
+  "limits": [
+    "Both resumes exited 1 before their assertions for a durable Execution Record.",
+    "The first refused check inside eligible frozen-product restoration and the specific check within interrupted render producer admission remain Unknown.",
+    "The normal case records the storage subsystem refusal and ordinal. The specific filesystem predicate is Unknown."
+  ]
+}

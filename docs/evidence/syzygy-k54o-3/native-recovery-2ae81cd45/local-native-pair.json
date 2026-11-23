@@ -1,0 +1,473 @@
+{
+  "revision": "2ae81cd45dca6bae661fd169c30d514084748a1d",
+  "tree": "7e7d32d58385ec6251606765cf6e60dd42a8b3b2",
+  "parents": [
+    "f91e4ca400f8575b42d15dbba91e035f6c4f58be"
+  ],
+  "scenarios": {
+    "stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "stop-resume",
+          "result": "failed",
+          "ms": 317452
+        }
+      ],
+      "logSha256": "28dc33ccea399c796e4438f7a4ec37e5476fd60489bc62bdee459e2a746aaba6",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "Unknown"
+            }
+          ]
+        }
+      ],
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 151416.597651,
+          "settledMs": 162580.205827,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 162657.284341,
+          "settledMs": 163166.067226,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 163243.053877,
+          "settledMs": 169277.169713,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 170068.925417,
+          "settledMs": 232718.094939,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 233357.712631,
+          "settledMs": 256139.844005,
+          "outcome": "accepted"
+        },
+        "create-machine": {
+          "startedMs": 235396.10312,
+          "settledMs": 255536.311801,
+          "outcome": "accepted"
+        },
+        "open-store": {
+          "startedMs": 235904.319204,
+          "settledMs": 236913.263085,
+          "outcome": "accepted"
+        }
+      },
+      "resumeAuditSetup": {
+        "startedMs": 233944.93367,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 1249.6418770000746,
+          "longestMs": 108.29151400001138
+        },
+        "settledMs": 235393.509575,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "resumeStoreSteps": [
+        {
+          "kind": "open",
+          "startedMs": 235904.441534,
+          "runRemainingMs": 6991371,
+          "asyncAuthority": {
+            "started": 4,
+            "accepted": 4,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 419.961076000036
+          },
+          "settledMs": 236913.207741,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 237000.552674,
+          "runRemainingMs": 6990275,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 940.9954340000113
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 238791.930322,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 238898.567546,
+          "runRemainingMs": 6988377,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1544.167426
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 241424.842046,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 241509.556627,
+          "runRemainingMs": 6985766,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 990.1550800001132
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 243223.405461,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 243289.487739,
+          "runRemainingMs": 6983986,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1156.6166200000152
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 245231.860812,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 245334.509594,
+          "runRemainingMs": 6981941,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1060.8651219999883
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 247115.007292,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 247188.239045,
+          "runRemainingMs": 6980087,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 925.2845199999865
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 248826.368236,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 248938.931071,
+          "runRemainingMs": 6978337,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 938.3116370000353
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 250618.162397,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 250708.34291,
+          "runRemainingMs": 6976567,
+          "asyncAuthority": {
+            "started": 10,
+            "accepted": 10,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 944.8562880000682
+          },
+          "currentChecks": 2,
+          "currentRefusals": 0,
+          "read": "accepted",
+          "settledMs": 252500.536147,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "allocation",
+          "count": 8,
+          "startedMs": 252945.715628,
+          "runRemainingMs": 6974330,
+          "asyncAuthority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 590.5780170000216
+          },
+          "settledMs": 254649.270306,
+          "outcome": "accepted"
+        }
+      ],
+      "events": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "stoppedEvidence": {
+        "failure": null,
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "retired",
+        "machineSealed": true,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "design",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          }
+        ]
+      },
+      "resumedCliResult": "render refused",
+      "resumedCliReason": "The rendered products were not admitted by the checked producer before storage.",
+      "resumedDesign": {
+        "audit": {
+          "status": "read",
+          "count": 1,
+          "kinds": [
+            "declaration"
+          ]
+        },
+        "transportCounts": {
+          "open": 0,
+          "accept": 0,
+          "capture": 0,
+          "authorize": 0
+        },
+        "inspectedLaunches": 0
+      },
+      "renderTiming": {
+        "stepLogSha256": "daf07a7d640c3579b23753cf3284c7ab192d60f8c8d31ccfeaad223dcc527053",
+        "observedStart": "2026-11-23T11:35:41.153000+00:00",
+        "observedStepLogLastWrite": "2026-11-23T11:36:11.101573+00:00",
+        "elapsedSeconds": 29.948573,
+        "configuredReadLeaseMs": 30000,
+        "inference": "The interval aligns with expiration of the shared render read lease. This evidence leaves the internal producer checkpoint Unknown."
+      }
+    },
+    "eligible-stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "eligible-stop-resume",
+          "result": "failed",
+          "ms": 92549
+        }
+      ],
+      "logSha256": "b85437391d0196f22abac11cb52bb9628f7bacf8c89ad90f3a2a9e80cbf7bb2b",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [],
+      "resumeBootstrap": {},
+      "resumeAuditSetup": null,
+      "resumeStoreSteps": [],
+      "events": [
+        "run ended: checked session boundary unavailable"
+      ],
+      "stoppedEvidence": {
+        "failure": null,
+        "budgetReason": null,
+        "heldDesignTurns": 0,
+        "pendingRoles": [
+          "inventory",
+          "fidelity"
+        ],
+        "auditPoisoned": false,
+        "auditTail": "durable-prefix",
+        "auditTermination": "closed",
+        "auditSealed": true,
+        "machine": "retired",
+        "machineSealed": true,
+        "control": {
+          "pendingCallbacks": 0,
+          "termination": "settled"
+        },
+        "hosts": [
+          {
+            "role": "author",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "inventory",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          },
+          {
+            "role": "fidelity",
+            "pendingInvocations": 0,
+            "termination": "settled"
+          }
+        ],
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "inventory",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "stopped",
+            "group": "confirmed",
+            "view": "view-exited"
+          },
+          {
+            "role": "design",
+            "outcome": "Unknown"
+          }
+        ]
+      },
+      "initialForwards": {
+        "author": 5,
+        "inventory": 0,
+        "fidelity": 0,
+        "design": 0
+      },
+      "lastFixtureAssertion": "expected false to be true // Object.is equality"
+    }
+  }
+}
