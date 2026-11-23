@@ -162,8 +162,12 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
 type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
-type ResumeStoreStep = ResumeStamp & ({ kind: 'allocation' } | {
-  kind: 'terminal'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
+type ResumeStoreStep = ResumeStamp & {
+  runRemainingMs: number;
+  asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
+} & ({ kind: 'allocation' | 'close' } | {
+  // The transaction outcome is distinct from the caller's terminal comparison.
+  kind: 'exclusive'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
 });
 type ResumeAuditSetup = ResumeStamp & {
   declarations?: number;
@@ -1368,23 +1372,38 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean; asyncCurrent: boolean; asyncWithdrawn: boolean }[] = [];
           vi.spyOn(runMachine, 'createUrlRunMachine').mockImplementationOnce(async options => {
             const open = machineStore.openUrlMachineStore;
+            const storeStepScope = new AsyncLocalStorage<ResumeStoreStep>();
+            const startStoreStep = () => ({ startedMs: performance.now(), runRemainingMs: options.deadline - Date.now(),
+              asyncAuthority: { started: 0, accepted: 0, refused: 0, rejected: 0, totalMs: 0 } });
             let observing = true;
             const observeStoreStep = <T>(step: ResumeStoreStep, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
               resumeStoreSteps.push(step);
               const settled = (outcome: ResumeObservation) => Object.assign(step, { settledMs: performance.now(), outcome });
-              return observe(invoke, value => { settled(accepts(value) ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
+              return observe(() => storeStepScope.run(step, invoke), value => { settled(accepts(value) ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
             };
-            const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce(async (...args) => {
-              const store = await observeBootstrap('open-store', () => open(...args), value => value !== null);
+            const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce(async (storeOptions, identity) => {
+              const currentAsync = storeOptions.currentAsync;
+              const observedOptions = currentAsync === undefined ? storeOptions : { ...storeOptions, currentAsync: () => {
+                const authority = storeStepScope.getStore()?.asyncAuthority;
+                if (authority === undefined) return currentAsync();
+                authority.started++;
+                const started = performance.now();
+                const settled = (outcome: ResumeObservation) => {
+                  authority[outcome]++;
+                  authority.totalMs += performance.now() - started;
+                };
+                return observe(currentAsync, value => { settled(value ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
+              } };
+              const store = await observeBootstrap('open-store', () => open(observedOptions, identity), value => value !== null);
               if (store === null) return null;
               return Object.freeze<machineStore.UrlMachineStore>({ ...store,
                 allocateClient: deadline => observing
-                  ? observeStoreStep({ kind: 'allocation', startedMs: performance.now() }, () => store.allocateClient(deadline), value => value !== null)
+                  ? observeStoreStep({ kind: 'allocation', ...startStoreStep() }, () => store.allocateClient(deadline), value => value !== null)
                   : store.allocateClient(deadline),
                 exclusive: (id, deadline, run, profile) => {
                   if (!observing) return store.exclusive(id, deadline, run, profile);
-                  const step: Extract<ResumeStoreStep, { kind: 'terminal' }> = {
-                    kind: 'terminal', startedMs: performance.now(), currentChecks: 0, currentRefusals: 0,
+                  const step: Extract<ResumeStoreStep, { kind: 'exclusive' }> = {
+                    kind: 'exclusive', ...startStoreStep(), currentChecks: 0, currentRefusals: 0,
                   };
                   return observeStoreStep(step, () => store.exclusive(id, deadline, lease => run(Object.freeze({ ...lease,
                     read: () => observe(lease.read, value => { step.read = value === null ? 'refused' : 'accepted'; }, () => { step.read = 'rejected'; }),
@@ -1396,6 +1415,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                     },
                   })), profile), value => value);
                 },
+                close: () => observing
+                  ? observeStoreStep({ kind: 'close', ...startStoreStep() }, () => store.close(), () => true)
+                  : store.close(),
               });
             });
             let machine: Awaited<ReturnType<typeof createMachine>>;
