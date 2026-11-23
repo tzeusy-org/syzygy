@@ -208,9 +208,9 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
     if (!live() || verified.some(body => body.policies.originSha256 !== declaration.originPolicy.sha256)) return null;
     const parents = [...new Set([scaffold, ...checked.receipts, ...verified.map(body => body.origin)])];
     if (parents.length > URL_ORIGIN_LEDGER_LIMITS.parents) return null;
-    const parentSubjects = parents.map(receipt => ({ receipt }));
-    const parentMetadata = copy(ledger.inspectMetadata(parentSubjects));
-    const semanticParentsSha256 = ledger.semanticProvenance(parents);
+    const parentProvenance = ledger.inspectProvenance(parents);
+    const parentMetadata = copy(parentProvenance.metadata);
+    const semanticParentsSha256 = parentProvenance.semanticSha256;
     const semanticInputsSha256 = sha256(encodeCanonicalJson({ format: 'polaris-url-semantic-design-inputs/1',
       binding: { run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
         basePolicySha256: declaration.basePolicy.sha256, originPolicySha256: declaration.originPolicy.sha256,
@@ -241,10 +241,11 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
       const unchanged = isDeepStrictEqual(bindings, { record, declaration, renderer: renderer.identity, products: currentProducts.metadata })
         && sameProducts(checked, currentProducts) && input.products !== undefined && sameProducts(input.products, checked)
         && equalOrderedRenderValue(subject, { run: input.run, runId: input.runId, pinnedRevision: input.pinnedRevision, draftRevision: input.draftRevision,
-          input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies })
-        && isDeepStrictEqual(parentMetadata, ledger.inspectMetadata(parentSubjects))
-        && semanticParentsSha256 === ledger.semanticProvenance(parents);
-      return unchanged ? checkLease() : 'retired';
+          input: input.input, files: input.files, packet: input.packet, sourceBodies: input.sourceBodies });
+      if (!unchanged) return 'retired';
+      const actualParents = ledger.inspectProvenance(parents);
+      return isDeepStrictEqual(parentMetadata, actualParents.metadata) && semanticParentsSha256 === actualParents.semanticSha256
+        ? checkLease() : 'retired';
     };
     const rendererCurrent = (): Promise<boolean> => urlRendererCurrent(renderer);
     if (checkedView.files !== screened.files || checkedView.pages !== screened.pages

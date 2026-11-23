@@ -91,13 +91,12 @@ function fixture(lifetimeMilliseconds = 5000) {
     programBytes: 10, inputTreeSha256: 'e'.repeat(64), manifestSha256: 'f'.repeat(64), profileRegistrySha256: '1'.repeat(64) } };
   gates.renderers.add(loadedRenderer);
   const ledger = {
-    semanticProvenance: () => sha256('own upstream semantic provenance'),
     metadata(parent: UrlOriginReceipt): UrlOriginMetadata {
       if (!live || !parentMetadata.has(parent)) throw new Error('unknown parent');
       return structuredClone(parentMetadata.get(parent)!);
     },
-    inspectMetadata(requests: readonly { readonly receipt: UrlOriginReceipt }[]): readonly UrlOriginMetadata[] {
-      return requests.map(({ receipt }) => ledger.metadata(receipt));
+    inspectProvenance(receipts: readonly UrlOriginReceipt[]) {
+      return { metadata: receipts.map(receipt => ledger.metadata(receipt)), semanticSha256: sha256('own upstream semantic provenance') };
     },
   };
   const options = { run, record: { subject: { pinnedRevision: { commit: pin }, visibility: { value: 'private' } }, declared: { audience: 'Own readers' } },

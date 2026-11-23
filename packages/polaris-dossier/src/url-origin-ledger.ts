@@ -459,8 +459,7 @@ function create(given: UrlOriginLedgerOptions) {
     };
     return Object.freeze({ onToolReceipt, artifactOrigins: (file: string, bytes: Uint8Array) => artifactOrigins(role, file, bytes) });
   }
-  function captureProvenance(receipts: readonly UrlOriginReceipt[]): { readonly graph: UrlOriginProvenance; readonly keys: readonly string[] } {
-    live();
+  function collectProvenance(receipts: readonly UrlOriginReceipt[]): { readonly graph: UrlOriginProvenance; readonly keys: readonly string[] } {
     const nodes: UrlOriginProvenanceNode[] = [], seen = new Map<string | UrlOriginReceipt, string>();
     const historicalGraphs = new Map<UrlOriginProvenance, Map<string, string>>();
     const append = (metadata: UrlOriginMetadata, parents: readonly string[], derivation: UrlOriginDerivation,
@@ -478,7 +477,7 @@ function create(given: UrlOriginLedgerOptions) {
     };
     const visit = (receipt: UrlOriginReceipt): string => {
       // The bounded traversal is private and synchronous. Sample authority
-      // at capture and release while still authenticating each receipt.
+      // at entry and release while still authenticating each receipt.
       const value = lookup(receipt), provenance = lineage.get(receipt);
       if (!provenance) fail();
       const prior = seen.get(receipt); if (prior) return prior;
@@ -495,9 +494,30 @@ function create(given: UrlOriginLedgerOptions) {
       seen.set(receipt, key); return key;
     };
     const keys = receipts.map(visit);
-    const captured = copy({ graph: { format: 'polaris-url-origin-provenance/2' as const, nodes }, keys });
+    return copy({ graph: { format: 'polaris-url-origin-provenance/2' as const, nodes }, keys });
+  }
+  function captureProvenance(receipts: readonly UrlOriginReceipt[]): ReturnType<typeof collectProvenance> {
+    live();
+    const captured = collectProvenance(receipts);
     live();
     return captured;
+  }
+  function provenanceFingerprint(captured: ReturnType<typeof collectProvenance>): string {
+    return fingerprintUrlOriginProvenance(captured, { runId, sourceBindingSha256: sourceBindingSha256(record.subject),
+      sourcePin: record.subject.pinnedRevision.commit, basePolicySha256: screen.policySha256, originPolicySha256: origin.sha256 });
+  }
+  // The same current receipt list supplies allocation metadata and its
+  // separately checked lineage, which may retain historical allocation IDs.
+  function inspectProvenance(receipts: readonly UrlOriginReceipt[]) {
+    live();
+    if (!Array.isArray(receipts)) fail();
+    const count = receipts.length;
+    if (!Number.isSafeInteger(count) || count < 1 || count > limits.parents) fail();
+    const selected = Array.from({ length: count }, (_, index) => receipts[index]!);
+    const metadata = Object.freeze(selected.map(receipt => metadataOf(lookup(receipt))));
+    const semanticSha256 = provenanceFingerprint(collectProvenance(selected));
+    live();
+    return Object.freeze({ metadata, semanticSha256 });
   }
   async function restoreFrozenOrigins(capability: UrlVerifiedRecoveryProducts, expected: {
     readonly run: string; readonly coreSha256: string; readonly declarationSha256: string;
@@ -567,10 +587,9 @@ function create(given: UrlOriginLedgerOptions) {
   live();
   return Object.freeze({
     captureProvenance, restoreFrozenOrigins, sourceManifestRemainder,
+    inspectProvenance: (receipts: readonly UrlOriginReceipt[]) => guarded(() => inspectProvenance(receipts)),
     semanticProvenance: (receipts: readonly UrlOriginReceipt[]): string => guarded(() => {
-      const captured = captureProvenance(receipts);
-      const fingerprint = fingerprintUrlOriginProvenance(captured, { runId, sourceBindingSha256: sourceBindingSha256(record.subject),
-        sourcePin: record.subject.pinnedRevision.commit, basePolicySha256: screen.policySha256, originPolicySha256: origin.sha256 });
+      const fingerprint = provenanceFingerprint(captureProvenance(receipts));
       live(); return fingerprint;
     }),
     captureArtifactBindings: () => guarded(() => { live(); return Object.freeze([...artifacts].map(([key, value]) => {

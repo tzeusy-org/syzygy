@@ -139,6 +139,23 @@ describe('host-owned URL origin ledger', () => {
       receipt: policy!, get bytes() { f.stale(); return subject; },
     }])).toThrow('url-origin-refused');
   });
+  it('checks one bounded receipt list for current metadata and semantic provenance before release', () => {
+    const f = fixture(), current = vi.fn(() => true);
+    const ledger = createUrlOriginLedger({ ...f.options, current });
+    const [policy, structure] = f.options.fixed.map(value => ledger.fixed(value.id, value.bytes));
+    const receipt = ledger.compose(bytes('Own parent provenance.'), [policy!, structure!]);
+    const parents = [receipt, structure!];
+    const metadata = ledger.inspectMetadata(parents.map(receipt => ({ receipt })));
+    const semanticSha256 = ledger.semanticProvenance(parents);
+    current.mockClear();
+    expect(ledger.inspectProvenance(parents)).toEqual({ metadata, semanticSha256 });
+    expect(current).toHaveBeenCalledTimes(2);
+    current.mockReturnValueOnce(false);
+    expect(() => ledger.inspectProvenance(parents)).toThrow('url-origin-refused');
+    current.mockReturnValueOnce(true).mockReturnValueOnce(false);
+    expect(() => ledger.inspectProvenance(parents)).toThrow('url-origin-refused');
+    expect(() => ledger.inspectProvenance([{ ...receipt }])).toThrow('url-origin-refused');
+  });
   it('retains transitive actual class unions with valid earlier declaration edges, without all-seven widening', () => {
     const f = fixture(), [policy, structure, control] = roots(f);
     const first = f.ledger.compose(bytes('Own first composed input.'), [policy!, structure!]);
