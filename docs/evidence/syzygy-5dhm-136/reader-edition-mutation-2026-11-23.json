@@ -1,0 +1,486 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-23T17:21:30.175Z",
+  "commit": "3e4b20b13a8e637d2053371d4f2c5635395d4edf",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts": "dff1776a18ce4e0aac6beb495702206f7c0b6ed0f7ed35a67fcf072131eae76a",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "f504616351d6bd9c503e59abb6eddae5d36838ae9cdf79dba414c3706137612f",
+    "scripts/dossier_page_classes.json": "cbcb41481c62f9007478ea061947df46ed40d28b2f15db337bbeb6c38bf62b4b",
+    "scripts/dossier_site_to_text.py": "db4ca62630cae69e27b2a102f53448bb9e768555cccefedd63b2354412955600"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts"
+    ],
+    "scripts/dossier_site_to_text.py": {
+      "python": [
+        [
+          "scripts/dossier_site_to_text.py",
+          "--selftest"
+        ],
+        [
+          "scripts/dossier_pilot_runs.py",
+          "--selftest"
+        ],
+        [
+          "scripts/dossier_pilot_runs.py",
+          "--check"
+        ],
+        [
+          "scripts/test_dossier_pilot.py"
+        ]
+      ]
+    },
+    "scripts/dossier_page_classes.json": {
+      "python": [
+        [
+          "scripts/dossier_site_to_text.py",
+          "--selftest"
+        ],
+        [
+          "scripts/dossier_pilot_runs.py",
+          "--selftest"
+        ],
+        [
+          "scripts/dossier_pilot_runs.py",
+          "--check"
+        ],
+        [
+          "scripts/test_dossier_pilot.py"
+        ]
+      ],
+      "vitest": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    }
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "exitCode": 0,
+      "tests": 6,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 201,
+      "failedTests": []
+    },
+    {
+      "file": "scripts/dossier_page_classes.json",
+      "exitCode": 0,
+      "tests": 138,
+      "failedTests": []
+    },
+    {
+      "file": "scripts/dossier_site_to_text.py",
+      "exitCode": 0,
+      "tests": 4,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "fold-old-label",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<summary>${ABOUT_THIS_RUN}</summary>",
+      "new": "<summary>Review report</summary>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "packages/polaris-dossier/src/render.test.ts > render folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)"
+      ],
+      "seconds": 82
+    },
+    {
+      "id": "fold-misses-size-report",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${localNav(from)}<li><a href=\"${href(from, 'size-report.html')}\">Size report</a></li>",
+      "new": "${localNav(from)}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) resolves every link of the site: 432 of 432, the run pages reached from every page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 81
+    },
+    {
+      "id": "fold-not-last",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<li><a href=\"${href(from, 'glossary.html')}\">Glossary</a></li><li><a href=\"${href(from, 'sources/index.html')}\">Sources</a></li>${reviewReport(from)}`;",
+      "new": "<li><a href=\"${href(from, 'glossary.html')}\">Glossary</a></li>${reviewReport(from)}<ol><li><a href=\"${href(from, 'sources/index.html')}\">Sources</a></li></ol>`;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 66
+    },
+    {
+      "id": "fold-holds-unclassed-page",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`${localNav(from)}<li><a href=\"${href(from, 'size-report.html')}\">Size report</a></li>",
+      "new": "`<li><a href=\"${href(from, 'glossary.html')}\">Glossary</a></li>${localNav(from)}<li><a href=\"${href(from, 'size-report.html')}\">Size report</a></li>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) resolves every link of the site: 432 of 432, the run pages reached from every page",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 45
+    },
+    {
+      "id": "contents-about-heading-old",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "`</ol><h2 id=\"about-this-run\">${ABOUT_THIS_RUN}</h2>",
+      "new": "`</ol><h2 id=\"review-report\">Review report</h2>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "packages/polaris-dossier/src/render.test.ts > render folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 39
+    },
+    {
+      "id": "nav-index-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<li><a href=\"${href(from, FIND_BY_TASK_PAGE)}\">Find by task</a></li><li><a href=\"${href(from, NAME_INDEX_PAGE)}\">Index</a></li>`}${poles",
+      "new": "<li><a href=\"${href(from, FIND_BY_TASK_PAGE)}\">Find by task</a></li>`}${poles",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture resolves every link of the index page: 43 of 43 in its region, and every link of the site's navigation",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) resolves every link of the site: 432 of 432, the run pages reached from every page"
+      ],
+      "seconds": 39
+    },
+    {
+      "id": "contents-index-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<li><a href=\"${FIND_BY_TASK_PAGE}\">Find by task</a></li><li><a href=\"${NAME_INDEX_PAGE}\">Index</a></li>`}",
+      "new": "<li><a href=\"${FIND_BY_TASK_PAGE}\">Find by task</a></li>`}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture places the two pages in the reading order: find by task after the overview, the index directly after it (syzygy-5dhm.136)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) resolves every link of the site: 432 of 432, the run pages reached from every page"
+      ],
+      "seconds": 45
+    },
+    {
+      "id": "contents-index-moved",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<li><a href=\"${FIND_BY_TASK_PAGE}\">Find by task</a></li><li><a href=\"${NAME_INDEX_PAGE}\">Index</a></li>`}${(withheld",
+      "new": "<li><a href=\"${NAME_INDEX_PAGE}\">Index</a></li><li><a href=\"${FIND_BY_TASK_PAGE}\">Find by task</a></li>`}${(withheld",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture places the two pages in the reading order: find by task after the overview, the index directly after it (syzygy-5dhm.136)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order"
+      ],
+      "seconds": 57
+    },
+    {
+      "id": "reading-order-index-last",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (indexAt !== -1) pages.splice(",
+      "new": "if (indexAt === -2) pages.splice(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts > the generated index of the reading fixture places the two pages in the reading order: find by task after the overview, the index directly after it (syzygy-5dhm.136)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) lists the subject first, the finding pages near the top, and the run behind one entry at the end, in this literal order",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts > Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none"
+      ],
+      "seconds": 53
+    },
+    {
+      "id": "landing-map-after-sections",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "</header>${overviewFigures}${poleMap}${sections}${missingList}",
+      "new": "</header>${overviewFigures}${sections}${poleMap}${missingList}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) opens the landing page with the thesis, then the map of the parts, before any section",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) draws a figure homed on the overview after the thesis, then the map, then the sections",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts > Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none"
+      ],
+      "seconds": 57
+    },
+    {
+      "id": "landing-map-before-figure",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "</header>${overviewFigures}${poleMap}${sections}",
+      "new": "</header>${poleMap}${overviewFigures}${sections}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) draws a figure homed on the overview after the thesis, then the map, then the sections"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "unknown-marking-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const mark = (from: string, m: EpistemicMarking): string => (narrative(from) ? clipped(marking(m)) : marking(m));",
+      "new": "const mark = (from: string, m: EpistemicMarking): string => (m === 'unknown' ? '' : narrative(from) ? clipped(marking(m)) : marking(m));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim"
+      ],
+      "seconds": 42
+    },
+    {
+      "id": "unknown-lead-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const lead = reading && b.marking === 'unknown' ? '<span class=\"not-established\">Not established.</span> ' : '';",
+      "new": "const lead = '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html"
+      ],
+      "seconds": 44
+    },
+    {
+      "id": "unknown-reason-words-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const reason = b.unknownReason === null ? '' : reading ?",
+      "new": "const reason = true ? '' : reading ?",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts > the reading view clips what Syzygy adds to a block (dossier spec v1.5) clips the self-reported aside and the reason code, keeps the commands and the reason in words"
+      ],
+      "seconds": 46
+    },
+    {
+      "id": "withheld-words-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (own?.withheld !== undefined) return escape(part.text);",
+      "new": "if (own?.withheld !== undefined) return '';",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim",
+        "packages/polaris-dossier/src/render.test.ts > render names a path both denied and matched by a secret detector on no page, counting it as not named (syzygy-8hm6)",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) renders each withheld item Unknown in Syzygy's words with its count, and none of the agent's text for it",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html"
+      ],
+      "seconds": 64
+    },
+    {
+      "id": "claim-label-flipped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "data-claim-id=\"${escape(id)}\" data-epistemic=\"${m}\"${last}>",
+      "new": "data-claim-id=\"${escape(id)}\" data-epistemic=\"${m === 'unknown' ? 'inferred' : m}\"${last}>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 201,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim",
+        "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts > provider-mode render output is unchanged by the operator-agent inputs renders every fixture run to the captured bytes, file by file",
+        "packages/polaris-dossier/src/render.test.ts > render labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple",
+        "packages/polaris-dossier/src/render.test.ts > render the reading view and the evidence view (dossier spec v1.5) gives each block an evidence note whose values equal its machine attributes",
+        "packages/polaris-dossier/src/render.test.ts > render withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) renders each withheld item Unknown in Syzygy's words with its count, and none of the agent's text for it",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) keeps a block citing a withheld span beside an admitted one, counting the withheld span",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file",
+        "packages/polaris-dossier/src/render.test.ts > render: withheld items and judgements (dossier spec v1.5) keeps an uncited judgement Unknown while no counted review finds it advisory",
+        "packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) withholds a code excerpt of a file screening excludes, with none of its bytes",
+        "packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content",
+        "packages/polaris-dossier/src/render.test.ts > render: the thesis basis (schema v6) renders no line beside a withheld introduction, and machine.json says the line did not render",
+        "packages/polaris-dossier/src/render.test.ts > render: subsections (schema v8) renders each subsection after its section's paragraphs under an h3, its answer first, and the contents list before the first section of index.html"
+      ],
+      "seconds": 48
+    },
+    {
+      "id": "predicate-reason-in-attribute",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "old": "&& !element.slice(tag.length).includes(claim.unknownReason)",
+      "new": "&& !element.includes(claim.unknownReason)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 6,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "predicate-element-to-main-end",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "old": "const element = html.slice(start, elementEnd(html, start));",
+      "new": "const element = html.slice(start, html.indexOf('</main>', start));",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 6,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) keeps every Unknown and withheld disclosure on the page that makes the claim"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "predicate-links-skip-fragments",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+      "old": "if (onPage === undefined || (to.fragment !== '' && !onPage.has(to.fragment)))",
+      "new": "if (onPage === undefined)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 6,
+      "failedTests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) resolves every link of the site: 432 of 432, the run pages reached from every page"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "reader-form-keeps-run-pages",
+      "file": "scripts/dossier_site_to_text.py",
+      "old": "if reader and page_class(relative) == 'run':",
+      "new": "if reader and page_class(relative) == 'other':",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "reader-form-other-uncounted",
+      "file": "scripts/dossier_site_to_text.py",
+      "old": "if reader and page_class(relative) == 'other':",
+      "new": "if False:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "page-class-prefix-ignored",
+      "file": "scripts/dossier_site_to_text.py",
+      "old": "if relative in paths or relative.startswith(prefixes):",
+      "new": "if relative in paths:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 4,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/dossier_pilot_runs.py --selftest (exit 1)",
+        "python3 scripts/dossier_pilot_runs.py --check (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "classes-appendix-not-run",
+      "file": "scripts/dossier_page_classes.json",
+      "old": "\"size-report.html\", \"appendix.html\"]",
+      "new": "\"size-report.html\"]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 138,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/dossier_pilot_runs.py --check (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 57
+    },
+    {
+      "id": "classes-name-index-run",
+      "file": "scripts/dossier_page_classes.json",
+      "old": "\"sources/index.html\", \"name-index.html\"], \"prefixes\": []},\n  {\"class\": \"run\", \"paths\": [",
+      "new": "\"sources/index.html\"], \"prefixes\": []},\n  {\"class\": \"run\", \"paths\": [\"name-index.html\", ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 138,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path",
+        "packages/polaris-dossier/src/render.test.ts > render folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)"
+      ],
+      "seconds": 59
+    },
+    {
+      "id": "classes-size-report-navigation",
+      "file": "scripts/dossier_page_classes.json",
+      "old": "\"name-index.html\"], \"prefixes\": []},",
+      "new": "\"name-index.html\", \"size-report.html\"], \"prefixes\": []},",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 138,
+      "failedTests": [
+        "python3 scripts/dossier_site_to_text.py --selftest (exit 1)",
+        "python3 scripts/dossier_pilot_runs.py --check (exit 1)",
+        "python3 scripts/test_dossier_pilot.py (exit 1)",
+        "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts > the reader's edition (syzygy-5dhm.136) folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path"
+      ],
+      "seconds": 57
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 25,
+    "killed": 25,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

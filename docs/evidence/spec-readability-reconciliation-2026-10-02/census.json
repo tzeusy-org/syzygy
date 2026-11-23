@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 509,
+      "scenarios": 514,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1184,7 +1184,12 @@
             "Omission that makes no claim refused",
             "Hero not produced, or draft layer withheld",
             "Earlier schema keeps its bytes",
-            "Brief v16 asks for the hero"
+            "Brief v16 asks for the hero",
+            "The run's own pages fold under About this run",
+            "The landing page leads with the subject",
+            "The index is read third",
+            "A disclosure stays on its claim's page",
+            "Provider mode keeps its navigation"
           ]
         },
         "REQ-polaris-generation-035": {

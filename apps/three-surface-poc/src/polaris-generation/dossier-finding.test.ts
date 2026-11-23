@@ -95,9 +95,9 @@ describe('the generated index of the reading fixture', () => {
       expect(html.indexOf(open), path).toBeGreaterThan(-1);
       const nav = html.slice(html.indexOf(open), html.indexOf('</nav>', html.indexOf(open)));
       const named = links(nav, path).map(link => link.page);
-      expect(named.slice(0, 2), path).toEqual(['index.html', 'find-by-task.html']);
-      expect(named, path).toContain('name-index.html');
-      expect(named.indexOf('name-index.html'), path).toBe(named.indexOf('glossary.html') + 1);
+      // The reader's edition (syzygy-5dhm.136): both finding pages sit near the top, the index directly after find by task.
+      expect(named.slice(0, 3), path).toEqual(['index.html', 'find-by-task.html', 'name-index.html']);
+      expect(named.filter(page => page === 'name-index.html'), path).toHaveLength(1);
     }
   });
 
@@ -138,12 +138,12 @@ describe('the generated index of the reading fixture', () => {
     expect(pages).toBe(10);
   });
 
-  it('places the two pages in the reading order: find by task after the overview, the index after the glossary', () => {
+  it('places the two pages in the reading order: find by task after the overview, the index directly after it (syzygy-5dhm.136)', () => {
     const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path);
-    expect(order.slice(0, 2)).toEqual(['index.html', 'find-by-task.html']);
-    expect(order[order.indexOf('glossary.html') + 1]).toBe('name-index.html');
-    expect(files.get('contents.html')!).toContain('<ol><li><a href="find-by-task.html">Find by task</a></li>');
-    expect(files.get('contents.html')!).toContain('<li><a href="glossary.html">Glossary</a></li><li><a href="name-index.html">Index</a></li>');
+    expect(order.slice(0, 3)).toEqual(['index.html', 'find-by-task.html', 'name-index.html']);
+    expect(order.filter(page => page === 'name-index.html')).toHaveLength(1);
+    expect(files.get('contents.html')!).toContain('<ol><li><a href="find-by-task.html">Find by task</a></li><li><a href="name-index.html">Index</a></li>');
+    expect(files.get('contents.html')!).toContain('<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>');
   });
 
   it('indexes no name of the agent\'s while the draft layer is Unknown', () => {
