@@ -21,6 +21,9 @@ const ATTRIBUTES = new Set([
   // A computed map's element identities and an Unknown element's RFC2-24 reason (version 2.9): inert data Syzygy wrote (`_manifest-<k>`, a
   // reason code), never a draft's text.
   'data-manifest-id', 'data-unknown-reason',
+  // A schema-v9 graph edge's relation type, and a witnessed edge's witnessing fact, rule and version and its Observed marking (version 2.19):
+  // inert data Syzygy wrote from closed lists and its own identities, never a draft's free text.
+  'data-relation', 'data-witness-fact', 'data-witness-rule', 'data-witness-rule-version', 'data-epistemic',
 ]);
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 /** Attribute values the renderer emits: numbers, path commands, ids, class names. */
