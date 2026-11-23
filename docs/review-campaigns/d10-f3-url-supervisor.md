@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN|D11-RUNTIME-INITIAL)-REVIEW-RAW\.md`
+- `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN|D11-RUNTIME-INITIAL|D11-RUNTIME-SUCCESSOR)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -33,3 +33,5 @@
 [Observed] The resumed stage census drain review records `PASS` (`F3-STAGE-CENSUS-DRAIN-REVIEW-RAW.md:1`). A-100 records the exact source and revert. The stage read follows accepted live-sample settlement. Five existing native launcher variants cover the ordering.
 
 [Observed] The initial D11 runtime source review records `FAIL` (`F3-D11-RUNTIME-INITIAL-REVIEW-RAW.md:3`) at `a1d8ddf21`. It identified the old screening rule in the Author brief and an overclaim from the native wrapper launch. It also identified missing historical restart reasons and possible brief publication after a failed disclosure update.
+
+[Observed] The D11 runtime successor review records `FAIL` (`F3-D11-RUNTIME-SUCCESSOR-REVIEW-RAW.md:3`) at `e06483a3c`. It confirmed the Author wording and authenticated handoff evidence, and identified the pre-spawn uncertainty gap, the manifest tree provenance gap and missing restart explanations at two callers.
