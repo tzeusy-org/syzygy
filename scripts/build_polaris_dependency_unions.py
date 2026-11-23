@@ -55,12 +55,13 @@ cross-checks the same unions.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import pathlib
 import shutil
 import sys
 import tempfile
+
+from syzygy_gov.digest import sha256_hex as sha256
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CHANGES = pathlib.Path("openspec/changes")
@@ -108,10 +109,6 @@ def additions(root: pathlib.Path) -> list[str]:
     found = sorted(p.parent.parent.parent.name for p in
                    base.glob("*/specs/polaris-generation/spec.md")) if base.is_dir() else []
     return [c for c in found if c not in UNIONS.values()]
-
-
-def sha256(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
 
 
 def warrants(spec: str) -> dict[str, set[str]]:

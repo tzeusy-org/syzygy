@@ -7,7 +7,6 @@ identities, accepted-clause coverage, dispositions, current requirement
 warrants and deterministic drift, then generates the matrix manifest.
 """
 
-import hashlib
 import os
 import re
 import subprocess
@@ -16,6 +15,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_capability_1_spec_dependencies as base
 import build_polaris_project_wide_spec_dependencies as dependencies
+from syzygy_gov.digest import sha256_hex
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 CHANGE = os.path.join(ROOT, "openspec", "changes", "polaris-project-wide-butlers-model")
@@ -64,7 +64,7 @@ REPAIR_TOTAL_RE = re.compile(
 
 
 def digest(text):
-    return hashlib.sha256(text.encode()).hexdigest()
+    return sha256_hex(text.encode())
 
 
 def consequence_id_matches_clause(consequence_id, clause, marker):
