@@ -1,0 +1,86 @@
+{
+  "adoption": "A-140",
+  "testedBase": "2003540400519153787eb068e38eacbc96e2d55b",
+  "sourceCommit": "033318cb74b752544d3c0f92a7b0b58c7da9b959",
+  "patchSha256": "01b61e79cd7b706318dc4f4f4ff287704981e928ca8bda46296313f0cb1cf956",
+  "productionBlob": "0b5bbe59281a794105f9215eccb07ce52c98d8ba",
+  "testBlob": "dc826737a7a3a981fcfd6c6943c4f02a9f81d145",
+  "review": {
+    "path": "docs/reviews/F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "2608306b083889ab2c0c8999338a6b0b1fd4481977af031515251c77743ec41e",
+    "subjectSha256": "01b61e79cd7b706318dc4f4f4ff287704981e928ca8bda46296313f0cb1cf956"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "exactIntegration": {
+      "files": 4,
+      "cases": 127,
+      "sha256": "be6d2e614b196cc3bb2e94dd6e66dd7b34da237c6778c859f658d96530b3911e"
+    },
+    "mutants": [
+      {
+        "id": "repeat-native-entry-guard",
+        "old": "        if (!transportCurrent()) throw new Error('session-machine-transport-unavailable');",
+        "new": "        if (!transportCurrent() || !current()) throw new Error('session-machine-transport-unavailable');",
+        "test": "retains the exact async effect guard across awaits and revokes escaped descendants",
+        "assertion": "AssertionError: expected { ok: false } to deeply equal { ok: true, value: 'checked' }",
+        "failedControls": 1,
+        "logSha256": "83ba4889a3e64b810cdb5407c45d2993da6c875741d0aada1773c9e8cd1d7346"
+      },
+      {
+        "id": "omit-transport-entry-guard",
+        "old": "        if (!transportCurrent()) throw new Error('session-machine-transport-unavailable');",
+        "new": "",
+        "test": "retains the exact async effect guard across awaits and revokes escaped descendants",
+        "assertion": "AssertionError: expected { ok: true, value: undefined } to deeply equal { ok: false }",
+        "failedControls": 1,
+        "logSha256": "1f6da2fd19a00c1e4e091c8a5e7b7a1a8fb1c8cdc02e6bf4adbd59129c453273"
+      },
+      {
+        "id": "omit-raw-write-authority-check",
+        "old": "if (!state.boundary?.() || raw.destroyed || performance.now() >= deadline)",
+        "new": "if (!state.boundary || raw.destroyed || performance.now() >= deadline)",
+        "test": "guards the broker raw write after the last machine authority check: revoked",
+        "assertion": "AssertionError: expected [ 'authority', 'tool-budget', …(1) ] to deeply equal [ 'authority', 'machine' ]",
+        "failedControls": 1,
+        "logSha256": "549bbdc669cf8c0fcad45b45c9bb3087dd47af48ec46d7f1a2be226b022f4092"
+      }
+    ]
+  },
+  "diagnostic": {
+    "base": "2003540400519153787eb068e38eacbc96e2d55b",
+    "overlayPatchSha256": "c02f06cb8b697176acf6545e9151855cf2b96a4022cea083139448614272f333",
+    "sourceLogSha256": "42477e3387df57a29ccc5d27d40a522b02e2c4435aa214555f4dc0bbbfcf9d4d",
+    "scenario": "eligible-stop-resume",
+    "stagedPublicationRefusal": {
+      "atMs": 87612.568092,
+      "elapsedMs": 1013.0310109999991,
+      "phase": "lock-mkdir",
+      "cause": "lock-contention-cutoff",
+      "attempts": 13,
+      "staged": true,
+      "allocation": false,
+      "held": false
+    },
+    "overlappingAuthorEffect": {
+      "atMs": 87645.873375,
+      "elapsedMs": 1642.5678279999993,
+      "role": "author",
+      "heldAt": 86012.45375,
+      "releasedAt": 87633.074154,
+      "accepted": true
+    },
+    "firstAuthorRelayRefusal": {
+      "atMs": 87646.170336,
+      "event": "mediation-refused",
+      "stage": "audit-response",
+      "role": "author"
+    },
+    "releaseAfterRefusalMs": 20.506062000000384
+  },
+  "remaining": "End-to-end recovery and the timing effect on native lock contention are Unknown."
+}
