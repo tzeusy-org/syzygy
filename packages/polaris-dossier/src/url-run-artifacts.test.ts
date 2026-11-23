@@ -100,7 +100,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
   const schemaDocuments = { draft: b(draftSchemaDocument({ pinnedRevision: pin, maxQuestions: 1 })), inventory: b(inventorySchemaDocument({ pinnedRevision: pin })),
     fidelity: b(verdictSchemaDocument({ pinnedRevision: pin })), design: b(designVerdictSchemaDocument({ pinnedRevision: pin })) };
   const sessionId = (role: Role): string => `00000000-0000-4000-8000-${String(roles.indexOf(role) + 1).padStart(12, '0')}`;
-  const authorSchema = localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 });
+  const authorSchema = localDraftSchema({ pinnedRevision: pin, maxQuestions: 1, hero: 'required' });
   const validate = (schema: ReturnType<typeof localDraftSchema>, role: Role, v: unknown): boolean => !!v && typeof v === 'object' && !Array.isArray(v)
     && (v as Record<string, unknown>)['sessionId'] === sessionId(role) && checkDraftShape(schema, v).length === 0;
   const verifyCurrent = vi.fn(() => current);
@@ -177,6 +177,7 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
   };
   const draft = { schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION, pinnedRevision: pin, sessionId: sessionId('author'), title: 'Own dossier', thesisBasis: 'none',
     introduction: { id: 'intro', label: 'non-normative', text: 'Own introduction.' }, understanding: Object.fromEntries(UNDERSTANDING_ITEMS.map(key => [key, [{ id: `u-${key}`, label: 'unknown', reason: 'missing-evidence', statement: 'Own unknown.', scope: 'Own fixture.', citations: [] }]])),
+    hero: { omitted: { id: 'own-hero-omission', label: 'unknown', reason: 'missing-evidence', text: 'The fixture sources give no basis for an overview figure.', citations: [] } },
     sections: [{ id: 'own-section', title: 'Own section', paragraphs: [{ id: 'own-p', label: 'non-normative', text: 'Own prose.', children: [] }], disposition: { kind: 'produced', assetIds: ['own-section'] } }],
     diagrams: [], deepDives: [], unresolved: [], discovery: { inspected: ['own.ts'], selected: [], excluded: [], unresolved: [], deferred: [], stoppingReason: 'Own scope.' }, clarifications: [], executions: [] };
   const inventory = { schemaVersion: 'polaris-dossier-local-inventory-v1', pinnedRevision: pin, sessionId: sessionId('inventory'),
@@ -702,7 +703,7 @@ describe('trusted URL artifact producer bridge', () => {
       } finally { checkReads.close(); }
 
       const draft = b(f.draft);
-      expect(checkDraftShape(localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }), f.draft)).toEqual([]);
+      expect(checkDraftShape(localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1, hero: 'required' }), f.draft)).toEqual([]);
       expect(f.screen.screenBody(draft.toString())).toBeUndefined();
       const writeArgs = { path: 'drafts/next.json', content: draft.toString() };
       const written = f.receipt('author', 'mcp__syzygy__artifact_write', writeArgs,
