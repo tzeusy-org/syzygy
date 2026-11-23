@@ -12,9 +12,10 @@
     python3 scripts/dossier_pilot_runs.py --selftest
     --pilot DIR   the record directory (default: docs/evidence/pursuit-2026-11-21b/pilot)
 
-Page classes, by site-relative path:
-  reader      index.html, glossary.html, poles/*, deep-dives/*
-  navigation  contents.html, sources/index.html
+Page classes, by site-relative path, are the one definition in scripts/dossier_page_classes.json, applied by
+scripts/dossier_site_to_text.py's `page_class` (syzygy-5dhm.136 moved them there; the stored sites hold none of the pages it added):
+  reader      index.html, glossary.html, find-by-task.html, poles/*, deep-dives/*, maps/*
+  navigation  contents.html, sources/index.html, name-index.html
   run         review.html, discovery.html, size-report.html, clarifications.html, executions.html, appendix.html,
               understanding.html (pages about the run itself)
   other       anything else, listed by path
@@ -43,10 +44,6 @@ import sys
 
 SCRIPTS = pathlib.Path(__file__).resolve().parent
 DEFAULT_PILOT = SCRIPTS.parent / "docs" / "evidence" / "pursuit-2026-11-21b" / "pilot"
-RUN_PAGES = {"review.html", "discovery.html", "size-report.html", "clarifications.html", "executions.html", "appendix.html",
-             "understanding.html"}
-NAV_PAGES = {"contents.html", "sources/index.html"}
-CLASSES = ("reader", "navigation", "run", "other")
 NO_SITE_NOTE = "no rendered site: the run has no site/ directory (it was never rendered)"
 PAGE_WORDS_FORMAT = "polaris-dossier-pilot-page-words/2"
 SITE_DIGEST_RULE = ("SHA-256 of one line per kept page in path order: the SHA-256 of the page's bytes, two spaces, its "
@@ -59,14 +56,17 @@ class RunsError(Exception):
     """The record or a stored run cannot be read as expected."""
 
 
-def page_class(relative):
-    if relative in ("index.html", "glossary.html") or relative.startswith(("poles/", "deep-dives/")):
-        return "reader"
-    if relative in NAV_PAGES:
-        return "navigation"
-    if relative in RUN_PAGES:
-        return "run"
-    return "other"
+def _site_to_text():
+    spec = importlib.util.spec_from_file_location("dossier_site_to_text", SCRIPTS / "dossier_site_to_text.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+# The one page-class definition (scripts/dossier_page_classes.json), as dossier_site_to_text.py applies it.
+_CONVERTER = _site_to_text()
+page_class = _CONVERTER.page_class
+CLASSES = _CONVERTER.CLASSES
 
 
 def split(per_page):
@@ -163,13 +163,6 @@ def record_differences(runs, page_words):
 
 
 # ---- reading stored runs (only with --state-root) ----
-
-def _site_to_text():
-    spec = importlib.util.spec_from_file_location("dossier_site_to_text", SCRIPTS / "dossier_site_to_text.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
 
 def run_directory(state_root, prefix):
     found = [path for path in pathlib.Path(state_root).glob(f"run-{prefix}*")

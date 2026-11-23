@@ -614,7 +614,7 @@ describe('render', () => {
     expect(onIndex).toEqual([2, 4]);
   });
 
-  it('folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)', async () => {
+  it('folds how the dossier was made under one About this run entry, the last of the navigation, apart from the subject, open on the pages it holds (syzygy-pdja.13, syzygy-5dhm.136)', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -625,7 +625,7 @@ describe('render', () => {
       const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
       expect(navs.length, file).toBeGreaterThan(0);
       for (const nav of navs) {
-        const fold = nav.indexOf('<details class="review-report"');
+        const fold = nav.indexOf('<details class="about-this-run"');
         expect(fold, file).toBeGreaterThan(0);
         const product = nav.slice(0, fold);
         const folded = nav.slice(fold);
@@ -636,16 +636,45 @@ describe('render', () => {
         }
         expect(product, file).toContain(`href="${up}sources/index.html"`);
         expect(product, file).toContain(`href="${up}index.html"`);
-        expect(folded.startsWith(`<details class="review-report"${report.includes(file) ? ' open' : ''}><summary>Review report</summary>`), file).toBe(true);
+        expect(folded.startsWith(`<details class="about-this-run"${report.includes(file) ? ' open' : ''}><summary>About this run</summary>`), file).toBe(true);
+        // The last entry of the navigation: nothing follows the fold.
+        expect(folded.endsWith('</ol></details>'), file).toBe(true);
       }
     }
     const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
-    const heading = contents.indexOf('<h2 id="review-report">Review report</h2>');
+    const heading = contents.indexOf('<h2 id="about-this-run">About this run</h2>');
     expect(heading).toBeGreaterThan(0);
     for (const path of report) {
       expect(contents.indexOf(`href="${path}"`), path).toBeGreaterThan(heading);
     }
     expect(contents.indexOf('href="sources/index.html"')).toBeLessThan(heading);
+  });
+
+  it('folds exactly the pages the one page-class definition classes as run pages (scripts/dossier_page_classes.json, syzygy-5dhm.136)', async () => {
+    // The renderer folds the pages the render step passes it, the size report and the appendix; the text converter and the pilot class
+    // pages by the JSON. A run page added to one and not the other fails here.
+    const definition = JSON.parse(fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../scripts/dossier_page_classes.json'), 'utf8')) as {
+      readonly classes: readonly { readonly class: string; readonly paths: readonly string[]; readonly prefixes: readonly string[] }[] };
+    const runRow = definition.classes.filter(row => row.class === 'run');
+    expect(runRow).toHaveLength(1);
+    expect(runRow[0]!.prefixes).toEqual([]);
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const runPages = runRow[0]!.paths.filter(page => files.has(page));
+    expect(runPages.length).toBeGreaterThan(3);
+    for (const [file, page] of html(files)) {
+      const up = file.includes('/') ? '../' : '';
+      for (const nav of [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
+        const folded = nav.slice(nav.indexOf('<details class="about-this-run"'));
+        const linked = [...folded.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!.slice(up.length));
+        expect(linked, file).toEqual(runPages);
+      }
+    }
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const after = contents.slice(contents.indexOf('<h2 id="about-this-run">About this run</h2>'));
+    expect([...after.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!)).toEqual(runPages);
   });
 
   it('renders an attributed editorial draft without an RFC7-20 reading act', async () => {

@@ -1,0 +1,15 @@
+{
+ "format": "polaris-dossier-page-classes/1",
+ "rule": "A rendered page's class by its site-relative path: the first class, in the order listed, whose paths name it exactly or whose prefixes begin it; any other page is `other`. `run` pages are about the run itself (how the dossier was made, its review, its counts and its size) and fold under the navigation's last entry, About this run; every other page is on the reading path. Raw source pages (sources/* except sources/index.html) are the repository's files, not the dossier's explanation, and are left out before classing.",
+ "readers": [
+  "scripts/dossier_site_to_text.py (page_class, --reader)",
+  "scripts/dossier_pilot_runs.py (through dossier_site_to_text.py)",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts (the renderer's About this run fold holds exactly the rendered run pages)",
+  "packages/polaris-dossier/src/render.test.ts (the fold of a full render holds exactly the run pages present, in this order)"
+ ],
+ "classes": [
+  {"class": "reader", "paths": ["index.html", "glossary.html", "find-by-task.html"], "prefixes": ["poles/", "deep-dives/", "maps/"]},
+  {"class": "navigation", "paths": ["contents.html", "sources/index.html", "name-index.html"], "prefixes": []},
+  {"class": "run", "paths": ["understanding.html", "discovery.html", "clarifications.html", "executions.html", "review.html", "size-report.html", "appendix.html"], "prefixes": []}
+ ]
+}
