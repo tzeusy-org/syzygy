@@ -1,4 +1,4 @@
-import { mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmdirSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
 import * as fsPromises from 'node:fs/promises';
 import { mkdir, mkdtemp, rm, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -1172,13 +1172,14 @@ describe('prepared private CLI launch',()=>{
     { scenario: 'one missing entry on each of two walks', faults: [['ENOENT'], ['ENOENT']], outcome: 'exited', walks: 3 },
     { scenario: 'a non-ENOENT fault after a missing entry in the retry', faults: [['ENOENT'], ['ENOENT', 'EACCES']], outcome: 'inspection-failed', walks: 2 },
     { scenario: 'the shared entry allowance consumed on the retry', faults: [['ENOENT']], outcome: 'inspection-failed', walks: 2, entries: 8 },
-  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries }) => {
+    { scenario: 'an oversized entry before a missing entry', faults: [['ENOENT']], outcome: 'storage-limit', walks: 1, oversizedBefore: true },
+  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries, oversizedBefore }) => {
     const f = await launchFixture(entries === undefined ? {} : { entries });
     const names = new Set(Array.from({ length: 3 }, (_, index) => `own-census-entry-${index}`));
     const retained = 'own-retained-entry';
     const pending = faults.map(walk => [...walk]);
     const returned: string[] = [];
-    let rootOpens = 0;
+    let rootOpens = 0, oversized = false;
     const retainedWalks = new Set<number>();
     const completedSamples: number[] = [];
     const preparation = await prepareRestrictedUrlSession({ ...f.launch, current: () => {
@@ -1197,6 +1198,11 @@ describe('prepared private CLI launch',()=>{
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return lstat(...args);
       const name = path.basename(file);
       if (name === retained) retainedWalks.add(rootOpens);
+      if (oversizedBefore && !oversized && names.has(name)) {
+        oversized = true;
+        truncateSync(file, URL_LAUNCH_LIMITS.storageBytes + 1);
+        return lstat(...args);
+      }
       const fault = names.has(name) ? pending[rootOpens - 1]?.shift() : undefined;
       if (fault === undefined) return lstat(...args);
       // Observe real descriptor-relative ENOENT after removing the name. A
@@ -1227,9 +1233,12 @@ describe('prepared private CLI launch',()=>{
         expect([...returned].sort()).toEqual(faults.flat().sort());
         if (completed) expect(retainedWalks.has(walks)).toBe(true);
         expect(completedSamples).toEqual(completed ? [walks] : []);
-        expect(inspection.latest).toMatchObject({ ordinal: 1, phases: { storage: { outcome: completed ? 'accepted' : 'rejected' } } });
+        const censusAccepted = completed || outcome === 'storage-limit';
+        expect(inspection.latest).toMatchObject({ ordinal: 1, phases: { storage: { outcome: censusAccepted ? 'accepted' : 'rejected' } } });
         if (completed) expect(inspection.firstRefusal).toBeUndefined();
-        else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'operation-rejected' });
+        else expect(inspection.firstRefusal?.refusal).toMatchObject({
+          phase: 'storage', cause: outcome === 'storage-limit' ? 'resource-limit' : 'operation-rejected',
+        });
         releaseTool();
         expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
           groupTermination: 'confirmed', toolTermination: 'settled' });

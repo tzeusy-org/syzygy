@@ -300,21 +300,22 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
         check();
         const disappeared = (sample: PromiseSettledResult<Stats>): boolean =>
           sample.status === 'rejected' && (sample.reason as NodeJS.ErrnoException).code === 'ENOENT';
-        const missing = samples.filter(disappeared).length;
-        if (missing !== 0) {
-          // All the reads already ran. A disappearance cannot hide another
-          // refusal or make an unsupported entry eligible for a retry.
-          for (const sample of samples) {
-            if (sample.status === 'rejected') {
-              if (!disappeared(sample)) throw sample.reason;
-            } else if (!sample.value.isDirectory() && (!sample.value.isFile() || sample.value.nlink !== 1)) throw refused();
-          }
-          if (missing !== 1) throw refused();
-          throw entryDisappeared;
-        }
         for (const [index, sample] of samples.entries()) {
           check();
-          if (sample.status === 'rejected') throw sample.reason;
+          if (sample.status === 'rejected') {
+            if (!disappeared(sample)) throw sample.reason;
+            // The later reads have also settled. Honor a known refusal in
+            // this batch before retrying one observed disappearance.
+            for (const later of samples.slice(index + 1)) {
+              if (later.status === 'rejected') {
+                if (disappeared(later)) throw refused();
+                throw later.reason;
+              }
+              const stat = later.value;
+              if (!stat.isDirectory() && (!stat.isFile() || stat.nlink !== 1)) throw refused();
+            }
+            throw entryDisappeared;
+          }
           const stat = sample.value;
           if (stat.isDirectory()) await walk(batch[index]!, depth + 1);
           else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
