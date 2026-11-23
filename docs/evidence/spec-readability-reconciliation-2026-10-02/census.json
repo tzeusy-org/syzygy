@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 488,
+      "scenarios": 498,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1167,7 +1167,17 @@
             "An arrow the draft does not assert is never upgraded or challenged",
             "A witness needs a fact that renders Observed",
             "Earlier schemas and the provider keep their bytes",
-            "Brief v15 states relation types"
+            "Brief v15 states relation types",
+            "Hero figure leads the overview after the thesis",
+            "Draft with neither hero nor omission refused",
+            "Declared omission renders its reason",
+            "Hero names a figure that cannot lead the overview",
+            "Hero names no diagram",
+            "Malformed hero refused",
+            "Omission that makes no claim refused",
+            "Hero not produced, or draft layer withheld",
+            "Earlier schema keeps its bytes",
+            "Brief v16 asks for the hero"
           ]
         },
         "REQ-polaris-generation-035": {
