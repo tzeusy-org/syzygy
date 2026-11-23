@@ -18,3 +18,11 @@ blocks is the adopted [Three-Surface POC specification](../three-surface-poc-exp
 
 The scope above governs a future adoption. The current package freezes
 proposed bytes for independent review under CC-REV-4.
+
+## Independent review disposition
+
+R1 issued REVISE on `d3987aa4`. F1 asked for a substantive rendering
+failure after the fixed nonempty occurrence comparison passed. The two
+added cases keep exact marker membership and remove a flagged reason or
+alter the Inferred encoding.
+[Raw independent review](../../../docs/reviews/syzygy-nw3o/NW3O-MARKERS-R1-RAW.md).

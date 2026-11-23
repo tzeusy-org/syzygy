@@ -119,6 +119,15 @@ SHALL also fail the fixture's occurrence comparison.
   for that rendering predicate
 - **AND** the fixture exercises a flagged relationship's reason on a marked element
 
+#### Scenario: A flagged relationship marker has no rendered reason
+
+- **WHEN** the fixed fixture yields its exact declared nonempty marker
+  occurrences and the machine answer retains the flagged relationship's
+  reason, and one element marking it omits that reason
+- **THEN** the occurrence comparison passes and the rendered reason
+  predicate fails for that marked element
+- **AND** the machine-side result remains independently reported
+
 #### Scenario: Relationship occurrence drift fails fixture validation
 
 - **WHEN** a fixed nonempty fixture loses every declared relationship marker
@@ -290,6 +299,15 @@ SHALL also fail the fixture's occurrence comparison.
 - **THEN** the checker reports the complete observed count and a pass
   for that rendering predicate
 - **AND** the fixture exercises the declared Inferred encoding on a marked element
+
+#### Scenario: An Inferred record marker has the wrong encoding
+
+- **WHEN** the fixed fixture yields its exact declared nonempty marker
+  occurrences for its Inferred record and one element marking that record
+  uses the Observed entry
+- **THEN** the occurrence comparison passes and the rendered encoding
+  predicate fails for that marked element
+- **AND** the machine-side result remains independently reported
 
 #### Scenario: Inferred record occurrence drift fails fixture validation
 
