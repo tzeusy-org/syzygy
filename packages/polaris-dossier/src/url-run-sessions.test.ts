@@ -173,8 +173,8 @@ describe('one root lifecycle for four restricted URL roles', () => {
       } }).catch((error: unknown) => error);
       expect(handoffs).toEqual(['unknown']);
       expect(f.calls).toEqual(['prepare:author', 'host:author', 'host-close:author']);
-      expect(refusal).toMatchObject({ message: 'url-session-launch-refused' });
-      expect(f.failures).toEqual([]);
+      expect(refusal).toMatchObject({ message: 'url-run-sessions-unavailable' });
+      expect(f.failures).toEqual(['launch-unavailable']);
       expect(f.credentialClosed()).toBe(true);
     },
   );
