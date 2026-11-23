@@ -702,7 +702,7 @@ export function latestChecks(run: string): { readonly draft: CheckRecord; readon
 
 /** A review check record, read as every other reader reads it since version 2.18 (REQ-polaris-generation-035): by the reader rule under
  * 262,144 bytes and parsed within the record bounds; one it cannot read is no checked verdict of its kind. */
-const readReviewCheck = (file: string): unknown => readRecord(file);
+export const readReviewCheck = (file: string): unknown => readRecord(file);
 
 function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {
   let names: string[];

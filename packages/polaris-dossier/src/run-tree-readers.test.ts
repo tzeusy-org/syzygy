@@ -8,8 +8,9 @@ import { breachLog, stepInstants } from './close.js';
 import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
 import { readExecutionChoice } from './execution-choice.js';
+import { inventoryCoverageAdvice } from './inventory-coverage.js';
 import { patchFs } from './fs-patch.testkit.js';
-import { blockingWhy, loadState, readMaxRepairCycles, readVerdict, runPolarisCli } from './polaris.js';
+import { blockingWhy, loadState, readMaxRepairCycles, readReviewCheck, readVerdict, runPolarisCli } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
 import { logStep, readRecord } from './run-dir.js';
@@ -170,6 +171,14 @@ const READERS: readonly Reader[] = [
     name: 'readRecord (REQ-035: review check, prompt, launch-form and delivery records)', bound: RECORD_BOUND, file: 'record.json',
     atBound: (bytes) => padded('{"outcome":"validated"}', bytes),
     read: (_run, subject) => readRecord(subject),
+    readAtBound: { outcome: 'validated' },
+    pastBound: undefined,
+    notRegular: undefined,
+  },
+  {
+    name: 'readReviewCheck (REQ-035: the URL supervisor reads review check records, now bounded)', bound: RECORD_BOUND, file: 'reviews/checks/fidelity-verdict-0.json',
+    atBound: (bytes) => padded('{"outcome":"validated"}', bytes),
+    read: (_run, subject) => readReviewCheck(subject),
     readAtBound: { outcome: 'validated' },
     pastBound: undefined,
     notRegular: undefined,
@@ -350,5 +359,19 @@ describe('the run-tree reader rule (syzygy-3efd.80): syzygy polaris over a state
     expect(exit).toBe(1);
     expect(stderr).toBe(`syzygy polaris: refused: no launched run run-a under ${root}\n`);
     expect(fs.lstatSync(state).isFIFO()).toBe(true);
+  });
+});
+
+// Check's inventory-coverage advice reads the frozen inventory of record under 4,194,304 bytes: one it cannot read is an Unknown advice.
+describe('the run-tree reader rule (syzygy-3efd.80): the inventory-coverage advice', () => {
+  it.each(PLANTS)('is Unknown, without blocking, where the frozen inventory is %s', async (_what, plant) => {
+    const run = tempDir('run-tree-read-coverage-');
+    fs.mkdirSync(path.join(run, 'inventory'));
+    plant(path.join(run, 'inventory', 'rev-0.json'));
+    const advice = await inventoryCoverageAdvice(run, {}, {
+      inventoryOfRecord: async () => ({ counts: true, file: 'inventory/rev-0.json', sha256: 'a'.repeat(64), revision: 0 }) as never,
+      sources: {} as never, now: 0, isSecretPath: () => false,
+    });
+    expect(advice).toMatchObject({ state: 'unknown', why: 'the inventory of record could not be read or compared (NotARegularFileError)' });
   });
 });
