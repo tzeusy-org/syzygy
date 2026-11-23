@@ -1,0 +1,32 @@
+{
+  "adoption": "A-151",
+  "source": {
+    "commit": "e52ceedc98bcc5ac9797b9e0abe451576950dea2",
+    "tree": "3a4653724972c7ff7f56adb422290b3b47e24c8f",
+    "base": "81ce553e2bee8a23fc82fca692d76a80cddff0a9",
+    "patchSha256": "da09d496bd2ac4395376b29967589fd74cc2995f102a4386ea02d67208ff955e"
+  },
+  "review": {
+    "raw": "docs/reviews/F3-RESUMED-SANDBOX-LAUNCH-WINDOW-REVIEW-RAW.md",
+    "sha256": "f2f9bd4247f7b97c57e07cec5b7e75c88bd292311d716299399544f2fcfb44f6",
+    "verdict": "PASS",
+    "scope": "source review"
+  },
+  "priorInterruptedReplay": {
+    "sourceCommit": "f7bc22e46719ec9247dd962cbc0f822f29686528",
+    "diagnosticSha256": "179b9944e98754c13730d7b0ead438fc7d1702e07db37cdfeb018510f82cac10",
+    "preparationSettledMs": 109960.025,
+    "launchStartedMs": 127887.75,
+    "launchRejectedMs": 129983.32,
+    "cause": "Inferred exhaustion of the preparation setup window"
+  },
+  "focusedNativeTests": {
+    "file": "packages/polaris-dossier/src/session-launch.test.ts",
+    "exit": 0,
+    "passed": 5,
+    "selected": 5,
+    "filePopulation": 49,
+    "logSha256": "a08500e45d2f3f916a9900f56ca43b83459de71523c6bb20eb43b7143df44df3"
+  },
+  "nativeResume": "Unknown"
+}
