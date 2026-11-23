@@ -382,7 +382,7 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
   readonly append: (event: UrlSessionAuditEvent) => Promise<void>;
   readonly appendMachinePeer: (event: UrlMachinePeerAudit) => Promise<void>;
   readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>, observeRead?: (bytes: number) => void) => OrderedDesignAuditWriter;
-  readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability) => Promise<UrlCommittedLaunchHistory>;
+  readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability, waitForSample?: () => Promise<boolean>) => Promise<UrlCommittedLaunchHistory>;
   readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
   readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
@@ -1061,7 +1061,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       return writer;
     };
     const ownLaunches = new WeakSet<UrlCommittedLaunchHistory>();
-    const commitLaunchHistory = async (capability: UrlLaunchHistoryCapability): Promise<UrlCommittedLaunchHistory> => {
+    const commitLaunchHistory: Extract<UrlSessionAuditResult, { ok: true }>['commitLaunchHistory'] = async (capability, waitForSample) => {
       if (poisoned || closing) throw refused();
       let history: ReturnType<typeof inspectUrlLaunchHistory>;
       try { history = inspectUrlLaunchHistory(capability); } catch { throw refused(); }
@@ -1077,9 +1077,14 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         || !plan.view.protectedPaths.some(parent => containedBy(parent, input.parent))
         || containedBy(history.run, input.parent) || containedBy(`${history.run}.sessions`, input.parent)) throw refused();
       historyRoles.add(role);
+      const checkLaunchCurrent = waitForSample === undefined ? checkCurrent : async (deadline: number): Promise<void> => {
+        guard(deadline);
+        if (await wait(track('callback', waitForSample), deadline) !== true) poison();
+        await checkCurrent(deadline);
+      };
       const event = await enqueue({ kind: 'launch-history', role, scope, payload: { file: history.file, recordSha256: history.sha256,
         recordBytes: history.bytes.length, promptRecordSha256: history.promptRecordSha256, promptSha256: history.promptSha256,
-        sessionId: plan.declaration.sessionId } }, 'launch-history');
+        sessionId: plan.declaration.sessionId } }, 'launch-history', checkLaunchCurrent);
       const inspect = (observeRead?: (bytes: number) => void): CommittedLaunchHistoryIdentity => {
         verifyDurableEvent(role, event, observeRead);
       const latest = inspectUrlLaunchHistory(capability, observeRead);

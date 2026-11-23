@@ -249,12 +249,20 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     input.launched(child, host);
     let launch = input.firstLaunch;
     if (launch === null) {
+      // Let the pending native census settle before each history authority
+      // check. Both operations retain their independent deadlines.
+      const waitForNativeSample = async (): Promise<boolean> => {
+        await yieldToPoll();
+        return input.waitForSamples();
+      };
       const written = await writeUrlLaunchHistory({ run: input.run, runId: path.basename(input.run), plan: input.plan,
-        screen: input.screen, current: input.current, compatiblePromptSha256: input.compatiblePromptSha256,
+        screen: input.screen, current: async () => await waitForNativeSample() && await input.current(),
+        compatiblePromptSha256: input.compatiblePromptSha256,
         ...(input.generation === undefined ? {} : { generation: input.generation }),
         capture: { pid: child.pid, startedAt: input.now() } });
       if (written.capability === null) throw refused();
-      launch = await input.audit.commitLaunchHistory(written.capability);
+      if (!(await waitForNativeSample())) throw refused();
+      launch = await input.audit.commitLaunchHistory(written.capability, waitForNativeSample);
       await input.registerLaunch(launch);
     }
     if (!(await input.current()) || !(await input.waitForSamples())) throw refused();

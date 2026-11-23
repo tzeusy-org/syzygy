@@ -1141,6 +1141,26 @@ describe('URL stored launch history', () => {
     } finally { await audit.close(); }
   });
 
+  it.each([1, 3])('withholds ordered launch history when live sample %i refuses', async refusedSample => {
+    const fixture = productFixture(), capability = (await writeUrlLaunchHistory(options('design'))).capability!;
+    const { audit, attempt, segment } = await auditFixture(fixture.originPolicy.sha256, `history-native-sample-${refusedSample}`);
+    try {
+      await attempt('design');
+      const before = fs.readFileSync(segment('design'));
+      let samples = 0;
+      const waitForSample = async () => {
+        samples++;
+        if (samples === 1) expect(fs.readFileSync(segment('design'))).toEqual(before);
+        if (samples === 3) expect(fs.statSync(segment('design')).size).toBeGreaterThan(before.length);
+        return samples !== refusedSample;
+      };
+      await expect(audit.commitLaunchHistory(capability, waitForSample)).rejects.toThrow('url-session-audit-refused');
+      expect(samples).toBe(refusedSample);
+      if (refusedSample === 1) expect(fs.readFileSync(segment('design'))).toEqual(before);
+      expect(audit.summary()).toMatchObject({ poisoned: true, captured: { 'launch-attempt': 1, 'launch-history': 0 } });
+    } finally { await audit.close(); }
+  });
+
   it('refuses stale or incorrectly scoped audit registration with safe exact writer bytes', async () => {
     const { bridge } = productFixture(), capability = (await writeUrlLaunchHistory(options())).capability!;
     const { audit, attempt } = await auditFixture('f'.repeat(64), 'history-wrong-origin');

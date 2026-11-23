@@ -496,9 +496,9 @@ async function observeDesignRun(run: string, traceInference = false) {
       reproduce: () => currentPhase('reproduce', input.reproduce, value => value !== null),
       machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
       budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
-      audit: { ...input.audit, commitLaunchHistory: capability => {
+      audit: { ...input.audit, commitLaunchHistory: (...args) => {
         const stamp = designLaunchCommit = { startedMs: clock() };
-        return timed(stamp, () => input.audit.commitLaunchHistory(capability), () => true);
+        return timed(stamp, () => input.audit.commitLaunchHistory(...args), () => true);
       }, readDesignDeliveryView: (...args) =>
         currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
     }));
