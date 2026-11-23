@@ -599,9 +599,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const witnessItem = (e: DraftDiagram['edges'][number], relation: LocalEdgeRelation, evidence: NonNullable<LocalEdgeRelation['evidence']>): string =>
       `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
       + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact!} (${evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule!} version ${relation.witness.ruleVersion!} at revision ${evidence.revision}; record sha256:${evidence.recordSha256}.`)}</span></li>`;
+    const diagramRelationEdges: typeof relationEdges = [];
     const edgeList = d.edges.map(e => {
       const relation = relationOf(e.id);
-      if (relation !== undefined) relationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
+      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
       if (relation?.evidence !== undefined) return witnessItem(e, relation, relation.evidence);
       return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
     }).join('');
@@ -618,6 +619,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     } catch {
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
     }
+    for (const entry of diagramRelationEdges) relationEdges.push(entry);
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);

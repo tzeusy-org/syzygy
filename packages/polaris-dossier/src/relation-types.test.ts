@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -21,6 +21,7 @@ import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const RENDERER_MODULE = pathToFileURL(path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts')).href;
+const LAYOUT_MODULE = pathToFileURL(path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-generation/diagram-layout.ts')).href;
 const NOW = Date.UTC(2026, 10, 23, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'e'.repeat(32)}`;
@@ -204,6 +205,22 @@ describe('relation types: an arrow witnessed by a fact of its identical type', (
     expect(machine['edges']).toEqual([{ diagram: 'f1', page: 'index.html', id: 'e1', from: 'repo', to: 'src', epistemic: 'observed', text: 'contains', relation: 'contains', witness: witness('witnessed', null, '_tree-contains-1') }]);
     expect((machine['claims'] as Doc[]).map((claim) => claim['id'])).not.toContain('e1');
     expect((machine['claims'] as Doc[]).filter((claim) => claim['id'] === 'repo' || claim['id'] === 'src').map((claim) => claim['epistemic'])).toEqual(['inferred', 'inferred']);
+  });
+
+  it('omits relation edges from the machine view when their drawing is refused', async () => {
+    const layout: typeof import('../../../apps/three-surface-poc/src/polaris-generation/diagram-layout.js') = await import(LAYOUT_MODULE);
+    const draw = layout.renderDiagramSvg;
+    const spy = vi.spyOn(layout, 'renderDiagramSvg').mockImplementation((...args) => {
+      if (args[4] !== undefined && args[0].edges.some((item) => item.id === 'e1')) throw new Error('fixture drawing refused');
+      return draw(...args);
+    });
+    try {
+      const { files, machine } = await rendered(A, draftOf([FIG_1()]));
+      expect(files.get('index.html')).toContain('diagram could not be rendered inertly');
+      expect(machine['edges']).toEqual([]);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it('counts e1 in none of the draft\'s counts: the page and appendix counts equal those of the same draft without e1', async () => {

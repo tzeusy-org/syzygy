@@ -122,6 +122,7 @@ const MUTANTS = [
   ['site-witnessed-claim', SITE, 'if (relation?.evidence !== undefined) return witnessItem(e, relation, relation.evidence);', ''],
   ['site-no-svg-attributes', SITE, "id => edgeAttrs.get(id) ?? ''", "() => ''"],
   ['site-no-edges-member', SITE, "...(local.edgeRelations === undefined ? {} : { edges:", "...(true ? {} : { edges:"],
+  ['site-edges-before-draw', SITE, 'if (relation !== undefined) diagramRelationEdges.push(', 'if (relation !== undefined) relationEdges.push('],
   ['site-no-relation-attribute', SITE, 'const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${', 'const witnessAttrs = (relation: LocalEdgeRelation): string => `${'],
   ['site-mark-words', SITE, '<span class="derived-mark">Witnessed by Syzygy</span>', '<span class="derived-mark">Derived by Syzygy</span>'],
   ['inert-witness-fact-refused', INERT, "'data-relation', 'data-witness-fact', ", "'data-relation', "],

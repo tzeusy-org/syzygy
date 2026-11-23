@@ -811,6 +811,37 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
   });
 });
 
+it('omits detector-matched graph units from the fidelity packet while preserving other bindings', async () => {
+  const hiddenPath = `${BOTH_PATH}/package.json`;
+  const hiddenName = BOTH_PATH.split('/')[1]!;
+  const units = [
+    { kind: 'top-level-directory', path: 'src' },
+    { kind: 'package-manifest', path: hiddenPath },
+    { kind: 'dependency-name', name: hiddenName },
+  ];
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v9';
+    d.thesisBasis = 'stated';
+    d.diagrams = [{
+      id: 'graph', title: 'Project units', kind: 'boundary', relationship: 'Related parts of the project.',
+      home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['graph'] },
+      nodes: units.map((unit, index) => ({
+        id: `n${index}`, label: `Node ${index}`, epistemic: 'inferred', citations: [cite(`c-n${index}`)], unit,
+      })),
+      edges: [{ id: 'e1', from: 'n0', to: 'n1', relation: 'relates-to', label: 'Related', epistemic: 'inferred', citations: [cite('c-e1')] }],
+    }];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes(hiddenName)).toBe(false);
+  const packet = JSON.parse(built.bytes);
+  expect(packet.draft.withheldDiagramUnits).toBe(2);
+  expect(packet.draft.document.diagrams[0].nodes.map((node: Doc) => node.unit)).toEqual([units[0], undefined, undefined]);
+  const frozen = fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'));
+  expect(packet.draft.sha256).toBe(sha256(frozen));
+  expect(JSON.parse(frozen.toString()).diagrams[0].nodes[1].unit.path === hiddenPath).toBe(true);
+});
+
 // syzygy-8hm6: a cited path both denied and matched by a secret detector is a span without its path or object id, under the outcome
 // screening gave. The packet's copy of the draft still carries the citation as the author wrote it; this is the span record alone.
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
