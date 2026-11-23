@@ -350,7 +350,11 @@ function create(given: UrlOriginLedgerOptions) {
     } catch { return fail(); }
   }
   function inspectWholeSourceBody(capability: UrlWholeSourceBody): UrlWholeSourceBodyMetadata {
-    live(); const value = wholeBodies.get(capability); if (!value) return fail(); entry(value.origin); return value;
+    const value = wholeBodies.get(capability);
+    if (!value) return fail();
+    // The private lookup has no effect. The receipt check samples authority before any metadata leaves the ledger.
+    entry(value.origin);
+    return value;
   }
   async function verifiedSpan(input: { readonly path: string; readonly offset?: number; readonly limit?: number; readonly expectedObjectId?: string }) {
     try {

@@ -1,4 +1,4 @@
-import { checkedProductPopulation, yieldForProductReads, parseProductRecord, protectedProduct, type RunProductReads } from './url-operation-products.js';
+import { checkedProductPopulation, yieldForProductReads, parseProductRecord, protectedProduct, protectedProductPair, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError, bodyLines, parseBoundedJson, retainedWithMarkers, spanTouchesWithheld } from '@syzygy/polaris-generation-core/live';
@@ -43,19 +43,22 @@ export function latestPassedDraft(run: string, products?: RunProductReads): { re
   if (revision === -1) return { ok: false, reason: 'no draft revision has been checked' };
   if (!Number.isSafeInteger(revision) || revision < 0) throw new Error('url-product-revision-unavailable');
   const checkFile = path.join(RUN_LAYOUT.checks, `rev-${revision}.json`);
+  const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
+  // The protected population selection captured both records above. Recheck
+  // both subjects in a single synchronous read under the same authority.
+  const pair = products === undefined ? undefined : protectedProductPair(products, run, checkFile, frozen);
   let check: unknown;
-  if (products !== undefined) {
-    const bytes = protectedProduct(products, run, checkFile);
+  if (pair !== undefined) {
+    const [bytes] = pair;
     check = bytes === null ? undefined : parseProductRecord(bytes, CHECK_RECORD_LIMITS);
   } else {
     try { check = readCheckRecord(path.join(run, checkFile)); } catch { check = undefined; }
   }
   if (!isCheckRecordOf(check, revision)) return { ok: false, reason: `the check result of draft revision ${revision} cannot be read` };
   if (check['outcome'] !== 'passed') return { ok: false, reason: `draft revision ${revision}, the latest checked, has open findings; only a passed revision is reviewed` };
-  const frozen = path.join(RUN_LAYOUT.drafts, `rev-${revision}.json`);
   let bytes: Uint8Array | null;
-  if (products !== undefined) {
-    bytes = protectedProduct(products, run, frozen);
+  if (pair !== undefined) {
+    bytes = pair[1];
     if (bytes === null) return { ok: false, reason: `the frozen draft ${frozen} is absent` };
   } else try {
     // Read by the reader rule under the draft's 4,194,304 bytes (syzygy-3efd.76): check froze at most that many.

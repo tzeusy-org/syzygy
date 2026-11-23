@@ -1,4 +1,4 @@
-import { checkedProductPopulation, isRunProductReads, protectedHelperPrompt, protectedProduct, protectedProductRecord, yieldForProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
+import { checkedProductPopulation, isRunProductReads, parseProductRecord, protectedHelperPrompt, protectedProduct, protectedProductPair, protectedProductRecord, yieldForProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError } from '@syzygy/polaris-generation-core/live';
@@ -323,22 +323,23 @@ async function latestCheckedVerdict(
   const number = latestVerdictNumber(run, kind, products);
   if (number < 0) return no(`no ${kind} verdict has been checked`);
   const checkFile = path.join(REVIEW_CHECKS, verdictFileName(kind, number));
-  const check = productRecord(checkFile);
+  const frozen = path.join(RUN_LAYOUT.reviews, verdictFileName(kind, number));
+  const pair = products === undefined ? undefined : protectedProductPair(products, run, checkFile, frozen);
+  const check = pair === undefined ? productRecord(checkFile) : pair[0] === null ? undefined : parseProductRecord(pair[0]);
   if (check === undefined || check['format'] !== REVIEW_CHECK_FORMAT || check['number'] !== number) return no(`the result of ${kind} verdict ${number} cannot be read`);
   if (check['outcome'] !== 'validated') return no(`${kind} verdict ${number} failed validation`);
   if (continuation !== undefined) {
-    const checkedBytes = protectedProduct(products!, run, checkFile);
+    const checkedBytes = pair?.[0];
     const packet = check['packet'], readiness = check['readiness'];
-    if (continuation.checked.number !== number || checkedBytes === null || sha256(checkedBytes) !== continuation.checked.checkSha256
+    if (continuation.checked.number !== number || !checkedBytes || sha256(checkedBytes) !== continuation.checked.checkSha256
       || check['kind'] !== 'design' || check['runId'] !== continuation.binding.runId
       || !isRecord(packet) || packet['site'] !== continuation.delivery.identity.site || packet['sha256'] !== continuation.original.original.sha256
       || !isRecord(readiness) || readiness['declared'] !== 'ready' || readiness['blocking'] !== false)
       return no('the latest design check is not the ready verdict recorded for this delivery');
   }
-  const frozen = path.join(RUN_LAYOUT.reviews, verdictFileName(kind, number));
   let bytes: Uint8Array | null;
-  if (products !== undefined) {
-    bytes = protectedProduct(products, run, frozen);
+  if (pair !== undefined) {
+    bytes = pair[1];
     if (bytes === null) return no(`the frozen verdict ${frozen} is absent`);
   } else {
     try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.verdict)); } catch (cause) { return no(`the frozen verdict ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.verdict)})`); }

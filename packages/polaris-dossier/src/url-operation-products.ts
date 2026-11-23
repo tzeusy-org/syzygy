@@ -106,7 +106,9 @@ export function protectedProductPair(reads: RunProductReads, run: string, first:
   return [left, right];
 }
 
-export function parseProductRecord(bytes: Uint8Array, limits: { readonly maxBytes: number; readonly maxNodes: number; readonly maxDepth: number }) {
+const RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
+
+export function parseProductRecord(bytes: Uint8Array, limits: Readonly<{ maxBytes: number; maxNodes: number; maxDepth: number }> = RECORD_LIMITS) {
   try {
     const value = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), limits);
     return isRecord(value) ? value : undefined;
@@ -128,11 +130,9 @@ export function checkedProductPopulation(reads: RunProductReads, run: string,
   return selected;
 }
 
-const RECORD_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
-
 export function protectedProductRecord(reads: RunProductReads, run: string, file: string): Readonly<Record<string, unknown>> | undefined {
   const bytes = protectedProduct(reads, run, file);
-  return bytes === null ? undefined : parseProductRecord(bytes, RECORD_LIMITS);
+  return bytes === null ? undefined : parseProductRecord(bytes);
 }
 
 /** Each URL helper has one protected prompt and one durable dispatch record. */

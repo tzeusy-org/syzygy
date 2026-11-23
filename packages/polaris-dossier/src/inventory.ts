@@ -1,4 +1,4 @@
-import { checkedProductPopulation, yieldForProductReads, parseProductRecord, productSelection, protectedHelperPrompt, protectedProduct, protectedProductRecord, type RunProductReads } from './url-operation-products.js';
+import { checkedProductPopulation, yieldForProductReads, parseProductRecord, productSelection, protectedHelperPrompt, protectedProduct, protectedProductPair, protectedProductRecord, type RunProductReads } from './url-operation-products.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
@@ -400,13 +400,15 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
     revision = Math.max(...revisions);
   }
   const checkFile = path.join(INVENTORY_CHECKS, `rev-${revision}.json`);
+  const frozen = path.join(RUN_LAYOUT.inventory, `rev-${revision}.json`);
+  const pair = products === undefined ? undefined : protectedProductPair(products, run, checkFile, frozen);
   let check: Readonly<Record<string, unknown>> | undefined;
-  if (products === undefined) {
+  if (pair === undefined) {
     try {
       const read = readCheckRecord(path.join(run, checkFile));
       check = isRecord(read) ? read : undefined;
     } catch { check = undefined; }
-  } else check = protectedProductRecord(products, run, checkFile);
+  } else if (pair[0] !== null) check = parseProductRecord(pair[0]);
   if (check === undefined || check['format'] !== INVENTORY_CHECK_FORMAT || check['revision'] !== revision) return no(`the result of inventory revision ${revision} cannot be read`);
   if (check['outcome'] !== 'passed') return no(`inventory revision ${revision} has open findings`);
   const inventory = isRecord(check['inventory']) ? check['inventory'] : {};
@@ -415,9 +417,8 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   if (typeof number !== 'number' || !Number.isSafeInteger(number) || number < 1) return no(`the result of inventory revision ${revision} names no session`);
   if (typeof sessionId !== 'string' || declaredSessionId({ sessionId }) === null) return no(`inventory revision ${revision} declares no session identifier`);
   let bytes: Uint8Array | null;
-  const frozen = path.join(RUN_LAYOUT.inventory, `rev-${revision}.json`);
-  if (products !== undefined) {
-    bytes = protectedProduct(products, run, frozen);
+  if (pair !== undefined) {
+    bytes = pair[1];
     if (bytes === null) return no(`the frozen inventory ${frozen} is absent`);
   } else {
     try { bytes = readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.inventory); }
