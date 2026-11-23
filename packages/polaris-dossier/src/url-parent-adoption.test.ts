@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { findUrlParentAdoption, parseUrlParentRefs, URL_PARENT_DEFAULT_REF, URL_PARENT_TAG } from './url-parent-adoption.js';
+import { findUrlParentAdoption, parseUrlParentRefs, URL_PARENT_DEFAULT_REF, URL_PARENT_RECORD, URL_PARENT_TAG } from './url-parent-adoption.js';
 
 const commit = 'a'.repeat(40);
 const change = 'openspec/changes/dossier-url-declared-source-run/proposed';
@@ -15,6 +16,13 @@ const row = `| A-15 | 2026-11-21 | \`${commit}\` | ${links.join(', ')} | Apply r
 const ledger = (data: string): string => `# Agent adoptions\n\n| Id | Date | Commit | What changed | Why | Revert | Tag |\n|---|---|---|---|---|---|---|\n${data}\n`;
 
 describe('URL parent adoption record', () => {
+  it('finds the adopted URL parent in the complete repository ledger', () => {
+    const actualLedger = readFileSync(new URL(`../../../${URL_PARENT_RECORD}`, import.meta.url), 'utf8');
+    expect(findUrlParentAdoption(actualLedger)).toEqual({
+      id: 'A-14', commit: 'ab94bcdc7e4a0e1fdb4488e5f2a642fec0dcf118',
+    });
+  });
+
   it('finds the exact subject commit of a single complete adoption row', () => {
     expect(findUrlParentAdoption(ledger(row))).toEqual({ id: 'A-15', commit });
   });
