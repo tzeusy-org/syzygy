@@ -1,0 +1,246 @@
+{
+  "bead": "syzygy-bpyt.62",
+  "review": "docs/reviews/R-GP-IMPL-GEN-PLAN-TEST-2-RAW.md; N1–N3",
+  "command": [
+    "npx",
+    "--no-install",
+    "vitest",
+    "run",
+    "apps/three-surface-poc/src/polaris-generation/generation-mutation.test.ts"
+  ],
+  "testsAdded": 0,
+  "predecessor": {
+    "subject": "3266b734f722c52c3c42067c26bc51a6434f5f1e",
+    "cleanBaseline": {
+      "outcome": "passed",
+      "passed": 13,
+      "failed": 0
+    },
+    "controls": [
+      {
+        "id": "duplicate-empty-ids",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "id: 'canonical-json-sorted-keys-disabled'",
+            "new": "id: ''"
+          },
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled'",
+            "new": "id: ''"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      },
+      {
+        "id": "shared-describe-fragment",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['validation'],"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      },
+      {
+        "id": "describe-only-fragment",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['provider-local intermediate validation'],"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: test titles holding must-fail \"provider-local intermediate validation\": expected +0 to be 1 // Object.is equality"
+      },
+      {
+        "id": "qualified-name-positive-control",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities'],"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: test titles holding must-fail \"provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities\": expected +0 to be 1 // Object.is equality"
+      },
+      {
+        "id": "runner-drops-checked-file",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', ...TEST_FILES.slice(1), '--reporter=json'"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      },
+      {
+        "id": "runner-adds-unchecked-file",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', ...TEST_FILES, '--reporter=json', 'packages/polaris-generation-core/src/island-boundary.test.ts'"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      },
+      {
+        "id": "runner-quotes-file-spread",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', '...TEST_FILES', '--reporter=json'"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      }
+    ]
+  },
+  "candidate": {
+    "subject": "fc0b6ede943c9513e28dbd77e33bd52b63781da8",
+    "cleanBaseline": {
+      "outcome": "passed",
+      "passed": 13,
+      "failed": 0
+    },
+    "controls": [
+      {
+        "id": "duplicate-empty-ids",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "id: 'canonical-json-sorted-keys-disabled'",
+            "new": "id: ''"
+          },
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled'",
+            "new": "id: ''"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: duplicate mutation ids: expected '\"\"' to be '' // Object.is equality"
+      },
+      {
+        "id": "shared-describe-fragment",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['validation'],"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: describe-qualified test titles holding must-fail \"validation\": expected 22 to be 1 // Object.is equality"
+      },
+      {
+        "id": "describe-only-fragment",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['provider-local intermediate validation'],"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: describe-qualified test titles holding must-fail \"provider-local intermediate validation\": expected 21 to be 1 // Object.is equality"
+      },
+      {
+        "id": "qualified-name-positive-control",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
+            "new": "mustFail: ['provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities'],"
+          }
+        ],
+        "outcome": "passed",
+        "passed": 13,
+        "failed": 0
+      },
+      {
+        "id": "runner-drops-checked-file",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', ...TEST_FILES.slice(1), '--reporter=json'"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: the runner's Vitest argv: expected [ [ '\\'npx\\'', '\\'vitest\\'', …(4) ] ] to deeply equal [ [ '\\'npx\\'', '\\'vitest\\'', …(4) ] ]"
+      },
+      {
+        "id": "runner-adds-unchecked-file",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', ...TEST_FILES, '--reporter=json', 'packages/polaris-generation-core/src/island-boundary.test.ts'"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: the runner's Vitest argv: expected [ [ '\\'npx\\'', '\\'vitest\\'', …(5) ] ] to deeply equal [ [ '\\'npx\\'', '\\'vitest\\'', …(4) ] ]"
+      },
+      {
+        "id": "runner-quotes-file-spread",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+        "sourceSha256": "24bf40d8c529e5229b2887e506475ed9422dcb1a4814d149001518b7c8af5d34",
+        "replacements": [
+          {
+            "old": "'run', ...TEST_FILES, '--reporter=json'",
+            "new": "'run', '...TEST_FILES', '--reporter=json'"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: the runner's Vitest argv: expected [ [ '\\'npx\\'', '\\'vitest\\'', …(4) ] ] to deeply equal [ [ '\\'npx\\'', '\\'vitest\\'', …(4) ] ]"
+      }
+    ]
+  },
+  "assertionKills": 6,
+  "controls": 7
+}
