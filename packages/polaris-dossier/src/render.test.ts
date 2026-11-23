@@ -472,7 +472,7 @@ describe('render', () => {
   }, 60_000);
 
   it.each(['accepted', 'refused', 'failed'] as const)(
-    'preserves the disclosure restart result when the handoff changes during a %s stored site reproduction', async outcome => {
+    'preserves the disclosure restart result when handoff changes and stored site reproduction is %s', async outcome => {
     const f = await preparedUrlRender();
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     vi.setSystemTime(LATER);
