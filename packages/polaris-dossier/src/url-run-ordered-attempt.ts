@@ -135,6 +135,11 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     assertUrlDesignDeliveryViewCurrent(delivery!);
   };
   const current = async (): Promise<boolean> => {
+    // Resumed runtime authority includes synchronous Git and claim checks.
+    // Let a pending census finish before starting that work.
+    if (closed) return false;
+    if (input.generation !== undefined && delivery !== null && isUrlSessionProcess(child)
+      && !(await input.waitForSamples())) return false;
     if (closed || !(await input.current()) || sessionMachineEffectCurrent() === false) return false;
     // Bootstrap has no controller yet; activation still gates every send/tool.
     if (delivery === null) return input.machine.current();

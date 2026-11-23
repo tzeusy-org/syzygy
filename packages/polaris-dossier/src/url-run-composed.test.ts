@@ -1931,6 +1931,9 @@ describe('composed URL run with actual role processes', () => {
             const inspections = resumeDiagnostic?.();
             expect(inspections?.inspectedLaunches).toBe(1);
             expect(inspections?.roleInspections['design']?.samples).toBeGreaterThan(0);
+            const firstRelayCheck = inspections?.inference?.relayCurrent.at(0);
+            expect(firstRelayCheck?.stages.slice(0, 2).map(stage => stage.phase))
+              .toEqual(['wait-for-samples', 'runtime-authority']);
             expect(relayRoles).toEqual([...launchesBeforeResume, 'design']);
             expect([author.count(), inv.count(), fidelity.count()]).toEqual(forwardsBeforeResume.slice(0, 3));
             expect(deliveryReproductions).toEqual([[0], [1]]);
