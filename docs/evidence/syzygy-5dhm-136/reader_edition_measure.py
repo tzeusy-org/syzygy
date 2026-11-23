@@ -14,7 +14,8 @@ import re
 import subprocess
 import sys
 
-S = pathlib.Path(__file__).resolve().parent
+#: The scratch directory holding site-<before|after>-<run>/; the first argument, or this file's directory.
+S = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else pathlib.Path(__file__).resolve().parent
 W = pathlib.Path('/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-5dhm.136')
 TO_TEXT = W / 'scripts' / 'dossier_site_to_text.py'
 sys.path.insert(0, str(W / 'scripts'))
@@ -61,12 +62,23 @@ def element_at(text, start):
     return text[start:]
 
 
+#: The committed predicate this mirrors, clause for clause: `disclosuresOffTheirPage` in this file of the measured commit.
+PREDICATE = 'apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts'
+
+
 def disclosures(files, machine):
-    claims = [c for c in machine['claims'] if c['epistemic'] == 'unknown' or c.get('unknownReason') or (c.get('v15') or {}).get('withheldSources') is not None]
+    """`disclosuresOffTheirPage`, transcribed: a claim is selected when it is Unknown, its unknownReason is not null, or its v15 member
+    has a withheldSources key (present, whatever its value, as the test's `!== undefined`); it must occur exactly once on its page (id
+    escaped for & and " only), its element's own tag carry its epistemic label, an Unknown claim's element hold the [Unknown] marking
+    span, a withheld item's element text hold "Withheld from this dossier" or "Withheld item", and any other reasoned claim's element
+    text hold the reason."""
+    def withheld_of(c):
+        return isinstance(c.get('v15'), dict) and 'withheldSources' in c['v15']
+    claims = [c for c in machine['claims'] if c['epistemic'] == 'unknown' or c.get('unknownReason') is not None or withheld_of(c)]
     off = []
     for c in claims:
         t = files.get(c['page'], '')
-        marker = 'data-claim-id="%s"' % htmllib.escape(c['id'], quote=True).replace('&#x27;', '&#39;')
+        marker = 'data-claim-id="%s"' % c['id'].replace('&', '&amp;').replace('"', '&quot;')
         if t.count(marker) != 1:
             off.append(f"{c['id']}: {t.count(marker)} on {c['page']}")
             continue
@@ -78,10 +90,10 @@ def disclosures(files, machine):
             off.append(f"{c['id']}: label")
         if c["epistemic"] == "unknown" and "<span class=\"marking unknown\">[Unknown]</span>" not in el:
             off.append(f"{c['id']}: marking")
-        withheld = (c.get('v15') or {}).get('withheldSources') is not None
+        withheld = withheld_of(c)
         if withheld and not re.search(r'Withheld from this dossier|Withheld item', body):
             off.append(f"{c['id']}: withheld words")
-        elif c.get('unknownReason') and not withheld and c['unknownReason'] not in body:
+        elif c.get('unknownReason') is not None and not withheld and c['unknownReason'] not in body:
             off.append(f"{c['id']}: reason")
     return len(claims), off
 
@@ -114,11 +126,13 @@ def measure(run, form):
     header_end = main.find('</header>')
     pole_map = main.find('<nav class="pole-map"')
     first_section = main.find('<section id="section-')
+    overview_fig = main.find('<section id="overview-figures"')
     n_claims, off = disclosures(files, machine)
     order = [p['path'] for p in json.loads((site / 'dossier.json').read_text())['pages']]
     return {
         'htmlPages': len(files), 'sourcePages': len(files) - len(kept), 'keptPages': len(kept),
         'readingPathPages': reader['pages'], 'aboutThisRunPages': reader['runPagesExcluded'],
+        'otherPagesKept': reader.get('otherPagesKept'), 'otherPagesWords': reader.get('otherPagesWords'),
         'wordsFullText': full['words'], 'wordsReadingPath': reader['words'], 'wordsAboutThisRun': sum(reader['runPagesWords'].values()),
         'aboutThisRunWordsPerPage': reader['runPagesWords'],
         'links': total, 'linksResolved': total - len(bad), 'unresolvedSample': bad[:3],
@@ -127,6 +141,8 @@ def measure(run, form):
         'pagesWhoseNavFoldsExactlyTheRunPages': navs_ok,
         'landingMapBeforeFirstSection': pole_map != -1 and (first_section == -1 or pole_map < first_section),
         'landingMapDirectlyAfterThesis': pole_map != -1 and pole_map == header_end + len('</header>'),
+        'landingOverviewFigure': overview_fig != -1,
+        'landingOrder': [k for _, k in sorted((i, k) for i, k in ((header_end, 'header'), (overview_fig, 'overview-figures'), (pole_map, 'pole-map'), (first_section, 'first-section')) if i != -1)],
         'readingOrderFirst4': order[:4],
         'disclosureClaims': n_claims, 'disclosuresOnTheirPage': n_claims - len(off), 'disclosuresOff': off[:5],
     }

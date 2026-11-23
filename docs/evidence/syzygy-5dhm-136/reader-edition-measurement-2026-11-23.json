@@ -1,34 +1,41 @@
 {
  "format": "reader-edition-rerender-measurement/1",
  "bead": "syzygy-5dhm.136",
- "measuredAt": "2026-11-22T16:23:56Z",
- "commit": "3d4a72b071e59e580ce183dc3e3f237b673d40b7",
- "beforeCommit": "9b1019bc74378a4e87fc191c6a741d2335ffd3e4",
+ "measuredAt": "2026-11-23T13:58:00Z",
+ "commit": "cb08d2d170f47e1f197f3172bbf7d7fc5d9b1a92",
+ "beforeCommit": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
  "renderer": {
   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": {
-   "before": "5391eafe8ff2232e4bc72550a984cadffd7e4c040e51d448631214e7b99d94c1",
-   "after": "7acdca591c0e236c528e09f6305694298697a91cd75b1663532e4f246df884e0"
+   "before": "0aa25a64631e90f916a00b77f1b43703ad244a772d9476fe2c1d48e88447fa09",
+   "after": "f504616351d6bd9c503e59abb6eddae5d36838ae9cdf79dba414c3706137612f"
   },
   "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts": {
    "before": "709fe3814dbd5cfd2abdad3874445e89748c2604b6da24f460ffe6b624ada2cb",
    "after": "709fe3814dbd5cfd2abdad3874445e89748c2604b6da24f460ffe6b624ada2cb"
   },
   "packages/polaris-dossier/src/render.ts": {
-   "before": "ea33dadce18070a773d8fc6f5c43dc8ec5d72d4db0a8f1f4364b08ef0f7b3eaf",
-   "after": "ea33dadce18070a773d8fc6f5c43dc8ec5d72d4db0a8f1f4364b08ef0f7b3eaf"
+   "before": "daa13a48c89a0506c15ef6f1f749a653aa8d483e17a42ae268a966b0de92d4ee",
+   "after": "daa13a48c89a0506c15ef6f1f749a653aa8d483e17a42ae268a966b0de92d4ee"
   }
+ },
+ "disclosurePredicate": {
+  "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
+  "function": "disclosuresOffTheirPage",
+  "sha256": "253918f01d8e1451db88579f08e94eb8b45df79c47726a241cfab706cbf58cc6",
+  "transcription": "docs/evidence/syzygy-5dhm-136/reader_edition_measure.py disclosures()"
  },
  "pageClasses": {
   "file": "scripts/dossier_page_classes.json",
-  "sha256": "59a5151744c0a52dc09193f9a20a4a4e20765552ab4db20be7082b7abadc7d40"
+  "sha256": "cbcb41481c62f9007478ea061947df46ed40d28b2f15db337bbeb6c38bf62b4b"
  },
- "method": "[Observed] Every stored run with a stored draft under the dossier state root (seven; read only, no run-*.agents or run-*.sessions directory listed or opened) was copied to scratch and its latest passed draft drawn twice through the functions the render command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier): by beforeCommit (the default branch) and by commit. No fidelity or design review is bound in a scratch render, so the review-status region differs from a real render's; every run's derived structure is missing (all predate the derived record). Words are whitespace-separated tokens of scripts/dossier_site_to_text.py text over <main>, source pages left out; the reading path is its --reader form (pages of class run left out, scripts/dossier_page_classes.json) and About this run is the words of the pages it left out. Links: every internal href of every .html page, source pages included, resolved to a file of the render and, with a fragment, to an id on that page. Disclosures: each machine.json claim that is Unknown, has a reason or is a withheld item, found once on its page, its element labelled as recorded, carrying [Unknown] or Not established., its reason in its text, or for a withheld item Syzygy's withheld words, inside that element.",
+ "method": "[Observed] Every stored run with a stored draft under the dossier state root (seven; read only, no run-*.agents or run-*.sessions directory listed or opened) was copied to scratch and its latest passed draft drawn twice through the functions the render command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier): by beforeCommit (the default branch) and by commit. No fidelity or design review is bound in a scratch render, so the review-status region differs from a real render's; every run's derived structure is missing (all predate the derived record). Words are whitespace-separated tokens of scripts/dossier_site_to_text.py text over <main>, source pages left out; the reading path is its --reader form (pages of class run left out, scripts/dossier_page_classes.json) and About this run is the words of the pages it left out; a kept page the definition classes as none of reader, navigation or run is counted as other. Landing order: the offsets in index.html <main> of </header>, the overview-figures section, the Pole map and the first section, sorted. Links: every internal href of every .html page, source pages included, resolved to a file of the render and, with a fragment, to an id on that page. Disclosures: the committed predicate disclosuresOffTheirPage of disclosurePredicate.file at commit, transcribed clause for clause: a machine.json claim is selected when its epistemic is unknown, its unknownReason is not null, or its v15 member has a withheldSources key; it must occur exactly once on its page (data-claim-id, the id escaped for & and \" only); the opening tag of the element carrying it must hold data-epistemic equal to its recorded label; an Unknown claim's element must hold <span class=\"marking unknown\">[Unknown]</span>; a withheld item's element text (after its opening tag) must match Withheld from this dossier|Withheld item; any other claim with a reason must carry the reason in that text.",
  "limits": [
   "[Observed] The reader form of the default branch and of this change differ by one word per run: the contents heading \"Review report\" (2 words) became \"About this run\" (3). The run pages were already folded in the default branch's navigation; what this change moves is their label and place, the index and the landing map. The reading-path words reported \"before\" are therefore the full text a pilot reader was given (fullTextBefore), the same reduction the --reader form gives the default branch's render.",
+  "[Observed] The beforeCommit tree is a detached worktree whose node_modules links to this branch's worktree, so its @syzygy/* imports resolve to this branch's packages; the renderer files each form imports by path are its own, and between beforeCommit and commit no file under packages/ or apps/ changes but dossier-site.ts and tests (git diff --stat beforeCommit commit -- packages apps).",
   "[Unknown] Reader share before and after: no reader session was run. The coordinator runs the comparison on the reader-form text files left in scratch.",
   "[Inferred] Required-fact density on the reading path assumes no fact a reader earned came from a run page; the understanding page states purpose and capabilities, so it is an upper bound, not a measure.",
-  "[Observed] Three runs (36df95fa, 4465d22f, d9411d26) carry no Poles, so their landing page has no map either way.",
-  "[Observed] The re-rendered sites are larger than the stored sites runs.json measured (for run 658f2f90, 17,594 words of full text against 12,574): both renders here carry the find-by-task and index pages of version 2.15 and every addition since each run was last rendered, so the words here compare the two renderers over one input and are not the words a pilot arm read.",
+  "[Observed] 3 runs (36df95fa, 4465d22f, d9411d26) carry no Poles, so their landing page has no map either way.",
+  "[Observed] The re-rendered sites are larger than the stored sites runs.json measured (for run 658f2f90, 18,251 words of full text against 12,574): both renders here carry the find-by-task and index pages of version 2.15 and every addition since each run was last rendered, so the words here compare the two renderers over one input and are not the words a pilot arm read.",
   "[Observed] The text files are in the scratch directory named by run id and form: text-<run>-before-full, text-<run>-before-reader, text-<run>-after-full and text-<run>-after-reader. They are not committed: the converter prints counts only, and the page text quotes another repository."
  ],
  "requiredFactDensity": {
@@ -89,40 +96,50 @@
  },
  "totals": {
   "runs": 7,
-  "readingPathWordsAfter": 123770,
-  "fullTextWordsBefore": 152567,
-  "aboutThisRunWordsAfter": 28804,
-  "linksAfter": 16577,
-  "linksResolvedAfter": 16577
+  "readingPathWordsAfter": 128459,
+  "fullTextWordsBefore": 157312,
+  "aboutThisRunWordsAfter": 28860,
+  "readingPathWordsBefore": 128452,
+  "otherPagesAfter": 0,
+  "disclosureClaimsAfter": 1190,
+  "disclosuresOnTheirPageAfter": 1190,
+  "linksBefore": 16846,
+  "linksResolvedBefore": 16846,
+  "linksAfter": 16846,
+  "linksResolvedAfter": 16846
  },
  "runs": {
   "2ecdcab0c77e228f6ad9d3e0acfa1414": {
    "pages": {
-    "htmlBefore": 45,
-    "htmlAfter": 45,
+    "htmlBefore": 46,
+    "htmlAfter": 46,
     "sourcePages": 25,
-    "readingPath": 13,
-    "aboutThisRun": 7
+    "readingPath": 14,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 23462,
-    "readingPathBefore": 19773,
-    "readingPathAfter": 19774,
-    "aboutThisRunAfter": 3689,
+    "fullTextBefore": 24118,
+    "readingPathBefore": 20421,
+    "aboutThisRunBefore": 3697,
+    "readingPathAfter": 20422,
+    "aboutThisRunAfter": 3697,
     "aboutThisRunPerPage": {
      "appendix.html": 791,
      "clarifications.html": 68,
      "discovery.html": 1002,
      "executions.html": 166,
      "review.html": 158,
-     "size-report.html": 496,
+     "size-report.html": 504,
      "understanding.html": 1008
     },
-    "fullTextAfter": 23463
+    "fullTextAfter": 24119
    },
    "links": {
-    "before": "2262 of 2262",
-    "after": "2262 of 2262"
+    "before": "2303 of 2303",
+    "after": "2303 of 2303"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -151,9 +168,20 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "20 of 20"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "21 of 21"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section",
+     "pole-map"
+    ],
+    "orderAfter": [
+     "header",
+     "pole-map",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": true,
     "hasPoleMap": true
@@ -185,31 +213,35 @@
   },
   "36df95faf04a4c98eabbb32a18a4e833": {
    "pages": {
-    "htmlBefore": 54,
-    "htmlAfter": 54,
+    "htmlBefore": 55,
+    "htmlAfter": 55,
     "sourcePages": 37,
-    "readingPath": 10,
-    "aboutThisRun": 7
+    "readingPath": 11,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 19731,
-    "readingPathBefore": 15351,
-    "readingPathAfter": 15352,
-    "aboutThisRunAfter": 4380,
+    "fullTextBefore": 20387,
+    "readingPathBefore": 15999,
+    "aboutThisRunBefore": 4388,
+    "readingPathAfter": 16000,
+    "aboutThisRunAfter": 4388,
     "aboutThisRunPerPage": {
      "appendix.html": 824,
      "clarifications.html": 219,
      "discovery.html": 1279,
      "executions.html": 184,
      "review.html": 158,
-     "size-report.html": 568,
+     "size-report.html": 576,
      "understanding.html": 1148
     },
-    "fullTextAfter": 19732
+    "fullTextAfter": 20388
    },
    "links": {
-    "before": "2368 of 2368",
-    "after": "2368 of 2368"
+    "before": "2403 of 2403",
+    "after": "2403 of 2403"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -232,9 +264,18 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "17 of 17"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "18 of 18"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section"
+    ],
+    "orderAfter": [
+     "header",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": false,
     "hasPoleMap": false
@@ -266,31 +307,35 @@
   },
   "3744945f44ecdc31a06d43be3d38818c": {
    "pages": {
-    "htmlBefore": 50,
-    "htmlAfter": 50,
+    "htmlBefore": 51,
+    "htmlAfter": 51,
     "sourcePages": 31,
-    "readingPath": 12,
-    "aboutThisRun": 7
+    "readingPath": 13,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 17789,
-    "readingPathBefore": 13853,
-    "readingPathAfter": 13854,
-    "aboutThisRunAfter": 3936,
+    "fullTextBefore": 18598,
+    "readingPathBefore": 14654,
+    "aboutThisRunBefore": 3944,
+    "readingPathAfter": 14655,
+    "aboutThisRunAfter": 3944,
     "aboutThisRunPerPage": {
      "appendix.html": 786,
      "clarifications.html": 68,
      "discovery.html": 1335,
      "executions.html": 196,
      "review.html": 158,
-     "size-report.html": 536,
+     "size-report.html": 544,
      "understanding.html": 857
     },
-    "fullTextAfter": 17790
+    "fullTextAfter": 18599
    },
    "links": {
-    "before": "2405 of 2405",
-    "after": "2405 of 2405"
+    "before": "2444 of 2444",
+    "after": "2444 of 2444"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -317,9 +362,20 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "19 of 19"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "20 of 20"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section",
+     "pole-map"
+    ],
+    "orderAfter": [
+     "header",
+     "pole-map",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": true,
     "hasPoleMap": true
@@ -351,31 +407,35 @@
   },
   "4465d22f5ce1829ca49059a5b8451bb0": {
    "pages": {
-    "htmlBefore": 47,
-    "htmlAfter": 47,
+    "htmlBefore": 48,
+    "htmlAfter": 48,
     "sourcePages": 30,
-    "readingPath": 10,
-    "aboutThisRun": 7
+    "readingPath": 11,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 16560,
-    "readingPathBefore": 12608,
-    "readingPathAfter": 12609,
-    "aboutThisRunAfter": 3952,
+    "fullTextBefore": 17216,
+    "readingPathBefore": 13256,
+    "aboutThisRunBefore": 3960,
+    "readingPathAfter": 13257,
+    "aboutThisRunAfter": 3960,
     "aboutThisRunPerPage": {
      "appendix.html": 754,
      "clarifications.html": 68,
      "discovery.html": 1023,
      "executions.html": 161,
      "review.html": 158,
-     "size-report.html": 512,
+     "size-report.html": 520,
      "understanding.html": 1276
     },
-    "fullTextAfter": 16561
+    "fullTextAfter": 17217
    },
    "links": {
-    "before": "1975 of 1975",
-    "after": "1975 of 1975"
+    "before": "2010 of 2010",
+    "after": "2010 of 2010"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -398,9 +458,18 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "17 of 17"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "18 of 18"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section"
+    ],
+    "orderAfter": [
+     "header",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": false,
     "hasPoleMap": false
@@ -432,31 +501,35 @@
   },
   "658f2f90470f73eea1dc1d90209c5ef7": {
    "pages": {
-    "htmlBefore": 44,
-    "htmlAfter": 44,
+    "htmlBefore": 45,
+    "htmlAfter": 45,
     "sourcePages": 24,
-    "readingPath": 13,
-    "aboutThisRun": 7
+    "readingPath": 14,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 17594,
-    "readingPathBefore": 14080,
-    "readingPathAfter": 14081,
-    "aboutThisRunAfter": 3514,
+    "fullTextBefore": 18250,
+    "readingPathBefore": 14728,
+    "aboutThisRunBefore": 3522,
+    "readingPathAfter": 14729,
+    "aboutThisRunAfter": 3522,
     "aboutThisRunPerPage": {
      "appendix.html": 779,
      "clarifications.html": 68,
      "discovery.html": 894,
      "executions.html": 159,
      "review.html": 158,
-     "size-report.html": 488,
+     "size-report.html": 496,
      "understanding.html": 968
     },
-    "fullTextAfter": 17595
+    "fullTextAfter": 18251
    },
    "links": {
-    "before": "2002 of 2002",
-    "after": "2002 of 2002"
+    "before": "2043 of 2043",
+    "after": "2043 of 2043"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -485,9 +558,20 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "20 of 20"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "21 of 21"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section",
+     "pole-map"
+    ],
+    "orderAfter": [
+     "header",
+     "pole-map",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": true,
     "hasPoleMap": true
@@ -519,31 +603,35 @@
   },
   "d9411d26ca55ebe0250e2e9b94dc0e32": {
    "pages": {
-    "htmlBefore": 64,
-    "htmlAfter": 64,
+    "htmlBefore": 65,
+    "htmlAfter": 65,
     "sourcePages": 47,
-    "readingPath": 10,
-    "aboutThisRun": 7
+    "readingPath": 11,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 33269,
-    "readingPathBefore": 28120,
-    "readingPathAfter": 28121,
-    "aboutThisRunAfter": 5149,
+    "fullTextBefore": 33925,
+    "readingPathBefore": 28768,
+    "aboutThisRunBefore": 5157,
+    "readingPathAfter": 28769,
+    "aboutThisRunAfter": 5157,
     "aboutThisRunPerPage": {
      "appendix.html": 959,
      "clarifications.html": 68,
      "discovery.html": 1536,
      "executions.html": 210,
      "review.html": 158,
-     "size-report.html": 648,
+     "size-report.html": 656,
      "understanding.html": 1570
     },
-    "fullTextAfter": 33270
+    "fullTextAfter": 33926
    },
    "links": {
-    "before": "3124 of 3124",
-    "after": "3124 of 3124"
+    "before": "3159 of 3159",
+    "after": "3159 of 3159"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -566,9 +654,18 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "17 of 17"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "18 of 18"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section"
+    ],
+    "orderAfter": [
+     "header",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": false,
     "hasPoleMap": false
@@ -600,31 +697,35 @@
   },
   "ffe579c77dc21d9f6dd87ca6e2bc9301": {
    "pages": {
-    "htmlBefore": 47,
-    "htmlAfter": 47,
+    "htmlBefore": 48,
+    "htmlAfter": 48,
     "sourcePages": 26,
-    "readingPath": 14,
-    "aboutThisRun": 7
+    "readingPath": 15,
+    "aboutThisRun": 7,
+    "otherBefore": 0,
+    "otherAfter": 0,
+    "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 24162,
-    "readingPathBefore": 19978,
-    "readingPathAfter": 19979,
-    "aboutThisRunAfter": 4184,
+    "fullTextBefore": 24818,
+    "readingPathBefore": 20626,
+    "aboutThisRunBefore": 4192,
+    "readingPathAfter": 20627,
+    "aboutThisRunAfter": 4192,
     "aboutThisRunPerPage": {
      "appendix.html": 853,
      "clarifications.html": 68,
      "discovery.html": 1018,
      "executions.html": 332,
      "review.html": 158,
-     "size-report.html": 512,
+     "size-report.html": 520,
      "understanding.html": 1243
     },
-    "fullTextAfter": 24163
+    "fullTextAfter": 24819
    },
    "links": {
-    "before": "2441 of 2441",
-    "after": "2441 of 2441"
+    "before": "2484 of 2484",
+    "after": "2484 of 2484"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -655,9 +756,20 @@
      "glossary.html",
      "sources/index.html"
     ],
-    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "21 of 21"
+    "pagesWhoseFoldHoldsExactlyTheRunPagesAfter": "22 of 22"
    },
    "landing": {
+    "orderBefore": [
+     "header",
+     "first-section",
+     "pole-map"
+    ],
+    "orderAfter": [
+     "header",
+     "pole-map",
+     "first-section"
+    ],
+    "overviewFigure": false,
     "mapDirectlyAfterThesisBefore": false,
     "mapDirectlyAfterThesisAfter": true,
     "hasPoleMap": true
