@@ -10,6 +10,7 @@ interface Patchable {
   fstatSync: typeof fs.fstatSync;
   readSync: typeof fs.readSync;
   writeSync: typeof fs.writeSync;
+  fsync: (...args: Parameters<typeof fs.fsync>) => void;
   fsyncSync: typeof fs.fsyncSync;
   linkSync: typeof fs.linkSync;
   unlinkSync: typeof fs.unlinkSync;

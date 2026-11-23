@@ -474,11 +474,14 @@ async function observeDesignRun(run: string, traceInference = false) {
       const stamp = designLaunchWrite = { startedMs: clock() };
       return launchWriteScope.run(true, () => timed(stamp, () => writeLaunch(input), result => result.capability !== null));
     });
-    const restoreLaunchSync = patchFs('fsyncSync', sync => fd => {
-      if (launchWriteScope.getStore() !== true || launchSyncs.length >= 4) return sync(fd);
+    const restoreLaunchSync = patchFs('fsync', sync => (fd, done) => {
+      if (launchWriteScope.getStore() !== true || launchSyncs.length >= 4) return sync(fd, done);
       const stamp = { startedMs: clock() };
       launchSyncs.push(stamp);
-      return timed(stamp, () => sync(fd), () => true);
+      sync(fd, error => {
+        Object.assign(stamp, { settledMs: clock(), outcome: error ? 'rejected' : 'accepted' });
+        done(error);
+      });
     });
     cleanup.push(async () => { restoreLaunchSync(); });
     const startAttempt = orderedAttempt.startUrlOrderedAttempt;

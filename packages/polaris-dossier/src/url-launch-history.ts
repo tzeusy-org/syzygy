@@ -1,5 +1,6 @@
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import * as fs from 'node:fs';
+import { promisify } from 'node:util';
 import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
@@ -139,6 +140,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
   if (!isPreparedUrlRolePlan(given.plan)) return refuse();
   const { run, runId, plan, compatiblePromptSha256, current } = given, capture = { ...given.capture };
   const screenBody = given.screen.screenBody, screenSecrets = given.screen.screenSecrets, policy = given.screen.policySha256;
+  const sync = promisify(fs.fsync);
   let root: number | undefined, helper: number | undefined;
   try {
     if (!path.isAbsolute(run) || path.resolve(run) !== run || path.basename(run) !== runId || !RUN_ID.test(runId)
@@ -193,11 +195,18 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     let stat: fs.BigIntStats;
     try {
       if (fs.writeSync(fd, bytes) !== bytes.length) return refuse();
-      fs.fsyncSync(fd);
       stat = fs.fstatSync(fd, { bigint: true });
       if (!stat.isFile() || stat.uid !== initial.uid || stat.nlink !== 1n || (stat.mode & 0o777n) !== 0o600n) return refuse();
+      // Keep the original descriptor through flush and recheck its exact
+      // metadata before admitting the separate directory flush.
+      await sync(fd);
+      await check();
+      if (!unchanged(stat, fs.fstatSync(fd, { bigint: true }))
+        || !unchanged(stat, fs.lstatSync(path.join(helperAnchor, name), { bigint: true }))
+        || !same(helperIdentity, fs.lstatSync(path.join(anchor, child), { bigint: true }))
+        || !same(helperIdentity, fs.fstatSync(helper, { bigint: true }))) return refuse();
     } finally { fs.closeSync(fd); }
-    fs.fsyncSync(helper);
+    await sync(helper);
     const identity = { run, runId, role, file: relativeFile, plan, pin: read.record.subject.pinnedRevision.commit,
       coreSha256: sha256(base.bytes), promptFile: `${child}/${promptName}`, promptSha256: compatiblePromptSha256,
       promptRecordSha256: sha256(issuedPrompt.bytes),

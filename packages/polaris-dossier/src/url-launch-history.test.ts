@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { patchFs } from './fs-patch.testkit.js';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
 import { isOrderedDesignSessionProfile, sessionProfileReminderText } from './session-profile.js';
@@ -680,6 +681,66 @@ describe('protected URL design delivery audit', () => {
 });
 
 describe('URL stored launch history', () => {
+  it.each(['complete', 'withdraw-file', 'withdraw-directory', 'replace-directory', 'sync-error'] as const)(
+    'waits for the held file and directory flush in order and handles %s', async outcome => {
+      const input = options('design'), file = historyPath('design'), directory = path.dirname(file), moved = directory + '.held';
+      const reachesDirectory = outcome === 'complete' || outcome === 'withdraw-directory';
+      const helperDirectory = fs.statSync(directory, { bigint: true });
+      let enterFile!: () => void, enterDirectory!: () => void;
+      let releaseFile!: () => void, releaseDirectory!: () => void;
+      const fileEntered = new Promise<void>(resolve => { enterFile = resolve; });
+      const directoryEntered = new Promise<void>(resolve => { enterDirectory = resolve; });
+      const fileHold = new Promise<void>(resolve => { releaseFile = resolve; });
+      const directoryHold = new Promise<void>(resolve => { releaseDirectory = resolve; });
+      const syncs: string[] = [];
+      const restore = patchFs('fsync', sync => (fd, callback) => {
+        const held = fs.fstatSync(fd, { bigint: true });
+        const isHelper = held.dev === helperDirectory.dev && held.ino === helperDirectory.ino;
+        const isFile = !isHelper && fs.readlinkSync(`/proc/self/fd/${fd}`) === file;
+        if (!isFile && !isHelper) return sync(fd, callback);
+        syncs.push(isFile ? 'file' : 'directory');
+        (isFile ? enterFile : enterDirectory)();
+        void (isFile ? fileHold : directoryHold).then(() => {
+          if (isFile && outcome === 'sync-error') callback(new Error('owned sync fault') as NodeJS.ErrnoException);
+          else sync(fd, callback);
+        });
+      });
+      let current = true, settled = false;
+      const writing = writeUrlLaunchHistory({ ...input, current: () => current });
+      const result = writing.then(value => { settled = true; return value; }, () => { settled = true; return null; });
+      const waitFor = (entered: Promise<void>): Promise<void> => Promise.race([
+        entered, result.then(() => { throw new Error('writer settled before the selected flush'); }),
+      ]);
+      try {
+        await waitFor(fileEntered);
+        expect(syncs).toEqual(['file']);
+        expect(settled).toBe(false);
+        if (outcome === 'withdraw-file') current = false;
+        if (outcome === 'replace-directory') { fs.renameSync(directory, moved); fs.mkdirSync(directory); }
+        releaseFile();
+        if (reachesDirectory) {
+          await waitFor(directoryEntered);
+          expect(syncs).toEqual(['file', 'directory']);
+          expect(settled).toBe(false);
+          if (outcome === 'withdraw-directory') current = false;
+          releaseDirectory();
+        }
+        const published = await (reachesDirectory ? result : Promise.race([
+          result, directoryEntered.then(() => { throw new Error('the refused file flush reached the directory flush'); }),
+        ]));
+        if (outcome === 'complete') {
+          expect(published?.capability).toBeDefined();
+          expect(inspectUrlLaunchHistory(published!.capability!).sha256).toBe(sha256(fs.readFileSync(file)));
+        } else {
+          expect(published).toBeNull();
+          expect(syncs).toEqual(outcome === 'withdraw-directory' ? ['file', 'directory'] : ['file']);
+          if (outcome === 'replace-directory') expect(fs.readdirSync(directory)).toEqual([]);
+        }
+      } finally {
+        releaseFile(); releaseDirectory(); await result; restore();
+        if (fs.existsSync(moved)) { fs.rmdirSync(directory); fs.renameSync(moved, directory); }
+      }
+    });
   it('writes fixed exclusive0600 helper files with exact prompt/profile/command/session identities and Inferred captures', async () => {
     for (const role of ['inventory', 'fidelity', 'design']) {
       const input = options(role), result = await writeUrlLaunchHistory(input), record = JSON.parse(fs.readFileSync(result.file!, 'utf8'));
