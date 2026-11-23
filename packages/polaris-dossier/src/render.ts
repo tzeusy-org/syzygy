@@ -9,7 +9,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
-import { heroFindings, relationDecisions } from './check-derive.js';
+import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
@@ -184,7 +184,8 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     if (cause instanceof GitObjectReadRefusal) return refuse('object-read', `an object at the pinned revision could not be read: ${cause.message}`, { objectRead: cause.toJSON() });
     throw cause;
   }
-  const findings = [...derived.findings, ...heroFindings(doc)];
+  const findings = [...derived.findings];
+  applyHeroFindings(doc, findings);
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });

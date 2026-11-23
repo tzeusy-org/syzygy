@@ -652,15 +652,20 @@ export function relationFindings(decisions: RelationDecisions): CheckFinding[] {
   ];
 }
 
-export function heroFindings(doc: Readonly<Record<string, unknown>>): CheckFinding[] {
-  if (!Object.hasOwn(doc, 'hero')) {
-    return hasHeroForm(doc['schemaVersion'])
-      ? [{ kind: 'hero', at: '$.hero', detail: 'a v10 draft names its hero figure or declares it omitted with a reason' }]
-      : [];
+export function applyHeroFindings(doc: Readonly<Record<string, unknown>>, findings: CheckFinding[]): void {
+  if (hasHeroForm(doc['schemaVersion'])) {
+    findings.push(...heroFindings(doc));
+    return;
   }
-  if (!hasHeroForm(doc['schemaVersion'])) {
-    if (!LOCAL_DRAFT_SCHEMA_VERSIONS.some((version) => version === doc['schemaVersion'])) return [];
-    return [{ kind: 'field-version', at: '$.hero', detail: `\`hero\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` }];
+  if (!LOCAL_DRAFT_SCHEMA_VERSIONS.some((version) => version === doc['schemaVersion'])) return;
+  // The predecessor schema fault still suppresses relation challenges. Replace it in place once those decisions are made.
+  const index = findings.findIndex(({ kind, at }) => kind === 'schema' && at === '$.hero');
+  if (index >= 0) findings[index] = { kind: 'field-version', at: '$.hero', detail: `\`hero\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` };
+}
+
+function heroFindings(doc: Readonly<Record<string, unknown>>): CheckFinding[] {
+  if (!Object.hasOwn(doc, 'hero')) {
+    return [{ kind: 'hero', at: '$.hero', detail: 'a v10 draft names its hero figure or declares it omitted with a reason' }];
   }
   const hero = heroOf(doc);
   if (hero === undefined) return [{ kind: 'hero', at: '$.hero', detail: '`hero` is exactly one of {"figure": <diagram id>} and {"omitted": <claim block>}' }];
@@ -712,9 +717,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
       // A graph edge's `relation` or a graph node's `unit` in a v8 or earlier draft: likewise (version 2.19).
       const relationPaths = new Set(relationFieldVersionPaths(doc));
-      const supportedVersion = LOCAL_DRAFT_SCHEMA_VERSIONS.some((supported) => supported === version);
       const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
-        || (supportedVersion && path === '$.hero') || (hasHeroForm(version) && path === '$.hero.figure');
+        || (hasHeroForm(version) && (path === '$.hero' || path === '$.hero.figure'));
       if (hasFigureKindForm(version)) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
