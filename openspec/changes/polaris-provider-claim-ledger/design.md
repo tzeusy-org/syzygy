@@ -58,7 +58,9 @@ independently specified expected records. Include a generated factual
 heading and a non-factual navigation label to test coverage. Verify the
 fidelity review binds the ledger of the exact draft revision. Read an older
 supported artifact through its declared compatibility path and compare its
-bytes before and after.
+bytes before and after. For new production, test complete omission of the
+ledger and a result encoded by an earlier writer. Both refuse at check and
+review intake while the earlier recorded artifact remains readable.
 
 Mutate duplicate identities, missing and cross-revision sentence
 associations, dangling edge endpoints, mixed evidence and producer claims

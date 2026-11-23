@@ -21,3 +21,13 @@ shape, stage and review artifacts, both presentation forms and version-aware
 readers. Recheck closed schema and interface records and the spec coverage
 views at adoption. Doctrinal evidence rules, source admission and canonical
 source identity continue to govern. The draft is unadopted.
+
+## Review disposition
+
+R1 verdict REVISE on 41b4c599. F1 found that a new provider draft could
+select an earlier supported writer and omit the ledger. The repaired
+requirements require the ledger for newly produced revisions and refuse
+legacy or ledger-free output before it can count as a checked draft or
+review input. Reading existing artifacts keeps its compatibility path.
+The negative scenario exercises both ways to omit the ledger.
+[Raw independent review](../../../docs/reviews/syzygy-u05-13/SPEC-CLAIM-LEDGER-R1-RAW.md).
