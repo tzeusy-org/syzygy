@@ -247,13 +247,19 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     await probe.close();
     const read = prototype.read;
     let observing = false, siblingFd: number | undefined;
+    let closeCalls: (() => number) | undefined, restoreClose: (() => void) | undefined;
     let enteredSibling!: (entered: true) => void, releaseSibling!: () => void;
     const siblingEntered = new Promise<true>(resolve => { enteredSibling = resolve; });
     const heldSibling = new Promise<void>(resolve => { releaseSibling = resolve; });
     const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
       const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
       if (held?.ino === identity.ino && held.dev === identity.dev) {
-        if (args[3] === 0) throw new Error('owned positional image read failure');
+        if (args[3] === 0) {
+          const close = vi.spyOn(this, 'close');
+          closeCalls = () => close.mock.calls.length;
+          restoreClose = () => close.mockRestore();
+          throw new Error('owned positional image read failure');
+        }
         if (args[3] === 4 * 1_048_576) {
           siblingFd = this.fd;
           enteredSibling(true);
@@ -269,12 +275,15 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
       expect(await Promise.race([siblingEntered, capture.then(() => false)])).toBe(true);
       await new Promise<void>(resolve => setImmediate(resolve));
       expect(settled).toBe(false);
+      expect(closeCalls?.()).toBe(0);
       expect(fstatSync(siblingFd!, { bigint: true })).toMatchObject({ dev: identity.dev, ino: identity.ino });
       releaseSibling();
       expect((await capture).peer).toBeNull();
+      expect(closeCalls?.()).toBe(1);
     } finally {
       releaseSibling();
       await capture.catch(() => {});
+      restoreClose?.();
       descriptor.mockRestore();
     }
   });
