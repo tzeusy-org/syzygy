@@ -32,6 +32,7 @@ import * as machineStore from './url-machine-store.js';
 import * as rolePlan from './url-role-plan.js';
 import * as urlRuntime from './url-runtime.js';
 import * as runOrigins from './url-run-origins.js';
+import * as runArtifacts from './url-run-artifacts.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
@@ -835,7 +836,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
-    type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'start-sessions' | 'open-store' | 'create-machine';
+    type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'restore-products' | 'start-sessions' | 'open-store' | 'create-machine';
     const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
@@ -1308,6 +1309,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
               observeBootstrap('load-renderer', () => load(...args), value => value !== null));
             vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce((...args) =>
               observeBootstrap('create-origins', () => origins(...args), () => true));
+            const createArtifacts = runArtifacts.createUrlRunArtifacts;
+            vi.spyOn(runArtifacts, 'createUrlRunArtifacts').mockImplementationOnce((...args) => {
+              const bridge = createArtifacts(...args);
+              return Object.freeze({ ...bridge, restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) =>
+                observeBootstrap('restore-products', () => bridge.restoreFrozenProducts(...restoreArgs), () => true) });
+            });
             return result;
           });
           const createMachine = runMachine.createUrlRunMachine;
@@ -1359,7 +1366,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           }
           expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true, asyncCurrent: true, asyncWithdrawn: true }]);
           if (exit === 0) {
-            expect(Object.keys(resumeBootstrap)).toEqual(['restore-plans', 'load-renderer', 'create-origins',
+            expect(Object.keys(resumeBootstrap)).toEqual(['restore-plans', 'load-renderer', 'create-origins', 'restore-products',
               'start-sessions', 'create-machine', 'open-store']);
             expect(Object.values(resumeBootstrap).every(stamp => stamp.outcome === 'accepted')).toBe(true);
           }
