@@ -9,9 +9,9 @@ type LauncherBindingResult<T> =
 export async function launchAfterPwbRepositoryBinding<T>(
   configuredLocator: string,
   resolveBinding: (locator: string) => PwbRepositoryBinding,
-  launch: (boundLocator: string) => Promise<T>,
+  launch: (binding: Extract<PwbRepositoryBinding, { readonly kind: 'bound' }>) => Promise<T>,
 ): Promise<LauncherBindingResult<T>> {
   const binding = resolveBinding(configuredLocator);
   if (binding.kind === 'rejected') return binding;
-  return { kind: 'launched', result: await launch(binding.locator) };
+  return { kind: 'launched', result: await launch(binding) };
 }

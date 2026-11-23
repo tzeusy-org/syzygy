@@ -192,6 +192,14 @@ fact or as success.
 
 ## Prove portability
 
+[The project-shape profile and synthetic measurement design](ARTIFACTS-AND-TOOLS.md#project-shape-profile)
+define the prospective handoff between the observer and the generator. The
+reporting-only test can measure lexical debt in the POC source trees:
+
+```bash
+npx vitest run --project unit apps/three-surface-poc/src/polaris-portability-debt.test.ts
+```
+
 Completion means linked evidence that one unchanged process serves two real
 projects and a changed source, not two attractive screenshots.
 

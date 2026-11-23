@@ -22,10 +22,15 @@ describe('Poles: a landing page with the why section and a map, then one page pe
   it('draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none', () => {
     const files = withPoles(SPEC);
     const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path);
-    expect(order.slice(0, 4)).toEqual(['index.html', 'find-by-task.html', 'poles/2.html', 'poles/3.html']);
+    expect(order.slice(0, 5)).toEqual(['index.html', 'find-by-task.html', 'name-index.html', 'poles/2.html', 'poles/3.html']);
     expect(files.has('poles/1.html')).toBe(false);
     const index = files.get('index.html')!;
     expect(sectionsOn(index)).toEqual(['one']);
+    // The reader's edition (syzygy-5dhm.136): the landing page leads with the thesis, then the map of the parts, then the why section.
+    const landing = main(index);
+    expect(landing.indexOf('</header>')).toBeGreaterThan(-1);
+    expect(landing.indexOf('</header><nav class="pole-map"')).toBe(landing.indexOf('</header>'));
+    expect(landing.indexOf('<nav class="pole-map"')).toBeLessThan(landing.indexOf('<section id="section-one"'));
     expect(sectionsOn(files.get('poles/2.html')!)).toEqual(['two', 'three', 'four']);
     expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
     expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li data-hue="1"><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li data-hue="2"><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');

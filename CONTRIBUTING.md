@@ -107,6 +107,8 @@ Tests run in tiers so that "is my change green" has a quick answer and a
 complete one. Run `npm ci` once; every command below runs from the repository
 root.
 
+See [repository scripts](scripts/README.md) for the Python governance tools.
+
 | Command | What it runs | Needs |
 |---|---|---|
 | `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |

@@ -1,0 +1,913 @@
+{
+ "polaris-dossier-local-draft-v2/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "3483d614dcff476fc3a3b2aa858188a14c2a8d608ce0514f75d225367b4bc83e",
+   "brief.md": "f09131f3b161c64081602c66bcd3d1584bfb1d574dc82825d5dc25038187cd68",
+   "checks/rev-0.json": "af1ab4d6f4af7d9c3d6defbfe6c312ae2e3d605c150fbdee40d7fbc32f321d12",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "9e30c17f8c5728c5b7ec2e7059d9cc573c3d61c83e1281406c40ef43e699e2e7",
+   "drafts/rev-0.json": "9e30c17f8c5728c5b7ec2e7059d9cc573c3d61c83e1281406c40ef43e699e2e7",
+   "run-advice.json": "c06e9bcabde02de830d2c84fe32b6f91dc52266fa9b8f1c0391e3f9201139439",
+   "site/0/appendix.html": "86be79f89c89bdd709a0873190a6993fcbffa029155dde806a89fd1f4eed880d",
+   "site/0/clarifications.html": "56efc556c727307821c12d76998134b762ea1e15bea3a652600077eb128cd777",
+   "site/0/contents.html": "06ffa5ebddd992a971558bd83ac45708569da25b15c7f2f566134b2dafb22ed8",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "a392b1f92ba0b3b327b480a291081b6376f3500ae1db2671ea223dbc70d237bf",
+   "site/0/dossier.json": "f1d31008da65b8eb213acf7fa583a1a374e87621109e42fa8805a543efced069",
+   "site/0/executions.html": "6edc1ccea4abe7b06988402fe8527d4d3da697a39107f912a8f8486dc4831a1f",
+   "site/0/find-by-task.html": "24be396aec630c7f54c9e514d030e392423f38d7c10a8f295eb31d57d8d40462",
+   "site/0/glossary.html": "6da79d20c3bcb329902773fc509142f8c6277bd0483dec0e4b02968661a14616",
+   "site/0/index.html": "491c086a2e518211e0f67e928760313abed92e36123d8ca7c665ca5fe954a50b",
+   "site/0/machine.json": "100e740cdef4d0fad757dd53e88ff78be55e0245f859aae8c7f4b8c1a46cbf12",
+   "site/0/maps/ci.html": "086cbce5ecef6fed25cc2b11f50512145cc839c8f15ea92646e8e3eac4776a21",
+   "site/0/maps/directories.html": "99320459c3b645fc8a3148b4300eb794c7d8415d4aa00f1812a63e8f941cf8f9",
+   "site/0/maps/infrastructure.html": "0993ce170dfd1cfaecc8216f08ce19217d9d731804adffc11f7c97dd606b6d68",
+   "site/0/maps/units.html": "1e30e37ea72c99cba49fe4be8f15a64e5e1d9a65d494e725583ab5403ac59602",
+   "site/0/name-index.html": "7ad6fb37e2ee560b9cb1ab4c8db14818c5d0f65f78210700378bb2c441938703",
+   "site/0/review.html": "97421d21ffaa56eedcac59e7eb5db82067e265070ecb9a7c9c33964fc7f1b1aa",
+   "site/0/size-report.html": "6a90ab3ec447b7edec6e03cb8a23db3d784ff29081d585e56a36177cdc8fb2d8",
+   "site/0/size-report.json": "68469590ed1ef6df4d258eb75ce2a073980c33346bb0c08d049ae208d82259f9",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "01263bfc8c47bebe32b569408fb47fe305076fb19fe4a0900465dc69cf3667e9",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "2fa5ed34f96d46906d7c04393172bd2008a59a3511fb83c8860efed3b345fc26",
+   "site/0/sources/index.html": "219c2fcaf5f39c66dfabf957582e262e7b5984313e8e6032d74320f73d26bfa9",
+   "site/0/understanding.html": "8ba2c8fb0523d5d300c096f6d621f16b00468b1584dde05546ed11d4fc519595",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v2/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "8b6b5779c899fed3212b014745d308cabd1656e1c54ad5150a18c0741682fb5f",
+   "brief.md": "2e82c0becebf2196d822fede30f2451c0bac6a797d6ceb7f0f925fa4eece5a8b",
+   "checks/rev-0.json": "af4aa3e083332bbfc40cb3c3f1af84a2288677a8f5c550a6c24b15e057f308cb",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "29b40ba0ffee2f605b9d13d4636ebef121baf633e5ec4c4b2dac9d5fed047696",
+   "drafts/rev-0.json": "29b40ba0ffee2f605b9d13d4636ebef121baf633e5ec4c4b2dac9d5fed047696",
+   "run-advice.json": "c06e9bcabde02de830d2c84fe32b6f91dc52266fa9b8f1c0391e3f9201139439",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v2/sequence-early": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes",
+    "detail": "is required"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges",
+    "detail": "is required"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].kind",
+    "detail": "the diagram \"seq-1\": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].participants",
+    "detail": "the diagram \"seq-1\": `participants` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].messages",
+    "detail": "the diagram \"seq-1\": `messages` needs draft schema polaris-dossier-local-draft-v7"
+   }
+  ],
+  "files": {
+   "brief.json": "be2dea19b36800fbf49fe97ee949959d640a08d060efbb3ce76cf285b98a7ba3",
+   "brief.md": "33b68e52bb23f43252aaeb7628b34740e14a49f3c2198ef207be2219334a4813",
+   "checks/rev-0.json": "299da2199b9bf1c786ec976247c927ac0c73d0eb19ec0a8e156623e9965b9ee8",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "cd53048027c5fe4ddb271ace5f8b9074f0847901419427eb019d86d53b629100",
+   "drafts/rev-0.json": "cd53048027c5fe4ddb271ace5f8b9074f0847901419427eb019d86d53b629100",
+   "run-advice.json": "b06d99fcc5640a801cf21a34478c64cb00bbe479092c1f6190b2ccfb3d521da0",
+   "steps.jsonl": "1f05bbb9b056c7365f768364bd5968cee39c91e6d8657f80e3db35704f9e20c4"
+  }
+ },
+ "polaris-dossier-local-draft-v2/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "3c1237ccb79908261b905ec4858cfd16cd30f2c88465eaa439b7d3419212192d",
+   "brief.md": "3b088dcf17cdb5a74d13f8b04bb875e7a921f961d7cb1e728bd7ff97efe3d5fc",
+   "checks/rev-0.json": "95b177cd662c07f182a48a6e7f2942ea51a2e4279c659a7560f647065f10b454",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "9c5052390d03ce23d87085ce419ba286c8c302818ab62bfcfcee8a28752b4a77",
+   "drafts/rev-0.json": "9c5052390d03ce23d87085ce419ba286c8c302818ab62bfcfcee8a28752b4a77",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v3/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "6df8bde153f5ab77f56bcbcd845ae1f8d0518e18dd1c2bab16884a47cf272f96",
+   "brief.md": "b32ee92d3d146fece5e1b1c7a955feccabadb44e09da5b378831b5bb68f40965",
+   "checks/rev-0.json": "ec9e61e8732784f6f061b47df1f8cec73e5ab21f7743f3caca4a0f1639103e66",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "e8b16b725f54c5c7020c5a36a992dffea0ad6d6bdcf8b9ab77c4deaf99619910",
+   "drafts/rev-0.json": "e8b16b725f54c5c7020c5a36a992dffea0ad6d6bdcf8b9ab77c4deaf99619910",
+   "run-advice.json": "c06e9bcabde02de830d2c84fe32b6f91dc52266fa9b8f1c0391e3f9201139439",
+   "site/0/appendix.html": "516691c1a380e1710c34d69078917e6647ff87ca101a88decb870274bd75dd4c",
+   "site/0/clarifications.html": "fe2f9c2d527ff5c8b3f6a3401616b19521cd975b6d3bd68b49c2fd8a6dd4f03d",
+   "site/0/contents.html": "de4add1fe92ccf8285d00f69b3f24ebda5e9ec9b607666672a2c787e3aeccfb4",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "418fc1ca6b9153af17a525807e6c6d4d2f57ae5f8ebd4782b617a5922b26bd4f",
+   "site/0/dossier.json": "f1d31008da65b8eb213acf7fa583a1a374e87621109e42fa8805a543efced069",
+   "site/0/executions.html": "bdb7f8d94dc76d9470307207dd65e34d6c05c3e727eb1740233555dee7dfa799",
+   "site/0/find-by-task.html": "d527e79c76d7e98fd9a60a0cf4e56a40b9cc56b0d414b75a383c46c9ec782f57",
+   "site/0/glossary.html": "a32dde8e17351573dbcc1bed411c1a30885a23a36967659e2e0e2f7d4e808b92",
+   "site/0/index.html": "9c702da7f4f34481516c4c382cf8992eb9a13abb2ce8385ac504fe2e3991a259",
+   "site/0/machine.json": "3e9e9562e37b8cd52bbd2310a1c6ad3532b5154f35a002bca5b0e4f855e0575f",
+   "site/0/maps/ci.html": "2807b7addc776adf58efe8bebdee2d8aedefc6a71e772060f6eee2beec5de154",
+   "site/0/maps/directories.html": "157b3924fe154d782deaa5aaeec7279ae051554b7dbc689f76b1774c6a25dde6",
+   "site/0/maps/infrastructure.html": "e6ea9c7d4742b0bca48bad5e97bb17bc220b78d770a8c000a5442b022ec92588",
+   "site/0/maps/units.html": "ecf52b6ba216d2832a56bb7de960b5dcd3756dafd4aa1c5317423ead2a8a7024",
+   "site/0/name-index.html": "52f9ea3b1976fe38eab95adb3db951822af60ae30eb98baf134593070bf8a422",
+   "site/0/review.html": "e8fa811031a6593d33f3fe335abd2578436da08eca9677333392840651dd88ac",
+   "site/0/size-report.html": "b2dcb35bc816ddd20ab4f00c920c8c0151ba93f97baa299bf5a58bbd7ebafa6a",
+   "site/0/size-report.json": "35ecf2ab212c3e8dd65ccfdcf3b8ba10a3b2529ee0fbbf695bae601d45c01629",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "4296aa26ab6beccd0512178586ac2047f3a37c48c2d7dc897659c0f53874810a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "a90650038f434dc97d179d99ecb3b53220621f6c0f453b6f2b4195fd500423ab",
+   "site/0/sources/index.html": "13fe9618c10cd549b3310419e984608b8cadd5af1de0b6d151e71ecdd3155cc4",
+   "site/0/understanding.html": "cca06beac6352dc438e35d0b31ef0e280ac1b4c4ba5fe8af2fe624053cb012e3",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v3/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "ab2fe400694db7c59f1888276e53a28247a686c056a007b8bffc58aebbc7bf0e",
+   "brief.md": "49d3b5dbb51332f541e2b9fd5031b8abf48d9e157e22de42c83e4bc2f8377d33",
+   "checks/rev-0.json": "f7bfae8c38a4f82ac04626c542a791fd56437d621331240b4e67fa0d5b82e3e7",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "1a58efc2a8cc747ba6b415838c1ae29a1e846b5de5c797f47f3cbd15dfb5a609",
+   "drafts/rev-0.json": "1a58efc2a8cc747ba6b415838c1ae29a1e846b5de5c797f47f3cbd15dfb5a609",
+   "run-advice.json": "c06e9bcabde02de830d2c84fe32b6f91dc52266fa9b8f1c0391e3f9201139439",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v3/sequence-early": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes",
+    "detail": "is required"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges",
+    "detail": "is required"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].kind",
+    "detail": "the diagram \"seq-1\": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].participants",
+    "detail": "the diagram \"seq-1\": `participants` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].messages",
+    "detail": "the diagram \"seq-1\": `messages` needs draft schema polaris-dossier-local-draft-v7"
+   }
+  ],
+  "files": {
+   "brief.json": "d2bf5965ac29159d94813eff7a0a474e4d2ee9db2af1428f2651e49b6518c6ab",
+   "brief.md": "bd86cd03aa4c4f70a84e11296a71b7bc051213f3971cbf26fc623ea6a9421367",
+   "checks/rev-0.json": "65a0cbcf455860fcdab42cad2111d446944755379978e585c1994287c4cf0163",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "8dad870610662c50798f4182d2da0e57485ec70b0800e7ca9e58abe65387be8c",
+   "drafts/rev-0.json": "8dad870610662c50798f4182d2da0e57485ec70b0800e7ca9e58abe65387be8c",
+   "run-advice.json": "b06d99fcc5640a801cf21a34478c64cb00bbe479092c1f6190b2ccfb3d521da0",
+   "steps.jsonl": "1f05bbb9b056c7365f768364bd5968cee39c91e6d8657f80e3db35704f9e20c4"
+  }
+ },
+ "polaris-dossier-local-draft-v3/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "eebf576a2eff5b837946088a1bb844b232af95eb32eb1e647e58cc244136be0a",
+   "brief.md": "f8fd534514d076f0eaa29764c34b0493e4c46357f108a0b5ab7d4ff017e6b5d1",
+   "checks/rev-0.json": "739cdfed53b4cb939ca3da6b1b29d055ea37792c43e0c3ec9ebadd26eb903b8f",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "2f45b8e8e8307b6d611c399e81157761acd697864db0dc71f5e799baa3247eab",
+   "drafts/rev-0.json": "2f45b8e8e8307b6d611c399e81157761acd697864db0dc71f5e799baa3247eab",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v4/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "2fadd203e6563ac35834a5183dc709b4d4e7d874e58300cc97e0addf9b158216",
+   "brief.md": "f7580463ffaeb9d17f4200b29637bbafd77bbfbc1d91d559985f7d6a95a599ed",
+   "checks/rev-0.json": "89af86d7f39fff59882b61c7f4cb5e18f7fe886f749421b37e69a66dc13ab170",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "320becda19778139022da352c1ccd9d27b40564d2543c7f51f00a8e8275c8dec",
+   "drafts/rev-0.json": "320becda19778139022da352c1ccd9d27b40564d2543c7f51f00a8e8275c8dec",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "site/0/appendix.html": "2a849eac0dd0fa54f4c750ec9cdfa48c0988c53382ea94e906fd98be504c11d9",
+   "site/0/clarifications.html": "5059467513b944dfd09e633e19508ce50c8d283c0527ef073fde9054e908ce89",
+   "site/0/contents.html": "0072e813d6ab14ad72d5d29aa3e5d10221eef8061a87fcba43d673423492a152",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "94d24382ce158342ce9a982b75e1777a6fcd0699c57efb1af6acf0a5a309789d",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "df913f1b52e6d25268c0241fcd900d0bbd85b31f2fac06beed83d085c5ed75bd",
+   "site/0/find-by-task.html": "595cced40b40158b24d74316bbf27a49431dfd5bbbf16c001ef891709ddf27a3",
+   "site/0/glossary.html": "3523a61212534bcc6a0b0c7f6d9a4c82ebbcc0088d63b02fb026f082f3c15e21",
+   "site/0/index.html": "d015df7d24a404ce18c1b4ce1735a5eca6776abdcfcd96a6b306407f9f788e6d",
+   "site/0/machine.json": "682b5297746e0251434088cd36c088396ef9996f71b043878ef7e1bc7f5bd9c6",
+   "site/0/maps/ci.html": "93c5b22f672300ccb9029ed4ad47f0c209927edcb0ef7fcc570c2c2f918964c3",
+   "site/0/maps/directories.html": "90982615728fb0f7af9e8d0f3cb4fa42f5a86d45fb1aab0865d074acea441fc4",
+   "site/0/maps/infrastructure.html": "506961bb45b731ba20ef235a19257bedb17ac42e209de9937b4d26ff87b49ad3",
+   "site/0/maps/units.html": "c12dfe1968d8177b05ebe835feeb54fce039666278608b0c612d01c4fb3e8929",
+   "site/0/name-index.html": "7556c5fd4abd1456cb254888a025cbe7b2657298fb77e4bf2ddb6b8940736c84",
+   "site/0/poles/2.html": "23a4b8eba3b6c903609aa33773c9e73cfe457f1270b491c2e6136c93e5a1a9f7",
+   "site/0/review.html": "1978fbaa29d5258c0ada1ed5792382eb82de15e1ef5651dfc9311fee0369ce7f",
+   "site/0/size-report.html": "c5f5b2718f71e16f8954ce4d4d80f8c81e6f6b50e1f6f9e30c522f1d8a90c641",
+   "site/0/size-report.json": "5eaa380ffd128f44019794847ee3c7bcbdc7a89de3b7a46c058403dea2c369c0",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "463ac65c26c5397b2b12f3c8e35c21b522902585944c3decb861470c9f42ad2a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "689fc6ed3e5900fc7bdd502b5b3bad07fde1c909b11d5ad9aef99ade8adb84ff",
+   "site/0/sources/index.html": "55d592f460085d97f544e75427e1b5345ceb22c5123bd0b1250f45a402f30597",
+   "site/0/understanding.html": "a40916ca5c0949fa34cd7a3870bccd0dae9ac8f327b548543992ad6138ff9748",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v4/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "04a918eeaea983fcd96d44d94d4c4d98f3efaebc0e3fe95db456dc91423d29d6",
+   "brief.md": "9d75107c2060462bef9162ffc845c0c47c1b8cc7486fd414a3dd71a4c01be14e",
+   "checks/rev-0.json": "dd0bb053090745e2b2719e458b5800740edad0c30212bfec47d781dfabe2d0cd",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "0a561947317aba642d8062330abc0690877bd7947f8fee3e4fa69b1d29dff835",
+   "drafts/rev-0.json": "0a561947317aba642d8062330abc0690877bd7947f8fee3e4fa69b1d29dff835",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v4/sequence-early": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes",
+    "detail": "is required"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges",
+    "detail": "is required"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].kind",
+    "detail": "the diagram \"seq-1\": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].participants",
+    "detail": "the diagram \"seq-1\": `participants` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].messages",
+    "detail": "the diagram \"seq-1\": `messages` needs draft schema polaris-dossier-local-draft-v7"
+   }
+  ],
+  "files": {
+   "brief.json": "25a2261220f26aaf4383f435848324e88f5e8bdba0fc988045454d436d101010",
+   "brief.md": "7e028e47ce78a2b84664a9a49edf3035a4b760b8f38dc262e0565a45c17af67b",
+   "checks/rev-0.json": "b1df2a31b5670b7bd82d350fb9dd1a11f283a06929526cb2a1f588316f35ad6d",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "87c30027391fe9a0090c0bedcd0c4688e2d8e496c4df269d8fcece3ebf3ac3c2",
+   "drafts/rev-0.json": "87c30027391fe9a0090c0bedcd0c4688e2d8e496c4df269d8fcece3ebf3ac3c2",
+   "run-advice.json": "b06d99fcc5640a801cf21a34478c64cb00bbe479092c1f6190b2ccfb3d521da0",
+   "steps.jsonl": "1f05bbb9b056c7365f768364bd5968cee39c91e6d8657f80e3db35704f9e20c4"
+  }
+ },
+ "polaris-dossier-local-draft-v4/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "eb742144dd5af6274c3d6e921311e17616ffdfbdb5222331762164238c38490d",
+   "brief.md": "9c74c93b15a3fc7d9de339341ceecc27c98cdedafcffa8821770794d41960dcb",
+   "checks/rev-0.json": "6f5fba4087c2d9d8dd806a341098ee6880e2b93e263d8d79018c33a9060611e1",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "6e894988ea5068eda1640012cae8a6036aee94bf78c4c47fb09bedbe306ad1bb",
+   "drafts/rev-0.json": "6e894988ea5068eda1640012cae8a6036aee94bf78c4c47fb09bedbe306ad1bb",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v5/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "36b46b708e8d63f8a91f81703e6ca8bb78fd636f2a49ba9bb22bbd2a9146f587",
+   "brief.md": "65c12a6e37ae0868a534e2929d936238203793eb60d58cb7c1eac1d82f6d7de5",
+   "checks/rev-0.json": "c997c9aba3831ab0ac1b8d63ad8a676487b4aefa09f753e7bd53d8b6a2f8298c",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "fe847db1248a072050c5b37ff2446a1d38632943c986800daf925ce3d740ca83",
+   "drafts/rev-0.json": "fe847db1248a072050c5b37ff2446a1d38632943c986800daf925ce3d740ca83",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "site/0/appendix.html": "2a849eac0dd0fa54f4c750ec9cdfa48c0988c53382ea94e906fd98be504c11d9",
+   "site/0/clarifications.html": "5059467513b944dfd09e633e19508ce50c8d283c0527ef073fde9054e908ce89",
+   "site/0/contents.html": "0072e813d6ab14ad72d5d29aa3e5d10221eef8061a87fcba43d673423492a152",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "94d24382ce158342ce9a982b75e1777a6fcd0699c57efb1af6acf0a5a309789d",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "df913f1b52e6d25268c0241fcd900d0bbd85b31f2fac06beed83d085c5ed75bd",
+   "site/0/find-by-task.html": "595cced40b40158b24d74316bbf27a49431dfd5bbbf16c001ef891709ddf27a3",
+   "site/0/glossary.html": "3523a61212534bcc6a0b0c7f6d9a4c82ebbcc0088d63b02fb026f082f3c15e21",
+   "site/0/index.html": "d015df7d24a404ce18c1b4ce1735a5eca6776abdcfcd96a6b306407f9f788e6d",
+   "site/0/machine.json": "682b5297746e0251434088cd36c088396ef9996f71b043878ef7e1bc7f5bd9c6",
+   "site/0/maps/ci.html": "93c5b22f672300ccb9029ed4ad47f0c209927edcb0ef7fcc570c2c2f918964c3",
+   "site/0/maps/directories.html": "90982615728fb0f7af9e8d0f3cb4fa42f5a86d45fb1aab0865d074acea441fc4",
+   "site/0/maps/infrastructure.html": "506961bb45b731ba20ef235a19257bedb17ac42e209de9937b4d26ff87b49ad3",
+   "site/0/maps/units.html": "c12dfe1968d8177b05ebe835feeb54fce039666278608b0c612d01c4fb3e8929",
+   "site/0/name-index.html": "7556c5fd4abd1456cb254888a025cbe7b2657298fb77e4bf2ddb6b8940736c84",
+   "site/0/poles/2.html": "23a4b8eba3b6c903609aa33773c9e73cfe457f1270b491c2e6136c93e5a1a9f7",
+   "site/0/review.html": "1978fbaa29d5258c0ada1ed5792382eb82de15e1ef5651dfc9311fee0369ce7f",
+   "site/0/size-report.html": "c5f5b2718f71e16f8954ce4d4d80f8c81e6f6b50e1f6f9e30c522f1d8a90c641",
+   "site/0/size-report.json": "5eaa380ffd128f44019794847ee3c7bcbdc7a89de3b7a46c058403dea2c369c0",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "463ac65c26c5397b2b12f3c8e35c21b522902585944c3decb861470c9f42ad2a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "689fc6ed3e5900fc7bdd502b5b3bad07fde1c909b11d5ad9aef99ade8adb84ff",
+   "site/0/sources/index.html": "55d592f460085d97f544e75427e1b5345ceb22c5123bd0b1250f45a402f30597",
+   "site/0/understanding.html": "a40916ca5c0949fa34cd7a3870bccd0dae9ac8f327b548543992ad6138ff9748",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v5/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "bcfc854442aaf808883309d58104df73ff3154250c91eeef58ef7b5f85260de0",
+   "brief.md": "da335472329a439d148bc20787c75f5ee3ff6acbd6bfa1323077dfa65ea8049f",
+   "checks/rev-0.json": "bff877599f18196d6e7cda3649fd3075699d9ea38b45404bf4451c305c371193",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "41fc6c714ef0f383505425b6997263a8d26f0d3612a412076887e7a0a6f1940b",
+   "drafts/rev-0.json": "41fc6c714ef0f383505425b6997263a8d26f0d3612a412076887e7a0a6f1940b",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v5/sequence-early": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes",
+    "detail": "is required"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges",
+    "detail": "is required"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].kind",
+    "detail": "the diagram \"seq-1\": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].participants",
+    "detail": "the diagram \"seq-1\": `participants` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].messages",
+    "detail": "the diagram \"seq-1\": `messages` needs draft schema polaris-dossier-local-draft-v7"
+   }
+  ],
+  "files": {
+   "brief.json": "3244a441decc20c23d8aaeff51aa26373f84975f7012900ec75c62e46ed3be64",
+   "brief.md": "24856501bd91622dbb297b534222211394952e2bda94b576a392ba832749683f",
+   "checks/rev-0.json": "ea7e74defcb39964a81969e33ab87e6f3c0a71eadbe4b9e9c31c5cd31c4d0329",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "8f4981599058a7e35f243c40d6def9758eadad8b63b540e25de079856603c805",
+   "drafts/rev-0.json": "8f4981599058a7e35f243c40d6def9758eadad8b63b540e25de079856603c805",
+   "run-advice.json": "b06d99fcc5640a801cf21a34478c64cb00bbe479092c1f6190b2ccfb3d521da0",
+   "steps.jsonl": "1f05bbb9b056c7365f768364bd5968cee39c91e6d8657f80e3db35704f9e20c4"
+  }
+ },
+ "polaris-dossier-local-draft-v5/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "ff701335993fde27e2bd2db711e38bd87d82b138008121a66ee07c74749f7e9d",
+   "brief.md": "a14f8b08b901abe94219d7e2cdb95923553c4a49c5af0deb91d70937d7a95548",
+   "checks/rev-0.json": "5e5499294c846e347e0249f9c2565769e21d059af4bc84b1ab1d241a15725dce",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "4c9f0779b156e67cb6138faeecbfbb22a74c96cb85f6ea9a5bea1b53a3dc1a65",
+   "drafts/rev-0.json": "4c9f0779b156e67cb6138faeecbfbb22a74c96cb85f6ea9a5bea1b53a3dc1a65",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v6/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "337bd2d32853669cb4abf2178d251b5ba1eca50d190c0145e834153d128bf13b",
+   "brief.md": "9e1ceec1c62e7f3ac7de2d85688b1bbbee3177fad39d2e40b57c28a94fda298c",
+   "checks/rev-0.json": "edc1c5435f90d709c57bf35a832e2386c56fcc7e8adad28a3d42f7ac6d0c17b6",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "fe1a6cb3e376b4b0bc06e9c6f05829eb119e3451223077b2ba80edc6d7f5c18c",
+   "drafts/rev-0.json": "fe1a6cb3e376b4b0bc06e9c6f05829eb119e3451223077b2ba80edc6d7f5c18c",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "site/0/appendix.html": "2a849eac0dd0fa54f4c750ec9cdfa48c0988c53382ea94e906fd98be504c11d9",
+   "site/0/clarifications.html": "5059467513b944dfd09e633e19508ce50c8d283c0527ef073fde9054e908ce89",
+   "site/0/contents.html": "0072e813d6ab14ad72d5d29aa3e5d10221eef8061a87fcba43d673423492a152",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "94d24382ce158342ce9a982b75e1777a6fcd0699c57efb1af6acf0a5a309789d",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "df913f1b52e6d25268c0241fcd900d0bbd85b31f2fac06beed83d085c5ed75bd",
+   "site/0/find-by-task.html": "595cced40b40158b24d74316bbf27a49431dfd5bbbf16c001ef891709ddf27a3",
+   "site/0/glossary.html": "3523a61212534bcc6a0b0c7f6d9a4c82ebbcc0088d63b02fb026f082f3c15e21",
+   "site/0/index.html": "d015df7d24a404ce18c1b4ce1735a5eca6776abdcfcd96a6b306407f9f788e6d",
+   "site/0/machine.json": "9a47dc63a23e8e80e8b1a561ecde9daafb011cd973cde7a04de832defacccf50",
+   "site/0/maps/ci.html": "93c5b22f672300ccb9029ed4ad47f0c209927edcb0ef7fcc570c2c2f918964c3",
+   "site/0/maps/directories.html": "90982615728fb0f7af9e8d0f3cb4fa42f5a86d45fb1aab0865d074acea441fc4",
+   "site/0/maps/infrastructure.html": "506961bb45b731ba20ef235a19257bedb17ac42e209de9937b4d26ff87b49ad3",
+   "site/0/maps/units.html": "c12dfe1968d8177b05ebe835feeb54fce039666278608b0c612d01c4fb3e8929",
+   "site/0/name-index.html": "7556c5fd4abd1456cb254888a025cbe7b2657298fb77e4bf2ddb6b8940736c84",
+   "site/0/poles/2.html": "23a4b8eba3b6c903609aa33773c9e73cfe457f1270b491c2e6136c93e5a1a9f7",
+   "site/0/review.html": "1978fbaa29d5258c0ada1ed5792382eb82de15e1ef5651dfc9311fee0369ce7f",
+   "site/0/size-report.html": "c5f5b2718f71e16f8954ce4d4d80f8c81e6f6b50e1f6f9e30c522f1d8a90c641",
+   "site/0/size-report.json": "5eaa380ffd128f44019794847ee3c7bcbdc7a89de3b7a46c058403dea2c369c0",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "463ac65c26c5397b2b12f3c8e35c21b522902585944c3decb861470c9f42ad2a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "689fc6ed3e5900fc7bdd502b5b3bad07fde1c909b11d5ad9aef99ade8adb84ff",
+   "site/0/sources/index.html": "55d592f460085d97f544e75427e1b5345ceb22c5123bd0b1250f45a402f30597",
+   "site/0/understanding.html": "a40916ca5c0949fa34cd7a3870bccd0dae9ac8f327b548543992ad6138ff9748",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v6/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "9bac8892f41f59c088d080a631b8c2fedbdf737cd8fec095e6a12c5311e519d0",
+   "brief.md": "1216fe73d71a49ac40c0b8c59358fd9a1449c8e50f37e28a77b240089de0b770",
+   "checks/rev-0.json": "b162f683a74b88388994ca667d8a0ed59b34ca418a23522aa12df5d98df13bb6",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "89e380ab47f6e9bb799e1f8a635a52251d1427313e5af49b7e1795834a754ab1",
+   "drafts/rev-0.json": "89e380ab47f6e9bb799e1f8a635a52251d1427313e5af49b7e1795834a754ab1",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v6/sequence-early": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes",
+    "detail": "is required"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges",
+    "detail": "is required"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].kind",
+    "detail": "the diagram \"seq-1\": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].participants",
+    "detail": "the diagram \"seq-1\": `participants` needs draft schema polaris-dossier-local-draft-v7"
+   },
+   {
+    "kind": "field-version",
+    "at": "$.diagrams[0].messages",
+    "detail": "the diagram \"seq-1\": `messages` needs draft schema polaris-dossier-local-draft-v7"
+   }
+  ],
+  "files": {
+   "brief.json": "057fe0544944f001a4fd62a05ce0ff1a5344d2658f74abea2ed2a280aff9bb10",
+   "brief.md": "9b8717d771e9f1bbc2643c86a998b88a64402771206210e4837e45052226ce8d",
+   "checks/rev-0.json": "cdf046a10179e682d49500227f287cb5db01f3546fcc3e52d4ca7a2083d66c59",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "ac4649bbff31149213999c2200621fa1a7a30be4eea3770aae5bfa754618b6cc",
+   "drafts/rev-0.json": "ac4649bbff31149213999c2200621fa1a7a30be4eea3770aae5bfa754618b6cc",
+   "run-advice.json": "b06d99fcc5640a801cf21a34478c64cb00bbe479092c1f6190b2ccfb3d521da0",
+   "steps.jsonl": "1f05bbb9b056c7365f768364bd5968cee39c91e6d8657f80e3db35704f9e20c4"
+  }
+ },
+ "polaris-dossier-local-draft-v6/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "fb047f94613015604d33a8457b362b6767e549f6395333472896618c325ba380",
+   "brief.md": "37b89165e1ea3a580d82218d29f6b5f802dcb6be60e3d8fbb37271a857f240dd",
+   "checks/rev-0.json": "464add64b595862293463445340b0f69e4e4da001d8bb97e5a7990614da70d46",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "8455462cd62665aa9e498c9832b894f104ea4e85230fa97177e4c926b4d0f7bd",
+   "drafts/rev-0.json": "8455462cd62665aa9e498c9832b894f104ea4e85230fa97177e4c926b4d0f7bd",
+   "run-advice.json": "ef1ba5bafda7bee1b3359950f09903bdbe2584dd5309747aef8b55f09789c07b",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v7/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "beab6da2912835fe0c1c14222c2014fa17f65d0ac2d4a2587ef2b7eba83b08e9",
+   "brief.md": "90aa75ecbc1ac7359cc9e9f4cf00d1f6d0f2a62740227cef76d46573bdc8bb94",
+   "checks/rev-0.json": "1e5600b19fab4cf8c1c0df87c68d2b1208643047d8745b5f94f351986aed154c",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "761522769f38ecdd19acf83f5660448c2b35e48a3e6a6c30895d18ee48b93c19",
+   "drafts/rev-0.json": "761522769f38ecdd19acf83f5660448c2b35e48a3e6a6c30895d18ee48b93c19",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "site/0/appendix.html": "2a849eac0dd0fa54f4c750ec9cdfa48c0988c53382ea94e906fd98be504c11d9",
+   "site/0/clarifications.html": "5059467513b944dfd09e633e19508ce50c8d283c0527ef073fde9054e908ce89",
+   "site/0/contents.html": "0072e813d6ab14ad72d5d29aa3e5d10221eef8061a87fcba43d673423492a152",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "94d24382ce158342ce9a982b75e1777a6fcd0699c57efb1af6acf0a5a309789d",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "df913f1b52e6d25268c0241fcd900d0bbd85b31f2fac06beed83d085c5ed75bd",
+   "site/0/find-by-task.html": "595cced40b40158b24d74316bbf27a49431dfd5bbbf16c001ef891709ddf27a3",
+   "site/0/glossary.html": "3523a61212534bcc6a0b0c7f6d9a4c82ebbcc0088d63b02fb026f082f3c15e21",
+   "site/0/index.html": "d015df7d24a404ce18c1b4ce1735a5eca6776abdcfcd96a6b306407f9f788e6d",
+   "site/0/machine.json": "337477abc405ca5ac93fc2554813ffb72d57b59f3b8150c3b9a110597eb6f9f8",
+   "site/0/maps/ci.html": "93c5b22f672300ccb9029ed4ad47f0c209927edcb0ef7fcc570c2c2f918964c3",
+   "site/0/maps/directories.html": "90982615728fb0f7af9e8d0f3cb4fa42f5a86d45fb1aab0865d074acea441fc4",
+   "site/0/maps/infrastructure.html": "506961bb45b731ba20ef235a19257bedb17ac42e209de9937b4d26ff87b49ad3",
+   "site/0/maps/units.html": "c12dfe1968d8177b05ebe835feeb54fce039666278608b0c612d01c4fb3e8929",
+   "site/0/name-index.html": "b4e0a3d38eb78bef2ac8dda52b63f49989f7ca9515f0d3b6fba40a5b0c748b5d",
+   "site/0/poles/2.html": "dc644bf44e927a1188c4ef60d1240c865ca61dc9a7f2ab28dedda429bd420451",
+   "site/0/review.html": "1978fbaa29d5258c0ada1ed5792382eb82de15e1ef5651dfc9311fee0369ce7f",
+   "site/0/size-report.html": "683c6230aa32e64f34f218954d2a784d3e0ee0542f2bec9c97712610882abb09",
+   "site/0/size-report.json": "9a493540607a78108575823e8af25060fc341cd5598322d25887c1080267fa6c",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "463ac65c26c5397b2b12f3c8e35c21b522902585944c3decb861470c9f42ad2a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "689fc6ed3e5900fc7bdd502b5b3bad07fde1c909b11d5ad9aef99ade8adb84ff",
+   "site/0/sources/index.html": "3aa540f724e77474e7a1c2105f600dc54366b02781e61a6f9a2bba066ce7435c",
+   "site/0/understanding.html": "a40916ca5c0949fa34cd7a3870bccd0dae9ac8f327b548543992ad6138ff9748",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v7/subsections": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "field-version",
+    "at": "$.sections[0].subsections",
+    "detail": "`subsections` needs draft schema polaris-dossier-local-draft-v8"
+   }
+  ],
+  "files": {
+   "brief.json": "30cc861d764b0ec7e5142c04fc267f1a15725c27ab1de702b90981bfe132612e",
+   "brief.md": "394c0e2c3394666be47f336131122b0235c14da37694ce9c283e01662294f008",
+   "checks/rev-0.json": "c27b35c72cf4b364dd1a8b66543003c925c4bc6168b87073149f100a9921c15c",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "eefc461d214aeae96beddb2bb6ef6b5c63351b5bdd2f9ec066b71f6de404e28c",
+   "drafts/rev-0.json": "eefc461d214aeae96beddb2bb6ef6b5c63351b5bdd2f9ec066b71f6de404e28c",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "steps.jsonl": "278cc768428080d6a35a051b53e1ae5942e135c30ac3142caa280ad35b349d81"
+  }
+ },
+ "polaris-dossier-local-draft-v7/sequence-early": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "b47ca0ee8964597a43d7a352b3fc3420fbc9a9f96adf8da3ddd5a94a8cba377d",
+   "brief.md": "32261941c9b9a7daf06fb15f8bd10058a22bc1af688df341184df0d2772f56ee",
+   "checks/rev-0.json": "1e5600b19fab4cf8c1c0df87c68d2b1208643047d8745b5f94f351986aed154c",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "761522769f38ecdd19acf83f5660448c2b35e48a3e6a6c30895d18ee48b93c19",
+   "drafts/rev-0.json": "761522769f38ecdd19acf83f5660448c2b35e48a3e6a6c30895d18ee48b93c19",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "site/0/appendix.html": "2a849eac0dd0fa54f4c750ec9cdfa48c0988c53382ea94e906fd98be504c11d9",
+   "site/0/clarifications.html": "5059467513b944dfd09e633e19508ce50c8d283c0527ef073fde9054e908ce89",
+   "site/0/contents.html": "0072e813d6ab14ad72d5d29aa3e5d10221eef8061a87fcba43d673423492a152",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "94d24382ce158342ce9a982b75e1777a6fcd0699c57efb1af6acf0a5a309789d",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "df913f1b52e6d25268c0241fcd900d0bbd85b31f2fac06beed83d085c5ed75bd",
+   "site/0/find-by-task.html": "595cced40b40158b24d74316bbf27a49431dfd5bbbf16c001ef891709ddf27a3",
+   "site/0/glossary.html": "3523a61212534bcc6a0b0c7f6d9a4c82ebbcc0088d63b02fb026f082f3c15e21",
+   "site/0/index.html": "d015df7d24a404ce18c1b4ce1735a5eca6776abdcfcd96a6b306407f9f788e6d",
+   "site/0/machine.json": "337477abc405ca5ac93fc2554813ffb72d57b59f3b8150c3b9a110597eb6f9f8",
+   "site/0/maps/ci.html": "93c5b22f672300ccb9029ed4ad47f0c209927edcb0ef7fcc570c2c2f918964c3",
+   "site/0/maps/directories.html": "90982615728fb0f7af9e8d0f3cb4fa42f5a86d45fb1aab0865d074acea441fc4",
+   "site/0/maps/infrastructure.html": "506961bb45b731ba20ef235a19257bedb17ac42e209de9937b4d26ff87b49ad3",
+   "site/0/maps/units.html": "c12dfe1968d8177b05ebe835feeb54fce039666278608b0c612d01c4fb3e8929",
+   "site/0/name-index.html": "b4e0a3d38eb78bef2ac8dda52b63f49989f7ca9515f0d3b6fba40a5b0c748b5d",
+   "site/0/poles/2.html": "dc644bf44e927a1188c4ef60d1240c865ca61dc9a7f2ab28dedda429bd420451",
+   "site/0/review.html": "1978fbaa29d5258c0ada1ed5792382eb82de15e1ef5651dfc9311fee0369ce7f",
+   "site/0/size-report.html": "683c6230aa32e64f34f218954d2a784d3e0ee0542f2bec9c97712610882abb09",
+   "site/0/size-report.json": "9a493540607a78108575823e8af25060fc341cd5598322d25887c1080267fa6c",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "463ac65c26c5397b2b12f3c8e35c21b522902585944c3decb861470c9f42ad2a",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "689fc6ed3e5900fc7bdd502b5b3bad07fde1c909b11d5ad9aef99ade8adb84ff",
+   "site/0/sources/index.html": "3aa540f724e77474e7a1c2105f600dc54366b02781e61a6f9a2bba066ce7435c",
+   "site/0/understanding.html": "a40916ca5c0949fa34cd7a3870bccd0dae9ac8f327b548543992ad6138ff9748",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v7/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "2d9b5358ce282ad363f9e089969638391a30d9f97b557f52abcb9c5fd0a9ef9c",
+   "brief.md": "38f9d9fb81f78db677744fe4e5397af0f285985edc3562ed0dd5b82273c4859c",
+   "checks/rev-0.json": "5d2c0c3ec2a3c3a6fc2e67c5a24c40d25f6f5c47a0d718af2be6ea6aa57bef4f",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "4ba1918c28595af082f105726318c27c04e93aaf7849fb324d6b4d68230510b9",
+   "drafts/rev-0.json": "4ba1918c28595af082f105726318c27c04e93aaf7849fb324d6b4d68230510b9",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ },
+ "polaris-dossier-local-draft-v8/plain": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "99ebff734df26b818f4aa9f98ebd5a11b3e0af18e620ec3a5a89cfa79d0d90f6",
+   "brief.md": "cb69c7ec895f08ad444aa857b618027c9be61558865533079ea17592aa2d47ef",
+   "checks/rev-0.json": "c2523f351a98c5137848751f4d6e8f9323c2b9cdc3d0f8c0ad42d1fdf4eb0ddd",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "drafts/rev-0.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "site/0/appendix.html": "72a7fd12108d2ecf0105b4feb740ec3cbc9b92fb793cf00c868447fe2809e046",
+   "site/0/clarifications.html": "f9895e0bdce41d43a4dda5ccb2af5095e224d60cab8da56f8ee5e9fd6d6bfc04",
+   "site/0/contents.html": "8df974700c32962d5f4711c7ae3044bf808f6b654dbad104c5a419085e918b23",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "df2e333be2291e4ea847c0d95fed9f97cd246b08845356e5bdc25bfe7006b5c7",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "730e9be5192b6645c02750ce1d597d6736d43c701622a3959c4d023de97bb95b",
+   "site/0/find-by-task.html": "da59dd0c5c5be7f457861dca661e208d023da1d5cb3bb7e5536c5b5bac897de7",
+   "site/0/glossary.html": "cbfceed7a396bcb0d62a12938400711411afeba67f0c08dcf36521106b1b3c49",
+   "site/0/index.html": "57ae5f71fb2d199654556e5f5b2176959dbcfbc0e3aed90367108e35308e1023",
+   "site/0/machine.json": "bf56a8a877e8c0002d65da38b2c074e4b03e70570b62beb58ea7bcbe0ac20554",
+   "site/0/maps/ci.html": "b84c01993c47c07a78fc457f537a9654da309c410281df7832990ee42fd282ff",
+   "site/0/maps/directories.html": "9a64e6aa9c5315f994d05f0c5a8bafc4512db3c5d9a0599d8f874c98ac4ac90b",
+   "site/0/maps/infrastructure.html": "18cd415dde9095acd34cf71335ff824787751e47ebe3431e8e57146ece74a838",
+   "site/0/maps/units.html": "791575d8c1527287f374abb2b563928e44853d59049b494810a548eb0d43632d",
+   "site/0/name-index.html": "7f53a9ffe3dc1d93c11fa458883d56d196b50f25646caf828b2c6d72a8dd52c9",
+   "site/0/poles/2.html": "3c76f5e3e35a042cae835a763524fc8baf2d82d4d30a81fef9870f32b55eac26",
+   "site/0/review.html": "bb04c3467b8f1d648f26374f6b829ada5dd9c85298a7aed561e3c43d2533ca5d",
+   "site/0/size-report.html": "4434730e872c4993ce482b0043c57cb45871c48cccad028f4c4d92300063cd5e",
+   "site/0/size-report.json": "955c30932eb353838e274b63e5d82028d6fafdb97a9f96e7637dd5068a7fe1ce",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "4aaccf262b7ac357287e9be2d0b88139015b10a984a7b79fd08962c8fd7ad203",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "78314fdcf9b357c88876df6835940ab297b5b713121cf0bc58d82bc83201f227",
+   "site/0/sources/index.html": "0fc607a6fa35e5788f71821f6a582234bd5edcfe99e93d2cae2623e8ad56d4c5",
+   "site/0/understanding.html": "4ec5a556bc26bf3c7f9297dcc761e66d274039b4175651255abf40755f68ec1d",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v8/subsections": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "2138808c3e7ac4cc4d288c6dbe1e35dd5534caa6cf8f5507bb2035f11e2ec56d",
+   "brief.md": "f0c3a5342074eb60817f8d5a8ec332dd56a069e1c05035a497ea4aebf725304c",
+   "checks/rev-0.json": "c2523f351a98c5137848751f4d6e8f9323c2b9cdc3d0f8c0ad42d1fdf4eb0ddd",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "drafts/rev-0.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "site/0/appendix.html": "72a7fd12108d2ecf0105b4feb740ec3cbc9b92fb793cf00c868447fe2809e046",
+   "site/0/clarifications.html": "f9895e0bdce41d43a4dda5ccb2af5095e224d60cab8da56f8ee5e9fd6d6bfc04",
+   "site/0/contents.html": "8df974700c32962d5f4711c7ae3044bf808f6b654dbad104c5a419085e918b23",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "df2e333be2291e4ea847c0d95fed9f97cd246b08845356e5bdc25bfe7006b5c7",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "730e9be5192b6645c02750ce1d597d6736d43c701622a3959c4d023de97bb95b",
+   "site/0/find-by-task.html": "da59dd0c5c5be7f457861dca661e208d023da1d5cb3bb7e5536c5b5bac897de7",
+   "site/0/glossary.html": "cbfceed7a396bcb0d62a12938400711411afeba67f0c08dcf36521106b1b3c49",
+   "site/0/index.html": "57ae5f71fb2d199654556e5f5b2176959dbcfbc0e3aed90367108e35308e1023",
+   "site/0/machine.json": "bf56a8a877e8c0002d65da38b2c074e4b03e70570b62beb58ea7bcbe0ac20554",
+   "site/0/maps/ci.html": "b84c01993c47c07a78fc457f537a9654da309c410281df7832990ee42fd282ff",
+   "site/0/maps/directories.html": "9a64e6aa9c5315f994d05f0c5a8bafc4512db3c5d9a0599d8f874c98ac4ac90b",
+   "site/0/maps/infrastructure.html": "18cd415dde9095acd34cf71335ff824787751e47ebe3431e8e57146ece74a838",
+   "site/0/maps/units.html": "791575d8c1527287f374abb2b563928e44853d59049b494810a548eb0d43632d",
+   "site/0/name-index.html": "7f53a9ffe3dc1d93c11fa458883d56d196b50f25646caf828b2c6d72a8dd52c9",
+   "site/0/poles/2.html": "3c76f5e3e35a042cae835a763524fc8baf2d82d4d30a81fef9870f32b55eac26",
+   "site/0/review.html": "bb04c3467b8f1d648f26374f6b829ada5dd9c85298a7aed561e3c43d2533ca5d",
+   "site/0/size-report.html": "4434730e872c4993ce482b0043c57cb45871c48cccad028f4c4d92300063cd5e",
+   "site/0/size-report.json": "955c30932eb353838e274b63e5d82028d6fafdb97a9f96e7637dd5068a7fe1ce",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "4aaccf262b7ac357287e9be2d0b88139015b10a984a7b79fd08962c8fd7ad203",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "78314fdcf9b357c88876df6835940ab297b5b713121cf0bc58d82bc83201f227",
+   "site/0/sources/index.html": "0fc607a6fa35e5788f71821f6a582234bd5edcfe99e93d2cae2623e8ad56d4c5",
+   "site/0/understanding.html": "4ec5a556bc26bf3c7f9297dcc761e66d274039b4175651255abf40755f68ec1d",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v8/sequence-early": {
+  "outcome": "passed",
+  "findings": [],
+  "render": "ok",
+  "files": {
+   "brief.json": "ed6452c7f198c38fd752f9109a67af80cbddebd271a865f0d93af3630dce1b4c",
+   "brief.md": "b5d3bb2468795f4e23c708e9381e05d68be0ead097440c0e83ae6820066c42ea",
+   "checks/rev-0.json": "c2523f351a98c5137848751f4d6e8f9323c2b9cdc3d0f8c0ad42d1fdf4eb0ddd",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "drafts/rev-0.json": "7855c09969a6881cfda08057696d916fec9a07f333adbc00ec07886baab658dc",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "site/0/appendix.html": "72a7fd12108d2ecf0105b4feb740ec3cbc9b92fb793cf00c868447fe2809e046",
+   "site/0/clarifications.html": "f9895e0bdce41d43a4dda5ccb2af5095e224d60cab8da56f8ee5e9fd6d6bfc04",
+   "site/0/contents.html": "8df974700c32962d5f4711c7ae3044bf808f6b654dbad104c5a419085e918b23",
+   "site/0/derived-structure.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "site/0/discovery.html": "df2e333be2291e4ea847c0d95fed9f97cd246b08845356e5bdc25bfe7006b5c7",
+   "site/0/dossier.json": "10f0fd49a9194650becc6f855ca6369b2ec2c49be46e028ef67710370c8b05c0",
+   "site/0/executions.html": "730e9be5192b6645c02750ce1d597d6736d43c701622a3959c4d023de97bb95b",
+   "site/0/find-by-task.html": "da59dd0c5c5be7f457861dca661e208d023da1d5cb3bb7e5536c5b5bac897de7",
+   "site/0/glossary.html": "cbfceed7a396bcb0d62a12938400711411afeba67f0c08dcf36521106b1b3c49",
+   "site/0/index.html": "57ae5f71fb2d199654556e5f5b2176959dbcfbc0e3aed90367108e35308e1023",
+   "site/0/machine.json": "bf56a8a877e8c0002d65da38b2c074e4b03e70570b62beb58ea7bcbe0ac20554",
+   "site/0/maps/ci.html": "b84c01993c47c07a78fc457f537a9654da309c410281df7832990ee42fd282ff",
+   "site/0/maps/directories.html": "9a64e6aa9c5315f994d05f0c5a8bafc4512db3c5d9a0599d8f874c98ac4ac90b",
+   "site/0/maps/infrastructure.html": "18cd415dde9095acd34cf71335ff824787751e47ebe3431e8e57146ece74a838",
+   "site/0/maps/units.html": "791575d8c1527287f374abb2b563928e44853d59049b494810a548eb0d43632d",
+   "site/0/name-index.html": "7f53a9ffe3dc1d93c11fa458883d56d196b50f25646caf828b2c6d72a8dd52c9",
+   "site/0/poles/2.html": "3c76f5e3e35a042cae835a763524fc8baf2d82d4d30a81fef9870f32b55eac26",
+   "site/0/review.html": "bb04c3467b8f1d648f26374f6b829ada5dd9c85298a7aed561e3c43d2533ca5d",
+   "site/0/size-report.html": "4434730e872c4993ce482b0043c57cb45871c48cccad028f4c4d92300063cd5e",
+   "site/0/size-report.json": "955c30932eb353838e274b63e5d82028d6fafdb97a9f96e7637dd5068a7fe1ce",
+   "site/0/sources/3239fdb4fd7294274ba7cd8f.html": "4aaccf262b7ac357287e9be2d0b88139015b10a984a7b79fd08962c8fd7ad203",
+   "site/0/sources/b42220af55ad614d4f9d1486.html": "78314fdcf9b357c88876df6835940ab297b5b713121cf0bc58d82bc83201f227",
+   "site/0/sources/index.html": "0fc607a6fa35e5788f71821f6a582234bd5edcfe99e93d2cae2623e8ad56d4c5",
+   "site/0/understanding.html": "4ec5a556bc26bf3c7f9297dcc761e66d274039b4175651255abf40755f68ec1d",
+   "steps.jsonl": "868c19abd27f4cd52c5c20a68e60f71ff7f72ad14faba43f59f6f90cf398282c"
+  }
+ },
+ "polaris-dossier-local-draft-v8/relation": {
+  "outcome": "findings",
+  "findings": [
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].nodes[0].unit",
+    "detail": "is not a field of this form"
+   },
+   {
+    "kind": "schema",
+    "at": "$.diagrams[0].edges[0].relation",
+    "detail": "is not a field of this form"
+   }
+  ],
+  "files": {
+   "brief.json": "5bcb808995b05427753d6218c8b28f83a84f667d565807f46d279e35ca7dab28",
+   "brief.md": "6a56940e9f136abb7f6d96bb83d87b185c498168e87f6946ed765f8eaef64a61",
+   "checks/rev-0.json": "3f2a7e0dd3311bba946312e4c2d9ea3bd9f44a9dbe6ba33b23dd2bdd1088f41c",
+   "derived/rev-0.json": "e2392da5047838d66bf5292b641747cd69f375a6691d83318fc66a169685fe07",
+   "draft.schema.json": "bc931c3688257498bc2b371ac298b5b6109a3488636aa1fd8e7b4a385e9d2520",
+   "drafts/next.json": "e8f1f618285fb470b8e3ef9e35feac6e17b765351540fc343c237ff0fa81044f",
+   "drafts/rev-0.json": "e8f1f618285fb470b8e3ef9e35feac6e17b765351540fc343c237ff0fa81044f",
+   "run-advice.json": "ed5b338fe486866fc41e173f40906ae9309cbc81106103f585bca0124417214d",
+   "steps.jsonl": "55e490c6d05f2b49945e12eeaeb9d6cbc7aa2129500f36e011ccf81cab401f5c"
+  }
+ }
+}

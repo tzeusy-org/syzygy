@@ -605,6 +605,15 @@ def hero_amendment(root: Path) -> str | None:
     return text
 
 
+def readers_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+    text, records, subjects = adoption.readers_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("reader's edition adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def reltype_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -685,7 +694,8 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.TREEREAD_SPEC, treeread_amendment(root)),
                         (adoption.VERIFY_SPEC, verify_amendment(root)),
                         (adoption.RELTYPE_SPEC, reltype_amendment(root)),
-                        (adoption.HERO_SPEC, hero_amendment(root))):
+                        (adoption.HERO_SPEC, hero_amendment(root)),
+                        (adoption.READERS_SPEC, readers_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -740,12 +750,13 @@ def composition_inputs(root: Path) -> list[Path]:
     verify_amendment(root)
     reltype_amendment(root)
     hero_amendment(root)
+    readers_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
-        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS,
+        *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS,
     }

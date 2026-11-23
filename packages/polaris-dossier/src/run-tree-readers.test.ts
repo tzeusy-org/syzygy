@@ -11,7 +11,7 @@ import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
 import { readExecutionChoice } from './execution-choice.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
-import { READ_CASES, growOnceSized, opensOf, patchFs, trackReads, underReadCase } from './fs-patch.testkit.js';
+import { opensOf, patchFs } from './fs-patch.testkit.js';
 import { blockingWhy, loadState, readMaxRepairCycles, readReviewCheck, readVerdict, runPolarisCli } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
@@ -63,15 +63,33 @@ const logPadded = (line: string, bytes: number): string => {
 
 /** The bytes `run` reads from `subject`, one total per time it opens it. */
 const bytesReadFrom = (subject: string, run: () => void): number[] => {
-  const reads = trackReads(subject);
-  try { run(); } finally { reads.restore(); }
-  return reads.totals;
+  const opened = new Map<number, number>();
+  const totals: number[] = [];
+  const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+    const fd = (original as (...args: unknown[]) => number)(file, ...rest);
+    opened.delete(fd);
+    if (file === subject) { opened.set(fd, totals.length); totals.push(0); }
+    return fd;
+  }) as typeof original);
+  const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+    const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+    const index = opened.get(fd);
+    if (index !== undefined) totals[index]! += read;
+    return read;
+  }) as typeof original);
+  try { run(); } finally { restoreRead(); restoreOpen(); }
+  return totals;
 };
 
 /** Runs `run` while `subject` grows by a mebibyte once a descriptor's size is taken at exactly `bound` bytes. */
 const grownAfterSize = (subject: string, bound: number, run: () => void): void => {
-  const growth = growOnceSized(subject, bound);
-  try { run(); } finally { growth.restore(); }
+  let grown = false;
+  const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+    const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+    if (!grown && stats.isFile() && stats.size === bound) { grown = true; fs.appendFileSync(subject, '\n'.repeat(1_048_576)); }
+    return stats;
+  }) as typeof original);
+  try { run(); } finally { restore(); }
 };
 
 const PLANTS: readonly [string, (file: string) => void][] = [

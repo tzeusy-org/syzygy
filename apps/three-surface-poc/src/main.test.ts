@@ -9,8 +9,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi, type RunnerTa
 import type { DaemonOptions, DaemonStart, Route } from '@syzygy/http-host';
 import { PocObservationError, type PocModel } from '@syzygy/three-surface-poc-core';
 
-import type { GitObservation } from './git-observation.js';
-import { pocObserverInputsAreClean } from './git-observation.js';
+import { pocObserverInputsAreClean, resolvePwbRepositoryBinding, type GitObservation } from './git-observation.js';
 import { materializeRoutes } from './materialize-action.js';
 import { main, type PocIo, type PocMainDeps } from './poc-main.js';
 import { buildFixtureModel } from './test-model-fixture.js';
@@ -169,6 +168,11 @@ function harness(overrides: Partial<PocMainDeps> = {}, options: { observer?: Git
   let builds = 0;
   let observer = options.observer ?? observation('observer-rev');
   const deps: PocMainDeps = {
+    resolvePhysicalPath: (path) => path === OBSERVER_ROOT ? path : realpathSync(path),
+    authorizePwbLocator: ({ governanceRevision, evaluationInstant }) => {
+      calls.push(`authority ${governanceRevision}`);
+      return { kind: 'admitted', locator: repoRoot, authority: { ...ADMITTING_AUTHORITY, evaluationInstant } };
+    },
     resolveBinding: (locator) => { calls.push(`bind ${locator}`); return { kind: 'bound', locator, gitCommonDirectory: join(locator, '.git') }; },
     observeGitRepository: (root) => {
       calls.push(`observe ${root}`);
@@ -264,7 +268,7 @@ describe('main(argv, io): early exits', () => {
     expect(h.calls).toEqual([]);
   });
 
-  it('refuses a repository path that cannot be resolved before the gate is consulted', async () => {
+  it('refuses an unreadable configured path without reaching Git', async () => {
     const fake = fakeIo();
     const h = harness();
     expect(await main(['--repo', join(scratch, 'does', 'not', 'exist')], fake.io, h.deps)).toBe(1);
@@ -274,6 +278,32 @@ describe('main(argv, io): early exits', () => {
 });
 
 describe('main(argv, io): the P1 authority gate', () => {
+  it.each(['same path', 'alias', 'nested observer', 'nested target'])(
+    'refuses a configured target overlapping the observer checkout (%s) before any Git operation',
+    async (overlap) => {
+      const fake = fakeIo();
+      const observer = overlap === 'nested observer' ? join(repoRoot, 'subdir') : repoRoot;
+      const target = overlap === 'nested target' ? join(repoRoot, 'subdir') : repoRoot;
+      const configured = overlap === 'alias' ? '/alias/of/the/observer' : target;
+      const h = harness({
+        resolvePhysicalPath: (path) => path === OBSERVER_ROOT ? observer : target,
+      }, {
+        start: { started: false, failure: { kind: 'duplicate-route', detail: 'unexpected daemon startup' } },
+      });
+      expect(await main(['--repo', configured], fake.io, h.deps)).toBe(1);
+      expect(fake.err()).toBe('syzygy POC: observer checkout overlaps the configured repository\n');
+      expect(h.calls).toEqual([]);
+    },
+  );
+
+  it('a refused grant reaches no configured-repository operation', async () => {
+    const fake = fakeIo();
+    const h = harness({ authorizePwbLocator: () => ({ kind: 'rejected', reason: 'body-read-not-admitted' }) });
+    expect(await main(['--repo', repoRoot], fake.io, h.deps)).toBe(1);
+    expect(fake.err()).toBe('syzygy POC: configured repository authority rejected (body-read-not-admitted)\n');
+    expect(h.calls).toEqual([`observe ${OBSERVER_ROOT}`]);
+  });
+
   it('a rejected binding exits 1 and reaches no observation, model, daemon or state directory', async () => {
     const fake = fakeIo();
     const stateDir = join(scratch, 'never-created-state');
@@ -287,15 +317,22 @@ describe('main(argv, io): the P1 authority gate', () => {
     expect(await main(['--repo', repoRoot, '--state-dir', stateDir], fake.io, h.deps)).toBe(1);
     expect(fake.err()).toBe('syzygy POC: configured repository authority rejected (locator-mismatched)\n');
     expect(fake.out()).toBe('');
-    expect(h.calls).toEqual([`bind ${repoRoot}`]);
+    expect(h.calls).toEqual([`observe ${OBSERVER_ROOT}`, 'authority observer-rev', `bind ${repoRoot}`]);
     expect(existsSync(stateDir)).toBe(false);
   });
 
-  it('the shipped collaborators reject a directory that is not the registered repository', async () => {
+  it('the shipped binding rejects a directory that is outside the admitted locator', async () => {
     const fake = fakeIo();
-    expect(await main(['--repo', repoRoot], fake.io)).toBe(1);
-    expect(fake.err()).toMatch(/^syzygy POC: configured repository authority rejected \((locator-mismatched|binding-unreadable)\)\n$/);
+    const admitted = join(scratch, 'admitted-elsewhere');
+    mkdirSync(admitted);
+    const h = harness({
+      authorizePwbLocator: () => ({ kind: 'admitted', locator: admitted, authority: ADMITTING_AUTHORITY }),
+      resolveBinding: resolvePwbRepositoryBinding,
+    });
+    expect(await main(['--repo', repoRoot], fake.io, h.deps)).toBe(1);
+    expect(fake.err()).toBe('syzygy POC: configured repository authority rejected (locator-mismatched)\n');
     expect(fake.out()).toBe('');
+    expect(h.calls).toEqual([`observe ${OBSERVER_ROOT}`]);
   });
 });
 
@@ -305,7 +342,7 @@ describe('main(argv, io): startup refusals after the gate', () => {
     const h = harness({}, { observer: observation('observer-rev', ['apps/three-surface-poc/src/main.ts']) });
     expect(await main(['--repo', repoRoot], fake.io, h.deps)).toBe(1);
     expect(fake.err()).toBe('syzygy POC: POC runtime inputs have uncommitted changes\n');
-    expect(h.calls).toEqual([`bind ${repoRoot}`, `observe ${repoRoot}`, `observe ${OBSERVER_ROOT}`]);
+    expect(h.calls).toEqual([`observe ${OBSERVER_ROOT}`]);
   });
 
   it('names a git failure with its exit status, never its message', async () => {
@@ -385,9 +422,10 @@ describe('main(argv, io): serving', () => {
       expect(routes).toContain(expected);
     }
     expect(h.calls).toEqual([
+      `observe ${OBSERVER_ROOT}`,
+      'authority observer-rev',
       `bind ${repoRoot}`,
       `observe ${repoRoot}`,
-      `observe ${OBSERVER_ROOT}`,
       `horizon ${repoRoot} butlers-rev`,
       `model 1 butlers-rev ${repoRoot} ${OBSERVER_ROOT} ${NOW}`,
       `observatory ${OBSERVER_ROOT} observer-rev`,
@@ -456,7 +494,7 @@ describe('main(argv, io): serving', () => {
     await new Promise((resolve) => setImmediate(resolve));
     await new Promise((resolve) => setImmediate(resolve));
     expect(fake.out()).toBe(before);
-    expect(h.calls).toHaveLength(7);
+    expect(h.calls).toHaveLength(8);
     fake.signal('SIGINT');
     await run;
   }, TEST_TIMEOUT_MS);
@@ -486,9 +524,10 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(fake.out()).toContain(`Observed repository: ${BOUND}\n`);
     expect(h.daemonOptions()?.stateDir).toBe(stateDir);
     expect(h.calls).toEqual([
+      `observe ${OBSERVER_ROOT}`,
+      'authority observer-rev',
       `bind ${repoRoot}`,
       `observe ${BOUND}`,
-      `observe ${OBSERVER_ROOT}`,
       `horizon ${BOUND} butlers-rev`,
       `model 1 butlers-rev ${BOUND} ${OBSERVER_ROOT} 2026-10-22T09:00:00.000Z`,
       `observatory ${OBSERVER_ROOT} observer-rev`,
@@ -538,6 +577,45 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(response.body).toContain('The routing log SHALL carry the resolved entity.');
     expect(response.body).not.toContain('PURPOSE-PROSE-NEVER-RENDERED');
 
+    fake.signal('SIGINT');
+    expect(await run).toBe(0);
+  }, TEST_TIMEOUT_MS);
+
+  it('keeps captured data but refuses fresh verbatim reads after withdrawal, then resumes on an admitted refresh', async () => {
+    const fake = fakeIo();
+    const model = buildFixtureModel(fixtureDirectories, {
+      projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
+    });
+    const grant = { kind: 'admitted' as const, locator: repoRoot, authority: ADMITTING_AUTHORITY };
+    const authorizePwbLocator = vi.fn<PocMainDeps['authorizePwbLocator']>()
+      .mockReturnValueOnce(grant)
+      .mockReturnValueOnce({ kind: 'rejected', reason: 'body-read-not-admitted' })
+      .mockReturnValueOnce(grant);
+    const refreshed = { ...model, evaluation: { ...model.evaluation, snapshot: `${model.evaluation.snapshot}-refreshed` } };
+    const h = harness({ authorizePwbLocator }, { model: (build) => build === 1 ? model : refreshed });
+    const text = 'The switchboard SHALL resolve the sender of every inbound message to an entity.';
+    blobReader.serve = () => new TextEncoder().encode(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC['openspec/specs/switchboard-identity/spec.md']);
+    const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state')], fake.io, h.deps);
+    await started(run, fake);
+
+    const page = routeOf(h, 'GET', '/polaris');
+    const machine = routeOf(h, 'GET', '/api/poc');
+    const refresh = routeOf(h, 'POST', '/polaris/reobserve');
+    const request = { method: 'POST' as const, path: refresh.path, query: new URLSearchParams(), headers: LOCAL_BROWSER };
+    expect((await get(page)).body).toContain(text);
+    const readsBefore = blobReader.objectIds.length;
+    const prior = (await get(machine)).body;
+
+    expect((await refresh.handle({ request })).status).toBe(502);
+    const refused = await get(page);
+    expect(refused.body).toContain('The current repository authority is unconfirmed. No source was read.');
+    expect(refused.body).not.toContain(text);
+    expect(blobReader.objectIds).toHaveLength(readsBefore);
+    expect((await get(machine)).body).toBe(prior);
+
+    expect((await refresh.handle({ request })).status).toBe(200);
+    expect((await get(page)).body).toContain(text);
+    expect(blobReader.objectIds).toHaveLength(readsBefore + 1);
     fake.signal('SIGINT');
     expect(await run).toBe(0);
   }, TEST_TIMEOUT_MS);
@@ -610,9 +688,9 @@ describe('main(argv, io): the POST /polaris/reobserve handlers main registers', 
   });
   const servedSnapshot = async (h: Harness): Promise<string> => (JSON.parse((await get(routeOf(h, 'GET', '/api/poc'))).body) as { evaluation: { snapshot: string } }).evaluation.snapshot;
 
-  async function serve(options: Parameters<typeof harness>[1] = {}) {
+  async function serve(options: Parameters<typeof harness>[1] = {}, deps: Partial<PocMainDeps> = {}) {
     const fake = fakeIo();
-    const h = harness({}, { model: distinctBuilds(), ...options });
+    const h = harness(deps, { model: distinctBuilds(), ...options });
     const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state'), '--port', '0'], fake.io, h.deps);
     await started(run, fake);
     const stop = async (): Promise<void> => { fake.signal('SIGINT'); expect(await run).toBe(0); };
@@ -668,6 +746,25 @@ describe('main(argv, io): the POST /polaris/reobserve handlers main registers', 
 
     expect(h.calls).toHaveLength(calls);
     expect(await servedSnapshot(h)).toBe(before);
+    await stop();
+  }, TEST_TIMEOUT_MS);
+
+  it('refreshes the grant before touching the configured repository and serves the last good capture after withdrawal', async () => {
+    const grant = vi.fn<PocMainDeps['authorizePwbLocator']>()
+      .mockReturnValueOnce({ kind: 'admitted', locator: repoRoot, authority: ADMITTING_AUTHORITY })
+      .mockReturnValueOnce({ kind: 'rejected', reason: 'body-read-not-admitted' });
+    const { h, stop } = await serve({}, { authorizePwbLocator: grant });
+    const prior = await servedSnapshot(h);
+    const calls = h.calls.length;
+    h.setObserver(observation('observer-with-withdrawal'));
+
+    const result = await post(routeOf(h, 'POST', '/polaris/reobserve'), LOCAL_BROWSER);
+
+    expect(result.status).toBe(502);
+    expect(result.body).toContain('configured repository authority rejected (body-read-not-admitted)');
+    expect(grant.mock.lastCall?.[0].governanceRevision).toBe('observer-with-withdrawal');
+    expect(h.calls.slice(calls)).toEqual([`observe ${OBSERVER_ROOT}`]);
+    expect(await servedSnapshot(h)).toBe(prior);
     await stop();
   }, TEST_TIMEOUT_MS);
 
