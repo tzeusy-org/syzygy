@@ -1,0 +1,149 @@
+{
+  "adoption": "A-146",
+  "source": {
+    "commit": "883ba9d85173104b9f1acbb0e89e9c1b8c7ada30",
+    "tree": "c98893ad26342cfa5be7e81e54851605f01b29ec",
+    "base": "759d639bbeb8e0bbef8c8cb2f5a2619378164b93",
+    "patchSha256": "c93b6c50aa74732677eb8353a9be6f5fe722ad6200faf6e384af2010fdadc73e"
+  },
+  "review": {
+    "raw": "docs/reviews/F3-TERMINAL-READ-LOCK-REVIEW-RAW.md",
+    "sha256": "4f6a6461c91e71d5d184c01ef1e7dc17ac09328e6b4b0f1e9e846f42436a3149",
+    "verdict": "PASS",
+    "scope": "source only"
+  },
+  "focusedChecks": {
+    "typecheck": {
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "vitest": {
+      "exit": 0,
+      "files": [
+        "url-run-machine-close.test.ts",
+        "url-machine-store.test.ts"
+      ],
+      "passed": 103,
+      "logSha256": "2c154e7db3cbbfc6df5c117ac02e73e2cc363496573470fdaa8eed7d8b19fb48"
+    },
+    "deliberateFaults": [
+      {
+        "id": "generic-lock-brackets",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "groups the named-root check",
+        "old": "if (!terminalRead) {\n            if (!synchronousAnchor)",
+        "new": "if (true) {\n            if (!synchronousAnchor)",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "0960eef96b2a6816c5318d7a83c248e946f2e1c1cc2614f5b85fc9a04bfe3094"
+      },
+      {
+        "id": "no-named-root-sample",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "refuses a swapped named root",
+        "old": "check();\n                verifyNamedRoots();\n                checkDeadline();\n                if (contended",
+        "new": "check();\n                checkDeadline();\n                if (contended",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "447c9919cfb4e74cc535f82564538096da3a4561f6744737d7249217491544c7"
+      },
+      {
+        "id": "retry-after-lock-cutoff",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "refuses terminal read lock contention",
+        "old": "if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();\n              }",
+        "new": "\n              }",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "1db0689422bc23ce2641a979ce990635b6f001f49e3213cb3fec03d41a8d34c9"
+      },
+      {
+        "id": "mutable-cached-snapshot",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "detaches terminal snapshots",
+        "old": "return Object.freeze({ canonical, ...deepFreeze(structuredClone(metadata)) });",
+        "new": "return snapshot;",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "1659856d2ec9368c571662c280d8b8896d80464b6989ce65b310d7cbaa43fe3b"
+      },
+      {
+        "id": "late-cutoff-omitted",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withdrawal 'none'",
+        "old": "if (terminalRead && contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) {",
+        "new": "if (false && contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) {",
+        "expectedFailedTests": 2,
+        "exit": 1,
+        "logSha256": "58b8430c52a399b44b3fcb32301ecf38971278930f51c89e221e3f9f980a4f23"
+      },
+      {
+        "id": "late-sync-check-omitted",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withdrawal 'during-confirmation'",
+        "old": "          check();\n          verifyNamedRoots();\n          checkDeadline();\n          // Submit cleanup",
+        "new": "          verifyNamedRoots();\n          checkDeadline();\n          // Submit cleanup",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "4c4fbe6c2ed99429cbdd700745ff5e5a2e2730f9cff9344ee88f599cb776d059"
+      },
+      {
+        "id": "late-root-check-omitted",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withdrawal 'named-root-replaced'",
+        "old": "          check();\n          verifyNamedRoots();\n          checkDeadline();\n          // Submit cleanup",
+        "new": "          check();\n          checkDeadline();\n          // Submit cleanup",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "cb30fa621f9f1dba91f59e47bfa994fe9e47a684d202d4f7a46eca4bfa1da0a3"
+      },
+      {
+        "id": "yield-before-rmdir",
+        "source": "packages/polaris-dossier/src/url-machine-store.ts",
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withdrawal 'queued-after-check'",
+        "old": "          await rmdir(`${base}/lock`);\n          held = false;",
+        "new": "          await Promise.resolve();\n          await rmdir(`${base}/lock`);\n          held = false;",
+        "expectedFailedTests": 1,
+        "exit": 1,
+        "logSha256": "13c766c201248f42d3d92b39a5d6b6a263018bae279272a490d472709a4a60b5"
+      }
+    ]
+  },
+  "nativeEvidence": [
+    {
+      "case": "interrupted supervised Resume",
+      "commit": "759d639bbeb8e0bbef8c8cb2f5a2619378164b93",
+      "ci": "https://github.com/tzeusy-org/syzygy/actions/runs/45223669039/job/137866352689",
+      "logSha256": "c3da951a1774d335a4e2f81104c52b1d201000f80047b7e3f5d053bf2b05d6e9",
+      "observed": [
+        "historical terminal verification began after the stopped boundary and open store were accepted",
+        "first retained terminal read returned accepted before the transaction refused at 5094.883301 ms",
+        "the two paired samples and ten in-transaction asynchronous authority samples were accepted",
+        "fresh Design launch and Execution Record were absent"
+      ]
+    },
+    {
+      "case": "interrupted supervised Resume, earlier grouped reader",
+      "commit": "7e4f0b69d95a27a89137fc37cbeeaf3ae6ed0a4e",
+      "tree": "95b130f19e57b210ed6a5e298ffbaf658858a582",
+      "logSha256": "3244a98c4150c0604f73fed2abfce2b5e0445b45fa642b54e1715ef01572cc28",
+      "observed": [
+        "eight retained terminal reads accepted, each with eight asynchronous authority checks and two paired samples",
+        "retained reads took 1539.620 to 1999.335 ms each",
+        "two fresh allocations and the Design-only restart were accepted",
+        "the second native inspection refused after 1024.198 ms against the 1000 ms bound",
+        "no resumed Design send or Execution Record followed"
+      ],
+      "limit": "This precursor predates the reviewed late-lock cleanup guards."
+    }
+  ],
+  "unknown": "Both end-to-end native recovery results at the reviewed source."
+}
