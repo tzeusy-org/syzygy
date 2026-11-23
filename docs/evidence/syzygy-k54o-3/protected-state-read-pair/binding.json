@@ -1,0 +1,69 @@
+{
+  "subject": "2989e12bcade4dd421926ba6940bcfa0f872d0a1",
+  "base": "be11e6030dbf2f98b4bca1c8536fa700d4b93069",
+  "fullBinaryDiffSha256": "7f3386586d8d8eda1bb297cb6b590a06cdf76f971167641abe1538960cffed2c",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW.md",
+    "rawSha256": "7a5c64fe02be79da237e12d2df9ade628561206b1020d820fcfcba41ff9fe3f0"
+  },
+  "validation": {
+    "typecheck": {
+      "outcome": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "store": {
+      "passed": 46,
+      "total": 46,
+      "logSha256": "1657d135723c0eb599f2fddbee858897f5d2781862fef2091ad9c730c280065d"
+    },
+    "lifecycle": {
+      "passed": 36,
+      "total": 36,
+      "logSha256": "81428f6edabc4af406dc3f6cace9e83882d8b6b3f76675a71a085c7a29ceea98"
+    }
+  },
+  "mutations": {
+    "serialized": {
+      "subject": "2989e12bcade4dd421926ba6940bcfa0f872d0a1",
+      "before": [
+        "      const [identity, stateFile] = await Promise.allSettled([",
+        "        readFile(`${base}/identity.json`, 16_384),",
+        "        readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes),",
+        "      ]);"
+      ],
+      "after": [
+        "      const [identity] = await Promise.allSettled([readFile(`${base}/identity.json`, 16_384)]);",
+        "      const [stateFile] = await Promise.allSettled([readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes)]);"
+      ],
+      "patchSha256": "cec2ea4441d78f5fe455e12cab6067f99da2708ce5a335235bb579658dbcfd1e",
+      "logSha256": "49486ead0ae9c9afec5ef30856b56b0a291da245a2e0b68406b29bf927a70316",
+      "failed": 1,
+      "skipped": 45,
+      "total": 46
+    },
+    "early-refusal": {
+      "subject": "2989e12bcade4dd421926ba6940bcfa0f872d0a1",
+      "before": [
+        "      const [identity, stateFile] = await Promise.allSettled([",
+        "        readFile(`${base}/identity.json`, 16_384),",
+        "        readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes),",
+        "      ]);"
+      ],
+      "after": [
+        "      const success = <T>(value: T): PromiseSettledResult<T> => ({ status: 'fulfilled', value });",
+        "      const [identity, stateFile] = await Promise.all([",
+        "        readFile(`${base}/identity.json`, 16_384).then(success),",
+        "        readFile(`${base}/state.json`, URL_MACHINE_STORE_LIMITS.bytes).then(success),",
+        "      ]);"
+      ],
+      "patchSha256": "7daabad6017a1a54dd83c4f75f71563d311a616962c86ed9acf3927b623a3fe6",
+      "logSha256": "25652f357dc513b4bea1e10f0fd63dd8a30cfb184899da285fa489474af9b9c4",
+      "failed": 1,
+      "skipped": 45,
+      "total": 46
+    }
+  },
+  "precedingPublicationTiming": "../native-recovery-0d1fdfa78/publication-overlay.json"
+}

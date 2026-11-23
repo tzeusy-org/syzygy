@@ -21,6 +21,7 @@
 - `F3-MAIN-82290-MERGE-REVIEW-RAW\.md`
 - `F3-INITIAL-RENDER-HANDOFF(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-(PEER-POSITIONAL-IMAGE|STORAGE-LISTING-CLOSE)-REVIEW-RAW\.md`
+- `F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -99,3 +100,5 @@
 [Observed] The storage listing close review records `PASS` (`F3-STORAGE-LISTING-CLOSE-REVIEW-RAW.md:1`) for `9992cc285`. A-124 adopts concurrent closure of the independent listing and anchor at EOF when the tail batch is empty.
 
 [Observed] The installed peer image review records `PASS` (`F3-PEER-POSITIONAL-IMAGE-REVIEW-RAW.md:1`) for `4fb27aa6e`. A-125 adopts two bounded positional reads with ordered hashing, fresh currentness and both reads settling before close.
+
+[Observed] The protected state read pair review records `PASS` (`F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW.md:1`) for `2989e12bc`. A-126 overlaps the two private reads and keeps the state-to-client and late archive checks.

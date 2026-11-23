@@ -1,0 +1,44 @@
+{
+  "testedCommit": "0d1fdfa783c52151adbd4c5a919ae3bacbbd4e1c",
+  "testedTree": "4698644687dc24994d44f015ebe521d812b935cf",
+  "timingOverlaySha256": "454bb62008d31f25a558ebec19de4aa817e13c65fbf7e40e273dc5693a95134a",
+  "rawLogSha256": "110d64e7ac1d5a5b83d7c781fb6191e7162502fd387744efc1068bab87deb784",
+  "scenario": "stop-resume",
+  "timedObservation": {
+    "traceResult": "refused",
+    "tracePhase": "operate",
+    "elapsedMs": 5031.746633999981,
+    "pending": 1,
+    "samples": {
+      "synchronous-authority": {
+        "count": 11,
+        "totalMs": 1039.7416240000457,
+        "longestMs": 108.99387299999944
+      },
+      "io": {
+        "count": 26,
+        "totalMs": 3478.262897999957,
+        "longestMs": 1561.200588000007
+      },
+      "checked-state": {
+        "count": 7,
+        "totalMs": 1501.4237780000549,
+        "longestMs": 1230.5815950000251
+      }
+    }
+  },
+  "transportRefusal": {
+    "capture": {
+      "startedMs": 123832.369,
+      "settledMs": 127156.605,
+      "outcome": "accepted"
+    },
+    "authorize": {
+      "startedMs": 127156.733,
+      "settledMs": 132272.107,
+      "outcome": "refused"
+    }
+  },
+  "recordPresent": false,
+  "scope": "A local timing-only overlay on protected state publication. Checked-state durations are included in IO durations. The pending operation is excluded from completed durations."
+}
