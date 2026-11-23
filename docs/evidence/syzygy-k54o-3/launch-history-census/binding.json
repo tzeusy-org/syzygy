@@ -1,0 +1,167 @@
+{
+  "adoption": "A-142",
+  "testedBase": "c8223ffa74af6416b4ee43ad570562304dbbfd1f",
+  "sourceCommit": "8c0439e688a5f44553150d8b2dc76ad082e060f1",
+  "patchSha256": "b6b1873e8849c5007f870a10db9a56d8aec313b196062ae06f723805b315666f",
+  "sourceBlobs": {
+    "url-run-ordered-attempt.ts": "1a3cf9ddca8e82a0d103a60ed99a8db740501fae",
+    "url-session-audit.ts": "a9af40515ec8e5dc089014a7f694e68806617003",
+    "url-run-composed.test.ts": "f447529de0c7b88f23243906c8870e05cdb6c847",
+    "url-launch-history.test.ts": "f73857997072f7d36f08100dafe7b22083935974"
+  },
+  "review": {
+    "path": "docs/reviews/F3-LAUNCH-HISTORY-CENSUS-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "69e62e0ad65f57678669659b49068021d2f7ee56be6f4ab81156f733c295a059",
+    "subjectSha256": "b6b1873e8849c5007f870a10db9a56d8aec313b196062ae06f723805b315666f"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "exactIntegration": {
+      "files": 2,
+      "cases": 167,
+      "sha256": "4b5d1e0163503e72352ab9fe72e731ef4bab08623f52c922e9867902b27c0ba0"
+    }
+  },
+  "priorDiagnostic": {
+    "commit": "91bd698c001967fc0e7de9595aefc17cfe9bc8ed",
+    "patchSha256": "b76c3a24437609ef7b1ad78377b7b1619aa67ec219c70f99c09df1445a9afcf1",
+    "logSha256": "72e7562b3d05182ca050cebeb144984e596c2a818a41392da41373d5d69861bc",
+    "scenario": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 230858
+    },
+    "firstLauncherRefusal": {
+      "ordinal": 4,
+      "phases": {
+        "process": {
+          "startedMs": 0.03912299999501556,
+          "settledMs": 858.1193050000002,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.08614200001466088,
+          "settledMs": 656.2049420000112,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.08835599999292754
+        }
+      },
+      "refusal": {
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1012.7685249999922
+      }
+    },
+    "launchHistory": {
+      "write": {
+        "startedMs": 124810.721,
+        "settledMs": 127735.204,
+        "outcome": "accepted"
+      },
+      "commit": {
+        "startedMs": 127735.332,
+        "settledMs": 128851.064,
+        "outcome": "accepted"
+      },
+      "register": {
+        "startedMs": 128851.135,
+        "settledMs": 128882.45,
+        "outcome": "rejected"
+      }
+    }
+  },
+  "nativeTrial": {
+    "commit": "1a18e8be781487ad848e0b8d96fd699e2d403223",
+    "differenceFromReviewedSource": [
+      "packages/polaris-dossier/src/url-launch-history.test.ts"
+    ],
+    "logSha256": "d9e6b9a166796d306ab28e32af26fb98c01289c988508841884bd3d17768fb29",
+    "scenario": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 232163
+    },
+    "launchHistory": {
+      "write": {
+        "startedMs": 107522.292,
+        "settledMs": 109686.829,
+        "outcome": "accepted"
+      },
+      "commit": {
+        "startedMs": 110121.09,
+        "settledMs": 112671.549,
+        "outcome": "accepted"
+      },
+      "register": {
+        "startedMs": 112671.635,
+        "settledMs": 113905.048,
+        "outcome": "accepted"
+      }
+    },
+    "designAuditTail": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "launch-terminal"
+    ],
+    "designForwards": 0,
+    "hostActivation": {
+      "startedMs": 104815.037,
+      "settledMs": 123720.335,
+      "outcome": "rejected"
+    },
+    "recoveryChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      }
+    ],
+    "executionRecord": "not-written"
+  },
+  "remaining": "The source check and sampled launch history are verified. The native trial reached durable Design delivery before activation refused. Public Resume completion remains Unknown.",
+  "mutationControls": [
+    {
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "commit": "8c0439e688a5f44553150d8b2dc76ad082e060f1",
+      "old": "sessionId: plan.declaration.sessionId } }, 'launch-history', checkLaunchCurrent);",
+      "new": "sessionId: plan.declaration.sessionId } }, 'launch-history');",
+      "run": {
+        "selected": 2,
+        "failed": 2,
+        "assertion": "promise resolved instead of rejecting"
+      },
+      "logSha256": "16b20e74b559b49f04fe40de33faffa60801671bd314750994a04a94d53d5691"
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "commit": "8c0439e688a5f44553150d8b2dc76ad082e060f1",
+      "old": "          await segments.get(role)!.file.sync();\n          await checkEffectCurrent(deadline);",
+      "new": "          if (event.kind !== 'launch-history') await segments.get(role)!.file.sync();\n          await checkEffectCurrent(deadline);",
+      "run": {
+        "selected": 2,
+        "failed": 1,
+        "passed": 1,
+        "assertion": "post-file-sync observation recorded zero completed file syncs"
+      },
+      "logSha256": "fa22607a2e4ed321cf5536e5538fdd29c671e34fc002800cad343b93184074f0"
+    }
+  ]
+}

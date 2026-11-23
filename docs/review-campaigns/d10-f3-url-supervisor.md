@@ -36,6 +36,7 @@
 - `F3-PEER-SAMPLE-ORDER(-R2)?-REVIEW-RAW\.md`
 - `F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW\.md`
 - `F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW\.md`
+- `F3-LAUNCH-HISTORY-CENSUS-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -146,3 +147,5 @@
 [Observed] The prepared site review records `PASS` (`F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW.md:1`) at `34a644680`. A-139 uses one full stored site walk for the exact prepared view and retires the delivery when that walk detects drift. Typecheck, 165 integration cases and two fault controls passed. [Unknown] Native timing for this subject.
 
 [Observed] The transport callback review records `PASS` (`F3-TRANSPORT-EFFECT-ENTRY-REVIEW-RAW.md:1`) at `033318cb7`. A-140 removes one repeated native authority check at transport callback entry. Typecheck, 127 integration cases and three fault controls passed. [Unknown] Effect on native lock timing.
+
+[Observed] The ordered launch-history review records `PASS` (`F3-LAUNCH-HISTORY-CENSUS-REVIEW-RAW.md:1`) at `8c0439e68`. A-142 orders pending native samples before the existing launch writer and audit authority checks. Typecheck and 167 integration cases passed. A native trial of the same production bytes registered the launch and durably recorded Design delivery before activation refused. [Unknown] End-to-end Resume.
