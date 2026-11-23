@@ -1556,7 +1556,11 @@ function create(given: UrlRunArtifactsOptions) {
       // check/verdict pairs whose old terminal was verified by the caller's
       // cold audit. No old ordered review proof is issued here.
       latestStageChecksAfterRestore();
-      for (const [file, value] of saved) assertProductFileUnchanged(run, file, value.snapshot, live);
+      // This synchronous metadata check opens no file bodies. Check live
+      // authority around the whole descriptor walk, as in frozen capture.
+      snapshotWithAuthority(check => {
+        for (const [file, value] of saved) assertProductFileUnchanged(run, file, value.snapshot, check);
+      });
       if (!(await waitForSamples())) refuse(); live();
       recovered.revalidate();
       return copy({ artifacts: products, initial: { briefIssuedAt: briefRecord['issuedAt'], deadline: recovered.deadline,
