@@ -12,6 +12,7 @@
 - `F3-RESUMED-AUDIT-TRACE(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-INITIAL-ROLE-INSPECTION(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-ARTIFACT-GATE-FIXTURE-REVIEW-RAW\.md`
+- `F3-EAGER-TASK-READS(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -70,3 +71,5 @@
 [Observed] The first resumed audit trace review records `BLOCK` (`F3-RESUMED-AUDIT-TRACE-INITIAL-REVIEW-RAW.md:1`) at `9d830473b` for a diagnostic that could count a callback after audit setup settled. The successor records `PASS` (`F3-RESUMED-AUDIT-TRACE-REVIEW-RAW.md:1`) at `95a85821c` after moving the cutoff into the original promise's settlement handler. The native directory-open fixture passed its four targeted cases. [Unknown] The result of the current native interrupted replay.
 
 [Observed] The local replay at `4ca23d1c7` completed all four fresh audit declarations and 26 authority checks before machine startup refused. The initial role observation review records `BLOCK` (`F3-INITIAL-ROLE-INSPECTION-INITIAL-REVIEW-RAW.md:1`) because a partial audit row could hide the captured inspections. The successor records `PASS` (`F3-INITIAL-ROLE-INSPECTION-REVIEW-RAW.md:1`) at `b72c3ee11` for preserving the inspections and reporting the auxiliary read failure. The artifact gate timing fixture review records `PASS` (`F3-ARTIFACT-GATE-FIXTURE-REVIEW-RAW.md:1`) at `f6c311701`. Its four targeted integration cases passed.
+
+[Observed] The first eager task-read review records `BLOCK` (`F3-EAGER-TASK-READS-INITIAL-REVIEW-RAW.md:1`) at `acb8a9b8d` because a task-listing failure after open could still yield a partial process count. The successor records `PASS` (`F3-EAGER-TASK-READS-REVIEW-RAW.md:1`) at `2466184be` after making partial listings refuse. Eight independent exact-source probes passed, including bounded task reads and non-leader descendants.

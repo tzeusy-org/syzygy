@@ -1,0 +1,5 @@
+BLOCK — `acb8a9b8d08dd3b37d0d18674a1f898fb039d020` against `e8e9651753aa14cb24a745a548313c18e740726c`.
+
+[Observed] The opened task-directory iterator can yield a thread, then throw `ENOENT`. The catch treats that error as disappearance and collects the outstanding reads. An exact-source probe returned a partial process count of 2 where complete enumeration returned 3. Handle initial `opendir` disappearance separately, then drain pending reads and reject any error from the opened iterator. [session-launch.ts](/home/orca/.tmp/f3-native-recovery-next.YkWY2HwV/w/packages/polaris-dossier/src/session-launch.ts:384)
+
+[Observed] The probe saw one read start after the first task on the candidate and zero on the parent, matching the held-cadence assertion. Complete enumeration counted non-leader descendants and deduplicated repeated PIDs, with four peak live handles. `EIO` rejected and drained the pending read. Source inspection confirmed the shared 1000 ms cutoff and storage, process, then authority admission order. Native verification remains with the parent.
