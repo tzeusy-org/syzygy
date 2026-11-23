@@ -20,6 +20,7 @@
 - `F3-FROZEN-PRODUCT-TRACE-REVIEW-RAW\.md`
 - `F3-MAIN-82290-MERGE-REVIEW-RAW\.md`
 - `F3-INITIAL-RENDER-HANDOFF(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-(PEER-POSITIONAL-IMAGE|STORAGE-LISTING-CLOSE)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -94,3 +95,7 @@
 [Observed] The reconciliation with main `82290fb93` records `PASS` (`F3-MAIN-82290-MERGE-REVIEW-RAW.md:1`) at `d998ca955`. The adoption row and complete brief golden were compared with both parents. The fixture uses the issued v8 schema, and the recovery assertions still apply.
 
 [Observed] Both initial render handoff reviews record `PASS`. The successor (`F3-INITIAL-RENDER-HANDOFF-REVIEW-RAW.md:1`) binds source at `07902e4c5`. The initial producer records the expected identity while its existing lease is active. Design still uses a fresh full reproduction. Adoption A-112 records the change and revert command.
+
+[Observed] The storage listing close review records `PASS` (`F3-STORAGE-LISTING-CLOSE-REVIEW-RAW.md:1`) for `9992cc285`. A-124 adopts concurrent closure of the independent listing and anchor at EOF when the tail batch is empty.
+
+[Observed] The installed peer image review records `PASS` (`F3-PEER-POSITIONAL-IMAGE-REVIEW-RAW.md:1`) for `4fb27aa6e`. A-125 adopts two bounded positional reads with ordered hashing, fresh currentness and both reads settling before close.

@@ -7,7 +7,7 @@
     "verdict": "PASS",
     "scope": "source-only",
     "rawSha256": "3d3b7341d1c61e4ed547c0e5e30c84fcaa8b200b788d525b242813579b851aa0",
-    "rawPath": "docs/reviews/R-F3-PEER-POSITIONAL-IMAGE-RAW.md"
+    "rawPath": "docs/reviews/F3-PEER-POSITIONAL-IMAGE-REVIEW-RAW.md"
   },
   "typecheck": {
     "outcome": "passed",

@@ -7,7 +7,7 @@
     "verdict": "PASS",
     "scope": "source-only",
     "rawSha256": "ae2ebe6291cfe28963b11c592ceb5c8b188bfdb988ebe8f5c31af1449e5d11a8",
-    "rawPath": "docs/reviews/R-F3-STORAGE-LISTING-CLOSE-RAW.md"
+    "rawPath": "docs/reviews/F3-STORAGE-LISTING-CLOSE-REVIEW-RAW.md"
   },
   "typecheck": {
     "outcome": "passed",
