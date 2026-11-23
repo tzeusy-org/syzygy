@@ -1,4 +1,4 @@
-import { unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import * as fsPromises from 'node:fs/promises';
 import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
@@ -959,8 +959,9 @@ describe('prepared private CLI launch',()=>{
     procPath = `/proc/${child.pid}/task`;
     filesystem.taskListing = { procPath, fixturePath };
     const fixtureStorage = path.join(f.launch.view.workDirectory, 'own-listing');
-    await mkdir(fixtureStorage);
-    await Promise.all([...storedFiles].map(file => writeFile(path.join(fixtureStorage, file), 'owned')));
+    // Populate the previously verified empty directory before the sampling timer can run.
+    mkdirSync(fixtureStorage);
+    for (const file of storedFiles) writeFileSync(path.join(fixtureStorage, file), 'owned');
     const signalGroup = process.kill;
     const signal = vi.spyOn(process, 'kill').mockImplementation((pid, name) => {
       if (pid === -child.pid && name === 'SIGTERM') stoppingAt ??= performance.now();

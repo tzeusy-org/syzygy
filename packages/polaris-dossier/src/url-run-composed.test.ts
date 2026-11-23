@@ -753,6 +753,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
+    const liveFinalPreparations: Array<'accepted' | 'refused'> = [];
     let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
@@ -1006,6 +1007,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const observedRuntime: UrlRunSessions = !eligibleStop ? controller : { ...controller,
       prepareFinalRender: async (...args) => {
         const prepare = await controller.prepareFinalRender(...args);
+        liveFinalPreparations.push(prepare === null ? 'refused' : 'accepted');
         if (prepare === null) return null;
         return request => {
           const proof = prepare(request);
@@ -1253,6 +1255,14 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       const resumedAudit = resumeDiagnostic === undefined ? undefined : await readDesignAuditKinds(resumedDesignAudit);
       const resumeEvidence = resumeDiagnostic === undefined ? undefined : { ...resumeDiagnostic(), audit: resumedAudit };
+      const stoppedEvidence = {
+        failure: stopped.failure, budgetReason: stopped.budget.reason, heldDesignTurns: stopped.budget.heldDesignTurns,
+        pendingRoles: stopped.budget.pendingRoles, auditPoisoned: stopped.audit.poisoned, auditTail: stopped.audit.tail,
+        auditTermination: stopped.audit.termination, auditSealed: stopped.closedAuditHistory !== null,
+        machine: stopped.machine?.lifecycle, machineSealed: stopped.closedMachineHistory !== undefined, control: stopped.control,
+        hosts: stopped.hosts, roles: stopped.roles.map(({ role, outcome }) => outcome === 'Unknown' ? { role, outcome }
+          : { role, outcome: outcome.outcome, group: outcome.groupTermination, view: outcome.viewTermination }),
+      };
       const retainedCut = process.env['SYZYGY_COMPOSED_RETAIN'];
       if (retainedCut !== undefined) {
         const closing = cleanup.indexOf(f.close);
@@ -1266,6 +1276,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
+        stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
