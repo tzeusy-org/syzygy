@@ -9,6 +9,7 @@
 - `F3-CHECKED-DESIGN-PUBLICATION(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-NATIVE-INSPECTION(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-ORDERED-HOST-ACTIVATION-REVIEW-RAW\.md`
+- `F3-RESUMED-AUDIT-TRACE(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -63,3 +64,5 @@
 [Observed] The ordered host activation review records `PASS` (`F3-ORDERED-HOST-ACTIVATION-REVIEW-RAW.md:3`) at `5e83a760f`. A-105 records the reviewed change and revert command. The native host accepts the exact delivery within the original activation deadline. The focused integration run passed 18 cases.
 
 [Observed] The first native inspection fixture review records `BLOCK` (`F3-NATIVE-INSPECTION-INITIAL-REVIEW-RAW.md:1`) at `ec4950b50`. The successor review records `PASS` (`F3-NATIVE-INSPECTION-REVIEW-RAW.md:1`) at `39437fda4`. The corrected fixture records inspection after a genuine launch and asserts it on an accepted resumed Design launch. [Unknown] Whether the current branch completes the native interrupted replay.
+
+[Observed] The first resumed audit trace review records `BLOCK` (`F3-RESUMED-AUDIT-TRACE-INITIAL-REVIEW-RAW.md:1`) at `9d830473b` for a diagnostic that could count a callback after audit setup settled. The successor records `PASS` (`F3-RESUMED-AUDIT-TRACE-REVIEW-RAW.md:1`) at `95a85821c` after moving the cutoff into the original promise's settlement handler. The native directory-open fixture passed its four targeted cases. [Unknown] The result of the current native interrupted replay.
