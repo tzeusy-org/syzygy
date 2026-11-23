@@ -1,0 +1,25 @@
+{
+  "label": "Observed",
+  "commit": "afa67c63b03ab41b102b94014595986801f17b16",
+  "logSha256": "da96256fc07779eddf5e2ff35746db62db52f66ad8967ebb9b64577a424c98dc",
+  "retainedFixtureSha256": "e7c08081a5bc18a7ffdfa5c8a8cadbd030826200cdb7733c83e00106051000a8",
+  "scenario": "eligible-stop-resume",
+  "elapsedMs": 188250,
+  "forwardsPastGate": {
+    "author": 7,
+    "inventory": 6,
+    "fidelity": 4,
+    "design": 0
+  },
+  "failure": "transport-unavailable",
+  "resumeChecks": [],
+  "authorHttpAudit": [
+    "attempt-allowed",
+    "send-attempt",
+    "send-outcome",
+    "response-admitted",
+    "transport-failed"
+  ],
+  "remainingUnknown": "Why the new attempt stopped after the seventh admitted Author reply and before its eighth request.",
+  "successorGate": "Tied to checked round-one Fidelity packet registration."
+}
