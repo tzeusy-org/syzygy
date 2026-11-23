@@ -28,7 +28,12 @@ vi.mock('./url-machine-peer.js', () => ({
   mediateUrlMachinePeer: async (peer: object, _operation: string, effect: (current: () => boolean) => unknown) => {
     const state = backend.states.get(peer); if (!state?.live || backend.deny) return { ok: false };
     backend.mediations++;
-    try { const value = await effect(() => { backend.guard?.(); return state.live && !backend.deny; }); return state.live && !backend.deny ? { ok: true, value } : { ok: false }; }
+    const current = () => { backend.guard?.(); return state.live && !backend.deny; };
+    try {
+      if (!current()) return { ok: false };
+      const value = await effect(current);
+      return state.live && !backend.deny ? { ok: true, value } : { ok: false };
+    }
     catch { return { ok: false }; }
   },
 }));
@@ -267,7 +272,8 @@ describe('verified-chunk session transport adapter', () => {
   it('retains the exact async effect guard across awaits and revokes escaped descendants', async () => {
     let opened!: (stream: Duplex) => void;
     const accepted = new Promise<Duplex>(resolve => { opened = resolve; });
-    const transport = fixtureTransport([]), socketPath = join(tempDir('machine-effect-'), 's.sock');
+    let socket!: Socket;
+    const transport = fixtureTransport([], raw => { socket = raw; }), socketPath = join(tempDir('machine-effect-'), 's.sock');
     const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => { void (async () => {
       const stream = await openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds: 1000 });
       if (!stream) throw new Error('owned stream refused');
@@ -281,10 +287,14 @@ describe('verified-chunk session transport adapter', () => {
     expect(sessionMachineEffectCurrent()).toBeUndefined();
     expect(assertSessionMachineEffectCurrent).toThrow('session-machine-transport-unavailable');
     let release!: () => void, descendant: Promise<boolean | undefined> | undefined;
+    let checks = 0;
+    backend.guard = () => { checks++; };
     const released = new Promise<void>(resolve => { release = resolve; });
     const admitted = await context.mediate('artifact_write', async () => {
+      expect(checks).toBe(1);
       await Promise.resolve();
       assertSessionMachineEffectCurrent();
+      expect(checks).toBe(2);
       descendant = released.then(sessionMachineEffectCurrent);
       return 'checked';
     });
@@ -300,7 +310,14 @@ describe('verified-chunk session transport adapter', () => {
     expect(sessionMachineEffectCurrent()).toBeUndefined();
     const emptyError = await new Promise<Error | null | undefined>(resolve => stream.write(Buffer.alloc(0), resolve));
     expect(emptyError?.message).toBe('session-machine-transport-unavailable');
-    stream.destroy(); expect(await c.output).toBe('');
+    // The lower guard can see current peer authority while the raw socket
+    // already reports destruction. Its close event has yet to reach the adapter.
+    backend.deny = false;
+    backend.guard = () => { socket.destroy(); };
+    const afterClose = vi.fn();
+    expect(await context.mediate('artifact_write', afterClose)).toEqual({ ok: false });
+    expect(afterClose).not.toHaveBeenCalled();
+    expect(await c.output).toBe('');
   });
 
   it.each(['data', 'pending'] as const)('settles an in-flight native %s chunk before any protected effect after ingress stops', async kind => {

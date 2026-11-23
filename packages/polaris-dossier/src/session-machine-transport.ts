@@ -175,8 +175,10 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
       if (active.ingressComplete) await active.ingressDrained;
       if (ended || stream.destroyed || active.boundary !== null || performance.now() >= deadline) return { ok: false };
       return mediateUrlMachinePeer(selected, operation, async current => {
-        const boundary = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline && current();
-        if (!boundary()) throw new Error('session-machine-transport-unavailable');
+        const transportCurrent = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline;
+        // The peer checked currentness immediately before entering this callback.
+        if (!transportCurrent()) throw new Error('session-machine-transport-unavailable');
+        const boundary = () => transportCurrent() && current();
         active.boundary = boundary;
         const selectedEffect = { boundary, active: true };
         try { return await effects.run(selectedEffect, () => effect(boundary)); }
