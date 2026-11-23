@@ -1,0 +1,63 @@
+{
+  "label": "Observed",
+  "reviewedCommit": "9da66128c41ca72cbdb6e7dc9c8e0dee0e146696",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-store.ts": "46b689a018566286553369c04454a41e6ba44d7f505c2cd7634b851787d26463",
+    "packages/polaris-dossier/src/url-machine-store.test.ts": "e94ae1c6821c2278e28a6fe92a1a4ac4b589b14062bf16934d9e4793f22d1736"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "SOURCE-REVIEW-RAW.md",
+    "sha256": "078e8dc7ff89b4132269e94c969ef577a58c0d3f197747223f1d16f18dec4fde"
+  },
+  "validation": {
+    "unitMachineClose": {
+      "passed": 30,
+      "total": 30
+    },
+    "integrationStoreAndGuard": {
+      "passed": 52,
+      "total": 52
+    },
+    "typecheck": "passed"
+  },
+  "observedHostedPredecessor": {
+    "evidence": "../native-recovery-ee9d14880/hosted-integration.json",
+    "firstExclusiveElapsedMs": 5046.387,
+    "firstExclusiveRead": "rejected",
+    "freshAsyncChecksStarted": 13,
+    "synchronousLeaseCurrentChecks": 0
+  },
+  "unitCostControl": {
+    "simulatedMsPerFullCheck": 400,
+    "simulatedTotalMs": 4800,
+    "operationLimitMs": 5000
+  },
+  "selectedFaults": [
+    {
+      "name": "nested duplicate authority",
+      "commit": "9da66128c41ca72cbdb6e7dc9c8e0dee0e146696",
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "state: () => io(() => readState(checkDeadline))",
+      "new": "state: () => io(() => readState(stagingClock))",
+      "testNamePattern": "confirms protected state and client bytes",
+      "failure": "expected false to be true",
+      "failed": 1,
+      "skipped": 40,
+      "logSha256": "b8ba68f51d54c53a885d349f4300534b8775f8c595c7fe780e005ea32cddcd88"
+    },
+    {
+      "name": "missing outer authority",
+      "commit": "9da66128c41ca72cbdb6e7dc9c8e0dee0e146696",
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "state: () => io(() => readState(checkDeadline))",
+      "new": "state: () => readState(checkDeadline)",
+      "testNamePattern": "checks authority after protected state I/O",
+      "failure": "expected true to be false",
+      "failed": 1,
+      "skipped": 40,
+      "logSha256": "3facb7b52e157d19a43f845c08da4a83381e123c563fed048045467399dbc77a"
+    }
+  ],
+  "remainingUnknown": "Whether the same protected phase completes in native interrupted recovery and whether later recovery stages complete."
+}
