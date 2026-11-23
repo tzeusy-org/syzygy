@@ -7,6 +7,8 @@
 - `F3-AUDIT-OVERLAP(-POST-CALLBACK|-AUTHORITY)?-REVIEW-RAW\.md`
 - `F3-CHECKED-DESIGN-RENEWAL-REVIEW-RAW\.md`
 - `F3-CHECKED-DESIGN-PUBLICATION(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-NATIVE-INSPECTION(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-ORDERED-HOST-ACTIVATION-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -57,3 +59,7 @@
 [Observed] The checked Design renewal review records `PASS` (`F3-CHECKED-DESIGN-RENEWAL-REVIEW-RAW.md:1`) at `77ad94158`. Its predecessors left a durable authority check until after reproduction or omitted some of the new reads from the byte budget. A-103 records the adopted bytes and revert. The exact reviewed source passed 103 focused unit cases and 155 focused integration cases. [Unknown] Native completion of both recovery cases on the successor.
 
 [Observed] The subsequent fresh review records `REVISE` at `77ad94158` (`F3-CHECKED-DESIGN-PUBLICATION-INITIAL-REVIEW-RAW.md:1`) for the gap after the final machine check. The focused correction records `PASS` at `382820f9f` (`F3-CHECKED-DESIGN-PUBLICATION-REVIEW-RAW.md:1`). The published-source equivalent in A-104 adds the final lease sample before shared publication. The focused suite passed 82 cases and the expiry case detected the swapped order. [Unknown] Native recovery completion on the corrected subject.
+
+[Observed] The ordered host activation review records `PASS` (`F3-ORDERED-HOST-ACTIVATION-REVIEW-RAW.md:3`) at `5e83a760f`. A-105 records the reviewed change and revert command. The native host accepts the exact delivery within the original activation deadline. The focused integration run passed 18 cases.
+
+[Observed] The first native inspection fixture review records `BLOCK` (`F3-NATIVE-INSPECTION-INITIAL-REVIEW-RAW.md:1`) at `ec4950b50`. The successor review records `PASS` (`F3-NATIVE-INSPECTION-REVIEW-RAW.md:1`) at `39437fda4`. The corrected fixture records inspection after a genuine launch and asserts it on an accepted resumed Design launch. [Unknown] Whether the current branch completes the native interrupted replay.

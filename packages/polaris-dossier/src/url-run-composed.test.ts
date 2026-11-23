@@ -976,15 +976,18 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           record('rejected');
           throw error;
         }
-      } }).catch(error => {
+      } }).then(result => {
+        if (setup !== undefined) {
+          setup.settledMs = performance.now();
+          setup.outcome = result.ok ? 'accepted' : 'refused';
+          const { declarations, pendingCallbacks, pendingFilesystemOperations } = result.summary();
+          Object.assign(setup, { declarations, pendingCallbacks, pendingFilesystemOperations });
+        }
+        return result;
+      }, error => {
         if (setup !== undefined) Object.assign(setup, { settledMs: performance.now(), outcome: 'rejected' });
         throw error;
       });
-      if (setup !== undefined) {
-        const { declarations, pendingCallbacks, pendingFilesystemOperations } = actual.summary();
-        Object.assign(setup, { settledMs: performance.now(), outcome: actual.ok ? 'accepted' : 'refused',
-          declarations, pendingCallbacks, pendingFilesystemOperations });
-      }
       if (!actual.ok) return actual;
       if (resumedAudit && scenario === 'stop-resume') resumedDesignAudit = path.join(options.parent, `${options.name}-design.jsonl`);
       return { ...actual,
