@@ -12,7 +12,9 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionLaunchOptions } from './session-launch.js';
-import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, prepareUrlMachineListenerAsync, closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
+import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, prepareUrlMachineListenerAsync,
+  closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, waitForUrlMachinePeerPublication,
+  type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
@@ -159,6 +161,23 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
+  it.each(['activate', 'refuse', 'withdraw-parent', 'close-peer'] as const)(
+    'holds a captured peer pending activation and checks its currentness on %s', async outcome => {
+      const f = await fixture();
+      expect(f.peer).not.toBeNull();
+      const before = nativeObservations.calls().length;
+      let activate!: (value: boolean) => void;
+      const activation = new Promise<boolean>(resolve => { activate = resolve; });
+      const waiting = vi.fn(() => activation);
+      const allowed = waitForUrlMachinePeerPublication(f.peer!, waiting, () => isUrlMachinePeerFor(f.peer!, f.socket));
+      expect(waiting).toHaveBeenCalledExactlyOnceWith(f.launch);
+      expect(nativeObservations.calls()).toHaveLength(before);
+      if (outcome === 'withdraw-parent') f.revokeParent();
+      if (outcome === 'close-peer') closeUrlMachinePeer(f.peer!);
+      activate(outcome !== 'refuse');
+      await expect(allowed).resolves.toBe(outcome === 'activate');
+      expect(nativeObservations.calls()).toHaveLength(before + (outcome === 'activate' ? 1 : 0));
+    });
   it('refuses the fresh parent before invoking any native capture helper', async () => {
     const first = nativeObservations.calls().length;
     const current = vi.fn(async () => false);

@@ -28,6 +28,7 @@ import { readVerifiedUrlAuditLaunches, type UrlSessionAuditHistoryExpected } fro
 import { URL_DESIGN_VIEW_ARTIFACT } from './url-design-view.js';
 import { createUrlRunMachine, readUrlRunMachineClosedHistory, type UrlRunMachineClosedHistory } from './url-run-machine.js';
 import { startUrlOrderedAttempt } from './url-run-ordered-attempt.js';
+import type { OrderedDesignHost } from './url-ordered-design-host.js';
 import type { UrlParentAdoption } from './url-parent-adoption.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
@@ -387,6 +388,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     ask: options.ask, onFailure: () => { fail('control-unavailable'); } });
   const hosts = new Map<ViewRole, SessionHost>(), processes = new Map<ViewRole, UrlSessionProcess>();
   const launches = new Map<ViewRole, Promise<void>>();
+  const designHosts = new WeakMap<UrlSessionProcess, OrderedDesignHost>();
   let machine: Awaited<ReturnType<typeof createUrlRunMachine>> | undefined;
   let machineLifecycle: 'open' | 'retired' | 'Unknown' = 'open';
   let orderedAttempt: Awaited<ReturnType<typeof startUrlOrderedAttempt>> | null = null;
@@ -467,7 +469,9 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
         ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
           identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim),
-          currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim) } }),
+          currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim),
+          waitForDesignActivation: async child => await designHosts.get(child)?.waitForActivation() === true
+            && processes.get('design') === child } }),
         chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
     }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
@@ -674,6 +678,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
             deadline: options.deadline, now: options.now, current, waitForSamples,
             launched: (child, host) => {
               hosts.set('design', host); processes.set('design', child);
+              designHosts.set(child, host);
               const terminalConsumed = () => launchedAttempt?.terminalConsumed === true;
               completedDesign = { child, health: host.healthy, terminalConsumed, retired: false };
               if (host.healthy !== undefined) hostHealth.set('design', host.healthy);

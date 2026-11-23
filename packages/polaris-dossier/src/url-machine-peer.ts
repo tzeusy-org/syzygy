@@ -494,6 +494,18 @@ export function closeUrlMachinePeer(peer: UrlMachinePeer): void {
   if (state) closeState(state);
 }
 
+/** Reattest the captured peer after its exact launch's activation settles. */
+export async function waitForUrlMachinePeerPublication(peer: UrlMachinePeer,
+  waitForActivation: (launch: UrlSessionProcess) => Promise<boolean>, stillOpening: () => boolean): Promise<boolean> {
+  const state = issued.get(peer);
+  if (state === undefined || !stillOpening()) return false;
+  try {
+    if (!(await waitForActivation(state.options.launch)) || !stillOpening()) return false;
+    await current(state, true);
+    return stillOpening();
+  } catch { return false; }
+}
+
 /** Association only; effects still require current scoped mediation. */
 export function isUrlMachinePeerFor(peer: UrlMachinePeer, socket: Socket): boolean {
   const state = issued.get(peer);

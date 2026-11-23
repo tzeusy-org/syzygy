@@ -9,7 +9,7 @@ import { createSessionMachineTransport, type SessionMachineTransport } from './s
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import type { UrlMachineLifecycleResult, UrlMachineLifecycleSnapshot } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineClientKind, type UrlMachineClientRecord, type UrlMachineOperation } from './url-machine-instance.js';
-import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync,
+import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync, waitForUrlMachinePeerPublication,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
 import { initializeUrlMachineStore, openUrlMachineStore } from './url-machine-store.js';
 import { isColdUrlRunMachineHistory, type ColdUrlRunMachineHistory } from './url-machine-cold-history.js';
@@ -54,6 +54,7 @@ export interface UrlRunMachineOptions {
     readonly identitySha256: string;
     readonly current: () => boolean;
     readonly currentAsync?: () => Promise<boolean>;
+    readonly waitForDesignActivation?: (launch: UrlSessionProcess) => Promise<boolean>;
   };
   readonly deadline: number;
   readonly now: () => number;
@@ -280,6 +281,11 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           peers.add(peer);
           let permitted = false;
           try {
+            const waitForActivation = resumed?.waitForDesignActivation;
+            // The raw socket stays paused while the exact resumed attempt
+            // registers its launch and activates. Hold no publication lock.
+            if (plan.role === 'design' && waitForActivation !== undefined
+              && !(await waitForUrlMachinePeerPublication(peer, waitForActivation, authority))) return false;
             permitted = await serialize(async () => {
               if (!authority() || !current()) return false;
               const now = input.now(), old = client.record, stamp = new Date(now).toISOString();
