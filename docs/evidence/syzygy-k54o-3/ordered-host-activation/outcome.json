@@ -1,0 +1,45 @@
+{
+  "subjectCommit": "5e83a760fca5c67811254398eda0d292cb973452",
+  "sources": {
+    "packages/polaris-dossier/src/url-ordered-design-host.test.ts": "a79a5a065bf50cfc7b067a28592d103cac9b72ccab702c51c4b509f924f9634c"
+  },
+  "review": {
+    "path": "docs/reviews/F3-ORDERED-HOST-ACTIVATION-REVIEW-RAW.md",
+    "sha256": "4531b391494be492ed1281e1955ee02d9cb5e69e6fe2b2f4bcb34d1305753df4",
+    "verdict": "PASS"
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitStatus": 0
+  },
+  "focusedIntegration": {
+    "command": "vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-ordered-design-host.test.ts",
+    "passed": 18,
+    "total": 18
+  },
+  "mutation": {
+    "subjectCommit": "5e83a760fca5c67811254398eda0d292cb973452",
+    "path": "packages/polaris-dossier/src/url-ordered-design-host.ts",
+    "old": "const waitForActivation = async (): Promise<boolean> => await active && !closing && !failed;",
+    "new": "const waitForActivation = async (): Promise<boolean> => await input.controller.then(() => true) && !closing && !failed;",
+    "outcome": "detected",
+    "assertion": "The host must keep activation pending while the genuine delivery proof is held.",
+    "logSha256": "228e631cba6f2591aa3398cf0be244d8a6f2cc9ef5c8300cacacb9efc7368539",
+    "case": "binds native prepared listeners before activation and gates terminal access until the genuine bounded controller arrives"
+  },
+  "localPublicStopResume": {
+    "scenario": "stop-resume",
+    "sha256": "01d7237acf31d2c74bc61d0a07f6e585298560d64c0380f6258b10719cac2d49",
+    "inputTreeSha256": "a2f1fd27189fef35e2fb1116265604ba61b5c3af1cf070109861fa3d0d543b02",
+    "profileRegistrySha256": "3d9810414fe94aae4c7106a794852bb7b6fc1e6953e8220253db38466af61aee",
+    "result": [
+      "role-ended"
+    ],
+    "rolesWithInspectionFailure": [
+      "inventory"
+    ],
+    "confirmedDesignDeliveries": 0,
+    "resumePhases": [],
+    "verification": "The ordinary Inventory child failed inspection before a Design delivery. This run did not exercise activation."
+  }
+}
