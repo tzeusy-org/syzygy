@@ -1,0 +1,122 @@
+{
+  "label": "Observed",
+  "commit": "ee2377853e8ae04023b344bed7208dae126d410f",
+  "scenario": "stop-resume",
+  "outcome": "failed",
+  "testLogSha256": "098b2307e2926eb0335a221ad396a2d1812d1a8655c9c5c9f6ad0d7b9e3085ad",
+  "retainedManifestSha256": "8eedef204a847484129be5bc98bfcef81098487a7bb0e8555b5af4256054166c",
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "storeAccepted": {
+    "open": 1,
+    "exclusive": 8,
+    "allocation": 8
+  },
+  "connection": {
+    "kind": "inference-bridge",
+    "counts": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 0
+    },
+    "beforeCaptureMs": 95.82,
+    "stages": {
+      "open": {
+        "elapsedMs": 5430.915,
+        "outcome": "refused"
+      },
+      "accept": {
+        "elapsedMs": 5435.499,
+        "outcome": "refused"
+      },
+      "capture": {
+        "elapsedMs": 5339.749,
+        "outcome": "refused"
+      }
+    }
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 7,
+    "phases": {
+      "process": {
+        "startedMs": 0.04038599997875281,
+        "settledMs": 129.41439399999217,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.057938999991165474,
+        "settledMs": 115.94119199999841,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.05967200000304729,
+        "settledMs": 139.39029499999015,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 139.40177599998424,
+        "settledMs": 139.46710899999016,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 139.59237499997835
+    }
+  },
+  "record": {
+    "runDirectEntriesExamined": 14,
+    "executionRecordLstatFound": false,
+    "nativeEvidenceFileExists": false
+  }
+}

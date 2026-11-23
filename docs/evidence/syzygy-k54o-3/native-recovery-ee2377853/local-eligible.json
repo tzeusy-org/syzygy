@@ -1,0 +1,57 @@
+{
+  "label": "Observed",
+  "commit": "ee2377853e8ae04023b344bed7208dae126d410f",
+  "testLogSha256": "2284c9cebac58d60fdec08e2c4c9057b0ed22ce7f7ae6f260691300562cdbd06",
+  "retainedFailureManifestSha256": "2d0d900a417a25c65f1b2c6367604e450c9a966c413d5c80113a42994e0cdf43",
+  "case": {
+    "case": "eligible-stop-resume",
+    "result": "failed",
+    "ms": 158401
+  },
+  "reportedReasons": [
+    "transport-unavailable"
+  ],
+  "resume": [],
+  "roles": {
+    "author": "inspection-failed",
+    "inventory": "inspection-failed",
+    "fidelity": "inspection-failed",
+    "design": "Unknown"
+  },
+  "forwards": {
+    "author": 7,
+    "inventory": 6,
+    "fidelity": 2,
+    "design": 0
+  },
+  "relayEvents": {
+    "author": {
+      "attempt-allowed": 7,
+      "send-attempt": 7,
+      "send-outcome": 7,
+      "response-admitted": 7
+    },
+    "inventory": {
+      "attempt-allowed": 6,
+      "send-attempt": 6,
+      "send-outcome": 5,
+      "response-admitted": 5
+    },
+    "fidelity": {
+      "attempt-allowed": 2,
+      "send-attempt": 2,
+      "send-outcome": 1,
+      "response-admitted": 1
+    },
+    "design": {}
+  },
+  "auditEnd": [
+    "declaration"
+  ],
+  "checkedFidelityPacketDelivered": true,
+  "finalOperatorEvent": "run ended: checked session boundary unavailable",
+  "record": {
+    "runDirectEntriesExamined": 13,
+    "executionRecordLstatFound": false
+  }
+}
