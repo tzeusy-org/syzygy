@@ -169,10 +169,26 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     expect(modes).toEqual(['listener', 'listener']);
   });
 
-  it('pins the actual installed Node image without large synchronous reads on the supervisor event loop', async () => {
+  it('pins the actual installed Node image with bounded asynchronous descriptor reads', async () => {
     filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
-    const f = await fixture(); expect(f.peer, 'genuine capture must survive refusal of large synchronous file reads').not.toBeNull();
-    expect(filesystemBoundary.largeSyncReads).toBe(0);
+    const probe = await fs.open(await fs.realpath(process.execPath), 'r');
+    const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
+    await probe.close();
+    const read = prototype.read;
+    const requests: number[] = [];
+    let observing = false;
+    const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
+      const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
+      if (held?.ino === identity.ino && held.dev === identity.dev) requests.push(args[2] as number);
+      return read.apply(this, args);
+    });
+    try {
+      const f = await fixture('live', undefined, { readImageCurrent: () => { observing = true; return true; } });
+      expect(f.peer).not.toBeNull();
+      expect(filesystemBoundary.largeSyncReads).toBe(0);
+      expect(requests[0]).toBe(Math.min(4 * 1_048_576, Number(identity.size) + 1));
+      expect(requests.every(bytes => bytes > 0 && bytes <= 4 * 1_048_576)).toBe(true);
+    } finally { descriptor.mockRestore(); }
   });
 
   it.each([false, true])('checks full authority at the installed image read boundaries (withdrawal: %s)', async withdrawn => {

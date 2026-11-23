@@ -109,9 +109,9 @@ function pinnedFile(file: string, expected: string, maximum: number): fs.BigIntS
     return before;
   } finally { fs.closeSync(fd); }
 }
-/** A large installed Node image must not block the supervisor's 200ms sampler.
- * Hold one image, hash at most 1MiB per poll turn, then compare held and named
- * identities. An expiry or pathname replacement discards the entire capture. */
+/** A large installed Node image must yield to the supervisor's sampler.
+ * Read and hash at most 4 MiB per asynchronous descriptor read. Compare the
+ * held and named identities after hashing. Expiry or replacement refuses. */
 async function pinnedExecutable(file: string, expected: string, maximum: number, check: () => void): Promise<fs.BigIntStats> {
   check();
   if (!safePath(file) || !digest(expected) || await realFilePath(file) !== file) throw refused();
@@ -120,7 +120,7 @@ async function pinnedExecutable(file: string, expected: string, maximum: number,
     check();
     const before = await handle.stat({ bigint: true });
     if (!before.isFile() || before.nlink !== 1n || before.size < 1n || before.size > BigInt(maximum) || (before.mode & 0o022n) !== 0n) throw refused();
-    const chunk = Buffer.alloc(1_048_576), hash = createHash('sha256');
+    const chunk = Buffer.alloc(4 * 1_048_576), hash = createHash('sha256');
     let length = 0;
     while (length <= Number(before.size)) {
       // Each descriptor read yields to the sampler. Check authority after
