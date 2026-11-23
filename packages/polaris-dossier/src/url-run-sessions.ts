@@ -606,7 +606,8 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
             disclosureRefused = true;
             if (!disclosure.record('unknown')) return false;
             disclosureRefused = false;
-            return true;
+            // The durable write can outlast the run within the launch setup limit.
+            return effectBudgetCurrent();
           },
         }) }).catch(cause => {
           if (disclosureRefused || disclosure?.current() === false) refuseDisclosure();
