@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 478 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 488 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -196,6 +196,12 @@ authority and no model yet called on the current path.
     The disclosure and policy binding require runtime delivery in F-3.
     *(2026-11-23: the predecessor figure "473 scenarios" is superseded by that
     amendment. All 39 identities remain.)*
+    [Relation types amendment 2.19](openspec/changes/dossier-relation-types) is agent-adopted in A-52.
+    It replaces REQ-polaris-generation-034 again (158 to 168 scenarios: draft schema v9 with a relation type on every
+    graph arrow and a unit on a node, rule `relation-witness` with the `relation-challenged` and `unit-reference`
+    findings, brief v15); only `top-level-unit` may witness at this version, and its code is not yet landed.
+    *(2026-11-23: the predecessor figure "478 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
