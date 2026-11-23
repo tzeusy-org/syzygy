@@ -1,0 +1,64 @@
+{
+  "subjectCommit": "e1b7d513d0e49994955ada0f2d1f325485396bfc",
+  "baseCommit": "0810585bab0a1375fe39dcd90c62c753ab9adfd6",
+  "binaryDeltaSha256": "0c39dee61f9ec29da98f127acbe8a30794bface28662f77a6a84dc63074f13bc",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-DESIGN-PRODUCT-BEFORE-NATIVE-EFFECT-REVIEW-RAW.md",
+    "sha256": "e7ade6788d9fee1de0a4238127210afebc4e3d1c82907ffcb367c4d1771c5a9f"
+  },
+  "nativePredecessor": {
+    "subjectCommit": "0810585bab0a1375fe39dcd90c62c753ab9adfd6",
+    "scenario": "stop-resume",
+    "traceSha256": "6415868ce181229a9326f355c6593f48f5eb9cb75cfeca557ca8969175d0b2b2",
+    "relayEffect": {
+      "startedMs": 115236.326,
+      "settledMs": 147001.755,
+      "outcome": "refused"
+    },
+    "controllerChecks": [
+      {
+        "phase": "product-lease",
+        "timing": {
+          "startedMs": 130340.839,
+          "settledMs": 130477.063,
+          "outcome": "accepted"
+        },
+        "lease": "open",
+        "leaseRemainingMs": 347
+      },
+      {
+        "phase": "receipt-preflight",
+        "timing": {
+          "startedMs": 132377.203,
+          "settledMs": 136198.793,
+          "outcome": "accepted"
+        }
+      },
+      {
+        "phase": "reproduce",
+        "timing": {
+          "startedMs": 136613.774,
+          "settledMs": 148046.709,
+          "outcome": "refused"
+        }
+      }
+    ],
+    "replacementRefusal": {
+      "stage": "reverify",
+      "category": "product-read",
+      "freshLease": "retired",
+      "remainingMs": 48567
+    }
+  },
+  "relayControl": {
+    "path": "packages/polaris-dossier/src/session-relay.ts",
+    "old": "  const productPreflight = ports.productPreflight === undefined ? undefined : Object.freeze({ ...ports.productPreflight });",
+    "new": "  const productPreflight = undefined;",
+    "test": "packages/polaris-dossier/src/session-machine-transport.test.ts",
+    "selector": "runs HTTP parsing",
+    "detectedFailures": 1,
+    "logSha256": "d407cdf554a1ed006908e65a3bd8255cdb6cc16dd0e51d57e26687c0ae6537d6"
+  },
+  "nativeSuccessorCompletion": "Unknown"
+}
