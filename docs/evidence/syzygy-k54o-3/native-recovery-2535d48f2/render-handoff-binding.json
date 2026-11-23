@@ -1,0 +1,26 @@
+{
+  "format": "polaris-url-render-handoff-binding/1",
+  "label": "Observed",
+  "reviewedCommit": "07902e4c59b0f9dc3fa14feb1063dc9c83e6f257",
+  "reviews": [
+    {
+      "subject": "516d56f69c5943dd414d4f9d13fd98a61d6cbada",
+      "path": "docs/reviews/F3-INITIAL-RENDER-HANDOFF-INITIAL-REVIEW-RAW.md",
+      "sha256": "3511d71e2edefdc6f52fae4ec9bea6d22ee77b6034f8294861c17ff31405ff7e",
+      "verdict": "PASS"
+    },
+    {
+      "subject": "07902e4c59b0f9dc3fa14feb1063dc9c83e6f257",
+      "path": "docs/reviews/F3-INITIAL-RENDER-HANDOFF-REVIEW-RAW.md",
+      "sha256": "ac766716a2a16337ffa64dcf15366a4ecfca9f2816e439200af2eb0553b51eb3",
+      "verdict": "PASS"
+    }
+  ],
+  "focusedLocal": {
+    "subject": "516d56f69c5943dd414d4f9d13fd98a61d6cbada",
+    "passed": 274,
+    "logSha256": "2f725a902562e7ba89012e70d8328aa9821eb700000533d05e37f2a7f5c2ce0f",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "nativeRecoveryAcceptance": "Unknown"
+}

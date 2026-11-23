@@ -19,6 +19,7 @@
 - `F3-BOUNDED-STORAGE-RETRY(-INITIAL|-BYTE-LIMIT|-RECURSIVE|-TIMEOUT)?-REVIEW-RAW\.md`
 - `F3-FROZEN-PRODUCT-TRACE-REVIEW-RAW\.md`
 - `F3-MAIN-82290-MERGE-REVIEW-RAW\.md`
+- `F3-INITIAL-RENDER-HANDOFF(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -91,3 +92,5 @@
 [Observed] The explicit frozen-product restoration timing review records `PASS` (`F3-FROZEN-PRODUCT-TRACE-REVIEW-RAW.md:1`) at `f388b1e6a`. The observer preserves the genuine return and opaque capabilities. This review covered source only.
 
 [Observed] The reconciliation with main `82290fb93` records `PASS` (`F3-MAIN-82290-MERGE-REVIEW-RAW.md:1`) at `d998ca955`. The adoption row and complete brief golden were compared with both parents. The fixture uses the issued v8 schema, and the recovery assertions still apply.
+
+[Observed] Both initial render handoff reviews record `PASS`. The successor (`F3-INITIAL-RENDER-HANDOFF-REVIEW-RAW.md:1`) binds source at `07902e4c5`. The initial producer records the expected identity while its existing lease is active. Design still uses a fresh full reproduction. Adoption A-112 records the change and revert command.
