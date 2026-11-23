@@ -34,10 +34,36 @@ export type RepositoryRole = (typeof REPOSITORY_ROLES)[number];
 // never restrung (RFC2-24; CAP1-REQ-002/006).
 const MISSING_DECLARATION: 'missing-declaration' = UNKNOWN_REASONS[0];
 
-export interface NamedValidationFailure {
-  readonly kind: 'unparseable' | 'missing-field' | 'unknown-field' | 'invalid-field';
-  readonly field?: string;
-  readonly detail: string;
+export type NamedValidationFailure =
+  | {
+      readonly kind: 'unparseable' | 'missing-field' | 'unknown-field' | 'invalid-field';
+      readonly field?: string;
+      readonly detail: string;
+    }
+  | {
+      readonly kind: 'write-boundary-contradiction';
+      readonly field: string;
+      readonly routedTo: 'owner';
+      readonly detail: string;
+    };
+
+// Reserved write-boundary fields covered by the CAP1-REQ-061 conformance
+// and route fixtures. Their presence is the contradiction (RFC3-3).
+const WRITE_BOUNDARY_FIELDS = new Set([
+  'write_roots',
+  'writable_paths',
+  'write_paths',
+  'output_directory',
+  'deploy_target',
+]);
+
+function writeBoundaryContradiction(field: string): NamedValidationFailure {
+  return {
+    kind: 'write-boundary-contradiction',
+    field,
+    routedTo: 'owner',
+    detail: 'This field cannot widen the governed write boundary. Route this contradiction to the owner.',
+  };
 }
 
 export interface RepositoryEntry {
@@ -131,7 +157,9 @@ export function readDeclaration(source: string): DeclarationReadResult {
   // failure (RFC3-5; CAP1-REQ-004 — an unrecognized field is surfaced,
   // never silently dropped or reinterpreted).
   for (const field of Object.keys(doc)) {
-    if (!known.has(field)) {
+    if (WRITE_BOUNDARY_FIELDS.has(field)) {
+      failures.push(writeBoundaryContradiction(field));
+    } else if (!known.has(field)) {
       failures.push({
         kind: 'unknown-field',
         field,
@@ -233,7 +261,13 @@ export function readDeclaration(source: string): DeclarationReadResult {
 
   // --- declarations ---
   const declarations = doc['declarations'];
-  if ('declarations' in doc && !isPlainObject(declarations)) {
+  if (isPlainObject(declarations)) {
+    for (const field of Object.keys(declarations)) {
+      if (WRITE_BOUNDARY_FIELDS.has(field)) {
+        failures.push(writeBoundaryContradiction(`declarations.${field}`));
+      }
+    }
+  } else if ('declarations' in doc) {
     invalid('declarations', `\`declarations\` must be a mapping of declaration-artifact references; got ${describe(declarations)}`);
   }
 
