@@ -1,0 +1,76 @@
+{
+  "base": "7d44379ed78678ab54e5ba4d0b55538b2a25c64a",
+  "instrumentation": {
+    "diff": "local-storage-refusal.patch",
+    "diffSha256": "eb4cafc340a383254544be3f49c0e2992390528bc1e4b3a1818700b656205be3"
+  },
+  "onlyScenario": "eligible-stop-resume",
+  "rawLogSha256": "fb243982f02cc92e41160cfc99bfca9aadfdd559fb6a26aab37f7411221b3a94",
+  "capturedEvents": [
+    [
+      "entry-lstat",
+      "ENOENT"
+    ],
+    [
+      "single-retry",
+      "none"
+    ],
+    [
+      "entry-lstat",
+      "ENOENT"
+    ],
+    [
+      "single-retry",
+      "none"
+    ],
+    [
+      "entry-lstat",
+      "ENOENT"
+    ],
+    [
+      "single-retry",
+      "none"
+    ],
+    [
+      "entry-lstat",
+      "ENOENT"
+    ],
+    [
+      "single-retry",
+      "none"
+    ],
+    [
+      "entry-lstat",
+      "ENOENT"
+    ],
+    [
+      "retry-disappearance",
+      "none"
+    ]
+  ],
+  "failure": [
+    "role-ended"
+  ],
+  "roleSampleRefusal": {
+    "ordinal": 9,
+    "phases": {
+      "process": {
+        "startedMs": 0.018655000007129274,
+        "settledMs": 72.13216300000204,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.031018000008771196,
+        "settledMs": 89.76264700001047,
+        "outcome": "rejected"
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "operation-rejected",
+      "elapsedMs": 90.11644700000761
+    }
+  },
+  "resumeChecks": [],
+  "limits": "This was a local replay with storage observation only. Role identity is established by the recorded sample refusal. It stopped before Resume and does not establish the cause of the separate hosted eligible failure."
+}

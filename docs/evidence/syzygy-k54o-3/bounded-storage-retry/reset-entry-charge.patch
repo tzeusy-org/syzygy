@@ -1,0 +1,12 @@
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 1b9532dba..b8606d988 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -358,6 +358,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
+       // Use only a complete count. Every walk shares the original time and
+       // entry budgets, including the attempts that observed a disappearance.
+       bytes = 0;
++      entries = 0;
+     }
+   }
+ }

@@ -1,0 +1,7 @@
+diff --git a/packages/polaris-dossier/src/session-launch.ts b/packages/polaris-dossier/src/session-launch.ts
+index 1b9532dba..5448e3d24 100644
+--- a/packages/polaris-dossier/src/session-launch.ts
++++ b/packages/polaris-dossier/src/session-launch.ts
+@@ -279 +279 @@ const STORAGE_STAT_BATCH = 4;
+-const STORAGE_CENSUS_RESTARTS = 2;
++const STORAGE_CENSUS_RESTARTS = 1;

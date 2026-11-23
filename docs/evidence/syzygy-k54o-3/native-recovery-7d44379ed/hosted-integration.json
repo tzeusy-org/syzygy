@@ -1,0 +1,148 @@
+{
+  "subject": "7d44379ed78678ab54e5ba4d0b55538b2a25c64a",
+  "checkout": "974bc628ef0a4fba5120fb0cc995831dba6b071d",
+  "identicalTree": "dd5ae3a0d16cb2cb4ff9b861aa127826406e1991",
+  "workflowRun": 45115386629,
+  "job": 137497515167,
+  "rawLogSha256": "f105799ed09f5867d805f78676f18556f2202620ea540bc69d78d82487f81b8d",
+  "summaries": [
+    [
+      "Test Files",
+      "1 failed | 136 passed (137)"
+    ],
+    [
+      "Tests",
+      "2 failed | 3909 passed | 3 skipped (3914)"
+    ]
+  ],
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 70829
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 62179
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 341671
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 365931
+    }
+  ],
+  "interruptedResume": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": []
+      }
+    ],
+    "auditSetup": {
+      "startedMs": 471607.900968,
+      "authority": {
+        "started": 18,
+        "accepted": 17,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 4925.335356000112,
+        "longestMs": 344.8835299999919
+      },
+      "settledMs": 476641.797806,
+      "outcome": "refused",
+      "declarations": 2,
+      "pendingCallbacks": 1,
+      "pendingFilesystemOperations": 0
+    },
+    "bootstrap": {
+      "restore-plans": {
+        "startedMs": 258028.948363,
+        "settledMs": 267302.419066,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 267593.085223,
+        "settledMs": 267906.843364,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 268205.004088,
+        "settledMs": 287460.969614,
+        "outcome": "accepted"
+      },
+      "start-sessions": {
+        "startedMs": 469581.753114,
+        "settledMs": 476642.064658,
+        "outcome": "rejected"
+      }
+    },
+    "designForwards": 0,
+    "observedMsFromOriginsReturnToSessionStart": 182120.78350000002
+  },
+  "eligibleResume": {
+    "runnerTimeoutMs": 360000,
+    "lastWatchdog": {
+      "phase": "public-resume",
+      "settledOrdinaryRoles": [
+        "author",
+        "inventory",
+        "fidelity",
+        "design"
+      ],
+      "designForwards": 5,
+      "finalProductAssertions": 3,
+      "liveFinals": 2,
+      "coldFinals": 0,
+      "cutTaken": true,
+      "resumeChecks": 2,
+      "resumeGuardsChecked": false,
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 711769.030547,
+          "settledMs": 730833.610359,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 731579.161987,
+          "settledMs": 731820.300113,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 732626.157128,
+          "settledMs": 782660.596691,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "limits": "The watchdog samples the native call path before the timeout. It does not identify the last completed call after the observed origin creation."
+  },
+  "otherHostedJobs": {
+    "unit": 137496929744,
+    "e2e": 137497515148,
+    "coreGovernance": 137496929919,
+    "reconciliation": 137496930028
+  }
+}

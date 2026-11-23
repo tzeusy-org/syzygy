@@ -1,0 +1,69 @@
+{
+  "subject": "9cd29e9e6a1eadb7198e57c048840d96913a2cf6",
+  "baseline": "8e98a3764b3bbc67d1bab8b11eb72d7aef84dfa7",
+  "reviewedProduction": "dc61f9a94e59dbc1dd0041caa04e6db8f71e3f0a",
+  "source": "packages/polaris-dossier/src/session-launch.ts",
+  "limits": {
+    "sampleMilliseconds": 1000,
+    "maximumWalks": 3,
+    "resetPartialBytes": true,
+    "resetChargedEntries": false
+  },
+  "reviews": [
+    {
+      "scope": "production and fixture",
+      "verdict": "PASS",
+      "sha256": "eb7d3bad789a263f998654ad43f28b4d8b1b6d53d5299b4d13a3ee0de8eb0388"
+    },
+    {
+      "scope": "fixture startup and cleanup timeout",
+      "verdict": "PASS",
+      "sha256": "2b86efd897e103b78c8af7b97d86ce787303bb893aa885229859e01e7f5172e7"
+    }
+  ],
+  "focused": {
+    "passed": 12,
+    "skipped": 26,
+    "total": 38,
+    "logSha256": "37b28e9dd498af797838a7fe910d4f96783ab188c716eae51eae439757b0a868",
+    "typecheck": "passed"
+  },
+  "controls": [
+    {
+      "name": "one-retry",
+      "selector": "one missing entry on each of two walks",
+      "diff": "one-retry.patch",
+      "diffSha256": "2d3dc9e39d1953c54d60f4d97f3f414f97a2b224318331bb238a978ec4b5266a",
+      "logSha256": "49ba3b84a2a95eda0c46fb61a617eb8f7f0d088fc31105b400aaced2fcfdc041",
+      "assertion": "expected false to be true",
+      "applyArguments": [
+        "--unidiff-zero"
+      ]
+    },
+    {
+      "name": "drop-nested-sibling-refusal",
+      "selector": "a sibling stat fault after a nested d",
+      "diff": "drop-nested-sibling-refusal.patch",
+      "diffSha256": "315bb2f90dd69b062a82aa5a1933ae9e8105a489b9438eb3acd078745bf4db30",
+      "logSha256": "c3dd937e1c163e3c6a43bb322a6e3ad948fb8c6d551804499a45c3be2851ccd0",
+      "assertion": "expected true to be false"
+    },
+    {
+      "name": "reset-entry-charge",
+      "selector": "the shared entry allowance consumed o",
+      "diff": "reset-entry-charge.patch",
+      "diffSha256": "5b53f5e899383fa5876efcae22735ffa81b85b3b027822bb833b7e430c569595",
+      "logSha256": "df07598fa83f4cd313257267b7d9b1aef08cdad1cb1e47bc8e74d0bd658549e1",
+      "assertion": "expected true to be false"
+    },
+    {
+      "name": "retry-before-byte-limit",
+      "selector": "an oversized entry before a missing e",
+      "diff": "retry-before-byte-limit.patch",
+      "diffSha256": "3ad97456a155f3ee490a8247d070885250c71ec0d70788fc35da6707bea12c3b",
+      "logSha256": "87809772d818f15df15555ee7db1959cc4ecf992742cf9f8ce07baaf0b1be9a5",
+      "assertion": "expected 2 to be 1"
+    }
+  ],
+  "composedRefusalEvidence": "local-storage-refusal.json"
+}
