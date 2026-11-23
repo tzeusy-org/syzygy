@@ -208,9 +208,48 @@ async function readDesignAuditKinds(file: string | undefined) {
   } catch { return { status: 'unavailable' }; }
 }
 
-function observeInterruptedResume() {
+async function observeInterruptedResume(run: string) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
+  type AppendStage = 'audit-authority' | 'attempt-authority' | 'stat' | 'read' | 'write' | 'sync';
+  type AppendTrace = {
+    kind: orderedWriter.OrderedDesignStoredRecord['kind'];
+    timing: ResumeStamp;
+    stages: Array<{ phase: AppendStage; timing: ResumeStamp }>;
+  };
+  const appendContext = new AsyncLocalStorage<AppendTrace>();
+  let latestAppend: AppendTrace | undefined, firstRefusedAppend: AppendTrace | undefined;
+  function observeAppendStage<T>(phase: AppendStage, invoke: () => T, accepts: (value: Awaited<T>) => boolean): T {
+    const trace = appendContext.getStore();
+    if (trace === undefined || trace.stages.length >= 96) return invoke();
+    const timing: ResumeStamp = { startedMs: clock() };
+    trace.stages.push({ phase, timing });
+    const settle = (outcome: ResumeObservation) => { Object.assign(timing, { settledMs: clock(), outcome }); };
+    try {
+      const result = invoke();
+      const accept = (value: Awaited<T>) => settle(accepts(value) ? 'accepted' : 'refused');
+      if (result instanceof Promise) void result.then(accept, () => settle('rejected'));
+      else accept(result as Awaited<T>);
+      return result;
+    } catch (error) { settle('rejected'); throw error; }
+  }
+  const createAudit = sessionAudit.createUrlSessionAudit;
+  vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async input => {
+    const audit = await createAudit({ ...input, current: () => observeAppendStage('audit-authority', input.current, value => value === true) });
+    if (!audit.ok) return audit;
+    const beginOrderedDesignAudit: typeof audit.beginOrderedDesignAudit = (plan, current, onRead) =>
+      audit.beginOrderedDesignAudit(plan, () => observeAppendStage('attempt-authority', current, value => value === true), onRead);
+    return Object.freeze({ ...audit, beginOrderedDesignAudit });
+  });
+  const descriptor = await fs.open(run, fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW);
+  const prototype = Object.getPrototypeOf(descriptor) as Record<'read' | 'write' | 'sync' | 'stat', (...args: unknown[]) => Promise<unknown>>;
+  await descriptor.close();
+  for (const operation of ['read', 'write', 'sync', 'stat'] as const) {
+    const original = prototype[operation];
+    vi.spyOn(prototype, operation).mockImplementation(function (this: fs.FileHandle, ...args: unknown[]) {
+      return observeAppendStage(operation, () => original.apply(this, args), () => true);
+    });
+  }
   const socketLinks = new WeakMap<Parameters<typeof machineTransport.openSessionMachineConnection>[0], ResumeConnection>();
   const peerLinks = new WeakMap<machinePeer.UrlMachinePeer, ResumeConnection>();
   const connections: ResumeConnection[] = [];
@@ -307,9 +346,18 @@ function observeInterruptedResume() {
   const createOrderedWriter = orderedWriter.createOrderedDesignAuditWriter;
   vi.spyOn(orderedWriter, 'createOrderedDesignAuditWriter').mockImplementation((context, store, observeRead) => {
     const append = store.append, current = store.current;
-    vi.spyOn(store, 'append').mockImplementation(record => record.kind === 'prepared'
-      ? brokerPhase('prepared-store-append', () => append.call(store, record), reader => typeof reader === 'function')
-      : append.call(store, record));
+    vi.spyOn(store, 'append').mockImplementation(record => {
+      const trace: AppendTrace = { kind: record.kind, timing: { startedMs: clock() }, stages: [] };
+      latestAppend = trace;
+      const pending = appendContext.run(trace, () => record.kind === 'prepared'
+        ? brokerPhase('prepared-store-append', () => append.call(store, record), reader => typeof reader === 'function')
+        : append.call(store, record));
+      void pending.then(() => Object.assign(trace.timing, { settledMs: clock(), outcome: 'accepted' }), () => {
+        Object.assign(trace.timing, { settledMs: clock(), outcome: 'rejected' });
+        firstRefusedAppend ??= trace;
+      });
+      return pending;
+    });
     vi.spyOn(store, 'current').mockImplementation(() => brokerStages['prepared-store-append']?.outcome === 'accepted'
       ? brokerPhase('prepared-store-recheck', () => current.call(store), value => value === true)
       : current.call(store));
@@ -471,6 +519,7 @@ function observeInterruptedResume() {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
+    orderedAudit: { latestAppend, firstRefusedAppend },
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
@@ -524,7 +573,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
     const stoppingCut = cut || eligibleStop, resumeAfterStop = scenario === 'stop-resume' || eligibleStop;
     const resumeChecks: unknown[] = [];
-    let resumeDiagnostic: ReturnType<typeof observeInterruptedResume> | undefined;
+    let initialDiagnostic: Awaited<ReturnType<typeof observeInterruptedResume>> | undefined;
+    let resumeDiagnostic: Awaited<ReturnType<typeof observeInterruptedResume>> | undefined;
     let resumedDesignAudit: string | undefined;
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
@@ -672,6 +722,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       };
     });
     const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
+    if (eligibleStop) initialDiagnostic = await observeInterruptedResume(f.run);
     const writeEvidence = async (result: Record<string, unknown>) => {
       const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
       if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
@@ -920,7 +971,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             resumedControllers.push(runtime);
             return runtime;
           });
-          if (scenario === 'stop-resume') resumeDiagnostic = observeInterruptedResume();
+          if (scenario === 'stop-resume') resumeDiagnostic = await observeInterruptedResume(f.run);
           const exit = await runPolarisCli(['--supervise', '--resume', f.run, '--state-root', stateRoot], f.ports);
           if (exit !== 0) {
             const summary = resumedControllers[0]?.summary();
@@ -1001,11 +1052,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence,
-          initialDesignAudit }, null, 2));
+          initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
-        resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, producerReports: f.producerReports(),
+        resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
+        producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
     }
   }, scenario === 'stop-resume' ? 540_000 : 360_000);
