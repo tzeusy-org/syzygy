@@ -1870,6 +1870,21 @@ describe('check: subsections (schema v8)', () => {
     expect([result.outcome, listed(result)]).toEqual(['passed', []]);
   });
 
+  it('keeps every other finding of a v7 draft carrying subsections unchanged beside the field-version', async () => {
+    const result = await findingsOf(mutate((d) => { d.schemaVersion = V7; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].subsections = [sub('q1', 'Fine.'), sub('q2', 'Fine.')]; }));
+    const plain = await findingsOf(mutate((d) => { d.schemaVersion = V7; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; }));
+    const absent = { kind: 'path-absent', at: '$.sections[0].paragraphs[1].citations[0].path', detail: `"docs/absent.txt" names no file at the pinned revision ${commit}` };
+    expect(listed(plain)).toEqual([absent]);
+    expect(listed(result)).toEqual([{ kind: 'field-version', at: '$.sections[0].subsections', detail: '`subsections` needs draft schema polaris-dossier-local-draft-v8' }, absent]);
+  });
+
+  it('gives a v8 draft without subsections the findings the same v7 draft gets', async () => {
+    const faulty = (version: string) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].paragraphs[0].quotations = []; });
+    const v8 = listed(await findingsOf(faulty(V8)));
+    expect(v8).toEqual(listed(await findingsOf(faulty(V7))));
+    expect(v8.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
+  });
+
   it('keeps a v6 draft\'s figure-kind field-version naming schema v7', async () => {
     const result = await findingsOf(mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v6'; d.thesisBasis = 'stated'; d.diagrams.push({ ...homed({ kind: 'section', target: 'core-ideas' }), kind: 'sequence' }); }));
     expect(listed(result).find((finding) => finding.at === '$.diagrams[0].kind')).toEqual({ kind: 'field-version', at: '$.diagrams[0].kind', detail: 'the diagram "flow-1": the kind `sequence` needs draft schema polaris-dossier-local-draft-v7' });

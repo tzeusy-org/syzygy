@@ -9,6 +9,10 @@ SUBSEC_DUMP=<file>). It checks and, where the check passes, renders a draft of e
 (plain, carrying `subsections`, and a sequence figure before v7) and hashes every file of the run directory but
 run.json. The record lists, per variant, the outcome and every file whose bytes differ, and, where findings differ,
 each differing pair.
+
+Population: the 18 synthetic variants the dumper builds, nothing else. It is not every stored fixture: every other stored
+draft is exercised only by the existing literal suites, whose expectations this change left unchanged except version
+literals, and the provider golden, which its own test compares byte for byte. Both dumps are kept beside the record.
 """
 import hashlib, json, sys
 
@@ -35,7 +39,7 @@ record = {
     'format': 'byte-identity-comparison/1',
     'subject': {'before': before_commit, 'after': after_commit},
     'dumps': {'before': hashlib.sha256(raw_before).hexdigest(), 'after': hashlib.sha256(raw_after).hexdigest()},
-    'method': __doc__.strip().split('\n\n')[-1].replace('\n', ' '),
+    'method': ' '.join(__doc__.strip().split('\n\n')[-2:]).replace('\n', ' '),
     'population': {'variants': len(variants), 'files': files},
     'variants': variants,
 }

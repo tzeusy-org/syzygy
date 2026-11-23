@@ -133,6 +133,12 @@ export function codeSymbolInTitle(title: string): string | undefined {
 
 /** The words of an entry's own prose: a plain block's text and its children's; a presentation element (an entry with a `kind`) counts
  * none, since RS-19 counts prose outside the elements. */
+export function proseWords(entry: unknown): number {
+  if (!isRecord(entry) || entry['kind'] !== undefined) return 0;
+  const words = (value: unknown): number => (text(value)?.split(/\s+/u).filter((word) => word !== '').length ?? 0);
+  return words(entry['text']) + list(entry['children']).reduce<number>((sum, child) => sum + (isRecord(child) ? words(child['text']) : 0), 0);
+}
+
 /** A section's or deep dive's own prose words, as RS-19 counts them: its paragraphs and, in a schema-v8 draft only, each of a section's
  * subsections' answer and plain blocks (version 2.16). The reading ledger counts a container by the same words. */
 export function containerProseWords(doc: Readonly<Record<string, unknown>>, container: Readonly<Record<string, unknown>>, part: 'sections' | 'deepDives'): number {
@@ -140,12 +146,6 @@ export function containerProseWords(doc: Readonly<Record<string, unknown>>, cont
   if (part !== 'sections' || !hasSubsectionForm(doc['schemaVersion'])) return own;
   return list(container['subsections']).reduce<number>((sum, subsection) => (isRecord(subsection)
     ? sum + proseWords(subsection['answer']) + list(subsection['paragraphs']).reduce<number>((inner, entry) => inner + proseWords(entry), 0) : sum), own);
-}
-
-export function proseWords(entry: unknown): number {
-  if (!isRecord(entry) || entry['kind'] !== undefined) return 0;
-  const words = (value: unknown): number => (text(value)?.split(/\s+/u).filter((word) => word !== '').length ?? 0);
-  return words(entry['text']) + list(entry['children']).reduce<number>((sum, child) => sum + (isRecord(child) ? words(child['text']) : 0), 0);
 }
 
 /** The advice for one parsed draft; a draft that is not an object yields none. */

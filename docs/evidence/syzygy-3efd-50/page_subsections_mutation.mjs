@@ -94,6 +94,9 @@ const MUTANTS = [
   ['rs17-messages-not-in-v8', ADVICE, "if (diagram['kind'] !== 'sequence' || !hasFigureKindForm(doc['schemaVersion'])) return;", "if (diagram['kind'] !== 'sequence' || doc['schemaVersion'] !== 'polaris-dossier-local-draft-v7') return;"],
   ['ledger-section-subsections-uncounted', LEDGER, "const words = containerProseWords(doc, section, 'sections');", "const words = containerProseWords(doc, section, 'deepDives');"],
   ['ledger-v8-homes-read-as-section-ids', LEDGER, "const homesInHome = hasHomeForm(doc['schemaVersion']);", "const homesInHome = ['polaris-dossier-local-draft-v5', 'polaris-dossier-local-draft-v6', 'polaris-dossier-local-draft-v7'].includes(String(doc['schemaVersion']));"],
+  // --- the shared draft model's handles
+  ['handles-subsection-blocks-dropped', MODEL, ',\n      ...(s.subsections ?? []).flatMap(sub => [sub.answer, ...treeBlocks(sub.paragraphs)])])', '])'],
+  ['handles-subsection-ids-dropped', MODEL, ', ...(s.subsections ?? []).map(sub => sub.id)]', ']'],
   // --- the render model
   ['model-subsections-dropped', RENDER, '...(subsectionRecords(section).length === 0 ? {} :', '...(true ? {} :'],
   ['section-title-over-own-paragraphs-only', RENDER, "const paragraphs = [...leaves(container['paragraphs']), ...leaves(subsectionRecords(container).flatMap(subsectionContent))];", "const paragraphs = leaves(container['paragraphs']);"],

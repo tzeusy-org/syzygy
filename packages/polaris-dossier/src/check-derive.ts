@@ -545,6 +545,7 @@ function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (findi
     const answer = subsection['answer'];
     if (!isRecord(answer)) return;
     const name = subsectionName(subsection, at);
+    // One finding per answer, by intent: a non-normative answer is not read for its sentence count, since the repair replaces it whole.
     if (answer['label'] === 'non-normative') {
       add({ kind: 'subsection-answer', at: `${at}.answer`, detail: `${name}: an answer is an inferred or unknown claim that answers the subsection's question, never non-normative` });
     } else if (typeof answer['text'] === 'string' && !oneSentenceAnswer(answer['text'])) {

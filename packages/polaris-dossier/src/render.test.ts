@@ -2473,6 +2473,27 @@ describe('render: subsections (schema v8)', () => {
     expect(index).toContain('data-visual-provenance="curated" data-figure-kind="sequence"');
   });
 
+  it('renders no subsection, contents list or their style on any page while the draft layer is withheld', async () => {
+    const run = await prepared(versioned(V8, SUBSECTIONS, true), false);
+    const { renderer, inputs } = capturing();
+    const result = await renderRun(run, renderDeps({ renderer }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect([...readSite(result.report.site).values()].some((page) => page.includes('class="subsection"'))).toBe(true);
+    const input = inputs[0]!;
+    const files = renderLocalDossier({ ...input, local: { ...input.local, draftLayer: { state: 'unknown', reason: 'missing-declaration', why: ['fixture'] } } }).files;
+    expect([...files.keys()].filter((file) => file.startsWith('poles/'))).toEqual([]); // no Pole page renders over a withheld draft layer
+    expect([...files].filter(([, page]) => page.includes('subsection') || page.includes('page-contents')).map(([file]) => file)).toEqual([]);
+  });
+
+  it('escapes a section title in the contents list as its heading does', async () => {
+    const doc = versioned(V8, SUBSECTIONS);
+    (doc['sections'] as Doc[])[0]!['title'] = 'Reads & <writes>';
+    const index = (await rendered(doc)).get('index.html')!;
+    expect(index).toContain('<li><a href="#section-core-ideas">Reads &amp; &lt;writes&gt;</a><ol>');
+    expect(index).toContain('<h2>Reads &amp; &lt;writes&gt;</h2>');
+    expect(index).not.toContain('<writes>');
+  });
+
   it('renders no subsection, list or style for a section that is not produced', async () => {
     const doc = versioned(V8, SUBSECTIONS);
     (doc['sections'] as Doc[])[0]!['disposition'] = { kind: 'omitted', reason: 'Not needed.', citations: [] };

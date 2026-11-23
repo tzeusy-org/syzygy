@@ -1108,16 +1108,16 @@ const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.fig
  * its bytes. The `figure-forms` box is a size container; it displays its drawing while it is at least the drawing's laid-out width W wide
  * and its phone form, a numbered list, while it is narrower, with no script. The list's text is the 13 px figure text, wrapped within the
  * box; each item's left border is solid, dashed or dotted by its mark, as the legend's line styles are. */
-/** The subsection and on-page contents-list rules (version 2.16), carried only by a page that renders a subsection. Never sticky: sticky
- * styling stays scoped to the site navigation. */
-export const SUBSECTION_CSS = '.subsection{margin:1.5rem 0 0}.subsection>h3{margin:0 0 .5rem;font-size:1.1rem}.subsection-answer{font-weight:600;margin:0 0 .75rem}'
-  + '.page-contents{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.9rem}.page-contents-title{margin:0 0 .25rem;font-weight:600}.page-contents ol{margin:.25rem 0;padding-left:1.2rem}';
-
 export const FIGURE_KINDS_CSS = '.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
   + '.figure-stepper>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}'
   + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-width:1;stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}'
   + '.legend-line.order{border-top:1px solid var(--muted)}'
   + [408, 592, 776, 960].map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
+
+/** The subsection and on-page contents-list rules (version 2.16), carried only by a page that renders a subsection. Never sticky: sticky
+ * styling stays scoped to the site navigation. */
+export const SUBSECTION_CSS = '.subsection{margin:1.5rem 0 0}.subsection>h3{margin:0 0 .5rem;font-size:1.1rem}.subsection-answer{font-weight:600;margin:0 0 .75rem}'
+  + '.page-contents{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.9rem}.page-contents-title{margin:0 0 .25rem;font-weight:600}.page-contents ol{margin:.25rem 0;padding-left:1.2rem}';
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
  * control is a fragment link and a CSS rule, so it works with scripts off. */
