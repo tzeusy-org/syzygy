@@ -132,6 +132,11 @@ describe('rule relation-witness version 1: a recognizer row once eligible (a tab
     expect(decideWitness(edge('declares-dependency', pkg('web/package.json'), dep('web')), inputs(), EVERY).state).toBe('challenged');
     // A Cargo manifest's relation reads the cargo recognizer's facts, which hold none for this path.
     expect(decideWitness(edge('declares-dependency', pkg('web/Cargo.toml'), dep('left-pad')), inputs(), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
+    // A fact of the right kind, path and name that another rule (or another version) derived never witnesses.
+    const foreign = (rule: string, ruleVersion: number): WitnessInputs['manifest'] => ({ ...MANIFEST, facts: [{ id: '_manifest-9', fact: 'dependency', rule, ruleVersion, path: 'web/Cargo.toml', name: 'left-pad', section: 'dependencies', group: null }] } as WitnessInputs['manifest']);
+    expect(decideWitness(edge('declares-dependency', pkg('web/Cargo.toml'), dep('left-pad')), inputs({ manifest: foreign('npm-package-manifest', 1) }), EVERY).state).toBe('unknown');
+    expect(decideWitness(edge('declares-dependency', pkg('web/Cargo.toml'), dep('left-pad')), inputs({ manifest: foreign('cargo-manifest', 2) }), EVERY).state).toBe('unknown');
+    expect(decideWitness(edge('declares-dependency', pkg('web/Cargo.toml'), dep('left-pad')), inputs({ manifest: foreign('cargo-manifest', 1) }), EVERY)).toEqual({ state: 'witnessed', reason: null, fact: '_manifest-9', factKind: 'dependency', rule: 'cargo-manifest', ruleVersion: 1 });
   });
 
   it('is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value', () => {
@@ -170,7 +175,7 @@ describe('unit-reference: a unit that names no unit of its kind', () => {
       [ROOT, undefined], [dep('left-pad'), undefined], [tld('src'), undefined], [tld('docs'), undefined], [tld('.github'), undefined],
       [tld('src/lib'), 'top-level-directory'], [tld('.'), 'top-level-directory'], [tld('..'), 'top-level-directory'],
       [pkg('web/package.json'), undefined], [pkg('lib/package.json'), 'no-blob'], [pkg('README.md'), 'package-manifest'], [pkg('web/package.json.bak'), 'package-manifest'],
-      [pkg('Cargo.toml'), 'no-blob'], [pkg('x/pyproject.toml'), 'no-blob'], [pkg('go.mod'), 'no-blob'], [pkg('web/Package.json'), 'package-manifest'],
+      [pkg('Cargo.toml'), 'no-blob'], [pkg('x/pyproject.toml'), 'no-blob'], [pkg('go.mod'), 'no-blob'], [pkg('web/Package.json'), 'package-manifest'], [pkg('web/mypackage.json'), 'package-manifest'], [pkg('package.json'), 'no-blob'],
       [job('.github/workflows/ci.yml', 'build'), undefined], [job('ci.yml', 'build'), 'workflow-job'], [job('.github/workflows/sub/ci.yml', 'build'), 'workflow-job'], [job('.github/workflows/cd.yaml', 'build'), 'no-blob'],
       [svc('compose.yaml', 'db'), undefined], [svc('ops/docker-compose.override.yml', 'db'), 'no-blob'], [svc('compose.json', 'db'), 'compose-service'], [svc('.github/workflows/compose.yaml', 'db'), 'compose-service'],
       // A path the tree hides is never tested for a blob, whether or not one exists there.

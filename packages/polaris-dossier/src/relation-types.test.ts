@@ -268,6 +268,14 @@ describe('relation types: complete coverage with no witnessing fact', () => {
     expect(again.ok && again.report.outcome).toBe('passed');
   });
 
+  it('decides no edge of a draft with a schema finding, and none in a figure the draft does not produce', async () => {
+    const bad = draftOf([toDocs(), figure('f2', [node('a', 'A', { kind: 'module' }), node('b', 'B')], [edge('e2', 'a', 'b', 'relates-to', 'feeds')])]);
+    expect((await findingsOf(A, bad)).findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.diagrams[1].nodes[0].unit']);
+    const omitted = toDocs();
+    omitted['disposition'] = { kind: 'omitted', reason: 'Not drawn.', citations: [] };
+    expect(await findingsOf(A, draftOf([omitted]))).toEqual(PASSED);
+  });
+
   it('places the finding after every finding version 2.16 reports and the unit-reference findings', async () => {
     const doc = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('dx', 'Documentation', tld('docs')), node('bad', 'Library', tld('src/lib'))],
       [edge('e9', 'repo', 'dx', 'contains', 'holds the guides'), edge('e8', 'repo', 'bad', 'contains', 'holds the library')])]);
@@ -284,11 +292,15 @@ describe('relation types: complete coverage with no witnessing fact', () => {
       });
     }
 
-    it('renders the docs edge with the draft\'s marking, coverage-partial, while e1 is still witnessed', async () => {
-      const { files, machine } = await rendered(SECRET, draftOf([toDocs()]));
-      expect(statesOf(machine)).toEqual({ e1: witness('witnessed', null, '_tree-contains-1'), e9: witness('unknown', 'coverage-partial') });
-      expect(files.get('index.html')).toContain('<g class="edge inferred" data-relation="contains"><title>holds the guides (inferred)</title>');
-    });
+    // The joining fact is the tree's own: over the wide tree `src` is the 250th unit in code-unit order, after d000 to d248; a directory
+    // holding only a submodule is no unit of rule top-level-unit, so `src` stays the first.
+    for (const [name, tree, fact] of [['a secret path', () => SECRET, '_tree-contains-1'], ['251 top-level directories', () => WIDE, '_tree-contains-250'], ['docs a submodule', () => SUBMODULE, '_tree-contains-1'], ['docs holding only a submodule', () => ONLY_SUBMODULE, '_tree-contains-1']] as const) {
+      it(`renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over ${name}`, async () => {
+        const { files, machine } = await rendered(tree(), draftOf([toDocs()]));
+        expect(statesOf(machine)).toEqual({ e1: witness('witnessed', null, fact), e9: witness('unknown', 'coverage-partial') });
+        expect(files.get('index.html')).toContain('<g class="edge inferred" data-relation="contains"><title>holds the guides (inferred)</title>');
+      });
+    }
   });
 
   describe('an arrow the draft does not assert is never upgraded or challenged', () => {
@@ -344,6 +356,8 @@ describe('relation types: relation types and unit forms outside the lists', () =
     expect((await findingsOf(A, doc)).findings).toEqual([{ kind: 'schema', at: '$.diagrams[0].nodes[1].unit.name', detail: 'must be 1 to 256 code units; is 258' }]);
     const fits = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Long', { kind: 'dependency-name', name: '\u{1F600}'.repeat(128) })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
     expect(await findingsOf(A, fits)).toEqual(PASSED);
+    const long = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Long', { kind: 'dependency-name', name: 'x'.repeat(257) })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
+    expect((await findingsOf(A, long)).findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.diagrams[0].nodes[1].unit.name']);
   });
 
   it('reports them in a v8 draft as field-version in place of the schema findings version 2.16 reports, beside every other finding', async () => {
