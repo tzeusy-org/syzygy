@@ -584,7 +584,13 @@ function create(given: UrlOriginLedgerOptions) {
     boundArtifact: (role: Role, file: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => {
       live(); const value = artifacts.get(`${role}:${file}`); if (!value) fail(); assertSubject(value, bytes); return value.receipt;
     }),
-    fixed: (name: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => { live(); const registered = registry.get(name), receipt = fixedReceipts.get(name); if (!registered || !receipt) return fail(); origins(receipt, bytes); return receipt; }),
+    fixed: (name: string, bytes: Uint8Array): UrlOriginReceipt => guarded(() => {
+      live();
+      const receipt = fixedReceipts.get(name);
+      if (!registry.has(name) || receipt === undefined) return fail();
+      assertSubject(lookup(receipt), bytes);
+      return receipt;
+    }),
     planRendererScaffold,
     sourceSpan: async (input: Parameters<typeof verifiedSpan>[0]): Promise<UrlOriginReceipt> => (await verifiedSpan(input)).receipt,
     // Host-only lineage for a producer that derives values from an uncited

@@ -101,10 +101,16 @@ async function create(given: UrlRunOriginsOptions) {
   const rootParents = Object.freeze([roots.rolePolicy, roots.runControl, roots.toolMetadata]);
   const preparationReceipt = ledger.report({ role: 'author', kind: 'check', bytes: preparationBytes, parents: rootParents });
   const initialReceipts = {} as Record<Role, UrlOriginReceipt>, aliases = new Map<string, string>();
-  for (const role of roles) {
-    const receipt = ledger.compose(Buffer.from(role.profile.input.initialPrompt), rootParents), metadata = ledger.metadata(receipt);
+  const subjects = roles.map(role => {
+    const bytes = Buffer.from(role.profile.input.initialPrompt);
+    return { bytes, receipt: ledger.compose(bytes, rootParents) };
+  });
+  const metadataRows = ledger.inspectMetadata(subjects);
+  for (const [index, role] of roles.entries()) {
+    const metadata = metadataRows[index]!;
     if (canonical(metadata.classes) !== canonical([...role.initialOrigin.classes].sort()) || metadata.digest !== role.declaration.inputPacketSha256) refuse();
-    initialReceipts[role.role] = receipt; aliases.set(metadata.id, role.declaration.inputOriginId);
+    initialReceipts[role.role] = subjects[index]!.receipt;
+    aliases.set(metadata.id, role.declaration.inputOriginId);
   }
   let active = true, timer: ReturnType<typeof setTimeout> | undefined;
   const deadline = new Promise<never>((_resolve, reject) => { timer = setTimeout(() => { active = false; reject(new Error('url-run-origins-unavailable')); }, limits.milliseconds); });

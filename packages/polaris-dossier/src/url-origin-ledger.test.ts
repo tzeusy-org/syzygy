@@ -87,6 +87,18 @@ describe('host-owned URL origin ledger', () => {
     expect(() => f.ledger.fixed('origin:unknown', bytes('Own'))).toThrow('url-origin-refused');
     expect(() => createUrlOriginLedger({ ...f.options, fixed: [{ ...f.options.fixed[0]!, kind: 'evidence-content' as never }] })).toThrow('url-origin-refused');
   });
+  it('checks fixed authority once and verifies the exact subject before returning its receipt', () => {
+    const f = fixture(), current = vi.fn(() => true);
+    const ledger = createUrlOriginLedger({ ...f.options, current });
+    const subject = f.options.fixed[0]!;
+    current.mockClear();
+    const receipt = ledger.fixed(subject.id, subject.bytes);
+    expect(current).toHaveBeenCalledTimes(1);
+    expect(ledger.metadata(receipt)).toMatchObject({ id: subject.id, digest: sha256(subject.bytes), bytes: subject.bytes.length });
+    expect(() => ledger.fixed(subject.id, Buffer.alloc(subject.bytes.length, 'x'))).toThrow('url-origin-refused');
+    current.mockReturnValue(false);
+    expect(() => ledger.fixed(subject.id, subject.bytes)).toThrow('url-origin-refused');
+  });
   it('checks authority at capture and release of a shared provenance graph', () => {
     const f = fixture(), current = vi.fn(() => true);
     const ledger = createUrlOriginLedger({ ...f.options, current });
