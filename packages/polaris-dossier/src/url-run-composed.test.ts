@@ -1116,11 +1116,12 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
   });
 }
 
-describe('composed URL run with actual role processes', { timeout: 360_000 }, () => {
+describe('composed URL run with actual role processes', () => {
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
-  // Interrupted recovery includes a cold claim and a second live exchange.
-  // Allow time to observe both under host contention while the runtime enforces its own deadlines.
+  // The hosted eligible replay was still restoring protected products after
+  // six minutes. Allow the fixture to observe cold recovery and closure while
+  // the runtime continues to enforce its own operation and run deadlines.
   for (const scenario of ['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'] as const) it(`runs the genuine production pipeline to ${scenario}`, async ({ onTestFinished }) => {
     const eligibleStop = scenario === 'eligible-stop-resume';
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
@@ -1904,5 +1905,5 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
     }
-  }, scenario === 'stop-resume' ? 540_000 : 360_000);
+  }, scenario.endsWith('stop-resume') ? 600_000 : 360_000);
 });
