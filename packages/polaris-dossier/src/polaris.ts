@@ -575,7 +575,7 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
   if (claim === null) throw new Error('url-recovery-ownership');
   try {
     const checked = verified.checkedContext, run = previous.run;
-    const current = (): boolean => claim.current() && checked.current();
+    const current = claim.current;
     const sessionCurrent = claim.currentAsync;
     const generation = randomBytes(16).toString('hex');
     const directories: Readonly<Record<ViewRole, string>> = { author: run, inventory: sessionDirectory(run, 1),
@@ -1247,7 +1247,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     const recovery = context.prepared.continuation;
     if (recovery === undefined) return null;
     const { verified, claim } = recovery;
-    const current = (): boolean => isClaimedStoppedUrlRun(verified, claim) && verified.checkedContext.current();
+    const current = (): boolean => isClaimedStoppedUrlRun(verified, claim);
     const output = readStoredUrlRenderWithAuthority(verified.checkedContext.deadline, current, withinDeadline => {
       const attempts = verified.verifiedAudits.flatMap(audit => readVerifiedUrlAuditLaunches(audit)?.ordered ?? []);
       const last = attempts.at(-1);

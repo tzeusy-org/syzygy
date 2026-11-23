@@ -161,6 +161,27 @@ describe('retained URL stop expectation', () => {
     expect(claim.release()).toBe(true);
   });
 
+  it.each(['none', 'marker', 'record'] as const)('checks the consumed claim after its synchronous policy probe (%s)', change => {
+    const f = stoppedFixture(); f.write();
+    const marker = path.join(f.root, `${sha256(f.run)}.${f.expected.generation}.resumed.json`);
+    let checking = false, recordCurrent = true;
+    const current = vi.fn(() => recordCurrent);
+    const sync = vi.fn(() => {
+      if (checking && change === 'marker') fs.unlinkSync(marker);
+      if (checking && change === 'record') recordCurrent = false;
+      return true;
+    });
+    const claim = acquireUrlRecoveryClaim({ root: f.root, expected: f.expected, sha256: f.load()!.sha256,
+      now: () => 2000, current, policy: { ...policy, current: sync } })!;
+    try {
+      expect(claim.consume()).toBe(true);
+      checking = true; current.mockClear(); sync.mockClear();
+      expect(claim.current()).toBe(change === 'none');
+      expect(sync).toHaveBeenCalledTimes(1);
+      expect(current).toHaveBeenCalledTimes(change === 'marker' ? 0 : 1);
+    } finally { claim.release(); }
+  });
+
   it.each(['none', 'lock', 'marker', 'boundary', 'record', 'deadline', 'policy'] as const)(
     'rechecks the exact consumed claim after a deferred policy observation (%s)', async change => {
       const f = stoppedFixture(); f.write();

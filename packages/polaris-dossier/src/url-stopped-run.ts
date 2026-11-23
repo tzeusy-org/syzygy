@@ -332,12 +332,20 @@ export function acquireUrlRecoveryClaim(input: {
       catch { return false; }
     };
     const ownsConsumedBoundary = (): boolean => consumedStat !== undefined && own() && markerCurrent();
+    const recheckConsumedBoundary = (): boolean => ownsConsumedBoundary() && boundaryCurrent() && input.current() === true;
+    const current = (): boolean => {
+      try {
+        // Check the live run record at release, after the blocking policy
+        // probe and the fresh read of the consumed stop boundary.
+        return ownsConsumedBoundary() && input.policy.current() === true && recheckConsumedBoundary();
+      } catch { return false; }
+    };
     const currentAsync = async (): Promise<boolean> => {
       try {
         if (!ownsConsumedBoundary() || input.current() !== true || await input.policy.currentAsync() !== true) return false;
         // The policy check may suspend. Recheck the lease, marker and exact
         // stopped bytes before admitting the freshly checked run record.
-        return ownsConsumedBoundary() && boundaryCurrent() && input.current() === true;
+        return recheckConsumedBoundary();
       } catch { return false; }
     };
     if (!heldCurrent()) {
@@ -345,8 +353,7 @@ export function acquireUrlRecoveryClaim(input: {
       return null;
     }
     fs.fsyncSync(directoryFd);
-    const claim: UrlRecoveryClaim = Object.freeze({ current: () => consumedStat !== undefined && heldCurrent(),
-      currentAsync,
+    const claim: UrlRecoveryClaim = Object.freeze({ current, currentAsync,
       consume: (): boolean => {
         if (consumedStat !== undefined) return heldCurrent();
         if (!heldCurrent()) return false;
