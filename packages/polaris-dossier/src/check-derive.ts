@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, RELATION_FIELD, UNIT_FIELD, hasRelationForm, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSIONS, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, RELATION_FIELD, UNIT_FIELD, hasRelationForm, hasHeroForm, heroOf, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { UNIT_FAULT_WORDS, UNIT_TEXT_LIMIT, decideWitness, unitFault, unitOf, type EdgeEnd, type RelationType, type UnitFault, type UnitTree, type WitnessDecision, type WitnessInputs } from './relation-witness.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
@@ -98,7 +98,7 @@ export interface SubjectRules {
    * `sectionId`; one before v6 has no `thesisBasis`), and the later-version fields it may not carry, which the structure reports as
    * field-version findings instead; undefined for a subject of the current version. */
   readonly earlier?: (subject: unknown) => { readonly schema: DraftSchemaWithDefs; readonly reported: { readonly test: (path: string) => boolean };
-    /** The schema faults that stand in place of one, at its place in the order: a v7 diagram naming no kind (version 2.5). */
+    /** The schema faults that stand in place of one, such as a diagram without a named kind or a malformed hero omission. */
     readonly replaced?: (error: { readonly path: string; readonly detail: string }) => readonly { readonly path: string; readonly detail: string }[] | undefined } | undefined;
   /** The declared clarification-question limit, where the subject records questions. */
   readonly maxQuestions: number | null;
@@ -587,7 +587,7 @@ function relationFieldVersionPaths(doc: Readonly<Record<string, unknown>>): stri
  * or service key past 256 code units, which the schema's code-point bound passes. */
 function relationStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
   for (const at of relationFieldVersionPaths(doc)) {
-    add({ kind: 'field-version', at, detail: `\`${at.endsWith(UNIT_FIELD) ? UNIT_FIELD : RELATION_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    add({ kind: 'field-version', at, detail: `\`${at.endsWith(UNIT_FIELD) ? UNIT_FIELD : RELATION_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V9}` });
   }
   if (!hasRelationForm(doc['schemaVersion'])) return;
   graphElements(doc, (member, element, at) => {
@@ -652,10 +652,43 @@ export function relationFindings(decisions: RelationDecisions): CheckFinding[] {
   ];
 }
 
+export function heroFindings(doc: Readonly<Record<string, unknown>>): CheckFinding[] {
+  if (!Object.hasOwn(doc, 'hero')) {
+    return hasHeroForm(doc['schemaVersion'])
+      ? [{ kind: 'hero', at: '$.hero', detail: 'a v10 draft names its hero figure or declares it omitted with a reason' }]
+      : [];
+  }
+  if (!hasHeroForm(doc['schemaVersion'])) {
+    if (!LOCAL_DRAFT_SCHEMA_VERSIONS.some((version) => version === doc['schemaVersion'])) return [];
+    return [{ kind: 'field-version', at: '$.hero', detail: `\`hero\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` }];
+  }
+  const hero = heroOf(doc);
+  if (hero === undefined) return [{ kind: 'hero', at: '$.hero', detail: '`hero` is exactly one of {"figure": <diagram id>} and {"omitted": <claim block>}' }];
+  if (hero.form === 'omitted') {
+    return isRecord(hero.value) && hero.value['label'] === 'non-normative'
+      ? [{ kind: 'hero', at: '$.hero.omitted', detail: "an omitted hero's reason is an Inferred or Unknown claim block" }]
+      : [];
+  }
+  const at = '$.hero.figure';
+  if (typeof hero.value !== 'string') return [{ kind: 'hero', at, detail: '`hero.figure` names a diagram by its identity' }];
+  const diagram = list(doc['diagrams']).find((item) => isRecord(item) && item['id'] === hero.value);
+  if (!isRecord(diagram)) return [{ kind: 'unresolved-reference', at, detail: 'no diagram has the identity named by `hero.figure`' }];
+  const home = diagram['home'];
+  const findings: CheckFinding[] = [];
+  if (!isRecord(home) || home['kind'] !== 'overview' || Object.keys(home).length !== 1) {
+    findings.push({ kind: 'hero', at, detail: `${hero.value}: the hero is a figure homed on the overview` });
+  }
+  if (membersOfKind(diagram['kind'])?.[0] !== 'nodes') {
+    findings.push({ kind: 'hero', at, detail: `${hero.value}: the hero is a figure of a graph kind` });
+  }
+  return findings;
+}
+
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
-  const current = localDraftSchema(parameters);
+  const current = localDraftSchema({ ...parameters, hero: 'required' });
+  const v9 = localDraftSchema(parameters);
   const v8 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'absent');
   const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent', 'absent');
   const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent', 'absent');
@@ -679,20 +712,28 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
       // A graph edge's `relation` or a graph node's `unit` in a v8 or earlier draft: likewise (version 2.19).
       const relationPaths = new Set(relationFieldVersionPaths(doc));
-      const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path);
+      const supportedVersion = LOCAL_DRAFT_SCHEMA_VERSIONS.some((supported) => supported === version);
+      const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
+        || (supportedVersion && path === '$.hero') || (hasHeroForm(version) && path === '$.hero.figure');
       if (hasFigureKindForm(version)) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
         // read against the graph form with every kind permitted instead, each at its own path, as v6 reports them.
         const diagrams = list(doc['diagrams']);
         const replaced = (error: { readonly path: string; readonly detail: string }) => {
+          const hero = heroOf(doc);
+          if (error.path === '$.hero' && hero?.form === 'omitted') {
+            // The outer sum reports at the member. Preserve the paragraph's own schema failures at its real path.
+            return checkShape({ root: current.defs['paragraph']!, defs: current.defs }, hero.value)
+              .map((fault) => ({ ...fault, path: '$.hero.omitted' + fault.path.slice(1) }));
+          }
           const match = /^\$\.diagrams\[(\d+)\]$/u.exec(error.path);
           if (match === null || !error.detail.startsWith('matches none of the permitted forms')) return undefined;
           const diagram = diagrams[Number(match[1])];
           if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
           return checkShape(hasRelationForm(version) ? unnamedV9 : unnamedV8, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
         };
-        const schema = version === LOCAL_DRAFT_SCHEMA_VERSION ? current : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
+        const schema = hasHeroForm(version) ? current : hasRelationForm(version) ? v9 : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7;
         return { schema, reported: { test: (path) => standing.has(path) || fieldVersioned(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
@@ -909,6 +950,10 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   const claim = (at: string, value: Readonly<Record<string, unknown>>): Block =>
     ({ at, value, textKey: 'text', allowed: ['inferred', 'unknown', 'non-normative'], quotable: 'inferred', unquotable: CLAIM_UNQUOTABLE });
   if (isRecord(doc['introduction'])) out.push(claim('$.introduction', doc['introduction']));
+  const hero = heroOf(doc);
+  if (hero?.form === 'omitted' && isRecord(hero.value) && !ELEMENT_KINDS.has(text(hero.value['kind']) ?? '')) {
+    out.push(claim('$.hero.omitted', hero.value));
+  }
   for (const part of ['sections', 'deepDives'] as const) {
     list(doc[part]).forEach((container, i) => {
       if (!isRecord(container)) return;
