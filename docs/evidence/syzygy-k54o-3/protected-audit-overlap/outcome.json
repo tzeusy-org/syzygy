@@ -1,0 +1,331 @@
+{
+  "base": "72939b0985db767c920153b272faf3b5ba5eacfd",
+  "reviewed": "055f8a2a55fd7e51a10faec96a7ef3a6fd040222",
+  "adopted": "137b563213505691f0380fccd7e111db994aa7a2",
+  "filesSha256": {
+    "packages/polaris-dossier/src/url-session-audit.ts": "c6ec712d7f16260aa787bd271aa52c024dcec9bfe94d4d6a42797dba20342896",
+    "packages/polaris-dossier/src/url-session-audit.test.ts": "17c2a6ab5c55385f42f3d733299049952eaaa5318afbf7cdcd5d570c92ea9072"
+  },
+  "reviewSha256": {
+    "docs/reviews/F3-AUDIT-OVERLAP-AUTHORITY-REVIEW-RAW.md": "0a12a82f0d64bbecedb6c62e2498493a0dab07e26c961b17ce976a8ea8beecf6",
+    "docs/reviews/F3-AUDIT-OVERLAP-POST-CALLBACK-REVIEW-RAW.md": "4a7a8f1d7eee8e93c519993197e30457e2ef863638fa543c091ef64343559b52",
+    "docs/reviews/F3-AUDIT-OVERLAP-REVIEW-RAW.md": "8ff50ddaf6e5e4b004ab2fb41b8fa608f9ea3a2b34924bcba08545ede3b659f7"
+  },
+  "auditTests": {
+    "logSha256": "7b3dddf167b116d1b0f0aebdffdc7c9365d338d2f8b4bb569f1a2607d9ce211d",
+    "passed": 111,
+    "total": 111
+  },
+  "benchmarkPatchSha256": "07ed878545010afe614e5cf6cf4ba05ce6370b13d28dc41cc10af1544c561407",
+  "perf": {
+    "72939b0985db767c920153b272faf3b5ba5eacfd": {
+      "logSha256": "b16cdb9b10da8b9d1ccc08de09e195acf46273f73d40ba9e14122117c80c2fd5",
+      "samples": [
+        {
+          "delayMs": 0,
+          "durationMs": 21,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 32.6,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 38.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 35.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 44.5,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 26.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 21.7,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 19.5,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 25.6,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 33.1,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 26.6,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 33.9,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 368.4,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 325.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 334.4,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 333.6,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 343.9,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 750,
+          "durationMs": 4999.8,
+          "accepted": false,
+          "descriptorReads": 7,
+          "deadlineMs": 5000,
+          "durableDelta": 0
+        }
+      ],
+      "medianMs": {
+        "0": 29.6,
+        "35": 334.4,
+        "750": 4999.8
+      }
+    },
+    "055f8a2a55fd7e51a10faec96a7ef3a6fd040222": {
+      "logSha256": "d59ca8b1fb5c3f5c1e7368b0fb9fbbee5413f4ee6c1badd030077ba05d0a398d",
+      "samples": [
+        {
+          "delayMs": 0,
+          "durationMs": 47.9,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 33.3,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 23.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 26.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 27.8,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 18.8,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 26.3,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 28,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 26.1,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 45.1,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 29.1,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 0,
+          "durationMs": 39.2,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 104.8,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 109.4,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 145.8,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 110.9,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 35,
+          "durationMs": 125.1,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        },
+        {
+          "delayMs": 750,
+          "durationMs": 1558.5,
+          "accepted": true,
+          "descriptorReads": 8,
+          "deadlineMs": 5000,
+          "durableDelta": 1
+        }
+      ],
+      "medianMs": {
+        "0": 27.9,
+        "35": 110.9,
+        "750": 1558.5
+      }
+    }
+  },
+  "benchmarkFixtureSha256": "8f73a06a8f03c53294ba7f81e087e05079b5cb8dfa89ee4efad6cfc07bdaa924"
+}

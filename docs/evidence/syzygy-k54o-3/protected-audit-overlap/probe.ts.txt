@@ -1,0 +1,25 @@
+
+it('measures synthetic descriptor-read latency against the real audit deadline', async () => {
+  const f = fixture(), writer = await f.create(), p = await prototype(), read = p.read;
+  for (let index = 0; index < 4; index++) {
+    for (const role of ROLES) await writer.append(f.event(writer, 'before-tool', role));
+  }
+  let delayMs = 0, descriptorReads = 0;
+  vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+    descriptorReads++;
+    const result = await read.apply(this, args);
+    if (delayMs > 0) await new Promise(resolve => setTimeout(resolve, delayMs));
+    return result;
+  });
+  for (const injected of [...Array(12).fill(0), 35, 35, 35, 35, 35, 750]) {
+    delayMs = injected;
+    descriptorReads = 0;
+    const records = writer.summary().durableRecords;
+    const started = performance.now();
+    const accepted = await writer.append(f.event(writer)).then(() => true, () => false);
+    const durationMs = Math.round((performance.now() - started) * 10) / 10;
+    const summary = writer.summary();
+    console.log('F3_SCAN_SAMPLE', JSON.stringify({delayMs, durationMs, accepted, descriptorReads, deadlineMs: summary.limits.milliseconds, durableDelta: summary.durableRecords - records}));
+    if (!accepted) await vi.waitFor(() => expect(writer.summary().pendingFilesystemOperations).toBe(0), { timeout: 2000 });
+  }
+}, 60_000);
