@@ -9,6 +9,7 @@ import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js
 import { urlDossierReportExit } from './url-dossier-result.js';
 import { encodeRunRecord, readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import type { PolicyBinding } from './policy-snapshot.js';
+import { deriveManifestRemainder, type ManifestRemainder } from './manifest-facts.js';
 import type { DossierScreen } from './screen.js';
 import type { SessionAdmission, SessionBinding, SessionContentClass } from './session-egress-policy.js';
 import type { SessionToolsReceipt, SessionToolOrigins } from './session-tools.js';
@@ -289,6 +290,34 @@ function create(given: UrlOriginLedgerOptions) {
     if (treatment.kind !== 'admitted') fail(); safe(bytes, file); check();
     return { objectId: blob.id, bytes, raw, contentClass };
   }
+  async function verifiedManifestRemainder(check: () => void): Promise<Buffer> {
+    check();
+    const entries = await openReader().listTree();
+    check();
+    // Reuse the check's bounded path-only projection. Neither the raw tree
+    // listing nor a blob identifier or body enters this receipt's subject.
+    const bytes = Buffer.from(canonical(deriveManifestRemainder(entries, screen)));
+    if (bytes.length > limits.itemBytes) fail();
+    safe(bytes);
+    check();
+    return bytes;
+  }
+  const manifestRemainderOriginId = (digest: string) =>
+    `origin:manifest-remainder-${sha256(canonical([readerOptions.revision, screen.policySha256, digest])).slice(0, 32)}`;
+  async function sourceManifestRemainder(remainder: ManifestRemainder): Promise<UrlOriginReceipt> {
+    try {
+      live();
+      const supplied = Buffer.from(canonical(remainder));
+      return await sourceOperation(async check => {
+        const bytes = await verifiedManifestRemainder(check);
+        if (!bytes.equals(supplied)) fail();
+        const id = manifestRemainderOriginId(sha256(bytes));
+        check();
+        return issuedById.get(id) ?? issue(bytes, ['code-structure'], [], { id, species: 'structural-source-and-tool-metadata' },
+          { parents: [], derivation: { kind: 'source-manifest-remainder' } });
+      });
+    } catch { return fail(); }
+  }
   function issueWholeSourceBody(file: string, body: Awaited<ReturnType<typeof verifiedSource>>, check: () => void): UrlWholeSourceBody {
     const { objectId } = body;
     const digest = sha256(body.bytes), identity = canonical([file, objectId, digest]); check();
@@ -508,6 +537,10 @@ function create(given: UrlOriginLedgerOptions) {
         });
         safe(result);
         if (sha256(result) !== node.metadata.digest || result.length !== node.metadata.bytes || canonical(node.metadata.classes) !== canonical(['code-structure'])) fail();
+      } else if (d.kind === 'source-manifest-remainder') {
+        const bytes = await sourceOperation(verifiedManifestRemainder);
+        const digest = sha256(bytes);
+        if (digest !== node.metadata.digest || bytes.length !== node.metadata.bytes || manifestRemainderOriginId(digest) !== node.metadata.id) fail();
       }
       // Composition/report/provider nodes are protected historical derivation
       // metadata. Their old capabilities are never recreated or exposed.
@@ -531,7 +564,7 @@ function create(given: UrlOriginLedgerOptions) {
   }
   live();
   return Object.freeze({
-    captureProvenance, restoreFrozenOrigins,
+    captureProvenance, restoreFrozenOrigins, sourceManifestRemainder,
     semanticProvenance: (receipts: readonly UrlOriginReceipt[]): string => guarded(() => {
       const captured = captureProvenance(receipts);
       const fingerprint = fingerprintUrlOriginProvenance(captured, { runId, sourceBindingSha256: sourceBindingSha256(record.subject),

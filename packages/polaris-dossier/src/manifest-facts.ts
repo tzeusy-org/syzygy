@@ -202,18 +202,21 @@ export async function deriveManifestFacts(inputs: ManifestInputs): Promise<Manif
     format: MANIFEST_FACTS_FORMAT, state: 'derived',
     screeningPolicy: { policyId: screen.policyId, policyVersion: screen.policyVersion, sha256: screen.policySha256 },
     recognizers, facts: listed, factsNotListed: pending.length - listed.length,
-    remainder: remainderOf(blobs, isSecretPath),
+    remainder: deriveManifestRemainder(blobs, screen),
   };
 }
 
 /** The coverage remainder (infrastructure recognizers): every blob entry by place, those the secret test leaves in, and those of them that are a
  * candidate of no recognizer. A place is the root (null) or a top-level directory's raw first segment, in the census's shown form where
  * it is not citable; the first `CENSUS_LISTED_LIMIT` directories, in code-unit order, are listed and the rest summed. */
-function remainderOf(blobs: readonly Pick<TreeEntry, 'path'>[], isSecretPath: (path: string) => boolean): ManifestRemainder {
+export function deriveManifestRemainder(entries: readonly Pick<TreeEntry, 'path' | 'mode'>[],
+  screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>): ManifestRemainder {
+  const isSecretPath = secretPathOf(screen);
   let secretPathsLeftOut = 0, candidates = 0, notCandidates = 0;
   const root = { files: 0, notCandidates: 0 };
   const directories = new Map<string, { files: number; notCandidates: number }>();
-  for (const { path } of blobs) {
+  for (const { path, mode } of entries) {
+    if (!BLOB_MODES.has(mode)) continue;
     const segments = path.split('/');
     if (secretOrUnder(segments, isSecretPath)) { secretPathsLeftOut++; continue; }
     const candidate = MANIFEST_RECOGNIZERS.some((recognizer) => recognizer.matches(path));

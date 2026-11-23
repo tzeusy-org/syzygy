@@ -14,6 +14,7 @@ export type UrlOriginDerivation =
   | { readonly kind: 'source-span'; readonly path: string; readonly objectId: string; readonly offset: number; readonly limit: number }
   | { readonly kind: 'source-whole'; readonly path: string; readonly objectId: string }
   | { readonly kind: 'source-tree'; readonly offset: number; readonly limit: number }
+  | { readonly kind: 'source-manifest-remainder' }
   | { readonly kind: 'composition' }
   | { readonly kind: 'source-reply' }
   | { readonly kind: 'report'; readonly report: UrlReportKind; readonly role: string }

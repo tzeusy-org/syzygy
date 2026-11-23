@@ -41,6 +41,7 @@ import { buildFidelityPacket } from './review-packet.js';
 import { reviewOfRecord } from './review.js';
 import { inventoryOfRecord } from './inventory.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
+import { deriveManifestFacts, type ManifestFacts } from './manifest-facts.js';
 import { addRawReadDisclosureFixture, fixtureSources } from './full-run.testkit.js';
 import { issueBrief, shapePackSelection, type BriefReport } from './brief.js';
 
@@ -65,8 +66,22 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
   };
   const blob = object('blob', Buffer.from(source));
   const sourceObjects = new Map([['own.ts', blob], ...Object.entries(extraFiles).map(([file, text]) => [file, object('blob', Buffer.from(text))] as const)]);
-  const tree = object('tree', Buffer.concat([...sourceObjects].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
-    .flatMap(([file, id]) => [Buffer.from(`100644 ${file}\0`), Buffer.from(id, 'hex')])));
+  const sourceTrees = new Map<string, string>();
+  function writeTree(prefix: string): string {
+    const entries: { name: string; mode: string; id: string }[] = [], subdirectories = new Set<string>();
+    for (const [file, id] of sourceObjects) {
+      if (!file.startsWith(prefix)) continue;
+      const name = file.slice(prefix.length), slash = name.indexOf('/');
+      if (slash === -1) entries.push({ name, mode: '100644', id });
+      else subdirectories.add(name.slice(0, slash));
+    }
+    for (const name of subdirectories) entries.push({ name, mode: '40000', id: writeTree(`${prefix}${name}/`) });
+    entries.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+    const id = object('tree', Buffer.concat(entries.flatMap(({ name, mode, id }) => [Buffer.from(`${mode} ${name}\0`), Buffer.from(id, 'hex')])));
+    sourceTrees.set(prefix, id);
+    return id;
+  }
+  const tree = writeTree('');
   const pin = object('commit', Buffer.from(`tree ${tree}\nauthor Own <own@example.invalid> 0 +0000\ncommitter Own <own@example.invalid> 0 +0000\n\nOwn.\n`));
   const policyPath = `.syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-${policyVersion}.json`;
   const policyDoc = JSON.parse(fs.readFileSync(new URL(`../../../${policyPath}`, import.meta.url), 'utf8'));
@@ -188,9 +203,10 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     await target.toolReceipt('inventory', raw, admission('inventory')); expect(target.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(false);
     target.committed('inventory', raw.id); expect(target.hasCommittedProduct('inventory/checks/rev-0.json', sha256(checkedBytes))).toBe(true); return { bytes, checked, checkedBytes, raw, response, argv };
   };
-  const commitCheck = async (commit = true) => {
+  const commitCheck = async (commit = true, manifestFacts?: ManifestFacts) => {
     const draft = await writeDraft(); bridge.committed('author', draft.raw.id); write('drafts/rev-0.json', draft.bytes);
-    const doc = checkDoc(draft.bytes), stored = `${JSON.stringify(doc, null, 2)}\n`; write('checks/rev-0.json', stored);
+    const doc = { ...checkDoc(draft.bytes), ...(manifestFacts === undefined ? {} : { manifestFacts }) };
+    const stored = `${JSON.stringify(doc, null, 2)}\n`; write('checks/rev-0.json', stored);
     const report = { command: 'check', run, checkFile: path.join(run, 'checks/rev-0.json'), ...doc, disclosures: [] }, response = { stdout: JSON.stringify(report), stderr: '', exit: 0 }, argv = ['dossier', 'check', run];
     replyQueue.push(response); await bridge.runDossier('author')(argv, null);
     const raw = receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response }); await bridge.toolReceipt('author', raw, admission('author')); if (commit) bridge.committed('author', raw.id);
@@ -234,16 +250,24 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     await bridge.toolReceipt('fidelity', prepared.raw, prepared.admission);
     return prepared;
   };
-  return { root, run, runId, pin, blob, source, sourceObjects, options, bridge, initialize, produceInitial, write, dir, ledger, admission, receipt, draft, inventory, writeDraft, checkDoc, replyQueue, calls, screen: loaded.screen, basePolicyBytes,
+  return { root, run, runId, pin, blob, source, sourceObjects, sourceTrees, options, bridge, initialize, produceInitial, write, dir, ledger, admission, receipt, draft, inventory, writeDraft, checkDoc, replyQueue, calls, screen: loaded.screen, basePolicyBytes,
     commitInventory, commitCheck, producePacket, prepareFidelity, submitFidelity, freshOrigins, verifyCurrent, stale: () => { current = false; } };
 }
 
 /** Real protected files and genuinely cold-verified never-issued machine
  * anchors. The synthetic stop seal is independent fixture input, never a live
  * process/launch/provider claim. No native helper or CLI is invoked. */
-async function recoveryFixture(withPacket = true) {
-  const f = fixture(undefined, {}, 'v1', true); f.initialize();
-  await f.commitCheck(); await f.commitInventory();
+async function recoveryFixture(withPacket = true, withManifestRemainder = false) {
+  const extraFiles: Record<string, string> = withManifestRemainder ? { 'own-notes/uncited.ts': 'Own uncited body.\n' } : {};
+  const f = fixture(undefined, extraFiles, 'v1', true); f.initialize();
+  let manifestFacts: ManifestFacts | undefined;
+  if (withManifestRemainder) {
+    const clone = f.options.record.subject.clone.path;
+    const reader = bindUrlSourceReader({ clone, revision: f.pin, store: 'owned-loose', current: f.options.current })({ gitDir: path.join(clone, '.git'), revision: f.pin });
+    manifestFacts = await deriveManifestFacts({ entries: await reader.listTree(), screen: f.screen, consented: f.options.record.subject.contentClasses,
+      read: async () => { throw new Error('the uncited nonmanifest tree requires no body read'); } });
+  }
+  await f.commitCheck(true, manifestFacts); await f.commitInventory();
   fs.writeFileSync(path.join(f.dir('inventory'), 'inventory.json'), b(f.inventory));
   if (withPacket) {
     const packet = f.producePacket(b(f.draft), b(f.inventory));
@@ -380,6 +404,25 @@ describe('trusted URL artifact producer bridge', () => {
     finally { release(); }
     await expect(work).resolves.toMatchObject({ initial: { deadline: expect.any(Number) } });
   });
+  it('rechecks the uncited manifest remainder tree in a fresh ledger before restoring the check', async () => {
+    const f = await recoveryFixture(false, true);
+    const coverageOrigin = f.frozen.provenance.nodes.find(node => node.derivation.kind === 'source-manifest-remainder')!;
+    expect(coverageOrigin).toMatchObject({ parents: [], referenceMode: 'declared', metadata: { classes: ['code-structure'], originIds: [] } });
+    const change = { ...f.frozen, provenance: { ...f.frozen.provenance, nodes: f.frozen.provenance.nodes.map(node =>
+      node === coverageOrigin ? { ...node, derivation: { ...node.derivation, path: 'own-notes/uncited.ts' } } : node) } };
+    expect(verifyUrlFrozenProductHistory(f.run, change, f.options.current)).toBeNull();
+    const id = f.sourceTrees.get('own-notes/')!;
+    const tree = path.join(f.options.record.subject.clone.path, '.git/objects', id.slice(0, 2), id.slice(2));
+    const next = f.fresh();
+    fs.renameSync(tree, `${tree}.held`);
+    try {
+      await expect(next.bridge.restoreFrozenProducts(f.capability)).rejects.toThrow('url-run-artifacts-unavailable');
+    } finally { fs.renameSync(`${tree}.held`, tree); }
+    const fresh = f.fresh(), capability = f.issue();
+    if (capability === null) throw new Error('own fresh recovery capability missing');
+    await fresh.bridge.restoreFrozenProducts(capability);
+    expect(fresh.origins.ledger.semanticProvenance([fresh.bridge.checkReceipt(0)])).toBe(f.ledger.semanticProvenance([f.bridge.checkReceipt(0)]));
+  });
   it('refuses the first failed resource check before importing historical provenance', async () => {
     const f = await recoveryFixture(false), next = f.fresh(); let waits = 0;
     await expect(next.bridge.restoreFrozenProducts(f.capability, async () => ++waits !== 1)).rejects.toThrow('url-run-artifacts-unavailable');
@@ -474,8 +517,11 @@ describe('trusted URL artifact producer bridge', () => {
     const manifest = `{\n${'\n'.repeat(2000)}"name":"own-uncited-package",\r"dependencies":{"own-uncited-dependency":"1.0.0"}\r}\n`;
     const excludedManifest = '[package]\nname = "OWN_SECRET_CANARY"\n';
     const compose = 'services:\n  web:\n    image: nginx:stable\n';
+    const uncitedPath = 'own-notes/uncited.ts', uncitedBody = 'export const uncited = "OWN_UNCITED_BODY";\n';
+    const privatePath = 'OWN_SECRET_CANARY/own-hidden.ts', privateBody = 'export const hidden = "OWN_PRIVATE_BODY";\n';
     const f = fixture(undefined, {
       'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest, 'compose.yaml': compose,
+      [uncitedPath]: uncitedBody, [privatePath]: privateBody,
     }, 'v2');
     Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
       citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
@@ -633,8 +679,9 @@ describe('trusted URL artifact producer bridge', () => {
             expect.objectContaining({ path: 'package.json', fact: 'dependency', name: 'own-uncited-dependency' }),
             expect.objectContaining({ path: 'compose.yaml', fact: 'service-image', service: 'web', image: 'nginx:stable' }),
           ]),
-          remainder: { files: 5, secretPathsLeftOut: 0, candidates: 3, notCandidates: 2,
-            places: [{ place: null, files: 5, notCandidates: 2 }], placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
+          remainder: { files: 7, secretPathsLeftOut: 1, candidates: 3, notCandidates: 3,
+            places: [{ place: null, files: 5, notCandidates: 2 }, { place: 'own-notes', files: 1, notCandidates: 1 }],
+            placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
         });
         if (result.report.manifestFacts?.state !== 'derived') throw Error('own manifest facts unavailable');
         expect(result.report.manifestFacts.facts.filter(fact => fact.path === 'package.json').every(fact => fact.lines[0] > 2000)).toBe(true);
@@ -677,6 +724,17 @@ describe('trusted URL artifact producer bridge', () => {
           f.replyQueue.push({ ...response, stdout: JSON.stringify(mutant) });
           await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
         }
+        const { remainder } = result.report.manifestFacts;
+        // Editing both products preserves their mutual agreement and every
+        // count. Only independent pinned-tree verification catches the place.
+        const forgedManifest = { ...result.report.manifestFacts, remainder: {
+          ...remainder, places: [remainder.places[0]!, { place: 'forged-notes', files: 1, notCandidates: 1 }],
+        } };
+        f.write('checks/rev-0.json', b({ ...stored, manifestFacts: forgedManifest }));
+        f.replyQueue.push({ ...response, stdout: JSON.stringify({ ...result.report, manifestFacts: forgedManifest }) });
+        await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow('url-run-artifacts-unavailable');
+        expect(bridge.dossierOrigins('author')(argv, response)).toBeNull();
+        f.write('checks/rev-0.json', storedBytes);
         f.replyQueue.push(response);
         await expect(bridge.runDossier('author')(argv, null)).resolves.toEqual(response);
         const origins = bridge.dossierOrigins('author')(argv, response);
@@ -688,13 +746,24 @@ describe('trusted URL artifact producer bridge', () => {
         expect(structure).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'] });
         const composeBody = f.ledger.plannedOrigins().find(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(compose));
         expect(composeBody).toBeDefined();
-        expect(origins?.originIds).toEqual(expect.arrayContaining([body!.id, structure!.id, composeBody!.id]));
-        expect(f.ledger.plannedOrigins().some(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(excludedManifest))).toBe(false);
+        const coverageOrigin = f.ledger.plannedOrigins().find(origin => origin.sha256 === sha256(b(remainder)));
+        expect(coverageOrigin).toMatchObject({ species: 'structural-source-and-tool-metadata', classes: ['code-structure'], originIds: [] });
+        const actualOrigins = [body!.id, structure!.id, composeBody!.id, coverageOrigin!.id];
+        expect(origins?.originIds).toEqual(expect.arrayContaining(actualOrigins));
+        for (const absent of [excludedManifest, uncitedBody, privateBody]) {
+          expect(f.ledger.plannedOrigins().some(origin => origin.species === 'pinned-repository-body' && origin.sha256 === sha256(absent))).toBe(false);
+        }
+        for (const absent of [uncitedPath, 'OWN_UNCITED_BODY', f.sourceObjects.get(uncitedPath)!, 'OWN_SECRET_CANARY', 'OWN_PRIVATE_BODY', f.sourceObjects.get(privatePath)!]) {
+          expect(response.stdout).not.toContain(absent);
+        }
         const receipt = f.receipt('author', 'mcp__syzygy__dossier_step', { argv }, { ok: true, kind: 'dossier-result', ...response });
         await bridge.toolReceipt('author', receipt, f.admission('author'));
         bridge.committed('author', receipt.id);
-        expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining([body!.id, structure!.id, composeBody!.id]));
+        expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining(actualOrigins));
         const ancestry = f.ledger.captureProvenance([bridge.checkReceipt(0)]).graph.nodes;
+        expect(ancestry.find(node => node.metadata.id === coverageOrigin!.id)).toMatchObject({
+          parents: [], derivation: { kind: 'source-manifest-remainder' }, metadata: { digest: sha256(b(remainder)), bytes: b(remainder).length },
+        });
         for (const digest of [sha256(countedInventory.bytes), sha256(countedInventory.checkedBytes), sha256(promptBytes), sha256(launchBytes)])
           expect(ancestry.some(node => node.metadata.digest === digest)).toBe(true);
         expect(bridge.latestStageCheck('author')).toMatchObject({ revision: 0, record: { figureFit: stored.figureFit } });

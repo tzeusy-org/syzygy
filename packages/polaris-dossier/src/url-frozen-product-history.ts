@@ -127,6 +127,9 @@ export function verifyFrozenOriginProvenance(graph: UrlOriginProvenance) {
         || (d.kind === 'source-span' && (!integer(d.offset) || !integer(d.limit) || d.limit < 1 || d.limit > 2000))) refuse();
     } else if (d.kind === 'source-tree') {
       if (!keys(d, ['kind', 'offset', 'limit']) || !integer(d.offset) || !integer(d.limit) || d.limit < 1 || d.limit > 2000 || node.parents.length) refuse();
+    } else if (d.kind === 'source-manifest-remainder') {
+      if (!keys(d, ['kind']) || node.parents.length || node.metadata.originIds.length || node.referenceMode !== 'declared'
+        || canonical(node.metadata.classes) !== canonical(['code-structure']) || !/^origin:manifest-remainder-[a-f0-9]{32}$/u.test(node.metadata.id)) refuse();
     } else if (d.kind === 'report') {
       if (!keys(d, ['kind', 'report', 'role']) || !['draft', 'inventory', 'fidelity-verdict', 'design-verdict', 'check'].includes(d.report)
         || !['author', 'inventory', 'fidelity', 'design'].includes(d.role) || node.parents.length < 1) refuse();

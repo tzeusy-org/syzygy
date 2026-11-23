@@ -598,10 +598,17 @@ function create(given: UrlRunArtifactsOptions) {
     const sources = await sourceParents(doc['citedBlobs'], waitForCapture);
     // The actual checker also derives manifest facts from bodies absent from
     // citedBlobs. Preserve their complete screened source lineage in the reply.
-    const manifests = doc['manifestFacts'] as ManifestFacts | undefined;
-    const manifestPaths = manifests?.state === 'derived'
-      ? [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files.filter(file => file.epistemic === 'inferred').map(file => file.path)))] : [];
-    if (new Set([...inputParents, report.receipt, ...inventoryParents, ...sources]).size + manifestPaths.length > limits.parents) refuse();
+    const facts = doc['manifestFacts'] as ManifestFacts | undefined;
+    const manifests = facts?.state === 'derived' ? facts : undefined;
+    const manifestPaths = manifests === undefined ? []
+      : [...new Set(manifests.recognizers.flatMap(recognizer => recognizer.files.filter(file => file.epistemic === 'inferred').map(file => file.path)))];
+    const manifestParents = manifestPaths.length + Number(manifests !== undefined);
+    if (new Set([...inputParents, report.receipt, ...inventoryParents, ...sources]).size + manifestParents > limits.parents) refuse();
+    if (manifests !== undefined) {
+      await waitForCapture();
+      sources.push(await ledger.sourceManifestRemainder(manifests.remainder));
+      live();
+    }
     for (const file of manifestPaths) {
       await waitForCapture();
       sources.push(await ledger.sourceWhole({ path: file }));
