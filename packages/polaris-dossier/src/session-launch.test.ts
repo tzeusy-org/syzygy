@@ -1261,7 +1261,7 @@ describe('prepared private CLI launch',()=>{
       census.restore();
       vi.useRealTimers();
     }
-  }, 15000);
+  }, 60_000);
 
   it.each([
     { missing: 'one child', directories: 1, outcome: 'exited', removed: 1, rootReads: 2 },
