@@ -97,8 +97,10 @@ function fullRunPolicy(): Uint8Array {
   const code = baseline.find(rule => rule.class === 'code-content');
   const documentation = baseline.find(rule => rule.class === 'project-documentation');
   if (code === undefined || documentation === undefined) throw new Error('Full-run fixture policy has no baseline class rules');
-  // This synthetic run's .txt citation is code-content. Keep the policy's code and documentation extensions disjoint.
-  code.sourceExtensions.push('.txt');
+  // Keep the synthetic run's .c and .txt inputs as its only code extensions, with active-content screening for both.
+  code.sourceExtensions = ['.c', '.txt'];
+  delete document.publicSourceScope.activeContent.codeContentExemption;
+  // The policy requires code and documentation extensions to be disjoint.
   documentation.documentSuffixes = documentation.documentSuffixes.filter(suffix => suffix !== '.txt');
   documentation.docTreeExtensions = documentation.docTreeExtensions.filter(suffix => suffix !== '.txt');
   documentation.licenseTreeSuffixes = documentation.licenseTreeSuffixes.filter(suffix => suffix !== '.txt');
