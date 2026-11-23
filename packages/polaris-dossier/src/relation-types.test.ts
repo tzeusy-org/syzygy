@@ -280,6 +280,12 @@ describe('relation types: complete coverage with no witnessing fact', () => {
     expect(result.findings[0]!.detail).not.toContain('docs');
   });
 
+  it('challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit', async () => {
+    const secretName = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('tk', 'Tokens', tld('token=abcdefghijk'))], [edge('e7', 'repo', 'tk', 'contains', 'holds the tokens')])]);
+    expect(await findingsOf(A, secretName)).toEqual({ outcome: 'findings', findings: [{ kind: 'relation-challenged', at: '$.diagrams[0].edges[0]',
+      detail: 'the edge "e7", relation contains: no contains fact joins this edge\'s two units in what rule top-level-unit version 1 derived at the pinned revision; correct the arrow, its relation or its units' }] });
+  });
+
   it('keeps the draft from review until a resubmitted revision passes', async () => {
     const { run, result } = await checked(A, draftOf([toDocs()]));
     expect(result.ok && result.report.outcome).toBe('findings');
@@ -376,25 +382,30 @@ describe('relation types: a witness needs a fact that renders Observed', () => {
 });
 
 describe('relation types: relation types and unit forms outside the lists', () => {
-  it('reports each in a v9 draft as schema at the edge\'s relation or within the node\'s unit', async () => {
+  it('reports each in a v9 draft as schema at the edge\'s relation or at the node\'s unit, one finding per unit', async () => {
     const doc = draftOf([figure('f1', [node('repo', 'Repository', { kind: 'module', path: 'src' }), node('src', 'Source', { kind: 'top-level-directory', path: 'src', name: 'src' })],
       [edge('e1', 'repo', 'src', undefined, 'holds the code'), edge('e2', 'src', 'repo', 'invokes', 'calls back')])]);
     const result = await findingsOf(A, doc);
     expect(result.findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual([
-      'schema $.diagrams[0].nodes[0].unit', 'schema $.diagrams[0].nodes[1].unit.name', 'schema $.diagrams[0].edges[0].relation', 'schema $.diagrams[0].edges[1].relation']);
-    expect(result.findings[1]!.detail).toBe('is not a field of this form');
+      'schema $.diagrams[0].nodes[0].unit', 'schema $.diagrams[0].nodes[1].unit', 'schema $.diagrams[0].edges[0].relation', 'schema $.diagrams[0].edges[1].relation']);
+    const forms = 'matches none of the permitted forms (kind repository-root; kind top-level-directory; kind package-manifest; kind dependency-name; kind workflow-job; kind compose-service)';
+    expect(result.findings[0]!.detail).toBe(forms);
+    expect(result.findings[1]!.detail).toBe(forms);
     expect(result.findings[2]!.detail).toBe('is required');
+    // A unit with several faults within it (another member and a text past 256 code points) is still one finding, at the unit.
+    const twice = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Pad', { kind: 'dependency-name', name: 'x'.repeat(300), version: '1' })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
+    expect((await findingsOf(A, twice)).findings).toEqual([{ kind: 'schema', at: '$.diagrams[0].nodes[1].unit', detail: forms }]);
     expect(result.findings[3]!.detail).toBe('must be one of contains, declares-dependency, needs-job, depends-on-service, calls, imports, reads, writes, sends-to, starts, relates-to');
   });
 
   it('reports a unit\'s key past 256 code units as schema though it holds no more than 256 code points', async () => {
     const astral = '\u{1F600}'.repeat(129);
     const doc = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Long', { kind: 'dependency-name', name: astral })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
-    expect((await findingsOf(A, doc)).findings).toEqual([{ kind: 'schema', at: '$.diagrams[0].nodes[1].unit.name', detail: 'must be 1 to 256 code units; is 258' }]);
+    expect((await findingsOf(A, doc)).findings).toEqual([{ kind: 'schema', at: '$.diagrams[0].nodes[1].unit', detail: '`name` must be 1 to 256 code units; is 258' }]);
     const fits = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Long', { kind: 'dependency-name', name: '\u{1F600}'.repeat(128) })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
     expect(await findingsOf(A, fits)).toEqual(PASSED);
     const long = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('lp', 'Long', { kind: 'dependency-name', name: 'x'.repeat(257) })], [edge('e1', 'repo', 'lp', 'relates-to', 'names')])]);
-    expect((await findingsOf(A, long)).findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.diagrams[0].nodes[1].unit.name']);
+    expect((await findingsOf(A, long)).findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.diagrams[0].nodes[1].unit']);
   });
 
   it('reports them in a v8 draft as field-version in place of the schema findings version 2.16 reports, beside every other finding', async () => {
