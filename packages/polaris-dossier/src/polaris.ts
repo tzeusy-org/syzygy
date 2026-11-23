@@ -218,7 +218,8 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   if (options.mode === 'resume') {
     const state = readState(options.stateRoot, options.run!);
     if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
-    const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
+    const verified = await verifyStoppedUrlRun(state, { checkout: CHECKOUT, sources: cliGateSources(ports),
+      now: ports.now ?? Date.now, requireAuthorHandoffDisclosure: true });
     if (!verified.ok) return refuse(verified.reason ?? `The stopped run could not re-establish its checked recovery boundary (${verified.code}).`);
     if (readRawReadDisclosure(state.run, verified.record.declared.agentProvider) === null) return refuse(RAW_READ_DISCLOSURE_REFUSAL);
     resumedState = state;
@@ -345,7 +346,7 @@ export async function preparePolarisStart(
 
 type VerifiedStoppedRun = Extract<Awaited<ReturnType<typeof verifyStoppedUrlRun>>, { ok: true }>;
 
-class UrlRecoveryPolicyRefusal extends Error {}
+class UrlRecoveryRefusal extends Error {}
 interface UrlContinuation {
   readonly verified: VerifiedStoppedRun; readonly claim: UrlRecoveryClaim;
   readonly initial: UrlRestoredFrozenProducts['initial'];
@@ -556,9 +557,10 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
   readonly state: SupervisorState; readonly prepared: PreparedUrlRun; readonly artifacts: UrlArtifacts;
   readonly claim: UrlRecoveryClaim;
 }> {
-  const verified = await verifyStoppedUrlRun(previous, { checkout: CHECKOUT, sources: cliGateSources(ports), now: ports.now ?? Date.now });
+  const verified = await verifyStoppedUrlRun(previous, { checkout: CHECKOUT, sources: cliGateSources(ports),
+    now: ports.now ?? Date.now, requireAuthorHandoffDisclosure: true });
   if (!verified.ok) {
-    if (verified.reason !== undefined) throw new UrlRecoveryPolicyRefusal(verified.reason);
+    if (verified.reason !== undefined) throw new UrlRecoveryRefusal(verified.reason);
     throw new Error(`url-recovery-${verified.code}`);
   }
   if (readRawReadDisclosure(previous.run, verified.record.declared.agentProvider) === null) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
@@ -657,7 +659,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     const runtime = await startPreparedSupervisor(state, prepared, artifacts, screen, ports, stop);
     return await runUrlSupervisorLoop(options.stateRoot, ports, state, screen, { prepared, artifacts, runtime, stop });
   } catch (error) {
-    if (error instanceof UrlRecoveryPolicyRefusal) return fail(error.message);
+    if (error instanceof UrlRecoveryRefusal) return fail(error.message);
     if (error instanceof Error && error.message === RAW_READ_DISCLOSURE_REFUSAL) return fail(RAW_READ_DISCLOSURE_REFUSAL);
     const detail = error instanceof Error && /^url-recovery-[a-z-]+$/u.test(error.message) ? ` (${error.message})` : '';
     return fail(`The checked session controller or a supervised stage failed${detail}. Inspect the retained audit for captured outcomes and cleanup.`);

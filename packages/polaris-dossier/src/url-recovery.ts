@@ -10,6 +10,7 @@ import { URL_HOST_ROOT } from './url-mode-registry.js';
 import { readUrlParentAdoption } from './url-parent-adoption.js';
 import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, restartExplanation, samePolicy } from './policy-snapshot.js';
 import type { SupervisorState } from './polaris.js';
+import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure } from './raw-read-disclosure.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { buildDossierScreen, placementSubjectOf } from './screen.js';
 import { URL_CLI_PROGRAM, verifySupportedUrlCli } from './session-launch.js';
@@ -61,15 +62,16 @@ function absent(run: string, file: string): boolean {
  * writers until it makes a distinct, exclusive decision to start new work. */
 export async function verifyStoppedUrlRun(state: SupervisorState, input: {
   readonly checkout: string; readonly sources: GateSources; readonly now: () => number;
+  readonly requireAuthorHandoffDisclosure?: boolean;
 }) {
   const run = state.run, { sources, now } = input, root = sources.recordsRoot;
   const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
   const stillStopped = (): boolean => now() < deadline && absent(run, RUN_LAYOUT.record) && absent(run, RUN_LAYOUT.executionChoice);
-  const refuse = (code: 'state' | 'policy' | 'runtime' | 'checkpoint' | 'source' | 'machine-history' | 'session-history' | 'budget',
+  const refuse = (code: 'state' | 'policy' | 'disclosure' | 'runtime' | 'checkpoint' | 'source' | 'machine-history' | 'session-history' | 'budget',
     reason?: string) => ({ ok: false as const, code, ...(reason === undefined ? {} : { reason }) });
   try {
     if (state.stopGeneration === undefined || state.declarationSha256 === undefined || state.stopped === undefined || state.done !== undefined
-      || !stillStopped() || sources.effectiveRunDeclaration === undefined) return refuse('state');
+      || sources.effectiveRunDeclaration === undefined) return refuse('state');
     const read = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
     if (!read.ok) return read.code === 'policy-binding' ? refuse('policy', read.reason) : refuse('state');
     if (read.effective.kind !== 'url' || read.sidecarSha256 !== state.declarationSha256) return refuse('state');
@@ -77,6 +79,9 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     if (declaration.runId !== state.runId || record.declared.deadline.seconds !== state.deadlineSeconds
       || record.subject.pinnedRevision.commit !== declaration.pinnedCommit || record.subject.clone.path !== state.clone
       || declaration.inference.model !== state.model || declaration.sourceTransport.originalLocator !== state.url) return refuse('state');
+    if (input.requireAuthorHandoffDisclosure === true && readRawReadDisclosure(run, record.declared.agentProvider) === null)
+      return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+    if (!stillStopped()) return refuse('state');
     const policy = readCommittedPolicy(root, declaration.basePolicy.path), origin = readCommittedUrlOriginPolicy(root);
     if (!policy.ok || !samePolicy(policy.binding, declaration.basePolicy)) return refuse('policy',
       restartExplanation('the committed policy identity, version or bytes differ from this run binding', declaration.basePolicy.path));
