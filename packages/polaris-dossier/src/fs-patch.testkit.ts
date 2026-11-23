@@ -1,6 +1,7 @@
 /** Test support: replace one `node:fs` function for every module that imports `node:fs`, then restore it. A module's namespace import
  * reads the CommonJS module's bindings, which `syncBuiltinESMExports` refreshes, so a replacement installed there is what the code under
  * test calls (R-GP-IMPL-LAUNCHED-MARKER-2, R2-N1 and R2-N4). */
+import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import { createRequire, syncBuiltinESMExports } from 'node:module';
 import * as path from 'node:path';
@@ -134,4 +135,61 @@ export function sealExcept(dir: string, readable: readonly string[]): { readonly
     unseal: () => { for (const s of sealed) fs.chmodSync(path.join(dir, ...s.rel.split('/')), s.mode); },
     reseal: () => { for (const s of sealed) fs.chmodSync(path.join(dir, ...s.rel.split('/')), 0o000); },
   };
+}
+
+/** The bytes read through `readSync` from each descriptor `openSync` gives for `subject`, one total per open, in open order, until
+ * `restore` (REQ-polaris-generation-033 and -035 version 2.18, syzygy-3efd.80). */
+export function trackReads(subject: string): { readonly totals: number[]; readonly restore: () => void } {
+  const opened = new Map<number, number>();
+  const totals: number[] = [];
+  const restoreOpen = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+    const fd = (original as (...args: unknown[]) => number)(file, ...rest);
+    opened.delete(fd);
+    if (typeof file === 'string' && path.resolve(file) === path.resolve(subject)) { opened.set(fd, totals.length); totals.push(0); }
+    return fd;
+  }) as typeof original);
+  const restoreRead = patchFs('readSync', (original) => ((fd: number, ...rest: unknown[]) => {
+    const read = (original as (...args: unknown[]) => number)(fd, ...rest);
+    const index = opened.get(fd);
+    if (index !== undefined) totals[index]! += read;
+    return read;
+  }) as typeof original);
+  return { totals, restore: () => { restoreRead(); restoreOpen(); } };
+}
+
+/** Grows `subject` by a mebibyte of newlines the first time a descriptor's size is taken at exactly `bound` bytes, until `restore`. */
+export function growOnceSized(subject: string, bound: number): { readonly grown: () => boolean; readonly restore: () => void } {
+  let grown = false;
+  const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+    const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+    if (!grown && stats.isFile() && stats.size === bound) { grown = true; fs.appendFileSync(subject, '\n'.repeat(1_048_576)); }
+    return stats;
+  }) as typeof original);
+  return { grown: () => grown, restore };
+}
+
+/** The six cases a version 2.18 Case line puts at each bounded run-tree file: three special files, a regular file one byte past its
+ * bound, one grown past it after its size was taken, and one exactly at it. */
+export const READ_CASES = ['a FIFO', 'a symbolic link to /dev/zero', 'a directory', 'one byte past its bound', 'grown past its bound after its size was taken', 'exactly at its bound'] as const;
+export type ReadCase = (typeof READ_CASES)[number];
+
+/** Replaces whatever is at `file` with `kase` for a file bounded at `bound` bytes: a regular file is sparse, of NUL bytes, and one to be
+ * grown is placed exactly at its bound (`growOnceSized` grows it). */
+export function placeReadCase(kase: ReadCase, file: string, bound: number): void {
+  fs.rmSync(file, { recursive: true, force: true });
+  if (kase === 'a FIFO') execFileSync('mkfifo', [file]);
+  else if (kase === 'a symbolic link to /dev/zero') fs.symlinkSync('/dev/zero', file);
+  else if (kase === 'a directory') fs.mkdirSync(file);
+  else { fs.writeFileSync(file, ''); fs.truncateSync(file, kase === 'one byte past its bound' ? bound + 1 : bound); }
+}
+
+/** Places `kase` at `file` (`placeReadCase`), runs `act` with the reads of `file` tracked and, for the grown case, `file` grown once its
+ * size is taken at `bound`, and gives the bytes read per open. */
+export async function underReadCase(kase: ReadCase, file: string, bound: number, act: () => unknown): Promise<number[]> {
+  placeReadCase(kase, file, bound);
+  const growth = kase === 'grown past its bound after its size was taken' ? growOnceSized(file, bound) : undefined;
+  const reads = trackReads(file);
+  try { await act(); } finally { reads.restore(); growth?.restore(); }
+  if (growth !== undefined && !growth.grown()) throw new Error(`fixture: ${file} was never sized at ${bound} bytes`);
+  return reads.totals;
 }

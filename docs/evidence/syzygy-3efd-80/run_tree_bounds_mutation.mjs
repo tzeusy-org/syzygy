@@ -2,6 +2,8 @@
 // run-tree file those requirements state, read by the version 2.10 reader rule under its stated bound, with the stated words.
 // Usage: node run_tree_bounds_mutation.mjs <worktree> <out.json> <scratch dir>
 // Copied from docs/evidence/syzygy-3efd-76/remaining_bounds_mutation.mjs; only the test files, the mutants, the timeout and this header differ.
+// Re-run at the repaired head after the 2.18 code review: three fragments re-pointed at the code as it now reads (close-old-reader,
+// state-old-reader, state-unreadable-as-absent, formerly state-unparsed-as-absent) and seven mutants added for the review's findings.
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the test files below, and restores the source in `finally`.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -62,8 +64,12 @@ const MUTANTS = [
   ['cause-not-regular', BOUNDS, "if (cause instanceof NotARegularFileError) return 'not a regular file';", ''],
   ['cause-past-bound', BOUNDS, 'if (cause instanceof PastBoundError) return `larger than ${cause.bound} bytes`;', ''],
   ['cause-absent', BOUNDS, "=== 'ENOENT';", "=== 'ENOENT-not';"],
+  // The 2.18 code review, note 5: a byte-limit refusal with no bound carried and none given never prints an undefined bound.
+  ['cause-undefined-bound', BOUNDS, "return bound === undefined ? cause.code : `larger than ${bound} bytes`;", 'return `larger than ${bound} bytes`;'],
+  // The 2.18 code review, note 4: the credential list's bound has one home.
+  ['bound-credential-list', BOUNDS, 'credentialList: 65_536,', 'credentialList: 65_537,'],
   // REQ-033: close's two logs; present but unreadable is Unknown, never empty.
-  ['close-old-reader', CLOSE, 'readBoundedText(path.join(run, name), RUN_TREE_BOUNDS.log)', "fs.readFileSync(path.join(run, name), 'utf8')"],
+  ['close-old-reader', CLOSE, 'readBoundedText(file, RUN_TREE_BOUNDS.log)', "fs.readFileSync(file, 'utf8')"],
   ['close-unreadable-as-empty', CLOSE, 'return { ok: false, why: `${name} cannot be read', 'return { ok: true, lines: [] }; return { ok: false, why: `${name} cannot be read'],
   ['close-breaches-as-none', CLOSE, "if (!read.ok) return [{ unreadable: true, why: read.why, label: 'Unknown' }];", 'if (!read.ok) return [];'],
   ['close-steps-inferred', CLOSE, "if (!read.ok) return { label: 'Unknown', basis", "if (!read.ok) return { label: 'Inferred', basis"],
@@ -98,9 +104,18 @@ const MUTANTS = [
   ['coverage-inventory-old-reader', COVERAGE, 'readBoundedFile(path.join(path.resolve(runDir), counted.file), RUN_TREE_BOUNDS.inventory)', 'fs.readFileSync(path.join(path.resolve(runDir), counted.file))'],
   ['site-page-old-reader', DESIGN, 'bytes = readBoundedFile(full, SITE_MAX_BYTES - total);', 'bytes = fs.readFileSync(full);'],
   ['site-page-not-regular-words', DESIGN, 'if (cause instanceof NotARegularFileError) return `${relative} in site ${number} is not a regular file`;', ''],
+  // The 2.18 code review, finding 1: the page past what remains of the site's bound, and the remainder arithmetic.
+  ['site-page-past-bound-words', DESIGN, "if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return `site ${number} is larger than ${SITE_MAX_BYTES} bytes`;", ''],
+  ['site-page-whole-bound', DESIGN, 'bytes = readBoundedFile(full, SITE_MAX_BYTES - total);', 'bytes = readBoundedFile(full, SITE_MAX_BYTES);'],
+  ['site-page-remainder-off-by-one', DESIGN, 'bytes = readBoundedFile(full, SITE_MAX_BYTES - total);', 'bytes = readBoundedFile(full, SITE_MAX_BYTES - total + 1);'],
   // REQ-035: the waiting command.
   ['await-record-not-first', WAITING, 'if (record === undefined) return mismatch();', ''],
   ['await-packet-own-size', WAITING, 'readBoundedFile(packetFile, packetBound)', 'readFileAsSized(packetFile)'],
+  // The 2.18 code review, note 6: the packet is read under exactly the packetBytes its delivery record states.
+  ['await-packet-bound-plus-one', WAITING, 'readBoundedFile(packetFile, packetBound)', 'readBoundedFile(packetFile, packetBound + 1)'],
+  // The waiting tests' node:fs mock now reaches fs-patch.testkit.ts's read log: a mutant that reads a round file before refusing an
+  // invalid packetBytes is seen only by that log, which the old spread-copy mock bypassed.
+  ['await-invalid-bound-reads-round', WAITING, '|| packetBound < 0)) return mismatch();', '|| packetBound < 0)) { readBoundedText(path.join(roundDir, DELIVERY_FILE), RUN_TREE_BOUNDS.roundDelivery); return mismatch(); }'],
   ['await-legacy-not-own-size', WAITING, 'packetBound === undefined ? readFileAsSized(packetFile) :', 'packetBound === undefined ? readBoundedFile(packetFile, 0) :'],
   ['await-delivery-old-reader', WAITING, 'readBoundedText(path.join(roundDir, DELIVERY_FILE), RUN_TREE_BOUNDS.roundDelivery)', "fs.readFileSync(path.join(roundDir, DELIVERY_FILE), 'utf8')"],
   ['await-digest-old-reader', WAITING, 'readBoundedText(path.join(roundDir, PACKET_DIGEST_FILE), RUN_TREE_BOUNDS.packetDigestLine)', "fs.readFileSync(path.join(roundDir, PACKET_DIGEST_FILE), 'utf8')"],
@@ -110,8 +125,8 @@ const MUTANTS = [
   ['supervisor-review-check-unbounded', POLARIS, 'export const readReviewCheck = (file: string): unknown => readRecord(file);', "export const readReviewCheck = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));"],
   ['supervisor-verdict-old-reader', POLARIS, "const doc: unknown = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict));", "const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8'));"],
   ['supervisor-blocking-why-old-reader', POLARIS, 'doc = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict)) as', "doc = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')) as"],
-  ['state-old-reader', POLARIS, 'text = readBoundedText(statePath(stateRoot, runId), RUN_TREE_BOUNDS.supervisorState);', "text = fs.readFileSync(statePath(stateRoot, runId), 'utf8');"],
-  ['state-unparsed-as-absent', POLARIS, "return isAbsent(cause) ? 'absent' : 'unreadable';", "return 'absent';"],
+  ['state-old-reader', POLARIS, 'text = readBoundedText(file, RUN_TREE_BOUNDS.supervisorState);', "text = fs.readFileSync(file, 'utf8');"],
+  ['state-unreadable-as-absent', POLARIS, "return isMissingEntry(file, cause) ? 'absent' : 'unreadable';", "return 'absent';"],
   ['state-non-object-accepted', POLARIS, "return isRecord(doc) ? doc as unknown as SupervisorState : 'unreadable';", 'return doc as unknown as SupervisorState;'],
   ['supervise-unreadable-started-afresh', POLARIS, "if (loaded === 'unreadable') return refuse(`no launched run ${options.run} under ${options.stateRoot}`);", ''],
   // The bound a bounded read reports for a file read under its own size.
