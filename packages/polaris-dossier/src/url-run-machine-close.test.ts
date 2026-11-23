@@ -1,5 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { createServer, Socket } from 'node:net';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { sha256 } from '@syzygy/support';
@@ -12,10 +13,13 @@ import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachin
 import { URL_ORIGIN_POLICY_PATH, URL_ROLES } from './url-run-record.js';
 import type { UrlRolePlan } from './url-role-plan.js';
 import type { UrlRuntime } from './url-runtime.js';
+import * as peerPort from './url-machine-peer.js';
+import * as transportPort from './session-machine-transport.js';
 
 // Unit scope: upstream installation/plan admission is substituted. The actual
 // provisioner, eight protected filesystem allocations and close/readback run.
-// No socket, listener, helper, CLI or peer verifier is created or fabricated.
+// The accept-order control substitutes the launch sample and peer ports.
+// No native helper or CLI is executed and no peer capability is issued.
 const admission = vi.hoisted(() => ({ runtimes: new WeakSet<object>(), plans: new WeakSet<object>() }));
 vi.mock('./url-runtime.js', async original => ({ ...await original<typeof import('./url-runtime.js')>(),
   urlMachineReaderProgram: (value: object) => admission.runtimes.has(value) ? { executable: '/not-executed', sha256: 'a'.repeat(64) } : null,
@@ -29,12 +33,16 @@ const canon = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MAC
 const cleanup: (() => Promise<unknown>)[] = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const close of cleanup.splice(0).reverse()) await close(); });
 
-async function fixture() {
+async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 'reverify'>> = {}) {
   const root = tempDir('machine-close-'), runId = `run-${'b'.repeat(32)}`;
   let now = NOW, current = true, effects = true;
-  const runtime = { inputTreeSha256: id(1) } as unknown as UrlRuntime; admission.runtimes.add(runtime);
+  const runtime = { inputTreeSha256: id(1), worker: { node: '/not-executed', nodeSha256: id(3) },
+    peerProgram: { executable: '/not-executed', sha256: id(4) }, supportSha256: { 'session-mcp.js': id(5), 'session-bridge.js': id(6) },
+  } as unknown as UrlRuntime;
+  admission.runtimes.add(runtime);
   const plans = URL_ROLES.map((role, ordinal) => {
-    const plan = { role, profile: { digest: id(10 + ordinal), input: { binding: { run: runId, role } } } } as unknown as UrlRolePlan;
+    const plan = { role, profile: { digest: id(10 + ordinal), input: { binding: { run: runId, role } } },
+      view: { supportDirectory: '/not-executed', protectedPaths: [] } } as unknown as UrlRolePlan;
     admission.plans.add(plan); return plan;
   });
   await mkdir(path.join(root, 'observing/.syzygy'), { recursive: true });
@@ -42,10 +50,40 @@ async function fixture() {
     runtime, plans, runId, originPolicySha256: id(2), pin: 'a'.repeat(40), deadline: NOW + 60_000, now: () => now,
     parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
       subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: id(2) }] }, current: () => current, effectCurrent: () => effects,
-    reverify: () => true, launch: () => undefined, audit: () => {}, chargeNativeCpuMicroseconds: () => { throw new Error('unit closure invoked native helper'); } };
+    reverify: () => true, launch: () => undefined, audit: () => {},
+    chargeNativeCpuMicroseconds: () => { throw new Error('unit closure invoked native helper'); }, ...overrides };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   return { root, options, machine, expire: () => { now = options.deadline; }, withdraw: () => { current = false; }, withdrawEffects: () => { effects = false; } };
 }
+
+describe('machine accept authorization ordering', () => {
+  it.each(['sample-refused', 'verification-refused', 'verified'] as const)('checks the fresh verifier after the live sample for %s', async outcome => {
+    const events: string[] = [];
+    let constructed = false;
+    const createTransport = vi.spyOn(transportPort, 'createSessionMachineTransport');
+    vi.spyOn(peerPort, 'prepareUrlMachineListenerAsync').mockResolvedValue({ transport: 'kernel-sender-stream/1' });
+    const capture = vi.spyOn(peerPort, 'captureUrlMachinePeer').mockImplementation(async options => {
+      events.push('capture');
+      expect(await options.current()).toBe(outcome === 'verified');
+      return null;
+    });
+    const f = await fixture({ launch: () => ({ pid: 1, commandSha256: id(7),
+      waitForSample: async () => { events.push('sample'); return outcome !== 'sample-refused'; },
+      finished: new Promise(() => {}), stop: async () => { throw new Error('fixture launch cannot be stopped'); } }),
+    reverify: async () => { events.push('verify'); return !constructed || outcome !== 'verification-refused'; } });
+    const [ports] = createTransport.mock.calls[0]!;
+    expect(f.machine.transport('author', 'mcp-shim')).toBe(createTransport.mock.results[0]!.value);
+    expect(await ports.prepare(createServer())).toBe(true);
+    events.length = 0;
+    constructed = true;
+    const socket = new Socket();
+    try {
+      expect(await ports.accept(socket)).toBeNull();
+      expect(capture).toHaveBeenCalledOnce();
+      expect(events).toEqual(outcome === 'sample-refused' ? ['capture', 'sample'] : ['capture', 'sample', 'verify']);
+    } finally { socket.destroy(); }
+  });
+});
 
 describe('retained production machine closure evidence', () => {
   it('retains eight actual never-issued anchors and immutable selected contexts from the exact clean result', async () => {

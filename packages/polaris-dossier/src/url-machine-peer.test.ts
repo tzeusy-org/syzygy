@@ -57,7 +57,7 @@ beforeAll(async () => {
 });
 
 async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live',
-  chargeNativeCpuMicroseconds?: (capacity: number) => void, imageGuards?: Pick<UrlMachinePeerOptions, 'effectCurrent' | 'readImageCurrent'>) {
+  chargeNativeCpuMicroseconds?: (capacity: number) => void, captureGuards?: Partial<Pick<UrlMachinePeerOptions, 'current' | 'effectCurrent' | 'readImageCurrent'>>) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -136,7 +136,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
     installed: { executable: nodeExecutable, sha256: nodeSha256, script: mcpPath, scriptSha256: sha256(mcp) },
     protectedPaths: [path.join(root, 'hidden'), governanceRoot], now: () => now, current: () => current,
     audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); },
-    chargeNativeCpuMicroseconds, ...imageGuards };
+    chargeNativeCpuMicroseconds, ...captureGuards };
   const peer = await captureUrlMachinePeer(options);
   if (peer) cleanup.push(() => closeUrlMachinePeer(peer));
   const record = (credential: UrlMachinePeer): UrlMachineClientRecord => ({ format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: id(),
@@ -159,6 +159,16 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
+  it('refuses the fresh parent before invoking any native capture helper', async () => {
+    const first = nativeObservations.calls().length;
+    const current = vi.fn(async () => false);
+    const f = await fixture('live', undefined, { current });
+    expect(f.peer).toBeNull();
+    expect(current).toHaveBeenCalledOnce();
+    const modes = nativeObservations.calls().slice(first).map(call => (call[1] as readonly string[]).at(-1));
+    expect(modes).toEqual(['listener', 'listener']);
+  });
+
   it('pins the actual installed Node image without large synchronous reads on the supervisor event loop', async () => {
     filesystemBoundary.largeSyncReads = 0; filesystemBoundary.refuseLargeSyncReads = true;
     const f = await fixture(); expect(f.peer, 'genuine capture must survive refusal of large synchronous file reads').not.toBeNull();
