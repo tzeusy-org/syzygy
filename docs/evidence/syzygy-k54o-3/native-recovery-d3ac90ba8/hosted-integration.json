@@ -1,0 +1,345 @@
+{
+  "label": "Observed",
+  "head": "d3ac90ba8440dff33ad9e51721aae99854ef18c9",
+  "hostedCheckoutWithIdenticalTree": "3882a56652402caa021d4d2627e20a7b8fe81865",
+  "workflowJob": "https://github.com/tzeusy-org/syzygy/actions/runs/45134179902/job/137557382431",
+  "decodedConnectorLogSha256": "5af132f7d19e4cef67889bfaa6f21af67a6b48780ba4927835b69bdf88764633",
+  "tests": {
+    "files": {
+      "passed": 136,
+      "failed": 1,
+      "total": 137
+    },
+    "passed": 3965,
+    "failed": 2,
+    "skipped": 3,
+    "total": 3970
+  },
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 96547
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 75434
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 368622
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 111359
+    }
+  ],
+  "interruptedResume": {
+    "reportedReasons": [],
+    "resume": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": []
+      }
+    ],
+    "roles": {
+      "author": "stopped",
+      "inventory": "stopped",
+      "fidelity": "stopped",
+      "design": "stopped"
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 7,
+        "response-admitted": 7
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 6,
+        "response-admitted": 6
+      },
+      "fidelity": {
+        "attempt-allowed": 4,
+        "send-attempt": 4,
+        "send-outcome": 4,
+        "response-admitted": 4
+      },
+      "design": {}
+    },
+    "auditEnd": [
+      "declaration"
+    ],
+    "bootstrap": {
+      "restore-plans": {
+        "outcome": "accepted",
+        "elapsedMs": 9951.506
+      },
+      "load-renderer": {
+        "outcome": "accepted",
+        "elapsedMs": 288.237
+      },
+      "create-origins": {
+        "outcome": "accepted",
+        "elapsedMs": 19200.496
+      },
+      "restore-products": {
+        "outcome": "accepted",
+        "elapsedMs": 174880.783
+      },
+      "start-sessions": {
+        "outcome": "rejected",
+        "elapsedMs": 25626.593
+      },
+      "create-machine": {
+        "outcome": "rejected",
+        "elapsedMs": 19940.666
+      },
+      "open-store": {
+        "outcome": "accepted",
+        "elapsedMs": 2291.798
+      }
+    },
+    "auditSetup": {
+      "outcome": "accepted",
+      "elapsedMs": 3838.578,
+      "declarations": 4,
+      "authority": {
+        "started": 14,
+        "accepted": 14,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 3806.4674009999726,
+        "longestMs": 315.29651499999454
+      },
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "resumeStoreOperations": [
+      {
+        "outcome": "accepted",
+        "elapsedMs": 2291.62,
+        "kind": "open",
+        "asyncAuthority": {
+          "started": 4,
+          "accepted": 4,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 1026.3793480002787
+        }
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 5041.499,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 12,
+          "accepted": 12,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 3047.1581139999907
+        },
+        "currentChecks": 2,
+        "currentRefusals": 1,
+        "read": "accepted"
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1366.944,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 808.3911070000613
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1370.745,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 806.0923989999574
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1333.334,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 794.3257079999894
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1320.924,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 800.1306570000015
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1347.395,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 800.7079820000799
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1332.425,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 789.3311059999978
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1326.232,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 777.9191080000019
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "refused",
+        "elapsedMs": 1326.254,
+        "kind": "exclusive",
+        "asyncAuthority": {
+          "started": 3,
+          "accepted": 3,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 809.3925430000527
+        },
+        "currentChecks": 0,
+        "currentRefusals": 0
+      },
+      {
+        "outcome": "accepted",
+        "elapsedMs": 0.144,
+        "kind": "close",
+        "asyncAuthority": {
+          "started": 0,
+          "accepted": 0,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 0
+        }
+      }
+    ]
+  },
+  "eligibleResume": {
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "resume": [],
+    "roles": {
+      "author": "inspection-failed",
+      "inventory": "inspection-failed",
+      "fidelity": "inspection-failed",
+      "design": "Unknown"
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 2,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 7,
+        "response-admitted": 7
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 5,
+        "response-admitted": 5
+      },
+      "fidelity": {
+        "attempt-allowed": 2,
+        "send-attempt": 2,
+        "send-outcome": 1,
+        "response-admitted": 1
+      },
+      "design": {}
+    },
+    "auditEnd": [
+      "declaration"
+    ],
+    "checkedFidelityPacketDelivered": true,
+    "toolReceipts": 12,
+    "finalOperatorEvent": "run ended: checked session boundary unavailable"
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "label": "Observed",
+  "base": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+  "overlaySha256": "14243e511c467710125a03e495558e9e98519553b2f2e1c0947283d0694944b1",
+  "testLogSha256": "857f1e689c0ce6b94864a2bca344879970ffcca1f9534f513490b973265abc52",
+  "audit": {
+    "outcome": "accepted",
+    "elapsedMs": 1058.905,
+    "declarations": 4,
+    "authority": {
+      "started": 14,
+      "accepted": 14,
+      "refused": 0,
+      "rejected": 0,
+      "totalMs": 1007.6645319999952,
+      "longestMs": 84.88995199999772
+    },
+    "phases": {
+      "claim-start": {
+        "callbacks": 14,
+        "medianMs": 0.045,
+        "minMs": 0.025,
+        "maxMs": 0.234
+      },
+      "claim-before-ownership-accepted": {
+        "callbacks": 14,
+        "medianMs": 0.115,
+        "minMs": 0.065,
+        "maxMs": 0.166
+      },
+      "claim-before-run-accepted": {
+        "callbacks": 14,
+        "medianMs": 1.167,
+        "minMs": 0.877,
+        "maxMs": 1.51
+      },
+      "policy-working-files-start": {
+        "callbacks": 14,
+        "medianMs": 0.005,
+        "minMs": 0.003,
+        "maxMs": 0.009
+      },
+      "policy-working-files-finished": {
+        "callbacks": 14,
+        "medianMs": 1.099,
+        "minMs": 0.978,
+        "maxMs": 1.354
+      },
+      "policy-before-refs-accepted": {
+        "callbacks": 14,
+        "medianMs": 21.036,
+        "minMs": 18.743,
+        "maxMs": 25.767
+      },
+      "policy-cat-file-returned": {
+        "callbacks": 14,
+        "medianMs": 25.006,
+        "minMs": 21.781,
+        "maxMs": 34.036
+      },
+      "policy-cat-file-verified": {
+        "callbacks": 14,
+        "medianMs": 0.089,
+        "minMs": 0.075,
+        "maxMs": 0.113
+      },
+      "policy-after-refs-accepted": {
+        "callbacks": 14,
+        "medianMs": 20.154,
+        "minMs": 17.517,
+        "maxMs": 23.173
+      },
+      "policy-after-working-file-stats": {
+        "callbacks": 14,
+        "medianMs": 0.083,
+        "minMs": 0.069,
+        "maxMs": 0.109
+      },
+      "claim-policy-accepted": {
+        "callbacks": 14,
+        "medianMs": 0.004,
+        "minMs": 0.003,
+        "maxMs": 0.005
+      },
+      "claim-after-ownership-accepted": {
+        "callbacks": 14,
+        "medianMs": 0.11,
+        "minMs": 0.088,
+        "maxMs": 0.146
+      },
+      "claim-boundary-accepted": {
+        "callbacks": 14,
+        "medianMs": 0.272,
+        "minMs": 0.222,
+        "maxMs": 0.39
+      },
+      "claim-run-accepted": {
+        "callbacks": 14,
+        "medianMs": 1.107,
+        "minMs": 0.933,
+        "maxMs": 3.072
+      }
+    }
+  },
+  "bridge": {
+    "openToCaptureMs": 91.387,
+    "parentCallbacks": [
+      {
+        "outcome": "accepted",
+        "elapsedMs": 499.769
+      },
+      {
+        "outcome": "accepted",
+        "elapsedMs": 502.395
+      },
+      {
+        "outcome": "accepted",
+        "elapsedMs": 1905.693
+      }
+    ],
+    "marks": [
+      {
+        "phase": "entry",
+        "ms": 0
+      },
+      {
+        "phase": "first-parent",
+        "ms": 86
+      },
+      {
+        "phase": "first-parent-accepted",
+        "ms": 754
+      },
+      {
+        "phase": "kernel-read",
+        "ms": 754
+      },
+      {
+        "phase": "second-parent",
+        "ms": 891
+      },
+      {
+        "phase": "native-prepare",
+        "ms": 1568
+      },
+      {
+        "phase": "process-walk",
+        "ms": 1619
+      },
+      {
+        "phase": "pinned-executable",
+        "ms": 1706
+      },
+      {
+        "phase": "installed-script-and-command",
+        "ms": 2677
+      },
+      {
+        "phase": "final-current",
+        "ms": 2678
+      }
+    ],
+    "installedImage": {
+      "reads": 32,
+      "bytes": 129129032,
+      "privateReadMs": 728.521662999934,
+      "hashMs": 76.60020300006727,
+      "guardMs": 29.418766999966465,
+      "lastAt": "digest-and-metadata"
+    },
+    "outerTimeoutMs": 5000.0,
+    "outerTimeoutObservedMs": 5040.117,
+    "captureRefusalAfterTimeoutMs": 1.623
+  },
+  "limitation": "Both this capture and the predecessor used timing overlays. The exact candidate refused before authorization. This run distinguishes successful image verification from the subsequent path to kernel reattestation. It does not isolate the first predicate inside final reattestation."
+}
