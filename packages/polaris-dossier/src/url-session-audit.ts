@@ -383,7 +383,8 @@ export type UrlSessionAuditResult = { readonly ok: true; readonly scope: (role: 
   readonly appendMachinePeer: (event: UrlMachinePeerAudit) => Promise<void>;
   readonly beginOrderedDesignAudit: (plan: OrderedDesignPlan, current: () => boolean | Promise<boolean>, observeRead?: (bytes: number) => void) => OrderedDesignAuditWriter;
   readonly commitLaunchHistory: (history: UrlLaunchHistoryCapability, waitForSample?: () => Promise<boolean>) => Promise<UrlCommittedLaunchHistory>;
-  readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>) => Promise<UrlDesignDeliveryView>;
+  readonly commitDesignDelivery: (input: UrlDesignDeliveryAuditInput, waitForSample?: () => Promise<boolean>,
+    observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
   readonly revalidateDesignDelivery: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct) => Promise<void>;
   readonly readDesignDeliveryView: (record: UrlDesignDeliveryAuditRecord, product: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void) => Promise<UrlDesignDeliveryView>;
   readonly commitDesignArtifactRead: (view: UrlDesignDeliveryView, receipt: UrlSessionToolReceiptMetadata) => Promise<void>;
@@ -1339,7 +1340,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     };
     /** Record identities only. A checked append can be cited by a later delivery
      * verifier independently reproducing the subject under its own live read. */
-    const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample) => {
+    const commitDesignDelivery: Extract<UrlSessionAuditResult, { ok: true }>['commitDesignDelivery'] = async (request, waitForSample, observeRead) => {
       if (poisoned || closing || designPending || designRetired
         || !exact(request, ['product', 'expectedProduct', 'launch', 'run', 'runId', 'pinnedRevision', 'sitePath', 'round'])
         || !count(request.round, 999_999) || request.round !== nextDesignRound
@@ -1442,7 +1443,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           catch (cause) { if (expired(cause)) throw cause; throw refused(); }
         };
         await checkSample();
-        verify(after, product);
+        verify(after, product, observeRead);
         const preparedProduct = new WeakRef(product);
         function checkDelivery(checked: typeof after, candidate: ValidatedUrlDesignProduct, observeRead?: (bytes: number) => void): () => void {
           const ref = new WeakRef(candidate);
@@ -1465,7 +1466,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           verify(checked, candidate, observeRead);
           return checkDelivery(checked, candidate, observeRead);
         } });
-        authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product),
+        authenticatedDesignViews.set(delivery, { current: checkDelivery(after, product, observeRead),
           receiptCurrent: verifyReceipt, product: preparedProduct });
         capturedDeliveries.set(result.eventSha256, result);
         if (orderedDesignProfile !== null && input.deadline !== undefined) {

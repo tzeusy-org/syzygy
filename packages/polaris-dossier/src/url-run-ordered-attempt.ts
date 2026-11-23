@@ -266,9 +266,11 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       await input.registerLaunch(launch);
     }
     if (!(await input.current()) || !(await input.waitForSamples())) throw refused();
+    // The commit issues the freshly checked view after its durable append.
+    // Activation rechecks that exact view under the live role and run guards.
     delivery = await input.audit.commitDesignDelivery({ product: render.product, expectedProduct: input.expectedProduct, launch,
-      sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin }, input.waitForSamples);
-    delivery = await input.audit.readDesignDeliveryView(delivery.receipt, render.product, observeRead);
+      sitePath: input.sitePath, round: input.round, run: input.run, runId: path.basename(input.run), pinnedRevision: input.pin },
+      input.waitForSamples, observeRead);
     const planInput = orderedDesignPlanInputForDelivery(profile, delivery.receipt, input.expectedProduct, input.pin, input.deadline);
     const plan = planOrderedDesignBytes({ ...planInput, envelope: delivery.view });
     const envelope = { cpuMicroseconds: 64_000_000, wallMilliseconds: 30_000, auditReadBytes: 500_000_000,

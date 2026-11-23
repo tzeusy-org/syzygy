@@ -378,11 +378,12 @@ describe('protected URL design delivery audit', () => {
       expect(read).not.toHaveBeenCalled();
 
       const sampledDurability: number[] = [];
+      const issuedDeliveryReads = vi.fn();
       const first = audit.commitDesignDelivery(request, async () => {
         const count = audit.summary().captured['design-delivery'];
         sampledDurability.push(count);
         return mode !== 'sample-refusal' || count === 0;
-      });
+      }, mode.startsWith('ordered') ? issuedDeliveryReads : undefined);
       const duplicate = audit.commitDesignDelivery(request);
       await expect(duplicate).rejects.toThrow('url-session-audit-refused');
       if (mode !== 'valid' && mode !== 'prepared-site-drift' && !mode.startsWith('ordered') && !mode.startsWith('renew-')) {
@@ -435,6 +436,12 @@ describe('protected URL design delivery audit', () => {
         }
         if (mode.startsWith('ordered')) {
           if (!isOrderedDesignSessionProfile(profile)) throw Error('own ordered profile missing');
+          const deliveryLine = fs.readFileSync(segment('design'), 'utf8').trimEnd().split('\n').at(-1)!;
+          expect(JSON.parse(deliveryLine).event.kind).toBe('design-delivery');
+          const readBytes = Buffer.byteLength(deliveryLine + '\n');
+          expect(issuedDeliveryReads.mock.calls).toEqual([[readBytes]]);
+          assertUrlDesignDeliveryViewCurrent(delivered);
+          expect(issuedDeliveryReads.mock.calls).toEqual([[readBytes], [readBytes]]);
           const planInput = { envelope: view, envelopeSha256: sha256(view), original: metadata.original,
             fileCount: 1, pageCount: 1, instructionProfileSha256: sha256(profile.input.systemPrompt), limits: { partBytes: profile.transcript.partition.partBytes, partCount: profile.transcript.partition.partCount, replyBytes: profile.transcript.partition.replyBytes, preparedBytes: profile.transcript.partition.preparedBytes },
             parents: metadata.parents.map(parent => sha256(encodeCanonicalJson(parent, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }))), binding: {
