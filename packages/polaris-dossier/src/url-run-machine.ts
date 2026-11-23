@@ -271,7 +271,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
             installed: { executable: input.runtime.worker.node, sha256: input.runtime.worker.nodeSha256,
               script: path.join(plan.view.supportDirectory, name), scriptSha256: support[name] },
             protectedPaths: [...plan.view.protectedPaths, input.governanceRoot, input.protectedRoot], now: input.now,
-            current: async () => current() && await selectedLaunch.waitForSample()
+            // The peer checks effectCurrent before calling this verifier.
+            // Drain the pending census before repeating that authority read.
+            current: async () => await selectedLaunch.waitForSample() && current()
               && await input.reverify() === true && current(),
             effectCurrent: current, readImageCurrent: () => !stopped && !closing && effectCurrent(), audit: input.audit,
             chargeNativeCpuMicroseconds: input.chargeNativeCpuMicroseconds });

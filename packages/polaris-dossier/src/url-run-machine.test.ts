@@ -81,7 +81,13 @@ beforeAll(async () => {
   const loaded = await readUrlRuntime(installedRoot); expect(loaded.ok).toBe(true); if (!loaded.ok) throw new Error('owned runtime refused'); runtime = loaded.runtime;
 }, 30_000);
 
-async function fixture() {
+async function fixture(sampleGate?: {
+  readonly sampling: Promise<void>;
+  readonly release: Promise<void>;
+  readonly entered: () => void;
+  readonly captureChecked: () => void;
+  readonly reverified: () => void;
+}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'urm-')); cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   const runId = `run-${opaque().slice(0, 32)}`, run = path.join(root, runId), views = path.join(root, 'views'), hidden = path.join(root, 'hidden');
   for (const name of [run, views, hidden]) await fs.mkdir(name, { mode: 0o700 });
@@ -111,16 +117,20 @@ async function fixture() {
     originPolicySha256: 'c'.repeat(64), pin: 'a'.repeat(40), runId, runtime, plans: plans.roles, deadline: now + 60_000, now: () => now,
     current: () => current,
     effectCurrent: () => {
-      if (countAdmissionChecks) admissionChecks++;
+      if (countAdmissionChecks) {
+        admissionChecks++;
+        if (admissionChecks === 2 && sampleGate !== undefined) setImmediate(sampleGate.captureChecked);
+      }
       return effectsCurrent;
     },
     reverify: async () => {
+      if (countAdmissionChecks && sampleGate !== undefined) sampleGate.reverified();
       if (block) { countAdmissionChecks = false; reached?.(); await block; }
       return current && (launch === undefined || await launch.waitForSample());
     },
     launch: role => {
       if (role !== 'author') return undefined;
-      if (block && launch !== undefined) { admissionChecks = 0; countAdmissionChecks = true; }
+      if ((block !== undefined || sampleGate !== undefined) && launch !== undefined) { admissionChecks = 0; countAdmissionChecks = true; }
       return launch;
     },
     audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
@@ -136,12 +146,17 @@ async function fixture() {
   const start = async () => {
     const preparation = await prepareRestrictedUrlSession({ view: plan.view, profile: plan.profile,
       expected: { nodeSha256: runtime.worker.nodeSha256, supportSha256: runtime.supportSha256 }, current: () => current,
+      ...(sampleGate === undefined ? {} : { inspectionAuthority: {
+        verify: async () => { sampleGate.entered(); await sampleGate.release; return current; },
+        confirm: verified => verified && current,
+      } }),
       audit: () => {}, canaries: [canary], hostLoopbackPort: (loopback.address() as AddressInfo).port, limits: { milliseconds: 60_000 } });
     for (const [kind, directory, name] of [['mcp-shim', plan.view.brokerSocketDirectory, 'b.sock'], ['inference-bridge', plan.view.relaySocketDirectory, 'r.sock']] as const) {
       const transport: SessionMachineTransport = machine.transport('author', kind);
       const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, socket => {
         sockets.add(socket); socket.on('error', () => {});
-        const connection = openSessionMachineConnection(socket, transport, { bytes: 65_536, milliseconds: 60_000 }); accepted.push(connection);
+        const open = () => openSessionMachineConnection(socket, transport, { bytes: 65_536, milliseconds: 60_000 });
+        accepted.push(sampleGate === undefined ? open() : sampleGate.sampling.then(open));
       });
       await new Promise<void>(resolve => server.listen(path.join(directory, name), resolve)); servers.push(server);
       expect(await prepareSessionMachineTransport(transport, server)).toBe(true);
@@ -158,6 +173,7 @@ async function fixture() {
     expect(accepted.length).toBeGreaterThan(index); return accepted[index]!;
   };
   return { root, options, machine, start, connection, records, auditCount: () => auditing, nativeCapacity: () => nativeCapacity,
+    admissionChecks: () => admissionChecks,
     withdrawEffects: () => { effectsCurrent = false; },
     expire: () => { now = options.deadline; }, revoke: () => { current = false; },
     blockAdmission: () => { let release!: () => void; block = new Promise<void>(resolve => { release = resolve; });
@@ -246,6 +262,26 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
     expect(await f.connection(0)).toBeNull(); expect(await f.records()).toEqual([]); expect(f.machine.current()).toBe(false);
     expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
     expect(effectChecks).toBe(3);
+  });
+
+  it('waits for the pending native sample before repeating the capture authority check', async () => {
+    let entered!: () => void, release!: () => void, captureChecked!: () => void;
+    const sampling = new Promise<void>(resolve => { entered = resolve; });
+    const released = new Promise<void>(resolve => { release = resolve; });
+    const checked = new Promise<void>(resolve => { captureChecked = resolve; });
+    let reverified = false;
+    const f = await fixture({ sampling, release: released, entered, captureChecked, reverified: () => { reverified = true; } });
+    let checksDuringSample: number;
+    try {
+      await f.start();
+      await checked;
+      checksDuringSample = f.admissionChecks();
+      f.withdrawEffects();
+    } finally { release(); }
+    expect(await f.connection(0)).toBeNull();
+    expect(await f.records()).toEqual([]);
+    expect(checksDuringSample).toBe(2);
+    expect(reverified).toBe(false);
   });
 
   it('refuses copied capabilities before creating a store and reports expired retirement as Unknown', async () => {
