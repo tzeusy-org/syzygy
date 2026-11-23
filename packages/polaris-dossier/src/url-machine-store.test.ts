@@ -340,6 +340,47 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect((await readdir(f.options.protectedRoot)).sort()).toEqual(names);
   });
 
+  it.each([true, false])('joins the staged allocation lock sync and census before currentness %s admits state reads', async allowed => {
+    const f = await fixture(), root = f.options.protectedRoot, stateFile = path.join(root, 'state.json');
+    const before = await readFile(stateFile);
+    let measuring = false, asyncSamples = 0, censusStarted = false, stateOpened = false, rootSyncs = 0;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (!measuring) return true;
+      return ++asyncSamples !== 2 || allowed;
+    } }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+
+    let enterSync!: () => void, releaseSync!: () => void;
+    const syncEntered = new Promise<void>(resolve => { enterSync = resolve; });
+    const syncReleased = new Promise<void>(resolve => { releaseSync = resolve; });
+    filesystem.afterSync = file => {
+      if (file !== root || ++rootSyncs !== 1) return;
+      enterSync();
+      return syncReleased;
+    };
+    filesystem.beforeOpendir = file => { if (/^\/proc\/self\/fd\/[0-9]+$/u.test(file)) censusStarted = true; };
+    filesystem.beforeOpen = file => { if (path.basename(file) === 'state.json') stateOpened = true; };
+
+    measuring = true;
+    const pending = reopened.allocateClients(8, f.options.deadline);
+    await syncEntered;
+    const whileSyncHeld = { censusStarted, stateOpened, asyncSamples };
+    releaseSync();
+    const issued = await pending;
+    expect(whileSyncHeld).toEqual({ censusStarted: true, stateOpened: false, asyncSamples: 1 });
+    expect(asyncSamples).toBe(allowed ? 6 : 2);
+    expect(stateOpened).toBe(allowed);
+    if (allowed) {
+      expect(issued).toHaveLength(8);
+      expect(await readdir(root)).not.toContain('lock');
+    } else {
+      expect(issued).toBeNull();
+      expect(await readFile(stateFile)).toEqual(before);
+      expect(await readdir(root)).toContain('lock');
+    }
+  });
+
   it.each(['before-rename', 'after-cleanup'] as const)('withholds every batched witness on withdrawal %s', async phase => {
     const f = await fixture();
     const stateFile = path.join(f.options.protectedRoot, 'state.json');

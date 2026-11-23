@@ -484,9 +484,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           return value;
         } finally { pending.delete(promise); }
       };
-      const syncAndCensus = async (): Promise<void> => {
-        charge();
-        const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);
+      const syncAndCensus = async (stagedAllocation = false): Promise<void> => {
+        const sync = () => heldRoot.sync();
+        if (!stagedAllocation) charge();
+        const [synced, scanned] = await Promise.allSettled(stagedAllocation
+          ? [io(sync), io(census)] : [sync(), census()]);
         if (synced.status === 'rejected') throw synced.reason;
         if (scanned.status === 'rejected') throw scanned.reason;
       };
@@ -589,12 +591,16 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
         }
         if (!joinedTerminalLock) {
-          if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {
+          if (allocation) {
+            // Keep a separate deadline and I/O checkpoint for each private
+            // operation. Verify live authority after both and before state reads.
+            await syncAndCensus(true);
+            await reverify(); check();
+          } else if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {
             // Join both operations before any client state read.
             await io(syncAndCensus);
           } else {
             await io(() => heldRoot.sync());
-            if (allocation) { await reverify(); check(); }
             await io(census);
           }
         }
