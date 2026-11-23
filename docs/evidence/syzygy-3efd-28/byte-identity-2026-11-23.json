@@ -1,12 +1,12 @@
 {
  "format": "byte-identity-comparison/1",
  "subject": {
-  "before": "64284e65cd2475f23769e6c0e78ae9e41a59f9b0",
-  "after": "0ec7cc4831842057f25692857188f56ea1869a76"
+  "before": "2a1ef3e8e5f4ba404184143079af52b226bff94a",
+  "after": "89158c02e267ef4f52b61e914407da699b5ee5fd"
  },
  "dumps": {
-  "before": "e42a15073af5edf15e6c6c9e45c38ea736c31099df46c210d97ea11fdc072ac0",
-  "after": "021bd4170160412d87d8126cc158b0570dacf09520d5f7a384c6226923410c67"
+  "before": "b75165b53e5521b265e87911a67b7af99797cac3c8cb336cdc078d7d9524128d",
+  "after": "992323bb1de908027cf2aa034a9ef9c2f7c8c0ff03ed9704dc85779687f17ec5"
  },
  "method": "Each dump is written by the describe block in byte-identity-dump-block.ts.txt, appended for the run to packages/polaris-dossier/src/render.test.ts in a checkout of the named commit and removed after it (run with REL_DUMP=<file>). It checks and, where the check passes, renders a draft of each schema v2 to v8 in four variants (plain, carrying `subsections`, a sequence figure before v7, and a graph node carrying `unit` and a graph edge carrying `relation`) and hashes every file of the run directory but run.json. The record lists, per variant, the outcome and every file whose bytes differ, and, where findings differ, each differing pair. Population: the 28 synthetic variants the dumper builds, nothing else. It is not every stored fixture: every other stored draft is exercised only by the existing literal suites, whose expectations this change left unchanged except version literals, and the provider golden, which its own test compares byte for byte. Both dumps are kept beside the record.",
  "population": {
