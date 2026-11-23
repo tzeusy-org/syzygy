@@ -15,7 +15,7 @@ import { latestPassedDraft, type ReviewDeps } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
-import { RUN_TREE_BOUNDS, isAbsent, readBoundedText, readCause } from './run-tree-read.js';
+import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -227,10 +227,11 @@ export function stepInstants(run: string): Readonly<Record<string, unknown>> {
  * 2.18). A log absent from the run directory is an empty log; one that stands at its path but cannot be read (not a regular file, past its
  * bound, or any other failed open or read) is Unknown, never empty: no evidence is not zero (VIS-2). */
 function readLog(run: string, name: string): { readonly ok: true; readonly lines: string[] } | { readonly ok: false; readonly why: string } {
+  const file = path.join(run, name);
   try {
-    return { ok: true, lines: readBoundedText(path.join(run, name), RUN_TREE_BOUNDS.log).split('\n').filter((line) => line !== '') };
+    return { ok: true, lines: readBoundedText(file, RUN_TREE_BOUNDS.log).split('\n').filter((line) => line !== '') };
   } catch (cause) {
-    if (isAbsent(cause)) return { ok: true, lines: [] };
+    if (isMissingEntry(file, cause)) return { ok: true, lines: [] };
     return { ok: false, why: `${name} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.log)})` };
   }
 }

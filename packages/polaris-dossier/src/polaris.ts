@@ -16,7 +16,7 @@ import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
 import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { RUN_TREE_BOUNDS, isAbsent, readBoundedText } from './run-tree-read.js';
+import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText } from './run-tree-read.js';
 import { readRecord } from './run-dir.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run, stated by the adopted REQ-polaris-generation-048 ("Declared URL dossier
@@ -162,7 +162,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     resumed = state;
     if (state.done) return refuse(`run ${state.runId} is closed`);
     if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
-    if (tmuxHas(state.tmuxSession)) return attach({ ...options, run: state.runId });
+    if (tmuxHas(state.tmuxSession)) return attachTo(state.tmuxSession);
   }
   let limits: string[] = [];
   if (options.mode === 'start' && options.missingLimits.length > 0) {
@@ -243,8 +243,9 @@ const statePath = (stateRoot: string, runId: string): string => path.join(stateR
  * `absent` where nothing stands at its path, `unreadable` where what stands there is not a regular file, is past the bound, cannot be
  * read or does not parse as a JSON object. */
 export function loadState(stateRoot: string, runId: string): SupervisorState | 'absent' | 'unreadable' {
+  const file = statePath(stateRoot, runId);
   let text: string;
-  try { text = readBoundedText(statePath(stateRoot, runId), RUN_TREE_BOUNDS.supervisorState); } catch (cause) { return isAbsent(cause) ? 'absent' : 'unreadable'; }
+  try { text = readBoundedText(file, RUN_TREE_BOUNDS.supervisorState); } catch (cause) { return isMissingEntry(file, cause) ? 'absent' : 'unreadable'; }
   try { const doc: unknown = JSON.parse(text); return isRecord(doc) ? doc as unknown as SupervisorState : 'unreadable'; } catch { return 'unreadable'; }
 }
 /** The state, or null where there is none the supervisor can read. */

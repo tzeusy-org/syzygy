@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
@@ -10,7 +10,7 @@ import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
 import { readExecutionChoice } from './execution-choice.js';
 import { inventoryCoverageAdvice } from './inventory-coverage.js';
-import { patchFs } from './fs-patch.testkit.js';
+import { opensOf, patchFs } from './fs-patch.testkit.js';
 import { blockingWhy, loadState, readMaxRepairCycles, readReviewCheck, readVerdict, runPolarisCli } from './polaris.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
@@ -18,6 +18,11 @@ import { logStep, readRecord } from './run-dir.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { readCause } from './run-tree-read.js';
 import { closedUsage, runStatus } from './status.js';
+
+vi.mock('node:child_process', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:child_process')>();
+  return { ...actual, spawnSync: vi.fn(actual.spawnSync) };
+});
 
 // REQ-polaris-generation-033, -035 and -048 version 2.18 (syzygy-3efd.80): every run-tree file those requirements state is read by the
 // reader rule of version 2.10 under the bound the spec states. Every reader opens the path once without blocking, refuses anything whose
@@ -260,6 +265,16 @@ describe('the run-tree reader rule (syzygy-3efd.80): what stays as it was', () =
     expect(breachLog(run)).toEqual([]);
   });
 
+  it('close returns Unknown for logs whose links cannot be opened', () => {
+    const run = tempDir('run-tree-read-unreadable-');
+    fs.symlinkSync('missing', path.join(run, 'steps.jsonl'));
+    fs.symlinkSync('missing', path.join(run, 'credential-breaches.jsonl'));
+    expect(stepInstants(run)).toMatchObject({ label: 'Unknown', why: 'steps.jsonl cannot be read (ENOENT)' });
+    expect(breachLog(run)).toEqual([
+      { unreadable: true, label: 'Unknown', why: 'credential-breaches.jsonl cannot be read (ENOENT)' },
+    ]);
+  });
+
   it('the execution-rule reader takes an absent choice as absent, as before', () => {
     expect(readExecutionChoice(tempDir('run-tree-read-absent-'))).toEqual({ state: 'absent', why: 'no execution-choice.json in the run directory' });
   });
@@ -362,6 +377,41 @@ describe('the run-tree reader rule (syzygy-3efd.80): syzygy polaris over a state
     expect(stderr).toBe(`syzygy polaris: refused: no launched run run-a under ${root}\n`);
     expect(fs.lstatSync(state).isFIFO()).toBe(true);
   });
+
+  it('refuses a named supervisor whose state is a dangling link', async () => {
+    const root = tempDir('run-tree-read-polaris-');
+    const state = path.join(root, 'run-a.supervisor.json');
+    fs.symlinkSync('missing', state);
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    try {
+      expect(await runPolarisCli(['--supervise', '--resume', 'run-a', '--state-root', root])).toBe(1);
+      expect(stderr).toHaveBeenLastCalledWith(`syzygy polaris: refused: no launched run run-a under ${root}\n`);
+      expect(fs.readlinkSync(state)).toBe('missing');
+      expect(fs.readdirSync(root)).toEqual(['run-a.supervisor.json']);
+    } finally {
+      stderr.mockRestore();
+    }
+  });
+});
+
+it('resumes a live view using the supervisor state it already read', async () => {
+  const root = tempDir('run-tree-read-resume-');
+  const state = path.join(root, 'run-a.supervisor.json');
+  fs.writeFileSync(state, JSON.stringify({
+    format: 'polaris-supervisor/1', runId: 'run-a', tmuxSession: 'view-a', briefIssuedAt: Date.now(), deadlineSeconds: 600,
+  }));
+  const spawn = vi.mocked(spawnSync);
+  spawn.mockReturnValue({ pid: 0, output: [], stdout: 'done\n', stderr: '', status: 0, signal: null });
+  vi.stubEnv('TMUX', undefined);
+  try {
+    expect(await opensOf(state, async () => {
+      expect(await runPolarisCli(['--resume', 'run-a', '--state-root', root])).toBe(0);
+    })).toBe(1);
+    expect(spawn.mock.lastCall?.slice(0, 2)).toEqual(['tmux', ['attach', '-t', 'view-a']]);
+  } finally {
+    vi.unstubAllEnvs();
+    spawn.mockRestore();
+  }
 });
 
 // Check's inventory-coverage advice reads the frozen inventory of record under 4,194,304 bytes: one it cannot read is an Unknown advice.

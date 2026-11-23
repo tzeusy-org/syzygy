@@ -653,8 +653,8 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   // packet's bound, and where it cannot be read the command refuses without reading a round file.
   const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
   if (record === undefined) return mismatch();
-  const stated = record['packetBytes'];
-  const packetBound = typeof stated === 'number' && Number.isSafeInteger(stated) && stated >= 0 ? stated : undefined;
+  const packetBound = record['packetBytes'];
+  if (packetBound !== undefined && (typeof packetBound !== 'number' || !Number.isSafeInteger(packetBound) || packetBound < 0)) return mismatch();
   let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
   const unreadable = (cause: unknown, bound?: number): AwaitResult =>
     refuse('rehash', `round ${round} cannot be read (${readCause(cause, bound)}); stop, and tell the operator`);

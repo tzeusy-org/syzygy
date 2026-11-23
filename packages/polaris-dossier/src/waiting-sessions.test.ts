@@ -11,6 +11,7 @@ import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
 import { deliverToWaiting, deliveryUsageNote, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, specNamesVersion, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 import { tempDir } from '@syzygy/test-kit';
+import { installReadLog } from './fs-patch.testkit.js';
 
 // Only directory enumeration is controllable, to verify candidate eligibility in both orders at the filesystem boundary.
 vi.mock('node:fs', async (importOriginal) => {
@@ -942,6 +943,26 @@ describe('delivery to a waiting review session', () => {
     const { packetBytes: _dropped, ...legacy } = readJson(record);
     write(record, legacy);
     expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({ outcome: 'delivered', round: 1 });
+  });
+
+  it('refuses a stated but invalid packetBytes before reading the round files (syzygy-3efd.80)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
+    const fid = path.join(h.sessions, 'fidelity-1');
+    const record = path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json');
+    write(record, { ...readJson(record), packetBytes: null });
+    const reads = installReadLog(fid);
+    try {
+      expect((await h.cli(['await', `${fid}/`])).doc).toMatchObject({
+        outcome: 'refused',
+        stage: 'rehash',
+        reason: "round 1's packet.json does not hash to the digest in delivery.json, packet.sha256 and the delivery record Syzygy wrote; do not read it: stop, and tell the operator",
+      });
+      expect(reads.log.opened).toEqual([]);
+    } finally {
+      reads.restore();
+    }
   });
 
   it('refuses an inventory brief that is a FIFO with the stated words, without blocking (syzygy-3efd.80)', async () => {

@@ -9,7 +9,7 @@ import { launchedMarkerState } from './launched.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { RUN_TREE_BOUNDS, isAbsent, readBoundedText, readCause } from './run-tree-read.js';
+import { RUN_TREE_BOUNDS, isNotFound, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier allow-execution <run> --revision <pinned> --declare <declarations>` (REQ-polaris-generation-033).
  *
@@ -157,7 +157,7 @@ export function readExecutionChoice(runDir: string): Awaited<ReturnType<Executio
   try {
     text = readBoundedText(file, RUN_TREE_BOUNDS.executionChoice);
   } catch (cause) {
-    return isAbsent(cause)
+    return isNotFound(cause)
       ? { state: 'absent', why: `no ${RUN_LAYOUT.executionChoice} in the run directory` }
       : { state: 'refused', why: `${RUN_LAYOUT.executionChoice} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.executionChoice)})` };
   }

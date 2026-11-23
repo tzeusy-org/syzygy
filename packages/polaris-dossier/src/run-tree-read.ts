@@ -1,3 +1,4 @@
+import { lstatSync } from 'node:fs';
 import { BoundedJsonError } from '@syzygy/polaris-generation-core/live';
 import { NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
 
@@ -37,8 +38,17 @@ export function readCause(cause: unknown, bound?: number): string {
   return (cause as NodeJS.ErrnoException | undefined)?.code ?? 'unknown-error';
 }
 
-/** Whether a failed read failed only because nothing stands at the path. */
-export const isAbsent = (cause: unknown): boolean => (cause as NodeJS.ErrnoException | undefined)?.code === 'ENOENT';
+export const isNotFound = (cause: unknown): boolean => (cause as NodeJS.ErrnoException | undefined)?.code === 'ENOENT';
+
+/** Distinguish a missing directory entry from a link whose target could not be opened. */
+export function isMissingEntry(file: string, cause: unknown): boolean {
+  if (!isNotFound(cause)) return false;
+  try {
+    return lstatSync(file, { throwIfNoEntry: false }) === undefined;
+  } catch {
+    return false;
+  }
+}
 
 /** The text of the regular file at `file`, read by the rule of version 2.10 under `bound` and decoded as UTF-8 as `readFileSync(file,
  * 'utf8')` decodes it, so a regular file within its bound yields exactly the text it yielded before. Throws as `readBoundedFile` does. */
