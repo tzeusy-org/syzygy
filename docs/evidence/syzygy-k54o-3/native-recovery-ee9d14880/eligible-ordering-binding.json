@@ -1,0 +1,118 @@
+{
+  "label": "Observed",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "sha256AtCommit": {
+    "72a6c147a7f0743dce86f54c58c5bb6bab444634": "a1518e52d74c05286cdd7057b568afa809c71418c4192d36ed947543aa779484",
+    "7c9424ffc45717d48cbe9ec2cfeb05774f8711b0": "6498035dbe316f1261670f37ff8499a4cb51ae9c14796c7803c810b1968316a8"
+  },
+  "review": [
+    {
+      "commit": "72a6c147a7f0743dce86f54c58c5bb6bab444634",
+      "file": "ELIGIBLE-INVENTORY-START-REVIEW-RAW.md",
+      "sha256": "03e460b45be6a0ad2836184db473e9d8694725215e9b51450bd445a53c844798",
+      "verdict": "PASS"
+    },
+    {
+      "commit": "7c9424ffc45717d48cbe9ec2cfeb05774f8711b0",
+      "file": "ELIGIBLE-ORDINARY-ENDTURN-REVIEW-RAW.md",
+      "sha256": "dbe0dea8b8e27eada859a179253d378b55c0778ef8789762d0ff3bc2a724c083",
+      "verdict": "PASS"
+    }
+  ],
+  "firstNativeReplay": {
+    "commit": "72a6c147a7f0743dce86f54c58c5bb6bab444634",
+    "testLogSha256": "b3bab313118714a6c502d719ea403ae33328d180ab47ba088afcff5ad967d38d",
+    "retainedFixtureSha256": "1ebcb41d91017d5ff6163077ecf5d89b7eb000c949c780ebe4dd9159edfbbb83",
+    "scenario": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 123854
+    },
+    "tests": {
+      "failed": 1,
+      "skipped": 3,
+      "total": 4
+    },
+    "events": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "run ended: checked session boundary unavailable"
+    ],
+    "forwards": {
+      "author": 7,
+      "inventory": 5,
+      "fidelity": 2,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 6,
+        "response-admitted": 6,
+        "transport-failed": 1
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 5,
+        "send-outcome": 5,
+        "response-admitted": 5
+      },
+      "fidelity": {
+        "attempt-allowed": 2,
+        "send-attempt": 2,
+        "send-outcome": 2,
+        "response-admitted": 1
+      },
+      "design": {}
+    },
+    "resumeChecks": []
+  },
+  "remainingUnknown": "The first refused predicate during the later packet-dependent replies, and the end-to-end outcome on the reviewed successor.",
+  "secondNativeReplay": {
+    "commit": "7c9424ffc45717d48cbe9ec2cfeb05774f8711b0",
+    "testLogSha256": "02e8c02d8da598ded76004a418f465f2ea93fe8f4379e474913633afbae6219c",
+    "retainedFixtureSha256": "d8a80c33adef616c52664eb1bf01542dd157ecbabdcaf51ee7908ddc4e540809",
+    "scenario": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 134873
+    },
+    "tests": {
+      "failed": 1,
+      "skipped": 3,
+      "total": 4
+    },
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 2,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 7,
+        "response-admitted": 7
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 5,
+        "response-admitted": 5
+      },
+      "fidelity": {
+        "attempt-allowed": 2,
+        "send-attempt": 2,
+        "send-outcome": 1,
+        "response-admitted": 1
+      },
+      "design": {}
+    },
+    "resume": []
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "label": "Observed",
+  "baseCommit": "ee9d14880f9d3ab975f8d15ee459306a808875a4",
+  "scenario": "eligible-stop-resume",
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "logSha256": "b7dc9a64fb3641244626b524c86c86587006c4d4a98a6e2da6f8ccd033010a78",
+  "diagnosticOverlaySha256": "ceda9b4df7fe782d0edd2d64f3910d5be3b8573b3b399539ae6015c85624f7f3",
+  "retainedFixtureSha256": "d0c9ce9787c415e9e95cf4accadd98a400615109a689fd7990a3c46259c7aec5",
+  "events": [
+    {
+      "ms": 51879,
+      "role": "inventory",
+      "exchange": 1,
+      "event": "response-ready"
+    },
+    {
+      "ms": 51879,
+      "role": "inventory",
+      "exchange": 1,
+      "event": "audit-send-outcome"
+    },
+    {
+      "ms": 51879,
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "response-ready"
+    },
+    {
+      "ms": 51879,
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "audit-send-outcome"
+    },
+    {
+      "ms": 53157,
+      "role": "inventory",
+      "exchange": 1,
+      "event": "caught-at-audit-send-outcome"
+    },
+    {
+      "ms": 53598,
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "post-send-current"
+    },
+    {
+      "ms": 53599,
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "response-policy-admission"
+    },
+    {
+      "ms": 54677,
+      "role": "author",
+      "exchange": 7,
+      "event": "caught-at-http-entry"
+    },
+    {
+      "ms": 54710,
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "caught-at-response-policy-admission"
+    }
+  ],
+  "auditRefusals": [
+    {
+      "at": 54657,
+      "role": "inventory",
+      "event": "transport-failed",
+      "phase": "io-entry-current",
+      "phaseMs": 1,
+      "elapsedMs": 2,
+      "remainingMs": 4996,
+      "waiting": 0,
+      "marks": [
+        {
+          "phase": "relay-lineage",
+          "ms": 0
+        },
+        {
+          "phase": "commit-start",
+          "ms": 0
+        },
+        {
+          "phase": "io-entry-current",
+          "ms": 1
+        }
+      ]
+    }
+  ],
+  "msFromReadyToFirstCatch": 1278,
+  "remainingUnknown": "The first refused predicate inside Inventory's send-outcome mediation. The later recovery audit refusal does not establish the cause of that earlier error."
+}

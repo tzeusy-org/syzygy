@@ -1,0 +1,43 @@
+{
+  "label": "Observed",
+  "baseCommit": "7c9424ffc45717d48cbe9ec2cfeb05774f8711b0",
+  "scratchInstrumentationPatchSha256": "ca015ef28e651849bedc3a146badae3990ae0d38ff089e937e5a44ce3d8e34da",
+  "testLogSha256": "7939025d9b4814d3298174996e1c245bf0c2169f77fb2a3a8e951e8522c1279c",
+  "retainedFixtureSha256": "73be8bc8a97867efde90f9fc4b9846011907cd33e55086ff8f308db941b5f6af",
+  "cases": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "refusals": [
+    {
+      "kind": "owned peer mediation refusal",
+      "at": 134351,
+      "phase": "effect",
+      "path": "callback",
+      "role": "author",
+      "operation": "artifact_read",
+      "elapsedMs": 881
+    },
+    {
+      "kind": "owned peer mediation refusal",
+      "at": 134459,
+      "phase": "initial-current",
+      "path": "outer",
+      "role": "inventory",
+      "operation": "inference-forward",
+      "elapsedMs": 1
+    },
+    {
+      "kind": "owned peer mediation refusal",
+      "at": 134466,
+      "phase": "initial-current",
+      "path": "outer",
+      "role": "fidelity",
+      "operation": "inference-forward",
+      "elapsedMs": 1
+    }
+  ],
+  "firstRefusal": "Machine peer entered the authenticated Author artifact-read effect before its callback rejected. The evidence contains later initial-current refusals for Inventory and Fidelity inference after their provider calls aborted.",
+  "remainingUnknown": "Which predicate inside the Author tool effect refused. This diagnostic run recorded no machine-store refusal."
+}
