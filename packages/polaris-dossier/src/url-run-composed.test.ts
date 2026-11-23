@@ -1074,7 +1074,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     // next exchange settles before Inventory and Fidelity finish their work.
     const authorBeforeEligibleStop = waitForFidelityPacket === undefined ? [] : [async () => {
       await waitForFidelityPacket;
-      return tool('author_recheck_brief', 'artifact_read', { path: 'brief.md' });
+      return tool('recheck', 'artifact_read', { path: 'brief.md' });
     }];
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
