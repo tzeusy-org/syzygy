@@ -238,6 +238,10 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
     object({ kind: one('workflow-job'), path: repoPath, job: unitText }),
     object({ kind: one('compose-service'), path: repoPath, service: unitText }),
   ] },
+  // Share these shapes across the graph kinds so the issued draft schema fits
+  // in the ordinary URL client's inline artifact result.
+  relationNode: object({ id: handle, label: text, epistemic, citations: citations(1), unit: ref('unit') }, ['unit']),
+  relationEdge: object({ id: handle, from: handle, to: handle, relation: choice(RELATION_TYPES), label: text, epistemic, citations: citations(1) }),
 });
 
 export interface DraftSchemaParameters {
@@ -269,10 +273,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     kind, relationship: text,
     // v9 (version 2.19): a graph edge carries `relation`, one of the eleven relation types, and a graph node may carry `unit`.
     nodes: list(relations === 'taken'
-      ? object({ id: handle, label: text, epistemic, citations: citations(1), unit: ref('unit') }, ['unit'])
+      ? ref('relationNode')
       : object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
     edges: list(relations === 'taken'
-      ? object({ id: handle, from: handle, to: handle, relation: choice(RELATION_TYPES), label: text, epistemic, citations: citations(1) })
+      ? ref('relationEdge')
       : object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
     disposition: ref('disposition'),
   });

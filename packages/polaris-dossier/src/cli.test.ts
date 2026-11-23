@@ -130,7 +130,7 @@ describe('dossier network module boundaries', () => {
       "server.listen(0, '127.0.0.1',",
     ] },
     'session-broker.ts': { modules: ['net'], calls: ['server.listen(socket,'] },
-    'session-launch.ts': { modules: ['net'], calls: ['server.listen(path.join(dir, name), resolve)'] },
+    'session-launch.ts': { modules: ['net'], calls: ['server.listen(socket, resolve)'] },
     'session-machine-transport.ts': { modules: ['net'], calls: [] },
     'session-mcp.ts': { modules: ['net'], calls: ['createConnection({ path: socketPath })'] },
     'session-peer.ts': { modules: ['net'], calls: [] },

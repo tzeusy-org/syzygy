@@ -9,9 +9,11 @@ import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps, type CheckResult } from './check.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { renderRun, type DossierRenderer, type RenderDeps } from './render.js';
+import { initialRawReadDisclosure } from './raw-read-disclosure.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
+import { RUN_LAYOUT } from './state-directory.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Relation types (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): each scenario over the exact pinned trees the requirement
@@ -139,6 +141,7 @@ async function checked(tree: Pinned, doc: Doc): Promise<{ run: string; result: C
   }));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone, tree.commit)));
+  fs.writeFileSync(path.join(run, RUN_LAYOUT.rawReadDisclosure), initialRawReadDisclosure(RUN_ID, parsed.config.agentProvider), { mode: 0o600 });
   const brief = await issueBrief(run, { sources: sources(tree.commit), now: () => NOW, loadScreen: async () => SCREEN });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
   fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });
