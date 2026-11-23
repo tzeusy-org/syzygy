@@ -687,6 +687,20 @@ READERS_SUBJECTS = {
 }
 READERS_BOUND_PARTS = len(READERS_SUBJECTS)
 
+# REQ-polaris-generation-034 after v2.22, pending until its own VIS-4 ledger
+# row, found by its tag as v2.22's is. The version label is chosen at
+# adoption; until then it is the placeholder 2.NN.
+FIGPLAN_CHANGE = "dossier-figure-plan"
+FIGPLAN_HOME = f"{CHANGES}/{FIGPLAN_CHANGE}"
+FIGPLAN_SPEC = f"{FIGPLAN_HOME}/proposed/polaris-generation/spec.md"
+FIGPLAN_UNION = f"{FIGPLAN_HOME}/GOVERNING-DEPENDENCIES.json"
+FIGPLAN_TAG = "polaris-dossier-figure-plan-v2.NN"
+FIGPLAN_STATUS_PREFIX = f"[Figure plan amendment 2.NN]({FIGPLAN_HOME})"
+FIGPLAN_SUBJECTS = {
+    FIGPLAN_SPEC: "61f679833862e6c948073fd46487172a4aa2615d5e8dc85204d33abb2da4541b",
+}
+FIGPLAN_BOUND_PARTS = len(FIGPLAN_SUBJECTS)
+
 RAW_READ_CHANGE = "dossier-raw-read-disclosure"
 RAW_READ_HOME = f"{CHANGES}/{RAW_READ_CHANGE}"
 RAW_READ_SPEC = f"{RAW_READ_HOME}/proposed/polaris-generation/spec.md"
@@ -1394,6 +1408,36 @@ def readers_disposition(root, rows):
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), READERS_TAG,
                                     READERS_SUBJECTS, plain_revert=True)
+    return None
+
+
+
+def is_figplan_row(line):
+    """A ledger row claiming the v2.NN figure-plan amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{FIGPLAN_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in FIGPLAN_SUBJECTS)
+
+
+def figplan_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_figplan_row(line)]
+
+
+def figplan_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), FIGPLAN_TAG,
+                                    FIGPLAN_SUBJECTS, plain_revert=True)
     return None
 
 def polaris_additions(root):
@@ -2464,6 +2508,44 @@ def readers_binding(root):
             subjects.append(f"reader's edition: `{rel}` differs from the reviewed v2.22 subject")
     return (None if records or subjects else read_text(root, READERS_SPEC), records, subjects)
 
+
+def figplan_binding(root):
+    """Read v2.NN's published composition: pending until its row, like v2.22.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.22's text of REQ-polaris-generation-034, so v2.22 must
+    itself be in force.
+    """
+    rows = figplan_rows(root)
+    if not rows or figplan_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if readers_binding(root)[0] is None:
+        records.append("figure plan: prior v2.22 reader's edition adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("figure plan: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{FIGPLAN_TAG}`" or not reason):
+            records.append("figure plan: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("figure plan: revert does not name the landed commit")
+            for rel in FIGPLAN_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"figure plan: adoption row does not name `{rel}`")
+    for rel, digest in FIGPLAN_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"figure plan: `{rel}` differs from the reviewed v2.NN subject")
+    return (None if records or subjects else read_text(root, FIGPLAN_SPEC), records, subjects)
+
 def is_raw_read_row(line):
     """A tag or a link to the subject at this row's own commit claims adoption."""
     if not line.startswith("|"):
@@ -3188,6 +3270,15 @@ def check_outcomes(root, report):
         subjects_seen += READERS_BOUND_PARTS
     r1 += readers_records
     r2 += readers_subjects
+    figplan_retired_by = figplan_disposition(root, figplan_rows(root))
+    figplan_amendment, figplan_records, figplan_subjects = figplan_binding(root)
+    if figplan_retired_by:
+        records += 2
+    elif figplan_amendment is not None or figplan_records or figplan_subjects:
+        records += 1
+        subjects_seen += FIGPLAN_BOUND_PARTS
+    r1 += figplan_records
+    r2 += figplan_subjects
     readmit_retired_by = readmit_disposition(root, readmit_rows(root))
     readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
     if readmit_retired_by:
@@ -3259,6 +3350,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.21 inactive by {verify_retired_by}"
     if readers_retired_by:
         retirement += f"; v2.22 inactive by {readers_retired_by}"
+    if figplan_retired_by:
+        retirement += f"; v2.NN inactive by {figplan_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -3292,7 +3385,8 @@ def check_outcomes(root, report):
                "one v2.19 row over effective v2.16, pending until recorded; hero figure: "
                "one v2.20 row over effective v2.19, pending until recorded; verify text: "
                "one v2.21 row over effective v2.18's 033, pending until recorded; reader's edition: "
-               "one v2.22 row over effective v2.20, pending until recorded" + retirement)
+               "one v2.22 row over effective v2.20, pending until recorded; figure plan: "
+               "one v2.NN row over effective v2.22, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -4170,6 +4264,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, readers_amendment)
                 pa += extra_a
                 pb += extra_b
+        figplan_amendment, figplan_records, figplan_subjects = figplan_binding(root)
+        findings += figplan_records + figplan_subjects
+        if figplan_amendment is not None:
+            if readers_amendment is None:
+                findings.append("POLARIS: figure plan requires effective reader's edition v2.22")
+            else:
+                a, extra_a = compose_figure_by_id(a, figplan_amendment)
+                b, extra_b = compose_figure_by_name(b, figplan_amendment)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -4395,6 +4499,14 @@ def polaris_expected(root, findings):
                                                                             findings.append("POLARIS reader's edition: methods disagree or change identities")
                                                                         n_scen += sum(len(row["scenarios"]) for row in readers_a.values()) - sum(
                                                                             len(row["scenarios"]) for row in hero_a.values())
+                                                                        figplan_amendment, _records, _subjects = figplan_binding(root)
+                                                                        if figplan_amendment is not None:
+                                                                            figplan_a, pa = compose_figure_by_id(readers_a, figplan_amendment)
+                                                                            figplan_b, pb = compose_figure_by_name(readers_b, figplan_amendment)
+                                                                            if pa or pb or figplan_a != figplan_b or set(figplan_a) != set(readers_a):
+                                                                                findings.append("POLARIS figure plan: methods disagree or change identities")
+                                                                            n_scen += sum(len(row["scenarios"]) for row in figplan_a.values()) - sum(
+                                                                                len(row["scenarios"]) for row in readers_a.values())
     raw_read_amendment, _records, _subjects = raw_read_binding(root)
     if raw_read_amendment is not None:
         # Only 033, 036 and 046 move. Use their effective predecessors, independent
@@ -4625,6 +4737,9 @@ def check_generated(root, pop, report):
     readers_amendment, _records, _subjects = readers_binding(root)
     if readers_amendment is not None:
         files += tracked(root, READERS_HOME)
+    figplan_amendment, _records, _subjects = figplan_binding(root)
+    if figplan_amendment is not None:
+        files += tracked(root, FIGPLAN_HOME)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
@@ -4696,6 +4811,7 @@ def check_generated(root, pop, report):
                         (reltype_amendment, RELTYPE_UNION),
                         (hero_amendment, HERO_UNION),
                         (readers_amendment, READERS_UNION),
+                        (figplan_amendment, FIGPLAN_UNION),
                         (raw_read_amendment, RAW_READ_UNION),
                         (treeread_amendment, TREEREAD_UNION),
                         (verify_amendment, VERIFY_UNION)):
@@ -5159,6 +5275,22 @@ def check_routes(root, pop, report):
         examined += 2
         if any("is agent-adopted" in field for field in readers_fields):
             findings.append(f"`{STATUS}` calls reader's edition v2.22 adopted while it is not in force")
+    figplan_amendment, _records, _subjects = figplan_binding(root)
+    figplan_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(FIGPLAN_STATUS_PREFIX)]
+    if figplan_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and FIGPLAN_TAG in line
+                   for line in rows.get(FIGPLAN_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route figure plan v2.NN "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = figplan_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or figplan_fields != [f"{FIGPLAN_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route figure plan v2.NN and its adoption {identity}")
+    elif FIGPLAN_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in figplan_fields):
+            findings.append(f"`{STATUS}` calls figure plan v2.NN adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -5403,6 +5535,7 @@ def inputs(root):
     paths |= {RELTYPE_UNION, *RELTYPE_SUBJECTS}
     paths |= {HERO_UNION, *HERO_SUBJECTS}
     paths |= {READERS_UNION, *READERS_SUBJECTS}
+    paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
     paths |= {RAW_READ_UNION, *RAW_READ_SUBJECTS}
     paths |= {TREEREAD_UNION, *TREEREAD_SUBJECTS}
     paths |= {VERIFY_UNION, *VERIFY_SUBJECTS}
@@ -5783,6 +5916,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_reltype = any(is_reltype_row(line) for line in original.splitlines())
     had_hero = any(is_hero_row(line) for line in original.splitlines())
     had_readers = any(is_readers_row(line) for line in original.splitlines())
+    had_figplan = any(is_figplan_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
     had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
     had_treeread = any(is_treeread_row(line) for line in original.splitlines())
@@ -5797,7 +5931,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
                       and not is_verify_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -5810,7 +5944,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_raw_read - had_treeread - had_verify
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_figplan - had_raw_read - had_treeread - had_verify
             and examined(report, "R2") == examined(clean, "R2") - 3
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -5831,6 +5965,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (RELTYPE_BOUND_PARTS if had_reltype else 0)
             - (HERO_BOUND_PARTS if had_hero else 0)
             - (READERS_BOUND_PARTS if had_readers else 0)
+            - (FIGPLAN_BOUND_PARTS if had_figplan else 0)
             - (len(RAW_READ_SUBJECTS) if had_raw_read else 0)
             - (len(TREEREAD_SUBJECTS) if had_treeread else 0)
             - (VERIFY_BOUND_PARTS if had_verify else 0))
@@ -6234,7 +6369,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6372,7 +6507,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6505,7 +6640,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6636,7 +6771,7 @@ def kinds_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6767,7 +6902,7 @@ def manifests_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6898,7 +7033,7 @@ def repairs_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7028,7 +7163,7 @@ def maps_cases(tmp, base, witnesses, failures):
                       if not is_maps_row(line) and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7227,7 +7362,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7356,7 +7491,7 @@ def corr_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7485,7 +7620,7 @@ def coverage_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7613,7 +7748,7 @@ def infra_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7740,7 +7875,7 @@ def findpages_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7886,7 +8021,7 @@ def subsec_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      if not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8013,7 +8148,7 @@ def reltype_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line))
+                      if not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8140,7 +8275,7 @@ def hero_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_hero_row(line) and not is_readers_row(line))
+                      if not is_hero_row(line) and not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8267,7 +8402,7 @@ def readers_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_readers_row(line))
+                      if not is_readers_row(line) and not is_figplan_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8373,6 +8508,132 @@ def readers_cases(tmp, base, witnesses, failures):
         a, ida = compose_figure_by_id(kin_pop, mutant)
         b, names = compose_figure_by_name(kin_pop, mutant)
         record(f"readers-compose-{name}", READERS_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == kin_pop), False)
+
+def figplan_cases(tmp, base, witnesses, failures):
+    """The v2.NN pending-to-adopted transition over v2.22, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, FIGPLAN_SPEC)
+    if original is None or readers_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "figplan-edition"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_figplan_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = FIGURE_REPLACES[0]
+    held = (figplan_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == 183)
+    record("figplan-pending", AGENT_ADOPTIONS, "<no v2.NN row>", "<unchanged>",
+           "landed package alone keeps v2.NN pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{FIGPLAN_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{FIGPLAN_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (figplan_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == 194
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("figplan-adopted", AGENT_ADOPTIONS, "<no v2.NN row>", row,
+           "v2.NN replaces exactly 034 (183 to 194 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", FIGPLAN_TAG, FIGPLAN_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{FIGPLAN_SPEC})", f"/blob/other/{FIGPLAN_SPEC})"),
+                           ("bad-date", "2026-11-21", "2026-99-21"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = figplan_binding(tree)
+        record(f"figplan-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (figplan_disposition(tree, figplan_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("figplan-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.22 034", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_readers_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_readers_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = figplan_binding(tree)
+        record("figplan-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.22 is not in force", r1 + r2,
+               effective is None and any("prior v2.22" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in FIGPLAN_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = figplan_binding(tree)
+        subject.write_bytes(previous)
+        record(f"figplan-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / FIGPLAN_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-014"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("figplan-union-changed", FIGPLAN_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(FIGPLAN_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(FIGPLAN_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("figplan-status-route-missing", STATUS, FIGPLAN_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("figure plan v2.NN" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(FIGPLAN_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("figplan-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Agent brief and mechanically checked draft",
+         "### Requirement: Agent brief and figure plan"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    kin_pop = predecessor
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(kin_pop, mutant)
+        b, names = compose_figure_by_name(kin_pop, mutant)
+        record(f"figplan-compose-{name}", FIGPLAN_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
@@ -9343,6 +9604,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     reltype_cases(tmp, base, witnesses, failures)
     hero_cases(tmp, base, witnesses, failures)
     readers_cases(tmp, base, witnesses, failures)
+    figplan_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)
