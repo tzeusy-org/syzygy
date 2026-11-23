@@ -56,16 +56,17 @@ interface UrlLaunchHistoryIdentity {
   readonly promptIdentity: { readonly device: bigint; readonly inode: bigint };
   readonly sha256: string; readonly bytes: Uint8Array;
 }
-const written = new WeakMap<UrlLaunchHistoryCapability, () => UrlLaunchHistoryIdentity>();
-export function inspectUrlLaunchHistory(capability: UrlLaunchHistoryCapability): UrlLaunchHistoryIdentity {
-  try { return (written.get(capability) ?? refuse())(); } catch { return refuse(); }
+const written = new WeakMap<UrlLaunchHistoryCapability, (observeRead?: (bytes: number) => void) => UrlLaunchHistoryIdentity>();
+export function inspectUrlLaunchHistory(capability: UrlLaunchHistoryCapability,
+  observeRead?: (bytes: number) => void): UrlLaunchHistoryIdentity {
+  try { return (written.get(capability) ?? refuse())(observeRead); } catch { return refuse(); }
 }
 
 const directoryFlags = fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW;
 const same = (a: fs.BigIntStats, b: fs.BigIntStats): boolean => a.dev === b.dev && a.ino === b.ino && a.uid === b.uid && a.mode === b.mode;
 const unchanged = (a: fs.BigIntStats, b: fs.BigIntStats): boolean => same(a, b) && a.size === b.size
   && a.nlink === b.nlink && a.mtimeNs === b.mtimeNs && a.ctimeNs === b.ctimeNs;
-function readRegular(anchor: string, name: string): { readonly bytes: Buffer; readonly stat: fs.BigIntStats } {
+function readRegular(anchor: string, name: string, observeRead?: (bytes: number) => void): { readonly bytes: Buffer; readonly stat: fs.BigIntStats } {
   const namedFile = path.join(anchor, name);
   const fd = fs.openSync(namedFile, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
   try {
@@ -73,7 +74,10 @@ function readRegular(anchor: string, name: string): { readonly bytes: Buffer; re
     if (!before.isFile() || before.nlink !== 1n || before.size > BigInt(BOUNDS.maxBytes)) return refuse();
     const buffer = Buffer.alloc(Number(before.size) + 1); let length = 0;
     while (length < buffer.length) {
-      const count = fs.readSync(fd, buffer, length, buffer.length - length, null); if (!count) break; length += count;
+      const count = fs.readSync(fd, buffer, length, buffer.length - length, null);
+      if (!count) break;
+      observeRead?.(count);
+      length += count;
     }
     const after = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(namedFile, { bigint: true });
     if (length !== Number(before.size) || !unchanged(before, after) || !unchanged(after, named)) return refuse();
@@ -198,7 +202,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
       coreSha256: sha256(base.bytes), promptFile: `${child}/${promptName}`, promptSha256: compatiblePromptSha256,
       promptRecordSha256: sha256(issuedPrompt.bytes),
       promptIdentity: Object.freeze({ device: issuedPrompt.stat.dev, inode: issuedPrompt.stat.ino }), sha256: sha256(bytes) };
-    const inspect = (): UrlLaunchHistoryIdentity => {
+    const inspect = (observeRead?: (bytes: number) => void): UrlLaunchHistoryIdentity => {
       const runFd = fs.openSync(run, directoryFlags);
       try {
         const runAnchor = `/proc/self/fd/${runFd}`, childPath = path.join(runAnchor, child);
@@ -206,9 +210,9 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
         try {
           const childAnchor = `/proc/self/fd/${childFd}`;
           if (!same(initial, fs.fstatSync(runFd, { bigint: true })) || !same(helperIdentity, fs.fstatSync(childFd, { bigint: true }))
-            || !matchesFile(base, readRegular(runAnchor, 'run.json'))
-            || !matchesFile(issuedPrompt, readRegular(childAnchor, promptName))
-            || !matchesFile({ bytes, stat }, readRegular(childAnchor, name))
+            || !matchesFile(base, readRegular(runAnchor, 'run.json', observeRead))
+            || !matchesFile(issuedPrompt, readRegular(childAnchor, promptName, observeRead))
+            || !matchesFile({ bytes, stat }, readRegular(childAnchor, name, observeRead))
             || !same(helperIdentity, fs.lstatSync(childPath, { bigint: true }))
             || !same(initial, fs.lstatSync(run, { bigint: true })) || fs.realpathSync(run) !== run) return refuse();
           return Object.freeze({ ...identity, bytes: Uint8Array.from(bytes) });

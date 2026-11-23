@@ -318,9 +318,10 @@ interface CommittedLaunchHistoryIdentity {
   readonly history: ReturnType<typeof inspectUrlLaunchHistory>; readonly scope: UrlSessionAuditScope;
   readonly eventSha256: string; readonly project: string;
 }
-const committedLaunches = new WeakMap<UrlCommittedLaunchHistory, () => CommittedLaunchHistoryIdentity>();
-export function inspectCommittedUrlLaunchHistory(capability: UrlCommittedLaunchHistory): CommittedLaunchHistoryIdentity {
-  try { const inspect = committedLaunches.get(capability); if (inspect) return inspect(); } catch { /* Unavailable. */ }
+const committedLaunches = new WeakMap<UrlCommittedLaunchHistory, (observeRead?: (bytes: number) => void) => CommittedLaunchHistoryIdentity>();
+export function inspectCommittedUrlLaunchHistory(capability: UrlCommittedLaunchHistory,
+  observeRead?: (bytes: number) => void): CommittedLaunchHistoryIdentity {
+  try { const inspect = committedLaunches.get(capability); if (inspect) return inspect(observeRead); } catch { /* Unavailable. */ }
   throw refused();
 }
 export interface UrlSessionAuditOptions {
@@ -1031,9 +1032,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const event = await enqueue({ kind: 'launch-history', role, scope, payload: { file: history.file, recordSha256: history.sha256,
         recordBytes: history.bytes.length, promptRecordSha256: history.promptRecordSha256, promptSha256: history.promptSha256,
         sessionId: plan.declaration.sessionId } }, 'launch-history');
-      const inspect = (): CommittedLaunchHistoryIdentity => {
-        verifyDurableEvent(role, event);
-        const latest = inspectUrlLaunchHistory(capability);
+      const inspect = (observeRead?: (bytes: number) => void): CommittedLaunchHistoryIdentity => {
+        verifyDurableEvent(role, event, observeRead);
+      const latest = inspectUrlLaunchHistory(capability, observeRead);
         return Object.freeze({ history: latest, scope, eventSha256: event.digest, project: input.project });
       };
       inspect();
@@ -1341,16 +1342,20 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         if (before.deadline !== after.deadline || !equal(before.identity, after.identity)) throw refused();
         const result = copy({ eventSha256: event.digest, identity: after.identity }) as UrlDesignDeliveryAuditRecord;
         const delivery = deliveryView(result, material);
-        const verifyLaunch = (): void => {
-          if (inspectCommittedUrlLaunchHistory(launch).eventSha256 !== attempt.eventSha256) throw refused();
+        const verifyLaunch = (observeRead?: (bytes: number) => void): void => {
+          if (inspectCommittedUrlLaunchHistory(launch, observeRead).eventSha256 !== attempt.eventSha256) throw refused();
         };
         const verifyReceipt = (current: () => boolean, observeRead?: (bytes: number) => void): void => {
           currentDesignRecord(result);
           if (!current()) throw refused();
-          try {
-            verifyLaunch();
+          const onRead = (bytes: number): void => {
+            observeRead?.(bytes);
             if (!current()) throw refused();
-            verifyDurableEvent('design', event, observeRead);
+          };
+          try {
+            verifyLaunch(onRead);
+            if (!current()) throw refused();
+            verifyDurableEvent('design', event, onRead);
           } catch {
             if (current()) designRetired = true;
             throw refused();

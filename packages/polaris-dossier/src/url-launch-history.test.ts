@@ -404,7 +404,15 @@ describe('protected URL design delivery audit', () => {
             expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, () => false, observedRead)).toThrow('url-session-audit-refused');
             expect(observedRead).not.toHaveBeenCalled();
             expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized, observedRead)).not.toThrow();
-            expect(observedRead).toHaveBeenCalled();
+            const journal = fs.readFileSync(segment('design'), 'utf8').trimEnd().split('\n');
+            const eventBytes = (kind: string) => Buffer.byteLength(journal.find(line => JSON.parse(line).event.kind === kind)! + '\n');
+            const launchFileBytes = [path.join(run, 'run.json'), promptPath('design'), historyPath('design')]
+              .map(file => fs.statSync(file).size);
+            expect(observedRead.mock.calls.flat()).toEqual([eventBytes('launch-history'), ...launchFileBytes, eventBytes('design-delivery')]);
+            let current = true;
+            const revokeOnRead = vi.fn(() => { current = false; });
+            expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, () => current, revokeOnRead)).toThrow('url-session-audit-refused');
+            expect(revokeOnRead).toHaveBeenCalledExactlyOnceWith(eventBytes('launch-history'));
             expect(() => assertUrlDesignDeliveryReceiptCurrent(reproducedView, authorized)).not.toThrow();
             if (mode === 'renew-launch-drift') fs.utimesSync(historyPath('design'), 1, 1);
             else fs.appendFileSync(segment('design'), '\n');
