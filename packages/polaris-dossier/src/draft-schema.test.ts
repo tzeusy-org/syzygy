@@ -188,7 +188,7 @@ describe('draft.schema.json', () => {
     const defs = Object.keys(document['$defs'] as object).sort();
     const used = [...new Set(refs(document).map((ref) => ref.replace('#/$defs/', '')))].sort();
     expect(used).toEqual(defs);
-    expect(defs).toEqual(['block', 'callout', 'cards', 'citation', 'code', 'content', 'definitions', 'detailContent', 'details', 'disposition', 'paragraph', 'pathReason', 'routeStep', 'steps', 'subsection', 'table', 'taskRoute', 'understandingItem', 'unit', 'unknownReason']);
+    expect(defs).toEqual(['block', 'callout', 'cards', 'citation', 'code', 'content', 'definitions', 'detailContent', 'details', 'disposition', 'paragraph', 'pathReason', 'relationEdge', 'relationNode', 'routeStep', 'steps', 'subsection', 'table', 'taskRoute', 'understandingItem', 'unit', 'unknownReason']);
   });
 
   it('nowhere offers an observed label', () => {

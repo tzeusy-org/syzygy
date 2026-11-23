@@ -701,7 +701,8 @@ describe('trusted URL artifact producer bridge', () => {
       } finally { checkReads.close(); }
 
       const draft = b(f.draft);
-      expect(checkDraftShape(localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }, 'home', 'absent'), f.draft)).toEqual([]);
+      const v5Schema = localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }, 'home', 'absent', 'absent', 'absent', 'absent');
+      expect(checkDraftShape(v5Schema, f.draft)).toEqual([]);
       expect(f.screen.screenBody(draft.toString())).toBeUndefined();
       const writeArgs = { path: 'drafts/next.json', content: draft.toString() };
       const written = f.receipt('author', 'mcp__syzygy__artifact_write', writeArgs,
