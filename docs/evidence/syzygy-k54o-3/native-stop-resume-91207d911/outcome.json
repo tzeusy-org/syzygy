@@ -1,0 +1,435 @@
+{
+  "format": "syzygy-f3-hosted-recovery-observation/1",
+  "head": "91207d911f6b6b69e57b60a25cef8ba8f8244bab",
+  "checkout": "d973f37ebf58a9eee45604ddbdfd66d57b9722d6",
+  "tree": "76ab2561a07d7f9ddb2da88eb9e8a9d1833b87f8",
+  "base": "01f97af681ac901346c5c57dc988998c80141a3b",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45106414830/job/137469354655",
+  "integrationLogSha256": "0b53257f9d8683104e45e5fd7231955dd086dfbe3b79cc933eb569849353913e",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "5b4f9b392140c4aef81d5ef1c0444cb87c52a4570dabc8d7f1603bd09e012bae",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "0d41c3b96248732399a1762e1f675da307632698cda9166aab716fa9e6e03083",
+    "packages/polaris-dossier/src/url-session-audit.ts": "8d251fea40e4cb017ce6484d913213e26a99b2a4854caa4ab27a671d3d3d3f2b",
+    "packages/polaris-dossier/src/session-launch.ts": "67ade379d23169e86c2cf4017bbf823b8a05a1969848e3942ff931537ec46ae7"
+  },
+  "tests": {
+    "passed": 3904,
+    "failed": 4,
+    "skipped": 3
+  },
+  "files": {
+    "passed": 135,
+    "failed": 2
+  },
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 99964
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 8261
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 197491
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 221399
+    }
+  ],
+  "publicResume": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "transport-unavailable",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "exitCode": null,
+            "signal": "SIGTERM"
+          }
+        ]
+      }
+    ],
+    "providerForwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "auditTail": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "launch-terminal"
+    ],
+    "firstHostRefusal": {
+      "startedMs": 104004.489,
+      "stages": [
+        {
+          "phase": "runtime-authority",
+          "timing": {
+            "startedMs": 104004.536,
+            "settledMs": 104224.979,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 104225.016,
+            "settledMs": 104225.057,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "wait-for-samples",
+          "timing": {
+            "startedMs": 104225.414,
+            "settledMs": 104325.957,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 104325.979,
+            "settledMs": 104325.985,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 104325.991,
+            "settledMs": 104326.004,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 104326.007,
+            "settledMs": 104414.958,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 104415,
+            "settledMs": 104477.375,
+            "outcome": "accepted"
+          },
+          "lease": "open"
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 104477.402,
+            "settledMs": 104477.407,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 104477.417,
+            "settledMs": 104477.425,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 104477.43,
+            "settledMs": 104536.695,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "delivery-assertion",
+          "timing": {
+            "startedMs": 104536.732,
+            "settledMs": 105239.665,
+            "outcome": "rejected"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105338.585,
+            "settledMs": 105338.597,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105338.609,
+            "settledMs": 105338.615,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105338.618,
+            "settledMs": 105391.608,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105391.763,
+            "settledMs": 105391.766,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105391.772,
+            "settledMs": 105391.774,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105391.776,
+            "settledMs": 105447.328,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105447.962,
+            "settledMs": 105447.966,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105447.973,
+            "settledMs": 105447.974,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105447.976,
+            "settledMs": 105498.991,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105499.157,
+            "settledMs": 105499.161,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105499.168,
+            "settledMs": 105499.17,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105499.176,
+            "settledMs": 105552.326,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105552.486,
+            "settledMs": 105552.489,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105552.5,
+            "settledMs": 105552.501,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105552.505,
+            "settledMs": 105602.712,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105602.8,
+            "settledMs": 105602.807,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105602.812,
+            "settledMs": 105602.817,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105602.819,
+            "settledMs": 105655.971,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 105656.07,
+            "settledMs": 105656.073,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 105656.077,
+            "settledMs": 105656.083,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 105656.085,
+            "settledMs": 105707.954,
+            "outcome": "accepted"
+          }
+        }
+      ],
+      "settledMs": 106571.978,
+      "outcome": "refused"
+    },
+    "firstLauncherRefusal": {
+      "ordinal": 22,
+      "phases": {
+        "process": {
+          "startedMs": 0.05516300001181662,
+          "settledMs": 321.335167000012,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.08575899997958913,
+          "settledMs": 259.05429800000275,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.0871709999628365,
+          "settledMs": 363.75022499996703,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 363.7589380000136,
+          "settledMs": 363.7804809999652,
+          "outcome": "refused"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "authority-refused",
+        "elapsedMs": 363.8521980000078
+      }
+    }
+  },
+  "eligible": {
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "providerForwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 4
+    },
+    "auditTail": [
+      "relay:send-attempt",
+      "machine-peer:inference-forward",
+      "omitted",
+      "relay:send-outcome",
+      "machine-peer:inference-forward",
+      "machine-peer:inference-forward",
+      "ordered:response-admitted",
+      "usage",
+      "relay:response-admitted",
+      "machine-peer:inference-forward",
+      "machine-peer:dossier_step",
+      "ordered:delivery-completed",
+      "ordered:verdict-staged",
+      "ordered:acknowledgment-receipt",
+      "launch-terminal"
+    ],
+    "resumeChecks": 0
+  },
+  "otherIntegrationFailure": "one-child directory disappearance sample never retried before child termination"
+}

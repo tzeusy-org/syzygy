@@ -315,7 +315,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   type InferenceBoundary = 'parent-current' | 'kernel-peer' | 'peer-audit';
   type RelayPhase = 'request' | 'response' | 'controller-current' | 'product-assertion' | 'screening-worker' | 'admission';
   type CurrentPhase = 'runtime-authority' | 'machine-effect' | 'machine-authority' | 'budget' | 'wait-for-samples'
-    | 'product-lease' | 'product-assertion' | 'delivery-assertion' | 'reproduce' | 'read-reproduced-delivery';
+    | 'product-lease' | 'product-assertion' | 'delivery-assertion' | 'checked-expiry' | 'receipt-preflight'
+    | 'reproduce' | 'read-reproduced-delivery';
   type CurrentStage = { phase: CurrentPhase; timing: ResumeStamp; lease?: ReturnType<typeof designProduct.urlDesignProductLeaseState>['state'] };
   type CurrentTrace = ResumeStamp & { stages: CurrentStage[] };
   type InferenceStep = {
@@ -372,7 +373,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   }
   function currentPhase<T>(phase: CurrentPhase, call: () => T, accepted: (value: Awaited<T>, stage: CurrentStage) => boolean): T {
     const trace = currentScope.getStore();
-    if (trace === undefined || trace.stages.length >= 32) return call();
+    if (trace === undefined || trace.stages.length >= 64) return call();
     const stage = { phase, timing: { startedMs: clock() } };
     trace.stages.push(stage);
     return timed(stage.timing, call, value => accepted(value, stage));
@@ -450,6 +451,12 @@ async function observeDesignRun(run: string, traceInference = false) {
     const assertDelivery = sessionAudit.assertUrlDesignDeliveryViewCurrent;
     vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryViewCurrent').mockImplementation(delivery =>
       currentPhase('delivery-assertion', () => assertDelivery(delivery), () => true));
+    const checkedExpiry = designProduct.isCheckedUrlDesignProductExpiry;
+    vi.spyOn(designProduct, 'isCheckedUrlDesignProductExpiry').mockImplementation((...args) =>
+      currentPhase('checked-expiry', () => checkedExpiry(...args), value => value === true));
+    const assertReceipt = sessionAudit.assertUrlDesignDeliveryReceiptCurrent;
+    vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryReceiptCurrent').mockImplementation((...args) =>
+      currentPhase('receipt-preflight', () => assertReceipt(...args), () => true));
     const kernelPeer = sessionPeer.captureKernelUnixPeerAsync;
     vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
       inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
@@ -950,7 +957,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       };
     });
     const f = await prepareComposedRun(runtime, resumeAfterStop ? { hostRoot: recoveryHost.root } : undefined); cleanup.push(f.close);
-    if (eligibleStop) initialDiagnostic = await observeDesignRun(f.run, true);
+    if (eligibleStop || scenario === 'delivery-stop') initialDiagnostic = await observeDesignRun(f.run, eligibleStop);
     const writeEvidence = async (result: Record<string, unknown>) => {
       const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
       if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
@@ -1031,7 +1038,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         }
       }
       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
-      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit }));
+      throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit,
+        initialRoleInspections: initialDiagnostic?.().roleInspections }));
     }); cleanup.push(controller.stop);
     expect(handoffStates[0]).toBe('unknown');
     function beginOwnedStop() {
