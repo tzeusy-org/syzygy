@@ -531,7 +531,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const f = await fixture(), slot = await f.allocate();
     let elapsed = 0, measuring = false;
     const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
-      if (measuring) elapsed += 550;
+      if (measuring) elapsed += 650;
       return true;
     } }, f.store.identitySha256);
     if (reopened === null) throw new Error('fixture reopen refused');
@@ -549,8 +549,40 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       });
       expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(true);
       expect(verify).toHaveBeenCalledTimes(1);
-      expect(elapsed).toBe(4400);
+      expect(elapsed).toBe(4550);
     } finally { clock.mockRestore(); }
+  });
+
+  it.each(['withdrawn', 'root replaced', 'expired'] as const)('withholds a terminal snapshot after its bytes were read when %s', async change => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    const completed = new Set<string>();
+    const terminalNames = new Set([path.basename(slot.file), path.basename(slot.projection)]);
+    let confirmed = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (completed.size !== terminalNames.size) return true;
+      confirmed = true;
+      if (change === 'withdrawn') return false;
+      if (change === 'expired') f.tick(f.options.deadline);
+      else {
+        await rename(f.canonicalRoot, f.canonicalRoot + '.previous');
+        await mkdir(f.canonicalRoot, { mode: 0o700 });
+      }
+      return true;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    filesystem.afterClose = file => {
+      const name = path.basename(file);
+      if (terminalNames.has(name)) completed.add(name);
+    };
+    const inspect = vi.fn();
+    expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, async lease => {
+      inspect(await lease.read());
+    })).toBe(false);
+    expect(completed).toEqual(terminalNames);
+    expect(confirmed).toBe(true);
+    expect(inspect).not.toHaveBeenCalled();
   });
 
   it('refuses a swapped named root before submitting a terminal-read lock', async () => {

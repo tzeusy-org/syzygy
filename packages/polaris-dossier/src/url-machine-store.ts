@@ -447,7 +447,6 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       // private I/O and require full authority at durable and release boundaries.
       const stagingClock = staging === undefined ? undefined : checkDeadline;
       const checkWork = stagingClock ?? check;
-      const verifyAnchors = () => anchored(stagingClock);
       // The I/O wrapper supplies the enclosing authority checks for this read.
       const verifyAnchorsDuringIo = () => anchored(checkDeadline);
       const checkAsync = async (authorize: () => Promise<boolean>): Promise<void> => {
@@ -459,6 +458,15 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (currentAsync === undefined) check();
         else await checkAsync(currentAsync);
       };
+      const verifyAnchors = terminalRead ? async (): Promise<void> => {
+        // The exact terminal bytes are already private. Resample authority
+        // after their read, then verify the roots synchronously so the root
+        // proof adds no intervening I/O await.
+        await reverify();
+        check();
+        verifyNamedRoots();
+        checkDeadline();
+      } : () => anchored(stagingClock);
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
         if (currentAsync === undefined || staging !== undefined) checkWork();
         else await checkAsync(currentAsync);
@@ -693,7 +701,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             readFile(`${home}/${clientId}.json`, URL_MACHINE_CLIENT_LIMITS.maxBytes, true),
             readFile(`${base}/projection-${clientId}.json`, 16_384, true),
           ]);
-          checkWork(); await anchored(); checkWork();
+          if (!terminalRead) checkWork();
+          await anchored();
+          checkWork();
           const projected = projectionBytes === null ? null : decode(projectionBytes);
           if (projected !== null && (!projection(projected) || projected.clientId !== clientId)) return null;
           const audited = entry.audit.length === 0 ? null : auditHead(entry.audit.at(-1)!);
