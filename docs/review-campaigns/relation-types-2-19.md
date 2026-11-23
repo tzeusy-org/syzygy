@@ -16,3 +16,5 @@
 [Observed] Runtime review 1 records `REVISE` (`syzygy-3efd-28/R-RELATION-TYPES-RUNTIME-1-RAW.md`). The package's design records the fixes for F1 and N1. The two focused regression cases failed on the reviewed source and passed after the fixes.
 
 [Observed] Runtime review 2 records `ACCEPT` (`syzygy-3efd-28/R-RELATION-TYPES-RUNTIME-2-RAW.md`) at `89158c02`. It confirms F1 and N1 and retains a separate note about generic claims when an SVG is refused.
+
+[Observed] The final source's Rule 6 run caught 75 injected changes by assertions, with eight passing module baselines. The record binds the subject commit, module digests, exact replacements and outcomes. [Mutation record](../evidence/syzygy-3efd-28/relation-types-mutation-2026-11-23.json)
