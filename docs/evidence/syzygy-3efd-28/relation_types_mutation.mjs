@@ -95,7 +95,7 @@ const MUTANTS = [
   // --- check
   ['field-version-not-reported', DERIVE, 'if (Object.hasOwn(element, field)) out.push(`${at}.${field}`);', ''],
   ['field-version-in-v9', DERIVE, "  if (hasRelationForm(doc['schemaVersion'])) return [];\n  const out: string[] = [];", '  const out: string[] = [];'],
-  ['field-version-schema-kept', DERIVE, 'subsectionPaths.has(path) || relationPaths.has(path);', 'subsectionPaths.has(path);'],
+  ['field-version-schema-kept', DERIVE, 'subsectionPaths.has(path) || relationPaths.has(path)', 'subsectionPaths.has(path)'],
   ['code-unit-bound-unchecked', DERIVE, 'if (over !== undefined) add(', 'if (false) add('],
   ['code-unit-finding-below-unit', DERIVE, "add({ kind: 'schema', at: `${at}.${UNIT_FIELD}`, detail: `\\`${over[0]}\\`", "add({ kind: 'schema', at: `${at}.${UNIT_FIELD}.${over[0]}`, detail: `\\`${over[0]}\\`"],
   ['code-unit-twice-with-schema', DERIVE, 'if (texts.some(([, value]) => [...value].length > UNIT_TEXT_LIMIT)) return;', ''],
@@ -115,7 +115,7 @@ const MUTANTS = [
   // --- the schema
   ['relation-optional', SCHEMA, 'relation: choice(RELATION_TYPES), ', ''],
   ['unit-code-points-257', SCHEMA, 'maxLength: UNIT_TEXT_LIMIT }', 'maxLength: UNIT_TEXT_LIMIT + 1 }'],
-  ['v8-has-relation-form', SCHEMA, 'export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;', 'export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION || version === LOCAL_DRAFT_SCHEMA_VERSION_V8;'],
+  ['v8-has-relation-form', SCHEMA, 'export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);', 'export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || version === LOCAL_DRAFT_SCHEMA_VERSION_V8 || hasHeroForm(version);'],
   // --- render
   ['render-withheld-asserted', RENDER, "edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? '')", "edge['epistemic'] === 'inferred'"],
   ['render-witness-without-record', RENDER, "if (decision.state === 'witnessed' && derived.state === 'derived') {", "if (decision.state === 'witnessed' && derived.state !== 'derived') {"],

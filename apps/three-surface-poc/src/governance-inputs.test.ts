@@ -14,6 +14,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
+import { authorizePwbLocator, currentConsentLocator } from './consent-locator.js';
 
 import {
   discloseAuthority,
@@ -63,6 +64,51 @@ function realGovernanceFixture(): string {
 function sha256(bytes: Uint8Array): string {
   return createHash('sha256').update(bytes).digest('hex');
 }
+
+describe('PWB admitted consent locator', () => {
+  const options = { repoRoot: REPO_ROOT, governanceRevision: CURRENT_COMMIT, evaluationInstant: EVALUATION_INSTANT };
+
+  it('derives the configured path from the digest-matched consent', () => {
+    const grant = authorizePwbLocator(options, () => loaderFor(fakeTree()));
+    expect(grant).toMatchObject({
+      kind: 'admitted',
+      locator: '/home/tze/GitHub/butlers',
+      authority: { admits: true, consent: { artifactDigest: sha256(readFileSync(join(REPO_ROOT, PWB_AUTHORITY_ARTIFACTS.consent))) } },
+    });
+  });
+
+  it('refuses a modified consent locator even when its declaration is well-formed', () => {
+    const tree = fakeTree();
+    const signedText = tree.files.get(PWB_AUTHORITY_ARTIFACTS.consent)!;
+    tree.files.set(PWB_AUTHORITY_ARTIFACTS.consent, signedText.replace('/home/tze/GitHub/butlers', '/elsewhere/synthetic'));
+    expect(authorizePwbLocator(options, () => loaderFor(tree))).toEqual({ kind: 'rejected', reason: 'body-read-not-admitted' });
+  });
+
+  it('reads one complete absolute locator and its exact optional annotation', () => {
+    expect(currentConsentLocator(Buffer.from('Current locator: `/synthetic checkout`'))).toBe('/synthetic checkout');
+    expect(currentConsentLocator(Buffer.from('Current locator: `/synthetic` (configuration, not repository identity)'))).toBe('/synthetic');
+    expect(currentConsentLocator(Buffer.from('Current locator: `/synthetic` (configuration, not repository\r\nidentity)'))).toBe('/synthetic');
+  });
+
+  it.each([
+    'A document with no locator',
+    'Current locator: `relative`',
+    'Current locator: `/first`\nCurrent locator: `/second`',
+    'Current locator: `/first`\n  Current locator: `/second`',
+    'Current locator:\n`/synthetic`',
+    'Current locator: `/synthetic` (configuration, not repository',
+    'Current locator: `/synthetic` (unrecognized)',
+    'Current locator: `/synthetic',
+    'Current locator: `/synthetic` extra',
+  ])('refuses a missing or malformed declaration %j', (text) => {
+    expect(currentConsentLocator(Buffer.from(text))).toBeUndefined();
+  });
+
+  it('fails closed on undecodable bytes', () => {
+    const bytes = Buffer.concat([Buffer.from('Current locator: `/synthetic`\n'), Buffer.from([0xff])]);
+    expect(currentConsentLocator(bytes)).toBeUndefined();
+  });
+});
 
 interface FakeTree {
   readonly files: Map<string, string>;

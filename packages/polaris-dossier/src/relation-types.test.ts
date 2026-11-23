@@ -299,6 +299,23 @@ describe('relation types: complete coverage with no witnessing fact', () => {
     expect(await findingsOf(A, draftOf([omitted]))).toEqual(PASSED);
   });
 
+  it('keeps the v9 edge gate and finding order when a draft carries a v10 hero', async () => {
+    const hero = { figure: 'f1' };
+    const versionFinding = { kind: 'field-version', at: '$.hero', detail: '`hero` needs draft schema polaris-dossier-local-draft-v10' };
+    expect(await findingsOf(A, { ...draftOf([toDocs()]), hero })).toEqual({ outcome: 'findings', findings: [versionFinding] });
+
+    const doc = draftOf([toDocs()]);
+    doc.sections[0].paragraphs[0].citations[0].path = 'docs/absent.md';
+    expect((await findingsOf(A, { ...doc, hero })).findings).toEqual([
+      versionFinding,
+      { kind: 'path-absent', at: '$.sections[0].paragraphs[0].citations[0].path', detail: expect.any(String) },
+    ]);
+    expect((await findingsOf(A, { ...draftOf([toDocs()]), hero, extra: true })).findings).toEqual([
+      versionFinding,
+      { kind: 'schema', at: '$.extra', detail: expect.any(String) },
+    ]);
+  });
+
   it('places the finding after every finding version 2.16 reports and the unit-reference findings', async () => {
     const doc = draftOf([figure('f1', [node('repo', 'Repository', ROOT), node('dx', 'Documentation', tld('docs')), node('bad', 'Library', tld('src/lib'))],
       [edge('e9', 'repo', 'dx', 'contains', 'holds the guides'), edge('e8', 'repo', 'bad', 'contains', 'holds the library')])]);
