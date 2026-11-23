@@ -1,16 +1,16 @@
 {
   "bead": "syzygy-3efd.29",
-  "subject": "ad0b0e1614226b12d9eab327a8d238caff038116",
+  "subject": "c41c166f9905b8a377c110eaefe7550be26d01c0",
   "contract": "A-54, REQ-polaris-generation-034 v2.20; design D8 and verification rule 6",
-  "denominator": 22,
-  "assertionKills": 22,
+  "denominator": 24,
+  "assertionKills": 24,
   "cases": [
     {
       "id": "hero-required",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
-      "old": "return hasHeroForm(doc['schemaVersion'])\n      ?",
-      "new": "return false\n      ?",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
+      "old": "if (!Object.hasOwn(doc, 'hero')) {",
+      "new": "if (false) {",
       "command": [
         "npx",
         "--no-install",
@@ -48,7 +48,7 @@
     {
       "id": "hero-reference-is-text",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "if (typeof hero.value !== 'string') return",
       "new": "if (typeof hero.value !== 'string' && typeof hero.value !== 'number') return",
       "command": [
@@ -68,7 +68,7 @@
     {
       "id": "hero-reference-exists",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "if (!isRecord(diagram)) return [{ kind: 'unresolved-reference', at, detail: 'no diagram has the identity named by `hero.figure`' }];",
       "new": "if (!isRecord(diagram)) return [];",
       "command": [
@@ -88,7 +88,7 @@
     {
       "id": "hero-home-is-overview",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "if (!isRecord(home) || home['kind'] !== 'overview' || Object.keys(home).length !== 1) {",
       "new": "if (false) {",
       "command": [
@@ -108,7 +108,7 @@
     {
       "id": "hero-kind-is-graph",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "if (membersOfKind(diagram['kind'])?.[0] !== 'nodes') {",
       "new": "if (false) {",
       "command": [
@@ -128,7 +128,7 @@
     {
       "id": "omission-carries-claim",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "isRecord(hero.value) && hero.value['label'] === 'non-normative'",
       "new": "false",
       "command": [
@@ -148,7 +148,7 @@
     {
       "id": "malformed-omission-at-own-path",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "error.path === '$.hero' && hero?.form === 'omitted'",
       "new": "error.path === '$.hero.other' && hero?.form === 'omitted'",
       "command": [
@@ -168,9 +168,9 @@
     {
       "id": "earlier-version-finding",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
-      "old": "return [{ kind: 'field-version', at: '$.hero', detail:",
-      "new": "return [{ kind: 'schema', at: '$.hero', detail:",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
+      "old": "findings[index] = { kind: 'field-version', at: '$.hero', detail:",
+      "new": "findings[index] = { kind: 'schema', at: '$.hero', detail:",
       "command": [
         "npx",
         "--no-install",
@@ -182,6 +182,46 @@
       ],
       "baselinePassed": 13,
       "mutantPassed": 12,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "earlier-hero-preserves-relation-gate",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "sourceSha256": "260d2a9515e5fde085be088793951a87814c4b869fcc906923cddb731ab64d38",
+      "old": "findings.some((finding) => finding.kind === 'schema')",
+      "new": "findings.some((finding) => finding.kind === 'schema' && finding.at !== '$.hero')",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/relation-types.test.ts",
+        "-t",
+        "keeps the v9 edge gate"
+      ],
+      "baselinePassed": 1,
+      "mutantPassed": 0,
+      "mutantFailed": 1,
+      "outcome": "assertion-killed"
+    },
+    {
+      "id": "earlier-hero-preserves-finding-order",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
+      "old": "if (index >= 0) findings[index] = { kind: 'field-version', at: '$.hero', detail: `\\`hero\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` };",
+      "new": "if (index >= 0) { findings.splice(index, 1); findings.push({ kind: 'field-version', at: '$.hero', detail: `\\`hero\\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` }); }",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/relation-types.test.ts",
+        "-t",
+        "keeps the v9 edge gate"
+      ],
+      "baselinePassed": 1,
+      "mutantPassed": 0,
       "mutantFailed": 1,
       "outcome": "assertion-killed"
     },
@@ -308,7 +348,7 @@
     {
       "id": "fidelity-requires-omission-entry",
       "file": "packages/polaris-dossier/src/check-derive.ts",
-      "sourceSha256": "d1c92ad1164025a2eb4def84a1118bbc07fd04d61e115bd9db0a70929a6db6b3",
+      "sourceSha256": "19ffc09e7ad44e0776ced889fa74a8f23c4a47f3e80ee1a6937fd13d7840f954",
       "old": "out.push(claim('$.hero.omitted', hero.value));",
       "new": "void hero.value;",
       "command": [
