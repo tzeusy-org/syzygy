@@ -1,0 +1,129 @@
+{
+  "revision": "48eec56e0f9c1d8ab1af29bd305a121377df22ed",
+  "comparisonRevision": "7ca92cd03e3f12ce5b02e75d2905ba56ab9ee5da",
+  "sourceRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+  "stage": "site/0",
+  "configSha256": "84b1976143d5b2b653d86193f5c9ea0330b3b0ec3b7e7afdeeca742e86a45068",
+  "draftSha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+  "population": {
+    "renderedPages": 46,
+    "readerPages": 21,
+    "readerWords": 19799,
+    "sourcePagesExcluded": 25
+  },
+  "readerWordsRecount": 19799,
+  "observations": "Compared every reader-text byte before and after replacing only the fresh tree observation timestamp and its record digest. These fields are visible evidence metadata. No fresh blind score is claimed.",
+  "perPage": {
+    "appendix.md": {
+      "previousSha256": "e7741357d6d28001a5c4a13fa2bba015258980ec1cf539e4149c2fe7ba22c08b",
+      "currentSha256": "e7741357d6d28001a5c4a13fa2bba015258980ec1cf539e4149c2fe7ba22c08b",
+      "byteIdentical": true
+    },
+    "clarifications.md": {
+      "previousSha256": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+      "currentSha256": "064ca4e22d7c4c868011aa95f2023c8baeb95965bea15901fc51e2bf7e1af710",
+      "byteIdentical": true
+    },
+    "contents.md": {
+      "previousSha256": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+      "currentSha256": "c4eaf410941bb25df6945ca61c768d0bfc59923daa648601b132462f0ddf8cd1",
+      "byteIdentical": true
+    },
+    "deep-dives/mechanism-deep-dive.md": {
+      "previousSha256": "78822818793902b33b05c804e880b413d0bdd0333302c4780de704c3c9ee28ea",
+      "currentSha256": "78822818793902b33b05c804e880b413d0bdd0333302c4780de704c3c9ee28ea",
+      "byteIdentical": true
+    },
+    "discovery.md": {
+      "previousSha256": "bb4082ee3ab1c6a40e348f3fb3d8be56470e59b584e6c41a7eb49e7421b7724c",
+      "currentSha256": "bb4082ee3ab1c6a40e348f3fb3d8be56470e59b584e6c41a7eb49e7421b7724c",
+      "byteIdentical": true
+    },
+    "executions.md": {
+      "previousSha256": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+      "currentSha256": "9b908186c806a67028e603680763b570d53065cdcea17b0d6bc13c223f711c4c",
+      "byteIdentical": true
+    },
+    "find-by-task.md": {
+      "previousSha256": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+      "currentSha256": "0ee5eba1c85521a08d18d7f1e5fddeda5f828968052cb823bf49229348ba0d53",
+      "byteIdentical": true
+    },
+    "glossary.md": {
+      "previousSha256": "e175bd66196a3d468a56b85504df6ae23ae24fab32fa4376411eb00a6d0b9e9e",
+      "currentSha256": "e175bd66196a3d468a56b85504df6ae23ae24fab32fa4376411eb00a6d0b9e9e",
+      "byteIdentical": true
+    },
+    "index.md": {
+      "previousSha256": "9ec616366fc2577f9eef24e6b86a742e861005f055d54e55dc0f745409448e96",
+      "currentSha256": "327727a119367083d1d166ce551b06b49ffbffd60047412919c33fbedb1a9999",
+      "byteIdentical": false,
+      "observationTimestampReplacements": 1,
+      "observationRecordDigestReplacements": 21,
+      "byteIdenticalAfterObservationMetadataReplacement": true
+    },
+    "maps/ci.md": {
+      "previousSha256": "0b8c3d916ed3a4f7a4ecd7ab969b3e9d69423871eec859767f0ed39d49f01590",
+      "currentSha256": "0b8c3d916ed3a4f7a4ecd7ab969b3e9d69423871eec859767f0ed39d49f01590",
+      "byteIdentical": true
+    },
+    "maps/directories.md": {
+      "previousSha256": "740b5828caf4ba35bc26b29afc58dc36628e7db23a64d0fd713cf64a4dd3bddc",
+      "currentSha256": "2ca7ec0e127bb9b28c57e3efb311fa3b405a7751af73857498ae65f383aac73c",
+      "byteIdentical": false,
+      "observationTimestampReplacements": 1,
+      "observationRecordDigestReplacements": 21,
+      "byteIdenticalAfterObservationMetadataReplacement": true
+    },
+    "maps/infrastructure.md": {
+      "previousSha256": "4dcdbf409b52e0217d0c338671a8126851ca41e0973e532ab1d30cecfa9bc30d",
+      "currentSha256": "4dcdbf409b52e0217d0c338671a8126851ca41e0973e532ab1d30cecfa9bc30d",
+      "byteIdentical": true
+    },
+    "maps/units.md": {
+      "previousSha256": "7795bcf4556b5fa1dc752732bf5ae3b9e42fcc645073a9400b5cafd5b418ce31",
+      "currentSha256": "7795bcf4556b5fa1dc752732bf5ae3b9e42fcc645073a9400b5cafd5b418ce31",
+      "byteIdentical": true
+    },
+    "name-index.md": {
+      "previousSha256": "468b30808ec6aea7db9d3260abda9568559f2163edada72775ff70673f669271",
+      "currentSha256": "468b30808ec6aea7db9d3260abda9568559f2163edada72775ff70673f669271",
+      "byteIdentical": true
+    },
+    "poles/1.md": {
+      "previousSha256": "261b906346882a38bdf4a7a40a2c085fd5d0a507ded66447d01c2c38fd088214",
+      "currentSha256": "261b906346882a38bdf4a7a40a2c085fd5d0a507ded66447d01c2c38fd088214",
+      "byteIdentical": true
+    },
+    "poles/2.md": {
+      "previousSha256": "5046b871dfce27aaf95c2428f76945e0ff6834818a94ef639b5b70c8683b71a8",
+      "currentSha256": "5046b871dfce27aaf95c2428f76945e0ff6834818a94ef639b5b70c8683b71a8",
+      "byteIdentical": true
+    },
+    "poles/3.md": {
+      "previousSha256": "16679f8f3510449884ffafc52f13b40dd712a0ce2cd82d8e8d598c5c59720ea8",
+      "currentSha256": "16679f8f3510449884ffafc52f13b40dd712a0ce2cd82d8e8d598c5c59720ea8",
+      "byteIdentical": true
+    },
+    "review.md": {
+      "previousSha256": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+      "currentSha256": "1c4919b3bc8570612248c8879eac5f7b2c705981788362d09f853169c188ef3c",
+      "byteIdentical": true
+    },
+    "size-report.md": {
+      "previousSha256": "8a59af76d12bf08b326f253f84f3ffc0fcc682b7b96e7e15ae0cfb8c9a1fd77a",
+      "currentSha256": "8a59af76d12bf08b326f253f84f3ffc0fcc682b7b96e7e15ae0cfb8c9a1fd77a",
+      "byteIdentical": true
+    },
+    "sources/index.md": {
+      "previousSha256": "231de66af50b37679c7a2653a90d1f7cdfdbe66a83ed9ee973eac322bfca90be",
+      "currentSha256": "231de66af50b37679c7a2653a90d1f7cdfdbe66a83ed9ee973eac322bfca90be",
+      "byteIdentical": true
+    },
+    "understanding.md": {
+      "previousSha256": "5633cf55c39d171d46ee0c8bfad10fd943526bfb7dfe3615835f3e9948c5e85e",
+      "currentSha256": "5633cf55c39d171d46ee0c8bfad10fd943526bfb7dfe3615835f3e9948c5e85e",
+      "byteIdentical": true
+    }
+  }
+}

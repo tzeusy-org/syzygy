@@ -1,0 +1,355 @@
+{
+  "sourceHead": "48eec56e0f9c1d8ab1af29bd305a121377df22ed",
+  "sourceTree": "681887fa4f289e1e114958f4514ae40857acd0e0",
+  "hostedCheckout": "b5e4e1c583e7e45b216a2cffde0e64fca7bc2fa9",
+  "hostedCheckoutTree": "681887fa4f289e1e114958f4514ae40857acd0e0",
+  "hostedBase": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45152730933/job/137619846525",
+  "jobLogSha256": "0b0c19d093404ae31fda17017ef354bbafc443e17d5b1bc0d0e9a1ee82f123da",
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "failed",
+      "ms": 12054
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 80986
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 491810
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 359606
+    }
+  ],
+  "retainedCaseDetails": {
+    "complete": {
+      "resumeChecks": [],
+      "supervisorEvents": [
+        "run ended: checked session boundary unavailable"
+      ],
+      "roles": {
+        "author": "inspection-failed",
+        "inventory": "inspection-failed",
+        "fidelity": "inspection-failed",
+        "design": "Unknown"
+      },
+      "firstRoleRefusals": {
+        "author": {
+          "ordinal": 34,
+          "phases": {
+            "process": {
+              "startedMs": 0.07811800000126823,
+              "settledMs": 2.9291030000003957,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.14480900000125985,
+              "settledMs": 3.7770330000003014,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 3.781269000000975,
+              "settledMs": 3.7878990000008343,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 3.8009190000011586
+          }
+        },
+        "inventory": {
+          "ordinal": 23,
+          "phases": {
+            "process": {
+              "startedMs": 0.022664000000077067,
+              "settledMs": 8.395767999998498,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.032368999998652725,
+              "settledMs": 9.10145299999931,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 9.10530899999867,
+              "settledMs": 9.109225000000151,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 9.115724999999657
+          }
+        },
+        "fidelity": {
+          "ordinal": 12,
+          "phases": {
+            "process": {
+              "startedMs": 0.04715100000066741,
+              "settledMs": 3.930073999999877,
+              "outcome": "accepted"
+            },
+            "storage": {
+              "startedMs": 0.13746700000046985,
+              "settledMs": 5.059989999999743,
+              "outcome": "accepted"
+            },
+            "current": {
+              "startedMs": 5.063315000001239,
+              "settledMs": 5.067861999999877,
+              "outcome": "refused"
+            }
+          },
+          "refusal": {
+            "phase": "current",
+            "cause": "authority-refused",
+            "elapsedMs": 5.150005999999848
+          }
+        }
+      },
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "forwards": {
+        "author": 1,
+        "inventory": 0,
+        "fidelity": 0,
+        "design": 0
+      },
+      "orderedAppends": {}
+    },
+    "stop-resume": {
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "supervisorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "stopped"
+      },
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 258012.055416,
+          "settledMs": 270113.120768,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 270530.904019,
+          "settledMs": 270796.668994,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 271191.744332,
+          "settledMs": 299292.367764,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 303582.098795,
+          "settledMs": 551674.371975,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 554514.902286,
+          "settledMs": 587065.970034,
+          "outcome": "rejected"
+        },
+        "create-machine": {
+          "startedMs": 562382.470608,
+          "settledMs": 587063.591313,
+          "outcome": "rejected"
+        },
+        "open-store": {
+          "startedMs": 564162.688697,
+          "settledMs": 567251.52494,
+          "outcome": "accepted"
+        }
+      },
+      "resumeAuditSetup": {
+        "startedMs": 557443.21722,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 4910.30758399982,
+          "longestMs": 369.9225219999207
+        },
+        "settledMs": 562380.920417,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "firstStoreOperations": [
+        {
+          "kind": "open",
+          "startedMs": 564162.750491,
+          "runRemainingMs": 6740421,
+          "asyncAuthority": {
+            "started": 4,
+            "accepted": 4,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1381.237804000033
+          },
+          "settledMs": 567251.49853,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 567588.491601,
+          "runRemainingMs": 6736995,
+          "asyncAuthority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 5133.712365000043
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 572691.142234,
+          "outcome": "refused",
+          "read": "rejected"
+        }
+      ],
+      "reportedReasons": [],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "orderedAppends": {}
+    },
+    "eligible-stop-resume": {
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "supervisorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "prepared design round 1 for the reviewer",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "exited"
+      },
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 881690.4316,
+          "settledMs": 905066.249138,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 905984.371181,
+          "settledMs": 906264.084304,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 907134.242549,
+          "settledMs": 946662.834671,
+          "outcome": "rejected"
+        }
+      },
+      "firstRoleRefusals": {},
+      "reportedReasons": [],
+      "forwards": {
+        "author": 8,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 5
+      },
+      "orderedAppends": {
+        "preparedAppend": {
+          "kind": "prepared",
+          "timing": {
+            "startedMs": 152843.746,
+            "settledMs": 153014.201,
+            "outcome": "accepted"
+          }
+        },
+        "latestAppend": {
+          "kind": "eligible",
+          "timing": {
+            "startedMs": 251485.017,
+            "settledMs": 251657.737,
+            "outcome": "accepted"
+          }
+        }
+      }
+    }
+  },
+  "otherFailingTest": "apps/three-surface-poc/src/sync-child-process-guard.test.ts > suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports",
+  "integration": {
+    "passedTests": 3976,
+    "failedTests": 4,
+    "skippedTests": 3,
+    "testPopulation": 3983,
+    "passedFiles": 135,
+    "failedFiles": 2,
+    "filePopulation": 137
+  },
+  "otherJobs": {
+    "nodeUnit": "success",
+    "nodeE2e": "success",
+    "governanceAggregate": "success",
+    "nodeAggregate": "failure"
+  }
+}

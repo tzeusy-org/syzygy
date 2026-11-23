@@ -23,6 +23,7 @@
 - `F3-(PEER-POSITIONAL-IMAGE|STORAGE-LISTING-CLOSE)-REVIEW-RAW\.md`
 - `F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW\.md`
 - `F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW\.md`
+- `F3-(LAUNCHER-FIXTURE-CLOSE|RESUME-SLOT-BATCH)-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -105,3 +106,7 @@
 [Observed] The protected state read pair review records `PASS` (`F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW.md:1`) for `2989e12bc`. A-126 overlaps the two private reads and keeps the state-to-client and late archive checks.
 
 [Observed] The protected lock census review records `PASS` (`F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW.md:1`) for `293e82747`. A-127 joins the independent private operations before rechecking authority.
+
+[Observed] The native launcher fixture close review records `PASS` (`F3-LAUNCHER-FIXTURE-CLOSE-REVIEW-RAW.md:1`) for `882119cbc`. Refused samples release the held tool after the host revokes authority.
+
+[Observed] The Resume slot batch review records `PASS` (`F3-RESUME-SLOT-BATCH-REVIEW-RAW.md:1`) for `81d08b251`. A-128 publishes the complete selected set of never-issued endpoints in one checked state update.

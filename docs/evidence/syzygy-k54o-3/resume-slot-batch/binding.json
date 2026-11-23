@@ -1,0 +1,62 @@
+{
+  "subject": "81d08b251a10c7138da26fb86b4f831aa4e4b247",
+  "base": "882119cbc474ef84df6928586733eef7c976c325",
+  "fullBinaryDiffSha256": "4a96eb66a54f9b0aeb1217bd615327ef6e9bfab0da7ff853c65d65d932d3df09",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-RESUME-SLOT-BATCH-REVIEW-RAW.md",
+    "rawSha256": "05ececac5fd030a3235b0adb647d8c7f0478f88daf4e3966a6c20749213744da"
+  },
+  "validation": {
+    "typecheck": {
+      "outcome": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "store": {
+      "passed": 51,
+      "total": 51,
+      "logSha256": "7931f4798be8bb8c690ef38698cbb4d92464937a899c469bb340f8f8513e40a7"
+    },
+    "lifecycle": {
+      "passed": 36,
+      "total": 36,
+      "logSha256": "181a9c74e78e5e9190d29fdeb6a62091c30200617bd4ccd8fbb443b793189e02"
+    }
+  },
+  "mutations": {
+    "unbounded_count": {
+      "before": [
+        "      if (!Number.isSafeInteger(count) || count < 1 || count > 8) return null;"
+      ],
+      "after": [
+        "      if (!Number.isSafeInteger(count) || count < 1) return null;"
+      ],
+      "patchSha256": "f1c5cb0bb465490dcfc1865425621655de080dff335b2b2f239e8ab5b9623094",
+      "logSha256": "4fbd0982308c30eed7b10f74d1857d494d9c30783279b03f40d163e3b54fd2f9",
+      "failed": 1,
+      "skipped": 50,
+      "total": 51,
+      "subject": "81d08b251a10c7138da26fb86b4f831aa4e4b247"
+    },
+    "skip_cleanup_authority": {
+      "before": [
+        "          await reverify(); check(); verifyNamedRoots(); checkDeadline();",
+        "        }",
+        "      });"
+      ],
+      "after": [
+        "          check(); verifyNamedRoots(); checkDeadline();",
+        "        }",
+        "      });"
+      ],
+      "patchSha256": "b500d483b2aaa535753cefaff519816285eeaaa9c68f5edf145ba325697beb7d",
+      "logSha256": "fd7a90d6193f4833d6ae7644a0e94552e6aaa2fe466a0c6aa123ab1762376c29",
+      "failed": 1,
+      "skipped": 50,
+      "total": 51,
+      "subject": "81d08b251a10c7138da26fb86b4f831aa4e4b247"
+    }
+  },
+  "nativeLatency": "Unknown"
+}

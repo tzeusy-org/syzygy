@@ -1,0 +1,18 @@
+{
+  "subject": "882119cbc474ef84df6928586733eef7c976c325",
+  "base": "14e7ea4b506777c164eff24b93101daa5c1b81a9",
+  "fullBinaryDiffSha256": "33a41a27ad1b3adef7f67917d2c3b237a7feacc9ccd195608213d2cc86bd67ce",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-LAUNCHER-FIXTURE-CLOSE-REVIEW-RAW.md",
+    "rawSha256": "02a9b6d52b964a545fb437dc74ffacfba03f61e71e700ce4def1e29fee48750b"
+  },
+  "validation": {
+    "passed": 12,
+    "skipped": 32,
+    "total": 44,
+    "logSha256": "1e5cda2ac228699a9c00c40dda8c0c72031f037a417974d38f268c7ed282fc7c"
+  },
+  "scope": "The two native storage fault matrices with real deadlines and controlled held tool invocation."
+}
