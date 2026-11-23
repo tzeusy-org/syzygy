@@ -1,0 +1,161 @@
+{
+  "format": "polaris-url-native-recovery-local-checkpoint/1",
+  "label": "Observed",
+  "capturedOn": "2026-11-23",
+  "nativeSubject": {
+    "commit": "2535d48f2b667b75263a6fb1d73bd0461acb9a02",
+    "inputTreeSha256": "9f0e3234ffaf4d16431738619c558ab705db7d2b689d86efaaba807655de1df8",
+    "profileRegistrySha256": "f29ccb0fc3ef3a323a454c4b673e8763aeec0cb60da1b370f126533f36cd5b99"
+  },
+  "nativeInterrupted": {
+    "rawFixtureSha256": "448055bb9bf7c4a331c88e109402f2b945ac4e4f05d3a3d51d19890ce924fc96",
+    "logSha256": "ba68a4af1f4a16f6836797899fa0ff839ad2704566acf67e9be184e1bbeb2c67",
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "Unknown"
+          }
+        ]
+      }
+    ],
+    "bootstrap": {
+      "restore-plans": {
+        "startedMs": 143216.479952,
+        "settledMs": 154263.069837,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 154389.331364,
+        "settledMs": 154929.816169,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 155021.551744,
+        "settledMs": 162757.763683,
+        "outcome": "accepted"
+      },
+      "start-sessions": {
+        "startedMs": 243078.38373,
+        "settledMs": 288193.468618,
+        "outcome": "accepted"
+      },
+      "create-machine": {
+        "startedMs": 246237.843081,
+        "settledMs": 287486.64576,
+        "outcome": "accepted"
+      },
+      "open-store": {
+        "startedMs": 246788.95045,
+        "settledMs": 248016.255103,
+        "outcome": "accepted"
+      }
+    },
+    "auditSetup": {
+      "startedMs": 244120.523061,
+      "authority": {
+        "started": 14,
+        "accepted": 14,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1954.8553339999635,
+        "longestMs": 211.75141100000474
+      },
+      "settledMs": 246235.274528,
+      "outcome": "accepted",
+      "declarations": 4,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "controllerExit": 1,
+    "publicResult": "render producer result unavailable",
+    "designConnections": 0,
+    "inspectedDesignLaunches": 0,
+    "authoritativePredicate": "Unknown"
+  },
+  "nativeEligible": {
+    "rawFixtureSha256": "bee9ad3ffc879e119d53e7ee7db1f6ca0bbc15e140b589b907cedf6fb28f4dcf",
+    "logSha256": "0d4c31c304f653707d9c70f74416a7509c6c9d5d95d21adb3b2553557ce60e83",
+    "initialFailure": "transport-unavailable",
+    "publicResumeEntered": false
+  },
+  "ownedRelayDiagnostic": {
+    "logSha256": "eaff58bee8477e5063b9296ffc3b54687b625b442203bde1fe16a2eb25a53fc6",
+    "patchSha256": "9fe35e7d766024dc3bbd27f44636f8cd4c57004284e8b01221043e6e66cb0f46",
+    "diagnosticStages": [
+      {
+        "role": "author",
+        "stage": "allowed-audit"
+      },
+      {
+        "role": "fidelity",
+        "stage": "provider-exchange"
+      },
+      {
+        "role": "inventory",
+        "stage": "header-mediation"
+      }
+    ],
+    "observedFailure": "transport-unavailable",
+    "publicResumeEntered": false,
+    "exactRejectingPredicate": "Unknown"
+  },
+  "mainReconciliation": {
+    "commit": "d998ca9556edd1c1d67602b8c00e58b61765a0cf",
+    "main": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+    "reviewPath": "docs/reviews/F3-MAIN-82290-MERGE-REVIEW-RAW.md",
+    "reviewSha256": "4979fec93b8a2f96e2a6bc946a7a7d1e16cdc82ee3994333c3cdc4bf47091a7d",
+    "verdict": "PASS",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "focusedUnitTestsPassed": 73,
+    "unitLogSha256": "1d18a1313fd47e5e94e1568409ecfa4eab1d5c23fc8dde87cb3ef37c5a1e222a",
+    "focusedIntegrationTestsPassed": 471,
+    "integrationLogSha256": "7763fec4f89f22978d49231ad70b5bfe3d0b5c3f9088701f04a65688eece0e01",
+    "governance": {
+      "ok": 21,
+      "warn": 17,
+      "fail": 0,
+      "total": 38
+    },
+    "governanceLogSha256": "e4e1d386712967779ddeeafc6f3209d03d73ba9b773dc54abbcbc5853aafa6fa"
+  }
+}

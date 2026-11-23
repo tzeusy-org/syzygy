@@ -18,6 +18,7 @@
 - `F3-PRIVATE-AUDIT-DECLARATION-AUTHORITY-REVIEW-RAW\.md`
 - `F3-BOUNDED-STORAGE-RETRY(-INITIAL|-BYTE-LIMIT|-RECURSIVE|-TIMEOUT)?-REVIEW-RAW\.md`
 - `F3-FROZEN-PRODUCT-TRACE-REVIEW-RAW\.md`
+- `F3-MAIN-82290-MERGE-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -88,3 +89,5 @@
 [Observed] Three early bounded storage retry reviews record `BLOCK` for a mixed error result, byte-limit order and recursive disappearance respectively. The final runtime review records `PASS` (`F3-BOUNDED-STORAGE-RETRY-REVIEW-RAW.md:1`) at `dc61f9a94`. The original ordering counts an oversized entry before later disappearances and validates settled sibling results through recursive returns. The fixture timeout adjustment records `PASS` (`F3-BOUNDED-STORAGE-RETRY-TIMEOUT-REVIEW-RAW.md:1`) at `9cd29e9e6`.
 
 [Observed] The explicit frozen-product restoration timing review records `PASS` (`F3-FROZEN-PRODUCT-TRACE-REVIEW-RAW.md:1`) at `f388b1e6a`. The observer preserves the genuine return and opaque capabilities. This review covered source only.
+
+[Observed] The reconciliation with main `82290fb93` records `PASS` (`F3-MAIN-82290-MERGE-REVIEW-RAW.md:1`) at `d998ca955`. The adoption row and complete brief golden were compared with both parents. The fixture uses the issued v8 schema, and the recovery assertions still apply.
