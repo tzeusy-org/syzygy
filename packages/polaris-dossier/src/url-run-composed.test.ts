@@ -410,12 +410,13 @@ async function observeDesignRun(run: string, traceInference = false) {
       const stamp = designLaunchWrite = { startedMs: clock() };
       return launchWriteScope.run(true, () => timed(stamp, () => writeLaunch(input), result => result.capability !== null));
     });
-    cleanup.push(patchFs('fsyncSync', sync => fd => {
+    const restoreLaunchSync = patchFs('fsyncSync', sync => fd => {
       if (launchWriteScope.getStore() !== true || launchSyncs.length >= 4) return sync(fd);
       const stamp = { startedMs: clock() };
       launchSyncs.push(stamp);
       return timed(stamp, () => sync(fd), () => true);
-    }));
+    });
+    cleanup.push(async () => { restoreLaunchSync(); });
     const startAttempt = orderedAttempt.startUrlOrderedAttempt;
     vi.spyOn(orderedAttempt, 'startUrlOrderedAttempt').mockImplementation(input => startAttempt({
       ...input,
