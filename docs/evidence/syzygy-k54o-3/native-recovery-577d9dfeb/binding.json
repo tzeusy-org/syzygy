@@ -1,0 +1,58 @@
+{
+  "label": "Observed",
+  "commit": "577d9dfeba5fb568180955f43193bfd212620b22",
+  "file": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "35e497b4c586f0d3e90c2c607707b5da423eaafb14a0e4f28b78d5aa695ad563"
+  },
+  "sourceReview": {
+    "file": "ELIGIBLE-POLL-ORDER-REVIEW-RAW.md",
+    "sha256": "e166d2519b95d420143d897b367899b26cc91687c5c7eb3de3d378445f8d8cb1",
+    "verdict": "PASS",
+    "commit": "577d9dfeba5fb568180955f43193bfd212620b22"
+  },
+  "typecheck": {
+    "outcome": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "native": {
+    "tests": {
+      "failed": 1,
+      "skipped": 3,
+      "total": 4
+    },
+    "testLogSha256": "226dbce2a2e7b57edd26a939b8e46f0b2a0f2f57d0ef9f2b020c6d1498146e0a",
+    "retainedFixtureSha256": "8a92b9662c37d495c6ac9b4f2a0e722897fb1c4c5cffa0dc1b4a1daa9a6c7162",
+    "scenario": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 50518
+    },
+    "forwards": {
+      "author": 6,
+      "inventory": 1,
+      "fidelity": 1,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 6,
+        "response-admitted": 6
+      },
+      "inventory": {
+        "attempt-allowed": 1,
+        "send-attempt": 1,
+        "send-outcome": 1
+      },
+      "fidelity": {
+        "attempt-allowed": 1,
+        "send-attempt": 1,
+        "transport-failed": 1
+      },
+      "design": {}
+    },
+    "resumed": false
+  },
+  "remainingUnknown": "Why the first early Fidelity provider response refused transport. This exact replay did not reach the Fidelity waiting result, checked packet, or public Resume."
+}

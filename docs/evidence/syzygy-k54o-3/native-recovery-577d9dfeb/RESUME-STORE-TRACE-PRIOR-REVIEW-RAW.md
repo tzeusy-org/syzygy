@@ -1,0 +1,6 @@
+REVISE
+
+- [Observed] Resumed store open invokes async authority around root verification, but the observer assigns a transaction scope only after open returns. An authority refusal or delay during open leaves only the bootstrap outcome and elapsed time. Scope the genuine open call so its existing authority outcomes and timing are captured. `packages/polaris-dossier/src/url-run-composed.test.ts:1387` `packages/polaris-dossier/src/url-run-composed.test.ts:1397` `packages/polaris-dossier/src/url-machine-store.ts:297` `packages/polaris-dossier/src/url-machine-store.ts:375`
+- [Inferred] The per-operation async scope keeps late settlements attached to their original transaction. The real store still controls locking, and the exclusive boolean remains independent of the terminal comparison. Cold reconstruction opens its own adapter before this observer is installed, preserving the identity-keyed history lookup. The new trace fields contain operation kinds, timings, outcomes, and counts. `packages/polaris-dossier/src/url-run-composed.test.ts:1375` `packages/polaris-dossier/src/url-run-composed.test.ts:1408` `packages/polaris-dossier/src/url-run-machine.ts:135` `packages/polaris-dossier/src/polaris.ts:565` `packages/polaris-dossier/src/url-machine-cold-history.ts:105`
+
+Reviewed `a359dd44b` against `577d9dfe`. Source review only.

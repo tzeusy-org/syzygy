@@ -1,0 +1,145 @@
+{
+  "label": "Observed",
+  "commit": "bf2a83f7bb5da8bf340bf4a1820990fb945e1412",
+  "scenario": "stop-resume",
+  "testLogSha256": "c34b1249d05e8f52bee00014ad40dbd6aede6629dc292e1f6082932f6bc677b8",
+  "retainedFixtureSha256": "b3351e4f2207aff75f22689be37ec3d189964faf0d7b6aee1d33075c26d1addb",
+  "inputTreeSha256": "3b3c2e7c23e1431c2ef9c101b07b9a1a7c196d48d4a01f84f3dba3e554dc40bc",
+  "profileRegistrySha256": "58fb802c8ad49c7f03becd8760eb011b3441b8e6388eee101ac1e96dfc194fc0",
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "bootstrap": {
+    "restore-plans": {
+      "ms": 7391.061,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "ms": 286.477,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "ms": 5500.723,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "ms": 49050.679,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "ms": 35243.644,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "ms": 32969.148,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "ms": 826.96,
+      "outcome": "accepted"
+    }
+  },
+  "transportCounts": {
+    "open": 1,
+    "accept": 1,
+    "capture": 1,
+    "authorize": 0
+  },
+  "firstConnection": {
+    "open": {
+      "ms": 5697.488,
+      "outcome": "refused"
+    },
+    "accept": {
+      "ms": 5701.434,
+      "outcome": "refused"
+    },
+    "capture": {
+      "ms": 5115.391,
+      "outcome": "refused"
+    }
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 6,
+    "phases": {
+      "process": {
+        "startedMs": 0.03524599998490885,
+        "settledMs": 121.97116399998777,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.05370099999709055,
+        "settledMs": 110.67225499998312,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.05576499999733642,
+        "settledMs": 132.79849200000172,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 132.80789999998524,
+        "settledMs": 132.88175000000047,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 132.9912970000005
+    }
+  },
+  "remainingUnknown": "The first peer-capture subphase refused on the updated image reader; the uninstrumented replay gives the refusal boundary and transport result."
+}

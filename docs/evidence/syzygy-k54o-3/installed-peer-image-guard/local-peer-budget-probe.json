@@ -1,0 +1,215 @@
+{
+  "label": "Observed",
+  "baseCommit": "988c0f47f217231d63009be023d790d9a8e45e24",
+  "scenario": "stop-resume",
+  "diagnosticOverlaySha256": "3926bf0a354b31ab71fa657ec25ad49534d07172e0a740532927d819eab35909",
+  "logSha256": "982c7e6a291f89e8570465816229072aa91cc2949183f032636ad9a45dcdc40d",
+  "retainedFixtureSha256": "1665d19998dc35dd2c60fea2650173aa13a03059dde608a45470bb0b42f6a6ba",
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "bootstrap": {
+    "restore-plans": {
+      "ms": 5567.168,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "ms": 259.329,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "ms": 4297.507,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "ms": 47431.314,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "ms": 34136.678,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "ms": 31885.843,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "ms": 722.38,
+      "outcome": "accepted"
+    }
+  },
+  "storeSteps": [
+    {
+      "kind": "terminal",
+      "ms": 2202.351,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 3102.74,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 3771.318,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 2189.211,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 2166.657,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 1913.434,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 1824.653,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "terminal",
+      "ms": 1888.632,
+      "outcome": "accepted",
+      "currentChecks": 2,
+      "read": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1230.382,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1328.693,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1238.538,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1201.575,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1210.846,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1369.61,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1292.686,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "allocation",
+      "ms": 1209.609,
+      "outcome": "accepted"
+    }
+  ],
+  "firstPeerCapture": {
+    "kind": "inference-bridge",
+    "marks": [
+      {
+        "phase": "entry",
+        "ms": 0
+      },
+      {
+        "phase": "first-parent",
+        "ms": 89
+      }
+    ],
+    "image": {
+      "reads": 0,
+      "bytes": 0,
+      "privateReadMs": 0,
+      "hashMs": 0,
+      "guardMs": 0,
+      "lastAt": "not-started"
+    }
+  },
+  "transportCounts": {
+    "open": 1,
+    "accept": 1,
+    "capture": 1,
+    "authorize": 0
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 2,
+    "phases": {
+      "process": {
+        "startedMs": 0.03928500000620261
+      },
+      "verify": {
+        "startedMs": 0.07264900000882335,
+        "settledMs": 543.0762570000079,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.07546399999409914
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "bounded-timeout",
+      "elapsedMs": 1065.8694130000076
+    }
+  },
+  "resumedExit": {
+    "phase": "resumed-exit",
+    "exit": 1,
+    "failure": "role-ended",
+    "roles": [
+      {
+        "role": "author",
+        "outcome": "Unknown"
+      },
+      {
+        "role": "inventory",
+        "outcome": "Unknown"
+      },
+      {
+        "role": "fidelity",
+        "outcome": "Unknown"
+      },
+      {
+        "role": "design",
+        "outcome": "inspection-failed",
+        "exitCode": null,
+        "signal": "SIGTERM"
+      }
+    ]
+  },
+  "remainingUnknown": "The first capture refused during its first parent check before checking the installed executable. The launcher sample recorded a bounded timeout with registered process and storage phase work still pending. This trace cannot measure image-read time or distinguish scheduling, process work and storage work within that sample cutoff."
+}

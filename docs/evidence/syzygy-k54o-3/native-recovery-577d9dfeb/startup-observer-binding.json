@@ -1,0 +1,25 @@
+{
+  "label": "Observed",
+  "commit": "69e2eacbbc44f8d1f246e026ef066842299ecfb9",
+  "file": {
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "a4c20e960d90342fe0de5d0f2e955a8e7fb19c784ddc9f20edf29e9ef2bc86e2"
+  },
+  "reviews": [
+    {
+      "commit": "69e2eacbbc44f8d1f246e026ef066842299ecfb9",
+      "file": "RESUME-STORE-TRACE-REVIEW-RAW.md",
+      "sha256": "1333a9e6bb47a30f60e64d8f18a263fbd98d0f69a0df47d9fce050a024ab278f",
+      "verdict": "PASS"
+    },
+    {
+      "commit": "a359dd44b601c31c2761d541f20a29d1ba0801f8",
+      "file": "RESUME-STORE-TRACE-PRIOR-REVIEW-RAW.md",
+      "sha256": "89e9c3888613087c044ea4241fb2469423985299cce942e108036c8a38b489bb",
+      "verdict": "REVISE"
+    }
+  ],
+  "typecheck": {
+    "outcome": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  }
+}

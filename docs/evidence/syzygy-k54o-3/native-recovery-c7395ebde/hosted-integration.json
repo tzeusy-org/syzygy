@@ -1,0 +1,177 @@
+{
+  "label": "Observed",
+  "head": "c7395ebde1cb2e065fffff9a8005355aab5591aa",
+  "base": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "checkout": "6fccf7913b117250769db1624c5196dadfeeb0b8",
+  "checkoutTreeAndHeadTree": "f2c8e11a8085d4fbe3df99252559e1021e06f8b3",
+  "identicalCheckoutDiff": true,
+  "workflowRun": 45123038579,
+  "job": 137522250678,
+  "logSha256": "c9d18967ec8888cccd82d23c1b2221bb5ea97ff8bf5c30125f8095102ba95555",
+  "tests": {
+    "passed": 3958,
+    "failed": 3,
+    "skipped": 3,
+    "total": 3964
+  },
+  "testFiles": {
+    "passed": 136,
+    "failed": 1,
+    "total": 137
+  },
+  "nativeComposedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 114155
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 109000
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 539435
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 131809
+    }
+  ],
+  "deliveryStop": {
+    "resumed": false,
+    "deliveryObserved": false,
+    "supervisorEnd": "run ended: protected rendered site evidence changed or expired",
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "observedLaunchRoles": [
+      "author",
+      "design",
+      "fidelity",
+      "inventory"
+    ],
+    "auditTail": "durable-prefix",
+    "designDeliveryRows": 1,
+    "orderedDesignRows": 0,
+    "firstIncompleteBoundary": "The audit recorded the Design delivery row. The fixture did not observe the confirmed delivery. The exact refusal after the durable append or during fixture plan confirmation is Unknown."
+  },
+  "interrupted": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": []
+      }
+    ],
+    "resumeBootstrap": {
+      "restore-plans": {
+        "ms": 13196.095,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "ms": 392.009,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "ms": 28345.348,
+        "outcome": "accepted"
+      },
+      "restore-products": {
+        "ms": 264083.942,
+        "outcome": "accepted"
+      },
+      "start-sessions": {
+        "ms": 38379.839,
+        "outcome": "rejected"
+      },
+      "create-machine": {
+        "ms": 30919.816,
+        "outcome": "rejected"
+      },
+      "open-store": {
+        "ms": 3210.431,
+        "outcome": "accepted"
+      }
+    },
+    "auditSetup": {
+      "startedMs": 729979.084964,
+      "authority": {
+        "started": 14,
+        "accepted": 14,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 4957.446115999832,
+        "longestMs": 368.67290800006595
+      },
+      "settledMs": 734964.170611,
+      "outcome": "accepted",
+      "declarations": 4,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "transportCounts": {
+      "open": 0,
+      "accept": 0,
+      "capture": 0,
+      "authorize": 0
+    },
+    "inspectedLaunches": 0
+  },
+  "eligible": {
+    "checks": [],
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 1,
+      "design": 0
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 7,
+        "response-admitted": 7
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 5,
+        "response-admitted": 5
+      },
+      "fidelity": {
+        "attempt-allowed": 1,
+        "send-attempt": 1,
+        "send-outcome": 1,
+        "response-admitted": 1
+      },
+      "design": {}
+    }
+  },
+  "remainingUnknown": "First incomplete machine construction predicate in interrupted recovery, immediate reason for the initial Design delivery refusal, and first refused eligible relay predicate."
+}

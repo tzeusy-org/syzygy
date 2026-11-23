@@ -1,0 +1,74 @@
+{
+  "label": "Observed",
+  "baseCommit": "c7395ebde1cb2e065fffff9a8005355aab5591aa",
+  "scenario": "eligible-stop-resume",
+  "diagnosticOverlaySha256": "64449a974a5cffe3cb372d42a24cdfeb26f63a394adf8383fa23a2434797ae76",
+  "logSha256": "bf92e69d581dbc8b0f032e76db23091120cbd56e9a15d6d368ddd8714b2812ff",
+  "retainedFixtureSha256": "f74ffe482f777f7ad3901682547f3b9a20f1ac19e8980f9c25d45727e6ab98dd",
+  "logLines": 404,
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "timings": [
+    {
+      "role": "author",
+      "exchange": 0,
+      "event": "gate-open",
+      "ms": 38820
+    },
+    {
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "waiting-for-gate",
+      "ms": 45542
+    },
+    {
+      "role": "inventory",
+      "exchange": 0,
+      "event": "gate-open",
+      "ms": 98922
+    },
+    {
+      "role": "design",
+      "exchange": 0,
+      "event": "gate-open",
+      "ms": 98923
+    },
+    {
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "peer-close-at-await-provider-return",
+      "ms": 219840
+    },
+    {
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "gate-aborted",
+      "ms": 219841
+    },
+    {
+      "role": "fidelity",
+      "exchange": 1,
+      "event": "caught-at-await-provider-return",
+      "ms": 219842
+    },
+    {
+      "role": "inventory",
+      "exchange": 5,
+      "event": "caught-at-http-entry",
+      "ms": 219922
+    },
+    {
+      "role": "author",
+      "exchange": 7,
+      "event": "caught-at-await-provider-return",
+      "ms": 219961
+    }
+  ],
+  "firstFidelityProviderWaitMs": 174298,
+  "loggedAuditRefusals": 0,
+  "observed": "The first Fidelity relay peer closed while the fixture awaited the round-one packet gate. The gate aborted. The Inventory and Author failures in this trace were recorded later.",
+  "remainingUnknown": "Why the first native peer closed. The diagnostic did not reach checked Fidelity registration, the intended cut or public Resume."
+}

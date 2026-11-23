@@ -1,0 +1,193 @@
+{
+  "label": "Observed",
+  "baseCommit": "c7395ebde1cb2e065fffff9a8005355aab5591aa",
+  "diagnosticOverlaySha256": "e032eaf204624a16c18e5b073c6c05c9b14ca07d49e0317b080103a398fb6e18",
+  "logSha256": "55e268ac97a87931fb5aa3bd0c190d09e20a52a017b0e6218c5aa494bb0ac4ed",
+  "retainedFixtureSha256": "b9c65b0da6ccb34c5ec7991c99ef9cfcf06618b119a0ad20a7baa43ee88c2345",
+  "bootstrap": {
+    "restore-plans": {
+      "startedMs": 90841.660847,
+      "settledMs": 96623.646223,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 96678.011433,
+      "settledMs": 96951.957145,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 97003.347722,
+      "settledMs": 101930.077749,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 102609.209952,
+      "settledMs": 152535.857523,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 153007.544415,
+      "settledMs": 180066.62584,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 154574.223675,
+      "settledMs": 179689.048828,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 154940.253548,
+      "settledMs": 155636.293111,
+      "outcome": "accepted"
+    }
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "capturePreludeMs": 518.8,
+  "connectionObservedMs": 5483.333,
+  "captureObservedMs": 4970.831,
+  "connection": {
+    "ordinal": 1,
+    "stages": {
+      "open": {
+        "startedMs": 149963.289,
+        "settledMs": 155446.622,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 149963.435,
+        "settledMs": 155452.99,
+        "outcome": "refused"
+      },
+      "capture": {
+        "startedMs": 150482.089,
+        "settledMs": 155452.92,
+        "outcome": "refused"
+      }
+    },
+    "boundMs": 180000,
+    "kind": "inference-bridge"
+  },
+  "markTrace": {
+    "kind": "inference-bridge",
+    "marks": [
+      {
+        "phase": "entry",
+        "ms": 0
+      },
+      {
+        "phase": "first-parent",
+        "ms": 96
+      },
+      {
+        "phase": "first-parent-accepted",
+        "ms": 808
+      },
+      {
+        "phase": "kernel-read",
+        "ms": 808
+      },
+      {
+        "phase": "second-parent",
+        "ms": 875
+      },
+      {
+        "phase": "native-prepare",
+        "ms": 1832
+      },
+      {
+        "phase": "process-walk",
+        "ms": 1893
+      },
+      {
+        "phase": "pinned-executable",
+        "ms": 1997
+      }
+    ]
+  },
+  "transportCounts": {
+    "open": 1,
+    "accept": 1,
+    "capture": 1,
+    "authorize": 0
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 6,
+    "phases": {
+      "process": {
+        "startedMs": 0.04401299997698516,
+        "settledMs": 129.47898799998802,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.06339899997692555,
+        "settledMs": 118.58467499999097,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.06545299998833798,
+        "settledMs": 142.39895000000251,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 142.40916899999138,
+        "settledMs": 142.48972099999082,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 142.61898599998676
+    }
+  },
+  "remainingUnknown": "The exact time split between file reads, the image guard, scheduling, and other work inside the bounded image verification."
+}

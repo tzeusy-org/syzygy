@@ -1,0 +1,44 @@
+{
+  "label": "Observed",
+  "commit": "bf2a83f7bb5da8bf340bf4a1820990fb945e1412",
+  "parentOfChange": "c94361f3703ac3a44cbfed908c44f99c1d168239",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-peer.ts": "111d7fe3eb70704fc6152befdac21595ec9e7a8969aa292d3571e7e6a77689dd",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "0ff8878759cb7ac1b59f7c526376e70743af76e2c89da67ca90556400dafff5e"
+  },
+  "closedFocusedSuite": {
+    "files": 2,
+    "passed": 34,
+    "total": 34,
+    "logSha256": "1963d5d48d404fb61e8ad4e327e7cfd02d47b2bcce24c0b1c41fe49c0b296ce7"
+  },
+  "typecheck": {
+    "result": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "sourceReview": {
+    "file": "SOURCE-REVIEW-RAW.md",
+    "sha256": "c26de83abdc9496cd1301470918ec39ecca1cf389ef0ae1c6504da1800d1c431",
+    "verdict": "PASS",
+    "commit": "bf2a83f7bb5da8bf340bf4a1820990fb945e1412",
+    "scope": "Fresh independent source review of the exact executable-read boundaries and native test."
+  },
+  "predecessorDiagnostic": {
+    "file": "local-predecessor-capture.json",
+    "sha256": "9436689e2bb0d1aa886f1210f1e4ae70f1e6078f7e8329eb04d3ca189a8cd647"
+  },
+  "selectedFault": {
+    "predicate": "withdrawn local image authority bars the next descriptor read",
+    "commit": "bf2a83f7bb5da8bf340bf4a1820990fb945e1412",
+    "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+    "old": "      check();\n      const part = await handle.read(chunk,",
+    "new": "      const part = await handle.read(chunk,",
+    "selectedTests": 1,
+    "failed": 1,
+    "skipped": 12,
+    "expectedDescriptorReads": 1,
+    "observedDescriptorReads": 125,
+    "testLogSha256": "b3821afca289564d36718651062b9a5be27ad68bde14c3c4dbba8815e1f5c36d"
+  },
+  "remainingUnknown": "Observed peer-capture latency on the change and successful completion of the full native interrupted recovery path."
+}
