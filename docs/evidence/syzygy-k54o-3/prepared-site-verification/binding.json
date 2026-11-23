@@ -1,0 +1,78 @@
+{
+  "adoption": "A-139",
+  "testedBase": "64d6924d8bd36d855d1d68c7954281043d624eac",
+  "sourceCommit": "34a6446801be33479a5c536ebdd84c75fd8b8873",
+  "patchSha256": "f3a608d67bd33c7fff460189b5708a7651185068397f2704a0b8ccd9589a56ad",
+  "productionBlob": "78e2e008474e9af3bdc1056d1c2f932fef8d13fb",
+  "testBlob": "a361bd20d1203bc3ef30d50698426ada486c4eb0",
+  "review": {
+    "path": "docs/reviews/F3-PREPARED-SITE-VERIFICATION-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "0d5bc13f2110c109112f94b69031ad58ba82abc84434b8e815092f3b0ef46ff6",
+    "subjectSha256": "f3a608d67bd33c7fff460189b5708a7651185068397f2704a0b8ccd9589a56ad"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "files": 2,
+      "cases": 165,
+      "sha256": "ccfc04ab0d425446aa3ad7bef285ac5ee3a859b2c378dc1cf28df24128135454"
+    },
+    "mutants": [
+      {
+        "id": "repeat-prepared-site-walk",
+        "old": "const checked = candidate === preparedProduct.deref() ? after\n            : capture(material ?? await inspectUrlDesignProduct(candidate, binding));",
+        "new": "const currentMaterial = material ?? (candidate === preparedProduct.deref()\n            ? undefined : await inspectUrlDesignProduct(candidate, binding));\n          const checked = currentMaterial === undefined ? after : capture(currentMaterial);",
+        "scenario": "valid",
+        "assertion": "to be called 1 times, but got 2 times",
+        "failedControls": 1,
+        "logSha256": "2d410dd5d976f6ef5ea00dbc46ad7376f6f8b1e8001ec639becaef84df718a49"
+      },
+      {
+        "id": "skip-stored-site-verification",
+        "old": "            if (checkStoredUrlRender(run, sitePath, after.output, current, preserveFailure) !== after.identity.site) throw refused();\n",
+        "new": "",
+        "scenario": "prepared-site-drift",
+        "assertion": "promise resolved",
+        "failedControls": 1,
+        "logSha256": "b3d6d75f09baefb8c900dbe1e7e35ec3c98de9c8112c20785e869672f9ec0478"
+      }
+    ]
+  },
+  "diagnostic": {
+    "base": "ee9a7001ce6e7b69d0e623be99cf27865089bcd7",
+    "overlayPatchSha256": "91846c7d782208943570a42422c5eff14a33fe8a98b22e0782df1e584d1e9ebd",
+    "sourceLogSha256": "1efbf05e389681bff22ea327d0669e9ec5c71121683b8a0c077bc34cd5c873bd",
+    "roleRefusals": {
+      "author": {
+        "ordinal": 748,
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1054.586529000022
+      },
+      "inventory": {
+        "ordinal": 730,
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1054.843062
+      }
+    },
+    "bootstrap": {
+      "phase": "read-delivery-view",
+      "lease": "retired",
+      "checkedExpiry": false
+    },
+    "protectedDesignAudit": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "launch-terminal"
+    ]
+  },
+  "remaining": "Native causation, latency, and common successful Stop/Resume revision are Unknown."
+}
