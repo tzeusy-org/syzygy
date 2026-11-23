@@ -21,6 +21,8 @@ const cleanup: (() => Promise<unknown>)[] = [];
 const filesystem = vi.hoisted(() => ({
   afterSync: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterLstat: undefined as ((file: string) => void) | undefined,
+  afterRealpath: undefined as ((file: string) => void) | undefined,
+  beforeMkdir: undefined as ((file: string) => void) | undefined,
   afterOpen: undefined as ((file: string) => void) | undefined,
   afterClose: undefined as ((file: string) => void) | undefined,
 }));
@@ -30,6 +32,13 @@ vi.mock('node:fs/promises', async importOriginal => {
     const stat = await original.lstat(...args);
     filesystem.afterLstat?.(String(args[0]));
     return stat;
+  }, realpath: async (...args: Parameters<typeof original.realpath>) => {
+    const resolved = await original.realpath(...args);
+    filesystem.afterRealpath?.(String(args[0]));
+    return resolved;
+  }, mkdir: (...args: Parameters<typeof original.mkdir>) => {
+    filesystem.beforeMkdir?.(String(args[0]));
+    return original.mkdir(...args);
   }, open: async (...args: Parameters<typeof original.open>) => {
     const handle = await original.open(...args), file = String(args[0]);
     filesystem.afterOpen?.(file);
@@ -40,7 +49,7 @@ vi.mock('node:fs/promises', async importOriginal => {
   } };
 });
 afterEach(async () => {
-  filesystem.afterSync = filesystem.afterLstat = filesystem.afterOpen = filesystem.afterClose = undefined;
+  filesystem.afterSync = filesystem.afterLstat = filesystem.afterRealpath = filesystem.beforeMkdir = filesystem.afterOpen = filesystem.afterClose = undefined;
   for (const clean of cleanup.splice(0).reverse()) await clean();
 });
 
@@ -202,13 +211,15 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
     let asyncCurrent = true;
-    const namedRootChecks: ('current' | 'root')[] = [];
+    const namedRootChecks: string[] = [];
     const current = vi.fn(f.options.current);
     const currentAsync = vi.fn(async () => { namedRootChecks.push('current'); return asyncCurrent; });
     const reopened = await openUrlMachineStore({ ...f.options, current, currentAsync }, f.store.identitySha256);
     expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
     current.mockClear(); currentAsync.mockClear(); namedRootChecks.length = 0;
-    filesystem.afterLstat = file => { if (file === f.options.protectedRoot) namedRootChecks.push('root'); };
+    filesystem.afterLstat = file => { if (file === f.options.protectedRoot) namedRootChecks.push('root-lstat'); };
+    filesystem.afterRealpath = file => { if (file === f.canonicalRoot) namedRootChecks.push('last-realpath'); };
+    filesystem.beforeMkdir = file => { if (path.basename(file) === 'lock') namedRootChecks.push('lock-mkdir'); };
     expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => {
       expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
       expect(currentAsync.mock.calls.length).toBeGreaterThan(current.mock.calls.length);
@@ -217,7 +228,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(currentAsync.mock.calls).toHaveLength(asyncChecks);
       expect(current.mock.calls).toHaveLength(syncChecks + 1);
     })).toBe(true);
-    expect(namedRootChecks.slice(0, 3)).toEqual(['current', 'root', 'current']);
+    expect(namedRootChecks.slice(0, 6)).toEqual(['current', 'root-lstat', 'last-realpath', 'current', 'current', 'lock-mkdir']);
     filesystem.afterSync = file => { if (file === f.options.protectedRoot) asyncCurrent = false; };
     const run = vi.fn();
     expect(await reopened!.exclusive(slot.context.clientId, f.options.deadline, run)).toBe(false);
