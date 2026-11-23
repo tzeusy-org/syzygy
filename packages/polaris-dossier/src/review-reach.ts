@@ -121,6 +121,10 @@ const standingIn = (reach: ReadonlyMap<unknown, CitationReach>) => (id: string):
   return value === 'withheld' ? 'withheld' : value === 'reaches-review' ? 'admitted' : 'other';
 };
 
+/** Whether a diagram node or edge, or any other item citing its own spans, is a withheld item, read as `render.ts` reads it: rule
+ * `relation-witness` (version 2.19) never upgrades or challenges an edge rendered as one. */
+export const isWithheldElement = (value: Readonly<Record<string, unknown>>, inputs: ReachInputs): boolean => isWithheldItem(value, standingIn(reachOf(value, inputs)));
+
 /** The claim blocks of a parsed draft that no fidelity verdict can confirm, and the understanding items and diagram nodes and edges that
  * are withheld items; a draft that is not an object yields none. */
 export function reviewReachAdvice(doc: unknown, inputs: ReachInputs): ReviewReachAdvice {
