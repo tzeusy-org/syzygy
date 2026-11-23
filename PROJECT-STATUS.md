@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 524 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 538 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -233,6 +233,12 @@ authority and no model yet called on the current path.
     `containment-size` and `containment-flat` findings, nestings witnessed as `contains` edges, brief v17); its code is
     not yet landed.
     *(2026-11-24: the predecessor figure "514 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [System model amendment 2.24](openspec/changes/dossier-system-model) is agent-adopted in A-61.
+    It replaces REQ-polaris-generation-034 again (193 to 207 scenarios: draft schema v12 with one `model` of typed
+    elements with parents and cited or derived relationships, graph and containment figures as one-level views over
+    it, the model and view findings, a pure migration from schema v10 and v11, brief v18); its code is not yet landed.
+    *(2026-11-24: the predecessor figure "524 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
