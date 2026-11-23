@@ -683,12 +683,14 @@ async function observeDesignRun(run: string, traceInference = false) {
   type CurrentPhase = 'runtime-authority' | 'machine-effect' | 'machine-authority' | 'budget' | 'wait-for-samples'
     | 'product-lease' | 'product-assertion' | 'delivery-assertion' | 'checked-expiry' | 'receipt-preflight'
     | 'reproduce' | 'read-reproduced-delivery';
-  type CurrentStage = { phase: CurrentPhase; timing: ResumeStamp; lease?: ReturnType<typeof designProduct.urlDesignProductLeaseState>['state'] };
+  type CurrentStage = { phase: CurrentPhase; timing: ResumeStamp;
+    lease?: ReturnType<typeof designProduct.urlDesignProductLeaseState>['state']; leaseRemainingMs?: number };
   type CurrentTrace = ResumeStamp & { stages: CurrentStage[] };
   type InferenceStep = {
     ordinal: number;
     mediate: ResumeStamp;
     effect?: ResumeStamp;
+    controllerCurrent?: CurrentTrace;
     firstEffectGuardRefusalMs?: number;
     boundaries: Array<{ phase: InferenceBoundary; timing: ResumeStamp }>;
     relay: Array<{ phase: RelayPhase; timing: ResumeStamp }>;
@@ -812,6 +814,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     vi.spyOn(designProduct, 'urlDesignProductLeaseState').mockImplementation(product =>
       currentPhase('product-lease', () => leaseState(product), (value, stage) => {
         stage.lease = value.state;
+        if ('deadline' in value) stage.leaseRemainingMs = value.deadline - Date.now();
         return value.state === 'open';
       }));
     const leaseOpen = designProduct.isUrlDesignProductLeaseOpen;
@@ -889,9 +892,16 @@ async function observeDesignRun(run: string, traceInference = false) {
   const createOrderedSession = orderedSession.createOrderedDesignSession;
   vi.spyOn(orderedSession, 'createOrderedDesignSession').mockImplementation(input => createOrderedSession({
     ...input,
-    current: () => decisionScope.getStore() === true ? relayPhase('controller-current', input.current, value => value === true)
-      : brokerPhase(brokerStages['tool-before-plan-current'] === undefined
-        ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true),
+    current: () => {
+      if (decisionScope.getStore() !== true) return brokerPhase(brokerStages['tool-before-plan-current'] === undefined
+        ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true);
+      return relayPhase('controller-current', () => {
+        const step = inferenceScope.getStore();
+        if (step === undefined) return input.current();
+        const trace = step.controllerCurrent = { startedMs: clock(), stages: [] };
+        return timed(trace, () => currentScope.run(trace, input.current), value => value === true);
+      }, value => value === true);
+    },
     assertCurrent: () => decisionScope.getStore() === true ? relayPhase('product-assertion', input.assertCurrent, () => true)
       : brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
         ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
