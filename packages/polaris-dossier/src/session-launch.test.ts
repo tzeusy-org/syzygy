@@ -54,6 +54,7 @@ const filesystem = vi.hoisted(() => ({
   afterLstatStart: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
   beforeOpen: undefined as ((file: unknown) => Promise<void>) | undefined,
   beforeClose: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
+  afterClose: undefined as ((file: unknown) => void) | undefined,
   taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
   storageListing: undefined as { directory: string; afterFirstFile: () => void } | undefined,
 }));
@@ -93,12 +94,12 @@ vi.mock('node:fs/promises', async importOriginal => {
     },
     open: async (...args: Parameters<typeof actual.open>) => {
       if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(args[0]);
-      const handle = await actual.open(...args), beforeClose = filesystem.beforeClose;
-      if (beforeClose !== undefined) {
+      const handle = await actual.open(...args), { beforeClose, afterClose } = filesystem;
+      if (beforeClose !== undefined || afterClose !== undefined) {
         const close = handle.close.bind(handle);
         handle.close = async () => {
-          try { await beforeClose(args[0]); }
-          finally { await close(); }
+          try { await beforeClose?.(args[0]); }
+          finally { await close(); afterClose?.(args[0]); }
         };
       }
       return handle;
@@ -110,6 +111,7 @@ afterEach(async () => {
   filesystem.afterLstatStart = undefined;
   filesystem.beforeOpen = undefined;
   filesystem.beforeClose = undefined;
+  filesystem.afterClose = undefined;
   filesystem.taskListing = undefined;
   filesystem.storageListing = undefined;
   for (const stop of cleanup.splice(0).reverse()) await stop();
@@ -1089,10 +1091,12 @@ describe('prepared private CLI launch',()=>{
     let toolEntered!: (entered: true) => void, releaseTool!: () => void;
     let closeEntered!: (entered: true) => void, releaseClose!: () => void;
     let workEntered!: (entered: true) => void, missingObserved!: (entered: true) => void;
+    let workClosed!: (closed: true) => void;
     const enteredTool = new Promise<true>(resolve => { toolEntered = resolve; });
     const enteredClose = new Promise<true>(resolve => { closeEntered = resolve; });
     const enteredWork = new Promise<true>(resolve => { workEntered = resolve; });
     const missing = new Promise<true>(resolve => { missingObserved = resolve; });
+    const closedWork = new Promise<true>(resolve => { workClosed = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
     const heldClose = new Promise<void>(resolve => { releaseClose = resolve; });
     const host = await f.start({ beforeTool: () => { toolEntered(true); return heldTool; } });
@@ -1115,6 +1119,7 @@ describe('prepared private CLI launch',()=>{
         if (disposition === 'failed-close') throw new Error('owned storage close failure');
       });
     };
+    filesystem.afterClose = file => { if (file === census.work) workClosed(true); };
     vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
     try {
       const child = await launchRestrictedUrlSession({ preparation, host: { ...host, close: () => { releaseTool(); return host.close(); } } });
@@ -1128,6 +1133,8 @@ describe('prepared private CLI launch',()=>{
         expect(await Promise.race([enteredClose, ended])).toBe(true);
         expect(await Promise.race([enteredWork, ended])).toBe(true);
         if (disposition === 'failed-close') expect(await Promise.race([missing, ended])).toBe(true);
+        expect(await Promise.race([closedWork, ended])).toBe(true);
+        await new Promise<void>(resolve => setImmediate(resolve));
         expect(inspection().latest?.phases.storage?.outcome).toBeUndefined();
         expect(confirm).not.toHaveBeenCalled();
         releaseClose();

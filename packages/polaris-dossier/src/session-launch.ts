@@ -310,6 +310,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
     });
     const batch: { file: string; sample: Promise<Stats> }[] = [];
     try {
+      checkCensus();
       const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
       const inspect = async (): Promise<void> => {
         if (batch.length === 0) return;
