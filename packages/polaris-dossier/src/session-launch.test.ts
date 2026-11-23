@@ -1,6 +1,6 @@
-import { mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import * as fsPromises from 'node:fs/promises';
-import { mkdir, mkdtemp, rm, rmdir, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import * as net from 'node:net';
 import os from 'node:os';
@@ -1190,50 +1190,62 @@ describe('prepared private CLI launch',()=>{
     const f = await launchFixture();
     const work = f.launch.view.workDirectory, names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
     const preparation = await prepareRestrictedUrlSession(f.launch);
-    let releaseTool!: () => void;
+    const inspect = observeUrlSessionInspectionForTest(preparation)!;
+    let enterTool!: (entered: true) => void, releaseTool!: () => void;
+    const toolEntered = new Promise<true>(resolve => { enterTool = resolve; });
     const heldTool = new Promise<void>(resolve => { releaseTool = resolve; });
-    const host = await f.start({ beforeTool: () => heldTool });
+    const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
     const retained = 'own-retained-dir-entry';
     const enumerated = new Set<string>();
-    let rootOpens = 0, childRemovals = 0;
-    let inspectedRetainedAfterRetry!: (observed: true) => void;
-    const retryObserved = new Promise<true>(resolve => { inspectedRetainedAfterRetry = resolve; });
+    let rootOpens = 0, childRemovals = 0, retainedOnRetry = false;
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       const name = path.basename(file);
       if (names.has(name)) enumerated.add(name);
-      if (name === retained && rootOpens > 1) inspectedRetainedAfterRetry(true);
+      if (name === retained && rootOpens === 2) retainedOnRetry = true;
     };
     filesystem.beforeOpen = async file => {
       if (file === work) {
         rootOpens++;
-        if (rootOpens === 1) {
-          if (missing === 'root') throw Object.assign(new Error('own missing work root'), { code: 'ENOENT' });
-          await Promise.all([...Array.from(names, name => mkdir(path.join(work, name))), writeFile(path.join(work, retained), 'retained')]);
-        }
+        if (rootOpens === 1 && missing === 'root') throw Object.assign(new Error('own missing work root'), { code: 'ENOENT' });
       } else if (typeof file === 'string' && file.startsWith('/proc/self/fd/') && names.has(path.basename(file))) {
         expect(enumerated.has(path.basename(file))).toBe(true);
-        await rmdir(file);
+        rmdirSync(file);
         childRemovals++;
-        if (missing === 'replaced child') await writeFile(file, 'not a directory', { flag: 'wx' });
+        if (missing === 'replaced child') writeFileSync(file, 'not a directory', { flag: 'wx' });
       }
     };
-    // Keep the CLI in its first native tool call until the intended census
-    // branch runs. Release pending fixture work when the host closes.
-    const child = await launchRestrictedUrlSession({ preparation, host: {
-      ...host, close: () => { releaseTool(); return host.close(); },
-    } });
-    cleanup.push(child.stop);
-    if (outcome === 'exited') {
-      expect(await Promise.race([retryObserved, child.finished.then(() => false)])).toBe(true);
-      expect(await child.waitForSample()).toBe(true);
-      releaseTool();
+    // Admit exactly one real sample after the native tool is held and the
+    // inputs exist. The sample's clock and filesystem deadline stay real.
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      const child = await launchRestrictedUrlSession({ preparation, host: {
+        ...host, close: () => { releaseTool(); return host.close(); },
+      } });
+      cleanup.push(child.stop);
+      try {
+        expect(await Promise.race([toolEntered, child.finished.then(result => result.outcome)])).toBe(true);
+        for (const name of names) mkdirSync(path.join(work, name));
+        writeFileSync(path.join(work, retained), 'retained', { flag: 'wx' });
+        vi.advanceTimersByTime(URL_LAUNCH_LIMITS.sampleMilliseconds);
+        const current = await child.waitForSample();
+        const observation = inspect();
+        const completed = outcome === 'exited';
+        const diagnostic = JSON.stringify({ rootOpens, childRemovals, sample: observation.firstRefusal ?? observation.latest });
+        expect(current, diagnostic).toBe(completed);
+        expect(observation.samples).toBe(1);
+        expect(childRemovals).toBe(removed);
+        expect(rootOpens, diagnostic).toBe(rootReads);
+        if (completed) expect(retainedOnRetry).toBe(true);
+        releaseTool();
+        expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
+          groupTermination: 'confirmed', toolTermination: 'settled' });
+      } finally {
+        releaseTool();
+        await child.stop();
+      }
+    } finally {
+      vi.useRealTimers();
     }
-    const result = await child.finished;
-    expect(childRemovals).toBe(removed);
-    expect(result).toMatchObject({ outcome, exitCode: outcome === 'exited' ? 0 : null,
-      groupTermination: 'confirmed', toolTermination: 'settled' });
-    if (outcome === 'exited') expect(rootOpens).toBeGreaterThanOrEqual(rootReads);
-    else expect(rootOpens, JSON.stringify(result)).toBe(rootReads);
   }, 60_000);
 });
