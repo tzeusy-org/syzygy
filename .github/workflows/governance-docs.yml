@@ -543,11 +543,13 @@ jobs:
   # The slow selftests run beside the governance job, each on its own
   # runner, so the wall clock is the longest job rather than the sum
   # (syzygy-j5m0). Their steps are unchanged; CG-26 compares run lines, not
-  # jobs.
+  # jobs. The reconciliation selftest grows with every spec version's cases:
+  # it took 9 to 15 minutes on 2026-11-23 and was cancelled at 15, so its
+  # limit is 30.
   reconciliation-selftest:
     name: checks (reconciliation selftest)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
