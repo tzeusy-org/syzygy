@@ -1,6 +1,6 @@
 # dossier-hero-figure
 
-[Inferred] Candidate version 2.20 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.29. It adds draft schema `polaris-dossier-local-draft-v10`, in which a draft names its hero, one graph-kind figure homed on the overview, or declares the hero omitted with a reason in one claim block; a `hero` finding for a draft that does neither; the hero or the omission rendered first after the landing page's header, which ends with the thesis; and brief `polaris-dossier-brief-v16`. Drafts of schema v9 and earlier, stored drafts and the provider mode keep their bytes.
+[Inferred] Candidate version 2.20 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.29. It adds draft schema `polaris-dossier-local-draft-v10`, in which a draft names its hero, one graph-kind figure homed on the overview, or declares the hero omitted with a reason in one claim block; a `hero` finding for a draft that does neither; the hero or the omission rendered first after the landing page's header, which holds the title, the thesis and any open questions; and brief `polaris-dossier-brief-v16`. Drafts of schema v9 and earlier, stored drafts and the provider mode keep their bytes.
 
 | File | What it holds |
 |---|---|

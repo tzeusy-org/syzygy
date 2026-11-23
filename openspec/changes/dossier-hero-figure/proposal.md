@@ -20,7 +20,7 @@
   - `hero` at `$.hero.omitted` for a non-normative omission;
   - `field-version` for `hero` in schema v9 and earlier.
 - Rendering:
-  - The landing page's region of overview figures opens with the hero, carrying `data-hero="figure"`, right after the header that ends with the thesis.
+  - The landing page's region of overview figures opens with the hero, carrying `data-hero="figure"`, right after the header, which holds the title, the thesis and any open questions.
   - A declared omission renders there instead: a Syzygy-written line, then the reason's claim block.
   - `machine.json` gains a `hero` member for v10.
   - The reading ledger places the omission on `index.html`.

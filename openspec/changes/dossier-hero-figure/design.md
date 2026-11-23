@@ -15,6 +15,8 @@
   - Its "schema v5" (thesis, pillars, an optional code-excerpt hero) collides with the 2.x line's schema v5 (`home`).
   - **This version departs from an owner-signed sentence.** [Observed] v1.7, which the owner signed on 2026-11-17, says in `.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-7/proposed/spec.md.patch`: "With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding." [Inferred] Version 2.20 does not follow that sentence. A v10 draft that neither names a hero figure nor declares the hero omitted gets a `hero` repair finding.
     - Why: the declared-omission escape keeps the author free to leave the hero out, so an author is never made to draw a figure that would not be true. What changes is that the omission is said, with its reason shown to the reader where the figure would stand. A silently missing picture leaves the reader unable to tell a deliberate choice from a gap.
+    - [Observed] v1.7 pins the same rule in two more places in that patch: the scenario "Thesis and pillars checked" ("a draft that names no hero gets no repair finding for it") and its falsifier ("or a missing hero is a repair finding"). Whoever reconciles v1.7 must address all three (since review 1, F6).
+    - [Inferred] Strictly, that rule governs v1.7's schema-v5 code-excerpt hero, a different object from this figure hero, and no 2.x draft is governed by v1.7's text. So the conflict is one of intent, not of text. This design treats it as a departure, which is the conservative reading.
     - Standing: the signing predates D10, so it stays in force as decided, and a later change to what it decided is an agent adoption (AGENTS.md, Orientation). This is not a veto, and it decides no owner class. The adoption row states the departure, and an owner veto reverts it.
   - The two heroes differ in kind, a code excerpt there and a figure here, so a landed v1.7 would need a name for each.
   - v1.7 is unapplied on the 2.x line, and its schema-v5 numbering collides with the 2.x line's. Whoever lands v1.7 must reconcile both of these, together with this departure.
@@ -36,17 +38,19 @@
 
 ## D5. Findings
 
-- [Inferred] Acceptance 1 asks for "a specific finding". A missing or malformed `hero` is the `hero` finding at `$.hero`, in place of the generic schema check's finding at that path, so the author reads one finding that says what to do. The detail is a literal, and the scenarios fix it.
+- [Inferred] Acceptance 1 asks for "a specific finding". A missing or malformed `hero` is the `hero` finding at `$.hero`, in place of the generic schema check's finding at that path, so the author reads one finding that says what to do. Every finding's detail is a literal stated in the paragraph (since review 1, F3), and the scenarios fix them, including the case of a diagram that fails both the home and the kind test (two findings, home first) and a `figure` that is not a string.
+- [Inferred] The v10 schema document admits in `omitted` every claim-block form the introduction may take, with any label, so a non-normative omission raises the `hero` finding alone and a presentation element there is the schema check's (since review 1, F4).
 - [Inferred] A name that resolves to nothing reuses `unresolved-reference`, as a `home` target that names nothing does in version 2.2.
 - [Inferred] A hero whose diagram's disposition is not `produced` raises no finding. The disposition is the draft's existing, reasoned way of saying a figure was not drawn, and its notice renders in the hero's place. A second finding for the same fact would make an author repair a figure the run could not draw.
 - [Inferred] The findings follow every finding version 2.19 reports, so no earlier finding moves.
 
 ## D6. Rendering
 
-- [Inferred] The hero is the region's first element and carries `data-hero="figure"`; an omission is the region's first element and carries `data-hero="omitted"`. A test, a reviewer and a later slice (Pole links, syzygy-3efd.61) can then find it without reading words.
+- [Inferred] The landing page's header keeps what version 2.19 puts there, in the same order: the title, any run-stopped banner, the thesis-basis line, the introduction and the draft's open questions (`unresolved`), the last as `dossier-site.ts` renders them today. The region follows the header, so the hero comes after the thesis and any open questions (since review 1, F1). Moving open questions below the hero was rejected: it would move bytes the bead does not ask to move, and "after the thesis" holds either way.
+- [Inferred] The hero is the region's first element and carries `data-hero="figure"`; an omission is the region's first element and is the element `<div data-hero="omitted">`, with no role or accessible name of its own (since review 1, F7). A test, a reviewer and a later slice (Pole links, syzygy-3efd.61) can then find it without reading words.
 - [Inferred] The omission line is Syzygy's own words, like the thesis-basis line of version 2.4. It carries no label token, citation or anchor, so it adds no claim, and the reason after it is the agent's claim block in both views. Acceptance 3 ("an omission's reason is visible to the reader") is met in the reading view.
-- [Inferred] Where the draft layer is withheld, no part of the draft renders, the hero included. That is the rule every overview figure already follows. `machine.json`'s `rendered: false` says so in the machine form.
-- [Inferred] `machine.json`'s `hero` member sits beside `thesisBasis`, outside `reviewStatus`, for v10 only. It carries the form and the identity, never text: the omission's text is already in the claims.
+- [Inferred] Where the draft layer is withheld, no part of the draft renders, the hero included. That is the rule every overview figure already follows. `machine.json`'s `rendered: false` says so in the machine form, and its `diagram` is null there, so no identity from a withheld draft enters the machine form (since review 1, F5).
+- [Inferred] `machine.json`'s `hero` member sits beside `thesisBasis`, outside `reviewStatus`, for v10 only. It carries the form and the identity, never text: the omission's text is already in the claims. `rendered` is true where the region opens with an element carrying `data-hero`, the hero's notice included, and the paragraph says it tells nothing of whether the figure was drawn.
 
 ## D7. Rendered bytes that move
 
@@ -82,3 +86,17 @@ Nothing else moves:
 - [Inferred] Hero regions do not link to Poles or take Pole colour (syzygy-3efd.61, excluded by the bead).
 - [Inferred] The pursuit's Q4 asks to "ship the hero on today's schema first to measure whether one picture helps". No measure is specified here. Whether the hero helps is for a later review of rendered dossiers.
 - [Inferred] The v1.7 reconciliation in D2 is left to the change that lands v1.7 on the 2.x line.
+
+## Review
+
+[Observed] Review 1 (`docs/reviews/syzygy-3efd-29/R-HERO-FIGURE-SPEC-1-RAW.md`, over spec sha256 `894f5a16…` at `e090b645`) recorded `REVISE` with one blocking finding and six notes. Each was repaired in one pass; no confirmation round was run (one non-gating review under D10). No review has read the repaired bytes.
+
+| Finding | Disposition |
+|---|---|
+| F1 (blocking) "straight after the introduction" is false when the draft has open questions | Repaired. The render paragraph now lists the header's contents in order, ending with the draft's open questions, and places the region immediately after the header. The brief literal reads "after the introduction and any open questions". Scenario 1 adds the case with one open question. The preamble, `proposal.md`, `README.md` and the openspec index row now say the header holds the title, the thesis and any open questions. D6. |
+| F2 (note) the omission scenario said "first element after the header" | Repaired: "the first element of the region of overview figures". |
+| F3 (note) most finding details unfixed | Repaired: every finding has a literal detail. A diagram failing both tests raises two findings, home first. A non-string `figure` has its own detail. The scenarios fix each one. D5. |
+| F4 (note) the schema document's treatment of `omitted` unstated | Repaired: one sentence in the schema paragraph. Scenario 7 adds "no `schema` finding" and the presentation-element case. D5. |
+| F5 (note) identity under a withheld layer; `rendered` for a notice | Repaired: `diagram` is null under a withheld layer; `rendered` is defined as the region opening with a `data-hero` element, notice included. Scenario 8 fixes both machine members. D6. |
+| F6 (note) v1.7's scenario and falsifier not named; the conflict is of intent | Repaired in D2: both are named, and the conflict is described as one of intent. The adoption row states the departure and its revert. |
+| F7 (note) omission element unnamed | Repaired: `<div data-hero="omitted">`, with no other attribute, role or accessible name. D6. |
