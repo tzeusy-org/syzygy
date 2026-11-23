@@ -869,7 +869,7 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
   });
 });
 
-it('omits detector-matched graph units from the fidelity packet while preserving other bindings', async () => {
+it('screens graph units and citation paths together while preserving frozen bindings', async () => {
   const hiddenPath = `${BOTH_PATH}/package.json`;
   const hiddenName = BOTH_PATH.split('/')[1]!;
   const units = [
@@ -884,7 +884,7 @@ it('omits detector-matched graph units from the fidelity packet while preserving
       id: 'graph', title: 'Project units', kind: 'boundary', relationship: 'Related parts of the project.',
       home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['graph'] },
       nodes: units.map((unit, index) => ({
-        id: `n${index}`, label: `Node ${index}`, epistemic: 'inferred', citations: [cite(`c-n${index}`)], unit,
+        id: `n${index}`, label: `Node ${index}`, epistemic: 'inferred', citations: [cite(`c-n${index}`, index === 1 ? BOTH_PATH : undefined)], unit,
       })),
       edges: [{ id: 'e1', from: 'n0', to: 'n1', relation: 'relates-to', label: 'Related', epistemic: 'inferred', citations: [cite('c-e1')] }],
     }];
@@ -894,16 +894,21 @@ it('omits detector-matched graph units from the fidelity packet while preserving
   expect(built.bytes.includes(hiddenName)).toBe(false);
   const packet = JSON.parse(built.bytes);
   expect(packet.draft.withheldDiagramUnits).toBe(2);
+  expect(packet.draft.withheldCitationPaths).toBe(1);
+  expect(packet.draft.document.diagrams[0].nodes[1].citations[0]).toMatchObject({ id: 'c-n1', path: null });
+  expect(packet.spans).toContainEqual(expect.objectContaining({ path: null, objectId: null, outcome: 'denied-path',
+    citedBy: [{ subject: 'draft', citationId: 'c-n1' }],
+  }));
   expect(packet.draft.document.diagrams[0].nodes.map((node: Doc) => node.unit)).toEqual([units[0], undefined, undefined]);
   const frozen = fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'));
   expect(packet.draft.sha256).toBe(sha256(frozen));
-  expect(JSON.parse(frozen.toString()).diagrams[0].nodes[1].unit.path === hiddenPath).toBe(true);
+  const frozenNode = JSON.parse(frozen.toString()).diagrams[0].nodes[1];
+  expect(frozenNode.unit.path === hiddenPath).toBe(true);
+  expect(frozenNode.citations[0].path === BOTH_PATH).toBe(true);
 });
 
-// syzygy-8hm6: a cited path both denied and matched by a secret detector is a span without its path or object id, under the outcome
-// screening gave. The packet's copy of the draft still carries the citation as the author wrote it; this is the span record alone.
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
-  it('carries the span with neither path nor object id, outcome denied-path', async () => {
+  it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });
     const result = await reviewPacket(run, { kind: 'fidelity' }, deps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -912,7 +917,11 @@ describe('a cited path both denied and secret-matching in the fidelity packet', 
       { id: 'span-1', path: '.env', startLine: 1, endLine: 1, objectId: objectIds['.env'], outcome: 'denied-path', citedBy: [{ subject: 'inventory', citationId: 'c-e-env' }] },
       { id: 'span-2', path: null, startLine: 1, endLine: 1, objectId: null, outcome: 'denied-path', citedBy: [{ subject: 'draft', citationId: 'c-q0' }] },
     ]);
-    // A boolean, so a failure prints no span.
-    expect(JSON.stringify(packet.spans).includes('x'.repeat(24))).toBe(false);
+    // A boolean, so a failure prints no path.
+    expect(JSON.stringify(packet).includes('x'.repeat(24))).toBe(false);
+    expect(packet.draft.withheldCitationPaths).toBe(1);
+    expect(packet.draft.document.unresolved[0].citations).toEqual([{ id: 'c-q0', path: null, startLine: 1, endLine: 1 }]);
+    const frozen = JSON.parse(fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'), 'utf8'));
+    expect(frozen.unresolved[0].citations[0].path === BOTH_PATH).toBe(true);
   });
 });
