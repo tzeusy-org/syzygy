@@ -259,8 +259,9 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           const until = Math.min(input.deadline, input.now() + 5000);
           let launch = input.launch(plan.role);
           while (launch === undefined && current() && input.now() < until) { await yieldToPoll(); launch = input.launch(plan.role); }
-          if (launch === undefined || listener === null || !current()) return null;
-          // Capture checks the fresh parent after the live sample and before
+          if (launch === undefined || listener === null) return null;
+          // Capture samples this exact synchronous guard at entry before
+          // observing the listener. It checks the fresh parent again before
           // invoking either native verifier.
           const support = isOrderedDesignSessionProfile(plan.profile) ? plan.profile.transcript.supportSha256 : input.runtime.supportSha256;
           const name = kind === 'mcp-shim' ? 'session-mcp.js' : 'session-bridge.js';

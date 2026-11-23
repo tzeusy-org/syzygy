@@ -97,6 +97,7 @@ async function fixture() {
     governed: { kind: 'unstated', because: ['own fixture'] }, workItem: { identity: null, reason: NO_WORK_ITEM_REASON } });
   let now = Date.now(), current = true, effectsCurrent = true, launch: UrlSessionProcess | undefined, auditing = 0, nativeCapacity = 0;
   let block: Promise<void> | undefined, reached: (() => void) | undefined;
+  let countAdmissionChecks = false, admissionChecks = 0;
   // The existing historical fixture port permits an owned synthetic bridge;
   // production ordered profiles bind the real bridge's fixed transcript hash.
   // This tests the production provisioner, not ordered CLI/provider execution.
@@ -108,8 +109,21 @@ async function fixture() {
   const options: UrlRunMachineOptions = { governanceRoot: path.join(root, 'observing/.syzygy'), protectedRoot: path.join(hidden, 'store'),
     parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40), subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: 'c'.repeat(64) }] },
     originPolicySha256: 'c'.repeat(64), pin: 'a'.repeat(40), runId, runtime, plans: plans.roles, deadline: now + 60_000, now: () => now,
-    current: () => current, effectCurrent: () => effectsCurrent, reverify: async () => { if (block) { reached?.(); await block; } return current && (launch === undefined || await launch.waitForSample()); },
-    launch: role => role === 'author' ? launch : undefined, audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
+    current: () => current,
+    effectCurrent: () => {
+      if (countAdmissionChecks) admissionChecks++;
+      return effectsCurrent;
+    },
+    reverify: async () => {
+      if (block) { countAdmissionChecks = false; reached?.(); await block; }
+      return current && (launch === undefined || await launch.waitForSample());
+    },
+    launch: role => {
+      if (role !== 'author') return undefined;
+      if (block && launch !== undefined) { admissionChecks = 0; countAdmissionChecks = true; }
+      return launch;
+    },
+    audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   const canonicalRoot = path.join(options.governanceRoot, 'governance/policies/dossier-machine-clients');
   const records = async (): Promise<UrlMachineClientRecord[]> => Promise.all((await fs.readdir(canonicalRoot)).filter(name => name.endsWith('.json'))
@@ -147,7 +161,9 @@ async function fixture() {
     withdrawEffects: () => { effectsCurrent = false; },
     expire: () => { now = options.deadline; }, revoke: () => { current = false; },
     blockAdmission: () => { let release!: () => void; block = new Promise<void>(resolve => { release = resolve; });
-      const entered = new Promise<void>(resolve => { reached = resolve; }); return { entered, release }; } };
+      const entered = new Promise<void>(resolve => { reached = resolve; });
+      return { entered, release, effectChecks: () => admissionChecks };
+    } };
 }
 
 describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
@@ -221,11 +237,15 @@ describe('production URL run machine provisioner', { timeout: 60_000 }, () => {
 
   it.each(['close', 'withdraw-effects'] as const)('%s closes admission while a genuine socket awaits parent revalidation', async mode => {
     const f = await fixture(), barrier = f.blockAdmission(); await f.start(); await barrier.entered;
+    // Before the parent wait, check at capture entry, after observing the
+    // listener and when entering the run-level verifier.
+    const effectChecks = barrier.effectChecks();
     if (mode === 'close') expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
     else f.withdrawEffects();
     barrier.release();
     expect(await f.connection(0)).toBeNull(); expect(await f.records()).toEqual([]); expect(f.machine.current()).toBe(false);
     expect(await f.machine.close()).toEqual({ lifecycle: 'retired' });
+    expect(effectChecks).toBe(3);
   });
 
   it('refuses copied capabilities before creating a store and reports expired retirement as Unknown', async () => {
