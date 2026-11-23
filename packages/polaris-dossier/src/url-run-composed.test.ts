@@ -873,6 +873,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     }
     let releaseFinalResponses!: () => void;
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
+    let inventoryEndTurnObserved: (() => void) | undefined;
+    const waitForInventoryEndTurn = eligibleStop ? new Promise<void>(resolve => { inventoryEndTurnObserved = resolve; }) : undefined;
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
     const releaseProvider = new Map<(typeof ordinary)[number], () => void>();
     if (stoppingCut) finalResponseDelivery.afterEndTurn = role => {
@@ -880,6 +882,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       if (index < 0) return;
       const next = ordinary[index + 1];
       if (next !== undefined) releaseProvider.get(next)?.();
+      if (role === 'inventory') inventoryEndTurnObserved?.();
     };
     const finalResponse = (role: (typeof ordinary)[number]): (() => Promise<ScriptCall>)[] => {
       if (!stoppingCut) return [];
@@ -1067,9 +1070,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     };
     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
-    // The eligible cut waits for Design to finish. The Author rereads the
-    // brief after the checked Fidelity packet arrives, then begins a separate
-    // bounded exchange for its end-turn while Fidelity and Design proceed.
+    // The Author rereads its brief after checked packet registration. Its
+    // next exchange settles before Inventory and Fidelity finish their work.
     const authorBeforeEligibleStop = waitForFidelityPacket === undefined ? [] : [async () => {
       await waitForFidelityPacket;
       return tool('author_recheck_brief', 'artifact_read', { path: 'brief.md' });
@@ -1101,6 +1103,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // Let Inventory start after Fidelity's real wait result arrives.
         inv.allow();
         await waitForFidelityPacket;
+        // The prior readers' durable end-turns release the next packet read.
+        await waitForInventoryEndTurn;
         return readFidelityPacket();
       }, () => {
         const artifact = resultTexts(fidelity.received).reverse().find(value => value.kind === 'artifact' && value.path === 'round-1/packet.json');
