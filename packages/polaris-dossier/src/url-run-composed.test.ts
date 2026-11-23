@@ -586,7 +586,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
     const releaseProvider = new Map<(typeof ordinary)[number], () => void>();
-    if (cut) finalResponseDelivery.afterEndTurn = role => {
+    if (stoppingCut) finalResponseDelivery.afterEndTurn = role => {
       const index = ordinary.findIndex(candidate => candidate === role);
       if (index < 0) return;
       const next = ordinary[index + 1];
@@ -602,10 +602,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     };
     const settleOrdinaryResponses = async () => {
       const until = performance.now() + 5_000;
-      // Create an audit boundary with no outstanding ordinary exchanges.
-      // Settle each synthetic end-turn separately against the live machine.
+      // Confirm the ordinary exchanges started earlier have durably settled.
       for (const role of ordinary) {
-        if (!cut) releaseProvider.get(role)!();
         while (!settledProviderRoles.has(role) && performance.now() < until)
           await new Promise(resolve => setTimeout(resolve, 5));
         expect(settledProviderRoles.has(role), `${role} end-turn audit at the owned stop`).toBe(true);
@@ -846,9 +844,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
       artifacts: f.artifacts, runtime: observedRuntime, stop,
     });
-    // The initial cut waits at a live Design delivery. Let ordinary end-turns
-    // progress in durable audit order during their existing exchanges.
-    if (cut) releaseProvider.get('author')!();
+    // Settle ordinary end-turns in durable audit order while the supervisor
+    // works toward either Design cut. Keep native delivery behind the stop guard.
+    if (stoppingCut) releaseProvider.get('author')!();
     author.allow();
     try {
       const authorPassed = () => {
