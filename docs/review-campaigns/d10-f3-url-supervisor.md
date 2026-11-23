@@ -51,6 +51,7 @@
 - `F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW\.md`
 - `F3-A14-GIT-BLOB-BATCH-REVIEW-RAW\.md`
 - `F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW\.md`
+- `F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -181,3 +182,5 @@
 [Observed] The A-14 Git blob batch review records `PASS` (F3-A14-GIT-BLOB-BATCH-REVIEW-RAW.md:1) at `5a307abe4`. A-166 retains the shared deadline, exact direct refs and historical proof. The fixed-latency regression and the restored-clause check passed, and both fault controls detected the expected refusal or missing check. [Unknown] Whether the batch resolves the local cold Resume refusal.
 
 [Observed] The resumed Design authority-ordering review records `PASS` (F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW.md:1) at `56fce2f37`. A-167 joins the in-flight inspection before the resumed relay’s full authority check and preserves the final authority check. [Unknown] Native Resume completion for the successor.
+
+[Observed] The native inspection-bound review records `PASS` (F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW.md:1) at `d7c8de9f4`. A-168 records the two-second inspection and history sample wait. Focused cases exercise completion beyond the old limit and refusal at the declared bound. [Unknown] Native Resume completion.

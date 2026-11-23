@@ -1,0 +1,112 @@
+{
+  "adoption": "A-168",
+  "subjectCommit": "d7c8de9f4bbab12b7d7f0789e2051e6c2c2c2ab2",
+  "baseCommit": "2d4c7cb056909d3035f4f1a3a2e75ef15325b6a7",
+  "binaryDeltaSha256": "0fbaa63caa3b7b7984d7cf0291427be12af3bbd9b01292fa876124e0bf1baccf",
+  "review": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW.md",
+    "sha256": "7c25a27402b87345a3748f0c12e56c542c10b5db89c19a88922654433fccdd20"
+  },
+  "predecessorNative": {
+    "stop-resume": {
+      "subjectCommit": "2d4c7cb056909d3035f4f1a3a2e75ef15325b6a7",
+      "failureSha256": "25b7950af119bec044a25fb159c3001ae53495c0df423c9efad14595fd02b7bb",
+      "designInspection": {
+        "ordinal": 42,
+        "phases": {
+          "process": {
+            "startedMs": 0.07335799999418668
+          },
+          "verify": {
+            "startedMs": 0.11825299999327399
+          },
+          "storage": {
+            "startedMs": 0.1202869999979157
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1001.719723999995
+        }
+      },
+      "firstRelayCurrent": {
+        "startedMs": 110828.393,
+        "stages": [
+          {
+            "phase": "wait-for-samples",
+            "timing": {
+              "startedMs": 110828.579,
+              "settledMs": 110828.929,
+              "outcome": "refused"
+            }
+          }
+        ],
+        "settledMs": 110985.338,
+        "outcome": "refused"
+      }
+    },
+    "eligible-stop-resume": {
+      "subjectCommit": "6806a5b93e3fc954a52718dda2d98f6bfbaf79f5",
+      "failureSha256": "017bda31af4cedf81a831f2c591b895dcf564c0cd3242a43edc438845da41850",
+      "designInspection": {
+        "ordinal": 559,
+        "phases": {
+          "process": {
+            "startedMs": 0.02919500001007691,
+            "settledMs": 10.433776999998372,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.0843289999756962
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1275.049920999969
+        }
+      }
+    }
+  },
+  "regression": {
+    "passed": 10,
+    "skipped": 98,
+    "total": 108,
+    "logSha256": "d6e93ccd7b5d914a5fed9899dd5d405ff21fa2dd5810b937e3d0afa7cf257aad"
+  },
+  "faultControls": [
+    {
+      "subjectCommit": "48bda166ad21428fe3fd9ef48d8951a420898409",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "edits": [
+        {
+          "old": "performance.now() - sampleBegan >= limits.inspectionMilliseconds",
+          "new": "performance.now() - sampleBegan >= 1_000"
+        },
+        {
+          "old": "}, limits.inspectionMilliseconds, observation === undefined",
+          "new": "}, 1_000, observation === undefined"
+        }
+      ],
+      "assertion": "the complete sample held for 1,250 ms should be accepted",
+      "result": "false",
+      "logSha256": "fe5b8c19ff83405ff8921060e0a10ecf1dd48eb100d2c1c2312415605700d566"
+    },
+    {
+      "subjectCommit": "48bda166ad21428fe3fd9ef48d8951a420898409",
+      "file": "packages/polaris-dossier/src/url-launch-history.ts",
+      "edits": [
+        {
+          "old": "requireCurrent(waitForSample, URL_LAUNCH_LIMITS.inspectionMilliseconds)",
+          "new": "requireCurrent(waitForSample)"
+        }
+      ],
+      "assertion": "the checked write should complete after independent 1,500 ms sample and 550 ms authority waits",
+      "result": "url-launch-history-unavailable",
+      "logSha256": "cd268e4b84249c3adb748fab427db74d7b2c6d8fe1a6a4b19f678f3d7ebf5416"
+    }
+  ],
+  "successorNativeCompletion": "Unknown"
+}
