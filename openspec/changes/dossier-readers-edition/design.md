@@ -1,12 +1,12 @@
 # Design: the subject first, the run's own pages behind About this run
 
-[Inferred] Version 2.22 of REQ-polaris-generation-034, for syzygy-5dhm.136, drafted on `main` at `82290fb9` over the adopted version 2.20 text (`dossier-hero-figure`, row A-54). The renderer change it states is already on this branch (`3d4a72b0`, `41c4c155`, `f4e04733`, merged with `main` at `cb08d2d1`); version 2.20's own code (schema v10, the hero) has not landed at that commit, and nothing here depends on it.
+[Inferred] Version 2.22 of REQ-polaris-generation-034, for syzygy-5dhm.136, drafted on `main` at `82290fb9` over the adopted version 2.20 text (`dossier-hero-figure`, row A-54) and checked again on `main` at `2a1ef3e8`, where version 2.21 (verify text, row A-55) changed REQ-033 alone. The renderer change it states is already on this branch (`3d4a72b0`, `41c4c155`, `f4e04733`, merged with `main` at `cb08d2d1` and `24501caa`); version 2.20's own code (schema v10, the hero) has not landed at either commit, and nothing here depends on it.
 
 ## D1. The version label
 
-- [Observed] On `origin/main` at `82290fb9` the latest version of this line is 2.20 (`polaris-dossier-hero-figure-v2.20`, row A-54), and the next free row is A-55.
-- [Observed] Version 2.21 is allocated to a concurrent candidate of the same requirement, `dossier-containment-figure` (syzygy-3efd.31, branch `agent/syzygy-3efd.31` at `00131423`), composed over 2.20 and not yet adopted.
-- [Inferred] So this change takes 2.22, composed over 2.20, the newest adopted text. Both are MODIFIED REQ-034 over 2.20, so whichever lands second recomposes its text over the other's and renumbers its row, as 2.18 and 2.19 did (`bc3f4c04`, "adoption renumbered A-53"). The two touch different sentences: 2.21 adds a figure kind and its findings; this version moves no figure rule.
+- [Observed] On `origin/main` at `2a1ef3e8` the latest version of this line is 2.21 (`polaris-dossier-verify-text-v2.21`, row A-55), which replaces REQ-033 alone; the newest text of REQ-034 is still 2.20's (`polaris-dossier-hero-figure-v2.20`, row A-54).
+- [Observed] A concurrent candidate of the same requirement, `dossier-containment-figure` (syzygy-3efd.31, branch `agent/syzygy-3efd.31` at `00131423`), is composed over 2.20, labelled 2.21 on its branch, and not yet adopted; the verify text took 2.21 on `main` first.
+- [Inferred] So this change takes 2.22, composed over 2.20, the newest adopted text of REQ-034. Both are MODIFIED REQ-034 over 2.20, so whichever lands second recomposes its text over the other's and renumbers its row, as 2.18 and 2.19 did (`bc3f4c04`, "adoption renumbered A-53"). The two touch different sentences: 2.21 adds a figure kind and its findings; this version moves no figure rule.
 
 ## D2. The label "About this run", and the owner's words it departs from
 

@@ -53,7 +53,7 @@ sha = lambda b: hashlib.sha256(b).hexdigest()
 
 out = f'''# Version 2.22 semantic delta
 
-[Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed.
+[Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-5dhm-136/readers_edition_delta.py` writes this file.
 
 ## Change class
 
@@ -61,11 +61,11 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier hero figure version 2.20, row A-54, tag `polaris-dossier-hero-figure-v2.20`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.20. Version 2.21 is allocated to a concurrent candidate of the same requirement, `dossier-containment-figure` (syzygy-3efd.31), not adopted at this writing; whichever of the two lands second recomposes over the other (`design.md` D1). Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.20's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier hero figure version 2.20, row A-54, tag `polaris-dossier-hero-figure-v2.20`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.20. Version 2.21 (verify text, row A-55) replaces REQ-polaris-generation-033 alone, so the effective REQ-034 on `main` is still version 2.20's. A concurrent candidate of the same requirement, `dossier-containment-figure` (syzygy-3efd.31), is not adopted at this writing; whichever of the two lands second recomposes over the other (`design.md` D1). Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.20's, byte for byte.
 
 ## Carried unchanged
 
-[Observed] Of the predecessor requirement's {len(ob)} lines, {kept} appear byte for byte and in order in the new text; {len(changed)} are amended in place (below) and none is removed. All {sum(1 for l in ob if l.startswith('#### Scenario:'))} predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once.
+[Observed] Of the predecessor requirement's {len(ob)} lines, {kept} appear byte for byte and in order in the new text; {len(changed)} are amended in place (below) and none is removed. All {sum(1 for l in ob if l.startswith('#### Scenario:'))} predecessor scenarios are carried with their blocks byte for byte. The new text was built from the predecessor bytes by a script that replaces or inserts only at anchors it asserts occur exactly once (`docs/evidence/syzygy-5dhm-136/readers_edition_build_spec.py`, which reproduces the spec byte for byte); `readers_edition_survival.py` beside it prints the line and scenario counts and checks each predecessor scenario block.
 
 ## Amended in place
 
