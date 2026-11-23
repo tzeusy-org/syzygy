@@ -41,11 +41,16 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
+/** v17 (REQ-polaris-generation-034 version 2.23, syzygy-5dhm.41): brief v14 with draft schema v11 and the one worth-knowing paragraph
+ * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed (v15 and v16 are the numbers adopted versions 2.19 and 2.20 give their briefs, not yet implemented here). v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v14';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v17';
+
+/** The paragraph brief v17 adds immediately after the Poles paragraph, in the requirement's words (version 2.23). It carries no project
+ * content. */
+export const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole.';
 
 /** The paragraph brief v14 adds immediately after the figure-kinds paragraph, in the requirement's words (version 2.16). */
 export const SUBSECTIONS_PARAGRAPH = 'A section may also carry `subsections`, two to twelve, in reading order, when it answers more than one question. Each subsection has `id`, `title`, `answer` and `paragraphs`: `title` names the question in a short label; `answer` is one Inferred or Unknown claim block, with the members that form of a paragraph takes, whose `text` is one sentence that answers the question; and `paragraphs`, zero to thirty, hold what supports that answer, as a section\'s paragraphs do. Check counts a full stop, question mark or exclamation mark that a space follows, outside a quotation, as the end of a sentence, so write `for example`, not `e.g.`, in an answer. A section\'s own paragraphs open it, before its subsections. Syzygy renders each subsection under its own heading with its answer first, and lists the page\'s sections and subsections at the top of the page. A figure is never homed in a subsection, and a deep dive has none.';
@@ -182,6 +187,8 @@ export function renderBrief(input: BriefInput): string {
     '## Poles',
     '',
     `Divide the sections into Poles in \`poles\`: at most ${poleLimitOf(declared)}, this run's Pole limit, each a short label (under the rules for an element's short label) and the sections it holds, every section in exactly one. Choose the Poles from what the repository holds, each holding a substantial share of its documentation; never fill a fixed template, such as a server and a client, where the repository says little about one of them. Name in \`whySection\` the section that answers why the project exists. Syzygy renders a landing page holding the title, that section and a map of the Poles, then one page per Pole; the why section's own Pole links back to the landing page rather than repeating it, and a Pole holding only that section has no page of its own. A Pole is a page boundary and carries no claim. A draft with no \`poles\` keeps its sections on one page.`,
+    '',
+    WORTH_KNOWING_PARAGRAPH,
     '',
     '## Task routes',
     '',

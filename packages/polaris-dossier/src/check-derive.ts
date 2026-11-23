@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { checkShape, handle, leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText, type Schema } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, hasFigureKindForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
+import { FIGURE_MEMBERS, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, INVENTORY_OMISSIONS_SINCE, PRE_V5_SCHEMA_VERSIONS, SUBSECTIONS_FIELD, TASK_ROUTE_FIELD, UNDERSTANDING_ITEMS, V4_FIELDS, V7_FIGURE_MEMBERS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasWorthKnowingForm, hasHomeForm, hasSubsectionForm, hasThesisBasisForm, hasV4Forms, checkDraftShape, localDraftSchema, membersOfKind, type DraftSchemaWithDefs } from './draft-schema.js';
 import { isEntryPoint } from './derive.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
@@ -539,7 +539,7 @@ function subsectionName(subsection: Readonly<Record<string, unknown>>, at: strin
  * section's `subsections`, in place of the schema finding at that path. */
 function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
   for (const at of subsectionFieldVersionPaths(doc)) {
-    add({ kind: 'field-version', at, detail: `\`${SUBSECTIONS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    add({ kind: 'field-version', at, detail: `\`${SUBSECTIONS_FIELD}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION_V8}` });
   }
   subsectionsOf(doc, (subsection, at) => {
     const answer = subsection['answer'];
@@ -554,16 +554,52 @@ function subsectionStructure(doc: Readonly<Record<string, unknown>>, add: (findi
   });
 }
 
+/** The paths at which a draft of schema v8 or earlier carries the worth-knowing mark or a Pole's `worthKnowingNone`, each a field-version
+ * finding (version 2.23). */
+function worthKnowingFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
+  if (hasWorthKnowingForm(doc['schemaVersion'])) return [];
+  const out: string[] = [];
+  walk(doc, '$', (value, at) => { if (Object.hasOwn(value, WORTH_KNOWING_FIELD)) out.push(`${at}.${WORTH_KNOWING_FIELD}`); });
+  list(doc['poles']).forEach((pole, i) => { if (isRecord(pole) && Object.hasOwn(pole, WORTH_KNOWING_NONE_FIELD)) out.push(`$.poles[${i}].${WORTH_KNOWING_NONE_FIELD}`); });
+  return out;
+}
+
+/** Where a v11 block may carry the worth-knowing mark: one of a section's own paragraphs, never a child, an element's claim, a subsection,
+ * a deep dive, the introduction or a route step. */
+const WORTH_KNOWING_PLACE = /^\$\.sections\[\d+\]\.paragraphs\[\d+\]$/u;
+
+/** The worth-knowing mark (REQ-polaris-generation-034 version 2.23). In a v11 draft, a `worth-knowing` finding at an Inferred block marked
+ * `worthKnowing: true` that is not one of a section's own paragraphs, that cites nothing, or that carries the judgement mark: a marked
+ * block states a cited fact. A block of another label carrying the member is already a schema finding. In an earlier draft:
+ * `field-version` at each mark and each Pole's `worthKnowingNone`, in place of the schema finding at that path. */
+function worthKnowingStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+  for (const at of worthKnowingFieldVersionPaths(doc)) {
+    const member = at.endsWith(WORTH_KNOWING_NONE_FIELD) ? WORTH_KNOWING_NONE_FIELD : WORTH_KNOWING_FIELD;
+    add({ kind: 'field-version', at, detail: `\`${member}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+  }
+  if (!hasWorthKnowingForm(doc['schemaVersion'])) return;
+  walk(doc, '$', (value, at) => {
+    if (value[WORTH_KNOWING_FIELD] !== true || value['label'] !== 'inferred') return;
+    const blockId = text(value['id']);
+    const about = blockId === undefined ? {} : { blockId };
+    const finding = (detail: string): void => add({ kind: 'worth-knowing', at: `${at}.${WORTH_KNOWING_FIELD}`, ...about, detail });
+    if (!WORTH_KNOWING_PLACE.test(at)) finding('only a block that is one of a section\'s own paragraphs carries the worth-knowing mark: not a child, an element\'s claim, a subsection, a deep dive, the introduction or a route step');
+    if (list(value['citations']).length === 0) finding('a worth-knowing block states a fact about the project and cites at least one source');
+    if (value['judgement'] === true) finding('a worth-knowing block states a fact about the project, never your own judgement: drop one of the two marks');
+  });
+}
+
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
   const current = localDraftSchema(parameters);
-  const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent');
-  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent');
+  const v8 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'absent');
+  const v7 = localDraftSchema(parameters, 'home', 'required', 'taken', 'absent', 'absent');
+  const v6 = localDraftSchema(parameters, 'home', 'required', 'absent', 'absent', 'absent');
   const unnamedRoot = localDraftSchema(parameters, 'home', 'required', 'unnamed').root;
   const unnamed = { root: (unnamedRoot as { properties: Record<string, { items: Schema }> }).properties['diagrams']!.items, defs: current.defs };
-  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent');
-  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent');
+  const v5 = localDraftSchema(parameters, 'home', 'absent', 'absent', 'absent', 'absent');
+  const v4 = localDraftSchema(parameters, 'sectionId', 'absent', 'absent', 'absent', 'absent');
   const v5Reported = /^\$\.thesisBasis$/u, v4Reported = /^\$\.(?:diagrams\[\d+\]\.home|thesisBasis)$/u;
   return {
     noun: 'draft',
@@ -576,6 +612,8 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const doc = isRecord(subject) ? subject : {};
       // A section's `subsections` in a v7 or earlier draft: a field-version finding in place of the schema finding at that path (version 2.16).
       const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
+      // The worth-knowing mark and a Pole's `worthKnowingNone` in a v8 or earlier draft: likewise (version 2.23).
+      for (const at of worthKnowingFieldVersionPaths(doc)) subsectionPaths.add(at);
       if (hasFigureKindForm(version)) {
         const standing = new Set(figureKindFindings(doc).map((finding) => finding.member));
         // A diagram naming none of the eight kinds matches none of v7's forms, which would report one fault for all of it: its faults are
@@ -588,14 +626,14 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
           if (isRecord(diagram) && membersOfKind(diagram['kind']) !== undefined) return undefined;
           return checkShape(unnamed, diagram).map((fault) => ({ path: `${error.path}${fault.path.slice(1)}`, detail: fault.detail }));
         };
-        return { schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : v7, reported: { test: (path) => standing.has(path) || subsectionPaths.has(path) }, replaced };
+        return { schema: version === LOCAL_DRAFT_SCHEMA_VERSION ? current : version === LOCAL_DRAFT_SCHEMA_VERSION_V8 ? v8 : v7, reported: { test: (path) => standing.has(path) || subsectionPaths.has(path) }, replaced };
       }
       const fieldVersion = new Set(figureFieldVersionPaths(doc));
       const [schema, also] = version === LOCAL_DRAFT_SCHEMA_VERSION_V6 ? [v6, null] : version === LOCAL_DRAFT_SCHEMA_VERSION_V5 ? [v5, v5Reported] : [v4, v4Reported];
       return { schema, reported: { test: (path) => fieldVersion.has(path) || subsectionPaths.has(path) || (also !== null && also.test(path)) } };
     },
     maxQuestions,
-    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); },
+    structural: (doc, add) => { draftStructure(doc, add, poleLimit); thesisStructure(doc, add); figureStructure(doc, add); subsectionStructure(doc, add); worthKnowingStructure(doc, add); },
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };

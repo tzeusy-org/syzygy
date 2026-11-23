@@ -44,6 +44,8 @@ export type CheckFindingKind =
   | 'figure-kind' | 'figure-unused'
   // Version 2.16 (schema v8): a subsection answer that is non-normative or more than one sentence.
   | 'subsection-answer'
+  // Version 2.23 (schema v11): a worth-knowing mark off a section's own paragraph, on an uncited block or on a judgement.
+  | 'worth-knowing'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

@@ -10,7 +10,7 @@ import {
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasSubsectionForm, hasThesisBasisForm } from './draft-schema.js';
+import { UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasSubsectionForm, hasThesisBasisForm, hasWorthKnowingForm } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -875,6 +875,13 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { paragraph: paragraph(step), ...(see === undefined ? {} : { see: { kind: see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const, id: text(see['target'])! } }) };
         }),
       })) } : {}),
+      // A v11 draft's worth-knowing marks (version 2.23): the marked blocks of the sections' own paragraphs, where check admits the mark,
+      // and the Poles that say none was found. The reason a Pole gives is never rendered.
+      ...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {
+        blockIds: list(doc['sections']).filter(isRecord).flatMap((section) => list(section['paragraphs'])
+          .flatMap((entry) => (isRecord(entry) && entry[WORTH_KNOWING_FIELD] === true && typeof entry['id'] === 'string' ? [entry['id']] : []))),
+        nonePoles: list(doc['poles']).flatMap((pole, index) => (isRecord(pole) && typeof pole[WORTH_KNOWING_NONE_FIELD] === 'string' ? [index] : [])),
+      } } : {}),
       counts: {
         uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
         withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,

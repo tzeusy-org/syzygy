@@ -2137,3 +2137,79 @@ describe('check: the reader rule for the draft and the brief record (syzygy-3efd
     nothingFrozen(run);
   });
 });
+
+// REQ-polaris-generation-034 version 2.23 (syzygy-5dhm.41): schema v11's worth-knowing mark. A marked block is a cited Inferred block that
+// is one of a section's own paragraphs and carries no judgement mark; in a v8 or earlier draft the mark and a Pole's `worthKnowingNone`
+// are field-version. Expected values are literals written from the specification.
+describe('check: the worth-knowing mark (schema v11)', () => {
+  const V11 = 'polaris-dossier-local-draft-v11';
+  const drafted = (version: string, change: (d: Draft) => void) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; change(d); });
+  const findingsOf = async (draft: Draft) => {
+    const run = await briefedRun();
+    writeDraft(run, draft);
+    return report(await checkDraft(run, {}, deps()));
+  };
+  const listed = (result: { findings: readonly { kind: string; at: string; detail: string }[] }) => result.findings.map(({ kind, at, detail }) => ({ kind, at, detail }));
+  const CITES = 'a worth-knowing block states a fact about the project and cites at least one source';
+  const NOT_JUDGED = 'a worth-knowing block states a fact about the project, never your own judgement: drop one of the two marks';
+  const PLACE = 'only a block that is one of a section\'s own paragraphs carries the worth-knowing mark: not a child, an element\'s claim, a subsection, a deep dive, the introduction or a route step';
+  const poles = (d: Draft, none?: string) => { d.poles = [{ label: 'Ideas', sections: ['core-ideas'], ...(none === undefined ? {} : { worthKnowingNone: none }) }]; d.whySection = 'core-ideas'; };
+
+  it('passes a v11 draft whose section paragraphs carry the mark, and one whose Pole says why it marks none', async () => {
+    const marked = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].worthKnowing = true; d.sections[0].paragraphs[1].worthKnowing = true; poles(d); }));
+    expect([marked.outcome, listed(marked)]).toEqual(['passed', []]);
+    const none = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[1].worthKnowing = false; poles(d, 'No fact here meets the test.'); }));
+    expect([none.outcome, listed(none)]).toEqual(['passed', []]);
+  });
+
+  it('refuses a marked block that cites nothing, beside the citation rule\'s own finding', async () => {
+    const result = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'Snapshots are periodic.', citations: [], quotations: [], worthKnowing: true }); }));
+    expect(listed(result)).toEqual([
+      { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: CITES },
+      { kind: 'citation-by-kind', at: '$.sections[0].paragraphs[1].citations', detail: 'an inferred block cites at least one source, unless it is your own judgement of the project, asserting no fact about it, and carries "judgement": true' }]);
+    expect(result.outcome).toBe('findings');
+  });
+
+  it('refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it', async () => {
+    const cited = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { judgement: true, worthKnowing: true }); }));
+    expect(listed(cited)).toEqual([{ kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: NOT_JUDGED }]);
+    const uncited = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'The design is sound.', citations: [], quotations: [], judgement: true, worthKnowing: true }); }));
+    expect(listed(uncited)).toEqual([
+      { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: CITES },
+      { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: NOT_JUDGED }]);
+  });
+
+  it('refuses the mark anywhere but a section\'s own paragraphs: a child and the introduction', async () => {
+    const result = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].children[2].worthKnowing = true; d.introduction.worthKnowing = true; }));
+    expect(listed(result)).toEqual([
+      { kind: 'worth-knowing', at: '$.introduction.worthKnowing', detail: PLACE },
+      { kind: 'worth-knowing', at: '$.sections[0].paragraphs[0].children[2].worthKnowing', detail: PLACE }]);
+  });
+
+  it('reports the mark on an unknown block as schema alone', async () => {
+    const result = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].children[0].worthKnowing = true; }));
+    expect(listed(result)).toEqual([{ kind: 'schema', at: '$.sections[0].paragraphs[0].children[0].worthKnowing', detail: 'is not a field of this form' }]);
+  });
+
+  it('reports the mark and a Pole\'s reason in a v8 or earlier draft as field-version in place of the schema finding, and judges neither', async () => {
+    for (const version of ['polaris-dossier-local-draft-v8', 'polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v4']) {
+      const result = await findingsOf(drafted(version, (d) => {
+        if (version.endsWith('v4')) delete d.thesisBasis;
+        Object.assign(d.sections[0].paragraphs[1], { judgement: true, worthKnowing: true });
+        d.introduction.worthKnowing = true;
+        poles(d, 'None.');
+      }));
+      expect(listed(result), version).toEqual([
+        { kind: 'field-version', at: '$.introduction.worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v11' },
+        { kind: 'field-version', at: '$.sections[0].paragraphs[1].worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v11' },
+        { kind: 'field-version', at: '$.poles[0].worthKnowingNone', detail: '`worthKnowingNone` needs draft schema polaris-dossier-local-draft-v11' }]);
+    }
+  });
+
+  it('gives a v11 draft without marks the findings the same v8 draft gets', async () => {
+    const faulty = (version: string) => drafted(version, (d) => { d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].paragraphs[0].quotations = []; });
+    const v11 = listed(await findingsOf(faulty(V11)));
+    expect(v11).toEqual(listed(await findingsOf(faulty('polaris-dossier-local-draft-v8'))));
+    expect(v11.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
+  });
+});

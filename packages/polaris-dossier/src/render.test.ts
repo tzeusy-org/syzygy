@@ -2678,3 +2678,74 @@ describe('render: task routes and the generated index', () => {
     expect(machine.nameIndex.names.filter((entry) => entry.kind === 'path').map((entry) => entry.name)).toEqual(['docs/notes.txt', 'src/kestrel.c']);
   });
 });
+
+// REQ-polaris-generation-034 version 2.23 (syzygy-5dhm.41): schema v11's worth-knowing marks through the render command. A marked block
+// renders once, in its page's callout before the page's sections, followed by a link to its section; a Pole that says why it marks none
+// gets Syzygy's none-found sentence and never its reason; a v11 draft without marks renders as the same v8 draft does. Literals throughout.
+describe('render: the worth-knowing callout (schema v11)', () => {
+  const V8 = 'polaris-dossier-local-draft-v8', V11 = 'polaris-dossier-local-draft-v11';
+  const REASON = 'REASON-NEVER-RENDERED no fact here meets the test.';
+  const sectionOf = (id: string, title: string, paragraphs: Doc[]): Doc => ({ id, title, paragraphs, disposition: { kind: 'produced', assetIds: [id] } });
+  const versioned = (version: string, mark: boolean, poles: boolean): Doc => {
+    const doc: Doc = { ...draft(), schemaVersion: version, thesisBasis: 'stated' };
+    const sections = doc['sections'] as Doc[];
+    // p1 carries the member set false: only `true` marks a block.
+    if (mark) { (sections[0]!['paragraphs'] as Doc[])[1]!['worthKnowing'] = true; (sections[0]!['paragraphs'] as Doc[])[0]!['worthKnowing'] = false; }
+    if (poles) {
+      sections.unshift(sectionOf('why', 'Why Kestrel exists', [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }]));
+      sections.push(sectionOf('later', 'Later', [{ id: 'l1', label: 'non-normative', text: 'Later words.', children: [] }]));
+      doc['poles'] = [{ label: 'Why', sections: ['why'] }, { label: 'How it works', sections: ['core-ideas'] },
+        { label: 'Later on', sections: ['later'], ...(mark ? { worthKnowingNone: REASON } : {}) }];
+      doc['whySection'] = 'why';
+    }
+    return doc;
+  };
+  const rendered = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const OPEN = '<aside class="callout callout-important worth-knowing" id="worth-knowing" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> What a newcomer would not guess</p><div class="worth-knowing-item"><p ';
+  const FROM = (href: string) => `<p class="worth-knowing-from">In <a href="${href}">Core ideas</a></p></div></aside>`;
+  const NONE = '<aside class="callout callout-note worth-knowing" id="worth-knowing" data-worth-knowing="none" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> None found</p><p>The authoring session reports that no fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>';
+
+  it('draws a Pole\'s marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why', async () => {
+    const files = await rendered(versioned(V11, true, true));
+    const pole = files.get('poles/2.html')!;
+    const at = pole.indexOf(OPEN);
+    expect(at).toBeGreaterThan(-1);
+    expect(pole.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeLessThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(pole.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+    expect(pole.indexOf('id="block-p1"')).toBeGreaterThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(files.get('poles/3.html')).toContain(NONE);
+    for (const [file, page] of files) {
+      expect(page, file).not.toContain('REASON-NEVER-RENDERED');
+      if (file.endsWith('.html')) expect(page.toLowerCase(), file).not.toContain('<script');
+    }
+    expect(files.get('index.html')).not.toContain('worth-knowing');
+    const claims = (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] }).claims;
+    expect(claims.filter((claim) => claim.id === 'p2').map((claim) => claim.page)).toEqual(['poles/2.html']);
+  });
+
+  it('draws the callout on the landing page, before the sections, for a draft with no Poles', async () => {
+    const index = (await rendered(versioned(V11, true, false))).get('index.html')!;
+    const at = index.indexOf(OPEN);
+    expect(at).toBeGreaterThan(index.indexOf('</header>'));
+    expect(index.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(index.indexOf(FROM('#section-core-ideas'))).toBeLessThan(index.indexOf('<section id="section-core-ideas"'));
+    expect(index.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+  });
+
+  it('renders a v11 draft without marks as the same v8 draft, page for page', async () => {
+    for (const poles of [true, false]) {
+      const v8 = await rendered(versioned(V8, false, poles));
+      const v11 = await rendered(versioned(V11, false, poles));
+      expect([...v11.keys()].sort(), String(poles)).toEqual([...v8.keys()].sort());
+      for (const [file, page] of v8) if (file.endsWith('.html')) expect(v11.get(file), `${poles} ${file}`).toBe(page);
+      for (const page of v11.values()) expect(page).not.toContain('worth-knowing');
+    }
+  });
+});

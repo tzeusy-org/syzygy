@@ -1,7 +1,7 @@
 import { isRecord } from '@syzygy/support';
 import { READER_STANDARDS_VERSION } from './reader-standards.js';
 import { NO_LAYOUT, type FigureFitEntry } from './figure-fit.js';
-import { hasFigureKindForm, hasSubsectionForm } from './draft-schema.js';
+import { WORTH_KNOWING_CEILING, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasSubsectionForm, hasWorthKnowingForm } from './draft-schema.js';
 
 /** The counted reader standards (`reader-standards.ts`, syzygy-pdja.17): what `syzygy dossier check` can measure of RS-13, RS-14, RS-16,
  * RS-17 (an edge's locality, syzygy-3efd.17) and RS-19 in a draft, reported to the author as advice. Advice is never a finding: it sets no outcome, is on the check's report only
@@ -20,6 +20,46 @@ export interface ReaderAdvice {
   readonly standards: typeof READER_STANDARDS_VERSION;
   readonly note: string;
   readonly advisories: readonly ReaderAdvisory[];
+  /** The worth-knowing count advice (version 2.23): on a schema-v11 draft only, so an earlier draft's advice keeps its bytes. */
+  readonly worthKnowing?: readonly WorthKnowingAdvisory[];
+}
+
+/** One item of the worth-knowing count advice: a Pole (or, in a draft with no Poles, the draft) with no marked block and no reason why, or
+ * with more marked blocks than the brief asks for. Advice like the rest: it sets no outcome. */
+export interface WorthKnowingAdvisory {
+  /** A JSON path into the draft: the Pole, or `$.sections` for a draft with no Poles. */
+  readonly at: string;
+  readonly marked: number;
+  readonly detail: string;
+}
+
+/** The count advice for the worth-knowing mark (REQ-polaris-generation-034 version 2.23). Counts the blocks marked `worthKnowing: true`
+ * among the section paragraphs of each Pole (each section counted in the first Pole naming it), or of the whole draft where it declares no
+ * Poles: none, where the Pole gives no `worthKnowingNone`, and more than the ceiling are each one advisory. Undefined for a draft before v11. */
+export function worthKnowingAdvice(doc: Readonly<Record<string, unknown>>): readonly WorthKnowingAdvisory[] | undefined {
+  if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;
+  const marks = new Map<string, number>();
+  list(doc['sections']).forEach((section) => {
+    if (!isRecord(section) || text(section['id']) === undefined) return;
+    marks.set(text(section['id'])!, list(section['paragraphs']).filter((entry) => isRecord(entry) && entry[WORTH_KNOWING_FIELD] === true).length);
+  });
+  const groups: { at: string; sections: readonly string[]; none: boolean; name: string }[] = Array.isArray(doc['poles'])
+    ? doc['poles'].flatMap((pole, i) => (isRecord(pole) ? [{
+      at: `$.poles[${i}]`, sections: list(pole['sections']).filter((id): id is string => typeof id === 'string'),
+      none: text(pole[WORTH_KNOWING_NONE_FIELD]) !== undefined, name: `the Pole ${JSON.stringify(text(pole['label']) ?? '')}`,
+    }] : []))
+    : [{ at: '$.sections', sections: [...marks.keys()], none: false, name: 'the draft' }];
+  const counted = new Set<string>();
+  const out: WorthKnowingAdvisory[] = [];
+  for (const group of groups) {
+    const marked = group.sections.reduce((sum, id) => { if (counted.has(id)) return sum; counted.add(id); return sum + (marks.get(id) ?? 0); }, 0);
+    if (marked === 0 && !group.none) {
+      out.push({ at: group.at, marked, detail: `${group.name} marks no block worth knowing: mark one to ${WORTH_KNOWING_CEILING} cited facts a newcomer would not guess from the kind of project this is, or, where none meets that test, say why in its \`${WORTH_KNOWING_NONE_FIELD}\`` });
+    } else if (marked > WORTH_KNOWING_CEILING) {
+      out.push({ at: group.at, marked, detail: `${group.name} marks ${marked} blocks worth knowing, past ${WORTH_KNOWING_CEILING}: keep the ones a newcomer would least guess and drop the mark from the rest` });
+    }
+  }
+  return out;
 }
 
 /** The class of an item of check's advice to the author (REQ-polaris-generation-034 version 2.9, syzygy-3efd.64): `author` where a change to
@@ -204,5 +244,6 @@ export function readerAdvice(doc: unknown): ReaderAdvice {
       });
     });
   }
-  return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories };
+  const worthKnowing = isRecord(doc) ? worthKnowingAdvice(doc) : undefined;
+  return { standards: READER_STANDARDS_VERSION, note: NOTE, advisories, ...(worthKnowing === undefined ? {} : { worthKnowing }) };
 }
