@@ -162,6 +162,9 @@ afterEach(async () => { for (const close of cleanup.splice(0).reverse()) await c
 type ResumeTransportStage = 'open' | 'accept' | 'capture' | 'authorize';
 type ResumeObservation = 'accepted' | 'refused' | 'rejected';
 type ResumeStamp = { startedMs: number; settledMs?: number; outcome?: ResumeObservation };
+type ResumeStoreStep = ResumeStamp & ({ kind: 'allocation' } | {
+  kind: 'terminal'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
+});
 type ResumeAuditSetup = ResumeStamp & {
   declarations?: number;
   pendingFilesystemOperations?: number;
@@ -838,6 +841,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     const resumeChecks: unknown[] = [];
     type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'restore-products' | 'start-sessions' | 'open-store' | 'create-machine';
     const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
+    const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
       resumeBootstrap[phase] = stamp;
@@ -857,7 +861,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
       }, 340_000).unref();
@@ -1364,12 +1368,41 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           const machineChecks: { current: boolean; claimChecks: number; withdrawn: boolean; asyncCurrent: boolean; asyncWithdrawn: boolean }[] = [];
           vi.spyOn(runMachine, 'createUrlRunMachine').mockImplementationOnce(async options => {
             const open = machineStore.openUrlMachineStore;
-            const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce((...args) =>
-              observeBootstrap('open-store', () => open(...args), value => value !== null));
+            let observing = true;
+            const observeStoreStep = <T>(step: ResumeStoreStep, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
+              resumeStoreSteps.push(step);
+              const settled = (outcome: ResumeObservation) => Object.assign(step, { settledMs: performance.now(), outcome });
+              return observe(invoke, value => { settled(accepts(value) ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
+            };
+            const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce(async (...args) => {
+              const store = await observeBootstrap('open-store', () => open(...args), value => value !== null);
+              if (store === null) return null;
+              return Object.freeze<machineStore.UrlMachineStore>({ ...store,
+                allocateClient: deadline => observing
+                  ? observeStoreStep({ kind: 'allocation', startedMs: performance.now() }, () => store.allocateClient(deadline), value => value !== null)
+                  : store.allocateClient(deadline),
+                exclusive: (id, deadline, run, profile) => {
+                  if (!observing) return store.exclusive(id, deadline, run, profile);
+                  const step: Extract<ResumeStoreStep, { kind: 'terminal' }> = {
+                    kind: 'terminal', startedMs: performance.now(), currentChecks: 0, currentRefusals: 0,
+                  };
+                  return observeStoreStep(step, () => store.exclusive(id, deadline, lease => run(Object.freeze({ ...lease,
+                    read: () => observe(lease.read, value => { step.read = value === null ? 'refused' : 'accepted'; }, () => { step.read = 'rejected'; }),
+                    current: () => {
+                      const current = lease.current();
+                      step.currentChecks++;
+                      if (!current) step.currentRefusals++;
+                      return current;
+                    },
+                  })), profile), value => value);
+                },
+              });
+            });
             let machine: Awaited<ReturnType<typeof createMachine>>;
             try {
               machine = await observeBootstrap('create-machine', () => createMachine(options), () => true);
             } finally {
+              observing = false;
               openObservation.mockRestore();
             }
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
@@ -1497,7 +1530,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeAuditEnteredMs,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence,
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
@@ -1506,7 +1539,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
+        resumeChecks, resumeBootstrap, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
