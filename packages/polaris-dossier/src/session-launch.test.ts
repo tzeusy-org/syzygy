@@ -1238,7 +1238,8 @@ describe('prepared private CLI launch',()=>{
 
   it.each([
     { missing: 'one child', directories: 1, outcome: 'exited', removed: 1, rootReads: 2 },
-    { missing: 'two children', directories: 2, outcome: 'inspection-failed', removed: 2, rootReads: 2 },
+    { missing: 'two children', directories: 2, outcome: 'exited', removed: 2, rootReads: 3 },
+    { missing: 'three children', directories: 3, outcome: 'inspection-failed', removed: 3, rootReads: 3 },
     { missing: 'root', directories: 0, outcome: 'inspection-failed', removed: 0, rootReads: 1 },
     { missing: 'replaced child', directories: 1, outcome: 'inspection-failed', removed: 1, rootReads: 1 },
   ])('distinguishes $missing vanishing at directory open', async ({ missing, directories, outcome, removed, rootReads }) => {
@@ -1252,12 +1253,13 @@ describe('prepared private CLI launch',()=>{
     const host = await f.start({ beforeTool: () => { enterTool(true); return heldTool; } });
     const retained = 'own-retained-dir-entry';
     const enumerated = new Set<string>();
-    let rootOpens = 0, childRemovals = 0, retainedOnRetry = false;
+    let rootOpens = 0, childRemovals = 0;
+    const retainedWalks = new Set<number>();
     filesystem.beforeLstat = async file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/')) return;
       const name = path.basename(file);
       if (names.has(name)) enumerated.add(name);
-      if (name === retained && rootOpens === 2) retainedOnRetry = true;
+      if (name === retained) retainedWalks.add(rootOpens);
     };
     filesystem.beforeOpen = async file => {
       if (file === work) {
@@ -1291,7 +1293,7 @@ describe('prepared private CLI launch',()=>{
         expect(observation.samples).toBe(1);
         expect(childRemovals).toBe(removed);
         expect(rootOpens, diagnostic).toBe(rootReads);
-        if (completed) expect(retainedOnRetry).toBe(true);
+        if (completed) expect(retainedWalks.has(rootReads)).toBe(true);
         releaseTool();
         expect(await child.finished).toMatchObject({ outcome, exitCode: completed ? 0 : null,
           groupTermination: 'confirmed', toolTermination: 'settled' });
