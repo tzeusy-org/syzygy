@@ -699,17 +699,17 @@ CONT_SUBJECTS = {
     CONT_SPEC: "0f6ef5fb8ba2ef4577e2512f54c7e0e7683de7d5466def39fcb1b7b555d92f5d",
 }
 CONT_BOUND_PARTS = len(CONT_SUBJECTS)
-# The v2.NN system-model amendment (syzygy-3efd.37; the label is a placeholder
+# The v2.24 system-model amendment (syzygy-3efd.37; the label was a placeholder
 # until adoption): one MODIFIED REQ-polaris-generation-034 after v2.23,
 # pending until its own VIS-4 ledger row, found by its tag as v2.23's is.
 MODEL_CHANGE = "dossier-system-model"
 MODEL_HOME = f"{CHANGES}/{MODEL_CHANGE}"
 MODEL_SPEC = f"{MODEL_HOME}/proposed/polaris-generation/spec.md"
 MODEL_UNION = f"{MODEL_HOME}/GOVERNING-DEPENDENCIES.json"
-MODEL_TAG = "polaris-dossier-system-model-v2.NN"
-MODEL_STATUS_PREFIX = f"[System model amendment 2.NN]({MODEL_HOME})"
+MODEL_TAG = "polaris-dossier-system-model-v2.24"
+MODEL_STATUS_PREFIX = f"[System model amendment 2.24]({MODEL_HOME})"
 MODEL_SUBJECTS = {
-    MODEL_SPEC: "21c4b0835116a41407b227c748a96a2e8468feb8343d9b07692101f4494ed47c",
+    MODEL_SPEC: "f06e830deeef03f5d10f522481c8d25c141ff5ebce097c7411361d5bdc358c54",
 }
 MODEL_BOUND_PARTS = len(MODEL_SUBJECTS)
 
@@ -1451,7 +1451,7 @@ def cont_disposition(root, rows):
     return None
 
 def is_model_row(line):
-    """A ledger row claiming the v2.NN system-model amendment, well formed or not."""
+    """A ledger row claiming the v2.24 system-model amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -2584,7 +2584,7 @@ def cont_binding(root):
     return (None if records or subjects else read_text(root, CONT_SPEC), records, subjects)
 
 def model_binding(root):
-    """Read v2.NN's published composition: pending until its row, like v2.14.
+    """Read v2.24's published composition: pending until its row, like v2.14.
 
     The row names the installing commit (a plain commit, so its revert may
     omit `-m 1`), the reviewed spec at that commit and the version tag. Its
@@ -2617,7 +2617,7 @@ def model_binding(root):
     for rel, digest in MODEL_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"system model: `{rel}` differs from the reviewed v2.NN subject")
+            subjects.append(f"system model: `{rel}` differs from the reviewed v2.24 subject")
     return (None if records or subjects else read_text(root, MODEL_SPEC), records, subjects)
 
 def is_raw_read_row(line):
@@ -3436,7 +3436,7 @@ def check_outcomes(root, report):
     if cont_retired_by:
         retirement += f"; v2.23 inactive by {cont_retired_by}"
     if model_retired_by:
-        retirement += f"; v2.NN inactive by {model_retired_by}"
+        retirement += f"; v2.24 inactive by {model_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -3472,7 +3472,7 @@ def check_outcomes(root, report):
                "one v2.21 row over effective v2.18's 033, pending until recorded; reader's edition: "
                "one v2.22 row over effective v2.20, pending until recorded; containment figure: "
                "one v2.23 row over effective v2.22, pending until recorded; system model: "
-               "one v2.NN row over effective v2.23, pending until recorded" + retirement)
+               "one v2.24 row over effective v2.23, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -5406,15 +5406,15 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and MODEL_TAG in line
                    for line in rows.get(MODEL_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route system model v2.NN "
+            findings.append(f"`{OPENSPEC_README}` does not route system model v2.24 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = model_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or model_fields != [f"{MODEL_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route system model v2.NN and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route system model v2.24 and its adoption {identity}")
     elif MODEL_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in model_fields):
-            findings.append(f"`{STATUS}` calls system model v2.NN adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls system model v2.24 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -8765,7 +8765,7 @@ def cont_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == kin_pop), False)
 
 def model_cases(tmp, base, witnesses, failures):
-    """The v2.NN pending-to-adopted transition over v2.23, its ledger and byte guards, and the predecessor guard."""
+    """The v2.24 pending-to-adopted transition over v2.23, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, MODEL_SPEC)
     if original is None or cont_binding(base)[0] is None:
         return
@@ -8788,8 +8788,8 @@ def model_cases(tmp, base, witnesses, failures):
     ident = FIGURE_REPLACES[0]
     held = (model_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == 193)
-    record("model-pending", AGENT_ADOPTIONS, "<no v2.NN row>", "<unchanged>",
-           "landed package alone keeps v2.NN pending", pending_findings, held, True)
+    record("model-pending", AGENT_ADOPTIONS, "<no v2.24 row>", "<unchanged>",
+           "landed package alone keeps v2.24 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
     row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{MODEL_SPEC}) "
@@ -8802,8 +8802,8 @@ def model_cases(tmp, base, witnesses, failures):
             and len(current[ident]["scenarios"]) == 207
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("model-adopted", AGENT_ADOPTIONS, "<no v2.NN row>", row,
-           "v2.NN replaces exactly 034 (193 to 207 scenarios)", current_findings, held, True)
+    record("model-adopted", AGENT_ADOPTIONS, "<no v2.24 row>", row,
+           "v2.24 replaces exactly 034 (193 to 207 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", MODEL_TAG, MODEL_TAG + "-wrong"),
@@ -8861,7 +8861,7 @@ def model_cases(tmp, base, witnesses, failures):
     status.write_text(previous)
     record("model-status-route-missing", STATUS, MODEL_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("system model v2.NN" in f for f in report.findings.get("R5", [])), False)
+           any("system model v2.24" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)

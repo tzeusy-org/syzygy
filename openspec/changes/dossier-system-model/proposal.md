@@ -1,6 +1,6 @@
-# Dossier system model — version 2.NN
+# Dossier system model — version 2.24
 
-[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. The label 2.NN is a placeholder, set when the change is adopted, because another dossier change (syzygy-3efd.40) is drafted in parallel. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit; no change to secret detection or SEC-5's fail-closed rule; no write to a repository the owner does not own; no network exposure, release or multi-user use.
+[Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. Drafted under the placeholder label 2.NN while syzygy-3efd.40 was drafted in parallel; labelled 2.24 at adoption, .37 adopting first by the lead's ordering (design D1).
 
 ## Why
 

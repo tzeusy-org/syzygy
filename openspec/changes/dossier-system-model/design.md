@@ -1,10 +1,11 @@
 # Design: one system model, structural figures as views
 
-[Inferred] Version 2.NN of REQ-polaris-generation-034, for syzygy-3efd.37. It is drafted on `agent/syzygy-3efd.37`, over the version 2.23 text (`dossier-containment-figure`, row A-59, after #921 took A-58; PR #925, merged 2026-11-24). The code of versions 2.16 to 2.23 has not all landed: `main`'s draft schema in `packages/polaris-dossier/src/draft-schema.ts` is v9. Every code site named in D10 must be re-located on the base the implementation starts from.
+[Inferred] Version 2.24 of REQ-polaris-generation-034, for syzygy-3efd.37. It is drafted on `agent/syzygy-3efd.37`, over the version 2.23 text (`dossier-containment-figure`, row A-59, after #921 took A-58; PR #925, merged 2026-11-23). The code of versions 2.16 to 2.23 has not all landed: `main`'s draft schema in `packages/polaris-dossier/src/draft-schema.ts` is v9. Every code site named in D10 must be re-located on the base the implementation starts from.
 
 ## D1. The version label
 
-- [Observed] syzygy-3efd.40 (figure plan, advisories) is drafted in parallel over `main`. Both changes therefore use the placeholder 2.NN until adoption, as the lead directed.
+- [Observed] syzygy-3efd.40 (figure plan, advisories) is drafted in parallel over `main`. Both changes therefore used the placeholder 2.NN until adoption, as the lead directed. The lead then ordered .37 to adopt first: no tag or agent branch carried 2.24, so this change is 2.24 (schema v12, brief v18), and .40 rebuilds over it as schema v13 and brief v19.
+- [Observed] The label was set by a substitution script (session tooling, not in the tree): replacing `2.24` with `2.NN` in the adopted spec and restoring the preamble's clause "(the label is a placeholder until adoption)" reproduces the repaired bytes, sha256 `21c4b0835116a41407b227c748a96a2e8468feb8343d9b07692101f4494ed47c`. Review 1 and its quotations refer to the 2.NN label.
 - [Inferred] At adoption, re-fetch tags, agent branches and `AGENT-ADOPTIONS.md`, and take the next free label and row. If .40 lands first and changes REQ-034, rebuild this text on its text with the same anchored script.
 - [Inferred] Schema v12 and brief v18 follow 2.23's v11 and v17. If .40 also takes a schema or brief number, whichever lands second renumbers.
 
