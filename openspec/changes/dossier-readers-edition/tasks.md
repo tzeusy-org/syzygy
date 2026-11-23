@@ -6,6 +6,6 @@
 - [x] Seven stored runs re-rendered against `main` and measured (`docs/evidence/syzygy-5dhm-136/reader-edition-measurement-2026-11-23.json`), and a recorded rule-6 mutation run (`reader-edition-mutation-2026-11-23.json`).
 - [x] Draft the complete MODIFIED REQ-polaris-generation-034 on the version 2.20 text by an anchored script, and generate its semantic delta from the bytes.
 - [x] Wire the overlay into `scripts/check_spec_reconciliation.py` (pending until its row) and `scripts/count_polaris_effective_scenarios.py`, with selftest cases (`readers_cases`).
-- [ ] Append the agent-adoption row naming the installing commit.
+- [x] Append the agent-adoption row naming the installing commit (A-56, `a860f7cc`).
 - [ ] Create the version tag `polaris-dossier-readers-edition-v2.22` at the installing commit once it is on the default branch.
 - [ ] Reader sessions over the reader-form text, to measure reader share (coordinator).
