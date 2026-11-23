@@ -375,7 +375,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (++count > URL_MACHINE_STORE_LIMITS.clients + 5 || item.name.startsWith('canonical-history') && item.name !== 'canonical-history.json') throw refused();
       }
     };
-    const readState = async (publicationClock?: () => number): Promise<StoreState> => {
+    const readStateSnapshot = async (publicationClock?: () => number) => {
       await anchored(publicationClock);
       const id = await readFile(`${base}/identity.json`, 16_384);
       if (id === null || sha256(id) !== expectedIdentitySha256) throw refused();
@@ -388,9 +388,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         validatedState = { sha256: digest, value: decoded };
       }
       const state = validatedState.value;
-      await readArchive(state);
-      return state;
+      const archive = await readArchive(state);
+      return { state, archive };
     };
+    const readState = async (): Promise<StoreState> => (await readStateSnapshot()).state;
     await census();
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
@@ -402,6 +403,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       reverify: () => Promise<void>;
       anchored: () => Promise<void>;
       state: () => Promise<StoreState>;
+      stateSnapshot: () => ReturnType<typeof readStateSnapshot>;
       write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
     }) => Promise<void>;
     const withLock = async (deadline: number, operation: StoreOperation,
@@ -506,7 +508,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await io(census);
         // Bracket the complete private state read, including its named roots,
         // with I/O authority. The client read still starts after that check.
-        await operation({ check, checkWork, reverify, anchored: verifyAnchors, state: () => io(() => readState(checkDeadline)), write });
+        const stateSnapshot = () => io(() => readStateSnapshot(checkDeadline));
+        await operation({ check, checkWork, reverify, anchored: verifyAnchors,
+          state: async () => (await stateSnapshot()).state, stateSnapshot, write });
         check();
         if (allocation) {
           // The slot is durable. Keep lock cleanup and witness admission
@@ -564,7 +568,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)
         ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
-      return withLock(deadline, async ({ check, checkWork, anchored, state, write }) => {
+      return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
         if (effectProfile !== undefined) {
           const audit = (await state()).clients.find(client => client.clientId === clientId)?.audit.at(-1);
           if (!audit || audit.profileSha256 !== effectProfile.digest || audit.role !== effectProfile.input.binding.role
@@ -576,9 +580,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         const preflightCanonical: NonNullable<UrlMachineLifecycleLease['preflightCanonical']> = async (candidate, proposedHead) => {
           checkWork();
           if (phase !== 0 || prepared !== null || !head(proposedHead) || proposedHead.record.clientId !== clientId) return false;
-          const bytes = Buffer.from(candidate), current = await state(), entry = current.clients.find(item => item.clientId === clientId);
+          const bytes = Buffer.from(candidate);
+          const { state: current, archive: prior } = await stateSnapshot();
+          const entry = current.clients.find(item => item.clientId === clientId);
           if (!entry || (entry.anchor.kind !== 'never-issued' && entry.anchor.kind !== 'committed') || sha256(bytes) !== proposedHead.record.sha256) return false;
-          const prior = await readArchive(current);
           const raw = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), URL_MACHINE_CLIENT_LIMITS);
           if (!isRecord(raw)) return false;
           const last = entry.audit.at(-1);

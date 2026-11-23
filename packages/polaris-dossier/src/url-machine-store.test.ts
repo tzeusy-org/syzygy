@@ -1,5 +1,6 @@
 import { mkdir, mkdtemp, readFile, readdir, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
+import { writeFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
@@ -567,6 +568,39 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } else {
       expect(state.used).toEqual([]); expect(state.clients[0].anchor.kind).toBe('never-issued');
       expect((await slot.publish()).ok).toBe(true);
+    }
+  });
+
+  it.each(['current-archive', 'replaced-archive'] as const)('preflights one checked snapshot and rechecks %s before reserve', async archiveState => {
+    const f = await fixture(), slot = await f.allocate();
+    const stateFile = path.join(f.options.protectedRoot, 'state.json');
+    const pack = path.join(f.options.protectedRoot, 'canonical-history.json');
+    const originalState = await readFile(stateFile);
+    const archive = JSON.parse(await readFile(pack, 'utf8')) as { rootId: string };
+    let archiveReads = 0;
+    let readsBeforeReserve: number | undefined;
+    filesystem.afterClose = file => {
+      if (path.basename(file) !== 'canonical-history.json') return;
+      archiveReads++;
+      if (archiveState === 'replaced-archive' && archiveReads === 2) {
+        writeFileSync(pack, canon({ ...archive, rootId: id() }));
+      }
+    };
+    filesystem.afterSync = file => {
+      if (path.basename(file).startsWith('state.json.new-')) readsBeforeReserve ??= archiveReads;
+    };
+    const result = await f.store.publish({ context: slot.context, binding: slot.binding, expected: null, next: canon(slot.record) }, () => true);
+    if (archiveState === 'replaced-archive') {
+      expect(archiveReads).toBe(3);
+      expect(readsBeforeReserve).toBeUndefined();
+      expect(result.ok).toBe(false);
+      expect(await readFile(stateFile)).toEqual(originalState);
+      await expect(readFile(slot.file)).rejects.toMatchObject({ code: 'ENOENT' });
+    } else {
+      // Initial lifecycle read, preflight, reserve predecessor, and reserve state.
+      expect(readsBeforeReserve).toBe(4);
+      expect(result.ok).toBe(true);
+      expect(await readFile(slot.file)).toEqual(canon(slot.record));
     }
   });
 
