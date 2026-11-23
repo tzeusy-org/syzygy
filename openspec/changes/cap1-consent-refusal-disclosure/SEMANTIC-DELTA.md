@@ -28,3 +28,10 @@ is taken by drafting this package.
 
 Basis: [round 4 finding 2](../../../docs/reviews/R-CAP1-TRUSTED-BOOTSTRAP-CONSENT-4-RAW.md)
 and its [recorded disposition](../../../docs/reviews/R-CAP1-TRUSTED-BOOTSTRAP-CONSENT-4-DISPOSITION.md).
+
+## Independent review
+
+R1 issued `CONFIRM` on `3c05b8fb90c52518de09ca6461166dafb05fffb4`.
+[Raw independent review](../../../docs/reviews/syzygy-0v4l/0V4L-CONSENT-REFUSAL-R1-RAW.md),
+SHA-256 `bc693197bb9eae5a055baa066c03aebb37abf6531ed7a324d1dd0e4adcfaca6b`. The proposed requirement is byte-identical to that
+review subject.
