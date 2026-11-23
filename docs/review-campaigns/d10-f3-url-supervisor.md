@@ -13,6 +13,8 @@
 - `F3-INITIAL-ROLE-INSPECTION(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-ARTIFACT-GATE-FIXTURE-REVIEW-RAW\.md`
 - `F3-EAGER-TASK-READS(-INITIAL)?-REVIEW-RAW\.md`
+- `F3-SEALED-ORIGIN-GATE-REVIEW-RAW\.md`
+- `F3-RESUME-STAGE-TRACE(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -73,3 +75,7 @@
 [Observed] The local replay at `4ca23d1c7` completed all four fresh audit declarations and 26 authority checks before machine startup refused. The initial role observation review records `BLOCK` (`F3-INITIAL-ROLE-INSPECTION-INITIAL-REVIEW-RAW.md:1`) because a partial audit row could hide the captured inspections. The successor records `PASS` (`F3-INITIAL-ROLE-INSPECTION-REVIEW-RAW.md:1`) at `b72c3ee11` for preserving the inspections and reporting the auxiliary read failure. The artifact gate timing fixture review records `PASS` (`F3-ARTIFACT-GATE-FIXTURE-REVIEW-RAW.md:1`) at `f6c311701`. Its four targeted integration cases passed.
 
 [Observed] The first eager task-read review records `BLOCK` (`F3-EAGER-TASK-READS-INITIAL-REVIEW-RAW.md:1`) at `acb8a9b8d` because a task-listing failure after open could still yield a partial process count. The successor records `PASS` (`F3-EAGER-TASK-READS-REVIEW-RAW.md:1`) at `2466184be` after making partial listings refuse. Eight independent exact-source probes passed, including bounded task reads and non-leader descendants.
+
+[Observed] The cold origin gate review records `PASS` (`F3-SEALED-ORIGIN-GATE-REVIEW-RAW.md:1`) for `faa64c2ea`. It retains the exact checks around fresh input observations and the final handoff. A-108 records the adopted change and revert command.
+
+[Observed] The initial resume stage trace review records `BLOCK` (`F3-RESUME-STAGE-TRACE-INITIAL-REVIEW-RAW.md:1`) at `712458421` for introducing an extra promise into the machine timing path. The successor records `PASS` (`F3-RESUME-STAGE-TRACE-REVIEW-RAW.md:1`) at `acac67381`. It records the original call's outcome and keeps the store probe inside fresh machine creation.

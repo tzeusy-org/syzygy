@@ -1,0 +1,60 @@
+{
+  "subject": "faa64c2ea9e975fc8fbb1637cd095529e9d14f10",
+  "baseline": "1e5822ca58ee7e8fb7ad53080dcbb06acaf6411b",
+  "source": "packages/polaris-dossier/src/url-origin-ledger.ts",
+  "focused": {
+    "testFile": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+    "case": "checks cold origin authority for fresh observations and again before returning the sealed graph",
+    "suiteResult": {
+      "passed": 13,
+      "skipped": 57,
+      "total": 70
+    },
+    "logSha256": "f58113c6570d5379ead76374afe4acf86076de1493c3af75009d3ac8b33ea25b",
+    "typecheck": "passed"
+  },
+  "review": {
+    "verdict": "PASS",
+    "sha256": "3da8148ddebc96e5bee1c0a0b4b0f96b66bdad4193e1f58a95efaffc209e8305"
+  },
+  "mutations": [
+    {
+      "name": "metadata-polling",
+      "testSubject": "faa64c2ea9e975fc8fbb1637cd095529e9d14f10",
+      "diff": "metadata-polling.patch",
+      "diffSha256": "a7568cb537ecbaee80497d6efa1e36f2570668b1c8a0b117eb61083a79890f3e",
+      "logSha256": "75b72eba56008e81434a2d77bde45ba8cbc6cc38908b0378bcddc9c111386683",
+      "observedAssertion": "expected 34 to be 8"
+    },
+    {
+      "name": "final-gate",
+      "testSubject": "faa64c2ea9e975fc8fbb1637cd095529e9d14f10",
+      "diff": "final-gate.patch",
+      "diffSha256": "1f25ef36cdf840f4c584f86599b6f4d5ee09d19b82220a80ec99522846be8e83",
+      "logSha256": "c8f1cdc5aacbd84d7383ada18ebf47eed5654d7f7ffab49f39087507971ac079",
+      "observedAssertion": "expected 7 to be 8"
+    }
+  ],
+  "retainedInterruptedCut": {
+    "subject": "4ca23d1c7",
+    "sha256": "4685ecb97105535fe8b7710bb3361ddd409d2bf1eb4aed785c16ac74d4182c0b",
+    "nodesByDerivation": {
+      "authenticated-provider-output": 1,
+      "composition": 35,
+      "fixed": 3,
+      "report": 4,
+      "source-manifest-remainder": 1,
+      "source-reply": 4,
+      "source-span": 12
+    },
+    "sealedMetadataNodes": 44,
+    "freshObservationNodes": 16,
+    "otherRecordChecks": 21,
+    "otherArtifactChecks": 10,
+    "inferredGraphLayerOnlyWaits": {
+      "baseline": 61,
+      "successor": 17
+    }
+  },
+  "limits": "The retained cut establishes its population. The successor wait count on that cut is inferred from the code and does not establish elapsed savings or native recovery success."
+}

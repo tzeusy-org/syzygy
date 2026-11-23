@@ -1,0 +1,110 @@
+{
+  "subject": "e8e9651753aa14cb24a745a548313c18e740726c",
+  "checkout": "9bc890acccd03b2b49fd51c85fdfcea5ab86fbf7",
+  "identicalTree": "afab8bb2cb2213c344267933b9619d6cdc3af106",
+  "workflowRun": 45113051588,
+  "job": 137490405038,
+  "conclusion": "failure",
+  "rawLogSha256": "b7be95f68d198a2b3be3caf82d6f5bdcb0fa8434ed20e19257b5225c3dbbce09",
+  "observedFileRows": {
+    "count": 137,
+    "testPopulation": 3912,
+    "failed": 4,
+    "skipped": 3,
+    "failingFiles": [
+      {
+        "file": "packages/polaris-dossier/src/session-launch.test.ts",
+        "failed": 2
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "failed": 2
+      }
+    ],
+    "finalSuiteSummaryInRetainedLog": false
+  },
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 81519
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 69462
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 419569
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 316289
+    }
+  ],
+  "interruptedResume": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": []
+      }
+    ],
+    "freshAuditSetup": {
+      "startedMs": 567504.033871,
+      "authority": {
+        "started": 18,
+        "accepted": 17,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 4808.967803999782,
+        "longestMs": 363.30984299990814
+      },
+      "settledMs": 572522.910251,
+      "outcome": "refused",
+      "declarations": 2,
+      "pendingCallbacks": 1,
+      "pendingFilesystemOperations": 0
+    },
+    "designForwards": 0,
+    "failedAssertion": "expected [] to deeply equal [ { current: true, …(4) } ]"
+  },
+  "eligibleResume": {
+    "structuredFailureInRetainedLog": false,
+    "preTimeoutSnapshotInRetainedLog": false,
+    "firstFailingPhase": "Unknown"
+  },
+  "otherHostedJobs": {
+    "unit": 137489520728,
+    "e2e": 137490405081,
+    "coreGovernance": 137489521163,
+    "reconciliation": 137489521233
+  },
+  "storageFixture": {
+    "failedCases": [
+      "one child",
+      "two children"
+    ],
+    "oneChildFirstRefusal": "storage operation-rejected after one root open and one removal",
+    "twoChildAssertion": "expected 1 to be 2"
+  }
+}

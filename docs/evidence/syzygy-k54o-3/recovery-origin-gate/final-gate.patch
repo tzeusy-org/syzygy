@@ -1,0 +1,13 @@
+diff --git a/packages/polaris-dossier/src/url-origin-ledger.ts b/packages/polaris-dossier/src/url-origin-ledger.ts
+index cbe3f7f0f..8f8b774e1 100644
+--- a/packages/polaris-dossier/src/url-origin-ledger.ts
++++ b/packages/polaris-dossier/src/url-origin-ledger.ts
+@@ -547,7 +547,7 @@ function create(given: UrlOriginLedgerOptions) {
+         if (digest !== node.metadata.digest || bytes.length !== node.metadata.bytes || manifestRemainderOriginId(digest) !== node.metadata.id) fail();
+       }
+     }
+-    if (!(await waitForSamples())) fail(); transfer.revalidate();
++    transfer.revalidate();
+     const restored = new Map<string, UrlOriginReceipt>();
+     return Object.freeze({ history, launches: transfer.launches, deadline: transfer.deadline, revalidate: transfer.revalidate,
+       receipt: (file: string, bytes: Uint8Array, role?: Role): UrlOriginReceipt => guarded(() => {
