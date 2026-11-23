@@ -647,8 +647,8 @@ describe('protected URL session audit', () => {
   });
 
   it.each([
-    { cost: 320, ok: true, declarations: 4, checks: 14 },
-    { cost: 380, ok: false, declarations: 3, checks: 14 },
+    { cost: 440, ok: true, declarations: 4, checks: 11 },
+    { cost: 460, ok: false, declarations: 3, checks: 11 },
   ])('keeps one setup cutoff through all declarations at $cost ms per check', async ({ cost, ok, declarations, checks }) => {
     const f = fixture();
     let elapsed = 0;
@@ -662,6 +662,65 @@ describe('protected URL session audit', () => {
       expect(result.summary()).toMatchObject({ declarations, durableRecords: declarations, limits: { milliseconds: 5_000 } });
       expect(current).toHaveBeenCalledTimes(checks);
     } finally { vi.useRealTimers(); }
+  });
+
+  it('refreshes authority before the first write after screening a later declaration', async () => {
+    const f = fixture(), p = await prototype();
+    let screened = false;
+    const screenBody = (body: string) => {
+      if (body.includes('"kind":"declaration"') && body.includes('"role":"design"')) {
+        screened = true;
+        f.revoke();
+      }
+      return f.options.screen.screenBody(body);
+    };
+    const write = vi.spyOn(p, 'write');
+    const result = await createUrlSessionAudit({ ...f.options, screen: { ...f.options.screen, screenBody } });
+    if (result.ok) writers.push(result);
+    expect(screened).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(write).not.toHaveBeenCalled();
+    expect(result.summary()).toMatchObject({ closed: true, poisoned: true, durableRecords: 0, declarations: 0 });
+  });
+
+  it('refreshes authority after writing a declaration and before syncing its bytes', async () => {
+    const f = fixture(), p = await prototype(), actual = p.write;
+    vi.spyOn(p, 'write').mockImplementationOnce(async function(this: FileHandle, ...args: unknown[]) {
+      const write = await actual.apply(this, args);
+      f.revoke();
+      return write;
+    });
+    const sync = vi.spyOn(p, 'sync');
+    const result = await createUrlSessionAudit(f.options);
+    if (result.ok) writers.push(result);
+    expect(result.ok).toBe(false);
+    expect(sync).toHaveBeenCalledTimes(1);
+    expect(fs.statSync(f.file('author')).size).toBeGreaterThan(0);
+    expect(fs.statSync(f.file('inventory')).size).toBe(0);
+    expect(result.summary()).toMatchObject({ closed: true, poisoned: true, durableRecords: 0, declarations: 0 });
+  });
+
+  it('rechecks a future segment name before acknowledging a freshly checked prefix', async () => {
+    const f = fixture(), p = await prototype(), sync = vi.spyOn(p, 'sync');
+    const target = f.file('inventory'), displaced = path.join(f.root, 'displaced');
+    let replaced = false;
+    const current = () => {
+      if (!replaced && sync.mock.calls.length === 3) {
+        replaced = true;
+        fs.renameSync(target, displaced);
+        fs.writeFileSync(target, '', { flag: 'wx', mode: 0o600 });
+      }
+      return true;
+    };
+    const write = vi.spyOn(p, 'write');
+    const result = await createUrlSessionAudit({ ...f.options, current });
+    if (result.ok) writers.push(result);
+    expect(replaced).toBe(true);
+    expect(result.ok).toBe(false);
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(fs.statSync(target).ino).not.toBe(fs.statSync(displaced).ino);
+    expect(fs.statSync(displaced).size).toBe(0);
+    expect(result.summary()).toMatchObject({ closed: true, poisoned: true, durableRecords: 0, declarations: 0 });
   });
 
   it('does not count a declaration when its final prefix read withdraws setup authority', async () => {

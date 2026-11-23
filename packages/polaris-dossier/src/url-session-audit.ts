@@ -767,18 +767,56 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     const relayRequests = new Set<string>();
     type DurableEvent = { readonly offset: number; readonly bytes: Buffer; readonly digest: string };
     const relayLatest = new Map<ViewRole, { readonly payload: SessionAuditEvent; readonly events: readonly DurableEvent[] }>();
-    const commit = async (event: unknown, role: ViewRole, deadline: number, declaration: boolean,
+    const encodeRow = (event: unknown, sequence: number, roleSequence: number,
+      previousSha256: string | null, previousRoleSha256: string | null): Omit<DurableEvent, 'offset'> => {
+      const body = { format: URL_SESSION_AUDIT_FORMAT, sequence, roleSequence, previousSha256, previousRoleSha256, event };
+      const digest = sha256(canonical(body, limits.eventBytes));
+      const row = { ...body, sha256: digest };
+      const encoded = canonical(row, limits.eventBytes);
+      safe(row);
+      return { bytes: Buffer.from(encoded + '\n'), digest };
+    };
+    const writeRow = async (role: ViewRole, bytes: Buffer, deadline: number,
+      checkBoundary: () => void): Promise<SegmentPrefix> => {
+      verifyAppendNames(deadline);
+      const segment = segments.get(role)!;
+      const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
+      if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
+        || !sameSegment(segment, segment, lstatSync(name, { bigint: true }))) poison();
+      const intent: ManagedAppend = { role, prefix: Buffer.concat([segment.prefix, bytes]), full: null };
+      // Stage the exact append before the underlying write can change the extent.
+      checkBoundary();
+      managedAppend = intent;
+      const wrote = await segment.file.write(bytes, 0, bytes.length, null);
+      guard(deadline);
+      if (wrote.bytesWritten !== bytes.length) poison();
+      const stat = fstatSync(writerFd, { bigint: true });
+      if (!sameSegmentIdentity(segment, stat) || stat.size !== BigInt(intent.prefix.length)
+        || (intent.full !== null && !sameSegment(segment, intent.full, stat))) poison();
+      const full = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
+      intent.full = full;
+      return full;
+    };
+    const publishRow = (role: ViewRole, row: Omit<DurableEvent, 'offset'>, tail: SegmentPrefix,
+      deadline: number, checkBoundary: () => void): void => {
+      verifyAppendNames(deadline, { ...tail, role });
+      checkBoundary();
+      const segment = segments.get(role)!;
+      segment.prefix = tail.prefix; segment.modified = tail.modified; segment.changed = tail.changed;
+      records++; durableBytes += row.bytes.length; tip = row.digest;
+      totals[role].records++; totals[role].bytes += row.bytes.length; totals[role].tipSha256 = row.digest;
+    };
+    const commit = async (event: CapturedAuditEvent, role: ViewRole, deadline: number,
       checkEffectCurrent = checkCurrent, attemptDeadline?: number): Promise<DurableEvent> => {
       const checkBoundary = (): void => {
         guard(deadline);
         if (attemptDeadline !== undefined && Date.now() >= attemptDeadline) poison();
       };
-      guard(deadline); if (!declaration && records - declarations >= limits.events) poison();
-      const segment = segments.get(role)!;
-      const body = { format: URL_SESSION_AUDIT_FORMAT, sequence: records + 1, roleSequence: totals[role].records + 1,
-        previousSha256: tip, previousRoleSha256: totals[role].tipSha256, event };
-      const digest = sha256(canonical(body, limits.eventBytes)); const encoded = canonical({ ...body, sha256: digest }, limits.eventBytes); safe({ ...body, sha256: digest });
-      const offset = segment.prefix.length, bytes = Buffer.from(encoded + '\n'); if (durableBytes + bytes.length > limits.bytes) poison();
+      guard(deadline);
+      if (records - declarations >= limits.events) poison();
+      const row = encodeRow(event, records + 1, totals[role].records + 1, tip, totals[role].tipSha256);
+      const offset = segments.get(role)!.prefix.length;
+      if (durableBytes + row.bytes.length > limits.bytes) poison();
       let nextUsage: SessionResponseUsage | undefined;
       if (isRecord(event) && event.kind === 'usage') {
         const reported = event.payload as SessionResponseUsage;
@@ -786,55 +824,27 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         usage(nextUsage);
         for (const key of Object.keys(zeroUsage()) as (keyof SessionResponseUsage)[]) if (!count(ROLES.reduce((n, r) => n + (r === role ? nextUsage![key] : totals[r].usage[key]), 0))) poison();
       }
-      const intent: ManagedAppend = { role, prefix: Buffer.concat([segment.prefix, bytes]), full: null };
       try {
-        const append = async (): Promise<SegmentPrefix> => {
-          // The private declarations use the original setup cutoff. The
-          // checked append still samples authority before writing and before
-          // syncing its new bytes, and again after checking the complete tail.
+        const tail = await io(deadline, async () => {
           await inspectIdentities(deadline);
           await checkEffectCurrent(deadline);
-          verifyAppendNames(deadline);
-          const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
-          if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
-            || !sameSegment(segment, segment, lstatSync(name, { bigint: true }))) poison();
-          // Stage the exact append before the underlying write can change the
-          // extent. The new event becomes durable only after both syncs.
-          checkBoundary();
-          managedAppend = intent;
-          const wrote = await segment.file.write(bytes, 0, bytes.length, null);
-          guard(deadline);
-          if (wrote.bytesWritten !== bytes.length) poison();
-          const stat = fstatSync(writerFd, { bigint: true });
-          if (!sameSegmentIdentity(segment, stat) || stat.size !== BigInt(intent.prefix.length)
-            || (intent.full !== null && !sameSegment(segment, intent.full, stat))) poison();
-          const full = { prefix: intent.prefix, modified: stat.mtimeNs, changed: stat.ctimeNs };
-          intent.full = full;
+          const full = await writeRow(role, row.bytes, deadline, checkBoundary);
           await checkEffectCurrent(deadline);
-          await segment.file.sync();
-          // Setup already synced and verified these four private names. The
-          // directory sync changes no name, and a stale declaration cannot
-          // become a counted prefix or expose a writer without the final check.
-          if (declaration) checkBoundary(); else await checkEffectCurrent(deadline);
+          await segments.get(role)!.file.sync();
+          await checkEffectCurrent(deadline);
           await directory.sync();
-          if (declaration) checkBoundary(); else await checkEffectCurrent(deadline);
+          await checkEffectCurrent(deadline);
           await inspectIdentities(deadline, { ...full, role });
-          if (declaration || checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
+          if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
           return full;
-        };
-        const tail = declaration ? await setupIo(append) : await io(deadline, append);
-        verifyAppendNames(deadline, { ...tail, role });
-        checkBoundary();
-        segment.prefix = tail.prefix; segment.modified = tail.modified; segment.changed = tail.changed;
+        });
+        publishRow(role, row, tail, deadline, checkBoundary);
       } finally { managedAppend = undefined; }
-      records++; durableBytes += bytes.length; tip = digest; totals[role].records++; totals[role].bytes += bytes.length; totals[role].tipSha256 = digest;
-      if (declaration) declarations++; else {
-        const capturedEvent = event as CapturedAuditEvent; captured[capturedEvent.kind]++;
-        if (capturedEvent.kind === 'relay') relayEvents[capturedEvent.payload.event]++;
-        if (capturedEvent.kind === 'launch-attempt') attempts.set(role, capturedEvent.payload);
-      }
+      captured[event.kind]++;
+      if (event.kind === 'relay') relayEvents[event.payload.event]++;
+      if (event.kind === 'launch-attempt') attempts.set(role, event.payload);
       if (nextUsage) { totals[role].usageReports++; totals[role].usage = nextUsage; }
-      return { offset, bytes, digest };
+      return { offset, ...row };
     };
     async function commitRelay(snapshot: Extract<UrlSessionAuditEvent, { kind: 'relay' }>, deadline: number) {
       const { payload, role } = snapshot;
@@ -850,7 +860,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         poison();
       }
       const linked = { ...snapshot, payload: { ...payload, previousExchangeSha256: earlierEvents.at(-1)?.digest ?? null } };
-      const record = await commit(linked, role, deadline, false);
+      const record = await commit(linked, role, deadline);
       relayRequests.add(payload.requestId);
       relayLatest.set(role, { payload, events: [...earlierEvents, record] });
       return record;
@@ -860,7 +870,39 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       payload: { project: input.project, pin: input.pin, principal: input.principal, declaredClasses: input.declaredClasses,
         profile: roleProfiles.get(role)!.id, limits, capture: 'host-callbacks-only', providerReceipts: 'Unknown', nativeSendCensus: 'Unknown' },
     }])) as UrlSessionAuditHistoryExpected['declarations'];
-    for (const role of ROLES) await commit({ kind: 'declaration', role, ...declarationsByRole[role] }, role, setupDeadline, true);
+    // Screen every fixed row before sampling authority for the first write.
+    // After each complete prefix scan, one fresh check authorizes publishing
+    // that row and starting the next write in the same continuation.
+    let declaredTip: string | null = null, declaredBytes = 0;
+    const declarationRows = ROLES.map((role, index) => {
+      guard(setupDeadline);
+      const event = { kind: 'declaration', role, ...declarationsByRole[role] };
+      const row = encodeRow(event, index + 1, 1, declaredTip, null);
+      declaredTip = row.digest;
+      declaredBytes += row.bytes.length;
+      if (declaredBytes > limits.bytes) poison();
+      return { role, ...row };
+    });
+    const checkSetupBoundary = () => guard(setupDeadline);
+    await setupIo(async () => {
+      await inspectIdentities(setupDeadline);
+      await checkCurrent(setupDeadline);
+      for (const row of declarationRows) {
+        const { role } = row;
+        try {
+          const tail = await writeRow(role, row.bytes, setupDeadline, checkSetupBoundary);
+          await checkCurrent(setupDeadline);
+          await segments.get(role)!.file.sync();
+          checkSetupBoundary();
+          await directory.sync();
+          checkSetupBoundary();
+          await inspectIdentities(setupDeadline, { ...tail, role });
+          await checkCurrent(setupDeadline);
+          publishRow(role, row, tail, setupDeadline, checkSetupBoundary);
+          declarations++;
+        } finally { managedAppend = undefined; }
+      }
+    });
     guard(setupDeadline);
     setupWallDeadline = undefined;
     const unstartedOrdered = new Map<string, UrlOrderedDesignHistoryExpected>();
@@ -892,7 +934,7 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       catch { poisoned = true; return Promise.reject(refused()); }
       pending++;
       const operation = queue.then(() => snapshot.kind === 'relay' ? commitRelay(snapshot, deadline)
-        : commit(snapshot, snapshot.role, deadline, false, checkEffectCurrent, attemptDeadline)).catch(() => poison());
+        : commit(snapshot, snapshot.role, deadline, checkEffectCurrent, attemptDeadline)).catch(() => poison());
       queue = operation.then(() => {}, () => {}).finally(() => { pending--; });
       return wait(operation, deadline).then(result => { guard(deadline); return result; }, () => poison());
     };
