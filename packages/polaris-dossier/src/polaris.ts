@@ -1420,7 +1420,8 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         }
         const metadata = initial.metadata;
         const report = rendered.doc;
-        if (metadata === null || metadata.draftRevision !== passedDraft || report?.['run'] !== run
+        if (metadata === null || metadata.run !== binding.run || metadata.runId !== binding.runId
+          || metadata.pinnedRevision !== binding.pinnedRevision || metadata.draftRevision !== passedDraft || report?.['run'] !== run
           || report['draftRevision'] !== passedDraft || report['command'] !== 'render' || report['outcome'] !== 'rendered'
           || report['pages'] !== metadata.output.pages || typeof report['site'] !== 'string' || !products.isLeaseOpen()) {
           phase = 'render producer result unavailable';
