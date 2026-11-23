@@ -186,7 +186,8 @@ describe('allow-execution: refused', () => {
   it('refuses when the committed policy is unavailable', async () => {
     const run = runDirectory();
     expect(await allow(run, REV, ALL, { declaredPolicy: async () => ({ ok: false, why: 'fixture unavailable' }) })).toMatchObject({
-      ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'policy', reason: 'fixture unavailable' }] },
+      ok: false, refusal: { stage: 'reverify', refusals: [{ code: 'policy',
+        reason: expect.stringMatching(/dossier-declared-source\/4\.0\.0.*fixture unavailable.*start a new run/u) }] },
     });
     nothingWritten(run);
   });
