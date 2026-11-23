@@ -10,7 +10,7 @@ import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessi
 import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS, type UrlMachineArchive, type UrlMachineArchivePointer } from './url-machine-archive.js';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext } from './url-machine-instance.js';
-import { matchesResumedDesignPeerPublication, type UrlMachinePeer } from './url-machine-peer.js';
+import type { UrlMachinePeer } from './url-machine-peer.js';
 
 type Expected = Parameters<UrlMachineLifecycleLease['advance']>[0];
 type AuditStep = Extract<UrlMachineLifecycleStep, { kind: 'audit' }>;
@@ -813,8 +813,13 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         return verify(Object.freeze({ read: readDetached, sampleCurrent }));
       }, undefined, undefined, true),
       publish: async (input, stillOpening, resumedDesignPeer) => {
-        if (resumedDesignPeer !== undefined && (currentAsync === undefined || typeof stillOpening !== 'function'
-          || !matchesResumedDesignPeerPublication(resumedDesignPeer, adapter, input, stillOpening))) return { ok: false, code: 'unavailable' };
+        if (resumedDesignPeer !== undefined) {
+          if (currentAsync === undefined || typeof stillOpening !== 'function') return { ok: false, code: 'unavailable' };
+          // Store-only consumers do not load the native launcher. The resumed
+          // supervisor has already loaded this module to capture the peer.
+          const { matchesResumedDesignPeerPublication } = await import('./url-machine-peer.js');
+          if (!matchesResumedDesignPeerPublication(resumedDesignPeer, adapter, input, stillOpening)) return { ok: false, code: 'unavailable' };
+        }
         // The replay can carry a full historical archive. Keep the complete
         // publication protocol within a separate finite live-connection lease.
         const operationMilliseconds = resumedDesignPeer === undefined

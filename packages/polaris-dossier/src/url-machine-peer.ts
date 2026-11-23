@@ -521,6 +521,7 @@ export function matchesResumedDesignPeerPublication(peer: UrlMachinePeer, store:
       || input.expected !== null || input.context.role !== 'design' || input.context.kind !== 'inference-bridge'
       || !equal(state.options.binding, input.binding)
       || !equal({ ...state.options.context, now: input.context.now }, input.context)) return false;
+    if (check(state) < input.context.now) return false;
     const checked = readUrlMachineClient(input.next, input.context);
     return checked.ok && checked.record.revision === 1 && checked.record.instances.length === 1
       && equal(checked.record.instances[0]!.verifier, peer.verifier);
