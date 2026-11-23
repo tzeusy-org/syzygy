@@ -567,6 +567,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
                 await releaseLateTerminalLock();
                 return;
               }
+              checkDeadline();
+              charge();
               await syncAndCensus();
             });
             if (joinedTerminalLock && !held) return false;
