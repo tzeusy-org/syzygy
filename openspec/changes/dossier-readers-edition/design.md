@@ -44,15 +44,16 @@
 
 ## D8. Evidence
 
-[Observed] `docs/evidence/syzygy-5dhm-136/reader-edition-measurement-2026-11-23.json`, at `cb08d2d1` against `main` `82290fb9`, over every stored run with a stored draft (seven):
+[Observed] `docs/evidence/syzygy-5dhm-136/reader-edition-measurement-2026-11-23.json`, at `45d7cc0b` against `main` `82290fb9`, over every stored run with a stored draft (seven). It was re-rendered with the three inputs a real render has: the placement subject, the run's content classes and the injected stored verdict (syzygy-a70b). The first harness lacked all three.
 
-- links resolved: 16,846 of 16,846, before and after;
-- disclosures on their page: 1,190 of 1,190 Unknown, reasoned or withheld claims, by the committed predicate;
+- links resolved: 18,777 of 18,777, before and after;
+- disclosures on their page: 80 of 80 Unknown, reasoned or withheld claims, by the committed predicate;
+- claim states equal to the stored site's, by claim id, the same in both forms (the record's `claimStatesMatchingStoredSite`);
 - pages of class `other`: 0;
 - on the four runs with Poles, the landing order moves from header, sections, Pole map to header, Pole map, sections;
-- words: 157,312 of full text before; 128,459 on the reading path after, 28,860 under About this run. The default branch already folded these pages, so its own reading path differs by one word per run (the heading's third word).
+- words: 149,769 of full text before; 117,255 on the reading path after, 32,521 under About this run. The default branch already folded these pages, so its own reading path differs by one word per run (the heading's third word).
 
-[Unknown] Reader share before and after: no reader session has run. That is review finding F5, and the coordinator runs those sessions.
+[Inferred] Reader share, from `docs/evidence/syzygy-5dhm-136/readers-2026-11-23/`: one blind, uncalibrated grading. Before and after are level on both runs graded (0.235 to 0.235 and 0.444 to 0.451 of 81 required facts). Those sessions read text from the first, defective harness in both arms, so the delta holds and the absolute shares are understated. Review finding F5 is answered by these sessions.
 
 ## Review
 
@@ -64,4 +65,4 @@
 | F1(b): the Pole map before the overview figures | Fixed at `f4e04733` (D5). |
 | F2: the fold not tied to the one page-class definition; `other` pages read silently as the subject | Fixed at `f4e04733`: `render.test.ts` reads the definition, and the reader form counts `other` pages apart (D3). |
 | F3, F4: the measurement's disclosure predicate in words, not the committed one, and its commit not the final head | The record names the test file's digest, transcribes `disclosuresOffTheirPage` clause for clause, and is re-run against `main` `82290fb9` (D8). |
-| F5: reader share claimed without reader sessions | Stated as Unknown (D8). |
+| F5: reader share claimed without reader sessions | Stated as Unknown until the reader sessions ran; their result is in D8, with its harness limit. |

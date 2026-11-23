@@ -25,6 +25,24 @@ for arm, row in third.items():
                     'factsPer1000WordsGiven': round(row['factsGiven'] / full * 1000, 2),
                     'factsPer1000WordsOnReadingPathIfNoneFromRunPages': round(row['factsGiven'] / (full - run_words) * 1000, 2)})
 plain = third.get('P')
+#: The run copies the renders were drawn from (their stored site is the reference for claim states).
+RUNS = pathlib.Path(sys.argv[5]).resolve() if len(sys.argv) > 5 else S.parent / 'r136' / 'runs'
+
+
+def claim_states(run, form):
+    """How many of the stored site's claims the render gives the same epistemic label and Unknown reason, by claim id."""
+    sites = RUNS / f'run-{run}' / 'site'
+    if not sites.is_dir():
+        return None
+    stored = json.loads((sites / max((d.name for d in sites.iterdir() if d.name.isdigit()), key=int) / 'machine.json').read_text())['claims']
+    drawn = {c['id']: c for c in json.loads((S / f'site-{form}-{run}' / 'machine.json').read_text())['claims']}
+    same = sum(1 for c in stored if c['id'] in drawn and (drawn[c['id']]['epistemic'], drawn[c['id']]['unknownReason']) == (c['epistemic'], c['unknownReason']))
+    return f'{same} of {len(stored)}'
+
+
+def harness_inputs(run, form):
+    out = (S / f'log-{form}-{run}.out').read_text().strip().splitlines()
+    return json.loads(out[-1])['inputs']
 rows = {}
 for run, forms in sorted(m.items()):
     b, a = forms['before'], forms['after']
@@ -39,6 +57,8 @@ for run, forms in sorted(m.items()):
         'landing': {'orderBefore': b['landingOrder'], 'orderAfter': a['landingOrder'], 'overviewFigure': a['landingOverviewFigure'], 'mapDirectlyAfterThesisBefore': b['landingMapDirectlyAfterThesis'], 'mapDirectlyAfterThesisAfter': a['landingMapDirectlyAfterThesis'], 'hasPoleMap': a['landingMapBeforeFirstSection'] or b['landingMapBeforeFirstSection'] or a['landingMapDirectlyAfterThesis']},
         'readingOrderFirst4': {'before': b['readingOrderFirst4'], 'after': a['readingOrderFirst4']},
         'disclosures': {'before': f"{b['disclosuresOnTheirPage']} of {b['disclosureClaims']}", 'after': f"{a['disclosuresOnTheirPage']} of {a['disclosureClaims']}"},
+        'claimStatesMatchingStoredSite': {'before': claim_states(run, 'before'), 'after': claim_states(run, 'after')},
+        'harnessInputs': harness_inputs(run, 'after'),
         'textFiles': {f'{form}-{kind}': f'text-{run}-{form}-{kind}/' for form in ('before', 'after') for kind in ('full', 'reader')},
     }
 # The first limit's claim, checked rather than stated: the reader forms differ by exactly one word per run.
@@ -56,8 +76,12 @@ record = {
     'method': ('[Observed] Every stored run with a stored draft under the dossier state root (seven; read only, no run-*.agents or run-*.sessions '
                'directory listed or opened) was copied to scratch and its latest passed draft drawn twice through the functions the render '
                'command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier): by beforeCommit '
-               "(the default branch) and by commit. No fidelity or design review is bound in a scratch render, so the review-status region "
-               "differs from a real render's; every run's derived structure is missing (all predate the derived record). Words are "
+               "(the default branch) and by commit, with the three inputs a real render has (syzygy-a70b): the screen loaded for the run's "
+               "placement subject (repository and pinned commit), the run's eligible content classes (a legacy run recording none takes "
+               "code-content, project-documentation and governance-text, the set the newest stored run declares), and the run's newest "
+               "stored fidelity verdict injected as if it counted (its packet is not rebuilt); harnessInputs names each per run, and "
+               "claimStatesMatchingStoredSite checks the result against the stored site's machine.json by claim id (epistemic label and "
+               "Unknown reason). No design review is bound; every run's derived structure is missing (all predate the derived record). Words are "
                'whitespace-separated tokens of scripts/dossier_site_to_text.py text over <main>, source pages left out; the reading path is '
                'its --reader form (pages of class run left out, scripts/dossier_page_classes.json) and About this run is the words of the '
                'pages it left out; a kept page the definition classes as none of reader, navigation or run is counted as other. Landing order: '
@@ -72,7 +96,9 @@ record = {
     'limits': [
         '[Observed] The reader form of the default branch and of this change differ by one word per run: the contents heading "Review report" (2 words) became "About this run" (3). The run pages were already folded in the default branch\'s navigation; what this change moves is their label and place, the index and the landing map. The reading-path words reported "before" are therefore the full text a pilot reader was given (fullTextBefore), the same reduction the --reader form gives the default branch\'s render.',
         '[Observed] The beforeCommit tree is a detached worktree whose node_modules links to this branch\'s worktree, so its @syzygy/* imports resolve to this branch\'s packages; the renderer files each form imports by path are its own, and between beforeCommit and commit no file under packages/ or apps/ changes but dossier-site.ts and tests (git diff --stat beforeCommit commit -- packages apps).',
-        '[Unknown] Reader share before and after: no reader session was run. The coordinator runs the comparison on the reader-form text files left in scratch.',
+        '[Observed] This record supersedes the first measurement of the same date (git history, at cb08d2d1), whose harness lacked all three inputs above: it rendered 229 blocks Unknown for missing evidence, withheld owner-placed configuration blocks and excluded governance-text blocks, in both forms alike (figures from the syzygy-a70b diagnosis).',
+        '[Observed] claimStatesMatchingStoredSite: ' + '; '.join(f"{r[:8]} {rows[r]['claimStatesMatchingStoredSite']['before']} before, {rows[r]['claimStatesMatchingStoredSite']['after']} after" for r in sorted(rows)) + ' (None: the run copy holds no stored site). The before and after forms agree on every run, so this change moves no claim state; a shortfall against the stored site is the same in both forms.',
+        '[Inferred] The reader sessions (readers-2026-11-23/) read text from that first, defective harness, in both the before and the after arms: their before-to-after comparison holds (both arms carried the same defect), but their absolute shares understate what a reader of a real render earns.',
         '[Inferred] Required-fact density on the reading path assumes no fact a reader earned came from a run page; the understanding page states purpose and capabilities, so it is an upper bound, not a measure.',
         '[Observed] ' + str(len(no_poles)) + ' runs (' + ', '.join(no_poles) + ') carry no Poles, so their landing page has no map either way.',
         '[Observed] The re-rendered sites are larger than the stored sites runs.json measured (for run 658f2f90, ' + f"{m['658f2f90470f73eea1dc1d90209c5ef7']['after']['wordsFullText']:,} words of full text against {runs['658f2f90']['words']:,}" + '): both renders here carry the find-by-task and index pages of version 2.15 and every addition since each run was last rendered, so the words here compare the two renderers over one input and are not the words a pilot arm read.',

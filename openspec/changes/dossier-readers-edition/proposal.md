@@ -34,4 +34,4 @@
 - moving any disclosure, Unknown, withheld item or screening outcome off the page that makes the claim;
 - the provider mode's navigation and every byte its golden pins;
 - any script, form or event handler, and any fragment target inside a collapsible element;
-- a reader-share measurement: whether readers earn more facts per word is [Unknown] until reader sessions run on the reader-form text (`docs/evidence/syzygy-5dhm-136/`).
+- a claim of a reader-share gain: the reader sessions (`docs/evidence/syzygy-5dhm-136/readers-2026-11-23/`) found before and after level, and no gain is claimed.

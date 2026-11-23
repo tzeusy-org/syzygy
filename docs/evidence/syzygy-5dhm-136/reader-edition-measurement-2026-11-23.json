@@ -1,8 +1,8 @@
 {
  "format": "reader-edition-rerender-measurement/1",
  "bead": "syzygy-5dhm.136",
- "measuredAt": "2026-11-23T13:58:00Z",
- "commit": "cb08d2d170f47e1f197f3172bbf7d7fc5d9b1a92",
+ "measuredAt": "2026-11-23T17:45:39Z",
+ "commit": "45d7cc0b3db930a68963463beaddab3858c835b1",
  "beforeCommit": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
  "renderer": {
   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": {
@@ -21,21 +21,23 @@
  "disclosurePredicate": {
   "file": "apps/three-surface-poc/src/polaris-generation/dossier-reader-edition.test.ts",
   "function": "disclosuresOffTheirPage",
-  "sha256": "253918f01d8e1451db88579f08e94eb8b45df79c47726a241cfab706cbf58cc6",
+  "sha256": "dff1776a18ce4e0aac6beb495702206f7c0b6ed0f7ed35a67fcf072131eae76a",
   "transcription": "docs/evidence/syzygy-5dhm-136/reader_edition_measure.py disclosures()"
  },
  "pageClasses": {
   "file": "scripts/dossier_page_classes.json",
   "sha256": "cbcb41481c62f9007478ea061947df46ed40d28b2f15db337bbeb6c38bf62b4b"
  },
- "method": "[Observed] Every stored run with a stored draft under the dossier state root (seven; read only, no run-*.agents or run-*.sessions directory listed or opened) was copied to scratch and its latest passed draft drawn twice through the functions the render command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier): by beforeCommit (the default branch) and by commit. No fidelity or design review is bound in a scratch render, so the review-status region differs from a real render's; every run's derived structure is missing (all predate the derived record). Words are whitespace-separated tokens of scripts/dossier_site_to_text.py text over <main>, source pages left out; the reading path is its --reader form (pages of class run left out, scripts/dossier_page_classes.json) and About this run is the words of the pages it left out; a kept page the definition classes as none of reader, navigation or run is counted as other. Landing order: the offsets in index.html <main> of </header>, the overview-figures section, the Pole map and the first section, sorted. Links: every internal href of every .html page, source pages included, resolved to a file of the render and, with a fragment, to an id on that page. Disclosures: the committed predicate disclosuresOffTheirPage of disclosurePredicate.file at commit, transcribed clause for clause: a machine.json claim is selected when its epistemic is unknown, its unknownReason is not null, or its v15 member has a withheldSources key; it must occur exactly once on its page (data-claim-id, the id escaped for & and \" only); the opening tag of the element carrying it must hold data-epistemic equal to its recorded label; an Unknown claim's element must hold <span class=\"marking unknown\">[Unknown]</span>; a withheld item's element text (after its opening tag) must match Withheld from this dossier|Withheld item; any other claim with a reason must carry the reason in that text.",
+ "method": "[Observed] Every stored run with a stored draft under the dossier state root (seven; read only, no run-*.agents or run-*.sessions directory listed or opened) was copied to scratch and its latest passed draft drawn twice through the functions the render command calls (deriveFindings, buildLocalInput, derivedStructureAt, renderManifestFacts, renderLocalDossier): by beforeCommit (the default branch) and by commit, with the three inputs a real render has (syzygy-a70b): the screen loaded for the run's placement subject (repository and pinned commit), the run's eligible content classes (a legacy run recording none takes code-content, project-documentation and governance-text, the set the newest stored run declares), and the run's newest stored fidelity verdict injected as if it counted (its packet is not rebuilt); harnessInputs names each per run, and claimStatesMatchingStoredSite checks the result against the stored site's machine.json by claim id (epistemic label and Unknown reason). No design review is bound; every run's derived structure is missing (all predate the derived record). Words are whitespace-separated tokens of scripts/dossier_site_to_text.py text over <main>, source pages left out; the reading path is its --reader form (pages of class run left out, scripts/dossier_page_classes.json) and About this run is the words of the pages it left out; a kept page the definition classes as none of reader, navigation or run is counted as other. Landing order: the offsets in index.html <main> of </header>, the overview-figures section, the Pole map and the first section, sorted. Links: every internal href of every .html page, source pages included, resolved to a file of the render and, with a fragment, to an id on that page. Disclosures: the committed predicate disclosuresOffTheirPage of disclosurePredicate.file at commit, transcribed clause for clause: a machine.json claim is selected when its epistemic is unknown, its unknownReason is not null, or its v15 member has a withheldSources key; it must occur exactly once on its page (data-claim-id, the id escaped for & and \" only); the opening tag of the element carrying it must hold data-epistemic equal to its recorded label; an Unknown claim's element must hold <span class=\"marking unknown\">[Unknown]</span>; a withheld item's element text (after its opening tag) must match Withheld from this dossier|Withheld item; any other claim with a reason must carry the reason in that text.",
  "limits": [
   "[Observed] The reader form of the default branch and of this change differ by one word per run: the contents heading \"Review report\" (2 words) became \"About this run\" (3). The run pages were already folded in the default branch's navigation; what this change moves is their label and place, the index and the landing map. The reading-path words reported \"before\" are therefore the full text a pilot reader was given (fullTextBefore), the same reduction the --reader form gives the default branch's render.",
   "[Observed] The beforeCommit tree is a detached worktree whose node_modules links to this branch's worktree, so its @syzygy/* imports resolve to this branch's packages; the renderer files each form imports by path are its own, and between beforeCommit and commit no file under packages/ or apps/ changes but dossier-site.ts and tests (git diff --stat beforeCommit commit -- packages apps).",
-  "[Unknown] Reader share before and after: no reader session was run. The coordinator runs the comparison on the reader-form text files left in scratch.",
+  "[Observed] This record supersedes the first measurement of the same date (git history, at cb08d2d1), whose harness lacked all three inputs above: it rendered 229 blocks Unknown for missing evidence, withheld owner-placed configuration blocks and excluded governance-text blocks, in both forms alike (figures from the syzygy-a70b diagnosis).",
+  "[Observed] claimStatesMatchingStoredSite: 2ecdcab0 326 of 326 before, 326 of 326 after; 36df95fa None before, None after; 3744945f 271 of 271 before, 271 of 271 after; 4465d22f 185 of 185 before, 185 of 185 after; 658f2f90 231 of 231 before, 231 of 231 after; d9411d26 555 of 555 before, 555 of 555 after; ffe579c7 278 of 280 before, 278 of 280 after (None: the run copy holds no stored site). The before and after forms agree on every run, so this change moves no claim state; a shortfall against the stored site is the same in both forms.",
+  "[Inferred] The reader sessions (readers-2026-11-23/) read text from that first, defective harness, in both the before and the after arms: their before-to-after comparison holds (both arms carried the same defect), but their absolute shares understate what a reader of a real render earns.",
   "[Inferred] Required-fact density on the reading path assumes no fact a reader earned came from a run page; the understanding page states purpose and capabilities, so it is an upper bound, not a measure.",
   "[Observed] 3 runs (36df95fa, 4465d22f, d9411d26) carry no Poles, so their landing page has no map either way.",
-  "[Observed] The re-rendered sites are larger than the stored sites runs.json measured (for run 658f2f90, 18,251 words of full text against 12,574): both renders here carry the find-by-task and index pages of version 2.15 and every addition since each run was last rendered, so the words here compare the two renderers over one input and are not the words a pilot arm read.",
+  "[Observed] The re-rendered sites are larger than the stored sites runs.json measured (for run 658f2f90, 18,291 words of full text against 12,574): both renders here carry the find-by-task and index pages of version 2.15 and every addition since each run was last rendered, so the words here compare the two renderers over one input and are not the words a pilot arm read.",
   "[Observed] The text files are in the scratch directory named by run id and form: text-<run>-before-full, text-<run>-before-reader, text-<run>-after-full and text-<run>-after-reader. They are not committed: the converter prints counts only, and the page text quotes another repository."
  ],
  "requiredFactDensity": {
@@ -96,24 +98,24 @@
  },
  "totals": {
   "runs": 7,
-  "readingPathWordsAfter": 128459,
-  "fullTextWordsBefore": 157312,
-  "aboutThisRunWordsAfter": 28860,
-  "readingPathWordsBefore": 128452,
+  "readingPathWordsAfter": 117255,
+  "fullTextWordsBefore": 149769,
+  "aboutThisRunWordsAfter": 32521,
+  "readingPathWordsBefore": 117248,
   "otherPagesAfter": 0,
-  "disclosureClaimsAfter": 1190,
-  "disclosuresOnTheirPageAfter": 1190,
-  "linksBefore": 16846,
-  "linksResolvedBefore": 16846,
-  "linksAfter": 16846,
-  "linksResolvedAfter": 16846
+  "disclosureClaimsAfter": 80,
+  "disclosuresOnTheirPageAfter": 80,
+  "linksBefore": 18777,
+  "linksResolvedBefore": 18777,
+  "linksAfter": 18777,
+  "linksResolvedAfter": 18777
  },
  "runs": {
   "2ecdcab0c77e228f6ad9d3e0acfa1414": {
    "pages": {
-    "htmlBefore": 46,
-    "htmlAfter": 46,
-    "sourcePages": 25,
+    "htmlBefore": 50,
+    "htmlAfter": 50,
+    "sourcePages": 29,
     "readingPath": 14,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -121,25 +123,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 24118,
-    "readingPathBefore": 20421,
-    "aboutThisRunBefore": 3697,
-    "readingPathAfter": 20422,
-    "aboutThisRunAfter": 3697,
+    "fullTextBefore": 22084,
+    "readingPathBefore": 17851,
+    "aboutThisRunBefore": 4233,
+    "readingPathAfter": 17852,
+    "aboutThisRunAfter": 4233,
     "aboutThisRunPerPage": {
-     "appendix.html": 791,
-     "clarifications.html": 68,
-     "discovery.html": 1002,
-     "executions.html": 166,
-     "review.html": 158,
-     "size-report.html": 504,
-     "understanding.html": 1008
+     "appendix.html": 814,
+     "clarifications.html": 86,
+     "discovery.html": 1031,
+     "executions.html": 184,
+     "review.html": 417,
+     "size-report.html": 554,
+     "understanding.html": 1147
     },
-    "fullTextAfter": 24119
+    "fullTextAfter": 22085
    },
    "links": {
-    "before": "2303 of 2303",
-    "after": "2303 of 2303"
+    "before": "2629 of 2629",
+    "after": "2629 of 2629"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -201,8 +203,22 @@
     ]
    },
    "disclosures": {
-    "before": "218 of 218",
-    "after": "218 of 218"
+    "before": "8 of 8",
+    "after": "8 of 8"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "326 of 326",
+    "after": "326 of 326"
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-2.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-2ecdcab0c77e228f6ad9d3e0acfa1414-before-full/",
@@ -213,9 +229,9 @@
   },
   "36df95faf04a4c98eabbb32a18a4e833": {
    "pages": {
-    "htmlBefore": 55,
-    "htmlAfter": 55,
-    "sourcePages": 37,
+    "htmlBefore": 59,
+    "htmlAfter": 59,
+    "sourcePages": 41,
     "readingPath": 11,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -223,25 +239,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 20387,
-    "readingPathBefore": 15999,
-    "aboutThisRunBefore": 4388,
-    "readingPathAfter": 16000,
-    "aboutThisRunAfter": 4388,
+    "fullTextBefore": 19680,
+    "readingPathBefore": 14844,
+    "aboutThisRunBefore": 4836,
+    "readingPathAfter": 14845,
+    "aboutThisRunAfter": 4836,
     "aboutThisRunPerPage": {
-     "appendix.html": 824,
-     "clarifications.html": 219,
-     "discovery.html": 1279,
-     "executions.html": 184,
-     "review.html": 158,
-     "size-report.html": 576,
-     "understanding.html": 1148
+     "appendix.html": 847,
+     "clarifications.html": 237,
+     "discovery.html": 1308,
+     "executions.html": 202,
+     "review.html": 422,
+     "size-report.html": 626,
+     "understanding.html": 1194
     },
-    "fullTextAfter": 20388
+    "fullTextAfter": 19681
    },
    "links": {
-    "before": "2403 of 2403",
-    "after": "2403 of 2403"
+    "before": "2604 of 2604",
+    "after": "2604 of 2604"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -295,8 +311,22 @@
     ]
    },
    "disclosures": {
-    "before": "106 of 106",
-    "after": "106 of 106"
+    "before": "13 of 13",
+    "after": "13 of 13"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": null,
+    "after": null
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-36df95faf04a4c98eabbb32a18a4e833-before-full/",
@@ -317,21 +347,21 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 18598,
-    "readingPathBefore": 14654,
-    "aboutThisRunBefore": 3944,
-    "readingPathAfter": 14655,
-    "aboutThisRunAfter": 3944,
+    "fullTextBefore": 17053,
+    "readingPathBefore": 12746,
+    "aboutThisRunBefore": 4307,
+    "readingPathAfter": 12747,
+    "aboutThisRunAfter": 4307,
     "aboutThisRunPerPage": {
-     "appendix.html": 786,
-     "clarifications.html": 68,
-     "discovery.html": 1335,
-     "executions.html": 196,
-     "review.html": 158,
-     "size-report.html": 544,
-     "understanding.html": 857
+     "appendix.html": 798,
+     "clarifications.html": 86,
+     "discovery.html": 1353,
+     "executions.html": 214,
+     "review.html": 419,
+     "size-report.html": 562,
+     "understanding.html": 875
     },
-    "fullTextAfter": 18599
+    "fullTextAfter": 17054
    },
    "links": {
     "before": "2444 of 2444",
@@ -395,8 +425,22 @@
     ]
    },
    "disclosures": {
-    "before": "133 of 133",
-    "after": "133 of 133"
+    "before": "13 of 13",
+    "after": "13 of 13"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "271 of 271",
+    "after": "271 of 271"
+   },
+   "harnessInputs": {
+    "placement": "repository:tzeusy-org-butlers@563078d0838b6f8a5274f6dd46e8ee150e839c08",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "run.json",
+    "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-3744945f44ecdc31a06d43be3d38818c-before-full/",
@@ -407,9 +451,9 @@
   },
   "4465d22f5ce1829ca49059a5b8451bb0": {
    "pages": {
-    "htmlBefore": 48,
-    "htmlAfter": 48,
-    "sourcePages": 30,
+    "htmlBefore": 52,
+    "htmlAfter": 52,
+    "sourcePages": 34,
     "readingPath": 11,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -417,25 +461,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 17216,
-    "readingPathBefore": 13256,
-    "aboutThisRunBefore": 3960,
-    "readingPathAfter": 13257,
-    "aboutThisRunAfter": 3960,
+    "fullTextBefore": 16679,
+    "readingPathBefore": 12281,
+    "aboutThisRunBefore": 4398,
+    "readingPathAfter": 12282,
+    "aboutThisRunAfter": 4398,
     "aboutThisRunPerPage": {
-     "appendix.html": 754,
-     "clarifications.html": 68,
-     "discovery.html": 1023,
-     "executions.html": 161,
-     "review.html": 158,
-     "size-report.html": 520,
-     "understanding.html": 1276
+     "appendix.html": 767,
+     "clarifications.html": 86,
+     "discovery.html": 1052,
+     "executions.html": 179,
+     "review.html": 418,
+     "size-report.html": 570,
+     "understanding.html": 1326
     },
-    "fullTextAfter": 17217
+    "fullTextAfter": 16680
    },
    "links": {
-    "before": "2010 of 2010",
-    "after": "2010 of 2010"
+    "before": "2210 of 2210",
+    "after": "2210 of 2210"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -489,8 +533,22 @@
     ]
    },
    "disclosures": {
-    "before": "87 of 87",
-    "after": "87 of 87"
+    "before": "8 of 8",
+    "after": "8 of 8"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "185 of 185",
+    "after": "185 of 185"
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-2.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-4465d22f5ce1829ca49059a5b8451bb0-before-full/",
@@ -501,9 +559,9 @@
   },
   "658f2f90470f73eea1dc1d90209c5ef7": {
    "pages": {
-    "htmlBefore": 45,
-    "htmlAfter": 45,
-    "sourcePages": 24,
+    "htmlBefore": 49,
+    "htmlAfter": 49,
+    "sourcePages": 28,
     "readingPath": 14,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -511,25 +569,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 18250,
-    "readingPathBefore": 14728,
-    "aboutThisRunBefore": 3522,
-    "readingPathAfter": 14729,
-    "aboutThisRunAfter": 3522,
+    "fullTextBefore": 18290,
+    "readingPathBefore": 14142,
+    "aboutThisRunBefore": 4148,
+    "readingPathAfter": 14143,
+    "aboutThisRunAfter": 4148,
     "aboutThisRunPerPage": {
-     "appendix.html": 779,
-     "clarifications.html": 68,
-     "discovery.html": 894,
-     "executions.html": 159,
-     "review.html": 158,
-     "size-report.html": 496,
-     "understanding.html": 968
+     "appendix.html": 794,
+     "clarifications.html": 86,
+     "discovery.html": 923,
+     "executions.html": 177,
+     "review.html": 420,
+     "size-report.html": 546,
+     "understanding.html": 1202
     },
-    "fullTextAfter": 18251
+    "fullTextAfter": 18291
    },
    "links": {
-    "before": "2043 of 2043",
-    "after": "2043 of 2043"
+    "before": "2376 of 2376",
+    "after": "2376 of 2376"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -591,8 +649,22 @@
     ]
    },
    "disclosures": {
-    "before": "135 of 135",
-    "after": "135 of 135"
+    "before": "6 of 6",
+    "after": "6 of 6"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "231 of 231",
+    "after": "231 of 231"
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-658f2f90470f73eea1dc1d90209c5ef7-before-full/",
@@ -603,9 +675,9 @@
   },
   "d9411d26ca55ebe0250e2e9b94dc0e32": {
    "pages": {
-    "htmlBefore": 65,
-    "htmlAfter": 65,
-    "sourcePages": 47,
+    "htmlBefore": 69,
+    "htmlAfter": 69,
+    "sourcePages": 51,
     "readingPath": 11,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -613,25 +685,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 33925,
-    "readingPathBefore": 28768,
-    "aboutThisRunBefore": 5157,
-    "readingPathAfter": 28769,
-    "aboutThisRunAfter": 5157,
+    "fullTextBefore": 30852,
+    "readingPathBefore": 25021,
+    "aboutThisRunBefore": 5831,
+    "readingPathAfter": 25022,
+    "aboutThisRunAfter": 5831,
     "aboutThisRunPerPage": {
-     "appendix.html": 959,
-     "clarifications.html": 68,
-     "discovery.html": 1536,
-     "executions.html": 210,
-     "review.html": 158,
-     "size-report.html": 656,
-     "understanding.html": 1570
+     "appendix.html": 996,
+     "clarifications.html": 86,
+     "discovery.html": 1565,
+     "executions.html": 228,
+     "review.html": 423,
+     "size-report.html": 706,
+     "understanding.html": 1827
     },
-    "fullTextAfter": 33926
+    "fullTextAfter": 30853
    },
    "links": {
-    "before": "3159 of 3159",
-    "after": "3159 of 3159"
+    "before": "3637 of 3637",
+    "after": "3637 of 3637"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -685,8 +757,22 @@
     ]
    },
    "disclosures": {
-    "before": "339 of 339",
-    "after": "339 of 339"
+    "before": "21 of 21",
+    "after": "21 of 21"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "555 of 555",
+    "after": "555 of 555"
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-5.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-d9411d26ca55ebe0250e2e9b94dc0e32-before-full/",
@@ -697,9 +783,9 @@
   },
   "ffe579c77dc21d9f6dd87ca6e2bc9301": {
    "pages": {
-    "htmlBefore": 48,
-    "htmlAfter": 48,
-    "sourcePages": 26,
+    "htmlBefore": 52,
+    "htmlAfter": 52,
+    "sourcePages": 30,
     "readingPath": 15,
     "aboutThisRun": 7,
     "otherBefore": 0,
@@ -707,25 +793,25 @@
     "otherPagesAfter": []
    },
    "words": {
-    "fullTextBefore": 24818,
-    "readingPathBefore": 20626,
-    "aboutThisRunBefore": 4192,
-    "readingPathAfter": 20627,
-    "aboutThisRunAfter": 4192,
+    "fullTextBefore": 25131,
+    "readingPathBefore": 20363,
+    "aboutThisRunBefore": 4768,
+    "readingPathAfter": 20364,
+    "aboutThisRunAfter": 4768,
     "aboutThisRunPerPage": {
-     "appendix.html": 853,
-     "clarifications.html": 68,
-     "discovery.html": 1018,
-     "executions.html": 332,
-     "review.html": 158,
-     "size-report.html": 520,
-     "understanding.html": 1243
+     "appendix.html": 870,
+     "clarifications.html": 86,
+     "discovery.html": 1047,
+     "executions.html": 350,
+     "review.html": 429,
+     "size-report.html": 570,
+     "understanding.html": 1416
     },
-    "fullTextAfter": 24819
+    "fullTextAfter": 25132
    },
    "links": {
-    "before": "2484 of 2484",
-    "after": "2484 of 2484"
+    "before": "2877 of 2877",
+    "after": "2877 of 2877"
    },
    "navigation": {
     "foldBefore": "[Review report]",
@@ -789,8 +875,22 @@
     ]
    },
    "disclosures": {
-    "before": "172 of 172",
-    "after": "172 of 172"
+    "before": "11 of 11",
+    "after": "11 of 11"
+   },
+   "claimStatesMatchingStoredSite": {
+    "before": "278 of 280",
+    "after": "278 of 280"
+   },
+   "harnessInputs": {
+    "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+    "contentClasses": [
+     "code-content",
+     "project-documentation",
+     "governance-text"
+    ],
+    "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+    "review": "injected fidelity-verdict-6.json (stored verdict, packet not rebuilt)"
    },
    "textFiles": {
     "before-full": "text-ffe579c77dc21d9f6dd87ca6e2bc9301-before-full/",

@@ -17,6 +17,14 @@ Not authority. The before-and-after reader measurement that rule A-38 asks for, 
 | Z | Run `d9411d26`, the original stored site, as text |
 | D, E, P | The pilot's arms D, E and P, kept as anchors (their answers are in the pilot record) |
 
+## Harness limit
+
+[Observed] The texts were drawn by the first re-render harness. It lacked three inputs a real render has (syzygy-a70b): the placement subject, the run's content classes and a bound fidelity verdict. Both the before arms (W, X) and the after arms (U, V, R, S) carried that defect alike.
+
+- So the before-to-after comparison holds.
+- The absolute shares are understated: main's render scoring below the original stored sites is that defect, not a regression in main.
+- The corrected harness reproduces the stored sites' claim states (`../reader-edition-measurement-2026-11-23.json`, `claimStatesMatchingStoredSite`).
+
 ## Files
 
 | File | What it is |
@@ -46,6 +54,6 @@ The reading is [Inferred]: one uncalibrated grading.
   - overall -2 and +2;
   - one kind drops by more than five points: structure, -8 on `658f2f90` (0.29 to 0.21);
   - the reader form leaves out the run pages, so it is a smaller text, not a different render.
-- [Observed] Main's render already scores below the original stored sites (Y 0.290 and Z 0.593 against W and X), mostly on limits. That gap is not this change's; it is filed as syzygy-a70b.
+- [Observed] Main's render scores below the original stored sites (Y 0.290 and Z 0.593 against W and X), mostly on limits. That gap is the harness defect above (syzygy-a70b), not this change and not main.
 
 Before committing, the answers were checked for token-shaped strings, and no match was printed. One 44-character match, the same in all four `d9411d26` answers, is a two-segment letters-only path, not a credential.
