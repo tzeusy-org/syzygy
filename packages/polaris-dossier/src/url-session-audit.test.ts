@@ -19,7 +19,30 @@ import type { ViewRole } from './session-view.js';
 type Writer = Extract<UrlSessionAuditResult, { ok: true }>;
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
 const writers: Writer[] = [];
-afterEach(async () => { vi.restoreAllMocks(); for (const writer of writers.splice(0)) await writer.close(); });
+const filesystem = vi.hoisted(() => ({
+  afterClose: undefined as ((file: string) => void) | undefined,
+  afterLstat: undefined as ((file: string) => void) | undefined,
+}));
+vi.mock('node:fs/promises', async importOriginal => {
+  const original = await importOriginal<typeof import('node:fs/promises')>();
+  return { ...original, lstat: async (...args: Parameters<typeof original.lstat>) => {
+    const stat = await original.lstat(...args);
+    filesystem.afterLstat?.(String(args[0]));
+    return stat;
+  }, open: async (...args: Parameters<typeof original.open>) => {
+    const handle = await original.open(...args), afterClose = filesystem.afterClose;
+    if (afterClose !== undefined) {
+      const close = handle.close.bind(handle);
+      handle.close = async () => { await close(); afterClose(String(args[0])); };
+    }
+    return handle;
+  } };
+});
+afterEach(async () => {
+  filesystem.afterClose = filesystem.afterLstat = undefined;
+  vi.restoreAllMocks();
+  for (const writer of writers.splice(0)) await writer.close();
+});
 const flush = async () => { for (let n = 0; n < 30; n++) await Promise.resolve(); };
 function deferred<T>() { let resolve!: (value: T) => void; const promise = new Promise<T>(r => { resolve = r; }); return { promise, resolve }; }
 function fixture(extraDetector?: { id: string; kind: string; [key: string]: unknown }) {
@@ -405,6 +428,88 @@ describe('protected URL session audit', () => {
     await expect(writer.append(f.event(writer))).rejects.toThrow(); expect(writer.summary()).toMatchObject({ poisoned: true, durableRecords: 4, tail: 'Unknown' });
   });
 
+  it('poisons on a sibling segment mismatch while an earlier prefix read remains pending', async () => {
+    const f = fixture(), writer = await f.create(), p = await prototype(), read = p.read, stat = p.stat;
+    const authorBytes = fs.readFileSync(f.file('author'));
+    const authorInode = fs.statSync(f.file('author'), { bigint: true }).ino;
+    const designInode = fs.statSync(f.file('design'), { bigint: true }).ino;
+    const entered = deferred<void>(), held = deferred<void>();
+    fs.appendFileSync(f.file('design'), 'OWN_SIBLING_TAMPER');
+    vi.spyOn(p, 'stat').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+      const result = await stat.apply(this, args);
+      if (result.ino === designInode) await entered.promise;
+      return result;
+    });
+    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+      if (fs.fstatSync(this.fd, { bigint: true }).ino === authorInode) {
+        entered.resolve();
+        await held.promise;
+      }
+      return read.apply(this, args);
+    });
+    const write = vi.spyOn(p, 'write');
+    const operation = writer.append(f.event(writer));
+    const refusal = expect(operation).rejects.toThrow('url-session-audit-refused');
+    try {
+      await Promise.race([entered.promise, operation]);
+      await vi.waitFor(() => expect(writer.summary().poisoned).toBe(true));
+      expect(writer.summary()).toMatchObject({ pendingFilesystemOperations: 1, durableRecords: 4, tail: 'Unknown' });
+      expect(write).not.toHaveBeenCalled();
+    } finally {
+      entered.resolve();
+      held.resolve();
+      await refusal;
+    }
+    expect(writer.summary()).toMatchObject({ pendingFilesystemOperations: 0, durableRecords: 4, tail: 'Unknown' });
+    expect(fs.readFileSync(f.file('author'))).toEqual(authorBytes);
+  });
+
+  it.each([
+    ['pre-write', 'segment'],
+    ['append', 'segment'],
+    ['close', 'segment'],
+    ['close', 'directory'],
+  ])('refuses late %s drift in a verified %s', async (operation, subject) => {
+    const f = fixture(), writer = await f.create(), p = await prototype(), read = p.read, write = p.write;
+    const authorInode = fs.statSync(f.file('author'), { bigint: true }).ino;
+    const designInode = fs.statSync(f.file('design'), { bigint: true }).ino;
+    const authorReading = deferred<void>(), releaseAuthor = deferred<void>(), designVerified = deferred<void>();
+    let scanning = operation !== 'append';
+    const attemptedWrite = vi.spyOn(p, 'write').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+      const result = await write.apply(this, args);
+      scanning = true;
+      return result;
+    });
+    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+      if (!scanning) return read.apply(this, args);
+      const inode = fs.fstatSync(this.fd, { bigint: true }).ino;
+      if (inode === authorInode) { authorReading.resolve(); await releaseAuthor.promise; }
+      const result = await read.apply(this, args);
+      // Each fixture prefix fits in one read. Let the Design branch finish
+      // checking its result while the Author descriptor remains held.
+      if (inode === designInode) setImmediate(() => designVerified.resolve());
+      return result;
+    });
+    const completion = operation === 'close'
+      ? writer.close().then(summary => !summary.poisoned)
+      : writer.append(f.event(writer)).then(() => true, () => false);
+    try {
+      const concurrentScan = Promise.all([authorReading.promise, designVerified.promise]).then(() => true);
+      expect(await Promise.race([concurrentScan, completion.then(() => false)])).toBe(true);
+      if (subject === 'segment') fs.appendFileSync(f.file('design'), 'OWN_LATE_SIBLING_DRIFT');
+      else {
+        const moved = path.join(f.root, 'moved');
+        fs.renameSync(f.parent, moved);
+        fs.symlinkSync(moved, f.parent, 'dir');
+      }
+    } finally {
+      releaseAuthor.resolve();
+    }
+    expect(await completion).toBe(false);
+    expect(writer.summary()).toMatchObject({ poisoned: true, durableRecords: 4, tail: 'Unknown' });
+    if (operation === 'pre-write') expect(attemptedWrite).not.toHaveBeenCalled();
+  });
+
   it('compares the actual descriptor prefix, not only size and inode metadata', async () => {
     const f = fixture(), writer = await f.create(), p = await prototype(), actual = p.read;
     vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: any[]) {
@@ -505,7 +610,7 @@ describe('protected URL session audit', () => {
   });
 
   it('bounds queue-inclusive waits and close, reporting an uncancelled filesystem operation as Unknown', async () => {
-    const f = fixture(), writer = await f.create({ limits: { milliseconds: 500 } }), p = await prototype(), actual = p.sync, held = deferred<void>();
+    const f = fixture(), writer = await f.create({ limits: { milliseconds: 1000 } }), p = await prototype(), actual = p.sync, held = deferred<void>();
     let entered = false;
     vi.spyOn(p, 'sync').mockImplementation(async function(this: FileHandle) { entered = true; await held.promise; return actual.call(this); });
     const first = writer.append(f.event(writer)), refusal = expect(first).rejects.toThrow();
@@ -677,6 +782,79 @@ describe('protected URL session audit', () => {
     const [first, second] = await Promise.all([writer.close(), writer.close()]);
     expect(first).toMatchObject({ closed: true, poisoned: false, tail: 'durable-prefix' }); expect(second).toEqual(first);
     expect(await writer.close()).toEqual(first);
+  });
+
+  it('refuses a sibling change made by the final append authority callback', async () => {
+    const f = fixture();
+    let afterSetup = false, samples = 0;
+    const writer = await f.create({ current: () => {
+      if (afterSetup && ++samples === 6) fs.appendFileSync(f.file('design'), 'OWN_FINAL_AUTHORITY_DRIFT');
+      return true;
+    } });
+    afterSetup = true;
+    await expect(writer.append(f.event(writer))).rejects.toThrow();
+    expect(samples).toBe(6);
+    expect(writer.summary()).toMatchObject({ durableRecords: 4, poisoned: true, tail: 'Unknown' });
+  });
+
+  it.each([0, 1])('withholds admission when a prefix read withdraws authority after %s writes', async priorWrites => {
+    const f = fixture(), writer = await f.create(), p = await prototype(), read = p.read;
+    const writes = vi.spyOn(p, 'write');
+    let revoked = false;
+    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+      const result = await read.apply(this, args);
+      if (writes.mock.calls.length === priorWrites && !revoked) {
+        revoked = true;
+        f.revoke();
+      }
+      return result;
+    });
+    await expect(writer.append(f.event(writer))).rejects.toThrow();
+    expect(revoked).toBe(true);
+    expect(writes).toHaveBeenCalledTimes(priorWrites);
+    expect(writer.summary()).toMatchObject({ durableRecords: 4, poisoned: true, tail: 'Unknown' });
+  });
+
+  it('refuses a replaced earlier name during the final close sweep', async () => {
+    const f = fixture();
+    let released = 0, checkedAuthor = false, replaced = false;
+    filesystem.afterClose = () => { released++; };
+    const writer = await f.create();
+    filesystem.afterLstat = file => {
+      if (released !== ROLES.length + 1) return;
+      if (file === f.file('author')) checkedAuthor = true;
+      if (file === f.file('design') && checkedAuthor && !replaced) {
+        fs.renameSync(f.file('author'), path.join(f.options.parent, 'previous-author'));
+        fs.writeFileSync(f.file('author'), 'OWN_REPLACEMENT', { flag: 'wx', mode: 0o600 });
+        replaced = true;
+      }
+    };
+    expect(await writer.close()).toMatchObject({ closed: true, poisoned: true, tail: 'Unknown' });
+    expect(replaced).toBe(true);
+    expect(writer.closedHistory()).toBeNull();
+  });
+
+  it('withholds closed history until the post-release pathname check finishes', async () => {
+    const f = fixture();
+    const released = deferred<void>();
+    let remaining = ROLES.length + 1;
+    filesystem.afterClose = () => {
+      if (--remaining === 0) {
+        fs.appendFileSync(f.file('design'), 'OWN_DRIFT_DURING_DESCRIPTOR_RELEASE');
+        released.resolve();
+      }
+    };
+    const writer = await f.create();
+    const first = writer.close();
+    await expect(Promise.race([released.promise.then(() => 'released'), first.then(() => 'closed')])).resolves.toBe('released');
+    for (let turn = 0; turn < 16; turn++) {
+      expect(writer.summary()).toMatchObject({ closed: false, termination: 'Unknown' });
+      expect(writer.closedHistory()).toBeNull();
+      expect(writer.close()).toBe(first);
+      await Promise.resolve();
+    }
+    expect(await first).toMatchObject({ closed: true, poisoned: true, tail: 'Unknown' });
+    expect(writer.closedHistory()).toBeNull();
   });
 
 });

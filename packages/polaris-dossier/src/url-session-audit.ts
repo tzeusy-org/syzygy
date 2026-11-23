@@ -386,14 +386,16 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
   let poisoned = false, closing = false, pending = 0, filesystem = 0, callbacks = 0, records = 0, durableBytes = 0, declarations = 0;
   let tip: string | null = null, limits: Limits = URL_SESSION_AUDIT_LIMITS;
   let setupWallDeadline: number | undefined;
+  let closeVerificationPending = false;
   const relayEvents = Object.fromEntries(SESSION_RELAY_EVENTS.map(event => [event, 0])) as Record<SessionAuditEvent['event'], number>;
   const captured = zeroKinds(), totals = Object.fromEntries(ROLES.map(role => [role, { records: 0, bytes: 0, tipSha256: null, usageReports: 0, usage: zeroUsage() }])) as Record<ViewRole, Totals>;
   const handles = new Set<FileHandle>(), shutting = new Map<FileHandle, Promise<void>>();
-  const summary = (): UrlSessionAuditSummary => copy({ format: URL_SESSION_AUDIT_FORMAT, closed: closing && handles.size === 0 && filesystem === 0 && callbacks === 0 && pending === 0,
+  const closed = (): boolean => closing && !closeVerificationPending && handles.size === 0 && filesystem === 0 && callbacks === 0 && pending === 0;
+  const summary = (): UrlSessionAuditSummary => copy({ format: URL_SESSION_AUDIT_FORMAT, closed: closed(),
     poisoned, durableRecords: records, durableBytes, declarations, captured, relayEvents, tipSha256: tip, roles: totals,
     usageReports: ROLES.reduce((n, r) => n + totals[r].usageReports, 0), capturedUsage: Object.fromEntries(Object.keys(zeroUsage()).map(k => [k, ROLES.reduce((n, r) => n + totals[r].usage[k as keyof SessionResponseUsage], 0)])) as unknown as SessionResponseUsage,
     pendingAppends: pending, pendingFilesystemOperations: filesystem, pendingCallbacks: callbacks, tail: poisoned ? 'Unknown' : 'durable-prefix',
-    termination: closing ? (handles.size || filesystem || callbacks || pending ? 'Unknown' : 'closed') : 'open',
+    termination: closing ? (closed() ? 'closed' : 'Unknown') : 'open',
     providerReceipts: 'Unknown', nativeSendCensus: 'Unknown', completeness: 'Unknown', hostileSameUidIsolation: 'Unknown', limits });
   function poison(): never { poisoned = true; throw refused(); }
   const remaining = (deadline: number): number => Math.min(deadline - performance.now(),
@@ -416,14 +418,18 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
   };
   let queue = Promise.resolve();
   let verifyOnClose: ((deadline: number) => Promise<void>) | undefined;
+  let verifyClosedNames: ((deadline: number) => Promise<void>) | undefined;
   let closeOperation: Promise<UrlSessionAuditSummary> | undefined;
   const close = (): Promise<UrlSessionAuditSummary> => {
-    if (closing && handles.size === 0 && filesystem === 0 && callbacks === 0 && pending === 0) return Promise.resolve(summary());
     if (closeOperation) return closeOperation;
-    closing = true; const deadline = performance.now() + limits.milliseconds;
+    if (closed()) return Promise.resolve(summary());
+    closing = true; closeVerificationPending = true;
+    const deadline = performance.now() + limits.milliseconds;
     closeOperation = (async () => {
       try { await wait(queue, deadline); if (!poisoned && verifyOnClose) await verifyOnClose(deadline); } catch { poisoned = true; }
       try { await wait(Promise.all([...handles].map(shut)), deadline); } catch { poisoned = true; }
+      try { if (!poisoned && verifyClosedNames) await verifyClosedNames(deadline); } catch { poisoned = true; }
+      closeVerificationPending = false;
       return summary();
     })().finally(() => { closeOperation = undefined; });
     return closeOperation;
@@ -521,19 +527,57 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       && stat.ino === segment.initial.ino && stat.uid === segment.initial.uid && stat.mode === segment.initial.mode && stat.nlink === 1n;
     const sameSegment = (segment: Segment, expected: SegmentPrefix, stat: Stat): boolean => sameSegmentIdentity(segment, stat)
       && stat.size === BigInt(expected.prefix.length) && stat.mtimeNs === expected.modified && stat.ctimeNs === expected.changed;
-    // The caller brackets a complete read-only prefix check with currentness.
-    const inspectIdentities = async (deadline: number, changed?: SegmentPrefix & { readonly role: ViewRole }, cleanup = false): Promise<void> => {
-      const inspect = async <T>(fn: () => Promise<T>): Promise<T> => {
-        const value = await fn();
-        if (cleanup) { if (poisoned || performance.now() >= deadline) poison(); }
-        else guard(deadline);
-        return value;
-      };
-      if (await inspect(() => realpath(input.parent)) !== input.parent
-        || !sameDirectory(await inspect(() => lstat(input.parent, { bigint: true })))
-        || !sameDirectory(await inspect(() => directory.stat({ bigint: true })))) poison();
+    type ChangedSegment = SegmentPrefix & { readonly role: ViewRole };
+    const expectedSegment = (role: ViewRole, segment: Segment, changed?: ChangedSegment): SegmentPrefix =>
+      changed?.role === role ? changed : segment;
+    type Inspect = <T>(fn: () => Promise<T>) => Promise<T>;
+    const verifyDirectoryName = async (inspect: Inspect): Promise<Stat> => {
+      if (await inspect(() => realpath(input.parent)) !== input.parent) poison();
+      const stat = await inspect(() => lstat(input.parent, { bigint: true }));
+      if (!sameDirectory(stat)) poison();
+      return stat;
+    };
+    // Recheck the names in role order after every parallel prefix read has
+    // finished. Keep this final sweep within the tracked filesystem operation.
+    const verifyPrefixNames = async (inspect: Inspect, changed?: ChangedSegment): Promise<void> => {
+      const before = await verifyDirectoryName(inspect);
       for (const [role, segment] of segments) {
-        const expected = changed?.role === role ? changed : segment;
+        if (!sameSegment(segment, expectedSegment(role, segment, changed),
+          await inspect(() => lstat(path.join(input.parent, segment.name), { bigint: true })))) poison();
+      }
+      const after = await verifyDirectoryName(inspect);
+      // A replacement of an earlier name can keep the parent inode intact.
+      if (after.mtimeNs !== before.mtimeNs || after.ctimeNs !== before.ctimeNs) poison();
+    };
+    // No asynchronous work separates the final authority sample from the
+    // append or its acknowledgement. Recheck only the metadata of the fixed
+    // role names here. The preceding tracked scan checks the complete bytes.
+    const verifyAppendNames = (deadline: number, changed?: ChangedSegment): void => {
+      guard(deadline);
+      if (realpathSync(input.parent) !== input.parent
+        || !sameDirectory(lstatSync(input.parent, { bigint: true }))) poison();
+      for (const [role, segment] of segments) {
+        guard(deadline);
+        if (!sameSegment(segment, expectedSegment(role, segment, changed),
+          lstatSync(path.join(input.parent, segment.name), { bigint: true }))) poison();
+      }
+      guard(deadline);
+    };
+    const cleanupGuard = (deadline: number): void => { if (poisoned || remaining(deadline) <= 0) poison(); };
+    const inspectWithin = (deadline: number, cleanup = false): Inspect => async fn => {
+      const check = cleanup ? cleanupGuard : guard;
+      check(deadline);
+      const result = await fn();
+      check(deadline);
+      return result;
+    };
+    // The caller brackets a complete read-only prefix check with currentness.
+    const inspectIdentities = async (deadline: number, changed?: ChangedSegment, cleanup = false): Promise<void> => {
+      const inspect = inspectWithin(deadline, cleanup);
+      await verifyDirectoryName(inspect);
+      if (!sameDirectory(await inspect(() => directory.stat({ bigint: true })))) poison();
+      const inspectSegment = async (role: ViewRole, segment: Segment): Promise<void> => {
+        const expected = expectedSegment(role, segment, changed);
         for (const stat of [await inspect(() => segment.file.stat({ bigint: true })), await inspect(() => lstat(path.join(input.parent, segment.name), { bigint: true }))]) {
           if (!sameSegment(segment, expected, stat)) poison();
         }
@@ -544,7 +588,12 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           if (read.bytesRead !== wanted || !buffer.subarray(0, wanted).equals(expected.prefix.subarray(offset, offset + wanted))) poison();
           offset += wanted;
         }
-      }
+      };
+      // Each role has its own descriptor. Keep the scan tracked until all
+      // started reads settle, even after one role has poisoned the audit.
+      const checked = await Promise.allSettled([...segments].map(([role, segment]) =>
+        inspectSegment(role, segment).catch(poison)));
+      if (checked.some(result => result.status === 'rejected')) poison();
     };
     for (const role of ROLES) {
       const name = `${input.name}-${role}.jsonl`;
@@ -556,7 +605,9 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     await setupIo(() => directory.sync());
     await setupIo(() => inspectIdentities(setupDeadline));
     await checkCurrent(setupDeadline);
+    await setupIo(() => verifyPrefixNames(inspectWithin(setupDeadline)));
     verifyOnClose = deadline => io(deadline, () => inspectIdentities(deadline, undefined, true), true);
+    verifyClosedNames = deadline => io(deadline, () => verifyPrefixNames(inspectWithin(deadline, true)), true);
     const classes = (v: unknown): void => {
       if (!Array.isArray(v) || v.length === 0 || v.length > SESSION_CONTENT_CLASSES.length || new Set(v).size !== v.length
         || v.some(c => !one(c, SESSION_CONTENT_CLASSES) || !input.declaredClasses.includes(c as SessionContentClass))) poison();
@@ -696,7 +747,11 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
     type DurableEvent = { readonly offset: number; readonly bytes: Buffer; readonly digest: string };
     const relayLatest = new Map<ViewRole, { readonly payload: SessionAuditEvent; readonly events: readonly DurableEvent[] }>();
     const commit = async (event: unknown, role: ViewRole, deadline: number, declaration: boolean,
-      checkEffectCurrent = checkCurrent): Promise<DurableEvent> => {
+      checkEffectCurrent = checkCurrent, attemptDeadline?: number): Promise<DurableEvent> => {
+      const checkBoundary = (): void => {
+        guard(deadline);
+        if (attemptDeadline !== undefined && Date.now() >= attemptDeadline) poison();
+      };
       guard(deadline); if (!declaration && records - declarations >= limits.events) poison();
       const segment = segments.get(role)!;
       const body = { format: URL_SESSION_AUDIT_FORMAT, sequence: records + 1, roleSequence: totals[role].records + 1,
@@ -716,11 +771,13 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           // Each sample after a filesystem stage also admits the next stage.
           await inspectIdentities(deadline);
           await checkEffectCurrent(deadline);
+          verifyAppendNames(deadline);
           const writerFd = segment.file.fd, name = `/proc/self/fd/${directory.fd}/${segment.name}`;
           if (!sameSegment(segment, segment, fstatSync(writerFd, { bigint: true }))
             || !sameSegment(segment, segment, lstatSync(name, { bigint: true }))) poison();
           // Stage the exact append before the underlying write can change the
           // extent. The new event becomes durable only after both syncs.
+          checkBoundary();
           managedAppend = intent;
           const wrote = await segment.file.write(bytes, 0, bytes.length, null);
           guard(deadline);
@@ -739,7 +796,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
           if (checkEffectCurrent !== checkCurrent) await checkEffectCurrent(deadline);
           return full;
         });
-        guard(deadline);
+        verifyAppendNames(deadline, { ...tail, role });
+        checkBoundary();
         segment.prefix = tail.prefix; segment.modified = tail.modified; segment.changed = tail.changed;
       } finally { managedAppend = undefined; }
       records++; durableBytes += bytes.length; tip = digest; totals[role].records++; totals[role].bytes += bytes.length; totals[role].tipSha256 = digest;
@@ -798,14 +856,16 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       return deepFreeze({ durableRecords: captured.durableRecords, durableBytes: captured.durableBytes, tipSha256: captured.tipSha256,
         roles, declarations: declarationsByRole, ...(ordered.length === 0 ? {} : { ordered }) });
     };
-    const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null, checkEffectCurrent = checkCurrent) => {
-      const deadline = performance.now() + limits.milliseconds;
+    const enqueue = (event: CapturedAuditEvent, privateKind: PrivateEventKind | null, checkEffectCurrent = checkCurrent,
+      attemptDeadline?: number) => {
+      const deadline = performance.now() + Math.min(limits.milliseconds,
+        attemptDeadline === undefined ? Infinity : attemptDeadline - Date.now());
       let snapshot: CapturedAuditEvent;
       try { guard(deadline); if (pending >= limits.pending) poison(); snapshot = project(copy(event, limits.eventBytes), privateKind); }
       catch { poisoned = true; return Promise.reject(refused()); }
       pending++;
       const operation = queue.then(() => snapshot.kind === 'relay' ? commitRelay(snapshot, deadline)
-        : commit(snapshot, snapshot.role, deadline, false, checkEffectCurrent)).catch(() => poison());
+        : commit(snapshot, snapshot.role, deadline, false, checkEffectCurrent, attemptDeadline)).catch(() => poison());
       queue = operation.then(() => {}, () => {}).finally(() => { pending--; });
       return wait(operation, deadline).then(result => { guard(deadline); return result; }, () => poison());
     };
@@ -897,7 +957,8 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
       const writer = createOrderedDesignAuditWriter({ profile: orderedDesignProfile, plan, principal: input.principal }, {
         current: async () => { await checkAttemptCurrent(performance.now() + limits.milliseconds); return true; },
         append: async record => {
-          const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record }, 'design-ordered', checkAttemptCurrent);
+          const event = await enqueue({ kind: 'design-ordered', role: 'design', scope, payload: record },
+            'design-ordered', checkAttemptCurrent, attemptDeadline);
           const read = () => {
             const bytes = verifyDurableEvent('design', event, observeRead);
             const row = parseBoundedJson(bytes.toString('utf8'), { maxBytes: limits.eventBytes + 1, maxNodes: 4096, maxDepth: 12 });
