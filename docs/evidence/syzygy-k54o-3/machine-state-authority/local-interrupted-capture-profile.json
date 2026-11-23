@@ -1,0 +1,138 @@
+{
+  "label": "Observed",
+  "baseCommit": "9da66128c41ca72cbdb6e7dc9c8e0dee0e146696",
+  "scratchInstrumentationPatchSha256": "3926bf0a354b31ab71fa657ec25ad49534d07172e0a740532927d819eab35909",
+  "testLogSha256": "44ab547200a4bf25f476ec4c058d614571ce8302decc6467a6619918c4a0282b",
+  "retainedFixtureSha256": "27028b983b30ff0d180080f9a83e549eb847cd5acba4b92d67a69caa118e3b2f",
+  "scenario": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 232262
+  },
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "storeAccepted": {
+    "open": 1,
+    "retainedReads": 8,
+    "allocations": 8
+  },
+  "resumedConnection": {
+    "kind": "inference-bridge",
+    "counts": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 0
+    },
+    "stages": {
+      "open": {
+        "elapsedMs": 792.05,
+        "outcome": "refused"
+      },
+      "accept": {
+        "elapsedMs": 791.915,
+        "outcome": "refused"
+      },
+      "capture": {
+        "elapsedMs": 406.428,
+        "outcome": "refused"
+      }
+    }
+  },
+  "captureTrace": {
+    "kind": "inference-bridge",
+    "marks": [
+      {
+        "phase": "entry",
+        "ms": 0
+      },
+      {
+        "phase": "first-parent",
+        "ms": 86
+      }
+    ],
+    "image": {
+      "reads": 0,
+      "bytes": 0,
+      "privateReadMs": 0,
+      "hashMs": 0,
+      "guardMs": 0,
+      "lastAt": "not-started"
+    }
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 2,
+    "phases": {
+      "process": {
+        "startedMs": 0.05582400001003407
+      },
+      "verify": {
+        "startedMs": 0.15116300000227056,
+        "settledMs": 527.4871909999929,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.15869700000621378
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "bounded-timeout",
+      "elapsedMs": 1063.0379790000152
+    }
+  },
+  "remainingUnknown": "Which pending census caused the sample expiry. The launcher recorded storage as the timeout phase while both process and storage were pending. No native image read started in this capture."
+}
