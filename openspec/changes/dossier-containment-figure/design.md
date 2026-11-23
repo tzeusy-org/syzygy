@@ -17,7 +17,7 @@
   - withholding, review and the machine form;
   - its nesting is the child's own claim ("this lies inside that"), so it carries the child's marking.
 - [Inferred] The bounds are three levels, 40 groups, five top-level groups and eight children per group.
-  - Three levels is the bead's acceptance case ("a three-level containment figure"). It is also the depth at which the narrowest box (128 px) still holds a 13-character line.
+  - Three levels is the bead's acceptance case ("a three-level containment figure"). It is also the depth at which the narrowest box (128 px) still holds a 13-character line at the 2.5 ratio (D5).
   - Five columns is 2.5's bound, so a containment's width W takes 2.5's values (plus 224 px for one column).
   - 40 groups keeps the figure readable and its list short.
   - The bounds are stated in the requirement and in every finding's detail. Acceptance 2 asks that "the bound [be] named".
@@ -59,14 +59,16 @@
   - 48 px for a group with no children;
   - otherwise 40 px of header, plus the children, plus 8 px between children and 12 px at the foot.
   - The layout reads no label width. That makes it pure and its outputs literal: scenario 1 fixes five boxes, W and H, computed by hand.
-- [Inferred] Labels wrap at about 8 px per character (19, 16 and 13 characters), the ratio 2.5 uses for a 176 px box. A longer label ends in `…` and is whole in the list.
+- [Inferred] Labels wrap at 19, 16 and 13 characters, about 9 to 10 px per character, scaling 2.5's 19 characters at 176 px to the 152 and 128 px boxes. A longer label ends in `…` and is whole in the list.
 - [Inferred] On a narrow screen the figure shows a nested list, as a swimlane shows a stepper, through the same container query and with no script.
   - So it fits at 1440 and 390 by construction. That is acceptance 1's "lint at both widths".
 
 ## D6. Findings
 
 [Inferred] There are three new kinds, each with a literal detail that names its bound:
-- `containment-depth`: reported at each group at level 4 only. One fault gives one finding; its deeper groups add none.
+- `containment-depth`: reported at each group at level 4 only. One fault gives one finding; its deeper groups add none, and no group past level 3 draws `unit-reference`.
+- The three are computed only over `groups` and `children` lists with no `schema` finding, so an empty or over-long list is that finding alone.
+- A containment with any of the three, or a `figure-kind` finding, or in a draft with a `schema` finding, has no nesting decided, as its layout cannot be computed.
 - `containment-size`: counts every group.
 - `containment-flat`: a containment with no nesting would be a row of boxes, which is a graph without edges.
 
@@ -106,7 +108,8 @@ A v11 draft with no containment renders as v10 would. Drafts of schema v10 and e
   - `field-version` for v10 and earlier.
 - A pure `containment-layout.ts` beside `apps/three-surface-poc/src/polaris-generation/diagram-layout.ts`.
 - `dossier-site.ts`:
-  - the figure, its two forms and the outline styles, only on pages with a containment;
+  - the figure and its two forms;
+  - the `figure-forms` container query rules on any page with a sequence, swimlane or containment, and the outline styles only on pages with a containment;
   - tally, list and witnessed items;
   - declarative source;
   - the `figureStructures` entry.
@@ -127,3 +130,23 @@ A v11 draft with no containment renders as v10 would. Drafts of schema v10 and e
 - [Inferred] A containment cannot be a hero. 2.20's hero is a graph kind, and widening it is a later version's choice.
 - [Inferred] Membership of a package in a workspace cannot be witnessed until a fact states resolved members and its recognizer is eligible (D4).
 - [Inferred] A deep, wide tree can be tall: up to about 40 boxes in one column. The bounds keep it finite. Whether such a figure reads well is a design-review judgement.
+
+## Review
+
+[Observed] One fresh-context review, `docs/reviews/syzygy-3efd-31/R-CONTAINMENT-FIGURE-SPEC-1-RAW.md` (sha256 `05e913974b2c06a7ed22944c2a295cd51013198b527d240d7d56335794344067`), over the spec at install commit 00131423 (sha256 `9c8b919de56f92b09658df81c147e88129b147793d7e9e719be5373ff70970fb`). Verdict REVISE: findings 1 and 2 blocking, 3 to 9 notes. Every finding is repaired below. No review has read the repaired bytes; under D10 the review is one round and this section is its record.
+
+- F1 (blocking), which page carries which style rules. Repaired.
+  - 2.5's carrier sentence is amended in place, declared in `SEMANTIC-DELTA.md`: since 2.21 the container query rules on the `figure-forms` box go on a page with a produced sequence, swimlane or containment figure, and the stepper's other rules stay as 2.5 states.
+  - 2.21's render paragraph now says the outline's own rules (text size, indent, borders) go only on a page with a containment, so a containment-only page carries no stepper rules and a page with no containment no outline rules.
+  - Scenario "Containment fits at both widths" now names both pages: a containment-only page and a swimlane-only page. Extended rather than added, so the census stays at 188.
+- F2 (blocking), groups past level 3. Repaired.
+  - A group below level 4 raises no `containment-depth` finding, and no group at level 4 or below raises `unit-reference`.
+  - A containment with a `containment-depth` finding has no nesting decided (F4), so no `relation-challenged` finding can come from it.
+  - The depth scenario lists each excluded kind.
+- F3 (note), containment findings beside `schema` findings. Repaired: the three containment findings are computed only where the `groups` list and every `children` list have no `schema` finding, so `groups: []` is the `schema` finding alone. The Form's Case list gains the empty-list case and a past-level-3 group with a malformed unit.
+- F4 (note), which containments have nestings decided. Repaired: rule `relation-witness` decides nestings only for a containment with no `figure-kind`, `containment-depth`, `containment-size` or `containment-flat` finding, in a draft with no `schema` finding; such a containment raises no `relation-challenged` finding.
+- F5 (note), the challenged detail. Repaired: the detail now opens `<diagram>: ` and names the child group's identity, `no contains fact joins the units of group <child> and the group it is drawn in, …`, like every other containment finding. An identity is the draft's, never a unit's path or name. The challenged scenario gives the literal.
+- F6 (note), the list item. Repaired: each group's item text is `{label}` at level 1 and `{label} (in {parent label})` below, labels as rendered. The Oracle fixes the list's items as literals.
+- F7 (note), a withheld parent. Repaired as suggested: a nesting either of whose groups renders as a withheld item is `unknown` (`edge-not-inferred`).
+- F8 (note, editorial), the double "and". Repaired in both brief chains of the brief paragraph, declared in the delta.
+- F9 (note, design.md), the characters-per-pixel figure. Repaired in D5 and D2: about 9 to 10 px per character, scaling 2.5's 19 at 176 px.
