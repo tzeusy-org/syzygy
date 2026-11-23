@@ -1223,15 +1223,39 @@ describe('composed URL run with actual role processes', () => {
     }
     const reproducedAtDesignHostCount: number[] = [];
     const deliveryReproductions: number[][] = [];
-    let firstReproductionRefusal: { stage: string; designHosts: number; startedMs: number; settledMs: number } | undefined;
+    let firstReproductionRefusal: { stage: rendering.RenderStage; category: string; admission: string; freshLease: string;
+      remainingMs: number; designHosts: number; startedMs: number; settledMs: number } | undefined;
     if (stoppingCut) {
       const reproduce = rendering.reproduceUrlRender;
-      vi.spyOn(rendering, 'reproduceUrlRender').mockImplementation(async (...args) => {
+      vi.spyOn(rendering, 'reproduceUrlRender').mockImplementation(async (run, deps, site, continuation) => {
         const startedMs = performance.now();
-        const result = await reproduce(...args);
+        let admission: 'unreached' | 'pending' | 'accepted' | 'refused' | 'rejected' = 'unreached';
+        const admit = deps.admitProducedSite;
+        const result = await reproduce(run, admit === undefined ? deps : {
+          ...deps,
+          admitProducedSite(input) {
+            admission = 'pending';
+            try {
+              const checked = admit.call(deps, input);
+              if (typeof checked === 'boolean') admission = checked ? 'accepted' : 'refused';
+              else void checked.then(ok => { admission = ok ? 'accepted' : 'refused'; }, () => { admission = 'rejected'; });
+              return checked;
+            } catch (cause) { admission = 'rejected'; throw cause; }
+          },
+        }, site, continuation);
         const designHosts = relayRoles.filter(role => role === 'design').length;
         if (result.ok) reproducedAtDesignHostCount.push(designHosts);
-        else firstReproductionRefusal ??= { stage: result.refusal.stage, designHosts, startedMs, settledMs: performance.now() };
+        else if (firstReproductionRefusal === undefined) {
+          const categories: Record<string, string> = {
+            'the authenticated URL products are unavailable or changed': 'product-read',
+            'The rendered products were not admitted by the checked producer before storage.': 'product-admission',
+            'The reproduced output differs from the checked stored site.': 'stored-site-comparison',
+          };
+          firstReproductionRefusal = { stage: result.refusal.stage,
+            category: Object.hasOwn(categories, result.refusal.reason) ? categories[result.refusal.reason]! : 'other', admission,
+            freshLease: deps.productReads?.leaseState() ?? 'absent', remainingMs: (deps.productReads?.deadline ?? Date.now()) - Date.now(),
+            designHosts, startedMs, settledMs: performance.now() };
+        }
         return result;
       });
     }
