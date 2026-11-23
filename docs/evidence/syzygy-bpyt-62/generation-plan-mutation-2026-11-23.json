@@ -36,6 +36,21 @@
         "failed": 0
       },
       {
+        "id": "quoted-duplicate-diagnostic-t6",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled'",
+            "new": "id: 'canonical-json-sorted-keys-disabled'"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: duplicate mutation ids: expected 'canonical-json-sorted-keys-disabled' to be '' // Object.is equality"
+      },
+      {
         "id": "shared-describe-fragment",
         "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
@@ -55,14 +70,14 @@
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
         "replacements": [
           {
-            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
-            "new": "mustFail: ['provider-local intermediate validation'],"
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing'],"
           }
         ],
         "outcome": "assertion-killed",
         "passed": 12,
         "failed": 1,
-        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: test titles holding must-fail \"provider-local intermediate validation\": expected +0 to be 1 // Object.is equality"
+        "diagnostic": "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing\": expected +0 to be 1 // Object.is equality"
       },
       {
         "id": "qualified-name-positive-control",
@@ -70,14 +85,14 @@
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
         "replacements": [
           {
-            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
-            "new": "mustFail: ['provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities'],"
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing rejects pollution keys'],"
           }
         ],
         "outcome": "assertion-killed",
         "passed": 12,
         "failed": 1,
-        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: test titles holding must-fail \"provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities\": expected +0 to be 1 // Object.is equality"
+        "diagnostic": "AssertionError: parse-json-pollution-key-check-disabled: test titles holding must-fail \"bounded provider JSON parsing rejects pollution keys\": expected +0 to be 1 // Object.is equality"
       },
       {
         "id": "runner-drops-checked-file",
@@ -151,6 +166,21 @@
         "diagnostic": "AssertionError: duplicate mutation ids: expected '\"\"' to be '' // Object.is equality"
       },
       {
+        "id": "quoted-duplicate-diagnostic-t6",
+        "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+        "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
+        "replacements": [
+          {
+            "old": "id: 'canonical-json-cycle-check-disabled'",
+            "new": "id: 'canonical-json-sorted-keys-disabled'"
+          }
+        ],
+        "outcome": "assertion-killed",
+        "passed": 12,
+        "failed": 1,
+        "diagnostic": "AssertionError: duplicate mutation ids: expected '\"canonical-json-sorted-keys-disabled\"' to be '' // Object.is equality"
+      },
+      {
         "id": "shared-describe-fragment",
         "file": "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
@@ -171,14 +201,14 @@
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
         "replacements": [
           {
-            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
-            "new": "mustFail: ['provider-local intermediate validation'],"
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing'],"
           }
         ],
         "outcome": "assertion-killed",
         "passed": 12,
         "failed": 1,
-        "diagnostic": "AssertionError: provider-draft-unknown-source-check-disabled: describe-qualified test titles holding must-fail \"provider-local intermediate validation\": expected 21 to be 1 // Object.is equality"
+        "diagnostic": "AssertionError: parse-json-pollution-key-check-disabled: describe-qualified test titles holding must-fail \"bounded provider JSON parsing\": expected 9 to be 1 // Object.is equality"
       },
       {
         "id": "qualified-name-positive-control",
@@ -186,8 +216,8 @@
         "sourceSha256": "b383c956eb0e7c15c2842b6a86ba3fbc886cc9dfa0c3edd234af9b9a3ec735aa",
         "replacements": [
           {
-            "old": "mustFail: ['refuses missing admitted sources, unknown support and duplicate local identities'],",
-            "new": "mustFail: ['provider-local intermediate validation refuses missing admitted sources, unknown support and duplicate local identities'],"
+            "old": "mustFail: ['rejects pollution keys'],",
+            "new": "mustFail: ['bounded provider JSON parsing rejects pollution keys'],"
           }
         ],
         "outcome": "passed",
@@ -241,6 +271,6 @@
       }
     ]
   },
-  "assertionKills": 6,
-  "controls": 7
+  "assertionKills": 7,
+  "controls": 8
 }
