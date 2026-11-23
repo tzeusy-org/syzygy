@@ -126,6 +126,9 @@ describe('the reader\'s edition (syzygy-5dhm.136)', () => {
     expect(navEntries(files.get('poles/2.html')!, 'poles/2.html')).toEqual(navEntries(files.get('index.html')!, 'index.html'));
     const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path).filter(page => !page.startsWith('sources/') || page === 'sources/index.html');
     expect(order).toEqual(['index.html', 'find-by-task.html', 'name-index.html', 'poles/2.html', 'poles/3.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'appendix.html']);
+    // The contents page lists the finding pages first, the index directly after find-by-task, then the first section.
+    const contentsLinks = [...files.get('contents.html')!.split('<section id="contents">')[1]!.matchAll(/href="([^"]*)"/gu)].map(match => match[1]);
+    expect(contentsLinks.slice(0, 3)).toEqual(['find-by-task.html', 'name-index.html', 'index.html#section-one']);
   });
 
   it('folds exactly the pages the one page-class definition calls run, and keeps every other page on the reading path', () => {

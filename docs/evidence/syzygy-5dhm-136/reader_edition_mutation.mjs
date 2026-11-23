@@ -44,6 +44,7 @@ const MUTANTS = [
   // --- the finding pages near the top
   ['nav-index-dropped', SITE, '<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li><li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}${poles', '<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li>`}${poles'],
   ['contents-index-dropped', SITE, '<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}', '<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li>`}'],
+  ['contents-index-moved', SITE, '<li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li><li><a href="${NAME_INDEX_PAGE}">Index</a></li>`}${(withheld', '<li><a href="${NAME_INDEX_PAGE}">Index</a></li><li><a href="${FIND_BY_TASK_PAGE}">Find by task</a></li>`}${(withheld'],
   ['reading-order-index-last', SITE, 'if (indexAt !== -1) pages.splice(', 'if (indexAt === -2) pages.splice('],
   // --- the landing page leads with the thesis and the map
   ['landing-map-after-sections', SITE, '</header>${overviewFigures}${poleMap}${sections}${missingList}', '</header>${overviewFigures}${sections}${poleMap}${missingList}'],
