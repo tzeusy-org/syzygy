@@ -1,0 +1,44 @@
+{
+  "subject": "2466184be8ddd4152d219461f869ede003a4e0c0",
+  "baseline": "e8e9651753aa14cb24a745a548313c18e740726c",
+  "focused": {
+    "path": "packages/polaris-dossier/src/session-launch.test.ts",
+    "passed": 7,
+    "skipped": 25,
+    "total": 32,
+    "maximumWorkers": 1,
+    "caseSelector": "keeps the 200ms cadence|refuses a task census when an opened listing disappears|joins independent inspection authority",
+    "logSha256": "d243f76ceedd1bea8498654d775186a5a2109134a258fea3f5078b1cb4172028",
+    "typecheck": "passed"
+  },
+  "review": {
+    "verdict": "PASS",
+    "sha256": "560b99ce36462dad88172de1d2de05fa972f7804f0beaa59663460d21d04135c",
+    "probesPassed": 8
+  },
+  "mutations": [
+    {
+      "name": "delay-open-until-batch",
+      "testSubject": "acb8a9b8d08dd3b37d0d18674a1f898fb039d020",
+      "sourceRestoredFrom": "e8e9651753aa14cb24a745a548313c18e740726c",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "diff": "delay-open-until-batch.patch",
+      "diffSha256": "6fa73c317dfd2cc1fd77db67038bed934259119f43e73a38bffec472e0ea1be9",
+      "caseSelector": "keeps the 200ms cadence",
+      "logSha256": "ccd6fdc5918b06f387dd56d66985587a238aadda00b91b2a18211cb1f576d642",
+      "observedAssertion": "expected +0 to be 1"
+    },
+    {
+      "name": "skip-open-iterator-enoent",
+      "testSubject": "2466184be8ddd4152d219461f869ede003a4e0c0",
+      "sourceRestoredFrom": "acb8a9b8d08dd3b37d0d18674a1f898fb039d020",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "diff": "skip-open-iterator-enoent.patch",
+      "diffSha256": "f857cd7fc20ac1871dadd41347405f5a595dcbd2b4fe102c2951e322c4daf7c6",
+      "caseSelector": "refuses a task census when an opened listing disappears",
+      "logSha256": "84e1f8f376e6ef5a8104e3471a48c74bf6747a78791eeedee5e9ccff12679f1b",
+      "observedAssertion": "expected true to be false"
+    }
+  ],
+  "limits": "The regressions enforce read ordering and incomplete-census refusal. The hosted speedup and complete native recovery still require same-revision measurements."
+}
