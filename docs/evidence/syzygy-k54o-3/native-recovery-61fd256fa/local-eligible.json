@@ -1,0 +1,122 @@
+{
+  "label": "Observed",
+  "commit": "61fd256fac0e832147c19a9f6e303422287450f1",
+  "logSha256": "d561d36cf30026c9603f3e635e2b7d938e1f5b07da23be73d0cf559054e78d94",
+  "retainedFixtureSha256": "d9d35c368c49b07efb67ce9c24d7d664a119254698a5b0ca08289f6e2b302978",
+  "selectedCase": "eligible-stop-resume",
+  "terminal": "transport-unavailable",
+  "resumeChecks": [],
+  "providerForwardsPastFixtureGate": {
+    "author": 6,
+    "inventory": 1,
+    "fidelity": 0,
+    "design": 0
+  },
+  "relayEvents": {
+    "author": {
+      "attempt-allowed": 6,
+      "send-attempt": 6,
+      "send-outcome": 6,
+      "response-admitted": 6,
+      "transport-failed": 1
+    },
+    "inventory": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1,
+      "response-admitted": 1
+    },
+    "fidelity": {
+      "attempt-allowed": 1,
+      "send-attempt": 1
+    },
+    "design": {}
+  },
+  "firstAuthorityRefusals": {
+    "author": {
+      "samples": 344,
+      "firstRefusal": {
+        "ordinal": 344,
+        "phases": {
+          "process": {
+            "startedMs": 0.07031300000380725,
+            "settledMs": 4.480090000011842,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.12284200001158752,
+            "settledMs": 7.1899930000072345,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 7.199071000010008,
+            "settledMs": 7.209190000008675,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 7.221593000009307
+        }
+      }
+    },
+    "inventory": {
+      "samples": 297,
+      "firstRefusal": {
+        "ordinal": 297,
+        "phases": {
+          "process": {
+            "startedMs": 0.013937000010628253,
+            "settledMs": 33.34219799999846,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.024727000010898337,
+            "settledMs": 69.67810499999905,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 69.69563800000469,
+            "settledMs": 69.70050700000138,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 69.77983700000914
+        }
+      }
+    },
+    "fidelity": {
+      "samples": 272,
+      "firstRefusal": {
+        "ordinal": 272,
+        "phases": {
+          "process": {
+            "startedMs": 0.01852500000677537,
+            "settledMs": 30.152046000002883,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.0329829999973299,
+            "settledMs": 70.10220599999593,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 70.10584299999755,
+            "settledMs": 70.10809799999697,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 70.1139589999948
+        }
+      }
+    }
+  },
+  "remainingUnknown": "Why the original Fidelity provider exchange stopped before the eligible cut."
+}

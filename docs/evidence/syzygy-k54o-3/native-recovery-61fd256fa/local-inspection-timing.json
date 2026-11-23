@@ -1,0 +1,128 @@
+{
+  "label": "Observed",
+  "baseCommit": "61fd256fac0e832147c19a9f6e303422287450f1",
+  "diagnosticOverlaySha256": "0aeb213c04d0270311ca94b3faea22db62e829b400a49fc56825dfacd1827597",
+  "logSha256": "7398fb88210ca1900aac9a39db0c11ec61e7a9cfbd4320b6f936b2ca580d0575",
+  "retainedFixtureSha256": "83122142a2cc8c580cb477b9d187cf6fdbfe30f252f783fa5616d3a210ef9a2a",
+  "selectedCase": "stop-resume",
+  "bootstrap": {
+    "restore-plans": {
+      "startedMs": 90169.640519,
+      "settledMs": 95316.008338,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 95366.644592,
+      "settledMs": 95649.325222,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 95697.884029,
+      "settledMs": 99991.924279,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 100680.549066,
+      "settledMs": 144278.202412,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 144686.88407,
+      "settledMs": 172937.151038,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 146220.079854,
+      "settledMs": 172449.735359,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 146532.599775,
+      "settledMs": 147139.20841,
+      "outcome": "accepted"
+    }
+  },
+  "claims": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "firstDesignInspectionRefusal": {
+    "ordinal": 4,
+    "phases": {
+      "process": {
+        "startedMs": 0.06045399999129586,
+        "settledMs": 872.2775560000155,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.11594899999909103,
+        "settledMs": 757.7030420000083,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.1193349999957718,
+        "settledMs": 913.2422550000192,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 913.2674830000033,
+        "settledMs": 1007.6999110000033,
+        "outcome": "accepted"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "sample-deadline",
+      "elapsedMs": 1007.914426000003
+    }
+  },
+  "firstStorageRefusalTraceEmitted": false,
+  "initialObservation": "The timed overlay reached the native Design process and the fourth sample accepted storage and process. The exact end-of-sample confirmation accepted authority and crossed the original one-second deadline.",
+  "remainingUnknown": "Which competing work drove process, storage, and confirmation latency in the two different replays."
+}

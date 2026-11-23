@@ -1,0 +1,139 @@
+{
+  "label": "Observed",
+  "commit": "61fd256fac0e832147c19a9f6e303422287450f1",
+  "rawFixtureSha256": "6b2489bf0ceea58466b7612d66eb763c46de94ed5e07dd512d47d51781f9fb0d",
+  "logSha256": "0729046969334e8598384b2bee1485427680614503f86e89b2d218dfe720a135",
+  "bootstrap": {
+    "restore-plans": {
+      "startedMs": 75707.70943,
+      "settledMs": 80755.180513,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 80819.987358,
+      "settledMs": 81077.046277,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 81128.741912,
+      "settledMs": 85249.600778,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 85815.547512,
+      "settledMs": 133700.410514,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 135214.047433,
+      "settledMs": 173372.602253,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 138965.224193,
+      "settledMs": 172831.530144,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 139366.222438,
+      "settledMs": 140266.568599,
+      "outcome": "accepted"
+    }
+  },
+  "audit": {
+    "startedMs": 135922.30479,
+    "authority": {
+      "started": 14,
+      "accepted": 14,
+      "refused": 0,
+      "rejected": 0,
+      "totalMs": 1168.5332579999522,
+      "longestMs": 128.55723499998567
+    },
+    "settledMs": 138962.734121,
+    "outcome": "accepted",
+    "declarations": 4,
+    "pendingCallbacks": 0,
+    "pendingFilesystemOperations": 0
+  },
+  "claims": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "firstDesignInspectionRefusal": {
+    "ordinal": 1,
+    "phases": {
+      "process": {
+        "startedMs": 0.033774000010453165,
+        "settledMs": 384.6466599999985,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.08092300000134856,
+        "settledMs": 452.57692099999986,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.10852500001783483
+      }
+    },
+    "refusal": {
+      "phase": "storage",
+      "cause": "bounded-timeout",
+      "elapsedMs": 1007.2188840000017
+    }
+  },
+  "designTransport": {
+    "open": 1,
+    "accept": 1,
+    "capture": 0,
+    "authorize": 0
+  },
+  "candidateOwnedTracePatchSha256": "0aeb213c04d0270311ca94b3faea22db62e829b400a49fc56825dfacd1827597"
+}

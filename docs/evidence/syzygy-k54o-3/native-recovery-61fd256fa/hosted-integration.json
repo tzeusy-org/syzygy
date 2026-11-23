@@ -1,0 +1,183 @@
+{
+  "label": "Observed",
+  "head": "61fd256fac0e832147c19a9f6e303422287450f1",
+  "base": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "checkout": "1b2f5667a17f967496bbed66fe720d4b315f0301",
+  "checkoutTreeAndHeadTree": "ca049d6377fdf61f6173d246c0c5a05f99eb4f08",
+  "identicalCheckoutDiff": true,
+  "workflowRun": 45120088178,
+  "job": 137512334249,
+  "logSha256": "ecb330f7a825b1ee4cc22afc84e6ddc2506849898c6ec318e38f148c03bf8483",
+  "tests": {
+    "passed": 3959,
+    "failed": 2,
+    "skipped": 3,
+    "total": 3964
+  },
+  "testFiles": {
+    "passed": 136,
+    "failed": 1,
+    "total": 137
+  },
+  "nativeComposedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 114511
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 93289
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 515800
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 256820
+    }
+  ],
+  "interrupted": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": []
+      }
+    ],
+    "auditSetup": {
+      "startedMs": 691781.976162,
+      "authority": {
+        "started": 14,
+        "accepted": 14,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 4797.485757999937,
+        "longestMs": 362.36043000000063
+      },
+      "settledMs": 696612.950377,
+      "outcome": "accepted",
+      "declarations": 4,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "bootstrap": {
+      "restore-plans": {
+        "startedMs": 389737.557003,
+        "settledMs": 401780.986953,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 402201.862069,
+        "settledMs": 402572.768325,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 402955.393265,
+        "settledMs": 429211.917605,
+        "outcome": "accepted"
+      },
+      "restore-products": {
+        "startedMs": 432781.378526,
+        "settledMs": 687241.164843,
+        "outcome": "accepted"
+      },
+      "start-sessions": {
+        "startedMs": 689364.798709,
+        "settledMs": 726845.667098,
+        "outcome": "rejected"
+      },
+      "create-machine": {
+        "startedMs": 696614.992043,
+        "settledMs": 726842.087016,
+        "outcome": "rejected"
+      },
+      "open-store": {
+        "startedMs": 698293.086234,
+        "settledMs": 701444.803741,
+        "outcome": "accepted"
+      }
+    },
+    "bootstrapElapsedMs": {
+      "restore-plans": 12043.43,
+      "load-renderer": 370.91,
+      "create-origins": 26256.52,
+      "restore-products": 254459.79,
+      "start-sessions": 37480.87,
+      "create-machine": 30227.09,
+      "open-store": 3151.72
+    },
+    "transportCounts": {
+      "open": 0,
+      "accept": 0,
+      "capture": 0,
+      "authorize": 0
+    },
+    "resumedLaunchesInspected": 0,
+    "remainingUnknown": "The first rejecting machine creation predicate after the protected store opened."
+  },
+  "eligible": {
+    "reportedReasons": [
+      "transport-unavailable"
+    ],
+    "resume": [],
+    "roles": {
+      "author": "inspection-failed",
+      "inventory": "inspection-failed",
+      "fidelity": "inspection-failed",
+      "design": "inspection-failed"
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 4
+    },
+    "relayEvents": {
+      "author": {
+        "attempt-allowed": 7,
+        "send-attempt": 7,
+        "send-outcome": 7,
+        "response-admitted": 7
+      },
+      "inventory": {
+        "attempt-allowed": 6,
+        "send-attempt": 6,
+        "send-outcome": 6,
+        "response-admitted": 6
+      },
+      "fidelity": {
+        "attempt-allowed": 4,
+        "send-attempt": 4,
+        "send-outcome": 4,
+        "response-admitted": 4
+      },
+      "design": {
+        "attempt-allowed": 4,
+        "send-attempt": 4,
+        "send-outcome": 4,
+        "response-admitted": 3
+      }
+    }
+  }
+}

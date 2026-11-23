@@ -1,0 +1,90 @@
+{
+  "label": "Observed",
+  "baseCommit": "61fd256fac0e832147c19a9f6e303422287450f1",
+  "diagnosticOverlaySha256": "cd047818eead21e25bf21a787e11dcbb425019a1e2b08fead179195b893dd1e3",
+  "logSha256": "58ab0a25a2b6f8bcf6dcc8dece83f8e679d615ceeb2a23fb68cb11a784c549c2",
+  "retainedFixtureSha256": "5e24cf6b2b0e0dcf2919a17ee243c34aec428575e2ac9ca153786ef541d41d50",
+  "selectedCase": "eligible-stop-resume",
+  "timeline": [
+    {
+      "surface": "provider",
+      "role": "fidelity",
+      "ordinal": 1,
+      "stage": "waiting-for-gate",
+      "ms": 22305
+    },
+    {
+      "surface": "relay",
+      "role": "author",
+      "ordinal": 7,
+      "stage": "http-entry",
+      "ms": 51570
+    },
+    {
+      "surface": "relay",
+      "role": "author",
+      "ordinal": 7,
+      "stage": "audit-response-admitted",
+      "ms": 59951
+    },
+    {
+      "surface": "provider",
+      "role": "fidelity",
+      "ordinal": 0,
+      "stage": "gate-open",
+      "ms": 105374
+    },
+    {
+      "surface": "provider",
+      "role": "fidelity",
+      "ordinal": 1,
+      "stage": "response-ready",
+      "ms": 105844
+    },
+    {
+      "surface": "relay",
+      "role": "design",
+      "ordinal": 2,
+      "stage": "audit-send-outcome",
+      "ms": 227427
+    },
+    {
+      "surface": "relay",
+      "role": "author",
+      "ordinal": 7,
+      "stage": "peer-close-at-audit-response-admitted",
+      "ms": 230362
+    },
+    {
+      "surface": "relay",
+      "role": "design",
+      "ordinal": 2,
+      "stage": "caught-at-audit-send-outcome",
+      "ms": 230394
+    },
+    {
+      "surface": "relay",
+      "role": "inventory",
+      "ordinal": 6,
+      "stage": "peer-close-at-audit-response-admitted",
+      "ms": 230507
+    },
+    {
+      "surface": "relay",
+      "role": "fidelity",
+      "ordinal": 4,
+      "stage": "peer-close-at-audit-response-admitted",
+      "ms": 230508
+    }
+  ],
+  "elapsedMs": {
+    "fidelitySyntheticGate": 83069,
+    "fidelityResponseAfterGateOpened": 470,
+    "authorHttpEntryToPeerClose": 178792,
+    "authorFinalAdmissionStageToPeerClose": 170411,
+    "authorPeerCloseToCaughtDesignAudit": 32
+  },
+  "fixtureOutcome": "transport-unavailable before the eligible cut",
+  "relayTimersObserved": 0,
+  "remainingUnknown": "Which native peer condition closed the held Author reply. The relay timer did not emit. The ordinal 7 terminal reply remained behind the test-only end-turn barrier."
+}
