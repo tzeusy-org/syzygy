@@ -1,0 +1,129 @@
+{
+  "label": "Observed",
+  "commit": "d44c8a6b65bd7b9c755e93b12331522d26e4b7c2",
+  "testLogSha256": "8bbfef07367bf2187f7f0ce511e4e3c234bb0eab2cfadd2476af91e93c074462",
+  "failureManifestSha256": "0752be78577c5db061c10bd2e1d0056b83bca9a1b987c9d5c4220d47cba823ff",
+  "case": {
+    "case": "eligible-stop-resume",
+    "result": "failed",
+    "ms": 81024
+  },
+  "resumeChecks": [],
+  "reportedReasons": [
+    "transport-unavailable"
+  ],
+  "relayEvents": {
+    "author": {
+      "attempt-allowed": 7,
+      "send-attempt": 6,
+      "send-outcome": 6,
+      "response-admitted": 6,
+      "transport-failed": 1
+    },
+    "inventory": {
+      "attempt-allowed": 1,
+      "send-attempt": 1
+    },
+    "fidelity": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1,
+      "response-admitted": 1
+    },
+    "design": {}
+  },
+  "providerForwards": {
+    "author": 6,
+    "inventory": 0,
+    "fidelity": 1,
+    "design": 0
+  },
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "run ended: checked session boundary unavailable"
+  ],
+  "protectedRoleAudit": {
+    "author": {
+      "rows": 109,
+      "tail": [
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        },
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        },
+        {
+          "kind": "relay",
+          "event": "attempt-allowed"
+        },
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        }
+      ]
+    },
+    "inventory": {
+      "rows": 11,
+      "tail": [
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        },
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        },
+        {
+          "kind": "relay",
+          "event": "send-attempt"
+        },
+        {
+          "kind": "control",
+          "event": "control-published"
+        }
+      ]
+    },
+    "fidelity": {
+      "rows": 20,
+      "tail": [
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "inference-forward"
+        },
+        {
+          "kind": "machine-peer",
+          "event": "machine-peer-effect",
+          "operation": "dossier_step"
+        },
+        {
+          "kind": "before-tool",
+          "tool": "dossier_step"
+        },
+        {
+          "kind": "tool-receipt"
+        }
+      ]
+    },
+    "design": {
+      "rows": 1,
+      "tail": [
+        {
+          "kind": "declaration"
+        }
+      ]
+    }
+  },
+  "record": {
+    "runDirectEntriesExamined": 13,
+    "executionRecordLstatFound": false
+  },
+  "remainingUnknown": "The requested stop had no valid completed cut. Author recorded an additional allowed attempt and one machine effect before transport refusal, with no corresponding new provider forward or durable send-attempt. The exact inner reason for the refusal remains unknown."
+}

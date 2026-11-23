@@ -46,5 +46,6 @@
   },
   "precedingCaptureProfile": "../native-recovery-ee2377853/interrupted-timing-overlay.json",
   "composedInterrupted": "local-interrupted.json",
-  "remainingUnknown": "The complete native interrupted replay refused during the first connection capture before authorization. The focused cases establish the exact bounded read shape and withdrawal behavior. Completion and the capture phase timing on the new revision remain unverified."
+  "remainingUnknown": "The complete native interrupted replay refused during the first connection capture before authorization. The focused cases establish the exact bounded read shape and withdrawal behavior. Completion and the capture phase timing on the new revision remain unverified.",
+  "composedEligible": "local-eligible.json"
 }
