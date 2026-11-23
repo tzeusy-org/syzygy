@@ -22,6 +22,7 @@ import { assertUrlDesignDeliveryReceiptCurrent, assertUrlDesignDeliveryViewCurre
   inspectCommittedUrlLaunchHistory, isIssuedUrlDesignDeliveryView } from './url-session-audit.js';
 import * as sessionAudit from './url-session-audit.js';
 import * as designProduct from './url-design-product.js';
+import * as storedRender from './url-stored-render.js';
 import { URL_DESIGN_VIEW_ENCODING, URL_DESIGN_VIEW_FORMAT } from './url-design-view.js';
 import { createUrlRunArtifacts } from './url-run-artifacts.js';
 import { beginRunProductReads, isUrlProductReadExpiry, UrlProductReadRefusal } from './url-operation-products.js';
@@ -285,7 +286,7 @@ async function orderedDeliveryPrefix(writer: OrderedDesignAuditWriter, plan: Ord
 }
 
 describe('protected URL design delivery audit', () => {
-  it.each(['valid', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal',
+  it.each(['valid', 'prepared-site-drift', 'ordered', 'ordered-resumed', 'ordered-mutated', 'ordered-extra', 'expiry', 'launch-drift', 'sample-refusal',
     'renew-launch-drift', 'renew-receipt-drift'] as const)(
     'keeps a metadata-only event and rechecks after durability (%s)', async mode => {
     if (mode.startsWith('ordered')) plans = orderedPlans;
@@ -384,7 +385,7 @@ describe('protected URL design delivery audit', () => {
       });
       const duplicate = audit.commitDesignDelivery(request);
       await expect(duplicate).rejects.toThrow('url-session-audit-refused');
-      if (mode !== 'valid' && !mode.startsWith('ordered') && !mode.startsWith('renew-')) {
+      if (mode !== 'valid' && mode !== 'prepared-site-drift' && !mode.startsWith('ordered') && !mode.startsWith('renew-')) {
         await expect(first).rejects.toThrow('url-session-audit-refused');
         if (mode === 'sample-refusal') {
           expect(sampledDurability).toEqual([0, 0, 1]);
@@ -397,6 +398,16 @@ describe('protected URL design delivery audit', () => {
         expect(sampledDurability).toEqual([0, 0, 1, 1, 1]);
         const sealed = delivered.receipt;
         const authorized = () => true;
+        if (mode === 'prepared-site-drift') {
+          const file = path.join(sitePath, 'index.html');
+          fs.writeFileSync(file, content.replace('OWN', 'NEW'));
+          await expect(audit.readDesignDeliveryView(sealed, token)).rejects.toThrow('url-session-audit-refused');
+          fs.writeFileSync(file, content);
+          await expect(audit.readDesignDeliveryView(sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
+          expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).toThrow('url-session-audit-refused');
+          expect(audit.summary().captured['design-delivery']).toBe(1);
+          return;
+        }
         if (mode.startsWith('renew-')) {
           const reproducedView = await audit.readDesignDeliveryView(sealed, reproduced);
           const clock = vi.spyOn(Date, 'now').mockReturnValue(reproducedMetadata.products.deadline + 1);
@@ -563,7 +574,11 @@ describe('protected URL design delivery audit', () => {
         expect(() => assertUrlDesignDeliveryViewCurrent(delivered)).toThrow('url-session-audit-refused');
         expect(() => assertUrlDesignDeliveryReceiptCurrent(delivered, authorized)).toThrow('url-session-audit-refused');
         delivered.view[0] = view[0]!;
-        await expect(audit.readDesignDeliveryView(sealed, token)).resolves.toStrictEqual(expected);
+        const verifySite = vi.spyOn(storedRender, 'checkStoredUrlRender');
+        try {
+          await expect(audit.readDesignDeliveryView(sealed, token)).resolves.toStrictEqual(expected);
+          expect(verifySite).toHaveBeenCalledTimes(1);
+        } finally { verifySite.mockRestore(); }
         await expect(other.audit.readDesignDeliveryView(sealed, reproduced)).rejects.toThrow('url-session-audit-refused');
         await expect(audit.readDesignDeliveryView({ ...sealed }, reproduced)).rejects.toThrow('url-session-audit-refused');
         await expect(audit.readDesignDeliveryView(sealed, { ...reproduced })).rejects.toThrow('url-session-audit-refused');

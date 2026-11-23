@@ -1451,9 +1451,10 @@ export async function createUrlSessionAudit(given: UrlSessionAuditOptions): Prom
         designRecords.set(result, { binding, prepared: preparedProduct, verifyStored, verifyReceipt, verify: async (candidate, material, observeRead) => {
           // The receipt survives its operation lease. A later act needs a newly
           // validated product whose full identity still matches the recorded one.
-          const currentMaterial = material ?? (candidate === preparedProduct.deref()
-            ? undefined : await inspectUrlDesignProduct(candidate, binding));
-          const checked = currentMaterial === undefined ? after : capture(currentMaterial);
+          // The prepared capability supplies the same captured metadata on
+          // each read. verify still checks the exact stored site at this use.
+          const checked = candidate === preparedProduct.deref() ? after
+            : capture(material ?? await inspectUrlDesignProduct(candidate, binding));
           currentDesignRecord(result);
           if (!equal(after.identity, checked.identity)) { designRetired = true; throw refused(); }
           verify(checked, candidate, observeRead);
