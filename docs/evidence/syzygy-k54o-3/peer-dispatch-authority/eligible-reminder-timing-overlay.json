@@ -1,0 +1,56 @@
+{
+  "label": "Observed",
+  "base": "2270ec7d94122b5e82247a50701e58856aa20580",
+  "case": {
+    "case": "eligible-stop-resume",
+    "result": "failed",
+    "ms": 133449
+  },
+  "overlaySha256": "dcb252803fd20330ff9b67947890813fd6d6633b38426b523a5ac44a43abd7fe",
+  "testLogSha256": "b686492cfbd99c91f8fa2a60040f348d39c22186a37af76173c2f264c72ac2bb",
+  "failureManifestSha256": "78fcca6f4c4dd20f9c9cbd9b3e11312eebbbdb913b1fbc04f11926a20ea78915",
+  "operatorEvents": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "run ended: checked session boundary unavailable"
+  ],
+  "reportedReasons": [
+    "transport-unavailable"
+  ],
+  "refusals": {
+    "receipt controller refusal": {
+      "at": 136584,
+      "role": "author",
+      "tool": "mcp__syzygy__artifact_read",
+      "phase": "reminder-origin",
+      "active": true,
+      "ms": 37
+    },
+    "receipt host refusal": {
+      "at": 136585,
+      "role": "author",
+      "tool": "mcp__syzygy__artifact_read",
+      "phase": "controller-registration",
+      "ms": 38
+    },
+    "tool handling refusal": {
+      "at": 136585,
+      "role": "author",
+      "phase": "register-receipt",
+      "tool": "artifact_read",
+      "code": "receipt-unavailable"
+    },
+    "host tool refusal": {
+      "at": 136585,
+      "role": "author",
+      "phase": "tool-invoke",
+      "tool": "artifact_read",
+      "code": "receipt-unavailable"
+    }
+  },
+  "record": {
+    "runDirectEntriesExamined": 13,
+    "recordJsonLstatFound": false
+  },
+  "remainingUnknown": "The Author controller accepted the result registration and derived the accounting reminder. Registration of that reminder refused while the controller was active. This trace does not expose the policy's refusal code."
+}
