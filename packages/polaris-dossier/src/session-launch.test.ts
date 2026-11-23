@@ -964,7 +964,7 @@ describe('prepared private CLI launch',()=>{
     (f.launch.limits as { outputBytes: number }).outputBytes = 8192;
     const host = await f.start(), before = nativeSpawns.calls().length;
     await expect(launchRestrictedUrlSession({ preparation, host })).rejects.toThrow('url-session-launch-refused');
-    expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100, inspectionMilliseconds: 1000 });
+    expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100, inspectionMilliseconds: 2_000 });
     expect(nativeSpawns.calls()).toHaveLength(before); expect(f.counts().forwards).toBe(0);
     expect(await host.close()).toMatchObject({ termination: 'settled' });
   }, 20_000);
@@ -1066,7 +1066,7 @@ describe('prepared private CLI launch',()=>{
     expect(await stoppedAtExit).toMatchObject({ outcome: 'exited', signal: 'SIGKILL', groupTermination: 'confirmed' });
   }, 15000);
 
-  it('keeps the 200ms cadence, bounds one pending inspection to 1000ms and withholds both samples on timeout', async () => {
+  it('keeps the 200ms cadence, bounds one pending inspection to 2,000ms and withholds both samples on timeout', async () => {
     const f = await launchFixture();
     const preparation = await prepareRestrictedUrlSession(f.launch);
     let releaseReads!: () => void;
@@ -1121,7 +1121,7 @@ describe('prepared private CLI launch',()=>{
     let enteredSample!: () => void;
     const startedSample = new Promise<void>(resolve => { enteredSample = resolve; });
     const timer = vi.spyOn(globalThis, 'setTimeout').mockImplementation((callback, delay, ...args) => {
-      if (delay !== 1000 || scheduledAt !== undefined) return schedule(callback, delay, ...args);
+      if (delay !== 2_000 || scheduledAt !== undefined) return schedule(callback, delay, ...args);
       scheduledAt = performance.now();
       enteredSample();
       return schedule(() => { earlyCallbackAt = performance.now(); callback(...args); }, 20);
@@ -1141,7 +1141,7 @@ describe('prepared private CLI launch',()=>{
       expect(processReadsBeforeTimeout).toBe(4);
       expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, peakProcesses: null, groupTermination: 'confirmed' });
       expect(earlyCallbackAt! - scheduledAt!).toBeLessThan(100);
-      expect(stoppingAt! - scheduledAt!).toBeGreaterThanOrEqual(999);
+      expect(stoppingAt! - scheduledAt!).toBeGreaterThanOrEqual(1_999);
     } finally {
       intervals.mockRestore();
       timer.mockRestore();
@@ -1360,9 +1360,10 @@ describe('prepared private CLI launch',()=>{
     } finally { vi.useRealTimers(); }
   }, 15000);
 
-  it.each(['current', 'withdrawn', 'timed-out', 'census-timed-out', 'confirmation-expired'] as const)(
+  it.each(['current', 'current-after-one-second', 'withdrawn', 'timed-out', 'census-timed-out', 'confirmation-expired'] as const)(
     'joins independent inspection authority with the live census when %s', async disposition => {
       const f = await launchFixture();
+      const accepted = disposition === 'current' || disposition === 'current-after-one-second';
       let releaseCensus!: () => void, startedCensus!: (value: true) => void;
       let resolveVerification!: (value: true) => void, startedVerification!: (value: true) => void;
       let releaseTool!: () => void;
@@ -1376,7 +1377,7 @@ describe('prepared private CLI launch',()=>{
         if (disposition === 'confirmation-expired') {
           // Block timer delivery while the confirmation exhausts the original
           // sample interval. The final monotonic check must still refuse.
-          Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 1000);
+          Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2_000);
         }
         return accepted && authorityCurrent;
       });
@@ -1385,7 +1386,7 @@ describe('prepared private CLI launch',()=>{
       } });
       expect(observeUrlSessionInspectionForTest({ ...preparation })).toBeNull();
       const inspect = observeUrlSessionInspectionForTest(preparation)!;
-      expect(inspect()).toEqual({ cadenceMs: 200, inspectionMs: 1000, samples: 0 });
+      expect(inspect()).toEqual({ cadenceMs: 200, inspectionMs: 2_000, samples: 0 });
       expect(observeUrlSessionInspectionForTest(preparation)).toBeNull();
       const host = await f.start({ beforeTool: () => heldTool });
       filesystem.beforeOpen = async file => {
@@ -1425,7 +1426,7 @@ describe('prepared private CLI launch',()=>{
           const refusal = inspect().firstRefusal!;
           expect(refusal).toMatchObject({ ordinal: 1, phases: { verify: { outcome: 'accepted' } },
             refusal: { phase: 'storage', cause: 'bounded-timeout' } });
-          expect(refusal.refusal!.elapsedMs).toBeGreaterThanOrEqual(1000);
+          expect(refusal.refusal!.elapsedMs).toBeGreaterThanOrEqual(2_000);
           expect(refusal.phases.storage?.outcome).toBeUndefined();
           expect(refusal.phases.confirm).toBeUndefined();
           expect(confirm).not.toHaveBeenCalled();
@@ -1433,24 +1434,28 @@ describe('prepared private CLI launch',()=>{
           resolveVerification(true);
           await verified;
           expect(confirm).not.toHaveBeenCalled();
+          if (disposition === 'current-after-one-second') {
+            await new Promise<void>(resolve => setTimeout(resolve, 1_250));
+            expect(confirm).not.toHaveBeenCalled();
+          }
           authorityCurrent = disposition !== 'withdrawn';
           releaseCensus();
-          expect(await sample).toBe(disposition === 'current');
+          expect(await sample).toBe(accepted);
           expect(confirm.mock.calls).toEqual([[true]]);
           const inspection = inspect();
           expect(inspection.latest?.phases).toMatchObject({ storage: { outcome: 'accepted' }, process: { outcome: 'accepted' },
             verify: { outcome: 'accepted' }, confirm: { outcome: disposition === 'withdrawn' ? 'refused' : 'accepted' } });
-          if (disposition === 'current') expect(inspection.firstRefusal).toBeUndefined();
+          if (accepted) expect(inspection.firstRefusal).toBeUndefined();
           else expect(inspection.firstRefusal?.refusal).toMatchObject({ phase: 'confirm',
             cause: disposition === 'withdrawn' ? 'authority-refused' : 'sample-deadline' });
           releaseTool();
           expect(await child.finished).toMatchObject({
-            outcome: disposition === 'current' ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
+            outcome: accepted ? 'exited' : 'inspection-failed', groupTermination: 'confirmed',
           });
         }
-        expect(await selection).toEqual(disposition === 'current'
+        expect(await selection).toEqual(accepted
           ? { kind: 'selected', roles: ['fidelity'] } : { kind: 'inspection-refused' });
-        expect(selectRoles).toHaveBeenCalledTimes(disposition === 'current' ? 1 : 0);
+        expect(selectRoles).toHaveBeenCalledTimes(accepted ? 1 : 0);
       } finally {
         releaseCensus();
         resolveVerification(true);

@@ -744,7 +744,7 @@ describe('URL stored launch history', () => {
   it('checks the live sample before starting the independent writer authority deadline', async () => {
     const input = options('design'), calls: string[] = [];
     const waitForSample = async (): Promise<boolean> => {
-      if (calls.length === 0) await new Promise<void>(resolve => setTimeout(resolve, 650));
+      if (calls.length === 0) await new Promise<void>(resolve => setTimeout(resolve, 1_500));
       calls.push('sample');
       return true;
     };
@@ -757,7 +757,7 @@ describe('URL stored launch history', () => {
     try {
       const writing = writeUrlLaunchHistory({ ...input, waitForSample, current });
       const observed = writing.then(result => ({ result }), error => ({ error }));
-      await vi.advanceTimersByTimeAsync(650);
+      await vi.advanceTimersByTimeAsync(1_500);
       expect(calls).toEqual(['sample']);
       await vi.advanceTimersByTimeAsync(550);
       const completed = await observed;
@@ -768,7 +768,7 @@ describe('URL stored launch history', () => {
     } finally { vi.useRealTimers(); }
   });
 
-  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s exactly at its existing limit', async stage => {
+  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s at its independent limit', async stage => {
     const input = options('design');
     const stalled = new Promise<boolean>(() => {});
     const waitForSample = vi.fn(async () => stage === 'sample' ? stalled : true);
@@ -778,7 +778,8 @@ describe('URL stored launch history', () => {
       let settled = false, refused: unknown;
       void writeUrlLaunchHistory({ ...input, waitForSample, current }).then(
         () => { settled = true; }, error => { settled = true; refused = error; });
-      await vi.advanceTimersByTimeAsync(999);
+      const bound = stage === 'sample' ? 2_000 : 1_000;
+      await vi.advanceTimersByTimeAsync(bound - 1);
       expect(settled).toBe(false);
       await vi.advanceTimersByTimeAsync(1);
       expect(settled).toBe(true);

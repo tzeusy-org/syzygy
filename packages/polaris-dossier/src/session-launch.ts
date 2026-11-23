@@ -16,7 +16,7 @@ import { probeUrlSessionView, URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSession
 export { URL_CLI_PROGRAM };
 export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupMilliseconds: 20_000, cleanupMilliseconds: 2500,
   cpuSeconds: 600, addressBytes: 68_719_476_736, fileBytes: 2_097_152, storageBytes: 16_777_216,
-  entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200, inspectionMilliseconds: 1000 });
+  entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200, inspectionMilliseconds: 2_000 });
 export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]: number };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;

@@ -10,7 +10,7 @@ import { RUN_ID } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
 import { urlSessionViewFor } from './session-url-view.js';
-import { URL_CLI_PROGRAM } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
 import type { DossierScreen } from './screen.js';
 import type { SessionBinding } from './session-egress-policy.js';
 import { readEffectiveRunDeclaration, type UrlRoleDeclaration } from './url-run-record.js';
@@ -91,10 +91,12 @@ const matchesFile = (expected: ReturnType<typeof readRegular>, found: ReturnType
   unchanged(expected.stat, found.stat) && expected.bytes.equals(found.bytes);
 const parse = (bytes: Uint8Array): unknown => parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), BOUNDS);
 
-async function requireCurrent(current: UrlLaunchHistoryOptions['current']): Promise<void> {
+async function requireCurrent(current: UrlLaunchHistoryOptions['current'], milliseconds = 1_000): Promise<void> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    if (await Promise.race([Promise.resolve().then(current), new Promise<false>(resolve => { timer = setTimeout(() => resolve(false), 1000); })]) !== true) refuse();
+    if (await Promise.race([Promise.resolve().then(current), new Promise<false>(resolve => {
+      timer = setTimeout(() => resolve(false), milliseconds);
+    })]) !== true) refuse();
   } finally { clearTimeout(timer); }
 }
 function screenHistory(value: unknown, screenBody: DossierScreen['screenBody'], screenSecrets: DossierScreen['screenSecrets']): void {
@@ -154,7 +156,7 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     const initial = fs.fstatSync(root, { bigint: true }), anchor = `/proc/self/fd/${root}`;
     if (!initial.isDirectory() || initial.uid !== BigInt(process.getuid?.() ?? -1)) return refuse();
     const check = async (): Promise<void> => {
-      if (waitForSample !== undefined) await requireCurrent(waitForSample);
+      if (waitForSample !== undefined) await requireCurrent(waitForSample, URL_LAUNCH_LIMITS.inspectionMilliseconds);
       await requireCurrent(current);
       if (fs.realpathSync(run) !== run || !same(initial, fs.lstatSync(run, { bigint: true })) || !same(initial, fs.fstatSync(root!, { bigint: true }))) return refuse();
     };
