@@ -1,0 +1,222 @@
+{
+  "format": "polaris-url-native-recovery-hosted-checkpoint/1",
+  "label": "Observed",
+  "capturedOn": "2026-11-23",
+  "subject": {
+    "commit": "2535d48f2b667b75263a6fb1d73bd0461acb9a02",
+    "hostedCheckout": "d59275bd82f6fcd6bb960463b2ce6f42dc1f8742",
+    "identicalTree": "5b4c2455917e12a72b547861083a6dd7f553e892",
+    "workflow": 45117497725,
+    "job": 137504733328,
+    "jobLogSha256": "6790ac9b202df8e0694fe395ed9d7c9956d6514dd0d0c7b00208af4f8a565e79"
+  },
+  "observedNativeCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 105198
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 67234
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 353051
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 352755
+    }
+  ],
+  "fullIntegrationTotals": "Unknown",
+  "interrupted": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "Unknown"
+          }
+        ]
+      }
+    ],
+    "bootstrap": {
+      "restore-plans": {
+        "startedMs": 277933.84606,
+        "settledMs": 285011.208075,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 285147.329586,
+        "settledMs": 285480.677466,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 285646.824802,
+        "settledMs": 294483.249536,
+        "outcome": "accepted"
+      },
+      "start-sessions": {
+        "startedMs": 386793.480889,
+        "settledMs": 443354.314912,
+        "outcome": "accepted"
+      },
+      "create-machine": {
+        "startedMs": 390077.450148,
+        "settledMs": 442545.04685,
+        "outcome": "accepted"
+      },
+      "open-store": {
+        "startedMs": 390749.143129,
+        "settledMs": 392007.041751,
+        "outcome": "accepted"
+      }
+    },
+    "millisecondsFromOriginsToStartSessions": 92310.231,
+    "auditSetup": {
+      "startedMs": 388034.525129,
+      "authority": {
+        "started": 14,
+        "accepted": 14,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 2014.5796789999586,
+        "longestMs": 187.36018799996236
+      },
+      "settledMs": 390075.389453,
+      "outcome": "accepted",
+      "declarations": 4,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "designConnections": 0,
+    "firstRefusingPredicate": "Unknown"
+  },
+  "eligible": {
+    "phase": "public-resume",
+    "settledOrdinaryRoles": [
+      "author",
+      "inventory",
+      "fidelity",
+      "design"
+    ],
+    "designForwards": 5,
+    "finalProductAssertions": 3,
+    "liveFinals": 2,
+    "coldFinals": 0,
+    "cutTaken": true,
+    "resumeGuardsChecked": false,
+    "resumeBootstrap": {
+      "restore-plans": {
+        "startedMs": 736540.424029,
+        "settledMs": 750429.981205,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 751036.300991,
+        "settledMs": 751349.999673,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 751801.558106,
+        "settledMs": 782992.468726,
+        "outcome": "accepted"
+      }
+    },
+    "firstIncompleteStageAfterOrigins": "Unknown"
+  },
+  "localRenderDiagnostic": {
+    "subject": "2535d48f2b667b75263a6fb1d73bd0461acb9a02",
+    "patchSha256": "58af7acf300cd21d3a97dc50ed0b28609151e82412462354c0bd30c9179aba8a",
+    "logSha256": "ccba816396a53edffe6f5f57e93f0e65c53ac4a0544a96cfb01e7d9ec1dd750b",
+    "fixtureSha256": "d14d4a2b9f30ad5b01363f3c12982de7d641eec48f4cc2341dad469c231af3bf",
+    "metadataInspection": {
+      "firstOperationRemainingMilliseconds": 9675,
+      "remainingAfterInspectionMilliseconds": 7556,
+      "metadataAccepted": true
+    },
+    "laterProtectedInspection": {
+      "refusalPhase": "second-sample",
+      "lease": "retired"
+    },
+    "designTransport": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 0
+    },
+    "firstDesignSampleRefusal": {
+      "ordinal": 7,
+      "phases": {
+        "process": {
+          "startedMs": 0.04258000000845641,
+          "settledMs": 136.98953600000823,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.0650630000163801,
+          "settledMs": 122.75183500000276,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.06667600001674145,
+          "settledMs": 143.09750299999723,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 143.10662999999477,
+          "settledMs": 143.1837570000207,
+          "outcome": "refused"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "authority-refused",
+        "elapsedMs": 143.31002600002103
+      }
+    },
+    "firstRefusingPredicate": "Unknown"
+  }
+}
