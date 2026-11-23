@@ -57,7 +57,8 @@ vi.mock('./url-mode-registry.js', async importOriginal => ({
 // reference stable so the fixture can observe the actual native preparations.
 vi.mock('./session-launch.js', async importOriginal => {
   const actual = await importOriginal<typeof import('./session-launch.js')>();
-  return { ...actual, prepareRestrictedUrlSession: vi.fn(actual.prepareRestrictedUrlSession) };
+  return { ...actual, prepareRestrictedUrlSession: vi.fn(actual.prepareRestrictedUrlSession),
+    launchRestrictedUrlSession: vi.fn(actual.launchRestrictedUrlSession) };
 });
 
 type Forward = Parameters<typeof sessionRelayTestPort>[0];
@@ -285,7 +286,11 @@ async function observeDesignRun(run: string, traceInference = false) {
   let terminal: { atMs: number; outcome: sessionLaunch.UrlSessionLaunchOutcome['outcome']; latestSample?: ResumeSample } | undefined;
   let finishedInspection: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>> | undefined;
   const roleInspections = new Map<string, NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>>();
-  const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, () => ResumeSample | undefined>();
+  const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, {
+    role: string;
+    inspect: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>;
+    sample?: () => ResumeSample | undefined;
+  }>();
 
   function snapshotSample(sample: ResumeSample | undefined): ResumeSample | undefined {
     return sample === undefined ? undefined : { ...sample, verify: { ...sample.verify },
@@ -667,14 +672,14 @@ async function observeDesignRun(run: string, traceInference = false) {
     }, () => { mcpReads.rejected++; mcpReadRefusedMs ??= clock(); });
   });
 
-  const { prepareRestrictedUrlSession: prepare } = await vi.importActual<typeof sessionLaunch>('./session-launch.js');
+  const { prepareRestrictedUrlSession: prepare, launchRestrictedUrlSession: launch } =
+    await vi.importActual<typeof sessionLaunch>('./session-launch.js');
   vi.mocked(sessionLaunch.prepareRestrictedUrlSession).mockImplementation(input => {
     const authority = input.inspectionAuthority;
     const role = input.profile.input.binding.role;
-    const trace = (result: sessionLaunch.UrlSessionPreparation) => {
+    const trace = (result: sessionLaunch.UrlSessionPreparation, sample?: () => ResumeSample | undefined) => {
       const inspected = sessionLaunch.observeUrlSessionInspectionForTest(result);
-      if (inspected !== null) roleInspections.set(role, inspected);
-      return inspected;
+      if (inspected !== null) preparations.set(result, { role, inspect: inspected, sample });
     };
     if (authority === undefined) return observe(() => prepare(input), trace, () => {});
     let activeSample: ResumeSample | undefined;
@@ -719,17 +724,17 @@ async function observeDesignRun(run: string, traceInference = false) {
           }
         }
       },
-    } }), result => {
-      finishedInspection = trace(result) ?? undefined;
-      preparations.set(result, () => snapshotSample(activeSample));
-    }, () => {});
+    } }), result => trace(result, () => snapshotSample(activeSample)), () => {});
   });
 
-  const launch = sessionLaunch.launchRestrictedUrlSession;
-  vi.spyOn(sessionLaunch, 'launchRestrictedUrlSession').mockImplementation(input => {
-    const sampleForPreparation = preparations.get(input.preparation);
-    if (sampleForPreparation === undefined) return launch(input);
+  vi.mocked(sessionLaunch.launchRestrictedUrlSession).mockImplementation(input => {
+    const preparation = preparations.get(input.preparation);
+    if (preparation === undefined) return launch(input);
     return observe(() => launch(input), child => {
+      roleInspections.set(preparation.role, preparation.inspect);
+      const sampleForPreparation = preparation.sample;
+      if (sampleForPreparation === undefined) return;
+      finishedInspection = preparation.inspect;
       inspectedLaunches++;
       void child.finished.then(outcome => {
         terminal = { atMs: clock(), outcome: outcome.outcome, latestSample: sampleForPreparation() };
@@ -1270,6 +1275,9 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             expect(execution.supervisorCapture.roles.every(role => role.pid === 'Unknown')).toBe(true);
             expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(coldFinals[0]!)).toThrow();
           } else {
+            const inspections = resumeDiagnostic?.();
+            expect(inspections?.inspectedLaunches).toBe(1);
+            expect(inspections?.roleInspections['design']?.samples).toBeGreaterThan(0);
             expect(relayRoles).toEqual([...launchesBeforeResume, 'design']);
             expect([author.count(), inv.count(), fidelity.count()]).toEqual(forwardsBeforeResume.slice(0, 3));
             expect(deliveryReproductions).toEqual([[0, 0], [1, 1]]);
