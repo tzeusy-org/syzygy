@@ -1,0 +1,146 @@
+{
+  "label": "Observed",
+  "commit": "5bf7f5301d653988b6fafecbd2af3e4fce744733",
+  "cases": [
+    {
+      "case": {
+        "case": "stop-resume",
+        "result": "failed",
+        "ms": 258526
+      },
+      "logSha256": "35e23cf05cabb513718592a70695ad3d86f7b4240e16596b0ce2da390098a4df",
+      "failureManifestSha256": "c510204cb90178929ec17d2f8c6c0f727dcd2ede242ef714395be6a8b2de9a98",
+      "record": {
+        "runDirectEntriesExamined": 14,
+        "recordJsonLstatFound": false
+      },
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "role-ended",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "inspection-failed",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "reportedReasons": [],
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "firstLauncherRefusal": {
+        "ordinal": 3,
+        "phases": {
+          "process": {
+            "startedMs": 0.12560800000210293,
+            "settledMs": 927.4989709999936,
+            "outcome": "accepted"
+          },
+          "verify": {
+            "startedMs": 0.23486399999819696,
+            "settledMs": 239.04886399998213,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.23769899999024346
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 1003.8068599999824
+        }
+      },
+      "acceptedStoreOperations": {
+        "open": 1,
+        "exclusive": 8,
+        "allocation": 8
+      },
+      "resumeAudit": {
+        "outcome": "accepted",
+        "declarations": 4,
+        "authorityCallbacks": 14,
+        "acceptedAuthorityCallbacks": 14
+      },
+      "resumedInspection": "The process census and independent authority verification completed. The storage census was pending when the 1000 ms inspection deadline fired."
+    },
+    {
+      "case": {
+        "case": "eligible-stop-resume",
+        "result": "failed",
+        "ms": 151255
+      },
+      "logSha256": "98502cfb81f6ce8458b61bb9d94f51cc7e68f0ad70abeb0b7b6514345031fe81",
+      "failureManifestSha256": "5923441170961c3170f66c1580f86b8c789d95b1b20ccbd447ef8314bcf8c82c",
+      "record": {
+        "runDirectEntriesExamined": 13,
+        "recordJsonLstatFound": false
+      },
+      "resumeChecks": [],
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "run ended: checked session boundary unavailable"
+      ],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 2,
+        "design": 0
+      },
+      "firstLauncherRefusal": null
+    }
+  ]
+}
