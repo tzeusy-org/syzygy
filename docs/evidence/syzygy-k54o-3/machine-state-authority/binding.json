@@ -7,8 +7,9 @@
   },
   "review": {
     "verdict": "PASS",
-    "file": "SOURCE-REVIEW-RAW.md",
-    "sha256": "078e8dc7ff89b4132269e94c969ef577a58c0d3f197747223f1d16f18dec4fde"
+    "file": "SOURCE-REVIEW-REISSUE-RAW.md",
+    "sha256": "e77e40db6e8026144043e198d3d41599730b7383b7f421a33a74ea2d765fd8ba",
+    "supersededCitationOnlySha256": "078e8dc7ff89b4132269e94c969ef577a58c0d3f197747223f1d16f18dec4fde"
   },
   "validation": {
     "unitMachineClose": {
