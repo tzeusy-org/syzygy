@@ -53,6 +53,12 @@ const recoveryHost = await vi.hoisted(async () => {
 vi.mock('./url-mode-registry.js', async importOriginal => ({
   ...await importOriginal<typeof import('./url-mode-registry.js')>(), URL_HOST_ROOT: recoveryHost.root,
 }));
+// The supervisor holds the preparation function at module load. Keep that
+// reference stable so the fixture can observe the actual native preparations.
+vi.mock('./session-launch.js', async importOriginal => {
+  const actual = await importOriginal<typeof import('./session-launch.js')>();
+  return { ...actual, prepareRestrictedUrlSession: vi.fn(actual.prepareRestrictedUrlSession) };
+});
 
 type Forward = Parameters<typeof sessionRelayTestPort>[0];
 const provider = vi.hoisted(() => new Map<string, Forward>());
@@ -661,8 +667,8 @@ async function observeDesignRun(run: string, traceInference = false) {
     }, () => { mcpReads.rejected++; mcpReadRefusedMs ??= clock(); });
   });
 
-  const prepare = sessionLaunch.prepareRestrictedUrlSession;
-  vi.spyOn(sessionLaunch, 'prepareRestrictedUrlSession').mockImplementation(input => {
+  const { prepareRestrictedUrlSession: prepare } = await vi.importActual<typeof sessionLaunch>('./session-launch.js');
+  vi.mocked(sessionLaunch.prepareRestrictedUrlSession).mockImplementation(input => {
     const authority = input.inspectionAuthority;
     const role = input.profile.input.binding.role;
     const trace = (result: sessionLaunch.UrlSessionPreparation) => {
@@ -733,7 +739,10 @@ async function observeDesignRun(run: string, traceInference = false) {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
-    roleInspections: Object.fromEntries([...roleInspections].map(([role, inspect]) => [role, inspect().firstRefusal])),
+    roleInspections: Object.fromEntries([...roleInspections].map(([role, inspect]) => {
+      const { samples, firstRefusal } = inspect();
+      return [role, { samples, firstRefusal }];
+    })),
     launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
       hostActivation, hostCurrent, firstRefusedHostCurrent } } : {}),
@@ -1041,6 +1050,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, initialDesignAudit,
         initialRoleInspections: initialDiagnostic?.().roleInspections }));
     }); cleanup.push(controller.stop);
+    if (initialDiagnostic !== undefined)
+      expect(Object.keys(initialDiagnostic().roleInspections)).toEqual(['author', 'inventory', 'fidelity']);
     expect(handoffStates[0]).toBe('unknown');
     function beginOwnedStop() {
       try {
