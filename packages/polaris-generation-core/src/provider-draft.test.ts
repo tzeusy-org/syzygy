@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { diagramToMermaid, stageSchema, validateStage, reviewVerdict } from './provider-draft.js';
+import { draftHandles, type DossierDraft } from './draft-model.js';
+import { diagramToMermaid, stageSchema, validateDraftRecord, validateStage, reviewVerdict } from './provider-draft.js';
 
 const sources = [{ sourceId: 's1', text: 'Purpose and architecture' }, { sourceId: 's2', text: 'A material qualification' }];
 const inventory = { entries: [
@@ -181,6 +182,24 @@ describe('provider-local intermediate validation', () => {
     expect(() => validateStage('author', bad, context)).toThrow('invalid-property');
     expect(called).toBe(false);
     expect(() => validateStage('inventory', { entries: new Array(2) }, context)).toThrow('invalid-array');
+  });
+
+  it('refuses a section\'s subsections in every draft stage and the draft record: the provider form is closed (version 2.16)', () => {
+    const sub = (id: string) => ({ id, title: 'Q', answer: paragraph('intro'), paragraphs: [] });
+    const withSubsections = { ...draft, sections: [{ ...draft.sections[0]!, subsections: [sub('q1'), sub('q2')] }] };
+    for (const stage of ['author', 'edit', 'repair'] as const) expect(() => validateStage(stage, withSubsections, context), stage).toThrow('invalid-fields');
+    expect(() => validateDraftRecord(withSubsections)).toThrow('invalid-fields');
+    expect(JSON.stringify(stageSchema('author'))).not.toContain('subsection');
+  });
+
+  it('counts a subsection\'s answer and paragraphs as blocks and its identity as a handle, for a draft that carries them', () => {
+    const typed = { ...draft, sections: [{ ...draft.sections[0]!, subsections: [
+      { id: 'q1', title: 'Q', answer: paragraph('qa1'), paragraphs: [block('qp1')] }, { id: 'q2', title: 'Q', answer: paragraph('qa2'), paragraphs: [] }] }] } as unknown as DossierDraft;
+    const handles = draftHandles(typed);
+    expect([...handles.blocks]).toEqual(['intro', 'body', 'qa1', 'qp1', 'qa2', 'n1', 'n2', 'e1', 'detail-body']);
+    expect([...handles.all]).toEqual(['intro', 'body', 'qa1', 'qp1', 'qa2', 'n1', 'n2', 'e1', 'detail-body', 'section', 'q1', 'q2', 'diagram', 'detail']);
+    const clash = { ...typed, sections: [{ ...typed.sections[0]!, subsections: [{ id: 'q1', title: 'Q', answer: paragraph('body'), paragraphs: [] }] }] } as unknown as DossierDraft;
+    expect(() => draftHandles(clash)).toThrow('duplicate-handle');
   });
 
   it('refuses an array with a plain object\'s prototype under a disposition as invalid-disposition, not a TypeError', () => {

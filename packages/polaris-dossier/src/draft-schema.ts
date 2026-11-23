@@ -37,14 +37,25 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V6 = 'polaris-dossier-local-draft-v6';
 /** v7 (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30): a diagram's `kind` may also be `sequence` (`participants` and `messages`)
  * or `swimlane` (`lanes` and `steps`), each in place of `nodes` and `edges`. Everything else is v6; a v6 or earlier draft still checks and
  * renders as before, and the new kinds and members in one are field-version. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v7';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V7 = 'polaris-dossier-local-draft-v7';
+/** v8 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): a section may carry `subsections`, two to twelve, each a short title, a
+ * one-sentence answer and its paragraphs. Everything else is v7; a v7 or earlier draft still checks and renders as before, and
+ * `subsections` in one is field-version. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v8';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
 export const hasHomeForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V5 || hasThesisBasisForm(version);
 /** Whether a draft's version carries the required `thesisBasis`: v6 and every later version. */
-export const hasThesisBasisForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || version === LOCAL_DRAFT_SCHEMA_VERSION;
+export const hasThesisBasisForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V6 || hasFigureKindForm(version);
+/** Whether a draft's version has the figure kinds `sequence` and `swimlane`: v7 and every later version. */
+export const hasFigureKindForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V7 || hasSubsectionForm(version);
+/** Whether a draft's version lets a section carry `subsections`: v8 (version 2.16). */
+export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** The bounds of a v8 section's `subsections` and of one subsection's `paragraphs`. */
+export const SUBSECTION_BOUNDS = Object.freeze({ subsections: [2, 12] as const, paragraphs: [0, 30] as const });
+export const SUBSECTIONS_FIELD = 'subsections';
 /** The members each diagram kind takes (v7): a graph kind `nodes` and `edges`, a sequence `participants` and `messages`, a swimlane
  * `lanes` and `steps`; every other diagram member is shared. */
 export const FIGURE_MEMBERS = Object.freeze(['nodes', 'edges', 'participants', 'messages', 'lanes', 'steps'] as const);
@@ -202,6 +213,9 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   routeStep: object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(1), quotations: quotationRefs(QUOTATION_FORM),
     see: object({ kind: choice(TASK_ROUTE_SEE_KINDS), target: handle }) }, ['see']),
   taskRoute: object({ id: handle, task: presentationLabel, steps: list(ref('routeStep'), 1, TASK_ROUTE_STEP_MAX) }),
+  // A subsection (v8, version 2.16): a short title naming the question it answers, its answer in a paragraph form (whether that answer is
+  // Inferred or Unknown and one sentence is `check`'s `subsection-answer` rule, which names it), and zero to thirty paragraphs.
+  subsection: object({ id: handle, title: presentationLabel, answer: ref('paragraph'), paragraphs: list(ref('content'), ...SUBSECTION_BOUNDS.paragraphs) }),
 });
 
 export interface DraftSchemaParameters {
@@ -215,10 +229,11 @@ export interface DraftSchemaParameters {
  * `sectionId` (schema v4 and earlier, which `check` applies to such a draft so that its findings stay byte for byte those of the version
  * before). `thesisBasis` says whether the draft carries its required `thesisBasis` (schema v6 and later) or has no such member (schema
  * v5 and earlier, whose findings stay those of the version before). `figureKinds` says whether a diagram may be a `sequence` or `swimlane`
- * with its own members (schema v7, what the brief publishes; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges`
- * only (schema v6 and earlier); `unnamed` is the form `check` reads a v7 diagram naming no kind against. */
+ * with its own members (schema v7 and later; REQ-polaris-generation-034 version 2.5) or is a graph of `nodes` and `edges` only (schema v6
+ * and earlier); `unnamed` is the form `check` reads a diagram naming no kind against. `subsections` says whether a section may carry
+ * `subsections` (schema v8, what the brief publishes; version 2.16) or has no such member (schema v7 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
-  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken'): DraftSchemaWithDefs {
+  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   const graph = (kind: Schema): Record<string, Schema> => ({
@@ -254,7 +269,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     title: text,
     introduction: ref('paragraph'),
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
-    sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
+    // A v8 section may carry `subsections` (version 2.16); in an earlier draft the member is a field-version finding (check-derive).
+    sections: list(subsections === 'taken'
+      ? object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), [SUBSECTIONS_FIELD]: list(ref('subsection'), ...SUBSECTION_BOUNDS.subsections), disposition: ref('disposition') }, [SUBSECTIONS_FIELD])
+      : object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
     diagrams: list(diagram, 0, 20),
     deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),

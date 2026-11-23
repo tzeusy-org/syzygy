@@ -68,11 +68,15 @@ export type AssetDisposition =
 export interface DossierDraft {
   title: string;
   introduction: DraftParagraph;
-  sections: { id: string; title: string; paragraphs: DraftBlock[]; disposition: AssetDisposition }[];
+  /** `subsections` only on an operator-agent schema-v8 section that carries them (REQ-polaris-generation-034 version 2.16); the provider
+   * stages' closed `draft` schema has no such member, so a provider draft never carries one. */
+  sections: { id: string; title: string; paragraphs: DraftBlock[]; subsections?: DraftSubsection[]; disposition: AssetDisposition }[];
   diagrams: DraftDiagram[];
   deepDives: { id: string; title: string; sectionId: string; paragraphs: DraftBlock[]; disposition: AssetDisposition }[];
   unresolved: { question: string; reason: string; references: string[] }[];
 }
+/** A subsection (version 2.16): its title, its one-sentence answer and its paragraphs, rendered after its section's own paragraphs. */
+export interface DraftSubsection { id: string; title: string; answer: DraftParagraph; paragraphs: DraftBlock[] }
 export interface DraftDiagram {
   id: string; title: string; sectionId: string; kind: DiagramKind | FigureKind; relationship: string;
   nodes: DraftDiagramNode[]; edges: DraftDiagramEdge[]; disposition: AssetDisposition;
@@ -119,10 +123,11 @@ export function treeBlocks(blocks: readonly DraftBlock[]): DraftParagraph[] {
 }
 
 export function draftHandles(value: DossierDraft): { all: Set<string>; blocks: Set<string> } {
-  const blocks = [value.introduction, ...value.sections.flatMap(s => treeBlocks(s.paragraphs)),
+  const blocks = [value.introduction, ...value.sections.flatMap(s => [...treeBlocks(s.paragraphs),
+      ...(s.subsections ?? []).flatMap(sub => [sub.answer, ...treeBlocks(sub.paragraphs)])]),
     ...value.diagrams.flatMap(d => [...d.nodes, ...d.edges]),
     ...value.deepDives.flatMap(d => treeBlocks(d.paragraphs))].map(b => b.id);
-  return { blocks: unique(blocks), all: unique([...blocks, ...value.sections.map(s => s.id),
+  return { blocks: unique(blocks), all: unique([...blocks, ...value.sections.flatMap(s => [s.id, ...(s.subsections ?? []).map(sub => sub.id)]),
     ...value.diagrams.map(d => d.id), ...value.deepDives.map(d => d.id)]) };
 }
 

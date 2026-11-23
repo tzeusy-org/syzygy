@@ -84,6 +84,21 @@ describe('reading ledger', () => {
     });
   });
 
+  it('counts a v8 section\'s subsection answers and paragraphs on its page, and an earlier draft\'s never (version 2.16)', () => {
+    const sub = (id: string, answer: string, paragraphs: unknown[]) => ({ id, title: id, answer: { id: `${id}-a`, label: 'unknown', reason: 'missing-evidence', text: answer, citations: [] }, paragraphs });
+    const withSubsections = (schemaVersion: string) => ({ ...DRAFT, schemaVersion, sections: (DRAFT['sections'] as Record<string, unknown>[]).map((s: Record<string, unknown>) => (s['id'] === 'core'
+      ? { ...s, subsections: [sub('q1', 'Two words.', [block('q1p', 'Three more words.', [block('q1c', 'And four more here.')])]), sub('q2', 'One.', [])] } : s)),
+      deepDives: (DRAFT['deepDives'] as Record<string, unknown>[]).map((d: Record<string, unknown>) => (d['id'] === 'dive-a' ? { ...d, subsections: [sub('q3', 'Never counted here.', []), sub('q4', 'Nor here.', [])] } : d)) });
+    const pages = (doc: Draft) => readingLedger(doc, FIT, readerAdvice(doc)).pages.map((p) => [p.page, p.proseWords, p.figures]);
+    const draftWords = (doc: Draft) => readingLedger(doc, FIT, readerAdvice(doc)).draft.proseWords;
+    expect(pages(withSubsections('polaris-dossier-local-draft-v8'))).toEqual([['index.html', 11, 1], ['poles/1.html', 15, 1], ['poles/2.html', 301, 1], ['deep-dives/dive-a.html', 2, 1], ['deep-dives/dive-b.html', 3, 0]]);
+    expect(draftWords(withSubsections('polaris-dossier-local-draft-v8'))).toBe(336);
+    for (const version of ['polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v5']) {
+      expect(pages(withSubsections(version)), version).toEqual([['index.html', 11, 1], ['poles/1.html', 5, 1], ['poles/2.html', 301, 1], ['deep-dives/dive-a.html', 2, 1], ['deep-dives/dive-b.html', 3, 0]]);
+      expect(draftWords(withSubsections(version)), version).toBe(326);
+    }
+  });
+
   it('without Poles keeps every produced section on the landing page; an earlier schema places a figure by sectionId', () => {
     const v4 = { ...DRAFT, schemaVersion: 'polaris-dossier-local-draft-v4', poles: undefined, whySection: undefined,
       diagrams: [{ ...figure('h0', undefined), home: undefined, sectionId: 'loose' }, { ...figure('h1', undefined), home: undefined, sectionId: 'gone' }] };
