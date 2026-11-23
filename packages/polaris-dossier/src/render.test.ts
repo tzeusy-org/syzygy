@@ -808,13 +808,13 @@ describe('render', () => {
     expect([...files.values()].join('')).not.toContain('LEGACY-LAUNCH-SHOULD-NOT-RENDER'); expect(fs.readFileSync(file, 'utf8')).toBe(legacy);
   });
 
-  it('renders the raw-read risk without asserting a read or send when the run records no author handoff', async () => {
+  it('renders the raw-read risk and Unknown handoff after issuing the local Author brief', async () => {
     const run = await prepared(); const result = await renderRun(run, renderDeps()); if (!result.ok) throw new Error(result.refusal.reason);
     const files = readSite(result.report.site);
     const machine = JSON.parse(files.get('machine.json')!);
     expect(machine.disclosure).toContainEqual({ id: 'source-screening-boundary', text: 'Syzygy screens the Git objects and artifacts it reads through its checked flow. SEC-2 and SEC-5 govern that flow.', label: null });
-    expect(machine.disclosure).toContainEqual({ id: 'raw-read-disclosure', label: 'Inferred',
-      text: `${RISK} The run records the author handoff as not-reached. Transmissions from the operator’s authoring tool are Unknown.` });
+    expect(machine.disclosure).toContainEqual({ id: 'raw-read-disclosure', label: 'Unknown',
+      text: `${RISK} The run records the author handoff as unknown. Transmissions from the operator’s authoring tool are Unknown.` });
     const appendix = files.get('appendix.html')!;
     expect(appendix).toMatch(/data-disclosure-id="raw-read-disclosure"[^>]*>.*?own reads of the raw clone are unscreened\. A secret from that clone may reach the run&#39;s declared provider\./u);
     const html = [...files].filter(([file]) => file.endsWith('.html'));
