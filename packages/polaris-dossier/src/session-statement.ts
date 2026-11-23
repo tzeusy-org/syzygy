@@ -5,6 +5,7 @@ import { type GateSources } from './gate-sources.js';
 import { AGENT_TOOLS } from './run-config.js';
 import { readRunRecord } from './run-record.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** Historical statement citation types remain readable by retained artifact schemas. New /2
  * prompts bind the supported tool and declared provider directly; they carry no statement grant. */
@@ -24,7 +25,7 @@ export async function recheckSessionStatement(
 ): Promise<SessionStatementRecheck> {
   const no = (why: string): SessionStatementRecheck => ({ ok: false, why: `${why}; ${consequence ?? 'its work does not count'}` });
   let text: string;
-  try { text = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'); }
+  try { text = readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord); }
   catch { return no(`the run record cannot be read to check ${noun} declared provider`); }
   const read = readRunRecord(text);
   if (!read.ok) return no(read.detail);

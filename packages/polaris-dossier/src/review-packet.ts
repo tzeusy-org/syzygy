@@ -14,6 +14,7 @@ import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { placementSubjectOf, screenLoaderOf, secretPathOf, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 
 /** Building and writing the fidelity and design packets; split out of `review.ts` unchanged. */
 
@@ -72,7 +73,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   const counted = await inventoryOfRecord(run, { sources: deps.sources, now: deps.now() });
   if (!counted.counts) return { ok: false, stage: 'inventory', reason: `no inventory counts, so no fidelity packet is built: ${counted.why}` };
   let inventoryBytes: Uint8Array;
-  try { inventoryBytes = new Uint8Array(fs.readFileSync(path.join(run, counted.file))); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${errno(cause)})` }; }
+  try { inventoryBytes = new Uint8Array(readBoundedFile(path.join(run, counted.file), RUN_TREE_BOUNDS.inventory)); } catch (cause) { return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})` }; }
   if (sha256(inventoryBytes) !== counted.sha256) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} changed after it was counted` };
   const inventoryDoc = parseSubject(inventoryBytes);
   if (inventoryDoc === undefined) return { ok: false, stage: 'inventory', reason: `the frozen inventory ${counted.file} is not one bounded JSON object` };

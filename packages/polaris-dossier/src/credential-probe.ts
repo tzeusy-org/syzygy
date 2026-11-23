@@ -1,10 +1,11 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { CredentialProbe } from './execution-rule.js';
-import { readBoundedFile } from './check-record-read.js';
+import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { readBoundedText } from './run-tree-read.js';
 
 /** The adapter-credential check of D9's credential condition (REQ-polaris-generation-033; R3-F1).
  *
@@ -66,11 +67,12 @@ export function credentialListFromFile(file: string): CredentialListSource {
     list: () => {
       let text: string;
       try {
-        const stat = fs.statSync(file);
-        if (!stat.isFile()) return { ok: false, why: `${file} is not a regular file` };
-        if (stat.size > LIST_MAX_BYTES) return { ok: false, why: `${file} is larger than ${LIST_MAX_BYTES} bytes` };
-        text = fs.readFileSync(file, 'utf8');
+        // The reader rule (REQ-polaris-generation-033 version 2.18): one non-blocking open, a regular file only, and at most one byte past
+        // the bound read, so a list grown after its size was taken is refused with the same words as one past it by its size.
+        text = readBoundedText(file, LIST_MAX_BYTES);
       } catch (cause) {
+        if (cause instanceof NotARegularFileError) return { ok: false, why: `${file} is not a regular file` };
+        if (cause instanceof BoundedJsonError && cause.code === 'byte-limit') return { ok: false, why: `${file} is larger than ${LIST_MAX_BYTES} bytes` };
         return { ok: false, why: `${file} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
       }
       let value: unknown;

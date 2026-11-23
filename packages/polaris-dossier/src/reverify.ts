@@ -10,6 +10,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { governedSubject, type GovernedDecision } from './governed.js';
 import { readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** Recheck declarations, the committed policy and pinned objects. Stored subject
  * history is Inferred; no retired consent or statement source is consulted. */
@@ -87,9 +88,9 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
     ({ ok: false, reasons: refusals.map(r => r.reason), refusals, ...extra, disclosures: DISCLOSURES });
   let text: string;
   try {
-    text = fs.readFileSync(path.join(path.resolve(runDir), RUN_LAYOUT.config), 'utf8');
+    text = readBoundedText(path.join(path.resolve(runDir), RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord);
   } catch (cause) {
-    refusals.push({ code: 'record-invalid', reason: `${runDir} holds no readable ${RUN_LAYOUT.config} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` });
+    refusals.push({ code: 'record-invalid', reason: `${runDir} holds no readable ${RUN_LAYOUT.config} (${readCause(cause, RUN_TREE_BOUNDS.runRecord)})` });
     return refuse();
   }
   const read = readRunRecord(text);

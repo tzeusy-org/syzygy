@@ -16,9 +16,13 @@ import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
 import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { RUN_TREE_BOUNDS, isAbsent, readBoundedText } from './run-tree-read.js';
+import { readRecord } from './run-dir.js';
 
-/** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
- * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
+/** `syzygy polaris <url>`: the one-command dossier run, stated by the adopted REQ-polaris-generation-048 ("Declared URL dossier
+ * supervisor"; first built from the one-command-run candidates of `polaris-dossier-one-command-run/` as a prototype under owner direction
+ * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design). Since version 2.18 it reads its own state, the run
+ * record, the frozen verdicts and the review check records by the reader rule under their stated bounds.
  *
  * The command opens a tmux session and runs a supervisor in its first window. The supervisor runs every `syzygy dossier` step itself, in
  * process, and starts the four agent sessions (author, inventory, fidelity review, design review), each in its own tmux window and its own
@@ -151,9 +155,11 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   if (tmux.status !== 0) return refuse('tmux is required for the attended view; install it, or use `syzygy dossier init` for an operator-started run');
   const view = viewProbeRefusal();
   if (view !== null) return refuse(`${view}. A launched run needs session views (REQ-042).`);
+  let resumed: SupervisorState | undefined;
   if (options.mode === 'resume') {
     const state = readState(options.stateRoot, options.run!);
     if (state === null) return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
+    resumed = state;
     if (state.done) return refuse(`run ${state.runId} is closed`);
     if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
     if (tmuxHas(state.tmuxSession)) return attach({ ...options, run: state.runId });
@@ -171,7 +177,8 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     audience = await ask('Who is this dossier for? (one line, e.g. "Operators and integrators deploying or building on Redis"): ');
     if (audience.trim() === '') return refuse('an audience is required');
   }
-  const name = options.mode === 'resume' ? readState(options.stateRoot, options.run!)!.tmuxSession : `polaris-${Date.now().toString(36)}`;
+  // The state is read once per command (version 2.18): resume names the session the state it checked names.
+  const name = resumed !== undefined ? resumed.tmuxSession : `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
   // A running tmux server gives a new session its own global environment, not this process's, so what the supervisor needs is passed
   // with -e: the state root, PATH (to find the agent tool), the runtime directory, and every SYZYGY_ variable (a stand-in agent included).
@@ -232,8 +239,18 @@ async function ask(question: string): Promise<string> {
 }
 
 const statePath = (stateRoot: string, runId: string): string => path.join(stateRoot, `${runId}.supervisor.json`);
+/** The supervisor's state for `runId`, read once by the reader rule under 16,777,216 bytes (REQ-polaris-generation-048 version 2.18):
+ * `absent` where nothing stands at its path, `unreadable` where what stands there is not a regular file, is past the bound, cannot be
+ * read or does not parse as a JSON object. */
+export function loadState(stateRoot: string, runId: string): SupervisorState | 'absent' | 'unreadable' {
+  let text: string;
+  try { text = readBoundedText(statePath(stateRoot, runId), RUN_TREE_BOUNDS.supervisorState); } catch (cause) { return isAbsent(cause) ? 'absent' : 'unreadable'; }
+  try { const doc: unknown = JSON.parse(text); return isRecord(doc) ? doc as unknown as SupervisorState : 'unreadable'; } catch { return 'unreadable'; }
+}
+/** The state, or null where there is none the supervisor can read. */
 function readState(stateRoot: string, runId: string): SupervisorState | null {
-  try { return JSON.parse(fs.readFileSync(statePath(stateRoot, runId), 'utf8')) as SupervisorState; } catch { return null; }
+  const state = loadState(stateRoot, runId);
+  return typeof state === 'string' ? null : state;
 }
 function saveState(stateRoot: string, state: SupervisorState): void {
   fs.writeFileSync(statePath(stateRoot, state.runId), `${JSON.stringify(state, null, 2)}\n`, { mode: 0o600 });
@@ -287,7 +304,10 @@ class Screen {
 }
 
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
-  const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
+  const loaded = options.run === undefined ? 'absent' : loadState(options.stateRoot, options.run);
+  // A named run whose state path holds anything the supervisor cannot read is refused, and nothing is written there (version 2.18).
+  if (loaded === 'unreadable') return refuse(`no launched run ${options.run} under ${options.stateRoot}`);
+  const previous = loaded === 'absent' ? null : loaded;
   if (previous === null && (options.audience === undefined || options.audience.trim() === '')) return refuse('--audience is required for a new launched run');
   const screen = new Screen('syzygy polaris — launched run (prototype)   detach: C-b d   windows: C-b n / C-b p');
   const fail = async (reason: string): Promise<number> => {
@@ -598,7 +618,7 @@ export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairS
 
 /** The verdict file a review check validated, or an empty object when it cannot be read. */
 export function readVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> {
-  try { const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')); return isRecord(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
+  try { const doc: unknown = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict)); return isRecord(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
 }
 
 /** At most this many entries are listed in one inventory repair message; the rest are counted. */
@@ -680,9 +700,9 @@ export function latestChecks(run: string): { readonly draft: CheckRecord; readon
   return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE, readCheckRecord), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE, readCheckRecord) };
 }
 
-/** A review check record as the supervisor reads it today: with no bound. Version 2.10 does not reach it; it is left as it was, and
- * syzygy-3efd.76 names it among the reads still to bound. */
-const readReviewCheckUnbounded = (file: string): unknown => JSON.parse(fs.readFileSync(file, 'utf8'));
+/** A review check record, read as every other reader reads it since version 2.18 (REQ-polaris-generation-035): by the reader rule under
+ * 262,144 bytes and parsed within the record bounds; one it cannot read is no checked verdict of its kind. */
+const readReviewCheck = (file: string): unknown => readRecord(file);
 
 function latestRecord(dir: string, pattern: RegExp, read: (file: string) => unknown): { n: number; doc: Record<string, unknown> } | null {
   let names: string[];
@@ -715,9 +735,9 @@ function tell(state: SupervisorState, role: ViewRole, message: string): void {
 }
 const tellAuthor = (state: SupervisorState, message: string): void => tell(state, 'author', message);
 
-function readMaxRepairCycles(run: string): number {
+export function readMaxRepairCycles(run: string): number {
   try {
-    const declared = (JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')) as { declared?: { maxRepairCycles?: unknown } }).declared?.maxRepairCycles;
+    const declared = (JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)) as { declared?: { maxRepairCycles?: unknown } }).declared?.maxRepairCycles;
     return typeof declared === 'number' ? declared : Number.POSITIVE_INFINITY;
   } catch { return Number.POSITIVE_INFINITY; }
 }
@@ -726,7 +746,7 @@ function readMaxRepairCycles(run: string): number {
  * because screening withheld the cited span), which the author can repair only by citing evidence the review can see. */
 export function blockingWhy(run: string, kind: 'fidelity' | 'design', n: number): string {
   let doc: Record<string, unknown>;
-  try { doc = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')) as Record<string, unknown>; } catch { return 'its verdict is unreadable'; }
+  try { doc = JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), RUN_TREE_BOUNDS.verdict)) as Record<string, unknown>; } catch { return 'its verdict is unreadable'; }
   const rows = (key: string): Record<string, unknown>[] => (Array.isArray(doc[key]) ? (doc[key] as Record<string, unknown>[]) : []);
   const blocking = rows('findings').filter((f) => f['severity'] === 'blocking').length;
   const unresolved = [...rows('blockSupport').filter((r) => r['verdict'] !== 'supported'), ...rows('inventoryAccuracy').filter((r) => r['accuracy'] !== 'accurate')].length;
@@ -751,8 +771,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     if (stop !== null) { phase = stop; break; }
     const passedDraft = draft !== null && draft.doc['outcome'] === 'passed' ? draft.n : null;
     const inventory = await inventoryOfRecord(run, { sources: cliGateSources(ports), now: (ports.now ?? Date.now)() });
-    const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/, readReviewCheckUnbounded);
-    const design = latestRecord(path.join(run, REVIEW_CHECKS), /^design-verdict-(\d+)\.json$/, readReviewCheckUnbounded);
+    const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/, readReviewCheck);
+    const design = latestRecord(path.join(run, REVIEW_CHECKS), /^design-verdict-(\d+)\.json$/, readReviewCheck);
     const site = draft !== null && draft.doc['outcome'] === 'passed' ? (state.siteFor[String(draft.n)] ?? null) : null;
     const verdictFor = (rec: typeof fidelity, key: 'draftRevision' | 'site', value: number | null): 'none' | 'blocking' | 'ready' => {
       if (rec === null || value === null || rec.doc['outcome'] !== 'validated') return 'none';

@@ -6,6 +6,7 @@ import type { FigureFit } from './figure-fit.js';
 import { proseWords, type ReaderAdvice, type ReaderStandardId } from './reader-advice.js';
 import { readRunRecord } from './run-record.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): per narrative page the draft lays out on, the words of
  * its own prose, the reading minutes, the figures, the reader advisories per counted standard and the figure-fit counts, computed from
@@ -305,7 +306,7 @@ export function readingDifference(run: string, repositoryId: string, checkedAt: 
     if (!entry.isDirectory() || !RUN_ID.test(entry.name) || entry.name === self) continue;
     const dir = path.join(root, entry.name);
     let stored;
-    try { stored = readRunRecord(fs.readFileSync(path.join(dir, RUN_LAYOUT.config), 'utf8')); } catch { unreadableRuns += 1; continue; }
+    try { stored = readRunRecord(readBoundedText(path.join(dir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)); } catch { unreadableRuns += 1; continue; }
     if (!stored.ok) { unreadableRuns += 1; continue; }
     if (stored.record.subject.repository.repositoryId !== repositoryId) continue;
     let records: number[];

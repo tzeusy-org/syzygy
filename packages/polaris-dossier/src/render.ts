@@ -32,6 +32,7 @@ import { continuationOf } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 import { poleLimitOf } from './run-config.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** `syzygy dossier render <run>` (REQ-polaris-generation-033, 034, 036; design "Command surface", `render`; syzygy-qkea.10).
  *
@@ -145,7 +146,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // A retained legacy run is read-only and gets its restart explanation even
   // when no renderer is installed; do not append a step or inspect its sources.
   try {
-    const stored = readRunRecord(fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8'));
+    const stored = readRunRecord(readBoundedText(path.join(runDir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
     if (!stored.ok && stored.legacy) return refuse('run', stored.detail);
   } catch { /* existing missing-run / missing-renderer handling below */ }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);

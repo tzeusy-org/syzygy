@@ -234,6 +234,16 @@ describe('reading difference', () => {
     });
   });
 
+  // REQ-polaris-generation-033 version 2.18 (syzygy-3efd.80): the other runs' run.json is read by the reader rule under 65,536 bytes.
+  it('counts another run whose run.json is a link to /dev/zero among unreadableRuns, reading no byte of it (syzygy-3efd.80)', () => {
+    const root = tempDir('reading-difference-');
+    const self = runIn(root, id('c'), RUN_RECORD('kestrel'));
+    const other = runIn(root, id('d'), RUN_RECORD('kestrel'), { 0: checkRecord('2026-11-22T11:00:00.000Z', EARLIER) });
+    fs.rmSync(path.join(other, 'run.json'));
+    fs.symlinkSync('/dev/zero', path.join(other, 'run.json'));
+    expect(readingDifference(self, 'kestrel', NOW, LATER)).toMatchObject({ state: 'unknown', unreadableRuns: 1 });
+  });
+
   it('takes the latest earlier check, a tie going to the greatest run identity, and skips a ledger checked after this check', () => {
     const root = tempDir('reading-difference-');
     const self = runIn(root, id('c'), RUN_RECORD('kestrel'));

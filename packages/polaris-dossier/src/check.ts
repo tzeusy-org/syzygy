@@ -26,6 +26,7 @@ import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './ch
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 export { CHECK_RECORD_FORMAT, STEP_LOG_FORMAT, DEFAULT_DRAFT, DRAFT_MAX_BYTES, reviewVisibility, lineRanges, blobRedaction } from './check-model.js';
 export type { BoundedCheckRecord, BoundedRecordOmits, RecordMeasure, MechanismAdvice, CheckFindingKind, CheckFinding, VerifiedQuotation, ExcludedQuotation, ReviewVisibility, CitedBlob, BlobRedaction, CheckStage, CheckCommand, CheckRefusal, CheckRecord, CheckReport, CheckResult, CheckRequest, CheckDeps } from './check-model.js';
 export { deriveFindings, draftRules, collectBlocks, collectCitations } from './check-derive.js';
@@ -154,7 +155,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const { noun } = plan;
   const log = (entry: Record<string, unknown>): void => {
     try {
-      const stored = readRunRecord(fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8'));
+      const stored = readRunRecord(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
       if (!stored.ok && stored.legacy) return;
       fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: STEP_LOG_FORMAT, step: plan.command, at: isoOf(started), ...entry })}\n`, { mode: 0o600 });
     } catch { /* the step log is a convenience within the agent's reach; a failure to append changes no result */ }
