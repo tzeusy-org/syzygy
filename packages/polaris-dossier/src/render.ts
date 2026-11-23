@@ -209,6 +209,11 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
   const urlMode = opened.effective?.kind === 'url';
   const rawRead = readRawReadDisclosure(run, declared.agentProvider);
   if (rawRead === null) return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+  const disclosureUnchanged = (): boolean => readRawReadDisclosure(run, declared.agentProvider)?.authorHandoff === rawRead.authorHandoff;
+  const refuseDisclosure = (): RenderResult => {
+    logRun = undefined;
+    return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+  };
   const disclosed = describeRawReadDisclosure(rawRead);
   const transmissionScope = urlMode
     ? 'Checked URL relay facts apply to the relay’s captured traffic. Transmissions outside those captures are'
@@ -438,17 +443,18 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
         }),
         new Promise<false>(resolve => { timer = setTimeout(() => { abort.abort(); resolve(false); }, producerMilliseconds); }),
       ]);
-      if (admitted !== true || expired()) return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
-      completed = true;
-    } catch { return refuse('render', 'The rendered products were not admitted by the checked producer before storage.'); }
+      completed = admitted === true && !expired();
+    } catch { /* The checked producer supplied no admission. */ }
     finally { clearTimeout(timer); if (!completed) abort.abort(); }
+    if (!completed) {
+      if (!disclosureUnchanged()) return refuseDisclosure();
+      return refuse('render', 'The rendered products were not admitted by the checked producer before storage.');
+    }
   }
 
-  if (urlMode && !(await urlRendererCurrent(installed!))) return refuse('renderer', 'The bound URL renderer changed before site storage.');
-  if (readRawReadDisclosure(run, declared.agentProvider)?.authorHandoff !== rawRead.authorHandoff) {
-    logRun = undefined;
-    return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
-  }
+  const rendererCurrent = !urlMode || await urlRendererCurrent(installed!);
+  if (!disclosureUnchanged()) return refuseDisclosure();
+  if (!rendererCurrent) return refuse('renderer', 'The bound URL renderer changed before site storage.');
   const productLeaseCurrent = (): boolean => products?.isLeaseOpen() === true
     && (checkedDesign === undefined || Date.now() < checkedDesign.deadline);
   const ensureStorageCurrent = (): void => {

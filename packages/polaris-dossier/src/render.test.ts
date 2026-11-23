@@ -471,7 +471,8 @@ describe('render', () => {
     } finally { admit(false); await rendered; reads.close(); vi.useRealTimers(); }
   }, 60_000);
 
-  it('preserves the disclosure restart result when the handoff changes during stored site reproduction', async () => {
+  it.each(['accepted', 'refused', 'failed'] as const)(
+    'preserves the disclosure restart result when the handoff changes during a %s stored site reproduction', async outcome => {
     const f = await preparedUrlRender();
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
     vi.setSystemTime(LATER);
@@ -489,7 +490,8 @@ describe('render', () => {
       const reads = beginRunProductReads(f.run, f.artifacts, 'render', deadline);
       const admitProducedSite = vi.fn(async () => {
         fs.writeFileSync(path.join(f.run, 'raw-read-disclosure.json'), rawReadCompanion('unknown'));
-        return true;
+        if (outcome === 'failed') throw Error('fixture producer failed during stored site reproduction');
+        return outcome === 'accepted';
       });
       try {
         expect(await reproduceUrlRender(f.run, { ...f.deps, productReads: reads, admitProducedSite }, stored))
@@ -499,6 +501,25 @@ describe('render', () => {
         expect(fs.readFileSync(stepLog)).toEqual(steps);
       } finally { reads.close(); }
     } finally { renderReads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
+  it('reports a disclosure withdrawal during primary URL producer refusal without writing a step', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 60_000);
+    const stepLog = path.join(f.run, 'steps.jsonl'), before = fs.readFileSync(stepLog);
+    const admitProducedSite = vi.fn(async () => {
+      fs.unlinkSync(path.join(f.run, 'raw-read-disclosure.json'));
+      return false;
+    });
+    try {
+      expect(await renderRun(f.run, { ...f.deps, productReads: reads, admitProducedSite }))
+        .toMatchObject({ ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE } });
+      expect(admitProducedSite).toHaveBeenCalledTimes(1);
+      expect(fs.existsSync(path.join(f.run, 'site'))).toBe(false);
+      expect(fs.readFileSync(stepLog)).toEqual(before);
+    } finally { reads.close(); vi.useRealTimers(); }
   }, 60_000);
 
   it('aborts an actual URL producer at the remaining shared deadline after initial rendering has consumed time', async () => {
