@@ -1,0 +1,37 @@
+{
+  "subject": {
+    "commit": "742d7c02e16a3f45871314fbe1f8afbb238f90ca",
+    "binaryDiffSha256": "aa0fb65126c36ae15e62c72365a8d79bba86e1d7b834d5abd7b0dcae4648067a"
+  },
+  "governance": [
+    "A-14",
+    "A-68",
+    "A-144",
+    "REQ-polaris-generation-035"
+  ],
+  "review": {
+    "path": "docs/reviews/F3-SINGLE-DESIGN-REPRODUCTION-REVIEW-RAW.md",
+    "sha256": "c7e46360cd36025c1abe3293cb22de2dbbe8f86aa4cb98386dd7b59369642c09",
+    "verdict": "PASS"
+  },
+  "verification": {
+    "typecheck": "passed",
+    "integration": {
+      "suite": "url-run-sessions.test.ts",
+      "passed": 18,
+      "total": 18
+    },
+    "nativeAssertionCommit": "d725f0b30fecd76cd32d6b6ecbb7d39286961551",
+    "nativeObservations": [
+      {
+        "subject": "29464a8290639eff967075d319b4f042a5ea740c",
+        "outcome": "one reproduction completed before native Design, one genuine supervised Stop, predecessor assertion failed on obsolete two-reproduction count"
+      },
+      {
+        "subject": "d725f0b30fecd76cd32d6b6ecbb7d39286961551",
+        "outcome": "transport-unavailable before a resumed Design attempt"
+      }
+    ],
+    "durableNativeResume": "Unknown"
+  }
+}
