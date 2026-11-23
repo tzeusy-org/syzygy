@@ -5,6 +5,7 @@ import {
   readMaterializationRecordFile,
   readTestArtifactRecordFile,
   walkthroughAcceptance,
+  type BodyReadAuthorityEvaluation,
   type PocEvaluationEvidence,
   type PocModel,
   type ProjectShapeModelInput,
@@ -20,6 +21,7 @@ export interface PocRuntimeCapture {
   readonly observerRevision: string;
   readonly workingTreeDigest: string;
   readonly evidence: PocEvaluationEvidence;
+  readonly authority?: BodyReadAuthorityEvaluation;
 }
 
 interface ProductionModelBuildOptions {
@@ -97,7 +99,7 @@ export function buildProductionPocModel({ capture, repoRoot, stateDir, observerR
   let projectShape: ProjectShapeModelInput | undefined;
   let projectShapeDetail: string | undefined;
   try {
-    const authority = evaluateBodyReadAuthority(
+    const authority = capture.authority?.evaluationInstant === asOf ? capture.authority : evaluateBodyReadAuthority(
       loadBodyReadAuthorityInputs({
         repoRoot: observerRoot,
         governanceRevision: capture.observerRevision,

@@ -13,9 +13,9 @@
 // fragment matched only in a comment that removeComments drops, or a `to`
 // that differs from `from` only in whitespace between tokens, fails), and
 // every must-fail name is a literal fragment (not blank, no `%` or `$`) held
-// by exactly one `it` or `test` title, or `each` title template, of the files
-// the runner's TEST_FILES lists. Whether the mutated guard is then caught is
-// the gate's own run (generation-mutation-run-main.ts).
+// by exactly one describe-qualified `it` or `test` title (or `each` title
+// template) in the files the runner passes to Vitest. Whether the mutated guard
+// is then caught is the gate's own run (generation-mutation-run-main.ts).
 
 import { readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
@@ -43,39 +43,49 @@ const emit = (file: string, text: string): string =>
     compilerOptions: { removeComments: true, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
   }).outputText;
 
-// The literal titles of every `it(...)`, `test(...)`, `it.each(...)(...)` and
-// `test.each(...)(...)` call in a test file; an `each` title keeps its `%s`.
+// An `each` title keeps its template; the plan can name the whole case family.
 const isTestCallee = (callee: ts.Expression): boolean =>
   (ts.isIdentifier(callee) && ['it', 'test'].includes(callee.text)) ||
   (ts.isCallExpression(callee) && ts.isPropertyAccessExpression(callee.expression) && callee.expression.name.text === 'each' &&
     ts.isIdentifier(callee.expression.expression) && ['it', 'test'].includes(callee.expression.expression.text));
-// Every `TEST_FILES` declaration in the runner's source, each as its elements
-// (a non-literal element as its source text), so a commented-out, computed or
-// second declaration cannot read as the four files.
-function runnerTestFiles(): string[][] {
-  const lists: string[][] = [];
+// Read both the declared file list and what the runner passes to the subprocess.
+function runnerBindings(): { files: string[][]; invocations: string[][] } {
+  const files: string[][] = [];
+  const invocations: string[][] = [];
+  const readArgument = (argument: ts.Expression | undefined): string =>
+    argument !== undefined && ts.isStringLiteralLike(argument) ? argument.text : argument?.getText() ?? '(missing)';
   const visit = (node: ts.Node): void => {
     if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'TEST_FILES') {
       const init = node.initializer !== undefined && ts.isAsExpression(node.initializer) ? node.initializer.expression : node.initializer;
-      lists.push(init !== undefined && ts.isArrayLiteralExpression(init)
-        ? init.elements.map((element) => (ts.isStringLiteralLike(element) ? element.text : element.getText()))
-        : [init?.getText() ?? '(no initializer)']);
+      files.push(init !== undefined && ts.isArrayLiteralExpression(init) ? init.elements.map(readArgument) : [readArgument(init)]);
+    }
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'spawnSync') {
+      const [program, args] = node.arguments;
+      const argv = args !== undefined && ts.isArrayLiteralExpression(args) ? args.elements.map((argument) => argument.getText()) : [args?.getText() ?? '(missing)'];
+      invocations.push([program?.getText() ?? '(missing)', ...argv]);
     }
     ts.forEachChild(node, visit);
   };
   visit(ts.createSourceFile(RUNNER, read(RUNNER), ts.ScriptTarget.Latest, true));
-  return lists;
+  return { files, invocations };
 }
+
 function testTitles(file: string): string[] {
   const titles: string[] = [];
-  const visit = (node: ts.Node): void => {
-    if (ts.isCallExpression(node) && isTestCallee(node.expression)) {
-      const [title] = node.arguments;
-      if (title !== undefined && ts.isStringLiteralLike(title)) titles.push(title.text);
+  const visit = (node: ts.Node, scopes: readonly string[]): void => {
+    if (ts.isCallExpression(node)) {
+      const [title, ...body] = node.arguments;
+      if (title !== undefined && ts.isStringLiteralLike(title)) {
+        if (ts.isIdentifier(node.expression) && node.expression.text === 'describe') {
+          for (const child of body) visit(child, [...scopes, title.text]);
+          return;
+        }
+        if (isTestCallee(node.expression)) titles.push([...scopes, title.text].join(' '));
+      }
     }
-    ts.forEachChild(node, visit);
+    ts.forEachChild(node, (child) => visit(child, scopes));
   };
-  visit(ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, true));
+  visit(ts.createSourceFile(file, read(file), ts.ScriptTarget.Latest, true), []);
   return titles;
 }
 
@@ -83,8 +93,13 @@ describe('generation mutation plan', () => {
   it('holds twelve mutations with distinct ids, and the runner runs the test files their must-fail names are read from', () => {
     const ids = GENERATION_LITERAL_MUTATIONS.map((mutation) => mutation.id);
     expect(ids.length, ids.join(', ')).toBe(12);
-    expect(ids.filter((id, index) => ids.indexOf(id) !== index).join(', '), 'duplicate mutation ids').toBe('');
-    expect(runnerTestFiles(), "the runner's TEST_FILES declarations").toEqual([RUNNER_TEST_FILES]);
+    const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+    expect(duplicates.map((id) => JSON.stringify(id)).join(', '), 'duplicate mutation ids').toBe('');
+    const runner = runnerBindings();
+    expect(runner.files, "the runner's TEST_FILES declarations").toEqual([RUNNER_TEST_FILES]);
+    expect(runner.invocations, "the runner's Vitest argv").toEqual([
+      ["'npx'", "'vitest'", "'run'", '...TEST_FILES', "'--reporter=json'", '`--outputFile=${outputFile}`'],
+    ]);
   });
 
   it.each(GENERATION_LITERAL_MUTATIONS.map((mutation): [string, LiteralMutation] => [mutation.id, mutation]))(
@@ -100,7 +115,7 @@ describe('generation mutation plan', () => {
       const titles = RUNNER_TEST_FILES.flatMap(testTitles);
       for (const name of mutation.mustFail) {
         expect(name.trim() !== '' && !/%|\$/.test(name), `${id}: must-fail "${name}" is a literal title fragment`).toBe(true);
-        expect(titles.filter((title) => title.includes(name)).length, `${id}: test titles holding must-fail "${name}"`).toBe(1);
+        expect(titles.filter((title) => title.includes(name)).length, `${id}: describe-qualified test titles holding must-fail "${name}"`).toBe(1);
       }
     },
   );

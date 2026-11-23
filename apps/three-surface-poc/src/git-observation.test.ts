@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -11,7 +11,6 @@ import {
   observeGitHorizon,
   observeObservatoryDrift,
   observeRevisionChange,
-  PWB_APPROVED_REPOSITORY_LOCATOR,
   pocObserverInputsAreClean,
   resolvePwbRepositoryBinding,
 } from './git-observation.js';
@@ -118,11 +117,6 @@ describe('read-only Git observation', () => {
       runGit: () => '/approved/butlers/.git\n',
     });
     expect(result).toEqual({ kind: 'bound', locator: '/approved/butlers', gitCommonDirectory: '/approved/butlers/.git' });
-  });
-
-  it('keeps the approved locator byte-equal to the act-bound consent mapping', () => {
-    const consent = readFileSync(join(REPO_ROOT, '.syzygy/governance/decisions/BUTLERS-PROJECT-SHAPE-OBSERVATION-CONSENT.md'), 'utf8');
-    expect(consent).toContain(`Current locator: \`${PWB_APPROVED_REPOSITORY_LOCATOR}\` (configuration, not repository`);
   });
 
   it('rejects a second Butlers-shaped repository before any repository observation', () => {

@@ -2678,3 +2678,99 @@ describe('render: task routes and the generated index', () => {
     expect(machine.nameIndex.names.filter((entry) => entry.kind === 'path').map((entry) => entry.name)).toEqual(['docs/notes.txt', 'src/kestrel.c']);
   });
 });
+
+describe('render: overview hero (schema v10)', () => {
+  const version = 'polaris-dossier-local-draft-v10';
+  const figure = (id: string, disposition: Doc = { kind: 'produced', assetIds: [id] }): Doc => ({
+    id, title: id, kind: 'boundary', home: { kind: 'overview' }, relationship: 'Related parts of one system.',
+    nodes: [{ id: id + '-a', label: 'Client', epistemic: 'inferred', citations: [cite(id + '-ca', 'src/kestrel.c', 1, 1)] },
+      { id: id + '-b', label: 'Server', epistemic: 'inferred', citations: [cite(id + '-cb', 'src/kestrel.c', 1, 1)] }],
+    edges: [{ id: id + '-ab', from: id + '-a', to: id + '-b', label: 'Communicates', relation: 'relates-to', epistemic: 'inferred', citations: [cite(id + '-cab', 'src/kestrel.c', 1, 1)] }],
+    disposition,
+  });
+  const versioned = (hero?: Doc): Doc => ({ ...draft(), schemaVersion: hero === undefined ? 'polaris-dossier-local-draft-v9' : version,
+    thesisBasis: 'stated', ...(hero === undefined ? {} : { hero }), diagrams: [figure('overview-secondary'), figure('system-hero')] });
+  const rendered = async (doc: Doc, rend = renderDeps()) => {
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, rend);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const region = '<section id="overview-figures" data-reading-level="1" data-topics="">';
+
+  it.each([false, true])('places the named graph first after the header, including with open questions (%s)', async (openQuestion) => {
+    const doc = versioned({ figure: 'system-hero' });
+    if (openQuestion) doc.unresolved = [{ id: 'q-hero', question: 'Which protocol does the client use?', reason: 'No evidence.', citations: [] }];
+    const files = await rendered(doc);
+    const index = files.get('index.html')!;
+    expect(index).toContain('</header>' + region + '<figure data-hero="figure"');
+    const hero = index.indexOf('id="figure-system-hero"');
+    const secondary = index.indexOf('id="figure-overview-secondary"');
+    expect(hero).toBeGreaterThan(index.indexOf('id="block-intro"'));
+    expect(index.indexOf('id="block-intro"')).toBeGreaterThan(-1);
+    expect(secondary).toBeGreaterThan(hero);
+    if (openQuestion) {
+      const q = index.indexOf('Which protocol does the client use?');
+      expect(q).toBeGreaterThan(index.indexOf('id="block-intro"'));
+      expect(q).toBeLessThan(hero);
+      const appendix = files.get('appendix.html')!;
+      expect(appendix).toContain('<a href="index.html#open-questions">Read the open questions in the overview.</a>');
+      expect(appendix).not.toContain('Which protocol does the client use?');
+    }
+    expect([...files].filter(([, html]) => html.includes('id="figure-system-hero"')).map(([route]) => route)).toEqual(['index.html']);
+    expect(JSON.parse(files.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: 'system-hero', rendered: true });
+  });
+
+  it('renders the reasoned omission as its own overview claim and requires its own fidelity entry', async () => {
+    const id = 'hero-omission-reason';
+    const reason = { id, label: 'inferred', basis: 'source', text: 'A single process keeps the working keys.', citations: [cite('c-hero-reason', 'src/kestrel.c', 1, 1)], quotations: [] };
+    const doc = versioned({ omitted: reason });
+    doc.diagrams = [];
+    const unreviewed = await prepared(doc, false);
+    const { packet } = await handedPacket(unreviewed);
+    const criteria = JSON.parse(fs.readFileSync(path.join(packet.report.directory, 'packet.json'), 'utf8')).criteria;
+    expect(criteria.find((line: string) => line.startsWith('Support:'))).toContain('the introduction, any declared hero omission');
+    await expect(prepared(doc, true)).rejects.toThrow(/fixture verdict: .*hero-omission-reason/u);
+    const run = await prepared(doc, true, [{ blockId: id, verdict: 'supported', spanIds: [], reason: 'The source states it.', quotations: [] }], {
+      verdict: (value, spans) => {
+        value.blockSupport.find((row: Doc) => row.blockId === id).spanIds = spans.filter((span) => span.path === 'src/kestrel.c' && span.startLine === 1).slice(0, 1).map((span) => span.id);
+      },
+    });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(index).toContain('</header>' + region + '<div data-hero="omitted"><p class="hero-omitted">The authoring session left out the overview figure, for the reason that follows.</p>');
+    expect(index).toContain('id="block-hero-omission-reason">A single process keeps the working keys.');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.hero).toEqual({ form: 'omitted', diagram: null, rendered: true });
+    expect(machine.claims.filter((claim: Doc) => claim.id === id)).toEqual([expect.objectContaining({ id, page: 'index.html' })]);
+  });
+
+  it('marks a legitimate figure notice first and withholds the hero and its identity with the draft layer', async () => {
+    const doc = versioned({ figure: 'system-hero' });
+    doc.diagrams[1] = figure('system-hero', { kind: 'omitted', reason: 'No useful drawing.', citations: [] });
+    const capture = capturing();
+    const files = await rendered(doc, renderDeps({ renderer: capture.renderer }));
+    expect(files.get('index.html')).toContain(region + '<aside data-hero="figure" class="unresolved-asset" data-asset-disposition="omitted">');
+    expect(JSON.parse(files.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: 'system-hero', rendered: true });
+    const hidden = { state: 'unknown', reason: 'missing-declaration', why: ['fixture'] } as const;
+    const input = capture.inputs[0]!;
+    const hold = (local: typeof input.local) => renderLocalDossier({ ...input, local: { ...local, draftLayer: hidden } }).files;
+    const withheld = hold(input.local);
+    const { hero: _withoutHero, ...earlierInput } = input.local;
+    expect(withheld.get('index.html')).toBe(hold(earlierInput).get('index.html'));
+    expect(withheld.get('index.html')).not.toContain('data-hero');
+    expect(withheld.get('machine.json')).not.toContain('system-hero');
+    expect(JSON.parse(withheld.get('machine.json')!).hero).toEqual({ form: 'figure', diagram: null, rendered: false });
+  });
+
+  it('does not add a hero member or marker to an earlier stored draft', async () => {
+    const files = await rendered(versioned());
+    const index = files.get('index.html')!;
+    expect(index).not.toContain('data-hero');
+    expect(JSON.parse(files.get('machine.json')!)).not.toHaveProperty('hero');
+    expect(index.indexOf('id="figure-overview-secondary"')).toBeGreaterThan(-1);
+    expect(index.indexOf('id="figure-system-hero"')).toBeGreaterThan(index.indexOf('id="figure-overview-secondary"'));
+  });
+});

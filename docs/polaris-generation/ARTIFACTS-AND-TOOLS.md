@@ -123,6 +123,56 @@ from the example.
 - The existing `poc:fresh-checkout-demo` requires the configured repository's
   actual read gates and remains a separate live proving-case check.
 
+## Project-shape profile
+
+[Inferred] This version 1 coordination descriptor gives the observer and the
+generator one vocabulary for project-shaped inputs. The registry owns
+project grammar. The effective consent and policy still determine what the
+observer can read. The signed PWB-REQ-002 amendment defines the loaded
+extraction grammar and its refusal behavior.
+
+| Field | Writer and consumer | Current proving-case reference |
+|---|---|---|
+| `profileVersion`, `observingProjectId`, `repositoryId`, `contentClass` | The registry identifies the subject. The observer and generator carry these identities through their records. | `project:syzygy`, `repository:butlers-configured-poc`, `declared-project-shape-text`. The effective consent supplies the physical locator as configuration. |
+| `rootIndex`, `indexDepth`, `layers`, `pillars` | The registry specifies discovery vocabulary. The observer derives the manifest from the pinned tree and admitted index bytes. | The proving case's about/README.md, depth 3, and the five pillar keys and labels in [the manifest](../../packages/three-surface-poc-core/src/project-shape-manifest.ts). |
+| `sourceRules`, `extractionClasses`, `grammarRows` | The registry names source-selection rules, the class vocabulary and per-source bindings. Policy supplies admission and screening constraints. | Five source rules and nine extraction classes in [the manifest](../../packages/three-surface-poc-core/src/project-shape-manifest.ts). The adopted grammar fixes the nine container shapes and eight item key forms. |
+| `projectAccountKeys`, `catalogKeys`, `precedence` | The observer interprets selected declarations with the registered key vocabulary. The screened root index supplies the declared precedence rows. | The six account keys are `purpose`, `promises`, `refusals`, `architecture`, `v1-scope` and `v1-success`. Use the current catalog and precedence vocabulary from [extraction](../../packages/three-surface-poc-core/src/project-shape-extraction.ts) and [coverage](../../packages/three-surface-poc-core/src/project-shape-coverage.ts). |
+| `profileDigest`, `revision`, `evaluationId` | The future loader derives one SHA-256 identity over the versioned canonical profile. Each capture binds that identity to its own revision and evaluation. | The profile digest will accompany the existing manifest digest and observation identity when the loaded-profile slice implements it. |
+| `selectedSources`, `excludedSources` | The observer retains the population at the pinned revision with its disposition and existing screening rules. The generator consumes the admitted population and the associated safe exclusion evidence. | The manifest records selected source identities and population gaps. The generator's current admitted input is [`SourcePopulation`](../../packages/polaris-generation-core/src/admitted-input.ts). |
+
+[`PocSeedInput`](../../packages/three-surface-poc-core/src/poc-seeds.ts) holds
+POC seed entities. Audience, provider, budget and requested assets belong to
+the generator run envelope. This coordination descriptor is documentation for
+the registry-backed profile work.
+
+### Synthetic second-corpus measurement design
+
+[Inferred] Build a fabricated tree with ordinary material that uses
+Syzygy-shaped filenames and different headings and ontology from the proving
+case. Inject the tree listing, blob reader, clock and authority outcomes. Run
+against that in-memory fixture with provider dispatch and real repository
+operations wired to fail if reached.
+
+Freeze the selected and excluded path sets before evaluating. One proposed
+fixture has five selected paths (governance/INDEX.md,
+governance/intent/README.md, governance/intent/vision.md,
+specs/service/spec.md, and map/service.md) and three excluded paths
+(private/fixture.txt, notes/unclassified.txt, and
+scratch/untracked.md). Give each path one explicit reason or admitted
+rule. In an additional input, remove the root index bytes while retaining its
+expected ID in the denominator.
+
+| Stage | Measure against the frozen fixture |
+|---|---|
+| Admission and discovery | Record whether the stage crashed, returned Unknown with a reason, or produced a supported result. Count all eight input dispositions and compare the exact IDs against the fixture's expected sets. With a refused grant, count repository operations and require none. |
+| Screening and extraction | Preserve each excluded disposition and each failed expected source in the per-stage population. Verify that attributed claims recover the same-revision fabricated span and digest. |
+| Model and presentation | Trace each emitted claim to the fixture or record a proving-case copy leak. Include unsupported framing in the sweep even when it contains no proper nouns. Compare human and machine claim identities where both surfaces render a supported result. |
+
+The first measurement begins Unknown and records actual stage outcomes
+before assigning expectations to later regression runs. A synthetic result
+exercises the profile boundary. Real portability evidence requires a
+separately admitted observation and its own retained inputs.
+
 ## Tool interfaces to build for the vertical slice
 
 These names describe proposed operations, **not commands that exist**.

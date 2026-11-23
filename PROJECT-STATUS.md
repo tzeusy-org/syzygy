@@ -227,7 +227,7 @@ authority and no model yet called on the current path.
     (syzygy-5dhm.136) lands with it.
     *(2026-11-24: the predecessor figure "509 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Containment figure amendment 2.23](openspec/changes/dossier-containment-figure) is agent-adopted in A-58.
+    [Containment figure amendment 2.23](openspec/changes/dossier-containment-figure) is agent-adopted in A-59.
     It replaces REQ-polaris-generation-034 again (183 to 193 scenarios: draft schema v11 with the `containment` figure
     kind, groups nested at most three levels deep and drawn as boxes within boxes, the `containment-depth`,
     `containment-size` and `containment-flat` findings, nestings witnessed as `contains` edges, brief v17); its code is
