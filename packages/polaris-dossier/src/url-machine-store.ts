@@ -510,9 +510,20 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           check();
           if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
         }
-        await io(() => heldRoot.sync());
-        if (allocation) { await reverify(); check(); }
-        await io(census);
+        if (currentAsync !== undefined && staging === undefined) {
+          // The held lock's sync and the private census are independent.
+          // Join both and recheck authority before any client state read.
+          await io(async () => {
+            charge();
+            const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);
+            if (synced.status === 'rejected') throw synced.reason;
+            if (scanned.status === 'rejected') throw scanned.reason;
+          });
+        } else {
+          await io(() => heldRoot.sync());
+          if (allocation) { await reverify(); check(); }
+          await io(census);
+        }
         // Bracket the complete private state read, including its named roots,
         // with I/O authority. The client read still starts after that check.
         const stateSnapshot = () => io(() => readStateSnapshot(checkDeadline));

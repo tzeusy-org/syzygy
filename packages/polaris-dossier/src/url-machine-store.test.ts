@@ -24,6 +24,7 @@ const filesystem = vi.hoisted(() => ({
   afterLstat: undefined as ((file: string) => void) | undefined,
   afterRealpath: undefined as ((file: string) => void) | undefined,
   beforeMkdir: undefined as ((file: string) => void) | undefined,
+  beforeOpendir: undefined as ((file: string) => void) | undefined,
   beforeOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterClose: undefined as ((file: string) => void) | undefined,
@@ -41,6 +42,9 @@ vi.mock('node:fs/promises', async importOriginal => {
   }, mkdir: (...args: Parameters<typeof original.mkdir>) => {
     filesystem.beforeMkdir?.(String(args[0]));
     return original.mkdir(...args);
+  }, opendir: (...args: Parameters<typeof original.opendir>) => {
+    filesystem.beforeOpendir?.(String(args[0]));
+    return original.opendir(...args);
   }, open: async (...args: Parameters<typeof original.open>) => {
     const file = String(args[0]);
     if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(file);
@@ -55,7 +59,7 @@ vi.mock('node:fs/promises', async importOriginal => {
 });
 afterEach(async () => {
   filesystem.afterSync = filesystem.afterLstat = filesystem.afterRealpath = filesystem.beforeMkdir = filesystem.afterOpen = filesystem.afterClose = undefined;
-  filesystem.beforeOpen = undefined;
+  filesystem.beforeOpen = filesystem.beforeOpendir = undefined;
   for (const clean of cleanup.splice(0).reverse()) await clean();
 });
 
@@ -429,8 +433,37 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
         expect(lease.current()).toBe(true);
       });
       expect(finished).toBe(true);
-      expect(elapsed).toBe(4800);
+      expect(elapsed).toBe(4000);
     } finally { clock.mockRestore(); }
+  });
+
+  it.each(['current', 'withdrawn'] as const)('joins lock sync and census before the async authority check when %s', async disposition => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let current = true;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => current }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    let reportSync!: () => void, releaseSync!: () => void;
+    const synced = new Promise<void>(resolve => { reportSync = resolve; });
+    const syncHold = new Promise<void>(resolve => { releaseSync = resolve; });
+    let censusStarted = false, readStarted = false;
+    filesystem.beforeOpendir = file => { if (/^\/proc\/self\/fd\/[0-9]+$/u.test(file)) censusStarted = true; };
+    filesystem.afterSync = file => {
+      if (file === f.options.protectedRoot) { reportSync(); return syncHold; }
+    };
+    filesystem.beforeOpen = file => { if (path.basename(file) === 'state.json') readStarted = true; };
+    const pending = reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
+    });
+    const reached = await Promise.race([synced.then(() => true), pending.then(() => false)]);
+    const held = { censusStarted, readStarted };
+    current = disposition === 'current';
+    releaseSync();
+    expect(await pending).toBe(current);
+    expect(reached).toBe(true);
+    expect(held).toEqual({ censusStarted: true, readStarted: false });
+    expect(readStarted).toBe(current);
   });
 
   it('reads private state while identity is held and joins both before client access', async () => {
