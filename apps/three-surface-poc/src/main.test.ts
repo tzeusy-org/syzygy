@@ -168,6 +168,7 @@ function harness(overrides: Partial<PocMainDeps> = {}, options: { observer?: Git
   let builds = 0;
   let observer = options.observer ?? observation('observer-rev');
   const deps: PocMainDeps = {
+    resolvePhysicalPath: (path) => path === OBSERVER_ROOT ? path : realpathSync(path),
     authorizePwbLocator: ({ governanceRevision, evaluationInstant }) => {
       calls.push(`authority ${governanceRevision}`);
       return { kind: 'admitted', locator: repoRoot, authority: { ...ADMITTING_AUTHORITY, evaluationInstant } };
@@ -267,16 +268,32 @@ describe('main(argv, io): early exits', () => {
     expect(h.calls).toEqual([]);
   });
 
-  it('refuses an unreadable configured path after the authority check and before binding', async () => {
+  it('refuses an unreadable configured path without reaching Git', async () => {
     const fake = fakeIo();
     const h = harness();
     expect(await main(['--repo', join(scratch, 'does', 'not', 'exist')], fake.io, h.deps)).toBe(1);
     expect(fake.err()).toBe('syzygy POC: configured repository is not readable\n');
-    expect(h.calls).toEqual([`observe ${OBSERVER_ROOT}`, 'authority observer-rev']);
+    expect(h.calls).toEqual([]);
   });
 });
 
 describe('main(argv, io): the P1 authority gate', () => {
+  it.each(['same path', 'alias', 'nested observer', 'nested target'])(
+    'refuses a configured target overlapping the observer checkout (%s) before any Git operation',
+    async (overlap) => {
+      const fake = fakeIo();
+      const observer = overlap === 'nested observer' ? join(repoRoot, 'subdir') : repoRoot;
+      const target = overlap === 'nested target' ? join(repoRoot, 'subdir') : repoRoot;
+      const configured = overlap === 'alias' ? '/alias/of/the/observer' : target;
+      const h = harness({
+        resolvePhysicalPath: (path) => path === OBSERVER_ROOT ? observer : target,
+      });
+      expect(await main(['--repo', configured], fake.io, h.deps)).toBe(1);
+      expect(fake.err()).toBe('syzygy POC: observer checkout overlaps the configured repository\n');
+      expect(h.calls).toEqual([]);
+    },
+  );
+
   it('a refused grant reaches no configured-repository operation', async () => {
     const fake = fakeIo();
     const h = harness({ authorizePwbLocator: () => ({ kind: 'rejected', reason: 'body-read-not-admitted' }) });
@@ -558,6 +575,45 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(response.body).toContain('The routing log SHALL carry the resolved entity.');
     expect(response.body).not.toContain('PURPOSE-PROSE-NEVER-RENDERED');
 
+    fake.signal('SIGINT');
+    expect(await run).toBe(0);
+  }, TEST_TIMEOUT_MS);
+
+  it('keeps captured data but refuses fresh verbatim reads after withdrawal, then resumes on an admitted refresh', async () => {
+    const fake = fakeIo();
+    const model = buildFixtureModel(fixtureDirectories, {
+      projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
+    });
+    const grant = { kind: 'admitted' as const, locator: repoRoot, authority: ADMITTING_AUTHORITY };
+    const authorizePwbLocator = vi.fn<PocMainDeps['authorizePwbLocator']>()
+      .mockReturnValueOnce(grant)
+      .mockReturnValueOnce({ kind: 'rejected', reason: 'body-read-not-admitted' })
+      .mockReturnValueOnce(grant);
+    const refreshed = { ...model, evaluation: { ...model.evaluation, snapshot: `${model.evaluation.snapshot}-refreshed` } };
+    const h = harness({ authorizePwbLocator }, { model: (build) => build === 1 ? model : refreshed });
+    const text = 'The switchboard SHALL resolve the sender of every inbound message to an entity.';
+    blobReader.serve = () => new TextEncoder().encode(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC['openspec/specs/switchboard-identity/spec.md']);
+    const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state')], fake.io, h.deps);
+    await started(run, fake);
+
+    const page = routeOf(h, 'GET', '/polaris');
+    const machine = routeOf(h, 'GET', '/api/poc');
+    const refresh = routeOf(h, 'POST', '/polaris/reobserve');
+    const request = { method: 'POST' as const, path: refresh.path, query: new URLSearchParams(), headers: LOCAL_BROWSER };
+    expect((await get(page)).body).toContain(text);
+    const readsBefore = blobReader.objectIds.length;
+    const prior = (await get(machine)).body;
+
+    expect((await refresh.handle({ request })).status).toBe(502);
+    const refused = await get(page);
+    expect(refused.body).toContain('The current repository authority is unconfirmed. No source was read.');
+    expect(refused.body).not.toContain(text);
+    expect(blobReader.objectIds).toHaveLength(readsBefore);
+    expect((await get(machine)).body).toBe(prior);
+
+    expect((await refresh.handle({ request })).status).toBe(200);
+    expect((await get(page)).body).toContain(text);
+    expect(blobReader.objectIds).toHaveLength(readsBefore + 1);
     fake.signal('SIGINT');
     expect(await run).toBe(0);
   }, TEST_TIMEOUT_MS);

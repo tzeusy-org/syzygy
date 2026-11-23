@@ -1,6 +1,6 @@
 import { realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import type { Readable, Writable } from 'node:stream';
 
 import { closeOnSignal, createDaemon } from '@syzygy/http-host';
@@ -75,6 +75,7 @@ export interface PocIo {
  * The tests inject fakes so no repository is read and no socket is opened. */
 export interface PocMainDeps {
   readonly authorizePwbLocator: typeof authorizePwbLocator;
+  readonly resolvePhysicalPath: (path: string) => string;
   readonly resolveBinding: typeof resolvePwbRepositoryBinding;
   readonly observeGitRepository: typeof observeGitRepository;
   readonly observeGitHorizon: typeof observeGitHorizon;
@@ -88,6 +89,7 @@ export interface PocMainDeps {
 
 const REAL_DEPS: PocMainDeps = {
   authorizePwbLocator,
+  resolvePhysicalPath: (path) => realpathSync(resolve(path)),
   resolveBinding: resolvePwbRepositoryBinding,
   observeGitRepository,
   observeGitHorizon,
@@ -114,9 +116,16 @@ export async function main(argv: readonly string[], io: PocIo, deps: PocMainDeps
     io.stderr.write(`syzygy POC: ${parsed.detail}\n\n${USAGE}`);
     return 1;
   }
+  let configuredLocator: string;
+  try {
+    configuredLocator = deps.resolvePhysicalPath(parsed.config.repoRoot);
+  } catch {
+    io.stderr.write('syzygy POC: configured repository is not readable\n');
+    return 1;
+  }
   let observer: ReturnType<typeof observeObserver>;
   try {
-    observer = observeObserver(io, deps, 'observer-checkout-dirty');
+    observer = observeObserver(configuredLocator, io, deps, 'observer-checkout-dirty');
   } catch (cause) {
     io.stderr.write(`syzygy POC: ${gitObservationDetail(cause)}\n`);
     return 1;
@@ -126,13 +135,6 @@ export async function main(argv: readonly string[], io: PocIo, deps: PocMainDeps
     return 1;
   }
   const grant = observer.grant;
-  let configuredLocator: string;
-  try {
-    configuredLocator = realpathSync(resolve(parsed.config.repoRoot));
-  } catch {
-    io.stderr.write('syzygy POC: configured repository is not readable\n');
-    return 1;
-  }
   const launch = await launchAfterPwbRepositoryBinding(
     configuredLocator,
     (locator) => deps.resolveBinding(locator, { approvedLocator: grant.locator }),
@@ -145,13 +147,24 @@ export async function main(argv: readonly string[], io: PocIo, deps: PocMainDeps
   return launch.result;
 }
 
-function observeObserver(io: PocIo, deps: PocMainDeps, dirtyRefusal: string) {
-  const repoRoot = io.cwd();
+function containsCheckout(parent: string, child: string): boolean {
+  const remainder = relative(parent, child);
+  return remainder !== '..' && !remainder.startsWith(`..${sep}`) && !isAbsolute(remainder);
+}
+
+function observeObserver(configuredLocator: string, io: PocIo, deps: PocMainDeps, dirtyRefusal: string) {
+  const repoRoot = deps.resolvePhysicalPath(io.cwd());
+  // Git searches upwards from a subdirectory. Keep the governance read on
+  // a physically separate checkout even if --repo or cwd used an alias.
+  if (containsCheckout(repoRoot, configuredLocator) || containsCheckout(configuredLocator, repoRoot)) {
+    throw new Error('observer-checkout-overlaps-configured-repository');
+  }
   const observer = deps.observeGitRepository(repoRoot);
   if (!deps.pocObserverInputsAreClean(observer)) throw new Error(dirtyRefusal);
   // Keep the governance revision and evaluation instant paired throughout a capture.
   const evaluationInstant = io.now();
   return {
+    repoRoot,
     revision: observer.revision,
     evaluationInstant,
     grant: deps.authorizePwbLocator({ repoRoot, governanceRevision: observer.revision, evaluationInstant }),
@@ -170,9 +183,7 @@ async function serveBoundRepository(
   deps: PocMainDeps,
 ): Promise<number> {
   const repoRoot = binding.locator;
-  // The horizon read and the clock read sit outside the checkout try below,
-  // as they did when this was written twice: only a checkout failure is
-  // reported as a named startup refusal.
+  // Only a checkout failure is reported as a named startup refusal.
   const observeCapture = (repository: ReturnType<typeof observeGitRepository>, observer: AdmittedObserver): PocRuntimeCapture => {
     const horizon = deps.observeGitHorizon(repoRoot, repository.revision);
     return {
@@ -201,12 +212,13 @@ async function serveBoundRepository(
     capture: currentCapture,
     repoRoot,
     stateDir,
-    observerRoot: io.cwd(),
+    observerRoot: initialObserver.repoRoot,
   });
 
   try {
     const servedResponses = new ServedResponseRecorder();
     let credentialProvision: 'minted' | 'reused' | undefined;
+    let admitsTransientReads = true;
     // syzygy-u05.2: every evaluation is a named re-evaluation result
     // carrying the identity it supersedes, the three clocks and the
     // two staleness limbs. The observatory limb counts Syzygy commits
@@ -216,19 +228,28 @@ async function serveBoundRepository(
       capture,
       build: buildModel,
       observe: async () => {
-        const observer = observeObserver(io, deps, 'POC runtime inputs are dirty; re-observation was refused');
+        admitsTransientReads = false;
+        let configuredLocator: string;
+        try {
+          configuredLocator = deps.resolvePhysicalPath(config.repoRoot);
+        } catch {
+          throw new Error('configured repository is not readable');
+        }
+        const observer = observeObserver(configuredLocator, io, deps, 'POC runtime inputs are dirty; re-observation was refused');
+        if (observer.repoRoot !== initialObserver.repoRoot) throw new Error('observer checkout changed; restart the POC to observe it');
         const { grant } = observer;
         if (grant.kind === 'rejected') throw new Error(`configured repository authority rejected (${grant.reason})`);
-        const currentBinding = deps.resolveBinding(config.repoRoot, { approvedLocator: grant.locator });
+        const currentBinding = deps.resolveBinding(configuredLocator, { approvedLocator: grant.locator });
         if (currentBinding.kind === 'rejected') throw new Error(`configured repository authority rejected (${currentBinding.reason})`);
         if (currentBinding.locator !== repoRoot || currentBinding.gitCommonDirectory !== binding.gitCommonDirectory) {
           throw new Error('configured repository binding changed; restart the POC to observe it');
         }
         return observeCapture(deps.observeGitRepository(repoRoot), { ...observer, grant });
       },
+      onReobserved: () => { admitsTransientReads = true; },
       observeHorizon: (pinned) => deps.observeGitHorizon(repoRoot, pinned),
       observeRevisionChange: (from, to) => deps.observeRevisionChange(repoRoot, from, to),
-      observeObservatory: () => deps.observeObservatoryDrift(io.cwd(), buildRevision),
+      observeObservatory: () => deps.observeObservatoryDrift(initialObserver.repoRoot, buildRevision),
       now: io.now,
     });
     const start = await deps.createDaemon({
@@ -238,7 +259,11 @@ async function serveBoundRepository(
         // PWB-REQ-011 (amended): Polaris's transient exact-requirement
         // route — the observed shape's own admitted baseline-spec object,
         // read at render and never stored.
-        ...pocRoutes(session.model, undefined, (current) => ({ verbatim: verbatimRouteReader(current, gitBlobReaderFor(repoRoot)) }), servedResponses, () => credentialProvision, session.latest),
+        ...pocRoutes(session.model, undefined, (current) => ({
+          verbatim: admitsTransientReads
+            ? verbatimRouteReader(current, gitBlobReaderFor(repoRoot))
+            : () => ({ refused: 'unconsented-source-or-provider', detail: 'The current repository authority is unconfirmed. No source was read.' }),
+        }), servedResponses, () => credentialProvision, session.latest),
         ...deps.materializeRoutes({
           getModel: session.model,
           targetRepoRoot: repoRoot,
