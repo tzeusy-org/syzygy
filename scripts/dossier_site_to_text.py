@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert a rendered Polaris dossier site to the plain text a reader session is given (syzygy-5dhm.133, R29 slice 1).
 
-    python3 scripts/dossier_site_to_text.py SITE_DIR OUT_DIR [--report FILE]
+    python3 scripts/dossier_site_to_text.py SITE_DIR OUT_DIR [--report FILE] [--reader]
     python3 scripts/dossier_site_to_text.py --selftest
 
 One text file per HTML page of SITE_DIR (the page's path with `.md` for `.html`), written under OUT_DIR, which must not exist
@@ -10,6 +10,11 @@ or must be empty. Only the page's `main` element is kept: no navigation, banner,
 SVG one `[figure text: ...]` line of its distinct title and text labels, an image its alternative text, and a citation its
 visible mark and its pop-up as `[mark: file and lines]`. The raw source pages (every page under `sources/` except
 `sources/index.html`) are left out: they are the repository's files, not the dossier's explanation.
+
+`--reader` (the reader's edition, syzygy-5dhm.136) also leaves out every page of class `run`, the pages about the run itself that
+fold under the navigation's "About this run" entry, so the text holds the reading path alone. A page's class is read from
+`scripts/dossier_page_classes.json`, the one definition of the page classes, which `page_class` applies and
+`scripts/dossier_pilot_runs.py` imports from here.
 
 Prints counts only, never page text: pages, words (whitespace-separated tokens of the converted text) and the source pages left
 out. `--report` writes the same counts with the words per page as JSON. Reads SITE_DIR only and refuses a path inside a
@@ -28,6 +33,33 @@ BLOCK = {'p', 'div', 'section', 'article', 'header', 'footer', 'figure', 'figcap
          'dd', 'blockquote', 'pre', 'details', 'summary', 'caption', 'aside'}
 SKIP = {'style', 'script', 'noscript', 'template'}
 RULE = ('every .html under the site except sources/*.html other than sources/index.html; text from <main> only')
+READER_RULE = (RULE + '; with --reader, pages of class run (scripts/dossier_page_classes.json) are left out too, and pages the '
+               'definition classes as none of reader, navigation or run are kept and counted as other')
+PAGE_CLASSES_FILE = pathlib.Path(__file__).resolve().parent / 'dossier_page_classes.json'
+PAGE_CLASSES_FORMAT = 'polaris-dossier-page-classes/1'
+
+
+def _load_page_classes(path=PAGE_CLASSES_FILE):
+    """The page classes, in order, each with its exact paths and its prefixes."""
+    record = json.loads(pathlib.Path(path).read_text(encoding='utf-8'))
+    if record.get('format') != PAGE_CLASSES_FORMAT:
+        raise ValueError(f'{path}: format {record.get("format")!r}, expected {PAGE_CLASSES_FORMAT!r}')
+    classes = tuple((row['class'], frozenset(row['paths']), tuple(row['prefixes'])) for row in record['classes'])
+    if [name for name, _, _ in classes] != ['reader', 'navigation', 'run']:
+        raise ValueError(f'{path}: classes must be reader, navigation, run in that order')
+    return classes
+
+
+PAGE_CLASSES = _load_page_classes()
+CLASSES = tuple(name for name, _, _ in PAGE_CLASSES) + ('other',)
+
+
+def page_class(relative):
+    """A site-relative page path's class: reader, navigation, run or other (scripts/dossier_page_classes.json)."""
+    for name, paths, prefixes in PAGE_CLASSES:
+        if relative in paths or relative.startswith(prefixes):
+            return name
+    return 'other'
 
 
 class _Converter(html.parser.HTMLParser):
@@ -150,21 +182,33 @@ def site_pages(site):
     return sorted(pages)
 
 
-def convert_site(site, out):
-    """Write the reader text of every kept page under `out`; returns the counts."""
+def convert_site(site, out, reader=False):
+    """Write the reader text of every kept page under `out`; returns the counts. With `reader`, run pages are left out too, and a kept
+    page of class `other` is counted apart, so a page the definition does not know is reported rather than silently read as the subject."""
     site, out = pathlib.Path(site), pathlib.Path(out)
-    per_page, left_out = {}, 0
+    per_page, left_out, run_left_out, other_kept = {}, 0, {}, {}
     for relative in site_pages(site):
         if is_source_page(relative):
             left_out += 1
+            continue
+        if reader and page_class(relative) == 'run':
+            run_left_out[relative] = len(page_text((site / relative).read_text(encoding='utf-8')).split())
             continue
         text = page_text((site / relative).read_text(encoding='utf-8'))
         target = out / (relative[:-len('.html')] + '.md')
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding='utf-8')
         per_page[relative] = len(text.split())
-    return {'pages': len(per_page), 'words': sum(per_page.values()), 'sourcesPagesExcluded': left_out,
-            'perPageWords': per_page, 'rule': RULE}
+        if reader and page_class(relative) == 'other':
+            other_kept[relative] = per_page[relative]
+    summary = {'pages': len(per_page), 'words': sum(per_page.values()), 'sourcesPagesExcluded': left_out,
+               'perPageWords': per_page, 'rule': READER_RULE if reader else RULE, 'form': 'reader' if reader else 'full'}
+    if reader:
+        summary['runPagesExcluded'] = len(run_left_out)
+        summary['runPagesWords'] = run_left_out
+        summary['otherPagesKept'] = len(other_kept)
+        summary['otherPagesWords'] = other_kept
+    return summary
 
 
 FIXTURE = """<!doctype html><html><head><title>T</title><style>main{color:red}</style></head><body>
@@ -220,14 +264,41 @@ def selftest():
     for relative, want in paths:
         if is_source_page(relative) is not want:
             failures.append(f'{relative}: source page read as {not want}')
+    classes = (('index.html', 'reader'), ('glossary.html', 'reader'), ('find-by-task.html', 'reader'), ('poles/1.html', 'reader'),
+               ('deep-dives/aof.html', 'reader'), ('maps/ci.html', 'reader'), ('contents.html', 'navigation'),
+               ('sources/index.html', 'navigation'), ('name-index.html', 'navigation'), ('understanding.html', 'run'),
+               ('discovery.html', 'run'), ('clarifications.html', 'run'), ('executions.html', 'run'), ('review.html', 'run'),
+               ('size-report.html', 'run'), ('appendix.html', 'run'), ('poles.html', 'other'), ('maps.html', 'other'),
+               ('extra/review.html', 'other'), ('machine.html', 'other'))
+    for relative, want in classes:
+        if page_class(relative) != want:
+            failures.append(f'{relative}: classed {page_class(relative)}, expected {want}')
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        site = pathlib.Path(tmp, 'site')
+        for relative in ('index.html', 'appendix.html', 'sources/index.html', 'sources/ab.html', 'review.html', 'unclassed.html'):
+            (site / relative).parent.mkdir(parents=True, exist_ok=True)
+            (site / relative).write_text(FIXTURE, encoding='utf-8')
+        full = convert_site(site, pathlib.Path(tmp, 'full'))
+        reader = convert_site(site, pathlib.Path(tmp, 'reader'), reader=True)
+        if sorted(full['perPageWords']) != ['appendix.html', 'index.html', 'review.html', 'sources/index.html', 'unclassed.html']:
+            failures.append(f'the full form kept {sorted(full["perPageWords"])}')
+        if sorted(reader['perPageWords']) != ['index.html', 'sources/index.html', 'unclassed.html'] or reader['runPagesExcluded'] != 2:
+            failures.append(f'the reader form kept {sorted(reader["perPageWords"])}')
+        if sorted(p.relative_to(tmp, ).as_posix() for p in pathlib.Path(tmp, 'reader').rglob('*.md')) != ['reader/index.md', 'reader/sources/index.md', 'reader/unclassed.md']:
+            failures.append('the reader form wrote a run page')
+        if reader['words'] + sum(reader['runPagesWords'].values()) != full['words']:
+            failures.append('the reader form and the run pages it left out do not add up to the full form')
+        if sorted(reader['otherPagesWords']) != ['unclassed.html'] or reader['otherPagesKept'] != 1:
+            failures.append(f'the reader form counted {sorted(reader["otherPagesWords"])} as other')
     sessions = (('/s/run-1.agents/site/1', True), ('/s/run-1.sessions', True), ('/s/run-1/site/1', False), ('/s/agents/x', False))
     for candidate, want in sessions:
         if is_session_path(candidate) is not want:
             failures.append(f'{candidate}: session path read as {not want}')
     for failure in failures:
         print(f'FAIL {failure}')
-    print(f'selftest: 1 fixture page, {len(mutations)} mutations, 5 marks, {len(paths)} paths, {len(sessions)} session paths; '
-          f'{len(failures)} failure(s)')
+    print(f'selftest: 1 fixture page, {len(mutations)} mutations, 5 marks, {len(paths)} paths, {len(classes)} page classes, '
+          f'1 reader-form site, {len(sessions)} session paths; {len(failures)} failure(s)')
     return 1 if failures else 0
 
 
@@ -236,6 +307,7 @@ def main(argv=None):
     parser.add_argument('site', nargs='?')
     parser.add_argument('out', nargs='?')
     parser.add_argument('--report')
+    parser.add_argument('--reader', action='store_true', help='leave out the run pages too: the reading path alone')
     parser.add_argument('--selftest', action='store_true')
     args = parser.parse_args(argv)
     if args.selftest:
@@ -260,10 +332,11 @@ def main(argv=None):
     if refuse:
         print(f'dossier_site_to_text: {refuse}', file=sys.stderr)
         return 2
-    summary = convert_site(site, out)
+    summary = convert_site(site, out, reader=args.reader)
     if report is not None:
         report.write_text(json.dumps({**summary, 'site': str(site)}, indent=1), encoding='utf-8')
-    print('pages', summary['pages'], 'words', summary['words'], 'sources pages excluded', summary['sourcesPagesExcluded'])
+    print('pages', summary['pages'], 'words', summary['words'], 'sources pages excluded', summary['sourcesPagesExcluded'],
+          *(('run pages excluded', summary['runPagesExcluded'], 'other pages kept', summary['otherPagesKept']) if args.reader else ()))
     return 0
 
 

@@ -1,0 +1,126 @@
+{
+ "answers": [
+  {
+   "id": "Q01",
+   "answer": "Redis is a server program that keeps data primarily in memory (main goal: an in-memory database) and lets applications read and change it over a network; clients send commands such as SET/GET that run against in-memory data structures (strings, hashes, lists, sets, sorted sets, streams, vector sets, module types). Writes can optionally be copied to disk (snapshots/AOF) and to replicas. Stated uses: caching, session management, querying/sorting/analytics, messaging and interservice communication, vector operations (plus per-type uses: counters, leaderboards, rate limiters, queues, event sourcing, similarity search/RAG).",
+   "where": "Overview intro; Core ideas; data-types table; Advantages the maintainers state"
+  },
+  {
+   "id": "Q02",
+   "answer": "Snapshots (RDB) dump the data set to disk via a forked child (rdbSaveBackground/rdbSave, triggered by save points in serverCron or BGSAVE); the AOF logs every write command (feedAppendOnlyFile into aof_buf, flushed in beforeSleep), with appendfsync always making the write reach the file before the reply. Both can be on, or off. Durability comparison beyond that: not stated (the trade-off details are withheld). At startup loadDataFromDisk loads the AOF (loadAppendOnlyFiles) when AOF is on, otherwise the RDB; a preload-file setting overrides both.",
+   "where": "Core ideas 'Disk is an optional copy'; Workflow 3 persistence hops; Trade-offs"
+  },
+  {
+   "id": "Q03",
+   "answer": "src/bio.c worker threads do background close(2), AOF fsync and lazy freeing (freeObjAsync frees in the background only above LAZYFREE_THRESHOLD=64). Ordering guarantee: not stated.",
+   "where": "Mechanisms table 'Background jobs'; Deep dive lazy freeing"
+  },
+  {
+   "id": "Q04",
+   "answer": "Modules are shared libraries that extend Redis and add new commands (modules API). They are named with loadmodule (config line reaches queueLoadModule at startup) and main calls moduleLoadFromQueue (outside Sentinel mode); bundled modules are pinned in modules/modules.yaml, fetched with make modules-update and configured via redis-full.conf. Loading into an already running server (e.g. at runtime command) and how a module data type is saved/restored: not stated (src/module.c is withheld).",
+   "where": "Glossary 'module'; Workflow 6; Mechanisms table 'Modules'"
+  },
+  {
+   "id": "Q05",
+   "answer": "The event loop (aeMain in src/ae.c) repeatedly calls aeProcessEvents, which runs beforeSleep, waits in aeApiPoll (best of evport/epoll/kqueue/select), runs afterSleep, then runs ready file events (read handler before write handler unless AE_BARRIER) and time events (serverCron, server.hz times/sec: active expiry, rehashing, saves, replication reconnect). Connection layer: connSocketAcceptHandler accepts and calls acceptCommonHandler, which creates a client via createClient and installs readQueryFromClient as the read handler; readQueryFromClient reads into querybuf, processInputBuffer parses and calls processCommand; replies are buffered and sent from beforeSleep via handleClientsWithPendingWrites (after flushAppendOnlyFile). A generic connection-type abstraction layer: not stated.",
+   "where": "Mechanisms table; Deep dive event loop paragraphs; Workflow 2"
+  },
+  {
+   "id": "Q06",
+   "answer": "Not stated (the dossier does not describe the per-database dict/expires containers, cluster-mode layout, or where the key name is stored relative to the value). It only says robj holds type, encoding, LRU/LFU data, refcount and payload pointer, and setGenericCommand writes with setKeyByLink.",
+   "where": "Mechanisms table 'Object model'; Workflow 2"
+  },
+  {
+   "id": "Q07",
+   "answer": "Type is what a value is (an abstract data structure such as a list, defined also by operations' space/time complexity); encoding is how it is represented in memory at the moment (e.g. strings RAW/EMBSTR/INT, sets INTSET/HT, lists QUICKLIST of listpacks, streams radix tree of listpacks). Both exist so memory-saving encodings can sit under each type. Who decides which encoding is used: not stated (withheld, rests on redis.conf).",
+   "where": "Glossary data-type/encoding; Core ideas 'Cost is part of the type'; Deep dive encodings"
+  },
+  {
+   "id": "Q08",
+   "answer": "Code split: src/cluster.c (key-to-slot mapping, routing/redirection, getNodeByQuery) and src/cluster_legacy.c (node failure detection, failover, bus). keyHashSlot computes crc16 of the key (only the {...} hashtag part if present), low 14 bits -> one of 16384 slots. processCommand calls getNodeByQuery, which returns the node serving that slot; if it is this node the command runs, otherwise clusterRedirectClient replies MOVED (or ASK during migration) with slot and node address; cross-slot keys get -CROSSSLOT, -TRYAGAIN during migration.",
+   "where": "Workflow 5; Mechanisms table 'Cluster'; Glossary hash-slot; Trade-offs distribution"
+  },
+  {
+   "id": "Q09",
+   "answer": "Accept (connSocketAcceptHandler -> acceptCommonHandler, rejects at maxclients; createClient installs readQueryFromClient; clientAcceptHandler refuses non-loopback clients in protected mode with no default-user password) -> Read (aeProcessEvents calls readQueryFromClient, bytes into querybuf) -> Parse (processInputBuffer: '*' = multibulk, else inline) -> Dispatch (main thread calls processCommandAndResetClient -> processCommand; I/O threads only queue the client) -> Gate (lookupCommand and checks) -> Execute (call -> c->cmd->proc, e.g. setCommand -> setGenericCommand, setKeyByLink, server.dirty++) -> Propagate (dirty changed so alsoPropagate; propagateNow feeds feedAppendOnlyFile and replicationFeedSlaves; multiple commands wrapped in MULTI/EXEC) -> Flush (beforeSleep runs flushAppendOnlyFile first; with appendfsync always the write reaches the file before the reply) -> Reply (handleClientsWithPendingWrites/writeToClient). Checks that can stop it: authentication (noautherr), ACL (-NOPERM), cluster routing (redirect), memory/maxmemory eviction failure for deny-on-memory-limit commands (OOM), disk errors (writeCommandsDeniedByDiskError), read-only replica (roslaveerr), loading (loadingerr); also MULTI queuing.",
+   "where": "Workflow 2; 'Main checks in processCommand' table; Deep dive propagation"
+  },
+  {
+   "id": "Q10",
+   "answer": "When the AOF grows past auto-aof-rewrite-percentage and auto-aof-rewrite-min-size, serverCron calls rewriteAppendOnlyFileBackground, which forks a child. The step-by-step rewrite details beyond that: not stated. File tracking: a manifest file names which files are current: one BASE (snapshot from last rewrite), one or more ordered INCR files (writes since last successful rewrite); after a rewrite old BASE and INCR become HISTORY, removed automatically unless garbage collection is disabled.",
+   "where": "Workflow 3 'Compact the log'; Deep dive AOF lifecycle; Figure 'Life of the AOF files'"
+  },
+  {
+   "id": "Q11",
+   "answer": "replicationCron calls connectWithMaster (syncWithMaster handler); the replica sends PSYNC with replication ID and offset (slaveTryPartialResynchronization). On the master, syncCommand calls masterTryPartialResynchronization: if the ID matches and the offset is still in the backlog, it answers +CONTINUE and sends only the missing data (partial resync); otherwise +FULLRESYNC, the master runs startBgsaveForReplication and the replica receives the RDB in readSyncBulkPayload. Afterwards replicationFeedSlaves streams write commands; a replica relays its master's stream unchanged to its own replicas.",
+   "where": "Workflow 4; figure 'How a replica catches up'"
+  },
+  {
+   "id": "Q12",
+   "answer": "Two mechanisms: lazy, on access expireIfNeeded deletes an expired key (src/db.c), and active, activeExpireCycle scans in the background (src/expire.c, run from serverCron). How the active cycle limits its own cost: not stated. Consistency: a replica does not expire keys itself; it waits for the master, which sends synthesized DEL operations through the shared replication/AOF feed.",
+   "where": "Mechanisms table expiry row; Deep dive expiry and propagation"
+  },
+  {
+   "id": "Q13",
+   "answer": "Not stated (the eviction approximation and its rationale are not described; only that performEvictions frees keys when over maxmemory unless the policy forbids it, and robj holds LRU or LFU data).",
+   "where": "Mechanisms table 'Memory limit', 'Object model'"
+  },
+  {
+   "id": "Q14",
+   "answer": "Not stated (serverCron includes rehashing, but no rationale or fork-related resize policy is given).",
+   "where": "Mechanisms table 'Periodic work'"
+  },
+  {
+   "id": "Q15",
+   "answer": "Redis uses a mostly single-threaded core; scaling across cores is done by higher-order features like Redis Cluster (rationale for single-thread beyond that: not stated). Extra threads: I/O threads read and parse (new client assigned to the least-loaded I/O thread) but cannot run commands; pub/sub, monitor, blocked and tracking clients stay on the main thread; bio threads do background close, AOF fsync and lazy freeing; forked children write RDB/AOF rewrites. Costs/conditions: io-threads does not make commands run in parallel (throughput limit); TLS.md says multi-threaded I/O is not supported for TLS (possibly outdated); helper threads start after modules load due to an ld.so TLS/dlopen race; forked children add copy-on-write memory pressure.",
+   "where": "Core ideas; Deep dive threads; Trade-offs"
+  },
+  {
+   "id": "Q16",
+   "answer": "Sync policy trade-off: only partly stated: with appendfsync always the write reaches the file before the reply, and a failed write ends the process (exit(1)) because the reply may already be buffered and cannot be rolled back; other policies' trade-offs are withheld. The log is flushed in beforeSleep so that the write reaches the file before replies are sent in the same pass (flush runs first, then handleClientsWithPendingWrites). Durability given up during a background save with the mitigation on: not stated.",
+   "where": "Workflow 2 Flush step; Trade-offs (aof always)"
+  },
+  {
+   "id": "Q17",
+   "answer": "Commands are defined as JSON files under src/commands/*.json; utils/generate-command-code.py reads them to generate commands.def, which src/commands.c includes with COMMAND_STRUCT set to redisCommand. At runtime lookupCommand finds the command and call runs c->cmd->proc. Flags such as deny-on-memory-limit and auth needs are part of the command description; full list of what else must be described: not stated.",
+   "where": "Mechanisms table 'Command table'; processCommand checks table"
+  },
+  {
+   "id": "Q18",
+   "answer": "Config is read by loadServerConfig and defaults are compiled in src/config.c (e.g. loadmodule handled there). How runtime mutability, defaults and apply actions are declared: not stated.",
+   "where": "Workflow 1 & 6; settings table (src/config.c citations)"
+  },
+  {
+   "id": "Q19",
+   "answer": "Not stated (the thresholds rest on redis.conf, which is withheld).",
+   "where": "Deep dive encodings (withheld items)"
+  },
+  {
+   "id": "Q20",
+   "answer": "(a) The event loop chooses a multiplexing backend in src/ae.c, trying ae_evport.c, ae_epoll.c, ae_kqueue.c, then ae_select.c, so a new API would be a new ae_*.c backend selected there [Inferred from that description]. (b) Not stated (only src/socket.c accept handler and TLS built in or as a module are mentioned).",
+   "where": "Deep dive event loop; Workflow 2 Accept; TLS paragraph"
+  },
+  {
+   "id": "Q21",
+   "answer": "When maxmemory is set, processCommand calls performEvictions before running a command; if it cannot free memory, commands marked deny-on-memory-limit are refused with an OOM error, while read-only/non-memory commands still run; the eviction policy may forbid eviction (noeviction). A 32-bit instance with no limit gets 3 GB maxmemory with noeviction. Forked children add copy-on-write memory not covered by figures. Which memory/instances are exempt from the limit: otherwise not stated.",
+   "where": "Trade-offs 'At the memory limit' figure; Mechanisms table; platform limits"
+  },
+  {
+   "id": "Q22",
+   "answer": "Background snapshot failure: writes can be denied by writeCommandsDeniedByDiskError with an error message (details of when are not stated). AOF write failure with always: exit(1). Damaged AOF at startup and unloadable data file: not stated.",
+   "where": "processCommand checks table; Trade-offs aof always"
+  },
+  {
+   "id": "Q23",
+   "answer": "Not stated as a guarantees list (relevant sections withheld). Stated: replicas are copies fed asynchronously by replicationFeedSlaves; a replica rejects writes from normal clients (read-only replica error); replicas don't expire keys themselves. Operator knobs to narrow exposure and replica behaviour when the link is down: not stated.",
+   "where": "Workflow 4; processCommand checks table"
+  },
+  {
+   "id": "Q24",
+   "answer": "Multi-key commands must have all keys in one slot (else -CROSSSLOT; hashtags {..} group keys), -TRYAGAIN during slot migration, and commands for other nodes are redirected (MOVED/ASK). Restrictions on databases and availability when slots are uncovered: not stated.",
+   "where": "Trade-offs distribution; Workflow 5"
+  }
+ ],
+ "minutes_felt": 6,
+ "notes": "Workflows and mechanism tables were easy to use once boilerplate was skipped; every claim is repeated with long Unknown/provenance noise, and many key rationale and config topics are withheld (redis.conf, module.c) so a large share of questions are not stated."
+}
