@@ -1,0 +1,376 @@
+{
+  "adoption": "A-164",
+  "subjectCommit": "8f796d31e284c2df01b9e9818c424cef22b3c51c",
+  "baseCommit": "bec98a09338313ec53e9415e28cd9ff4cf4ba809",
+  "binaryDeltaSha256": "61788177413be909b7717485451dbd26385ba1e92765d030623f1db54b7ba96d",
+  "review": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW.md",
+    "sha256": "1c0c92dc7d84b8192b634d5d907bffa00da8f6296e3b418ed61063b432c6b676"
+  },
+  "exactPredecessorNative": {
+    "subjectCommit": "1661994b0ef9da16130b581dc5f1bc1e6f5dd7c8",
+    "scenario": "stop-resume",
+    "failureReportSha256": "63b18bd95b6b193372764e9cbbcbc518ca242b424945e8760bea84094ff1f461",
+    "hostActivation": "accepted",
+    "delivery": "accepted",
+    "firstInferenceBridge": {
+      "anchor": "pending",
+      "canonicalMatchesArchive": true,
+      "statePointerMatchesArchive": false,
+      "lockRetained": true,
+      "auditRows": 0,
+      "mtimeMsFromLock": {
+        "protectedState": 733.009987,
+        "canonical": 1328.018095,
+        "projection": 2916.039737,
+        "archive": 4412.060129
+      }
+    },
+    "executionRecordPresent": false
+  },
+  "instrumentedPredecessorNative": {
+    "subjectCommit": "13162d085e9e88ec468b7438cfdef818419d3a7d",
+    "baseCommit": "bec98a09338313ec53e9415e28cd9ff4cf4ba809",
+    "scenario": "stop-resume",
+    "logSha256": "2b741384b63ff8e654103b2751fa442ca8581016679f4884e6ad3f526278b0fd",
+    "reattestation": {
+      "kind": "inference-bridge",
+      "ready": true,
+      "began": 167627.243246,
+      "ended": 179377.808989
+    },
+    "publication": {
+      "kind": "inference-bridge",
+      "ok": false,
+      "began": 179467.938573,
+      "ended": 184533.993376
+    },
+    "store": {
+      "began": 179468.163769,
+      "elapsed": 5065.393874000001,
+      "operationMilliseconds": 5000,
+      "pending": 0,
+      "uncertain": true,
+      "contended": false,
+      "syncAuthority": {
+        "calls": 18,
+        "elapsed": 1680.998215000116
+      },
+      "stages": [
+        [
+          "lock-held",
+          240.5003629999992
+        ],
+        [
+          "lock-synced",
+          273.55567800000426
+        ],
+        [
+          "lock-censused",
+          276.5135279999813
+        ],
+        [
+          "read-enter",
+          365.6911329999857
+        ],
+        [
+          "read-state",
+          368.3790330000047
+        ],
+        [
+          "read-physical",
+          368.5560370000021
+        ],
+        [
+          "read-verified",
+          369.7921239999996
+        ],
+        [
+          "preflight",
+          545.5334529999818
+        ],
+        [
+          "reserve",
+          821.949346999987
+        ],
+        [
+          "read-enter",
+          822.2425809999986
+        ],
+        [
+          "read-state",
+          897.4747489999863
+        ],
+        [
+          "read-physical",
+          897.7238499999803
+        ],
+        [
+          "read-verified",
+          899.0282650000008
+        ],
+        [
+          "advance-state-enter",
+          899.0858040000021
+        ],
+        [
+          "advance-state-read",
+          932.9760459999961
+        ],
+        [
+          "write-enter",
+          940.7279470000067
+        ],
+        [
+          "write-rename",
+          1184.09010999999
+        ],
+        [
+          "write-parent-synced",
+          1215.5542669999995
+        ],
+        [
+          "write-readback",
+          1219.16749599998
+        ],
+        [
+          "read-enter",
+          1316.8974739999976
+        ],
+        [
+          "read-state",
+          1321.7872259999858
+        ],
+        [
+          "read-physical",
+          1321.9999379999936
+        ],
+        [
+          "read-verified",
+          1412.2236899999843
+        ],
+        [
+          "publish",
+          1503.3003239999816
+        ],
+        [
+          "read-enter",
+          1503.5468499999843
+        ],
+        [
+          "read-state",
+          1505.7531199999794
+        ],
+        [
+          "read-physical",
+          1505.8732569999993
+        ],
+        [
+          "read-verified",
+          1506.9204160000081
+        ],
+        [
+          "advance-state-enter",
+          1506.954059999989
+        ],
+        [
+          "advance-state-read",
+          1508.8313780000026
+        ],
+        [
+          "write-enter",
+          1508.861745000002
+        ],
+        [
+          "write-rename",
+          1665.1078390000039
+        ],
+        [
+          "write-parent-synced",
+          1697.759831000003
+        ],
+        [
+          "write-readback",
+          1702.0066479999805
+        ],
+        [
+          "read-enter",
+          1805.7306849999877
+        ],
+        [
+          "read-state",
+          1958.9412420000008
+        ],
+        [
+          "read-physical",
+          2086.7491379999847
+        ],
+        [
+          "read-verified",
+          2116.1531909999903
+        ],
+        [
+          "synchronize",
+          2211.6397299999953
+        ],
+        [
+          "read-enter",
+          2211.941279999999
+        ],
+        [
+          "read-state",
+          2364.3449719999917
+        ],
+        [
+          "read-physical",
+          2366.587759999995
+        ],
+        [
+          "read-verified",
+          2367.983548999997
+        ],
+        [
+          "advance-state-enter",
+          2368.021219999995
+        ],
+        [
+          "advance-state-read",
+          2373.0917229999905
+        ],
+        [
+          "write-enter",
+          2373.1820439999865
+        ],
+        [
+          "write-rename",
+          3156.4668249999813
+        ],
+        [
+          "write-parent-synced",
+          3188.698101999995
+        ],
+        [
+          "write-readback",
+          3416.332258999988
+        ],
+        [
+          "read-enter",
+          3514.8156420000014
+        ],
+        [
+          "read-state",
+          3518.086584000004
+        ],
+        [
+          "read-physical",
+          3518.4405930000066
+        ],
+        [
+          "read-verified",
+          3519.55521999998
+        ],
+        [
+          "audit",
+          3617.123152999993
+        ],
+        [
+          "read-enter",
+          3617.3580870000005
+        ],
+        [
+          "read-state",
+          4316.739100999985
+        ],
+        [
+          "read-physical",
+          4328.811308000004
+        ],
+        [
+          "read-verified",
+          4330.407004000008
+        ],
+        [
+          "advance-state-enter",
+          4330.468670000002
+        ],
+        [
+          "advance-state-read",
+          4363.6951779999945
+        ],
+        [
+          "write-enter",
+          4363.887832000008
+        ],
+        [
+          "write-rename",
+          4627.625293999998
+        ],
+        [
+          "write-parent-synced",
+          4657.804772999982
+        ],
+        [
+          "write-readback",
+          4660.473827999987
+        ],
+        [
+          "write-enter",
+          4666.961248999985
+        ],
+        [
+          "write-rename",
+          4879.841921999992
+        ],
+        [
+          "write-parent-synced",
+          4920.595595999999
+        ],
+        [
+          "write-readback",
+          4963.613259000005
+        ],
+        [
+          "caught",
+          5065.37935599999
+        ]
+      ]
+    }
+  },
+  "checks": {
+    "subjectCommit": "ccc84f833abbb2722eb18a0b21cacb63158ce6ff",
+    "logSha256": "d3b0adf70020993d1c89e27f7fafb25a261ce64b5b3dbb608880007c587c8548",
+    "typecheck": "PASS",
+    "integration": {
+      "passed": 101,
+      "denominator": 101
+    },
+    "unit": {
+      "passed": 36,
+      "denominator": 36
+    },
+    "nativeAcceptance": "Unknown"
+  },
+  "faultControls": [
+    {
+      "name": "store-window",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "test": "atomic after five seconds with publication mode selected",
+      "old": "const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;",
+      "new": "const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 5_000;",
+      "sourceSha256": "4e9d4bbbb64209f5fe784137e87669b6ecc71b2bb359710fde2f3f327c612895",
+      "logSha256": "2bc74e42a62409b317a80ae31a5b4321d3c6180c603be041a55aed9217fa2432",
+      "subjectCommit": "ccc84f833abbb2722eb18a0b21cacb63158ce6ff"
+    },
+    {
+      "name": "late-lock-admission",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "test": "if a contended lock arrives after one second",
+      "old": "if (((terminalRead && !joinedTerminalLock) || resumedDesignPublication) && lateContendedLock()) {",
+      "new": "if (terminalRead && !joinedTerminalLock && lateContendedLock()) {",
+      "sourceSha256": "8b6e4372cf5933c8b85415cba7bcb6d49742beccac4e7fee3b6378510076bbea",
+      "logSha256": "2bf317d895c803740eff4e0bfa2cd1a7370e79898f786ddeffb5e9c4fcd3c179",
+      "subjectCommit": "ccc84f833abbb2722eb18a0b21cacb63158ce6ff"
+    }
+  ]
+}

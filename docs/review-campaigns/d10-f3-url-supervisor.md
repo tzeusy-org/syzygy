@@ -48,6 +48,7 @@
 - `F3-TERMINAL-LOCK-SHARED-AUTHORITY(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-RECOVERED-PRODUCT-CENSUS-REVIEW-RAW\.md`
 - `F3-(CHECKED-RENDER-INPUT-PAIRS|SINGLE-DESIGN-REPRODUCTION|RESUME-ALLOCATION-LOCK|ORDERED-PLAN-REUSE|RENDER-LEASE|DESIGN-ACTIVATION-LEASE)-REVIEW-RAW\.md`
+- `F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -172,3 +173,5 @@
 [Observed] The terminal lock handoff review records `FAIL` for `6f402ff4` (`F3-TERMINAL-LOCK-SHARED-AUTHORITY-INITIAL-REVIEW-RAW.md:1`) and `PASS` for `eb487a5eb` (`F3-TERMINAL-LOCK-SHARED-AUTHORITY-REVIEW-RAW.md:1`). A-153 preserves the deadline check and I/O budget immediately before lock sync and census. The expiry fault control reproduced the refused census boundary. [Unknown] Native completion for the successor.
 
 [Observed] The recovered-product metadata walk review records `PASS` for `b45b3c7c9` (F3-RECOVERED-PRODUCT-CENSUS-REVIEW-RAW.md:1). A-155 retains the descriptor checks and brackets the complete walk with live authority. Its evidence records the matched 23-file observation and exact focused results. [Unknown] Native Resume completion.
+
+[Observed] The resumed Design bridge publication review records `PASS` (F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW.md:1) at `8f796d31e`. A-164 binds the initial publication window to the activated and reattested inference peer and records the original deadlines and contention cutoff. Typecheck, 101 integration cases, 36 unit cases and two fault controls passed. [Unknown] Native Resume completion for this subject.
