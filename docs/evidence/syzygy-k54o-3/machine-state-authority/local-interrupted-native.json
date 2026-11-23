@@ -1,0 +1,392 @@
+{
+  "label": "Observed",
+  "commit": "9da66128c41ca72cbdb6e7dc9c8e0dee0e146696",
+  "testLogSha256": "049e1c6b3dc5019d767a6877595db225554c7813b67acce308b2a1d8e41d2387",
+  "retainedFixtureSha256": "6e4a343981c9b2123861960553a54b1d1042fbb93d13006eb4654b79dfe89e7c",
+  "scenario": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 248313
+  },
+  "testedScenarios": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "resumeBootstrap": {
+    "restore-plans": {
+      "outcome": "accepted",
+      "elapsedMs": 4962.259
+    },
+    "load-renderer": {
+      "outcome": "accepted",
+      "elapsedMs": 253.135
+    },
+    "create-origins": {
+      "outcome": "accepted",
+      "elapsedMs": 3874.218
+    },
+    "restore-products": {
+      "outcome": "accepted",
+      "elapsedMs": 39853.897
+    },
+    "start-sessions": {
+      "outcome": "accepted",
+      "elapsedMs": 24477.221
+    },
+    "create-machine": {
+      "outcome": "accepted",
+      "elapsedMs": 22638.504
+    },
+    "open-store": {
+      "outcome": "accepted",
+      "elapsedMs": 684.155
+    }
+  },
+  "resumedStoreOperations": [
+    {
+      "kind": "open",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 4,
+        "accepted": 4,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 280.29398700001184
+      },
+      "elapsedMs": 684.008
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 812.7819949999684
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1462.306
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 821.9642390000226
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1476.235
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 743.5795739999448
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1369.692
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 756.1756709999754
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1385.823
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 787.6021309999633
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1502.393
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 855.7140570001211
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1549.68
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 768.81327100005
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1320.378
+    },
+    {
+      "kind": "exclusive",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 12,
+        "accepted": 12,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 771.4167799999996
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "elapsedMs": 1335.672
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 388.9433799999824
+      },
+      "elapsedMs": 1063.136
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 448.06554900002084
+      },
+      "elapsedMs": 1208.786
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 443.73417700000573
+      },
+      "elapsedMs": 1172.191
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 442.0921210000233
+      },
+      "elapsedMs": 1163.958
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 374.7911699999531
+      },
+      "elapsedMs": 1085.832
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 393.1754600000568
+      },
+      "elapsedMs": 1038.043
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 387.01149300002726
+      },
+      "elapsedMs": 1071.882
+    },
+    {
+      "kind": "allocation",
+      "outcome": "accepted",
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 431.3961010000203
+      },
+      "elapsedMs": 1180.99
+    }
+  ],
+  "inspectedLaunches": 1,
+  "resumedAuditKinds": [
+    "declaration",
+    "launch-attempt",
+    "launch-history",
+    "launch-terminal"
+  ],
+  "firstConnection": {
+    "kind": "inference-bridge",
+    "stages": {
+      "open": {
+        "outcome": "refused",
+        "elapsedMs": 5725.398
+      },
+      "accept": {
+        "outcome": "refused",
+        "elapsedMs": 5736.886
+      },
+      "capture": {
+        "outcome": "refused",
+        "elapsedMs": 5170.361
+      }
+    },
+    "counts": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 0
+    }
+  },
+  "firstLauncherRefusal": {
+    "ordinal": 6,
+    "phases": {
+      "process": {
+        "startedMs": 0.041366999997990206,
+        "settledMs": 171.23530799997388,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 0.06201499997405335,
+        "settledMs": 148.46912399999565,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 0.06398899998748675,
+        "settledMs": 183.8297259999963,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 183.84155799998553,
+        "settledMs": 183.92834899999434,
+        "outcome": "refused"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 184.0664140000008
+    }
+  },
+  "executionRecord": {
+    "directRunEntriesExamined": 14,
+    "nameListed": false,
+    "lstatFound": false
+  },
+  "remainingUnknown": "Which condition inside the first Design peer capture refused and whether the same state-read improvement holds in hosted CI."
+}
