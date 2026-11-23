@@ -1825,7 +1825,14 @@ be a distinctive string, because a short label like `added` would be
 **Build discipline for the implementing bead.** A core type change requires
 `tsc -b packages/three-surface-poc-core` before
 `tsc --noEmit -p apps/three-surface-poc`, or the app reports phantom errors;
-`build:poc` keeps `tsc -b --force`. Slice 2's page measurement needs a
+`build:poc` keeps `tsc -b --force`. **Stale since 2026-10-28.**
+[PR #549](https://github.com/tzeusy-org/syzygy/pull/549)
+(`syzygy-bpyt.4.2`) moved the no-emit root typecheck to workspace source.
+Run `npm run typecheck` without a prior build. `npm run build:poc` invokes
+`scripts/clean_build.mjs`, which clears the participating build outputs
+before running the project build without `--force`.
+
+Slice 2's page measurement needs a
 committed, clean tree and a private daemon on `--port 0 --state-dir <scratch>`,
 measured twice — direct and with the tailnet `Host` — never through a
 loopback daemon on a fixed port.
