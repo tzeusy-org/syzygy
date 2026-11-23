@@ -1,4 +1,4 @@
-import type { DossierDraft, EpistemicMarking } from './draft-model.js';
+import type { DossierDraft, DraftParagraph, EpistemicMarking } from './draft-model.js';
 
 /**
  * What the multi-page dossier renderer takes for an operator-agent run
@@ -314,6 +314,8 @@ export interface LocalRenderInput {
    * on, and whether the code-reading line renders before it. Absent for every earlier draft, so its pages and machine view keep their
    * bytes. */
   readonly thesisBasis?: { readonly value: 'stated' | 'code-reading' | 'none'; readonly lineRendered: boolean };
+  /** A schema-v10 draft's overview figure, or the checked claim block that explains its omission. */
+  readonly hero?: { readonly form: 'figure'; readonly diagram: string } | { readonly form: 'omitted'; readonly reason: DraftParagraph };
   /** The draft's task routes (the index-and-task-routes change): reader tasks, each a short label and its steps in order. Every step is a claim block of
    * `blocks`, checked and reviewed as any block is. Absent when the draft declares none: the find-by-task page then says so and shows
    * no route. */

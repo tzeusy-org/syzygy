@@ -115,7 +115,9 @@ export function measureDraft(bytes: Uint8Array, layout: FigureLayout | undefined
   if (typeof pinned !== 'string' || !COMMIT.test(pinned)) return { outcome: 'refused', schemaVersion: version, why: 'no-pinned-revision', schemaFindings: 0 };
   const rules = draftRules(pinned, NO_QUESTION_LIMIT);
   const earlier = rules.earlier?.(doc);
-  const findings = checkDraftShape(earlier?.schema ?? rules.schema, doc).filter((error) => earlier === undefined || !earlier.reported.test(error.path)).length;
+  // Measure only valid shapes. The check command replaces faults on the hero with its own findings.
+  const findings = checkDraftShape(earlier?.schema ?? rules.schema, doc).filter((error) =>
+    error.path === '$.hero' || earlier === undefined || !earlier.reported.test(error.path)).length;
   if (findings > 0) return { outcome: 'refused', schemaVersion: version, why: 'schema', schemaFindings: findings };
   const fit = figureFit(doc, layout);
   const ledger = readingLedger(doc, fit, readerAdvice(doc));
