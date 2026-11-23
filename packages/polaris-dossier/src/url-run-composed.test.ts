@@ -1196,10 +1196,20 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       },
     };
     const initialSiteDescription = cut ? vi.spyOn(designProduct, 'describeCheckedUrlDesignProduct') : undefined;
+    const observedArtifacts: typeof f.artifacts = eligibleStop ? { ...f.artifacts,
+      registerPacket: async (...args) => {
+        const result = await f.artifacts.registerPacket(...args);
+        if (args[0].round === 1) {
+          releaseAuthorReread?.();
+          fidelity.allow();
+        }
+        return result;
+      },
+    } : f.artifacts;
     const loop = runUrlSupervisorLoop(stateRoot, f.ports, state, { event: message => events.push(message), draw: lines => draws.push([...lines]) }, {
       prepared: { record: f.record, roles: f.plans, effectiveDeclaration: f.effectiveDeclaration, screen: f.screen, renderer: f.renderer, origins: f.origins,
         current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
-      artifacts: f.artifacts, runtime: observedRuntime, stop,
+      artifacts: observedArtifacts, runtime: observedRuntime, stop,
     });
     // Settle ordinary end-turns in durable audit order while the supervisor
     // works toward either Design cut. Keep native delivery behind the stop guard.
@@ -1221,11 +1231,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       });
       inv.allow(); design.allow();
       eligiblePhase = 'fidelity';
-      const packetUntil = performance.now() + 60_000;
-      while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
-        await new Promise(resolve => setTimeout(resolve, 250));
-      if (state.fidelityDeliveredPairs?.includes('0/0')) releaseAuthorReread?.();
-      fidelity.allow();
+      if (!eligibleStop) {
+        const packetUntil = performance.now() + 60_000;
+        while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
+          await new Promise(resolve => setTimeout(resolve, 250));
+        fidelity.allow();
+      }
       if (stoppingCut) {
         eligiblePhase = 'initial-supervisor';
         expect(await loop).toBe(1);
