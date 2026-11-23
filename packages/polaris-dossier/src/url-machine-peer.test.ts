@@ -175,19 +175,26 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
     await probe.close();
     const read = prototype.read;
-    const requests: number[] = [];
+    const reads: { requested: number; received: number }[] = [];
     let observing = false;
     const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
       const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
-      if (held?.ino === identity.ino && held.dev === identity.dev) requests.push(args[2] as number);
-      return read.apply(this, args);
+      const result = await read.apply(this, args);
+      if (held?.ino === identity.ino && held.dev === identity.dev) reads.push({ requested: args[2] as number, received: result.bytesRead });
+      return result;
     });
     try {
       const f = await fixture('live', undefined, { readImageCurrent: () => { observing = true; return true; } });
       expect(f.peer).not.toBeNull();
       expect(filesystemBoundary.largeSyncReads).toBe(0);
-      expect(requests[0]).toBe(Math.min(4 * 1_048_576, Number(identity.size) + 1));
-      expect(requests.every(bytes => bytes > 0 && bytes <= 4 * 1_048_576)).toBe(true);
+      const size = Number(identity.size);
+      let bytesRead = 0;
+      for (const { requested, received } of reads) {
+        expect(requested).toBe(Math.min(4 * 1_048_576, size + 1 - bytesRead));
+        bytesRead += received;
+      }
+      expect(bytesRead).toBe(size);
+      expect(reads.at(-1)?.received).toBe(0);
     } finally { descriptor.mockRestore(); }
   });
 
