@@ -1026,6 +1026,29 @@ def _copy_composition_inputs(root: Path, dest: Path) -> None:
         target.write_bytes(source.read_bytes())
 
 
+def _later_row_predicates(adoption, keep: tuple[str, ...]) -> list:
+    """Every Polaris amendment row predicate the adoption module defines, but those named in `keep`.
+
+    A historical control projects the ledger as it stood at its version by removing the rows of every
+    later amendment. Read from the module rather than listed here, so an amendment added later is
+    removed too: listing only the next row left every later amendment in force, and from raw-read
+    disclosure 2.17, which requires URL source v2.1, the projection refused to count at all
+    (syzygy-3efd.82).
+    """
+    names = sorted(name for name in dir(adoption) if re.fullmatch(r"is_[a-z_]+_row", name))
+    if "is_url_source_row" not in names or any(name not in names for name in keep):
+        raise ScenarioCountError("selftest setup error: the adoption module's row predicates are not as expected")
+    return [getattr(adoption, name) for name in names if name not in keep]
+
+
+def _project_ledger(ledger: Path, predicates: list) -> None:
+    lines = ledger.read_text(encoding="utf-8").splitlines(keepends=True)
+    kept = [line for line in lines if not any(claims(line.rstrip("\n")) for claims in predicates)]
+    if len(kept) == len(lines):
+        raise ScenarioCountError("selftest setup error: the ledger projection removed no row")
+    ledger.write_text("".join(kept), encoding="utf-8")
+
+
 def _declared_source_selftest(base: Path) -> None:
     """Exercise the reviewed v2.0 predecessor before the v2.1 adoption row."""
     if declared_source_amendment(ROOT) is None:
@@ -1033,9 +1056,7 @@ def _declared_source_selftest(base: Path) -> None:
     import check_spec_reconciliation as adoption
     fixture = base / "declared-source"
     _copy_composition_inputs(ROOT, fixture)
-    ledger = fixture / adoption.AGENT_ADOPTIONS
-    ledger.write_text("".join(line for line in ledger.read_text(encoding="utf-8").splitlines(keepends=True)
-                              if not adoption.is_url_source_row(line.rstrip("\n"))), encoding="utf-8")
+    _project_ledger(fixture / adoption.AGENT_ADOPTIONS, _later_row_predicates(adoption, keep=()))
     status = fixture / STATUS_PAGE_REL
     status.write_bytes(STATUS_FIGURE_RE.sub(
         b"38 requirements and 277 scenarios in the effective composition", status.read_bytes(), count=1))
@@ -1076,7 +1097,14 @@ def _url_source_selftest(base: Path) -> None:
         return  # The transaction or an archived tree may precede adoption.
     import check_spec_reconciliation as adoption
 
-    result, _reqs, _scenarios = _run_check(ROOT)
+    fixture = base / "url-source"
+    _copy_composition_inputs(ROOT, fixture)
+    _project_ledger(fixture / adoption.AGENT_ADOPTIONS,
+                    _later_row_predicates(adoption, keep=("is_url_source_row",)))
+    status = fixture / STATUS_PAGE_REL
+    status.write_bytes(STATUS_FIGURE_RE.sub(
+        b"39 requirements and 333 scenarios in the effective composition", status.read_bytes(), count=1))
+    result, _reqs, _scenarios = _run_check(fixture)
     expected = {"Provenance-bound source policy": 14,
                 "Operator-agent authoring mode": 6,
                 "Fresh-context review in the operator-agent mode": 37,
@@ -1089,7 +1117,7 @@ def _url_source_selftest(base: Path) -> None:
     print("  [ok] URL declared-source: four replacements and one addition total 39/333")
 
     projected = base / "url-source-projected"
-    _copy_composition_inputs(ROOT, projected)
+    _copy_composition_inputs(fixture, projected)
     if _run_check(projected)[0].per_requirement != result.per_requirement:
         raise ScenarioCountError("projected URL declared-source inputs lose the effective composition")
     print("  [ok] URL declared-source: projected install keeps binding inputs and effective composition")
