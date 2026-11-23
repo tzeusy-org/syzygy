@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { fstatSync } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import { createServer, connect, type Socket, type Server, type AddressInfo } from 'node:net';
 import os from 'node:os';
@@ -180,13 +181,27 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     else expect(f.peer).not.toBeNull();
   });
 
-  it('refuses the peer when local authority is withdrawn during an installed image read', async () => {
-    let checks = 0;
-    const readImageCurrent = vi.fn(() => ++checks < 4);
-    const f = await fixture('live', undefined, { effectCurrent: () => true, readImageCurrent });
-    expect(f.peer).toBeNull();
-    expect(readImageCurrent).toHaveBeenCalledTimes(4);
-    expect(readImageCurrent.mock.results.at(-1)?.value).toBe(false);
+  it('refuses before the next installed image read when the held read loses authority', async () => {
+    const probe = await fs.open(await fs.realpath(process.execPath), 'r');
+    const identity = await probe.stat({ bigint: true }), prototype = Object.getPrototypeOf(probe);
+    await probe.close();
+    const read = prototype.read;
+    let observing = false, imageReads = 0, current = true;
+    const readImageCurrent = () => { observing = true; return current; };
+    const descriptor = vi.spyOn(prototype, 'read').mockImplementation(async function(this: fs.FileHandle, ...args: unknown[]) {
+      const held = observing ? fstatSync(this.fd, { bigint: true }) : null;
+      const result = await read.apply(this, args);
+      if (held?.ino === identity.ino && held.dev === identity.dev) {
+        imageReads++;
+        current = false;
+      }
+      return result;
+    });
+    try {
+      const f = await fixture('live', undefined, { effectCurrent: () => true, readImageCurrent });
+      expect(f.peer).toBeNull();
+      expect(imageReads).toBe(1);
+    } finally { descriptor.mockRestore(); }
   });
 
   it('reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses', async () => {
