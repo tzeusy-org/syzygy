@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { checkDraft } from './check.js';
+import { readBoundedFile, readFileAsSized } from './check-record-read.js';
 import { breachLog, stepInstants } from './close.js';
 import { credentialListFromFile } from './credential-probe.js';
 import { readLatestSite } from './design-review.js';
@@ -15,6 +16,7 @@ import { reverifyPinnedRevision } from './reverify.js';
 import { renderRun } from './render.js';
 import { logStep, readRecord } from './run-dir.js';
 import { recheckSessionStatement } from './session-statement.js';
+import { readCause } from './run-tree-read.js';
 import { closedUsage, runStatus } from './status.js';
 
 // REQ-polaris-generation-033, -035 and -048 version 2.18 (syzygy-3efd.80): every run-tree file those requirements state is read by the
@@ -373,5 +375,24 @@ describe('the run-tree reader rule (syzygy-3efd.80): the inventory-coverage advi
       sources: {} as never, now: 0, isSecretPath: () => false,
     });
     expect(advice).toMatchObject({ state: 'unknown', why: 'the inventory of record could not be read or compared (NotARegularFileError)' });
+  });
+});
+
+// A file read under its own size (the inventory brief, a packet whose delivery record states no size) names the size it was read under.
+describe('the run-tree reader rule (syzygy-3efd.80): the bound a refusal names', () => {
+  it('names the size a file read under its own size had when opened, once it grows while read', () => {
+    const file = path.join(tempDir('run-tree-read-sized-'), 'inventory-brief.md');
+    fs.writeFileSync(file, '0123456789');
+    let cause: unknown;
+    grownAfterSize(file, 10, () => { try { readFileAsSized(file); } catch (error) { cause = error; } });
+    expect(readCause(cause)).toBe('larger than 10 bytes');
+  });
+
+  it('names the bound a file past it by its size was refused under, with no bound given to the words', () => {
+    const file = path.join(tempDir('run-tree-read-sized-'), 'packet.json');
+    fs.writeFileSync(file, '0123456789');
+    let cause: unknown;
+    try { readBoundedFile(file, 5); } catch (error) { cause = error; }
+    expect(readCause(cause)).toBe('larger than 5 bytes');
   });
 });

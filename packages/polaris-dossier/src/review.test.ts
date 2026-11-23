@@ -622,6 +622,20 @@ describe('review-check', () => {
     expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: `the frozen verdict reviews/fidelity-verdict-0.json cannot be read (${words})` });
   });
 
+  it('builds no fidelity packet from a frozen inventory that is a FIFO when the packet reads it, though a regular file when counted (syzygy-3efd.80)', async () => {
+    const run = await prepared();
+    const frozen = path.join(run, 'inventory', 'rev-0.json');
+    let opens = 0;
+    const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      if (file === frozen && ++opens === 2) { fs.rmSync(frozen); execFileSync('mkfifo', [frozen]); }
+      return (original as (...args: unknown[]) => number)(file, ...rest);
+    }) as typeof original);
+    let built;
+    try { built = await buildFidelityPacket(await opened(run), deps()); } finally { restore(); }
+    expect(opens).toBe(2);
+    expect(built).toEqual({ ok: false, stage: 'inventory', reason: 'the frozen inventory inventory/rev-0.json cannot be read (not a regular file)' });
+  });
+
   it('validates a ready verdict with no blocking row', async () => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
