@@ -1,0 +1,272 @@
+{
+  "subject": {
+    "commit": "bdb0252fcb4e2a53fbcb71b77ea667dc779e0c50",
+    "hostedMergeTree": "8a5f955f09cdf2e087d8efbe5a065376bc31ec49",
+    "filesSha256": {
+      "url-run-composed.test.ts": "2457843918763db12f97b2220d2dc44fcc06f92a2496fa3337811f9e841d6fdf",
+      "session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+      "url-run-sessions.ts": "bf22fe55fb2cde170753cc0f88c5402bf2683dd2315a981487250a5307709e94",
+      "url-session-audit.ts": "145c864cb8114e832b5cdd8aecf139dd80d3933475a6eb2258290d0f0287e03a",
+      "session-launch.ts": "67ade379d23169e86c2cf4017bbf823b8a05a1969848e3942ff931537ec46ae7",
+      "session-machine-transport.ts": "5179044c53a46512c283635ce134ce96fde3708446a250b43965f8e62e72c2d4",
+      "screen.test.ts": "6c70443a53bfedd5dd3dc0f7790536a7479a50ec9bfa168a0715cced1e85740d",
+      "policy-snapshot.ts": "f14904311c318ef19bd008cfacd6f4d78c248ab79fbe84ce239f8d0901cc80fc"
+    }
+  },
+  "hostedJob": {
+    "runId": 45096221301,
+    "jobId": 137437382612,
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45096221301/job/137437382612",
+    "logSha256": "0551b044b4217546cf0a26cf15b573f007a0bed6a0e724404cf962a38399962e",
+    "conclusion": "failure"
+  },
+  "suite": {
+    "files": {
+      "passed": 135,
+      "failed": 2
+    },
+    "tests": {
+      "passed": 3875,
+      "failed": 9,
+      "skipped": 3,
+      "total": 3887
+    }
+  },
+  "cases": [
+    {
+      "name": "complete",
+      "outcome": "passed",
+      "milliseconds": 81665
+    },
+    {
+      "name": "delivery-stop",
+      "outcome": "passed",
+      "milliseconds": 47622
+    },
+    {
+      "name": "stop-resume",
+      "outcome": "failed",
+      "milliseconds": 231492
+    },
+    {
+      "name": "eligible-stop-resume",
+      "outcome": "failed",
+      "milliseconds": 166072
+    }
+  ],
+  "screenFixtureFailures": [
+    "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: in force",
+    "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: absent",
+    "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: future",
+    "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: withdrawn",
+    "parity with the any-repo reader's screen (syzygy-qkea.17) > keeps legacy app class admission separate from the declared dossier policy: different module: classified, its digest is history since D10 (readClassAct)",
+    "the screen of the committed dossier policy > loads without an act and binds the exact policy bytes",
+    "the screen of the committed dossier policy > classifies documentation from the policy without a class act"
+  ],
+  "publicInterruptedRecovery": {
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "transport-unavailable",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "exitCode": null,
+            "signal": "SIGTERM"
+          }
+        ]
+      }
+    ],
+    "designProviderForwards": 1,
+    "designRelayEvents": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1
+    },
+    "audit": {
+      "status": "read",
+      "count": 15,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "launch-terminal"
+      ]
+    },
+    "transportCounts": {
+      "open": 1,
+      "accept": 1,
+      "capture": 1,
+      "authorize": 1
+    },
+    "resourceSamples": {
+      "started": 207,
+      "verified": 207,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 206,
+      "confirmRefused": 1,
+      "confirmRejected": 0
+    },
+    "firstInspectionRefusal": {
+      "ordinal": 207,
+      "phases": {
+        "process": {
+          "startedMs": 0.03874999994877726,
+          "settledMs": 93.16075999999885,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.0646949999500066,
+          "settledMs": 59.49350099998992,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.0666639999835752,
+          "settledMs": 109.99134199996479,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 109.99934499996016,
+          "settledMs": 110.02731599996332,
+          "outcome": "refused"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "authority-refused",
+        "elapsedMs": 110.17098399996758
+      }
+    },
+    "firstRefusalConfirmation": {
+      "ordinal": 207,
+      "verify": {
+        "startedMs": 162499.156,
+        "settledMs": 162558.55,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 162609.066,
+        "settledMs": 162609.069,
+        "outcome": "refused"
+      }
+    },
+    "orderedToolCalls": 0,
+    "orderedAppendObserved": false,
+    "toolIngressStarted": 0
+  },
+  "eligibleColdRecovery": {
+    "assertion": "fidelity end-turn audit at the owned stop: expected false to be true // Object.is equality",
+    "resumeChecks": [],
+    "fidelityRelayEvents": {
+      "attempt-allowed": 4,
+      "send-attempt": 4,
+      "send-outcome": 4,
+      "response-admitted": 4
+    },
+    "designRelayEvents": {
+      "attempt-allowed": 5,
+      "send-attempt": 5,
+      "send-outcome": 5,
+      "response-admitted": 5
+    },
+    "designAudit": {
+      "status": "read",
+      "count": 103,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:attempt-allowed",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "omitted",
+        "machine-peer:inference-forward",
+        "ordered:send-outcome",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "ordered:response-admitted",
+        "ordered:eligible",
+        "usage",
+        "relay:response-admitted",
+        "ordered-design-verdict",
+        "machine-peer:inference-forward",
+        "launch-terminal"
+      ]
+    },
+    "orderedAppend": {
+      "preparedAppend": {
+        "kind": "prepared",
+        "timing": {
+          "startedMs": 72169.465,
+          "settledMs": 72365.709,
+          "outcome": "accepted"
+        }
+      },
+      "latestAppend": {
+        "kind": "eligible",
+        "timing": {
+          "startedMs": 145229.544,
+          "settledMs": 145396.161,
+          "outcome": "accepted"
+        }
+      }
+    }
+  }
+}
