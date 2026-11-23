@@ -3,14 +3,15 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { Duplex } from 'node:stream';
 import {
   closeUrlMachinePeer, isUrlMachinePeerFor, mediateUrlMachinePeer, readUrlMachinePeer,
-  type UrlMachinePeer,
+  type UrlMachineEffectPreflight, type UrlMachinePeer,
 } from './url-machine-peer.js';
 import type { UrlMachineOperation } from './url-machine-instance.js';
 
 export interface SessionMachineTransport { readonly authentication: 'url-machine-peer/1' }
 export interface SessionMachineEffectContext {
   readonly peer: UrlMachinePeer;
-  mediate<T>(operation: UrlMachineOperation, effect: (current: () => boolean) => T | Promise<T>):
+  mediate<T>(operation: UrlMachineOperation, effect: (current: () => boolean) => T | Promise<T>,
+    preflight?: UrlMachineEffectPreflight):
     Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }>;
 }
 interface TransportPorts {
@@ -166,16 +167,21 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
   state = { raw, peer: selected, stream, deadline, boundary: null, ingressComplete: false, ingressDrained, replyWrite: null };
   const context: SessionMachineEffectContext = Object.freeze({ peer: selected,
     async mediate<T>(this: SessionMachineEffectContext, operation: UrlMachineOperation,
-      effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
+      effect: (current: () => boolean) => T | Promise<T>, preflight?: UrlMachineEffectPreflight):
+      Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
       const active = contexts.get(this);
       if (!active || active !== state || ended || stream.destroyed || active.boundary !== null) return { ok: false };
       // The parser can finish the request while its native reader is still
       // validating a chunk. Settle that read before any protected callback:
       // trailing data must refuse before an effect, not after its response.
       if (active.ingressComplete) await active.ingressDrained;
-      if (ended || stream.destroyed || active.boundary !== null || performance.now() >= deadline) return { ok: false };
+      const transportCurrent = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline;
+      if (!transportCurrent() || active.boundary !== null) return { ok: false };
+      const checkedPreflight = preflight === undefined ? undefined : {
+        prepare: async () => transportCurrent() && await preflight.prepare(),
+        current: () => transportCurrent() && preflight.current() && transportCurrent(),
+      };
       return mediateUrlMachinePeer(selected, operation, async current => {
-        const transportCurrent = () => !ended && !raw.destroyed && !stream.destroyed && performance.now() < deadline;
         // The peer checked currentness immediately before entering this callback.
         if (!transportCurrent()) throw new Error('session-machine-transport-unavailable');
         const boundary = () => transportCurrent() && current();
@@ -183,7 +189,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
         const selectedEffect = { boundary, active: true };
         try { return await effects.run(selectedEffect, () => effect(boundary)); }
         finally { selectedEffect.active = false; active.boundary = null; }
-      });
+      }, checkedPreflight);
     },
   });
   contexts.set(context, state); connections.set(stream, context);

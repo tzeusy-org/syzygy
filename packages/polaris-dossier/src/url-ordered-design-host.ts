@@ -9,6 +9,7 @@ import { isOrderedDesignSessionProfile, projectSessionProfileMetadata, sessionPr
   type OrderedDesignSessionProfile } from './session-profile.js';
 import { SESSION_COUNT_TOKENS_PATH, startSessionRelay, type SessionAuditEvent, type SessionRelay, type SessionRelaySubject,
   type SessionResponseObservation } from './session-relay.js';
+import type { UrlMachineEffectPreflight } from './url-machine-peer.js';
 import { createOrderedDesignSession, isProductionOrderedDesignSession } from './url-ordered-design-session.js';
 
 type Controller = ReturnType<typeof createOrderedDesignSession>;
@@ -25,6 +26,7 @@ export interface OrderedDesignHostOptions {
   readonly brokerMachine: SessionMachineTransport;
   readonly relayMachine: SessionMachineTransport;
   readonly current: () => boolean | Promise<boolean>;
+  readonly productPreflight?: UrlMachineEffectPreflight;
   /** Extra same-turn authority when an early preparation was replaced. */
   readonly startupCurrent?: () => boolean;
   /** Checked product parents and host scaffolding, independently of role text. */
@@ -94,6 +96,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
     if (await Promise.race([Promise.resolve(input.current()), cancelled]) !== true || closing || failed) throw refused();
     relay = await startRelay(input.relaySocket, input.subject, {
       current,
+      ...(input.productPreflight === undefined ? {} : { productPreflight: input.productPreflight }),
       ...(startupCurrent === undefined ? {} : { startupCurrent }),
       request: async (bytes, _context, route) => {
         try {
@@ -151,7 +154,7 @@ async function start(input: OrderedDesignHostOptions, startRelay: typeof startSe
           replies.set(call.id, receipt);
           issuedCall = null;
         });
-      });
+      }, input.productPreflight);
       if (!result.ok) { poison(); throw refused(); }
     }, poison, undefined, input.brokerMachine, startupCurrent);
     if (closing || failed || await Promise.race([Promise.resolve(input.current()), cancelled]) !== true

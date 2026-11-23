@@ -8,6 +8,7 @@ import { deepFreeze, sha256 } from '@syzygy/support';
 import { SESSION_CONTENT_CLASSES, type SessionAdmission, type SessionBinding, type SessionConsumedToolResult, type SessionTool } from './session-egress-policy.js';
 import { isSessionMachineTransport, openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, stopSessionMachineIngress,
   type SessionMachineTransport, type SessionMachineEffectContext } from './session-machine-transport.js';
+import type { UrlMachineEffectPreflight } from './url-machine-peer.js';
 import type { SessionResponseStopReason, SessionResponseUsage } from './session-response.js';
 import { SESSION_PROFILE_TOKEN_BUDGET } from './session-profile.js';
 
@@ -87,6 +88,8 @@ export interface SessionRelayPorts {
   readonly startupCurrent?: () => boolean;
   /** Must revalidate the run/pin/policy/provider binding, not consult consent records. */
   readonly current: () => boolean | Promise<boolean>;
+  /** An ordered Design host can prepare its protected product before mediation. */
+  readonly productPreflight?: UrlMachineEffectPreflight;
   /** Host commits the new opaque policy state before returning success. */
   readonly request: (bytes: Uint8Array, context: SessionMachineEffectContext | null, route: SessionRelayPath) => SessionRequestDecision | Promise<SessionRequestDecision>;
   /** Independently pinned protocol headers and host-owned credentials only.
@@ -186,6 +189,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
   limits = Object.freeze({ ...limits });
   subject = Object.freeze({ binding: Object.freeze({ ...subject.binding }), project: subject.project, pin: subject.pin, principal: subject.principal });
   const startupCurrent = ports.startupCurrent;
+  const productPreflight = ports.productPreflight === undefined ? undefined : Object.freeze({ ...ports.productPreflight });
   ports = Object.freeze({ current: ports.current, request: ports.request, providerHeaders: ports.providerHeaders, response: ports.response, audit: ports.audit });
   const controllers = new Set<AbortController>();
   const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
@@ -202,17 +206,19 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     if (!tokenCount) responseFlushed = false;
     const controller = new AbortController(); controllers.add(controller);
     const requestId = randomUUID();
-    const effect = async <T>(act: (boundary: () => boolean) => T | Promise<T>): Promise<T> => {
+    const effect = async <T>(act: (boundary: () => boolean) => T | Promise<T>,
+      preflight?: UrlMachineEffectPreflight): Promise<T> => {
       if (fixture) return act(() => true);
       if (context === null) throw new Error('session-machine-transport-unavailable');
-      const result = await context.mediate('inference-forward', act);
+      const result = await context.mediate('inference-forward', act, preflight);
       if (!result.ok) throw new Error('session-machine-transport-unavailable');
       return result.value;
     };
     const audit = (row: SessionAuditEvent): Promise<void> => effect(async boundary => {
       if (!boundary()) throw new Error('session-machine-transport-unavailable');
       await ports.audit(row, context);
-    });
+    }, row.event === 'attempt-refused' || row.event === 'transport-failed' || row.event === 'response-refused'
+      ? undefined : productPreflight);
     let terminal = false, refusing = false, writingAdmittedResponse = false, admission: SessionAdmission | null = null;
     let received: SessionAuditEvent['received'] = null;
     let consumedToolResults: SessionAuditEvent['consumedToolResults'] = [];
@@ -293,7 +299,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         const decision = await effect(boundary => {
           if (!boundary()) throw new Error('session-machine-transport-unavailable');
           return ports.request(body, context, route);
-        });
+        }, productPreflight);
         if (!decision.ok || (tokenCount && decision.consumedToolResults.length !== 0)) { await auditRefusal(403); return; }
         if (!(decision.body instanceof Uint8Array) || decision.body.byteLength > limits.requestBytes) { await auditRefusal(403); return; }
         const forwardingBody = Buffer.from(decision.body);
@@ -345,7 +351,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
         const accepted = responseStatus === 200 && content !== null ? await effect(boundary => {
           if (!boundary()) throw new Error('session-machine-transport-unavailable');
           return ports.response(checkingBody, responseType, context, route);
-        }) : { ok: false } as const;
+        }, productPreflight) : { ok: false } as const;
         if (!content || !accepted.ok || sha256(checkingBody) !== responseDigest
           || (accepted.kind === 'token-count') !== (content === 'count-tokens-json')) {
           await audit(event('response-refused', 'refused', responseStatus)); refuse(502); return;

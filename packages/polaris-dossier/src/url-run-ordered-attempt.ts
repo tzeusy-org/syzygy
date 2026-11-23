@@ -80,19 +80,22 @@ export interface UrlOrderedAttemptOptions {
   };
 }
 
-/** A full check may itself reach the original product expiry. Only that
- * failure may request one genuine reproduction; an open but changed proof refuses.
+/** An expired lease or an open, fully checked product with too little time
+ * for an upcoming machine effect may request one genuine reproduction.
  * The refresh port owns same-delivery verification and shared pending capacity. */
 export async function checkUrlOrderedProductCurrent(input: {
   readonly product: ValidatedUrlDesignProduct;
   readonly assertCurrent: () => void;
   readonly refresh: () => Promise<boolean>;
+  readonly effectHorizon?: () => number;
 }): Promise<boolean> {
-  const state = urlDesignProductLeaseState(input.product).state;
-  if (state === 'open') {
-    try { input.assertCurrent(); return true; }
-    catch (cause) { if (!isCheckedUrlDesignProductExpiry(input.product, cause)) return false; }
-  } else if (state !== 'expired') return false;
+  const lease = urlDesignProductLeaseState(input.product);
+  if (lease.state === 'open') {
+    try {
+      input.assertCurrent();
+      if (input.effectHorizon === undefined || lease.deadline >= input.effectHorizon()) return true;
+    } catch (cause) { if (!isCheckedUrlDesignProductExpiry(input.product, cause)) return false; }
+  } else if (lease.state !== 'expired') return false;
   return input.refresh();
 }
 
@@ -134,7 +137,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     assertProcessingCurrent();
     assertUrlDesignDeliveryViewCurrent(delivery!);
   };
-  const current = async (): Promise<boolean> => {
+  const current = async (effectHorizon?: () => number): Promise<boolean> => {
     // Resumed runtime authority includes synchronous Git and claim checks.
     // Let a pending census finish before starting that work.
     if (closed) return false;
@@ -153,6 +156,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     return checkUrlOrderedProductCurrent({
       product: render!.product,
       assertCurrent,
+      ...(effectHorizon === undefined ? {} : { effectHorizon }),
       refresh: async () => {
         const pending = renewing ??= (async () => {
           if (!processingCurrent()) return false;
@@ -180,6 +184,16 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         return await pending && isUrlOrderedProductCurrentAfterEffectCheck(render?.product, processingCurrent);
       },
     });
+  };
+  const effectHorizon = () => Math.min(input.deadline, input.now() + profile.transcript.nativeEffectMilliseconds);
+  const productCoversEffect = (): boolean => {
+    if (render === null) return false;
+    const lease = urlDesignProductLeaseState(render.product);
+    return lease.state === 'open' && lease.deadline >= effectHorizon();
+  };
+  const productPreflight = {
+    prepare: async () => productCoversEffect() || current(effectHorizon),
+    current: () => processingCurrent() && productCoversEffect(),
   };
   const consumeTerminal = async (): Promise<boolean> => {
     if (consumedTerminal) return true;
@@ -254,7 +268,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     // activation by that original lease and the original run deadline.
     const activationDeadline = Math.min(input.deadline, startupLease.deadline);
     let admission: SessionAdmission | null = null;
-    host = await startOrderedDesignHost({ controller: activation, activationDeadline,
+    host = await startOrderedDesignHost({ controller: activation, activationDeadline, productPreflight,
       profile, subject: { binding: profile.input.binding, project: 'project:syzygy', pin: input.pin, principal: input.principal },
       credential: input.credential, brokerSocket: path.join(input.plan.view.brokerSocketDirectory, 'b.sock'),
       relaySocket: path.join(input.plan.view.relaySocketDirectory, 'r.sock'),

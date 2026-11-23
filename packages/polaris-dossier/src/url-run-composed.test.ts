@@ -389,8 +389,8 @@ function observeInitialAuthorSend() {
       ? observe(() => capture(options), peer => { if (peer !== null) peers.add(peer); }, () => {})
       : capture(options));
   const mediate = machinePeer.mediateUrlMachinePeer;
-  const mediateSpy = vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
-    if (operation !== 'inference-forward' || !peers.has(peer)) return mediate(peer, operation, effect);
+  const mediateSpy = vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect, preflight) => {
+    if (operation !== 'inference-forward' || !peers.has(peer)) return mediate(peer, operation, effect, preflight);
     const mediation: AuthorMediation = start();
     const attempt = active;
     // Allow room for send, send-attempt audit, and refusal audit mediation.
@@ -402,7 +402,7 @@ function observeInitialAuthorSend() {
         if (!current) mediation.peerBoundaryRefusedMs ??= performance.now();
         return current;
       }), () => true);
-    });
+    }, preflight);
     return timed(mediation, () => scope.run(mediation, invoke), result => result.ok, () => {
       const failed = attempt ?? (active?.allowedMediation === mediation ? active : undefined);
       if (failed !== undefined) refuse(failed, 'mediation');
@@ -929,7 +929,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   });
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
-  vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect) => {
+  vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect, preflight) => {
     if (traceInference && operation === 'inference-forward' && peerLinks.get(peer)?.kind === 'inference-bridge') {
       const step: InferenceStep = { ordinal: ++inferenceCount, mediate: { startedMs: clock() }, boundaries: [], relay: [] };
       if (inferenceSteps.length >= 12) inferenceSteps.splice(4, 1);
@@ -937,15 +937,15 @@ async function observeDesignRun(run: string, traceInference = false) {
       const invoke = () => mediatePeer(peer, operation, current => {
         const stamp = step.effect = { startedMs: clock() };
         return timed(stamp, () => effect(current), () => true);
-      });
+      }, preflight);
       return timed(step.mediate, () => inferenceScope.run(step, invoke), result => {
         if (!result.ok) firstRefusedInference ??= step;
         return result.ok;
       });
     }
-    if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect);
+    if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect, preflight);
     return brokerPhase('mediate-peer', () => mediatePeer(peer, operation, current =>
-      brokerPhase('host-action', () => effect(current), () => true)), result => result.ok);
+      brokerPhase('host-action', () => effect(current), () => true), preflight), result => result.ok);
   });
 
   const boundTransfer = orderedBounds.boundOrderedDesignTransfer;

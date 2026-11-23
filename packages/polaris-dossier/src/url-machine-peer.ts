@@ -442,12 +442,18 @@ export async function readUrlMachinePeer(peer: UrlMachinePeer): Promise<UrlMachi
   finally { state.reading = false; }
 }
 
+export interface UrlMachineEffectPreflight {
+  readonly prepare: () => Promise<boolean>;
+  readonly current: () => boolean;
+}
+
 /** Call separately before each delivery, tool effect, reply registration or
  * forward. The callback is trusted host code; after awaits it must use the
  * supplied boundary guard immediately before its actual effect. No timeout
  * promises cancellation or retroactive undo of an already attempted effect. */
 export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: UrlMachineOperation,
-  effect: (current: () => boolean) => T | Promise<T>): Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
+  effect: (current: () => boolean) => T | Promise<T>, preflight?: UrlMachineEffectPreflight):
+  Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }> {
   const state = issued.get(peer);
   if (!state || state.mediating) return { ok: false };
   state.mediating = true; let result: { readonly ok: true; readonly value: T } | undefined;
@@ -455,6 +461,10 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: 
     await current(state);
     const { options } = state, context = options.context;
     if (!context.allowedScopes.includes(operation)) return { ok: false };
+    // The checked product may need one fresh reproduction. Finish that work
+    // before opening the machine store's independently bounded effect lease.
+    if (preflight !== undefined && (!isOrderedDesignSessionProfile(options.profile)
+      || !(await preflight.prepare()) || check(state) >= context.deadline || !preflight.current())) return { ok: false };
     const completed = await options.store.exclusive(context.clientId, context.deadline, async lease => {
       try {
       const now = await current(state), snapshot = await lease.read();

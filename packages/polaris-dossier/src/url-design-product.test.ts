@@ -137,6 +137,28 @@ describe('active URL design product capability', () => {
     expect(assertCurrent).toHaveBeenCalledTimes(1); expect(refresh).not.toHaveBeenCalled();
   });
 
+  it.each(['ample', 'short', 'changed'] as const)('prepares an effect horizon from the checked product (%s)', async scenario => {
+    const f = fixture(60_000), product = await validateUrlDesignProduct(f.input, f.options);
+    if (product === null) throw new Error('own protected product unavailable');
+    const deadline = f.reads.deadline;
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - (scenario === 'ample' ? 35_000 : 15_000));
+    try {
+      const assertCurrent = vi.fn(() => {
+        if (scenario === 'changed') throw new Error('owned delivery digest drift');
+        assertUrlDesignProductInputsCurrent(product);
+      });
+      const refresh = vi.fn(async () => {
+        expect(assertCurrent).toHaveBeenCalledTimes(1);
+        expect(urlDesignProductLeaseState(product).state).toBe('open');
+        return true;
+      });
+      expect(await checkUrlOrderedProductCurrent({ product, assertCurrent, refresh,
+        effectHorizon: () => Date.now() + 30_000 })).toBe(scenario !== 'changed');
+      expect(assertCurrent).toHaveBeenCalledTimes(1);
+      expect(refresh).toHaveBeenCalledTimes(scenario === 'short' ? 1 : 0);
+    } finally { clock.mockRestore(); }
+  });
+
   it('refuses a delivery check failure while its genuine product lease remains open', async () => {
     const f = await validatedFixture(), refresh = vi.fn(async () => true);
     expect(await checkUrlOrderedProductCurrent({ product: f.capability,

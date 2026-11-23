@@ -10,7 +10,7 @@ import { createSessionMachineTransport, isSessionMachineTransport, openSessionMa
   sessionMachineEffectCurrent, assertSessionMachineEffectCurrent, type SessionMachineEffectContext } from './session-machine-transport.js';
 import { startSessionBroker } from './session-broker.js';
 import { sessionRelayTestPort, SESSION_RELAY_LIMITS, type SessionRelayPorts, type SessionRelaySubject } from './session-relay.js';
-import type { UrlMachinePeer } from './url-machine-peer.js';
+import type { UrlMachineEffectPreflight, UrlMachinePeer } from './url-machine-peer.js';
 
 // Adapter-only fixture backend. These assertions make no kernel identity claim;
 // url-machine-peer.test.ts independently exercises the actual native verifier.
@@ -25,12 +25,13 @@ vi.mock('./url-machine-peer.js', () => ({
     if (backend.readBlock) { const bytes = await backend.readBlock(); return bytes === null ? { kind: 'pending' } : { kind: 'data', bytes }; }
     const bytes = state.chunks.shift(); return bytes ? { kind: 'data', bytes } : { kind: state.endAfterChunks ? 'end' : 'pending' };
   },
-  mediateUrlMachinePeer: async (peer: object, _operation: string, effect: (current: () => boolean) => unknown) => {
+  mediateUrlMachinePeer: async (peer: object, _operation: string, effect: (current: () => boolean) => unknown,
+    preflight?: UrlMachineEffectPreflight) => {
     const state = backend.states.get(peer); if (!state?.live || backend.deny) return { ok: false };
     backend.mediations++;
     const current = () => { backend.guard?.(); return state.live && !backend.deny; };
     try {
-      if (!current()) return { ok: false };
+      if (!current() || (preflight !== undefined && (!(await preflight.prepare()) || !preflight.current()))) return { ok: false };
       const value = await effect(current);
       return state.live && !backend.deny ? { ok: true, value } : { ok: false };
     }
@@ -320,6 +321,34 @@ describe('verified-chunk session transport adapter', () => {
     expect(await c.output).toBe('');
   });
 
+  it('runs preparation outside the effect and refuses a disconnected socket before calling the effect', async () => {
+    let opened!: (stream: Duplex) => void;
+    const accepted = new Promise<Duplex>(resolve => { opened = resolve; });
+    let socket!: Socket;
+    const transport = fixtureTransport([], raw => { socket = raw; });
+    const socketPath = join(tempDir('machine-preflight-'), 's.sock');
+    const server = createServer({ pauseOnConnect: true }, raw => { void (async () => {
+      const stream = await openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds: 1000 });
+      if (!stream) throw new Error('owned stream refused');
+      opened(stream);
+    })(); });
+    server.listen(socketPath); await once(server, 'listening');
+    cleanup.push(() => new Promise<void>(resolve => server.close(() => resolve())));
+    client(socketPath);
+    const context = sessionMachineEffectContext(await accepted)!;
+    const effect = vi.fn(() => assertSessionMachineEffectCurrent());
+    const current = vi.fn(() => true);
+    const prepare = vi.fn(async () => {
+      expect(sessionMachineEffectCurrent()).toBeUndefined();
+      socket.destroy();
+      return true;
+    });
+    expect(await context.mediate('inference-forward', effect, { prepare, current })).toEqual({ ok: false });
+    expect(prepare).toHaveBeenCalledTimes(1);
+    expect(current).not.toHaveBeenCalled();
+    expect(effect).not.toHaveBeenCalled();
+  });
+
   it.each(['data', 'pending'] as const)('settles an in-flight native %s chunk before any protected effect after ingress stops', async kind => {
     let entered!: () => void, release!: (bytes: Buffer | null) => void, stream!: Duplex;
     const reading = new Promise<void>(resolve => { entered = resolve; });
@@ -366,25 +395,41 @@ describe('verified-chunk session transport adapter', () => {
     const body = '{"messages":[]}', raw = Buffer.from(`POST /v1/messages HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nAuthorization: Bearer NONSECRET-fixture\r\nContent-Length: ${body.length}\r\n\r\n${body}`);
     const subject: SessionRelaySubject = { binding: { run: 'own', role: 'author', sourceBinding: 'a'.repeat(64), policy: 'b'.repeat(64),
       provider: 'anthropic', model: 'own' }, project: 'project:syzygy', pin: 'c'.repeat(40), principal: 'own' };
-    for (const { revoke, pipeline } of [{ revoke: false, pipeline: false }, { revoke: true, pipeline: false }, { revoke: false, pipeline: true }]) {
-      let forwards = 0; const contexts: (SessionMachineEffectContext | null)[] = [];
+    for (const scenario of ['current', 'revoked', 'pipeline', 'preflight-refused'] as const) {
+      const contexts: (SessionMachineEffectContext | null)[] = [];
+      const order: string[] = [];
       const ports: SessionRelayPorts = {
         current: () => true,
-        request: (bytes, context) => { contexts.push(context); expect(Buffer.from(bytes).toString()).toBe(body);
+        productPreflight: {
+          prepare: async () => {
+            expect(sessionMachineEffectCurrent()).toBeUndefined();
+            order.push('prepare');
+            return scenario !== 'preflight-refused';
+          },
+          current: () => { order.push('preflight-current'); return true; },
+        },
+        request: (bytes, context) => {
+          assertSessionMachineEffectCurrent();
+          order.push('request');
+          contexts.push(context); expect(Buffer.from(bytes).toString()).toBe(body);
           return { ok: true, body: bytes, admission: { bytes: bytes.length, digest: sha256(bytes), originIds: ['own'], classes: ['work-history'] }, consumedToolResults: [] }; },
         providerHeaders: (headers, context) => { contexts.push(context); return headers; },
         response: (_bytes, _type, context) => { contexts.push(context); return { ok: true, observation: { stopReason: 'end_turn', textBlocks: 1, tool: null } }; },
-        audit: (event, context) => { contexts.push(context); if (revoke && event.event === 'attempt-allowed') backend.deny = true; },
+        audit: (event, context) => { contexts.push(context); if (scenario === 'revoked' && event.event === 'attempt-allowed') backend.deny = true; },
       };
-      const start = sessionRelayTestPort(async () => { forwards++; const reads = backend.reads;
+      const forward = vi.fn(async () => { const reads = backend.reads;
         await new Promise(resolve => setTimeout(resolve, 30)); expect(backend.reads).toBe(reads); return { status: 200, contentType: 'application/json', body: Buffer.from('{}'), requestFlushed: true }; });
-      const relay = await start(join(tempDir('machine-relay-'), 'r.sock'), subject, ports,
-        { ...SESSION_RELAY_LIMITS, milliseconds: 1000 }, fixtureTransport([pipeline ? Buffer.concat([raw, raw]) : raw]));
+      const relay = await sessionRelayTestPort(forward)(join(tempDir('machine-relay-'), 'r.sock'), subject, ports,
+        { ...SESSION_RELAY_LIMITS, milliseconds: 1000 }, fixtureTransport([scenario === 'pipeline' ? Buffer.concat([raw, raw]) : raw]));
       cleanup.push(() => relay.close());
       const c = client(relay.socket); c.socket.write('unverified raw request'); const output = await c.output;
-      expect(forwards).toBe(revoke || pipeline ? 0 : 1);
-      if (!revoke && !pipeline) { expect(output.startsWith('HTTP/1.1 200')).toBe(true); expect(output.endsWith('{}')).toBe(true); }
-      if (!pipeline) expect(contexts.length).toBeGreaterThan(0); expect(contexts.every(value => value !== null && value === contexts[0])).toBe(true);
+      expect(forward).toHaveBeenCalledTimes(scenario === 'current' ? 1 : 0);
+      if (scenario === 'pipeline') expect(order).toEqual([]);
+      else if (scenario === 'preflight-refused') expect(order).toEqual(['prepare']);
+      else expect(order.slice(0, 3)).toEqual(['prepare', 'preflight-current', 'request']);
+      if (scenario === 'current') { expect(output.startsWith('HTTP/1.1 200')).toBe(true); expect(output.endsWith('{}')).toBe(true); }
+      if (scenario !== 'pipeline') expect(contexts.length).toBeGreaterThan(0);
+      expect(contexts.every(value => value !== null && value === contexts[0])).toBe(true);
       backend.deny = false;
     }
     expect(backend.mediations).toBeGreaterThan(5);
