@@ -708,21 +708,40 @@ describe('URL stored launch history', () => {
       calls.push('authority');
       return true;
     };
-    const result = await writeUrlLaunchHistory({ ...input, waitForSample, current });
-    expect(calls).toEqual(['sample', 'authority', 'sample', 'authority', 'sample', 'authority', 'sample', 'authority']);
-    expect(inspectUrlLaunchHistory(result.capability!).sha256).toBe(sha256(fs.readFileSync(result.file!)));
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const writing = writeUrlLaunchHistory({ ...input, waitForSample, current });
+      const observed = writing.then(result => ({ result }), error => ({ error }));
+      await vi.advanceTimersByTimeAsync(650);
+      expect(calls).toEqual(['sample']);
+      await vi.advanceTimersByTimeAsync(550);
+      const completed = await observed;
+      if ('error' in completed) throw completed.error;
+      const { result } = completed;
+      expect(calls).toEqual(['sample', 'authority', 'sample', 'authority', 'sample', 'authority', 'sample', 'authority']);
+      expect(inspectUrlLaunchHistory(result.capability!).sha256).toBe(sha256(fs.readFileSync(result.file!)));
+    } finally { vi.useRealTimers(); }
   });
 
-  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s under its existing limit', async stage => {
+  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s exactly at its existing limit', async stage => {
     const input = options('design');
     const stalled = new Promise<boolean>(() => {});
-    const waitForSample = vi.fn(() => stage === 'sample' ? stalled : true);
+    const waitForSample = vi.fn(async () => stage === 'sample' ? stalled : true);
     const current = vi.fn(() => stage === 'authority' ? stalled : true);
-    await expect(writeUrlLaunchHistory({ ...input, waitForSample: async () => waitForSample(), current }))
-      .rejects.toThrow('url-launch-history-unavailable');
-    expect(waitForSample).toHaveBeenCalledTimes(1);
-    expect(current).toHaveBeenCalledTimes(stage === 'authority' ? 1 : 0);
-    expect(fs.existsSync(historyPath('design'))).toBe(false);
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      let settled = false, refused: unknown;
+      void writeUrlLaunchHistory({ ...input, waitForSample, current }).then(
+        () => { settled = true; }, error => { settled = true; refused = error; });
+      await vi.advanceTimersByTimeAsync(999);
+      expect(settled).toBe(false);
+      await vi.advanceTimersByTimeAsync(1);
+      expect(settled).toBe(true);
+      expect(refused).toMatchObject({ message: 'url-launch-history-unavailable' });
+      expect(waitForSample).toHaveBeenCalledTimes(1);
+      expect(current).toHaveBeenCalledTimes(stage === 'authority' ? 1 : 0);
+      expect(fs.existsSync(historyPath('design'))).toBe(false);
+    } finally { vi.useRealTimers(); }
   });
 
   it.each(['complete', 'withdraw-file', 'withdraw-directory', 'replace-directory', 'sync-error'] as const)(
