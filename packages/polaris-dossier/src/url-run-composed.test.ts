@@ -167,7 +167,7 @@ type ResumeStoreStep = ResumeStamp & {
   asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
 } & ({ kind: 'open' | 'close' } | { kind: 'allocation'; count: number } | {
   // The transaction outcome is distinct from the caller's terminal comparison.
-  kind: 'exclusive'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
+  kind: 'terminal-read'; read?: ResumeObservation; currentChecks: number; currentRefusals: number;
 });
 type ResumeAuditSetup = ResumeStamp & {
   declarations?: number;
@@ -1401,26 +1401,20 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                 allocateClients: (count, deadline) => observing
                   ? observeStoreStep({ kind: 'allocation', count, ...startStoreStep() }, () => store.allocateClients(count, deadline), value => value?.length === count)
                   : store.allocateClients(count, deadline),
-                exclusive: (id, deadline, run, profile) => {
-                  if (!observing) return store.exclusive(id, deadline, run, profile);
-                  const step: Extract<ResumeStoreStep, { kind: 'exclusive' }> = {
-                    kind: 'exclusive', ...startStoreStep(), currentChecks: 0, currentRefusals: 0,
+                readTerminal: (id, deadline, verify) => {
+                  if (!observing) return store.readTerminal(id, deadline, verify);
+                  const step: Extract<ResumeStoreStep, { kind: 'terminal-read' }> = {
+                    kind: 'terminal-read', ...startStoreStep(), currentChecks: 0, currentRefusals: 0,
                   };
-                  return observeStoreStep(step, () => store.exclusive(id, deadline, lease => run(Object.freeze({ ...lease,
+                  return observeStoreStep(step, () => store.readTerminal(id, deadline, lease => verify(Object.freeze({
                     read: () => observe(lease.read, value => { step.read = value === null ? 'refused' : 'accepted'; }, () => { step.read = 'rejected'; }),
-                    current: () => {
-                      const current = lease.current();
-                      step.currentChecks++;
-                      if (!current) step.currentRefusals++;
-                      return current;
-                    },
                     sampleCurrent: () => {
                       const now = lease.sampleCurrent();
                       step.currentChecks++;
                       if (now === null) step.currentRefusals++;
                       return now;
                     },
-                  })), profile), value => value);
+                  }))), value => value);
                 },
                 close: () => observing
                   ? observeStoreStep({ kind: 'close', ...startStoreStep() }, () => store.close(), () => true)
@@ -1440,7 +1434,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
             if (allocations.length !== 0) {
               expect(resumeStoreSteps.at(-1)).toBe(allocations[0]);
               expect(resumeStoreSteps.slice(1, -1)).toHaveLength(options.resume!.history.clients.length);
-              expect(resumeStoreSteps.slice(1, -1).every(step => step.kind === 'exclusive' && step.read === 'accepted')).toBe(true);
+              expect(resumeStoreSteps.slice(1, -1).every(step => step.kind === 'terminal-read' && step.read === 'accepted')).toBe(true);
             }
             const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
             const current = machine.current(), claimChecks = checkClaim.mock.calls.length;

@@ -252,18 +252,21 @@ describe('same-store machine continuation seam', () => {
       const store = await open(...args);
       if (store === null) return null;
       let first = true;
-      return { ...store, exclusive: (clientId, deadline, operation, profile) => {
-        if (!first) return store.exclusive(clientId, deadline, operation, profile);
+      return { ...store, readTerminal: (clientId, deadline, operation) => {
+        if (!first) return store.readTerminal(clientId, deadline, operation);
         first = false;
-        return store.exclusive(clientId, deadline, lease => operation({
-          ...lease, current: separateCurrent, now: separateClock,
-          sampleCurrent: () => {
-            const actual = lease.sampleCurrent();
-            const sample = sampleTimes.length + 1 === refusal ? null : actual;
-            sampleTimes.push(sample);
-            return sample;
-          },
-        }), profile);
+        return store.readTerminal(clientId, deadline, lease => {
+          const observed = {
+            ...lease, current: separateCurrent, now: separateClock,
+            sampleCurrent: () => {
+              const actual = lease.sampleCurrent();
+              const sample = sampleTimes.length + 1 === refusal ? null : actual;
+              sampleTimes.push(sample);
+              return sample;
+            },
+          };
+          return operation(observed);
+        });
       } };
     });
     const create = createUrlRunMachine({ ...f.options, requiredRoles: ['author'], plans: f.options.plans.slice(0, 1) });

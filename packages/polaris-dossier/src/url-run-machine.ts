@@ -135,7 +135,7 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
     && effectCurrent() && input.now() < input.deadline;
   const verifyTerminal = async (context: UrlMachineClientContext, terminal: Terminal): Promise<number | null> => {
     let confirmedAt: number | null = null;
-    const verified = await store.exclusive(context.clientId, input.deadline, async lease => {
+    const verified = await store.readTerminal(context.clientId, input.deadline, async lease => {
       const snapshot = await lease.read();
       if (!snapshot) return;
       const now = lease.sampleCurrent();

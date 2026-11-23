@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, rmdir, symlink, unlink, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
@@ -23,7 +23,8 @@ const filesystem = vi.hoisted(() => ({
   afterSync: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterLstat: undefined as ((file: string) => void) | undefined,
   afterRealpath: undefined as ((file: string) => void) | undefined,
-  beforeMkdir: undefined as ((file: string) => void) | undefined,
+  beforeMkdir: undefined as ((file: string) => Promise<void> | void) | undefined,
+  beforeRmdir: undefined as ((file: string) => void) | undefined,
   beforeOpendir: undefined as ((file: string) => void) | undefined,
   beforeOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
@@ -40,8 +41,11 @@ vi.mock('node:fs/promises', async importOriginal => {
     filesystem.afterRealpath?.(String(args[0]));
     return resolved;
   }, mkdir: (...args: Parameters<typeof original.mkdir>) => {
-    filesystem.beforeMkdir?.(String(args[0]));
-    return original.mkdir(...args);
+    const delay = filesystem.beforeMkdir?.(String(args[0]));
+    return delay === undefined ? original.mkdir(...args) : delay.then(() => original.mkdir(...args));
+  }, rmdir: (...args: Parameters<typeof original.rmdir>) => {
+    filesystem.beforeRmdir?.(String(args[0]));
+    return original.rmdir(...args);
   }, opendir: (...args: Parameters<typeof original.opendir>) => {
     filesystem.beforeOpendir?.(String(args[0]));
     return original.opendir(...args);
@@ -59,7 +63,7 @@ vi.mock('node:fs/promises', async importOriginal => {
 });
 afterEach(async () => {
   filesystem.afterSync = filesystem.afterLstat = filesystem.afterRealpath = filesystem.beforeMkdir = filesystem.afterOpen = filesystem.afterClose = undefined;
-  filesystem.beforeOpen = filesystem.beforeOpendir = undefined;
+  filesystem.beforeOpen = filesystem.beforeOpendir = filesystem.beforeRmdir = undefined;
   for (const clean of cleanup.splice(0).reverse()) await clean();
 });
 
@@ -523,6 +527,153 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
+  it('groups the named-root check and lock submission for a terminal read', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let elapsed = 0, measuring = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (measuring) elapsed += 550;
+      return true;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+    try {
+      measuring = true;
+      const verify = vi.fn<Parameters<typeof reopened.readTerminal>[2]>(async lease => {
+        expect(Object.keys(lease).sort()).toEqual(['read', 'sampleCurrent']);
+        expect(await lease.read()).toMatchObject({ canonical: null, projection: null, audit: null,
+          anchor: { kind: 'never-issued', clientId: slot.context.clientId } });
+        expect(lease.sampleCurrent()).toBe(NOW);
+        expect(lease.sampleCurrent()).toBe(NOW);
+      });
+      expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(true);
+      expect(verify).toHaveBeenCalledTimes(1);
+      expect(elapsed).toBe(4400);
+    } finally { clock.mockRestore(); }
+  });
+
+  it('refuses a swapped named root before submitting a terminal-read lock', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    const displaced = f.options.protectedRoot + '.previous';
+    let swapRoot = false, submitted = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (swapRoot) {
+        swapRoot = false;
+        await rename(f.options.protectedRoot, displaced);
+        await mkdir(f.options.protectedRoot, { mode: 0o700 });
+      }
+      return true;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    filesystem.beforeMkdir = file => { if (path.basename(file) === 'lock') submitted = true; };
+    const verify = vi.fn();
+    swapRoot = true;
+    expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(false);
+    expect(swapRoot).toBe(false);
+    expect(submitted).toBe(false);
+    expect(verify).not.toHaveBeenCalled();
+  });
+
+  it('detaches terminal snapshots from cached lifecycle metadata', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    const revoked = { ...slot.record, revision: 2, revokedAt: new Date(NOW).toISOString() };
+    const publication = await slot.publish(revoked, { revision: 1, sha256: sha256(canon(slot.record)) });
+    if (!publication.ok) throw new Error('fixture retirement refused');
+    expect(await f.store.readTerminal(slot.context.clientId, f.options.deadline, async lease => {
+      const first = await lease.read();
+      if (first?.anchor.kind !== 'committed' || first.audit === null || first.projection === null || first.canonical === null)
+        throw new Error('fixture terminal read refused');
+      expect(Reflect.set(first.anchor.head.record, 'revision', 999)).toBe(false);
+      expect(Reflect.set(first.audit.binding, 'controllerSha256', '0'.repeat(64))).toBe(false);
+      expect(Reflect.set(first.projection, 'revision', 999)).toBe(false);
+      first.canonical.fill(0);
+      const second = await lease.read();
+      expect(second).toEqual({ canonical: canon(revoked), anchor: { kind: 'committed', head: publication.receipt },
+        audit: publication.receipt, projection: publication.receipt.record });
+      expect(second?.anchor).not.toBe(first.anchor);
+    })).toBe(true);
+  });
+
+  it('refuses terminal read lock contention that clears after one second', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    const lock = path.join(f.options.protectedRoot, 'lock');
+    let submissions = 0, elapsed = 0;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (submissions === 1 && elapsed === 0) {
+        await rmdir(lock);
+        elapsed = 1001;
+      }
+      return true;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    await mkdir(lock, { mode: 0o700 });
+    filesystem.beforeMkdir = file => { if (path.basename(file) === 'lock') submissions++; };
+    const verify = vi.fn();
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+    try {
+      expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(false);
+    } finally { clock.mockRestore(); }
+    expect(elapsed).toBe(1001);
+    expect(submissions).toBe(1);
+    expect(verify).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { authority: 'synchronous', withdrawal: 'none' },
+    { authority: 'asynchronous', withdrawal: 'none' },
+    { authority: 'asynchronous', withdrawal: 'during-confirmation' },
+    { authority: 'asynchronous', withdrawal: 'queued-after-check' },
+    { authority: 'asynchronous', withdrawal: 'named-root-replaced' },
+  ] as const)('settles a late terminal read lock under $authority authority (withdrawal $withdrawal)',
+    async ({ authority, withdrawal }) => {
+    const f = await fixture(), slot = await f.allocate();
+    const lock = path.join(f.options.protectedRoot, 'lock');
+    const displacedRoot = f.options.protectedRoot + '.previous';
+    const retainsLock = withdrawal === 'during-confirmation' || withdrawal === 'named-root-replaced';
+    let submissions = 0, elapsed = 0, withdrawn = false, stateRead = false;
+    let cleanupWhileCurrent: boolean | undefined;
+    const reopened = await openUrlMachineStore({ ...f.options, current: () => {
+      if (elapsed === 1001 && withdrawal === 'queued-after-check') queueMicrotask(() => { withdrawn = true; });
+      return !withdrawn;
+    },
+      ...(authority === 'asynchronous' ? { currentAsync: async () => {
+        if (elapsed === 1001 && withdrawal === 'during-confirmation') withdrawn = true;
+        if (elapsed === 1001 && withdrawal === 'named-root-replaced') {
+          await rename(f.options.protectedRoot, displacedRoot);
+          await mkdir(f.options.protectedRoot, { mode: 0o700 });
+        }
+        return true;
+      } } : {}) }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    await mkdir(lock, { mode: 0o700 });
+    filesystem.beforeMkdir = file => {
+      if (path.basename(file) !== 'lock' || ++submissions !== 2) return;
+      return rmdir(lock).then(() => { elapsed = 1001; });
+    };
+    filesystem.beforeOpen = file => { if (path.basename(file) === 'state.json') stateRead = true; };
+    filesystem.beforeRmdir = file => { if (file.startsWith('/proc/self/fd/')) cleanupWhileCurrent = !withdrawn; };
+    const verify = vi.fn();
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+    try {
+      expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(false);
+    } finally { clock.mockRestore(); }
+    expect(elapsed).toBe(1001);
+    expect(submissions).toBe(2);
+    expect(verify).not.toHaveBeenCalled();
+    expect(stateRead).toBe(false);
+    expect(withdrawn).toBe(withdrawal === 'during-confirmation' || withdrawal === 'queued-after-check');
+    expect(cleanupWhileCurrent).toBe(retainsLock ? undefined : true);
+    const files = await readdir(withdrawal === 'named-root-replaced' ? displacedRoot : f.options.protectedRoot);
+    expect(files.includes('lock')).toBe(retainsLock);
+  });
+
   it.each([
     { kind: 'resumed', allowed: true, overlaps: true },
     { kind: 'resumed', allowed: false, overlaps: true },
@@ -623,7 +774,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(clientStarted).toBe(false);
   });
 
-  it('checks authority after protected state I/O before using it to open the client', async () => {
+  it.each(['exclusive', 'readTerminal'] as const)('%s checks authority after protected state I/O before opening the client', async read => {
     const f = await fixture(), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
     let current = true, clientOpened = false;
@@ -631,7 +782,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
     filesystem.afterClose = file => { if (path.basename(file) === 'canonical-history.json') current = false; };
     filesystem.afterOpen = file => { if (path.basename(file) === path.basename(slot.file)) clientOpened = true; };
-    const finished = await reopened!.exclusive(slot.context.clientId, f.options.deadline, async lease => { await lease.read(); });
+    const finished = await reopened![read](slot.context.clientId, f.options.deadline, async lease => { await lease.read(); });
     expect(finished).toBe(false);
     expect(current).toBe(false);
     expect(clientOpened).toBe(false);

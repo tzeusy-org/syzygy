@@ -69,12 +69,15 @@ export interface UrlMachineStoreOptions {
 interface UrlMachineStoreLease extends UrlMachineLifecycleLease {
   sampleCurrent(): number | null;
 }
+type UrlMachineTerminalLease = Readonly<Pick<UrlMachineStoreLease, 'read' | 'sampleCurrent'>>;
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
    * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
   exclusive(clientId: string, deadline: number, run: (lease: UrlMachineStoreLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   /** Run only the trusted lifecycle publication protocol inside one held lock. */
   publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean): Promise<UrlMachineLifecycleResult>;
+  /** Verify a historical terminal under the store lock, without lifecycle writes. */
+  readTerminal(clientId: string, deadline: number, verify: (lease: UrlMachineTerminalLease) => Promise<void>): Promise<boolean>;
   readonly identitySha256: string;
   readonly protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown';
   /** Allocate a new slot durably. Absence alone never produces a witness. */
@@ -420,8 +423,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       readonly operationMilliseconds?: number;
       readonly staging?: StagedBoundary | undefined;
       readonly ordinaryEffect?: boolean;
+      readonly terminalRead?: boolean;
     } = {}): Promise<boolean> => {
-      const { operationMilliseconds = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging, ordinaryEffect = false } = bounds;
+      const { operationMilliseconds = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging, ordinaryEffect = false,
+        terminalRead = false } = bounds;
       const began = performance.now();
       let active = true, held = false, uncertain = false, contended = false;
       const pending = new Set<Promise<unknown>>();
@@ -508,18 +513,46 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline
           || (!synchronousAnchor && deadline <= live())) throw refused();
         for (;;) {
-          if (!synchronousAnchor) check();
-          await io(verifyAnchorsDuringIo);
+          if (!terminalRead) {
+            if (!synchronousAnchor) check();
+            await io(verifyAnchorsDuringIo);
+          }
           if (allocation) {
             await reverify(); check(); verifyNamedRoots(); checkDeadline();
             if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
           }
-          try { await io(() => mkdir(`${base}/lock`, { mode: 0o700 })); held = true; break; }
-          catch (error) {
+          try {
+            await io(() => {
+              if (terminalRead) {
+                // The protected read has no publication. Check the named
+                // roots and full authority in the same turn as lock submission.
+                check();
+                verifyNamedRoots();
+                checkDeadline();
+                if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+              }
+              return mkdir(`${base}/lock`, { mode: 0o700 });
+            });
+            held = true;
+            break;
+          } catch (error) {
             if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw error;
             contended = true;
             await new Promise(resolve => setTimeout(resolve, 10));
           }
+        }
+        // A queued retry can acquire after its contention window. Confirm the
+        // named lock's authority before cleanup and before any protected read.
+        if (terminalRead && contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) {
+          check();
+          verifyNamedRoots();
+          checkDeadline();
+          // Submit cleanup under the checked authority before yielding.
+          await rmdir(`${base}/lock`);
+          held = false;
+          checkDeadline();
+          await heldRoot.sync();
+          return false;
         }
         if (allocation) {
           check();
@@ -551,16 +584,16 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           await rmdir(`${base}/lock`); await heldRoot.sync();
           await reverify(); check(); verifyNamedRoots(); checkDeadline();
         }
+        return true;
       });
       activeWork.add(work);
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
       try {
-        await Promise.race([work, new Promise<never>((_, reject) => {
+        return await Promise.race([work, new Promise<never>((_, reject) => {
           const operationRemaining = operationMilliseconds - (performance.now() - began);
           timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); },
             Math.max(1, Math.min(operationRemaining, deadline - clock())));
         })]);
-        return true;
       } catch { uncertain = true; return false; }
       finally {
         clearTimeout(timer); active = false;
@@ -605,7 +638,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const allocateClient = async (deadline: number): Promise<AllocatedClient | null> =>
       (await allocateClients(1, deadline))?.[0] ?? null;
     const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineStoreLease) => Promise<void>,
-      effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
+      effectProfile?: NativeSessionProfile, publication?: StagedBoundary, terminalRead = false): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const orderedEffect = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile);
       const operationMilliseconds = orderedEffect
@@ -725,10 +758,22 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await operation(Object.freeze({ now: () => live(), current: () => sampleCurrent() !== null,
           sampleCurrent, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
-      }, { operationMilliseconds, ordinaryEffect: effectProfile !== undefined && !orderedEffect, staging: publication });
+      }, { operationMilliseconds, ordinaryEffect: effectProfile !== undefined && !orderedEffect, staging: publication, terminalRead });
     };
     const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
-      allocateClient, allocateClients, exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),
+      allocateClient, allocateClients,
+      exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),
+      readTerminal: (clientId, deadline, verify) => exclusive(clientId, deadline, ({ read, sampleCurrent }) => {
+        const readDetached = async (): ReturnType<typeof read> => {
+          const snapshot = await read();
+          if (snapshot === null) return null;
+          // Metadata can refer to the decoded store cache. The canonical
+          // bytes were read into a new buffer and are already independent.
+          const { canonical, ...metadata } = snapshot;
+          return Object.freeze({ canonical, ...deepFreeze(structuredClone(metadata)) });
+        };
+        return verify(Object.freeze({ read: readDetached, sampleCurrent }));
+      }, undefined, undefined, true),
       publish: (input: UrlMachineLifecyclePublication, stillOpening?: () => boolean) => publishUrlMachineLifecycle(input, {
         exclusive: (clientId, deadline, operation) => exclusive(clientId, deadline, operation, undefined, { current: stillOpening }),
       }),
