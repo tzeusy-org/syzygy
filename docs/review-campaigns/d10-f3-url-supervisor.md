@@ -33,6 +33,7 @@
 - `F3-ORDINARY-STORE-LOCK-CENSUS-REVIEW-RAW\.md`
 - `F3-CAPTURE-ACCEPT-AUTHORITY(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-DESIGN-PARENT-PROVENANCE-REVIEW-RAW\.md`
+- `F3-PEER-SAMPLE-ORDER(-R2)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -137,3 +138,5 @@
 [Observed] The initial capture review records `REVISE` (`F3-CAPTURE-ACCEPT-AUTHORITY-INITIAL-REVIEW-RAW.md:1`) because the proposed interval crossed a listener descriptor observation. The corrected review records `PASS` (`F3-CAPTURE-ACCEPT-AUTHORITY-REVIEW-RAW.md:1`) at `055aa1f0d`. A-136 uses the actual capture entry's fresh check before the listener read. Independent source review, typecheck, 27 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.
 
 [Observed] The grouped Design parent read review records `PASS` (`F3-DESIGN-PARENT-PROVENANCE-REVIEW-RAW.md:1`) at `486196c41`. A-137 retains distinct allocated metadata and historical lineage results under two authority checks and keeps the product lease. Typecheck, 82 unit cases, 100 integration cases and four fault controls passed. [Unknown] Native timing for this subject.
+
+[Observed] The native sample review records `PASS` (`F3-PEER-SAMPLE-ORDER-R2-REVIEW-RAW.md:1` and `F3-PEER-SAMPLE-ORDER-REVIEW-RAW.md:1`) at `de1f64638`. A-138 moves one repeated full authority read after the already-pending launcher sample. Typecheck, seven exact focused cases and two fault controls passed. The identical production bytes passed 72 integration cases with the predecessor test assertion order. [Unknown] Native timing for this subject.

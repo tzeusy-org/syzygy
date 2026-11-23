@@ -1,0 +1,106 @@
+{
+  "adoption": "A-138",
+  "testedBase": "64d6924d8bd36d855d1d68c7954281043d624eac",
+  "sourceCommit": "de1f646382e3756a3b6d2b85a916a76778b8669a",
+  "patchSha256": "d42d81bb675607c26d1e4e7e6891a98fb3ff935c344b7dc88966a76612535238",
+  "productionBlob": "f08db6ee9f0df4e79458c057dab26e7046781956",
+  "testBlob": "4530b0c5d7cb1b65fe1d0f857ce257a2b92362fb",
+  "reviews": [
+    {
+      "path": "docs/reviews/F3-PEER-SAMPLE-ORDER-R2-REVIEW-RAW.md",
+      "verdict": "PASS",
+      "sha256": "4c8ed1860d6c8d4b9cc2a70f6d213ec02d6d730aabdc64dfcd4a448a2b4ac12f",
+      "subjectSha256": "c87d6fdedef93f83cc5cc2facdbbac9dc251e1f1e9084850c7b835796f4fc74d"
+    },
+    {
+      "path": "docs/reviews/F3-PEER-SAMPLE-ORDER-REVIEW-RAW.md",
+      "verdict": "PASS",
+      "sha256": "5f3c22e4a3b3ce30725d229eb8ce489c74029df386625980afc42ea82896d265",
+      "subjectSha256": "d42d81bb675607c26d1e4e7e6891a98fb3ff935c344b7dc88966a76612535238"
+    }
+  ],
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "exactIntegration": {
+      "files": 1,
+      "cases": 7,
+      "sha256": "ed04a33fdb2c8403abaa57fe2c511bf65a45d189c346b0be5b583fd1c77fdbff"
+    },
+    "identicalProductionAtR2": {
+      "patchSha256": "c87d6fdedef93f83cc5cc2facdbbac9dc251e1f1e9084850c7b835796f4fc74d",
+      "integration": {
+        "files": 3,
+        "cases": 72,
+        "sha256": "4ab10f2a773aa257623b3cd457cfcbe9ce7bce030d763e1389b68bfeaff16304"
+      }
+    },
+    "mutants": [
+      {
+        "id": "repeat-guard-before-sample",
+        "old": "current: async () => await selectedLaunch.waitForSample() && current()\n              && await input.reverify() === true && current(),",
+        "new": "current: async () => current() && await selectedLaunch.waitForSample()\n              && await input.reverify() === true && current(),",
+        "assertion": "AssertionError: expected 3 to be 2",
+        "failedControls": 1,
+        "logSha256": "c59da74f3e741ecdf7f1ebdab385d11a93f0b0d40225508e7b6377cdf09e9aad"
+      },
+      {
+        "id": "omit-post-sample-guard",
+        "old": "current: async () => await selectedLaunch.waitForSample() && current()\n              && await input.reverify() === true && current(),",
+        "new": "current: async () => await selectedLaunch.waitForSample()\n              && await input.reverify() === true && current(),",
+        "assertion": "AssertionError: expected true to be false",
+        "failedControls": 1,
+        "logSha256": "9a582c5a434fd12a47ce0ff75cbb87c69419a505ea44900cd1f762f6947aba44"
+      }
+    ]
+  },
+  "diagnostic": {
+    "base": "ee9a7001ce6e7b69d0e623be99cf27865089bcd7",
+    "overlayPatchSha256": "91846c7d782208943570a42422c5eff14a33fe8a98b22e0782df1e584d1e9ebd",
+    "sourceLogSha256": "675ba868f334971e4a09d768a6f24f129331f86832e6a2c11d7146cc0669b12a",
+    "firstLauncherRefusal": {
+      "ordinal": 2,
+      "phases": {
+        "process": {
+          "startedMs": 0.10336400000960566,
+          "settledMs": 910.9562580000202,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.16133300002547912,
+          "settledMs": 874.4559500000032,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.16485000000102445,
+          "settledMs": 910.0986340000236,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 910.9594940000097,
+          "settledMs": 1031.0755240000144,
+          "outcome": "accepted"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "sample-deadline",
+        "elapsedMs": 1031.2976320000016
+      }
+    },
+    "bootstrapPhase": "write-launch-history",
+    "leaseState": "open",
+    "synchronousClaimPolicy": {
+      "calls": 6,
+      "elapsedMs": 730.0675250000495
+    },
+    "captureRelatedSynchronousCalls": {
+      "claim.caller.url-stopped-run.ts:351>url-recovery.ts:35>url-run-sessions.ts:477>url-run-machine.ts:94>url-run-machine.ts:134>test.ts:707>url-machine-peer.ts:341": 106.47193400000106,
+      "claim.caller.url-stopped-run.ts:351>url-recovery.ts:35>url-run-sessions.ts:477>url-run-machine.ts:94>url-run-machine.ts:134>test.ts:707>url-machine-peer.ts:308": 109.91254800002207,
+      "claim.caller.url-stopped-run.ts:351>url-recovery.ts:35>url-run-sessions.ts:477>url-run-machine.ts:94>url-run-machine.ts:134>url-run-machine.ts:274>test.ts:704": 103.97083700000076
+    }
+  },
+  "remaining": "Common successful native recovery and effect on native latency are Unknown."
+}

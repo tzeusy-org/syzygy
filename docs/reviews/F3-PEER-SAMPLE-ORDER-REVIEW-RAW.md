@@ -1,0 +1,1 @@
+**PASS** for A138 revision 3, SHA-256 `d42d81bb675607c26d1e4e7e6891a98fb3ff935c344b7dc88966a76612535238`. [Observed] The base, both blobs, and worktree diff match. The only change from revision 2 is the order of the two test assertions. No edits or tests run.
