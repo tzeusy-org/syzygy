@@ -1,0 +1,40 @@
+{
+  "adoption": "A-157",
+  "review": {
+    "commit": "8729692b02f196ac86c73cf064c6903a94eb6f3f",
+    "tree": "535cc6ea33d0c95dbb2d67c9fb2726ebed8fffdf",
+    "base": "a196fa111132475adc3bda7e502a81bbbf88268e",
+    "reviewDiffSha256": "b285b470217992adb1e7f06cc78ac25f21d75b2f1287ff5fb26862ae41e5cad2",
+    "raw": "docs/reviews/F3-CHECKED-RENDER-INPUT-PAIRS-REVIEW-RAW.md",
+    "rawSha256": "9213f5937cdf3b6867c12563a4255765fba04fb543134586c0c509cdb890d512",
+    "verdict": "PASS"
+  },
+  "comparison": {
+    "label": "Observed",
+    "scope": "Previously selected draft check and frozen draft only. The actual old and new entry points used the same artifact bridge and committed draft.",
+    "identical": [
+      "revision",
+      "draft bytes",
+      "registered records",
+      "selections",
+      "snapshot bytes"
+    ],
+    "observation": "checked-draft-read",
+    "before": 3,
+    "after": 2,
+    "draft": "2a9c478b75a911773f77ce720f0ffdd9227665b0ea4da12b1ec38aca23dc6ebf",
+    "records": 2,
+    "selections": 2,
+    "probeSha256": "fff5276b8aa1f43937303084bce9870c3eec9ac4430cdd3da5eb1295c7f28976",
+    "outputSha256": "add5f38463a08d6de177fc34b9063e1417ebe43f2a3148dda7f7b243ded7aec6"
+  },
+  "verification": {
+    "typecheck": "passed",
+    "integrationTests": {
+      "passed": 377,
+      "total": 377,
+      "files": 5
+    },
+    "nativeStopResume": "Unknown"
+  }
+}
