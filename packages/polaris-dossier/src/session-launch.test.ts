@@ -51,6 +51,7 @@ vi.mock('node:child_process', async importOriginal => {
 const cleanup: (() => Promise<unknown> | void)[] = [];
 const filesystem = vi.hoisted(() => ({
   beforeLstat: undefined as ((file: unknown) => Promise<void>) | undefined,
+  afterLstatStart: undefined as ((file: unknown) => Promise<void> | undefined) | undefined,
   beforeOpen: undefined as ((file: unknown) => Promise<void>) | undefined,
   taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
   storageListing: undefined as { directory: string; afterFirstFile: () => void } | undefined,
@@ -82,7 +83,12 @@ vi.mock('node:fs/promises', async importOriginal => {
     },
     lstat: async (...args: Parameters<typeof actual.lstat>) => {
       if (filesystem.beforeLstat !== undefined) await filesystem.beforeLstat(args[0]);
-      return actual.lstat(...args);
+      const sample = actual.lstat(...args);
+      const hold = filesystem.afterLstatStart?.(args[0]);
+      if (hold === undefined) return sample;
+      const stat = await sample;
+      await hold;
+      return stat;
     },
     open: async (...args: Parameters<typeof actual.open>) => {
       if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(args[0]);
@@ -92,6 +98,7 @@ vi.mock('node:fs/promises', async importOriginal => {
 });
 afterEach(async () => {
   filesystem.beforeLstat = undefined;
+  filesystem.afterLstatStart = undefined;
   filesystem.beforeOpen = undefined;
   filesystem.taskListing = undefined;
   filesystem.storageListing = undefined;
@@ -973,10 +980,10 @@ describe('prepared private CLI launch',()=>{
       await readsHeld;
       throw Object.assign(new Error('synthetic vanished thread'), { code: 'ENOENT' });
     };
-    filesystem.beforeLstat = async file => {
+    filesystem.afterLstatStart = file => {
       if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/') || !storedFiles.has(path.basename(file))) return;
       if (!completedHold) storageReadsBeforeTimeout++;
-      await readsHeld;
+      return readsHeld;
     };
     const intervals = vi.spyOn(globalThis, 'setInterval');
     const child = await launchRestrictedUrlSession({ preparation, host: {
@@ -1033,6 +1040,36 @@ describe('prepared private CLI launch',()=>{
       signal.mockRestore();
     }
   }, 15000);
+
+  it('holds the storage directory until a submitted stat settles when enumeration fails', async () => {
+    const f = await launchFixture();
+    const preparation = await prepareRestrictedUrlSession(f.launch);
+    let releaseStat!: () => void, releaseTool!: () => void;
+    const statHeld = new Promise<void>(resolve => { releaseStat = resolve; });
+    const toolHeld = new Promise<void>(resolve => { releaseTool = resolve; });
+    const host = await f.start({ beforeTool: () => toolHeld });
+    const directory = path.join(f.launch.view.workDirectory, 'own-partial-storage-listing');
+    const entry = 'only-owned-entry';
+    let anchor: string | undefined, heldAtStop = false;
+    filesystem.afterLstatStart = file => {
+      if (typeof file !== 'string' || !file.startsWith('/proc/self/fd/') || path.basename(file) !== entry) return;
+      anchor = path.dirname(file);
+      return statHeld;
+    };
+    filesystem.storageListing = { directory, afterFirstFile: () => { throw new Error('owned incomplete storage listing'); } };
+    const child = await launchRestrictedUrlSession({ preparation, host: { ...host, close: async () => {
+      try { heldAtStop = anchor !== undefined && readlinkSync(anchor) === directory; }
+      catch { heldAtStop = false; }
+      finally { releaseStat(); releaseTool(); }
+      return host.close();
+    } } });
+    cleanup.push(child.stop);
+    mkdirSync(directory);
+    writeFileSync(path.join(directory, entry), 'owned');
+    const outcome = await child.finished;
+    expect(heldAtStop).toBe(true);
+    expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, groupTermination: 'confirmed' });
+  }, 15_000);
 
   it('refuses a task census when an opened listing disappears partway through', async () => {
     const f = await launchFixture();
