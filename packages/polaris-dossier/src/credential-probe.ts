@@ -5,7 +5,7 @@ import type { CredentialProbe } from './execution-rule.js';
 import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { readBoundedText } from './run-tree-read.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** The adapter-credential check of D9's credential condition (REQ-polaris-generation-033; R3-F1).
  *
@@ -24,7 +24,7 @@ import { readBoundedText } from './run-tree-read.js';
 
 export const CREDENTIAL_LIST_ENV = 'SYZYGY_DOSSIER_CREDENTIAL_LIST';
 export const CREDENTIAL_LIST_FORMAT = 'syzygy-adapter-credential-list/1';
-const LIST_MAX_BYTES = 65_536;
+const LIST_MAX_BYTES = RUN_TREE_BOUNDS.credentialList;
 
 export type CredentialList = { readonly ok: true; readonly paths: readonly string[] } | { readonly ok: false; readonly why: string };
 

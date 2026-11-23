@@ -749,7 +749,7 @@ describe('preflight', () => {
   });
   it('prints clone commands that leave the consented commit alone in the clone', async () => {
     const result = await run(records());
-    if (!result.ok) throw new Error(result.reason);
+    if (!result.ok) throw new Error(result.refusal.reason);
     // A local stand-in for the upstream, holding the consented commits and others; the printed commands run against it with the URL
     // replaced, and the clone they make must hold exactly the one commit fetched.
     const upstream = path.join(tempDir('preflight-upstream-'), 'redis.git');
@@ -812,8 +812,10 @@ describe('preflight', () => {
     expect(edited.ok && edited.report.rfc720Ruling.state).toBe('ok');
   });
   it('refuses a URL that is not an admitted locator, by its rule and never quoting it, and never fetches', async () => {
-    expect(await run(records(), 'https://user:token@github.com/redis/redis')).toEqual({ ok: false,
-      reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
+    expect(await run(records(), 'https://user:token@github.com/redis/redis')).toEqual({ ok: false, refusal: {
+      command: 'preflight', outcome: 'refused',
+      reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded',
+    } });
   });
   it('a locator on another host, or under another path, is read and simply matches no consent (no GitHub-only refusal)', async () => {
     const other = await run(records(), 'https://github.com/redis/redis/tree/unstable');

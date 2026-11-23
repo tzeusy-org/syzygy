@@ -60,7 +60,8 @@ export function readLatestSite(run: string): SiteRead {
       if (!isDossierPagePath(relative)) return `${relative} in site ${number} is not a path the renderer writes`;
       if (files.size >= SITE_MAX_FILES) return `site ${number} holds more than ${SITE_MAX_FILES} files`;
       // The reader rule under what remains of the site's bound (REQ-polaris-generation-035 version 2.18): a page file that is not a
-      // regular file when opened, or one past what remains, is refused before or as it is read, never read whole.
+      // regular file when opened, or one past what remains, is refused before or as it is read, never read whole. So the running total
+      // never passes the bound, and no check after the read is needed.
       let bytes: Buffer;
       try { bytes = readBoundedFile(full, SITE_MAX_BYTES - total); } catch (cause) {
         if (cause instanceof NotARegularFileError) return `${relative} in site ${number} is not a regular file`;
@@ -68,7 +69,6 @@ export function readLatestSite(run: string): SiteRead {
         throw cause;
       }
       total += bytes.byteLength;
-      if (total > SITE_MAX_BYTES) return `site ${number} is larger than ${SITE_MAX_BYTES} bytes`;
       try { files.set(relative, decoder.decode(bytes)); } catch { return `${relative} in site ${number} is not UTF-8 text`; }
     }
     return undefined;
