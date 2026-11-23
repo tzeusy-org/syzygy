@@ -1,0 +1,19 @@
+{
+  "subject": "382820f9f4bae705521407d3eedbedeff6639f95",
+  "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+  "old": "return effectCurrent() && product !== undefined && isUrlDesignProductLeaseOpen(product);",
+  "new": "return product !== undefined && isUrlDesignProductLeaseOpen(product) && effectCurrent();",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--project",
+    "unit",
+    "--maxWorkers=1",
+    "packages/polaris-dossier/src/url-design-product.test.ts",
+    "-t",
+    "expires during the final machine effect check"
+  ],
+  "executed": true,
+  "exit": 1,
+  "logSha256": "c4b572142335c32648600bd289cb5f25e21289f9a10edd004f223664a6ebec2c"
+}

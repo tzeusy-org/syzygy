@@ -1,0 +1,61 @@
+{
+  "format": "syzygy-f3-renewal-source-fault-controls/1",
+  "subject": "77ad941589725882a2327ccb78309d51acbd2aa2",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--project",
+    "integration",
+    "--maxWorkers=1",
+    "packages/polaris-dossier/src/url-launch-history.test.ts",
+    "-t",
+    "renew-launch-drift"
+  ],
+  "checks": [
+    {
+      "id": "baseline",
+      "path": null,
+      "old": null,
+      "new": null,
+      "testExecuted": true,
+      "exit": 0,
+      "logSha256": "5834cf856a5e533d65faef1980a63ff7f703f0f2943370592a261c13dc3c9670"
+    },
+    {
+      "id": "durable-launch-audit-bytes",
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "verifyDurableEvent(role, event, observeRead);",
+      "new": "verifyDurableEvent(role, event);",
+      "testExecuted": true,
+      "exit": 1,
+      "logSha256": "173bbbdb40d1fe9fdbb86c79a6c330d88c4f9bd5f63ccf625a62c63560c63f7e"
+    },
+    {
+      "id": "launch-file-bytes",
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "const latest = inspectUrlLaunchHistory(capability, observeRead);",
+      "new": "const latest = inspectUrlLaunchHistory(capability);",
+      "testExecuted": true,
+      "exit": 1,
+      "logSha256": "7f6cf2f4e36b5e26c69e243b71cdbf15385e860564fe0e7f35819c9690a54f89"
+    },
+    {
+      "id": "first-read-authority",
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "observeRead?.(bytes);\n            if (!current()) throw refused();",
+      "new": "observeRead?.(bytes);",
+      "testExecuted": true,
+      "exit": 1,
+      "logSha256": "3f314909fefdc194e3808c3944b1f6883a7fd0a79006f176203d8c6404cb8f23"
+    },
+    {
+      "id": "durable-launch-identity",
+      "path": "packages/polaris-dossier/src/url-launch-history.ts",
+      "old": "|| !matchesFile({ bytes, stat }, readRegular(childAnchor, name, observeRead))",
+      "new": "|| !readRegular(childAnchor, name, observeRead).stat.isFile()",
+      "testExecuted": true,
+      "exit": 1,
+      "logSha256": "19717c639fe2c0725ce3ee64ee22d50accddba8cb911024fc1932384eb2ea20c"
+    }
+  ]
+}

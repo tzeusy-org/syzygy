@@ -6,6 +6,7 @@
 - `F3-(D11-LAUNCHER|D11-RENDER-PRODUCER|D11-RENDER-RESTART|MANIFEST-PROVENANCE|MANIFEST-CLOSURE|MANIFEST-GIT-PATHS)-REVIEW-RAW\.md`
 - `F3-AUDIT-OVERLAP(-POST-CALLBACK|-AUTHORITY)?-REVIEW-RAW\.md`
 - `F3-CHECKED-DESIGN-RENEWAL-REVIEW-RAW\.md`
+- `F3-CHECKED-DESIGN-PUBLICATION(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -54,3 +55,5 @@
 [Observed] The protected audit overlap reviews record `REVISE` for the post-callback and authority-boundary candidates (`F3-AUDIT-OVERLAP-POST-CALLBACK-REVIEW-RAW.md:1`, `F3-AUDIT-OVERLAP-AUTHORITY-REVIEW-RAW.md:1`). The successor records `PASS` (`F3-AUDIT-OVERLAP-REVIEW-RAW.md:1`) at `055f8a2a5`. A-102 records the adopted bytes and revert. Native recovery at that checkpoint remains [Unknown].
 
 [Observed] The checked Design renewal review records `PASS` (`F3-CHECKED-DESIGN-RENEWAL-REVIEW-RAW.md:1`) at `77ad94158`. Its predecessors left a durable authority check until after reproduction or omitted some of the new reads from the byte budget. A-103 records the adopted bytes and revert. The exact reviewed source passed 103 focused unit cases and 155 focused integration cases. [Unknown] Native completion of both recovery cases on the successor.
+
+[Observed] The subsequent fresh review records `REVISE` at `77ad94158` (`F3-CHECKED-DESIGN-PUBLICATION-INITIAL-REVIEW-RAW.md:1`) for the gap after the final machine check. The focused correction records `PASS` at `382820f9f` (`F3-CHECKED-DESIGN-PUBLICATION-REVIEW-RAW.md:1`). The published-source equivalent in A-104 adds the final lease sample before shared publication. The focused suite passed 82 cases and the expiry case detected the swapped order. [Unknown] Native recovery completion on the corrected subject.

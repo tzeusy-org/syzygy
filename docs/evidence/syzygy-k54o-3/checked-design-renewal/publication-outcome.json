@@ -1,0 +1,31 @@
+{
+  "format": "syzygy-f3-checked-design-publication-review/1",
+  "reviewedSubject": "382820f9f4bae705521407d3eedbedeff6639f95",
+  "adoptedSource": "9d2e756a90e34018be513d2e8559ce1a626636b1",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "faa8ce64cc2cf33f1e5aa6b1c072388ddeb15ef85cb1972d581b4647a52435c4",
+    "packages/polaris-dossier/src/url-design-product.test.ts": "804552e346f606eeaf4f301f36d9c5c69648582699a70e67958d4c85521c7675"
+  },
+  "review": {
+    "path": "docs/reviews/F3-CHECKED-DESIGN-PUBLICATION-REVIEW-RAW.md",
+    "sha256": "5e822195ae84ea4e6d23d419c920ad443d9f7a936970afe018b75d7d129424f3",
+    "verdict": "PASS"
+  },
+  "initialReview": {
+    "path": "docs/reviews/F3-CHECKED-DESIGN-PUBLICATION-INITIAL-REVIEW-RAW.md",
+    "sha256": "0551f32b8aa40c644de4913e4e9ec4f2bbe76f261e5ae3730cd8a007605d581a",
+    "verdict": "REVISE",
+    "subject": "77ad941589725882a2327ccb78309d51acbd2aa2"
+  },
+  "checks": {
+    "unit": {
+      "passed": 82,
+      "outputSha256": "17bb4432f8d484d30d6b59737873fb1956bb98529de20ca0d921c26207756082"
+    },
+    "typecheck": {
+      "exit": 0,
+      "outputSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "nativeRecovery": "Unknown"
+}
