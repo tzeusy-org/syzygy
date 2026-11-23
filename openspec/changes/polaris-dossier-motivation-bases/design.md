@@ -25,8 +25,11 @@ They carry no source page, citation anchor or Observed quote. The checker
 refuses marked external blocks while 10b stands. The fidelity verdict
 detects unmarked external reliance and blocks readiness. If external
 presentation becomes eligible through a recorded reversal, it remains
-outside the opening and concise account. Its disclosed status keeps
-reported transmission outside Syzygy's observed record.
+outside the opening and concise account. The verdict accounts for that
+report under the current packet as `external-unverifiable`. The report
+receives no accuracy or support credit. The eligibility condition is
+rechecked at render. The disclosed transmission remains the agent's
+report of activity outside Syzygy's observed record.
 
 ## Review controls
 

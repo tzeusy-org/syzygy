@@ -29,7 +29,8 @@ can still be disclosed as Unknown.
 REQ-039 keeps the 10b refusal operative. It describes the conditional
 presentation of an agent's external report after a separate recorded
 reversal. The report's source labels carry no evidence authority and
-Syzygy makes no external request. The standing permission,
+Syzygy makes no external request. An eligible report receives its own
+packet entry and carries no support credit. The standing permission,
 history admission and the predecessor packet's questions stay with
 [the parked change](../polaris-dossier-arbitrary-public-repo/proposal.md)
 and syzygy-mzge.
