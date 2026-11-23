@@ -1,0 +1,62 @@
+{
+  "subjects": [
+    {
+      "adoption": "A-169",
+      "subjectCommit": "25bcf3f6cef44c632859d6ef8662355c2020b5eb",
+      "baseCommit": "4671923156915f2cf6176b3e20f3fcef502c9c00",
+      "binaryDeltaSha256": "b5ecb254f5e2c93c9ed0992e8f163141a2aef41132b0d3bec4249527e7f373d0",
+      "reviewVerdict": "PASS",
+      "positive": {
+        "command": "./node_modules/.bin/vitest run --project unit --maxWorkers=1 packages/polaris-dossier/src/url-stopped-run.test.ts",
+        "passed": 18,
+        "logSha256": "8b413a9d70c7e872a7c0d82cbffedc0cf829cc8d75075d4e3b8322dbc9b4a71e"
+      },
+      "predecessorControl": {
+        "restoredFrom": "4671923156915f2cf6176b3e20f3fcef502c9c00",
+        "path": "packages/polaris-dossier/src/url-stopped-run.ts",
+        "selector": "synchronous policy probe",
+        "detectedFailures": 2,
+        "logSha256": "706ca2d57fc16edce4a033fe3995d825ccaacfb79858ad6ddf63d5dc65812695"
+      }
+    },
+    {
+      "adoption": "A-170",
+      "subjectCommit": "00dcfb69770fd956ba0a3b20950d5e50a7756e40",
+      "baseCommit": "25bcf3f6cef44c632859d6ef8662355c2020b5eb",
+      "binaryDeltaSha256": "c3d27a73ef370e598e0732bd3ba0d3ae71aca69ccc79dc915822baaf439f7bb0",
+      "reviewVerdict": "PASS",
+      "positive": {
+        "command": "./node_modules/.bin/vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "passed": 23,
+        "logSha256": "14fdb6d620187e4a8ef5d27f018d67bb7c3333276d750dc2aeabddbb9027b92a"
+      },
+      "predecessorControl": {
+        "restoredFrom": "25bcf3f6cef44c632859d6ef8662355c2020b5eb",
+        "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+        "selector": "under slow live authority",
+        "detectedFailures": 1,
+        "logSha256": "e9103100b96e00adf4dd9768dfb473276c2c043c286c99e9bf34c89dd5556966"
+      }
+    }
+  ],
+  "review": {
+    "path": "docs/reviews/F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "ebaba89068c450766dd21c38464070d19c5319d9f5e2920e6f7e9148b5c43182"
+  },
+  "hostedPredecessor": {
+    "subjectCommit": "c57a8eb4e6e9923cb98a7daea15b8b91b9620464",
+    "workflowRun": 45284321343,
+    "job": 138078068596,
+    "logSha256": "fe3d0f97f9f7932708db7ea74bdfbc04d5c92beee509865ac597891a9fc7129f",
+    "case": "eligible-stop-resume",
+    "stopCutVerified": true,
+    "consumedClaimCurrent": true,
+    "refusedAt": "create-origins / first representative",
+    "representativeMilliseconds": 6662.295085,
+    "authoritySamples": 8,
+    "authorityMilliseconds": 6657.872457000194,
+    "authorityRefusals": 0,
+    "executionRecordPresent": false
+  },
+  "successorNativeCompletion": "Unknown"
+}

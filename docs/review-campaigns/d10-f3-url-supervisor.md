@@ -52,6 +52,7 @@
 - `F3-A14-GIT-BLOB-BATCH-REVIEW-RAW\.md`
 - `F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW\.md`
 - `F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW\.md`
+- `F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -184,3 +185,5 @@
 [Observed] The resumed Design authority-ordering review records `PASS` (F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW.md:1) at `56fce2f37`. A-167 joins the in-flight inspection before the resumed relay’s full authority check and preserves the final authority check. [Unknown] Native Resume completion for the successor.
 
 [Observed] The native inspection-bound review records `PASS` (F3-NATIVE-INSPECTION-BOUND-REVIEW-RAW.md:1) at `d7c8de9f4`. A-168 records the two-second inspection and history sample wait. Focused cases exercise completion beyond the old limit and refusal at the declared bound. [Unknown] Native Resume completion.
+
+[Observed] The consumed claim and bounded source review records `PASS` for `25bcf3f6c` and `00dcfb697` (F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW.md:1). A-169 checks the exact effective record at synchronous claim release. A-170 retains the original read timer, the source reader's live checks and final authority after screening. The focused predecessor controls detected stale run-record acceptance and a source read refusal under slow live samples. [Unknown] Native Resume completion.
