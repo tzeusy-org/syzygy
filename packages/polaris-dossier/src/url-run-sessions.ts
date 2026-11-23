@@ -599,16 +599,23 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         hosts.set(role, host);
         if (host.healthy !== undefined) hostHealth.set(role, host.healthy);
         if (disclosure?.current() === false) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
-        const child = await ports.launch({ preparation, host }).catch(cause => {
-          if (disclosure?.current() === false) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
+        let disclosureRefused = false;
+        const child = await ports.launch({ preparation, host, ...(disclosure === undefined ? {} : {
+          beforeSpawn: () => {
+            // Record uncertain handoff before releasing the process that may reach the Author.
+            disclosureRefused = true;
+            if (!disclosure.record('unknown')) return false;
+            disclosureRefused = false;
+            return true;
+          },
+        }) }).catch(cause => {
+          if (disclosureRefused || disclosure?.current() === false) refuseDisclosure();
           throw cause;
         });
         handingOff = false;
         processes.set(role, child);
         const capture = captures.get(role)!;
         rememberTerminal(role, child, () => false);
-        // A launcher handle alone cannot establish the Author handoff.
-        if (disclosure?.record('unknown') === false) refuseDisclosure();
         if (role !== 'author' && launchHistory !== undefined) {
           try {
             if (child.commandSha256 !== plan.declaration.commandSha256 || !(await current())) throw new Error();

@@ -403,7 +403,12 @@ function processArgs(args: readonly string[], limits: UrlLaunchLimits): string[]
 /** Launches only from a genuine consumed preparation, after the real host binds.
  * Raw role output is drained and hashed, never persisted or exposed. Callbacks
  * and underlying IO are not claimed cancelled by a supervisor wait deadline. */
-export async function launchRestrictedUrlSession(input: { readonly preparation: UrlSessionPreparation; readonly host: SessionHost }): Promise<UrlSessionProcess> {
+export async function launchRestrictedUrlSession(input: {
+  readonly preparation: UrlSessionPreparation;
+  readonly host: SessionHost;
+  /** Synchronous durable handoff marker, after verification and before releasing the spawn. */
+  readonly beforeSpawn?: () => boolean;
+}): Promise<UrlSessionProcess> {
   const state = preparations.get(input.preparation), host = input.host;
   if (!state) throw refused(); preparations.delete(input.preparation);
   const trace = inspectionTraces.get(input.preparation);
@@ -425,6 +430,10 @@ export async function launchRestrictedUrlSession(input: { readonly preparation: 
       await verify(state, check);
     }, Math.min(limits.setupMilliseconds, Math.max(1, state.expires - performance.now())));
     check();
+    if (input.beforeSpawn !== undefined) {
+      if (input.beforeSpawn() !== true) throw refused();
+      check();
+    }
   } catch { active = false; await bounded(closeHost, limits.cleanupMilliseconds).catch(() => {}); throw refused(); }
   active = false;
   let child: ReturnType<typeof spawn>;

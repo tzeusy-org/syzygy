@@ -88,6 +88,7 @@ async function runtimeFixture(failRole?: ViewRole, sampleForRole?: (role: ViewRo
       const plan = prepared.roles.find(value => value.role === role)!;
       await launchAudits.get(role)!({ event: 'session-launch-attempt', profileSha256: plan.profile.digest,
         commandSha256: plan.declaration.commandSha256, viewSha256: plan.declaration.viewSha256, limits: URL_LAUNCH_LIMITS });
+      if (input.beforeSpawn !== undefined && input.beforeSpawn() !== true) throw new Error('url-session-launch-refused');
       calls.push(`launch:${role}`);
       let resolve!: (value: UrlSessionLaunchOutcome) => void;
       const finished = new Promise<UrlSessionLaunchOutcome>(done => { resolve = done; });
@@ -141,6 +142,16 @@ describe('one root lifecycle for four restricted URL roles', () => {
       expect(stopped.audit).toMatchObject({ poisoned: false, termination: 'closed', captured: { 'launch-terminal': 4 } });
       expect(stopped.roles.every(role => role.outcome !== 'Unknown' && role.outcome.groupTermination === 'confirmed')).toBe(true);
     } finally { await runtime.stop(); }
+  });
+  it('reports the disclosure restart refusal when the Author launch marker cannot be written', async () => {
+    const f = await runtimeFixture(), handoffs: string[] = [];
+    await expect(f.start({ ...f.options, authorHandoff: {
+      current: () => true, record: handoff => { handoffs.push(handoff); return false; },
+    } })).rejects.toThrow('REQ-polaris-generation-033 requires a valid raw-read disclosure before this step. Start a new run with syzygy dossier init or syzygy polaris <url>.');
+    expect(handoffs).toEqual(['unknown']);
+    expect(f.calls).toEqual(['prepare:author', 'host:author', 'host-close:author']);
+    expect(f.failures).toEqual(['raw-read-disclosure-unavailable']);
+    expect(f.credentialClosed()).toBe(true);
   });
   it('prepares before each actual host, captures safe receipts and usage, and closes each owned process before audit', async () => {
     const f = await runtimeFixture(), handoffs: string[] = [];

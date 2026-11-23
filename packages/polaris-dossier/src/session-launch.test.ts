@@ -8,10 +8,12 @@ import path from 'node:path';
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson, parseBoundedJson, REVIEW_STATUS_REGION_OPEN } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
+import { patchFs } from './fs-patch.testkit.js';
 import { policyFixture } from './full-run.testkit.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, sourceBindingSha256 } from './run-record.js';
 import { DOSSIER_POLICY_PATH } from './policy-snapshot.js';
+import { initialRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { buildDossierScreen } from './screen.js';
 import { loadSessionCredential } from './session-credential.js';
 import { screenOrderedDesignRequest, SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
@@ -817,6 +819,36 @@ describe('prepared private CLI launch',()=>{
     expect(captured?.limits).toMatchObject({ milliseconds: 8000, outputBytes: 4096, sampleMilliseconds: 100, inspectionMilliseconds: 1000 });
     expect(nativeSpawns.calls()).toHaveLength(before); expect(f.counts().forwards).toBe(0);
     expect(await host.close()).toMatchObject({ termination: 'settled' });
+  }, 20_000);
+
+  it('withholds native Author spawn when its disclosure write fails after preflight', async () => {
+    const f = await launchFixture();
+    const runId = `run-${'a'.repeat(32)}`, run = path.join(f.root, runId), provider = 'anthropic';
+    const file = path.join(run, 'raw-read-disclosure.json');
+    await mkdir(run, { mode: 0o700 });
+    const beforeBytes = initialRawReadDisclosure(runId, provider);
+    await writeFile(file, beforeBytes, { mode: 0o600 });
+    const preparation = await prepareRestrictedUrlSession(f.launch), host = await f.start();
+    const beforeSpawns = nativeSpawns.calls().length;
+    const beforeSpawn = vi.fn(() => {
+      expect(f.events).toContain('launch-audit');
+      expect(nativeSpawns.calls()).toHaveLength(beforeSpawns);
+      return recordRawReadHandoff(run, provider, 'unknown');
+    });
+    const refuseRename = vi.fn(() => { throw Object.assign(new Error('owned disclosure write refusal'), { code: 'EIO' }); });
+    const restore = patchFs('renameSync', rename => (from, to) => {
+      if (path.basename(String(to)) === 'raw-read-disclosure.json') return refuseRename();
+      return rename(from, to);
+    });
+    try {
+      await expect(launchRestrictedUrlSession({ preparation, host, beforeSpawn })).rejects.toThrow('url-session-launch-refused');
+      expect(beforeSpawn).toHaveBeenCalledTimes(1);
+      expect(refuseRename).toHaveBeenCalledTimes(1);
+      expect(nativeSpawns.calls()).toHaveLength(beforeSpawns);
+      expect(f.counts()).toEqual({ artifactReads: 0, forwards: 0, responses: 0, reservations: 0 });
+      expect(await readFile(file, 'utf8')).toBe(beforeBytes);
+      expect(await host.close()).toMatchObject({ termination: 'settled' });
+    } finally { restore(); }
   }, 20_000);
 
   it('bounds a stuck launch audit, closes the host and does not launch late when the callback resolves', async () => {
