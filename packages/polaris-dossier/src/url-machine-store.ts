@@ -426,6 +426,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       let active = true, held = false, uncertain = false, contended = false;
       const pending = new Set<Promise<unknown>>();
       const allocation = staging?.allocation === true;
+      const stagedPublication = staging !== undefined && !allocation;
       const checkDeadline = (): number => {
         if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
         const now = clock();
@@ -456,14 +457,16 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const io = async <T>(start: () => Promise<T>): Promise<T> => {
         if (currentAsync === undefined || staging !== undefined) checkWork();
         else await checkAsync(currentAsync);
-        checkDeadline(); charge();
+        // The staged publication guard already sampled this boundary.
+        if (!stagedPublication) checkDeadline();
+        charge();
         const promise = start();
         pending.add(promise);
         try {
           const value = await promise;
           if (currentAsync === undefined || staging !== undefined) checkWork();
           else await checkAsync(currentAsync);
-          checkDeadline();
+          if (!stagedPublication) checkDeadline();
           return value;
         } finally { pending.delete(promise); }
       };
