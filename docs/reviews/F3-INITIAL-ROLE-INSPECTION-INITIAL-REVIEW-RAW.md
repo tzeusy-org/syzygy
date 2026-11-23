@@ -1,0 +1,5 @@
+BLOCK
+
+[Inferred] A short audit write during Inventory startup can leave a partial JSON row after Author has launched. The startup failure handler parses that row before emitting `initialRoleInspections`, so `JSON.parse` can replace the intended diagnostic with a `SyntaxError` and hide the genuine Author inspection. Preserve the captured inspection map when auxiliary audit parsing fails. [Startup failure handler](/home/orca/.tmp/f3-publication-final.ZPps4HP6/w/packages/polaris-dossier/src/url-run-composed.test.ts:1107) · [Short-write coverage](/home/orca/.tmp/f3-publication-final.ZPps4HP6/w/packages/polaris-dossier/src/url-session-audit.test.ts:533)
+
+[Observed] I reproduced the parser failure with a valid row followed by a partial row. The exact `4ca23d1c7` diff is test-only. Its observer preserves native promise and receipt identity, excludes restored-only receipts, and gives the resumed observer independent state. A local Vitest spy probe confirmed that cleanup restores the stable wrapper’s native implementation. The composed case was outside this source review.

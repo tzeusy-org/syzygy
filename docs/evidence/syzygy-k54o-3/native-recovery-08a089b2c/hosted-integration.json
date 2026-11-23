@@ -1,0 +1,167 @@
+{
+  "subject": "08a089b2c7427009fe6ef6593ccc676b4bd8f6c6",
+  "checkout": "9534626fca6a1f4dcf8a4b0d8fadd10fccef6d1d",
+  "identicalTree": "2953e510b765cc45aa3d4df7bb22f5ad4fb91017",
+  "workflowRun": 45110470950,
+  "job": 137482587920,
+  "rawLogSha256": "4c6b7b83c70662fb5b43d637cbcbd92214a2feec1e8b59171f46d1792ae8b52d",
+  "finalDenominatorSources": [
+    [
+      "Test Files",
+      "2 failed | 135 passed (137)"
+    ],
+    [
+      "Tests",
+      "3 failed | 3906 passed | 3 skipped (3912)"
+    ]
+  ],
+  "composedCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 93202
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 61051
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 361535
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 360832
+    }
+  ],
+  "interruptedResume": {
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "role-ended",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "exitCode": null,
+            "signal": "SIGTERM"
+          }
+        ]
+      }
+    ],
+    "firstLauncherRefusal": {
+      "ordinal": 1,
+      "phases": {
+        "process": {
+          "startedMs": 0.03724000003421679,
+          "settledMs": 914.9193030000315,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.10845200001494959,
+          "settledMs": 596.1625980000244,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.12417000002460554,
+          "settledMs": 597.2623550000135,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 914.9345769999782,
+          "settledMs": 1005.9404230000218,
+          "outcome": "accepted"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "sample-deadline",
+        "elapsedMs": 1006.0249869999825
+      }
+    },
+    "audit": {
+      "status": "read",
+      "count": 3,
+      "kinds": [
+        "declaration",
+        "launch-attempt",
+        "launch-terminal"
+      ]
+    },
+    "hostActivation": {
+      "startedMs": 220272.809,
+      "settledMs": 225135.28,
+      "outcome": "rejected"
+    },
+    "inferenceExchanges": 0,
+    "connectionCount": 1
+  },
+  "eligibleResume": {
+    "lastProgress": {
+      "phase": "public-resume",
+      "settledOrdinaryRoles": [
+        "author",
+        "inventory",
+        "fidelity",
+        "design"
+      ],
+      "designForwards": 5,
+      "finalProductAssertions": 3,
+      "liveFinals": 2,
+      "coldFinals": 0,
+      "cutTaken": true,
+      "resumeGuardsChecked": false,
+      "resumeChecks": 2
+    },
+    "hostActivation": {
+      "startedMs": 77420.92,
+      "settledMs": 79566.534,
+      "outcome": "accepted"
+    },
+    "runnerTimeoutMs": 360000
+  },
+  "additionalFailure": {
+    "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+    "case": "reports the exact artifact sample cause after denied gate through the owning read port",
+    "assertion": "expected true to be false for typed read expiry"
+  }
+}

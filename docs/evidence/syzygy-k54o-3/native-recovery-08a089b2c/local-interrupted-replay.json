@@ -1,0 +1,70 @@
+{
+  "subject": "4ca23d1c76dbd0202bb9b8afa31986b451e862b7",
+  "nativeLogSha256": "45fefcaa76bf1aa51c142ff6ea9a0e78bf3dc211252ded4812ddd04acbf30536",
+  "fixtureManifestSha256": "2714392878f3a521525096758f6099a89b10ffe6f3b214588f3ebefb957b4760",
+  "result": "failed",
+  "reportedReason": "launch-unavailable",
+  "initialRoleInspections": {
+    "author": {
+      "samples": 495
+    },
+    "inventory": {
+      "samples": 461
+    },
+    "fidelity": {
+      "samples": 430
+    },
+    "design": {
+      "samples": 5
+    }
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "Unknown",
+      "roles": []
+    }
+  ],
+  "resumeAuditSetup": {
+    "startedMs": 277961.610149,
+    "authority": {
+      "started": 26,
+      "accepted": 26,
+      "refused": 0,
+      "rejected": 0,
+      "totalMs": 3245.8990880000056,
+      "longestMs": 195.5772950000246
+    },
+    "settledMs": 281352.358993,
+    "outcome": "accepted",
+    "declarations": 4,
+    "pendingCallbacks": 0,
+    "pendingFilesystemOperations": 0
+  },
+  "resumedDesignAudit": {
+    "status": "read",
+    "count": 1,
+    "kinds": [
+      "declaration"
+    ]
+  },
+  "inspectedResumedRoleLaunches": 0,
+  "completeExecutionRecordObserved": false,
+  "limits": "Machine allocation did not return a controller or a check witness. The first refusing allocation predicate is unknown."
+}
