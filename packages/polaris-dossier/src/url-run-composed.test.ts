@@ -617,6 +617,10 @@ async function observeDesignRun(run: string, traceInference = false) {
     const commitDesignDelivery: typeof audit.commitDesignDelivery = (request, sample, onRead) => {
       const stamp: DeliveryTrace = { startedMs: clock(), samples: [] };
       designDelivery = stamp;
+      if (traceInference) {
+        expect(hostActivation).toBeDefined();
+        expect(designProduct.urlDesignProductLeaseState(request.product)).toHaveProperty('deadline', hostActivation!.deadline);
+      }
       const observeSample = sample === undefined ? undefined : () => {
         const timing: ResumeStamp = { startedMs: clock() };
         stamp.samples.push(timing);
@@ -700,7 +704,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   let firstRefusedInference: InferenceStep | undefined;
   let firstRefusedCurrent: CurrentTrace | undefined;
   let firstRefusedHostCurrent: CurrentTrace | undefined;
-  let hostActivation: ResumeStamp | undefined;
+  let hostActivation: (ResumeStamp & { deadline: number }) | undefined;
   let designLaunchWrite: ResumeStamp | undefined;
   let designLaunchCommit: ResumeStamp | undefined;
   let designLaunchRegistration: ResumeStamp | undefined;
@@ -853,8 +857,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   }
 
   const startBroker = sessionBroker.startSessionBroker;
-  vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine) => {
-    if (machine === undefined || !orderedBrokers.has(machine)) return startBroker(socket, invoke, onFault, limits, machine);
+  vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine, startupCurrent) => {
+    if (machine === undefined || !orderedBrokers.has(machine)) return startBroker(socket, invoke, onFault, limits, machine, startupCurrent);
     return startBroker(socket, (value, release, context) => {
       brokerInvocations++;
       if (context === null || context.peer !== firstMcpPeer || ++firstPeerInvocations !== 1) return invoke(value, release, context);
@@ -864,7 +868,7 @@ async function observeDesignRun(run: string, traceInference = false) {
           revalidate === undefined ? undefined : () => brokerPhase('release-check', revalidate, () => true),
           finalToolBudgetCheck === undefined ? undefined : () => brokerPhase('release-final-budget', finalToolBudgetCheck, () => true)),
         () => true), context), () => true));
-    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine);
+    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine, startupCurrent);
   });
 
   const startHost = orderedHost.startOrderedDesignHost;
@@ -872,7 +876,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     orderedBrokers.add(input.brokerMachine);
     if (traceInference) {
       resumeRelayProbes.set(input.relayMachine, relayProbe);
-      hostActivation = { startedMs: clock() };
+      hostActivation = { startedMs: clock(), deadline: input.activationDeadline };
       timed(hostActivation, () => input.controller, () => true);
     }
     return startHost({ ...input, current: () => brokerPhase('host-current', () =>

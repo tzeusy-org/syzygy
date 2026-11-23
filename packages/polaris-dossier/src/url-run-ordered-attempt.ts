@@ -243,15 +243,19 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         if (!renderCurrent()) throw refused();
         return fresh;
       });
-    const startupCurrent = resumedPreparation !== undefined && preparation !== resumedPreparation ? renderCurrent : undefined;
+    const startupLease = urlDesignProductLeaseState(reproduced.product);
+    if (startupLease.state !== 'open') throw refused();
+    // Launch registration and delivery use the same checked product. Bound
+    // activation by that original lease and the original run deadline.
+    const activationDeadline = Math.min(input.deadline, startupLease.deadline);
     let admission: SessionAdmission | null = null;
-    host = await startOrderedDesignHost({ controller: activation, activationDeadline: Math.min(input.deadline, input.now() + 20_000),
+    host = await startOrderedDesignHost({ controller: activation, activationDeadline,
       profile, subject: { binding: profile.input.binding, project: 'project:syzygy', pin: input.pin, principal: input.principal },
       credential: input.credential, brokerSocket: path.join(input.plan.view.brokerSocketDirectory, 'b.sock'),
       relaySocket: path.join(input.plan.view.relaySocketDirectory, 'r.sock'),
       brokerMachine: input.machine.transport('design', 'mcp-shim'), relayMachine: input.machine.transport('design', 'inference-bridge'),
       current,
-      ...(startupCurrent === undefined ? {} : { startupCurrent }),
+      startupCurrent: renderCurrent,
       admit: (checks, replies) => {
         assertCurrent();
         const parents = checks.resultWrappers.length === 0 ? [] : input.expectedProduct.parents;
@@ -273,8 +277,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
         if (event.event === 'response-admitted' && event.response?.stopReason === 'end_turn' && !(await consumeTerminal())) throw refused();
       },
     });
-    child = await launchRestrictedUrlSession({ preparation, host,
-      ...(startupCurrent === undefined ? {} : { beforeSpawn: startupCurrent }) });
+    child = await launchRestrictedUrlSession({ preparation, host, beforeSpawn: renderCurrent });
     input.launched(child, host);
     let launch = input.firstLaunch;
     if (launch === null) {
