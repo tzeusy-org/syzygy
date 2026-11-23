@@ -266,19 +266,23 @@ describe('same-store machine continuation seam', () => {
         }), profile);
       } };
     });
-    const create = createUrlRunMachine({ ...f.options, requiredRoles: [], plans: [] });
+    const create = createUrlRunMachine({ ...f.options, requiredRoles: ['author'], plans: f.options.plans.slice(0, 1) });
     if (refusal === 0) {
       const resumed = await create;
       cleanup.push(() => resumed.close());
       expect(resumed.current()).toBe(true);
       expect(sampleTimes).toEqual([NOW, NOW]);
+      const beforeClients = JSON.parse(before.toString()).clients;
+      const afterClients = JSON.parse(await readFile(stateFile, 'utf8')).clients;
+      expect(afterClients).toHaveLength(beforeClients.length + 2);
+      expect(afterClients.slice(0, beforeClients.length)).toEqual(beforeClients);
     } else {
       await expect(create).rejects.toThrow('url-run-machine-unavailable');
       expect(sampleTimes).toEqual(refusal === 1 ? [null] : [NOW, null]);
+      expect(await readFile(stateFile)).toEqual(before);
     }
     expect(separateCurrent).not.toHaveBeenCalled();
     expect(separateClock).not.toHaveBeenCalled();
-    expect(await readFile(stateFile)).toEqual(before);
   });
 
   it('refuses a changed protected retired head after genuine cold capture and never allocates around it', async () => {
