@@ -80,7 +80,7 @@ describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
     const canary = 'AKIA' + 'A'.repeat(16);
     for (const key of ['model', 'operator', 'audience', 'revision', 'identity']) {
       const result = await preparePolarisStart({ ...input, [key]: canary }, { sources });
-      expect(result).toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+      expect(result).toMatchObject({ ok: false, refusal: { reason: expect.stringContaining('declaration is excluded') } });
       expect(JSON.stringify(result)).not.toContain(canary);
     }
     const ssh = { knownHostsPath: '/own/known-hosts', authentication: { kind: 'agent-socket' as const, path: '/own/agent', publicIdentityPath: '/own/public-key' } };
@@ -94,14 +94,14 @@ describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
       ];
       for (const candidate of cases) {
         const result = await preparePolarisStart({ ...input, ssh: candidate }, { sources });
-        expect(result).toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+        expect(result).toMatchObject({ ok: false, refusal: { reason: expect.stringContaining('declaration is excluded') } });
         expect(JSON.stringify(result)).not.toContain(value);
       }
     }
     expect(await preparePolarisStart({ ...input, model: 'AKIA', operator: 'A'.repeat(8), audience: 'A'.repeat(8) }, { sources }))
-      .toMatchObject({ ok: false, reason: expect.stringContaining('declaration is excluded') });
+      .toMatchObject({ ok: false, refusal: { reason: expect.stringContaining('declaration is excluded') } });
     expect(await preparePolarisStart({ ...input, url: 'https://example.invalid/only-one-segment' }, { sources }))
-      .toMatchObject({ ok: false, reason: expect.stringContaining('--identity repository:<id>') });
+      .toMatchObject({ ok: false, refusal: { reason: expect.stringContaining('--identity repository:<id>') } });
   });
   it('refuses incomplete or conflicting explicit SSH authentication before source or child access', async () => {
     const stateRoot = tempDir('polaris-ssh-options-');

@@ -3,7 +3,9 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { briefIssuedAt } from './check.js';
 import { USAGE_NOT_RECORDED } from './close.js';
-import { type RecordedRunConfig } from './run-record.js';
+import type { Outcome } from './outcome.js';
+import type { RunConfigRefusal } from './run-config.js';
+import type { RecordedRunConfig } from './run-record.js';
 import { describeRawReadDisclosure, readRawReadDisclosure } from './raw-read-disclosure.js';
 import { effectiveUrlProjection, readEffectiveRunRecord, URL_MODE_MARKERS, URL_RUN_SIDECAR, type EffectiveRunAuthority } from './effective-run-record.js';
 import type { UrlRunDeclaration } from './url-run-record.js';
@@ -66,9 +68,14 @@ export interface StatusReport {
   readonly unrecognizedEntries: readonly string[];
 }
 
-export type StatusResult =
-  | { readonly ok: true; readonly report: StatusReport }
-  | { readonly ok: false; readonly reason: string; readonly refusals?: readonly { readonly field?: string; readonly kind: string; readonly detail: string }[] };
+interface StatusRefusal {
+  readonly command: 'status';
+  readonly outcome: 'refused';
+  readonly reason: string;
+  readonly refusals?: readonly RunConfigRefusal[];
+}
+
+export type StatusResult = Outcome<StatusReport, StatusRefusal>;
 
 const KNOWN_ENTRIES: ReadonlySet<string> = new Set(Object.values(RUN_LAYOUT));
 
@@ -96,16 +103,19 @@ export function closedUsage(file: string): string {
 export const NO_RECORD_DEADLINE_PASSED = 'not written, and it will not be: the deadline passed before the run was closed, and close, like every step, refuses after it; the agent usage is therefore not recorded';
 
 export function runStatus(runDir: string, now: () => number = Date.now, authority?: EffectiveRunAuthority): StatusResult {
+  const refuse = (reason: string, refusals?: readonly RunConfigRefusal[]): StatusResult => ({
+    ok: false, refusal: { command: 'status', outcome: 'refused', reason, ...(refusals ? { refusals } : {}) },
+  });
   const run = path.resolve(runDir);
   let stats: fs.Stats;
   try {
     stats = fs.statSync(run);
   } catch (cause) {
-    return { ok: false, reason: `run directory ${run} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+    return refuse(`run directory ${run} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
   }
-  if (!stats.isDirectory()) return { ok: false, reason: `${run} is not a run directory` };
+  if (!stats.isDirectory()) return refuse(`${run} is not a run directory`);
   const read = readEffectiveRunRecord(run, authority);
-  if (!read.ok) return { ok: false, reason: read.reason, ...(read.refusals ? { refusals: read.refusals } : {}) };
+  if (!read.ok) return refuse(read.reason, read.refusals);
   const record = { record: read.core };
   const url = read.effective.kind === 'url' ? read.effective.declaration : undefined;
 

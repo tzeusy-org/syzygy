@@ -717,8 +717,9 @@ describe('declared-source admission and continuation boundaries', () => {
     expect(refusal(out)).toMatchObject({ stage: 'policy', objectsRead: false,
       reason: 'a new run requires the current committed dossier policy binding' });
     expect(fs.existsSync(stateRoot)).toBe(false);
-    expect(await preflight(URL_, sources, NOW)).toEqual({ ok: false,
-      reason: 'preparation for a new run requires the current committed dossier policy binding' });
+    expect(await preflight(URL_, sources, NOW)).toEqual({ ok: false, refusal: {
+      command: 'preflight', outcome: 'refused', reason: 'preparation for a new run requires the current committed dossier policy binding',
+    } });
   });
   it('refuses malformed declarations before any object read', async () => {
     const out = await init({ url: 'https://user:fixture@example.invalid/repo' });
@@ -884,7 +885,9 @@ describe('preflight: declared metadata preparation', () => {
   it('refuses missing or changed committed policy rather than using a policy act', async () => {
     const root = records();
     fs.appendFileSync(path.join(root, DOSSIER_POLICY_PATH), '\n');
-    expect(await run(root)).toMatchObject({ ok: false, reason: 'the dossier policy differs from its committed bytes; start only from a committed policy' });
+    expect(await run(root)).toEqual({ ok: false, refusal: {
+      command: 'preflight', outcome: 'refused', reason: 'the dossier policy differs from its committed bytes; start only from a committed policy',
+    } });
     fs.unlinkSync(path.join(root, DOSSIER_POLICY_PATH));
     expect((await run(root)).ok).toBe(false);
   });
@@ -892,13 +895,19 @@ describe('preflight: declared metadata preparation', () => {
   it('refuses a credential-bearing locator before consulting any source port and never echoes it', async () => {
     const sources = new Proxy({} as ReturnType<typeof createPackageGateSources>, { get() { throw new Error('source read before URI validation'); } });
     const result = await preflight('https://user:token@github.com/redis/redis', sources, NOW);
-    expect(result).toEqual({ ok: false, reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
+    expect(result).toEqual({ ok: false, refusal: {
+      command: 'preflight', outcome: 'refused',
+      reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded',
+    } });
   });
 
   it('screens secret-shaped metadata before returning a normalized locator', async () => {
     const nonsecretCanary = 'AKIA' + 'A'.repeat(16);
     const result = await run(records(), `https://git.example.org/team/${nonsecretCanary}`);
-    expect(result).toEqual({ ok: false, reason: 'the repository locator is excluded by the committed metadata screening policy; it is not printed or stored' });
+    expect(result).toEqual({ ok: false, refusal: {
+      command: 'preflight', outcome: 'refused',
+      reason: 'the repository locator is excluded by the committed metadata screening policy; it is not printed or stored',
+    } });
     expect(JSON.stringify(result)).not.toContain(nonsecretCanary);
   });
 

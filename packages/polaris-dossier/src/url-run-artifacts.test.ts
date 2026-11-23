@@ -1647,7 +1647,7 @@ describe('trusted URL artifact producer bridge', () => {
     const f = fixture(); f.initialize(); f.write('run.json', encodeRunRecord(f.options.record.declared, f.options.record.subject));
     f.write('raw-read-disclosure.json', JSON.stringify({ schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: path.basename(f.run),
       declaredProvider: f.options.record.declared.agentProvider, authorHandoff: 'reached' }));
-    const status = runStatus(f.run, () => Date.UTC(2026, 10, 19, 0, 1)); if (!status.ok) throw Error(status.reason);
+    const status = runStatus(f.run, () => Date.UTC(2026, 10, 19, 0, 1)); if (!status.ok) throw Error(status.refusal.reason);
     expect(status.report.rawReadDisclosure).toMatchObject({ authorHandoff: 'reached', label: 'Inferred', uncapturedTransmissions: 'Unknown' });
     for (const [argv, response] of [[['dossier', 'help'], { stdout: f.options.helpText, stderr: '', exit: 0 }],
       [['dossier', 'status', f.run], { stdout: JSON.stringify(status.report), stderr: '', exit: 0 }]] as const) {

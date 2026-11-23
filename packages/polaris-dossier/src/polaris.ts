@@ -19,7 +19,7 @@ import { isCheckRecordOf, readCheckRecord } from './check-record-read.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { dossierLocator, normaliseIdentityOption } from './launch-identity.js';
-import { preflight, type PreflightResult } from './preflight.js';
+import { preflight, refusePreflight, type PreflightResult } from './preflight.js';
 import { planUrlRevision } from './url-revision.js';
 import { acquireUrlSource, selectUrlSource, type AcquireUrlSourceResult, type SelectedUrlSource, type SelectUrlSourceResult, type UrlAcquisitionOperation } from './url-acquisition.js';
 import { resolveCloneHead, type CloneHead } from './clone-head.js';
@@ -245,7 +245,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
   }
   if (options.mode === 'start') {
     const prepared = await preparePolarisStart({ ...options, ...(audience === undefined ? {} : { audience }) }, ports);
-    if (!prepared.ok) return refuse(prepared.reason);
+    if (!prepared.ok) return refuse(prepared.refusal.reason);
   }
   const name = resumedState?.tmuxSession ?? `polaris-${Date.now().toString(36)}`;
   const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
@@ -328,7 +328,7 @@ function parseArgs(argv: readonly string[]): Options | string {
 export async function preparePolarisStart(
   input: Pick<Options, 'url' | 'revision' | 'identity' | 'model' | 'operator' | 'audience' | 'ssh'>, ports: CliPorts,
 ): Promise<PreflightResult> {
-  if (input.url === undefined) return { ok: false, reason: 'give a repository URL' };
+  if (input.url === undefined) return refusePreflight('give a repository URL');
   const result = await preflight(input.url, cliGateSources(ports), (ports.now ?? Date.now)());
   if (!result.ok) return result;
   const authentication = input.ssh?.authentication;
@@ -337,11 +337,11 @@ export async function preparePolarisStart(
   const declared = fields.filter((value): value is string => value !== undefined);
   for (const value of [...declared, declared.join(''), declared.join('\n'), declared.join(' ')]) {
     if (value !== undefined && (Buffer.byteLength(value, 'utf8') > 65_536 || result.screen.screenBody(value) !== undefined)) {
-      return { ok: false, reason: 'a run declaration is excluded by the committed metadata screening policy; its value is not printed or stored' };
+      return refusePreflight('a run declaration is excluded by the committed metadata screening policy; its value is not printed or stored');
     }
   }
   if (input.identity === undefined && result.report.repository.repositoryId === null) {
-    return { ok: false, reason: 'the locator has no unambiguous repository identity; give --identity repository:<id>' };
+    return refusePreflight('the locator has no unambiguous repository identity; give --identity repository:<id>');
   }
   return result;
 }
@@ -722,7 +722,7 @@ export async function supervisorSource(input: SupervisorSourceInput, ports: Supe
 async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise<SupervisorState | string> {
   const url = options.url!;
   const prepared = await preparePolarisStart(options, ports);
-  if (!prepared.ok) return prepared.reason;
+  if (!prepared.ok) return prepared.refusal.reason;
   let executable: string;
   try { executable = fs.realpathSync(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)); }
   catch { return 'The supported restricted CLI is unavailable; no source was acquired.'; }

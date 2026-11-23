@@ -513,8 +513,7 @@ async function deliverReview(
     }
     // Delivery revalidates the lease and all selected products before writing.
     if (products !== undefined) await yieldForProductReads(products, run);
-    const delivered = deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now, undefined, products);
-    return delivered.ok ? delivered : refuse('write', delivered.reason);
+    return deliverToWaiting(run, opened.runId, kind, waiting, built, packet, now, undefined, products);
   } catch (cause) {
     if (cause instanceof UrlProductReadRefusal) return refuse('reverify', cause.message);
     throw cause;
