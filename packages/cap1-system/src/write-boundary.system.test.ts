@@ -7,11 +7,12 @@
 // (openspec/**, .syzygy/**) is byte-identical, compared file by file
 // with an enumerated denominator.
 
-import { rmSync } from 'node:fs';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
+  FIXTURE_DECLARATION,
   readCredential,
   snapshotTree,
   startDaemon,
@@ -28,6 +29,62 @@ afterEach(async () => {
 });
 
 describe('RT6 — write boundary by harness-external filesystem observation', () => {
+  it.each([
+    { placement: 'at the declaration root', prefix: '' },
+    { placement: 'under declarations', prefix: 'declarations.' },
+  ])('routes widening fields $placement to the owner on both surfaces', async ({ prefix }) => {
+    const base = tempBase('syz-sys-widening-');
+    cleanups.push(() => rmSync(base, { recursive: true, force: true }));
+    const fixtureRoot = join(base, 'fixture');
+    writeCompleteFixture(fixtureRoot);
+
+    const names = ['write_roots', 'writable_paths', 'write_paths', 'output_directory', 'deploy_target'];
+    const inertValue = 'widening-fixture-placeholder';
+    const indent = prefix ? '  ' : '';
+    const fields = names.map((name) => `${indent}${name}: ${inertValue}\n`).join('');
+    const declaration = prefix
+      ? FIXTURE_DECLARATION.replace('declarations:\n', `declarations:\n${fields}`)
+      : FIXTURE_DECLARATION + fields;
+    writeFileSync(join(fixtureRoot, '.syzygy', 'project.yaml'), declaration, 'utf8');
+    const before = snapshotTree(fixtureRoot);
+
+    const daemon = await startDaemon({ fixtureRoot, stateDir: join(base, 'state') });
+    cleanups.push(async () => {
+      await daemon.stop();
+    });
+    const token = readCredential(daemon.credentialPath);
+    const human = await fetch(daemon.baseUrl);
+    const machine = await fetch(`${daemon.baseUrl}/api/project`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+    expect(human.status).toBe(200);
+    expect(machine.status).toBe(200);
+
+    const html = await human.text();
+    const rawMachine = await machine.text();
+    const detail = 'This field cannot widen the governed write boundary. Route this contradiction to the owner.';
+    expect(html).toContain('data-evaluation-kind="declaration-invalid"');
+    for (const name of names) {
+      expect(html).toContain(
+        `<li data-failure-kind="write-boundary-contradiction">write-boundary-contradiction (${prefix}${name}): ${detail}</li>`,
+      );
+    }
+    expect(JSON.parse(rawMachine)).toEqual({
+      kind: 'declaration-invalid',
+      failures: names.map((name) => ({
+        kind: 'write-boundary-contradiction',
+        field: prefix + name,
+        routedTo: 'owner',
+        detail,
+      })),
+    });
+    expect(html).not.toContain(inertValue);
+    expect(rawMachine).not.toContain(inertValue);
+
+    expect(await daemon.stop()).toBe(0);
+    expect(snapshotTree(fixtureRoot)).toEqual(before);
+  });
+
   it('after requests to all routes, the only filesystem additions live under the state dir and the governed tree is untouched', async () => {
     const base = tempBase('syz-sys-wb-');
     cleanups.push(() => rmSync(base, { recursive: true, force: true }));
