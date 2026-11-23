@@ -16,6 +16,7 @@
 - `F3-SEALED-ORIGIN-GATE-REVIEW-RAW\.md`
 - `F3-RESUME-STAGE-TRACE(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-PRIVATE-AUDIT-DECLARATION-AUTHORITY-REVIEW-RAW\.md`
+- `F3-BOUNDED-STORAGE-RETRY(-INITIAL|-BYTE-LIMIT|-RECURSIVE|-TIMEOUT)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -82,3 +83,5 @@
 [Observed] The initial resume stage trace review records `BLOCK` (`F3-RESUME-STAGE-TRACE-INITIAL-REVIEW-RAW.md:1`) at `712458421` for introducing an extra promise into the machine timing path. The successor records `PASS` (`F3-RESUME-STAGE-TRACE-REVIEW-RAW.md:1`) at `acac67381`. It records the original call's outcome and keeps the store probe inside fresh machine creation.
 
 [Observed] The private audit declaration authority review records `PASS` (`F3-PRIVATE-AUDIT-DECLARATION-AUTHORITY-REVIEW-RAW.md:1`) at `8e98a3764`. A-109 retains both syncs and verifies exact authority before new bytes and after complete tail verification under the original setup deadline. The focused audit and history suites passed 149 cases.
+
+[Observed] Three early bounded storage retry reviews record `BLOCK` for a mixed error result, byte-limit order and recursive disappearance respectively. The final runtime review records `PASS` (`F3-BOUNDED-STORAGE-RETRY-REVIEW-RAW.md:1`) at `dc61f9a94`. The original ordering counts an oversized entry before later disappearances and validates settled sibling results through recursive returns. The fixture timeout adjustment records `PASS` (`F3-BOUNDED-STORAGE-RETRY-TIMEOUT-REVIEW-RAW.md:1`) at `9cd29e9e6`.

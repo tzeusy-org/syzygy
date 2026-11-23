@@ -1,0 +1,5 @@
+BLOCK
+
+[Observed] `c5344753b9b9375011cf0299df2930a08d210aa9` restores the byte-limit check before a later `ENOENT` and adds a regression fixture. It validates later settled batch results when the current `lstat` returns `ENOENT`. [Production handling](/home/orca/.tmp/f3-storage-diagnosis.9RJJ9gY8/w/packages/polaris-dossier/src/session-launch.ts:299) · [Byte-limit fixture](/home/orca/.tmp/f3-storage-diagnosis.9RJJ9gY8/w/packages/polaris-dossier/src/session-launch.test.ts:1175)
+
+[Inferred] A race still bypasses that validation. An entry enumerated as a file can become a directory before `lstat`, placing a directory in a multi-entry batch. If its recursive walk signals a disappearance, the sentinel propagates without checking already-settled sibling results. On the second walk, that can permit a third census despite a known sibling `EACCES`, unsupported entry, or additional `ENOENT`. Validate those results before propagating a retry sentinel from recursion. This was a source-only review. [Recursive walk](/home/orca/.tmp/f3-storage-diagnosis.9RJJ9gY8/w/packages/polaris-dossier/src/session-launch.ts:320)
