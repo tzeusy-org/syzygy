@@ -934,8 +934,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       });
     }
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
-    let designDelivered: (() => void) | undefined;
-    const waitForDesignDelivery = eligibleStop ? new Promise<void>(resolve => { designDelivered = resolve; }) : undefined;
+    let releaseAuthorReread: (() => void) | undefined;
+    const waitForFidelityPacket = eligibleStop ? new Promise<void>(resolve => { releaseAuthorReread = resolve; }) : undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn(), resumedBegins = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
@@ -1035,7 +1035,6 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           expectedPlan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(profile, view.receipt,
             args[0].expectedProduct, f.commit, f.deadline), envelope: view.view });
           delivered = view;
-          designDelivered?.();
           if (!cut) return view;
           cutTaken = true;
           // Confirm the earlier ordinary exchanges have durably settled, then
@@ -1060,11 +1059,11 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     };
     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
-    // The eligible cut waits for Design to finish. Space the Author's final
-    // reply across two real bounded exchanges, using a permitted reread after
-    // the checked Design delivery, so a single reply need not span both phases.
-    const authorBeforeEligibleStop = waitForDesignDelivery === undefined ? [] : [async () => {
-      await waitForDesignDelivery;
+    // The eligible cut waits for Design to finish. The Author rereads the
+    // brief after the checked Fidelity packet arrives, then begins a separate
+    // bounded exchange for its end-turn while Fidelity and Design proceed.
+    const authorBeforeEligibleStop = waitForFidelityPacket === undefined ? [] : [async () => {
+      await waitForFidelityPacket;
       return tool('author_recheck_brief', 'artifact_read', { path: 'brief.md' });
     }];
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
@@ -1225,6 +1224,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const packetUntil = performance.now() + 60_000;
       while (!state.fidelityDeliveredPairs?.includes('0/0') && failures.length === 0 && state.stopped === undefined && performance.now() < packetUntil)
         await new Promise(resolve => setTimeout(resolve, 250));
+      if (state.fidelityDeliveredPairs?.includes('0/0')) releaseAuthorReread?.();
       fidelity.allow();
       if (stoppingCut) {
         eligiblePhase = 'initial-supervisor';
