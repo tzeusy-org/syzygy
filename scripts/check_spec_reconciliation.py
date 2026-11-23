@@ -672,17 +672,17 @@ HERO_SUBJECTS = {
     HERO_SPEC: "fcf271f84c03570cfbb8447d3370ae26c4ea75a54211b1677148b607e940d36b",
 }
 HERO_BOUND_PARTS = len(HERO_SUBJECTS)
-# The v2.21 containment-figure amendment (syzygy-3efd.31): one MODIFIED
+# The v2.23 containment-figure amendment (syzygy-3efd.31): one MODIFIED
 # REQ-polaris-generation-034 after v2.20, pending until its own VIS-4 ledger
 # row, found by its tag as v2.20's is.
 CONT_CHANGE = "dossier-containment-figure"
 CONT_HOME = f"{CHANGES}/{CONT_CHANGE}"
 CONT_SPEC = f"{CONT_HOME}/proposed/polaris-generation/spec.md"
 CONT_UNION = f"{CONT_HOME}/GOVERNING-DEPENDENCIES.json"
-CONT_TAG = "polaris-dossier-containment-figure-v2.21"
-CONT_STATUS_PREFIX = f"[Containment figure amendment 2.21]({CONT_HOME})"
+CONT_TAG = "polaris-dossier-containment-figure-v2.23"
+CONT_STATUS_PREFIX = f"[Containment figure amendment 2.23]({CONT_HOME})"
 CONT_SUBJECTS = {
-    CONT_SPEC: "ccf9709c1bb9def3ec31e484a389df64414ab425acb32668f03ce49fe89366eb",
+    CONT_SPEC: "eea54b488ca9653f28ab3088ea7ed6732424ec493ee883561f6fe555a7dccbbb",
 }
 CONT_BOUND_PARTS = len(CONT_SUBJECTS)
 
@@ -1367,7 +1367,7 @@ def hero_disposition(root, rows):
     return None
 
 def is_cont_row(line):
-    """A ledger row claiming the v2.21 containment-figure amendment, well formed or not."""
+    """A ledger row claiming the v2.23 containment-figure amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -2426,7 +2426,7 @@ def hero_binding(root):
     return (None if records or subjects else read_text(root, HERO_SPEC), records, subjects)
 
 def cont_binding(root):
-    """Read v2.21's published composition: pending until its row, like v2.14.
+    """Read v2.23's published composition: pending until its row, like v2.14.
 
     The row names the installing commit (a plain commit, so its revert may
     omit `-m 1`), the reviewed spec at that commit and the version tag. Its
@@ -2459,7 +2459,7 @@ def cont_binding(root):
     for rel, digest in CONT_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"containment figure: `{rel}` differs from the reviewed v2.21 subject")
+            subjects.append(f"containment figure: `{rel}` differs from the reviewed v2.23 subject")
     return (None if records or subjects else read_text(root, CONT_SPEC), records, subjects)
 
 
@@ -3255,7 +3255,7 @@ def check_outcomes(root, report):
     if hero_retired_by:
         retirement += f"; v2.20 inactive by {hero_retired_by}"
     if cont_retired_by:
-        retirement += f"; v2.21 inactive by {cont_retired_by}"
+        retirement += f"; v2.23 inactive by {cont_retired_by}"
     if verify_retired_by:
         retirement += f"; v2.21 inactive by {verify_retired_by}"
     if readmit_retired_by:
@@ -3291,7 +3291,7 @@ def check_outcomes(root, report):
                "one v2.19 row over effective v2.16, pending until recorded; hero figure: "
                "one v2.20 row over effective v2.19, pending until recorded; verify text: "
                "one v2.21 row over effective v2.18's 033, pending until recorded; containment figure: "
-               "one v2.21 row over effective v2.20, pending until recorded" + retirement)
+               "one v2.23 row over effective v2.20, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -5149,15 +5149,15 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and CONT_TAG in line
                    for line in rows.get(CONT_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route containment figure v2.21 "
+            findings.append(f"`{OPENSPEC_README}` does not route containment figure v2.23 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = cont_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or cont_fields != [f"{CONT_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route containment figure v2.21 and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route containment figure v2.23 and its adoption {identity}")
     elif CONT_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in cont_fields):
-            findings.append(f"`{STATUS}` calls containment figure v2.21 adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls containment figure v2.23 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -8250,7 +8250,7 @@ def hero_cases(tmp, base, witnesses, failures):
 
 
 def cont_cases(tmp, base, witnesses, failures):
-    """The v2.21 pending-to-adopted transition over v2.20, its ledger and byte guards, and the predecessor guard."""
+    """The v2.23 pending-to-adopted transition over v2.20, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, CONT_SPEC)
     if original is None or hero_binding(base)[0] is None:
         return
@@ -8273,8 +8273,8 @@ def cont_cases(tmp, base, witnesses, failures):
     ident = FIGURE_REPLACES[0]
     held = (cont_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == 178)
-    record("cont-pending", AGENT_ADOPTIONS, "<no v2.21 row>", "<unchanged>",
-           "landed package alone keeps v2.21 pending", pending_findings, held, True)
+    record("cont-pending", AGENT_ADOPTIONS, "<no v2.23 row>", "<unchanged>",
+           "landed package alone keeps v2.23 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
     row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{CONT_SPEC}) "
@@ -8287,8 +8287,8 @@ def cont_cases(tmp, base, witnesses, failures):
             and len(current[ident]["scenarios"]) == 188
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("cont-adopted", AGENT_ADOPTIONS, "<no v2.21 row>", row,
-           "v2.21 replaces exactly 034 (178 to 188 scenarios)", current_findings, held, True)
+    record("cont-adopted", AGENT_ADOPTIONS, "<no v2.23 row>", row,
+           "v2.23 replaces exactly 034 (178 to 188 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", CONT_TAG, CONT_TAG + "-wrong"),
@@ -8346,7 +8346,7 @@ def cont_cases(tmp, base, witnesses, failures):
     status.write_text(previous)
     record("cont-status-route-missing", STATUS, CONT_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("containment figure v2.21" in f for f in report.findings.get("R5", [])), False)
+           any("containment figure v2.23" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)

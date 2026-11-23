@@ -1,4 +1,4 @@
-# Version 2.21 semantic delta
+# Version 2.23 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed.
 
@@ -8,7 +8,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-hero-figure/proposed/polaris-generation/spec.md` (dossier hero figure version 2.20, row A-54, tag `polaris-dossier-hero-figure-v2.20`; sha256 `fcf271f84c03570cfbb8447d3370ae26c4ea75a54211b1677148b607e940d36b`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md`, sha256 `ccf9709c1bb9def3ec31e484a389df64414ab425acb32668f03ce49fe89366eb`) replaces that text, composed after version 2.20. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.20's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `openspec/changes/dossier-hero-figure/proposed/polaris-generation/spec.md` (dossier hero figure version 2.20, row A-54, tag `polaris-dossier-hero-figure-v2.20`; sha256 `fcf271f84c03570cfbb8447d3370ae26c4ea75a54211b1677148b607e940d36b`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md`, sha256 `eea54b488ca9653f28ab3088ea7ed6732424ec493ee883561f6fe555a7dccbbb`) replaces that text, composed after version 2.20. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.20's, byte for byte.
 
 ## Carried unchanged
 
@@ -16,28 +16,28 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.21. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.23. In the requirement, each changed line, with the displaced words and the words that replace them:
 
-- After "…a fact under rule `relation-witness` below,": inserted "and, since version 2.21, for a nesting of a containment figure that Syzygy so finds witnessed,".
+- After "…a fact under rule `relation-witness` below,": inserted "and, since version 2.23, for a nesting of a containment figure that Syzygy so finds witnessed,".
 - After "…as `polaris-dossier-brief-v14`, from version 2.19 as": displaced "`polaris-dossier-brief-v15` and"; now "`polaris-dossier-brief-v15`,".
-- After "…`polaris-dossier-brief-v15` and from version 2.20 as": displaced "`polaris-dossier-brief-v16`,"; now "`polaris-dossier-brief-v16` and from version 2.21 as `polaris-dossier-brief-v17`,".
+- After "…`polaris-dossier-brief-v15` and from version 2.20 as": displaced "`polaris-dossier-brief-v16`,"; now "`polaris-dossier-brief-v16` and from version 2.23 as `polaris-dossier-brief-v17`,".
 - After "…schema v8, brief v15 issues schema": displaced "v9 and"; now "v9,".
 - After "…and brief v16 issues schema v10": inserted "and brief v17 issues schema v11".
 - After "…v3, v4, v5, v6, v7, v8,": displaced "v9"; now "v9, v10".
 - After "…v5, v6, v7, v8, v9 or": displaced "v10"; now "v11".
-- After "…earlier schema keeps the draft's marking.": inserted "Since version 2.21 the nesting of a containment figure of a schema-v11 draft is read by the same rule, and a witnessed nesting is stated in Syzygy's words in the figure's list and machine form alone, its two boxes keeping the draft's marking.".
-- After "…apart from the additions of version": displaced "2.15."; now "2.15; since version 2.21 the rules among them that display one of the two forms by the container size query on the `figure-forms` box SHALL be carried by a page on which a produced sequence, swimlane or containment figure renders its two forms, and by no other page, and the stepper's other rules as this sentence first states.".
-- After "…finds witnessed by such a fact,": inserted "or, since version 2.21, on the list item of a containment figure's nesting that Syzygy so finds witnessed,".
-- After "…v9 and earlier with and without": displaced "`hero`."; now "`hero`; and, for version 2.21, schema-v11 containment figures of one to five top-level groups and one to three levels, at and past each bound (depth, 40 groups, eight children, five top-level groups), with no nesting, with an empty `groups` list, with a group past level 3 carrying a malformed unit, with members of another kind, with Unknown and withheld groups, with and without units on each pair of nested groups and with complete and partial structure records, each rendered at 1440 and 390, and drafts of schema v10 and earlier with and without a containment.".
-- After "…entry and the brief v16 hero": displaced "paragraph."; now "paragraph; for version 2.21, the `figure-kind`, `containment-depth`, `containment-size`, `containment-flat`, `unit-reference`, `relation-challenged`, `schema` and `field-version` findings with their details, each containment's laid-out boxes, its two forms and which the stylesheet displays at each width, its tally, list, witnessed-nesting items, declarative source and `figureStructures` entry, and figure fit's entries.".
-- After "…the bytes version 2.19 renders for": inserted "it; for version 2.21, each fixture tree's box coordinates, W and H computed by hand from the stated constants and fixed as literals, the findings' details, the list's items, the brief v17 paragraph and the declarative source fixed as literals, and, for every draft of schema v10 or earlier, the bytes version 2.20 renders for".
+- After "…earlier schema keeps the draft's marking.": inserted "Since version 2.23 the nesting of a containment figure of a schema-v11 draft is read by the same rule, and a witnessed nesting is stated in Syzygy's words in the figure's list and machine form alone, its two boxes keeping the draft's marking.".
+- After "…apart from the additions of version": displaced "2.15."; now "2.15; since version 2.23 the rules among them that display one of the two forms by the container size query on the `figure-forms` box SHALL be carried by a page on which a produced sequence, swimlane or containment figure renders its two forms, and by no other page, and the stepper's other rules as this sentence first states.".
+- After "…finds witnessed by such a fact,": inserted "or, since version 2.23, on the list item of a containment figure's nesting that Syzygy so finds witnessed,".
+- After "…v9 and earlier with and without": displaced "`hero`."; now "`hero`; and, for version 2.23, schema-v11 containment figures of one to five top-level groups and one to three levels, at and past each bound (depth, 40 groups, eight children, five top-level groups), with no nesting, with an empty `groups` list, with a group past level 3 carrying a malformed unit, with members of another kind, with Unknown and withheld groups, with and without units on each pair of nested groups and with complete and partial structure records, each rendered at 1440 and 390, and drafts of schema v10 and earlier with and without a containment.".
+- After "…entry and the brief v16 hero": displaced "paragraph."; now "paragraph; for version 2.23, the `figure-kind`, `containment-depth`, `containment-size`, `containment-flat`, `unit-reference`, `relation-challenged`, `schema` and `field-version` findings with their details, each containment's laid-out boxes, its two forms and which the stylesheet displays at each width, its tally, list, witnessed-nesting items, declarative source and `figureStructures` entry, and figure fit's entries.".
+- After "…the bytes version 2.19 renders for": inserted "it; for version 2.23, each fixture tree's box coordinates, W and H computed by hand from the stated constants and fixed as literals, the findings' details, the list's items, the brief v17 paragraph and the declarative source fixed as literals, and, for every draft of schema v10 or earlier, the bytes version 2.20 renders for".
 - After "…place of the `schema` finding at": displaced "`$.hero`."; now "`$.hero`; a containment deeper than three levels, over 40 groups or with no nesting passes, or is refused only by a `schema` finding; a box's coordinates, W or H differ from the stated layout or depend on a label's width; a line, arrow or connector is drawn between groups; a box of a draft is drawn solid or labelled Observed; a nesting is witnessed by a fact of another kind, across other unit kinds, or by a recognizer outside the eligibility table, or challenged where coverage is partial; an unknown nesting raises a finding; a containment fails figure fit at 1440 or 390, or both forms, or neither, display at a width; the phone form carries an identity, citation, anchor or label token, or a script is needed; or a draft of schema v10 or earlier, or a provider-mode page, changes a byte other than the `field-version` findings in place of `schema` findings.".
 
 ## Added
 
 [Observed] 7 paragraphs, placed immediately before the paragraph of declared manifest facts ("In the operator-agent mode `syzygy dossier check`, for each draft revision it checks and writes a check record for, SHALL also derive declared manifest facts"), in this order:
 
-- "A draft in schema `polaris-dossier-local-draft-v11` (version 2.21) is a schema-v10 draft in every respect …"
+- "A draft in schema `polaris-dossier-local-draft-v11` (version 2.23) is a schema-v10 draft in every respect …"
 - "For a v11 draft the `figure-kind` rule of version 2.5 SHALL read a `containment` …"
 - "Rule `relation-witness` version 1 SHALL decide, for each produced containment figure of a v11 …"
 - "A containment has its own pure layout, deterministic for the same record, that reads …"

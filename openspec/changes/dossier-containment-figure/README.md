@@ -1,6 +1,6 @@
 # dossier-containment-figure
 
-[Inferred] Candidate version 2.21 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.31. It adds draft schema `polaris-dossier-local-draft-v11` with a figure kind `containment`, a tree of groups at most three levels deep drawn as boxes within boxes by a pure layout, with no line between groups and a nested-list form on a narrow screen; findings naming each bound; each nesting of two groups with units read by rule `relation-witness` as a `contains` relation; and brief `polaris-dossier-brief-v17`. Drafts of schema v10 and earlier, stored drafts and the provider mode keep their bytes.
+[Inferred] Candidate version 2.23 of the dossier specification line: one MODIFIED REQ-polaris-generation-034 for bead syzygy-3efd.31. It adds draft schema `polaris-dossier-local-draft-v11` with a figure kind `containment`, a tree of groups at most three levels deep drawn as boxes within boxes by a pure layout, with no line between groups and a nested-list form on a narrow screen; findings naming each bound; each nesting of two groups with units read by rule `relation-witness` as a `contains` relation; and brief `polaris-dossier-brief-v17`. Drafts of schema v10 and earlier, stored drafts and the provider mode keep their bytes.
 
 | File | What it holds |
 |---|---|

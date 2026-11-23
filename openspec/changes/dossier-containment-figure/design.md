@@ -1,11 +1,13 @@
 # Design: nested groups drawn as boxes within boxes
 
-[Inferred] Version 2.21 of REQ-polaris-generation-034, for syzygy-3efd.31. It is drafted on `agent/syzygy-3efd.29` at `1980eb0c`, over the version 2.20 text (`dossier-hero-figure`, row A-54), and installed on `main` at `82290fb9`, where that text merged (#913). The code of versions 2.16, 2.19 and 2.20 (schemas v8 to v10) has not landed at that commit: `main`'s draft schema is v7 and its brief is v13. Every code site named in D9 must be re-located on the base the implementation starts from.
+[Inferred] Version 2.23 of REQ-polaris-generation-034, for syzygy-3efd.31. It is drafted on `agent/syzygy-3efd.29` at `1980eb0c`, over the version 2.20 text (`dossier-hero-figure`, row A-54), and installed on `main` at `82290fb9`, where that text merged (#913). The code of versions 2.16, 2.19 and 2.20 (schemas v8 to v10) has not landed at that commit: `main`'s draft schema is v7 and its brief is v13. Every code site named in D9 must be re-located on the base the implementation starts from.
 
 ## D1. The version label
 
-[Observed] Tags on this line run to `polaris-dossier-run-tree-read-bounds-v2.18` and `polaris-dossier-relation-types-v2.19`. Version 2.20 is adopted (A-54) and tagged `polaris-dossier-hero-figure-v2.20`. No branch on `origin` carries "Candidate version 2.21", and no tag `v2.2x` exists.
-- So this version is 2.21, tag `polaris-dossier-containment-figure-v2.21`.
+[Observed] Drafted as 2.21, when tags on this line ran to `polaris-dossier-relation-types-v2.19` and version 2.20 was adopted (A-54, `polaris-dossier-hero-figure-v2.20`) and no branch on `origin` carried "Candidate version 2.21".
+- [Observed] Before adoption, verify text (REQ-polaris-generation-033, A-55, #902) landed as 2.21 with tag `polaris-dossier-verify-text-v2.21`, and `origin/agent/syzygy-5dhm.136` (`dossier-readers-edition`) carries "Candidate version 2.22", a MODIFIED REQ-polaris-generation-034 over 2.20's text (178 to 183 scenarios), not yet landed.
+- [Inferred] The labels are one dossier-wide sequence, so this version is relabelled 2.23, tag `polaris-dossier-containment-figure-v2.23`. It composes over 2.20 as on `main`. 2.22 and 2.23 both amend REQ-034 over 2.20: whichever lands second merges over the other, rebuilding its complete MODIFIED text on the first's.
+- [Observed] The review below read the text as 2.21; its finding numbers and quotations refer to that label.
 - Brief and schema continue from 2.20: brief v17, schema v11.
 
 ## D2. The record: a tree of groups, at most three levels deep
@@ -136,8 +138,8 @@ A v11 draft with no containment renders as v10 would. Drafts of schema v10 and e
 [Observed] One fresh-context review, `docs/reviews/syzygy-3efd-31/R-CONTAINMENT-FIGURE-SPEC-1-RAW.md` (sha256 `05e913974b2c06a7ed22944c2a295cd51013198b527d240d7d56335794344067`), over the spec at install commit 00131423 (sha256 `9c8b919de56f92b09658df81c147e88129b147793d7e9e719be5373ff70970fb`). Verdict REVISE: findings 1 and 2 blocking, 3 to 9 notes. Every finding is repaired below. No review has read the repaired bytes; under D10 the review is one round and this section is its record.
 
 - F1 (blocking), which page carries which style rules. Repaired.
-  - 2.5's carrier sentence is amended in place, declared in `SEMANTIC-DELTA.md`: since 2.21 the container query rules on the `figure-forms` box go on a page with a produced sequence, swimlane or containment figure, and the stepper's other rules stay as 2.5 states.
-  - 2.21's render paragraph now says the outline's own rules (text size, indent, borders) go only on a page with a containment, so a containment-only page carries no stepper rules and a page with no containment no outline rules.
+  - 2.5's carrier sentence is amended in place, declared in `SEMANTIC-DELTA.md`: since 2.23 the container query rules on the `figure-forms` box go on a page with a produced sequence, swimlane or containment figure, and the stepper's other rules stay as 2.5 states.
+  - 2.23's render paragraph now says the outline's own rules (text size, indent, borders) go only on a page with a containment, so a containment-only page carries no stepper rules and a page with no containment no outline rules.
   - Scenario "Containment fits at both widths" now names both pages: a containment-only page and a swimlane-only page. Extended rather than added, so the census stays at 188.
 - F2 (blocking), groups past level 3. Repaired.
   - A group below level 4 raises no `containment-depth` finding, and no group at level 4 or below raises `unit-reference`.
