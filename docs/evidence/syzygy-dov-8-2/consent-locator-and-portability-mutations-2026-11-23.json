@@ -1,6 +1,6 @@
 {
   "subject": "M8 consent-locator and portability debt predicates",
-  "commit": "9fe6ef178f205dde194e728f22359b4c5ab19b0f",
+  "commit": "8becb493e25df4aab0f0b78d5de4b677fb42d2fc",
   "epistemic": "Observed",
   "mutations": [
     {
@@ -64,6 +64,32 @@
       "tier": "unit",
       "testFile": "apps/three-surface-poc/src/polaris-portability-debt.test.ts",
       "filter": "counts NUL-bearing files",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "observer-overlap-reaches-git",
+      "path": "apps/three-surface-poc/src/poc-main.ts",
+      "sourceSha256": "aa787152ff79753f54f9a101a6d69b8658f9abcb06b71002a502043e7e9316cd",
+      "old": "if (containsCheckout(repoRoot, configuredLocator) || containsCheckout(configuredLocator, repoRoot)) {",
+      "new": "if (false) {",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/main.test.ts",
+      "filter": "refuses a configured target overlapping",
+      "baseline": "passed",
+      "mutant": "assertion-failed",
+      "restored": true
+    },
+    {
+      "id": "last-good-verbatim-read-after-withdrawal",
+      "path": "apps/three-surface-poc/src/poc-main.ts",
+      "sourceSha256": "aa787152ff79753f54f9a101a6d69b8658f9abcb06b71002a502043e7e9316cd",
+      "old": "        admitsTransientReads = false;",
+      "new": "        admitsTransientReads = true;",
+      "tier": "integration",
+      "testFile": "apps/three-surface-poc/src/main.test.ts",
+      "filter": "refuses fresh verbatim reads after withdrawal",
       "baseline": "passed",
       "mutant": "assertion-failed",
       "restored": true
