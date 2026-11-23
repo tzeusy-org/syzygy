@@ -147,7 +147,7 @@ export function computedMapsInput(): { readonly local: LocalRenderInput; readonl
   const file = (path: string, facts: number) => ({ path, epistemic: 'inferred' as const, unknownReason: null, parseFault: null, facts, valuesLeftOut: 0 });
   const ci = '.github/workflows/ci.yml';
   const manifestFacts: LocalRenderInput['manifestFacts'] = {
-    format: 'polaris-dossier-manifest-facts/1', state: 'derived', screeningPolicy: { policyId: 'POLARIS-DOSSIER-SCREENING-POLICY', policyVersion: '2.0.0', sha256: 'a'.repeat(64) }, factsNotListed: 0,
+    format: 'polaris-dossier-manifest-facts/2', state: 'derived', screeningPolicy: { policyId: 'POLARIS-DOSSIER-SCREENING-POLICY', policyVersion: '2.0.0', sha256: 'a'.repeat(64) }, factsNotListed: 0,
     facts: [
       fact(1, 'workflow', WF, ci, { name: 'CI' }), fact(2, 'job', WF, ci, { job: 'build' }), fact(3, 'job', WF, ci, { job: 'test' }),
       fact(4, 'job-needs', WF, ci, { from: 'test', to: 'build' }), fact(5, 'package', NPM, 'src/package.json', { name: 'app' }),
@@ -156,7 +156,13 @@ export function computedMapsInput(): { readonly local: LocalRenderInput; readonl
       recognizer(NPM, { candidates: 1, inferred: 1, facts: 1, files: [file('src/package.json', 1)] }),
       recognizer('cargo-manifest'), recognizer('python-project-manifest'), recognizer('go-module-manifest'),
       recognizer(WF, { candidates: 1, inferred: 1, facts: 4, files: [file(ci, 4)] }),
+      recognizer('compose-file'), recognizer('kubernetes-manifest'), recognizer('terraform-configuration'), recognizer('makefile'), recognizer('cmake-lists'),
     ],
+    remainder: {
+      files: 11, secretPathsLeftOut: 0, candidates: 2, notCandidates: 9,
+      places: [{ place: null, files: 2, notCandidates: 2 }, { place: 'src', files: 9, notCandidates: 7 }],
+      placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0,
+    },
   };
   return { sources, local: { ...local, derivedStructure, manifestFacts } };
 }
