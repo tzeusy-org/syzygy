@@ -1,0 +1,58 @@
+{
+  "label": "Observed",
+  "reviewedCommit": "60e34353c71354eeb157e6795be9440c2018f2d8",
+  "files": {
+    "packages/polaris-dossier/src/url-run-machine.ts": "db53bafdd7cec8fa6b7bd0b59792d397d6537bbf0cf250e3aaab1e0e2a86267c",
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": "f337f07e440780d28293048fd7081430a1189f5762ff4dfe163c06f8dd716b5c",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "7cffaf6e21307c050196163b46e765bdaa1608569304dac2187aef62c0b4b6e6"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "SOURCE-REVIEW-RAW.md",
+    "sha256": "4826fdc0901f2a9a3d9ea1a59e55fd7429b2c1294b3986fa9a99031e7b084f4b"
+  },
+  "precedingBoundEvidence": {
+    "file": "../machine-state-authority/local-interrupted-native.json",
+    "outerToCaptureStartMs": 566.543,
+    "captureToRefusalMs": 5170.361,
+    "outerRefusalBeforeCaptureSettledMs": 11.506
+  },
+  "validation": {
+    "unit": {
+      "passed": 33,
+      "total": 33
+    },
+    "integration": {
+      "passed": 46,
+      "total": 46,
+      "logSha256": "cb4553fb79d84a3e0b3d6781b158f5a25beefd463341ea11a86afeeb1a08743f"
+    },
+    "typecheck": {
+      "result": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "selectedFaults": [
+    {
+      "name": "repeated accept verifier",
+      "commit": "60e34353c71354eeb157e6795be9440c2018f2d8",
+      "file": "packages/polaris-dossier/src/url-run-machine.ts",
+      "old": "if (launch === undefined || listener === null || !current()) return null;",
+      "new": "if (launch === undefined || listener === null || !current() || !(await input.reverify()) || !current()) return null;",
+      "failed": 3,
+      "skipped": 30,
+      "logSha256": "f6f7f2ae876af90b409cac3c68cb503ad6d2293561abaa6423e094539b161c4f"
+    },
+    {
+      "name": "missing first capture parent check",
+      "commit": "60e34353c71354eeb157e6795be9440c2018f2d8",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "old": "    if (await parentCurrent(options) !== true) return null;",
+      "new": "",
+      "failed": 1,
+      "skipped": 13,
+      "logSha256": "c048299450de0cbf31e533116f3bbd64c0a833750fb9c3911b56eb672a13107a"
+    }
+  ],
+  "remainingUnknown": "Whether the same source order lets both full native Resume scenarios complete within their original bounds."
+}
