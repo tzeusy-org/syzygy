@@ -6,7 +6,7 @@
 
 - [Observed] syzygy-3efd.80, found by version 2.14 (`dossier-infrastructure-recognizers/design.md`, "The reader rule for four more files"): reads of agent-writable run-tree files that belong to requirements other than REQ-034 still take the whole file with no bound before the read, or a `stat` and then a whole read. A FIFO at such a path blocks the reader, a symbolic link to a device exhausts its memory, and a file grown after its `stat` is read whole.
 - [Observed] A sweep of every whole-file read in `packages/polaris-dossier/src/` and `apps/three-surface-poc/src/polaris-generation/` (89 sites over 119 files at `c900e871`, two methods agreeing) finds 40 such reads, of files stated by REQ-polaris-generation-033, -035 and -048 (`design.md`, "The sweep and its denominator").
-- [Observed] The bead names candidates REQ-polaris-generation-040 to 044 for the supervisor; none is adopted. The supervisor's command, `syzygy polaris <url>`, is stated by the adopted REQ-polaris-generation-048, so its own state file is bounded there.
+- [Observed] The bead names the candidate requirements of `polaris-dossier-one-command-run/` (040 to 044 there) for the supervisor; none is adopted. The supervisor's command, `syzygy polaris <url>`, is stated by the adopted REQ-polaris-generation-048, so its own state file is bounded there.
 
 ## What changes
 
