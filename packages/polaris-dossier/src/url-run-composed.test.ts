@@ -1222,11 +1222,15 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     }
     const reproducedAtDesignHostCount: number[] = [];
     const deliveryReproductions: number[][] = [];
+    let firstReproductionRefusal: { stage: string; designHosts: number; startedMs: number; settledMs: number } | undefined;
     if (stoppingCut) {
       const reproduce = rendering.reproduceUrlRender;
       vi.spyOn(rendering, 'reproduceUrlRender').mockImplementation(async (...args) => {
+        const startedMs = performance.now();
         const result = await reproduce(...args);
-        if (result.ok) reproducedAtDesignHostCount.push(relayRoles.filter(role => role === 'design').length);
+        const designHosts = relayRoles.filter(role => role === 'design').length;
+        if (result.ok) reproducedAtDesignHostCount.push(designHosts);
+        else firstReproductionRefusal ??= { stage: result.refusal.stage, designHosts, startedMs, settledMs: performance.now() };
         return result;
       });
     }
@@ -1868,7 +1872,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
-          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(),
+          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
@@ -1878,7 +1882,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
         resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
-        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(),
+        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
