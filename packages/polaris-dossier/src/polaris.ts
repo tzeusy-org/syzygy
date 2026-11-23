@@ -28,7 +28,7 @@ import { readRunRecord, sourceBindingSha256, type RecordedRunConfig, type RunSub
 import { initRun } from './init.js';
 import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure, recordRawReadHandoff } from './raw-read-disclosure.js';
 import { beginRunProductReads, UrlProductReadRefusal, type RunProductReads } from './url-operation-products.js';
-import { describeCheckedUrlDesignProduct, inspectUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
+import { describeCheckedUrlDesignProduct, sameReproducedUrlDesignProduct, validateUrlDesignProduct,
   type UrlDesignProductMetadata, type ValidatedUrlDesignProduct } from './url-design-product.js';
 import { renderRun, reproduceUrlRender, type ProducedSiteInput } from './render.js';
 import { assertUrlFinalDesignProduct, prepareRecoveredUrlDesignRenderContinuation,
@@ -1405,29 +1405,31 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         catch (cause) { if (cause instanceof UrlProductReadRefusal) return null; throw cause; }
       })();
       if (products === null) { phase = 'render products unavailable'; break; }
-      let product: ValidatedUrlDesignProduct | null = null;
+      const initial: { metadata: UrlDesignProductMetadata | null } = { metadata: null };
       try {
         if (scaffold === null) { phase = 'renderer scaffold origin unavailable'; break; }
         const rendered = await step(['--json', 'render', run], { ...runPorts, productReads: products,
           admitProducedSite: async input => {
-            product = await validate(products, input);
-            return product !== null;
+            initial.metadata = await describeCheckedUrlDesignProduct(input, productOptions(products, scaffold));
+            return initial.metadata !== null;
           } });
         if (rendered.exit !== 0) {
           screen.event(`render refused: ${rendered.doc ? String(rendered.doc['reason']) : rendered.stderr.trim()}`);
           phase = 'render refused';
           break;
         }
-        const metadata = product === null ? null : await inspectUrlDesignProduct(product, binding);
+        const metadata = initial.metadata;
         const report = rendered.doc;
         if (metadata === null || metadata.draftRevision !== passedDraft || report?.['run'] !== run
           || report['draftRevision'] !== passedDraft || report['command'] !== 'render' || report['outcome'] !== 'rendered'
-          || report['pages'] !== metadata.output.pages || typeof report['site'] !== 'string') {
+          || report['pages'] !== metadata.output.pages || typeof report['site'] !== 'string' || !products.isLeaseOpen()) {
           phase = 'render producer result unavailable';
           break;
         }
-        // The stored subject must survive a fresh authenticated render read.
-        // The first operation's capability cannot authorize the later boundary.
+        // The initial producer captures only the expected identity under the
+        // original lease. The stored site needs a fresh, live reproduction
+        // before the supervisor can deliver it to Design.
+        products.revalidate();
         products.close();
         const sitePath = report['site'], subject = { path: sitePath, output: metadata.output };
         const reproduce = async (): Promise<UrlDesignReproduction | null> => {
