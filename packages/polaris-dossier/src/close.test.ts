@@ -87,7 +87,7 @@ describe('close (S10)', () => {
     // The brief record names the arm; a permitting one makes the check required at every later step (the arm itself is off in production).
     const briefRecord = readJson(path.join(run, 'brief.json'));
     fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ ...briefRecord, executionRule: { arm: 'permitting' } }));
-    const readable = { probe: async () => ({ passed: false as const, why: 'adapter credentials readable by the operator\'s user: /fixture/adapter.token' }) };
+    const readable = { probe: async () => ({ passed: false as const, kind: 'adapter-credential-readable' as const, why: 'adapter credentials readable by the operator\'s user: /fixture/adapter.token' }) };
     const closed = await closeRun(run, { usageTurns: '4' }, { sources: fixtureSources(commit), now: () => LATER, probe: readable, loadScreen: async () => FIXTURE_SCREEN });
     if (!closed.ok) throw new Error(closed.refusal.reason);
     expect(closed.report.outcome).toBe('closed-with-finding');

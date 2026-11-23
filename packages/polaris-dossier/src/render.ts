@@ -13,7 +13,7 @@ import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
 import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
@@ -1005,9 +1005,26 @@ function disclosureItems(inputs: {
       : { id: 'draft-layer', text: `Draft layer: Unknown (missing-declaration), so no part of the draft is shown: ${draftLayer.why.join('; ')}.`, label: 'Unknown' },
   ];
   if (credential.required) {
-    items.push(credential.passed
-      ? { id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' }
-      : { id: 'adapter-credential', text: `At this render an adapter credential was readable as the operator's user: ${credential.finding.why}. ${credential.finding.instruction}`, label: 'Observed' });
+    if (credential.passed) {
+      items.push({ id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' });
+    } else {
+      for (const finding of credentialFindings(credential)) {
+        const id = finding === credential.finding ? 'adapter-credential' : 'adapter-credential-readable';
+        items.push(credentialFindingDisclosure(id, finding));
+      }
+    }
   }
   return items;
+}
+
+function credentialFindingDisclosure(id: string, finding: CredentialBreachFinding): LocalDisclosureItem {
+  const detail = `${finding.why}. ${finding.instruction}`;
+  switch (finding.kind) {
+    case 'adapter-credential-readable':
+      return { id, text: `At this render an adapter credential was readable as the operator's user: ${detail}`, label: 'Observed' };
+    case 'adapter-credential-configuration-refused':
+      return { id, text: `The adapter-credential check at this render refused the configuration because ${detail}`, label: 'Unknown' };
+    case 'adapter-credential-undetermined':
+      return { id, text: `The adapter-credential check at this render ended without a definite result because ${detail}`, label: 'Unknown' };
+  }
 }

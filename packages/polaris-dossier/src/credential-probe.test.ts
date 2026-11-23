@@ -25,7 +25,7 @@ describe('the operating-system read attempt', () => {
     const dir = tempDir();
     const token = path.join(dir, 'scheduler.token');
     fs.writeFileSync(token, 'secret', { mode: 0o600 });
-    expect(await createCredentialProbe(listOf([token])).probe()).toEqual({ passed: false, why: `adapter credentials readable by the operator's user: ${token}` });
+    expect(await createCredentialProbe(listOf([token])).probe()).toEqual({ passed: false, kind: 'adapter-credential-readable', why: `adapter credentials readable by the operator's user: ${token}` });
   });
 
   it.skipIf(isRoot)('passes on a credential the operating system refuses to the user, and on an absent one', async () => {
@@ -50,9 +50,9 @@ describe('the operating-system read attempt', () => {
 
   it('fails closed on a directory, and on an error it cannot classify', async () => {
     const dir = tempDir();
-    expect(await createCredentialProbe(listOf([dir])).probe()).toEqual({ passed: false, why: `the read attempt could not decide for: ${dir}` });
+    expect(await createCredentialProbe(listOf([dir])).probe()).toEqual({ passed: false, kind: 'adapter-credential-undetermined', why: `the read attempt could not decide for: ${dir}` });
     const eio: OpenForRead = () => ({ opened: false, code: 'EIO' });
-    expect(await createCredentialProbe(listOf(['/x/token']), eio).probe()).toEqual({ passed: false, why: 'the read attempt could not decide for: /x/token' });
+    expect(await createCredentialProbe(listOf(['/x/token']), eio).probe()).toEqual({ passed: false, kind: 'adapter-credential-undetermined', why: 'the read attempt could not decide for: /x/token' });
   });
 
   it.each<[ReturnType<OpenForRead>, string]>([
@@ -70,7 +70,7 @@ describe('the operating-system read attempt', () => {
 describe('the credential list', () => {
   it('fails closed when no list source is configured', async () => {
     expect(await createCredentialProbe(credentialListFromEnv({})).probe()).toEqual({
-      passed: false, why: 'no credential list source is configured: set SYZYGY_DOSSIER_CREDENTIAL_LIST to a syzygy-adapter-credential-list/1 file (source: no credential list (SYZYGY_DOSSIER_CREDENTIAL_LIST is not set))',
+      passed: false, kind: 'adapter-credential-configuration-refused', why: 'no credential list source is configured: set SYZYGY_DOSSIER_CREDENTIAL_LIST to a syzygy-adapter-credential-list/1 file (source: no credential list (SYZYGY_DOSSIER_CREDENTIAL_LIST is not set))',
     });
   });
 
@@ -86,7 +86,7 @@ describe('the credential list', () => {
     const configured = path.join(dir, 'provider.key');
     fs.writeFileSync(configured, 'secret', { mode: 0o600 });
     const probe = createCredentialProbe(listOf([]), undefined, [configured]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `adapter credentials readable by the operator's user: ${configured}` });
+    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-readable', why: `adapter credentials readable by the operator's user: ${configured}` });
     expect(probe.last()?.source).toBe('fixture list, together with 1 credential path configured by typed adapters in this repository');
   });
 
@@ -143,13 +143,20 @@ describe('a configured adapter\'s credential declaration', () => {
   const absent: OpenForRead = (file) => { opens.push(file); return { opened: false, code: 'ENOENT' }; };
   afterEach(() => { opens.splice(0); });
 
-  it('refuses a declared credential the list does not hold, before reading the declared list or attempting any read', async () => {
-    const source = counted(['/x/listed.token']);
-    const probe = createCredentialProbe(source, absent, [], [{ adapter: 'fixture-scheduler', credentials: ['/x/scheduler.token'] }]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
-    expect(probe.last()).toEqual({ source: 'fixture list, together with 0 credential paths configured by typed adapters in this repository', outcomes: [] });
-    expect(source.reads()).toBe(0);
-    expect(opens).toEqual([]);
+  it('refuses the unlisted declaration after attempting the usable listed and configured paths', async () => {
+    const source = counted(['/x/listed.token', '/x/shared.token']);
+    const probe = createCredentialProbe(source, absent, ['/x/shared.token', '/x/configured.token'], [{ adapter: 'fixture-scheduler', credentials: ['/x/scheduler.token'] }]);
+    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
+    expect(probe.last()).toEqual({
+      source: 'fixture list, together with 2 credential paths configured by typed adapters in this repository',
+      outcomes: [
+        { path: '/x/listed.token', outcome: 'absent' },
+        { path: '/x/shared.token', outcome: 'absent' },
+        { path: '/x/configured.token', outcome: 'absent' },
+      ],
+    });
+    expect(source.reads()).toBe(1);
+    expect(opens).toEqual(['/x/listed.token', '/x/shared.token', '/x/configured.token']);
   });
 
   it('names every unlisted declaration, of every adapter, and none the list holds', async () => {
@@ -157,7 +164,7 @@ describe('a configured adapter\'s credential declaration', () => {
       { adapter: 'fixture-ci', credentials: ['/x/a.token', '/x/b.token'] },
       { adapter: 'fixture-provider', credentials: ['/x/c.token'] },
     ]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `${REFUSAL}fixture-ci: /x/b.token, fixture-provider: /x/c.token` });
+    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why: `${REFUSAL}fixture-ci: /x/b.token, fixture-provider: /x/c.token` });
   });
 
   it('refuses a declaration the list spells differently: membership is exact', async () => {
@@ -168,18 +175,18 @@ describe('a configured adapter\'s credential declaration', () => {
       [' /x/a.token', `${REFUSAL}fixture-ci:  /x/a.token`],
     ] as const) {
       const probe = createCredentialProbe(listOf([]), absent, ['/x/a.token'], [{ adapter: 'fixture-ci', credentials: [declared] }]);
-      expect(await probe.probe()).toEqual({ passed: false, why });
+      expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why });
     }
   });
 
   it('refuses on the declaration, not the list source, when no list source is configured either', async () => {
     const probe = createCredentialProbe(credentialListFromEnv({}), absent, [], [{ adapter: 'fixture-scheduler', credentials: ['/x/scheduler.token'] }]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
+    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
   });
 
   it('is not satisfied by the operator-declared list holding the path', async () => {
     const probe = createCredentialProbe(listOf(['/x/scheduler.token']), absent, [], [{ adapter: 'fixture-scheduler', credentials: ['/x/scheduler.token'] }]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
+    expect(await probe.probe()).toEqual({ passed: false, kind: 'adapter-credential-configuration-refused', why: `${REFUSAL}fixture-scheduler: /x/scheduler.token` });
   });
 
   it('probes as before when the list holds every declared credential', async () => {
@@ -192,7 +199,7 @@ describe('a configured adapter\'s credential declaration', () => {
     const token = path.join(dir, 'ci.token');
     fs.writeFileSync(token, 'secret', { mode: 0o600 });
     expect(await createCredentialProbe(listOf([]), undefined, [token], [{ adapter: 'fixture-ci', credentials: [token] }]).probe())
-      .toEqual({ passed: false, why: `adapter credentials readable by the operator's user: ${token}` });
+      .toEqual({ passed: false, kind: 'adapter-credential-readable', why: `adapter credentials readable by the operator's user: ${token}` });
   });
 
   it('changes nothing for an adapter that declares no credential, or for no adapter', async () => {
@@ -219,7 +226,7 @@ describe('the step hook every later step calls', () => {
     if (record !== undefined) fs.writeFileSync(path.join(run, 'brief.json'), typeof record === 'string' ? record : JSON.stringify(record));
     return run;
   };
-  const failing = { probe: async () => ({ passed: false as const, why: 'fixture credential readable' }) };
+  const failing = { probe: async () => ({ passed: false as const, kind: 'adapter-credential-readable' as const, why: 'fixture credential readable' }) };
   const passing = { probe: async () => ({ passed: true as const, checked: 1, source: 'fixture' }) };
   const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 

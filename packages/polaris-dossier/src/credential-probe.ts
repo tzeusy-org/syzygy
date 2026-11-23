@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
-import type { CredentialProbe } from './execution-rule.js';
+import type { CredentialFindingKind, CredentialProbe } from './execution-rule.js';
 import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
@@ -130,9 +130,8 @@ export const CONFIGURED_ADAPTER_DECLARATIONS: readonly AdapterCredentialDeclarat
 
 export const NO_ADAPTER_CREDENTIAL_DECLARED = 'no adapter credential declared; list operator-declared, Inferred';
 
-/** The probe `brief` and every later step call. It refuses first when a configured adapter declares a credential `configured` does
- * not hold. Otherwise it reads the union of the declared list and `configured`; an explicitly declared empty list with nothing
- * configured passes, with a disclosure that says so, and an unset, unreadable or malformed source fails. */
+/** The probe `brief` and every later step call. It attempts the paths in the usable list and `configured` even when an adapter
+ * declaration forces a refusal. An unset, unreadable or malformed list also forces a refusal. */
 export function createCredentialProbe(
   source: CredentialListSource, open: OpenForRead = openForRead, configured: readonly string[] = CONFIGURED_ADAPTER_CREDENTIALS,
   adapters: readonly AdapterCredentialDeclaration[] = CONFIGURED_ADAPTER_DECLARATIONS,
@@ -143,24 +142,28 @@ export function createCredentialProbe(
     probe: async () => {
       const described = `${source.describe}, together with ${configured.length} credential path${configured.length === 1 ? '' : 's'} configured by typed adapters in this repository`;
       const unlisted = adapters.flatMap(({ adapter, credentials }) => credentials.filter((file) => !configured.includes(file)).map((file) => `${adapter}: ${file}`));
-      if (unlisted.length > 0) {
-        last = { source: described, outcomes: [] };
-        return { passed: false, why: `a configured typed adapter declares a credential the repository's adapter-credential list does not hold: ${unlisted.join(', ')}` };
-      }
+      const declarationRefusal = unlisted.length === 0 ? undefined
+        : `a configured typed adapter declares a credential the repository's adapter-credential list does not hold: ${unlisted.join(', ')}`;
       const list = source.list();
-      if (!list.ok) { last = { source: source.describe, outcomes: [] }; return { passed: false, why: `${list.why} (source: ${source.describe})` }; }
-      const paths = [...new Set([...list.paths, ...configured])];
-      if (paths.length === 0) {
-        last = { source: described, outcomes: [] };
-        return { passed: true, checked: 0, source: `${NO_ADAPTER_CREDENTIAL_DECLARED} (${described})` };
+      if (!list.ok) {
+        last = { source: declarationRefusal === undefined ? source.describe : described, outcomes: [] };
+        return { passed: false, kind: 'adapter-credential-configuration-refused', why: declarationRefusal ?? `${list.why} (source: ${source.describe})` };
       }
+      const paths = [...new Set([...list.paths, ...configured])];
       const outcomes = paths.map((file) => ({ path: file, outcome: classifyRead(open(file)) }));
       last = { source: described, outcomes };
       const readable = outcomes.filter((entry) => entry.outcome === 'readable').map((entry) => entry.path);
+      if (declarationRefusal !== undefined) {
+        return {
+          passed: false, kind: 'adapter-credential-configuration-refused', why: declarationRefusal,
+          ...(readable.length === 0 ? {} : { readableAlongsideRefusal: readable.length }),
+        };
+      }
+      if (readable.length > 0) return { passed: false, kind: 'adapter-credential-readable', why: `adapter credentials readable by the operator's user: ${readable.join(', ')}` };
       const unknown = outcomes.filter((entry) => entry.outcome === 'unknown').map((entry) => entry.path);
-      if (readable.length > 0) return { passed: false, why: `adapter credentials readable by the operator's user: ${readable.join(', ')}` };
-      if (unknown.length > 0) return { passed: false, why: `the read attempt could not decide for: ${unknown.join(', ')}` };
-      return { passed: true, checked: outcomes.length, source: described };
+      if (unknown.length > 0) return { passed: false, kind: 'adapter-credential-undetermined', why: `the read attempt could not decide for: ${unknown.join(', ')}` };
+      const disclosure = paths.length === 0 ? `${NO_ADAPTER_CREDENTIAL_DECLARED} (${described})` : described;
+      return { passed: true, checked: outcomes.length, source: disclosure };
     },
   };
 }
@@ -170,17 +173,28 @@ export const CREDENTIAL_CHECK_DISCLOSURE = 'The adapter-credential check is an o
 export type CredentialStep = 'check' | 'inventory-check' | 'review-check' | 'render' | 'close';
 
 export interface CredentialBreachFinding {
-  readonly kind: 'adapter-credential-readable';
+  readonly kind: CredentialFindingKind;
   readonly step: CredentialStep;
   readonly at: string;
   readonly why: string;
   readonly instruction: 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.';
 }
 
+type CredentialStepFailure = {
+  readonly required: true;
+  readonly passed: false;
+  readonly finding: CredentialBreachFinding;
+  readonly readableFinding?: CredentialBreachFinding;
+};
+
 export type CredentialStepResult =
   | { readonly required: false; readonly why: string }
   | { readonly required: true; readonly passed: true; readonly checked: number; readonly source: string }
-  | { readonly required: true; readonly passed: false; readonly finding: CredentialBreachFinding };
+  | CredentialStepFailure;
+
+export function credentialFindings(result: CredentialStepFailure): readonly CredentialBreachFinding[] {
+  return result.readableFinding === undefined ? [result.finding] : [result.finding, result.readableFinding];
+}
 
 /** The step hook S6–S10 call. It is required once a brief has been issued that permits execution, or when the brief record cannot be
  * read to say it did not; a failure becomes a finding of that step and is appended to the run's breach log. */
@@ -192,11 +206,21 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
   const result = await probe.probe();
   if (result.passed) return { required: true, passed: true, checked: result.checked, source: result.source };
   const finding: CredentialBreachFinding = {
-    kind: 'adapter-credential-readable', step, at: isoOf(now), why: result.why,
+    kind: result.kind ?? 'adapter-credential-undetermined', step, at: isoOf(now), why: result.why,
     instruction: 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.',
   };
-  fs.appendFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), `${JSON.stringify(finding)}\n`, { mode: 0o600 });
-  return { required: true, passed: false, finding };
+  const failure: CredentialStepFailure = {
+    required: true, passed: false, finding,
+    ...(result.readableAlongsideRefusal === undefined ? {} : {
+      readableFinding: {
+        ...finding, kind: 'adapter-credential-readable',
+        why: `the count of listed adapter credential files opened for reading was ${result.readableAlongsideRefusal}`,
+      },
+    }),
+  };
+  const records = credentialFindings(failure).map((record) => `${JSON.stringify(record)}\n`).join('');
+  fs.appendFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), records, { mode: 0o600 });
+  return failure;
 }
 
 /** The arm the stored brief record names; null when it cannot be read, which every caller treats as permitting (fail closed). */
