@@ -1,0 +1,48 @@
+{
+  "adoption": "A-166",
+  "subjectCommit": "5a307abe435f28ed3f87ab3beb4f75cd429c03c0",
+  "baseCommit": "c57a8eb4e6e9923cb98a7daea15b8b91b9620464",
+  "binaryDeltaSha256": "134e4c49ad83031d9349841b310b7c7200498d6343c899a9446c54056cc0e50c",
+  "review": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-A14-GIT-BLOB-BATCH-REVIEW-RAW.md",
+    "sha256": "fe3572b19dff7dc6fbfbebc8a872a8bd9eba67266a25c29df3fd75e583ec1636"
+  },
+  "regression": {
+    "testFile": "packages/polaris-dossier/src/url-parent-adoption.git.test.ts",
+    "passed": 9,
+    "total": 9,
+    "fixedStartupDelayMilliseconds": 420,
+    "latencyFixtureElapsedMilliseconds": 5485,
+    "logSha256": "e50c16a0df6bc41247d00c6002f74b07fce05a7c18d362f73620ace7af3bb25b"
+  },
+  "controls": [
+    {
+      "subjectCommit": "5a307abe435f28ed3f87ab3beb4f75cd429c03c0",
+      "replacementCommit": "c57a8eb4e6e9923cb98a7daea15b8b91b9620464",
+      "file": "packages/polaris-dossier/src/url-parent-adoption.ts",
+      "beforeFileSha256": "a4acf2546059a252ea0a6d3ba35914904bf22c789bc729874dcbd1cbc2d6b49c",
+      "afterFileSha256": "3df8908295915494fbbdeee8a89a77efa085a1130c13baa140e77a93040c93aa",
+      "testFilter": "fixed Git startup latency",
+      "observed": "failed with a null proof",
+      "logSha256": "e53d29e33a5875c8a1fd26145513b25a8e6f5c221939015fe8f513af18e2e4d7"
+    },
+    {
+      "subjectCommit": "56fce2f379f260179eda10757d6f0b1a79e9d012",
+      "file": "packages/polaris-dossier/src/url-parent-adoption.ts",
+      "old": "    for (const commit of revisions) {\n      const files = commit === defaultCommit ? defaultFiles : blobs(commit, CONTRACT_FILES);\n      if (!installedClausesMatch(reviewed, file => utf8(files.get(file)!))) return null;\n    }\n",
+      "new": "",
+      "testFilter": "intervening amendment",
+      "observed": "failed after the altered historical clause escaped detection",
+      "logSha256": "7f1dfe2a4fbdf213daaa156d3b732644fdc20c0a9dd4ddbaab188dfb759f123d"
+    }
+  ],
+  "nativePredecessor": {
+    "instrumentedCommit": "6806a5b93e3fc954a52718dda2d98f6bfbaf79f5",
+    "traceLogSha256": "9c9c1dc535ae45d24859f081ed0647d4e58d6e9a2c5053489f20ec28945380e4",
+    "initialAcceptedGitCommands": 26,
+    "initialElapsedMilliseconds": 136.79923299999973,
+    "observedStop": "The initial A-14 proof passed. The stopped audit was refused after a later Design storage inspection timeout.",
+    "coldResumeRefusalCause": "Unknown"
+  }
+}

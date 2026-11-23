@@ -49,6 +49,7 @@
 - `F3-RECOVERED-PRODUCT-CENSUS-REVIEW-RAW\.md`
 - `F3-(CHECKED-RENDER-INPUT-PAIRS|SINGLE-DESIGN-REPRODUCTION|RESUME-ALLOCATION-LOCK|ORDERED-PLAN-REUSE|RENDER-LEASE|DESIGN-ACTIVATION-LEASE)-REVIEW-RAW\.md`
 - `F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW\.md`
+- `F3-A14-GIT-BLOB-BATCH-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -175,3 +176,5 @@
 [Observed] The recovered-product metadata walk review records `PASS` for `b45b3c7c9` (F3-RECOVERED-PRODUCT-CENSUS-REVIEW-RAW.md:1). A-155 retains the descriptor checks and brackets the complete walk with live authority. Its evidence records the matched 23-file observation and exact focused results. [Unknown] Native Resume completion.
 
 [Observed] The resumed Design bridge publication review records `PASS` (F3-RESUMED-DESIGN-BRIDGE-PUBLICATION-REVIEW-RAW.md:1) at `8f796d31e`. A-164 binds the initial publication window to the activated and reattested inference peer and records the original deadlines and contention cutoff. Typecheck, 101 integration cases, 36 unit cases and two fault controls passed. [Unknown] Native Resume completion for this subject.
+
+[Observed] The A-14 Git blob batch review records `PASS` (F3-A14-GIT-BLOB-BATCH-REVIEW-RAW.md:1) at `5a307abe4`. A-166 retains the shared deadline, exact direct refs and historical proof. The fixed-latency regression and the restored-clause check passed, and both fault controls detected the expected refusal or missing check. [Unknown] Whether the batch resolves the local cold Resume refusal.
