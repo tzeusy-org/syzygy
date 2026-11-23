@@ -45,6 +45,7 @@
 - `F3-RESUMED-SANDBOX-REPROBE-REVIEW-RAW\.md`
 - `F3-DESIGN-DELIVERY-RELEASE-CHECK-REVIEW-RAW\.md`
 - `F3-RESUMED-SANDBOX-LAUNCH-WINDOW-REVIEW-RAW\.md`
+- `F3-TERMINAL-LOCK-SHARED-AUTHORITY(-INITIAL)?-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -165,3 +166,5 @@
 [Observed] The staged publication boundary review records `PASS` (`F3-STAGED-PUBLICATION-IO-BOUNDARIES-REVIEW-RAW.md:1`) at `1556516293`. A-145 removes adjacent duplicate samples during staged publication I/O. The native variant passed 135 focused cases and seven native machine cases on isolated retry after a compiler setup failure. The full native replay ran out of its inspection window before reaching protected client publication. [Unknown] End-to-end Resume.
 
 [Observed] The terminal read lock review records `PASS` (`F3-TERMINAL-READ-LOCK-REVIEW-RAW.md:1`) at `883ba9d85`. A-146 groups root checks and lock submission for the read-only historical terminal verifier and guards cleanup of late acquisitions. Typecheck and 103 focused tests passed. A native replay of the earlier grouped reader verified the eight retained clients and launched Design before an inspection refused. [Unknown] End-to-end Resume at the reviewed revision.
+
+[Observed] The terminal lock handoff review records `FAIL` for `6f402ff4` (`F3-TERMINAL-LOCK-SHARED-AUTHORITY-INITIAL-REVIEW-RAW.md:1`) and `PASS` for `eb487a5eb` (`F3-TERMINAL-LOCK-SHARED-AUTHORITY-REVIEW-RAW.md:1`). A-153 preserves the deadline check and I/O budget immediately before lock sync and census. The expiry fault control reproduced the refused census boundary. [Unknown] Native completion for the successor.

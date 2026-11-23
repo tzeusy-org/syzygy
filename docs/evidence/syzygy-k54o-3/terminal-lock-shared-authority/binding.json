@@ -1,0 +1,39 @@
+{
+  "adoption": "A-153",
+  "reviews": [
+    {
+      "commit": "6f402ff4fcaf22ee4831e643830ec33d5b01cfa8",
+      "tree": "10848727b438ddedd43e7bcbcd2dcb9bc5224bda",
+      "base": "0bad6ebc8418ea33081347f0a7f7e0377a5208ec",
+      "patchSha256": "68abb0583dbdc3d1705f64b6ad88eed9fe2ecd44875f3c12baa13a6458c7358e",
+      "raw": "docs/reviews/F3-TERMINAL-LOCK-SHARED-AUTHORITY-INITIAL-REVIEW-RAW.md",
+      "rawSha256": "a7c6a9b2d0117299098fc0ece99bf01629669459e0c7e480528a3c8a8f7cedcc",
+      "verdict": "FAIL"
+    },
+    {
+      "commit": "eb487a5eb8ef07984b2f83844a91f1e9b8d8d108",
+      "tree": "669dcf3f2132abde7def61a4806802283722cbc4",
+      "base": "0bad6ebc8418ea33081347f0a7f7e0377a5208ec",
+      "patchSha256": "75581de8597fc20fbf7ad66ec5e469e82e6c483b5b6814654dd989298b9a3868",
+      "raw": "docs/reviews/F3-TERMINAL-LOCK-SHARED-AUTHORITY-REVIEW-RAW.md",
+      "rawSha256": "e56750ffe032633d02ff69320176f2476b8479e55279c41a454e2d8ab313674d",
+      "verdict": "PASS"
+    }
+  ],
+  "hostedObservation": {
+    "subject": "bb408a815",
+    "job": "137950127384",
+    "readMilliseconds": 5196.5,
+    "operationLimitMilliseconds": 5000,
+    "acceptedAsyncSamples": 7,
+    "acceptedAsyncSampleMilliseconds": 2825.5
+  },
+  "verification": {
+    "selectedCases": 2,
+    "filePopulation": 71,
+    "focusedLogSha256": "a5b9a037ce2c560d956768eecbb96a8e93955f4b2d685f4a5edd2fae58fe6db6",
+    "deadlineFaultControlLogSha256": "619cdb3464744bd7925af314f6c37b4bb118a45e248e8a8851b3c6242efcecb0",
+    "deadlineFaultControlObservedCensus": true,
+    "nativeResume": "Unknown"
+  }
+}
