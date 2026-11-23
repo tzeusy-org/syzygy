@@ -199,8 +199,11 @@ async function render(runDir: string, deps: RenderDeps, storedSite?: StoredUrlRe
     } catch { /* existing missing-run / missing-renderer handling below */ }
   }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
-  const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', deps);
-  if (!opened.ok) return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
+  const opened = await openRun(runDir, deps.sources, now, 'nothing is rendered', { ...deps, requireAuthorHandoffDisclosure: true });
+  if (!opened.ok) {
+    if (opened.refusals?.some(item => item.code === 'raw-read-disclosure')) return refuse('disclosure', RAW_READ_DISCLOSURE_REFUSAL);
+    return refuse(opened.stage, opened.reason, { ...(opened.reasons ? { reasons: opened.reasons } : {}), ...(opened.refusals ? { refusals: opened.refusals } : {}) });
+  }
   const { run, runId, subject, declared } = opened;
   const urlMode = opened.effective?.kind === 'url';
   const rawRead = readRawReadDisclosure(run, declared.agentProvider);

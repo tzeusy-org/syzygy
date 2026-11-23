@@ -4,6 +4,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import type { GateSources } from './gate-sources.js';
+import { RAW_READ_DISCLOSURE_REFUSAL, readRawReadDisclosure } from './raw-read-disclosure.js';
 import { restartExplanation, samePolicy } from './policy-snapshot.js';
 import { buildDossierScreen } from './screen.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -18,7 +19,7 @@ import { isBoundUrlSourceReader } from './url-source-reader.js';
 /** Recheck declarations, the committed policy and pinned objects. Stored subject
  * history is Inferred; no retired consent or statement source is consulted. */
 export type ReverifyCode =
-  | 'record-invalid' | 'consent-ids' | 'revision-unnamed' | 'registry' | 'policy' | 'listing' | 'governed-changed' | 'statement'
+  | 'record-invalid' | 'raw-read-disclosure' | 'consent-ids' | 'revision-unnamed' | 'registry' | 'policy' | 'listing' | 'governed-changed' | 'statement'
   | 'statement-changed' | 'source-changed' | 'declared-changed' | 'pin-changed' | 'policy-changed';
 
 export interface ReverifyRefusal { readonly code: ReverifyCode; readonly reason: string }
@@ -52,6 +53,7 @@ export type ReverifyResult =
 export interface ReverifyOptions {
   /** The object reader; the default is the re-hashing in-process reader. */
   readonly productReads?: RunProductReads;
+  readonly requireAuthorHandoffDisclosure?: boolean;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 
@@ -112,6 +114,10 @@ export async function reverifyPinnedRevision(runDir: string, sources: GateSource
     return refuse();
   }
   const { subject, declared } = read.core;
+  if (options.requireAuthorHandoffDisclosure === true && readRawReadDisclosure(run, declared.agentProvider) === null) {
+    refusals.push({ code: 'raw-read-disclosure', reason: RAW_READ_DISCLOSURE_REFUSAL });
+    return refuse();
+  }
   if (read.effective.kind === 'url') disclosures = [
     'The protected host mode binding and strict URL declaration were checked for this read. URL providers, planned classes, source selection and launch history remain Inferred; actual sends, receipts, usage and completeness are Unknown here.',
     DISCLOSURES[1]!,

@@ -13,6 +13,8 @@ import { buildDossierScreen } from './screen.js';
 import { patchFs } from './fs-patch.testkit.js';
 import { issueBrief } from './brief.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
+import { verifyStoppedUrlRun } from './url-recovery.js';
+import type { SupervisorState } from './polaris.js';
 import { runStatus } from './status.js';
 import { closeRun } from './close.js';
 import { renderRun, type DossierRenderer, type DossierRendererInput } from './render.js';
@@ -81,6 +83,29 @@ function bindUrl(run: string, screenMetadata: (text: string) => boolean = () => 
 }
 
 describe('effective host run readers', () => {
+  it('explains a missing companion before attempting to load a stopped URL run’s unavailable policy or runtime', async () => {
+    const run = ownRun(), url = bindUrl(run);
+    fs.unlinkSync(path.join(run, 'raw-read-disclosure.json'));
+    const before = () => fs.readdirSync(run).sort().map(file => [file, fs.readFileSync(path.join(run, file))]);
+    const retained = before();
+    const state: SupervisorState = {
+      format: 'polaris-supervisor/2', run, runId: path.basename(run), declarationSha256: url.sha256,
+      tmuxSession: 'owned', clone: url.core.subject.clone.path, url: url.declaration.sourceTransport.originalLocator,
+      model: url.declaration.inference.model, authorSkipPermissions: false,
+      briefIssuedAt: NOW, deadlineSeconds: url.core.declared.deadline.seconds, sessions: [],
+      fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
+      stopGeneration: 'a'.repeat(32), stopped: 'synthetic retained stop',
+    };
+    const recordsRoot = tempDir('missing-url-policy-');
+    const verify = (requireAuthorHandoffDisclosure: boolean) => verifyStoppedUrlRun(state, {
+      checkout: recordsRoot, sources: { ...fixtureSources(PIN), recordsRoot, effectiveRunDeclaration: url.authority },
+      now: () => LATER, requireAuthorHandoffDisclosure,
+    });
+    expect(await verify(false)).toMatchObject({ ok: false, code: 'policy' });
+    expect(await verify(true)).toMatchObject({ ok: false, code: 'disclosure',
+      reason: expect.stringMatching(/REQ-polaris-generation-033.*syzygy dossier init/u) });
+    expect(before()).toEqual(retained);
+  });
   it('keeps the package URL authority current across reads and reopens committed policy for a full metadata check', () => {
     const recordsRoot = commitPolicyFixture(tempDir('effective-run-observer-'), policyFixture().bytes);
     const policy = readCommittedPolicy(recordsRoot);

@@ -425,6 +425,25 @@ describe('render', () => {
     } finally { reads.close(); }
   }, 60_000);
 
+  it('refuses an authenticated URL render with missing disclosure before dependent source reads or writes', async () => {
+    const f = await preparedUrlRender();
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(LATER);
+    const reads = beginRunProductReads(f.run, f.artifacts, 'render', LATER + 60_000);
+    fs.unlinkSync(path.join(f.run, 'raw-read-disclosure.json'));
+    const before = readSite(f.run);
+    const openReader = vi.fn(() => { throw new Error('source reader must remain closed'); });
+    const admitProducedSite = vi.fn(() => true);
+    try {
+      expect(await renderRun(f.run, { ...f.deps, productReads: reads, openReader, admitProducedSite })).toMatchObject({
+        ok: false, refusal: { stage: 'disclosure', reason: RESTART_DISCLOSURE },
+      });
+      expect(openReader).not.toHaveBeenCalled();
+      expect(admitProducedSite).not.toHaveBeenCalled();
+      expect(readSite(f.run)).toEqual(before);
+    } finally { reads.close(); vi.useRealTimers(); }
+  }, 60_000);
+
   it('lets an actual URL producer finish after six seconds within its original thirty-second context', async () => {
     const f = await preparedUrlRender();
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
