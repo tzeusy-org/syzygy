@@ -1,0 +1,430 @@
+{
+  "schemaVersion": 1,
+  "subject": {
+    "bead": "syzygy-bpyt.84",
+    "original": "syzygy-bpyt.33",
+    "mainCommit": "85a0a709ca2d38c7d79e5a8ff4e718d37e12d38c",
+    "scope": "Current evidence disposition for the original remainder"
+  },
+  "target": {
+    "source": {
+      "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "gitBlob": "3d31318196fc8d2a3eda8103233c642f998d58d2",
+      "sha256": "e7bc6f0a11fae5b99e548d654e3e6b68a06562f4673bdc5ce5c76cd314149ee0",
+      "bytes": 17092
+    },
+    "suite": "Zero downstream citations of Polaris as authority (PWB-REQ-014)",
+    "case": "no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+    "localTimeoutMs": 25000,
+    "caseAndPrecedingCommentSha256": "ce245a73f8cb73ce634ed85d12ae52af6c84b0a688229977d874b70b19b49efe",
+    "trackedConfiguration": [
+      {
+        "path": "package-lock.json",
+        "gitBlob": "4ed3ccbb653d5498339d411f7c93536821eb6d4a",
+        "sha256": "a7884de5e824029a290b5c2e96049195a3ea80ebe21fec835016842cfd618cd8",
+        "bytes": 58671
+      },
+      {
+        "path": "vitest.config.ts",
+        "gitBlob": "7cf918bc1253228318e9116f0a37fc3e1b6b089d",
+        "sha256": "f1dbdaab5fe74bc5b67ada7ca2fb517fb6a62abd5e7b8d0b3a1189f34c049189",
+        "bytes": 3115
+      },
+      {
+        "path": "vitest.tiers.ts",
+        "gitBlob": "ccd9c43c1425b1311742f07858cf23f8297ae245",
+        "sha256": "ff58d605fc9b13cad74ef21b8a19043bc6f16774437ccfaf71c41913459075e9",
+        "bytes": 13423
+      }
+    ]
+  },
+  "authorityAndPriorEvidence": [
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-SYZYGY-BPYT-33-SCOPE-EXCEPTION-2026-11-07.md",
+      "gitBlob": "f665f5cf3d5a20d9d9ffcb9829ca089af43d31eb",
+      "sha256": "3a8cbb3651b66a4e0da7acdcf329b7a1dd3c7daa15966092f95beb8ed9b42811",
+      "bytes": 9410
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-15.md",
+      "gitBlob": "5036219b1ec14d84ec098f30ac5a5c4a22717735",
+      "sha256": "6bb7bebaad91c5c7e88ece4bb299f3b2b483e412e9a56f6c71b8e80fc1bb8584",
+      "bytes": 7561
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-33/depth-guard-2026-11-17.json",
+      "gitBlob": "405dc31b70585a8d33494c420cd69d5677e3d53f",
+      "sha256": "fa5f3c3b2fc031f6f8b20a363fc15ea8b1899256520e43555de2d86e99e39b30",
+      "bytes": 3882
+    },
+    {
+      "path": "docs/reviews/R-BPYT33-DEPTH-GUARD-1-RAW.md",
+      "gitBlob": "0c0940c4d24b470ca3aacad6ee8a536e8ad8fca8",
+      "sha256": "a2d1299abf5e056b6d0cd728dddd0f2865a5fa05e0ba35c2eaba4bdb29c731df",
+      "bytes": 8255
+    },
+    {
+      "path": "docs/evidence/syzygy-exj7/flaky-under-load-2026-11-04.json",
+      "gitBlob": "f4c618d7c14861bfd43978a87472d1feb115178d",
+      "sha256": "ec67f305bb58f94495dc5867948a670aa8e10fcab0665ead46d7e6a9d8d6360f",
+      "bytes": 21937
+    }
+  ],
+  "priorPullRequests": [
+    {
+      "pullRequest": 769,
+      "topic": "Unused depth-7 guard and scoped evidence",
+      "reviewedHead": "38d1cf44483e015f5cb1fe8460dc6e8b33dc5243",
+      "mergedCommit": "7f237f091ad7086d6728ad48db4257452cf0d5bc"
+    },
+    {
+      "pullRequest": 719,
+      "topic": "Existing site-local timeout",
+      "reviewedHead": "6b7cbcf29692374fb6dad8c38b508f9ae487dba5",
+      "mergedCommit": "8b7b45ded6004f7faef3b39b895468dd49f9dd20"
+    }
+  ],
+  "historicalFullContexts": {
+    "state": "Observed",
+    "subjectCommit": "829525003da054787a905bacf1e4b7d3176c68ef",
+    "sourceManifest": {
+      "path": "docs/evidence/syzygy-bpyt-4-41/manifest.json",
+      "gitBlob": "d092c8b2cb12a130536b570735724b4f506d2c0a",
+      "sha256": "33b7f2bf32ebae5a5dee7bd116d4d3d2c23587bd356cabf79642f6fdf6e04544",
+      "bytes": 81421
+    },
+    "sourceArchive": {
+      "path": "docs/evidence/syzygy-bpyt-4-41/measurements.json.gz",
+      "gitBlob": "a7cf095bc7cf882d754a0999bc7f79d628213020",
+      "sha256": "a62cf8935664475b37d2398dec0062e20ee773cd72598da5588860652a636977",
+      "bytes": 3939249
+    },
+    "uncompressedArchiveSha256": "cf30f0d9102757d0e68f756835a62c26cab904f6c898dee8d272f6330612f800",
+    "membersVerified": 210,
+    "fullContextReportsExamined": 70,
+    "corroboratingStdoutRuns": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05"
+    ],
+    "exactHistoricalCaseRows": [
+      {
+        "run": "01",
+        "report": "full-contexts-5/run-01/command-02/reports/report-8841.json",
+        "sha256": "2abda7b5e455f9c81a12e50b00646249a6cf6f235bdf5ae92ef27aedab2894b2",
+        "state": "pass",
+        "duration_ms": 746.606145
+      },
+      {
+        "run": "02",
+        "report": "full-contexts-5/run-02/command-02/reports/report-40747.json",
+        "sha256": "2a13415bfa3f558c113ebda47631445f0e301010cff736a27f9ebf1f059c5835",
+        "state": "pass",
+        "duration_ms": 936.3380770000001
+      },
+      {
+        "run": "03",
+        "report": "full-contexts-5/run-03/command-02/reports/report-72639.json",
+        "sha256": "31773798c74ad8b0723595e69cf326feb4c34809f938974b05dd04bdf25d5ff6",
+        "state": "pass",
+        "duration_ms": 822.8367539999999
+      },
+      {
+        "run": "04",
+        "report": "full-contexts-5/run-04/command-02/reports/report-104525.json",
+        "sha256": "48bb206df4cd45bc261647f4efb4b261032d6b580e5edb60aedb0f2b11d33b26",
+        "state": "pass",
+        "duration_ms": 2822.140333
+      },
+      {
+        "run": "05",
+        "report": "full-contexts-5/run-05/command-02/reports/report-136437.json",
+        "sha256": "0c06acc8b46d3ee3619dff4668b8ce92c456d42a66d3f1433975a9c06e1ae1f5",
+        "state": "pass",
+        "duration_ms": 931.353286
+      }
+    ],
+    "worstHistoricalCaseMs": 2822.140333,
+    "method": "Verify the decompressed archive digest and each base64 member against the manifest before selecting complete-context report rows by exact file, suite and case.",
+    "currentEquivalence": "Unknown. Exact literal case is unchanged. Surrounding source, default budget, tier and tracked corpus differ."
+  },
+  "historicalNovember8TrackerReport": {
+    "sourceBead": "syzygy-bpyt.33",
+    "sourceNoteMarker": "Observed 2026-11-08 finalcurrent0f8 ONEgate actual",
+    "reportedSubjectCommit": "0f8f0298f1f329eeeb805a63d9ec2f6f4c64c887",
+    "reportedManifestSha256": "a68f79a84168ca5683d1dc226c4c5339336d71684e02685d4a10b8a6f48d10a2",
+    "reportedManifestFiles": 264,
+    "reportedCaseMs": 5757.417918,
+    "retainedSummary": "Observed in tracker",
+    "rawReplay": "Unknown; subject and named manifest and report directories unavailable under the recorded local locators"
+  },
+  "staticTrackedCorpus": {
+    "state": "Observed",
+    "roots": [
+      ".syzygy/governance",
+      "openspec",
+      "packages",
+      "apps",
+      "docs"
+    ],
+    "excludedComponents": [
+      ".git",
+      "dist",
+      "node_modules"
+    ],
+    "selection": "NUL-delimited git ls-tree -rz and -rlz agree on selected regular blobs and exact Git object IDs. Use the suffix expression in the subject case and byte sizes from ls-tree -rlz.",
+    "historical": {
+      "commit": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "paths": 5983,
+      "bytes": 142194449
+    },
+    "current": {
+      "commit": "85a0a709ca2d38c7d79e5a8ff4e718d37e12d38c",
+      "paths": 7308,
+      "bytes": 193951908
+    },
+    "addedPaths": 1327,
+    "removedPaths": 2,
+    "retainedPathsWithDifferentBlob": 255,
+    "actualPresentFileExecutionPopulation": "Unknown"
+  },
+  "F3": {
+    "method": "Git tree and blobs, same directory and named source list, each split at LF including final empty field",
+    "historicalStatedLines": 2432,
+    "subjects": [
+      {
+        "commit": "d065b481e0674cc98c21102c789fef7865653f60",
+        "inputs": [
+          {
+            "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+            "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+            "lines": 108,
+            "bytes": 4177
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+            "sha256": "9a6ac3933b1babe8d0915269bd1f306bf76eff2e1fcd011c394661bb98a86196",
+            "lines": 872,
+            "bytes": 49384
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+            "sha256": "9b9a77e63418a417a519e5327c07a6b7948189d4288dcad57d548d00d43d5e18",
+            "lines": 410,
+            "bytes": 24820
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+            "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+            "lines": 939,
+            "bytes": 55632
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+            "sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a",
+            "lines": 193,
+            "bytes": 10154
+          }
+        ],
+        "inputFiles": 5,
+        "inputLines": 2522
+      },
+      {
+        "commit": "70601c969fddb81884cfc13443eb084f53e47633",
+        "inputs": [
+          {
+            "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+            "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+            "lines": 108,
+            "bytes": 4177
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+            "sha256": "9a6ac3933b1babe8d0915269bd1f306bf76eff2e1fcd011c394661bb98a86196",
+            "lines": 872,
+            "bytes": 49384
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+            "sha256": "9b9a77e63418a417a519e5327c07a6b7948189d4288dcad57d548d00d43d5e18",
+            "lines": 410,
+            "bytes": 24820
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+            "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+            "lines": 939,
+            "bytes": 55632
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+            "sha256": "606ee96e5702079cbd3134563542394cd2a5691ae41742056edb6601622738d3",
+            "lines": 193,
+            "bytes": 10169
+          }
+        ],
+        "inputFiles": 5,
+        "inputLines": 2522
+      },
+      {
+        "commit": "7f237f091ad7086d6728ad48db4257452cf0d5bc",
+        "inputs": [
+          {
+            "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+            "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+            "lines": 108,
+            "bytes": 4177
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+            "sha256": "9a6ac3933b1babe8d0915269bd1f306bf76eff2e1fcd011c394661bb98a86196",
+            "lines": 872,
+            "bytes": 49384
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+            "sha256": "9b9a77e63418a417a519e5327c07a6b7948189d4288dcad57d548d00d43d5e18",
+            "lines": 410,
+            "bytes": 24820
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+            "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+            "lines": 939,
+            "bytes": 55632
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+            "sha256": "606ee96e5702079cbd3134563542394cd2a5691ae41742056edb6601622738d3",
+            "lines": 193,
+            "bytes": 10169
+          }
+        ],
+        "inputFiles": 5,
+        "inputLines": 2522
+      },
+      {
+        "commit": "1c36b12b6612ac5c3bb60ab337b5ad214647a6ea",
+        "inputs": [
+          {
+            "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+            "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+            "lines": 108,
+            "bytes": 4177
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+            "sha256": "9a6ac3933b1babe8d0915269bd1f306bf76eff2e1fcd011c394661bb98a86196",
+            "lines": 872,
+            "bytes": 49384
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+            "sha256": "9b9a77e63418a417a519e5327c07a6b7948189d4288dcad57d548d00d43d5e18",
+            "lines": 410,
+            "bytes": 24820
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+            "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+            "lines": 939,
+            "bytes": 55632
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+            "sha256": "606ee96e5702079cbd3134563542394cd2a5691ae41742056edb6601622738d3",
+            "lines": 193,
+            "bytes": 10169
+          }
+        ],
+        "inputFiles": 5,
+        "inputLines": 2522
+      },
+      {
+        "commit": "85a0a709ca2d38c7d79e5a8ff4e718d37e12d38c",
+        "inputs": [
+          {
+            "path": "packages/three-surface-poc-core/src/fixtures/synthetic-corpora.ts",
+            "sha256": "a5bff51c0d50fb1dc508107792c6e4c4249c779e0bf8cadf54fd7ea26f9a95c4",
+            "lines": 108,
+            "bytes": 4177
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+            "sha256": "9a6ac3933b1babe8d0915269bd1f306bf76eff2e1fcd011c394661bb98a86196",
+            "lines": 872,
+            "bytes": 49384
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+            "sha256": "9b9a77e63418a417a519e5327c07a6b7948189d4288dcad57d548d00d43d5e18",
+            "lines": 410,
+            "bytes": 24820
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+            "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+            "lines": 939,
+            "bytes": 55632
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+            "sha256": "606ee96e5702079cbd3134563542394cd2a5691ae41742056edb6601622738d3",
+            "lines": 193,
+            "bytes": 10169
+          }
+        ],
+        "inputFiles": 5,
+        "inputLines": 2522
+      }
+    ],
+    "historicalStatedCountDerivation": "Unknown"
+  },
+  "F8": {
+    "denominator": 313,
+    "event": {
+      "id": "cf5c66f4-b192-5066-8882-8cace897a1e0",
+      "actor": "coordinator:codex-20261104-cdcf24d2",
+      "issue_id": "syzygy-bpyt.33",
+      "created_at": "2026-11-07T17:28:20Z",
+      "event_type": "status_changed"
+    },
+    "changedCriteria": [
+      7
+    ],
+    "criteriaPopulation": 15,
+    "changedDesignLines": [
+      9
+    ],
+    "before": {
+      "acceptance_criteria": "d91e126a6011109f6db8201243f58434a6ed9ebea039af4cf635f3581b561d61",
+      "design": "2a17aa54dbda6779a6f0a14b94d478e2d23020ca4513be2b630415f3c52b0a7a"
+    },
+    "after": {
+      "acceptance_criteria": "49aeac8d7108bc631b49b17596fac7dc77c8b2db48b179b701dbfb983529c703",
+      "design": "4aa2d2b910938ee6a0f86538bec33ee229953b5a6c42d0c19795591f32ac6a50"
+    },
+    "status": [
+      "blocked",
+      "open"
+    ],
+    "currentOriginalTracker": {
+      "id": "syzygy-bpyt.33",
+      "status": "closed",
+      "descriptionSha256": "6c0b793c0cd691c94c1403d9898ed80e2559ebd3f377a135111392a71cbde8f3",
+      "acceptance_criteria": "49aeac8d7108bc631b49b17596fac7dc77c8b2db48b179b701dbfb983529c703",
+      "design": "4aa2d2b910938ee6a0f86538bec33ee229953b5a6c42d0c19795591f32ac6a50"
+    },
+    "replay": "Read bd history syzygy-bpyt.33 --events --json and replay the identified event old_value and new_value. Hash exact UTF-8 strings for acceptance_criteria and design. Compare numbered criterion blocks and logical design lines.",
+    "changedNotes": "Append only; no runtime or infrastructure disposition"
+  },
+  "outstanding": {
+    "fivePresentCompleteFileTimedAttempts": "Unknown",
+    "presentApplicableFullContext": "Unknown",
+    "presentWorstMs": "Unknown",
+    "presentTimeoutHeadroomMs": "Unknown",
+    "completeOriginalOutcome": "Open"
+  }
+}
