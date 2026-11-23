@@ -690,6 +690,8 @@ async function observeDesignRun(run: string, traceInference = false) {
     ordinal: number;
     mediate: ResumeStamp;
     effect?: ResumeStamp;
+    productPreparation?: CurrentTrace;
+    preparedProductCurrent?: CurrentTrace;
     controllerCurrent?: CurrentTrace;
     firstEffectGuardRefusalMs?: number;
     boundaries: Array<{ phase: InferenceBoundary; timing: ResumeStamp }>;
@@ -934,10 +936,19 @@ async function observeDesignRun(run: string, traceInference = false) {
       const step: InferenceStep = { ordinal: ++inferenceCount, mediate: { startedMs: clock() }, boundaries: [], relay: [] };
       if (inferenceSteps.length >= 12) inferenceSteps.splice(4, 1);
       inferenceSteps.push(step);
+      const tracePreflight = <T extends boolean | Promise<boolean>>(
+        key: 'productPreparation' | 'preparedProductCurrent', call: () => T): T => {
+        const trace = step[key] = { startedMs: clock(), stages: [] };
+        return timed(trace, () => currentScope.run(trace, call), value => value === true);
+      };
+      const observedPreflight = preflight === undefined ? undefined : {
+        prepare: () => tracePreflight('productPreparation', preflight.prepare),
+        current: () => tracePreflight('preparedProductCurrent', preflight.current),
+      };
       const invoke = () => mediatePeer(peer, operation, current => {
         const stamp = step.effect = { startedMs: clock() };
         return timed(stamp, () => effect(current), () => true);
-      }, preflight);
+      }, observedPreflight);
       return timed(step.mediate, () => inferenceScope.run(step, invoke), result => {
         if (!result.ok) firstRefusedInference ??= step;
         return result.ok;
