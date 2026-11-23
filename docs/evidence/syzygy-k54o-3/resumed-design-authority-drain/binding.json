@@ -1,0 +1,59 @@
+{
+  "adoption": "A-167",
+  "subjectCommit": "56fce2f379f260179eda10757d6f0b1a79e9d012",
+  "baseCommit": "5a307abe435f28ed3f87ab3beb4f75cd429c03c0",
+  "binaryDeltaSha256": "e26ba2ffbf893f4d89a887f8004938dd092309c9668b69491c5445c986ba3cf2",
+  "review": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-RESUMED-DESIGN-AUTHORITY-DRAIN-REVIEW-RAW.md",
+    "sha256": "435114332cc924faa95d17ec204dcaacbf9d6b7c185622d9a68f1acbbae04108"
+  },
+  "nativePredecessor": {
+    "subjectCommit": "c57a8eb4e6e9923cb98a7daea15b8b91b9620464",
+    "scenario": "stop-resume",
+    "failureReportSha256": "5722a834f6f5e07c2003400bf28e8c05f5ae2ba993133d459b7c02342cb5a34a",
+    "firstConnectionAuthorization": "accepted",
+    "inspectionLimitMilliseconds": 1000,
+    "firstDesignInspectionRefusal": {
+      "ordinal": 39,
+      "phases": {
+        "process": {
+          "startedMs": 0.06986099999630824,
+          "settledMs": 995.7431529999885,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.11747099997592159,
+          "settledMs": 866.8913719999837,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.11969599997974001,
+          "settledMs": 997.1472539999813,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 997.1544069999945,
+          "settledMs": 1093.382289000001,
+          "outcome": "accepted"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "sample-deadline",
+        "elapsedMs": 1093.5756039999833
+      }
+    },
+    "verifyStartMilliseconds": 111221.73,
+    "relayRuntimeAuthority": {
+      "phase": "runtime-authority",
+      "timing": {
+        "startedMs": 111840.05,
+        "settledMs": 112564.805,
+        "outcome": "refused"
+      }
+    },
+    "executionRecordPresent": false
+  },
+  "successorNativeCompletion": "Unknown"
+}
