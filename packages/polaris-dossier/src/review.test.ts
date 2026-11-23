@@ -21,6 +21,7 @@ import { buildDossierScreen, type ScreenLoad } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { patchFs } from './fs-patch.testkit.js';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
@@ -580,6 +581,59 @@ describe('review-check', () => {
       await change(run);
       expect((await reviewOfRecord(await opened(run), deps())).counts).toBe(false);
     }
+  });
+
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): the verdict given to review check and every frozen verdict are read by the
+  // reader rule under 4,194,304 bytes.
+  it('refuses a verdict file that is a FIFO, without blocking, and one grown past 4,194,304 bytes after its size was taken (syzygy-3efd.80)', async () => {
+    const run = await prepared();
+    const dir = await reviewSessionOf(run);
+    const file = path.join(dir, 'verdict.json');
+    execFileSync('mkfifo', [file]);
+    expect(await reviewCheck(run, {}, deps())).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason: `${file} is not a regular file` } });
+    fs.rmSync(file);
+    fs.writeFileSync(file, ' '.repeat(4_194_304));
+    let grown = false;
+    const restore = patchFs('fstatSync', (original) => ((fd: number, ...rest: unknown[]) => {
+      const stats = (original as (...args: unknown[]) => fs.Stats)(fd, ...rest);
+      if (!grown && stats.isFile() && stats.size === 4_194_304) { grown = true; fs.appendFileSync(file, ' '); }
+      return stats;
+    }) as typeof original);
+    let result;
+    try { result = await reviewCheck(run, {}, deps()); } finally { restore(); }
+    expect(grown).toBe(true);
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason: `${file} is larger than the 4194304-byte verdict bound` } });
+    expect(fs.existsSync(path.join(run, 'reviews', 'fidelity-verdict-0.json'))).toBe(false);
+  });
+
+  it.each<[string, (file: string) => void, string]>([
+    ['a FIFO', (file) => execFileSync('mkfifo', [file]), 'not a regular file'],
+    ['a file past 4,194,304 bytes', (file) => fs.writeFileSync(file, ' '.repeat(4_194_305)), 'larger than 4194304 bytes'],
+  ])('counts no review from a frozen verdict that is %s, with the stated words (syzygy-3efd.80)', async (_what, plant, words) => {
+    const run = await prepared();
+    const dir = await reviewSessionOf(run);
+    writeVerdict(dir, verdict(sha256(expectedPacket(run))));
+    await reviewCheck(run, {}, deps());
+    await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
+    expect((await reviewOfRecord(await opened(run), deps())).counts).toBe(true);
+    const frozen = path.join(run, 'reviews', 'fidelity-verdict-0.json');
+    fs.rmSync(frozen);
+    plant(frozen);
+    expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: `the frozen verdict reviews/fidelity-verdict-0.json cannot be read (${words})` });
+  });
+
+  it('builds no fidelity packet from a frozen inventory that is a FIFO when the packet reads it, though a regular file when counted (syzygy-3efd.80)', async () => {
+    const run = await prepared();
+    const frozen = path.join(run, 'inventory', 'rev-0.json');
+    let opens = 0;
+    const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      if (file === frozen && ++opens === 2) { fs.rmSync(frozen); execFileSync('mkfifo', [frozen]); }
+      return (original as (...args: unknown[]) => number)(file, ...rest);
+    }) as typeof original);
+    let built;
+    try { built = await buildFidelityPacket(await opened(run), deps()); } finally { restore(); }
+    expect(opens).toBe(2);
+    expect(built).toEqual({ ok: false, stage: 'inventory', reason: 'the frozen inventory inventory/rev-0.json cannot be read (not a regular file)' });
   });
 
   it('validates a ready verdict with no blocking row', async () => {

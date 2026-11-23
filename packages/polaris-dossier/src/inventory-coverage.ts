@@ -7,6 +7,8 @@ import { DRAFT_JSON_LIMITS, line, list, text } from './check-model.js';
 import { INVENTORY_OMISSIONS_SINCE } from './draft-schema.js';
 import type { GateSources } from './gate-sources.js';
 import type { InventoryOfRecord } from './inventory.js';
+import { readBoundedFile } from './check-record-read.js';
+import { RUN_TREE_BOUNDS } from './run-tree-read.js';
 
 /** Which entries of the independent inventory no block of the draft covers, told to the author at check time, before any reviewer is
  * asked (syzygy-5dhm.28, pursuit 2026-11-21b move R4 slice 1; REQ-polaris-generation-034 version 2.12).
@@ -151,7 +153,8 @@ export async function inventoryCoverageAdvice(runDir: string, draft: unknown, in
   try {
     const counted = await inputs.inventoryOfRecord(runDir, { sources: inputs.sources, now: inputs.now });
     if (!counted.counts) return unknown(`no inventory counts: ${counted.why}`);
-    const bytes = new Uint8Array(fs.readFileSync(path.join(path.resolve(runDir), counted.file)));
+    // By the reader rule under 4,194,304 bytes (REQ-polaris-generation-035 version 2.18): one it cannot read is an Unknown advice below.
+    const bytes = new Uint8Array(readBoundedFile(path.join(path.resolve(runDir), counted.file), RUN_TREE_BOUNDS.inventory));
     if (sha256(bytes) !== counted.sha256) return unknown(`the frozen inventory ${counted.file} changed after it was counted`);
     const inventory = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), DRAFT_JSON_LIMITS);
     if (!isRecord(inventory)) return unknown(`the frozen inventory ${counted.file} is not one JSON object`);

@@ -15,6 +15,7 @@ import { latestPassedDraft, type ReviewDeps } from './review.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -207,9 +208,10 @@ function reportedCommands(run: string, clone: string, secret: (value: string) =>
 }
 
 /** The instants of Syzygy's own steps, from the step log: stored, so Inferred. Only the step, instant and outcome are carried. */
-function stepInstants(run: string): Readonly<Record<string, unknown>> {
-  let lines: string[];
-  try { lines = fs.readFileSync(path.join(run, RUN_LAYOUT.steps), 'utf8').split('\n').filter((line) => line !== ''); } catch { lines = []; }
+export function stepInstants(run: string): Readonly<Record<string, unknown>> {
+  const read = readLog(run, RUN_LAYOUT.steps);
+  if (!read.ok) return { label: 'Unknown', basis: 'the run\'s step log, which the agent sessions can write', entries: [], unreadable: 0, why: read.why };
+  const { lines } = read;
   const entries: { step: string; at: string; outcome: string | null }[] = [];
   let unreadable = 0;
   for (const line of lines.slice(0, STEP_LINES_MAX)) {
@@ -221,11 +223,24 @@ function stepInstants(run: string): Readonly<Record<string, unknown>> {
   return { label: 'Inferred', basis: 'the run\'s step log, which the agent sessions can write', entries, unreadable: unreadable + Math.max(0, lines.length - STEP_LINES_MAX) };
 }
 
-/** The adapter-credential breach log, as stored: Inferred. */
-function breachLog(run: string): readonly unknown[] {
-  let lines: string[];
-  try { lines = fs.readFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), 'utf8').split('\n').filter((line) => line !== ''); } catch { return []; }
-  return lines.slice(0, STEP_LINES_MAX).map((line) => {
+/** The lines of the step log or the breach log, read by the reader rule under 16,777,216 bytes (REQ-polaris-generation-033 version
+ * 2.18). A log absent from the run directory is an empty log; one that stands at its path but cannot be read (not a regular file, past its
+ * bound, or any other failed open or read) is Unknown, never empty: no evidence is not zero (VIS-2). */
+function readLog(run: string, name: string): { readonly ok: true; readonly lines: string[] } | { readonly ok: false; readonly why: string } {
+  const file = path.join(run, name);
+  try {
+    return { ok: true, lines: readBoundedText(file, RUN_TREE_BOUNDS.log).split('\n').filter((line) => line !== '') };
+  } catch (cause) {
+    if (isMissingEntry(file, cause)) return { ok: true, lines: [] };
+    return { ok: false, why: `${name} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.log)})` };
+  }
+}
+
+/** The adapter-credential breach log, as stored: Inferred; one Unknown entry where it stands at its path but cannot be read. */
+export function breachLog(run: string): readonly unknown[] {
+  const read = readLog(run, RUN_LAYOUT.credentialBreaches);
+  if (!read.ok) return [{ unreadable: true, why: read.why, label: 'Unknown' }];
+  return read.lines.slice(0, STEP_LINES_MAX).map((line) => {
     try { const entry: unknown = JSON.parse(line); return isRecord(entry) ? { ...entry, label: 'Inferred' } : { unreadable: true }; } catch { return { unreadable: true }; }
   });
 }
