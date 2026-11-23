@@ -52,7 +52,7 @@ const cleanup: (() => Promise<unknown> | void)[] = [];
 const filesystem = vi.hoisted(() => ({
   beforeLstat: undefined as ((file: unknown) => Promise<void>) | undefined,
   beforeOpen: undefined as ((file: unknown) => Promise<void>) | undefined,
-  taskListing: undefined as { procPath: string; fixturePath: string } | undefined,
+  taskListing: undefined as { procPath: string; fixturePath: string; afterFirstTask?: () => void } | undefined,
 }));
 vi.mock('node:fs/promises', async importOriginal => {
   const actual = await importOriginal<typeof import('node:fs/promises')>();
@@ -60,8 +60,20 @@ vi.mock('node:fs/promises', async importOriginal => {
     ...actual,
     opendir: (...args: Parameters<typeof actual.opendir>) => {
       const listing = filesystem.taskListing;
-      if (listing !== undefined && args[0] === listing.procPath) args[0] = listing.fixturePath;
-      return actual.opendir(...args);
+      if (listing === undefined || args[0] !== listing.procPath) return actual.opendir(...args);
+      return actual.opendir(listing.fixturePath, args[1]).then(dir => {
+        const afterFirstTask = listing.afterFirstTask;
+        if (afterFirstTask === undefined) return dir;
+        const iterate = dir[Symbol.asyncIterator].bind(dir);
+        dir[Symbol.asyncIterator] = async function* () {
+          let first = true;
+          for await (const task of iterate()) {
+            yield task;
+            if (first) { first = false; afterFirstTask(); }
+          }
+        };
+        return dir;
+      });
     },
     lstat: async (...args: Parameters<typeof actual.lstat>) => {
       if (filesystem.beforeLstat !== undefined) await filesystem.beforeLstat(args[0]);
@@ -932,6 +944,7 @@ describe('prepared private CLI launch',()=>{
     let procPath: string | undefined;
     const storedFiles = new Set(Array.from({ length: 6 }, (_, index) => `own-batched-file-${index}`));
     let completedHold = false, processReadsBeforeTimeout = 0, storageReadsBeforeTimeout = 0;
+    let readsAfterFirstTask: number | undefined;
     let earlyCallbackAt: number | undefined, scheduledAt: number | undefined, stoppingAt: number | undefined;
     filesystem.beforeOpen = async file => {
       if (procPath === undefined || typeof file !== 'string' || !file.startsWith(`${procPath}/`)) return;
@@ -957,7 +970,7 @@ describe('prepared private CLI launch',()=>{
     } });
     cleanup.push(child.stop);
     procPath = `/proc/${child.pid}/task`;
-    filesystem.taskListing = { procPath, fixturePath };
+    filesystem.taskListing = { procPath, fixturePath, afterFirstTask: () => { readsAfterFirstTask = processReadsBeforeTimeout; } };
     const fixtureStorage = path.join(f.launch.view.workDirectory, 'own-listing');
     // Populate the previously verified empty directory before the sampling timer can run.
     mkdirSync(fixtureStorage);
@@ -986,6 +999,7 @@ describe('prepared private CLI launch',()=>{
       const outcome = await child.finished;
       expect(intervals.mock.calls.map(call => call[1])).toContain(200);
       expect(storageReadsBeforeTimeout).toBe(4);
+      expect(readsAfterFirstTask).toBe(1);
       expect(processReadsBeforeTimeout).toBe(4);
       expect(outcome).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null, peakProcesses: null, groupTermination: 'confirmed' });
       expect(earlyCallbackAt! - scheduledAt!).toBeLessThan(100);

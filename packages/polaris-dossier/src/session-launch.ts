@@ -370,26 +370,35 @@ async function taskChildren(task: string, check: () => void): Promise<readonly s
 const TASK_READ_BATCH = 4;
 async function descendants(pid: number, maximum: number, check: () => void): Promise<number> {
   const pending = [pid], seen = new Set<number>(); let taskEntries = 0;
-  const collect = async (tasks: readonly string[]): Promise<void> => {
-    const children = await Promise.all(tasks.map(task => taskChildren(task, check)));
+  const collect = async (reads: Promise<readonly string[]>[]): Promise<void> => {
+    const children = await Promise.allSettled(reads.splice(0));
     check();
     for (const group of children) {
-      for (const child of group) if (child) pending.push(Number(child));
+      if (group.status === 'rejected') throw group.reason;
+      for (const child of group.value) if (child) pending.push(Number(child));
     }
   };
   while (pending.length) {
     check(); const next = pending.pop()!; if (seen.has(next)) continue; seen.add(next); if (seen.size > maximum) return seen.size;
-    const taskRoot = `/proc/${next}/task`, batch: string[] = [];
+    const taskRoot = `/proc/${next}/task`, batch: Promise<readonly string[]>[] = [];
     try {
       const tasks = await opendir(taskRoot);
-      // Each thread may own children. Read a bounded group at a time and
-      // apply the results in enumeration order under the same deadline.
+      // Each thread may own children. Open its file once enumerated, while the
+      // task directory is still being read. Join the same fixed-size group and
+      // apply its results in enumeration order under the shared deadline.
       for await (const task of tasks) {
         check(); if (!/^[0-9]+$/u.test(task.name) || ++taskEntries > 4096) throw refused();
-        batch.push(`${taskRoot}/${task.name}/children`);
-        if (batch.length === TASK_READ_BATCH) { await collect(batch); batch.length = 0; }
+        const read = taskChildren(`${taskRoot}/${task.name}/children`, check);
+        void read.catch(() => {}); // The group checks settlement after enumeration.
+        batch.push(read);
+        if (batch.length === TASK_READ_BATCH) await collect(batch);
       }
-    } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        await Promise.allSettled(batch);
+        throw error;
+      }
+    }
     if (batch.length !== 0) await collect(batch);
   }
   return seen.size;
