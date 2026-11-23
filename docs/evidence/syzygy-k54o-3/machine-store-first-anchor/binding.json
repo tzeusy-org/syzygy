@@ -1,0 +1,43 @@
+{
+  "adoption": "A-134",
+  "base": "bdb06b8b6bb4142e8877ed292adfb350b5f035d8",
+  "sourceCommit": "e93544ff4c4856ba75dae9e8b3e89e209fd6dbbf",
+  "patchSha256": "fc670d2f746b1deb8d0b9f182de4e852da89404368077e2c02c99d3b714493b6",
+  "productionBlob": "392bee2c49432cb588df3870646b0d804247377e",
+  "testBlob": "6553c8ba4607edc133ca043a837dadad00610983",
+  "review": {
+    "path": "docs/reviews/F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW.md",
+    "verdict": "PASS",
+    "sha256": "202150eb27f64772a98321415af7e99832d1eed3709ec06fa023738031ae9908",
+    "subjectSha256": "fc670d2f746b1deb8d0b9f182de4e852da89404368077e2c02c99d3b714493b6"
+  },
+  "checks": {
+    "typecheck": {
+      "outcome": "passed",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "integration": {
+      "outcome": "passed",
+      "cases": 77,
+      "files": 3,
+      "sha256": "0fc620430ea5daf69ab814a1ead344e8d4107d945f8150458a2404ff7b5a5af3"
+    },
+    "mutants": [
+      {
+        "id": "duplicate-entry-checks",
+        "old": "const synchronousAnchor = currentAsync === undefined && staging === undefined;",
+        "new": "const synchronousAnchor = false;",
+        "failedControls": 1,
+        "logSha256": "cf78af5fc986bced23a2974077d630902cc9b3310ecf9c929c5afa744d449957"
+      },
+      {
+        "id": "missing-immediate-parent-check",
+        "old": "if (currentAsync === undefined || staging !== undefined) checkWork();\n        else await checkAsync(currentAsync);\n        checkDeadline(); charge();",
+        "new": "if (currentAsync === undefined || staging !== undefined) {\n          if (start !== verifyAnchorsDuringIo || staging !== undefined) checkWork();\n        } else await checkAsync(currentAsync);\n        checkDeadline(); charge();",
+        "failedControls": 2,
+        "logSha256": "b18fa99faea78c25e95761628a304df41ac8d381a6528fa2732b349412b66d8c"
+      }
+    ]
+  },
+  "remaining": "Exact native latency and common successful revision for both Stop/Resume paths are Unknown."
+}

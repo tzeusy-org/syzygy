@@ -1,0 +1,50 @@
+{
+  "sourceHead": "9b8374f5374e66dc9ddc4925addd36d11d302250",
+  "sourceTree": "c199478a380bbcc6c8aca4c2e2138a3bab8151eb",
+  "hostedCheckout": "e048ee672833d7eee41241858ced271f558baf26",
+  "hostedCheckoutTree": "c199478a380bbcc6c8aca4c2e2138a3bab8151eb",
+  "hostedBase": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "job": "https://github.com/tzeusy-org/syzygy/actions/runs/45170529908/job/137679803055",
+  "jobLogSha256": "4336df2a9a2fd11f2d66d0520378f23fdc79ef9078cb4a455e36de4d33c53b7d",
+  "jobCompleted": "2026-11-23T12:27:06Z",
+  "nativeCases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 110968
+    },
+    {
+      "case": "delivery-stop",
+      "result": "failed",
+      "ms": 116965
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 554313
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 325162
+    }
+  ],
+  "deliveryStop": {
+    "assertion": "expected undefined to be defined",
+    "forwards": {
+      "author": 7,
+      "inventory": 6,
+      "fidelity": 4,
+      "design": 0
+    },
+    "firstDesignForward": false
+  },
+  "stopResume": {
+    "vitestTimeoutMs": 540000
+  },
+  "eligibleStopResume": {
+    "reason": "Unknown",
+    "detail": "Job log ends after the failed eligible case line, before its structured refusal payload."
+  },
+  "suiteTotals": "Unknown. The available job log ends before Vitest reports its integration population."
+}

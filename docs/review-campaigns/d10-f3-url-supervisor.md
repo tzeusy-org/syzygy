@@ -29,6 +29,7 @@
 - `F3-LAUNCH-HISTORY-ASYNC-FLUSH(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-RESUME-EMPTY-PRODUCT-SAMPLE(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-PRIVATE-AUDIT-ADJACENT-DECLARATIONS-REVIEW-RAW\.md`
+- `F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -125,3 +126,5 @@
 [Observed] The pre-launch sample review records `REVISE` (`F3-RESUME-EMPTY-PRODUCT-SAMPLE-INITIAL-REVIEW-RAW.md:1`) because a test assertion could keep the resumed controller from its cleanup owner. The revised review records `PASS` (`F3-RESUME-EMPTY-PRODUCT-SAMPLE-REVIEW-RAW.md:1`) at `88a1077be`. A-132 samples the exact consumed claim once before any native process begins. The composed fixture records its observation before returning the controller, then asserts after supervisor cleanup.
 
 [Observed] The adjacent declaration review records `PASS` (`F3-PRIVATE-AUDIT-ADJACENT-DECLARATIONS-REVIEW-RAW.md:1`) at `3ee16e955`. A-133 shares a fresh authority sample only between a fully verified declaration and the next write in the same continuation. Typecheck, 170 focused tests and five fault controls passed. [Unknown] Exact native timing for this subject.
+
+[Observed] The synchronous store review records `PASS` (`F3-MACHINE-STORE-FIRST-ANCHOR-REVIEW-RAW.md:1`) at `e93544ff4`. A-134 keeps one fresh authority sample immediately before the first named-root read in each unstaged synchronous attempt. Typecheck, 77 integration cases and two fault controls passed. [Unknown] Exact native latency for this subject.

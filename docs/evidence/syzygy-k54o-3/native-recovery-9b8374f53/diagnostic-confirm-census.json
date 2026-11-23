@@ -1,0 +1,138 @@
+{
+  "subject": "9b8374f5374e66dc9ddc4925addd36d11d302250",
+  "overlaySha256": "aa263254b3a7d6fd28355f4388d1a5937ee2147f755799fab9181bac90b083ba",
+  "interruptedLogSha256": "f5f46eae534b003da68fd628109a31da11244e71391645b9106f2d660ed91ad2",
+  "eligibleLogSha256": "a0145da86a93cb8d52cfc343da18956f6d46b674a25b3766f616d6596166bcdc",
+  "slowestObservedSample": {
+    "ordinal": 2,
+    "began": 192360.653667,
+    "spans": {
+      "process.task-open": {
+        "n": 5,
+        "totalMs": 25.780228000017814,
+        "longestMs": 25.485012000019196,
+        "firstMs": 192360.731855,
+        "lastMs": 193021.000683
+      },
+      "storage.dir-open": {
+        "n": 8,
+        "totalMs": 3.0900749999273103,
+        "longestMs": 2.029123999993317,
+        "firstMs": 192386.287019,
+        "lastMs": 193021.543577
+      },
+      "storage.dir-read": {
+        "n": 17,
+        "totalMs": 25.184166999999434,
+        "longestMs": 23.930492999992566,
+        "firstMs": 192386.595841,
+        "lastMs": 193021.697186
+      },
+      "storage.lstat": {
+        "n": 9,
+        "totalMs": 450.3125740000105,
+        "longestMs": 321.48295600002166,
+        "firstMs": 192386.72767,
+        "lastMs": 193020.893521
+      },
+      "process.children": {
+        "n": 35,
+        "totalMs": 2440.963977000123,
+        "longestMs": 425.28435299999546,
+        "firstMs": 192386.507545,
+        "lastMs": 193021.803206
+      },
+      "claim.lock": {
+        "n": 7,
+        "totalMs": 0.5176959999953397,
+        "longestMs": 0.11728099998435937,
+        "firstMs": 192437.320043,
+        "lastMs": 193021.946767
+      },
+      "claim.run-record": {
+        "n": 7,
+        "totalMs": 6.8499639999936335,
+        "longestMs": 1.2205809999722987,
+        "firstMs": 192437.391087,
+        "lastMs": 193022.888753
+      },
+      "policy.prepare": {
+        "n": 7,
+        "totalMs": 8.485986000014236,
+        "longestMs": 1.6901360000192653,
+        "firstMs": 192438.338663,
+        "lastMs": 193023.961705
+      },
+      "policy.refs": {
+        "n": 14,
+        "totalMs": 350.610716999945,
+        "longestMs": 30.460812999983318,
+        "firstMs": 192439.399282,
+        "lastMs": 193102.042087
+      },
+      "policy.objects": {
+        "n": 7,
+        "totalMs": 197.11643699993147,
+        "longestMs": 30.562693999992916,
+        "firstMs": 192461.342368,
+        "lastMs": 193077.740134
+      },
+      "claim.policy": {
+        "n": 7,
+        "totalMs": 556.9135809999425,
+        "longestMs": 86.88951800001087,
+        "firstMs": 192438.33698,
+        "lastMs": 193102.130874
+      },
+      "claim.marker": {
+        "n": 7,
+        "totalMs": 0.16126400002394803,
+        "longestMs": 0.025457999989157543,
+        "firstMs": 192513.389002,
+        "lastMs": 193102.16057
+      },
+      "claim.boundary": {
+        "n": 7,
+        "totalMs": 1.9560080000082962,
+        "longestMs": 0.3032909999892581,
+        "firstMs": 192513.413057,
+        "lastMs": 193102.452931
+      },
+      "confirm.complete": {
+        "n": 1,
+        "totalMs": 81.17212999999174,
+        "longestMs": 81.17212999999174,
+        "firstMs": 193021.814327,
+        "lastMs": 193102.986457
+      }
+    },
+    "drift": [
+      {
+        "atMs": 192756.280713,
+        "ms": 321.4345139999932
+      },
+      {
+        "atMs": 192859.781756,
+        "ms": 103.50104300002567
+      },
+      {
+        "atMs": 192994.621165,
+        "ms": 109.20724999997765
+      }
+    ],
+    "phase": "confirm",
+    "elapsedMs": 742.3758610000077
+  },
+  "interruptedCase": {
+    "case": "stop-resume",
+    "result": "failed",
+    "ms": 231732
+  },
+  "interruptedHostActivation": {
+    "startedMs": 106814.956,
+    "settledMs": 124661.186,
+    "outcome": "rejected"
+  },
+  "observed": "Synchronous policy checks overlapped live resource sampling and took about 557 ms during one 742 ms sample. The sample passed. A later host activation refused after the delivery event was captured.",
+  "unknown": "Which synchronous caller generated every policy check in the sample, and which final predicate refused host activation."
+}

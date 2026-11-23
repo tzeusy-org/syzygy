@@ -1,0 +1,147 @@
+{
+  "base": "bdb06b8b6bb4142e8877ed292adfb350b5f035d8",
+  "overlayPatchSha256": "dffd00870858afd94930444857e90d7bf73d8c6a19cafbbd456cb9c9e2c02d73",
+  "scope": "Local synthetic diagnostic overlay. Cases ran serially. This report does not establish exact revision behavior.",
+  "interrupted": {
+    "sourceLogSha256": "545dd5912ecaeaf7a7373efd4005a404efbd93d958b64a14bf3b50f80bc84b0b",
+    "case": {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 284040
+    },
+    "confirmedAuditSetup": {
+      "startedMs": 205505.874794,
+      "authority": {
+        "started": 11,
+        "accepted": 11,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1549.4216149999702,
+        "longestMs": 247.41590500000166
+      },
+      "settledMs": 207237.147577,
+      "outcome": "accepted",
+      "declarations": 4,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0
+    },
+    "resumeBootstrap": {
+      "restore-plans": {
+        "startedMs": 133801.586739,
+        "settledMs": 141606.518316,
+        "outcome": "accepted",
+        "durationMs": 7804.93157700001
+      },
+      "load-renderer": {
+        "startedMs": 141668.814808,
+        "settledMs": 141997.778743,
+        "outcome": "accepted",
+        "durationMs": 328.96393500000704
+      },
+      "create-origins": {
+        "startedMs": 142072.866017,
+        "settledMs": 146954.058064,
+        "outcome": "accepted",
+        "durationMs": 4881.192047000019
+      },
+      "restore-products": {
+        "startedMs": 147623.243278,
+        "settledMs": 204060.620972,
+        "outcome": "accepted",
+        "durationMs": 56437.377693999995
+      },
+      "start-sessions": {
+        "startedMs": 204669.908115,
+        "settledMs": 233652.071611,
+        "outcome": "accepted",
+        "durationMs": 28982.163495999994
+      },
+      "create-machine": {
+        "startedMs": 207239.974509,
+        "settledMs": 232725.978395,
+        "outcome": "accepted",
+        "durationMs": 25486.00388600002
+      },
+      "open-store": {
+        "startedMs": 207699.231804,
+        "settledMs": 208663.275012,
+        "outcome": "accepted",
+        "durationMs": 964.0432079999882
+      }
+    },
+    "resumeChecks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      },
+      {
+        "phase": "resumed-guards",
+        "policyWithdrawal": "refused",
+        "claimWithdrawal": "refused"
+      },
+      {
+        "phase": "machine-claim",
+        "current": true,
+        "claimChecks": 1,
+        "withdrawn": true,
+        "asyncCurrent": true,
+        "asyncWithdrawn": true
+      },
+      {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "Unknown",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "Unknown"
+          }
+        ]
+      }
+    ],
+    "resumedDesignLaunches": 0,
+    "terminalPhase": "render refused",
+    "refusal": "The rendered products were not admitted by the checked producer before storage."
+  },
+  "eligible": {
+    "sourceLogSha256": "712b12d55a9f7070d762ae515585f513ae400b714a0a2a60f463e9f410440636",
+    "case": {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 159418
+    },
+    "forwards": {
+      "author": 7,
+      "inventory": 5,
+      "fidelity": 2,
+      "design": 0
+    },
+    "firstTracedRefusal": {
+      "role": "author",
+      "operation": "inference-forward",
+      "machinePhase": "store-result",
+      "relayPhase": "response-screening",
+      "elapsedMs": 1335.8870709999755
+    },
+    "resumeChecks": [],
+    "causeOfStoreRefusal": "Unknown"
+  }
+}
