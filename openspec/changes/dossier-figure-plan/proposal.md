@@ -22,7 +22,7 @@
 - Advice, on check's report alone as `figureAdvice`, gating nothing:
   - `figure-information-floor`: a graph of at most three nodes and at most one edge fewer than its nodes, a swimlane of at most three steps, a sequence of at most two messages, a containment of at most three groups;
   - `figure-duplicate`: a figure every key of which (boxes, arrows, steps and nestings, by normalised label) another figure of its family also draws;
-  - `figure-mixed-levels`: a graph or containment figure holding an element whose `unit` encloses another's, with no `contains` arrow between them (graph) or without drawing the second inside the first (containment).
+  - `figure-mixed-levels`: a graph or containment figure holding an element X whose `unit` encloses another's, Y's, where no chain of `contains` edges leads from X to Y (graph) or Y is not drawn inside X (containment).
 - The plan renders nowhere and no rendered byte moves.
 - Brief `polaris-dossier-brief-v18`: brief v17 plus one paragraph, issuing schema v12.
 - In the predecessor text, the brief-version list and the accepted-schema list are extended. Eleven scenarios are added and the four Form lines are extended.

@@ -67,14 +67,14 @@ PARAGRAPHS = [
     "top-level member `figurePlan`, the authoring session's figure plan, written before the prose: for each place a figure can be homed, "
     "the one question a picture there answers better than text and the kind of figure it needs, or why that place has none. The places "
     "are the overview, each section and each deep dive of the draft, each written as a v5 `home` names it: `{\"kind\": \"overview\"}`, "
-    "`{\"kind\": \"section\", \"target\": <a section's identity>}` or `{\"kind\": \"deep-dive\", \"target\": <a deep dive's identity>}`; "
-    "two places are the same where their `kind` and their `target`, compared by exact code units, are. `figurePlan` is a list holding "
+    "`{\"kind\": \"section\", \"target\": <a section's identity>}` or `{\"kind\": \"deep-dive\", \"target\": <a deep dive's identity>}`, "
+    "each `target` a string, and nothing else is a place form; two places are the same where their `kind` and their `target`, compared by exact code units, are. `figurePlan` is a list holding "
     "exactly one entry for each place, in any order, and each entry is exactly one of two forms. `{\"home\": <place>, \"question\": "
     "<text>, \"kind\": <figure kind>, \"figure\": <a diagram's identity>}` is a planned figure: `kind` is one of the nine figure kinds of "
     f"versions 2.5 and 2.23, {KINDS}, and `figure` names the diagram that answers the question, which SHALL be homed at that place and "
     "be of that kind. `{\"home\": <place>, \"omitted\": <text>}` says why the place has no planned figure: no question there is answered "
-    "better by a picture, or the planned figure could not be drawn. `question` and `omitted` are each plain text of 1 to 300 Unicode "
-    "code points. A planned figure names one diagram, and its place may hold other diagrams that the plan does not name. The plan is the "
+    "better by a picture, or the planned figure could not be drawn. `question` and `omitted` are each a string of 1 to 300 Unicode "
+    "code points holding at least one that is not white space (U+0009 to U+000D and U+0020). A planned figure names one diagram, and its place may hold other diagrams that the plan does not name. The plan is the "
     "authoring session's working record, read by check alone: it is no claim block and carries no label, citation or quotation; no page "
     "renders it; `machine.json`, `dossier.json`, `derived-structure.json` and the size report carry none of it; and it enters no claim "
     "count, claim list, fidelity entry or reading ledger. Whether a planned question is the right one, and whether an omission's reason "
@@ -86,13 +86,15 @@ PARAGRAPHS = [
     "`figurePlan` entry for the overview, each section and each deep dive ``; and where it is present and is not a list, with the detail "
     "`` `figurePlan` is a list of plan entries ``. At `$.figurePlan[<k>]`, `<k>` being the entry's index, for an entry that is not an "
     "object, that does not carry `home` and exactly the further members of one of the two forms, or whose `home` is not one of the three "
-    "place forms, whose `question` or `omitted` is not a string of 1 to 300 Unicode code points, or whose `kind` is not one of the nine "
+    "place forms, whose `question` or `omitted` is not a string of 1 to 300 Unicode code points holding at least one that is not white space, or whose `kind` is not one of the nine "
     "figure kinds, with the detail `` a plan entry is {\"home\", \"question\", \"kind\", \"figure\"} or {\"home\", \"omitted\"} ``; an "
     "entry with this finding is not well formed, and no other finding of this paragraph reads it. A finding of kind "
     "`unresolved-reference` at `$.figurePlan[<k>].home.target` for a well-formed entry whose `target` names no section, or no deep dive, "
     "of the draft, as its `kind` says, with the detail `` no section or deep dive has the identity named by "
-    "`figurePlan[<k>].home.target` ``, `<k>` written as the entry's index. At `$.figurePlan[<k>].home` for a well-formed entry naming the "
-    "same place as an earlier well-formed entry, with the detail `` <place>: a second plan entry for this place ``. For a well-formed "
+    "`figurePlan[<k>].home.target` ``, `<k>` written as the entry's index. Such an entry names no place: it is a second entry for no "
+    "place, the `home` of the diagram it plans is not compared with it, and it plans no place; every other finding of this paragraph reads it as "
+    "any well-formed entry. At `$.figurePlan[<k>].home` for a well-formed entry naming the "
+    "same place as an earlier well-formed entry that names a place, with the detail `` <place>: a second plan entry for this place ``. For a well-formed "
     "planned figure: a finding of kind `unresolved-reference` at `$.figurePlan[<k>].figure` where `figure` names no diagram of the "
     "draft, with the detail `` no diagram has the identity named by `figurePlan[<k>].figure` ``, `<k>` written as the entry's index; and, "
     "where it names a diagram, one at `$.figurePlan[<k>].figure` where that diagram's `home` is not the entry's place, with the detail `` "
@@ -131,27 +133,30 @@ PARAGRAPHS = [
     "`[\"box\", <key>]` for each lane and `[\"step\", <key of its lane's label>, <key of its label>]` for each step; and a containment's, "
     "`[\"box\", <key>]` for each group and `[\"in\", <key of its parent's label>, <key of its label>]` for each group drawn inside "
     "another. An edge's or message's own label is part of no key, and an edge, message or step whose reference names no node, "
-    "participant or lane of its figure gives no key. Two figures are of one family where both are of graph kinds, both are sequences, "
+    "participant or lane of its figure gives no key. A figure's keys are a set: a repeated key counts once, and the order of "
+    "messages and steps is not compared, so two sequences of the same messages in another order are advised on as duplicates. Two figures are of one family where both are of graph kinds, both are sequences, "
     "both are swimlanes or both are containments. A figure A draws nothing another figure B of its family does not where A has at least "
     "one `arrow`, `step` or `in` key, every key of A is a key of B, and either B has a key that A has not, or the two have the same keys "
     "and B comes before A in the draft. The rule advises on A, naming the first such B in draft order, with the detail `` <identity>: "
-    "every box and arrow it draws is drawn by <other identity>; keep one figure, or draw what the other does not ``; so of two figures "
+    "everything it draws is drawn by <other identity>; keep one figure, or draw what the other does not ``; so of two figures "
     "with the same keys only the later is advised on, and a figure with one box, arrow or nesting of its own is not. Rule "
     "`figure-mixed-levels` version 1 advises on a graph or containment figure that draws a unit beside a unit within it without saying "
     "that one holds the other. It reads only the `unit` members that version 2.19 lets a node carry and version 2.23 lets a group "
     "carry, so a node or group without one, and every sequence and swimlane, is in no comparison. An element X's unit encloses an "
     "element Y's where X's is `{\"kind\": \"repository-root\"}` and Y's is of any kind but `repository-root` and `dependency-name`; or "
     "where X's is `{\"kind\": \"top-level-directory\", \"path\": <P>}` and Y's is a `package-manifest`, `workflow-job` or "
-    "`compose-service` unit whose `path` begins with P followed by `/`. A graph figure says that X holds Y where an edge of the figure "
-    "whose `relation` is `contains` joins from X to Y, and a containment says so where Y is drawn inside X, at any depth. The rule "
+    "`compose-service` unit whose `path` begins with P followed by `/`. A graph figure says that X holds Y where a chain of one or "
+    "more edges of the figure whose `relation` is `contains`, each starting at the node the one before it ends at, leads from X to Y, and a containment says so where Y is drawn inside X, at any depth. The rule "
     "advises on a figure holding two elements X and Y, X's unit enclosing Y's, where the figure does not say that X holds Y, naming the "
     "first such pair, ordered by X's place among the nodes or groups and then by Y's, with the detail `` <identity>: <X's identity> and "
-    "<Y's identity> stand for a unit and a unit within it, and no contains arrow joins them; draw one level, or show the containment ``; "
+    "<Y's identity> stand for a unit and a unit within it, and the figure does not show that one holds the other; draw one level, or "
+    "show the containment ``; "
     "so a graph of the repository root with its top-level directories joined by `contains` arrows, a containment that draws those "
     "directories inside the root, a figure of two top-level directories, and a figure of one top-level directory beside a package "
-    "manifest under another is not advised on, while a containment that draws the root and one of its top-level directories as two "
-    "top-level groups is. The advice is Inferred, a computation over the draft's bytes alone that reads no blob, layout, record or fact, "
-    "and two checks of the same draft bytes give the same member. Each advisory is one a change to the draft clears, so it is advice to "
+    "manifest under another is not advised on, while a containment that draws the root and one of its top-level directories side by "
+    "side as two top-level groups, nesting something else, is. The advice is Inferred, a computation over the draft's bytes alone that reads no blob, layout, record or fact, "
+    "and two checks of the same draft bytes give the same member. A failure to compute it, at any point and for any cause, SHALL NOT "
+    "refuse or fail a check: the report then carries no `figureAdvice` member. Each advisory is one a change to the draft clears, so it is advice to "
     "the author in the sense of version 2.9, and, like the inventory-coverage advice of version 2.12, it carries no class member and is "
     "on the report beside the `author`-class advice. It gates nothing: it is no repair finding, sets no outcome, exit status or "
     "readiness, is read by no render, review or close, and is counted by no reading ledger, reading difference, `run-advice.json` or "
@@ -205,11 +210,11 @@ SCENARIOS = r'''
 
 - **WHEN** a schema-v<S> draft with sections `a` and `b` and no deep dive carries well-formed plan entries for the overview, for section `a` and again for section `a`, and none for section `b`
 - **THEN** check reports a `figure-plan` finding at `$.figurePlan[2].home` with the detail `section a: a second plan entry for this place`, then one at `$.figurePlan` with the detail `section b: no plan entry for this place`
-- **AND** where the third entry's `home` is instead `{"kind": "section", "target": "c"}` and the draft has no section `c`, check reports a finding of kind `unresolved-reference` at `$.figurePlan[2].home.target` with the detail ``no section or deep dive has the identity named by `figurePlan[2].home.target` `` and still reports section `b` unplanned
+- **AND** where the third entry's `home` is instead `{"kind": "section", "target": "c"}` and the draft has no section `c`, check reports a finding of kind `unresolved-reference` at `$.figurePlan[2].home.target` with the detail ``no section or deep dive has the identity named by `figurePlan[2].home.target` `` and still reports section `b` unplanned; a fourth entry with that same unresolved `home` gets its own `unresolved-reference` finding and no `a second plan entry` finding; a planned figure in such an entry, naming a diagram of its kind homed in a section, gets no home finding; and a `target` that is not a string, such as `7`, gets the malformed-entry finding at `$.figurePlan[<k>]` and no `unresolved-reference` finding
 
 #### Scenario: Malformed plan entry refused
 
-- **WHEN** a schema-v<S> plan entry carries both `figure` and `omitted`, or neither, or a further member, or a `kind` of `pie`, or an empty `question` or one of 301 Unicode code points, or a `home` of kind `pole`, or is a string
+- **WHEN** a schema-v<S> plan entry carries both `figure` and `omitted`, or neither, or a further member, or a `kind` of `pie`, or an empty `question`, one of 301 Unicode code points or one of white space alone, or a `home` of kind `pole`, or is a string
 - **THEN** check reports for that entry one finding of kind `figure-plan` at `$.figurePlan[<k>]` with the detail `a plan entry is {"home", "question", "kind", "figure"} or {"home", "omitted"}`, no other plan finding for it, and no `schema` finding at or below `$.figurePlan`
 - **AND** the place that entry was meant for is reported unplanned where no other entry names it, and an entry whose `kind` is `containment` is well formed
 
@@ -233,15 +238,15 @@ SCENARIOS = r'''
 
 #### Scenario: A figure that draws nothing new is advised as a duplicate
 
-- **WHEN** a schema-v<S> draft holds, all produced and in this order, a `flow` `a` of five nodes chained by four edges; a `dependency` `b` with the same node labels and edges as `a` except for letter case and white space in its labels and its own edge labels; a `flow` `c` drawing four of `a`'s nodes and three of its edges; a `flow` `d` drawing all of `a` and one more node; a `flow` `e` drawing `a` with one edge reversed; a `sequence` whose participants and messages carry `a`'s node labels and edges; a `containment` `k1` of a group `Workspace` holding groups `api` and `web`; and a `containment` `k2` of a group `workspace` holding `API`
-- **THEN** the report's `figureAdvice` holds, under rule `figure-duplicate`, an advisory for `a` with the detail `a: every box and arrow it draws is drawn by d; keep one figure, or draw what the other does not`, one for `b` naming `a`, one for `c` naming `a` and one for `k2` naming `k1`
-- **AND** it holds none under that rule for `d`, `e`, the sequence or `k1`
+- **WHEN** a schema-v<S> draft holds, all produced and in this order, a `flow` `a` of five nodes chained by four edges; a `dependency` `b` with the same node labels and edges as `a` except for letter case and white space in its labels and its own edge labels; a `flow` `c` drawing four of `a`'s nodes and three of its edges; a `flow` `d` drawing all of `a` and one more node; a `flow` `e` drawing `a` with one edge reversed; a `sequence` whose participants and messages carry `a`'s node labels and edges; a `containment` `k1` of a group `Workspace` holding groups `api` and `web`; a `containment` `k2` of a group `workspace` holding `API`; and two sequences `q1` and `q2` of the same two messages in opposite orders
+- **THEN** the report's `figureAdvice` holds, under rule `figure-duplicate`, an advisory for `a` with the detail `a: everything it draws is drawn by d; keep one figure, or draw what the other does not`, one for `b` naming `a`, one for `c` naming `a`, one for `k2` naming `k1` and one for `q2` naming `q1`
+- **AND** it holds none under that rule for `d`, `e`, the first sequence, `k1` or `q1`
 
 #### Scenario: A figure that mixes levels is advised
 
-- **WHEN** a schema-v<S> draft holds produced figures: `f1`, a graph whose node `root` has the unit `{"kind": "repository-root"}` and node `src` the unit `{"kind": "top-level-directory", "path": "src"}`, joined by one edge of `relation` `calls`; `f2`, the same with an edge of `relation` `contains` from `root` to `src`; `f3`, a graph whose nodes have the units `{"kind": "top-level-directory", "path": "packages"}` and `{"kind": "package-manifest", "path": "packages/core/package.json"}` and no edge between them; `f4`, as `f3` with the directory `pack` in place of `packages`; `f5`, a graph of two nodes without `unit`; `f6`, a containment whose top-level group `root` carries the repository-root unit and holds a group `src` carrying the `src` directory's unit; and `f7`, a containment whose two top-level groups `root` and `src` carry those same units
-- **THEN** the report's `figureAdvice` holds a `figure-mixed-levels` advisory for `f1` with the detail `f1: root and src stand for a unit and a unit within it, and no contains arrow joins them; draw one level, or show the containment`, and one each for `f3` and `f7`
-- **AND** it holds none under that rule for `f2`, `f4`, `f5` or `f6`
+- **WHEN** a schema-v<S> draft holds produced figures: `f1`, a graph whose node `root` has the unit `{"kind": "repository-root"}` and node `src` the unit `{"kind": "top-level-directory", "path": "src"}`, joined by one edge of `relation` `calls`; `f2`, the same with an edge of `relation` `contains` from `root` to `src`; `f3`, a graph whose nodes have the units `{"kind": "top-level-directory", "path": "packages"}` and `{"kind": "package-manifest", "path": "packages/core/package.json"}` and no edge between them; `f4`, as `f3` with the directory `pack` in place of `packages`; `f5`, a graph of two nodes without `unit`; `f6`, a containment whose top-level group `root` carries the repository-root unit and holds a group `src` carrying the `src` directory's unit; `f7`, a containment whose two top-level groups `root` and `src` carry those same units, `src` holding a group `app` without `unit`; and `f8`, a graph whose nodes `r`, `pkgs` and `core` carry the repository-root unit, the `packages` directory's unit and the unit `{"kind": "package-manifest", "path": "packages/core/package.json"}`, with edges of `relation` `contains` from `r` to `pkgs` and from `pkgs` to `core` and none from `r` to `core`
+- **THEN** the report's `figureAdvice` holds a `figure-mixed-levels` advisory for `f1` with the detail `f1: root and src stand for a unit and a unit within it, and the figure does not show that one holds the other; draw one level, or show the containment`, and one each for `f3` and `f7`
+- **AND** it holds none under that rule for `f2`, `f4`, `f5`, `f6` or `f8`
 
 #### Scenario: Figure advice gates nothing
 
@@ -267,8 +272,8 @@ extend("and drafts of schema v10 and earlier with and without a containment.",
        "unresolved, misplaced and of the wrong kind, and omitted places; figures on each side of each advice rule's boundary (a third "
        "and a fourth node, a third edge among three nodes, a third and a fourth step, a second and a third message, a third and a fourth "
        "group; equal, contained, extended and reversed keys and another family; a unit enclosing another with and without a `contains` "
-       "arrow or a nesting, and a directory that is only a prefix of a path); and drafts of schema v<PS> and earlier with and without "
-       "`figurePlan`.")
+       "arrow, a chain of them or a nesting, and a directory that is only a prefix of a path); entries with an unresolved or non-string "
+       "`target`; the same drafts with their draft layer withheld; and drafts of schema v<PS> and earlier with and without `figurePlan`.")
 extend("its tally, list, witnessed-nesting items, declarative source and `figureStructures` entry, and figure fit's entries.",
        "; for version 2.NN, the plan findings with their paths, details and order, the report's `figureAdvice` member, the check record, "
        "`run-advice.json` and reading ledger beside it, the brief v<B> figure-plan paragraph, and the rendered bytes of a v<S> draft beside "
