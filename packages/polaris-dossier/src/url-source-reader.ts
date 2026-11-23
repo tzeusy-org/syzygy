@@ -8,6 +8,11 @@ const MAX_CALL_OBJECTS = 16_384;
 export const URL_STORE_ENTRY_LIMIT = 32_768;
 const MAX_INDEX_BYTES = 1_048_576;
 
+/** Whole-source provenance reads Git object paths, including spaces in names. */
+export const isUrlWholeSourcePath = (value: unknown): value is string => typeof value === 'string' && value.length > 0
+  && Buffer.byteLength(value) <= 4096 && !/[\\\u0000-\u001f\u007f]/u.test(value) && !value.startsWith('/')
+  && value.split('/').every(part => part !== '' && part !== '.' && part !== '..');
+
 type ReaderFactory = (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 
 const readers = new WeakSet<ReaderFactory>();

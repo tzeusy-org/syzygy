@@ -5,6 +5,7 @@ import { decodeUtf8, deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { urlManifestFactsShape } from './url-check-product-shape.js';
 import { URL_HELPER_LAUNCH_FILES, isUrlHelperLaunchFile } from './url-launch-history.js';
 import { assertProductFileUnchanged, snapshotProductFile, snapshotProductNames, type ProductFileSnapshot, type ProductNameSnapshot } from './url-product-reads.js';
+import { isUrlWholeSourcePath } from './url-source-reader.js';
 
 const JSON_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
 const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
@@ -124,7 +125,8 @@ export function verifyFrozenOriginProvenance(graph: UrlOriginProvenance) {
     if (d.kind === 'fixed') { if (!keys(d, ['kind', 'id']) || d.id !== node.metadata.id || node.parents.length) refuse(); }
     else if (d.kind === 'source-span' || d.kind === 'source-whole') {
       if (!keys(d, d.kind === 'source-span' ? ['kind', 'path', 'objectId', 'offset', 'limit'] : ['kind', 'path', 'objectId'])
-        || !relative(d.path) || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(d.objectId) || node.parents.length
+        || !(d.kind === 'source-span' ? relative(d.path) : isUrlWholeSourcePath(d.path))
+        || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(d.objectId) || node.parents.length
         || (d.kind === 'source-span' && (!integer(d.offset) || !integer(d.limit) || d.limit < 1 || d.limit > 2000))) refuse();
     } else if (d.kind === 'source-tree') {
       if (!keys(d, ['kind', 'offset', 'limit']) || !integer(d.offset) || !integer(d.limit) || d.limit < 1 || d.limit > 2000 || node.parents.length) refuse();

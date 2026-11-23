@@ -531,12 +531,13 @@ describe('trusted URL artifact producer bridge', () => {
     const excludedManifest = '[package]\nname = "OWN_SECRET_CANARY"\n';
     const compose = 'services:\n  web:\n    image: nginx:stable\n';
     const unparsedManifest = 'services:\n  - own-unparsed-service\n';
+    const unparsedPath = 'infra examples/docker-compose.yml';
     const withheldManifest = 'module own-withheld-module\n';
     const uncitedPath = 'own-notes/uncited.ts', uncitedBody = 'export const uncited = "OWN_UNCITED_BODY";\n';
     const privatePath = 'OWN_SECRET_CANARY/own-hidden.ts', privateBody = 'export const hidden = "OWN_PRIVATE_BODY";\n';
     const f = fixture(undefined, {
       'README.md': 'Own documented purpose.\n', 'package.json': manifest, 'Cargo.toml': excludedManifest, 'compose.yaml': compose,
-      'docker-compose.yml': unparsedManifest, 'go.mod': withheldManifest,
+      [unparsedPath]: unparsedManifest, 'go.mod': withheldManifest,
       [uncitedPath]: uncitedBody, [privatePath]: privateBody,
     }, 'v2');
     Object.assign(f.draft.understanding, { purpose: [{ id: 'own-purpose', label: 'inferred', statement: 'Own documented purpose.', scope: 'Own fixture.',
@@ -696,7 +697,8 @@ describe('trusted URL artifact producer bridge', () => {
             expect.objectContaining({ path: 'compose.yaml', fact: 'service-image', service: 'web', image: 'nginx:stable' }),
           ]),
           remainder: { files: 9, secretPathsLeftOut: 1, candidates: 5, notCandidates: 3,
-            places: [{ place: null, files: 7, notCandidates: 2 }, { place: 'own-notes', files: 1, notCandidates: 1 }],
+            places: [{ place: null, files: 6, notCandidates: 2 }, { place: 'infra examples', files: 1, notCandidates: 0 },
+              { place: 'own-notes', files: 1, notCandidates: 1 }],
             placesNotListed: 0, filesInPlacesNotListed: 0, notCandidatesInPlacesNotListed: 0 },
         });
         if (result.report.manifestFacts?.state !== 'derived') throw Error('own manifest facts unavailable');
@@ -705,7 +707,7 @@ describe('trusted URL artifact producer bridge', () => {
           .toEqual([expect.objectContaining({ path: 'Cargo.toml', epistemic: 'unknown', unknownReason: 'secret-detector-match' })]);
         const manifestFiles = result.report.manifestFacts.recognizers.flatMap(recognizer => recognizer.files);
         expect(manifestFiles).toEqual(expect.arrayContaining([
-          expect.objectContaining({ path: 'docker-compose.yml', epistemic: 'unknown', unknownReason: 'unparsed', parseFault: 'field-type' }),
+          expect.objectContaining({ path: unparsedPath, epistemic: 'unknown', unknownReason: 'unparsed', parseFault: 'field-type' }),
           expect.objectContaining({ path: 'go.mod', epistemic: 'unknown', unknownReason: 'unknown-extraction-class', parseFault: null }),
         ]));
         const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 };
@@ -749,7 +751,7 @@ describe('trusted URL artifact producer bridge', () => {
         // Editing both products preserves their mutual agreement and every
         // count. Only independent pinned-tree verification catches the place.
         const forgedManifest = { ...result.report.manifestFacts, remainder: {
-          ...remainder, places: [remainder.places[0]!, { place: 'forged-notes', files: 1, notCandidates: 1 }],
+          ...remainder, places: [...remainder.places.slice(0, -1), { place: 'forged-notes', files: 1, notCandidates: 1 }],
         } };
         f.write('checks/rev-0.json', b({ ...stored, manifestFacts: forgedManifest }));
         f.replyQueue.push({ ...response, stdout: JSON.stringify({ ...result.report, manifestFacts: forgedManifest }) });
@@ -785,8 +787,10 @@ describe('trusted URL artifact producer bridge', () => {
         bridge.committed('author', receipt.id);
         expect(f.ledger.metadata(bridge.checkReceipt(0)).originIds).toEqual(expect.arrayContaining(actualOrigins));
         const ancestry = f.ledger.captureProvenance([bridge.checkReceipt(0)]).graph.nodes;
-        expect(ancestry.find(node => node.derivation.kind === 'source-whole' && node.derivation.path === 'docker-compose.yml'))
+        expect(ancestry.find(node => node.derivation.kind === 'source-whole' && node.derivation.path === unparsedPath))
           .toMatchObject({ metadata: { digest: sha256(unparsedManifest), bytes: Buffer.byteLength(unparsedManifest) } });
+        expect(f.ledger.semanticProvenance([bridge.checkReceipt(0)])).toMatch(/^[a-f0-9]{64}$/u);
+        await expect(f.ledger.sourceSpan({ path: unparsedPath })).rejects.toThrow('url-origin-refused');
         expect(ancestry.find(node => node.metadata.id === coverageOrigin!.id)).toMatchObject({
           parents: [], derivation: { kind: 'source-manifest-remainder' }, metadata: { digest: sha256(b(remainder)), bytes: b(remainder).length },
         });

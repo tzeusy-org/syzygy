@@ -5,7 +5,7 @@ import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, PAGE_SINK_CONTRACT, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { bindUrlSourceReader, type UrlSourceStore } from './url-source-reader.js';
+import { bindUrlSourceReader, isUrlWholeSourcePath, type UrlSourceStore } from './url-source-reader.js';
 import { urlDossierReportExit } from './url-dossier-result.js';
 import { encodeRunRecord, readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import type { PolicyBinding } from './policy-snapshot.js';
@@ -279,7 +279,7 @@ function create(given: UrlOriginLedgerOptions) {
     if (screen.screenSecrets(text) !== undefined || screen.screenSecrets(fields.join('')) !== undefined || screen.screenSecrets(values.join('')) !== undefined) fail();
   }
   async function verifiedSource(file: string, check: () => void) {
-    check(); if (!relative(file) || screen.screenPath(file) !== undefined) fail();
+    check(); if (!isUrlWholeSourcePath(file) || screen.screenPath(file) !== undefined) fail();
     const contentClass = screen.contentClass(file);
     if (!contentClass || !['code-content', 'governance-text', 'project-documentation'].includes(contentClass)) fail();
     const reader = openReader();
@@ -339,7 +339,7 @@ function create(given: UrlOriginLedgerOptions) {
   }
   async function verifyWholeSourceBody(input: { readonly path: string; readonly objectId: string; readonly bytes: Uint8Array }): Promise<UrlWholeSourceBody> {
     try {
-      live(); if (!exact(input, ['path', 'objectId', 'bytes']) || !relative(input.path) || typeof input.objectId !== 'string'
+      live(); if (!exact(input, ['path', 'objectId', 'bytes']) || !isUrlWholeSourcePath(input.path) || typeof input.objectId !== 'string'
         || input.objectId.length !== record.subject.pinnedRevision.commit.length || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.objectId)) fail();
       const file = input.path, objectId = input.objectId, supplied = snapshot(input.bytes);
       return await sourceOperation(async check => {
@@ -589,7 +589,7 @@ function create(given: UrlOriginLedgerOptions) {
     // complete blob. The path grants no role read or raw-composition exception.
     sourceWhole: async (input: { readonly path: string }): Promise<UrlOriginReceipt> => {
       try {
-        live(); if (!exact(input, ['path']) || !relative(input.path)) fail();
+        live(); if (!exact(input, ['path']) || !isUrlWholeSourcePath(input.path)) fail();
         const file = input.path;
         return await sourceOperation(async check => {
           const body = await verifiedSource(file, check);
