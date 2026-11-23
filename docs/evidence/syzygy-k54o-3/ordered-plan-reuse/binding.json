@@ -1,0 +1,50 @@
+{
+  "subject": {
+    "commit": "7f385c1fd3a19b71a6e73c8f06049b86c2598986",
+    "binaryDiffSha256": "58224a7e7fa70075960753a74623f44d1374556c4b7ff43d932846be8a79f530"
+  },
+  "governance": [
+    "A-14",
+    "A-150",
+    "REQ-polaris-generation-035"
+  ],
+  "review": {
+    "reviewedCommit": "2c204005ea52d68bf61719077e2138ae4186411d",
+    "path": "docs/reviews/F3-ORDERED-PLAN-REUSE-REVIEW-RAW.md",
+    "sha256": "2ac57964c155f41e9d27c90d6e29d88b5190e80388d1b03baf671ab3ccd34e2b",
+    "verdict": "PASS"
+  },
+  "verification": {
+    "typecheck": "passed",
+    "integration": {
+      "testFile": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "selector": "protected URL design delivery audit",
+      "passed": 14,
+      "unselected": 44,
+      "total": 58
+    },
+    "faultControls": [
+      {
+        "commit": "2c204005ea52d68bf61719077e2138ae4186411d",
+        "file": "packages/polaris-dossier/src/url-session-audit.ts",
+        "old": "        verify(before, product, observeRead);\n",
+        "new": "",
+        "testFile": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "selector": "ordered-plan-expiry",
+        "failedAsExpected": 1,
+        "unselected": 57
+      },
+      {
+        "commit": "2c204005ea52d68bf61719077e2138ae4186411d",
+        "file": "packages/polaris-dossier/src/url-session-audit.ts",
+        "old": "product = checkedIssuedDeliveryView(view).product.deref();",
+        "new": "product = authenticatedDesignViews.get(view)?.product.deref();",
+        "testFile": "packages/polaris-dossier/src/url-launch-history.test.ts",
+        "selector": "after durability \\(ordered\\)$",
+        "failedAsExpected": 1,
+        "unselected": 57
+      }
+    ],
+    "nativeTiming": "Unknown"
+  }
+}

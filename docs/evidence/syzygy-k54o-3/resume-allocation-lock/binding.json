@@ -44,11 +44,35 @@
     "negativeControls": [
       {
         "change": "Restore serialized fsync and census",
-        "failedAsExpected": 2
+        "failedAsExpected": 2,
+        "commit": "b6aaf7832a5ea4f2df7e74f300b1b276e6226dfe",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "fragments": [
+          {
+            "old": "      const syncAndCensus = async (stagedAllocation = false): Promise<void> => {\n        const sync = () => heldRoot.sync();\n        if (!stagedAllocation) charge();\n        const [synced, scanned] = await Promise.allSettled(stagedAllocation\n          ? [io(sync), io(census)] : [sync(), census()]);\n",
+            "new": "      const syncAndCensus = async (): Promise<void> => {\n        charge();\n        const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);\n"
+          },
+          {
+            "old": "        if (!joinedTerminalLock) {\n          if (allocation) {\n            // Keep a separate deadline and I/O checkpoint for each private\n            // operation. Verify live authority after both and before state reads.\n            await syncAndCensus(true);\n            await reverify(); check();\n          } else if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {\n            // Join both operations before any client state read.\n            await io(syncAndCensus);\n          } else {\n            await io(() => heldRoot.sync());\n            await io(census);\n          }\n        }\n",
+            "new": "        if (!joinedTerminalLock) {\n          if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {\n            // Join both operations before any client state read.\n            await io(syncAndCensus);\n          } else {\n            await io(() => heldRoot.sync());\n            if (allocation) { await reverify(); check(); }\n            await io(census);\n          }\n        }\n"
+          }
+        ],
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "joins the staged allocation lock sync and census"
       },
       {
         "change": "Drop the second async authority check",
-        "failedAsExpected": 2
+        "failedAsExpected": 2,
+        "commit": "b6aaf7832a5ea4f2df7e74f300b1b276e6226dfe",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "fragments": [
+          {
+            "old": "await syncAndCensus(true);\n            await reverify(); check();",
+            "new": "await syncAndCensus(true);\n            check();"
+          }
+        ],
+        "testFile": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "joins the staged allocation lock sync and census"
       }
     ],
     "nativeTiming": "Unknown"
