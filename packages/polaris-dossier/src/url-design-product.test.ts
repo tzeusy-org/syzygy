@@ -4,7 +4,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { generationSourcesForBody, type EvidenceAnchor } from '@syzygy/polaris-generation-core/live';
 import { buildDesignPacket } from './design-review.js';
-import { checkUrlOrderedProductCurrent } from './url-run-ordered-attempt.js';
+import { checkUrlOrderedProductCurrent, isUrlOrderedProductCurrentAfterEffectCheck } from './url-run-ordered-attempt.js';
 import { buildDossierScreen, type DossierScreen } from './screen.js';
 import type { ProducedSiteInput, DossierRenderer } from './render.js';
 import { beginRunProductReads, type ProductReadEvidence, type RunProductReads } from './url-operation-products.js';
@@ -144,6 +144,18 @@ describe('active URL design product capability', () => {
       assertCurrent: () => { throw new Error('owned delivery digest drift'); }, refresh })).toBe(false);
     expect(urlDesignProductLeaseState(f.capability).state).toBe('open');
     expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('refuses to publish a replacement that expires during the final machine effect check', async () => {
+    const f = await validatedFixture(), deadline = f.evidence.metadata.deadline;
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(deadline - 1);
+    try {
+      expect(isUrlOrderedProductCurrentAfterEffectCheck(f.capability, () => true)).toBe(true);
+      expect(isUrlOrderedProductCurrentAfterEffectCheck(f.capability, () => {
+        clock.mockReturnValue(deadline);
+        return true;
+      })).toBe(false);
+    } finally { clock.mockRestore(); }
   });
 
   it('does not reproduce after delivery refusal that independently crosses the product deadline', async () => {

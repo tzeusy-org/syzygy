@@ -89,6 +89,12 @@ export async function checkUrlOrderedProductCurrent(input: {
   return input.refresh();
 }
 
+/** The machine effect check can outlast the shorter product lease. */
+export function isUrlOrderedProductCurrentAfterEffectCheck(product: ValidatedUrlDesignProduct | undefined,
+  effectCurrent: () => boolean): boolean {
+  return effectCurrent() && product !== undefined && isUrlDesignProductLeaseOpen(product);
+}
+
 /** A new process and protected epoch for one review round. Binding sockets does
  * not activate the controller: actual launch history and a freshly reproduced
  * checked delivery are committed before the one-use activation resolves. */
@@ -149,7 +155,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
             const checked = await input.audit.readDesignDeliveryView(delivery!.receipt, next.product, observeRead);
             if (!processingCurrent()) return false;
             assertUrlDesignDeliveryViewCurrent(checked);
-            if (!processingCurrent()) return false;
+            if (!isUrlOrderedProductCurrentAfterEffectCheck(next.product, processingCurrent)) return false;
             const previous = render;
             render = next;
             delivery = checked;
@@ -159,7 +165,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
           } finally { if (!adopted) next.close(); }
         })().finally(() => { renewing = null; });
         // A joining caller has its own machine effect scope.
-        return await pending && processingCurrent() && isUrlDesignProductLeaseOpen(render!.product);
+        return await pending && isUrlOrderedProductCurrentAfterEffectCheck(render?.product, processingCurrent);
       },
     });
   };
