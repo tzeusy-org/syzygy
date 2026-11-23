@@ -1186,6 +1186,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         return beginOwnedStop();
       },
     };
+    const initialSiteDescription = cut ? vi.spyOn(designProduct, 'describeCheckedUrlDesignProduct') : undefined;
     const loop = runUrlSupervisorLoop(stateRoot, f.ports, state, { event: message => events.push(message), draw: lines => draws.push([...lines]) }, {
       prepared: { record: f.record, roles: f.plans, effectiveDeclaration: f.effectiveDeclaration, screen: f.screen, renderer: f.renderer, origins: f.origins,
         current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
@@ -1224,6 +1225,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         expect(expectedPlan).toBeDefined();
         expect(deliveryReproductions).toEqual([[0, 0]]);
         if (cut) {
+          expect(initialSiteDescription).toHaveBeenCalledTimes(1);
+          initialSiteDescription!.mockRestore();
           expect(beginOrdered).not.toHaveBeenCalled();
           expect(stopped.audit).toMatchObject({ closed: true, poisoned: false, captured: { 'design-delivery': 1, 'design-ordered': 0 } });
           expect(stopped.closedAuditHistory?.ordered).toEqual([{
