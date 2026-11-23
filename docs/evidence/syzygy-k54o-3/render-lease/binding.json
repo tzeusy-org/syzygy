@@ -1,0 +1,180 @@
+{
+  "subject": {
+    "commit": "bbaec30f7537772b83fac43298c76835ca171918",
+    "binaryDiffSha256": "4e740d788c873a0b4b6b41633781d8928c8f1666fe9fbdaa2ac47fc2d9ea6101"
+  },
+  "governance": [
+    "A-14",
+    "A-66",
+    "A-158",
+    "A-160",
+    "REQ-polaris-generation-035",
+    "REQ-polaris-generation-048",
+    "RFC3-16(d).6"
+  ],
+  "review": {
+    "reviewedCommit": "ad8d6c7c26b7c8b3c3a6558524bc2bd80f6d2406",
+    "path": "docs/reviews/F3-RENDER-LEASE-REVIEW-RAW.md",
+    "sha256": "63386921729b89903bbcaaecbc6ae8963c6dfde855bc32170042ff8374ee3be8",
+    "verdict": "PASS"
+  },
+  "baseline": {
+    "commit": "584539778f025605885009b5bb80c435cd37515e",
+    "scenario": "stop-resume",
+    "initialRenderReadMaximumMilliseconds": 30000,
+    "resumeBootstrap": {
+      "restore-plans": "accepted",
+      "load-renderer": "accepted",
+      "create-origins": "accepted",
+      "restore-products": "accepted",
+      "start-sessions": "accepted",
+      "create-machine": "accepted",
+      "open-store": "accepted"
+    },
+    "allocatedClients": 8,
+    "designDelivery": {
+      "startedMs": 105620.631,
+      "samples": [
+        {
+          "startedMs": 105621.13,
+          "settledMs": 105621.157,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 108107.599,
+          "settledMs": 108107.643,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 109182.172,
+          "settledMs": 109273.656,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 112397.413,
+          "settledMs": 112397.438,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 112398.066,
+          "settledMs": 112398.077,
+          "outcome": "accepted"
+        }
+      ],
+      "settledMs": 112433.363,
+      "outcome": "accepted"
+    },
+    "followingHostCurrentStartedMs": 112527.875,
+    "productLeaseRefusal": {
+      "phase": "product-lease",
+      "timing": {
+        "startedMs": 113106.358,
+        "settledMs": 113291.551,
+        "outcome": "refused"
+      },
+      "lease": "expired"
+    },
+    "newDesignInferencesStarted": 0,
+    "executionRecord": false
+  },
+  "verification": {
+    "typecheck": "passed",
+    "integration": {
+      "paths": [
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "packages/polaris-dossier/src/url-run-machine.test.ts"
+      ],
+      "selector": "producer cross thirty seconds|producer at the remaining shared deadline|fixed render deadline|original shorter deadline|numeric product limits",
+      "passed": 5,
+      "unselected": 229,
+      "total": 234
+    },
+    "faultControls": [
+      {
+        "commit": "ad8d6c7c26b7c8b3c3a6558524bc2bd80f6d2406",
+        "file": "packages/polaris-dossier/src/url-product-read-limits.ts",
+        "old": "render: 60_000",
+        "new": "render: 30_000",
+        "testFile": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "selector": "fixed render deadline",
+        "failedAsExpected": 1,
+        "unselected": 71
+      },
+      {
+        "commit": "ad8d6c7c26b7c8b3c3a6558524bc2bd80f6d2406",
+        "file": "packages/polaris-dossier/src/render.ts",
+        "old": "URL_PRODUCT_READ_MILLISECONDS.render, producerDeadline - Date.now()",
+        "new": "30_000, producerDeadline - Date.now()",
+        "testFile": "packages/polaris-dossier/src/render.test.ts",
+        "selector": "producer cross thirty seconds",
+        "failedAsExpected": 1,
+        "unselected": 154
+      }
+    ],
+    "nativeCompletion": "Unknown"
+  },
+  "candidateReplay": {
+    "commit": "ad8d6c7c26b7c8b3c3a6558524bc2bd80f6d2406",
+    "scenario": "stop-resume",
+    "resumedRender": {
+      "phase": "resumed-render",
+      "initialRemainingMs": 59930,
+      "elapsedMs": 15297.119567999995,
+      "remainingMs": 44633,
+      "admission": {
+        "entryMs": 8494.71932199999,
+        "entryRemainingMs": 51435,
+        "outcome": "accepted",
+        "settledMs": 14761.665177999996
+      },
+      "artifactAuthority": {
+        "calls": 79,
+        "totalMs": 5945.810299999954
+      },
+      "outcome": "rendered",
+      "producerRefusal": false
+    },
+    "designDelivery": {
+      "startedMs": 113403.722,
+      "samples": [
+        {
+          "startedMs": 113404.44,
+          "settledMs": 113404.481,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 117302.221,
+          "settledMs": 117302.254,
+          "outcome": "accepted"
+        },
+        {
+          "startedMs": 118839.718,
+          "settledMs": 119017.767,
+          "outcome": "accepted"
+        }
+      ],
+      "settledMs": 122091.275,
+      "outcome": "rejected",
+      "leaseOnRefusal": "retired",
+      "remainingMs": 23831
+    },
+    "activation": {
+      "startedMs": 99822.952,
+      "settledMs": 122091.539,
+      "outcome": "rejected"
+    },
+    "firstPeerPublication": {
+      "startedMs": 109174.925,
+      "settledMs": 120208.107,
+      "outcome": "refused"
+    },
+    "roleInspectionRefusal": {
+      "phase": "confirm",
+      "cause": "authority-refused",
+      "elapsedMs": 451.9185540000035
+    },
+    "newDesignInferencesStarted": 0,
+    "executionRecord": false
+  }
+}
