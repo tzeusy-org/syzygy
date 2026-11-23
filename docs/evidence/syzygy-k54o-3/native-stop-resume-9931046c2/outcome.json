@@ -1,0 +1,271 @@
+{
+  "subject": {
+    "commit": "9931046c2a2e34f5cbf8016ebe58a0dfa8fd7702",
+    "hostedMergeCommit": "95ecb60e1c74ae70280121e767f39fdf795592f1",
+    "filesSha256": {
+      "url-run-composed.test.ts": "3e7c7484ea1467468d8feada0f6aea8d3e829bd79c2030837b9b1a73022c7f78",
+      "session-relay.ts": "c7ab6f4f29cc7df6db88fc6189d2ff27313cbf8926893f7df703fa8118ec41a2",
+      "session-machine-transport.ts": "5179044c53a46512c283635ce134ce96fde3708446a250b43965f8e62e72c2d4",
+      "url-machine-peer.ts": "4579210c3643213b7b2f1344e64b1f7d991866f4d3cb3848668490f65166927e",
+      "url-machine-store.ts": "0b34b3989c5055f4d401dca8945f504f410c94003935adafb5c836ad79d13983",
+      "url-ordered-design-host.ts": "d7f897700fba6f94487016a29aad4096ee752a38a694fa29928c3f701e98f6ee",
+      "url-ordered-design-session.ts": "68c7f5015ef316461accee889ca8f6d31daa29de54d5da02228b81e357569253",
+      "url-run-ordered-attempt.ts": "f6fe7e4095912d9ad92e699089e3892389c1fb0cb790f73d9a1856f05a855ad9",
+      "screen.test.ts": "0199f8707aa8ad87e1b7e890a6c3b841f0f6ec48438e7e3cc9d12606eab831eb"
+    }
+  },
+  "hostedJob": {
+    "url": "https://github.com/tzeusy-org/syzygy/actions/runs/45098731324/job/137445020055",
+    "logSha256": "81d4a0a2ef41adf076339e5c1542c5093508baddba203152467b6618c6d52128",
+    "conclusion": "failure"
+  },
+  "integration": {
+    "files": {
+      "passed": 136,
+      "failed": 1
+    },
+    "tests": {
+      "passed": 3883,
+      "failed": 2,
+      "skipped": 3,
+      "total": 3888
+    },
+    "screeningTestsPassed": 125
+  },
+  "cases": [
+    {
+      "case": "complete",
+      "result": "passed",
+      "ms": 101957
+    },
+    {
+      "case": "delivery-stop",
+      "result": "passed",
+      "ms": 60435
+    },
+    {
+      "case": "stop-resume",
+      "result": "failed",
+      "ms": 179308
+    },
+    {
+      "case": "eligible-stop-resume",
+      "result": "failed",
+      "ms": 182626
+    }
+  ],
+  "composedFailures": [
+    {
+      "assertion": "expected 1 to be +0 // Object.is equality",
+      "reportedReasons": [],
+      "resume": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "transport-unavailable",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "stopped",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "roles": {
+        "author": "stopped",
+        "inventory": "stopped",
+        "fidelity": "stopped",
+        "design": "stopped"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "relayEvents": {
+        "author": {
+          "attempt-allowed": 7,
+          "send-attempt": 7,
+          "send-outcome": 7,
+          "response-admitted": 7
+        },
+        "inventory": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "fidelity": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        },
+        "design": {}
+      },
+      "auditEnd": [
+        "declaration",
+        "launch-attempt",
+        "launch-history",
+        "design-delivery",
+        "machine-peer:inference-forward"
+      ],
+      "orderedAppends": {},
+      "firstResponse": {
+        "inferenceSteps": [
+          {
+            "mediate": {
+              "startedMs": 88091.131,
+              "settledMs": 94676.294,
+              "outcome": "refused"
+            },
+            "boundaries": [],
+            "effect": {
+              "startedMs": 92787.79,
+              "settledMs": 94332.047,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "mediate": {
+              "startedMs": 94676.791,
+              "settledMs": 94677.372,
+              "outcome": "refused"
+            },
+            "boundaries": []
+          }
+        ],
+        "responseSteps": [],
+        "responseAudits": []
+      },
+      "firstSampleRefusal": null,
+      "firstLauncherRefusal": null,
+      "broker": {
+        "invocations": 0,
+        "stages": {}
+      }
+    },
+    {
+      "assertion": "expected { captured: { \u2026(13) }, \u2026(21) } to match object { closed: true, poisoned: false, \u2026(1) }",
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "resume": [],
+      "roles": {
+        "author": "inspection-failed",
+        "inventory": "inspection-failed",
+        "fidelity": "inspection-failed",
+        "design": "inspection-failed"
+      },
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 4
+      },
+      "relayEvents": {
+        "author": {
+          "attempt-allowed": 7,
+          "send-attempt": 7,
+          "send-outcome": 7,
+          "response-admitted": 7
+        },
+        "inventory": {
+          "attempt-allowed": 6,
+          "send-attempt": 6,
+          "send-outcome": 6,
+          "response-admitted": 6
+        },
+        "fidelity": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        },
+        "design": {
+          "attempt-allowed": 4,
+          "send-attempt": 4,
+          "send-outcome": 4,
+          "response-admitted": 4
+        }
+      },
+      "auditEnd": [
+        "relay:send-attempt",
+        "machine-peer:inference-forward",
+        "omitted",
+        "relay:send-outcome",
+        "machine-peer:inference-forward",
+        "machine-peer:inference-forward",
+        "ordered:response-admitted",
+        "usage",
+        "relay:response-admitted",
+        "machine-peer:inference-forward",
+        "machine-peer:dossier_step",
+        "ordered:delivery-completed",
+        "ordered:verdict-staged",
+        "ordered:acknowledgment-receipt",
+        "machine-peer:inference-forward"
+      ],
+      "orderedAppends": {
+        "preparedAppend": {
+          "kind": "prepared",
+          "timing": {
+            "startedMs": 95221.188,
+            "settledMs": 95460.5,
+            "outcome": "accepted"
+          }
+        },
+        "latestAppend": {
+          "kind": "acknowledgment-receipt",
+          "timing": {
+            "startedMs": 159279.845,
+            "settledMs": 159562.591,
+            "outcome": "accepted"
+          }
+        }
+      },
+      "firstResponse": null,
+      "firstSampleRefusal": null,
+      "firstLauncherRefusal": null,
+      "broker": {}
+    }
+  ]
+}
