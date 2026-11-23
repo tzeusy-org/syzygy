@@ -1,0 +1,144 @@
+{
+  "label": "Observed",
+  "commit": "74b6979b87366beabcb306e735f5e091bb2c0d78",
+  "cases": [
+    {
+      "case": {
+        "case": "stop-resume",
+        "result": "failed",
+        "ms": 232990
+      },
+      "logSha256": "55e895de94d73f293247b8160adf15a5fa439c92e11791a573b70611c778a254",
+      "failureManifestSha256": "053959800b7a3bb0bc345d4d8d727d3140363ccf5c1cfebbf1b62cc2592a0b08",
+      "record": {
+        "runDirectEntriesExamined": 14,
+        "executionRecordLstatFound": false
+      },
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "machine-claim",
+          "current": true,
+          "claimChecks": 1,
+          "withdrawn": true,
+          "asyncCurrent": true,
+          "asyncWithdrawn": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "transport-unavailable",
+          "roles": [
+            {
+              "role": "author",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "inventory",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "fidelity",
+              "outcome": "Unknown"
+            },
+            {
+              "role": "design",
+              "outcome": "inspection-failed",
+              "exitCode": null,
+              "signal": "SIGTERM"
+            }
+          ]
+        }
+      ],
+      "reportedReasons": [],
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+        "rendering draft revision 0",
+        "run ended: operator stop requested, checked history retained"
+      ],
+      "acceptedStoreOperations": {
+        "open": 1,
+        "exclusive": 8,
+        "allocation": 8
+      },
+      "resumeAudit": {
+        "outcome": "accepted",
+        "declarations": 4,
+        "acceptedAuthority": 14
+      },
+      "resumedConnections": {
+        "open": 1,
+        "accept": 1,
+        "capture": 1,
+        "authorize": 0
+      },
+      "connectionPhases": [
+        {
+          "kind": "inference-bridge",
+          "stages": {
+            "open": {
+              "outcome": "refused",
+              "elapsedMs": 494.122
+            },
+            "accept": {
+              "outcome": "refused",
+              "elapsedMs": 493.965
+            },
+            "capture": {
+              "outcome": "refused",
+              "elapsedMs": 342.297
+            }
+          }
+        }
+      ]
+    },
+    {
+      "case": {
+        "case": "eligible-stop-resume",
+        "result": "failed",
+        "ms": 87791
+      },
+      "logSha256": "a822ed2895624d91b7dbf58ab667bcbcae3459cae4f3b66146abdcc128277023",
+      "failureManifestSha256": "6bca9d264d5a2fee8df623b18a753d2a40b758c11c398f9125ddb0cec8392c31",
+      "record": {
+        "runDirectEntriesExamined": 13,
+        "executionRecordLstatFound": false
+      },
+      "resumeChecks": [],
+      "reportedReasons": [
+        "transport-unavailable"
+      ],
+      "forwards": {
+        "author": 7,
+        "inventory": 0,
+        "fidelity": 1,
+        "design": 0
+      },
+      "operatorEvents": [
+        "told the inventory session: draft revision 0 is frozen",
+        "run ended: checked session boundary unavailable"
+      ]
+    }
+  ]
+}
