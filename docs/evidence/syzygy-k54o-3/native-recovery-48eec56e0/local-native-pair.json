@@ -1,0 +1,276 @@
+{
+  "revision": "48eec56e0f9c1d8ab1af29bd305a121377df22ed",
+  "tree": "681887fa4f289e1e114958f4514ae40857acd0e0",
+  "parents": [
+    "2989e12bcade4dd421926ba6940bcfa0f872d0a1"
+  ],
+  "scenarios": {
+    "stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "stop-resume",
+          "result": "failed",
+          "ms": 222596
+        }
+      ],
+      "logSha256": "3b8da6b2855c77f8d31b1224f00079930df986f7c7f8696b4c6d10a01888ae55",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "resumeBootstrap": {
+        "restore-plans": {
+          "startedMs": 86163.446972,
+          "settledMs": 91541.742356,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 91597.310063,
+          "settledMs": 91849.962354,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 91907.306839,
+          "settledMs": 96462.044043,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 97128.398828,
+          "settledMs": 145023.081896,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 146185.775833,
+          "settledMs": 229735.524452,
+          "outcome": "rejected"
+        },
+        "create-machine": {
+          "startedMs": 150199.683362,
+          "settledMs": 229725.27689,
+          "outcome": "rejected"
+        },
+        "open-store": {
+          "startedMs": 150564.560984,
+          "settledMs": 151232.458496,
+          "outcome": "accepted"
+        }
+      },
+      "resumeAuditSetup": {
+        "startedMs": 148130.965241,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 1913.3151639999996,
+          "longestMs": 204.6797169999918
+        },
+        "settledMs": 150196.929419,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "storeOpen": {
+        "kind": "open",
+        "asyncAuthority": {
+          "started": 4,
+          "accepted": 4,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 279.6558269999514
+        },
+        "outcome": "accepted"
+      },
+      "retainedReads": [
+        {
+          "outcome": "accepted",
+          "elapsedMs": 1430.6,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 871.1413969999412
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 1736.999,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 950.9570100000419
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 3736.426,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 2525.667066999915
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4205.565,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 2044.7631480000273
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4909.314,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 3075.122065000003
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4105.907,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 2390.8477110000385
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4119.142,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 2644.6163089999172
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 3913.158,
+          "authority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 2413.4590669999307
+          }
+        }
+      ],
+      "freshAllocations": [
+        {
+          "outcome": "accepted",
+          "elapsedMs": 3863.405,
+          "authority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1419.3526270000148
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4244.893,
+          "authority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1579.889519999997
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4454.143,
+          "authority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1626.906340000045
+          }
+        },
+        {
+          "outcome": "accepted",
+          "elapsedMs": 4262.307,
+          "authority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1742.378356000001
+          }
+        },
+        {
+          "outcome": "refused",
+          "elapsedMs": 5165.518,
+          "authority": {
+            "started": 6,
+            "accepted": 6,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1862.0287920000264
+          }
+        }
+      ]
+    },
+    "eligible-stop-resume": {
+      "exit": 1,
+      "cases": [
+        {
+          "case": "eligible-stop-resume",
+          "result": "failed",
+          "ms": 165605
+        }
+      ],
+      "logSha256": "96db77e3927f965357d6e67e8d45d77de6ce73fed658aca3c037f07fb3019f71",
+      "recordNames": [],
+      "recordPresent": false,
+      "resumeChecks": [],
+      "resumeBootstrap": {},
+      "resumeAuditSetup": null,
+      "evidenceNotes": [
+        "Initial run stopped before Design or an eligible checkpoint.",
+        "The earliest observed refusal was transport-unavailable on the seventh Author forward. The underlying transport cause is Unknown."
+      ]
+    }
+  }
+}

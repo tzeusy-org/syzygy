@@ -1,0 +1,9 @@
+PASS
+
+[Observed] The frozen diff matches SHA-256 `8b28dc8f8415191db241d456a70d294ff7c099923217cb7a2c319e82636d4731`.
+
+- [Observed] The async, unstaged branch acquires the exclusive lock before starting the root fsync and directory census. Both operations settle before authority is checked again or the lease callback can begin. The combined operation retains both original I/O charges and every census charge. Staged allocation and publication keep their existing sequence. `packages/polaris-dossier/src/url-machine-store.ts:449`, `:494`, `:513`, `:707`
+- [Inferred] One fresh authority check on each side of this private operation satisfies A-77, A-88, A-115, A-116, RFC3-16(d) clauses 4–6, and REQ-polaris-generation-048. The census supplies bounded store validation. The separate state read still checks the named roots, identity, state, and archive and rechecks authority before opening canonical or projection client files. The resumed adapter samples current run authority on both sides of the fresh claim check. `packages/polaris-dossier/src/url-machine-store.ts:369`, `:378`, `:529`, `:630`; `packages/polaris-dossier/src/url-run-machine.ts:112`
+- [Observed] The joined promise stays tracked. Timeout invalidates the operation, preserves the uncertain lock, and defers descriptor closure until outstanding work settles. The tests assert census start while fsync completion is held, refusal before state access on withdrawal, refusal before client access on post-archive withdrawal, and refusal before callback entry when authority outlasts the deadline. The timing fixture checks the exact retired bytes, head, audit, and projection with 4,000 ms of simulated authority latency. `packages/polaris-dossier/src/url-machine-store.ts:540`, `:710`; `packages/polaris-dossier/src/url-machine-store.test.ts:413`, `:440`, `:534`, `:546`
+
+[Unknown] Native recovery and latency remain unverified by this source-only review.

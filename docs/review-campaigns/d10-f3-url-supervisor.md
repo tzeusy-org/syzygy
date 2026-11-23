@@ -22,6 +22,7 @@
 - `F3-INITIAL-RENDER-HANDOFF(-INITIAL)?-REVIEW-RAW\.md`
 - `F3-(PEER-POSITIONAL-IMAGE|STORAGE-LISTING-CLOSE)-REVIEW-RAW\.md`
 - `F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW\.md`
+- `F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -102,3 +103,5 @@
 [Observed] The installed peer image review records `PASS` (`F3-PEER-POSITIONAL-IMAGE-REVIEW-RAW.md:1`) for `4fb27aa6e`. A-125 adopts two bounded positional reads with ordered hashing, fresh currentness and both reads settling before close.
 
 [Observed] The protected state read pair review records `PASS` (`F3-PROTECTED-STATE-READ-PAIR-REVIEW-RAW.md:1`) for `2989e12bc`. A-126 overlaps the two private reads and keeps the state-to-client and late archive checks.
+
+[Observed] The protected lock census review records `PASS` (`F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW.md:1`) for `293e82747`. A-127 joins the independent private operations before rechecking authority.

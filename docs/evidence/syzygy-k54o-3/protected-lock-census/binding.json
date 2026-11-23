@@ -1,0 +1,75 @@
+{
+  "subject": "293e82747ec24263b6d028d0fa98f928769b5c9c",
+  "base": "609f93b3dc7bb308fda0e5f5afd01e4899f9b819",
+  "fullBinaryDiffSha256": "8b28dc8f8415191db241d456a70d294ff7c099923217cb7a2c319e82636d4731",
+  "review": {
+    "verdict": "PASS",
+    "scope": "source-only",
+    "rawPath": "docs/reviews/F3-PROTECTED-LOCK-CENSUS-REVIEW-RAW.md",
+    "rawSha256": "6e2df272712458ceb5c3f3f9591b5e3a50da6622825cf4cce5ac4186d50774a6"
+  },
+  "validation": {
+    "typecheck": {
+      "outcome": "passed",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "store": {
+      "passed": 48,
+      "total": 48,
+      "logSha256": "f5491eecbf2bd89e29f3ccfad018bb59b91cc04ccf1779bae94fec75c22438e5"
+    },
+    "lifecycle": {
+      "passed": 36,
+      "total": 36,
+      "logSha256": "9060f572d684cabf50c9a9aaf5f9af0ee66a4a10c6969373bef7074eeca46820"
+    }
+  },
+  "mutations": {
+    "serialize_pair": {
+      "patchSha256": "39da826a68f26764cd71e1a4410b08a6ce42c1f06c5c5548e1c943d20dd64464",
+      "logSha256": "92dd03251c716c9d7618cde794db22ba6ef3009d39c636137bcec53f437bd2e3",
+      "failed": 2,
+      "skipped": 46,
+      "total": 48,
+      "subject": "293e82747ec24263b6d028d0fa98f928769b5c9c",
+      "changes": [
+        {
+          "before": [
+            "            const [synced, scanned] = await Promise.allSettled([heldRoot.sync(), census()]);"
+          ],
+          "after": [
+            "            const [synced] = await Promise.allSettled([heldRoot.sync()]);",
+            "            const [scanned] = await Promise.allSettled([census()]);"
+          ]
+        }
+      ]
+    },
+    "drop_grouped_post_check": {
+      "patchSha256": "e76ede61e0f652317232412469929fe82febecee4d47025992ad7f52a5de7b42",
+      "logSha256": "e7dcc2d85670e6080cbeb8d91576d40ffd6f99bccf0a03e6a048f4545589287f",
+      "failed": 1,
+      "skipped": 47,
+      "total": 48,
+      "subject": "293e82747ec24263b6d028d0fa98f928769b5c9c",
+      "changes": [
+        {
+          "before": [
+            "          else await checkAsync(currentAsync);"
+          ],
+          "after": [
+            "          else if (start.name !== 'lockSyncAndCensus') await checkAsync(currentAsync);"
+          ]
+        },
+        {
+          "before": [
+            "          await io(async () => {"
+          ],
+          "after": [
+            "          await io(async function lockSyncAndCensus() {"
+          ]
+        }
+      ]
+    }
+  },
+  "nativeLatency": "Unknown"
+}

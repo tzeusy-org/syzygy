@@ -1,0 +1,346 @@
+{
+  "testedHead": "0d1fdfa783c52151adbd4c5a919ae3bacbbd4e1c",
+  "testedMerge": "076e79967463820e60f4cfc3cccbfab2fea7b232",
+  "parent": "82290fb935f90a1f7b9c53943108ee3f4213e7d4",
+  "testedTree": "4698644687dc24994d44f015ebe521d812b935cf",
+  "workflowRun": 45149328122,
+  "integrationJob": 137608173080,
+  "rawLogSha256": "771c1c8772a1c2c11a1fd48a0ccfdb0b103393e431a8335c66221eed7bb91c7f",
+  "tests": {
+    "passed": 3972,
+    "failed": 5,
+    "skipped": 3,
+    "total": 3980
+  },
+  "files": {
+    "passed": 134,
+    "failed": 3,
+    "total": 137
+  },
+  "scenarios": {
+    "complete": {
+      "result": "passed",
+      "durationMilliseconds": 87548
+    },
+    "delivery-stop": {
+      "result": "passed",
+      "durationMilliseconds": 75442
+    },
+    "stop-resume": {
+      "result": "failed",
+      "durationMilliseconds": 399656,
+      "forwards": {
+        "author": 7,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 0
+      },
+      "recovery": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-guards",
+          "policyWithdrawal": "refused",
+          "claimWithdrawal": "refused"
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "bootstrap": {
+        "restore-plans": {
+          "startedMs": 307717.018493,
+          "settledMs": 318221.980265,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 318504.213255,
+          "settledMs": 318794.314854,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 319065.002771,
+          "settledMs": 340815.271058,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 343923.051489,
+          "settledMs": 535661.735742,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 537414.625261,
+          "settledMs": 565087.12706,
+          "outcome": "rejected"
+        },
+        "create-machine": {
+          "startedMs": 543752.155739,
+          "settledMs": 565083.882858,
+          "outcome": "rejected"
+        },
+        "open-store": {
+          "startedMs": 545157.469166,
+          "settledMs": 547843.321691,
+          "outcome": "accepted"
+        }
+      },
+      "auditSetup": {
+        "startedMs": 539545.44975,
+        "authority": {
+          "started": 14,
+          "accepted": 14,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 4185.332541999989,
+          "longestMs": 324.17560700001195
+        },
+        "settledMs": 543750.199791,
+        "outcome": "accepted",
+        "declarations": 4,
+        "pendingCallbacks": 0,
+        "pendingFilesystemOperations": 0
+      },
+      "retainedStoreSteps": [
+        {
+          "kind": "open",
+          "startedMs": 545157.55788,
+          "runRemainingMs": 6829275,
+          "asyncAuthority": {
+            "started": 4,
+            "accepted": 4,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 1177.736814999953
+          },
+          "settledMs": 547843.251495,
+          "outcome": "accepted"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 548154.76929,
+          "runRemainingMs": 6826278,
+          "asyncAuthority": {
+            "started": 12,
+            "accepted": 12,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 3628.231742999982
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "read": "rejected",
+          "settledMs": 553290.80219,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 553290.924354,
+          "runRemainingMs": 6821142,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 877.5712189999176
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 554729.15283,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 554729.19289,
+          "runRemainingMs": 6819703,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 856.5248309999006
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 556186.516713,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 556186.54757,
+          "runRemainingMs": 6818246,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 825.8198960000882
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 557688.528249,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 557688.560758,
+          "runRemainingMs": 6816744,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 793.6668859999627
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 559011.177063,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 559011.20846,
+          "runRemainingMs": 6815421,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 816.1669570000377
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 560363.090058,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 560363.141886,
+          "runRemainingMs": 6814069,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 810.2437980000395
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 561702.783775,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 561702.825057,
+          "runRemainingMs": 6812730,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 926.3321370000485
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 563199.836486,
+          "outcome": "refused"
+        },
+        {
+          "kind": "exclusive",
+          "startedMs": 563199.870227,
+          "runRemainingMs": 6811233,
+          "asyncAuthority": {
+            "started": 3,
+            "accepted": 3,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 916.5152799999341
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 564720.424715,
+          "outcome": "refused"
+        },
+        {
+          "kind": "close",
+          "startedMs": 564720.548781,
+          "runRemainingMs": 6809712,
+          "asyncAuthority": {
+            "started": 0,
+            "accepted": 0,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 0
+          },
+          "settledMs": 564720.699487,
+          "outcome": "accepted"
+        }
+      ],
+      "eligibleAppend": null
+    },
+    "eligible-stop-resume": {
+      "result": "failed",
+      "durationMilliseconds": 347276,
+      "forwards": {
+        "author": 8,
+        "inventory": 6,
+        "fidelity": 4,
+        "design": 5
+      },
+      "recovery": [
+        {
+          "phase": "verify",
+          "ok": true,
+          "nextDesignRound": 2
+        },
+        {
+          "phase": "claim",
+          "exactCut": true,
+          "current": true
+        },
+        {
+          "phase": "resumed-exit",
+          "exit": 1,
+          "failure": "Unknown",
+          "roles": []
+        }
+      ],
+      "bootstrap": {
+        "restore-plans": {
+          "startedMs": 851696.61218,
+          "settledMs": 872961.84881,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 873796.921393,
+          "settledMs": 874057.414242,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 874959.556638,
+          "settledMs": 912363.697142,
+          "outcome": "rejected"
+        }
+      },
+      "auditSetup": null,
+      "retainedStoreSteps": [],
+      "eligibleAppend": "eligible"
+    }
+  },
+  "otherFailures": [
+    "Whole-source machine peer fingerprint was stale after the image read change.",
+    "Non-ENOENT storage census retry control returned Unknown tool cleanup.",
+    "Exhausted entry budget storage census retry control returned Unknown tool cleanup."
+  ],
+  "recordEvidence": "No completed recovery or second-close check was reported by these native scenarios."
+}
