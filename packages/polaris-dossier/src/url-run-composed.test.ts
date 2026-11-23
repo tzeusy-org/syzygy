@@ -1435,10 +1435,11 @@ describe('composed URL run with actual role processes', () => {
       edges: [{ id: 'includes-src', from: 'repository', to: 'source', relation: 'contains', label: 'Includes the source',
         epistemic: 'inferred', citations: relationCitation('c-includes-src') }],
     }];
+    const authorCheck = { argv: ['dossier', 'check', f.run] };
     const author = scripted('author', [tool('brief', 'artifact_read', { path: 'brief.md' }), tool('schema', 'artifact_read', { path: 'draft.schema.json' }),
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
         schemaVersion: 'polaris-dossier-local-draft-v9', thesisBasis: 'stated', sessionId: session('author'), executions: [], diagrams }) }),
-      tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...authorBeforeEligibleStop, ...finalResponse('author')]);
+      tool('check', 'dossier_step', authorCheck), ...authorBeforeEligibleStop, ...finalResponse('author')]);
     const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
       tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),
       tool('inventory_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory, '--submit', 'inventory.json', '--stdin'],
@@ -1606,11 +1607,14 @@ describe('composed URL run with actual role processes', () => {
         try { return f.artifacts.latestStageCheck('author')?.record.outcome === 'passed'; }
         catch (error) { if (error instanceof Error && error.message === 'url-run-artifacts-unavailable') return false; throw error; }
       };
-      // The eligible arm starts all three ordinary native roles before it
-      // waits for the checked Author draft. Leave room for the shared host
-      // to admit the write and check exchanges before opening Fidelity.
-      const until = performance.now() + (eligibleStop ? 120_000 : 60_000);
-      while (!authorPassed() && failures.length === 0 && performance.now() < until)
+      // Wait for the known tool receipt before reading the checked draft in
+      // the eligible arm. The supervisor already polls the protected stage.
+      const authorCheckSha256 = sha256(canonical(authorCheck));
+      const authorCheckCommitted = () => receipts.some(receipt => receipt.role === 'author' && receipt.committed
+        && receipt.toolName === 'mcp__syzygy__dossier_step' && receipt.inputSha256 === authorCheckSha256);
+      const ready = eligibleStop ? authorCheckCommitted : authorPassed;
+      const until = performance.now() + (eligibleStop ? 240_000 : 60_000);
+      while (!ready() && failures.length === 0 && performance.now() < until)
         await new Promise(resolve => setTimeout(resolve, 250));
       expect(failures).toEqual([]);
       expect(handoffStates).toEqual(['unknown', 'reached']);
@@ -1619,7 +1623,10 @@ describe('composed URL run with actual role processes', () => {
       });
       if (!eligibleStop) inv.allow();
       design.allow();
-      if (eligibleStop) expect(authorPassed(), 'checked Author draft before eligible Fidelity').toBe(true);
+      if (eligibleStop) {
+        expect(authorCheckCommitted(), 'committed Author check before eligible Fidelity').toBe(true);
+        expect(authorPassed(), 'checked Author draft before eligible Fidelity').toBe(true);
+      }
       eligiblePhase = 'fidelity';
       if (eligibleStop) {
         // The real producer's registration releases the later packet read.
