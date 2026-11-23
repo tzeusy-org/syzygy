@@ -73,6 +73,7 @@ type Forward = Parameters<typeof sessionRelayTestPort>[0];
 const provider = vi.hoisted(() => new Map<string, Forward>());
 const relayRoles = vi.hoisted(() => [] as string[]);
 const settledProviderRoles = vi.hoisted(() => new Set<string>());
+const ordinaryNativeRoles = vi.hoisted(() => new Map<string, sessionLaunch.UrlSessionProcess>());
 const finalResponseDelivery = vi.hoisted(() => ({ wait: null as Promise<void> | null,
   afterEndTurn: null as ((role: string) => void) | null }));
 const relayObservations = vi.hoisted(() => [] as { role: string; event: string; route: string | null }[]);
@@ -218,6 +219,7 @@ afterEach(async () => {
   eligibleRelayTrace.active = false;
   eligibleRelayTrace.interruptions.clear();
   settledProviderRoles.clear();
+  ordinaryNativeRoles.clear();
   finalResponseDelivery.wait = null;
   finalResponseDelivery.afterEndTurn = null;
   vi.restoreAllMocks();
@@ -568,6 +570,7 @@ async function observeRoleLaunches(
     return observe(() => launch(input), child => {
       settle('accepted');
       roleInspections.set(preparation.role, preparation.inspect);
+      if (preparation.role !== 'design') ordinaryNativeRoles.set(preparation.role, child);
       if (preparation.sample !== undefined) observeDesignLaunch?.(preparation.inspect, preparation.sample, child);
     }, () => settle('rejected'));
   });
@@ -1175,8 +1178,8 @@ describe('composed URL run with actual role processes', () => {
       }, 340_000).unref();
       onTestFinished(() => { clearTimeout(diagnostic); });
     }
-    let releaseFinalResponses!: () => void;
-    if (stoppingCut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
+    let releaseFinalResponses: (() => void) | undefined;
+    if (cut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
     let inventoryEndTurnObserved: (() => void) | undefined;
     const waitForInventoryEndTurn = eligibleStop ? new Promise<void>(resolve => { inventoryEndTurnObserved = resolve; }) : undefined;
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
@@ -1184,6 +1187,13 @@ describe('composed URL run with actual role processes', () => {
     if (stoppingCut) finalResponseDelivery.afterEndTurn = role => {
       const index = ordinary.findIndex(candidate => candidate === role);
       if (index < 0) return;
+      if (eligibleStop) {
+        // Keep this fixture's real child available for public Stop while the
+        // relay finishes the admitted response within its normal deadline.
+        const child = ordinaryNativeRoles.get(role);
+        if (child === undefined || !sessionLaunch.isUrlSessionProcess(child)) throw new Error('ordinary native fixture child is unavailable');
+        process.kill(-child.pid, 'SIGSTOP');
+      }
       const next = ordinary[index + 1];
       if (next !== undefined) releaseProvider.get(next)?.();
       if (role === 'inventory') inventoryEndTurnObserved?.();
@@ -1538,7 +1548,7 @@ describe('composed URL run with actual role processes', () => {
           expect(stop.status()).toBe('requested');
         }
         return { settlement: controller.stop() };
-      } finally { releaseFinalResponses(); }
+      } finally { releaseFinalResponses?.(); }
     }
     const observedRuntime: UrlRunSessions = !eligibleStop ? controller : { ...controller,
       prepareFinalRender: async (...args) => {
@@ -1583,7 +1593,7 @@ describe('composed URL run with actual role processes', () => {
       artifacts: observedArtifacts, runtime: observedRuntime, stop,
     });
     // Settle ordinary end-turns in durable audit order while the supervisor
-    // works toward either Design cut. Keep native delivery behind the stop guard.
+    // works toward either Design cut. Stop still owns child termination.
     if (stoppingCut) releaseProvider.get('author')!();
     author.allow();
     try {
