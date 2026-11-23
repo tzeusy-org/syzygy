@@ -110,8 +110,8 @@ function pinnedFile(file: string, expected: string, maximum: number): fs.BigIntS
   } finally { fs.closeSync(fd); }
 }
 /** A large installed Node image must yield to the supervisor's sampler.
- * Read and hash at most 4 MiB per asynchronous descriptor read. Compare the
- * held and named identities after hashing. Expiry or replacement refuses. */
+ * Allow two 4 MiB positional reads against the same held descriptor. Hash
+ * them in file order, and compare the held and named identities after EOF. */
 async function pinnedExecutable(file: string, expected: string, maximum: number, check: () => void): Promise<fs.BigIntStats> {
   check();
   if (!safePath(file) || !digest(expected) || await realFilePath(file) !== file) throw refused();
@@ -120,18 +120,38 @@ async function pinnedExecutable(file: string, expected: string, maximum: number,
     check();
     const before = await handle.stat({ bigint: true });
     if (!before.isFile() || before.nlink !== 1n || before.size < 1n || before.size > BigInt(maximum) || (before.mode & 0o022n) !== 0n) throw refused();
-    const chunk = Buffer.alloc(4 * 1_048_576), hash = createHash('sha256');
-    let length = 0;
-    while (length <= Number(before.size)) {
-      // Each descriptor read yields to the sampler. Check authority after
-      // the previous private hash and before reading any more bytes.
+    const first = Buffer.alloc(4 * 1_048_576), second = Buffer.alloc(first.length), hash = createHash('sha256');
+    const size = Number(before.size);
+    const readChunk = async (chunk: Buffer, position: number, length: number): Promise<number> => {
+      let received = 0;
+      while (received < length) {
+        check();
+        const part = await handle.read(chunk, received, length - received, position + received);
+        if (part.bytesRead === 0) break;
+        received += part.bytesRead;
+      }
+      return received;
+    };
+    let position = 0;
+    while (position < size) {
+      const firstLength = Math.min(first.length, size - position);
+      const secondLength = Math.min(second.length, size - position - firstLength);
+      // Join every submitted read before releasing the descriptor on refusal.
+      const [left, right] = await Promise.allSettled([
+        readChunk(first, position, firstLength),
+        readChunk(second, position + firstLength, secondLength),
+      ]);
       check();
-      const part = await handle.read(chunk, 0, Math.min(chunk.length, Number(before.size) + 1 - length), null);
-      if (part.bytesRead === 0) break;
-      hash.update(chunk.subarray(0, part.bytesRead)); length += part.bytesRead;
+      if (left.status !== 'fulfilled' || left.value !== firstLength
+        || right.status !== 'fulfilled' || right.value !== secondLength) throw refused();
+      hash.update(first.subarray(0, firstLength));
+      if (secondLength !== 0) hash.update(second.subarray(0, secondLength));
+      position += firstLength + secondLength;
     }
     check();
-    if (length !== Number(before.size) || hash.digest('hex') !== expected
+    const end = await handle.read(first, 0, 1, size);
+    check();
+    if (end.bytesRead !== 0 || hash.digest('hex') !== expected
       || !sameFile(before, await handle.stat({ bigint: true })) || !sameFile(before, await namedFileStat(file, { bigint: true }))
       || await realFilePath(file) !== file) throw refused();
     check(); return before;
