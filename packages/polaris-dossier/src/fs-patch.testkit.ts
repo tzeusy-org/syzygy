@@ -16,6 +16,7 @@ interface Patchable {
   unlinkSync: typeof fs.unlinkSync;
   renameSync: typeof fs.renameSync;
   readlinkSync: typeof fs.readlinkSync;
+  realpathSync: typeof fs.realpathSync;
   open: typeof fs.open;
   readFileSync: typeof fs.readFileSync;
   readFile: typeof fs.readFile;

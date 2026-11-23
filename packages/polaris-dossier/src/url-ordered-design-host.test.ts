@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { access, mkdir, open, readFile, realpath, writeFile } from 'node:fs/promises';
-import { connect, createServer, type AddressInfo } from 'node:net';
+import { connect, createServer, Server, type AddressInfo } from 'node:net';
 import os from 'node:os';
 import { monitorEventLoopDelay } from 'node:perf_hooks';
 import path from 'node:path';
@@ -32,6 +32,7 @@ import { buildDossierScreen } from './screen.js';
 import { createUrlDesignView } from './url-design-view.js';
 import type { UrlMachineClientRecord, UrlMachineClientContext } from './url-machine-instance.js';
 import { V8 } from './screening-v8.testkit.js';
+import { patchFs } from './fs-patch.testkit.js';
 
 const RUN = `run-${'a'.repeat(32)}`;
 const directory = tempDir('odh-'), repository = new URL('../../../', import.meta.url);
@@ -152,10 +153,12 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
     accept: async () => { accepts++; return null; } });
   if (!machine) throw new Error('owned transport refused');
   const brokerSocket = path.join(directory, `b${suffix}`), relaySocket = path.join(directory, `r${suffix}`);
-  const start = async (activationDeadline = deadline, current: () => boolean | Promise<boolean> = () => true) => {
+  const start = async (activationDeadline = deadline, current: () => boolean | Promise<boolean> = () => true,
+    startupCurrent?: () => boolean) => {
     host = await startOrderedDesignHost({ controller: activation, activationDeadline, profile,
       subject: { binding: profile.input.binding, project: 'project:syzygy', pin: 'a'.repeat(40), principal: 'owned-operator' },
       brokerSocket, relaySocket, brokerMachine: machine, relayMachine: machine, current,
+      ...(startupCurrent === undefined ? {} : { startupCurrent }),
       credential: { source: 'api-key-environment', credentialIdentity: 'Unknown', expiresAt: null,
         headers: () => { callbacks++; return null; }, close: () => {} },
       admit: () => { callbacks++; throw new Error('unexpected admission'); }, audit: () => { callbacks++; } });
@@ -167,6 +170,40 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
 
 async function absent(file: string) { await expect.poll(async () => { try { await access(file); return false; } catch { return true; } }, { timeout: 5000 }).toBe(true); }
 describe('bounded processing and protected result validation', () => {
+  it.each(['after authority', 'after relay', 'after resolving the broker directory'] as const)('withholds the next ordered Design socket when startup currentness expires %s', async cut => {
+    const f = await fixture();
+    let valid = true;
+    const current = async () => {
+      await Promise.resolve();
+      if (cut === 'after authority') valid = false;
+      return true;
+    };
+    const startupCurrent = vi.fn(() => valid);
+    if (cut === 'after relay') startupCurrent.mockReturnValueOnce(true).mockReturnValue(false);
+    const listen = vi.spyOn(Server.prototype, 'listen');
+    let brokerDirectoryResolved = false;
+    const restoreRealpath = cut === 'after resolving the broker directory' ? patchFs('realpathSync', original => new Proxy(original, {
+      apply(target, receiver, args) {
+        const canonical = Reflect.apply(target, receiver, args);
+        if (args[0] === path.dirname(f.brokerSocket) && listen.mock.calls.some(([socket]) => socket === f.relaySocket)) {
+          brokerDirectoryResolved = true;
+          valid = false;
+        }
+        return canonical;
+      },
+    })) : () => {};
+    try {
+      await expect(f.start(f.deadline, current, startupCurrent)).rejects.toThrow('url-ordered-design-host-unavailable');
+      const submittedSockets = listen.mock.calls.map(([socket]) => socket).filter(socket => socket === f.relaySocket || socket === f.brokerSocket);
+      expect(submittedSockets).toEqual(cut === 'after authority' ? [] : [f.relaySocket]);
+      expect(startupCurrent).toHaveBeenCalledTimes(cut === 'after authority' ? 1 : 2);
+      expect(brokerDirectoryResolved).toBe(cut === 'after resolving the broker directory');
+      await absent(f.relaySocket);
+      await absent(f.brokerSocket);
+      expect(f.callbacks()).toBe(0);
+    } finally { restoreRealpath(); listen.mockRestore(); }
+  });
+
   it('rechecks continuous authority after the full currentness port awaits', async () => {
     let valid = true;
     const f = await fixture({ current: async () => { await Promise.resolve(); valid = false; return true; } }, () => valid);

@@ -28,14 +28,14 @@ export type ReleaseReply = (reply: unknown, revalidate?: () => void, finalToolBu
  */
 type Invoke = (value: unknown, release: ReleaseReply, context: SessionMachineEffectContext | null) => Promise<unknown>;
 export const startSessionBroker = (socket: string, invoke: Invoke, onFault: () => void,
-  limits: SessionBrokerLimits = SESSION_BROKER_LIMITS, machine?: SessionMachineTransport): Promise<SessionBroker> =>
-  start(socket, invoke, onFault, limits, machine, false);
+  limits: SessionBrokerLimits = SESSION_BROKER_LIMITS, machine?: SessionMachineTransport, startupCurrent?: () => boolean): Promise<SessionBroker> =>
+  start(socket, invoke, onFault, limits, machine, false, startupCurrent);
 /** Own synthetic fixtures only; never selected by role input or production wiring. */
 export const sessionBrokerTestPort = (socket: string, invoke: Invoke, onFault: () => void,
   limits: SessionBrokerLimits = SESSION_BROKER_LIMITS): Promise<SessionBroker> => start(socket, invoke, onFault, limits, undefined, true);
 
 async function start(socket: string, invoke: Invoke, onFault: () => void, limits: SessionBrokerLimits,
-  machine: SessionMachineTransport | undefined, fixture: boolean): Promise<SessionBroker> {
+  machine: SessionMachineTransport | undefined, fixture: boolean, startupCurrent?: () => boolean): Promise<SessionBroker> {
   let canonicalParent = false;
   try { canonicalParent = fs.realpathSync(path.dirname(socket)) === path.dirname(socket); } catch { /* Fixed configuration error below. */ }
   if (!path.isAbsolute(socket) || Buffer.byteLength(socket) > 103 || socket.includes('\0')
@@ -125,6 +125,7 @@ async function start(socket: string, invoke: Invoke, onFault: () => void, limits
     await new Promise<void>((resolve, reject) => {
       const failed = (): void => { reject(new Error('session-broker-start-failed')); };
       server.once('error', failed);
+      if (startupCurrent !== undefined && startupCurrent() !== true) { failed(); return; }
       server.listen(socket, () => { server.off('error', failed); resolve(); });
     });
     if (!fixture && !(await prepareSessionMachineTransport(machine!, server))) throw new Error('session-broker-start-failed');

@@ -83,6 +83,8 @@ export function decodeSessionCountResponse(bytes: Uint8Array, contentType: strin
   } catch { return { ok: false }; }
 }
 export interface SessionRelayPorts {
+  /** Synchronous host authority sampled immediately before listening. */
+  readonly startupCurrent?: () => boolean;
   /** Must revalidate the run/pin/policy/provider binding, not consult consent records. */
   readonly current: () => boolean | Promise<boolean>;
   /** Host commits the new opaque policy state before returning success. */
@@ -183,6 +185,7 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
     || ['current', 'request', 'providerHeaders', 'response', 'audit'].some(key => typeof ports[key as keyof SessionRelayPorts] !== 'function')) throw new Error('invalid-session-relay-configuration');
   limits = Object.freeze({ ...limits });
   subject = Object.freeze({ binding: Object.freeze({ ...subject.binding }), project: subject.project, pin: subject.pin, principal: subject.principal });
+  const startupCurrent = ports.startupCurrent;
   ports = Object.freeze({ current: ports.current, request: ports.request, providerHeaders: ports.providerHeaders, response: ports.response, audit: ports.audit });
   const controllers = new Set<AbortController>();
   const evidence = new WeakMap<SessionAuditEvent, SessionRelayAuditEvidence>();
@@ -398,7 +401,9 @@ async function start(socket: string, subject: SessionRelaySubject, ports: Sessio
   try {
     await new Promise<void>((resolve, reject) => {
       const failed = (): void => { reject(new Error('session-relay-start-failed')); };
-      listener.once('error', failed); listener.listen(socket, () => { listener.off('error', failed); resolve(); });
+      listener.once('error', failed);
+      if (startupCurrent !== undefined && startupCurrent() !== true) { failed(); return; }
+      listener.listen(socket, () => { listener.off('error', failed); resolve(); });
     });
     if (!fixture && !(await prepareSessionMachineTransport(machine!, listener))) throw new Error('session-relay-start-failed');
     listener.on('error', () => { poisoned = true; for (const controller of controllers) controller.abort(); server.closeAllConnections();

@@ -1,6 +1,6 @@
 import { mkdirSync, readlinkSync, rmdirSync, truncateSync, unlinkSync, writeFileSync } from 'node:fs';
 import * as fsPromises from 'node:fs/promises';
-import { mkdir, mkdtemp, rm, unlink, writeFile, readFile, realpath, readdir, access, copyFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, unlink, writeFile, readFile, realpath, readdir, access, copyFile, rename } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import * as net from 'node:net';
 import os from 'node:os';
@@ -33,7 +33,7 @@ import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { selectResumedRolesAfterSample } from './url-run-sessions.js';
-import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, finishUrlSessionPreparation, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
   prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
@@ -855,6 +855,83 @@ describe('prepared private CLI launch',()=>{
     expect(JSON.stringify(result)).not.toContain(body);expect(Object.keys(result.stdout).sort()).toEqual(['bytes','sha256']);
     await expect(launchRestrictedUrlSession({preparation,host})).rejects.toThrow('url-session-launch-refused');
   },20000);
+
+  it('reprobes an expired unused preparation before real host binding and spawns only the fresh one', async () => {
+    const f = await launchFixture();
+    const prepare = vi.fn((expectedDirectoryIdentities?: readonly string[]) => prepareRestrictedUrlSession({
+      ...f.launch, ...(expectedDirectoryIdentities === undefined ? {} : { expectedDirectoryIdentities }),
+    }));
+    const earlier = await prepare();
+    expect(await finishUrlSessionPreparation(earlier, prepare)).toBe(earlier);
+    await expect(finishUrlSessionPreparation({ ...earlier }, prepare)).rejects.toThrow('url-session-launch-refused');
+    expect(prepare).toHaveBeenCalledTimes(1);
+
+    const now = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + URL_LAUNCH_LIMITS.setupMilliseconds + 1);
+    try {
+      const preparation = await finishUrlSessionPreparation(earlier, prepare);
+      expect(preparation).not.toBe(earlier);
+      expect(preparation).toEqual(earlier);
+      expect(prepare).toHaveBeenCalledTimes(2);
+      await expect(finishUrlSessionPreparation(earlier, prepare)).rejects.toThrow('url-session-launch-refused');
+      expect(prepare).toHaveBeenCalledTimes(2);
+      expect(await readdir(f.launch.view.brokerSocketDirectory)).toEqual([]);
+      expect(await readdir(f.launch.view.relaySocketDirectory)).toEqual([]);
+      expect(f.counts().forwards).toBe(0);
+
+      const host = await f.start(), beforeSpawns = nativeSpawns.calls().length;
+      await expect(launchRestrictedUrlSession({ preparation: earlier, host })).rejects.toThrow('url-session-launch-refused');
+      expect(nativeSpawns.calls()).toHaveLength(beforeSpawns);
+      expect(f.events).not.toContain('launch-audit');
+      const child = await launchRestrictedUrlSession({ preparation, host });
+      cleanup.push(child.stop);
+      expect(await child.finished).toMatchObject({ outcome: 'exited', exitCode: 0 });
+      await expect(finishUrlSessionPreparation(preparation, prepare)).rejects.toThrow('url-session-launch-refused');
+      expect(prepare).toHaveBeenCalledTimes(2);
+    } finally { clock.mockRestore(); }
+  }, 45_000);
+
+  it.each([
+    { stage: 'before reprobe', authorityChecks: 0, probes: 0 },
+    { stage: 'after the first authority check', authorityChecks: 1, probes: 0 },
+    { stage: 'after the second authority check', authorityChecks: 2, probes: 1 },
+  ])('refuses a changed prepared directory $stage', async ({ authorityChecks, probes }) => {
+    const f = await launchFixture();
+    const earlier = await prepareRestrictedUrlSession(f.launch);
+    const directory = f.launch.view.workDirectory;
+    const replaceDirectory = async () => {
+      await rename(directory, directory + '.previous');
+      await mkdir(directory, { mode: 0o700 });
+    };
+    if (authorityChecks === 0) await replaceDirectory();
+    let changed = authorityChecks === 0, checks = 0;
+    let replacement: typeof earlier | undefined;
+    const prepare = vi.fn(async (expectedDirectoryIdentities: readonly string[]) => {
+      replacement = await prepareRestrictedUrlSession({ ...f.launch, expectedDirectoryIdentities, current: async () => {
+        if (++checks === authorityChecks) {
+          await replaceDirectory();
+          changed = true;
+        }
+        return f.launch.current();
+      } });
+      return replacement;
+    });
+    const beforeSpawns = nativeSpawns.calls().length;
+
+    const now = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + URL_LAUNCH_LIMITS.setupMilliseconds + 1);
+    try {
+      await expect(finishUrlSessionPreparation(earlier, prepare)).rejects.toThrow('url-session-launch-refused');
+      expect(prepare).toHaveBeenCalledTimes(1);
+      expect(changed).toBe(true);
+      expect(checks).toBe(authorityChecks);
+      expect(replacement).toBeUndefined();
+      expect(nativeSpawns.calls()).toHaveLength(beforeSpawns + probes);
+      expect(await readdir(f.launch.view.brokerSocketDirectory)).toEqual([]);
+      expect(await readdir(f.launch.view.relaySocketDirectory)).toEqual([]);
+      expect(f.counts().forwards).toBe(0);
+    } finally { clock.mockRestore(); }
+  }, 45_000);
 
   it('refuses forged preparation/profile and changed support identities before actual host work',async()=>{
     const f=await launchFixture();
