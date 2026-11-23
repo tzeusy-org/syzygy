@@ -969,10 +969,8 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     'secret/kept': unnamed('secret-detector-match'), 'secret/held': unnamed('secret-detector-match'),
     'denied-and-secret/kept': named('denied-path'), 'denied-and-secret/held': named('denied-path'),
   };
-  // Three rows differ from MAIN, each only by a name withheld: the excluded Stage-2 file whose path a configuration detector matches as
-  // text, and both denied-and-secret files.
   const HEAD: Record<string, Row> = {
-    ...MAIN, 'stage-2-text-matched/held': unnamed('secret-detector-match'),
+    ...MAIN, 'stage-2-text-matched/kept': unnamed('secret-detector-match'), 'stage-2-text-matched/held': unnamed('secret-detector-match'),
     'denied-and-secret/kept': unnamed('denied-path'), 'denied-and-secret/held': unnamed('denied-path'),
   };
   // Per citation: [finding kind, whether its detail quotes the path]. A path-excluded body is never read, so its range is not checked.
@@ -984,14 +982,14 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     'secret/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', true]],
   };
   const HEAD_FINDINGS: Record<string, [string, boolean][]> = {
-    ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [['range-beyond-blob', false]], 'stage-2-text-matched/held': [['range-beyond-blob', false]],
+    ...MAIN_FINDINGS, 'stage-2-text-matched/kept': [], 'stage-2-text-matched/held': [],
     'stage-2-text-matched/gone': [['path-absent', false]], 'denied-and-secret/gone': [['path-absent', false]],
   };
-  /** Whether `now` shows, names or sends nothing `before` did not: every flag that says so may only go from true to false, the review
-   * reach only from reaching to withheld, and an outcome never changes. */
+  /** Whether `now` shows, names or sends nothing `before` did not. An admitted source can become secret-withheld. */
   const noLooser = (before: Row, now: Row): boolean => {
     const shows = (row: Row): boolean[] => [row.blob[0], row.blob[1], row.inStoredRecord, row.inReviewNote, row.textShown, row.pathOnAPage, row.span[0], row.span[1], row.span[3], !row.reachWithheld];
-    return shows(now).every((flag, i) => !flag || shows(before)[i]!) && now.blob[2] === before.blob[2] && now.span[2] === before.span[2];
+    const compatible = (was: string, is: string): boolean => was === is || (was === 'admitted' && is === 'secret-detector-match');
+    return shows(now).every((flag, i) => !flag || shows(before)[i]!) && compatible(before.blob[2], now.blob[2]) && compatible(before.span[2], now.span[2]);
   };
 
   it('shows, names and sends nothing the predecessor withheld, for every kind of path and both bodies', async () => {
@@ -1004,13 +1002,15 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
       const blobs = report.citedBlobs.slice(-CASES.length);
       expect(report.citedBlobs.slice(0, -CASES.length).map((blob) => blob.path)).toEqual(['src/kestrel.c', 'docs/notes.txt']);
       // Withheld from the review, counted: every file but the two admitted ones, named or by the fixed phrase.
-      expect((report.reviewVisibility?.withheld ?? []).map((w) => w.outcome)).toEqual(['secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path']);
+      expect((report.reviewVisibility?.withheld ?? []).map((w) => w.outcome)).toEqual(['secret-detector-match', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path', 'secret-detector-match', 'secret-detector-match', 'denied-path', 'denied-path']);
       const stored = fs.readFileSync(path.join(run, 'checks', 'rev-0.json'), 'utf8');
       const rendered = await renderRun(run, renderDeps());
       if (!rendered.ok) throw new Error(rendered.refusal.reason);
       const files = readSite(rendered.report.site);
       const { review } = await handedPacket(run);
-      const spans = JSON.parse(fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8')).spans as { path: string | null; objectId: string | null; outcome: string; text?: string; citedBy: { citationId: string }[] }[];
+      const packetText = fs.readFileSync(path.join(review.report.directory, 'packet.json'), 'utf8');
+      expect(packetText.includes(KEYED)).toBe(false);
+      const spans = JSON.parse(packetText).spans as { path: string | null; objectId: string | null; outcome: string; text?: string; citedBy: { citationId: string }[] }[];
       // The planted body value reaches no page, record or span.
       expect([[...files.values()].some((page) => page.includes(BODY_TOKEN)), stored.includes(BODY_TOKEN), JSON.stringify(spans).includes(BODY_TOKEN)]).toEqual([false, false, false]);
       return Object.fromEntries(CASES.map((c, i): [string, Row] => {
@@ -1028,7 +1028,7 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
     });
     expect(table).toEqual(HEAD);
     expect(Object.keys(HEAD).filter((name) => !noLooser(MAIN[name]!, HEAD[name]!))).toEqual([]);
-    expect(Object.keys(HEAD).filter((name) => JSON.stringify(HEAD[name]) !== JSON.stringify(MAIN[name]))).toEqual(['stage-2-text-matched/held', 'denied-and-secret/kept', 'denied-and-secret/held']);
+    expect(Object.keys(HEAD).filter((name) => JSON.stringify(HEAD[name]) !== JSON.stringify(MAIN[name]))).toEqual(['stage-2-text-matched/kept', 'stage-2-text-matched/held', 'denied-and-secret/kept', 'denied-and-secret/held']);
     // The comparison is not vacuous: it refuses the regression review 1 found (the excluded Stage-2 file's item text rendering).
     expect(noLooser(MAIN['stage-2-text-matched/held']!, { ...HEAD['stage-2-text-matched/held']!, textShown: true })).toBe(false);
   }, 120_000);
@@ -1042,7 +1042,7 @@ describe('a cited path by kind and body under the two-stage policy: the secret-p
       return Object.fromEntries(cites.map((c, i) => [c.name, findings.filter((f) => f.citationId === `c-tt-${i}`).map((f): [string, boolean] => [f.kind, f.detail.includes(c.file)])]));
     });
     expect(got).toEqual(HEAD_FINDINGS);
-    expect(Object.keys(HEAD_FINDINGS).filter((name) => HEAD_FINDINGS[name]!.some(([kind, quoted], i) => kind !== MAIN_FINDINGS[name]![i]![0] || (quoted && !MAIN_FINDINGS[name]![i]![1])) || HEAD_FINDINGS[name]!.length !== MAIN_FINDINGS[name]!.length)).toEqual([]);
+    expect(Object.keys(HEAD_FINDINGS).filter((name) => HEAD_FINDINGS[name]!.some(([kind, quoted], i) => kind !== MAIN_FINDINGS[name]![i]![0] || (quoted && !MAIN_FINDINGS[name]![i]![1])) || HEAD_FINDINGS[name]!.length > MAIN_FINDINGS[name]!.length)).toEqual([]);
   }, 120_000);
 });
 

@@ -811,10 +811,8 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
   });
 });
 
-// syzygy-8hm6: a cited path both denied and matched by a secret detector is a span without its path or object id, under the outcome
-// screening gave. The packet's copy of the draft still carries the citation as the author wrote it; this is the span record alone.
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
-  it('carries the span with neither path nor object id, outcome denied-path', async () => {
+  it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });
     const result = await reviewPacket(run, { kind: 'fidelity' }, deps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -823,7 +821,11 @@ describe('a cited path both denied and secret-matching in the fidelity packet', 
       { id: 'span-1', path: '.env', startLine: 1, endLine: 1, objectId: objectIds['.env'], outcome: 'denied-path', citedBy: [{ subject: 'inventory', citationId: 'c-e-env' }] },
       { id: 'span-2', path: null, startLine: 1, endLine: 1, objectId: null, outcome: 'denied-path', citedBy: [{ subject: 'draft', citationId: 'c-q0' }] },
     ]);
-    // A boolean, so a failure prints no span.
-    expect(JSON.stringify(packet.spans).includes('x'.repeat(24))).toBe(false);
+    // A boolean, so a failure prints no path.
+    expect(JSON.stringify(packet).includes('x'.repeat(24))).toBe(false);
+    expect(packet.draft.withheldCitationPaths).toBe(1);
+    expect(packet.draft.document.unresolved[0].citations).toEqual([{ id: 'c-q0', path: null, startLine: 1, endLine: 1 }]);
+    const frozen = JSON.parse(fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'), 'utf8'));
+    expect(frozen.unresolved[0].citations[0].path === BOTH_PATH).toBe(true);
   });
 });

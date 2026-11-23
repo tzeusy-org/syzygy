@@ -244,6 +244,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const tree = new Map<string, TreeEntry>();
   for (const entry of await inputs.reader.listTree()) if (BLOB_MODES.has(entry.mode)) tree.set(entry.path, entry);
   const citations = collectCitations(doc);
+  const isSecretPath = secretPathOf(inputs.screen);
   const blobs = new Map<string, BlobState>();
   const toRead: TreeEntry[] = [];
   for (const { value } of citations) {
@@ -251,7 +252,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     if (cited === undefined || blobs.has(cited)) continue;
     const entry = tree.get(cited);
     if (entry === undefined) { blobs.set(cited, { state: 'absent' }); continue; }
-    const outcome = inputs.screen.screenPath(cited);
+    const outcome = inputs.screen.screenPath(cited) ?? (isSecretPath(cited) ? 'secret-detector-match' : undefined);
     if (outcome !== undefined) { blobs.set(cited, { state: 'excluded', outcome }); continue; }
     toRead.push(entry);
   }
@@ -270,7 +271,6 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
         : { state: 'admitted', entry: blob, raw, lines: lineCount(raw), tracked: null });
   }
   const firstCited = [...new Set(citations.flatMap(({ value }) => (text(value['path']) === undefined ? [] : [text(value['path'])!])))];
-  const isSecretPath = secretPathOf(inputs.screen);
   const citedBlobs: CitedBlob[] = firstCited.map((cited) => [cited, blobs.get(cited)!] as const).flatMap(([cited, state]): CitedBlob[] => {
     if (state.state === 'absent') return [];
     if (state.state === 'admitted') {

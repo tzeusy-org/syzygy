@@ -80,11 +80,26 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
   // The draft without its read account: the packet carries no discovery account, transcript or authoring exchange.
   const { discovery: _readAccount, ...draftView } = draftDoc;
 
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
+  if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
+  const screen = screenLoad.screen;
+  const isSecretPath = secretPathOf(screen);
+  const secretPaths = new Map<string, boolean>();
+  const withheldCitations = new WeakSet<object>();
+  const withheldCount = { draft: 0, inventory: 0 };
   const cited = new Map<string, { path: string; startLine: number; endLine: number; citedBy: SpanCitation[] }>();
   for (const [which, doc] of [['draft', draftView], ['inventory', inventoryDoc]] as const) {
     for (const { value } of collectCitations(doc)) {
       const citationId = text(value['id']), file = text(value['path']);
       const start = value['startLine'], end = value['endLine'];
+      if (file !== undefined) {
+        const secretPath = secretPaths.get(file) ?? isSecretPath(file);
+        secretPaths.set(file, secretPath);
+        if (secretPath) {
+          withheldCitations.add(value);
+          withheldCount[which] += 1;
+        }
+      }
       if (citationId === undefined || file === undefined || typeof start !== 'number' || typeof end !== 'number') continue;
       const key = JSON.stringify([file, start, end]);
       const entry = cited.get(key) ?? { path: file, startLine: start, endLine: end, citedBy: [] };
@@ -93,9 +108,6 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     }
   }
 
-  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
-  if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
-  const screen = screenLoad.screen;
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   const blobs = new Map<string, string>();
   const retainedLines = new Map<string, readonly string[]>();
@@ -107,7 +119,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     const toRead: string[] = [];
     for (const file of new Set([...cited.values()].map((span) => span.path))) {
       if (!tree.has(file)) { outcomes.set(file, 'absent'); continue; }
-      const excluded = screen.screenPath(file);
+      const excluded = screen.screenPath(file) ?? (secretPaths.get(file) ? 'secret-detector-match' : undefined);
       if (excluded !== undefined) { outcomes.set(file, excluded); continue; }
       toRead.push(file);
     }
@@ -155,7 +167,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
       return { id, path: span.path, startLine: span.startLine, endLine: span.endLine, objectId, outcome: 'admitted', text: spanText, redaction, citedBy: span.citedBy };
     }
     const outcome = raw !== undefined ? 'beyond-blob' : outcomes.get(span.path)!;
-    const secretPath = secretPathOf(screen)(span.path);
+    const secretPath = secretPaths.get(span.path);
     return { id, path: secretPath ? null : span.path, startLine: span.startLine, endLine: span.endLine, objectId: secretPath ? null : tree.get(span.path)?.id ?? null, outcome, citedBy: span.citedBy };
   });
 
@@ -164,11 +176,13 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     kind: 'fidelity',
     runId,
     pinnedRevision: pinned,
-    draft: { revision: draftRev.revision, sha256: sha256(draftRev.bytes), omitted: ['discovery'], document: draftView },
+    draft: { revision: draftRev.revision, sha256: sha256(draftRev.bytes), omitted: ['discovery'],
+      ...(withheldCount.draft === 0 ? {} : { withheldCitationPaths: withheldCount.draft }), document: draftView },
     inventory: {
       revision: counted.revision, sha256: counted.sha256,
       // The inventory's coverage account is its session's own content for the reviewer to judge, never a verified read account.
       coverage: { declaredBy: 'the inventory session', label: 'Inferred', basis: INVENTORY_INFERRED.completeness },
+      ...(withheldCount.inventory === 0 ? {} : { withheldCitationPaths: withheldCount.inventory }),
       document: inventoryDoc,
     },
     spans,
@@ -176,7 +190,10 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     criteria: fidelityCriteria(run),
     verdictSchema: verdictSchemaDocument({ pinnedRevision: pinned }),
   };
-  const bytes = `${JSON.stringify(packet, null, 2)}\n`;
+  // Keep the frozen originals for verdict validation. Only the packet copy loses the path values.
+  const bytes = `${JSON.stringify(packet, function (this: object, key, value: unknown) {
+    return key === 'path' && withheldCitations.has(this) ? null : value;
+  }, 2)}\n`;
   return {
     ok: true, bytes, sha256: sha256(bytes), spans,
     draft: { revision: draftRev.revision, sha256: sha256(draftRev.bytes), doc: draftDoc, sessionId: declaredSessionId(draftDoc) },
