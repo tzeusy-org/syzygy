@@ -1,0 +1,132 @@
+{
+  "format": "syzygy-f3-local-recovery-observation/1",
+  "subject": "f03892a11dca232f413ec0a5ec00c1ea617c8f0e",
+  "runtimeInputTreeSha256": "5754d6329c452e040741f26e86c77a79f064b1cffd954ef89e378d4f0507cc7b",
+  "runtimeProfileRegistrySha256": "53031641452516131e13f8c6518b3f8eb4b33cfd07724069076ad30cebaf8a65",
+  "fixtureResultSha256": "c8a12b0e06423d5993271d1474e5dfcc04e3c5c076c6c53a577b85969af0e666",
+  "testLogSha256": "d6a7865799c685dd1fd841233c3ff3235e6065d3050f4f254ce4a2a19568287e",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/session-launch.ts": "67ade379d23169e86c2cf4017bbf823b8a05a1969848e3942ff931537ec46ae7",
+    "packages/polaris-dossier/src/url-run-ordered-attempt.ts": "0d41c3b96248732399a1762e1f675da307632698cda9166aab716fa9e6e03083",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "35ae17bdd63f80d4688f8018db83d416ecd512e083d9e80ee29fc3bf4634020c"
+  },
+  "stop": "run ended: operator stop requested, checked history retained",
+  "resume": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "launcherInspection": {
+    "cadenceMs": 200,
+    "inspectionMs": 1000,
+    "samples": 1,
+    "latest": {
+      "ordinal": 1,
+      "phases": {
+        "process": {
+          "startedMs": 0.4398710000095889,
+          "settledMs": 652.7901510000229,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.5969210000475869,
+          "settledMs": 152.02422900003148,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.6081030000350438
+        }
+      },
+      "refusal": {
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1270.0016070000129
+      }
+    },
+    "firstRefusal": {
+      "ordinal": 1,
+      "phases": {
+        "process": {
+          "startedMs": 0.4398710000095889,
+          "settledMs": 652.7901510000229,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 0.5969210000475869,
+          "settledMs": 152.02422900003148,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.6081030000350438
+        }
+      },
+      "refusal": {
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 1270.0016070000129
+      }
+    }
+  },
+  "transportCounts": {
+    "open": 1,
+    "accept": 1,
+    "capture": 1,
+    "authorize": 0
+  },
+  "inferenceCount": 0,
+  "audit": {
+    "status": "read",
+    "count": 4,
+    "kinds": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "launch-terminal"
+    ]
+  }
+}

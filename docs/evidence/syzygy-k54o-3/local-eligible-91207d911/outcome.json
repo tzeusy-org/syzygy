@@ -1,0 +1,66 @@
+{
+  "format": "syzygy-f3-local-recovery-observation/1",
+  "subject": "91207d911f6b6b69e57b60a25cef8ba8f8244bab",
+  "runtimeInputTreeSha256": "35d5914ced1af9ee3e927fa1bacce35fb794b5158b06ad7f5cf98d2e70a31819",
+  "runtimeProfileRegistrySha256": "3e8f285733aba4bf4b3b67127d8989811ccb00bac75e39fbd3b747a3105738cd",
+  "fixtureResultSha256": "cdeada48bfc0141fdb8b68050a6c20ed21e1836f74c1e10df7dc4aec647f514e",
+  "testLogSha256": "3abebdf77a87f2aa48bb6ab7892026865af30a2b11d0daf9f342fc5e862b7d98",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/session-launch.ts": "67ade379d23169e86c2cf4017bbf823b8a05a1969848e3942ff931537ec46ae7",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "5b4f9b392140c4aef81d5ef1c0444cb87c52a4570dabc8d7f1603bd09e012bae"
+  },
+  "events": [
+    "run ended: checked session boundary unavailable"
+  ],
+  "failure": "role-ended",
+  "roles": [
+    {
+      "role": "author",
+      "outcome": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "sampledStorageBytes": 2193,
+        "peakProcesses": 5
+      }
+    },
+    {
+      "role": "inventory",
+      "outcome": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "sampledStorageBytes": 2193,
+        "peakProcesses": 5
+      }
+    },
+    {
+      "role": "fidelity",
+      "outcome": {
+        "outcome": "inspection-failed",
+        "signal": "SIGTERM",
+        "viewTermination": "view-exited",
+        "groupTermination": "confirmed",
+        "toolTermination": "settled",
+        "sampledStorageBytes": 0,
+        "peakProcesses": 4
+      }
+    },
+    {
+      "role": "design",
+      "outcome": "Unknown"
+    }
+  ],
+  "designAudit": {
+    "status": "read",
+    "count": 1,
+    "kinds": [
+      "declaration"
+    ]
+  },
+  "resumeChecks": []
+}

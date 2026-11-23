@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { buildComposedRuntime, prepareComposedRun } from './url-run-composed.testkit.js';
+import { patchFs } from './fs-patch.testkit.js';
 import { draft, inventory, fidelityVerdict, designVerdict } from './full-run.testkit.js';
 import { closeRun } from './close.js';
 import * as rendering from './render.js';
@@ -30,6 +31,7 @@ import * as runMachine from './url-run-machine.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
+import * as launchHistory from './url-launch-history.js';
 import * as sessionPeer from './session-peer.js';
 import * as policySnapshot from './policy-snapshot.js';
 import * as sessionBroker from './session-broker.js';
@@ -276,6 +278,7 @@ async function observeDesignRun(run: string, traceInference = false) {
   let firstSampleRefusal: ResumeSample | undefined;
   let terminal: { atMs: number; outcome: sessionLaunch.UrlSessionLaunchOutcome['outcome']; latestSample?: ResumeSample } | undefined;
   let finishedInspection: NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>> | undefined;
+  const roleInspections = new Map<string, NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>>();
   const preparations = new WeakMap<sessionLaunch.UrlSessionPreparation, () => ResumeSample | undefined>();
 
   function snapshotSample(sample: ResumeSample | undefined): ResumeSample | undefined {
@@ -335,6 +338,10 @@ async function observeDesignRun(run: string, traceInference = false) {
   let firstRefusedCurrent: CurrentTrace | undefined;
   let firstRefusedHostCurrent: CurrentTrace | undefined;
   let hostActivation: ResumeStamp | undefined;
+  let designLaunchWrite: ResumeStamp | undefined;
+  let designLaunchCommit: ResumeStamp | undefined;
+  let designLaunchRegistration: ResumeStamp | undefined;
+  const launchSyncs: ResumeStamp[] = [];
   function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean,
     onSettled?: (outcome: ResumeObservation) => void): T {
     const settle = (outcome: ResumeObservation) => {
@@ -396,15 +403,35 @@ async function observeDesignRun(run: string, traceInference = false) {
     },
   };
   if (traceInference) {
+    const launchWriteScope = new AsyncLocalStorage<true>();
+    const writeLaunch = launchHistory.writeUrlLaunchHistory;
+    vi.spyOn(launchHistory, 'writeUrlLaunchHistory').mockImplementation(input => {
+      if (input.plan.role !== 'design') return writeLaunch(input);
+      const stamp = designLaunchWrite = { startedMs: clock() };
+      return launchWriteScope.run(true, () => timed(stamp, () => writeLaunch(input), result => result.capability !== null));
+    });
+    cleanup.push(patchFs('fsyncSync', sync => fd => {
+      if (launchWriteScope.getStore() !== true || launchSyncs.length >= 4) return sync(fd);
+      const stamp = { startedMs: clock() };
+      launchSyncs.push(stamp);
+      return timed(stamp, () => sync(fd), () => true);
+    }));
     const startAttempt = orderedAttempt.startUrlOrderedAttempt;
     vi.spyOn(orderedAttempt, 'startUrlOrderedAttempt').mockImplementation(input => startAttempt({
       ...input,
       current: () => currentPhase('runtime-authority', input.current, value => value === true),
       waitForSamples: () => currentPhase('wait-for-samples', input.waitForSamples, value => value === true),
+      registerLaunch: committed => {
+        const stamp = designLaunchRegistration = { startedMs: clock() };
+        return timed(stamp, () => input.registerLaunch(committed), () => true);
+      },
       reproduce: () => currentPhase('reproduce', input.reproduce, value => value !== null),
       machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
       budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
-      audit: { ...input.audit, readDesignDeliveryView: (...args) =>
+      audit: { ...input.audit, commitLaunchHistory: capability => {
+        const stamp = designLaunchCommit = { startedMs: clock() };
+        return timed(stamp, () => input.audit.commitLaunchHistory(capability), () => true);
+      }, readDesignDeliveryView: (...args) =>
         currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
     }));
     const effectCurrent = machineTransport.sessionMachineEffectCurrent;
@@ -629,7 +656,13 @@ async function observeDesignRun(run: string, traceInference = false) {
   const prepare = sessionLaunch.prepareRestrictedUrlSession;
   vi.spyOn(sessionLaunch, 'prepareRestrictedUrlSession').mockImplementation(input => {
     const authority = input.inspectionAuthority;
-    if (authority === undefined) return prepare(input);
+    const role = input.profile.input.binding.role;
+    const trace = (result: sessionLaunch.UrlSessionPreparation) => {
+      const inspected = sessionLaunch.observeUrlSessionInspectionForTest(result);
+      if (inspected !== null) roleInspections.set(role, inspected);
+      return inspected;
+    };
+    if (authority === undefined) return observe(() => prepare(input), trace, () => {});
     let activeSample: ResumeSample | undefined;
     const verified = (sample: ResumeSample, outcome: ResumeObservation) => {
       Object.assign(sample.verify, { settledMs: clock(), outcome });
@@ -673,7 +706,7 @@ async function observeDesignRun(run: string, traceInference = false) {
         }
       },
     } }), result => {
-      finishedInspection = sessionLaunch.observeUrlSessionInspectionForTest(result) ?? undefined;
+      finishedInspection = trace(result) ?? undefined;
       preparations.set(result, () => snapshotSample(activeSample));
     }, () => {});
   });
@@ -692,6 +725,8 @@ async function observeDesignRun(run: string, traceInference = false) {
 
   return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, launcherInspection: finishedInspection?.(),
+    roleInspections: Object.fromEntries([...roleInspections].map(([role, inspect]) => [role, inspect().firstRefusal])),
+    launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
       hostActivation, hostCurrent, firstRefusedHostCurrent } } : {}),
     orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
@@ -1272,11 +1307,13 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeDiagnostic: resumeEvidence,
-          initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
+          initialDesignAudit, initialRoleInspections: initialDiagnostic?.().roleInspections,
+          initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
       }
       throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
+        initialRoleInspections: initialDiagnostic?.().roleInspections,
         resumeChecks, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
         initialInference: initialDiagnostic?.().inference,
         producerReports: f.producerReports(),
