@@ -188,6 +188,22 @@ describe('host-owned URL origin ledger', () => {
     await expect(packed.ledger.sourceSpan({ path: 'own.ts' })).rejects.toThrow('url-origin-refused');
 
   });
+  it('finishes the first screened source span within the read limit under slow live authority', async () => {
+    const f = fixture();
+    let elapsed = 0, charge = false;
+    const ledger = createUrlOriginLedger({ ...f.options, current: () => {
+      if (charge) elapsed += 860;
+      return true;
+    } });
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      charge = true;
+      const receipt = await ledger.sourceSpan({ path: f.file, offset: 0, limit: 1 });
+      const expected = bytes('Own source line one.\n');
+      expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
+    } finally { clock.mockRestore(); }
+  });
+
   it('authenticates exact complete byte coverage beyond 2000 lines without accepting span assertions or extending raw active treatment', async () => {
     const text = 'Own line.\r\n'.repeat(2001) + 'const own = "<script>Own</script>"; // tail \u00e9\n';
     const f = fixture(text), supplied = bytes(text), pristine = bytes(text);

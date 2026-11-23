@@ -256,12 +256,13 @@ function create(given: UrlOriginLedgerOptions) {
   };
   // A wait deadline is not cancellation of filesystem IO; only the bounded read
   // result can reach issuance. A late reader cannot register a receipt or binding.
-  async function sourceOperation<T>(work: (check: () => void) => Promise<T>): Promise<T> {
+  async function sourceOperation<T>(work: (check: () => void, checkTime: () => void) => Promise<T>): Promise<T> {
     let active = true, timer: ReturnType<typeof setTimeout> | undefined;
     const began = performance.now();
-    const check = (): void => { live(); if (!active || performance.now() - began >= limits.readMilliseconds) fail(); };
+    const checkTime = (): void => { if (!active || performance.now() - began >= limits.readMilliseconds) fail(); };
+    const check = (): void => { live(); checkTime(); };
     try {
-      return await Promise.race([Promise.resolve().then(() => work(check)), new Promise<never>((_resolve, reject) => {
+      return await Promise.race([Promise.resolve().then(() => work(check, checkTime)), new Promise<never>((_resolve, reject) => {
         timer = setTimeout(() => { active = false; reject(new Error('url-origin-refused')); }, limits.readMilliseconds);
       })]);
     } finally { active = false; clearTimeout(timer); }
@@ -278,12 +279,14 @@ function create(given: UrlOriginLedgerOptions) {
     visit(reply);
     if (screen.screenSecrets(text) !== undefined || screen.screenSecrets(fields.join('')) !== undefined || screen.screenSecrets(values.join('')) !== undefined) fail();
   }
-  async function verifiedSource(file: string, check: () => void) {
-    check(); if (!isUrlWholeSourcePath(file) || screen.screenPath(file) !== undefined) fail();
+  async function verifiedSource(file: string, check: () => void, checkTime: () => void) {
+    checkTime(); if (!isUrlWholeSourcePath(file) || screen.screenPath(file) !== undefined) fail();
     const contentClass = screen.contentClass(file);
     if (!contentClass || !['code-content', 'governance-text', 'project-documentation'].includes(contentClass)) fail();
+    // The bound reader samples full authority and the source store on both
+    // sides of its I/O. Recheck the timer here and live authority after screening.
     const reader = openReader();
-    const blob = (await reader.readBlobs([file]))[0]; check();
+    const blob = (await reader.readBlobs([file]))[0]; checkTime();
     if (!blob || blob.path !== file || !['100644', '100755'].includes(blob.mode)) fail();
     const bytes = snapshot(blob.bytes), raw = decode(bytes), treatment = screen.screenTargetBody(raw, file);
     // Neither a span nor complete coverage can authenticate a redacted body under its original identity.
@@ -342,8 +345,8 @@ function create(given: UrlOriginLedgerOptions) {
       live(); if (!exact(input, ['path', 'objectId', 'bytes']) || !isUrlWholeSourcePath(input.path) || typeof input.objectId !== 'string'
         || input.objectId.length !== record.subject.pinnedRevision.commit.length || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.objectId)) fail();
       const file = input.path, objectId = input.objectId, supplied = snapshot(input.bytes);
-      return await sourceOperation(async check => {
-        const body = await verifiedSource(file, check);
+      return await sourceOperation(async (check, checkTime) => {
+        const body = await verifiedSource(file, check, checkTime);
         if (body.objectId !== objectId || !Buffer.from(supplied).equals(body.bytes)) fail();
         return issueWholeSourceBody(file, body, check);
       });
@@ -361,7 +364,7 @@ function create(given: UrlOriginLedgerOptions) {
       live(); if (!isRecord(input) || Object.keys(input).some(key => !['path', 'offset', 'limit', 'expectedObjectId'].includes(key)) || !relative(input.path)) fail();
       const file = input.path, offset = input.offset ?? 0, limit = input.limit ?? 200, expectedObjectId = input.expectedObjectId;
       if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 2000) fail();
-      const { raw, contentClass, objectId } = await sourceOperation(check => verifiedSource(file, check)); live();
+      const { raw, contentClass, objectId } = await sourceOperation((check, checkTime) => verifiedSource(file, check, checkTime)); live();
       if (expectedObjectId !== undefined && expectedObjectId !== objectId) fail();
       const lines = raw.match(/[^\n]*(?:\n|$)/gu) ?? []; if (lines.at(-1) === '') lines.pop();
       const bytes = Buffer.from(lines.slice(offset, offset + limit).join(''));
@@ -547,7 +550,7 @@ function create(given: UrlOriginLedgerOptions) {
         const result = await verifiedSpan({ path: d.path, expectedObjectId: d.objectId, offset: d.offset, limit: d.limit });
         sameSubject(result.receipt, node.metadata);
       } else if (d.kind === 'source-whole') {
-        const body = await sourceOperation(check => verifiedSource(d.path, check));
+        const body = await sourceOperation((check, checkTime) => verifiedSource(d.path, check, checkTime));
         if (body.objectId !== d.objectId) fail();
         const checked = await verifyWholeSourceBody({ path: d.path, objectId: d.objectId, bytes: body.bytes });
         sameSubject(inspectWholeSourceBody(checked).origin, node.metadata);
@@ -622,8 +625,8 @@ function create(given: UrlOriginLedgerOptions) {
       try {
         live(); if (!exact(input, ['path']) || !isUrlWholeSourcePath(input.path)) fail();
         const file = input.path;
-        return await sourceOperation(async check => {
-          const body = await verifiedSource(file, check);
+        return await sourceOperation(async (check, checkTime) => {
+          const body = await verifiedSource(file, check, checkTime);
           const capability = issueWholeSourceBody(file, body, check);
           return inspectWholeSourceBody(capability).origin;
         });
