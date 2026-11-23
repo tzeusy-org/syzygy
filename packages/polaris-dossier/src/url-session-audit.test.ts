@@ -665,9 +665,9 @@ describe('protected URL session audit', () => {
   });
 
   it('does not count a declaration when its final prefix read withdraws setup authority', async () => {
-    const f = fixture(), p = await prototype(), read = p.read, sync = p.sync;
+    const f = fixture(), p = await prototype(), read = p.read;
     let withdrawn = false;
-    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: Parameters<FileHandle['read']>) {
+    vi.spyOn(p, 'read').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
       const result = await read.apply(this, args);
       if (!withdrawn && fs.fstatSync(this.fd).isFile() && result.bytesRead > 0) {
         withdrawn = true;
@@ -675,7 +675,7 @@ describe('protected URL session audit', () => {
       }
       return result;
     });
-    const syncs = vi.spyOn(p, 'sync').mockImplementation(async function(this: FileHandle) { return sync.call(this); });
+    const syncs = vi.spyOn(p, 'sync');
     const result = await createUrlSessionAudit(f.options);
     if (result.ok) writers.push(result);
     expect(withdrawn).toBe(true);
