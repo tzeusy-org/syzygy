@@ -596,10 +596,10 @@ describe('trusted URL artifact producer bridge', () => {
       citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
     const site = await import(new URL('../../../apps/three-surface-poc/src/polaris-generation/dossier-site.ts', import.meta.url).href) as { figureLaidOutWidth: FigureLayout };
     const cite = (id: string) => ({ id, path: 'README.md', startLine: 1, endLine: 1 });
-    Object.assign(f.draft, { schemaVersion: 'polaris-dossier-local-draft-v5', diagrams: [{ id: 'own-flow', title: 'Own flow',
+    Object.assign(f.draft, { schemaVersion: 'polaris-dossier-local-draft-v9', thesisBasis: 'none', diagrams: [{ id: 'own-flow', title: 'Own flow',
       home: { kind: 'section', target: 'own-section' }, kind: 'flow', relationship: 'Own order.', disposition: { kind: 'produced', assetIds: ['own-flow'] },
       nodes: ['own-a', 'own-b'].map(id => ({ id, label: id, epistemic: 'inferred', citations: [cite(`cite-${id}`)] })),
-      edges: [{ id: 'own-edge', from: 'own-a', to: 'own-b', label: 'then', epistemic: 'inferred', citations: [cite('cite-edge')] }] }] });
+      edges: [{ id: 'own-edge', from: 'own-a', to: 'own-b', relation: 'relates-to', label: 'then', epistemic: 'inferred', citations: [cite('cite-edge')] }] }] });
     const H = 'e'.repeat(64), core = encodeRunRecord(f.options.record.declared, f.options.record.subject);
     const identity = urlSourceTransportIdentity('https://own.example.invalid/source'); if (!identity.ok) throw Error('own transport');
     const sourceTransport = { originalLocator: identity.originalLocator, destination: identity.destination, providerId: identity.providerId,
@@ -701,8 +701,7 @@ describe('trusted URL artifact producer bridge', () => {
       } finally { checkReads.close(); }
 
       const draft = b(f.draft);
-      const v5Schema = localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }, 'home', 'absent', 'absent', 'absent', 'absent');
-      expect(checkDraftShape(v5Schema, f.draft)).toEqual([]);
+      expect(checkDraftShape(localDraftSchema({ pinnedRevision: f.pin, maxQuestions: 1 }), f.draft)).toEqual([]);
       expect(f.screen.screenBody(draft.toString())).toBeUndefined();
       const writeArgs = { path: 'drafts/next.json', content: draft.toString() };
       const written = f.receipt('author', 'mcp__syzygy__artifact_write', writeArgs,
