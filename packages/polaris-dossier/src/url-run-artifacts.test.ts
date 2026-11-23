@@ -17,7 +17,7 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { buildDossierScreen } from './screen.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, sourceBindingSha256, encodeRunRecord } from './run-record.js';
-import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, designVerdictSchemaDocument,
+import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, designVerdictSchemaDocument, LOCAL_DRAFT_SCHEMA_VERSION,
   localDraftSchema, localInventorySchema, localVerdictSchema, localDesignVerdictSchema, UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { createSessionProfile } from './session-profile.js';
 import { createUrlOriginLedger } from './url-origin-ledger.js';
@@ -100,12 +100,13 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
   const schemaDocuments = { draft: b(draftSchemaDocument({ pinnedRevision: pin, maxQuestions: 1 })), inventory: b(inventorySchemaDocument({ pinnedRevision: pin })),
     fidelity: b(verdictSchemaDocument({ pinnedRevision: pin })), design: b(designVerdictSchemaDocument({ pinnedRevision: pin })) };
   const sessionId = (role: Role): string => `00000000-0000-4000-8000-${String(roles.indexOf(role) + 1).padStart(12, '0')}`;
+  const authorSchema = localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 });
   const validate = (schema: ReturnType<typeof localDraftSchema>, role: Role, v: unknown): boolean => !!v && typeof v === 'object' && !Array.isArray(v)
     && (v as Record<string, unknown>)['sessionId'] === sessionId(role) && checkDraftShape(schema, v).length === 0;
   const verifyCurrent = vi.fn(() => current);
   const ledgerOptions: Parameters<typeof createUrlOriginLedger>[0] = { runId, record, screen: loaded.screen, basePolicyBytes,
     originPolicy: { binding: { path: '.syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json', commit: 'a'.repeat(40), policyId: 'POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1', policyVersion: '1.0.0', sha256: sha256(originBytes) }, bytes: originBytes },
-    current: verifyCurrent, fixed, schemas: { draft: v => validate(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }, 'home', 'absent'), 'author', v),
+    current: verifyCurrent, fixed, schemas: { draft: v => validate(authorSchema, 'author', v),
       inventory: v => validate(localInventorySchema({ pinnedRevision: pin }), 'inventory', v), 'fidelity-verdict': v => validate(localVerdictSchema({ pinnedRevision: pin }), 'fidelity', v),
       'design-verdict': v => validate(localDesignVerdictSchema({ pinnedRevision: pin }), 'design', v) } };
   const ledger = createUrlOriginLedger(ledgerOptions);
@@ -174,14 +175,14 @@ function fixture(source = 'Own pinned source.\n', extraFiles: Readonly<Record<st
     const canonicalText = canonical(reply); return { binding: plans.find(p => p.role === role)!.profile.input.binding, id: `tool-${sha256(canonical([role, toolInput, reply]))}`, kind: 'tool-result', toolName, toolInput,
       canonicalText, digest: sha256(canonicalText), bytes: Buffer.byteLength(canonicalText), classes: ['project-documentation'], originIds: ['FORGED_TAGS_HAVE_NO_AUTHORITY'] };
   };
-  const draft = { schemaVersion: 'polaris-dossier-local-draft-v2', pinnedRevision: pin, sessionId: sessionId('author'), title: 'Own dossier',
+  const draft = { schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION, pinnedRevision: pin, sessionId: sessionId('author'), title: 'Own dossier', thesisBasis: 'none',
     introduction: { id: 'intro', label: 'non-normative', text: 'Own introduction.' }, understanding: Object.fromEntries(UNDERSTANDING_ITEMS.map(key => [key, [{ id: `u-${key}`, label: 'unknown', reason: 'missing-evidence', statement: 'Own unknown.', scope: 'Own fixture.', citations: [] }]])),
     sections: [{ id: 'own-section', title: 'Own section', paragraphs: [{ id: 'own-p', label: 'non-normative', text: 'Own prose.', children: [] }], disposition: { kind: 'produced', assetIds: ['own-section'] } }],
     diagrams: [], deepDives: [], unresolved: [], discovery: { inspected: ['own.ts'], selected: [], excluded: [], unresolved: [], deferred: [], stoppingReason: 'Own scope.' }, clarifications: [], executions: [] };
   const inventory = { schemaVersion: 'polaris-dossier-local-inventory-v1', pinnedRevision: pin, sessionId: sessionId('inventory'),
     entries: [{ id: 'own-purpose', kind: 'purpose', label: 'inferred', statement: 'Own purpose.', citations: [{ id: 'own-cite', path: 'own.ts', startLine: 1, endLine: 1 }], quotations: [] }],
     coverage: { inspected: ['own.ts'], excluded: [], deferred: [], stoppingReason: 'Own scope.' } };
-  const writeDraft = async () => { expect(checkDraftShape(localDraftSchema({ pinnedRevision: pin, maxQuestions: 1 }, 'home', 'absent'), draft)).toEqual([]); const bytes = b(draft); write('drafts/next.json', bytes); const raw = receipt('author', 'mcp__syzygy__artifact_write', { path: 'drafts/next.json', content: bytes.toString() },
+  const writeDraft = async () => { expect(checkDraftShape(authorSchema, draft)).toEqual([]); const bytes = b(draft); write('drafts/next.json', bytes); const raw = receipt('author', 'mcp__syzygy__artifact_write', { path: 'drafts/next.json', content: bytes.toString() },
     { ok: true, kind: 'artifact-written', path: 'drafts/next.json', sha256: sha256(bytes) }); await bridge.toolReceipt('author', raw, admission('author')); return { raw, bytes }; };
   const checkDoc = (draftBytes: Uint8Array) => ({ format: 'polaris-dossier-check/1', runId, revision: 0, supersedes: null, pinnedRevision: pin, checkedAt: '2026-11-19T00:00:01.000Z', outcome: 'passed',
     draft: { file: 'drafts/rev-0.json', sha256: sha256(draftBytes), bytes: draftBytes.length }, session: { sessionId: sessionId('author'), declaredBy: 'the authoring session', label: 'Inferred' }, findings: [],
@@ -596,7 +597,7 @@ describe('trusted URL artifact producer bridge', () => {
       citations: [{ id: 'own-readme', path: 'README.md', startLine: 1, endLine: 1 }] }] });
     const site = await import(new URL('../../../apps/three-surface-poc/src/polaris-generation/dossier-site.ts', import.meta.url).href) as { figureLaidOutWidth: FigureLayout };
     const cite = (id: string) => ({ id, path: 'README.md', startLine: 1, endLine: 1 });
-    Object.assign(f.draft, { schemaVersion: 'polaris-dossier-local-draft-v9', thesisBasis: 'none', diagrams: [{ id: 'own-flow', title: 'Own flow',
+    Object.assign(f.draft, { diagrams: [{ id: 'own-flow', title: 'Own flow',
       home: { kind: 'section', target: 'own-section' }, kind: 'flow', relationship: 'Own order.', disposition: { kind: 'produced', assetIds: ['own-flow'] },
       nodes: ['own-a', 'own-b'].map(id => ({ id, label: id, epistemic: 'inferred', citations: [cite(`cite-${id}`)] })),
       edges: [{ id: 'own-edge', from: 'own-a', to: 'own-b', relation: 'relates-to', label: 'then', epistemic: 'inferred', citations: [cite('cite-edge')] }] }] });
