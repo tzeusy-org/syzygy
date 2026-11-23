@@ -1381,7 +1381,7 @@ describe('composed URL run with actual role processes', () => {
           // The actual issuer confirms the delivery before this interruption.
           // No writer, lease, receipt or history is synthesized by the test.
           const view = await actual.commitDesignDelivery(...args);
-          deliveryReproductions.push(reproducedAtDesignHostCount.slice(-2));
+          deliveryReproductions.push(reproducedAtDesignHostCount.splice(0));
           if (resumedAudit) return view;
           const profile = f.plans.find(plan => plan.role === 'design')!.profile;
           if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
@@ -1633,7 +1633,7 @@ describe('composed URL run with actual role processes', () => {
         const stopped = await controller.stop();
         expect(delivered).toBeDefined();
         expect(expectedPlan).toBeDefined();
-        expect(deliveryReproductions).toEqual([[0, 0]]);
+        expect(deliveryReproductions).toEqual([[0]]);
         if (cut) {
           expect(initialSiteDescription).toHaveBeenCalledTimes(1);
           initialSiteDescription!.mockRestore();
@@ -1929,7 +1929,7 @@ describe('composed URL run with actual role processes', () => {
             expect(inspections?.roleInspections['design']?.samples).toBeGreaterThan(0);
             expect(relayRoles).toEqual([...launchesBeforeResume, 'design']);
             expect([author.count(), inv.count(), fidelity.count()]).toEqual(forwardsBeforeResume.slice(0, 3));
-            expect(deliveryReproductions).toEqual([[0, 0], [1, 1]]);
+            expect(deliveryReproductions).toEqual([[0], [1]]);
             const fresh = execution.supervisorCapture.roles.find(role => role.role === 'design')!;
             expect(typeof fresh.pid).toBe('number'); expect(fresh.pid).not.toBe(oldDesignPid);
             expect(execution.supervisorCapture.roles.filter(role => role.role !== 'design').every(role => role.pid === 'Unknown')).toBe(true);
