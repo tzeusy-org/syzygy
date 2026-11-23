@@ -61,6 +61,10 @@ const OBSERVER_ROOT = '/observer/syzygy';
 // registered, for each test that reached a bounded wait.
 const WAIT_MS = 10_000;
 const TEST_TIMEOUT_MS = 30_000;
+// syzygy-tp79: the integration tier's default is 30 s, the same figure as
+// TEST_TIMEOUT_MS, which the last test reads as the mark of a waiting test.
+// This file keeps vitest's 5 s default so that mark stays exact.
+vi.setConfig({ testTimeout: 5_000 });
 
 /** The bound, in ms, summed per test (by full name) over its WAIT_MS waits. */
 const waitBudgets = new Map<string, number>();
