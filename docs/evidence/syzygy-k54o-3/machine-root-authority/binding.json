@@ -1,0 +1,47 @@
+{
+  "label": "Observed",
+  "reviewedCommit": "3932c2150a50f22a2543740f9b2b891facb29d59",
+  "branchCommit": "fdd2084420bfc42c46f515e8fadf127b93851006",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-store.ts": "8726870c4a0203d65cb6ee36324a60e6e1c92728fe29f872a4e653b83cbccd65",
+    "packages/polaris-dossier/src/url-machine-store.test.ts": "0655cba92f52b9a9b04da8fc6678fbe68b3b31361aad3677530796aee668d780"
+  },
+  "identicalReviewedSourceAndTest": true,
+  "focusedTests": {
+    "passed": 40,
+    "total": 40,
+    "logSha256": "e28a947d020c3bb724d80d5191788d0129756043703e6a1d16800cef05911b32"
+  },
+  "typecheck": {
+    "outcome": "passed",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "review": {
+    "verdict": "PASS",
+    "file": "SOURCE-REVIEW-RAW.md",
+    "sha256": "1b367f2d65f673bfaf7f395b9a4fb00147940ca4315e7038a268cd0e4c03450b"
+  },
+  "selectedFaults": [
+    {
+      "name": "duplicate-guard",
+      "commit": "3932c2150a50f22a2543740f9b2b891facb29d59",
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "const verifyAnchorsDuringIo = () => anchored(checkDeadline);",
+      "new": "const verifyAnchorsDuringIo = () => anchored(stagingClock);",
+      "failed": 1,
+      "skipped": 39,
+      "logSha256": "af99477ecaed807bb407a7c724d10416755408932e23f5fbf68e08633b9e4137"
+    },
+    {
+      "name": "missing-anchor-postcheck",
+      "commit": "3932c2150a50f22a2543740f9b2b891facb29d59",
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "          const value = await promise;\n          if (currentAsync === undefined || staging !== undefined) checkWork();\n          else await checkAsync(currentAsync);",
+      "new": "          const value = await promise;\n          if (currentAsync === undefined || staging !== undefined) checkWork();\n          else if (start !== verifyAnchorsDuringIo) await checkAsync(currentAsync);",
+      "failed": 1,
+      "skipped": 39,
+      "logSha256": "c72e05e7a052a8df5dd650424d12c5e74a4d930ac7216aa37c7cdae4c4a57245"
+    }
+  ],
+  "remainingUnknown": "The exact first hosted machine-start predicate and the native performance effect of the reviewed change."
+}

@@ -1,0 +1,46 @@
+{
+  "label": "Observed",
+  "commit": "ee9d14880f9d3ab975f8d15ee459306a808875a4",
+  "scenario": {
+    "case": "eligible-stop-resume",
+    "result": "failed",
+    "ms": 83188
+  },
+  "tests": {
+    "failed": 1,
+    "skipped": 3,
+    "total": 4
+  },
+  "logSha256": "c0fa1b998f477f4ce02ded50b2afcd67ed361f836bf929e01341739bc208f0fe",
+  "retainedFixtureSha256": "5e6f4ac0c9d8ed198d96dc44b9b0640a9b27f613c958047780465ddead73e59a",
+  "forwards": {
+    "author": 6,
+    "inventory": 1,
+    "fidelity": 1,
+    "design": 0
+  },
+  "relayEvents": {
+    "author": {
+      "attempt-allowed": 6,
+      "send-attempt": 6,
+      "send-outcome": 6,
+      "response-admitted": 6
+    },
+    "inventory": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1
+    },
+    "fidelity": {
+      "attempt-allowed": 1,
+      "send-attempt": 1,
+      "send-outcome": 1
+    },
+    "design": {}
+  },
+  "reportedReasons": [
+    "transport-unavailable"
+  ],
+  "resumeChecks": [],
+  "remainingUnknown": "The first refused predicate after the Inventory and Fidelity providers returned. Neither response was admitted and no public Resume began."
+}
