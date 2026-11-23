@@ -1,0 +1,6 @@
+**PASS** for the read-only review of `f7bc22e46719ec9247dd962cbc0f822f29686528` against REQ-polaris-generation-035 and -048.
+
+- [Observed] The same product capability and lease pass five sample gates and two fresh material checks across the durable append. Full metadata equality binds the post-append material to the pre-append identity, including the lease deadline. The final check still verifies the committed launch, exact stored site, and durable audit event before issuing the delivery. A post-append confirmation failure retains the historical event and blocks continuation. [url-session-audit.ts](/home/orca/.tmp/f3-v9-producer-fixture.7HCYIV1k/w/packages/polaris-dossier/src/url-session-audit.ts:1377)
+- [Inferred] Removing either guard would make its regression case fail. The material case changes only the draft revision and preserves the valid view. The site case changes file content at the fifth sample, after the earlier site check. I assessed both mutations by inspection. [url-launch-history.test.ts](/home/orca/.tmp/f3-v9-producer-fixture.7HCYIV1k/w/packages/polaris-dossier/src/url-launch-history.test.ts:355)
+
+No blocking counterexample found. The added timing is test-local instrumentation. Uninstrumented runtime verification remains with the parent’s separate runs.

@@ -1,0 +1,53 @@
+{
+  "adoption": "A-150",
+  "source": {
+    "commit": "f7bc22e46719ec9247dd962cbc0f822f29686528",
+    "tree": "7953d6850ca6e8fe5c33848ed4d4619ffe0db226",
+    "base": "bb408a815961bb89d6cd1d64832dd9ab09b305c9",
+    "patchSha256": "0148d3a6958563fc054545990770e59861114f4422de8595c689af943e3a47ba"
+  },
+  "review": {
+    "raw": "docs/reviews/F3-DESIGN-DELIVERY-RELEASE-CHECK-REVIEW-RAW.md",
+    "sha256": "1c79503707da2483543c14cbf6007dd91bb490803fb175d618ab23b9e08d7af3",
+    "verdict": "PASS",
+    "scope": "source review"
+  },
+  "focusedChecks": {
+    "typecheck": {
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "vitest": {
+      "exit": 0,
+      "passed": 254,
+      "population": 254,
+      "files": [
+        "url-launch-history.test.ts",
+        "url-session-audit.test.ts",
+        "url-design-product.test.ts"
+      ],
+      "logSha256": "1b25b5ffe9389851b0aaba8b7233ae97919889a94202950cb84b4426817d5cc1"
+    }
+  },
+  "faultControls": [
+    {
+      "case": "material-drift",
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "if (!material || !isDeepStrictEqual(reproduced, material.metadata)) throw refused();",
+      "new": "if (!material) throw refused();",
+      "result": "detected",
+      "assertion": "promise resolved instead of rejecting",
+      "logSha256": "2889ecfa189001e74f312844774ca9d40466fe252d6f1d1335c46f4f98416fee"
+    },
+    {
+      "case": "release-site-drift",
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "old": "            if (checkStoredUrlRender(run, sitePath, before.output, current, preserveFailure) !== before.identity.site) throw refused();\n",
+      "new": "",
+      "result": "detected",
+      "assertion": "promise resolved instead of rejecting",
+      "logSha256": "5ceb9731bedce33d87a1dd9c318997ce9eb5e0b2a753817ec55f292b21fafe02"
+    }
+  ],
+  "nativeResume": "Unknown"
+}
