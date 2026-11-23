@@ -25,7 +25,7 @@ const filesystem = vi.hoisted(() => ({
   afterRealpath: undefined as ((file: string) => void) | undefined,
   beforeMkdir: undefined as ((file: string) => void) | undefined,
   beforeOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
-  afterOpen: undefined as ((file: string) => void) | undefined,
+  afterOpen: undefined as ((file: string) => Promise<void> | void) | undefined,
   afterClose: undefined as ((file: string) => void) | undefined,
 }));
 vi.mock('node:fs/promises', async importOriginal => {
@@ -45,10 +45,11 @@ vi.mock('node:fs/promises', async importOriginal => {
     const file = String(args[0]);
     if (filesystem.beforeOpen !== undefined) await filesystem.beforeOpen(file);
     const handle = await original.open(...args);
-    filesystem.afterOpen?.(file);
     const sync = handle.sync.bind(handle), close = handle.close.bind(handle);
     handle.sync = async () => { await sync(); await filesystem.afterSync?.(file); };
     handle.close = async () => { await close(); filesystem.afterClose?.(file); };
+    const hold = filesystem.afterOpen?.(file);
+    if (hold !== undefined) await hold;
     return handle;
   } };
 });
@@ -450,15 +451,49 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const pending = f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
       expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
     });
-    try {
-      await identityRequested;
-      expect(stateStarted).toBe(true);
-      expect(archiveStarted).toBe(false);
-      expect(clientStarted).toBe(false);
-    } finally { releaseIdentity(); }
+    const reached = await Promise.race([identityRequested.then(() => true), pending.then(() => false)]);
+    const held = { stateStarted, archiveStarted, clientStarted };
+    releaseIdentity();
     expect(await pending).toBe(true);
+    expect(reached).toBe(true);
+    expect(held).toEqual({ stateStarted: true, archiveStarted: false, clientStarted: false });
     expect(archiveStarted).toBe(true);
     expect(clientStarted).toBe(true);
+  });
+
+  it('joins the held state descriptor after identity fails before refusing the read', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let reportOpen!: () => void, reportRejection!: () => void, releaseState!: () => void, reportClose!: () => void;
+    const stateOpened = new Promise<void>(resolve => { reportOpen = resolve; });
+    const identityFailed = new Promise<void>(resolve => { reportRejection = resolve; });
+    const stateHold = new Promise<void>(resolve => { releaseState = resolve; });
+    const stateClosed = new Promise<void>(resolve => { reportClose = resolve; });
+    let settled = false, closed = false, clientStarted = false;
+    filesystem.beforeOpen = async file => {
+      if (path.basename(file) !== 'identity.json') return;
+      await stateOpened;
+      reportRejection();
+      throw new Error('owned identity open refused');
+    };
+    filesystem.afterOpen = file => {
+      if (path.basename(file) === path.basename(slot.file)) clientStarted = true;
+      if (path.basename(file) === 'state.json') { reportOpen(); return stateHold; }
+    };
+    filesystem.afterClose = file => {
+      if (path.basename(file) === 'state.json') { closed = true; reportClose(); }
+    };
+    const pending = f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => { await lease.read(); })
+      .then(result => { settled = true; return result; });
+    const reached = await Promise.race([identityFailed.then(() => true), pending.then(() => false)]);
+    await new Promise<void>(resolve => setImmediate(resolve));
+    const held = { closed, settled, clientStarted };
+    releaseState();
+    expect(await pending).toBe(false);
+    expect(reached).toBe(true);
+    await stateClosed;
+    expect(held).toEqual({ closed: false, settled: false, clientStarted: false });
+    expect(clientStarted).toBe(false);
   });
 
   it('checks authority after protected state I/O before using it to open the client', async () => {
