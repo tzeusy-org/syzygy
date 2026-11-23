@@ -1,8 +1,9 @@
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { appendFileSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { promisify } from 'node:util';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, DOSSIER_POLICY_PATH, DOSSIER_READMISSION_POLICY_PATH,
@@ -81,10 +82,11 @@ function fixture() {
 }
 
 describe('URL parent adoption on the observing Git checkout', { timeout: 30_000 }, () => {
-  it('verifies the same parent within the aggregate deadline under fixed Git startup latency', () => {
+  it('verifies the same parent within the aggregate deadline under fixed Git startup latency', async () => {
     const { root, origin, binding } = fixture();
     const shim = scratch();
-    const program = execFileSync('/bin/sh', ['-c', 'command -v git'], { encoding: 'utf8' }).trim();
+    const { stdout } = await promisify(execFile)('/bin/sh', ['-c', 'command -v git'], { encoding: 'utf8', timeout: 1000, maxBuffer: 4096 });
+    const program = stdout.trim();
     writeFileSync(join(shim, 'git'), `#!/bin/sh\n/bin/sleep 0.42\nexec '${program.replaceAll("'", "'\\''")}' "$@"\n`,
       { mode: 0o755 });
     vi.stubEnv('PATH', `${shim}:${process.env['PATH'] ?? ''}`);
