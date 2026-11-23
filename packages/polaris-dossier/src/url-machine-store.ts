@@ -10,6 +10,7 @@ import { isNativeSessionProfile, isOrderedDesignSessionProfile, type NativeSessi
 import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArchive, urlMachineArchiveCapacity, URL_MACHINE_ARCHIVE_LIMITS, type UrlMachineArchive, type UrlMachineArchivePointer } from './url-machine-archive.js';
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext } from './url-machine-instance.js';
+import { matchesResumedDesignPeerPublication, type UrlMachinePeer } from './url-machine-peer.js';
 
 type Expected = Parameters<UrlMachineLifecycleLease['advance']>[0];
 type AuditStep = Extract<UrlMachineLifecycleStep, { kind: 'audit' }>;
@@ -41,6 +42,7 @@ type AllocatedClient = { readonly clientId: string; readonly witnessSha256: stri
 // A crash retains the lock, so temporary files cannot accumulate across runs.
 export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
   clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648, operationMilliseconds: 5000, lockMilliseconds: 1000 });
+const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;
 const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
 const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
@@ -75,7 +77,7 @@ export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
    * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
   exclusive(clientId: string, deadline: number, run: (lease: UrlMachineStoreLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   /** Run only the trusted lifecycle publication protocol inside one held lock. */
-  publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean): Promise<UrlMachineLifecycleResult>;
+  publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean, resumedDesignPeer?: UrlMachinePeer): Promise<UrlMachineLifecycleResult>;
   /** Verify a historical terminal under the store lock, without lifecycle writes. */
   readTerminal(clientId: string, deadline: number, verify: (lease: UrlMachineTerminalLease) => Promise<void>): Promise<boolean>;
   readonly identitySha256: string;
@@ -409,7 +411,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const ready = await readState();
     if (ready.clients.some(entry => entry.anchor.kind === 'pending')) throw refused();
     setupCurrent();
-    type StagedBoundary = { readonly current: (() => boolean) | undefined; readonly allocation?: true };
+    type StagedBoundary = { readonly current: (() => boolean) | undefined; readonly allocation?: true; readonly operationMilliseconds?: number };
     type StoreOperation = (lease: {
       check: () => number;
       checkWork: () => number;
@@ -432,6 +434,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const pending = new Set<Promise<unknown>>();
       const allocation = staging?.allocation === true;
       const stagedPublication = staging !== undefined && !allocation;
+      const resumedDesignPublication = stagedPublication && operationMilliseconds === RESUMED_DESIGN_PUBLICATION_MILLISECONDS;
       const joinedTerminalLock = terminalRead && currentAsync !== undefined;
       const checkDeadline = (): number => {
         if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
@@ -492,8 +495,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (synced.status === 'rejected') throw synced.reason;
         if (scanned.status === 'rejected') throw scanned.reason;
       };
-      const lateTerminalLock = () => contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds;
-      const releaseLateTerminalLock = async (): Promise<void> => {
+      const lateContendedLock = () => contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds;
+      const releaseLateContendedLock = async (): Promise<void> => {
         check();
         verifyNamedRoots();
         checkDeadline();
@@ -557,16 +560,17 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
                 check();
                 verifyNamedRoots();
                 checkDeadline();
-                if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
+                if (lateContendedLock()) throw refused();
               }
+              if (resumedDesignPublication && lateContendedLock()) throw refused();
               await mkdir(`${base}/lock`, { mode: 0o700 });
               if (!joinedTerminalLock) return;
               held = true;
               // This authority sample follows mkdir and gates starting the
               // joined sync and census in the same continuation.
               await reverify();
-              if (lateTerminalLock()) {
-                await releaseLateTerminalLock();
+              if (lateContendedLock()) {
+                await releaseLateContendedLock();
                 return;
               }
               checkDeadline();
@@ -582,8 +586,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             await new Promise(resolve => setTimeout(resolve, 10));
           }
         }
-        if (terminalRead && !joinedTerminalLock && lateTerminalLock()) {
-          await releaseLateTerminalLock();
+        if (((terminalRead && !joinedTerminalLock) || resumedDesignPublication) && lateContendedLock()) {
+          await releaseLateContendedLock();
           return false;
         }
         if (allocation) {
@@ -674,7 +678,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const orderedEffect = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile);
       const operationMilliseconds = orderedEffect
-        ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
+        ? effectProfile.transcript.nativeEffectMilliseconds : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
       return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
         if (effectProfile !== undefined) {
@@ -808,9 +812,18 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         };
         return verify(Object.freeze({ read: readDetached, sampleCurrent }));
       }, undefined, undefined, true),
-      publish: (input: UrlMachineLifecyclePublication, stillOpening?: () => boolean) => publishUrlMachineLifecycle(input, {
-        exclusive: (clientId, deadline, operation) => exclusive(clientId, deadline, operation, undefined, { current: stillOpening }),
-      }),
+      publish: async (input, stillOpening, resumedDesignPeer) => {
+        if (resumedDesignPeer !== undefined && (currentAsync === undefined || typeof stillOpening !== 'function'
+          || !matchesResumedDesignPeerPublication(resumedDesignPeer, adapter, input, stillOpening))) return { ok: false, code: 'unavailable' };
+        // The replay can carry a full historical archive. Keep the complete
+        // publication protocol within a separate finite live-connection lease.
+        const operationMilliseconds = resumedDesignPeer === undefined
+          ? URL_MACHINE_STORE_LIMITS.operationMilliseconds : RESUMED_DESIGN_PUBLICATION_MILLISECONDS;
+        return publishUrlMachineLifecycle(input, {
+          exclusive: (clientId, deadline, operation) => exclusive(clientId, deadline, operation, undefined,
+            { current: stillOpening, operationMilliseconds }),
+        });
+      },
       close: async () => {
         if (closed) return;
         closed = true;

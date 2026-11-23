@@ -14,6 +14,7 @@ import { initializeUrlMachineStore, openUrlMachineStore, type UrlMachineStore, t
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, type NativeSessionProfile } from './session-profile.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
+import * as machinePeer from './url-machine-peer.js';
 
 const NOW = Date.parse('2026-11-22T01:00:00.000Z');
 const id = () => randomBytes(32).toString('hex');
@@ -231,6 +232,87 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(current.mock.calls.length).toBe(checks + 1);
       expect(await lease.read()).toMatchObject({ anchor: { kind: 'committed' } });
     })).resolves.toBe(true);
+  });
+
+  it.each(['selected', 'ordinary', 'operation-expired', 'run-expired', 'connection-closed'] as const)(
+    'keeps the archive and audit atomic after five seconds with publication mode %s', async scenario => {
+      const f = await fixture(), slot = await f.allocate(), root = f.options.protectedRoot;
+      const archive = path.join(root, 'canonical-history.json'), stateFile = path.join(root, 'state.json');
+      const previousArchive = await readFile(archive);
+      const previousPointer = JSON.parse(await readFile(stateFile, 'utf8')).archive;
+      const store = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
+      if (store === null) throw new Error('owned store reopen refused');
+      cleanup.push(() => store.close());
+      const proof = vi.spyOn(machinePeer, 'matchesResumedDesignPeerPublication').mockReturnValue(true);
+      const published = { context: slot.context, binding: slot.binding, next: canon(slot.record), expected: null };
+      const peer = scenario === 'ordinary' ? undefined : { verifier: slot.record.instances[0]!.verifier };
+      let offset = 0, opening = true;
+      const stillOpening = () => opening;
+      const now = performance.now.bind(performance);
+      const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + offset);
+      filesystem.afterSync = async file => {
+        if (file !== root || offset !== 0 || previousArchive.equals(await readFile(archive))) return;
+        offset = scenario === 'operation-expired' ? 10_001 : 6_000;
+        if (scenario === 'run-expired') f.tick(f.options.deadline);
+        if (scenario === 'connection-closed') opening = false;
+      };
+      try {
+        const result = await store.publish(published, stillOpening, peer);
+        expect(result.ok).toBe(scenario === 'selected');
+        expect(offset).toBe(scenario === 'operation-expired' ? 10_001 : 6_000);
+        if (peer !== undefined) expect(proof).toHaveBeenCalledExactlyOnceWith(peer, store, published, stillOpening);
+        else expect(proof).not.toHaveBeenCalled();
+        const state = JSON.parse(await readFile(stateFile, 'utf8'));
+        const entry = state.clients.find((client: { clientId: string }) => client.clientId === slot.context.clientId);
+        expect(entry.anchor.kind).toBe(scenario === 'selected' ? 'committed' : 'pending');
+        expect(entry.audit).toHaveLength(scenario === 'selected' ? 1 : 0);
+        if (scenario === 'selected') expect(state.archive.sha256).toBe(sha256(await readFile(archive)));
+        else expect(state.archive).toEqual(previousPointer);
+      } finally {
+        proof.mockRestore();
+        clock.mockRestore();
+      }
+    });
+
+  it('refuses a copied peer before granting the resumed Design publication window', async () => {
+    const f = await fixture(), slot = await f.allocate(), root = f.options.protectedRoot;
+    const store = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
+    if (store === null) throw new Error('owned store reopen refused');
+    cleanup.push(() => store.close());
+    const before = await readFile(path.join(root, 'state.json'));
+    const candidate = { context: slot.context, binding: slot.binding, next: canon(slot.record), expected: null };
+    expect(await store.publish(candidate, () => true, { verifier: slot.record.instances[0]!.verifier })).toEqual({ ok: false, code: 'unavailable' });
+    expect(await readFile(path.join(root, 'state.json'))).toEqual(before);
+    expect(await readdir(root)).not.toContain('lock');
+  });
+
+  it('refuses resumed Design publication if a contended lock arrives after one second', async () => {
+    const f = await fixture(), slot = await f.allocate(), root = f.options.protectedRoot;
+    const store = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
+    if (store === null) throw new Error('owned store reopen refused');
+    cleanup.push(() => store.close());
+    const stateFile = path.join(root, 'state.json'), lock = path.join(root, 'lock');
+    const before = await readFile(stateFile);
+    await mkdir(lock);
+    const proof = vi.spyOn(machinePeer, 'matchesResumedDesignPeerPublication').mockReturnValue(true);
+    const now = performance.now.bind(performance);
+    let attempts = 0, offset = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + offset);
+    filesystem.beforeMkdir = async file => {
+      if (path.basename(file) !== 'lock' || ++attempts !== 2) return;
+      await rmdir(lock);
+      offset = 1001;
+    };
+    try {
+      expect(await store.publish({ context: slot.context, binding: slot.binding, next: canon(slot.record), expected: null },
+        () => true, { verifier: slot.record.instances[0]!.verifier })).toMatchObject({ ok: false });
+      expect(attempts).toBe(2);
+      expect(await readFile(stateFile)).toEqual(before);
+      expect(await readdir(root)).not.toContain('lock');
+    } finally {
+      proof.mockRestore();
+      clock.mockRestore();
+    }
   });
 
   it.each(['parent-withdrawn', 'connection-closed'] as const)('prevents the first durable rename when %s during a private write', async fault => {

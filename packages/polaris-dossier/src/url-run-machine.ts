@@ -301,8 +301,11 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
                   expiresAt: new Date(input.deadline).toISOString(), revokedAt: null, instances: [instance] }
                 : { ...old, revision: old.revision + 1,
                   instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
+              const firstResumedDesignPeer = old === null && waitForActivation !== undefined && plan.role === 'design'
+                && kind === 'inference-bridge' && isOrderedDesignSessionProfile(plan.profile) ? peer : undefined;
               const published = await store.publish({ context: { ...context, now }, binding,
-                expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) }, authority);
+                expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) },
+              authority, firstResumedDesignPeer);
               if (!published.ok) return false;
               client.record = next; client.head = published.receipt;
               return authority() && current();

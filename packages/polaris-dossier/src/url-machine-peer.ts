@@ -9,10 +9,11 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { captureKernelUnixPeerAsync, executeKernelPeerProgramAsync, type KernelPeerProgram } from './session-peer.js';
 import { isUrlSessionProcess, restrictedSessionCliArgs, type UrlSessionProcess } from './session-launch.js';
-import { isNativeSessionProfile, URL_CLI_PROGRAM, type NativeSessionProfile } from './session-profile.js';
+import { isNativeSessionProfile, isOrderedDesignSessionProfile, URL_CLI_PROGRAM, type NativeSessionProfile } from './session-profile.js';
 import { urlSessionCommand } from './session-url-view.js';
 import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineOperation, type UrlMachineVerifier } from './url-machine-instance.js';
 import type { UrlMachineStore } from './url-machine-store.js';
+import type { UrlMachineLifecyclePublication } from './url-machine-lifecycle.js';
 
 export const URL_MACHINE_PEER_LIMITS = Object.freeze({ ancestors: 64, chunks: 4096, bytes: 8_388_608,
   chunkBytes: 65_536, procBytes: 2_097_152, programBytes: 262_144, setupMilliseconds: 5000 });
@@ -72,6 +73,7 @@ interface PeerState {
   closed: boolean; finished: boolean; reading: boolean; mediating: boolean; chunks: number; bytes: number; lastNow: number;
 }
 const issued = new WeakMap<UrlMachinePeer, PeerState>();
+const readyForPublication = new WeakMap<UrlMachinePeer, () => boolean>();
 const claimed = new WeakSet<Socket>();
 const listeners = new WeakMap<UrlMachineListener, { readonly server: Server; readonly identity: string; readonly programSha256: string }>();
 const sameFile = (left: fs.BigIntStats, right: fs.BigIntStats): boolean =>
@@ -502,7 +504,26 @@ export async function waitForUrlMachinePeerPublication(peer: UrlMachinePeer,
   try {
     if (!(await waitForActivation(state.options.launch)) || !stillOpening()) return false;
     await current(state, true);
-    return stillOpening();
+    if (!stillOpening()) return false;
+    readyForPublication.set(peer, stillOpening);
+    return true;
+  } catch { return false; }
+}
+
+/** Match the first resumed inference client to the peer which passed launch
+ * activation and reattestation. This selects a time limit, not authority. */
+export function matchesResumedDesignPeerPublication(peer: UrlMachinePeer, store: UrlMachineStore,
+  input: UrlMachineLifecyclePublication, stillOpening: () => boolean): boolean {
+  try {
+    const state = issued.get(peer);
+    if (state === undefined || readyForPublication.get(peer) !== stillOpening || !isUrlMachinePeerFor(peer, state.options.socket)
+      || state.options.store.publish !== store.publish || !isOrderedDesignSessionProfile(state.options.profile)
+      || input.expected !== null || input.context.role !== 'design' || input.context.kind !== 'inference-bridge'
+      || !equal(state.options.binding, input.binding)
+      || !equal({ ...state.options.context, now: input.context.now }, input.context)) return false;
+    const checked = readUrlMachineClient(input.next, input.context);
+    return checked.ok && checked.record.revision === 1 && checked.record.instances.length === 1
+      && equal(checked.record.instances[0]!.verifier, peer.verifier);
   } catch { return false; }
 }
 
