@@ -122,15 +122,15 @@ async function pinnedExecutable(file: string, expected: string, maximum: number,
     if (!before.isFile() || before.nlink !== 1n || before.size < 1n || before.size > BigInt(maximum) || (before.mode & 0o022n) !== 0n) throw refused();
     const chunk = Buffer.alloc(1_048_576), hash = createHash('sha256');
     let length = 0;
-    check();
     while (length <= Number(before.size)) {
-      const part = await handle.read(chunk, 0, Math.min(chunk.length, Number(before.size) + 1 - length), null);
-      // The descriptor read yields to the sampler. This fresh check also
-      // guards the next read after this synchronous hash update.
+      // Each descriptor read yields to the sampler. Check authority after
+      // the previous private hash and before reading any more bytes.
       check();
+      const part = await handle.read(chunk, 0, Math.min(chunk.length, Number(before.size) + 1 - length), null);
       if (part.bytesRead === 0) break;
       hash.update(chunk.subarray(0, part.bytesRead)); length += part.bytesRead;
     }
+    check();
     if (length !== Number(before.size) || hash.digest('hex') !== expected
       || !sameFile(before, await handle.stat({ bigint: true })) || !sameFile(before, await namedFileStat(file, { bigint: true }))
       || await realFilePath(file) !== file) throw refused();
