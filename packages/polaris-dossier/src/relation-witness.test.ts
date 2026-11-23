@@ -53,6 +53,11 @@ describe('rule relation-witness version 1: the order it decides in', () => {
     expect(decideWitness(edge('contains', ROOT, tld('web')), inputs())).toEqual({ state: 'witnessed', reason: null, fact: '_tree-contains-2', factKind: 'contains', rule: 'top-level-unit', ruleVersion: 1 });
   });
 
+  it('names the first joining fact in the record\'s order where more than one joins', () => {
+    const twice = { ...complete, facts: [...TREE_FACTS, { id: '_tree-contains-9', fact: 'contains', ...R, path: 'src', to: '_tree-unit-1' }] };
+    expect(decideWitness(edge('contains', ROOT, tld('src')), inputs({ structure: twice }))).toEqual({ state: 'witnessed', reason: null, fact: '_tree-contains-1', factKind: 'contains', rule: 'top-level-unit', ruleVersion: 1 });
+  });
+
   it('matches the target by exact code units: no case folding, no normalisation', () => {
     expect(decideWitness(edge('contains', ROOT, tld('Src')), inputs())).toEqual({ state: 'challenged', reason: null, factKind: 'contains', rule: 'top-level-unit', ruleVersion: 1 });
     expect(decideWitness(edge('contains', ROOT, tld('src ')), inputs()).state).toBe('challenged');
@@ -146,6 +151,9 @@ describe('rule relation-witness version 1: a recognizer row once eligible (a tab
     expect(decideWitness(absent(pkg('api/package.json')), inputs(), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
     expect(decideWitness(absent(pkg('cli/package.json')), inputs(), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
     expect(decideWitness(absent(pkg('web/package.json')), inputs({ manifest: { ...MANIFEST, factsNotListed: 1 } as WitnessInputs['manifest'] }), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
+    // A file entry counts only under the recognizer the relation's row reads: the npm recognizer listing a Cargo manifest completes nothing.
+    const listedByNpm = { ...MANIFEST, recognizers: [{ rule: 'npm-package-manifest', ruleVersion: 1, files: [{ path: 'web/Cargo.toml', epistemic: 'inferred', valuesLeftOut: 0 }] }, { rule: 'cargo-manifest', ruleVersion: 1, files: [] }] } as WitnessInputs['manifest'];
+    expect(decideWitness(absent(pkg('web/Cargo.toml')), inputs({ manifest: listedByNpm }), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
     // A source path the screen hides is never taken as complete.
     expect(decideWitness(absent(pkg('web/package.json')), inputs({ hidden: (path) => path === 'web/package.json' }), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
     expect(decideWitness(edge('depends-on-service', svc('compose.yaml', 'db'), svc('compose.yaml', 'web')), inputs({ hidden: (path) => path === 'compose.yaml' }), EVERY)).toEqual({ state: 'unknown', reason: 'coverage-partial' });
