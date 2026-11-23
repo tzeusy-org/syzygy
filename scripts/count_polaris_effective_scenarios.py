@@ -637,6 +637,15 @@ def raw_read_amendment(root: Path) -> str | None:
     return text
 
 
+def treeread_amendment(root: Path) -> str | None:
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.treeread_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
@@ -659,6 +668,7 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.FINDPAGES_SPEC, findpages_amendment(root)),
                         (adoption.SUBSEC_SPEC, subsec_amendment(root)),
                         (adoption.RAW_READ_SPEC, raw_read_amendment(root)),
+                        (adoption.TREEREAD_SPEC, treeread_amendment(root)),
                         (adoption.RELTYPE_SPEC, reltype_amendment(root)),
                         (adoption.HERO_SPEC, hero_amendment(root))):
         if text is not None:
@@ -711,6 +721,7 @@ def composition_inputs(root: Path) -> list[Path]:
     findpages_amendment(root)
     subsec_amendment(root)
     raw_read_amendment(root)
+    treeread_amendment(root)
     reltype_amendment(root)
     hero_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
@@ -719,7 +730,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.LEDGER_SUBJECTS, *adoption.KINDS_SUBJECTS, *adoption.MANIFESTS_SUBJECTS,
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS,
-        *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS,
+        *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]

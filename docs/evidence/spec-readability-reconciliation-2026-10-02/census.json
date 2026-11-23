@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 498,
+      "scenarios": 505,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -994,7 +994,10 @@
             "URL projection does not inherit a false local dispatch reason",
             "Raw-read disclosure across a rendered dossier",
             "Raw-read disclosure when there is no site",
-            "Checked relay evidence does not stand for raw-read traffic"
+            "Checked relay evidence does not stand for raw-read traffic",
+            "Run files read under their bounds",
+            "Run record past its bound",
+            "Breach log that cannot be read is not recorded as none"
           ]
         },
         "REQ-polaris-generation-034": {
@@ -1219,7 +1222,10 @@
             "History projection, lifetime budget and retirement are fail closed",
             "Design verdict binds original and current representation separately",
             "Design view is not a decoded raw artifact channel",
-            "Supervised packet delivery uses only admitted MCP tools"
+            "Supervised packet delivery uses only admitted MCP tools",
+            "Review files read under their bounds",
+            "Frozen verdict past its bound",
+            "Delivered packet read under its recorded size"
           ]
         },
         "REQ-polaris-generation-036": {
@@ -1311,7 +1317,8 @@
             "Strict tools and disabled customization are checked",
             "Unsupported thinking cannot be hidden by a signature",
             "Boundary and audit must survive resume",
-            "Verified default is explicit and unsupported model never falls back"
+            "Verified default is explicit and unsupported model never falls back",
+            "Supervisor state read under its bound"
           ]
         }
       }
