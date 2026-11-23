@@ -416,8 +416,12 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       stateSnapshot: () => ReturnType<typeof readStateSnapshot>;
       write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
     }) => Promise<void>;
-    const withLock = async (deadline: number, operation: StoreOperation,
-      operationMilliseconds: number = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging?: StagedBoundary): Promise<boolean> => {
+    const withLock = async (deadline: number, operation: StoreOperation, bounds: {
+      readonly operationMilliseconds?: number;
+      readonly staging?: StagedBoundary | undefined;
+      readonly ordinaryEffect?: boolean;
+    } = {}): Promise<boolean> => {
+      const { operationMilliseconds = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging, ordinaryEffect = false } = bounds;
       const began = performance.now();
       let active = true, held = false, uncertain = false, contended = false;
       const pending = new Set<Promise<unknown>>();
@@ -518,7 +522,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           check();
           if (contended && performance.now() - began >= URL_MACHINE_STORE_LIMITS.lockMilliseconds) throw refused();
         }
-        if (currentAsync !== undefined && staging === undefined) {
+        if (staging === undefined && (currentAsync !== undefined || ordinaryEffect)) {
           // The held lock's sync and the private census are independent.
           // Join both and recheck authority before any client state read.
           await io(async () => {
@@ -592,7 +596,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (staging !== undefined) await reverify();
         check();
         issued = entries.map(({ clientId, witnessSha256 }) => ({ clientId, witnessSha256 }));
-      }, URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging);
+      }, { staging });
       return finished ? issued : null;
     };
     const allocateClient = async (deadline: number): Promise<AllocatedClient | null> =>
@@ -600,7 +604,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
     const exclusive = async (clientId: string, deadline: number, operation: (lease: UrlMachineStoreLease) => Promise<void>,
       effectProfile?: NativeSessionProfile, publication?: StagedBoundary): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
-      const operationMilliseconds = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile)
+      const orderedEffect = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile);
+      const operationMilliseconds = orderedEffect
         ? effectProfile.transcript.nativeEffectMilliseconds : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
       return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
@@ -717,7 +722,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await operation(Object.freeze({ now: () => live(), current: () => sampleCurrent() !== null,
           sampleCurrent, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
-      }, operationMilliseconds, publication);
+      }, { operationMilliseconds, ordinaryEffect: effectProfile !== undefined && !orderedEffect, staging: publication });
     };
     const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
       allocateClient, allocateClients, exclusive: (clientId, deadline, operation, effectProfile) => exclusive(clientId, deadline, operation, effectProfile),

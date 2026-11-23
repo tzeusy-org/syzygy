@@ -523,11 +523,19 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it.each(['current', 'withdrawn'] as const)('joins lock sync and census before the async authority check when %s', async disposition => {
-    const f = await fixture(), slot = await f.allocate();
+  it.each([
+    { kind: 'resumed', allowed: true, overlaps: true },
+    { kind: 'resumed', allowed: false, overlaps: true },
+    { kind: 'ordinary', allowed: true, overlaps: true },
+    { kind: 'ordinary', allowed: false, overlaps: true },
+    { kind: 'ordered', allowed: true, overlaps: false },
+    { kind: 'unprofiled', allowed: true, overlaps: false },
+  ] as const)('keeps the $kind lock sync and census before authority-gated state reads when current is $allowed', async ({ kind, allowed, overlaps }) => {
+    const profile = effectProfile(kind === 'ordered'), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
     let current = true;
-    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => current }, f.store.identitySha256);
+    const authority = kind === 'resumed' ? { currentAsync: async () => current } : { current: () => current };
+    const reopened = await openUrlMachineStore({ ...f.options, ...authority }, f.store.identitySha256);
     if (!reopened) throw new Error('owned store reopen refused');
     cleanup.push(() => reopened.close());
     let reportSync!: () => void, releaseSync!: () => void;
@@ -541,15 +549,15 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     filesystem.beforeOpen = file => { if (path.basename(file) === 'state.json') readStarted = true; };
     const pending = reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
       expect(await lease.read()).toMatchObject({ canonical: canon(slot.record), anchor: { kind: 'committed' } });
-    });
+    }, kind === 'ordinary' || kind === 'ordered' ? profile : undefined);
     const reached = await Promise.race([synced.then(() => true), pending.then(() => false)]);
     const held = { censusStarted, readStarted };
-    current = disposition === 'current';
+    current = allowed;
     releaseSync();
-    expect(await pending).toBe(current);
+    expect(await pending).toBe(allowed);
     expect(reached).toBe(true);
-    expect(held).toEqual({ censusStarted: true, readStarted: false });
-    expect(readStarted).toBe(current);
+    expect(held).toEqual({ censusStarted: overlaps, readStarted: false });
+    expect(readStarted).toBe(allowed);
   });
 
   it('reads private state while identity is held and joins both before client access', async () => {
