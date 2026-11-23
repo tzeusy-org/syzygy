@@ -397,8 +397,14 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
       .map(([, child]) => child.waitForSample()));
     return settled.every(Boolean) && !stopping && failure === null;
   };
-  const waitForProductSamples = async (): Promise<boolean> => await settleCompletedDesign() !== 'refused' && effectCurrent()
-    && (await waitForSamples()) && await settleCompletedDesign() !== 'refused' && effectCurrent();
+  const waitForProductSamples = async (): Promise<boolean> => {
+    if (await settleCompletedDesign() === 'refused') return false;
+    // Before Resume starts a role there is no inspection promise to join.
+    // Sample the consumed claim once, after the settlement check above.
+    if (resume !== undefined && processes.size === 0 && launches.size === 0 && completedDesign === null)
+      return effectCurrent();
+    return effectCurrent() && await waitForSamples() && await settleCompletedDesign() !== 'refused' && effectCurrent();
+  };
   const captures = new Map<ViewRole, { role: ViewRole; pid: number | 'Unknown'; startedAt: number | 'Unknown';
     finishedAt: number | 'Unknown'; outcome: UrlSessionLaunchOutcome | 'Unknown' }>(URL_ROLES.map(role => [role,
     { role, pid: 'Unknown', startedAt: 'Unknown', finishedAt: 'Unknown', outcome: 'Unknown' }]));

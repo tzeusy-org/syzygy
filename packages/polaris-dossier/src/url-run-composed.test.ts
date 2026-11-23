@@ -1461,10 +1461,19 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
           vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', undefined);
           vi.stubEnv('ANTHROPIC_API_KEY', 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL');
           const resumedControllers: UrlRunSessions[] = [];
+          let initialProductSample: { beforeLaunch: boolean; accepted: boolean; checks: number; exactClaim: boolean } | undefined;
           const startResumed = runSessions.startUrlRunSessions;
           vi.spyOn(runSessions, 'startUrlRunSessions').mockImplementationOnce(async (...args) => {
             const runtime = await observeBootstrap('start-sessions', () => startResumed(...args), () => true);
             resumedControllers.push(runtime);
+            const beforeLaunch = runtime.summary().roles.every(role => role.pid === 'Unknown');
+            const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
+            try {
+              const accepted = await runtime.waitForProductSamples().catch(() => false);
+              const checks = checkClaim.mock.calls;
+              initialProductSample = { beforeLaunch, accepted, checks: checks.length,
+                exactClaim: checks.every(([verified, claim]) => verified === verifiedCuts[0] && claim === args[0].resume?.claim) };
+            } finally { checkClaim.mockRestore(); }
             return runtime;
           });
           if (scenario === 'stop-resume') resumeDiagnostic = await observeDesignRun(f.run, true);
@@ -1478,6 +1487,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
                 : { role, outcome: outcome.outcome, exitCode: outcome.exitCode, signal: outcome.signal }) ?? [] });
           }
           expect(machineChecks).toEqual([{ current: true, claimChecks: 1, withdrawn: true, asyncCurrent: true, asyncWithdrawn: true }]);
+          if (resumedControllers.length !== 0)
+            expect(initialProductSample).toEqual({ beforeLaunch: true, accepted: true, checks: 1, exactClaim: true });
           if (exit === 0) {
             expect(Object.keys(resumeBootstrap)).toEqual(['restore-plans', 'load-renderer', 'create-origins', 'restore-products',
               'start-sessions', 'create-machine', 'open-store']);
