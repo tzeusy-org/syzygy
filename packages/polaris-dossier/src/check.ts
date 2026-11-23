@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
 import { SESSION_ID_PATTERN } from './draft-schema.js';
 import { executionFlags } from './execution-flags.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
@@ -268,7 +268,9 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     }
   }
   if (credential.required && !credential.passed) {
-    findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
+    for (const finding of credentialFindings(credential)) {
+      findings.push({ kind: finding.kind, at: '$', detail: `${finding.why}. ${finding.instruction}` });
+    }
   }
   // Version 2.19 (syzygy-3efd.28): after every finding version 2.16 reports, the `unit-reference` findings and then the `relation-challenged`
   // findings of a v9 draft, from the tree this check listed, the structure facts and the manifest facts it derived. The states of the edges
@@ -278,6 +280,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
     const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
     const reach = { citedBlobs, admitted, screen, consented: checked.contentClasses };
+    // `isWithheldElement` is `isWithheldItem` (review-reach.ts), the predicate that enters an edge in the render's `withheldElements`, which
+    // `edgeRelationsAt` reads: check and render share one notion of a withheld edge.
     const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !isWithheldElement(edge, reach),
       listedEntries === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },

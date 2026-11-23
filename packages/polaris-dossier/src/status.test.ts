@@ -159,7 +159,7 @@ describe('status (REQ-polaris-generation-033)', () => {
     const bytes = JSON.stringify(record);
     fs.writeFileSync(file, bytes);
     const result = runStatus(runDir);
-    if (!result.ok) throw new Error(result.reason);
+    if (!result.ok) throw new Error(result.refusal.reason);
     expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis', role: 'observed-source' });
     expect(fs.readFileSync(file, 'utf8')).toBe(bytes);
   });
@@ -172,14 +172,16 @@ describe('status (REQ-polaris-generation-033)', () => {
 
   it('refuses a missing run directory', () => {
     const result = runStatus(path.join(runDir, 'absent'));
-    expect(result).toEqual({ ok: false, reason: `run directory ${path.join(runDir, 'absent')} cannot be read (ENOENT)` });
+    expect(result).toEqual({ ok: false, refusal: {
+      command: 'status', outcome: 'refused', reason: `run directory ${path.join(runDir, 'absent')} cannot be read (ENOENT)`,
+    } });
   });
 
   it('refuses a directory with no run.json', () => {
     fs.rmSync(path.join(runDir, 'run.json'));
     const result = runStatus(runDir);
     expect(result.ok).toBe(false);
-    expect(!result.ok && result.reason).toBe(`${runDir} holds no readable run.json (ENOENT)`);
+    expect(!result.ok && result.refusal.reason).toBe(`${runDir} holds no readable run.json (ENOENT)`);
   });
 
   it.each([
@@ -220,7 +222,7 @@ describe('status (REQ-polaris-generation-033)', () => {
     fs.writeFileSync(file, JSON.stringify(record));
     const result = runStatus(runDir);
     expect(result.ok).toBe(false);
-    expect(!result.ok && result.reason).toBe(reason);
+    expect(!result.ok && result.refusal.reason).toBe(reason);
   });
 
   it.each(['-redis', '_redis.conf', 'nodejs-node.js', '.dotfiles', '9'])('reads a repositoryId by 046\'s grammar, a tail opening with any of its characters: %s (the owner\'s ruling of 2026-11-14)', (id) => {

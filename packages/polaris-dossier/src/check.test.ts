@@ -1227,15 +1227,19 @@ describe('check: nothing Observed rests on a stored record', () => {
 });
 
 describe('check: the adapter-credential check after a permitting brief', () => {
-  it('reports a readable credential as a finding of the step, telling the agent to run nothing further, and logs it', async () => {
+  it.each([
+    ['adapter-credential-readable', 'adapter credentials readable by the operator\'s user: /fixture/token'],
+    ['adapter-credential-configuration-refused', 'the fixture credential list could not be read'],
+    ['adapter-credential-undetermined', 'the read attempt could not decide for: /fixture/token'],
+  ] as const)('reports and logs the %s finding and tells the agent to stop observed execution', async (kind, why) => {
     const run = await briefedRun();
     const record = JSON.parse(read(run, 'brief.json'));
     fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ ...record, executionRule: { arm: 'permitting' } }));
     writeDraft(run, valid());
-    const failing = { probe: async () => ({ passed: false as const, why: 'adapter credentials readable by the operator\'s user: /fixture/token' }) };
+    const failing = { probe: async () => ({ passed: false as const, kind, why }) };
     const result = report(await checkDraft(run, {}, deps({ probe: failing })));
-    expect(result.findings).toEqual([{ kind: 'adapter-credential-readable', at: '$', detail: 'adapter credentials readable by the operator\'s user: /fixture/token. Run no further observed code: the permission to build and run the observed project has lapsed for this run.' }]);
-    expect(JSON.parse(read(run, 'credential-breaches.jsonl'))).toMatchObject({ kind: 'adapter-credential-readable', step: 'check' });
+    expect(result.findings).toEqual([{ kind, at: '$', detail: `${why}. Run no further observed code: the permission to build and run the observed project has lapsed for this run.` }]);
+    expect(JSON.parse(read(run, 'credential-breaches.jsonl'))).toMatchObject({ kind, step: 'check' });
     expect(result.disclosures).toContain('The adapter-credential check is an operating-system read attempt as the operator\'s user at the instant of each step; its list comes from the source it names, which the agent sessions can write. That no process the session started could read a credential between checks, after close or through privilege escalation is Inferred. An agent tool\'s permission or deny rule does not satisfy it.');
   });
 });

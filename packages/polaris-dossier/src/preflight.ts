@@ -1,6 +1,7 @@
 import { RECORDS_WITHIN_REACH, type GateSources, type GateState } from './gate-sources.js';
 import { dossierLocator } from './launch-identity.js';
 import { quote } from './launch-revision.js';
+import type { Outcome } from './outcome.js';
 
 /** `syzygy dossier preflight <url>` (design "Command surface"): whether the records a run needs are in force for the repository,
  * which revisions the consent names, whether a per-project statement is in force, and whether D9 and the RFC7-20 reading are in force.
@@ -30,11 +31,17 @@ export interface PreflightReport {
   readonly disclosures: readonly string[];
 }
 
-export type PreflightResult = { readonly ok: true; readonly report: PreflightReport } | { readonly ok: false; readonly reason: string };
+interface PreflightRefusal {
+  readonly command: 'preflight';
+  readonly outcome: 'refused';
+  readonly reason: string;
+}
+
+export type PreflightResult = Outcome<PreflightReport, PreflightRefusal>;
 
 export async function preflight(input: string, sources: GateSources, now: number): Promise<PreflightResult> {
   const parsed = dossierLocator(input, 'repository');
-  if (!parsed.ok) return { ok: false, reason: parsed.reason };
+  if (!parsed.ok) return { ok: false, refusal: { command: 'preflight', outcome: 'refused', reason: parsed.reason } };
   const url = parsed.url;
   const ids = await sources.repositoryIdsFor(url);
   const repositoryId = ids.length === 1 ? ids[0]! : null;

@@ -13,7 +13,7 @@ import { applyHeroFindings, relationDecisions } from './check-derive.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
 import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
@@ -301,6 +301,9 @@ export async function edgeRelationsAt(inputs: {
   } catch (cause) {
     if (!(cause instanceof GitObjectReadRefusal)) throw cause;
   }
+  // An edge is asserted where it is labelled Inferred and is no withheld item. `withheld` is the render's `withheldElements`, whose graph
+  // edges are keyed by bare id and entered by `isWithheldItem` (review-reach.ts), the predicate check's `isWithheldElement` applies, over
+  // the same frozen revision: one notion of a withheld edge in both.
   const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? ''),
     blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
       structure: derived.state !== 'derived' ? { state: 'unknown' }
@@ -310,13 +313,15 @@ export async function edgeRelationsAt(inputs: {
     });
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
   return new Map(decisions.edges.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
+    // At version 1 every eligible fact is a structure fact, so `facts` (the structure record's, as this render derives them) holds every
+    // fact a decision can name, and the evidence names that record; a fact found in no rendered record is not current.
     const decision = witnessAtRender(checked, (factId) => facts.get(factId)?.epistemic === 'observed');
-    const witness = decision.state === 'witnessed'
-      ? { state: decision.state, reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion }
-      : { state: decision.state, reason: decision.reason, fact: null, rule: null, ruleVersion: null };
-    const evidence = decision.state === 'witnessed' && derived.state === 'derived'
-      ? { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } : undefined;
-    return [id, { relation, witness, ...(evidence === undefined ? {} : { evidence }) }];
+    if (decision.state === 'witnessed' && derived.state === 'derived') {
+      return [id, { relation, witness: { state: 'witnessed', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
+        evidence: { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } }];
+    }
+    const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
+    return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
   }));
 }
 
@@ -1005,9 +1010,26 @@ function disclosureItems(inputs: {
       : { id: 'draft-layer', text: `Draft layer: Unknown (missing-declaration), so no part of the draft is shown: ${draftLayer.why.join('; ')}.`, label: 'Unknown' },
   ];
   if (credential.required) {
-    items.push(credential.passed
-      ? { id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' }
-      : { id: 'adapter-credential', text: `At this render an adapter credential was readable as the operator's user: ${credential.finding.why}. ${credential.finding.instruction}`, label: 'Observed' });
+    if (credential.passed) {
+      items.push({ id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' });
+    } else {
+      for (const finding of credentialFindings(credential)) {
+        const id = finding === credential.finding ? 'adapter-credential' : 'adapter-credential-readable';
+        items.push(credentialFindingDisclosure(id, finding));
+      }
+    }
   }
   return items;
+}
+
+function credentialFindingDisclosure(id: string, finding: CredentialBreachFinding): LocalDisclosureItem {
+  const detail = `${finding.why}. ${finding.instruction}`;
+  switch (finding.kind) {
+    case 'adapter-credential-readable':
+      return { id, text: `At this render an adapter credential was readable as the operator's user: ${detail}`, label: 'Observed' };
+    case 'adapter-credential-configuration-refused':
+      return { id, text: `The adapter-credential check at this render refused the configuration because ${detail}`, label: 'Unknown' };
+    case 'adapter-credential-undetermined':
+      return { id, text: `The adapter-credential check at this render ended without a definite result because ${detail}`, label: 'Unknown' };
+  }
 }
