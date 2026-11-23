@@ -944,8 +944,6 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
     let delivered: sessionAudit.UrlDesignDeliveryView | undefined;
     let fidelityPacketRegistered: (() => void) | undefined;
     const waitForFidelityPacket = eligibleStop ? new Promise<void>(resolve => { fidelityPacketRegistered = resolve; }) : undefined;
-    let fidelityPollObserved: (() => void) | undefined;
-    const waitForFidelityPoll = eligibleStop ? new Promise<void>(resolve => { fidelityPollObserved = resolve; }) : undefined;
     let expectedPlan: OrderedDesignPlan | undefined;
     const beginOrdered = vi.fn(), resumedBegins = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
@@ -1080,14 +1078,10 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       ...sourceReads('author'), tool('draft', 'artifact_write', { path: 'drafts/next.json', content: canonical({ ...draft(f.commit),
         schemaVersion: 'polaris-dossier-local-draft-v8', thesisBasis: 'stated', sessionId: session('author'), executions: [] }) }),
       tool('check', 'dossier_step', { argv: ['dossier', 'check', f.run] }), ...authorBeforeEligibleStop, ...finalResponse('author')]);
-    const submitInventory = () => tool('inventory_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory, '--submit', 'inventory.json', '--stdin'],
-      stdin: canonical({ ...inventory(f.commit), sessionId: session('inventory') }) });
     const inv = scripted('inventory', [tool('inventory_await', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory] }),
       tool('inventory_brief', 'artifact_read', { path: 'inventory-brief.md' }), ...sourceReads('inventory'),
-      waitForFidelityPoll === undefined ? submitInventory() : async () => {
-        await waitForFidelityPoll;
-        return submitInventory();
-      }, ...finalResponse('inventory')]);
+      tool('inventory_submit', 'dossier_step', { argv: ['dossier', 'await', f.directories.inventory, '--submit', 'inventory.json', '--stdin'],
+        stdin: canonical({ ...inventory(f.commit), sessionId: session('inventory') }) }), ...finalResponse('inventory')]);
     const resultTexts = (requests: readonly unknown[]): Record<string, unknown>[] => {
       const results: Record<string, unknown>[] = [];
       const visit = (value: unknown): void => {
@@ -1104,9 +1098,8 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
         const poll = resultTexts(fidelity.received).find(value => value.kind === 'dossier-result' && value.ok === true && value.exit === 3);
         if (typeof poll?.stdout !== 'string') throw new Error('native Fidelity waiting result absent');
         expect(JSON.parse(poll.stdout)).toMatchObject({ command: 'await', outcome: 'waiting', role: 'review', kind: 'fidelity', session: 1, round: 1 });
-        // Allow Inventory to submit only after Fidelity has received the wait
-        // result. That keeps the poll outside the packet producer's handoff.
-        fidelityPollObserved?.();
+        // Let Inventory start after Fidelity's real wait result arrives.
+        inv.allow();
         await waitForFidelityPacket;
         return readFidelityPacket();
       }, () => {
@@ -1250,12 +1243,12 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       expect(JSON.parse(await fs.readFile(handoffFile, 'utf8'))).toEqual({
         schemaVersion: 'polaris-dossier-raw-read-disclosure/1', runId: f.runId, declaredProvider: 'anthropic', authorHandoff: 'reached',
       });
-      inv.allow(); design.allow();
+      if (!eligibleStop) inv.allow();
+      design.allow();
       eligiblePhase = 'fidelity';
       if (eligibleStop) {
         expect(authorPassed()).toBe(true);
-        // Let Fidelity poll while Inventory runs. Hold its packet read until
-        // the real producer has registered the checked packet.
+        // The real producer's registration releases the later packet read.
         fidelity.allow();
       } else {
         const packetUntil = performance.now() + 60_000;
