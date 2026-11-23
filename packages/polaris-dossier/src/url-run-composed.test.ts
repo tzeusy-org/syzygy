@@ -650,7 +650,7 @@ describe('composed URL run with actual role processes', { timeout: 360_000 }, ()
       const reproduce = rendering.reproduceUrlRender;
       vi.spyOn(rendering, 'reproduceUrlRender').mockImplementation(async (...args) => {
         const result = await reproduce(...args);
-        if (result) reproducedAtDesignHostCount.push(relayRoles.filter(role => role === 'design').length);
+        if (result.ok) reproducedAtDesignHostCount.push(relayRoles.filter(role => role === 'design').length);
         return result;
       });
     }
