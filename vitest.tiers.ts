@@ -31,6 +31,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'apps/three-surface-poc/src/governance-inputs.test.ts',
   'apps/three-surface-poc/src/governing-intent-sweep.test.ts',
   'apps/three-surface-poc/src/keyboard-sweep-record.test.ts',
+  'apps/three-surface-poc/src/main-entry.test.ts',
   'apps/three-surface-poc/src/main.test.ts',
   'apps/three-surface-poc/src/materialize-action.test.ts',
   'apps/three-surface-poc/src/orrery.test.ts',
