@@ -97,6 +97,11 @@ jobs:
       - name: test tiers partition (npm run test:tiers)
         run: npm run test:tiers
 
+      - name: integration routing population and selftests
+        run: |
+          node scripts/run_integration_lane.mjs --selftest
+          node scripts/run_integration_lane.mjs --check
+
       # The egress records embed a carried-content table generated from the
       # generator's code (scripts/derive_generator_sent_text.mjs). A change to
       # the generator, or to the script, that moves the table without
@@ -118,11 +123,17 @@ jobs:
         run: npm test
 
   # Integration tier: git, a real tree, loopback servers, python recorders.
-  # Parallel with e2e; both wait for the unit job.
+  # Three sorted file slices and four composed native cases. The three
+  # bounded observer cases and TMPDIR-driver controls run only in core-1.
+  # All lanes reuse this prerequisite definition and wait for the unit job.
   integration:
-    name: node (integration)
+    name: node (integration, ${{ matrix.lane }})
     needs: unit
     runs-on: ubuntu-26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: ["core-1", "core-2", "core-3", "complete", "delivery-stop", "stop-resume", "eligible-stop-resume"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -185,10 +196,20 @@ jobs:
       - name: dossier native integration prerequisites
         run: node scripts/check_dossier_native_integration.mjs
 
-      - name: integration tests (npm run test:integration)
+      - name: integration tests (${{ matrix.lane }})
+        env:
+          INTEGRATION_LANE: ${{ matrix.lane }}
         run: |
           umask 022
-          npm run test:integration
+          node scripts/run_integration_lane.mjs "$INTEGRATION_LANE"
+
+      - name: retain mandatory lane success receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-receipt-${{ matrix.lane }}
+          path: integration-receipts/${{ matrix.lane }}.json
+          if-no-files-found: error
+          retention-days: 1
 
   # e2e tier: a browser, a build and `npm ci` in clones, strace, and the
   # compiled daemon of the system-test suite. The job runs as the default
@@ -274,3 +295,17 @@ jobs:
           test "${UNIT}" = success
           test "${INTEGRATION}" = success
           test "${E2E}" = success
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: collect mandatory integration success receipts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: integration-receipt-*
+          path: ${{ runner.temp }}/integration-receipts
+          merge-multiple: true
+
+      - name: every mandatory integration lane passed for this commit
+        run: node scripts/run_integration_lane.mjs --receipts "$RUNNER_TEMP/integration-receipts" "$GITHUB_SHA"

@@ -160,8 +160,16 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   process or a socket. Vitest refuses to start when a list names a file that
   does not exist or a file is in two tiers.
 - **Hosted CI** (`.github/workflows/node-ci.yml`) runs the unit job first,
-  then the integration and e2e jobs in parallel; the job named `node` (the
-  required check) passes only when all three passed.
+  then seven integration lanes and the e2e job in parallel. Integration uses
+  three deterministic slices of its sorted non-composed files and one lane
+  per native composed scenario. The three bounded restoration observer cases
+  and TMPDIR-driver selftests run only in `core-1`. The unit job checks the
+  routing against Vitest's full integration file and composed-case discovery;
+  each lane checks its actual selection before running it. The job named
+  `node` (the required check) requires successful tiers and the exact set of
+  seven lane success receipts for its commit. Local `test:integration` keeps
+  running the full tier. Check routing without running tests with
+  `node scripts/run_integration_lane.mjs --selftest` and `--check`.
 - **What `check:all` leaves to CI:** the node-segment-rules pin and the egress
   and Redis-observation builders, which `node-ci` runs in its unit job, and
   `governance-docs.yml`, whose battery `check:battery` reads from
@@ -214,8 +222,11 @@ The clock is the slowest job of a workflow, not the sum of its steps.
 - **Where checks run.** Both workflows run on `pull_request` and
   `merge_group` only. There is no `push` run on `main`: `main` moves only
   through the merge queue, which already tested the exact tree that lands.
-- **How each workflow stays inside it.** `node-ci.yml` runs its integration
-  and e2e tiers in parallel after the unit job. `governance-docs.yml` runs
+- **How checks are placed.** `node-ci.yml` runs three integration file slices,
+  four separate native composed scenarios and the e2e tier in parallel after
+  the unit job. Splitting preserves test coverage and existing test deadlines;
+  hosted job durations establish whether the split meets this budget.
+  `governance-docs.yml` runs
   the governance battery in one job and three slow selftests
   (`check_spec_reconciliation --selftest`,
   `prepare_three_surface_poc_governedby_reference_recording --selftest`,
