@@ -1,16 +1,16 @@
 {
   "format": "syzygy-5dhm-25-step-measures-mutation/1",
-  "commit": "d1a7cf9b4eebab25a3601765d70653fa32130af3",
+  "commit": "829a3912e839f45f954451b2f0851d14b11f23e8",
   "subjects": {
-    "packages/polaris-dossier/src/step-measures.ts": "88c0488841eedc96ac334a8160bc9a91635c884ec965eb0f0e5019dbf4b8e51f",
-    "packages/polaris-dossier/src/close.ts": "e1d8a6a024ee61f6feba4d2745a753884f066b10741f8b74ce15648513013144"
+    "packages/polaris-dossier/src/step-measures.ts": "e423fee4f022970d60c2ef9ff80993372e7514f8837930cdbc9b2969c2f5f31b",
+    "packages/polaris-dossier/src/close.ts": "5913ef4b14eb715a400dbf861ba54340a8f128271fa6737c6fb5b5d5fc5809f3"
   },
   "tests": [
     "packages/polaris-dossier/src/step-measures.test.ts",
     "packages/polaris-dossier/src/close.test.ts"
   ],
-  "mutants": 22,
-  "killed": 21,
+  "mutants": 24,
+  "killed": 24,
   "results": [
     {
       "id": "span-order",
@@ -53,9 +53,27 @@
       "file": "packages/polaris-dossier/src/step-measures.ts",
       "old": "if (later.outcome === 'validated') { end = later; break; }",
       "new": "if (later.outcome === 'validated') { end = later; }",
-      "outcome": "SURVIVED",
-      "failedTests": 0,
-      "exit": 0
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-next-prompt",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "      if (isOpener(later, kind)) break;\n",
+      "new": "",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "outcome-known",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "(KNOWN_OUTCOMES as readonly string[]).includes(row.outcome) ? row.outcome",
+      "new": "true ? row.outcome",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
     },
     {
       "id": "round-refused",
@@ -63,7 +81,7 @@
       "old": "if (later.outcome === 'refused') refused++;",
       "new": "if (later.outcome === 'refused') refused += 0;",
       "outcome": "killed",
-      "failedTests": 1,
+      "failedTests": 2,
       "exit": 1
     },
     {
@@ -90,7 +108,7 @@
       "old": "ms: completed.reduce((sum, round) => sum + round.ms!, 0)",
       "new": "ms: 0",
       "outcome": "killed",
-      "failedTests": 2,
+      "failedTests": 3,
       "exit": 1
     },
     {
@@ -189,7 +207,7 @@
       "old": "    stepMeasures: closeStepMeasures(run, isoOf(now)),\n",
       "new": "",
       "outcome": "killed",
-      "failedTests": 9,
+      "failedTests": 4,
       "exit": 1
     },
     {
@@ -198,7 +216,7 @@
       "old": "if (!read.ok) return stepMeasures({ why: read.why }, closedAt);",
       "new": "if (!read.ok) return stepMeasures([], closedAt);",
       "outcome": "killed",
-      "failedTests": 6,
+      "failedTests": 1,
       "exit": 1
     },
     {
@@ -207,7 +225,7 @@
       "old": "unreadableRows: measures.unreadableRows + over",
       "new": "unreadableRows: measures.unreadableRows",
       "outcome": "killed",
-      "failedTests": 5,
+      "failedTests": 1,
       "exit": 1
     }
   ]
