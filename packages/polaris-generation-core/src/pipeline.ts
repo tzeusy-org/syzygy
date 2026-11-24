@@ -1,10 +1,10 @@
 import { quotableGenerationSources, validateGenerationSources, validateGenerationSourceTransport, type GenerationSource } from './generation-source.js';
 import { CanonicalJsonError, digestCanonicalJson, encodeCanonicalJson, type CanonicalJsonLimits } from './canonical-json.js';
 import { parseBoundedJson } from './parse-json.js';
-import { sha256 } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 
 import { promptForStage, type GenerationStage, type PromptProfile } from './prompts.js';
-import { validateRequestedAssets, type RequestedAsset } from './provider-draft.js';
+import { validateRequestedAssets, type EditReply, type RepairFinding, type RepairReply, type RequestedAsset } from './provider-draft.js';
 import { validateReaderQuestions } from './reader-questions.js';
 import { checkDraftQuotes, quoteFindingAsReviewFinding, sourceTextById, type QuoteFinding } from './quote-fidelity.js';
 
@@ -60,7 +60,8 @@ export type AdmissionDecision =
   | { readonly kind: 'reserved'; readonly permit: DispatchPermit }
   | { readonly kind: 'completed'; readonly permit: DispatchPermit; readonly bindingDigest: string;
       readonly inputDigest: string; readonly outputDigest: string; readonly outputBytes: number;
-      readonly model: string | null; readonly usageUnits: number; readonly value: unknown }
+      readonly model: string | null; readonly usageUnits: number; readonly value: unknown;
+      readonly repairFindings?: readonly RepairFinding[] }
   | { readonly kind: 'refused'; readonly reason: 'in-flight' | 'uncertain' | 'identity-mismatch' | 'permission-withdrawn' | 'budget-exhausted' };
 
 export interface ProviderReply {
@@ -81,7 +82,10 @@ export interface ProviderReply {
 export type InvalidOutputReason = 'parse-failed' | 'schema-rejected' | 'encode-failed' | 'digest-failed';
 
 export type AttemptOutcome =
-  | { readonly kind: 'validated'; readonly outputDigest: string; readonly model: string | null; readonly usageUnits: number; readonly outputBytes: number; readonly value: unknown }
+  | { readonly kind: 'validated'; readonly outputDigest: string; readonly model: string | null; readonly usageUnits: number;
+      readonly outputBytes: number; readonly value: unknown;
+      /** Bound input findings are stored separately from the provider output digest. */
+      readonly repairFindings?: readonly RepairFinding[] }
   /** 'detail' is a diagnostic message, truncated to 200 characters, that becomes part of a
    * durable receipt (see PipelinePorts.record). Contract: it must never carry the provider's
    * raw reply body, any source/reader-question content, or a credential/secret -- only the
@@ -125,6 +129,8 @@ export interface PipelinePorts {
   }) => Promise<ProviderReply>;
   /** Closed schema, source-reference and screening validation. Throws on refusal.
    * Returns a validated data record, not an acceptance/permission assertion.
+   * For edit and repair, the reply includes both the draft and its account
+   * against context.draft. Repair also accounts for context.repairFindings.
    * Contract: a thrown message is retained (truncated to 200 chars) in the durable
    * AttemptOutcome.detail below, so it must never quote the provider's raw reply body,
    * a source's raw content, or any credential/secret -- name the failing field or rule
@@ -156,6 +162,8 @@ export interface StageReceipt {
 export interface ValidatedStageOutput {
   readonly stage: GenerationStage;
   readonly value: unknown;
+  /** The exact finding identities and bodies supplied to a recorded repair. */
+  readonly repairFindings?: readonly RepairFinding[];
 }
 
 export type PipelineResult = {
@@ -180,6 +188,12 @@ class PipelineStop extends Error {
 }
 
 const dataLimits = (bytes: number): CanonicalJsonLimits => ({ maxBytes: bytes, maxNodes: 100_000, maxDepth: 64 });
+
+function requireEditorialReply(stage: GenerationStage, value: unknown): void {
+  if (stage !== 'edit' && stage !== 'repair') return;
+  if (!isRecord(value) || !Object.hasOwn(value, 'draft') || !Array.isArray(value.changes)
+    || (stage === 'repair' && !Array.isArray(value.findingDispositions))) throw new Error('missing-editorial-account');
+}
 
 function compactSource(source: GenerationSource): GenerationSource {
   if (source.redaction !== undefined || source.body === undefined || source.spans.length !== 1 || source.spans[0]?.start !== 0
@@ -299,18 +313,27 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       return frozen.sources.filter(source => referenced.has(source.sourceId)).flatMap(source => source.spans.map(span => ({ sourceId: source.sourceId, anchorId: span.anchorId, text: span.text,
         ...(source.redaction === undefined ? {} : { redaction: { redactionClass: source.redaction.redactionClass, withheldLines: source.redaction.withheldLines } }) })));
     };
-    const stage = async (name: GenerationStage, inputs: Readonly<Record<string, unknown>>): Promise<unknown> => {
+    const stage = async (name: GenerationStage, inputs: Readonly<Record<string, unknown>>, repairFindings?: readonly RepairFinding[]): Promise<unknown> => {
       check();
       if (calls >= budget.maxCalls) stop('budget-exhausted');
       const prompt = promptForStage(name, promptProfile);
       const promptDigest = sha256(prompt.system);
       const schema = ports.responseSchema(name);
-      const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema, inputs };
+      const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema,
+        inputs: repairFindings === undefined ? inputs : { ...inputs, findings: repairFindings } };
       let encoded: string;
       try { encoded = encodeCanonicalJson(envelope, dataLimits(budget.maxInputBytes)); }
       catch (error) { stop(error instanceof CanonicalJsonError && error.code === 'byte-limit' ? 'budget-exhausted' : 'invalid-request'); }
       const size = Buffer.byteLength(encoded, 'utf8');
       if (inputBytes + size > budget.maxInputBytes || outputBytes >= budget.maxOutputBytes || usage >= budget.maxUsageUnits) stop('budget-exhausted');
+      const boundEnvelope = JSON.parse(encoded) as typeof envelope;
+      const boundFindings = repairFindings === undefined ? undefined : boundEnvelope.inputs.findings as readonly RepairFinding[];
+      const validationContext = name === 'edit' || name === 'repair'
+        ? { ...context, draft: boundEnvelope.inputs.draft, ...(boundFindings === undefined ? {} : { repairFindings: boundFindings }) }
+        : context;
+      const retainArtifact = (value: unknown): void => {
+        artifacts.push({ stage: name, value, ...(boundFindings === undefined ? {} : { repairFindings: boundFindings }) });
+      };
       const baseInput: Omit<AttemptInput, 'permissionDigest' | 'bindingDigest'> = {
         requestId: frozen.requestId, projectId: frozen.projectId, snapshotId: frozen.snapshotId,
         providerRoute: frozen.routes[name], stage: name, ordinal: calls,
@@ -333,7 +356,12 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
         if (!await bounded(() => ports.permitted(input, permit))) stop('admission-refused');
         let restored: unknown;
         try {
-          restored = ports.validate(name, admission.value, context);
+          if (boundFindings !== undefined) {
+            const limits = dataLimits(budget.maxInputBytes);
+            if (encodeCanonicalJson(admission.repairFindings, limits) !== encodeCanonicalJson(boundFindings, limits)) stop('admission-refused');
+          }
+          restored = ports.validate(name, admission.value, validationContext);
+          requireEditorialReply(name, restored);
           if (digestCanonicalJson(restored, dataLimits(permit.maxOutputBytes)).digest !== admission.outputDigest) stop('admission-refused');
         } catch { stop('admission-refused'); }
         calls++;
@@ -342,7 +370,7 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
         outputBytes += admission.outputBytes;
         receipts.push({ stage: name, attemptId: permit.attemptId, reused: true, providerRoute: input.providerRoute, model: admission.model,
           inputDigest: input.inputDigest, outputDigest: admission.outputDigest, promptVersion: prompt.version, promptProfile, promptDigest });
-        artifacts.push({ stage: name, value: restored });
+        retainArtifact(restored);
         check();
         return restored;
       }
@@ -377,7 +405,7 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       armDeadline();
       const pending = Promise.resolve().then(() => {
         if (controller.signal.aborted) throw new PipelineStop(signal.aborted ? 'cancelled' : 'deadline');
-        return ports.generate({ permit: permit, stage: name, system: prompt.system, input: encoded, responseSchema: JSON.parse(encoded).responseSchema, signal: controller.signal });
+        return ports.generate({ permit: permit, stage: name, system: prompt.system, input: encoded, responseSchema: boundEnvelope.responseSchema, signal: controller.signal });
       });
       let reply: ProviderReply;
       try {
@@ -404,7 +432,8 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       try {
         const parsed = parseBoundedJson(reply.body, dataLimits(permit.maxOutputBytes));
         invalidOutputReason = 'schema-rejected';
-        validated = ports.validate(name, parsed, context);
+        validated = ports.validate(name, parsed, validationContext);
+        requireEditorialReply(name, validated);
         invalidOutputReason = 'encode-failed';
         const bytes = encodeCanonicalJson(validated, dataLimits(permit.maxOutputBytes));
         validated = JSON.parse(bytes);
@@ -434,25 +463,26 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
         stop('invalid-output');
       }
       await bounded(() => ports.record(permit, { kind: 'validated', outputDigest: digest, model: reply.model,
-        usageUnits: actualUsage, outputBytes: Buffer.byteLength(reply.body, 'utf8'), value: validated }), true);
+        usageUnits: actualUsage, outputBytes: Buffer.byteLength(reply.body, 'utf8'), value: validated,
+        ...(boundFindings === undefined ? {} : { repairFindings: boundFindings }) }), true);
       receipts.push({ stage: name, attemptId: permit.attemptId, reused: false, providerRoute: input.providerRoute, model: reply.model, inputDigest: input.inputDigest, outputDigest: digest, promptVersion: prompt.version, promptProfile, promptDigest });
-      artifacts.push({ stage: name, value: validated });
+      retainArtifact(validated);
       check();
       return validated;
     };
     context.inventory = await stage('inventory', { sources: context.sources, sourcePopulation, readerQuestions: context.readerQuestions, requestedAssets: context.requestedAssets });
     context.plan = await stage('plan', { sources: sourcePopulation, readerQuestions: context.readerQuestions, inventory: context.inventory, requestedAssets: context.requestedAssets });
     context.draft = await stage('author', { sources: citedSpans(context.plan), readerQuestions: context.readerQuestions, inventory: context.inventory, plan: context.plan, requestedAssets: context.requestedAssets });
-    context.draft = await stage('edit', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory, plan: context.plan, draft: context.draft, requestedAssets: context.requestedAssets });
+    const edited = await stage('edit', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory, plan: context.plan, draft: context.draft, requestedAssets: context.requestedAssets }) as EditReply;
+    context.draft = edited.draft;
     let review = await stage('fidelity', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory, draft: context.draft, requestedAssets: context.requestedAssets });
     // A deterministic quote check the model cannot waive runs beside the reviewer. It earns the draft a repair, but only the reviewer's own blocking verdict ends the run: quote findings that survive the last repair are returned per block, and the renderer shows those blocks as Unknown.
     const quoteTexts = sourceTextById(frozen.sources);
-    const judge = (reviewed: unknown): { readonly blocking: boolean; readonly findings: unknown; readonly reviewerBlocking: boolean; readonly quoteFindings: readonly QuoteFinding[] } => {
+    const judge = (reviewed: unknown) => {
       const verdict = ports.fidelity(reviewed);
       const quoteFindings = checkDraftQuotes(context.draft, quoteTexts);
-      if (quoteFindings.length === 0) return { ...verdict, reviewerBlocking: verdict.blocking, quoteFindings };
-      const prior = verdict.findings === undefined ? [] : Array.isArray(verdict.findings) ? verdict.findings : [verdict.findings];
-      return { blocking: true, findings: [...prior, ...quoteFindings.map(quoteFindingAsReviewFinding)], reviewerBlocking: verdict.blocking, quoteFindings };
+      const findings: readonly unknown[] = verdict.findings === undefined ? [] : Array.isArray(verdict.findings) ? verdict.findings : [verdict.findings];
+      return { blocking: verdict.blocking || quoteFindings.length > 0, findings, reviewerBlocking: verdict.blocking, quoteFindings };
     };
     let verdict = judge(review);
     for (let repairs = 0; verdict.blocking; repairs++) {
@@ -460,12 +490,22 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
         if (verdict.reviewerBlocking) stop('repair-exhausted');
         break;
       }
-      context.draft = await stage('repair', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory, draft: context.draft, findings: verdict.findings, requestedAssets: context.requestedAssets });
+      const issues = verdict.findings.map(finding =>
+        ({ finding, blocking: verdict.reviewerBlocking && (!isRecord(finding) || finding.severity !== 'advisory') }));
+      for (const quote of verdict.quoteFindings) issues.push({ finding: quoteFindingAsReviewFinding(quote), blocking: false });
+      const repairFindings = issues.map(({ finding }, index): RepairFinding => ({ id: `finding-${repairs + 1}-${index + 1}`, finding }));
+      const repaired = await stage('repair', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory,
+        draft: context.draft, requestedAssets: context.requestedAssets }, repairFindings) as RepairReply;
+      const unrepairable = new Set(repaired.findingDispositions.filter(row => row.action === 'unrepairable').map(row => row.findingId));
+      const unrepairableBlock = repairFindings.some(({ id }, index) => issues[index]!.blocking && unrepairable.has(id));
+      context.draft = repaired.draft;
       review = await stage('fidelity', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory, draft: context.draft, requestedAssets: context.requestedAssets });
       verdict = judge(review);
+      if (unrepairableBlock) stop('repair-exhausted');
     }
     check();
-    return { status: 'awaiting-rendered-review', draft: context.draft, inventory: context.inventory, review, quoteFindings: verdict.quoteFindings, receipts, artifacts };
+    return { status: 'awaiting-rendered-review', draft: context.draft, inventory: context.inventory, review,
+      quoteFindings: verdict.quoteFindings, receipts, artifacts };
   } catch (error) {
     return { status: 'stopped', reason: error instanceof PipelineStop ? error.reason : 'adapter-failure', receipts, artifacts };
   }
