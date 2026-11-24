@@ -1,0 +1,9 @@
+# P-73 Q6 candidate delivery integration review R2
+
+Verdict: REVISE
+
+[Observed] Reviewed project integration `81ce0928bf18b88bf0145826c4809d2e1ad45b02` over `79a47a153ceda5f130440e3698e66b4f5646d26e` in a clean detached independent checkout. The nine-path delta contains the six frozen candidate files, one OpenSpec index row, one verbatim archive of R1 and one campaign fragment. The six candidate path digests all match the frozen R1 manifest `41aba0f369c70c05cfbeddb619e4d9dd5597a1d54ddca440dd56a3a91cfdba1b`. The index row resolves to the candidate and leaves adoption and implementation pending. The retained R1 file compares byte-for-byte to the emitted independent review, SHA-256 `794968b36bfa5bd2098b0e956c5ee6bfd4be3053348b636b897d58790c483774`. The canonical effective composition still reports 39 requirements and 524 scenarios. Diff hygiene passes.
+
+F1 [Observed] The campaign's current last-verdict citation points only to R1 line 3, whose genuine verdict is ACCEPT. `check_docs_review_campaign_partition.py` requires a cited raw verdict line containing CONFIRM, PASS, READY, REVISE, CHANGES REQUESTED or FAIL. I independently ran `--check --second-method` on this exact commit and reproduced `campaign citation does not resolve to a verdict line: Polaris edit and repair accounting review`. This blocks the campaign's complete and independently checked archival record.
+
+[Inferred] Preserve the genuine R1 verbatim. Include this independently issued integration verdict in the same campaign, cite its exact verdict line and record the archive disposition. Before publishing the corrected integration, verify the complete two-method partition and both raw byte identities. The six-file candidate and its original R1 content acceptance stand. The correction concerns archival integration alone.
