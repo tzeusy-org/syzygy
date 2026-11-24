@@ -151,9 +151,9 @@ stays inside the ceilings.
 
 **Six moves were added** (R23 to R28, described under "Ranked moves"), and both reviewers'
 faults were applied. The most serious: the dossier's author would have read the same question
-file the benchmark grades on, while the plain session met those questions cold. The graded
-questions, depth list and reader tasks are now held out of every authoring session, and check
-asserts their absence.
+file the benchmark grades on, while the plain session met those questions cold. R1 therefore requires separately frozen graded questions, depth facts and reader tasks
+outside the authoring views. The question-file slice checks synthetic role texts and mount
+boundaries. The published Redis pilot remains available as historical regression evidence.
 
 **The first measurements were taken**, over the six stored Redis runs, with no new run and
 nothing sent anywhere. The record with predicates, denominators and the digest of every file
@@ -784,25 +784,23 @@ REQ-polaris-generation-033) makes the run record name its digest.
   brief and the profile read them from it; the brief's bytes and the provider golden are
   unchanged. `TARGETS.md` and the kit `README.md` point at the file instead of listing the
   seven.
-- [Observed] Its held-out part names key files by path, SHA-256 and count and holds none of
-  their text, so the file itself may sit in the binary and the authoring kit. Its one entry is
-  the Redis pilot: the graded list is the pilot's `key.json` (24 questions, 81 required facts,
-  digest `0dd37666…`), and the depth list and the five reader tasks are `not-written`. So the
-  pilot binds no comparison yet (`bindComparison` refuses with `held-out-part-incomplete`); a
-  session that has seen neither arm writes them before the calibration pass (syzygy-5dhm.83).
-  The pilot's files and `scripts/dossier_pilot_grading_input.py` are unchanged.
+- [Observed] Its held-out part carries evaluator key identifiers, SHA-256 digests and
+  counts. The published Redis pilot travels with the checkout and remains the historical
+  regression. All three Redis comparison lists are `not-written`. The independent evaluator
+  must supply new blind graded questions, depth facts and tasks before `bindComparison`
+  can succeed.
 - [Observed] `init` writes `questionFile` (`polaris-question-file/1`, version 1, digest
-  `b2d08554…`) into `run.json`; a record written before is read with its question file
+  `b3898375…`) into `run.json`; a record written before is read with its question file
   Unknown. Results compare only at equal digest, as the corpus pass rule already says of keys.
 - [Observed] `packages/polaris-dossier/src/question-file-hold-out.test.ts` builds seven packets
   over five roles from fixtures (the brief for author and editor, the inventory brief, the
   fidelity criteria, the provider reader-questions file, the discovery questions and the file
-  itself) and finds none of the 105 held-out needles in any; a planted question or fact, plain
-  or JSON-escaped, is reported by role, packet and needle id, never by its text. Fourteen
-  rule-6 mutants were all killed
-  (`docs/evidence/syzygy-5dhm-21/question-file-mutation-2026-11-25.json`).
-- [Unknown] Live packets and lists not yet written are not checked mechanically; a paraphrase
-  passes the eight-word predicate, as for the regression key.
+  itself) against 19 needles from three artificial keys. The synthetic mount control uses
+  the four supervised roles and a key placed first outside, then inside the checkout. A
+  planted question or fact is reported by role, packet and needle identifier.
+- [Unknown] Actual blind keys, live packet coverage and session reads need separate evidence.
+  The lexical predicate detects matching word sequences and leaves paraphrases outside its
+  scope.
 
 ## Known ledger and deviations
 

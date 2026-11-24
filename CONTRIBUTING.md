@@ -270,8 +270,8 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    runs or under a second key. The pilot is uncalibrated (one repository,
    model readers, a model grader), so a rise is reported as a number and
    never as evidence that a change is better.
-4. **The key stays held out.** The regression's questions and key are never
-   put in a brief, a packet or any other text an authoring session is given.
+4. **Regression checks and blind comparison custody.** Keep the regression
+   questions and key out of authoring briefs and packets.
    `packages/polaris-dossier/src/regression-hold-out.test.ts` fails if any
    eight consecutive words of one of the key's 24 question texts or 81
    required facts appear in the brief's sources, the installed agent texts or
@@ -279,16 +279,15 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    question texts only. [Observed] The required facts were added to the
    search on 2026-11-22 because they gave no hit in those files that day;
    none is shorter than eight words. The test does not search for the model
-   answers, and a paraphrase passes it. It also cannot keep the key from a
-   session: `docs/evidence/pursuit-2026-11-21b/pilot/key.json` is a tracked
-   file, so it sits in the checkout an operator session starts from. An
-   authoring session works in the observed repository's clone or copy; an
-   operator does not hand it this checkout. Every held-out list the question
-   file (`docs/polaris-generation/question-file-v1.json`, its held-out part)
-   marks frozen is checked the same way by
-   `packages/polaris-dossier/src/question-file-hold-out.test.ts`, over each
-   authoring, inventory, reviewer and scout packet this tree builds from
-   fixtures; a new held-out key is added there by reference, never by text.
+   answers, and a paraphrase passes it. The published Redis regression key
+   is tracked in the Syzygy checkout, which the supervised role views mount
+   read-only. Use separately frozen evaluator keys for blind comparisons.
+   Keep those keys outside every checkout, mount and packet the authoring
+   roles can read. The public question file carries opaque key identifiers,
+   digests and counts. `packages/polaris-dossier/src/question-file-hold-out.test.ts`
+   checks selected fixture role texts against synthetic keys and checks the
+   supervised view using a synthetic evaluator location. The shipped Redis
+   comparison lists are unwritten.
 
 ## Public-clone validation is part of done
 

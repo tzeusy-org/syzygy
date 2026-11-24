@@ -1,15 +1,14 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { QUESTION_FILE, type QuestionFile } from '@syzygy/polaris-generation-core/live';
+import { type QuestionFile } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 
 /** The hold-out check of the comprehension regression (syzygy-5dhm.134, R29 slice 2): the regression key's questions are never shown to
  * an authoring session, so no text an authoring session is given may carry one. Test support only: nothing in the product imports it.
  *
  * What it checks and what it does not: the 24 question texts and the 81 required facts of the key, by the word window below, in the
- * files the test lists. It does not check the model answers, and it cannot keep the key from a session: `key.json` is a tracked file
- * of this repository, so it sits in any checkout of it. An authoring session works in the observed repository's clone or copy, never
- * in this checkout, and the check holds only what Syzygy itself hands that session.
+ * files the test lists. The historical key is tracked by Syzygy and readable from its checkout mount. This regression checks
+ * selected content for accidental reuse. It establishes no blind key custody.
  *
  * The predicate, stated so it can be re-run: both texts are lower-cased and every run of characters outside `a-z0-9` becomes one
  * space; a question is found in a text when any `HOLD_OUT_WINDOW` consecutive words of the question (the whole question when it has
@@ -59,19 +58,22 @@ export function readKeyFacts(root: string): KeyQuestion[] {
   });
 }
 
-/** Every held-out text the question file binds (syzygy-5dhm.21): for each subject, each frozen list's key file, read from this
- * checkout and refused unless its bytes hash to the reference's digest and hold the reference's count. A graded key holds the pilot
- * key's `questions` (each question text and its required facts, as above); a depth key holds `depth` (`{ id, fact }` rows) and a task key
- * holds `tasks` (`{ id, task }` rows). Each text is returned as a needle `<subject>/<list>/<id>`, searched for by the same predicate. A
- * list not yet written adds no needle, and the result says how many lists were read, so a test can state its denominator. */
-export function readHeldOutNeedles(root: string, file: QuestionFile = QUESTION_FILE): { readonly needles: KeyQuestion[]; readonly listsRead: number } {
+/**
+ * Read artificial keys from the verifier's explicit lookup and check their digests and counts.
+ * Each needle names its subject, list and row. Unwritten references contribute no needles.
+ */
+export function readHeldOutNeedles(
+  lookup: (key: string) => Buffer | undefined,
+  file: QuestionFile,
+): { readonly needles: KeyQuestion[]; readonly listsRead: number } {
   const needles: KeyQuestion[] = [];
   let listsRead = 0;
   for (const entry of file.heldOut.entries) {
     for (const list of ['graded', 'depth', 'tasks'] as const) {
       const reference = entry[list];
       if (reference.state !== 'frozen') continue;
-      const bytes = fs.readFileSync(path.join(root, reference.key));
+      const bytes = lookup(reference.key);
+      if (bytes === undefined) throw new Error(`held-out ${entry.id}/${list}: the evaluator key is unavailable`);
       if (sha256(bytes) !== reference.sha256) throw new Error(`held-out ${entry.id}/${list}: the key's bytes do not hash to the question file's digest`);
       const key = JSON.parse(bytes.toString('utf8')) as Record<string, unknown>;
       const rows = (name: string, text: string): { id: string; text: string }[] => {

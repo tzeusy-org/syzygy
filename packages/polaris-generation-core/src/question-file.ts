@@ -6,11 +6,10 @@ import { OWNER_TOPICS, type OwnerTopic, type ReaderQuestion } from './topics.js'
  *
  * The public part holds every question an author may be told: the operator brief's four topics, the provider profile's five reader
  * questions (which the reader test and the scorecard also read) and the kit's seven evaluation questions. The held-out part holds, per
- * comparison subject, the graded questions, the depth list and the reader tasks, by reference only: a key file's path, its SHA-256 and
+ * comparison subject, the graded questions, the depth list and the reader tasks, by reference only: an evaluator-owned key identifier, its SHA-256 and
  * its counts. Their text is written in that key file and never here, so this file, its JSON copy and the `syzygy` binary that carries
- * it hold no held-out text and may be read by anyone, an authoring session included. The key files stay out of every authoring packet
- * (CONTRIBUTING.md, "Changing the dossier brief, draft schema or renderer", rule 4); `packages/polaris-dossier/src/question-file-hold-out.test.ts`
- * checks the packets.
+ * it hold no held-out text. Keep the key bytes in the evaluator's custody outside the checkouts and mounts authoring sessions can
+ * read. The key identifier is opaque to the runtime. The role-packet test checks selected fixture texts with artificial keys.
  *
  * The file's digest is SHA-256 over its encoding (two-space JSON, one trailing newline), which is also the byte content of its JSON
  * copy `docs/polaris-generation/question-file-v1.json` (a test holds the two identical). Because each held-out reference carries its
@@ -26,8 +25,7 @@ export const READER_TASKS = 5;
 export const QUESTION_FILE_MAX_BYTES = 65_536;
 
 export interface PublicQuestion { readonly id: string; readonly text: string }
-/** A held-out list frozen in a key file, by reference: the key's repository-relative path, the SHA-256 of its bytes and the count of
- * items it holds for this list. */
+/** A frozen evaluator-owned key, identified without a path, with a SHA-256 and item count. */
 export interface FrozenReference { readonly state: 'frozen'; readonly key: string; readonly sha256: string; readonly count: number }
 /** A held-out list not yet written: the subject cannot bind a comparison until it is. */
 export interface UnwrittenReference { readonly state: 'not-written'; readonly reason: string }
@@ -51,8 +49,6 @@ export interface QuestionFile {
   };
   readonly heldOut: { readonly rule: string; readonly entries: readonly HeldOutEntry[] };
 }
-
-const PILOT_KEY = 'docs/evidence/pursuit-2026-11-21b/pilot/key.json';
 
 /** Version 1. The public texts are, byte for byte, the lists the brief (brief v19), the provider profile (`dossier-v1`) and
  * docs/polaris-generation/TARGETS.md held before they moved here. */
@@ -84,15 +80,15 @@ export const QUESTION_FILE: QuestionFile = deepFreeze({
     ],
   },
   heldOut: {
-    rule: 'Every held-out text lives in the key file its reference names, never in this file. No graded question, required fact, depth fact or reader task enters a brief, packet, skill text or any other text an authoring, inventory, editor or scout session is given, and each key is stored outside every clone a session works in (CONTRIBUTING.md rule 4).',
+    rule: 'An evaluator-owned key identifier names a digest-bound list outside authoring packets and readable mounts. This file carries reference metadata only. A public regression key cannot bind a blind comparison.',
     entries: [
       {
-        id: 'redis-pilot-2026-11-21',
+        id: 'redis-comparison',
         repository: 'github.com/redis/redis',
         commit: '498ecd0d6d007db11ddb3aea9428552598a78622',
-        graded: { state: 'frozen', key: PILOT_KEY, sha256: '0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690', count: 24, requiredFacts: 81 },
-        depth: { state: 'not-written', reason: 'the pilot froze graded questions only; a depth list is written by a session that has seen neither arm, before the calibration pass (syzygy-5dhm.83)' },
-        tasks: { state: 'not-written', reason: 'the pilot froze graded questions only; five reader tasks are written with the depth list, before the calibration pass (syzygy-5dhm.83)' },
+        graded: { state: 'not-written', reason: 'A new blind graded list is required. The published Redis pilot is a historical regression.' },
+        depth: { state: 'not-written', reason: 'An independent evaluator freezes ten to twenty depth facts before the comparison.' },
+        tasks: { state: 'not-written', reason: 'An independent evaluator freezes five reader tasks before the comparison.' },
       },
     ],
   },
@@ -117,7 +113,6 @@ export class QuestionFileError extends Error {
 const HANDLE = /^[a-z0-9][a-z0-9.-]{0,79}$/u;
 const HEX64 = /^[0-9a-f]{64}$/u;
 const COMMIT = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
-const KEY_PATH = /^docs\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.json$/u;
 const TEXT_MAX = 1_000;
 const keysAre = (value: Readonly<Record<string, unknown>>, keys: readonly string[]): boolean =>
   Object.keys(value).sort().join(',') === [...keys].sort().join(',');
@@ -151,7 +146,7 @@ function reference(value: unknown, bounds: readonly [number, number], fault: Que
     return { state: 'not-written', reason: value.reason };
   }
   if (value.state !== 'frozen' || !keysAre(value, ['state', 'key', 'sha256', 'count', ...(extra === undefined ? [] : [extra])])) throw new QuestionFileError('shape');
-  if (typeof value.key !== 'string' || !KEY_PATH.test(value.key) || value.key.split('/').some((part) => part === '.' || part === '..')
+  if (typeof value.key !== 'string' || !HANDLE.test(value.key)
     || typeof value.sha256 !== 'string' || !HEX64.test(value.sha256)) throw new QuestionFileError('reference');
   if (!Number.isSafeInteger(value.count) || (value.count as number) < bounds[0] || (value.count as number) > bounds[1]) throw new QuestionFileError(fault);
   const frozen = { state: 'frozen' as const, key: value.key, sha256: value.sha256, count: value.count as number };

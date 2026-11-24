@@ -33,7 +33,7 @@ const text = (record: Record<string, unknown>): string => `${JSON.stringify(reco
 
 describe('the run record names the question file', () => {
   it('writes the question file\'s format, version and digest at init, and reads them back', () => {
-    expect(FILE_SHA).toBe('b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729');
+    expect(FILE_SHA).toBe('b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f');
     const record = stored();
     expect(record['questionFile']).toEqual({ format: 'polaris-question-file/1', version: 1, sha256: FILE_SHA });
     expect(Object.keys(record)).toEqual(['format', 'mode', 'declared', 'declaredBy', 'label', 'modelVersionProvider', 'principal', 'subject', 'questionFile']);

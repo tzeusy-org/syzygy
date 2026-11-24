@@ -21,15 +21,16 @@ const encode = (value: unknown): string => `${JSON.stringify(value, null, 2)}\n`
 const fault = (text: string): string => {
   try { readQuestionFile(text); return 'read'; } catch (cause) { return cause instanceof QuestionFileError ? cause.fault : 'other'; }
 };
-const FROZEN_DEPTH = { state: 'frozen', key: 'docs/evidence/example/key.json', sha256: 'a'.repeat(64), count: 12 };
-const FROZEN_TASKS = { state: 'frozen', key: 'docs/evidence/example/key.json', sha256: 'a'.repeat(64), count: 5 };
+const FROZEN_GRADED = { state: 'frozen', key: 'synthetic-graded-v1', sha256: 'a'.repeat(64), count: 2, requiredFacts: 3 };
+const FROZEN_DEPTH = { state: 'frozen', key: 'synthetic-depth-v1', sha256: 'b'.repeat(64), count: 12 };
+const FROZEN_TASKS = { state: 'frozen', key: 'synthetic-tasks-v1', sha256: 'c'.repeat(64), count: 5 };
 
 describe('the question file', () => {
   it('is held byte for byte by its JSON copy, whose SHA-256 is the recorded digest', () => {
     expect(encodeQuestionFile(QUESTION_FILE)).toBe(JSON_COPY);
-    expect(sha(JSON_COPY)).toBe('b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729');
-    expect(QUESTION_FILE_SHA256).toBe('b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729');
-    expect(questionFileBinding()).toEqual({ format: 'polaris-question-file/1', version: 1, sha256: 'b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729' });
+    expect(sha(JSON_COPY)).toBe('b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f');
+    expect(QUESTION_FILE_SHA256).toBe('b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f');
+    expect(questionFileBinding()).toEqual({ format: 'polaris-question-file/1', version: 1, sha256: 'b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f' });
     expect(readQuestionFile(JSON_COPY)).toEqual(QUESTION_FILE);
   });
 
@@ -41,24 +42,22 @@ describe('the question file', () => {
     expect(QUESTION_FILE.public.evaluationQuestions.map((question) => question.text)).toEqual(['purpose', 'beneficiary', 'central thesis', 'important capabilities', 'one architectural choice', 'a limit', 'an uncertainty']);
   });
 
-  it('is the list the provider profile, its frozen questions file and the scorecard\'s reader all read', () => {
+  it('is the list used by the provider profile and its frozen questions projection', () => {
     expect(DOSSIER_READER_QUESTIONS).toBe(QUESTION_FILE.public.readerQuestions);
     expect(parseReaderQuestions(dossierQuestionsFile())).toEqual(QUESTION_FILE.public.readerQuestions);
   });
 
-  it('pins each frozen held-out key by digest and count, and carries no held-out text itself', () => {
-    const [redis] = QUESTION_FILE.heldOut.entries;
+  it('records each Redis comparison key as unwritten and omits the public regression key', () => {
     expect(QUESTION_FILE.heldOut.entries).toHaveLength(1);
-    expect(redis?.graded).toEqual({ state: 'frozen', key: 'docs/evidence/pursuit-2026-11-21b/pilot/key.json', sha256: '0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690', count: 24, requiredFacts: 81 });
-    const bytes = fs.readFileSync(path.join(ROOT, 'docs/evidence/pursuit-2026-11-21b/pilot/key.json'));
-    expect(sha(bytes)).toBe('0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690');
-    const key = JSON.parse(bytes.toString('utf8')) as { questions: { question: string; required_facts: string[] }[] };
-    expect(key.questions).toHaveLength(24);
-    expect(key.questions.flatMap((question) => question.required_facts)).toHaveLength(81);
+    const [redis] = QUESTION_FILE.heldOut.entries;
+    expect(redis?.id).toBe('redis-comparison');
+    expect(redis?.graded).toEqual({
+      state: 'not-written',
+      reason: 'A new blind graded list is required. The published Redis pilot is a historical regression.',
+    });
     expect(redis?.depth.state).toBe('not-written');
     expect(redis?.tasks.state).toBe('not-written');
-    // The pilot's first question is in its key, never in the file.
-    expect(JSON_COPY).not.toContain('where does it keep its data');
+    expect(JSON_COPY).not.toContain('pilot/key.json');
   });
 
   it('moves its digest with any change to a text, an order or a referenced key', () => {
@@ -66,11 +65,14 @@ describe('the question file', () => {
     changedText.public.briefTopics[1].text += ' ';
     const reordered = mutable();
     reordered.public.readerQuestions.reverse();
+    const frozen = mutable();
+    frozen.heldOut.entries[0].graded = FROZEN_GRADED;
     const rekeyed = mutable();
-    rekeyed.heldOut.entries[0].graded.sha256 = 'b'.repeat(64);
-    const digests = [JSON_COPY, encode(changedText), encode(reordered), encode(rekeyed)].map((text) => questionFileSha256(readQuestionFile(text)));
-    expect(new Set(digests).size).toBe(4);
-    expect(digests[0]).toBe('b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729');
+    rekeyed.heldOut.entries[0].graded = { ...FROZEN_GRADED, sha256: 'b'.repeat(64) };
+    const digests = [JSON_COPY, encode(changedText), encode(reordered), encode(frozen), encode(rekeyed)]
+      .map((text) => questionFileSha256(readQuestionFile(text)));
+    expect(new Set(digests).size).toBe(5);
+    expect(digests[0]).toBe('b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f');
   });
 
   it('refuses a malformed file by its first fault', () => {
@@ -81,14 +83,16 @@ describe('the question file', () => {
       ['unknown topic', (file) => { file.public.readerQuestions[0].topics = ['marketing']; }, 'unknown-topic'],
       ['empty list', (file) => { file.public.evaluationQuestions = []; }, 'empty-list'],
       ['duplicate entry', (file) => { file.heldOut.entries.push(file.heldOut.entries[0]); }, 'duplicate-id'],
-      ['key outside docs', (file) => { file.heldOut.entries[0].graded.key = 'packages/x/key.json'; }, 'reference'],
-      ['key climbing out', (file) => { file.heldOut.entries[0].graded.key = 'docs/../key.json'; }, 'reference'],
+      ['tracked pilot path', (file) => { file.heldOut.entries[0].graded.key = 'docs/evidence/pursuit-2026-11-21b/pilot/key.json'; }, 'reference'],
+      ['relative path', (file) => { file.heldOut.entries[0].graded.key = '../key.json'; }, 'reference'],
+      ['absolute path', (file) => { file.heldOut.entries[0].graded.key = '/evaluation/key.json'; }, 'reference'],
       ['short digest', (file) => { file.heldOut.entries[0].graded.sha256 = 'a'.repeat(63); }, 'reference'],
       ['graded without its fact count', (file) => { delete file.heldOut.entries[0].graded.requiredFacts; }, 'shape'],
       ['short commit', (file) => { file.heldOut.entries[0].commit = '498ecd0'; }, 'shape'],
     ];
     for (const [name, mutate, expected] of cases) {
       const file = mutable();
+      file.heldOut.entries[0].graded = { ...FROZEN_GRADED };
       mutate(file);
       expect([name, fault(encode(file))]).toEqual([name, expected]);
     }
@@ -109,17 +113,26 @@ describe('the question file', () => {
   });
 
   it('binds a comparison only to a known subject at its own commit with every held-out list frozen', () => {
-    const subject = { entry: 'redis-pilot-2026-11-21', repository: 'github.com/redis/redis', commit: '498ecd0d6d007db11ddb3aea9428552598a78622' };
+    const subject = { entry: 'redis-comparison', repository: 'github.com/redis/redis', commit: '498ecd0d6d007db11ddb3aea9428552598a78622' };
     expect(bindComparison(QUESTION_FILE, subject)).toEqual({ ok: false, reason: 'held-out-part-incomplete' });
     expect(bindComparison(QUESTION_FILE, { ...subject, entry: 'valkey' })).toEqual({ ok: false, reason: 'unknown-subject' });
     expect(bindComparison(QUESTION_FILE, { ...subject, commit: 'f'.repeat(40) })).toEqual({ ok: false, reason: 'subject-mismatch' });
     const file = mutable();
+    file.heldOut.entries[0].graded = FROZEN_GRADED;
     file.heldOut.entries[0].depth = FROZEN_DEPTH;
     file.heldOut.entries[0].tasks = FROZEN_TASKS;
     const complete: QuestionFile = readQuestionFile(encode(file));
+    for (const list of ['graded', 'depth', 'tasks'] as const) {
+      const incomplete = mutable();
+      for (const other of ['graded', 'depth', 'tasks'] as const) {
+        if (other !== list) incomplete.heldOut.entries[0][other] = file.heldOut.entries[0][other];
+      }
+      expect(bindComparison(readQuestionFile(encode(incomplete)), subject))
+        .toEqual({ ok: false, reason: 'held-out-part-incomplete' });
+    }
     const bound = bindComparison(complete, subject);
     expect(bound.ok).toBe(true);
     expect(bound.ok && bound.questionFile.sha256).toBe(sha(encode(file)));
-    expect(bound.ok && bound.questionFile.sha256).not.toBe('b2d08554c96197afa8466cf004d7cfb61d3af0fbf952a2500d28d9aa225e6729');
+    expect(bound.ok && bound.questionFile.sha256).not.toBe('b389837535a755d3886b223ce776bbb99bb87a0fac121294613b6bfa3dc1db0f');
   });
 });

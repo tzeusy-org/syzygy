@@ -794,7 +794,7 @@ QFILE_TAG = "polaris-dossier-question-file-v2.27"
 QFILE_STATUS_PREFIX = f"[Question-file amendment 2.27]({QFILE_HOME})"
 QFILE_REPLACES = (POLARIS_ID + "033",)
 QFILE_SUBJECTS = {
-    QFILE_SPEC: "ec39365ec91faabb26ee8d1799f319d87ae1e840dcf0ef82c41fbe0525e05984",
+    QFILE_SPEC: "147954d8089b52e98deadf9710c061324c670f8ddfc4b7406fedbb9ab8c18b18",
 }
 QFILE_BOUND_PARTS = len(QFILE_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"

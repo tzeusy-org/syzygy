@@ -4,15 +4,15 @@
 
 ## Why
 
-- [Observed] Before this change three question sets disagreed and lived in three places: the brief's four topics (`packages/polaris-dossier/src/brief.ts`), the provider profile's five reader questions (`packages/polaris-generation-core/src/dossier-profile.ts`) and the kit's seven evaluation questions (`docs/polaris-generation/TARGETS.md`). The pilot's 24 graded questions sit in a fourth file, `docs/evidence/pursuit-2026-11-21b/pilot/key.json` (move R1's basis, `syzygy-5dhm.1`).
+- [Observed] Before this change three question sets disagreed and lived in three places: the brief's four topics (`packages/polaris-dossier/src/brief.ts`), the provider profile's five reader questions (`packages/polaris-generation-core/src/dossier-profile.ts`) and the kit's seven evaluation questions (`docs/polaris-generation/TARGETS.md`). The published Redis pilot is historical regression evidence for R29. R1 requires separately frozen blind questions.
 - [Inferred] A comparison of a dossier against a plain session is only repeatable if both are graded by one frozen instrument and every result names it. The corpus's pass rule already compares an entry's results only at equal key digest (`docs/polaris-generation/dossier-corpus-v1.json`, `passRule.key.comparison`); nothing in a run said which questions it was built and graded under.
 
 ## What changes
 
-One MODIFIED requirement, REQ-polaris-generation-033 ("Operator-agent authoring mode"), complete text in `proposed/polaris-generation/spec.md`: one paragraph before the disclosure paragraph, and two scenarios. The paragraph states that `init` writes a `questionFile` member (format, version, SHA-256) into the run record, what the question file holds (a public part every consumer reads, a held-out part naming key files by path, digest and count), how a record written before this version is read (Unknown, never refused or rewritten), and that no held-out text enters any authoring, inventory, editor or scout packet.
+One MODIFIED requirement, REQ-polaris-generation-033 ("Operator-agent authoring mode"), complete text in `proposed/polaris-generation/spec.md`: one paragraph before the disclosure paragraph, and two scenarios. The paragraph states that `init` writes a `questionFile` member (format, version, SHA-256) into the run record, what the question file holds (three public lists and a held-out part naming evaluator-owned keys by opaque identifier, digest and count), how a record written before this version is read (Unknown, never refused or rewritten), and the required exclusion of held-out keys and their text from authoring-side mounts and packets.
 
 Every other sentence and scenario of REQ-033 is carried unchanged (SEMANTIC-DELTA.md). REQ-034's brief text is unchanged byte for byte: the topics move into the question file with the same words and order. The provider mode's rendered bytes are unchanged.
 
 ## Non-goals
 
-No benchmark run, reader, grader or verdict (slices 2 to 8 of R1). No depth list or reader tasks are written here: the pilot entry marks both `not-written`, so it cannot bind a comparison until a session that saw neither arm writes them (slice 3, `syzygy-5dhm.83`). No change to the pilot's stored files or `scripts/dossier_pilot_grading_input.py`. No runtime refusal when the binary's question file differs from a run's recorded one.
+No benchmark run, reader, grader or verdict (slices 2 to 8 of R1). The Redis comparison entry records all three lists as unwritten. An independent evaluator must supply a new blind graded list, depth list and reader tasks before any comparison can bind. No change to the pilot's stored files or `scripts/dossier_pilot_grading_input.py`. No runtime refusal when the binary's question file differs from a run's recorded one.

@@ -89,26 +89,23 @@
     ]
   },
   "heldOut": {
-    "rule": "Every held-out text lives in the key file its reference names, never in this file. No graded question, required fact, depth fact or reader task enters a brief, packet, skill text or any other text an authoring, inventory, editor or scout session is given, and each key is stored outside every clone a session works in (CONTRIBUTING.md rule 4).",
+    "rule": "An evaluator-owned key identifier names a digest-bound list outside authoring packets and readable mounts. This file carries reference metadata only. A public regression key cannot bind a blind comparison.",
     "entries": [
       {
-        "id": "redis-pilot-2026-11-21",
+        "id": "redis-comparison",
         "repository": "github.com/redis/redis",
         "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
         "graded": {
-          "state": "frozen",
-          "key": "docs/evidence/pursuit-2026-11-21b/pilot/key.json",
-          "sha256": "0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690",
-          "count": 24,
-          "requiredFacts": 81
+          "state": "not-written",
+          "reason": "A new blind graded list is required. The published Redis pilot is a historical regression."
         },
         "depth": {
           "state": "not-written",
-          "reason": "the pilot froze graded questions only; a depth list is written by a session that has seen neither arm, before the calibration pass (syzygy-5dhm.83)"
+          "reason": "An independent evaluator freezes ten to twenty depth facts before the comparison."
         },
         "tasks": {
           "state": "not-written",
-          "reason": "the pilot froze graded questions only; five reader tasks are written with the depth list, before the calibration pass (syzygy-5dhm.83)"
+          "reason": "An independent evaluator freezes five reader tasks before the comparison."
         }
       }
     ]

@@ -1,7 +1,7 @@
-import * as fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DOSSIER_READER_QUESTIONS, QUESTION_FILE, dossierQuestionsFile, encodeQuestionFile } from '@syzygy/polaris-generation-core/live';
+import { DOSSIER_READER_QUESTIONS, QUESTION_FILE, dossierQuestionsFile, encodeQuestionFile, type QuestionFile } from '@syzygy/polaris-generation-core/live';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { BRIEF_TOPICS, renderBrief } from './brief.js';
 import { readSec3 } from './doctrine-quote.js';
@@ -13,15 +13,12 @@ import { heldOutFindings, readHeldOutNeedles, type KeyQuestion, type RolePacket 
 import { fidelityCriteria } from './review-packet.js';
 import { parseRunConfig, type RunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, type RunSubject } from './run-record.js';
+import { bwrapArgs, viewFor, type ViewInputs } from './session-view.js';
 
-/** The question file's hold-out (syzygy-5dhm.21, R1 slice 1): no packet an authoring, inventory, editor or scout session is given carries
- * a held-out text of the question file, and a packet that does is reported by role, packet and needle id, never by its text.
- *
- * The needles are every held-out list the question file marks frozen, read from the key file it names and checked against its digest
- * and counts (`readHeldOutNeedles`). The packets are each role's text as this tree builds it from fixtures: the operator-agent brief
- * (author and editor: the repair loop re-reads the same brief), the inventory brief, the fidelity reviewer's criteria, the provider
- * profile's frozen reader-questions file that every provider stage request carries (inventory, plan, author, edit, repair), the
- * discovery scout's reader-question strings, and the question file itself, which is public. Expected values are literals. */
+/**
+ * Exercise the lexical predicate on selected fixture-built role texts under
+ * syzygy-5dhm.21. The evaluator lookup holds only artificial key material.
+ */
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
@@ -45,12 +42,49 @@ const config = (): RunConfig => {
   return parsed.config;
 };
 
+const GRADED = {
+  questions: [
+    { id: 'Q1', question: 'Why does a copper lighthouse send three quiet signals through the fog',
+      required_facts: ['The keeper paints every narrow handrail lavender before inspecting the lantern'] },
+    { id: 'Q2', question: 'How does the striped trolley avoid the cracked bridge during a storm',
+      required_facts: ['The driver turns east at the antique fountain every Tuesday'] },
+  ],
+};
+const DEPTH = { depth: Array.from({ length: 10 }, (_, index) =>
+  ({ id: `D${index + 1}`, fact: `Observation ${index + 1} concerns imported ceramics in a vaulted attic` })) };
+const TASKS = { tasks: Array.from({ length: 5 }, (_, index) =>
+  ({ id: `T${index + 1}`, task: `Find drawer ${index + 1} near the clock under the spiral bench` })) };
+const gradedKey = Buffer.from(JSON.stringify(GRADED));
+const depthKey = Buffer.from(JSON.stringify(DEPTH));
+const taskKey = Buffer.from(JSON.stringify(TASKS));
+const custody = new Map([
+  ['grade-fixture-v1', gradedKey],
+  ['depth-fixture-v1', depthKey],
+  ['tasks-fixture-v1', taskKey],
+]);
+const digest = (bytes: Buffer): string => createHash('sha256').update(bytes).digest('hex');
+const FIXTURE_FILE: QuestionFile = {
+  ...QUESTION_FILE,
+  heldOut: {
+    ...QUESTION_FILE.heldOut,
+    entries: [{
+      id: 'synthetic-comparison',
+      repository: 'example.test/fixtures/keepsake',
+      commit: '4'.repeat(40),
+      graded: { state: 'frozen', key: 'grade-fixture-v1', sha256: digest(gradedKey), count: 2, requiredFacts: 2 },
+      depth: { state: 'frozen', key: 'depth-fixture-v1', sha256: digest(depthKey), count: 10 },
+      tasks: { state: 'frozen', key: 'tasks-fixture-v1', sha256: digest(taskKey), count: 5 },
+    }],
+  },
+};
+const lookup = (key: string): Buffer | undefined => custody.get(key);
+
 let needles: KeyQuestion[] = [];
 let listsRead = 0;
 let packets: RolePacket[] = [];
 
 beforeAll(async () => {
-  ({ needles, listsRead } = readHeldOutNeedles(ROOT));
+  ({ needles, listsRead } = readHeldOutNeedles(lookup, FIXTURE_FILE));
   const sec3 = readSec3(ROOT);
   if (!sec3.ok) throw new Error(sec3.reason);
   const rule = async (role: 'authoring' | 'inventory'): Promise<ExecutionRule> => decideExecutionRule({
@@ -66,17 +100,27 @@ beforeAll(async () => {
     { role: 'reviewer', packet: 'fidelity-criteria', text: fidelityCriteria('/r').join('\n\n') },
     { role: 'editor', packet: 'provider-reader-questions.json', text: dossierQuestionsFile() },
     { role: 'scout', packet: 'discovery-reader-questions', text: DOSSIER_READER_QUESTIONS.map((question) => question.text).join('\n') },
-    { role: 'author', packet: 'question-file-v1.json', text: encodeQuestionFile(QUESTION_FILE) },
+    { role: 'author', packet: 'question-file-v1.json', text: encodeQuestionFile(FIXTURE_FILE) },
   ];
 });
 
-describe('the question file\'s held-out part stays out of every authoring packet', () => {
-  it('reads every frozen held-out list the file names: today the pilot\'s graded key, 24 questions and 81 facts', () => {
-    expect(listsRead).toBe(1);
-    expect(needles).toHaveLength(105);
-    expect(needles[0]?.id).toBe('redis-pilot-2026-11-21/graded/Q01');
-    expect(needles.at(-1)?.id).toBe('redis-pilot-2026-11-21/graded/Q24#3');
-    expect(new Set(needles.map(({ id }) => id)).size).toBe(105);
+describe('the question file’s synthetic hold-out controls', () => {
+  it('loads the three frozen evaluator lists and enumerates their nineteen distinct needles', () => {
+    expect(listsRead).toBe(3);
+    expect(needles.map(({ id }) => id)).toEqual([
+      'synthetic-comparison/graded/Q1', 'synthetic-comparison/graded/Q2',
+      'synthetic-comparison/graded/Q1#1', 'synthetic-comparison/graded/Q2#1',
+      'synthetic-comparison/depth/D1', 'synthetic-comparison/depth/D2', 'synthetic-comparison/depth/D3',
+      'synthetic-comparison/depth/D4', 'synthetic-comparison/depth/D5', 'synthetic-comparison/depth/D6',
+      'synthetic-comparison/depth/D7', 'synthetic-comparison/depth/D8', 'synthetic-comparison/depth/D9',
+      'synthetic-comparison/depth/D10', 'synthetic-comparison/tasks/T1', 'synthetic-comparison/tasks/T2',
+      'synthetic-comparison/tasks/T3', 'synthetic-comparison/tasks/T4', 'synthetic-comparison/tasks/T5',
+    ]);
+  });
+
+  it('never requests a key for the shipped comparison entry while its lists are unwritten', () => {
+    expect(readHeldOutNeedles((key) => { throw new Error(`unexpected key lookup: ${key}`); }, QUESTION_FILE))
+      .toEqual({ needles: [], listsRead: 0 });
   });
 
   it('checks seven packets over five roles, each one non-empty, and finds nothing held out in any', () => {
@@ -91,37 +135,62 @@ describe('the question file\'s held-out part stays out of every authoring packet
   });
 
   it('reports a packet with a held-out question or fact planted in it, by role, packet and id, without repeating the text', () => {
-    const question = needles.find(({ id }) => id === 'redis-pilot-2026-11-21/graded/Q05');
-    const fact = needles.find(({ id }) => id === 'redis-pilot-2026-11-21/graded/Q11#2');
+    const question = needles.find(({ id }) => id === 'synthetic-comparison/graded/Q1');
+    const fact = needles.find(({ id }) => id === 'synthetic-comparison/graded/Q2#1');
     if (question === undefined || fact === undefined) throw new Error('fixture needles missing');
     for (const [index, { role, packet }] of packets.entries()) {
       const planted = packets.map((each, at) => (at === index ? { ...each, text: `${each.text}\n\n${question.question}\n` } : each));
-      expect(heldOutFindings(planted, needles)).toEqual([`${role}:${packet}: redis-pilot-2026-11-21/graded/Q05`]);
+      expect(heldOutFindings(planted, needles)).toEqual([`${role}:${packet}: synthetic-comparison/graded/Q1`]);
     }
     const findings = heldOutFindings([{ role: 'inventory', packet: 'inventory-brief.md', text: `${packets[2]?.text}\n- ${fact.question}` }], needles);
-    expect(findings).toEqual(['inventory:inventory-brief.md: redis-pilot-2026-11-21/graded/Q11#2']);
+    expect(findings).toEqual(['inventory:inventory-brief.md: synthetic-comparison/graded/Q2#1']);
     expect(findings.join('\n')).not.toContain(fact.question.slice(0, 30));
   });
 
   it('finds a needle serialized into JSON, escaped or wrapped, and does not read a short fragment as one', () => {
-    const question = needles.find(({ id }) => id === 'redis-pilot-2026-11-21/graded/Q02');
+    const question = needles.find(({ id }) => id === 'synthetic-comparison/graded/Q2');
     if (question === undefined) throw new Error('fixture needle missing');
     const words = question.question.split(' ');
     const escaped = JSON.stringify({ readerQuestions: [words.slice(0, 6).join(' ') + '\n' + words.slice(6).join(' ')] });
     expect(escaped).toContain('\\n');
-    expect(heldOutFindings([{ role: 'editor', packet: 'stage-request.json', text: escaped }], needles)).toEqual(['editor:stage-request.json: redis-pilot-2026-11-21/graded/Q02']);
+    expect(heldOutFindings([{ role: 'editor', packet: 'stage-request.json', text: escaped }], needles)).toEqual(['editor:stage-request.json: synthetic-comparison/graded/Q2']);
     const unicode = JSON.stringify({ q: question.question }).replace(/ /gu, '\\u0020');
-    expect(heldOutFindings([{ role: 'scout', packet: 'map-input.json', text: unicode }], needles)).toEqual(['scout:map-input.json: redis-pilot-2026-11-21/graded/Q02']);
+    expect(heldOutFindings([{ role: 'scout', packet: 'map-input.json', text: unicode }], needles)).toEqual(['scout:map-input.json: synthetic-comparison/graded/Q2']);
     expect(heldOutFindings([{ role: 'author', packet: 'brief.md', text: words.slice(0, 7).join(' ') }], needles)).toEqual([]);
   });
 
-  it('refuses a question file whose held-out reference does not match its key, so a stale key cannot pass the check unread', () => {
-    const entry = QUESTION_FILE.heldOut.entries[0];
+  it('refuses missing, stale or miscounted evaluator keys', () => {
+    const entry = FIXTURE_FILE.heldOut.entries[0];
     if (entry === undefined || entry.graded.state !== 'frozen') throw new Error('fixture entry missing');
-    const stale = { ...QUESTION_FILE, heldOut: { ...QUESTION_FILE.heldOut, entries: [{ ...entry, graded: { ...entry.graded, sha256: 'f'.repeat(64) } }] } };
-    expect(() => readHeldOutNeedles(ROOT, stale)).toThrow('the key\'s bytes do not hash to the question file\'s digest');
-    const miscounted = { ...QUESTION_FILE, heldOut: { ...QUESTION_FILE.heldOut, entries: [{ ...entry, graded: { ...entry.graded, count: 23 } }] } };
-    expect(() => readHeldOutNeedles(ROOT, miscounted)).toThrow('the key\'s counts differ from the question file\'s');
-    expect(fs.existsSync(path.join(ROOT, entry.graded.key))).toBe(true);
+    const stale = { ...FIXTURE_FILE, heldOut: { ...FIXTURE_FILE.heldOut, entries: [{ ...entry, graded: { ...entry.graded, sha256: 'f'.repeat(64) } }] } };
+    expect(() => readHeldOutNeedles(lookup, stale)).toThrow("the key's bytes do not hash to the question file's digest");
+    const miscounted = { ...FIXTURE_FILE, heldOut: { ...FIXTURE_FILE.heldOut, entries: [{ ...entry, graded: { ...entry.graded, count: 3 } }] } };
+    expect(() => readHeldOutNeedles(lookup, miscounted)).toThrow("the key's counts differ from the question file's");
+    expect(() => readHeldOutNeedles((key) => (key === 'tasks-fixture-v1' ? undefined : lookup(key)), FIXTURE_FILE))
+      .toThrow('held-out synthetic-comparison/tasks: the evaluator key is unavailable');
+  });
+
+  it('keeps a sibling evaluator key out of each supervised view and detects the same key under a mounted checkout', () => {
+    const mounts = {
+      checkout: '/fixture/syzygy',
+      clone: '/fixture/observed',
+      runDir: '/fixture/run',
+      sessionDir: '/fixture/session',
+      agentHome: '/fixture/home',
+      socketDir: '/fixture/socket',
+      brokerSocket: '/fixture/socket/broker',
+      shimDir: '/fixture/shim',
+      toolPaths: ['/fixture/tools'],
+    };
+    const roles: readonly ViewInputs['role'][] = ['author', 'inventory', 'fidelity', 'design'];
+    for (const role of roles) {
+      const args = bwrapArgs(viewFor({ role, ...mounts }));
+      const mounted = args.flatMap((arg, index) =>
+        ['--ro-bind', '--ro-bind-try', '--bind'].includes(arg) ? [args[index + 2]] : []);
+      const visible = (file: string): boolean => mounted.some((root) => file === root || file.startsWith(`${root}/`));
+      expect([role, visible('/fixture/syzygy/public-question-source.json')]).toEqual([role, true]);
+      expect([role, visible('/fixture/evaluator/grade-fixture-v1')]).toEqual([role, false]);
+      expect([role, visible('/fixture/syzygy/evaluator/grade-fixture-v1')]).toEqual([role, true]);
+    }
   });
 });
