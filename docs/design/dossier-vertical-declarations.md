@@ -4,7 +4,11 @@
 
 ## Governing inputs
 
-[Observed] The tracker records the owner's November 22 direction to account for thirteen internals pillars in future dossiers. The pillar work is `syzygy-ea4w.1`. REQ-polaris-generation-034 2.23 governs the versioned draft, check and render. REQ-polaris-generation-035 requires independent inventory and fresh-context reviews. VIS-2 governs missing evidence and SEC-5 governs every output that can carry source material. The proposed system-model successor in #932 and the runtime work in #839 use the draft, brief and renderer seams this proposal would need. [REQ-034](../../openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md), [REQ-035](../../openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md), [VIS-2 and VIS-4](../../.syzygy/governance/doctrine/vision.md), [SEC-5](../../.syzygy/governance/doctrine/security.md).
+[Observed] The tracker records the owner's November 22 direction to account for thirteen internals pillars in future dossiers. The pillar work is `syzygy-ea4w.1`. At the design base named above, REQ-polaris-generation-034 2.23 governed the versioned draft, check and render. REQ-polaris-generation-035 requires independent inventory and fresh-context reviews. VIS-2 governs missing evidence and SEC-5 governs every output that can carry source material. [REQ-034 at the design base](../../openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md), [REQ-035](../../openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md), [VIS-2 and VIS-4](../../.syzygy/governance/doctrine/vision.md), [SEC-5](../../.syzygy/governance/doctrine/security.md).
+
+[Observed] At the 2026-11-24 03:04 UTC refresh, the protected stage for #932 was `a2f9b97599d4a395e0c24dde8d85bdf94e76f3bc`, carrying proposed REQ-034 2.24 with the system model, draft v12 and brief v18. At that refresh #839 still had open runtime work on the shared draft, brief and renderer. [#932 exact proposed spec](https://github.com/tzeusy-org/syzygy/blob/d0536a9cde764e7def5b5a67216e028737f3f7fe/openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md), [#839 runtime work](https://github.com/tzeusy-org/syzygy/pull/839).
+
+[Inferred] Compose the normative declaration change against the effective REQ-034 and draft and brief versions at its own adoption. The design's independent inventory, declaration and source-admission rules below provide inputs to that composition.
 
 ## Inventory and draft
 
