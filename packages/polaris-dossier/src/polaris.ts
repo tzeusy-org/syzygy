@@ -59,7 +59,7 @@ import { reviewSessionDirectory } from './review-model.js';
 import type { BriefReport } from './brief.js';
 import type { StartSessionsReport } from './session-handover.js';
 import { createUrlRunArtifacts, type UrlRestoredFrozenProducts } from './url-run-artifacts.js';
-import { startUrlRunSessions, type UrlDesignReproduction, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
+import { startUrlRunSessions, type UrlDesignReproducer, type UrlRunSessions, type UrlRunSessionsSummary } from './url-run-sessions.js';
 import { readVerifiedUrlAuditLaunches } from './url-session-audit-history.js';
 import { claimStoppedUrlRun, isClaimedStoppedUrlRun, verifyStoppedUrlRun } from './url-recovery.js';
 import { retainUrlStoppedBoundary, type UrlRecoveryClaim } from './url-stopped-run.js';
@@ -1450,8 +1450,8 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
         products.revalidate();
         products.close();
         const sitePath = report['site'], subject = { path: sitePath, output: metadata.output };
-        const reproduce = async (): Promise<UrlDesignReproduction | null> => {
-          const reads = beginRunProductReads(run, context.artifacts, 'render', deadline, context.runtime.waitForProductSamples);
+        const reproduce: UrlDesignReproducer = async purpose => {
+          const reads = beginRunProductReads(run, context.artifacts, purpose ?? 'render', deadline, context.runtime.waitForProductSamples);
           let reproduced: ValidatedUrlDesignProduct | null = null;
           let opened = false;
           try {

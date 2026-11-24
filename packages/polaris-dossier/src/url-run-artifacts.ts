@@ -76,6 +76,7 @@ export interface UrlRunArtifactsOptions {
   readonly screen?: DossierScreen;
 }
 export type UrlProductReadOperation = keyof typeof URL_PRODUCT_READ_MILLISECONDS;
+type UrlProductEvidenceOperation = Exclude<UrlProductReadOperation, 'ordered-design-replacement'>;
 export type UrlProductReadLeaseState = 'open' | 'expired' | 'retired' | 'Unknown';
 /** No object shape authenticates this token; each bridge owns its WeakMap. */
 export interface UrlProductReadContext { readonly kind: 'url-product-read-context'; }
@@ -1081,7 +1082,7 @@ function create(given: UrlRunArtifactsOptions) {
   type KnownRecord = ReturnType<typeof authenticatedRecords.get>;
   interface ReadEntry { readonly physical: string; readonly snapshot: ProductFileSnapshot; readonly receipt: UrlOriginReceipt; readonly expected: KnownRecord; }
   interface ReadState {
-    readonly operation: UrlProductReadOperation; readonly deadline: number; readonly signal: AbortSignal | undefined;
+    readonly operation: UrlProductEvidenceOperation; readonly deadline: number; readonly signal: AbortSignal | undefined;
     readonly entries: Map<string, ReadEntry>;
     readonly excludedOrdered: ReadonlyMap<string, NonNullable<ReturnType<typeof authenticatedRecords.get>>>;
     readonly selections: Map<UrlProductSelector, { readonly snapshot: ProductNameSnapshot; readonly names: readonly string[]; readonly receipt: UrlOriginReceipt }>;
@@ -1139,7 +1140,10 @@ function create(given: UrlRunArtifactsOptions) {
       || (input.signal !== undefined && (!(input.signal instanceof AbortSignal) || input.signal.aborted))
       || activeReads.size >= 16 || ++readContextCount > limits.registrations) refuse();
     const context: UrlProductReadContext = Object.freeze({ kind: 'url-product-read-context' });
-    const state: ReadState = { operation: input.operation, deadline: input.deadline, signal: input.signal, entries: new Map(), excludedOrdered: input.operation === 'render' ? new Map(orderedPendingFiles) : new Map(), selections: new Map(), bytes: 0 };
+    // Replacement uses the same render evidence and excludes the same
+    // pending ordered records as the delivery it must independently match.
+    const operation = input.operation === 'ordered-design-replacement' ? 'render' : input.operation;
+    const state: ReadState = { operation, deadline: input.deadline, signal: input.signal, entries: new Map(), excludedOrdered: operation === 'render' ? new Map(orderedPendingFiles) : new Map(), selections: new Map(), bytes: 0 };
     state.timer = setTimeout(() => closeRead(state, 'expired'), input.deadline - now); state.timer.unref();
     state.abort = () => closeRead(state); input.signal?.addEventListener('abort', state.abort, { once: true });
     readContexts.set(context, state); activeReads.add(state);

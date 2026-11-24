@@ -3,6 +3,7 @@ import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
 import { URL_DESIGN_MCP_OUTPUT_TOKENS } from './session-url-view.js';
 import { SESSION_MCP_TOOLS } from './session-mcp.js';
 import type { SessionBinding, SessionOrigin } from './session-egress-policy.js';
+import { URL_ORDERED_NATIVE_EFFECT_MILLISECONDS } from './url-product-read-limits.js';
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
@@ -32,7 +33,7 @@ const ORDERED_DESIGN_TRANSCRIPT = deepFreeze({
   partition: { algorithm: 'maximal-utf8-scalar-prefix', partBytes: 400_000, partCount: 2, replyBytes: 490_000, preparedBytes: 4096 },
   nativeMcpOutputTokens: URL_DESIGN_MCP_OUTPUT_TOKENS,
   nativeResultPersistenceCharacters: 500_000,
-  nativeEffectMilliseconds: 30_000,
+  nativeEffectMilliseconds: URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,
   requestLimits: LIMITS,
   maxVerdictBytes: 32_768,
   maxAcknowledgmentBytes: 4096,

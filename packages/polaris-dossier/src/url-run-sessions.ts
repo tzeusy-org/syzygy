@@ -73,8 +73,9 @@ export interface UrlDesignReproduction {
   readonly product: ValidatedUrlDesignProduct;
   readonly close: () => void;
 }
+export type UrlDesignReproducer = (purpose?: 'ordered-design-replacement') => Promise<UrlDesignReproduction | null>;
 interface DesignArtifactPort {
-  readonly reproduce: () => Promise<UrlDesignReproduction | null>;
+  readonly reproduce: UrlDesignReproducer;
   readonly open: (file: string, delivery: UrlDesignDeliveryView) => SessionDesignArtifactRead;
 }
 export type UrlRunDossier = (argv: readonly string[], stdin: Uint8Array | null, review?: UrlDesignReviewProof,

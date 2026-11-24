@@ -24,7 +24,7 @@ import type { createUrlRunMachine } from './url-run-machine.js';
 import type { UrlOrderedCpuReservation } from './url-run-cpu-budget.js';
 import type { createUrlSessionBudget } from './url-session-budget.js';
 import type { createUrlRunArtifacts } from './url-run-artifacts.js';
-import type { UrlDesignReproduction } from './url-run-sessions.js';
+import type { UrlDesignReproducer, UrlDesignReproduction } from './url-run-sessions.js';
 import type { DossierScreen } from './screen.js';
 
 type Audit = Extract<UrlSessionAuditResult, { ok: true }>;
@@ -69,7 +69,7 @@ export interface UrlOrderedAttemptOptions {
   readonly expectedProduct: UrlDesignProductMetadata;
   readonly sitePath: string;
   readonly round: number;
-  readonly reproduce: () => Promise<UrlDesignReproduction | null>;
+  readonly reproduce: UrlDesignReproducer;
   readonly work: {
     readonly remainingCpuMicroseconds: () => number;
     readonly reserveRemainingOnce: (required: number) => UrlOrderedCpuReservation | null;
@@ -163,7 +163,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
           try { assertUrlDesignDeliveryReceiptCurrent(delivery!, processingCurrent, observeRead); }
           catch { return false; }
           if (!processingCurrent()) return false;
-          const next = await input.reproduce();
+          const next = await input.reproduce('ordered-design-replacement');
           if (next === null) return false;
           let adopted = false;
           try {

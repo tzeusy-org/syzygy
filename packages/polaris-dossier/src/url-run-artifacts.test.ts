@@ -1116,6 +1116,29 @@ describe('trusted URL artifact producer bridge', () => {
       expect(() => beginRunProductReads(f.run, f.bridge, 'render', deadline)).toThrow();
     } finally { vi.useRealTimers(); }
   });
+  it('reserves time for the native effect only on an immutable ordered replacement render lease', () => {
+    const f = fixture(); f.initialize();
+    vi.useFakeTimers();
+    try {
+      const began = Date.now();
+      const replacement = beginRunProductReads(f.run, f.bridge, 'ordered-design-replacement', began + 120_000);
+      const clipped = beginRunProductReads(f.run, f.bridge, 'ordered-design-replacement', began + 70_000);
+      expect(replacement.deadline).toBe(began + 90_000);
+      expect(clipped.deadline).toBe(began + 70_000);
+      expect(() => f.bridge.beginRead({ operation: 'ordered-design-replacement', deadline: began + 90_001 })).toThrow();
+      expect(() => f.bridge.beginRead({ operation: 'render', deadline: began + 90_000 })).toThrow();
+      expect(replacement.read('brief.json')).not.toBeNull();
+      vi.setSystemTime(began + 48_000);
+      expect(replacement.revalidate().metadata).toMatchObject({ operation: 'render', deadline: began + 90_000 });
+      expect(replacement.deadline - Date.now()).toBeGreaterThanOrEqual(30_000);
+      vi.setSystemTime(began + 70_000);
+      expect(clipped.leaseState()).toBe('expired');
+      expect(replacement.revalidate().metadata.deadline).toBe(began + 90_000);
+      vi.setSystemTime(replacement.deadline);
+      expect(replacement.leaseState()).toBe('expired');
+      expect(() => replacement.revalidate()).toThrow();
+    } finally { vi.useRealTimers(); }
+  });
   it.each(['cancel', 'abort', 'drift', 'current', 'timer', 'clock'] as const)('retains the first %s read termination when first inspected after its deadline', kind => {
     const f = fixture(), other = fixture(); f.initialize(); other.initialize();
     vi.useFakeTimers();
