@@ -1,7 +1,7 @@
 {
   "subject": "syzygy-5dhm.41: re-render of the seven stored runs' latest passed drafts, main tree against the worth-knowing branch",
-  "before": "e741fa2f8",
-  "after": "a4289a81b",
+  "before": "fb63570441b5c31da1b01069ebdf1ea2654fd4ab",
+  "after": "2f00edee45bab772277eb6c2587c202614d941ee",
   "harness": "docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts (syzygy-a70b form: placement subject, run content classes, injected stored verdict)",
   "runs": [
     {

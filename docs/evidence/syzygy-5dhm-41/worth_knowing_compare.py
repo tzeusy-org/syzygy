@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """syzygy-5dhm.41: compare the before and after re-renders of each stored run file by file, and record the result.
 
-Every stored draft predates schema v11, so none carries a worth-knowing mark; the change must leave each rendered file byte-identical.
+Every stored draft predates schema v13, so none carries a worth-knowing mark; the change must leave each rendered file byte-identical.
 Usage: worth_knowing_compare.py <scratch dir> <before commit> <after commit> <out.json>
 """
 import hashlib

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate SEMANTIC-DELTA.md for version 2.23 (syzygy-5dhm.41) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
+"""Generate SEMANTIC-DELTA.md for version 2.25 (syzygy-5dhm.41) from the bytes of the predecessor and the new text. Usage: delta.py <worktree>."""
 import difflib
 import hashlib
 import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-readers-edition/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -51,7 +51,7 @@ prev = next(nb[k] for k in range(para_at - 1, -1, -1) if nb[k].strip())
 lead_words = ' '.join(prev.split(' ')[:14])
 sha = lambda b: hashlib.sha256(b).hexdigest()
 
-out = f'''# Version 2.23 semantic delta
+out = f'''# Version 2.25 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as one delta (`NORMATIVE-CHANGE-WORKFLOW.md`). Every quoted text and count below was extracted from the bytes by script (a line diff of the requirement block and a word diff of each changed line), not transcribed: `docs/evidence/syzygy-5dhm-41/worth_knowing_delta.py` writes this file.
 
@@ -61,7 +61,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier reader's edition version 2.22, row A-56, tag `polaris-dossier-readers-edition-v2.22`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.22. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.22's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier containment figure version 2.23, row A-59, tag `polaris-dossier-containment-figure-v2.23`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.23. Version 2.24 (the system model, open pull request #932) is not adopted and is not composed here; its numbers, schema `polaris-dossier-local-draft-v12` and brief `polaris-dossier-brief-v18`, are left to it. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.23's, byte for byte.
 
 ## Carried unchanged
 
@@ -69,7 +69,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Amended in place
 
-[Observed] The title and preamble (file head, not requirement text) name version 2.23. In the requirement, each changed line, with the displaced words and the words that replace them:
+[Observed] The title and preamble (file head, not requirement text) name version 2.25. In the requirement, each changed line, with the displaced words and the words that replace them:
 
 {chr(10).join(amend)}
 
@@ -87,7 +87,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` states: only a draft in schema v11 changes any rendered byte (its callouts, and the marked blocks moving into them), and only the issued brief and inventory brief change for a new run (their version lines, schema lines, one brief paragraph and one inventory gloss line). A draft of schema v10 or earlier keeps its findings and bytes apart from the `field-version` finding for a member it cannot carry; the seven stored runs re-render byte for byte (`docs/evidence/syzygy-5dhm-41/worth-knowing-rerender-2026-11-24.json`). No provider-mode byte changes.
+[Inferred] As `design.md` states: only a draft in schema v13 changes any rendered byte (its callouts, and the marked blocks moving into them), and only the issued brief and inventory brief change for a new run (their version lines, schema lines, one brief paragraph and one inventory gloss line). A draft of schema v11 or earlier keeps its findings and bytes apart from the `field-version` finding for a member it cannot carry; the seven stored runs re-render byte for byte (`docs/evidence/syzygy-5dhm-41/worth-knowing-rerender-2026-11-24.json`). No provider-mode byte changes.
 '''
 (W / 'openspec/changes/dossier-worth-knowing/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'paras', len(added_paras), 'scenarios', len(scen))
