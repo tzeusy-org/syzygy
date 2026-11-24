@@ -1,0 +1,269 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-24T19:16:52.097Z",
+  "commit": "6896bbdb6de0c4c27fd6a7f03269538656436f61",
+  "subject": {
+    "packages/polaris-dossier/src/coverage-hold.ts": "e72b3e39e436f44ea81e746ffb18bc7c2d985a50f8c6a6729cc32a0626b22991",
+    "packages/polaris-dossier/src/polaris.ts": "4df2511e630126199c2c3f120c24cdca2797a9f4caf9e03ddef2e33ae719ff9d",
+    "packages/polaris-dossier/src/review-packet.ts": "c5e287be009c292c56837f3fe3f9c34be961c3be455c6f3490d0aff8ec5621ca",
+    "packages/polaris-dossier/src/review.ts": "567e8d36e377607180559ced2e8458264536e7cb8380821bef3e520dcd631c39",
+    "packages/polaris-dossier/src/session-handover.ts": "62ddd449a0098ecb4fcb4b51adfbab8bda74cd6f0b3fd1736d4c53bd33af17d3"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/coverage-hold.ts": [
+      "packages/polaris-dossier/src/coverage-hold.test.ts",
+      "packages/polaris-dossier/src/coverage-hold-flow.test.ts"
+    ],
+    "packages/polaris-dossier/src/review.ts": [
+      "packages/polaris-dossier/src/coverage-hold-flow.test.ts"
+    ],
+    "packages/polaris-dossier/src/session-handover.ts": [
+      "packages/polaris-dossier/src/coverage-hold-flow.test.ts",
+      "packages/polaris-dossier/src/waiting-sessions.test.ts"
+    ],
+    "packages/polaris-dossier/src/review-packet.ts": [
+      "packages/polaris-dossier/src/coverage-hold-flow.test.ts"
+    ],
+    "packages/polaris-dossier/src/polaris.ts": [
+      "packages/polaris-dossier/src/coverage-hold.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "exitCode": 0,
+      "tests": 9,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "exitCode": 0,
+      "tests": 8,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "exitCode": 0,
+      "tests": 1,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/review.ts",
+      "exitCode": 0,
+      "tests": 1,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/session-handover.ts",
+      "exitCode": 0,
+      "tests": 169,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "hold-never",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "if (uncovered.length === 0) return undefined;",
+      "new": "if (uncovered.length >= 0) return undefined;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold does not count a disjoint span on the same path, or an omission row without a reason",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "hold-pre-v5-held",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "typeof schemaVersion === 'string' && !PRE_V5_SCHEMA_VERSIONS.includes(schemaVersion)",
+      "new": "typeof schemaVersion === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold never holds a draft of schema v2 to v4, which can record no omission",
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "hold-schema-ignored",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "if (!heldSchema(subject.draft['schemaVersion'])) return undefined;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold never holds a draft of schema v2 to v4, which can record no omission",
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 11
+    },
+    {
+      "id": "hold-withheld-counted",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": ".filter((entry) => !isWithheldItem(entry, standing))",
+      "new": ".filter(() => true)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "hold-secret-path-named",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "entry.paths.map((cited) => JSON.stringify(cited))",
+      "new": "[...entry.paths, ...Array(entry.unnamedPaths).fill(\"config/secret.env\")].map((cited) => JSON.stringify(cited))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold counts a secret path and never names it, and names an entry with no identifier or no path plainly"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "hold-ids-unquoted",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "entry.entryId === null ? 'an entry with no identifier' : JSON.stringify(entry.entryId)",
+      "new": "entry.entryId === null ? 'an entry with no identifier' : entry.entryId",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold does not count a disjoint span on the same path, or an omission row without a reason",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold leaves out an entry screening withholds, whose outcome is Syzygy's",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold counts a secret path and never names it, and names an entry with no identifier or no path plainly",
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons",
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "hold-all-named",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "const listed = reasons.slice(0, HELD_ENTRIES_NAMED);",
+      "new": "const listed = reasons;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold names twelve entries in its paragraph, counts the rest, and lists every one in its reasons"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "hold-next-step-dropped",
+      "file": "packages/polaris-dossier/src/coverage-hold.ts",
+      "old": "then run syzygy dossier check ${subject.run} again. `",
+      "new": "`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 9,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > fidelityCoverageHold holds a v5 draft that leaves an entry without an outcome, naming it by identifier and path",
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "packet-hold-not-carried",
+      "file": "packages/polaris-dossier/src/review-packet.ts",
+      "old": "...(hold === undefined ? {} : { coverageHold: hold }),",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "review-packet-gate-dropped",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": "if (built.coverageHold !== undefined) return refuse('coverage', built.coverageHold.reason, built.coverageHold.reasons, opened.run);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 1,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "session-prompt-gate-dropped",
+      "file": "packages/polaris-dossier/src/session-handover.ts",
+      "old": "    if (fidelity.coverageHold !== undefined) return refuse('coverage', fidelity.coverageHold.reason, fidelity.coverageHold.reasons);\n    built = fidelity;\n    packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };\n  }\n  const session",
+      "new": "    built = fidelity;\n    packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };\n  }\n  const session",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 169,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold-flow.test.ts > the fidelity review waits for inventory coverage issues no fidelity packet while a listed entry has no outcome, says why and what to do, and issues it once each entry has one"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "delivery-gate-dropped",
+      "file": "packages/polaris-dossier/src/session-handover.ts",
+      "old": "    if (fidelity.coverageHold !== undefined) return refuse('coverage', fidelity.coverageHold.reason, fidelity.coverageHold.reasons);\n    built = fidelity;\n    packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };\n  }\n  return deliverToWaiting",
+      "new": "    built = fidelity;\n    packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };\n  }\n  return deliverToWaiting",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 169,
+      "failedTests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts > delivery to a waiting review session delivers nothing while a listed inventory entry has no outcome in the passed draft (syzygy-5dhm.29, version 2.27; mutant: drop the delivery hold)"
+      ],
+      "seconds": 32
+    },
+    {
+      "id": "supervisor-key-unpaired",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "`coverage-held-${draftRevision}/${inventoryRevision}`",
+      "new": "`coverage-held-${draftRevision}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 8,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > the launched run's hold notice keys the hold by its draft and inventory pair and tells the author the refusal in one line"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "supervisor-message-multiline",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "`Syzygy: ${flatten(reason, 4000)} This repair",
+      "new": "`Syzygy: ${reason} This repair",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 8,
+      "failedTests": [
+        "packages/polaris-dossier/src/coverage-hold.test.ts > the launched run's hold notice keys the hold by its draft and inventory pair and tells the author the refusal in one line"
+      ],
+      "seconds": 4
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 14,
+    "killed": 14,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}
