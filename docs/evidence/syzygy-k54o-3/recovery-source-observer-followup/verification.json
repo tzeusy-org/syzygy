@@ -1,0 +1,40 @@
+{
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "sourceSha256": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+  "sourceLocations": {
+    "frozen": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+    "primary": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+    "clone": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f"
+  },
+  "cloneBaseCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+  "cloneChangePopulation": [
+    " M packages/polaris-dossier/src/url-run-composed.test.ts"
+  ],
+  "verificationAt": "2026-11-24T19:50:32.311694+00:00",
+  "focused": {
+    "command": "npx vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t 'bounded restoration observer'",
+    "filesPassed": 1,
+    "filesTotal": 1,
+    "casesPassed": 3,
+    "casesSkipped": 4,
+    "casesTotal": 7,
+    "caseMilliseconds": 45,
+    "invocationSeconds": 4.47,
+    "logSha256": "13d7c07d5e7b30e0c8bcee0f9b08a41cf738d065b501daae3fa08e1d363ace10",
+    "status": "passed; output read"
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exit": 0,
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "status": "passed; output read"
+  },
+  "toolSession": 60741,
+  "toolExit": 0,
+  "trackedRuntimeChanges": "none by this task",
+  "limitations": [
+    "Focused cases exercise observer forwarding with plain stubs and issue no live authority or native recovery grant.",
+    "Future private-loop changes require revalidation of callback-position correlation.",
+    "Unobserved private timer sites remain Unknown; no timeout is inferred merely from duration."
+  ]
+}

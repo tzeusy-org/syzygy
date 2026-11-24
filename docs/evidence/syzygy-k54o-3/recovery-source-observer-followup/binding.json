@@ -1,0 +1,31 @@
+{
+  "subjectCommit": "9e5ec77a56a251f527e7028a5a8168db2f897476",
+  "sourceFile": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "sourceSha256": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+  "reviewVerdict": "PASS",
+  "reviewScope": "Source-only R2; R1 REVISE retained verbatim, two findings repaired.",
+  "verification": {
+    "baseCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+    "sourceSubstituted": true,
+    "cleanCommittedClone": false,
+    "sourceSha256": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+    "focusedPassed": 3,
+    "focusedSkipped": 4,
+    "focusedPopulation": 7,
+    "files": 1,
+    "typecheckExit": 0
+  },
+  "limits": "Private-loop callback position correspondence is bound to reviewed runtime bytes. First failure/cap metadata only; no additional authority calls, paths/bodies/error messages, altered runtime limit or claimed runtime cause. Native recovery and record closure Unknown.",
+  "rawLogs": {
+    "focused.log.gz": {
+      "rawSha256": "13d7c07d5e7b30e0c8bcee0f9b08a41cf738d065b501daae3fa08e1d363ace10",
+      "rawBytes": 362,
+      "encoding": "gzip;mtime=0"
+    },
+    "typecheck.log.gz": {
+      "rawSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "rawBytes": 37,
+      "encoding": "gzip;mtime=0"
+    }
+  }
+}

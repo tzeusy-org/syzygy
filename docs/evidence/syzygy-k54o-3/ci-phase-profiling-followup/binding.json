@@ -18,6 +18,16 @@
       "provenance": "Retained rerunnable AST-only harness reads exact committed source;16 cases and one exact-fragment mutant. No project imports.",
       "harness": "isolated-helper-reproducer/check_profile_helper.py",
       "results": "isolated-helper-reproducer/results.json"
+    },
+    "cleanCloneGovernance": {
+      "subject": "c5e41bbddd038ac1d67578e2e5cd5b1d40132661",
+      "governanceExit": 0,
+      "publishedHostedBatteryChecks": 138,
+      "partitionExit": 0,
+      "partitionTrackedReviewFiles": 1124,
+      "assigned": 1124,
+      "secondMethodPathSetsEqual": true,
+      "limits": "Two selected checks only. Existing advisory warnings retained; not the full canonical battery."
     }
   },
   "limits": "No selftest gate/assertion/family removed.140 workflow run commands, required aggregate,19 family calls preserved. Actual project selftest correctness, per-family costs, and seven-minute hosted acceptance remain Unknown.",

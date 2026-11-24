@@ -1,0 +1,18 @@
+{
+  "subject": "c5e41bbddd038ac1d67578e2e5cd5b1d40132661",
+  "cleanClone": true,
+  "checks": [
+    {
+      "name": "governance",
+      "exit": 0,
+      "log": "/home/orca/.tmp/f3-c5-governance-izq09ecz/governance.log",
+      "sha256": "b5701f7cc764acae584df25ff4c92990593ec5067e57617fb01eceabfbd1f1d5"
+    },
+    {
+      "name": "campaign-partition",
+      "exit": 0,
+      "log": "/home/orca/.tmp/f3-c5-governance-izq09ecz/campaign-partition.log",
+      "sha256": "0b2eb3010796d116f2b1c6d3c0bd8c1b5f4fc5baa2847249293e51784527595f"
+    }
+  ]
+}

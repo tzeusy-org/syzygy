@@ -1,0 +1,26 @@
+{
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+  "patchSha256": "668bb01e9401425855246efeb98045679820f786cc0295e183db7d38db9930e8",
+  "head": "c5e41bbddd038ac1d67578e2e5cd5b1d40132661",
+  "capturedAt": "2026-11-24T19:49:26.501124+00:00",
+  "revision": "R2: retain original open reader identity; observe existing mutable listTree method in place or disclose unavailable; record restore settlement population and preserve first fulfilled mismatch beyond retained-run cap.",
+  "scope": "Only observeProductRestoration and its existing forwarding test. No runtime source change, deadline change or extra authority call.",
+  "correlation": "Derivation ordinal/kind is callback-position correlation validated against current url-origin-ledger.ts private loop: one wait before each of six fresh derivation kinds, skips four sealed kinds, and one final wait. It does not prove arbitrary future execution order.",
+  "privateLoopSha256": "0d7cd92825aea17f91b1642816f4f8ae892e19acd3de8faea6236c31d1f80a5c",
+  "claims": [
+    "Original open reader object returned; in-place listTree observation preserves original result promise and receiver.",
+    "Check-time-threw only means the actual passed original checkTime callback threw through the wrapper. Other private checkTime sites remain unobserved.",
+    "Rejected restore records failure-cut with last callback position; fulfilled truncation is missing-waits, surplus is extra-waits; no inference of a private timeout."
+  ],
+  "verification": {
+    "diffCheck": "passed",
+    "focused": "pending",
+    "typecheck": "pending"
+  },
+  "priorR1": {
+    "sourceSha256": "8fceb6502c0dd63a39ed708127945e86f28bbb2b486a8e460e952fd1bbb74092",
+    "focused": "3passed4skipped/7 in baseline-clean7fa clone,5.13s invocation",
+    "typecheck": "passed exit0"
+  }
+}

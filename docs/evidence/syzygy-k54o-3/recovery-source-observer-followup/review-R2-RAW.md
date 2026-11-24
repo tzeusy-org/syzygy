@@ -1,0 +1,34 @@
+# Native88e source restoration observer independent review R2
+Subject SHA-256: 80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f
+Base commit: c5e41bbddd038ac1d67578e2e5cd5b1d40132661
+Verdict: PASS
+
+[Observed] Reviewed subject: frozen `packages/polaris-dossier/src/url-run-composed.test.ts` at `/home/orca/.tmp/f3-native-admission-fixes/native88e-source-observer-review/r2/url-run-composed.test.ts`. Base subject SHA-256: 170d145f450d19881dc627c23754f44627fc1f5d46e9d1de3a640113073a7803. R2 observer.patch SHA-256: 668bb01e9401425855246efeb98045679820f786cc0295e183db7d38db9930e8. R2 review.json SHA-256: b5c1bfd14c657c8c3bdcdfc34aebff1a82bd1ea24d228cf972d1d4e365a7ca9d. Each hash was computed from the frozen file. Independently applying the five patch hunks to the base commit's subject in memory reconstructed exactly the frozen R2 subject bytes.
+
+[Observed] Review scope is the complete observer diff and the extended existing forwarding case, including the R1-to-R2 delta. This review checked source correspondence against the actual production restoration loop, capture source-reader implementation and recovery-products transfer at the named base commit. It used repository AGENTS.md, engineering-bar and test-rigor instructions. It made no source edits, commits, builds, heavy test runs, credential reads, native authority calls or native execution. Writing this raw review is the only review artifact mutation. R1's raw review remains untouched.
+
+Findings and R1 disposition
+
+[Observed] R1 finding 1 is resolved. R2 subject lines 467–485 return the exact original reader object. A configurable, writable, plain own listTree method is observed in place; the original method is called with the actual receiver, and its original promise or synchronous error is returned or rethrown. A future incompatible reader is left unchanged with listTreeObservation='unavailable'. The current production source-reader open implementation returns a plain mutable object with an own listTree method, so that instrumentation applies to the reviewed production implementation. Lines 1842–1843 assert exact original reader and listTree promise identities. No additional source operation is invoked to install the observation.
+
+[Observed] R1 finding 2 is resolved. R2 subject lines 602–614 classify settlement as complete, failure-cut, missing-waits, extra-waits or graph-unavailable. A fulfilled population shorter than the fresh-node count plus final call is explicitly missing-waits. A rejected restoration is failure-cut rather than mislabeled missing. A first fulfilled missing/extra population mismatch is retained separately from the four-run tail. The forwarding case asserts failure-cut, extra-waits, missing-waits and first mismatch retention after five later invocations evict the earlier run.
+
+[Inferred] No further blocking source-review finding remains within the stated acceptance scope. Verdict PASS applies to these frozen source bytes and this source-only acceptance review.
+
+Production correspondence and forwarding
+
+[Observed] Production url-origin-ledger.ts lines 534–579 obtains the transferred history.provenance, iterates graph.nodes sequentially, skips composition/source-reply/report/authenticated-provider-output, waits once before each fixed/renderer/source-span/source-whole/source-tree/source-manifest-remainder node, and waits once more after the loop. The observer captures the actual transferred graph rather than reconstructing authority, preserves graph ordinals when filtering the same six fresh kinds, and assigns distinct ledger ordinals and AsyncLocalStorage contexts per restoreFrozenOrigins call. This position correlation agrees with the actual reviewed private loop. Multiple reads for a single source-whole node remain associated with that one derivation step.
+
+[Observed] The production files read for this comparison matched the base commit byte for byte. Their SHA-256 values were: url-origin-ledger.ts 0d7cd92825aea17f91b1642816f4f8ae892e19acd3de8faea6236c31d1f80a5c; url-source-reader.ts 301f69a55da4589d8ecdfab39bf397d343101db9d2996c25c89f16e8e31cc320; url-recovery-products.ts 28914edb1cc8da1fc3f75f97135461c228c984598506f4885852786fcd2715e9.
+
+[Observed] The capture wrapper calls the actual capture port once with its original binding input. The read wrapper forwards the original path and invokes checkTime and screen only when the actual captured reader invokes their supplied wrappers. It passes the actual blob to screen, returns the original readScreenedBlob and listTree promises, preserves screen results and thrown objects, and adds no current/wait calls. The original restoration observer's one continuation decorating its plain restored result remains the preexisting explicit exception; nominal receipt identities remain forwarded unchanged.
+
+[Observed] The forwarding case uses plain source-port stubs solely to test observer mechanics. Its assertions cover original argument/result/error identities and exact source/callback/wait call counts. It issues no native provenance authority, recovery proof or fixture reconstruction. Net test-case growth is zero; the existing case is extended. Source inspection identifies plausible regressions those added assertions catch: copied open result, wrapped read/list promises, callback duplication, changed blob identity, lost early failure after tail truncation, wrong graph ordinal after sealed nodes, and missing/extra/final wait populations.
+
+Bounded diagnostics and limits
+
+[Observed] Emitted source-read, per-read callback and per-run step arrays retain rolling tails of 32. Run summaries retain four contexts. First source failure, first derivation failure, first callback-position mismatch and first fulfilled population mismatch survive their corresponding tail caps. Diagnostic records contain ordinal, kind, enum and timing/count fields; they do not copy paths, source bodies, screen results or error messages. The internal correlation descriptor array contains one minimal ordinal/kind pair per fresh graph node and is not emitted in summaries.
+
+[Observed] A passed original checkTime callback throw is identified as check-time-threw, and the screen callback's return/throw outcome is recorded. Private checkTime sites outside that passed callback remain unobserved. The current production loop is serial; this review does not establish correlation for arbitrary future reordered or concurrent loops. A derivation failure identifies the last active observed wait boundary, not a proven private cause.
+
+[Unknown] Native run outcome, native failure cause, timing impact and runtime correctness remain unverified by this source-only review. The frozen packet lists R2 focused tests and typecheck as pending at review time; no test result is inferred from the source verdict. Production source correspondence is not causal evidence for any earlier native execution. No full-battery, green-build or native-success claim is made.
