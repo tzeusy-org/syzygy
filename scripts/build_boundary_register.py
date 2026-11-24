@@ -62,6 +62,11 @@ PINNED_SOURCE = {
     "materialize-routes": MATERIALIZE,
     "materialize-control": MATERIALIZE_TEST,
 }
+# Independent frozen review of the complete declaration inputs. The manifest
+# records per-source drift, while this subject prevents a manifest-only repin
+# from certifying a syntax the deliberately scoped extractor did not read.
+DECLARATION_SOURCES = ("effect-authority", "materialize-routes", "observer-registry", "poc-routes")
+REVIEWED_DECLARATIONS_SHA256 = "034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75"
 FORECLOSURE = {
     "reason": "foreclosed",
     "effect": "butlers-tracker-write",
@@ -310,7 +315,8 @@ def render(manifest, clauses, specs, units, effects, pins):
         "",
         f"Reviewed scope at `{manifest['reviewed_base']}` covers {len(clauses)} governing clauses",
         f"and {len(units)} source units, including explanatory context. The input digests below",
-        "bind the selected clause text and exact declaration/evidence files.",
+        "bind the selected doctrine, specification and evidence bytes. Source repinning alone",
+        "cannot update the independently reviewed context and complete declaration subjects.",
         "",
         "## Governing boundary dispositions",
         "",
@@ -340,10 +346,17 @@ def render(manifest, clauses, specs, units, effects, pins):
                      f"[{authority_title}](../{path}){constrained} |")
     lines.extend(("", "## Source pins", "", "| Subject | Exact SHA-256 |", "| --- | --- |"))
     lines.extend(f"| {key} | `{value}` |" for key, value in sorted(pins.items()))
+    lines.extend(("", "The reviewed declared-effect source subject is",
+                  f"`{declaration_digest(pins)}`."))
     return "\n".join((*lines, ""))
 
 
-def build(read, *, context_sha256=REVIEWED_CONTEXT_SHA256):
+def declaration_digest(pins):
+    return digest("\n".join(f"{key}:{pins[key]}" for key in DECLARATION_SOURCES))
+
+
+def build(read, *, context_sha256=REVIEWED_CONTEXT_SHA256,
+          declarations_sha256=REVIEWED_DECLARATIONS_SHA256):
     manifest = decode_json(read(MANIFEST))
     fields(manifest, ("reviewed_base", "pins", "boundaries", "effects"), "input manifest")
     require(manifest["reviewed_base"] == REVIEWED_BASE,
@@ -360,6 +373,8 @@ def build(read, *, context_sha256=REVIEWED_CONTEXT_SHA256):
     check_population(pins, manifest["pins"], "source pins")
     drift = [key for key, value in pins.items() if manifest["pins"][key] != value]
     require(not drift, f"scoped sources changed; reconcile exact bytes: {', '.join(drift)}")
+    require(declaration_digest(pins) == declarations_sha256,
+            "declared effect sources differ from the exact independently reviewed declaration inputs")
 
     units = boundary_units(clauses)
     mappings = manifest["boundaries"]
@@ -379,9 +394,11 @@ def reader(root):
     return read
 
 
-def check(read, *, context_sha256=REVIEWED_CONTEXT_SHA256):
+def check(read, *, context_sha256=REVIEWED_CONTEXT_SHA256,
+          declarations_sha256=REVIEWED_DECLARATIONS_SHA256):
     try:
-        output, count = build(read, context_sha256=context_sha256)
+        output, count = build(read, context_sha256=context_sha256,
+                              declarations_sha256=declarations_sha256)
         require(read(REGISTER) == output, "generated register is stale; regenerate and review")
     except (InvalidRegister, OSError, UnicodeError, KeyError, TypeError, AttributeError,
             json.JSONDecodeError) as error:
@@ -466,12 +483,15 @@ def selftest_cases():
     manifest["boundaries"][context] = {"disposition": "context",
                                        "rationale": "Synthetic reviewed heading summary."}
     context_sha256 = digest(context)
+    declarations_sha256 = declaration_digest(manifest["pins"])
 
-    def result(inputs):
-        return check(inputs.__getitem__, context_sha256=context_sha256)
+    def result(inputs, *, reviewed_declarations=declarations_sha256):
+        return check(inputs.__getitem__, context_sha256=context_sha256,
+                     declarations_sha256=reviewed_declarations)
 
     data[MANIFEST] = json.dumps(manifest)
-    data[REGISTER], _ = build(data.__getitem__, context_sha256=context_sha256)
+    data[REGISTER], _ = build(data.__getitem__, context_sha256=context_sha256,
+                              declarations_sha256=declarations_sha256)
     cases = [("complete fixture and explicit Unknown", result(data) == (17, None)
               and "Prose-only · typed enforcement Unknown" in data[REGISTER]
               and "Typed refusal · foreclosed" in data[REGISTER])]
@@ -520,7 +540,7 @@ def selftest_cases():
     del new_manifest["effects"]["route/POST MATERIALIZE_HUMAN_PATH"]
     new_manifest["effects"]["route/POST UNRELATED_POST_PATH"] = "P-71-Q5"
     changed = {**data, MATERIALIZE: materialize, MANIFEST: json.dumps(new_manifest)}
-    count, failure = result(changed)
+    count, failure = result(changed, reviewed_declarations=declaration_digest(new_manifest["pins"]))
     cases.append(("unrelated POST cannot borrow foreclosure", count == 0 and failure is not None
                   and failure == "route/POST UNRELATED_POST_PATH: no reviewed effect authority"))
 
@@ -535,12 +555,15 @@ def selftest_cases():
     new_manifest["pins"]["poc-routes"] = digest(head_route)
     changed[MANIFEST] = json.dumps(new_manifest)
     count, failure = result(changed)
+    cases.append(("new HEAD exact source review still required after source repin", count == 0
+                  and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+    count, failure = result(changed, reviewed_declarations=declaration_digest(new_manifest["pins"]))
     cases.append(("new HEAD remains unmapped after source repin", count == 0 and failure is not None
                   and "missing ['route/HEAD POC_HUMAN_PATH']" in failure))
 
     new_manifest["effects"]["route/HEAD POC_HUMAN_PATH"] = "Three-Surface POC reader notes"
     changed[MANIFEST] = json.dumps(new_manifest)
-    count, failure = result(changed)
+    count, failure = result(changed, reviewed_declarations=declaration_digest(new_manifest["pins"]))
     cases.append(("new HEAD cannot borrow GET authority", count == 0
                   and failure == "route/HEAD POC_HUMAN_PATH: no reviewed effect authority"))
 
@@ -551,8 +574,22 @@ def selftest_cases():
         new_manifest = deepcopy(manifest)
         new_manifest["pins"]["poc-routes"] = digest(source)
         changed = {**data, ROUTES: source, MANIFEST: json.dumps(new_manifest)}
-        count, failure = result(changed)
+        count, failure = result(changed, reviewed_declarations=declaration_digest(new_manifest["pins"]))
         cases.append((name, count == 0 and failure is not None and failure.startswith("POC routes: unsupported")))
+
+    for name, declaration in (
+        ("quoted method cannot be hidden by a repin",
+         "{ 'method': 'HEAD', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },"),
+        ("reordered properties cannot be hidden by a repin",
+         "{ path: POC_HUMAN_PATH, method: 'HEAD', credentialClass: 'human-open', handle },"),
+    ):
+        routes = data[ROUTES].replace("];", declaration + "\n];")
+        new_manifest = deepcopy(manifest)
+        new_manifest["pins"]["poc-routes"] = digest(routes)
+        changed = {**data, ROUTES: routes, MANIFEST: json.dumps(new_manifest)}
+        count, failure = result(changed)
+        cases.append((name, count == 0
+                      and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
 
     trials = (
         ("relabelled prohibition", "boundaries", first,

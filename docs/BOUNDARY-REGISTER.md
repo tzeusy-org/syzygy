@@ -9,7 +9,8 @@ They record no live read, operation, credential or deployment result.
 
 Reviewed scope at `1e30b1c196c691565fc2d858649aa4942306e305` covers 8 governing clauses
 and 72 source units, including explanatory context. The input digests below
-bind the selected clause text and exact declaration/evidence files.
+bind the selected doctrine, specification and evidence bytes. Source repinning alone
+cannot update the independently reviewed context and complete declaration subjects.
 
 ## Governing boundary dispositions
 
@@ -121,3 +122,6 @@ bind the selected clause text and exact declaration/evidence files.
 | poc-routes | `8e3edf6424909af35110f84a5b271025372b1640cf8787fb26b3249f1784de68` |
 | poc-spec-authorization | `a5e82deaaf41fa7af26a54ac1723d63d6e757b7086ec417f01d8d978664530ce` |
 | source-read-spec-act | `fc7f1585a2ff05e0f09a68faa5bf1b176c94e69186fb512238d6cc9288f2327e` |
+
+The reviewed declared-effect source subject is
+`034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75`.
