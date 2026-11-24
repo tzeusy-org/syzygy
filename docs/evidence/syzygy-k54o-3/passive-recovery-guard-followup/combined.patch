@@ -1,0 +1,218 @@
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index e4661f025..751980fb4 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -1173,6 +1173,30 @@ async function observeRoleLaunches(
+   }));
+ }
+ 
++type ScopedCurrentCalls<T extends ResumeStamp> = { calls: number; entries: T[]; firstRefusal?: T };
++
++/** Observe only the original callback inside this exact append's current scope. */
++function observeScopedCurrent<T extends ResumeStamp, R extends boolean | Promise<boolean>>(
++  scope: AsyncLocalStorage<T>, retained: ScopedCurrentCalls<T> | undefined, makeTrace: () => T,
++  current: () => R, clock: () => number,
++): R {
++  if (retained === undefined) return current();
++  const trace = makeTrace();
++  retained.calls++;
++  if (retained.entries.length === 32) retained.entries.shift();
++  retained.entries.push(trace);
++  const settle = (outcome: ResumeObservation): void => {
++    Object.assign(trace, { settledMs: clock(), outcome });
++    if (outcome !== 'accepted') retained.firstRefusal ??= trace;
++  };
++  try {
++    const original = scope.run(trace, current);
++    if (original instanceof Promise) void original.then(value => settle(value === true ? 'accepted' : 'refused'), () => settle('rejected'));
++    else settle(original === true ? 'accepted' : 'refused');
++    return original;
++  } catch (error) { settle('rejected'); throw error; }
++}
++
+ async function observeDesignRun(run: string, traceInference = false) {
+   const began = performance.now();
+   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
+@@ -1184,6 +1208,7 @@ async function observeDesignRun(run: string, traceInference = false) {
+     kind: orderedWriter.OrderedDesignStoredRecord['kind'];
+     timing: ResumeStamp;
+     stages: Array<{ phase: AppendStage; timing: ResumeStamp }>;
++    attemptCurrent?: ScopedCurrentCalls<CurrentTrace>;
+   };
+   const appendContext = new AsyncLocalStorage<AppendTrace>();
+   let preparedAppend: AppendTrace | undefined, latestAppend: AppendTrace | undefined, firstRefusedAppend: AppendTrace | undefined;
+@@ -1206,7 +1231,11 @@ async function observeDesignRun(run: string, traceInference = false) {
+     const audit = await createAudit({ ...input, current: () => observeAppendStage('audit-authority', input.current, value => value === true) });
+     if (!audit.ok) return audit;
+     const beginOrderedDesignAudit: typeof audit.beginOrderedDesignAudit = (plan, current, onRead) =>
+-      audit.beginOrderedDesignAudit(plan, () => observeAppendStage('attempt-authority', current, value => value === true), onRead);
++      audit.beginOrderedDesignAudit(plan, () => observeAppendStage('attempt-authority', () => {
++        const append = appendContext.getStore();
++        const retained = append === undefined ? undefined : append.attemptCurrent ??= { calls: 0, entries: [] };
++        return observeScopedCurrent(currentScope, retained, () => ({ startedMs: clock(), stages: [] }), current, clock);
++      }, value => value === true), onRead);
+     const commitDesignDelivery: typeof audit.commitDesignDelivery = (request, sample, onRead) => {
+       const stamp: DeliveryTrace = { startedMs: clock(), samples: [] };
+       designDelivery = stamp;
+@@ -2210,6 +2239,43 @@ describe('bounded restoration observer (no native authority fixture)', () => {
+     expect(append).toHaveBeenCalledTimes(82);
+     const auditDiagnostic = JSON.stringify(auditTrace.summary());
+     for (const excluded of ['OWN_PRIVATE_BODY', 'OWN_PRIVATE_PATH', 'OWN_NOT_DIAGNOSTIC']) expect(auditDiagnostic).not.toContain(excluded);
++
++    // The append scope observes nested original calls across an await. An
++    // outside callback still forwards without creating or changing metadata.
++    type CurrentTrace = ResumeStamp & { stages: Array<{ phase: 'runtime-authority'; timing: ResumeStamp }> };
++    const scope = new AsyncLocalStorage<CurrentTrace>(), retained: ScopedCurrentCalls<CurrentTrace> = { calls: 0, entries: [] };
++    let tick = 0;
++    const clock = () => ++tick;
++    const makeTrace = (): CurrentTrace => ({ startedMs: clock(), stages: [] });
++    const nested = vi.fn(() => {
++      scope.getStore()?.stages.push({ phase: 'runtime-authority', timing: { startedMs: clock(), outcome: 'accepted' } });
++      return true;
++    });
++    let originalCurrent!: Promise<boolean>;
++    const appendedCurrent = vi.fn(() => originalCurrent = Promise.resolve().then(nested));
++    const observedCurrent = observeScopedCurrent(scope, retained, makeTrace, appendedCurrent, clock);
++    expect(observedCurrent).toBe(originalCurrent);
++    await expect(observedCurrent).resolves.toBe(true);
++    expect(appendedCurrent).toHaveBeenCalledTimes(1); expect(nested).toHaveBeenCalledTimes(1);
++    expect(retained.entries).toMatchObject([{ outcome: 'accepted', stages: [{ phase: 'runtime-authority', timing: { outcome: 'accepted' } }] }]);
++    const beforeOutside = structuredClone(retained);
++    expect(observeScopedCurrent(scope, undefined, makeTrace, nested, clock)).toBe(true);
++    expect(nested).toHaveBeenCalledTimes(2); expect(retained).toEqual(beforeOutside);
++    const rejectedCurrent = Promise.reject(marker), rejectCurrent = vi.fn(() => rejectedCurrent);
++    expect(observeScopedCurrent(scope, retained, makeTrace, rejectCurrent, clock)).toBe(rejectedCurrent);
++    await expect(rejectedCurrent).rejects.toBe(marker);
++    expect(rejectCurrent).toHaveBeenCalledTimes(1);
++    const firstCurrentFailure = retained.firstRefusal;
++    expect(firstCurrentFailure).toMatchObject({ outcome: 'rejected', stages: [] });
++    for (let index = 0; index < 40; index++) expect(observeScopedCurrent(scope, retained, makeTrace, nested, clock)).toBe(true);
++    expect(retained.calls).toBe(42); expect(retained.entries).toHaveLength(32);
++    expect(retained.firstRefusal).toBe(firstCurrentFailure);
++    expect(nested).toHaveBeenCalledTimes(42);
++    const throwCurrent = vi.fn((): boolean => { throw marker; });
++    try { observeScopedCurrent(scope, retained, makeTrace, throwCurrent, clock); expect.unreachable(); }
++    catch (error) { expect(error).toBe(marker); }
++    expect(throwCurrent).toHaveBeenCalledTimes(1); expect(retained.firstRefusal).toBe(firstCurrentFailure);
++    expect(JSON.stringify(retained)).not.toContain('OWN_NOT_DIAGNOSTIC');
+   });
+ });
+ 
+@@ -2316,8 +2382,22 @@ describe('composed URL run with actual role processes', () => {
+       }
+     };
+     const liveFinals: sessionAudit.UrlDesignRenderContinuation[] = [], coldFinals: sessionAudit.UrlDesignRenderContinuation[] = [];
++    type ClaimCheck = Parameters<typeof recovery.isClaimedStoppedUrlRun>;
++    const coldClaimChecks = new WeakMap<sessionAudit.UrlDesignRenderContinuation, { expected: ClaimCheck; observed?: ClaimCheck[] }>();
+     let finalProductAssertions = 0, finalSiteBeforeStop = -1;
+     if (eligibleStop) {
++      const assertCurrent = sessionAudit.assertUrlDesignRenderContinuationCurrent;
++      vi.spyOn(sessionAudit, 'assertUrlDesignRenderContinuationCurrent').mockImplementation(proof => {
++        const checks = coldClaimChecks.get(proof);
++        if (checks === undefined || checks.observed !== undefined) return assertCurrent(proof);
++        // Observe the first genuine production assertion without issuing another proof walk.
++        const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
++        try { return assertCurrent(proof); }
++        finally {
++          checks.observed = checkClaim.mock.calls.slice();
++          checkClaim.mockRestore();
++        }
++      });
+       const assertFinal = sessionAudit.assertUrlFinalDesignProduct;
+       vi.spyOn(sessionAudit, 'assertUrlFinalDesignProduct').mockImplementation((...args) => { assertFinal(...args); finalProductAssertions++; });
+       const recoverFinal = sessionAudit.prepareRecoveredUrlDesignRenderContinuation;
+@@ -2328,15 +2408,12 @@ describe('composed URL run with actual role processes', () => {
+         return request => {
+           expect(designProduct.isUrlDesignProductLeaseOpen(input.product)).toBe(false);
+           const result = prepare(request);
+-          resumeChecks.push({ phase: 'cold-final-factory', issued: result !== null });
++          const timing = { phase: 'cold-final-factory', issued: result !== null,
++            issuedRemainingMs: result === null ? null : result.deadline - Date.now(), returnedRemainingMs: null as number | null };
++          resumeChecks.push(timing);
+           expect(result).not.toBeNull();
+           expect(result!.deadline).toBeLessThanOrEqual(Math.min(request.deadline, result!.original.products.deadline));
+           expect(prepare(request)).toBeNull();
+-          const checkClaim = vi.spyOn(recovery, 'isClaimedStoppedUrlRun');
+-          try {
+-            sessionAudit.assertUrlDesignRenderContinuationCurrent(result!);
+-            expect(checkClaim.mock.calls).toEqual([[input.verified, input.claim], [input.verified, input.claim]]);
+-          } finally { checkClaim.mockRestore(); }
+           expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent({ ...result! })).toThrow();
+           const priorIds = new Set(liveFinals[0]!.original.parents.map(parent => parent.id));
+           const freshIds = result!.original.parents.filter(parent => !priorIds.has(parent.id));
+@@ -2344,6 +2421,8 @@ describe('composed URL run with actual role processes', () => {
+           expect(result!.original.semanticParentsSha256).toBe(liveFinals[0]!.original.semanticParentsSha256);
+           expect(result!.original.semanticInputsSha256).toBe(liveFinals[0]!.original.semanticInputsSha256);
+           coldFinals.push(result!);
++          coldClaimChecks.set(result!, { expected: [input.verified, input.claim] });
++          timing.returnedRemainingMs = result!.deadline - Date.now();
+           return result;
+         };
+       });
+@@ -2819,7 +2898,8 @@ describe('composed URL run with actual role processes', () => {
+           const launchesBeforeResume = [...relayRoles];
+           const forwardsBeforeResume = [author.count(), inv.count(), fidelity.count(), design.count()];
+           const oldDesignPid = stopped.roles.find(role => role.role === 'design')!.pid;
+-          const resumedRenderAuthority = new AsyncLocalStorage<{ calls: number; totalMs: number }>();
++          type ResumedRenderAuthority = { calls: number; totalMs: number; lastRevalidation?: ResumeStamp };
++          const resumedRenderAuthority = new AsyncLocalStorage<ResumedRenderAuthority>();
+           const verifiedCuts: Awaited<ReturnType<typeof recovery.verifyStoppedUrlRun>>[] = [];
+           const verify = recovery.verifyStoppedUrlRun, claim = recovery.claimStoppedUrlRun;
+           vi.spyOn(recovery, 'verifyStoppedUrlRun').mockImplementation(async (...args) => {
+@@ -2851,11 +2931,27 @@ describe('composed URL run with actual role processes', () => {
+                 try { return options.current(); }
+                 finally { trace.totalMs += performance.now() - began; }
+               } });
+-              return Object.freeze({ ...bridge, restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) => {
+-                const [capability, wait] = restoreArgs;
+-                return observeBootstrap('restore-products', () => resumeProducts!.run(() => wait === undefined
+-                  ? bridge.restoreFrozenProducts(capability) : bridge.restoreFrozenProducts(capability, () => resumeProducts!.authority(wait))), () => true);
+-              } });
++              return Object.freeze({ ...bridge,
++                revalidateRead: (...args: Parameters<typeof bridge.revalidateRead>) => {
++                  const trace = resumedRenderAuthority.getStore();
++                  if (!eligibleStop || trace === undefined) return bridge.revalidateRead(...args);
++                  const stamp: ResumeStamp = { startedMs: performance.now() };
++                  trace.lastRevalidation = stamp;
++                  try {
++                    const result = bridge.revalidateRead(...args);
++                    stamp.outcome = 'accepted';
++                    return result;
++                  } catch (cause) {
++                    stamp.outcome = 'rejected';
++                    throw cause;
++                  } finally { stamp.settledMs = performance.now(); }
++                },
++                restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) => {
++                  const [capability, wait] = restoreArgs;
++                  return observeBootstrap('restore-products', () => resumeProducts!.run(() => wait === undefined
++                    ? bridge.restoreFrozenProducts(capability) : bridge.restoreFrozenProducts(capability, () => resumeProducts!.authority(wait))), () => true);
++                },
++              });
+             });
+             return result;
+           });
+@@ -2977,7 +3073,7 @@ describe('composed URL run with actual role processes', () => {
+               return renderRun(run, deps, continuation);
+             const began = performance.now();
+             const initialRemainingMs = productReads.deadline - Date.now();
+-            const authority = { calls: 0, totalMs: 0 };
++            const authority: ResumedRenderAuthority = { calls: 0, totalMs: 0 };
+             let admission: { entryMs: number; entryRemainingMs: number; outcome: ResumeObservation | 'pending'; settledMs?: number } | undefined;
+             const result = resumedRenderAuthority.run(authority, () => renderRun(run, { ...deps, admitProducedSite: input => {
+               const attempt: NonNullable<typeof admission> = { entryMs: performance.now() - began,
+@@ -3044,6 +3140,14 @@ describe('composed URL run with actual role processes', () => {
+             expect(resumedBegins).not.toHaveBeenCalled();
+             expect(coldFinals).toHaveLength(2);
+             expect(coldFinals[0]).not.toBe(coldFinals[1]);
++            for (const proof of coldFinals) {
++              const { expected, observed } = coldClaimChecks.get(proof)!;
++              expect(observed).toHaveLength(2);
++              for (const [verified, claim] of observed!) {
++                expect(verified).toBe(expected[0]);
++                expect(claim).toBe(expected[1]);
++              }
++            }
+             expect(resumed!.finalSite!.site).toBeGreaterThan(finalSiteBeforeStop);
+             expect(execution.supervisorCapture.roles.every(role => role.pid === 'Unknown')).toBe(true);
+             expect(() => sessionAudit.assertUrlDesignRenderContinuationCurrent(coldFinals[0]!)).toThrow();

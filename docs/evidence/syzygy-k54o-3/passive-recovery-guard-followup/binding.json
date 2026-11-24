@@ -1,0 +1,19 @@
+{
+  "baseCommit": "2c6ff308aaa5d34d2b590ef06bd43ec87fb40948",
+  "sourcePath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "sourceSha256": "dd3de76e5c99bfb4ebfbd5c75f0842d332e2badfd10223841f370c00e87e1791",
+  "patchSha256": "b61d76e00cf7d5825047e677ab6f2c9af012f81089a6777d66f7a8d2d68c86f5",
+  "parents": [
+    {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/append-current-observer-review/r1/append-current-observer.patch",
+      "sha256": "dae3206511ecc60fbb3c3dda000838d18002cae56ec0b9023fd2b55b84dda0dc"
+    },
+    {
+      "path": "/home/orca/.tmp/f3-cold-fixture-guard.EJO9tGcx/cold-fixture-passive-claim.patch",
+      "sha256": "b8ac2e1b5056a52404a2700cb2d25bdd85799a2247e46eb8861fae0c8039df1b"
+    }
+  ],
+  "frozenAtUtc": "2026-11-24T21:40:29.901648+00:00",
+  "tests": "pending focused3 andtypecheck whenheavy slotreleased",
+  "scope": "testonly originalappendcurrentScope tracing; passive actualcoldproof assertion observation replaces extra fixtureproofwalk;numeric proof/producer runway; native acceptance assertions retained through naturalcalls; no runtimechange/budgetincrease"
+}

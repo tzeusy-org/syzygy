@@ -1,0 +1,25 @@
+{
+  "base": "a303bc56e86f65e252aa13663827d46bdcc104f2",
+  "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "baseSha256": "c34ee711b820263e8ea43ea975a9e0a87365c51748e9ef5a4603705bd3408dbc",
+  "sourceSha256": "33725557e28d18465743bf9b3df7c6292cb11d19ceaa0fb7ba19c95e84dc1eae",
+  "patchSha256": "dae3206511ecc60fbb3c3dda000838d18002cae56ec0b9023fd2b55b84dda0dc",
+  "status": "frozen source-only; no tests executed",
+  "scope": "per-append original attemptCurrent timing scope and existing forwarding case; no cold/factory regions changed",
+  "criteria": [
+    "Original callback exactlyonce; original return promise and synchronous throw/rejection identity preserved",
+    "Actual nested runtime-authority phase across original callback await retained in same lexical append context",
+    "Outside append call forwards original callback and adds no metadata",
+    "Rolling32 entries plus independent firstRefusal survive later calls",
+    "No added authority/IO/deadlines/native fixture assertion changes",
+    "No new tests; extends existing forwarding case"
+  ],
+  "verificationPending": [
+    "focused3observer cases in clean source-substituted clone",
+    "typecheck",
+    "independent review of combined final source"
+  ],
+  "verified": {
+    "patchReconstruction": "applies to exacta303 source and reconstructs frozen bytes"
+  }
+}
