@@ -358,13 +358,16 @@ function observe<T>(call: () => Promise<T>, settled: (value: T) => void, rejecte
 function observeInitialOrdinarySend() {
   const peers = new WeakMap<machinePeer.UrlMachinePeer, string>();
   const scope = new AsyncLocalStorage<OrdinaryMediation>();
-  const failures = new Map<string, { atMs: number; phase: OrdinaryStage | 'mediation'; attempt: OrdinaryAttempt | undefined; step?: OrdinaryMediation }>();
+  const failures = new Map<string, { atMs: number; phase: OrdinaryStage | 'mediation'; attempt: OrdinaryAttempt; step?: OrdinaryMediation }>();
+  const unassociatedLockRefusals = new Map<string, OrdinaryMediation>();
   const active = new Map<string, OrdinaryAttempt>();
   const recent = new Map<string, OrdinaryMediation>();
+  const requests = new WeakMap<OrdinaryMediation, OrdinaryAttempt>();
   const stores = new WeakMap<machineStore.UrlMachineStore, machineStore.UrlMachineStore>();
 
   function refuse(role: string, phase: OrdinaryStage | 'mediation', attempt = active.get(role), step = scope.getStore()) {
-    if (!failures.has(role)) failures.set(role, { atMs: performance.now(), phase, attempt, step });
+    const known = attempt ?? (step === undefined ? undefined : requests.get(step));
+    if (known !== undefined && !failures.has(role)) failures.set(role, { atMs: performance.now(), phase, attempt: known, step });
   }
   function timed<T>(stamp: ResumeStamp, call: () => T, accepted: (value: Awaited<T>) => boolean, refused?: () => void): T {
     const mark = (outcome: ResumeObservation) => {
@@ -391,7 +394,7 @@ function observeInitialOrdinarySend() {
 
   const nativeFs = createRequire(import.meta.url)('node:fs/promises') as typeof fs;
   const mkdir = nativeFs.mkdir;
-  const mkdirSpy = vi.spyOn(nativeFs, 'mkdir').mockImplementation(((...args: Parameters<typeof mkdir>) => {
+  nativeFs.mkdir = ((...args: Parameters<typeof mkdir>) => {
     const [directory] = args, store = scope.getStore()?.store;
     const original = mkdir(...args);
     if (store === undefined || typeof directory !== 'string' || !/^\/proc\/self\/fd\/[0-9]+\/lock$/u.test(directory)) return original;
@@ -402,7 +405,7 @@ function observeInitialOrdinarySend() {
       } else store.otherErrorAt = performance.now();
     });
     return original;
-  }) as typeof mkdir);
+  }) as typeof mkdir;
   syncBuiltinESMExports();
 
   const capture = machinePeer.captureUrlMachinePeer;
@@ -437,8 +440,11 @@ function observeInitialOrdinarySend() {
     if (role === undefined || operation !== 'inference-forward') return mediate(peer, operation, effect, preflight);
     const step: OrdinaryMediation = { role, startedMs: performance.now(), stages: [] };
     const attempt = active.get(role);
-    recent.set(role, step);
-    if (attempt !== undefined && attempt.following.length < 8) attempt.following.push(step);
+    if (attempt !== undefined) {
+      requests.set(step, attempt);
+      recent.set(role, step);
+      if (attempt.following.length < 8) attempt.following.push(step);
+    }
     const invoke = () => mediate(peer, operation, boundary => {
       step.effect = { startedMs: performance.now() };
       return timed(step.effect, () => effect(() => {
@@ -447,7 +453,12 @@ function observeInitialOrdinarySend() {
         return current;
       }), () => true);
     }, preflight);
-    return timed(step, () => scope.run(step, invoke), result => result.ok, () => refuse(role, 'mediation', attempt, step));
+    return timed(step, () => scope.run(step, invoke), result => result.ok, () => {
+      refuse(role, 'mediation', attempt, step);
+      const store = step.store;
+      if (!requests.has(step) && store?.acquiredAt === undefined && store?.lastConflictAt !== undefined
+        && !unassociatedLockRefusals.has(role)) unassociatedLockRefusals.set(role, step);
+    });
   });
   for (const role of ['author', 'inventory', 'fidelity']) {
     let ordinal = 0;
@@ -456,6 +467,10 @@ function observeInitialOrdinarySend() {
         const step = scope.getStore();
         const attempt: OrdinaryAttempt = { ordinal: ++ordinal, route, following: step === undefined ? [] : [step], stages: [] };
         active.set(role, attempt);
+        if (step !== undefined) {
+          requests.set(step, attempt);
+          recent.set(role, step);
+        }
         return observeStage(role, 'request', call, value => value.ok, attempt);
       },
       audit(event, call) {
@@ -474,14 +489,15 @@ function observeInitialOrdinarySend() {
   }
   let stopped = false;
   return {
-    summary: () => ({ failures: Object.fromEntries(failures), recent: Object.fromEntries(recent) }),
+    summary: () => ({ failures: Object.fromEntries(failures), recent: Object.fromEntries(recent),
+      unassociatedLockRefusals: Object.fromEntries(unassociatedLockRefusals) }),
     stop() {
       if (stopped) return;
       stopped = true;
       ordinaryRelayProbes.clear();
       mediateSpy.mockRestore();
       captureSpy.mockRestore();
-      mkdirSpy.mockRestore();
+      nativeFs.mkdir = mkdir;
       syncBuiltinESMExports();
     },
   };
