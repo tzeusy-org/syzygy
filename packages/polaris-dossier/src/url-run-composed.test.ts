@@ -1193,6 +1193,7 @@ describe('composed URL run with actual role processes', () => {
     };
     const liveFinalPreparations: Array<'accepted' | 'refused'> = [];
     let initialDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
+    let initialFixtureDelivery: 'returned' | 'planned' | undefined;
     let resumeDiagnostic: Awaited<ReturnType<typeof observeDesignRun>> | undefined;
     let resumedDesignAudit: string | undefined;
     let resumeAuditEnteredMs: number | undefined;
@@ -1417,10 +1418,12 @@ describe('composed URL run with actual role processes', () => {
           const view = await actual.commitDesignDelivery(...args);
           deliveryReproductions.push(reproducedAtDesignHostCount.splice(0));
           if (resumedAudit) return view;
+          initialFixtureDelivery = 'returned';
           const profile = f.plans.find(plan => plan.role === 'design')!.profile;
           if (!isOrderedDesignSessionProfile(profile)) throw new Error('owned ordered profile absent');
           expectedPlan = planOrderedDesignBytes({ ...orderedDesignPlanInputForDelivery(profile, view.receipt,
             args[0].expectedProduct, f.commit, f.deadline), envelope: view.view });
+          initialFixtureDelivery = 'planned';
           delivered = view;
           if (!cut) return view;
           cutTaken = true;
@@ -2017,6 +2020,9 @@ describe('composed URL run with actual role processes', () => {
         ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
       const resumedAudit = resumeDiagnostic === undefined ? undefined : await readDesignAuditKinds(resumedDesignAudit);
       const resumeEvidence = resumeDiagnostic === undefined ? undefined : { ...resumeDiagnostic(), audit: resumedAudit };
+      const initialTrace = initialDiagnostic?.();
+      const initialDelivery = { setup: initialTrace?.designSetup, commit: initialTrace?.designDelivery, fixture: initialFixtureDelivery,
+        activation: initialTrace?.inference.hostActivation };
       const stoppedEvidence = {
         failure: stopped.failure, budgetReason: stopped.budget.reason, heldDesignTurns: stopped.budget.heldDesignTurns,
         pendingRoles: stopped.budget.pendingRoles, auditPoisoned: stopped.audit.poisoned, auditTail: stopped.audit.tail,
@@ -2032,19 +2038,19 @@ describe('composed URL run with actual role processes', () => {
         // Preserve failed pre-cut artifacts only after real bounded cleanup.
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
-          failure: error instanceof Error ? error.message : 'Unknown', inputTreeSha256: runtime.inputTreeSha256,
+          failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
-          initialOrderedAudit: initialDiagnostic?.().orderedAudit, initialInference: initialDiagnostic?.().inference }, null, 2));
+          initialOrderedAudit: initialTrace?.orderedAudit, initialInference: initialTrace?.inference }, null, 2));
       }
-      throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', events, failures,
+      throw new Error(JSON.stringify({ failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, events, failures,
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialDiagnostic?.().orderedAudit,
-        initialInference: initialDiagnostic?.().inference, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(), firstReproductionRefusal,
+        resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+        initialInference: initialTrace?.inference, firstRuntimeFailure, firstAuthorSendRefusal: initialAuthorSend?.first(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
