@@ -1,0 +1,39 @@
+diff --git a/spec.md b/spec.md
+--- a/spec.md
++++ b/spec.md
+@@ -56,0 +57,4 @@
++
++The ordinary `syzygy dossier check` for a structurally valid schema-v12 operator-agent draft SHALL give exactly one source-example advisory in its immediate report when its eligible draft structure is available and no qualifying source example is selected. The eligible positions are existing `code` elements in the block list of a produced section, a produced deep dive and a supported subsection of a produced section. A graph or recorded graph omission, plain text including a code hint, or a position in a non-produced part supplies no selection. The check uses existing structural visibility and screening. A code element whose structure is available may count as selected when its cited body is withheld; no body, path, range, identity or citation from that element may be disclosed by this advice. If the whole draft or a relevant structural population is withheld, unavailable or unusable for the absence decision, the advice SHALL be absent. Check SHALL perform no additional source read for this advice. The advice states a possible author action and establishes neither the truth of an example nor the presence or absence of examples in the repository.
++
++When reported, `sourceExampleAdvice` is one immediate JSON member with `{"code":"no-source-example","label":"Inferred","detail":"Consider a cited source example that shows what the project does."}`. The human report gives the same message once in its advisory region. The member is absent for a qualifying selection and for earlier draft schemas, the inventory check, provider operation, refusal or a check whose record used its bounded form. This addition SHALL affect only the immediate check report, outside `readerAdvice`. It SHALL leave findings, exit status and readiness, the stored check and derived records, the reading ledger and `readingDifference`, and rendered bytes unchanged. If another immediate report enhancement is requested, this advice SHALL change none of its fields or eligibility decisions.
+@@ -537,0 +542,30 @@
++
++#### Scenario: A supported draft with no selected example receives one immediate advisory
++
++- **WHEN** a structurally valid visible v12 operator-agent draft contains produced sections and no qualifying code selection, and a separately initialized predecessor run checks identical fixture inputs
++- **THEN** the JSON report has exactly the `sourceExampleAdvice` member above, and the human report has the same message once, while all other report fields, outcome, exit status, readiness, findings, durable records, ledger and difference match the predecessor byte or value as appropriate
++
++#### Scenario: Each eligible placement clears the advisory independently
++
++- **WHEN** otherwise identical supported drafts each add only one structural `code` element to a produced section's block list, a produced deep dive's block list or a supported subsection's block list, respectively
++- **THEN** each gives no source-example advice; in distinct controls, keeping similar prose or a code-naming string, or allowing a code element only in a non-produced part, leaves the single advisory
++
++#### Scenario: A graph and its omission do not select a source example
++
++- **WHEN** an otherwise matching supported draft without a code element supplies a produced graph hero or its reasoned omission in two separate runs
++- **THEN** both immediate reports carry the one advisory, and each graph or omission artifact and rendered output matches its equal predecessor without this advice
++
++#### Scenario: Withholding preserves the difference between a known selection and Unknown
++
++- **WHEN** normal screening withholds the cited text of a code element whose structure remains available, or a separate fixture withholds the whole layer or prevents classification of a relevant structural population
++- **THEN** neither case emits an absence advisory; no withheld identity or value appears and the read trace equals the predecessor, while the equivalent available empty population emits the one advisory
++
++#### Scenario: Other entry points and a bounded check report remain exact
++
++- **WHEN** otherwise equivalent input exercises an earlier supported schema, inventory, provider check, refusal or the supported draft's existing bounded check-record path
++- **THEN** no source-example advice is emitted, and the check output and records equal each exact predecessor for that entry point; the provider rendered golden retains its pinned bytes
++
++#### Scenario: An independently requested report remains separate from source-example advice
++
++- **WHEN** a supported draft receives this advice and another immediate assessment is independently available, first in the same invocation and then with the source-example advice disabled in a paired control
++- **THEN** only `sourceExampleAdvice` and its matching human message differ, with the other assessment, findings and readiness, stored records, and render kept byte or value equal
