@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW\.md`
+
 - `F3-(INITIAL-DESIGN-PUBLICATION-ACTIVATION|STAGED-ALLOCATION-READBACK-AUTHORITY)-REVIEW-RAW\.md`
 
 - `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN|D11-RUNTIME-INITIAL|D11-RUNTIME-SUCCESSOR)-REVIEW-RAW\.md`
@@ -234,3 +236,5 @@
 [Observed] The staged allocation readback review records `PASS` for `d45584c52` (F3-STAGED-ALLOCATION-READBACK-AUTHORITY-REVIEW-RAW.md). A-184 retains the authority check after returning across the promise boundary and before lock removal. The 91 focused cases pass. Both added controls detect restoration of the duplicate or removal of the retained check. [Unknown] Hosted allocation completion.
 
 [Observed] The main merge preserves each of its 74 adoption rows byte for byte. The branch’s historical same-store setup row for `236df7ecd` is recorded as A-210 after main assigned A-64 to the system-model amendment. Earlier frozen reviews retain their original branch identifier and subject commit. The 195 combined rows have distinct identifiers.
+
+[Observed] The staged batch envelope review records `PASS` for `f6721c73f` (F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW.md). A-185 gives an asynchronous two-to-eight-slot transaction ten seconds under its caller and original run deadline. The focused suite passes 99 cases and four negative controls fail their intended assertions. The native interrupted replay refused on ordinary Fidelity lock contention before Stop. [Unknown] Hosted batch completion.

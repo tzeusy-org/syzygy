@@ -1,0 +1,77 @@
+{
+  "subjectCommit": "f6721c73fd5cf8787cf88756f1061e2f9fcfa03e",
+  "baseCommit": "538e4da330946b264dc8580032b1ac077e96fdc2",
+  "binaryDeltaSha256": "340b6029a121b03d3ac86da12c122b1e42b80389abf2aee0aa0008bcada704e9",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW.md",
+    "sha256": "976e0063c16ace28368dc3e39958976522592eb5ea7239e1e40ec94fc1c310dd"
+  },
+  "declaredBatchBudget": {
+    "operationMilliseconds": 10000,
+    "selection": "currentAsync exists and count > 1",
+    "maximumCount": 8,
+    "lockContentionMilliseconds": 1000,
+    "expiry": "caller and original run deadline"
+  },
+  "focusedVerification": {
+    "integrationTestsPassed": 99,
+    "integrationLogSha256": "1403bca47006d796d09288d307375dd8035c3e56700426da3d2db584ab79e93c",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "typecheckExitCode": 0
+  },
+  "negativeControls": {
+    "subjectCommit": "f6721c73fd5cf8787cf88756f1061e2f9fcfa03e",
+    "selector": "bounds allocation with async",
+    "results": [
+      {
+        "name": "batch-five-seconds",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;",
+        "new": "const STAGED_BATCH_ALLOCATION_MILLISECONDS = 5000;",
+        "exitCode": 1,
+        "logSha256": "b9878537450c590ff31b18aa63d584f75c8073b03e38129c4187e5382a893f72"
+      },
+      {
+        "name": "batch-without-ten-second-cutoff",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;",
+        "new": "const STAGED_BATCH_ALLOCATION_MILLISECONDS = 30_000;",
+        "exitCode": 1,
+        "logSha256": "eda24a0082b18c5b2966683c9e95eeb6c549bc1d3c63ee76d38c22796921bf12"
+      },
+      {
+        "name": "batch-unqualified-authority",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "staging !== undefined && count > 1\n        ? STAGED_BATCH",
+        "new": "count > 1\n        ? STAGED_BATCH",
+        "exitCode": 1,
+        "logSha256": "5e715a86f431f543d9f95f2523ee38caea4e310c9f42bb359788fa3f91109011"
+      },
+      {
+        "name": "single-slot-batch-envelope",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "staging !== undefined && count > 1\n        ? STAGED_BATCH",
+        "new": "staging !== undefined\n        ? STAGED_BATCH",
+        "exitCode": 1,
+        "logSha256": "9d03fac2cff7d63d09977308cf07bbc27746b161b28cffd288b36fc7d62df860"
+      }
+    ]
+  },
+  "nativeSuccess": "Unknown",
+  "localNativeExercise": {
+    "subjectCommit": "f6721c73fd5cf8787cf88756f1061e2f9fcfa03e",
+    "scenario": "stop-resume",
+    "manifestSha256": "ad84307db7d9a63f3a81d27815d7de37f876bc4e707d0d4c22e130054ccdd574",
+    "logSha256": "7b0ee86b3f31f227cf895f81b7723eebb5a2a10bdd908accacf8f37cfcfbb8aa",
+    "stopReached": false,
+    "observedRefusal": {
+      "role": "fidelity",
+      "storeConflicts": 69,
+      "elapsedMilliseconds": 1002.338267,
+      "storeAcquisition": "absent",
+      "effectCallback": "absent"
+    },
+    "preciseHolderRelease": "Unknown"
+  }
+}
