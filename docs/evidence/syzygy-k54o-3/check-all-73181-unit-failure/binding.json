@@ -1,0 +1,40 @@
+{
+  "subjectCommit": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "command": "npm run check:all",
+  "result": "FAIL at unit; remaining tiers not run",
+  "counts": {
+    "passed": 6348,
+    "failed": 17,
+    "skipped": 1,
+    "todo": 0
+  },
+  "filesExamined": 255,
+  "failureClassification": {
+    "fiveSecondTestTimeouts": 17,
+    "method": "17 failed test rows in guarded reporter;17 corresponding default-reporter timeout arrows",
+    "nestedPendingOperation": "Unknown; this recording does not claim a shared leaf cause"
+  },
+  "runner": {
+    "oneObservedWorker": true,
+    "private0700TMPDIR": true,
+    "cleanup": true,
+    "denominatorProblems": [
+      "failed-files"
+    ]
+  },
+  "log": {
+    "path": "check-all.log.gz",
+    "encoding": "gzip; decompression restores exact captured stdout/stderr bytes",
+    "uncompressedSha256": "05fef1a4c8fd51a718391f0f913e49b9228bec791b8035cf0e025554b11e4228",
+    "gzipSha256": "37241b50c6e0158b51d4fd3ed1369d4454b500ce8d9e30697d9160f74dd6bba6"
+  },
+  "files": {
+    "commit": "e2f24c4f08fd1cad5a01c26fa8a7aa080f5ddc9f72d74a2714b4ac228aca8b3e",
+    "tree": "005ba3a73995aa30ebcdfb40fe506b473eba56093a9c1caeb6728def8dedcefa",
+    "exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "unit-failure-summary.json": "ace5715d6f630f4252a966a8d7f72e6a5545201f803d86d9858fe369110c24e3",
+    "worker-summary.json": "48c623b70fbbfe64e2ff7aea646c278c942a091b4d15380fdaefe19ea8b7ecc1",
+    "worker-samples.jsonl": "b9050227d7886c06b505fd715466dabaec7241a821d10d34ae4055a12fa30718"
+  },
+  "limits": "Earlier exactef014 unit pass remains a separate source-bound result. It does not replace this failure; these failures do not establish a product authority/resource guard defect."
+}

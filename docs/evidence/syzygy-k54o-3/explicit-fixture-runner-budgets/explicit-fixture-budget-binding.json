@@ -1,0 +1,143 @@
+{
+  "base": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "headAtRetention": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "sourceFiles": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-0.ts",
+      "beforeSha256": "7e223bb683732f8fd93330cd2e30b6cf584b71c0e20073cfb2a3db046d32ddbf",
+      "afterSha256": "b99e3b9946a36d851d2ddb0832a27485a3ef74d76a6552166da0f4dbddca7cbc",
+      "insertions": 2,
+      "deletions": 1,
+      "netLines": 1
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-1.ts",
+      "beforeSha256": "84765fa7d032daf2d29eaf9591065fbc90ddc29b00bba3ab9b4f805228d15fef",
+      "afterSha256": "a5715d73d0f62296c85e4eabfaa6b3cc0d853ae85baccf45081630f5adfaba98",
+      "insertions": 4,
+      "deletions": 3,
+      "netLines": 1
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-2.ts",
+      "beforeSha256": "faafb98f1a2b94ce9631ff4de9e3826612a30746b31f0f826c96f500e034de9d",
+      "afterSha256": "ca23c627c587d83faa186bb4ea173a95f5371ec85ab43c49bdfcd594a24f29ba",
+      "insertions": 2,
+      "deletions": 1,
+      "netLines": 1
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-3.ts",
+      "beforeSha256": "74bea7d5f5f36719ab22cf20fb851c48ec8b8d6e17116c7265567471d485ce94",
+      "afterSha256": "774669abc6191d26cd30edd84dbf29616833e7135c0fae6be36e200f4834c975",
+      "insertions": 1,
+      "deletions": 1,
+      "netLines": 0
+    }
+  ],
+  "frozen": true,
+  "netCaseGrowth": 0,
+  "testDeclarationsAndBodies": "All41callbackdeclarations/bodybytes unchanged; all183matcherexpressions and157expectlines identical. Independent removal ofonly6timeoutoptions+3comments recovers4originalfiles exactly.",
+  "allowanceChange": {
+    "durableFixtures": "Explicit20_000ms describedfault inpeer1/cold1/close3suites; existingpercaseexplicitoptionsoverride byVitest3.2.7 chunk-hooks655-657.",
+    "wholeTreeCensus": "Only finds exactly the listed consumers, by name and by whole-model serialization gets20_000ms; remaining3cases unchanged.",
+    "unchanged": "Unit tier, globaldefaults, all runtime5/10s guardlimits, assertions/bodybytes, fixturecalls, file/casepopulation.",
+    "footprint": {
+      "inserted": 9,
+      "deleted": 6,
+      "netLines": 3
+    }
+  },
+  "verification": {
+    "command": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l node node_modules/vitest/vitest.mjs run --project unit --maxWorkers 1 --reporter verbose packages/polaris-dossier/src/url-machine-peer-history.test.ts packages/polaris-dossier/src/url-run-machine-close.test.ts packages/polaris-dossier/src/url-machine-cold-history.test.ts apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+    "exit": 0,
+    "files": 4,
+    "passed": 105,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 264.7,
+    "wholeLogTotals": [
+      "Test Files  4 passed (4)",
+      "Tests  105 passed (105)",
+      "Duration  264.70s (transform 9.03s, setup 275ms, collect 18.16s, tests 240.63s, environment 1ms, prepare 2.14s)"
+    ],
+    "independentPerCaseLogCount": 105,
+    "perFileCases": {
+      "packages/polaris-dossier/src/url-machine-cold-history.test.ts": 29,
+      "packages/polaris-dossier/src/url-machine-peer-history.test.ts": 35,
+      "packages/polaris-dossier/src/url-run-machine-close.test.ts": 37,
+      "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts": 4
+    },
+    "scope": "Only4assignedfiles; no typecheck/fullsuite/native or extra tests. No mutationcontrols run.",
+    "passingCasesLongerThanOld5000": [
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "test": "cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store",
+        "milliseconds": 6700
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "test": "cold protected machine reconstruction > refuses run expectation drift",
+        "milliseconds": 5031
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "test": "cold protected machine reconstruction > refuses withdraw without renewing the original deadline",
+        "milliseconds": 5397
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "test": "cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup",
+        "milliseconds": 5927
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "test": "same-store machine continuation seam > retains exact old anchors and allocates only 4 freshly prepared roles in the same store",
+        "milliseconds": 5663
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "test": "same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints",
+        "milliseconds": 5072
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "test": "same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close",
+        "milliseconds": 5548
+      }
+    ]
+  },
+  "policyAssessment": {
+    "CONTRIBUTING": "Checking a change131-161 defineshermeticunitboundary andlowesttier rule; these remainunchanged. CI timebudget208-233 remainsindependentlyrequired; thisfocusedallowance is not a hosted7minute claim.",
+    "existingConvention": "vitest.config.ts42 explicitly preserves tests statingownbudget; existingunit store describes30_000. InstalledVitest3.2.7 supports suite-leveltimeout andpercaseoverride. No conflict found with requested scoped explicitallowance.",
+    "adoptionScope": "Testing allowance only, parentrequestedagentdecision; no change toproductperformancepromise, authoritytimers, secretguards or observed-codeexecution."
+  },
+  "priorFailure": {
+    "path": "/home/orca/.tmp/f3-authority-join-check-73181/unit-failure-summary.json",
+    "sha256": "ace5715d6f630f4252a966a8d7f72e6a5545201f803d86d9858fe369110c24e3",
+    "disposition": "Original73181fullcheck:allfailed17cases at5000ms Vitesttimeouts. Remainsretainedfailedattempt; focused105pass doesnot makefullgatepass oridentifyallnestedleafcauses. Integration/e2e/battery were not reached bythatfailedattempt."
+  },
+  "artifacts": {
+    "explicit-fixture-budget.patch": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget.patch",
+      "sha256": "82bb9e562d8ba30c984b19851e98e4a6d21c6d96cc99780cc57ccac59bb21e63"
+    },
+    "explicit-fixture-budget-focused.log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-focused.log",
+      "sha256": "93ea831a046105469be3bd13236bffb97a2c27d3d35c2e5fb5fcaffac08acead"
+    },
+    "explicit-fixture-budget-preservation.json": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-preservation.json",
+      "sha256": "48a0e4476355416f886df3396f2c37f45b5b4d597cee20b19b90dc6627055e3a"
+    },
+    "explicit-fixture-budget-plan.json": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-plan.json",
+      "sha256": "b89ec3f1015b120c67c10226c095ffdb130cea35ee8ca8c54548f10cc2284d41"
+    }
+  },
+  "actions": "Onlyassigned4testfilesedited; frozenforfreshindependentreview. No runtime/globaltierchanges, newtests, commit or trackermutation."
+}

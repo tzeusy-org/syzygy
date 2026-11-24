@@ -1,0 +1,73 @@
+diff --git a/apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts b/apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts
+index d454dbb1e..d9cd33c54 100644
+--- a/apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts
++++ b/apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts
+@@ -68,7 +68,7 @@ const EXPECTED_WHOLE_MODEL: Readonly<Record<string, string>> = {
+ };
+ 
+ describe('every consumer of the test-artifact verification treats `reported` as not verified', () => {
+-  it('finds exactly the listed consumers, by name and by whole-model serialization', () => {
++  it('finds exactly the listed consumers, by name and by whole-model serialization', { timeout: 20_000 }, () => {
+     const all = sources();
+     expect(all.size).toBeGreaterThan(100);
+     const consumers = [...all].filter(([path, text]) => path !== DEFINITION && CONSUMER.test(text)).map(([path]) => path);
+diff --git a/packages/polaris-dossier/src/url-machine-cold-history.test.ts b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+index 09217e956..b20344ec9 100644
+--- a/packages/polaris-dossier/src/url-machine-cold-history.test.ts
++++ b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+@@ -91,7 +91,8 @@ async function fixture(active = false, lateAudit = false, generations = 1) {
+   return { options, issued, files, row, expire: () => { now = deadline; }, withdraw: () => { current = false; } };
+ }
+ 
+-describe('cold protected machine reconstruction', () => {
++// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
++describe('cold protected machine reconstruction', { timeout: 20_000 }, () => {
+   it('reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority', async () => {
+     const f = await fixture(), before = await Promise.all(f.files.map(file => readFile(file)));
+     const result = await reconstructColdUrlRunMachineHistory(f.options); expect(result).not.toBeNull(); if (!result) return;
+diff --git a/packages/polaris-dossier/src/url-machine-peer-history.test.ts b/packages/polaris-dossier/src/url-machine-peer-history.test.ts
+index b5eb2ada2..82cb65678 100644
+--- a/packages/polaris-dossier/src/url-machine-peer-history.test.ts
++++ b/packages/polaris-dossier/src/url-machine-peer-history.test.ts
+@@ -68,7 +68,8 @@ async function fixture(revoke = true, subject?: Pick<UrlMachineClientContext, 'p
+   return { options, storeOptions, record, rotated, revoked, firstHead, files, tick: (instant: number) => { now = instant; }, withdraw: () => { current = false; } };
+ }
+ 
+-describe('cold historical machine-peer joins', () => {
++// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
++describe('cold historical machine-peer joins', { timeout: 20_000 }, () => {
+   it('joins actual protected machine and audit cuts under their distinct policy bindings', async () => {
+     const policy = policyFixture(), loaded = buildDossierScreen(policy.bytes, true, null, 'private');
+     if (!loaded.ok) throw new Error('owned audit screen refused');
+diff --git a/packages/polaris-dossier/src/url-run-machine-close.test.ts b/packages/polaris-dossier/src/url-run-machine-close.test.ts
+index 0233ebf67..d24ffbf78 100644
+--- a/packages/polaris-dossier/src/url-run-machine-close.test.ts
++++ b/packages/polaris-dossier/src/url-run-machine-close.test.ts
+@@ -67,7 +67,8 @@ async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' |
+   return { root, options, machine, expire: () => { now = options.deadline; }, withdraw: () => { current = false; }, withdrawEffects: () => { effects = false; } };
+ }
+ 
+-describe('machine accept authorization ordering', () => {
++// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
++describe('machine accept authorization ordering', { timeout: 20_000 }, () => {
+   it('keeps both initial ordered Design clients unpublished across a Stop before activation', async () => {
+     const createTransport = vi.spyOn(transportPort, 'createSessionMachineTransport');
+     const child: NonNullable<ReturnType<UrlRunMachineOptions['launch']>> = {
+@@ -123,7 +124,7 @@ describe('machine accept authorization ordering', () => {
+   });
+ });
+ 
+-describe('retained production machine closure evidence', () => {
++describe('retained production machine closure evidence', { timeout: 20_000 }, () => {
+   it('retains eight actual never-issued anchors and immutable selected contexts from the exact clean result', async () => {
+     const f = await fixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
+     expect(f.machine.current()).toBe(true); expect(readUrlRunMachineClosedHistory({ lifecycle: 'retired' })).toBeNull();
+@@ -184,7 +185,7 @@ describe('retained production machine closure evidence', () => {
+ 
+ /** Reopen uses real cold verification and protected files. Only upstream
+  * runtime/plan admission remains the same explicit unit substitution above. */
+-describe('same-store machine continuation seam', () => {
++describe('same-store machine continuation seam', { timeout: 20_000 }, () => {
+   async function closedFixture(issued = false) {
+     const f = await fixture(), result = await f.machine.close();
+     let sealed = readUrlRunMachineClosedHistory(result); if (!sealed) throw new Error('owned close refused');

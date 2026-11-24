@@ -1,0 +1,46 @@
+[
+  {
+    "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+    "caseCallbackDeclarations": 16,
+    "caseCallbackBodiesByteIdentical": true,
+    "caseCallbackBodiesSha256": "1d69f9720441ec7e354366f4d579341360cc27d3ea260227a1163b62c645fe76",
+    "matcherCallExpressions": 63,
+    "matcherExpressionsByteIdentical": true,
+    "matcherExpressionsSha256": "1f4bce2d0f16c17dffda9f8794b1e78324c60cf9a3945e6f9a284858d12e7ad6",
+    "expectLines": 59,
+    "expectLinesByteIdentical": true
+  },
+  {
+    "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+    "caseCallbackDeclarations": 12,
+    "caseCallbackBodiesByteIdentical": true,
+    "caseCallbackBodiesSha256": "15ef680687f1c77a2652abd2e6811d39cc87e620ef35c05f47a909b37055bc68",
+    "matcherCallExpressions": 84,
+    "matcherExpressionsByteIdentical": true,
+    "matcherExpressionsSha256": "679ee5a48f094ef5c2d8007edc19c8296b5f257ca20a329dfbef49c7bd241ec6",
+    "expectLines": 66,
+    "expectLinesByteIdentical": true
+  },
+  {
+    "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+    "caseCallbackDeclarations": 9,
+    "caseCallbackBodiesByteIdentical": true,
+    "caseCallbackBodiesSha256": "9dd6dae710e7ebf2bfca685f62aeead1ad98f7da7354cec8f1478592655dc638",
+    "matcherCallExpressions": 27,
+    "matcherExpressionsByteIdentical": true,
+    "matcherExpressionsSha256": "e7ce305a4144c9e232534357fa61ce26b155a6bf42a81b54de22e2d645ca6f21",
+    "expectLines": 23,
+    "expectLinesByteIdentical": true
+  },
+  {
+    "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+    "caseCallbackDeclarations": 4,
+    "caseCallbackBodiesByteIdentical": true,
+    "caseCallbackBodiesSha256": "902a6464e2de53ffb81305ecce9e459c7d9914f01cabb334af37ecbd65c1698f",
+    "matcherCallExpressions": 9,
+    "matcherExpressionsByteIdentical": true,
+    "matcherExpressionsSha256": "8d04b2840df107fcd704b67ec26a017b757de1f0cfd31a89497045ff93c5a964",
+    "expectLines": 9,
+    "expectLinesByteIdentical": true
+  }
+]

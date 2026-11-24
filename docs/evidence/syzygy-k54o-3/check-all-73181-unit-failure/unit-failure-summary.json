@@ -1,0 +1,123 @@
+{
+  "subjectCommit": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "command": "npm run check:all",
+  "exit": 1,
+  "terminalStage": "unit",
+  "typecheck": "passed",
+  "counts": {
+    "passed": 6348,
+    "failed": 17,
+    "skipped": 1,
+    "todo": 0
+  },
+  "independentFileSums": {
+    "passed": 6348,
+    "failed": 17,
+    "skipped": 1,
+    "todo": 0
+  },
+  "files": 255,
+  "denominatorProblems": [
+    "failed-files"
+  ],
+  "cleanup": true,
+  "leftovers": [],
+  "errors": [],
+  "failedFiles": [
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "tests": [
+        {
+          "name": "every consumer of the test-artifact verification treats `reported` as not verified > finds exactly the listed consumers, by name and by whole-model serialization",
+          "state": "fail"
+        }
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+      "tests": [
+        {
+          "name": "cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority",
+          "state": "fail"
+        },
+        {
+          "name": "cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store",
+          "state": "fail"
+        },
+        {
+          "name": "cold protected machine reconstruction > refuses parent expectation drift",
+          "state": "fail"
+        },
+        {
+          "name": "cold protected machine reconstruction > refuses run expectation drift",
+          "state": "fail"
+        }
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+      "tests": [
+        {
+          "name": "cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings",
+          "state": "fail"
+        },
+        {
+          "name": "cold historical machine-peer joins > checks 220 exact captured rows using one genuine protected read and no per-row filesystem work",
+          "state": "fail"
+        },
+        {
+          "name": "cold historical machine-peer joins > refuses extra-entry archive without repair on reopen",
+          "state": "fail"
+        },
+        {
+          "name": "cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup",
+          "state": "fail"
+        }
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+      "tests": [
+        {
+          "name": "same-store machine continuation seam > retains exact old anchors and allocates only 0 freshly prepared roles in the same store",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 0)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 1)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 2)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > withdraws both live currentness and retirement when run-authority is lost",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > withdraws both live currentness and retirement when claim is lost",
+          "state": "fail"
+        }
+      ]
+    }
+  ],
+  "notRun": [
+    "test:tiers",
+    "test:integration",
+    "test:e2e",
+    "check:battery"
+  ],
+  "logSha256": "05fef1a4c8fd51a718391f0f913e49b9228bec791b8035cf0e025554b11e4228"
+}

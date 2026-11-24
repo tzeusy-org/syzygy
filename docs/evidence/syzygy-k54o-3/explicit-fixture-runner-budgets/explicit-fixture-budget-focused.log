@@ -1,0 +1,114 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority 2942ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store 6700ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses identity expectation drift 4078ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses controller expectation drift 4151ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses parent expectation drift 3750ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses run expectation drift 5031ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift 4114ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses origin expectation drift 3576ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses profile expectation drift 1241ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses deadline expectation drift 1358ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses client-count expectation drift 1503ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses duplicate expectation drift 1186ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses role-cli expectation drift 1485ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses scope expectation drift 1418ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses witness expectation drift 4166ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses head expectation drift 3062ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-cut expectation drift 2192ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses early-cut expectation drift 1558ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses coherent-identity expectation drift 1340ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses wrong-slot expectation drift 1493ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-context expectation drift 1982ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses an active actual canonical head even when a supplied seal labels it revoked 1873ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a lifecycle event published after the sealed close even when its canonical revoke timestamp was backdated 2334ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a later protected revision instead of silently advancing an independently retained closed head 4102ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses expire without renewing the original deadline 4477ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses withdraw without renewing the original deadline 5397ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > rechecks clean-stop exclusion after an awaited genuine store open 4054ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual canonical-projection-rollback and leaves its bytes unrepaired 3843ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual missing-archive and leaves its bytes unrepaired 1558ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings 2043ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > checks 220 exact captured rows using one genuine protected read and no per-row filesystem work 2499ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses snapshot copies, successful-result copies and genuine result substitution for another row 1021ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > binds the genuine snapshot to each exact independently expected immutable audit subject field 1407ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a new capture once the independently retained original deadline expires 1098ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > retains exact hash, process, scope and temporal checks after caches have been populated 1051ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > reads exact protected revisions from a genuine reopened store and joins retained old bytes without reviving revocation 1679ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins exact archived old bytes after cold reopen without caller-supplied canonical text 1416ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > keeps historical legacy bytes explicitly unavailable and archives only the next real publication 1199ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses missing archive without repair on reopen 2047ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses mutated archive without repair on reopen 2316ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses extra-entry archive without repair on reopen 1836ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses orphan-file archive without repair on reopen 1573ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses relinked archive without repair on reopen 1169ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses interrupted-pack archive without repair on reopen 1090ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-drop archive without repair on reopen 1200ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-extra archive without repair on reopen 1028ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-mutation archive without repair on reopen 1055ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses reordered archive without repair on reopen 926ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup 5927ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > uses only the exact current canonical bytes when the requested revision is still the latest 2502ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed canonical-hash 2698ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed process 2627ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed channel 1146ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed scope 979ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed instance 951ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed role 962ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed run 932ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed parent 1715ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed store-identity 998ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed future-revision 1218ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed after-next-revision 2817ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a captured claim against the revoked latest revision even when all verifier fields match 2562ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses store-shaped copies, stale exact heads and withdrawn parent authority 2891ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses canonical plus ordinary projection rollback against the independent protected high-water history 2973ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > machine accept authorization ordering > keeps both initial ordered Design clients unpublished across a Stop before activation 2813ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > machine accept authorization ordering > checks the fresh verifier after the live sample for sample-refused 1016ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > machine accept authorization ordering > checks the fresh verifier after the live sample for verification-refused 1532ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > machine accept authorization ordering > checks the fresh verifier after the live sample for verified 2674ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > retained production machine closure evidence > retains eight actual never-issued anchors and immutable selected contexts from the exact clean result 2794ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > retained production machine closure evidence > emits no clean evidence after expire 1037ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > retained production machine closure evidence > emits no clean evidence after withdraw 712ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > retained production machine closure evidence > refuses clean closure when actual committed state contradicts in-memory never-issued state 1207ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > retained production machine closure evidence > refuses clean closure when actual pending state contradicts in-memory never-issued state 880ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > retains exact old anchors and allocates only 0 freshly prepared roles in the same store 3113ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > retains exact old anchors and allocates only 1 freshly prepared roles in the same store 3417ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > retains exact old anchors and allocates only 4 freshly prepared roles in the same store 5663ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses copy drift without allocating fresh endpoints 3157ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses identity drift without allocating fresh endpoints 4237ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses controller drift without allocating fresh endpoints 1680ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses parent drift without allocating fresh endpoints 2444ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints 5072ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses run drift without allocating fresh endpoints 4352ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses pin drift without allocating fresh endpoints 4317ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses origin drift without allocating fresh endpoints 2486ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses profile drift without allocating fresh endpoints 1640ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses missing-store drift without allocating fresh endpoints 1254ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses clock drift without allocating fresh endpoints 1272ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses claim drift without allocating fresh endpoints 1273ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses unprepared drift without allocating fresh endpoints 1228ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses extra-plan drift without allocating fresh endpoints 2846ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses duplicate-role drift without allocating fresh endpoints 3780ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses role-order drift without allocating fresh endpoints 2666ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close 5548ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 0) 3053ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 1) 2058ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 2) 2026ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it 2281ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > withdraws both live currentness and retirement when run-authority is lost 1180ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > withdraws both live currentness and retirement when claim is lost 1238ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses run-authority withdrawal after awaited revalidation before any fresh allocation 1450ms
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts > same-store machine continuation seam > refuses claim withdrawal after awaited revalidation before any fresh allocation 1585ms
+ ✓ |unit| apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts > every consumer of the test-artifact verification treats `reported` as not verified > finds exactly the listed consumers, by name and by whole-model serialization 1522ms
+ ✓ |unit| apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts > every consumer of the test-artifact verification treats `reported` as not verified > finds a destructuring reader, with or without a rename 2ms
+ ✓ |unit| apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts > every consumer of the test-artifact verification treats `reported` as not verified > finds no `verified` comparison or switch arm anywhere, since no such kind exists 89ms
+ ✓ |unit| apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts > every consumer of the test-artifact verification treats `reported` as not verified > defines no `verified` result kind 40ms
+
+ Test Files  4 passed (4)
+      Tests  105 passed (105)
+   Start at  01:59:18
+   Duration  264.70s (transform 9.03s, setup 275ms, collect 18.16s, tests 240.63s, environment 1ms, prepare 2.14s)
+

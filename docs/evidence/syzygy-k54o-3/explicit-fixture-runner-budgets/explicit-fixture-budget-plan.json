@@ -1,0 +1,31 @@
+{
+  "base": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-0.ts",
+      "beforeSha256": "7e223bb683732f8fd93330cd2e30b6cf584b71c0e20073cfb2a3db046d32ddbf",
+      "afterSha256": "b99e3b9946a36d851d2ddb0832a27485a3ef74d76a6552166da0f4dbddca7cbc"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-1.ts",
+      "beforeSha256": "84765fa7d032daf2d29eaf9591065fbc90ddc29b00bba3ab9b4f805228d15fef",
+      "afterSha256": "a5715d73d0f62296c85e4eabfaa6b3cc0d853ae85baccf45081630f5adfaba98"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-2.ts",
+      "beforeSha256": "faafb98f1a2b94ce9631ff4de9e3826612a30746b31f0f826c96f500e034de9d",
+      "afterSha256": "ca23c627c587d83faa186bb4ea173a95f5371ec85ab43c49bdfcd594a24f29ba"
+    },
+    {
+      "path": "apps/three-surface-poc/src/test-artifact-verification-consumers.test.ts",
+      "beforePath": "/home/orca/.tmp/f3-native-admission-fixes/explicit-fixture-budget-before-3.ts",
+      "beforeSha256": "74bea7d5f5f36719ab22cf20fb851c48ec8b8d6e17116c7265567471d485ce94",
+      "afterSha256": "774669abc6191d26cd30edd84dbf29616833e7135c0fae6be36e200f4834c975"
+    }
+  ],
+  "netCases": 0,
+  "scope": "Three durablefixture files explicit20s describedfaults; only firstwhole-tree censuscase20s in fourthfile. No body/assertion/runtime/global/tier changes."
+}
