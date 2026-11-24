@@ -8,11 +8,11 @@ import { createDaemon, type Route, type RunningDaemon } from '@syzygy/http-host'
 import { tempDir } from '@syzygy/test-kit';
 import { BUTLERS_POC_SEEDS, PWB_RESOURCE_LIMITS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';
 
-import { assertBriefingDerivesFromMachine } from './briefing-response-oracle.testkit.js';
+import { assertBriefingDerivesFromMachine, briefingSubjectsFromMachine } from './briefing-response-oracle.testkit.js';
 import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes, renderPocPage } from './routes.js';
 import { ServedResponseRecorder } from './served-response-recorder.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, projectShapeFixtureGit } from './test-project-shape-fixture.js';
+import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_PRECEDENCE, REJECTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 import { buildFixtureModel } from './test-model-fixture.js';
 import { walkthroughJudgmentFixture } from './test-walkthrough-judgment-fixture.js';
 
@@ -276,10 +276,10 @@ const BRIEFING_CLAIM = 'claim:item:baseline-spec:switchboard-identity';
 const BRIEFING_QUERY = new URLSearchParams({ for: BRIEFING_CLAIM });
 const BRIEFING_BYTES = 20_480;
 
-function briefingFixture(): PocModel {
+function briefingFixture(runGit = projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC)): PocModel {
   return buildFixtureModel(cleanups, {
     evaluationAsOf: ADMITTING_AUTHORITY.evaluationInstant,
-    projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
+    projectShape: { authority: ADMITTING_AUTHORITY, runGit },
     walkthroughJudgment: walkthroughJudgmentFixture('lawful-state-2'),
   });
 }
@@ -378,9 +378,85 @@ describe('authenticated single-claim briefing', () => {
     assertBriefingDerivesFromMachine(nextMachine.body, next.body, BRIEFING_CLAIM);
     expect(() => assertBriefingDerivesFromMachine(priorMachine, next.body, BRIEFING_CLAIM)).toThrow();
     const stale = JSON.parse(next.body);
-    stale.item = JSON.parse(briefingBodies[0]!).item;
+    stale.subject = JSON.parse(briefingBodies[0]!).subject;
     expect(() => assertBriefingDerivesFromMachine(nextMachine.body, JSON.stringify(stale), BRIEFING_CLAIM)).toThrow();
     expect(snapshot()).toEqual(state);
+  });
+
+  it('reconstructs the seven canonical claim families and refuses ambiguous mirrors and unbound failures', async () => {
+    const currentTexts = PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC;
+    const initial = briefingFixture(projectShapeFixtureGit({
+      ...currentTexts,
+      'about/heart-and-soul/v1.md': currentTexts['about/heart-and-soul/v1.md']!.replace('### Observability', '### Gateways\n\n### Observability'),
+    }));
+    if (initial.projectShape.kind !== 'observed') throw new Error('fixture must observe shape');
+    const { projectShape } = initial;
+    let current = initial;
+    const { daemon, token } = await startPoc(initial, pocRoutes(() => current, undefined, undefined, undefined, undefined, undefined, () => BRIEFING_BYTES));
+    const base = `http://${daemon.host}:${daemon.port}`;
+    const headers = { authorization: `Bearer ${token}` };
+    const read = (claimId: string) => wireRequest(`${base}/api/poc/briefing?${new URLSearchParams({ for: claimId })}`, headers);
+    const machine = () => wireRequest(`${base}/api/poc`, headers);
+    const complete = await machine();
+    expect(complete.status).toBe(200);
+    const subjects = briefingSubjectsFromMachine(complete.body);
+    expect(new Set(subjects.map(subject => subject.family))).toEqual(new Set([
+      'shape', 'source', 'item', 'class', 'fact', 'unenumerated-heading', 'project-account',
+    ]));
+    expect(new Set(subjects.map(subject => subject.record.claim.claimId)).size).toBe(subjects.length);
+    for (const { family, record } of subjects) {
+      const { claimId } = record.claim;
+      const briefing = await read(claimId);
+      expect(briefing.status, claimId).toBe(200);
+      assertBriefingDerivesFromMachine(complete.body, briefing.body, claimId);
+      if (family === 'unenumerated-heading') {
+        expect(JSON.parse(briefing.body)).toMatchObject({ subject: { record: { claim: { epistemic: { label: 'Unknown' } } } } });
+      }
+    }
+
+    const [item] = projectShape.items;
+    if (item === undefined) throw new Error('fixture must carry an item');
+    current = { ...initial, projectShape: { ...projectShape, items: [...projectShape.items, item] } };
+    const duplicate = await read(item.claim.claimId);
+    expect([duplicate.status, JSON.parse(duplicate.body)]).toEqual([409, { served: 'nothing', failure: 'briefing-claim-ambiguous' }]);
+    const contradicted = briefingFixture(projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITHOUT_PRECEDENCE));
+    if (contradicted.projectShape.kind !== 'observed') throw new Error('fixture must observe the contradiction');
+    const contradictedShape = contradicted.projectShape;
+    const conflicted = contradictedShape.contradictions[0];
+    if (conflicted === undefined) throw new Error('fixture must have an exact fact mirror');
+    current = contradicted;
+    const sharedFact = await read(conflicted.claim.claimId);
+    expect(sharedFact.status).toBe(200);
+    assertBriefingDerivesFromMachine((await machine()).body, sharedFact.body, conflicted.claim.claimId);
+    current = { ...contradicted, projectShape: {
+      ...contradictedShape,
+      contradictions: [{ ...conflicted, claim: { ...conflicted.claim, evaluationId: 'evaluation:other-fixture' } }],
+    } };
+    const mirror = await read(conflicted.claim.claimId);
+    expect([mirror.status, JSON.parse(mirror.body)]).toEqual([409, { served: 'nothing', failure: 'briefing-claim-ambiguous' }]);
+
+    const fixtureGit = projectShapeFixtureGit();
+    current = briefingFixture((args) => {
+      if (args[0] === 'ls-tree') throw new Error('synthetic observation refused');
+      return fixtureGit(args);
+    });
+    expect(current.projectShape.kind).toBe('observation-failed');
+    const unknown = await read('claim:project-shape');
+    expect(unknown.status).toBe(200);
+    expect(JSON.parse(unknown.body)).toMatchObject({ subject: { family: 'shape', record: { claim: { epistemic: { label: 'Unknown' } } } } });
+    expect(JSON.parse(unknown.body)).not.toHaveProperty('scope');
+    assertBriefingDerivesFromMachine((await machine()).body, unknown.body, 'claim:project-shape');
+    expect((await read(BRIEFING_CLAIM)).status).toBe(404);
+
+    current = modelFixture();
+    expect(current.projectShape.kind).toBe('not-evaluated');
+    expect((await read('claim:project-shape')).status).toBe(503);
+    current = buildFixtureModel(cleanups, {
+      evaluationAsOf: REJECTING_AUTHORITY.evaluationInstant,
+      projectShape: { authority: REJECTING_AUTHORITY, runGit: fixtureGit },
+    });
+    expect(current.projectShape.kind).toBe('not-admitted');
+    expect((await read('claim:project-shape')).status).toBe(503);
   });
 
   it('serves 20,480 final UTF-8 bytes and records a typed breach at 20,481', async () => {
@@ -423,7 +499,9 @@ describe('authenticated single-claim briefing', () => {
       const { counts } = projectShape;
       const population = { kind: 'counted', sources: counts.sources, items: counts.items, facts: counts.facts, exclusions: counts.exclusions };
       expect([excess.status, JSON.parse(excess.body)]).toEqual([503, {
-        served: 'nothing', failure: 'response-limit-breached', evaluation: JSON.parse(JSON.stringify(model.evaluation)),
+        served: 'nothing', failure: 'response-limit-breached', evaluation: {
+          snapshot: model.evaluation.snapshot, asOf: model.evaluation.asOf, inputsDigest: model.evaluation.inputsDigest,
+        },
         limit: 'maxBriefingResponseBytes', declared: 20_480, observed: 20_481, population, readiness: false,
       }]);
       expect(lines).toHaveLength(1);

@@ -1,5 +1,7 @@
+import { isDeepStrictEqual } from 'node:util';
+
 import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
-import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation, type TrajectoryViewRefusal } from '@syzygy/three-surface-poc-core';
+import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type ProjectShape, type ProjectShapeClaim, type PwbResourceLimits, type Reevaluation, type TrajectoryViewRefusal } from '@syzygy/three-surface-poc-core';
 
 import { BROWSER_ORIGIN_REFUSAL, browserRequestAllowed } from './browser-origin.js';
 import { epistemicText, exactTablesSection } from './exact-tables.js';
@@ -145,12 +147,13 @@ const RESPONSE_LIMIT_FAILURE = 'response-limit-breached' as const;
 const RESPONSE_LIMIT_STATUS = 503 as const;
 
 type OrdinaryResponseLimit = 'maxHumanResponseBytes' | 'maxMachineResponseBytes';
+type EvaluationIdentity = Pick<PocModel['evaluation'], 'snapshot' | 'asOf' | 'inputsDigest'>;
 
 // Test seam: exported type the tests name; production code uses it only inside this file.
 export interface ResponseLimitFailure {
   readonly served: 'nothing';
   readonly failure: typeof RESPONSE_LIMIT_FAILURE;
-  readonly evaluation: PocModel['evaluation'];
+  readonly evaluation: EvaluationIdentity;
   readonly limit: ServedResponseLimit;
   readonly declared: number;
   readonly observed: number;
@@ -167,7 +170,12 @@ function populationOf(model: PocModel): ResponseLimitFailure['population'] {
 }
 
 function responseLimitFailure(model: PocModel, limit: ServedResponseLimit, declared: number, observed: number): ResponseLimitFailure {
-  return { served: 'nothing', failure: RESPONSE_LIMIT_FAILURE, evaluation: model.evaluation, limit, declared, observed, population: populationOf(model), readiness: false };
+  const evaluation = limit === 'maxBriefingResponseBytes' ? evaluationIdentityOf(model) : model.evaluation;
+  return { served: 'nothing', failure: RESPONSE_LIMIT_FAILURE, evaluation, limit, declared, observed, population: populationOf(model), readiness: false };
+}
+
+function evaluationIdentityOf({ evaluation: { snapshot, asOf, inputsDigest } }: PocModel): EvaluationIdentity {
+  return { snapshot, asOf, inputsDigest };
 }
 
 // Serves `body` only when its UTF-8 encoding fits the named ceiling.
@@ -208,6 +216,43 @@ export function withServedReadiness(model: PocModel, recorder: ServedResponseRec
 type PolarisRenderInputsFor = (model: PocModel) => PolarisRenderInputs;
 
 type RouteRequest = Parameters<Route['handle']>[0]['request'];
+
+type BriefingShape = Extract<ProjectShape, { readonly kind: 'observed' | 'observation-failed' }>;
+
+interface BriefingSubject {
+  readonly family: 'shape' | 'source' | 'item' | 'class' | 'fact' | 'unenumerated-heading' | 'project-account';
+  readonly record: { readonly claim: ProjectShapeClaim };
+}
+
+function selectBriefingSubject(shape: BriefingShape, claimId: string): BriefingSubject | 'ambiguous' | undefined {
+  // A whole-shape query selects its own claim, never the full shape and its other claims.
+  const families: [BriefingSubject['family'], readonly BriefingSubject['record'][]][] = [['shape', [{ claim: shape.claim }]]];
+  if (shape.kind === 'observed') {
+    families.push(
+      ['source', shape.sources],
+      ['item', shape.items],
+      ['class', Object.values(shape.classes)],
+      ['fact', shape.facts],
+      ['unenumerated-heading', shape.unenumeratedHeadings],
+      ['project-account', shape.projectAccount],
+    );
+  }
+  let subject: BriefingSubject | undefined;
+  for (const [family, records] of families) {
+    for (const record of records) {
+      if (record.claim.claimId !== claimId) continue;
+      if (subject !== undefined) return 'ambiguous';
+      subject = { family, record };
+    }
+  }
+  // Contradictions are an exact subset of facts in the machine answer. A
+  // conflicting or repeated mirror cannot independently supply a subject.
+  if (shape.kind === 'observed') {
+    const mirrors = shape.contradictions.filter(row => row.claim.claimId === claimId);
+    if (mirrors.length > 1 || mirrors.some(row => subject?.family !== 'fact' || !isDeepStrictEqual(row, subject.record))) return 'ambiguous';
+  }
+  return subject;
+}
 
 export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS, polarisInputs?: PolarisRenderInputsFor, recorder = new ServedResponseRecorder(), credentialProvision?: () => 'minted' | 'reused' | undefined, reevaluation?: () => Reevaluation | null, briefingResponseLimit?: () => number | undefined): readonly Route[] {
   const linksFor = (request: RouteRequest): NonNullable<PocModel['links']> => {
@@ -271,17 +316,23 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
       return refuse(503, 'briefing-machine-answer-unavailable');
     }
     const { evaluation, projectShape } = model;
-    if (projectShape.kind !== 'observed' || !projectShape.authority.admits || projectShape.authority.evaluationInstant !== evaluation.asOf) {
+    if ((projectShape.kind !== 'observed' && projectShape.kind !== 'observation-failed')
+      || !projectShape.authority.admits || projectShape.authority.evaluationInstant !== evaluation.asOf) {
       return refuse(503, 'briefing-project-shape-unavailable');
     }
-    const matches = projectShape.items.filter(item => item.claim.claimId === claimId);
-    if (matches.length !== 1) return refuse(404, 'briefing-claim-unavailable');
-    const [item] = matches;
-    if (item === undefined || item.claim.evaluationId !== projectShape.authority.evaluationId) {
+    const subject = selectBriefingSubject(projectShape, claimId);
+    if (subject === undefined) return refuse(404, 'briefing-claim-unavailable');
+    if (subject === 'ambiguous') return refuse(409, 'briefing-claim-ambiguous');
+    if (subject.record.claim.evaluationId !== projectShape.authority.evaluationId) {
       return refuse(503, 'briefing-project-shape-unavailable');
     }
 
-    const body = JSON.stringify({ evaluation, scope: projectShape.identity.scope, authority: projectShape.authority, item });
+    const body = JSON.stringify({
+      evaluation: evaluationIdentityOf(model),
+      ...(projectShape.kind === 'observed' ? { scope: projectShape.identity.scope } : {}),
+      authority: projectShape.authority,
+      subject,
+    });
     return boundedOutput(model, 'maxBriefingResponseBytes', limit, 'application/json', body, recorder);
   };
   const presentationHandle: Route['handle'] = ({ request }) => {
