@@ -1,0 +1,43 @@
+{
+  "commit": "74dd20378651d366ed53fb7de08fe60ba9d33c67",
+  "cleanClone": true,
+  "results": [
+    {
+      "check": "observer",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "observes|forwards"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 5.572194642038085
+    },
+    {
+      "check": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 24.754398826975375
+    }
+  ],
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "3a5c2d45eb9c9bccab65817070aad47102d4a9ea2ce6de1b42f7ae90ff08216b",
+  "selectedCasesPassed": 3,
+  "nativeCasesSkipped": 4,
+  "totalCases": 7,
+  "scope": "Selected forwarding/observation cases only, clean exact74dd clone; no genuine native or final-head acceptance claim.",
+  "artifacts": {
+    "observer-74dd.log.gz": "eaf5ee143258d65f43d41982c855467b0faa121229377b18c409b3dae8b95445",
+    "typecheck-74dd.log.gz": "6e88a952198ce48f4a7e3a73d4d51e84d16109347fb7fa639bf86c5308c29130"
+  }
+}
