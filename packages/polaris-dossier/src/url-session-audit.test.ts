@@ -15,6 +15,9 @@ import { createUrlSessionAudit, type UrlSessionAuditEvent, type UrlSessionAuditO
 import { planOrderedDesignBytes } from './url-design-delivery.js';
 import { URL_LAUNCH_LIMITS } from './session-launch.js';
 import type { ViewRole } from './session-view.js';
+import { initializeUrlMachineStore } from './url-machine-store.js';
+import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
+import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
 
 type Writer = Extract<UrlSessionAuditResult, { ok: true }>;
 const ROLES = ['author', 'inventory', 'fidelity', 'design'] as const;
@@ -134,6 +137,101 @@ async function orderedFixture() {
 }
 
 describe('protected URL session audit', () => {
+  it.each([4000, 5100])('keeps the Fidelity response audit under its enclosing ordinary store lease at %i ms', async elapsedAtResponseWrite => {
+    const f = fixture(), now = Date.now(), deadline = now + 60_000;
+    const binding = { ...f.options.binding, run: `run-${'b'.repeat(32)}` };
+    const profiles = f.profiles.map(original => {
+      const compiled = createSessionProfile({ ...original.input, binding: { ...binding, role: original.input.binding.role } });
+      if (!compiled.ok) throw new Error('own matching profile refused');
+      return compiled.value.profile;
+    });
+    const profile = profiles.find(item => item.input.binding.role === 'fidelity')!;
+    const governanceRoot = path.join(f.root, 'observing/.syzygy'), protectedRoot = path.join(f.root, 'machine-store');
+    fs.mkdirSync(path.join(governanceRoot, 'governance/policies/dossier-machine-clients'), { recursive: true });
+    const store = await initializeUrlMachineStore({ governanceRoot, protectedRoot, deadline, now: () => now, current: () => true });
+    if (!store) throw new Error('own store refused');
+    let effectCurrent: (() => boolean) | undefined;
+    let restoreClock: (() => void) | undefined, restoreWrite: (() => void) | undefined;
+    try {
+      const slot = await store.allocateClient(deadline);
+      if (!slot) throw new Error('own Fidelity slot refused');
+      const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: f.options.originPolicySha256,
+        sourcePin: f.options.pin, runId: binding.run, role: 'fidelity', kind: 'inference-bridge', allowedScopes: ['inference-forward'],
+        profileSha256: profile.digest, now, deadline };
+      const verifier = { mechanism: 'rfc5-7d' as const, profileSha256: profile.digest,
+        processIdentitySha256: '4'.repeat(64), channelIdentitySha256: '5'.repeat(64) };
+      const record: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId,
+        issuanceId: '1'.repeat(64), policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: context.sourcePin,
+        runId: binding.run, role: 'fidelity', kind: 'inference-bridge', scopes: ['inference-forward'],
+        issuedAt: new Date(now - 1000).toISOString(), expiresAt: new Date(deadline).toISOString(), revokedAt: null,
+        instances: [{ instanceId: '2'.repeat(64), generation: 1, issuedAt: new Date(now - 1000).toISOString(),
+          expiresAt: new Date(deadline).toISOString(), retiredAt: null, revokedAt: null, verifier }] };
+      const canonical = Buffer.from(encodeCanonicalJson(record, URL_MACHINE_CLIENT_LIMITS));
+      expect((await publishUrlMachineLifecycle({ context, binding: { parentBindingSha256: '6'.repeat(64), controllerSha256: '7'.repeat(64) },
+        next: canonical, expected: null }, store)).ok).toBe(true);
+      const writer = await f.create({ binding, profiles, project: 'project:syzygy', current: () => effectCurrent?.() ?? true });
+      const base = f.event(writer, 'relay', 'fidelity');
+      if (base.kind !== 'relay') throw new Error('own Fidelity relay refused');
+      const relay = { ...base, payload: { ...base.payload, subject: { ...base.payload.subject, project: 'project:syzygy' } } };
+      await writer.append(relay);
+      await writer.append({ ...relay, payload: { ...relay.payload, event: 'send-attempt', outcome: 'attempted' } });
+      await writer.append({ ...relay, payload: { ...relay.payload, event: 'send-outcome', outcome: 'local-request-flushed' } });
+      const before = writer.summary(), inode = fs.statSync(f.file('fidelity'), { bigint: true }).ino;
+      const response = { ...relay, payload: { ...relay.payload, event: 'response-admitted', outcome: 'response-admitted', status: 200,
+        response: { digest: '8'.repeat(64), bytes: 120, content: 'messages-event-stream', stopReason: 'end_turn', textBlocks: 1, tool: null } } } as const;
+      let elapsed = 0, publishedPrefix = Buffer.alloc(0), responseStarted = 0;
+      const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+      restoreClock = () => clock.mockRestore();
+      const p = await prototype(), write = p.write;
+      const writes: string[] = [];
+      const writing = vi.spyOn(p, 'write').mockImplementation(async function(this: FileHandle, ...args: unknown[]) {
+        const result = await write.apply(this, args);
+        if (fs.fstatSync(this.fd, { bigint: true }).ino === inode) {
+          const row = JSON.parse(Buffer.from(args[0] as Uint8Array).toString('utf8'));
+          writes.push(row.event.kind);
+          elapsed = row.event.kind === 'machine-peer' ? 1000 : row.event.kind === 'usage' ? 3000 : elapsedAtResponseWrite;
+        }
+        return result;
+      });
+      restoreWrite = () => writing.mockRestore();
+      const completed = await store.exclusive(slot.clientId, deadline, async lease => {
+        expect((await lease.read())?.canonical).toEqual(canonical);
+        // This is the production audit callback's active-effect boundary. It
+        // samples the already-held lease; it does not acquire another lock.
+        effectCurrent = () => lease.sampleCurrent() !== null;
+        await writer.appendMachinePeer({ event: 'machine-peer-effect', clientId: slot.clientId, instanceId: record.instances[0]!.instanceId,
+          revision: 1, runId: binding.run, role: 'fidelity', operation: 'inference-forward',
+          processIdentitySha256: verifier.processIdentitySha256, channelIdentitySha256: verifier.channelIdentitySha256, at: now });
+        await writer.append(f.event(writer, 'usage', 'fidelity'));
+        publishedPrefix = fs.readFileSync(f.file('fidelity'));
+        responseStarted = performance.now();
+        await writer.append(response);
+      }, profile);
+      effectCurrent = undefined;
+      const accepted = elapsedAtResponseWrite === 4000;
+      expect(completed).toBe(accepted);
+      expect(writes).toEqual(['machine-peer', 'usage', 'relay']);
+      // Peer and usage appends each took less than five seconds. The response
+      // owns a fresh five seconds, but cannot outlive the enclosing effect.
+      expect(responseStarted).toBe(3000);
+      expect(elapsed - responseStarted).toBe(accepted ? 1000 : 2100);
+      const summary = writer.summary(), physical = fs.readFileSync(f.file('fidelity'));
+      expect(summary).toMatchObject({ poisoned: !accepted, durableRecords: before.durableRecords + (accepted ? 3 : 2),
+        captured: { 'machine-peer': 1, usage: 1 }, relayEvents: { 'response-admitted': accepted ? 1 : 0 } });
+      expect(physical.subarray(0, publishedPrefix.length)).toEqual(publishedPrefix);
+      const tail = physical.subarray(publishedPrefix.length), row = JSON.parse(tail.toString('utf8'));
+      expect(row.event).toEqual({ ...response, payload: { ...response.payload, previousExchangeSha256: before.tipSha256 } });
+      expect(row.previousSha256).toBe(JSON.parse(publishedPrefix.toString('utf8').trim().split('\n').at(-1)!).sha256);
+      expect(summary.roles.fidelity.bytes).toBe(accepted ? physical.length : publishedPrefix.length);
+      expect(summary.tipSha256).toBe(accepted ? row.sha256 : row.previousSha256);
+      expect(fs.existsSync(path.join(protectedRoot, 'lock'))).toBe(!accepted);
+    } finally {
+      effectCurrent = undefined;
+      restoreWrite?.(); restoreClock?.();
+      await store.close();
+    }
+  });
+
   it('durably captures only the independently scoped machine peer effect metadata', async () => {
     const f = fixture(), audit = await f.create();
     const effect = { event: 'machine-peer-effect', clientId: 'own-client', instanceId: 'own-instance', revision: 1,
