@@ -1,0 +1,11 @@
+{
+  "subjectCommit": "59902599f0a460a5ece635e7221cc52ae8141d7a",
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "3a5c2d45eb9c9bccab65817070aad47102d4a9ea2ce6de1b42f7ae90ff08216b",
+  "scope": "Test-only standalone audit observation attribution. Independent source PASS; targeted execution/typecheck pending reserved heavy slot. No native completion claim.",
+  "artifacts": {
+    "INDEPENDENT-REVIEW-RAW.md": "1e3a2aa0eace4d283fdc34ec1d78263abb3b5a661bcc82bb83e7d65699c09604",
+    "observer.patch": "fdfb00880b5aa3b20e32c0b6444cae9cf291e3160906580db3572bbb1cf7ed63",
+    "review.json": "b18f1619c7a6e02aa80701f54da289658c616ab7a8c2122c50c236e8329c4259"
+  }
+}

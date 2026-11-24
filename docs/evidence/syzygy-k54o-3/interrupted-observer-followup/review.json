@@ -1,0 +1,22 @@
+{
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "baseCommit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+  "baseSha256": "80fec1d63bf83009eba30ef8500eb78493c8b26ae7438ebb7ea70f01bd80f22f",
+  "sourceSha256": "3a5c2d45eb9c9bccab65817070aad47102d4a9ea2ce6de1b42f7ae90ff08216b",
+  "patchSha256": "fdfb00880b5aa3b20e32c0b6444cae9cf291e3160906580db3572bbb1cf7ed63",
+  "scope": "Only existing composed-test observer and its existing forwarding case; no product changes, new test cases, authority calls, deadline changes, index mutations or commits.",
+  "rationale": "The stopped f043 trace first refused a standalone audit current callback, while the old observer recorded nested machine-effect results only inside append scope. Entering a per-instance scope for every original current call retains nested guard outcomes without invoking any guard again.",
+  "requirements": [
+    "Keep existing same-instance append scope and attribution; give standalone calls instance-only scope.",
+    "Return original synchronous value, Promise or thrown object and preserve original invocation counts.",
+    "Retain bounded32 callback/append tails and independent first-failure snapshots; metadata never includes path/body/error text.",
+    "Extend only the existing forwarding case: async nested false outside append, original promise identity, exactly one current and nested guard invocation, unchanged previous counters and first failure."
+  ],
+  "verification": {
+    "diffCheck": "passed",
+    "patchReconstruction": "exact source reproduced from committed base in memory",
+    "tests": "deferred by parent while actual reconciliation is live",
+    "typecheck": "not run"
+  },
+  "nextRunLimit": "This captures original nested machine-effect false versus aggregate current false. It does not itself label a lower transport or peer subpredicate; preserve Unknown if that branch remains masked."
+}
