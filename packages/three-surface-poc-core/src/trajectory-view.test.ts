@@ -120,6 +120,8 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
       parameters: { status: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'], 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
       pageSize: 250,
       order: 'ascending item id',
+      groupedOrder: 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
+      groupedPageUnit: 'position',
       view: { status: 'closed', governingIntent: 'unknown', group: null, page: 1, matching: 60, pageCount: 1 },
     });
     const defaultProjection = base(workItems);

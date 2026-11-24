@@ -264,12 +264,17 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     server.listen(0, '127.0.0.1');
     await listening;
     let page: BrowserPage | undefined;
+    // Reach the link with Tab from where the page stands, never by script focus.
     const follow = async (selector: string, hash: string): Promise<unknown> => {
-      const href = await page!.evaluate(`(() => {
-        const link = document.querySelector('${selector}');
-        link.focus();
-        return [link.getAttribute('href'), link.closest('details') === null, document.activeElement === link];
-      })()`);
+      let href: unknown = null;
+      for (let press = 0; press < 600; press += 1) {
+        await page!.press('Tab');
+        href = await page!.evaluate(`(() => {
+          const link = document.activeElement;
+          return link.matches('${selector}') ? [link.getAttribute('href'), link.closest('details') === null, true] : null;
+        })()`);
+        if (href !== null) break;
+      }
       await page!.press('Enter');
       for (let attempt = 0; attempt < 50; attempt++) {
         if (await page!.evaluate(`location.hash === '${hash}' && document.readyState === 'complete'`)) break;
@@ -281,15 +286,15 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       page = await browser.newPage();
       const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
       await page.navigate(`${base}${prefix}/trajectory?group=parent&page=1`);
-      expect(await follow('a[data-group-continues="next"]', '#group-bu-p'))
-        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-bu-p`, true, true]);
+      expect(await follow('a[data-group-continues="next"]', '#group-p-bu-p'))
+        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-p-bu-p`, true, true]);
       expect(await page.evaluate(`(() => {
         const target = document.querySelector(':target');
         return [location.search, target?.id, target?.closest('details') === null];
-      })()`)).toEqual(['?group=parent&page=2', 'group-bu-p', true]);
-      expect(await follow('a[data-group-under="bu-root"]', '#group-bu-root'))
-        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-bu-root`, true, true]);
-      expect(await page.evaluate(`[location.search, document.querySelector(':target')?.id]`)).toEqual(['?group=parent&page=2', 'group-bu-root']);
+      })()`)).toEqual(['?group=parent&page=2', 'group-p-bu-p', true]);
+      expect(await follow('a[data-group-under="bu-root"]', '#group-p-bu-root'))
+        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-p-bu-root`, true, true]);
+      expect(await page.evaluate(`[location.search, document.querySelector(':target')?.id]`)).toEqual(['?group=parent&page=2', 'group-p-bu-root']);
     } finally {
       try {
         await page?.close();

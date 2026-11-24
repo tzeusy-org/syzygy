@@ -123,11 +123,11 @@ describe('Trajectory grouped view (syzygy-t3jk.20)', () => {
     const view = grouped(observed(ITEMS), EDGES);
     expect(view.grouping.positions).toBe(11);
     expect(view.grouping.groups.map((group) => [group.anchor, group.total, group.onPage])).toEqual([
-      ['group-bu-a', 2, ['bu-b', 'bu-d']],
-      ['group-bu-b', 1, ['bu-c']],
-      ['group-bu-f', 1, ['bu-g']],
-      ['group-bu-g', 1, ['bu-f']],
-      ['group-bu-x', 2, ['bu-d', 'bu-e']],
+      ['group-p-bu-a', 2, ['bu-b', 'bu-d']],
+      ['group-p-bu-b', 1, ['bu-c']],
+      ['group-p-bu-f', 1, ['bu-g']],
+      ['group-p-bu-g', 1, ['bu-f']],
+      ['group-p-bu-x', 2, ['bu-d', 'bu-e']],
       ['group-parent-outside-tracker', 2, ['bu-h', 'bu-j']],
       ['group-parent-unobserved', 1, ['bu-i']],
       ['group-no-parent', 1, ['bu-a']],
@@ -139,9 +139,10 @@ describe('Trajectory grouped view (syzygy-t3jk.20)', () => {
   it('states each parent as recorded: status, where its card is, what it sits under and its cycle', () => {
     const view = grouped(observed(ITEMS), EDGES);
     const parent = (anchor: string) => view.grouping.groups.find((group) => group.anchor === anchor)?.parent;
-    expect(parent('group-bu-x')).toEqual({ status: 'closed', cardPage: 1, under: [], cycle: null });
-    expect(parent('group-bu-b')).toEqual({ status: 'open', cardPage: 1, under: [{ id: 'bu-a', groupPage: 1, cardPage: 1 }], cycle: null });
-    expect(parent('group-bu-f')).toEqual({ status: 'open', cardPage: 1, under: [{ id: 'bu-g', groupPage: 1, cardPage: 1 }], cycle: ['bu-f', 'bu-g'] });
+    expect(parent('group-p-bu-x')).toEqual({ status: 'closed', cardPage: 1, under: [], cycle: null });
+    expect(parent('group-p-bu-b')).toEqual({ status: 'open', cardPage: 1, under: [{ id: 'bu-a', groupPage: 1, cardPage: 1 }], cycle: null });
+    expect(parent('group-p-bu-f')).toEqual({ status: 'open', cardPage: 1, under: [{ id: 'bu-g', groupPage: 1, cardPage: 1 }], cycle: { members: ['bu-f', 'bu-g'] } });
+    expect(parent('group-p-bu-g')?.cycle).toEqual({ statedUnder: 'bu-f', page: 1 });
     expect(view.grouping.groups.find((group) => group.anchor === 'group-no-parent')?.parent).toBeUndefined();
   });
 
@@ -151,14 +152,14 @@ describe('Trajectory grouped view (syzygy-t3jk.20)', () => {
     const filler = Array.from({ length: 300 }, (_, i) => item(`bu-f${String(i).padStart(3, '0')}`, 'closed'));
     const items = [...filler, item('bu-zz-root', 'open'), item('bu-zz-mid', 'closed'), item('bu-zz-leaf', 'open')];
     const view = grouped(observed(items), [{ child: 'bu-zz-mid', parent: 'bu-zz-root' }, { child: 'bu-zz-leaf', parent: 'bu-zz-mid' }]);
-    expect(view.grouping.groups.find((group) => group.anchor === 'group-bu-zz-mid')?.parent)
+    expect(view.grouping.groups.find((group) => group.anchor === 'group-p-bu-zz-mid')?.parent)
       .toEqual({ status: 'closed', cardPage: 2, under: [{ id: 'bu-zz-root', groupPage: null, cardPage: 2 }], cycle: null });
   });
 
   it('groups closed items only when the closed status is asked for', () => {
     const view = grouped(observed(ITEMS), EDGES, 'group=parent&status=closed');
     expect(view.grouping.groups.map((group) => [group.anchor, group.onPage])).toEqual([
-      ['group-bu-a', ['bu-k']],
+      ['group-p-bu-a', ['bu-k']],
       ['group-no-parent', ['bu-x']],
     ]);
   });
@@ -195,23 +196,60 @@ describe('Trajectory grouped view (syzygy-t3jk.20)', () => {
     const positions = [...expected.values()].reduce((sum, list) => sum + list.length, 0);
     expect(positions).toBe(640);
 
+    // The test's own placement: groups by parent id, each a contiguous run of positions.
+    const starts = new Map<string, number>();
+    let at = 0;
+    for (const parent of [...expected.keys()].sort()) { starts.set(parent, at); at += expected.get(parent)!.length; }
+
     const seen = new Map<string, string[]>();
     for (let page = 1; page <= 3; page++) {
       const view = grouped(workItems, edges, `group=parent&page=${page}`);
       expect(view.narrowing.view?.pageCount).toBe(3);
       expect(view.grouping.positions).toBe(640);
       expect(view.renderedCount + view.excludedCount).toBe(603);
+      const [pageStart, pageEnd] = [(page - 1) * 250, page * 250];
+      const expectedHere = [...starts].filter(([parent, start]) => start < pageEnd && start + expected.get(parent)!.length > pageStart).map(([parent]) => `group-p-${parent}`);
+      expect(view.grouping.groups.map((group) => group.anchor)).toEqual(expectedHere);
       for (const group of view.grouping.groups) {
-        const parent = group.anchor.slice('group-'.length);
+        const parent = group.anchor.slice('group-p-'.length);
+        const start = starts.get(parent)!;
+        const end = start + expected.get(parent)!.length;
         seen.set(parent, [...(seen.get(parent) ?? []), ...group.onPage]);
         expect(group.total).toBe(expected.get(parent)!.length);
+        expect([group.continuedFromPage, group.continuesOnPage], `${group.anchor} on page ${page}`)
+          .toEqual([start < pageStart ? page - 1 : null, end > pageEnd ? page + 1 : null]);
       }
-      const [first, last] = [view.grouping.groups[0]!, view.grouping.groups.at(-1)!];
-      expect(first.continuedFromPage).toBe(page === 1 ? null : page - 1);
-      expect(last.continuesOnPage).toBe(page === 3 ? null : page + 1);
     }
     expect(Object.fromEntries(seen)).toEqual(Object.fromEntries(expected));
     expect(() => grouped(workItems, edges, 'group=parent&page=4')).toThrow('not a grouped view');
+  });
+
+  it('marks a group spanning three pages at both ends of its middle page', () => {
+    const parent = item('bu-big', 'closed');
+    const children = Array.from({ length: 600 }, (_, i) => item(`bu-k${String(i).padStart(3, '0')}`, 'open'));
+    const edges = children.map((child) => ({ child: child.id, parent: 'bu-big' }));
+    const middle = grouped(observed([parent, ...children]), edges, 'group=parent&page=2');
+    expect(middle.grouping.groups.map((group) => [group.anchor, group.total, group.onPage.length, group.continuedFromPage, group.continuesOnPage]))
+      .toEqual([['group-p-bu-big', 600, 250, 1, 3]]);
+  });
+
+  it('keeps an item named like a group class apart from that class', () => {
+    // `no-parent` is a valid item id under the prefix `no`.
+    const items = [item('no-parent', 'open'), item('no-a', 'open'), item('no-b', 'open')];
+    const workItems = { ...observed(items), beadPrefix: 'no', provenance: { kind: 'dolt-revision' as const, source: 'Beads Dolt database (no)', revision: REVISION } };
+    const view = grouped(workItems, [{ child: 'no-a', parent: 'no-parent' }]);
+    expect(view.grouping.groups.map((group) => [group.anchor, group.onPage])).toEqual([
+      ['group-p-no-parent', ['no-a']],
+      ['group-no-parent', ['no-b', 'no-parent']],
+    ]);
+  });
+
+  it('declares the grouped order and that its pages count positions', () => {
+    const view = grouped(observed(ITEMS), EDGES);
+    expect([view.narrowing.groupedOrder, view.narrowing.groupedPageUnit]).toEqual([
+      'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
+      'position',
+    ]);
   });
 
   it('refuses a group value outside the declared set', () => {

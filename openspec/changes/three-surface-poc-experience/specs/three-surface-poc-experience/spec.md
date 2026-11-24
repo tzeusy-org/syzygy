@@ -1030,9 +1030,9 @@ Every served item SHALL be reachable: the route SHALL accept a closed
 parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
 `governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
 Unknown), `group=parent` and `page` (a positive integer), and any of them SHALL give a view
-of the matching items in ascending item id, one page of a declared fixed
-size, whose scope statement names the page, the page count and the matching
-count. No parameter SHALL give the default selection. Any other name, a
+of the matching items in ascending item id (with `group=parent`, in the
+grouped order below), one page of a declared fixed size, whose scope
+statement names the page, the page count and the matching count. No parameter SHALL give the default selection. Any other name, a
 repeated name, a value outside its set, a page that is not a positive
 integer, or a page past the last SHALL be refused with HTTP 400 naming the
 parameter, the reason and the allowed set, never ignored. When the
@@ -1042,8 +1042,9 @@ link, by real anchors outside any collapsed element and reachable by
 keyboard, to the default selection, every item by id, each status, the
 governing-intent Unknown and the grouped view with their whole-population
 counts, and the current view's previous and next page. The machine answer
-SHALL take no parameter and SHALL declare the parameter set, the page size
-and the order (`trajectory.narrowing`), so any page is recomputable from
+SHALL take no parameter and SHALL declare the parameter set, the page size,
+the order, and the grouped order and its page unit, `position`
+(`trajectory.narrowing`), so any page is recomputable from
 `workItems.items` and `trajectory.outline`.
 
 **Grouped by parent.** `group=parent` SHALL group the matching items by
@@ -1056,8 +1057,9 @@ parents, the items whose parent row names an external item, a wisp or
 another prefix, the items whose in-prefix parent is not served, and every
 set of served items whose parent links form a cycle; or, when that read is
 Unknown, the read's reason. An item SHALL sit under each served parent it
-has, once per parent; under "parent outside this tracker" and "parent not
-served" for those rows; under "no parent recorded" when it has none of
+has, once per parent; under "parent outside this tracker" for a parent row
+that names an external item, a wisp, another prefix or no target, and under
+"parent not served" for an in-prefix parent the observation did not serve; under "no parent recorded" when it has none of
 these; and, when the read is Unknown, every item SHALL sit under one
 "parent Unknown" group that states the reason. A parent outside the tracker
 or not served SHALL be counted and never named. Parent groups SHALL come
@@ -1066,11 +1068,15 @@ items in ascending id within a group; the page size counts positions, so
 an item under two parents takes two, and the view SHALL state the position
 total and that an item with several parents sits under each. A group's
 heading SHALL name its parent with the parent's tracker status as recorded,
-link to the parent's card and to the groups the parent itself sits under,
+link to the parent's card and to the groups the parent itself sits under
+(to that parent's card on its all-items page when it has no group in this
+view),
 state the group's whole count and its count on this page, and mark a group
-split across pages at both ends with a link to the other page. A parent in
-a cycle SHALL be stated with the cycle's members and the cycle SHALL NOT be
-followed. A closed parent with non-closed items, or the reverse, SHALL be
+split across pages at both ends with a link to the other page. A cycle
+SHALL be stated once, with its members, in the group of its first member in
+the grouped order; each other member's group SHALL link to that statement,
+and the cycle SHALL NOT be followed. Element ids of parent groups and of the
+four classes SHALL NOT collide, whatever an item's identifier. A closed parent with non-closed items, or the reverse, SHALL be
 shown as recorded: no group states completion, progress or a percentage of
 its parent (RFC8-15, RFC8-30). An item rendered twice on one page SHALL
 carry its fragment target once. The default selection is unchanged by this
@@ -1101,12 +1107,13 @@ parameter; making the grouped view the default is a further amendment.
   count; expected pages are the checker's own slices of the machine answer.
 - **Falsifier**: a board whose counts do not reconcile with the
   database total, or no visible scope statement; a served item on no page
-  or on two; a parameter outside the set ignored rather than refused; a
+  or on two of an ungrouped view; a parameter outside the set ignored rather than refused; a
   view link missing, inside a collapsed element or unreachable by keyboard;
   or a page the machine answer cannot reproduce; in the grouped view, a
   non-closed item missing from a parent it has, a parent outside the tracker
   named, a cycle followed past its members, a group stating its parent's
-  completion, or a split group unmarked.
+  completion, a cycle stated twice, two elements sharing an id, or a split
+  group unmarked.
 
 #### Scenario: Bounded board over a large history
 

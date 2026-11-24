@@ -42,13 +42,16 @@ under "parent not served". Items with none of these sit under "no parent
 recorded". When the dependency read is Unknown, every item sits under one
 "parent Unknown" group that states the reason. Parent groups come first by
 ascending parent id, then the four classes in that order; items are in
-ascending id. The page size counts positions.
+ascending id. The page size counts positions, and `trajectory.narrowing`
+declares the grouped order and its page unit.
 
 Each parent heading names the parent with its tracker status as recorded
 and links to the parent's card and to the groups the parent sits under. It
 states the group's whole count and its count on the page, and marks a group
 split across pages at both ends with a link. A parent in a cycle is stated
-with the cycle's members, and the cycle is not followed. No group states
+once, with its members, in its first member's group; the other members'
+groups link there; the cycle is not followed. Parent-group and class
+element ids cannot collide. No group states
 completion, progress or a percentage, and a closed parent with open items
 shows both as recorded (RFC8-15, RFC8-30). An item rendered twice on one
 page carries its fragment target once. The machine answer carries the
@@ -63,7 +66,7 @@ POC-REQ-062 says that `parent-child` rows feed those facts.
   declared view and leaves the default as POC-REQ-042 states it, because
   the default page is pinned by literal-denominator oracles across five
   test files and the five answers' region. Making the grouped view the
-  default is a further amendment, filed as its own bead.
+  default is a further amendment, filed as `syzygy-t3jk.22`.
 - No new tracker read: the parent facts come from the same statement
   POC-REQ-062 runs, with the same columns.
 - Eligibility, its counts, the blocked cause set and blocker links.
@@ -112,7 +115,7 @@ write).
 
 ## Evidence or decision basis
 
-- `trajectory-outline.test.ts` (new, 11 tests): the outline over a
+- `trajectory-outline.test.ts` (new, 14 tests after the review repairs): the outline over a
   fixture three deep, with a two-parent item, a closed parent, a two-item
   cycle, an out-of-prefix parent, an external parent, an unserved
   in-prefix parent and a closed child; no foreign identifier in the
@@ -190,19 +193,24 @@ index 8f34cf67d..ee7a26861 100644
  | RFC9-1 | Map surface is a non-authoritative projection of the shared fact model | covered — POC's Orrery projects the same shared fact model that parity (020) enforces; intended/proposed/historical planes and RFC2/RFC6 vocabulary limbs not touched | POC-REQ-020 |
  | RFC9-3 | Every rendered encoding traceable to an identified/declared artifact, reachable from the element | covered — No relationship/encoding beyond declared mappings; the surface-local "shared drawer" mechanism itself isn't built | POC-REQ-050, POC-REQ-052, POC-REQ-053 |
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index 8d21c3c9d..0691df448 100644
+index 8d21c3c9d..b615b3b27 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-@@ -1029,7 +1029,7 @@ that selection, so an excluded-item population is never silently invisible.
+@@ -1029,25 +1029,62 @@ that selection, so an excluded-item population is never silently invisible.
  Every served item SHALL be reachable: the route SHALL accept a closed
  parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
  `governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
 -Unknown) and `page` (a positive integer), and any of them SHALL give a view
+-of the matching items in ascending item id, one page of a declared fixed
+-size, whose scope statement names the page, the page count and the matching
+-count. No parameter SHALL give the default selection. Any other name, a
 +Unknown), `group=parent` and `page` (a positive integer), and any of them SHALL give a view
- of the matching items in ascending item id, one page of a declared fixed
- size, whose scope statement names the page, the page count and the matching
- count. No parameter SHALL give the default selection. Any other name, a
-@@ -1039,15 +1039,46 @@ parameter, the reason and the allowed set, never ignored. When the
++of the matching items in ascending item id (with `group=parent`, in the
++grouped order below), one page of a declared fixed size, whose scope
++statement names the page, the page count and the matching count. No parameter SHALL give the default selection. Any other name, a
+ repeated name, a value outside its set, a page that is not a positive
+ integer, or a page past the last SHALL be refused with HTTP 400 naming the
+ parameter, the reason and the allowed set, never ignored. When the
  work-item population is Unknown, a well-formed view SHALL render the
  Unknown board, since no served item gives a view or a last page. Every page SHALL
  link, by real anchors outside any collapsed element and reachable by
@@ -210,13 +218,13 @@ index 8d21c3c9d..0691df448 100644
 -governing-intent Unknown with their whole-population counts, and the
 -current view's previous and next page. The machine answer SHALL take no
 -parameter and SHALL declare the parameter set, the page size and the order
--(`trajectory.narrowing`), so any page is recomputable from
--`workItems.items`.
 +keyboard, to the default selection, every item by id, each status, the
 +governing-intent Unknown and the grouped view with their whole-population
 +counts, and the current view's previous and next page. The machine answer
-+SHALL take no parameter and SHALL declare the parameter set, the page size
-+and the order (`trajectory.narrowing`), so any page is recomputable from
++SHALL take no parameter and SHALL declare the parameter set, the page size,
++the order, and the grouped order and its page unit, `position`
+ (`trajectory.narrowing`), so any page is recomputable from
+-`workItems.items`.
 +`workItems.items` and `trajectory.outline`.
 +
 +**Grouped by parent.** `group=parent` SHALL group the matching items by
@@ -229,8 +237,9 @@ index 8d21c3c9d..0691df448 100644
 +another prefix, the items whose in-prefix parent is not served, and every
 +set of served items whose parent links form a cycle; or, when that read is
 +Unknown, the read's reason. An item SHALL sit under each served parent it
-+has, once per parent; under "parent outside this tracker" and "parent not
-+served" for those rows; under "no parent recorded" when it has none of
++has, once per parent; under "parent outside this tracker" for a parent row
++that names an external item, a wisp, another prefix or no target, and under
++"parent not served" for an in-prefix parent the observation did not serve; under "no parent recorded" when it has none of
 +these; and, when the read is Unknown, every item SHALL sit under one
 +"parent Unknown" group that states the reason. A parent outside the tracker
 +or not served SHALL be counted and never named. Parent groups SHALL come
@@ -239,11 +248,15 @@ index 8d21c3c9d..0691df448 100644
 +an item under two parents takes two, and the view SHALL state the position
 +total and that an item with several parents sits under each. A group's
 +heading SHALL name its parent with the parent's tracker status as recorded,
-+link to the parent's card and to the groups the parent itself sits under,
++link to the parent's card and to the groups the parent itself sits under
++(to that parent's card on its all-items page when it has no group in this
++view),
 +state the group's whole count and its count on this page, and mark a group
-+split across pages at both ends with a link to the other page. A parent in
-+a cycle SHALL be stated with the cycle's members and the cycle SHALL NOT be
-+followed. A closed parent with non-closed items, or the reverse, SHALL be
++split across pages at both ends with a link to the other page. A cycle
++SHALL be stated once, with its members, in the group of its first member in
++the grouped order; each other member's group SHALL link to that statement,
++and the cycle SHALL NOT be followed. Element ids of parent groups and of the
++four classes SHALL NOT collide, whatever an item's identifier. A closed parent with non-closed items, or the reverse, SHALL be
 +shown as recorded: no group states completion, progress or a percentage of
 +its parent (RFC8-15, RFC8-30). An item rendered twice on one page SHALL
 +carry its fragment target once. The default selection is unchanged by this
@@ -256,19 +269,23 @@ index 8d21c3c9d..0691df448 100644
  
  - **Case**: a checker loads Trajectory over a database whose total item
    count exceeds the rendered selection; then, over 640 items (three pages),
-@@ -1072,7 +1103,10 @@ parameter and SHALL declare the parameter set, the page size and the order
+@@ -1070,9 +1107,13 @@ parameter and SHALL declare the parameter set, the page size and the order
+   count; expected pages are the checker's own slices of the machine answer.
+ - **Falsifier**: a board whose counts do not reconcile with the
    database total, or no visible scope statement; a served item on no page
-   or on two; a parameter outside the set ignored rather than refused; a
+-  or on two; a parameter outside the set ignored rather than refused; a
++  or on two of an ungrouped view; a parameter outside the set ignored rather than refused; a
    view link missing, inside a collapsed element or unreachable by keyboard;
 -  or a page the machine answer cannot reproduce.
 +  or a page the machine answer cannot reproduce; in the grouped view, a
 +  non-closed item missing from a parent it has, a parent outside the tracker
 +  named, a cycle followed past its members, a group stating its parent's
-+  completion, or a split group unmarked.
++  completion, a cycle stated twice, two elements sharing an id, or a split
++  group unmarked.
  
  #### Scenario: Bounded board over a large history
  
-@@ -1081,6 +1115,18 @@ parameter and SHALL declare the parameter set, the page size and the order
+@@ -1081,6 +1122,18 @@ parameter and SHALL declare the parameter set, the page size and the order
  - **THEN** the surface states the selection rule and that 6,772 items
    are outside it, and the three numbers reconcile
  
@@ -287,7 +304,7 @@ index 8d21c3c9d..0691df448 100644
  #### Scenario: Every item reachable by state and page
  
  - **WHEN** 640 items are served and the reader follows the view links
-@@ -1092,11 +1138,11 @@ parameter and SHALL declare the parameter set, the page size and the order
+@@ -1092,11 +1145,11 @@ parameter and SHALL declare the parameter set, the page size and the order
  warrants:
    primary: VIS-2
    doctrine: [VIS-1, VIS-2, VIS-3]
@@ -301,7 +318,7 @@ index 8d21c3c9d..0691df448 100644
  ```
  
  ### Requirement: POC-REQ-043 — Activity is never rendered as satisfaction
-@@ -1788,7 +1834,7 @@ Group: Trajectory. Form: **state projection/query**.
+@@ -1788,7 +1841,7 @@ Group: Trajectory. Form: **state projection/query**.
  
  The dependency statement SHALL return exactly one distinguishable revision witness from Dolt resolving the same immutable revision as the table read, including when there are no dependency rows. The reader SHALL verify the witness before accepting the data. A request value echoed by the caller, a missing, extra or invalid witness, a mismatched revision, an unreadable response or an unexpected result shape makes the dependency observation unavailable. A valid witness with no edge rows makes the dependency set observed empty. The work-item observation and its substrate statuses retain their own epistemic states and their one served provenance record under POC-REQ-010.
  
@@ -310,7 +327,7 @@ index 8d21c3c9d..0691df448 100644
  
  For an observed dependency feed, a known blocker is the served target of a `blocks` edge whose observed tracker status is other than `closed`, where the row has neither the external nor the wisp flag. Deduplicate blocker identifiers. An unlisted edge type, external or wisp blocker, out-of-prefix blocker, or absent blocker status makes the applicable item's eligibility undetermined. Use a fixed reason for each applicable failure class and stable reason ordering if several apply. Count these rows even where their targets or raw types are withheld. A row with an unidentifiable dependent or a malformed input that prevents reliable row accounting makes the feed unavailable. No malformed record can create an observed-empty or ready result.
  
-@@ -1808,7 +1854,7 @@ A derived `blocked` result and an observed tracker `blocked` status each require
+@@ -1808,7 +1861,7 @@ A derived `blocked` result and an observed tracker `blocked` status each require
  
  On Trajectory, each card SHALL show the derived eligibility where present, and any fixed reason. A card with a derived blocked result or a tracker `blocked` status SHALL show its cause set or cause-Unknown, and each of its known blocker identifiers SHALL link to its existing work-item card via the paging rules of POC-REQ-042. Links SHALL work without client script from the default and narrowed views on the direct and tailnet paths. Trajectory SHALL declare the served non-closed denominator, each of the four eligibility counts, and the count of records with absent eligibility so those figures reconcile. It SHALL likewise disclose dependency rows observed, each recognized type's count, unlisted type rows, and external, wisp, and out-of-prefix target counts. One dependency row may contribute to more than one target-withholding count. When the feed is unavailable the edge counts SHALL be unavailable with the fixed reason, preserving the observed work-item denominator. The machine answer SHALL carry the same facts and link identities from the one shared model.
  
@@ -320,3 +337,66 @@ index 8d21c3c9d..0691df448 100644
  - **Observable.** Fixed-column queries, source-returned revision witness, classified edge totals, four eligibility counts and absent count, item-local reasons, blocked-cause set, exact blocker card targets, and unchanged epistemic status for the work-item observation.
  - **Oracle.** Literal fixture expectations independently classify every included row and every served status, compare the complete wire counts and card outcomes, follow every blocker link, and check query shape, one exact source revision, and no dependency read when that revision cannot be established. A changed-only revision B may not affect results from A. Captured metadata values not admitted by the output alternatives are absent from both wire forms.
 ````
+
+## Dispositions
+
+Review R-T4S2-OUTLINE-1 (`docs/reviews/R-T4S2-OUTLINE-1-RAW.md`), verdict
+`CONFIRM WITH EXCEPTIONS` over commit `19a5d40f5`: 0 blocking, 7
+should-fix, 6 notes. One round, not gating (D13); each finding repaired
+once in the commit after it, or answered here.
+
+1. **Should-fix: parent anchors collided with class anchors.** Taken.
+   A parent group's id is now `group-p-<id>`, a class's `group-<kind>`, and
+   no kind begins `p-` (`groupAnchor`, exported and used by the renderer).
+   New test: an item named `no-parent` under the prefix `no` keeps its own
+   group beside the `no-parent` class. The page test now asserts every
+   element id on the grouped page is distinct.
+2. **Should-fix: raw anchor in `href`.** Taken. Every group fragment is
+   URL-encoded and then HTML-escaped (`fragment()` in `trajectory.ts`).
+3. **Should-fix: the cycle stated in every member's group.** Taken. A cycle
+   is stated once, with its members, in the group of its first member in
+   the grouped order; each other member's group links to that statement
+   (`cycle: {members} | {statedUnder, page}`). The spec says so. A page test
+   renders a two-member cycle and counts one statement; a mutant stating it
+   in every member's group fails it.
+4. **Should-fix: spec sentences the grouped view contradicts.** Taken. The
+   view sentence now says "in ascending item id (with `group=parent`, in
+   the grouped order below)"; the falsifier's "on no page or on two" is
+   limited to an ungrouped view; `trajectory.narrowing` declares
+   `groupedOrder` and `groupedPageUnit: 'position'`, and the spec names
+   both.
+5. **Should-fix: continuation marks under-tested.** Taken. The three-page
+   test now checks the group list of every page and both marks of every
+   group against the test's own placement; a mutant marking every group on
+   a later page fails it. New tests: a group spanning three pages (marks
+   1 and 3 on its middle page), and the page's rendered "Continues on" and
+   "Continued from" sentences with their counts.
+6. **Should-fix: no determinism test.** Taken. Two renders of one model,
+   and a render of its JSON round trip, are byte-equal.
+7. **Should-fix: cycle notes could breach the ceiling.** Taken by finding
+   3's repair: a cycle's members are listed once per page at most, and the
+   other members' groups carry one link each.
+8. **Note: the verdict sweep's population.** Partly taken. The sweep now
+   covers all six group regions of the fixture (headings, counts and
+   notes: both cycle notes, the closed-parent note, the outside-tracker and
+   no-parent notes) and adds `resolved` and `satisfied`. The
+   parent-unobserved and parent-unknown notes are literal constants that
+   the fixture does not render together; the Unknown group's note is
+   asserted by literal in its own test.
+9. **Note: a null parent target called "outside this tracker".** Taken as
+   a spec statement: a parent row naming no target counts as outside this
+   tracker (it names no served item, and its target cannot be named).
+10. **Note: the "sits under" fallback was unstated.** Taken: the spec now
+    says the link goes to the grandparent's card on its all-items page when
+    the grandparent has no group in this view.
+11. **Note: the parity test regrouped the serialized model, membership
+    only.** Taken. It now reads the served `/api/poc` body (`servedAnswer`)
+    and checks the group order as well as each group's members in order.
+12. **Note: the browser test focused links by script.** Taken. It now
+    presses Tab until the link has focus (at most 600 presses) and then
+    Enter, on both paths.
+13. **Note: the follow-up bead was unnamed.** Taken: `syzygy-t3jk.22`
+    makes the grouped view the default selection.
+
+The campaign file `docs/review-campaigns/t4s2-outline.md` the reviewer saw
+untracked was written by the lead session for this raw.

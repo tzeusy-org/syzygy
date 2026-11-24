@@ -11,6 +11,7 @@ import {
   type TrajectoryNarrowing,
   type TrajectoryEligibility,
   type TrajectoryEligibilityReason,
+  groupAnchor,
   type TrajectoryGroupSlice,
   type TrajectoryGrouping,
   type TrajectoryItemEligibility,
@@ -479,6 +480,12 @@ function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers
     </nav>`;
 }
 
+/** A fragment reference to an element id: URL-encoded, then HTML-escaped
+ * (R-T4S2-OUTLINE-1 finding 2). */
+function fragment(id: string): string {
+  return `#${escapeHtml(encodeURIComponent(id))}`;
+}
+
 /** syzygy-t3jk.20: what a group's heading says. A parent is named with its
  * tracker status as recorded and never judged from its children; the four
  * classes say why their items sit under no named parent. */
@@ -509,7 +516,7 @@ const GROUP_NOTE = {
 
 function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string, cards: string): string {
   const pageLink = (page: number, text: string, rel: string): string =>
-    `<a data-group-continues="${rel}" href="${viewHref(mountPrefix, { ...view, page })}#${group.anchor}">${text} ${page}</a>`;
+    `<a data-group-continues="${rel}" href="${viewHref(mountPrefix, { ...view, page })}${fragment(group.anchor)}">${text} ${page}</a>`;
   const notes: string[] = [];
   const parent = group.parent;
   if (parent !== undefined) {
@@ -517,9 +524,16 @@ function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNa
     if (parent.under.length > 0) {
       notes.push(`The parent sits under ${parent.under.map(({ id, groupPage, cardPage }) => groupPage === null
         ? `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page: cardPage })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`
-        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}#group-${escapeHtml(id)}">${escapeHtml(id)}</a>`).join(', ')}.`);
+        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}${fragment(groupAnchor({ kind: 'parent', id }))}">${escapeHtml(id)}</a>`).join(', ')}.`);
     }
-    if (parent.cycle !== null) notes.push(`<span data-group-cycle="${escapeHtml(parent.cycle.join(' '))}">Parent-child cycle among ${parent.cycle.map((id) => `<code>${escapeHtml(id)}</code>`).join(', ')}: shown once and not followed further.</span>`);
+    const cycle = parent.cycle;
+    if (cycle !== null && 'members' in cycle) {
+      notes.push(`<span data-group-cycle="${escapeHtml(cycle.members.join(' '))}">Parent-child cycle among ${cycle.members.map((id) => `<code>${escapeHtml(id)}</code>`).join(', ')}: stated here once and not followed further.</span>`);
+    } else if (cycle !== null) {
+      const anchor = groupAnchor({ kind: 'parent', id: cycle.statedUnder });
+      const href = cycle.page === null ? fragment(anchor) : `${viewHref(mountPrefix, { ...view, page: cycle.page })}${fragment(anchor)}`;
+      notes.push(`<span data-group-cycle-ref="${escapeHtml(cycle.statedUnder)}">The parent is in a parent-child cycle, stated under <a href="${href}">${escapeHtml(cycle.statedUnder)}</a>.</span>`);
+    }
   } else if (group.key.kind === 'parent-unknown') {
     notes.push(`<span data-group-reason="${group.key.reason}">The dependency rows were not read. ${ELIGIBILITY_REASONS[group.key.reason]}</span>`);
   } else if (group.key.kind !== 'parent') {

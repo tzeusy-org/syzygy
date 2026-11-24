@@ -1335,6 +1335,8 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
       parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
       pageSize: 250,
       order: 'ascending item id',
+      groupedOrder: 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
+      groupedPageUnit: 'position',
       view: null,
     });
     const pageSize = served.trajectory.narrowing.pageSize;
@@ -1413,62 +1415,94 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
   });
   const parentEdge = (child: string, parent: string) =>
     ({ issue_id: child, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0, revision: null });
+  // bu-epic (closed) > bu-mid > bu-leaf; bu-twin under bu-epic and bu-mid; bu-cy1 and bu-cy2 are
+  // each other's parent; bu-far's parent is in another tracker; bu-alone has none.
   const rows = [
     item('bu-epic', 'closed'), item('bu-mid', 'open'), item('bu-leaf', 'open'), item('bu-twin', 'blocked'),
-    item('bu-alone', 'open'), item('bu-far', 'open'),
+    item('bu-alone', 'open'), item('bu-far', 'open'), item('bu-cy1', 'open'), item('bu-cy2', 'open'),
   ];
   const edges = [
     witness, parentEdge('bu-mid', 'bu-epic'), parentEdge('bu-leaf', 'bu-mid'), parentEdge('bu-twin', 'bu-epic'),
     parentEdge('bu-twin', 'bu-mid'), parentEdge('bu-far', 'elsewhere-fixture-parent'),
+    parentEdge('bu-cy1', 'bu-cy2'), parentEdge('bu-cy2', 'bu-cy1'),
   ];
   const model = () => buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => JSON.stringify(edges) });
 
-  function grouped(page: PocModel, prefix = ''): string {
-    const html = renderTrajectoryRoute(page, prefix, undefined, new URLSearchParams('group=parent'));
+  function grouped(page: PocModel, prefix = '', query = 'group=parent'): string {
+    const html = renderTrajectoryRoute(page, prefix, undefined, new URLSearchParams(query));
     if (typeof html !== 'string') throw new Error('refused');
     return html;
   }
+  const groupOrder = (html: string) => [...html.matchAll(/data-group="([^"]+)"/g)].map((match) => match[1]);
 
   it('renders one region per group, in order, each card once per parent and anchored once', () => {
     const html = grouped(model());
-    const groups = [...html.matchAll(/data-group="([^"]+)"/g)].map((match) => match[1]);
-    expect(groups).toEqual(['group-bu-epic', 'group-bu-mid', 'group-parent-outside-tracker', 'group-no-parent']);
+    expect(groupOrder(html)).toEqual(['group-p-bu-cy1', 'group-p-bu-cy2', 'group-p-bu-epic', 'group-p-bu-mid', 'group-parent-outside-tracker', 'group-no-parent']);
     expect(html.match(/data-work-item-id="bu-twin"/g)).toHaveLength(2);
     expect(html.match(/id="workitem-bu-twin"/g)).toHaveLength(1);
-    expect(html).toContain('<span data-parity-field="trajectory-outline-positions">6</span>');
+    expect(html).toContain('<span data-parity-field="trajectory-outline-positions">8</span>');
     expect(html).not.toContain('elsewhere-fixture-parent');
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it('renders the same bytes for two renders of one observation', () => {
+    const page = model();
+    expect(grouped(page)).toBe(grouped(page));
+    expect(grouped(JSON.parse(JSON.stringify(page)) as PocModel)).toBe(grouped(page));
   });
 
   it('names each parent with its recorded status, what it sits under, and never a verdict about it', () => {
     const html = grouped(model());
     expect(html).toContain('Parent <a data-group-parent="bu-epic" href="/trajectory?page=1#workitem-bu-epic">bu-epic</a>, tracker status <code data-group-parent-status>closed</code>');
     expect(html).toContain('The parent is closed in the tracker and its items keep their own statuses');
-    expect(html).toContain('The parent sits under <a data-group-under="bu-epic" href="/trajectory?group=parent&amp;page=1#group-bu-epic">bu-epic</a>.');
+    expect(html).toContain('The parent sits under <a data-group-under="bu-epic" href="/trajectory?group=parent&amp;page=1#group-p-bu-epic">bu-epic</a>.');
     const outline = /<section class="outline"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
-    expect(outline.length).toBeGreaterThan(0);
-    // The population: every group region's own text, outside the cards.
-    const headings = [...outline.matchAll(/<li class="outline-group"[\s\S]*?<ol class="wi-list">/g)].map((match) => match[0]);
-    expect(headings).toHaveLength(4);
-    for (const heading of headings) expect(heading).not.toMatch(/\b(done|complete|completed|finished|verified|progress)\b|%/i);
+    // The population: every group region's own text (heading, counts and notes), outside its cards.
+    const regions = [...outline.matchAll(/<li class="outline-group"[\s\S]*?<ol class="wi-list">/g)].map((match) => match[0]);
+    expect(regions).toHaveLength(6);
+    for (const region of regions) expect(region).not.toMatch(/\b(done|complete|completed|finished|resolved|satisfied|verified|progress)\b|%/i);
   });
 
-  it('reproduces the grouping from the machine answer by the test\'s own formula', () => {
+  it('states a parent-child cycle once, in its first member\'s group, and points to it from the other', () => {
+    const html = grouped(model());
+    expect(html.match(/data-group-cycle="/g)).toHaveLength(1);
+    expect(html).toContain('<span data-group-cycle="bu-cy1 bu-cy2">Parent-child cycle among <code>bu-cy1</code>, <code>bu-cy2</code>: stated here once and not followed further.</span>');
+    expect(html).toContain('<span data-group-cycle-ref="bu-cy1">The parent is in a parent-child cycle, stated under <a href="/trajectory?group=parent&amp;page=1#group-p-bu-cy1">bu-cy1</a>.</span>');
+  });
+
+  it('marks a group split across pages, with its counts, on the page', () => {
+    const many = [item('bu-p', 'open'), ...Array.from({ length: 260 }, (_, i) => item(`bu-c${String(i).padStart(3, '0')}`, 'open'))];
+    const manyEdges = [witness, ...many.slice(1).map((row) => parentEdge(row.id as string, 'bu-p'))];
+    const page = buildFixtureModel(cleanups, { workItemRows: many, runDependencyQuery: () => JSON.stringify(manyEdges) });
+    const first = grouped(page, '', 'group=parent&page=1');
+    const second = grouped(page, '', 'group=parent&page=2');
+    expect(first).toContain('<span data-group-total>260</span> items in this group, <span data-group-on-page>250</span> on this page. Continues on <a data-group-continues="next" href="/trajectory?group=parent&amp;page=2#group-p-bu-p">page 2</a>.');
+    expect(second).toContain('<span data-group-total>260</span> items in this group, <span data-group-on-page>10</span> on this page. Continued from <a data-group-continues="prev" href="/trajectory?group=parent&amp;page=1#group-p-bu-p">page 1</a>.');
+  });
+
+  it('reproduces the grouping from the served machine answer by the test\'s own formula', async () => {
     const page = model();
-    if (page.trajectory.kind !== 'observed' || page.trajectory.outline.kind !== 'observed') throw new Error('expected an observed outline');
-    const machine = JSON.parse(JSON.stringify(page)) as PocModel;
+    const machine = await servedAnswer(page);
     if (machine.trajectory.kind !== 'observed' || machine.trajectory.outline.kind !== 'observed' || machine.workItems.kind !== 'observed') throw new Error('unreachable');
     const outline = machine.trajectory.outline;
     const expected = new Map<string, string[]>();
     for (const served of [...machine.workItems.items].sort((a, b) => (a.id < b.id ? -1 : 1))) {
       if (served.status === 'closed') continue;
       const keys = [
-        ...(outline.parents[served.id] ?? []).map((id) => `group-${id}`),
+        ...(outline.parents[served.id] ?? []).map((id) => `group-p-${id}`),
         ...(outline.outsideTracker.includes(served.id) ? ['group-parent-outside-tracker'] : []),
         ...(outline.unobserved.includes(served.id) ? ['group-parent-unobserved'] : []),
       ];
       for (const key of keys.length === 0 ? ['group-no-parent'] : keys) expected.set(key, [...(expected.get(key) ?? []), served.id]);
     }
+    const classes = ['group-parent-outside-tracker', 'group-parent-unobserved', 'group-no-parent'];
+    const order = [...expected.keys()].sort((a, b) => {
+      const [ra, rb] = [classes.indexOf(a), classes.indexOf(b)];
+      return ra - rb || (a < b ? -1 : a > b ? 1 : 0);
+    });
     const html = grouped(page);
+    expect(groupOrder(html)).toEqual(order);
     for (const [anchor, ids] of expected) {
       const region = new RegExp(`data-group="${anchor}">([\\s\\S]*?)</li>\\s*</ol>\\s*</li>`).exec(html)?.[1] ?? '';
       expect([...region.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]), anchor).toEqual(ids);
@@ -1479,15 +1513,15 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
     const page = model();
     for (const prefix of ['', '/butlers-syzygy']) {
       const html = renderTrajectoryPage(page, prefix);
-      expect(html).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1">Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">5</span></a>`);
-      expect(grouped(page, prefix)).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1#group-bu-epic"`);
+      expect(html).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1">Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">7</span></a>`);
+      expect(grouped(page, prefix)).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1#group-p-bu-epic"`);
     }
   });
 
   it('puts every item under one Unknown group with its reason when the rows are unread', () => {
     const unread = buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => { throw new Error('down'); } });
     const html = grouped(unread);
-    expect([...html.matchAll(/data-group="([^"]+)"/g)].map((match) => match[1])).toEqual(['group-parent-unknown']);
+    expect(groupOrder(html)).toEqual(['group-parent-unknown']);
     expect(html).toContain('<span data-group-reason="dependency-read-failed">The dependency rows were not read. The dependency read failed.</span>');
   });
 });

@@ -257,8 +257,10 @@ sit under "No parent recorded"; and when the dependency read is Unknown every
 item sits under one "Parent Unknown" group with its reason. Each parent's
 heading shows its tracker status as recorded, links to its card and to the
 groups it sits under, states its count and its count on the page, and marks a
-group split across pages at both ends. A parent-child cycle is stated with its
-members and not followed. No heading says a parent is complete or how far
+group split across pages at both ends. A parent-child cycle is stated once,
+with its members, in its first member's group; the other members' groups
+link there, and the cycle is not followed. A parent row with no target counts
+as outside this tracker. No heading says a parent is complete or how far
 along it is. The machine answer carries the parent facts once, as
 `trajectory.outline`, so a checker regroups any page itself. The default
 selection is unchanged.

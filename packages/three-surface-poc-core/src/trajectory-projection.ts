@@ -208,8 +208,13 @@ export interface TrajectoryGroupSlice {
     /** The parent's own served parents, each with the first page of its group in this view
      * (null: not a group here) and the all-items page of its card. */
     readonly under: readonly { readonly id: string; readonly groupPage: number | null; readonly cardPage: number }[];
-    /** The cycle the parent belongs to, ascending; null when none. */
-    readonly cycle: readonly string[] | null;
+    /** The cycle the parent belongs to: its members, ascending, stated in the
+     * group of its first member only; the other members' groups name that
+     * member (`statedUnder`) and the page its group starts on. Null when none. */
+    readonly cycle:
+      | { readonly members: readonly string[] }
+      | { readonly statedUnder: string; readonly page: number | null }
+      | null;
   };
 }
 
@@ -228,6 +233,9 @@ export interface TrajectoryNarrowing {
   };
   readonly pageSize: number;
   readonly order: 'ascending item id';
+  /** syzygy-t3jk.20: with `group=parent`, the page counts positions in this order. */
+  readonly groupedOrder: typeof GROUPED_ORDER;
+  readonly groupedPageUnit: 'position';
   readonly view: (TrajectoryViewRequest & { readonly matching: number; readonly pageCount: number }) | null;
 }
 
@@ -243,6 +251,8 @@ function narrowingDeclaration(view: TrajectoryNarrowing['view']): TrajectoryNarr
     parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
     pageSize: TRAJECTORY_PAGE_SIZE,
     order: 'ascending item id',
+    groupedOrder: GROUPED_ORDER,
+    groupedPageUnit: 'position',
     view,
   };
 }
@@ -343,9 +353,13 @@ function pastEnd(pageCount: number): TrajectoryViewRefusal {
 }
 
 const SPECIAL_GROUP_ORDER = ['parent-outside-tracker', 'parent-unobserved', 'no-parent', 'parent-unknown'] as const;
+const GROUPED_ORDER = 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group' as const;
 
-function groupAnchor(key: TrajectoryGroupKey): string {
-  return key.kind === 'parent' ? `group-${key.id}` : `group-${key.kind}`;
+/** A group's element id. A parent's is `group-p-<id>`; a class's is
+ * `group-<kind>`, and no kind begins `p-`, so an item named like a class
+ * (`no-parent`) cannot collide with it (R-T4S2-OUTLINE-1 finding 1). */
+export function groupAnchor(key: TrajectoryGroupKey): string {
+  return key.kind === 'parent' ? `group-p-${key.id}` : `group-${key.kind}`;
 }
 
 /**
@@ -407,6 +421,13 @@ function groupedView(
   const cardPage = new Map([...served].sort(byId).map((item, index) => [item.id, pageOf(index)]));
   const cycleOf = new Map<string, readonly string[]>();
   if (outline.kind === 'observed') for (const cycle of outline.cycles) for (const id of cycle) cycleOf.set(id, cycle);
+  // A cycle's members are listed once, in the group that comes first.
+  const cycleNote = (id: string): NonNullable<TrajectoryGroupSlice['parent']>['cycle'] => {
+    const cycle = cycleOf.get(id);
+    if (cycle === undefined) return null;
+    const first = cycle.find((member) => firstPage.has(groupAnchor({ kind: 'parent', id: member })))!;
+    return first === id ? { members: cycle } : { statedUnder: first, page: firstPage.get(groupAnchor({ kind: 'parent', id: first })) ?? null };
+  };
 
   const pageStart = (request.page - 1) * TRAJECTORY_PAGE_SIZE;
   const pageEnd = pageStart + TRAJECTORY_PAGE_SIZE;
@@ -421,8 +442,8 @@ function groupedView(
     const parent = key.kind !== 'parent' ? undefined : {
       status: statusById.get(key.id) as WorkItemStatus,
       cardPage: cardPage.get(key.id) as number,
-      under: (outline.kind === 'observed' ? outline.parents[key.id] ?? [] : []).map((id) => ({ id, groupPage: firstPage.get(`group-${id}`) ?? null, cardPage: cardPage.get(id) as number })),
-      cycle: cycleOf.get(key.id) ?? null,
+      under: (outline.kind === 'observed' ? outline.parents[key.id] ?? [] : []).map((id) => ({ id, groupPage: firstPage.get(groupAnchor({ kind: 'parent', id })) ?? null, cardPage: cardPage.get(id) as number })),
+      cycle: cycleNote(key.id),
     };
     slices.push({
       key,
