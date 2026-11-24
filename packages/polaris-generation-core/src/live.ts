@@ -30,7 +30,12 @@ export {
   type DossierManifest, type DossierEvaluationInput, type ReaderQuestion, type ReaderAnswer, type ReaderAnswerPort, type ReaderPortFactory, type ReaderLocation,
   type PageBudget, type BoundOutcome, type QuoteOutcome, type ScannedPage, type OwnerTopic,
 } from './dossier-evaluation.js';
-export { DOSSIER_PROFILE_ID, DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, clarify, openQuestions } from './dossier-profile.js';
+export {
+  QUESTION_FILE, QUESTION_FILE_FORMAT, QUESTION_FILE_JSON_PATH, QUESTION_FILE_SHA256, DEPTH_LIST_MIN, DEPTH_LIST_MAX, READER_TASKS,
+  QuestionFileError, bindComparison, encodeQuestionFile, questionFileBinding, questionFileSha256, readQuestionFile,
+  type ComparisonBinding, type FrozenReference, type HeldOutEntry, type HeldOutReference, type PublicQuestion, type QuestionFile, type QuestionFileBinding, type QuestionFileFault,
+} from './question-file.js';
+export { DOSSIER_PROFILE_ID, DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, clarify, dossierQuestionsFile, openQuestions } from './dossier-profile.js';
 export type { ClarificationInput, ClarificationQuestion, ClarificationRecord, OwnerAnswer } from './dossier-profile.js';
 export { validateReaderQuestions, ReaderQuestionsError, READER_QUESTION_TOPICS, READER_QUESTIONS_MAX, READER_QUESTION_TEXT_MAX, type ReaderQuestionTopic } from './reader-questions.js';
 export { QUOTE_LEAD_IN, checkBlockQuotes, checkDraftQuotes, draftBlocks, inspectBlockQuotes, normaliseForQuote, quoteFindingAsReviewFinding, sourceTextById, type QuoteBlock, type QuoteFinding, type QuoteFindingKind } from './quote-fidelity.js';
