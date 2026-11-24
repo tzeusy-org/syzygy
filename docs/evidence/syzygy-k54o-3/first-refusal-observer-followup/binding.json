@@ -1,0 +1,223 @@
+{
+  "adoption": "A-234",
+  "sourceCommit": "4a2a24d9db1d273da3e0e903671d7243d08d4752",
+  "base": "22662df725480fa50e547bd28d361760ff5df944",
+  "review": "PASS",
+  "reviewScope": "fresh frozen source only",
+  "focused": {
+    "productUnit": {
+      "passed": 86,
+      "total": 86
+    },
+    "storeObserverIntegration": {
+      "passed": 121,
+      "total": 125,
+      "skippedGenuine": 4
+    },
+    "typecheck": "pass"
+  },
+  "mutationChecks": [
+    {
+      "name": "history",
+      "candidateCommit": "4a2a24d9db1d273da3e0e903671d7243d08d4752",
+      "cloneBase": "22662df725480fa50e547bd28d361760ff5df944",
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "candidateSha256": "0cc7d0baeba24550d4133168a273c223273f1f0435fb0d05f3c875f7dcbe25cd",
+      "old": "finally { history.mockClear(); }",
+      "new": "finally { /* mutant: omit history clear */ }",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "--testNamePattern=observes actual descriptor guards",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/first-refusal-mutants-R1/history.json"
+      ],
+      "exit": 1,
+      "elapsedSeconds": 4.105741178966127,
+      "passed": 0,
+      "failed": 1,
+      "pending": 6
+    },
+    {
+      "name": "store",
+      "candidateCommit": "4a2a24d9db1d273da3e0e903671d7243d08d4752",
+      "cloneBase": "22662df725480fa50e547bd28d361760ff5df944",
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "candidateSha256": "5a926ed31da2cbc5bb631b5a0a061e5d41e2e034dd1cafdf6b8f4215fe3b754a",
+      "old": "options.onRefusal?.(Object.freeze({ ...refusal, operationMilliseconds }));",
+      "new": "void refusal;",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "--testNamePattern=bounds unprofiled effects",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/first-refusal-mutants-R1/store.json"
+      ],
+      "exit": 1,
+      "elapsedSeconds": 2.2070505649899133,
+      "passed": 0,
+      "failed": 1,
+      "pending": 117
+    },
+    {
+      "name": "inspection",
+      "candidateCommit": "4a2a24d9db1d273da3e0e903671d7243d08d4752",
+      "cloneBase": "22662df725480fa50e547bd28d361760ff5df944",
+      "path": "packages/polaris-dossier/src/url-design-product.ts",
+      "candidateSha256": "2e5b5f3c67b42d5e262827bd4c70e02f272b58548a9d426b7f1da83fb9391e79",
+      "old": "observer({ phase, termination, deadline: Number.isSafeInteger(deadline) ? deadline! : null });",
+      "new": "void phase;",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/url-design-product.test.ts",
+        "--testNamePattern=preserves bounded JSON record prototypes",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/first-refusal-mutants-R1/inspection.json"
+      ],
+      "exit": 1,
+      "elapsedSeconds": 3.867451750964392,
+      "passed": 0,
+      "failed": 1,
+      "pending": 85
+    }
+  ],
+  "caseGrowth": {
+    "productUnit": 1,
+    "storeIntegration": 0,
+    "composedIntegration": 0
+  },
+  "files": [
+    {
+      "path": "first-refusal-composition-candidate/bindings.json",
+      "bytes": 1601,
+      "sha256": "ab8de090050c83f0eb05a21c60051b8b6abccb5f038a697442fbd7164f884d81"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate/packages/polaris-dossier/src/url-design-product.test.ts",
+      "bytes": 58669,
+      "sha256": "8f1ed9883b767b86a7958bc85e789ccee9b0d01bba946079487fd3d1b9358935"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate/packages/polaris-dossier/src/url-design-product.ts",
+      "bytes": 25253,
+      "sha256": "2e5b5f3c67b42d5e262827bd4c70e02f272b58548a9d426b7f1da83fb9391e79"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate/packages/polaris-dossier/src/url-machine-store.test.ts",
+      "bytes": 94600,
+      "sha256": "a7661ccafd624b06ae33bf95cc59d3c4952210ccfb4f0317932458830ef8e58a"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate/packages/polaris-dossier/src/url-machine-store.ts",
+      "bytes": 62441,
+      "sha256": "5a926ed31da2cbc5bb631b5a0a061e5d41e2e034dd1cafdf6b8f4215fe3b754a"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "bytes": 222727,
+      "sha256": "0cc7d0baeba24550d4133168a273c223273f1f0435fb0d05f3c875f7dcbe25cd"
+    },
+    {
+      "path": "first-refusal-composition-candidate/candidate.patch",
+      "bytes": 46515,
+      "sha256": "77de920ed66c24bbbd4b6d0748c31785a2c5ba6c07f7b0c1837fd4d5137d6e7f"
+    },
+    {
+      "path": "first-refusal-composition-candidate/parse-only.json",
+      "bytes": 474,
+      "sha256": "ef0a11798dff14bf821c819d9cb89c942b153cbe8149fe667263c5093a9bd696"
+    },
+    {
+      "path": "first-refusal-focused-R1/product-unit.json",
+      "bytes": 30437,
+      "sha256": "cc80c24aa7a92a1cfebcacc7a8e7973437eab36da8858e40800803ef034f8f2f"
+    },
+    {
+      "path": "first-refusal-focused-R1/product-unit.log",
+      "bytes": 1385,
+      "sha256": "08cb2c9fc813cd4abb547408c9522a697e55c20c8edd8e560767baebedecc16a"
+    },
+    {
+      "path": "first-refusal-focused-R1/results.json",
+      "bytes": 3302,
+      "sha256": "59fd2d2ddc83430e1ed2676e037e878fa48990e27e4a53e3060371c4d7bb668c"
+    },
+    {
+      "path": "first-refusal-focused-R1/store-observer-integration.json",
+      "bytes": 46886,
+      "sha256": "0ad2a59587bf0827150e9760ab69bd60313f04ea4959c63af1d4b4b3d55d7075"
+    },
+    {
+      "path": "first-refusal-focused-R1/store-observer-integration.log",
+      "bytes": 4226,
+      "sha256": "dd02b81a1122dfa581453216e0a72aa448d4db47ae064eefbda7aa9556b4cd1c"
+    },
+    {
+      "path": "first-refusal-focused-R1/typecheck.log",
+      "bytes": 52,
+      "sha256": "c60442528cbded773cc0eed9660ceb12e8d32164711bf04fab32e3235727b16d"
+    },
+    {
+      "path": "first-refusal-mutants-R1/history.json",
+      "bytes": 3996,
+      "sha256": "8f0e8262a301f3a116288356212966bc24de9b4e8ea6794331d6e0080fef3a01"
+    },
+    {
+      "path": "first-refusal-mutants-R1/history.log",
+      "bytes": 103,
+      "sha256": "69688db0f280ba7124e25069a6e1918e1a657d1b194ef8aeb1b17f00f55434c6"
+    },
+    {
+      "path": "first-refusal-mutants-R1/inspection.json",
+      "bytes": 28766,
+      "sha256": "ca348a7f18534b30f3f4f65b5b5741cb2374dc25d3b1bbb170f0ed5871c41b62"
+    },
+    {
+      "path": "first-refusal-mutants-R1/inspection.log",
+      "bytes": 106,
+      "sha256": "9b6b58983910d982c1d7bea3b65a6b660f6b86d42b10b6e1320ad2cdb15118e0"
+    },
+    {
+      "path": "first-refusal-mutants-R1/results.json",
+      "bytes": 2779,
+      "sha256": "114fb0eb2060488964b2a912a0a02c20f7f131dcf35c34beb6a1cb692316e1cc"
+    },
+    {
+      "path": "first-refusal-mutants-R1/store.json",
+      "bytes": 41182,
+      "sha256": "7a5088170325cfd42eb3552b214578a12db452c1f6f433810b0c84d494fdaba9"
+    },
+    {
+      "path": "first-refusal-mutants-R1/store.log",
+      "bytes": 101,
+      "sha256": "7926eb4f85cfb1f0665c5063dc32afbfa8985492df181c9c45dab771097c193f"
+    },
+    {
+      "path": "first-refusal-composition-review-R1-RAW.md",
+      "bytes": 12827,
+      "sha256": "33088db387b6ad8459a45f51127d7a31a5de0f337c3fb46af047656cc5d9c21f"
+    },
+    {
+      "path": "verify-first-refusal.py",
+      "bytes": 3103,
+      "sha256": "bc66dc3e691a59b15d59748f6df257ee90d0fe365540d14b70753140754cd7d4"
+    },
+    {
+      "path": "mutate-first-refusal.py",
+      "bytes": 2423,
+      "sha256": "59a6b672a3fa631939fb4d0ceda9c5274fd5aee22bde8d02d5a8c3d932d141d6"
+    }
+  ]
+}
