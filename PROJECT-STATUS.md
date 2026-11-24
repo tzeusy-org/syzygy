@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 530 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 539 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -234,13 +234,17 @@ authority and no model yet called on the current path.
     not yet landed.
     *(2026-11-24: the predecessor figure "514 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [Worth-knowing amendment 2.25](openspec/changes/dossier-worth-knowing) is agent-adopted in A-64.
-    It replaces REQ-polaris-generation-034 again (193 to 199 scenarios: draft schema v13 lets a cited section paragraph
-    carry the worth-knowing mark and a Pole say why it marks none, the `worth-knowing` finding and count advice, one
-    "Worth knowing" callout per page, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
-    (syzygy-5dhm.41) lands with it, built over schema v10 and brief v16 until 2.23's containment kind is implemented.
+    [System model amendment 2.24](openspec/changes/dossier-system-model) is agent-adopted in A-64.
+    It replaces REQ-polaris-generation-034 again (193 to 207 scenarios: draft schema v12 with one `model` of typed
+    elements with parents and cited or derived relationships, graph and containment figures as one-level views over
+    it, the model and view findings, a pure migration from schema v10 and v11, brief v18); its code is not yet landed.
     *(2026-11-24: the predecessor figure "524 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
+    [Edit and repair accounting amendment 2.25](openspec/changes/polaris-edit-repair-deletion-accounting) is agent-adopted in A-208.
+    REQ-polaris-generation-006 carries six scenarios. The new scenario requires edits and repairs to account
+    for each input block, and repairs to give each finding a disposition. Generator implementation is tracked
+    by syzygy-dov.6.3.
+    *(2026-11-24: edit and repair accounting supersedes the predecessor figure of 538 scenarios.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
@@ -581,7 +585,10 @@ output; it is the canonical battery.
 ```sh
 python3 scripts/check_governance.py
 python3 scripts/check_governance.py --selftest
+python3 scripts/check_merge_conflict_markers.py  # unresolved delimiters in the checked-out Git commit
+python3 scripts/check_merge_conflict_markers.py --selftest
 python3 scripts/record_polaris_understanding_adoption.py --selftest
+python3 scripts/count_polaris_effective_scenarios.py --selftest
 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
 python3 scripts/validate_launch_administration.py --selftest # the structured record path
 python3 scripts/render_launch_administration.py --selftest
@@ -720,7 +727,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-five checks above are the same one hundred and thirty-five the hosted workflow runs
+The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

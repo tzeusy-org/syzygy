@@ -1,0 +1,13 @@
+# BSX9 standalone counter selftest wiring review R1
+
+Verdict: ACCEPT
+
+[Observed] Exact subject 8461f28b6a3d60b9a830be55701b6d011d6f146c, tree ad144551b2a9e48d38ce065a3f84348da9f22f7e, parent e785433bfca9e2dc83f5c80f9c083c82812b6438. I used a clean detached checkout separate from the author's. The scope is the two-file diff, the two entry points and Rule 6 requirement in syzygy-bsx9, the same-logical-change criterion in CC-REV-2, and CG-26 parity. No finding.
+
+[Observed] PROJECT-STATUS.md:575–584 adds the literal command to the canonical block read at runtime by scripts/run_status_battery.py. package.json:18–19 already connects that reader to check:all. PROJECT-STATUS.md:723 updates both copies of the stated count in the same commit. .github/workflows/governance-docs.yml:465–466 adds the same unconditional command in the governance job, on both pull requests and merge groups. The required checks aggregator depends on governance and demands its success at lines 611–624. The two changed blobs contain the only authored differences. The counter and its fixture sources retain the predecessor bytes.
+
+[Observed] An independent normalized command multiset comparison consumed the canonical runner's parsed rows and YAML's actual job/step entries. Both entry points went from 135 to 136 distinct Python commands, with the requested command occurring once per entry point and every predecessor check retained. The local runner additionally emits its one Git orientation command. CG-26 independently reported 136 published, 136 hosted, 136 shared and zero findings, and governance yielded 21 OK, 17 WARN, 0 FAIL across 38 checks.
+
+[Observed] Executing the authentic YAML step using Bash's fail-on-nonzero mode produced 19 positive/refusal witnesses and exit 0. In the detached copy, changing only the expected URL-v2.1 count of "Trunk-tip revision pinned at launch" from 24 to 25 forced the same step to exit 1 with "URL declared-source control differs from literal v2.1 counts." Executing the unchanged aggregate shell with governance=success gave exit 0, and supplying governance=failure with each other result still success gave exit 1. The isolated source was restored byte-for-byte and tracked status was clean. Positive output SHA-256 eb6062d7d976586389c7cf303b05b07dedfd52105b5b7d44314e0bcc799ae8f2, stale output SHA-256 db21d0b0618271c5664c490547849145d82cd9b289db6caf0a138a8eaaa8b624, focused proof JSON SHA-256 2e25bd84657f8e5282478b4cf08e52ebbb4b9695b49916e51a17bee50d2972ec.
+
+[Unknown] Hosted execution on a published or integrated subject remains pending. This review covers the standalone two-file wiring and focused guarded failure, with a separate exact-head confirmation needed for any later composed delivery.

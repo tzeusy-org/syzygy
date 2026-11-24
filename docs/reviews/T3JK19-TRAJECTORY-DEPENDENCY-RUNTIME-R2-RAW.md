@@ -1,0 +1,9 @@
+# T4 S1 Trajectory dependency eligibility, independent exact implementation R2
+
+CONFIRM
+
+[Observed] Reviewed `38a94ba79766c334449bf9fdea644c7eb70373c8` directly over `04dfaa80cac19164d01c1b6ccdb0b688cad8d7dd`. The exact R1 raw is retained byte-for-byte at SHA-256 `35b8533cb1c95f2f39bcc7e3813da0d546c565228b845075ed0e51d6c3a46b54`. The governing POC spec and warrants, the projection, and the HTML runtime are unchanged. In the production delta the two readers share one canonical revision validation, and the work-item reader requires an actually seen matching sentinel before returning observed provenance. The dependency reader retains the original predicate and no-call path. The unchanged R1 result rejection for repeated or malformed sentinels still applies.
+
+[Observed] Both original independent R1 counterexamples now pass their exact assertions with one query call, unavailable dependency observation and no observed work-item provenance. The 18 exact targeted integration cases also passed, including exact query/wire fields, duplicate marker, changed revision, preserved seen statuses on dependency unavailability, and mixed known/withheld blocker parity. The source suite and independent probe are `/home/orca/.tmp/l2t4-runtime.SLZ9Sf/exact-runtime-r2-focused.json` and `/home/orca/.tmp/l2t4-runtime.SLZ9Sf/independent-witness-refusals-r2.json`. The independent fixture was removed afterwards, and the detached snapshot is clean. Project code was never changed outside the private fixture run.
+
+[Observed] Both policy/candidate raw proofs and the reviewed active spec are untouched. Campaign partition compared all 967 paths by two methods with no unmatched or overlapping entry. No remaining F1 source finding on this exact subject. Author-side final full checks, exact current-base composition and adoption remain separate from this targeted reviewer recheck.

@@ -1,9 +1,10 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 
-import { runGenerationPipeline, type DispatchPermit, type PipelineRequest, type ProviderReply } from '@syzygy/polaris-generation-core';
+import { reviewVerdict, runGenerationPipeline, stageSchema, validateStage,
+  type AttemptOutcome, type DispatchPermit, type PipelineRequest, type ProviderReply } from '@syzygy/polaris-generation-core';
 
 import { createDurableLifecycle, type DurableLifecycleOptions } from './durable-lifecycle.js';
 import { syntheticGenerationSource } from './synthetic-source.js';
@@ -21,12 +22,15 @@ interface Stub { readonly calls: { stage: string; permit: DispatchPermit; signal
 function lifecycle(stateDir: string, stub: Stub, generate: (stage: string, permit: DispatchPermit, signal: AbortSignal) => Promise<ProviderReply>, extra: Partial<DurableLifecycleOptions> = {}) {
   return createDurableLifecycle({ stateDir, permissionIdentity: async () => 'permission-v1', verifySources: async () => true, permitted: async () => true, maxAttemptUsageUnits: 5, maxAttemptOutputBytes: 10_000,
     responseSchema: stage => ({ version: 'schema-v1', schema: { stage } }),
-    validate: (stage, value) => { if ((value as { stage?: unknown }).stage !== stage) throw new Error('schema'); return value; },
+    validate: (stage, value) => { const record = stage === 'edit' ? (value as { draft: unknown }).draft : value;
+      if ((record as { stage?: unknown }).stage !== stage) throw new Error('schema'); return value; },
     fidelity: () => ({ blocking: false, findings: [] }),
     generate: async input => { stub.calls.push({ stage: input.stage, permit: input.permit, signal: input.signal }); return generate(input.stage, input.permit, input.signal); },
     ...extra });
 }
-const ok = (stage: string, usageUnits = 1): ProviderReply => ({ body: JSON.stringify({ stage }), model: 'stub-live-v1', usageUnits });
+const ok = (stage: string, usageUnits = 1): ProviderReply => ({
+  body: JSON.stringify(stage === 'edit' ? { draft: { stage }, changes: [] } : { stage }), model: 'stub-live-v1', usageUnits,
+});
 const journal = (stateDir: string): { state: string; permit: DispatchPermit }[] =>
   readdirSync(stateDir).filter(name => name.endsWith('.json')).map(name => JSON.parse(readFileSync(join(stateDir, name), 'utf8')));
 
@@ -108,6 +112,48 @@ describe('durable lifecycle with an injected generate port', () => {
     expect(done.status).toBe('awaiting-rendered-review');
     expect(second.calls.map(call => call.stage)).toEqual(['fidelity']);
     expect(done.receipts.map(receipt => receipt.reused)).toEqual([true, true, true, true, false]);
+  });
+
+  it('stores the findings behind an unrepairable disposition and refuses changed or missing findings on replay', async () => {
+    const stateDir = scratch(), run = request(), stub: Stub = { calls: [] };
+    const sourceIds = ['purpose'];
+    const intro = { id: 'intro', text: 'The project states: "The invented purpose."', sourceIds };
+    const disposition = (id: string) => ({ kind: 'produced', assetIds: [id] });
+    const draft = { title: 'Project', introduction: intro, diagrams: [], deepDives: [], unresolved: [],
+      sections: [{ id: 'section', title: 'Scope', disposition: disposition('section'),
+        paragraphs: [{ id: 'body', text: 'The declared purpose is documented.', sourceIds, children: [] }] }] };
+    const changes = ['intro', 'body'].map(blockId => ({ blockId, action: 'kept', reason: 'Preserves the supplied text.', newBlockIds: [] }));
+    const findingDispositions = [{ findingId: 'finding-1-1', action: 'unrepairable', reason: 'The quoted words lack source support.' }];
+    const outputs = {
+      inventory: { entries: [{ id: 'claim', kind: 'purpose', statement: 'The project declares its purpose.', sourceIds, disposition: disposition('intro') }] },
+      plan: { sections: [{ id: 'section', title: 'Scope', reason: 'Explain the purpose.', sourceIds, disposition: disposition('section') }] },
+      author: draft,
+      edit: { draft, changes },
+      repair: { draft, changes, findingDispositions },
+      fidelity: { inventoryCoverage: [{ entryId: 'claim', disposition: 'represented', blockIds: ['intro'], reason: 'The introduction names it.' }],
+        blockSupport: ['intro', 'body'].map(blockId => ({ blockId, verdict: 'supported', sourceIds, reason: 'The source names the purpose.' })), findings: [] },
+    };
+    const ports = () => lifecycle(stateDir, stub,
+      async stage => ({ body: JSON.stringify(outputs[stage as keyof typeof outputs]), model: 'stub-live-v1', usageUnits: 1 }),
+      { responseSchema: stageSchema, validate: validateStage, fidelity: reviewVerdict });
+
+    const first = await runGenerationPipeline(run, ports(), new AbortController().signal);
+    expect(first).toMatchObject({ status: 'awaiting-rendered-review', quoteFindings: [{ blockId: 'intro', quote: 'The invented purpose.' }] });
+    const repair = first.receipts.find(receipt => receipt.stage === 'repair')!;
+    const file = join(stateDir, `${repair.attemptId}.json`);
+    const stored = JSON.parse(readFileSync(file, 'utf8')) as { outcome: Extract<AttemptOutcome, { kind: 'validated' }> };
+    expect(stored.outcome).toMatchObject({ outputDigest: repair.outputDigest, value: { findingDispositions },
+      repairFindings: [{ id: 'finding-1-1', finding: { target: 'intro', message: expect.stringContaining('quote-not-in-cited-sources') } }] });
+    stub.calls.length = 0;
+    const resumed = await runGenerationPipeline(run, ports(), new AbortController().signal);
+    expect(resumed.status).toBe('awaiting-rendered-review');
+    expect(resumed.receipts).toEqual(first.receipts.map(receipt => ({ ...receipt, reused: true })));
+    expect(resumed.artifacts).toEqual(first.artifacts);
+    for (const repairFindings of [undefined, [{ id: 'finding-1-1', finding: { target: 'intro', message: 'Altered finding.' } }]]) {
+      writeFileSync(file, JSON.stringify({ ...stored, outcome: { ...stored.outcome, repairFindings } }));
+      expect(await runGenerationPipeline(run, ports(), new AbortController().signal)).toMatchObject({ status: 'stopped', reason: 'admission-refused' });
+    }
+    expect(stub.calls).toEqual([]);
   });
 
   it('releases an attempt whose per-call permission is withdrawn without calling generate, and only an exact true permits', async () => {

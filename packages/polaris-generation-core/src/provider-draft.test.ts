@@ -21,11 +21,14 @@ const draft = { title: 'A manifesto', introduction: paragraph('intro'),
 };
 const review = { inventoryCoverage: [{ entryId: 'i1', disposition: 'represented', blockIds: ['intro'], reason: 'represented' }, { entryId: 'i2', disposition: 'represented', blockIds: ['detail-body'], reason: 'represented' }], blockSupport: ['intro', 'body', 'n1', 'n2', 'e1', 'detail-body'].map(blockId => ({ blockId, verdict: 'supported', sourceIds: [blockId === 'detail-body' ? 's2' : 's1'], reason: 'supported' })), findings: [] };
 const requestedAssets = [{ id: 'section', kind: 'section', required: true }, { id: 'diagram', kind: 'diagram', required: true }, { id: 'detail', kind: 'deep-dive', required: false }];
-const context = { sources, inventory, plan, draft, requestedAssets };
+const context = { sources, inventory, plan, draft, requestedAssets, repairFindings: [] };
+const kept = (blockId: string) => ({ blockId, action: 'kept', reason: 'The supported text is unchanged.', newBlockIds: [] as string[] });
+const edit = { draft, changes: ['intro', 'body', 'n1', 'n2', 'e1', 'detail-body'].map(kept) };
+const repair = { ...edit, findingDispositions: [] };
 
 describe('provider-local intermediate validation', () => {
   it('accepts the complete staged path with serializable isolated schemas and outputs', () => {
-    for (const [stage, value] of [['inventory', inventory], ['plan', plan], ['author', draft], ['edit', draft], ['repair', draft], ['fidelity', review]] as const) {
+    for (const [stage, value] of [['inventory', inventory], ['plan', plan], ['author', draft], ['edit', edit], ['repair', repair], ['fidelity', review]] as const) {
       expect(validateStage(stage, value, context)).toEqual(value);
       expect(validateStage(stage, value, context)).not.toBe(value);
       expect(JSON.parse(JSON.stringify(stageSchema(stage)))).toEqual(stageSchema(stage));
@@ -33,6 +36,40 @@ describe('provider-local intermediate validation', () => {
     const schema = stageSchema('author');
     schema.schema = stageSchema('inventory').schema;
     expect(stageSchema('author')).not.toEqual(schema);
+  });
+
+  it('accepts reasoned removal or a split into two present children of the exact input draft', () => {
+    const prior = structuredClone(draft);
+    prior.sections[0]!.paragraphs[0]!.children = [paragraph('old-detail')];
+    const editContext = { ...context, draft: prior };
+    const removed = { ...edit, changes: [...edit.changes, { blockId: 'old-detail', action: 'removed', reason: 'The earlier detail duplicated the parent.', newBlockIds: [] }] };
+    expect(validateStage('edit', removed, editContext)).toEqual(removed);
+
+    const split = structuredClone(draft);
+    split.sections[0]!.paragraphs[0]!.children = [paragraph('first-detail'), paragraph('second-detail')];
+    const row = { blockId: 'old-detail', action: 'split', reason: 'Explain the two details independently.', newBlockIds: ['first-detail', 'second-detail'] };
+    const result = { draft: split, changes: [...edit.changes, row] };
+    expect(validateStage('edit', result, editContext)).toEqual(result);
+    expect(() => validateStage('edit', edit, editContext)).toThrow('incomplete-coverage');
+    expect(() => validateStage('edit', { ...edit, changes: [...edit.changes, kept('old-detail')] }, editContext)).toThrow('change-action-mismatch');
+    expect(() => validateStage('edit', { ...result, changes: [...edit.changes, row, row] }, editContext)).toThrow('duplicate-handle');
+    expect(() => validateStage('edit', { ...result, changes: [...edit.changes, { ...row, newBlockIds: ['first-detail', 'missing-detail'] }] }, editContext)).toThrow('invalid-split-blocks');
+    expect(() => validateStage('edit', { ...result, changes: [...edit.changes, { ...row, newBlockIds: ['first-detail', 'first-detail'] }] }, editContext)).toThrow('duplicate-reference');
+    expect(() => validateStage('edit', { ...result, changes: [...edit.changes, { ...row, reason: '  ' }] }, editContext)).toThrow('missing-change-reason');
+  });
+
+  it('accepts an unchanged repair with distinct dispositions for two findings on the same block', () => {
+    const repairContext = { ...context, repairFindings: [
+      { id: 'finding-1', finding: { target: 'body', severity: 'blocking', message: 'One unsupported qualification.' } },
+      { id: 'finding-2', finding: { target: 'body', severity: 'blocking', message: 'A separate unsupported direction.' } },
+    ] };
+    const first = { findingId: 'finding-1', action: 'unrepairable', reason: 'The supplied sources do not support the qualification.' };
+    const second = { findingId: 'finding-2', action: 'unrepairable', reason: 'The supplied sources do not show the direction.' };
+    const result = { ...edit, findingDispositions: [first, second] };
+    expect(validateStage('repair', result, repairContext)).toEqual(result);
+    expect(() => validateStage('repair', { ...result, findingDispositions: [first] }, repairContext)).toThrow('incomplete-coverage');
+    expect(() => validateStage('repair', { ...result, findingDispositions: [first, first] }, repairContext)).toThrow('duplicate-handle');
+    expect(() => validateStage('repair', { ...result, findingDispositions: [first, { ...second, findingId: 'finding-3' }] }, repairContext)).toThrow('incomplete-coverage');
   });
 
   it('validates the checked-in synthetic inventory block as an isolated clone', () => {
@@ -187,7 +224,9 @@ describe('provider-local intermediate validation', () => {
   it('refuses a section\'s subsections in every draft stage and the draft record: the provider form is closed (version 2.16)', () => {
     const sub = (id: string) => ({ id, title: 'Q', answer: paragraph('intro'), paragraphs: [] });
     const withSubsections = { ...draft, sections: [{ ...draft.sections[0]!, subsections: [sub('q1'), sub('q2')] }] };
-    for (const stage of ['author', 'edit', 'repair'] as const) expect(() => validateStage(stage, withSubsections, context), stage).toThrow('invalid-fields');
+    expect(() => validateStage('author', withSubsections, context)).toThrow('invalid-fields');
+    expect(() => validateStage('edit', { ...edit, draft: withSubsections }, context)).toThrow('invalid-fields');
+    expect(() => validateStage('repair', { ...repair, draft: withSubsections }, context)).toThrow('invalid-fields');
     expect(() => validateDraftRecord(withSubsections)).toThrow('invalid-fields');
     expect(JSON.stringify(stageSchema('author'))).not.toContain('subsection');
   });
@@ -209,10 +248,10 @@ describe('provider-local intermediate validation', () => {
     const outcome = (() => { try { validateStage('inventory', { entries: [entry] }, context); return 'ok'; } catch (error) { return `${(error as Error).constructor.name}: ${(error as Error).message}`; } })();
     expect(outcome).toBe('Error: invalid-disposition');
   });
-  it('versions only the draft stages at v2', () => {
+  it('versions the authored draft and the edit and repair accounts independently', () => {
     expect(['inventory', 'plan', 'author', 'edit', 'repair', 'fidelity'].map(stage => stageSchema(stage as 'author').version)).toEqual([
       'polaris-provider-inventory-v1', 'polaris-provider-plan-v1', 'polaris-provider-author-v2',
-      'polaris-provider-edit-v2', 'polaris-provider-repair-v2', 'polaris-provider-fidelity-v1',
+      'polaris-provider-edit-v3', 'polaris-provider-repair-v3', 'polaris-provider-fidelity-v1',
     ]);
   });
 

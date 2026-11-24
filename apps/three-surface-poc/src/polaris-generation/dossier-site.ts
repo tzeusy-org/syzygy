@@ -205,13 +205,31 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
   + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}.diagram-tally{margin:.25rem 0 0;font:.8rem var(--font-mono);color:var(--muted)}';
 
-/** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
-interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
+/** The surrounding operator-agent notice, wayfinding, and review status. */
+interface PageChrome {
+  readonly notice: string;
+  readonly disclosure: (path: string) => string;
+  readonly mainAttributes: string;
+  readonly region: string;
+  readonly pageTurn: (path: string) => string;
+}
+
+interface DossierNavLink { readonly path: string; readonly title: string }
+
+const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-decoration:underline}'
+  + '.contents .pole-dive-links{display:block}'
+  + '.reading-column{display:grid;grid-template-columns:minmax(0,1fr);min-width:0}@media(max-width:800px){.reading-column{display:block}}'
+  + '.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;width:min(1180px,calc(100% - 2rem));margin:1.5rem auto 0}'
+  + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
+  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main>`;
+  // Wayfinding follows the reading text so the main-only converter retains its original input.
+  const turn = chrome?.pageTurn(path) ?? '';
+  const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
-</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
+</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="${chrome === undefined ? 'Dossier' : 'Dossier (mobile)'}">${nav}</nav></details>${column}</div></body></html>`;
 }
 
 export interface DossierStop { readonly reason: string; readonly shown: string; readonly lastStage: string | null }
@@ -691,16 +709,54 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
     reserved.add(localPage.path);
   }
-  const localNav = (from: string): string => localPages.map(localPage => `<li><a href="${escape(href(from, localPage.path))}">${escape(localPage.title)}</a></li>`).join('');
-  // How the dossier was made, kept apart from the subject (owner review of the Redis run, syzygy-pdja.13; the reader's edition,
-  // syzygy-5dhm.136): the run's own pages, the size report and the appendix fold under one "About this run" entry, the last entry of
-  // every page's navigation and the last part of the contents page. The appendix stays the last page of the reading order (dossier spec
-  // v1.5), and the fold opens itself on the pages it holds. `scripts/dossier_page_classes.json` classes exactly these paths as `run`.
-  const reportPaths = [...localPages.map(localPage => localPage.path), 'size-report.html', ...(local === undefined ? [] : [APPENDIX])];
-  const reportItems = (from: string): string => `${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}`;
-  // A provider run's bytes are pinned, so its list keeps its old shape.
-  const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="about-this-run"${reportPaths.includes(from) ? ' open' : ''}><summary>${ABOUT_THIS_RUN}</summary><ol>${reportItems(from)}</ol></details>`;
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${local === undefined ? '' : `<li><a href="${href(from, FIND_BY_TASK_PAGE)}">Find by task</a></li><li><a href="${href(from, NAME_INDEX_PAGE)}">Index</a></li>`}${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
+  const overview = { path: 'index.html', title: 'Overview' };
+  const contentsLink = { path: 'contents.html', title: 'Contents' };
+  const glossaryLink = { path: 'glossary.html', title: 'Glossary' };
+  const sourceIndexLink = { path: 'sources/index.html', title: 'Sources' };
+  const diveLinks = deepDives.map(dive => ({ path: deepPaths.get(dive.id)!, title: dive.title, sectionId: dive.sectionId }));
+  const standaloneDives = poleSpec === undefined ? diveLinks : [];
+  // Both the sidebar and the page turns use this order, including the maps only when the site renders them.
+  const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
+  const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
+  const readingGroups = [
+    ...[overview, ...findingLinks].map(link => ({ title: link.title, link, dives: [], hue: null })),
+    ...poles.map(pole => ({
+      title: pole.label,
+      link: pole.path === null ? null : { path: pole.path, title: pole.label },
+      dives: diveLinks.filter(dive => pole.sections.includes(dive.sectionId)),
+      hue: pole.hue,
+    })),
+    ...[contentsLink, ...standaloneDives, glossaryLink, sourceIndexLink, ...(maps === undefined ? [] : COMPUTED_MAPS)]
+      .map(link => ({ title: link.title, link, dives: [], hue: null })),
+  ];
+  // How the dossier was made stays apart from its subject. The appendix is the last page of the reading order.
+  const reportLinks = [...localPages, { path: 'size-report.html', title: 'Size report' }, ...(local === undefined ? [] : [{ path: APPENDIX, title: 'Appendix' }])];
+  const navigationLink = (from: string, link: DossierNavLink): string =>
+    `<a href="${escape(href(from, link.path))}"${local !== undefined && from === link.path ? ' aria-current="page"' : ''}>${escape(link.title)}</a>`;
+  const navigationItems = (from: string, links: readonly DossierNavLink[]): string =>
+    links.map(link => `<li>${navigationLink(from, link)}</li>`).join('');
+  const reportItems = (from: string): string => navigationItems(from, reportLinks);
+  const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>`
+    : `</ol><details class="about-this-run"${reportLinks.some(link => link.path === from) ? ' open' : ''}><summary>${ABOUT_THIS_RUN}</summary><ol>${reportItems(from)}</ol></details>`;
+  const sidebarItems = (from: string): string => readingGroups.map(group => {
+    if (group.link === null && group.dives.length === 0) return '';
+    const label = group.link === null ? escape(group.title) : navigationLink(from, group.link);
+    const dives = group.dives.length === 0 ? '' : `<ol class="pole-dive-links">${navigationItems(from, group.dives)}</ol>`;
+    return `<li${group.hue === null ? '' : hueAttr(group.hue)}>${label}${dives}</li>`;
+  }).join('');
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol>${sidebarItems(from)}${reviewReport(from)}`;
+  const readingOrder = [...readingGroups.flatMap(group => [...(group.link === null ? [] : [group.link]), ...group.dives]), ...reportLinks];
+  const readingPosition = new Map(readingOrder.map((link, index) => [link.path, index]));
+  const pageTurn = (from: string): string => {
+    const position = readingPosition.get(from);
+    if (position === undefined) return ''; // Exact source pages are outside the reading order.
+    const links = (['prev', 'next'] as const).map(direction => {
+      const target = readingOrder[position + (direction === 'prev' ? -1 : 1)];
+      if (target === undefined) return '';
+      return `<a rel="${direction}" href="${escape(href(from, target.path))}">${direction === 'prev' ? 'Previous' : 'Next'}: ${escape(target.title)}</a>`;
+    });
+    return `<nav class="reading-order" aria-label="Reading order">${links.join('')}</nav>`;
+  };
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -718,6 +774,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ? ` data-draft-state="editorial-draft" data-inference-model="${escape(local.draftLayer.inferenceProvenance.modelIdentity)}" data-inference-model-version="${escape(local.draftLayer.inferenceProvenance.modelVersion ?? 'not shown by the agent tool')}"`
       : ' data-draft-state="unknown" data-unknown-reason="unconsented-source-or-provider"'} data-disclosure-ids="${escape(local.disclosure.map(item => item.id).join(' '))}"`,
     region: regionMarkup(local.reviewStatus, escape),
+    pageTurn,
   };
 
   const files = new Map<string, string>();
@@ -738,9 +795,6 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // --- entry page
   const from = 'index.html';
   // The structure Syzygy derived from the pinned tree (version 2.3), in its own region at the end of the landing page's main content.
-  // The computed map pages (version 2.9): only for an operator-agent render that carries both the derived structure and the manifest facts
-  // it derived itself, as `syzygy dossier render` always does; the region then ends with the line linking them.
-  const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
   const derivedRegion = local?.derivedStructure === undefined ? '' : renderDerivedRegion(local.derivedStructure, maps !== undefined);
   // The open questions: on the overview for a provider run; for an operator-agent run, on the appendix (v1.5), drawn there.
   const openQuestionClaims = (at: string): string => withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',

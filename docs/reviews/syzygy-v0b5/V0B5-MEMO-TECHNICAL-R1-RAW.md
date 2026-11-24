@@ -1,0 +1,13 @@
+REVISE
+
+# Independent technical review of the reconciliation memo composition
+
+[Observed] The exact requested prospective tree is `0780c6ce8777a495e017a92a8ede17cec4f77376`, 11 paths against #958 protected stage `f9fbc5d3f5e2be8c2f330eae0778acd7522732c3`. The only executable change is `scripts/check_spec_reconciliation.py` at SHA-256 `94a125fe78c47fc1db161daed69d503baf2a547abf6c38c0ff56861fc7600562`. I read the source diff, inspected the existing imports and ran a synthetic isolated check. Exact timing and full witness parity were outside this requested review.
+
+[Observed] F1. `reverse_apply` obtains the hash from one read of the patch and hands the original pathname to `_reverse_apply`, which opens it again indirectly through Git. I used two synthetic single-target patches from `alpha` or `beta` to `current`: Git initially returns `alpha`, a benign replacement of the patch between the two reads makes the cache store `beta` under `alpha`'s digest, and the same process returns `beta` after restoring the alpha patch. The uncached exact restored patch still returns `alpha`. Make the bytes used to derive the key the same bytes fed to `git apply -R`, with a targeted replacement-and-restore regression.
+
+[Observed] F2. The reverse-result dictionary is module-global and keeps full outputs across normal calls, successive runs in one importing process and independent selftest sessions. A replay of 128 distinct one-hunk fixtures retained exactly 128 results. There is no eviction, byte ceiling, or run/selftest teardown in the source. Preserve warmed sharing in the intended parent/worker lifetime while controlling retention. A later independent ordinary run must re-derive its state and a changed patch must keep its own proved result.
+
+[Observed] Separately enumerating top-level functions with Python AST yielded exactly 25 supported single-`root` binding declarations. Module inspection found those same 25 wrapped, `adopted_binding(module)` left alone and zero imported `_binding` names in the exact current code. No current registration omission or accidental imported registration was found. `functools.wraps` retains inspection metadata and the mutable result is copied on each return. The memo explicitly bypasses `_FILES_OVERRIDE`. A later namespace import ending in `_binding` remains subject to the suffix/signature convention, so keep that convention scoped to pure local bindings if extending it.
+
+[Observed] Portable replay SHA-256 `ff36c2d848ba964c94755d10c26a1085f587fae8e8fe63b5f9e61aa82961419c`, result SHA-256 `c512b9586a7f4c9f5ee0cb9d4f27d1a24fd771f027a2e635f004d381881b50f9`. No original artifact was edited.

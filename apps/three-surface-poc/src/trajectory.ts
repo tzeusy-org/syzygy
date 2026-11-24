@@ -9,6 +9,9 @@ import {
   projectTrajectoryView,
   workerChangeVerificationId,
   type TrajectoryNarrowing,
+  type TrajectoryEligibility,
+  type TrajectoryEligibilityReason,
+  type TrajectoryItemEligibility,
   type TrajectoryViewRefusal,
   type TrajectoryViewRequest,
   type PocModel,
@@ -248,6 +251,56 @@ function itemFacts(item: TrajectoryLaneItem): string {
   return `<span class="wi-facts">priority <span data-parity-field="work-item-priority">${item.priority}</span> · ${instant('work-item-created', 'created', item.createdAt)} · ${instant('work-item-updated', 'updated', item.updatedAt)}${item.closedAt === null ? '' : ` · ${instant('work-item-closed', 'closed', item.closedAt)}`}</span>`;
 }
 
+const ELIGIBILITY_REASONS = {
+  'tracker-deferred': 'The tracker records this item as deferred.',
+  'work-item-revision-unavailable': 'No exact work-item revision was available for the dependency read.',
+  'dependency-read-failed': 'The dependency read failed.',
+  'dependency-result-malformed': 'The dependency read returned an unexpected result.',
+  'dependency-revision-unverified': 'The dependency read lacked a matching source revision witness.',
+  'unlisted-edge-type': 'A dependency row has an unlisted edge type.',
+  'external-blocker': 'A blocking row has an external target.',
+  'wisp-blocker': 'A blocking row has a wisp target.',
+  'out-of-prefix-blocker': 'A blocking row has a target outside the observed prefix.',
+  'unobserved-blocker': 'A blocking target has no observed work-item status.',
+} as const satisfies Record<TrajectoryEligibilityReason, string>;
+
+function eligibilityCount(label: string, count: number): string {
+  return `<span data-eligibility-count="${escapeHtml(label)}">${escapeHtml(label)} ${count}</span>`;
+}
+
+function eligibilityRegion(eligibility: TrajectoryEligibility): string {
+  const counts = Object.entries(eligibility.counts).map(([label, count]) => eligibilityCount(label, count));
+  const feed = eligibility.feed.kind === 'unknown'
+    ? `Unknown. ${ELIGIBILITY_REASONS[eligibility.feed.reason]}`
+    : [
+        eligibilityCount('rows', eligibility.feed.counts.total),
+        ...Object.entries(eligibility.feed.counts.byType).map(([label, count]) => eligibilityCount(label, count)),
+        eligibilityCount('unlisted', eligibility.feed.counts.unlisted),
+        eligibilityCount('external', eligibility.feed.counts.external),
+        eligibilityCount('wisp', eligibility.feed.counts.wisp),
+        eligibilityCount('out-of-prefix', eligibility.feed.counts.outOfPrefix),
+      ].join(' · ');
+  return `<section class="notice" aria-label="Work-item eligibility">
+    <p>Eligibility across ${eligibilityCount('served non-closed', eligibility.served)} items. ${counts.join(' · ')}</p>
+    <p data-dependency-feed="${eligibility.feed.kind}">Dependency rows. ${feed}</p>
+  </section>`;
+}
+
+function itemEligibility(eligibility: TrajectoryItemEligibility | undefined, mountPrefix: string): string {
+  if (eligibility === undefined) return '';
+  const reasons = eligibility.reasons.map((reason) =>
+    `<span data-eligibility-reason="${reason}">${ELIGIBILITY_REASONS[reason]}</span>`,
+  ).join(' ');
+  const block = eligibility.block;
+  const cause = block === undefined ? '' :
+    `<span data-blocked-cause="${block.causes[0] ?? 'unknown'}">Cause ${block.causes[0] ?? 'Unknown'}.</span>`;
+  const blockers = block === undefined || block.blockers.length === 0 ? '' :
+    `<div>Blockers ${block.blockers.map(({ id, page }) =>
+      `<a data-blocker-id="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`,
+    ).join(', ')}</div>`;
+  return `<div class="wi-facts"><span data-trajectory-eligibility="${eligibility.state}">Eligibility ${eligibility.state}.</span> ${reasons} ${cause}${blockers}</div>`;
+}
+
 /** POC-REQ-014: the served count of the governing-intent Unknown beside how
  * many the rendered selection holds and how many fall outside it, with the
  * reason, its RFC2-24 route and what resolves an item. `inside` is counted
@@ -302,6 +355,8 @@ function itemCard(
   testArtifactVerification: TestArtifactVerificationResult,
   governingIntentId: string | null,
   demonstrated: boolean,
+  eligibility: TrajectoryItemEligibility | undefined,
+  mountPrefix: string,
 ): string {
   const governedBy = servedGovernedBy(model, item.id);
   return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}" id="workitem-${escapeHtml(item.id)}" data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
@@ -309,6 +364,7 @@ function itemCard(
     <a class="wi-title" href="#workitem-${escapeHtml(item.id)}" data-parity-field="work-item-id">${escapeHtml(item.id)}</a>
     ${itemTitleWithheld(model)}
     <span class="wi-status" data-parity-field="work-item-status">${escapeHtml(item.status)}</span>
+    ${itemEligibility(eligibility, mountPrefix)}
     ${itemFacts(item)}
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
@@ -331,6 +387,8 @@ const TRAJECTORY_STYLE = `
   code { overflow-wrap: anywhere; }
   .board { display: grid; grid-template-columns: repeat(7, minmax(10rem, 1fr)); gap: .75rem; padding: 1.5rem 0 3rem; overflow-x: auto; }
   .wi-facts { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); overflow-wrap: anywhere; }
+  .wi-facts a { color: var(--cyan); }
+  .wi-facts a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   .mark-ref { font-size: .68rem; color: inherit; }
   .board-column { background: linear-gradient(145deg, #102126, var(--panel)); border: 1px solid var(--line); padding: 1rem; min-width: 0; }
   .board-column h2 { font-size: 1.1rem; margin: 0 0 .8rem; }
@@ -448,6 +506,8 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
               model.testArtifactVerification,
               model.governingIntentId,
               item.id === demonstratedId,
+              trajectory.eligibility.items[item.id],
+              mountPrefix,
             ),
           )
           .join('')}</ol>
@@ -464,6 +524,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     body = `
       ${answersRegion(model, trajectory.answers)}
       ${timeMeasuresRegion(trajectory.timeMeasures)}
+      ${eligibilityRegion(trajectory.eligibility)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.

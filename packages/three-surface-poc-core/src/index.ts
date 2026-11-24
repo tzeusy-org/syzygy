@@ -1,7 +1,19 @@
 export * from './model.js';
 export * from './poc-seeds.js';
 export * from './code-structure.js';
-export * from './work-items.js';
+export {
+  countGoverningIntentUnknown,
+  GOVERNING_INTENT_UNKNOWN_BASIS,
+  governingIntentUnknown,
+  observeWorkItems,
+  workItemTitlesDisclosure,
+  workItemTitlesWithheld,
+  type GoverningIntentUnknown,
+  type WorkItemFact,
+  type WorkItemsObserved,
+  type WorkItemsResult,
+  type WorkItemStatus,
+} from './work-items.js';
 export * from './worker-change-observation.js';
 export * from './orrery-projection.js';
 export * from './trajectory-projection.js';

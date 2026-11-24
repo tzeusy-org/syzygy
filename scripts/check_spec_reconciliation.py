@@ -200,6 +200,8 @@ Usage:
   python3 scripts/check_spec_reconciliation.py --selftest [--witnesses FILE]
 """
 import argparse
+import functools
+import copy
 import multiprocessing
 import contextlib
 from datetime import date as iso_date
@@ -400,6 +402,7 @@ POC_SCENARIO_AMENDMENTS = (
     ('three-surface-poc-five-answers-amendment-v1.0', {"044": 3}),  # syzygy-t3jk.16, new POC-REQ-044
     ('three-surface-poc-elapsed-time-amendment-v1.0', {"045": 2}),  # syzygy-t3jk.17, new POC-REQ-045
     ('three-surface-poc-views-amendment-v1.0', {"042": 1}),  # syzygy-t3jk.18
+    ('three-surface-poc-trajectory-dependency-eligibility-amendment-v1.0', {"062": 7}),  # syzygy-t3jk.19
 )
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
@@ -698,20 +701,30 @@ CONT_STATUS_PREFIX = f"[Containment figure amendment 2.23]({CONT_HOME})"
 CONT_SUBJECTS = {
     CONT_SPEC: "0f6ef5fb8ba2ef4577e2512f54c7e0e7683de7d5466def39fcb1b7b555d92f5d",
 }
-# The v2.25 worth-knowing amendment (syzygy-5dhm.41): one MODIFIED
-# REQ-polaris-generation-034 after v2.23, pending until its own VIS-4 ledger
-# row, found by its tag as v2.23's is.
-WORTH_CHANGE = "dossier-worth-knowing"
-WORTH_HOME = f"{CHANGES}/{WORTH_CHANGE}"
-WORTH_SPEC = f"{WORTH_HOME}/proposed/polaris-generation/spec.md"
-WORTH_UNION = f"{WORTH_HOME}/GOVERNING-DEPENDENCIES.json"
-WORTH_TAG = "polaris-dossier-worth-knowing-v2.25"
-WORTH_STATUS_PREFIX = f"[Worth-knowing amendment 2.25]({WORTH_HOME})"
-WORTH_SUBJECTS = {
-    WORTH_SPEC: "e6b4d22cab359c9fff2c5fcde811d00aba71c000821dededfedd1fbe622a9942",
-}
-WORTH_BOUND_PARTS = len(WORTH_SUBJECTS)
 CONT_BOUND_PARTS = len(CONT_SUBJECTS)
+# The v2.24 system-model amendment (syzygy-3efd.37; the label was a placeholder
+# until adoption): one MODIFIED REQ-polaris-generation-034 after v2.23,
+# pending until its own VIS-4 ledger row, found by its tag as v2.23's is.
+MODEL_CHANGE = "dossier-system-model"
+MODEL_HOME = f"{CHANGES}/{MODEL_CHANGE}"
+MODEL_SPEC = f"{MODEL_HOME}/proposed/polaris-generation/spec.md"
+MODEL_UNION = f"{MODEL_HOME}/GOVERNING-DEPENDENCIES.json"
+MODEL_TAG = "polaris-dossier-system-model-v2.24"
+MODEL_STATUS_PREFIX = f"[System model amendment 2.24]({MODEL_HOME})"
+MODEL_SUBJECTS = {
+    MODEL_SPEC: "f06e830deeef03f5d10f522481c8d25c141ff5ebce097c7411361d5bdc358c54",
+}
+MODEL_BOUND_PARTS = len(MODEL_SUBJECTS)
+
+EDIT_ACCOUNT_CHANGE = "polaris-edit-repair-deletion-accounting"
+EDIT_ACCOUNT_HOME = f"{CHANGES}/{EDIT_ACCOUNT_CHANGE}"
+EDIT_ACCOUNT_SPEC = f"{EDIT_ACCOUNT_HOME}/proposed/polaris-generation/spec.md"
+EDIT_ACCOUNT_TAG = "polaris-edit-repair-deletion-accounting-v2.25"
+EDIT_ACCOUNT_STATUS_PREFIX = f"[Edit and repair accounting amendment 2.25]({EDIT_ACCOUNT_HOME})"
+EDIT_ACCOUNT_SUBJECTS = {
+    EDIT_ACCOUNT_SPEC: "1f0ba725aea6c0660e2da7ffbe653fd0921452d0a1c4a11dcc8792aae5e9fa74",
+}
+EDIT_ACCOUNT_REPLACES = (POLARIS_ID + "006",)
 
 RAW_READ_CHANGE = "dossier-raw-read-disclosure"
 RAW_READ_HOME = f"{CHANGES}/{RAW_READ_CHANGE}"
@@ -1450,12 +1463,12 @@ def cont_disposition(root, rows):
                                     CONT_SUBJECTS, plain_revert=True)
     return None
 
-def is_worth_row(line):
-    """A ledger row claiming the v2.25 worth-knowing amendment, well formed or not."""
+def is_model_row(line):
+    """A ledger row claiming the v2.24 system-model amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
-    tag = f"`{WORTH_TAG}`"
+    tag = f"`{MODEL_TAG}`"
     if len(cells) == 7 and cells[6] == tag:
         return True
     if len(cells) != 7 and tag in cells:
@@ -1463,20 +1476,60 @@ def is_worth_row(line):
     if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
         return False
     snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
-    return all(f"]({snapshot}{path})" in cells[3] for path in WORTH_SUBJECTS)
+    return all(f"]({snapshot}{path})" in cells[3] for path in MODEL_SUBJECTS)
 
 
-def worth_rows(root):
+def model_rows(root):
     return [[cell.strip() for cell in line.split("|")[1:-1]]
-            for line in adoption_table_rows(root) if is_worth_row(line)]
+            for line in adoption_table_rows(root) if is_model_row(line)]
 
 
-def worth_disposition(root, rows):
+def model_disposition(root, rows):
     if len(rows) == 1 and len(rows[0]) == 7:
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
-        return recorded_disposition(root, identity, commit.strip("`"), WORTH_TAG,
-                                    WORTH_SUBJECTS, plain_revert=True)
+        return recorded_disposition(root, identity, commit.strip("`"), MODEL_TAG,
+                                    MODEL_SUBJECTS, plain_revert=True)
     return None
+
+def is_edit_account_row(line):
+    """Recognize an adoption claim by its tag or its own subject snapshot."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{EDIT_ACCOUNT_TAG}`"
+    if (len(cells) == 7 and cells[6] == tag) or (len(cells) != 7 and tag in cells):
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{EDIT_ACCOUNT_SPEC})" in cells[3]
+
+
+def edit_account_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_edit_account_row(line)]
+
+
+def edit_account_identity_unique(root, identity):
+    return sum(line.split("|", 2)[1].strip() == identity
+               for line in adoption_table_rows(root)) == 1
+
+
+def edit_account_index_adopted(cells):
+    if len(cells) != 4:
+        return False
+    return bool(re.match(r"Agent-adopted(?:[.\s]|$)", cells[2].replace("**", "")))
+
+
+def edit_account_disposition(root, rows):
+    if len(rows) != 1 or len(rows[0]) != 7:
+        return None
+    identity, _date, commit, _changed, _reason, _revert, _tag = rows[0]
+    if not edit_account_identity_unique(root, identity):
+        return None
+    return recorded_disposition(root, identity, commit.strip("`"), EDIT_ACCOUNT_TAG,
+                                EDIT_ACCOUNT_SUBJECTS, plain_revert=True)
+
 
 def polaris_additions(root):
     """Signed-addition candidates: [(change, spec path)], by change name.
@@ -2583,42 +2636,76 @@ def cont_binding(root):
             subjects.append(f"containment figure: `{rel}` differs from the reviewed v2.23 subject")
     return (None if records or subjects else read_text(root, CONT_SPEC), records, subjects)
 
-def worth_binding(root):
-    """Read v2.25's published composition: pending until its row, like v2.14.
+def model_binding(root):
+    """Read v2.24's published composition: pending until its row, like v2.14.
 
     The row names the installing commit (a plain commit, so its revert may
     omit `-m 1`), the reviewed spec at that commit and the version tag. Its
     predecessor is v2.23's text of REQ-polaris-generation-034, so v2.23 must
     itself be in force.
     """
-    rows = worth_rows(root)
-    if not rows or worth_disposition(root, rows):
+    rows = model_rows(root)
+    if not rows or model_disposition(root, rows):
         return None, [], []
     records, subjects = [], []
     if cont_binding(root)[0] is None:
-        records.append("worth-knowing: prior v2.23 containment figure adoption is unavailable")
+        records.append("system model: prior v2.23 containment figure adoption is unavailable")
     if len(rows) != 1 or len(rows[0]) != 7:
-        records.append("worth-knowing: expected one seven-column agent adoption row")
+        records.append("system model: expected one seven-column agent adoption row")
     else:
         identity, date, commit, changed, reason, revert, tag = rows[0]
         landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
         if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
                 or not valid_adoption_date(date)
-                or not landed or tag != f"`{WORTH_TAG}`" or not reason):
-            records.append("worth-knowing: malformed adoption identity, date, commit, reason or tag")
+                or not landed or tag != f"`{MODEL_TAG}`" or not reason):
+            records.append("system model: malformed adoption identity, date, commit, reason or tag")
         if landed:
             oid = landed.group(1)
             if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
-                records.append("worth-knowing: revert does not name the landed commit")
-            for rel in WORTH_SUBJECTS:
+                records.append("system model: revert does not name the landed commit")
+            for rel in MODEL_SUBJECTS:
                 snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
                 if f"]({snapshot})" not in changed:
-                    records.append(f"worth-knowing: adoption row does not name `{rel}`")
-    for rel, digest in WORTH_SUBJECTS.items():
+                    records.append(f"system model: adoption row does not name `{rel}`")
+    for rel, digest in MODEL_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"worth-knowing: `{rel}` differs from the reviewed v2.25 subject")
-    return (None if records or subjects else read_text(root, WORTH_SPEC), records, subjects)
+            subjects.append(f"system model: `{rel}` differs from the reviewed v2.24 subject")
+    return (None if records or subjects else read_text(root, MODEL_SPEC), records, subjects)
+
+def edit_account_binding(root):
+    """Verify the recorded v2.25 REQ-006 replacement over effective v2.24."""
+    rows = edit_account_rows(root)
+    if not rows or edit_account_disposition(root, rows):
+        return None, [], []
+
+    records = []
+    if model_binding(root)[0] is None:
+        records.append("edit and repair accounting: prior v2.24 system-model adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("edit and repair accounting: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        oid = commit[1:-1] if re.fullmatch(r"`[0-9a-f]{40}`", commit) else None
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date) or not oid
+                or not reason or tag != f"`{EDIT_ACCOUNT_TAG}`"):
+            records.append("edit and repair accounting: malformed adoption identity, date, commit, reason or tag")
+        if not edit_account_identity_unique(root, identity):
+            records.append("edit and repair accounting: adoption identity is not unique in the ledger")
+        if oid:
+            if revert not in (f"`git revert {oid}`", f"`git revert -m 1 {oid}`"):
+                records.append("edit and repair accounting: revert does not name the installing commit")
+            snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{EDIT_ACCOUNT_SPEC}"
+            if f"]({snapshot})" not in changed:
+                records.append("edit and repair accounting: adoption row does not name the reviewed specification")
+
+    body = read_bytes(root, EDIT_ACCOUNT_SPEC)
+    subjects = []
+    if body is None or sha(body) != EDIT_ACCOUNT_SUBJECTS[EDIT_ACCOUNT_SPEC]:
+        subjects.append(f"edit and repair accounting: `{EDIT_ACCOUNT_SPEC}` differs from the reviewed v2.25 subject")
+    return (None if records or subjects else body.decode("utf-8"), records, subjects)
+
 
 def is_raw_read_row(line):
     """A tag or a link to the subject at this row's own commit claims adoption."""
@@ -2914,17 +3001,57 @@ def package_patches(root, proposed):
     return out
 
 
+# Equal patch bytes, target path, body bytes and application mode yield equal
+# reverse results. Retain at most 64 MiB of result bytes per active process. An
+# uncached result still follows the same Git path after either limit is reached.
+_REVERSE_CACHE_ENTRIES = 128
+_REVERSE_CACHE_RESULT_BYTES = 512 * 1024
+_REVERSE_CACHE = None
+
+
+@contextlib.contextmanager
+def _reverse_cache_scope():
+    """Reuse an enclosing selftest cache or own a cache for one invocation."""
+    global _REVERSE_CACHE
+    if _REVERSE_CACHE is not None:
+        yield
+        return
+    _REVERSE_CACHE = {}
+    try:
+        yield
+    finally:
+        _REVERSE_CACHE = None
+
+
 def reverse_apply(root, patch_rel, target_rel, body, *, zero_context=False):
     """`body` with the patch reversed, or None when it does not reverse."""
+    try:
+        patch = (root / patch_rel).read_bytes()
+    except OSError:
+        # A removed or unreadable patch fails the reversal, as Git did.
+        return None
+    cache = _REVERSE_CACHE
+    if cache is None:
+        return _reverse_apply(patch, target_rel, body, zero_context=zero_context)
+    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)
+    if key in cache:
+        return cache[key]
+    result = _reverse_apply(patch, target_rel, body, zero_context=zero_context)
+    if len(cache) < _REVERSE_CACHE_ENTRIES and (
+            result is None or len(result) <= _REVERSE_CACHE_RESULT_BYTES):
+        cache[key] = result
+    return result
+
+
+def _reverse_apply(patch, target_rel, body, *, zero_context=False):
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / target_rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(body)
         options = ["--unidiff-zero"] if zero_context else []
         done = subprocess.run(
-            ["git", "apply", "-R", "--whitespace=nowarn", *options,
-             str((root / patch_rel).resolve())],
-            cwd=tmp, capture_output=True)
+            ["git", "apply", "-R", "--whitespace=nowarn", *options, "-"],
+            input=patch, cwd=tmp, capture_output=True)
         return dest.read_bytes() if done.returncode == 0 else None
 
 
@@ -3353,15 +3480,24 @@ def check_outcomes(root, report):
         subjects_seen += CONT_BOUND_PARTS
     r1 += cont_records
     r2 += cont_subjects
-    worth_retired_by = worth_disposition(root, worth_rows(root))
-    worth_amendment, worth_records, worth_subjects = worth_binding(root)
-    if worth_retired_by:
+    model_retired_by = model_disposition(root, model_rows(root))
+    model_amendment, model_records, model_subjects = model_binding(root)
+    if model_retired_by:
         records += 2
-    elif worth_amendment is not None or worth_records or worth_subjects:
+    elif model_amendment is not None or model_records or model_subjects:
         records += 1
-        subjects_seen += WORTH_BOUND_PARTS
-    r1 += worth_records
-    r2 += worth_subjects
+        subjects_seen += MODEL_BOUND_PARTS
+    r1 += model_records
+    r2 += model_subjects
+    edit_account_retired_by = edit_account_disposition(root, edit_account_rows(root))
+    edit_account_amendment, edit_account_records, edit_account_subjects = edit_account_binding(root)
+    if edit_account_retired_by:
+        records += 2
+    elif edit_account_amendment is not None or edit_account_records or edit_account_subjects:
+        records += 1
+        subjects_seen += len(EDIT_ACCOUNT_SUBJECTS)
+    r1 += edit_account_records
+    r2 += edit_account_subjects
     readmit_retired_by = readmit_disposition(root, readmit_rows(root))
     readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
     if readmit_retired_by:
@@ -3435,8 +3571,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.22 inactive by {readers_retired_by}"
     if cont_retired_by:
         retirement += f"; v2.23 inactive by {cont_retired_by}"
-    if worth_retired_by:
-        retirement += f"; v2.25 inactive by {worth_retired_by}"
+    if model_retired_by:
+        retirement += f"; v2.24 inactive by {model_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -3471,8 +3607,8 @@ def check_outcomes(root, report):
                "one v2.20 row over effective v2.19, pending until recorded; verify text: "
                "one v2.21 row over effective v2.18's 033, pending until recorded; reader's edition: "
                "one v2.22 row over effective v2.20, pending until recorded; containment figure: "
-               "one v2.23 row over effective v2.22, pending until recorded; worth-knowing: "
-               "one v2.25 row over effective v2.23, pending until recorded" + retirement)
+               "one v2.23 row over effective v2.22, pending until recorded; system model: "
+               "one v2.24 row over effective v2.23, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -4360,16 +4496,23 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, cont_amendment)
                 pa += extra_a
                 pb += extra_b
-        worth_amendment, worth_records, worth_subjects = worth_binding(root)
-        findings += worth_records + worth_subjects
-        if worth_amendment is not None:
+        model_amendment, model_records, model_subjects = model_binding(root)
+        findings += model_records + model_subjects
+        if model_amendment is not None:
             if cont_amendment is None:
-                findings.append("POLARIS: worth-knowing requires effective containment figure v2.23")
+                findings.append("POLARIS: system model requires effective containment figure v2.23")
             else:
-                a, extra_a = compose_figure_by_id(a, worth_amendment)
-                b, extra_b = compose_figure_by_name(b, worth_amendment)
+                a, extra_a = compose_figure_by_id(a, model_amendment)
+                b, extra_b = compose_figure_by_name(b, model_amendment)
                 pa += extra_a
                 pb += extra_b
+        edit_account_amendment, edit_account_records, edit_account_subjects = edit_account_binding(root)
+        findings += edit_account_records + edit_account_subjects
+        if edit_account_amendment is not None:
+            a, extra_a = compose_figure_by_id(a, edit_account_amendment, EDIT_ACCOUNT_REPLACES)
+            b, extra_b = compose_figure_by_name(b, edit_account_amendment, EDIT_ACCOUNT_REPLACES)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -4603,13 +4746,13 @@ def polaris_expected(root, findings):
                                                                                 findings.append("POLARIS containment figure: methods disagree or change identities")
                                                                             n_scen += sum(len(row["scenarios"]) for row in cont_a.values()) - sum(
                                                                                 len(row["scenarios"]) for row in readers_a.values())
-                                                                            worth_amendment, _records, _subjects = worth_binding(root)
-                                                                            if worth_amendment is not None:
-                                                                                worth_a, pa = compose_figure_by_id(cont_a, worth_amendment)
-                                                                                worth_b, pb = compose_figure_by_name(cont_b, worth_amendment)
-                                                                                if pa or pb or worth_a != worth_b or set(worth_a) != set(cont_a):
-                                                                                    findings.append("POLARIS worth-knowing: methods disagree or change identities")
-                                                                                n_scen += sum(len(row["scenarios"]) for row in worth_a.values()) - sum(
+                                                                            model_amendment, _records, _subjects = model_binding(root)
+                                                                            if model_amendment is not None:
+                                                                                model_a, pa = compose_figure_by_id(cont_a, model_amendment)
+                                                                                model_b, pb = compose_figure_by_name(cont_b, model_amendment)
+                                                                                if pa or pb or model_a != model_b or set(model_a) != set(cont_a):
+                                                                                    findings.append("POLARIS system model: methods disagree or change identities")
+                                                                                n_scen += sum(len(row["scenarios"]) for row in model_a.values()) - sum(
                                                                                     len(row["scenarios"]) for row in cont_a.values())
     raw_read_amendment, _records, _subjects = raw_read_binding(root)
     if raw_read_amendment is not None:
@@ -4652,6 +4795,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS verify text: cannot count predecessor and successor for 033")
         else:
             n_scen += current[ident] - prior[ident]
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    if edit_account_amendment is not None:
+        ident = EDIT_ACCOUNT_REPLACES[0]
+        prior_text = read_text(root, POLARIS_OVERLAY_SPEC) or ""
+        previous = [len(scenarios) for kind, ids, _name, scenarios in _polaris_blocks_regex(prior_text)
+                    if kind == "MODIFIED" and tuple(ids) == (ident,)]
+        replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(edit_account_amendment)
+                       if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(previous) != 1 or len(replacement) != 1:
+            findings.append("POLARIS edit and repair accounting: cannot count predecessor and successor for 006")
+        else:
+            n_scen += replacement[0] - previous[0]
     return n_req, n_scen, ids
 
 
@@ -4844,9 +4999,12 @@ def check_generated(root, pop, report):
     cont_amendment, _records, _subjects = cont_binding(root)
     if cont_amendment is not None:
         files += tracked(root, CONT_HOME)
-    worth_amendment, _records, _subjects = worth_binding(root)
-    if worth_amendment is not None:
-        files += tracked(root, WORTH_HOME)
+    model_amendment, _records, _subjects = model_binding(root)
+    if model_amendment is not None:
+        files += tracked(root, MODEL_HOME)
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    if edit_account_amendment is not None:
+        files.append(EDIT_ACCOUNT_SPEC)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
@@ -4919,7 +5077,7 @@ def check_generated(root, pop, report):
                         (hero_amendment, HERO_UNION),
                         (readers_amendment, READERS_UNION),
                         (cont_amendment, CONT_UNION),
-                        (worth_amendment, WORTH_UNION),
+                        (model_amendment, MODEL_UNION),
                         (raw_read_amendment, RAW_READ_UNION),
                         (treeread_amendment, TREEREAD_UNION),
                         (verify_amendment, VERIFY_UNION)):
@@ -5399,22 +5557,48 @@ def check_routes(root, pop, report):
         examined += 2
         if any("is agent-adopted" in field for field in cont_fields):
             findings.append(f"`{STATUS}` calls containment figure v2.23 adopted while it is not in force")
-    worth_amendment, _records, _subjects = worth_binding(root)
-    worth_fields = [line.strip() for line in visible_route_lines(status)
-                    if line.strip().startswith(WORTH_STATUS_PREFIX)]
-    if worth_amendment is not None:
+    model_amendment, _records, _subjects = model_binding(root)
+    model_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(MODEL_STATUS_PREFIX)]
+    if model_amendment is not None:
         examined += 2
-        if not any(Path(AGENT_ADOPTIONS).name in line and WORTH_TAG in line
-                   for line in rows.get(WORTH_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route worth-knowing v2.25 "
+        if not any(Path(AGENT_ADOPTIONS).name in line and MODEL_TAG in line
+                   for line in rows.get(MODEL_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route system model v2.24 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
-        identity = worth_rows(root)[0][0]
-        if AGENT_ADOPTIONS not in status or worth_fields != [f"{WORTH_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route worth-knowing v2.25 and its adoption {identity}")
-    elif WORTH_CHANGE in changes:
+        identity = model_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or model_fields != [f"{MODEL_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route system model v2.24 and its adoption {identity}")
+    elif MODEL_CHANGE in changes:
         examined += 2
-        if any("is agent-adopted" in field for field in worth_fields):
-            findings.append(f"`{STATUS}` calls worth-knowing v2.25 adopted while it is not in force")
+        if any("is agent-adopted" in field for field in model_fields):
+            findings.append(f"`{STATUS}` calls system model v2.24 adopted while it is not in force")
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    edit_account_fields = [line.strip() for line in visible_route_lines(status)
+                           if line.strip().startswith(EDIT_ACCOUNT_STATUS_PREFIX)]
+    edit_account_routes = [[cell.strip() for cell in line.split("|")[1:-1]]
+                           for line in rows.get(EDIT_ACCOUNT_CHANGE, [])]
+    if edit_account_amendment is not None:
+        examined += 2
+        identity = edit_account_rows(root)[0][0]
+        spec_link = f"[`{EDIT_ACCOUNT_CHANGE}`](changes/{EDIT_ACCOUNT_CHANGE})"
+        ledger_link = f"[Agent adoption {identity}](../{AGENT_ADOPTIONS}) (`{EDIT_ACCOUNT_TAG}`)"
+        if (len(edit_account_routes) != 1
+                or not edit_account_index_adopted(edit_account_routes[0])
+                or edit_account_routes[0][0] != spec_link
+                or edit_account_routes[0][3] != ledger_link):
+            findings.append(f"`{OPENSPEC_README}` does not route edit and repair accounting v2.25 "
+                            f"to exact adoption {identity} in `{AGENT_ADOPTIONS}` and its version tag")
+        if AGENT_ADOPTIONS not in status or edit_account_fields != [
+            f"{EDIT_ACCOUNT_STATUS_PREFIX} is agent-adopted in {identity}."
+        ]:
+            findings.append(f"`{STATUS}` does not route edit and repair accounting v2.25 and its adoption {identity}")
+    elif EDIT_ACCOUNT_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in edit_account_fields):
+            findings.append(f"`{STATUS}` calls edit and repair accounting v2.25 adopted while it is not in force")
+        if any(edit_account_index_adopted(cells) for cells in edit_account_routes):
+            findings.append(f"`{OPENSPEC_README}` calls edit and repair accounting v2.25 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -5590,10 +5774,39 @@ def reference_signed(root):
     return _SIGNED_MEMO[key]
 
 
+# Within one run() the tree is only read, so neither D10's state nor any
+# versioned binding can change between the predicates that ask. Each binding
+# re-derived every predecessor's binding (a call chain that grew with the square
+# of the version count) and each asked D10's recorder afresh (syzygy-v0b5). The
+# memo is keyed by function and resolved root, lives for one run() call only,
+# and is bypassed while `_FILES_OVERRIDE` puts other bytes in front of a read.
+_RUN_MEMO = None
+
+
+def _per_run(function):
+    """`function(root)`, answered once per root within one run()."""
+    @functools.wraps(function)
+    def memoized(*args, **kwargs):
+        if _RUN_MEMO is None or _FILES_OVERRIDE is not None or len(args) != 1 or kwargs:
+            return function(*args, **kwargs)
+        key = (function.__module__, function.__name__, str(Path(args[0]).resolve()))
+        if key not in _RUN_MEMO:
+            _RUN_MEMO[key] = function(args[0])
+        # A copy each time: a caller may extend the finding lists it is given.
+        return copy.deepcopy(_RUN_MEMO[key])
+    memoized.unmemoized = function
+    return memoized
+
+
+@_reverse_cache_scope()
 def run(root):
-    global _SIGNED_MEMO
+    global _SIGNED_MEMO, _RUN_MEMO
     report = Report()
     _SIGNED_MEMO = {}
+    _RUN_MEMO = {}
+    import d10_supersession
+    d10_state = d10_supersession.state
+    d10_supersession.state = _per_run(d10_state)
     try:
         check_outcomes(root, report)
         pop = check_census(root, report)
@@ -5603,7 +5816,24 @@ def run(root):
         check_unions(root, report)
     finally:
         _SIGNED_MEMO = None
+        _RUN_MEMO = None
+        d10_supersession.state = d10_state
     return report
+
+
+# Every versioned binding of a root, memoized per run() (`_per_run`) by the
+# call just before `main`'s guard: each
+# local function named `*_binding` whose one parameter is `root`, found rather
+# than listed, so a binding a later version adds is memoized without an edit
+# here. `adopted_binding` takes a module name and is left alone.
+def _memoize_bindings(namespace):
+    import inspect
+    for name, value in list(namespace.items()):
+        if (name.endswith("_binding") and inspect.isfunction(value)
+                and value.__module__ == namespace["__name__"]
+                and not hasattr(value, "unmemoized")
+                and list(inspect.signature(value).parameters) == ["root"]):
+            namespace[name] = _per_run(value)
 
 
 # --------------------------------------------------------------------------
@@ -5660,7 +5890,7 @@ def inputs(root):
     paths |= {HERO_UNION, *HERO_SUBJECTS}
     paths |= {READERS_UNION, *READERS_SUBJECTS}
     paths |= {CONT_UNION, *CONT_SUBJECTS}
-    paths |= {WORTH_UNION, *WORTH_SUBJECTS}
+    paths |= {MODEL_UNION, *MODEL_SUBJECTS}
     paths |= {RAW_READ_UNION, *RAW_READ_SUBJECTS}
     paths |= {TREEREAD_UNION, *TREEREAD_SUBJECTS}
     paths |= {VERIFY_UNION, *VERIFY_SUBJECTS}
@@ -6042,11 +6272,15 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_hero = any(is_hero_row(line) for line in original.splitlines())
     had_readers = any(is_readers_row(line) for line in original.splitlines())
     had_cont = any(is_cont_row(line) for line in original.splitlines())
-    had_worth = any(is_worth_row(line) for line in original.splitlines())
+    had_model = any(is_model_row(line) for line in original.splitlines())
     had_readmit = any(is_readmit_row(line) for line in original.splitlines())
     had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
     had_treeread = any(is_treeread_row(line) for line in original.splitlines())
     had_verify = any(is_verify_row(line) for line in original.splitlines())
+    edit_rows = edit_account_rows(tree)
+    edit_retired = edit_account_disposition(tree, edit_rows)
+    edit_records = 2 if edit_retired else int(bool(edit_rows))
+    edit_subjects = len(EDIT_ACCOUNT_SUBJECTS) if edit_rows and not edit_retired else 0
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -6057,7 +6291,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
                       and not is_verify_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line)
+                      and not is_edit_account_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -6070,8 +6305,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_worth - had_raw_read - had_treeread - had_verify
-            and examined(report, "R2") == examined(clean, "R2") - 3
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_raw_read - had_treeread - had_verify - edit_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -6092,7 +6327,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (HERO_BOUND_PARTS if had_hero else 0)
             - (READERS_BOUND_PARTS if had_readers else 0)
             - (CONT_BOUND_PARTS if had_cont else 0)
-            - (WORTH_BOUND_PARTS if had_worth else 0)
+            - (MODEL_BOUND_PARTS if had_model else 0)
             - (len(RAW_READ_SUBJECTS) if had_raw_read else 0)
             - (len(TREEREAD_SUBJECTS) if had_treeread else 0)
             - (VERIFY_BOUND_PARTS if had_verify else 0))
@@ -6496,7 +6731,7 @@ def figure_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6634,7 +6869,7 @@ def derived_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6767,7 +7002,7 @@ def ledger_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -6898,7 +7133,7 @@ def kinds_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7029,7 +7264,7 @@ def manifests_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7160,7 +7395,7 @@ def repairs_cases(tmp, base, witnesses, failures):
                       and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7290,7 +7525,7 @@ def maps_cases(tmp, base, witnesses, failures):
                       if not is_maps_row(line) and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7489,7 +7724,7 @@ def bounds_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_bounds_row(line) and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7618,7 +7853,7 @@ def corr_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_corr_row(line) and not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7747,7 +7982,7 @@ def coverage_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_coverage_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -7875,7 +8110,7 @@ def infra_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8002,7 +8237,7 @@ def findpages_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      if not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8148,7 +8383,7 @@ def subsec_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      if not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8275,7 +8510,7 @@ def reltype_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      if not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8402,7 +8637,7 @@ def hero_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      if not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8529,7 +8764,7 @@ def readers_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_readers_row(line) and not is_cont_row(line) and not is_worth_row(line))
+                      if not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8655,7 +8890,7 @@ def cont_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_cont_row(line) and not is_worth_row(line))
+                      if not is_cont_row(line) and not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -8764,9 +8999,160 @@ def cont_cases(tmp, base, witnesses, failures):
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
-def worth_cases(tmp, base, witnesses, failures):
-    """The v2.25 pending-to-adopted transition over v2.23, its ledger and byte guards, and the predecessor guard."""
-    original = read_text(base, WORTH_SPEC)
+def edit_account_cases(tmp, base, witnesses, failures):
+    """Exercise the v2.25 binding and sole REQ-006 replacement in a disposable tree."""
+    reviewed = read_text(base, EDIT_ACCOUNT_SPEC)
+    if reviewed is None or model_binding(base)[0] is None:
+        return
+
+    def record(case, path, old, new, expected, findings, caught, control=False):
+        outcome = ("held" if control else "killed") if caught else "SURVIVED"
+        name = f"edit-account-{case}"
+        witnesses.append({"mutant": name, "path": path, "old": old, "new": new,
+                          "expected": expected, "failed": findings, "outcome": outcome})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "edit-account-v225"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_edit_account_row(line))
+    ledger.write_text(pending)
+    baseline, findings = census(tree)
+    predecessor = baseline["POLARIS"]
+    ident = EDIT_ACCOUNT_REPLACES[0]
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>",
+           "candidate stays out of effective REQ-006", findings,
+           not findings and edit_account_binding(tree) == (None, [], [])
+           and len(predecessor[ident]["scenarios"]) == 5, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{EDIT_ACCOUNT_SPEC}"
+    row = (f"| A-999 | 2026-11-24 | `{oid}` | [spec]({snapshot}) | Selftest "
+           f"| `git revert {oid}` | `{EDIT_ACCOUNT_TAG}` |\n")
+    ledger.write_text(pending + row)
+    installed, findings = census(tree)
+    expected_scenarios = [
+        *predecessor[ident]["scenarios"],
+        "Edit or repair drops a prior block without account",
+    ]
+    expected = {**predecessor, ident: {**predecessor[ident], "scenarios": expected_scenarios}}
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row,
+           "binding activates one extra scenario and preserves the other requirements", findings,
+           not findings and edit_account_binding(tree) == (reviewed, [], [])
+           and installed["POLARIS"] == expected, True)
+
+    bad_rows = (
+        ("wrong-tag", EDIT_ACCOUNT_TAG, EDIT_ACCOUNT_TAG.replace("2.25", "2.99"), "malformed adoption"),
+        ("bad-sha", f"| `{oid}` |", "| `0123456` |", "malformed adoption"),
+        ("wrong-revert", f"git revert {oid}", f"git revert {'f' * 40}", "revert does not name"),
+        ("wrong-snapshot", snapshot, snapshot.replace(oid, "f" * 40), "does not name the reviewed"),
+        ("duplicate", row, row + row.replace("A-999", "A-1000"), "expected one seven-column"),
+        ("reused-identity", "A-999", "A-64", "adoption identity is not unique"),
+    )
+    for case, old, new, reason in bad_rows:
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, records, subjects = edit_account_binding(tree)
+        record(case, AGENT_ADOPTIONS, old, new, reason, records + subjects,
+               effective is None and any(reason in line for line in records) and not subjects)
+
+    prior_row = next(line for line in pending.splitlines(keepends=True) if is_model_row(line))
+    ledger.write_text(pending.replace(prior_row, "", 1) + row)
+    effective, records, subjects = edit_account_binding(tree)
+    record("prior-missing", AGENT_ADOPTIONS, prior_row, "", "reject missing effective v2.24",
+           records + subjects, effective is None and any("prior v2.24" in line for line in records))
+
+    ledger.write_text(pending + row)
+    subject = tree / EDIT_ACCOUNT_SPEC
+    previous = subject.read_bytes()
+    subject.write_bytes(previous + b"\n")
+    effective, records, subjects = edit_account_binding(tree)
+    record("subject-drift", EDIT_ACCOUNT_SPEC, "<end of file>", "\n", "reject changed subject bytes",
+           records + subjects, effective is None and not records and bool(subjects))
+    subject.unlink()
+    effective, records, subjects = edit_account_binding(tree)
+    record("subject-missing", EDIT_ACCOUNT_SPEC, "<reviewed file>", "<file missing>",
+           "reject a missing reviewed subject", records + subjects,
+           effective is None and not records and bool(subjects))
+    subject.write_bytes(previous)
+
+    veto = ("| A-1000 | 2026-11-24 | `8a468bc` | Veto A-999 | Selftest "
+            "| `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    retired, findings = census(tree)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto,
+           "a valid later veto restores the exact predecessor composition", findings,
+           not findings and edit_account_disposition(tree, edit_account_rows(tree)) == "A-1000"
+           and retired == baseline, True)
+
+    ledger.write_text(pending + row)
+    status = tree / STATUS
+    index = tree / OPENSPEC_README
+    prior_status = status.read_text()
+    prior_index = index.read_text()
+    adopted_status = f"    {EDIT_ACCOUNT_STATUS_PREFIX} is agent-adopted in A-999."
+    status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
+                                 if not line.strip().startswith(EDIT_ACCOUNT_STATUS_PREFIX))
+    index_row = next(line for line in prior_index.splitlines(keepends=True)
+                     if line.startswith(f"| [`{EDIT_ACCOUNT_CHANGE}`]("))
+    adopted_index = (f"| [`{EDIT_ACCOUNT_CHANGE}`](changes/{EDIT_ACCOUNT_CHANGE}) | Edit and repair accounting "
+                     f"| Agent-adopted | [Agent adoption A-999](../{AGENT_ADOPTIONS}) (`{EDIT_ACCOUNT_TAG}`) |\n")
+    status.write_text(status_without_route + adopted_status + "\n")
+    index.write_text(prior_index.replace(index_row, adopted_index, 1))
+
+    def route_findings(population):
+        report = Report()
+        check_routes(tree, population, report)
+        return [f for f in report.findings.get("R5", []) if "edit and repair accounting v2.25" in f]
+
+    findings = route_findings(installed)
+    record("route-installed", STATUS, "<candidate route>", adopted_status, "route agrees with binding",
+           findings, not findings, True)
+    status.write_text(status_without_route)
+    findings = route_findings(installed)
+    record("status-route-missing", STATUS, adopted_status, "", "status must link the active adoption",
+           findings, len(findings) == 1 and STATUS in findings[0])
+    status.write_text(status_without_route + adopted_status + "\n")
+    index_cases = (
+        ("wrong-tag", EDIT_ACCOUNT_TAG, "incorrect-tag"),
+        ("wrong-ledger-path", f"../{AGENT_ADOPTIONS}", "../README.md#AGENT-ADOPTIONS.md"),
+        ("wrong-ledger-identity", "Agent adoption A-999", "Agent adoption A-998"),
+        ("wrong-change-path", f"changes/{EDIT_ACCOUNT_CHANGE}", f"../{EDIT_ACCOUNT_HOME}"),
+        ("candidate-stated", "Agent-adopted", "Candidate"),
+    )
+    for case, old, new in index_cases:
+        assert old in adopted_index, case
+        index.write_text(prior_index.replace(index_row, adopted_index.replace(old, new, 1), 1))
+        findings = route_findings(installed)
+        record(f"index-route-{case}", OPENSPEC_README, old, new, "refuse the inaccurate index route",
+               findings, len(findings) == 1 and OPENSPEC_README in findings[0])
+    index.write_text(prior_index.replace(index_row, adopted_index.replace("Agent adoption A-999", "Historical record"), 1))
+    ledger.write_text(pending)
+    findings = route_findings(baseline)
+    record("pending-adoption-claimed", AGENT_ADOPTIONS, row, "", "both routes refuse a false adoption",
+           findings, len(findings) == 2 and any(STATUS in f for f in findings)
+           and any(OPENSPEC_README in f for f in findings))
+    status.write_text(prior_status)
+    index.write_text(prior_index)
+
+    content_cases = (
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "005"),
+        ("wrong-name", "### Requirement: Independent review and repair", "### Requirement: Other review"),
+        ("wrong-operation", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+    )
+    for case, old, new in content_cases:
+        assert old in reviewed, case
+        candidate = reviewed.replace(old, new, 1)
+        by_id, id_findings = compose_figure_by_id(predecessor, candidate, EDIT_ACCOUNT_REPLACES)
+        by_name, name_findings = compose_figure_by_name(predecessor, candidate, EDIT_ACCOUNT_REPLACES)
+        record(case, EDIT_ACCOUNT_SPEC, old, new, "both parsers reject without partial application",
+               id_findings + name_findings, bool(id_findings and name_findings) and by_id == by_name == predecessor)
+
+
+def model_cases(tmp, base, witnesses, failures):
+    """The v2.24 pending-to-adopted transition over v2.23, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, MODEL_SPEC)
     if original is None or cont_binding(base)[0] is None:
         return
 
@@ -8777,98 +9163,98 @@ def worth_cases(tmp, base, witnesses, failures):
         if not caught:
             failures.append(name)
 
-    tree = Path(tmp) / "worth-edition"
+    tree = Path(tmp) / "model-edition"
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_worth_row(line) and not is_worth_row(line))
+                      if not is_model_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
     ident = FIGURE_REPLACES[0]
-    held = (worth_binding(tree) == (None, [], []) and not pending_findings
+    held = (model_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == 193)
-    record("worth-pending", AGENT_ADOPTIONS, "<no v2.25 row>", "<unchanged>",
-           "landed package alone keeps v2.25 pending", pending_findings, held, True)
+    record("model-pending", AGENT_ADOPTIONS, "<no v2.24 row>", "<unchanged>",
+           "landed package alone keeps v2.24 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
-    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{WORTH_SPEC}) "
-           f"| Selftest | `git revert {oid}` | `{WORTH_TAG}` |\n")
+    row = (f"| A-999 | 2026-11-21 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{MODEL_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{MODEL_TAG}` |\n")
     ledger.write_text(pending + row)
     current_pop, current_findings = census(tree)
     current = current_pop["POLARIS"]
-    held = (worth_binding(tree) == (original, [], []) and not current_findings
+    held = (model_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 199
+            and len(current[ident]["scenarios"]) == 207
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("worth-adopted", AGENT_ADOPTIONS, "<no v2.25 row>", row,
-           "v2.25 replaces exactly 034 (193 to 199 scenarios)", current_findings, held, True)
+    record("model-adopted", AGENT_ADOPTIONS, "<no v2.24 row>", row,
+           "v2.24 replaces exactly 034 (193 to 207 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
-                           ("wrong-tag", WORTH_TAG, WORTH_TAG + "-wrong"),
+                           ("wrong-tag", MODEL_TAG, MODEL_TAG + "-wrong"),
                            ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
-                           ("missing-spec-link", f"/blob/{oid}/{WORTH_SPEC})", f"/blob/other/{WORTH_SPEC})"),
+                           ("missing-spec-link", f"/blob/{oid}/{MODEL_SPEC})", f"/blob/other/{MODEL_SPEC})"),
                            ("bad-date", "2026-11-21", "2026-99-21"),
                            ("no-reason", "| Selftest |", "|  |")):
         assert old in row
         ledger.write_text(pending + row.replace(old, new, 1))
-        effective, r1, r2 = worth_binding(tree)
-        record(f"worth-{name}", AGENT_ADOPTIONS, old, new,
+        effective, r1, r2 = model_binding(tree)
+        record(f"model-{name}", AGENT_ADOPTIONS, old, new,
                "R1 refusal with no effective amendment", r1 + r2,
                effective is None and bool(r1) and not r2, False)
 
     veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
     ledger.write_text(pending + row + veto)
     pop, found = census(tree)
-    held = (worth_disposition(tree, worth_rows(tree)) == "A-1000" and not found
+    held = (model_disposition(tree, model_rows(tree)) == "A-1000" and not found
             and pop["POLARIS"] == predecessor)
-    record("worth-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.23 034", found, held, True)
+    record("model-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.23 034", found, held, True)
     prior_row = next((line for line in pending.splitlines(keepends=True) if is_cont_row(line)), None)
     if prior_row is not None:
         no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_cont_row(line))
         ledger.write_text(no_prior + row)
-        effective, r1, r2 = worth_binding(tree)
-        record("worth-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+        effective, r1, r2 = model_binding(tree)
+        record("model-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
                "R1 refusal while v2.23 is not in force", r1 + r2,
                effective is None and any("prior v2.23" in f for f in r1), False)
 
     ledger.write_text(pending + row)
-    for rel in WORTH_SUBJECTS:
+    for rel in MODEL_SUBJECTS:
         subject = tree / rel
         previous = subject.read_bytes()
         subject.write_bytes(previous + b"\n")
-        effective, r1, r2 = worth_binding(tree)
+        effective, r1, r2 = model_binding(tree)
         subject.write_bytes(previous)
-        record(f"worth-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+        record(f"model-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
                "R2 refusal with no effective amendment", r1 + r2,
                effective is None and not r1 and bool(r2), False)
-    union = tree / WORTH_UNION
+    union = tree / MODEL_UNION
     previous = union.read_text()
     assert '"REQ-polaris-generation-014"' in previous
     union.write_text(previous.replace('"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', 1))
     report = Report()
     check_generated(tree, current_pop, report)
     union.write_text(previous)
-    record("worth-union-changed", WORTH_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
-           report.findings.get("R4", []), any(WORTH_UNION in f for f in report.findings.get("R4", [])), False)
+    record("model-union-changed", MODEL_UNION, '"REQ-polaris-generation-014"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(MODEL_UNION in f for f in report.findings.get("R4", [])), False)
     status = tree / STATUS
     previous = status.read_text()
     status.write_text("\n".join(line for line in previous.split("\n")
-                                if not line.strip().startswith(WORTH_STATUS_PREFIX)))
+                                if not line.strip().startswith(MODEL_STATUS_PREFIX)))
     report = Report()
     check_routes(tree, current_pop, report)
     status.write_text(previous)
-    record("worth-status-route-missing", STATUS, WORTH_STATUS_PREFIX, "", "R5 refusal",
+    record("model-status-route-missing", STATUS, MODEL_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("worth-knowing v2.25" in f for f in report.findings.get("R5", [])), False)
+           any("system model v2.24" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)
     claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
-    adopted_status = any(line.strip().startswith(WORTH_STATUS_PREFIX) and "is agent-adopted" in line
+    adopted_status = any(line.strip().startswith(MODEL_STATUS_PREFIX) and "is agent-adopted" in line
                          for line in previous.split("\n"))
-    record("worth-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+    record("model-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
            "R5 refuses an adopted route while the row is missing", claims,
            bool(claims) if adopted_status else not claims, not adopted_status)
     ledger.write_text(pending + row)
@@ -8877,7 +9263,7 @@ def worth_cases(tmp, base, witnesses, failures):
         ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
         ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
         ("renamed", "### Requirement: Agent brief and mechanically checked draft",
-         "### Requirement: Agent brief and worth-knowing mark"),
+         "### Requirement: Agent brief and system model"),
         ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
     ]
     kin_pop = predecessor
@@ -8886,7 +9272,7 @@ def worth_cases(tmp, base, witnesses, failures):
         mutant = original.replace(old, new, 1)
         a, ida = compose_figure_by_id(kin_pop, mutant)
         b, names = compose_figure_by_name(kin_pop, mutant)
-        record(f"worth-compose-{name}", WORTH_SPEC, old, new,
+        record(f"model-compose-{name}", MODEL_SPEC, old, new,
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
@@ -9758,6 +10144,8 @@ def adopted_mutants():
     )
 
 
+# The case workers fork after the parent warms this invocation's cache.
+@_reverse_cache_scope()
 def selftest(witness_path=None):
     commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                             capture_output=True, text=True).stdout.strip()
@@ -9841,24 +10229,21 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     declared_source_historical_cases(tmp, base, clean, witnesses, failures)
     declared_source_composition_cases(witnesses, failures)
     url_source_cases(tmp, base, witnesses, failures)
-    figure_cases(tmp, base, witnesses, failures)
-    derived_cases(tmp, base, witnesses, failures)
-    ledger_cases(tmp, base, witnesses, failures)
-    kinds_cases(tmp, base, witnesses, failures)
-    manifests_cases(tmp, base, witnesses, failures)
-    repairs_cases(tmp, base, witnesses, failures)
-    maps_cases(tmp, base, witnesses, failures)
-    bounds_cases(tmp, base, witnesses, failures)
-    corr_cases(tmp, base, witnesses, failures)
-    coverage_cases(tmp, base, witnesses, failures)
-    infra_cases(tmp, base, witnesses, failures)
-    findpages_cases(tmp, base, witnesses, failures)
-    subsec_cases(tmp, base, witnesses, failures)
-    reltype_cases(tmp, base, witnesses, failures)
-    hero_cases(tmp, base, witnesses, failures)
-    readers_cases(tmp, base, witnesses, failures)
-    cont_cases(tmp, base, witnesses, failures)
-    worth_cases(tmp, base, witnesses, failures)
+    # These cases reconstruct historical REQ-034 floors, including versions
+    # at which the v2.24 prerequisite for edit accounting cannot exist.
+    figure_base = base
+    if edit_account_rows(base):
+        figure_base = Path(tmp) / "before-edit-accounting"
+        shutil.copytree(base, figure_base)
+        ledger = figure_base / AGENT_ADOPTIONS
+        rows = ledger.read_text().splitlines(keepends=True)
+        ledger.write_text("".join(line for line in rows if not is_edit_account_row(line)))
+    for case in (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+                 repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
+                 infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
+                 readers_cases, cont_cases, model_cases):
+        case(tmp, figure_base, witnesses, failures)
+    edit_account_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)
@@ -10494,6 +10879,10 @@ def _main(args):
           f"{'FAIL' if report.failed else 'PASS'} — counts derived, not "
           "asserted")
     return 1 if report.failed else 0
+
+
+# After every definition, so a binding defined anywhere in the module is found.
+_memoize_bindings(globals())
 
 
 if __name__ == "__main__":

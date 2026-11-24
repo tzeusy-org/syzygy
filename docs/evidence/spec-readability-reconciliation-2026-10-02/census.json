@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 28,
-      "scenarios": 43,
+      "requirements": 29,
+      "scenarios": 50,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -460,6 +460,18 @@
           "scenarios": [
             "Keyboard-only reading"
           ]
+        },
+        "POC-REQ-062": {
+          "name": "Trajectory derives eligibility from revision-bound dependencies",
+          "scenarios": [
+            "Complete revision with a known blocker and a ready item",
+            "Observed empty and unavailable dependencies",
+            "Missing work-item revision prevents dependency observation",
+            "A blocked card retains a known cause alongside an unsettled edge",
+            "Unsettled edge metadata is counted without disclosing input strings",
+            "Planned, blocked without cause, and statuses outside derived eligibility",
+            "Blocker reaches its card across pages"
+          ]
         }
       }
     },
@@ -619,7 +631,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 530,
+      "scenarios": 539,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -689,7 +701,8 @@
             "Revision after confirmation",
             "Source trade-off omitted entirely",
             "Omitted material qualification",
-            "New evidence outside the current budget or authority"
+            "New evidence outside the current budget or authority",
+            "Edit or repair drops a prior block without account"
           ]
         },
         "REQ-polaris-generation-007": {
@@ -1200,12 +1213,20 @@
             "Nesting of other units is Unknown, never a finding",
             "Earlier schema keeps its bytes",
             "Brief v17 states the containment kind",
-            "A worth-knowing block leads its page",
-            "A Pole with none found",
-            "A misplaced, uncited or judged mark refused",
-            "Count advice without a quota",
-            "A pre-v13 draft keeps its bytes",
-            "Brief v19 and inventory brief v4 ask for the facts"
+            "Two views share one element",
+            "Migration renders the same figures",
+            "View naming a missing element refused",
+            "View showing a relationship without its ends refused",
+            "Element parents that loop refused",
+            "Element type disagreeing with its unit refused",
+            "Derived relationship stated by Syzygy",
+            "Derived relationship with nothing to derive it refused",
+            "Element no view shows refused",
+            "Schema v11 and earlier keep their bytes",
+            "Derived relationship Syzygy cannot derive drawn Unknown",
+            "Findings beside a schema finding not computed",
+            "Shared element in a later containment and a witnessed relationship",
+            "Brief v18 states the system model"
           ]
         },
         "REQ-polaris-generation-035": {

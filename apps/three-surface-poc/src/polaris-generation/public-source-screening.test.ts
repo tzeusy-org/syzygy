@@ -570,7 +570,8 @@ describe('the v4 redacted corpus behind the original-object verification boundar
       permissionIdentity: async () => { throw Error('consent must replace this port'); },
       admit: async input => ({ kind: 'reserved', permit: { attemptId: String(input.ordinal), maxUsageUnits: 1, maxOutputBytes: 1_000 } }),
       permitted: async () => true, releaseUnsent: async () => undefined, responseSchema: () => ({ version: 'fixture', schema: {} }),
-      generate: async input => { sent.push(input.input); return { body: '{}', model: 'fixture', usageUnits: 1 }; },
+      generate: async input => { sent.push(input.input);
+        return { body: input.stage === 'edit' ? '{"draft":{},"changes":[]}' : '{}', model: 'fixture', usageUnits: 1 }; },
       validate: (_stage, data) => data, record: async () => undefined, lateReceipt: async () => undefined, fidelity: () => ({ blocking: false, findings: [] }) };
     const run = async (sources: readonly GenerationSource[]) => runGenerationPipeline({ ...request, routes, sources }, withConsent(base, {
       now: () => now, reader: { read: async () => records }, consentingProject: 'project:fixture', routeProviders: { fixture: 'fixture-provider' },

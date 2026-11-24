@@ -105,7 +105,21 @@ export function fixtureWorkItemRow(
   return workItemRow(id, status, createdAt, updatedAt, closedAt, FIXTURE_DOLT_REVISION);
 }
 
-const FIXTURE_DOLT_REVISION = 'dolt-fixture-revision';
+export const FIXTURE_DOLT_REVISION = '1234567890abcdefghijklmnopqrstuv';
+
+function workItemRevisionWitness(revision: string): Record<string, unknown> {
+  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null };
+}
+
+export function fixtureWorkItemQuery(
+  rows: readonly Record<string, unknown>[],
+  revision = FIXTURE_DOLT_REVISION,
+  runDependencyQuery: (sql: string) => string = () => '[]',
+): (_root: string, sql: string) => string {
+  return (_root, sql) => sql.includes('FROM dependencies ')
+    ? runDependencyQuery(sql)
+    : JSON.stringify([workItemRevisionWitness(revision), ...rows]);
+}
 
 function workItemRow(
   id: string,
@@ -144,6 +158,7 @@ interface FixtureModelOptions {
   readonly fixtureRepo?: FixtureRepo;
   /** Replace the five default work-item rows (built with `fixtureWorkItemRow`). */
   readonly workItemRows?: readonly Record<string, unknown>[];
+  readonly runDependencyQuery?: (sql: string) => string;
 }
 
 export function buildFixtureModel(cleanups: string[], options: FixtureModelOptions = {}): PocModel {
@@ -192,8 +207,7 @@ export function buildFixtureModel(cleanups: string[], options: FixtureModelOptio
     observerRevision: revision,
     evaluation: { snapshot: 'butlers@fixture', asOf: options.evaluationAsOf ?? '2026-08-30T12:00:00Z' },
     evidence: fixtureEvidence(revision),
-    runWorkItemQuery: (_repoRoot, sql) =>
-      sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: doltRevision }]),
+    runWorkItemQuery: fixtureWorkItemQuery(rows, typeof rows[0]?.revision === 'string' ? rows[0].revision : doltRevision, options.runDependencyQuery),
     ...(options.projectShape === undefined ? {} : { projectShape: options.projectShape }),
     // The production traversal predicate: readiness is assessed whenever a
     // pair is supplied, exactly as the daemon does.
