@@ -224,7 +224,11 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       try {
         await page?.close();
       } finally {
-        await new Promise<void>((resolve, reject) => server.close((error) => error === undefined ? resolve() : reject(error)));
+        await new Promise<void>((resolve, reject) => {
+          server.close((error) => error === undefined ? resolve() : reject(error));
+          // The browser assertions are complete. Drain the fixture's remaining HTTP connections.
+          server.closeAllConnections();
+        });
       }
     }
   });
