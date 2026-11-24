@@ -1,0 +1,151 @@
+{
+  "baseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67",
+  "subjects": {
+    "url-origin-ledger.ts": {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "baseSha256": "3098b2580c67a191a5ce587535b15f8cd349c468f75d37e28c28ae0d5d1262d0",
+      "sourceSha256": "e96a2783771ae5c22e9ca7403bb40a161a964d7bf603a53a653ebf65786a2a4c"
+    },
+    "url-origin-ledger.test.ts": {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "baseSha256": "143c202cfe2aa5d7bb5ff4af2a3c3ae9f08d0ff365115f8a8bc86face96d7304",
+      "sourceSha256": "84c792bdfcf5a6aa0a1c7c8660ce2d9ce9731de26246e7a12962062a19c747ca"
+    }
+  },
+  "patchSha256": "d549f5d4f05fbafd0f25e63a2c5f9fa9a5fff6f653220f1f4a1c7f7bf7d1f7fb",
+  "scope": "Only ledger-private constructor/span/whole-body receipt insertion plus four existing test cases. No new test cases, public API, policy/ref logic, source reader pre/post checks, screening or bounds changes. Restore duplicate read and public verifyWholeSourceBody fresh independent reread/equality remain intact.",
+  "adoptedBudgetPreserved": "A227 default readMilliseconds10000 and tighter caller limits unchanged.",
+  "problem": "Private intermediate receipt insertions repeated the full blocking claim.current policy/run/boundary probe despite synchronous private staging and no intermediate capability release.",
+  "implementation": "All fixed inputs screen before final constructor live(), then fixed receipts insert without callbacks/awaits. verifiedSpan retains entry live(), actual bound source reader pre/post, and post-read live(); structure screening completes, then final live() precedes private body/structure/final span insertion. No intermediate plans publish before final withdrawal guard. All other receipt issuance still enters issue() and its original live().",
+  "protectedBoundaryEvidence": [
+    {
+      "boundary": "constructor",
+      "before": "given.current at entry; per-fixed issue live; final live",
+      "after": "same entry current and final live; private fixed insertion moved after final guard",
+      "noInterveningCallbacks": "Only captured checkedFixed entries, fixed ROOTS, private map/array updates and bounded deterministic hash/copy operations follow final live before returned API."
+    },
+    {
+      "boundary": "source descriptor walk",
+      "before": "url-source-reader readScreenedBlob.check before checkTime/read; actual whole-body screen; check after screen",
+      "after": "byte-identical source-reader and verifiedSource paths; both actual reader checks and time/screen callbacks unchanged"
+    },
+    {
+      "boundary": "span after await",
+      "before": "live immediately following awaited sourceOperation",
+      "after": "same live preserved before body/span/structure preparation"
+    },
+    {
+      "boundary": "span final public issuance",
+      "before": "issue final receipt live after two private intermediate issue live calls",
+      "after": "explicit live after structure screen and before all three private insertions; no external callback/await until result return"
+    },
+    {
+      "boundary": "derived parent lookup",
+      "before": "parents validates bounded receipt list then receipts.map(lookup); derived live at entry and issue live after screen/schema callbacks",
+      "after": "unchanged; no redundant parent entry live exists in this baseline"
+    },
+    {
+      "boundary": "whole-body identity and final issuance",
+      "before": "fresh check immediately after digest/identity; safe structural bytes then fresh check; intermediate issue/check/entry probes repeat full authority7 more times",
+      "after": "both initial post-await identity fresh check and post-structure-screen final fresh check retained;3 private insertions and private lookup use timer-only checks; no screen/schema/authority callback or await inside helper after final fresh check",
+      "unchanged": "actual reader pre/post, public independent reread/equality, caller sourceWhole inspect guard, restore duplicate read"
+    }
+  ],
+  "privateHelperCallAudit": {
+    "function": "insertReceipt",
+    "externalExport": false,
+    "callSites": 8,
+    "regions": [
+      "issue wrapper1 after live",
+      "verifiedSpan3 after final live",
+      "constructor1 after final live",
+      "issueWholeSourceBody3 after final fresh structural-screen check; timer-only checks remain"
+    ],
+    "globalAuthorityCache": false
+  },
+  "governingReferences": [
+    {
+      "clause": "RFC3-16(d).5",
+      "quote": "Before any protected data delivery, reply registration, tool/adapter effect or dependent forwarding, including queued work/open connections/attach/resume, re-read current parent effective adoption",
+      "argument": "Private receipt intermediates are inaccessible until one final synchronous operation returns. All actual reader and release authority samples remain; constructor/public span issuance retain fresh authority immediately before publication."
+    },
+    {
+      "clause": "RFC3-16(d).6",
+      "quote": "Maintain finite record/instance/client/parse/I/O/lock/output/wall bounds under the original run deadline, rejecting exhaustion",
+      "argument": "Existing resource and caller bounds, actual secret screening and late-I/O refusal paths are unchanged."
+    }
+  ],
+  "callCensus": {
+    "status": "source-derived; no runtime checks executed while parent reconciliation holds heavy slot",
+    "constructor": {
+      "before": "N+2",
+      "after": 2,
+      "fixtureRoots": 3,
+      "fixtureBefore": 5,
+      "productionRoots": 7,
+      "productionBefore": 9
+    },
+    "newSpan": {
+      "before": 7,
+      "after": 5,
+      "retained": [
+        "entry",
+        "reader pre",
+        "reader post",
+        "post-read",
+        "final issuance"
+      ]
+    },
+    "duplicateSpan": {
+      "before": 5,
+      "after": 5
+    },
+    "newWholeBodyVerify": {
+      "before": 12,
+      "after": 5,
+      "insideOperationBefore": 11,
+      "insideOperationAfter": 4,
+      "retained": [
+        "public entry",
+        "reader pre",
+        "reader post",
+        "post-await digest/identity",
+        "final after structural screening"
+      ]
+    }
+  },
+  "testChanges": [
+    "Existing fixed-authority case asserts constructor2 samples, exact root population, and late fixed-screen withdrawal returns no ledger. Also assert aggregate-byte exhaustion stops before the over-budget second body is screened and before later root bytes are accessed; growing input population exhaustion stops before extra receipt bytes are accessed.",
+    "Existing slow authority/default10k/tighter5k case asserts new and duplicate span5 original calls, both actual fresh reader checks remain charged3000ms each, duplicate plans unchanged, and tighter caller limit still refuses.",
+    "Existing authority/deadline source-screen refusal case adds final structural-screen withdrawal and verifies no returned receipt and no new plans.",
+    "Existing complete-body bounds/currentness case proves actual2000ms current cost fits default10k with5 original samples, and structural-screen withdrawal returns no capability/no new plans. Existing independent reread/corruption, actual secret/store and late I/O cases unchanged."
+  ],
+  "eligibleEvidence": {
+    "subjectCommit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+    "file": "/home/orca/.tmp/f3-native-eligible-f043a10aa/native-cut.json.failure.json",
+    "sha256": "d81389979b8d97f2988b9e4f1d58a4855c12e8cd962d3454d26ea36350043fb2",
+    "originAuthorityCalls": 52,
+    "originAuthorityMs": 100178.79398000007,
+    "originElapsedMs": 101638.65775899997,
+    "sourceReadMs": 5597.984664999996,
+    "screenAndCheckOutcomes": [
+      "accepted",
+      "accepted"
+    ]
+  },
+  "performanceLimits": "Captured origin authority mean motivates fewer probes but no measured native speedup or7min completion claim. Whole-body helper9 authority checks become2 while actual reader pre/post remain; public verifyWholeSourceBody12 total callbacks become5. Restore still performs its original independent duplicate read.",
+  "verification": {
+    "diffCheck": "passed",
+    "tests": "not yet run on these frozen R2 bytes",
+    "typecheck": "not yet run",
+    "native": "not run",
+    "expectedFileCases": 27
+  },
+  "revision": "R2 with incremental staging bounds and parent-authorized whole-body receipt staging; R1 and preliminary constructor-only packet preserved separately",
+  "priorReview": {
+    "path": "/home/orca/.tmp/f3-native-admission-fixes/eligible-private-receipt-staging-review/INDEPENDENT-REVIEW-RAW.md",
+    "sha256": "0d9bc5a471c010636425dfc5907a8420474e6431df9ba761c7bc0df79f4ba2a2",
+    "verdict": "REVISE"
+  },
+  "repair": "Constructor staging checks receipt population each iteration, and snapshots each fixed body with min(itemBytes, aggregate remaining bytes) before copying/screening/retaining it. No oversized fixed population is retained. Final live and callback-free insertion remain unchanged."
+}

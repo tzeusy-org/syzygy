@@ -1,0 +1,188 @@
+{
+  "subjectBaseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67",
+  "reviewManifestSha256": "5cbf1faa123f598f1c0133397d2ddf4f96c7ab1f4015a21c55b1044624aa6a52",
+  "patchSha256": "d549f5d4f05fbafd0f25e63a2c5f9fa9a5fff6f653220f1f4a1c7f7bf7d1f7fb",
+  "subjects": {
+    "url-origin-ledger.ts": {
+      "sha256": "e96a2783771ae5c22e9ca7403bb40a161a964d7bf603a53a653ebf65786a2a4c",
+      "primaryCloneFrozenEqual": true
+    },
+    "url-origin-ledger.test.ts": {
+      "sha256": "84c792bdfcf5a6aa0a1c7c8660ce2d9ce9731de26246e7a12962062a19c747ca",
+      "primaryCloneFrozenEqual": true
+    }
+  },
+  "cleanBaseClone": "/home/orca/.tmp/f3-private-receipt-staging-verify/w",
+  "substitutions": [
+    "url-origin-ledger.ts",
+    "url-origin-ledger.test.ts"
+  ],
+  "tmpdir": "/home/orca/.tmp/f3-private-receipt-staging-verify/tmp",
+  "workerCount": 1,
+  "nativeRuns": false,
+  "builds": false,
+  "indexOrCommitMutations": false,
+  "tests": {
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--project",
+      "integration",
+      "--maxWorkers",
+      "1",
+      "packages/polaris-dossier/src/url-origin-ledger.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 4.6788576190010644,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "population": 27,
+    "filesPassed": 1,
+    "filesPopulation": 1,
+    "sourceCaseCountTwoMethods": 27
+  },
+  "typecheck": {
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 20.334794824011624
+  },
+  "mutationWitnesses": [
+    {
+      "id": "aggregate-staging",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "-t",
+        "checks fixed authority once"
+      ],
+      "exit": 1,
+      "seconds": 3.5229690299602225,
+      "mutantSha256": "f164d1fb3d1ed4458b1adae3e45959518262f1b81ce9a81ae198385ad92734b9",
+      "old": "snapshot(fixed.bytes as Uint8Array, Math.min(limits.itemBytes, limits.bytes - fixedBytes))",
+      "new": "snapshot(fixed.bytes as Uint8Array)",
+      "subjectBaseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67"
+    },
+    {
+      "id": "receipt-staging",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "-t",
+        "checks fixed authority once"
+      ],
+      "exit": 1,
+      "seconds": 3.5267304310109466,
+      "mutantSha256": "33f7f22f135f83eb2aeeb7e9ae7677efd0a96d078adf172a06827d81c5ad090a",
+      "old": "    if (checkedFixed.length >= limits.receipts) fail();\n",
+      "new": "",
+      "subjectBaseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67"
+    },
+    {
+      "id": "predecessor-runtime",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+        "-t",
+        "checks fixed authority once|bounds the full screened read|keeps complete-body bounds/currentness"
+      ],
+      "exit": 1,
+      "seconds": 3.610168506973423,
+      "mutantSha256": "3098b2580c67a191a5ce587535b15f8cd349c468f75d37e28c28ae0d5d1262d0",
+      "old": null,
+      "new": null,
+      "subjectBaseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67"
+    }
+  ],
+  "mutationDenominators": {
+    "aggregate-staging": {
+      "failed": 1,
+      "skipped": 26,
+      "population": 27,
+      "filesFailed": 1,
+      "filesPopulation": 1
+    },
+    "receipt-staging": {
+      "failed": 1,
+      "skipped": 26,
+      "population": 27,
+      "filesFailed": 1,
+      "filesPopulation": 1
+    },
+    "predecessor-runtime": {
+      "failed": 3,
+      "skipped": 24,
+      "population": 27,
+      "filesFailed": 1,
+      "filesPopulation": 1
+    }
+  },
+  "observedCensus": {
+    "constructorAfter": 2,
+    "fixtureRootCount": 3,
+    "constructorPredecessor": 5,
+    "newSpanAfter": 5,
+    "newSpanPredecessor": 7,
+    "duplicateSpanAfter": 5,
+    "wholeBodyVerifyAfter": 5,
+    "wholeBodyVerifyPredecessor": "refused before success under the same10k bound and2000ms original-current cost"
+  },
+  "remainingSourceDerivedCensus": {
+    "duplicateSpanPredecessor": 5,
+    "newWholeBodyVerifyPredecessorUninterruptedTotal": 12
+  },
+  "logs": {
+    "npm-ci.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/npm-ci.log",
+      "sha256": "d3f47e65312d8045a7def831d655445aa849eeb0ed17ce62f57a96924cc735ed"
+    },
+    "ledger-tests.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/ledger-tests.log",
+      "sha256": "27632ae7510e553b34eb20b0b8a552b6eb51720085b9c52dcf7ea6de0a2c06b9"
+    },
+    "typecheck.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "aggregate-staging.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/aggregate-staging.log",
+      "sha256": "7c892d1bdc74f4e0e3228cb7e4c0f8bd56de21effc1d9478e5f323382aa15847"
+    },
+    "receipt-staging.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/receipt-staging.log",
+      "sha256": "066e618d562340595b466c9f2080c75f4c68e0d09d4ee99a4eb8f6600125c391"
+    },
+    "predecessor-runtime.log": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/predecessor-runtime.log",
+      "sha256": "56fe37e78c996f1b8c29a1895b8c241435bbe6e5a9ad5951b26c68b6ec319cf7"
+    },
+    "mutation-results.json": {
+      "path": "/home/orca/.tmp/f3-private-receipt-staging-verify/mutation-results.json",
+      "sha256": "83e0cdda10ab1ac27377da34768d393e8d6aacf18548f0e56e53c8f398677157"
+    }
+  },
+  "postMutationRestore": "Exact frozen runtime restored; patch and primary/clone/frozen hashes independently compared after all checks."
+}

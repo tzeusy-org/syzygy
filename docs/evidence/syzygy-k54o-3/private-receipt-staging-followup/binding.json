@@ -1,0 +1,32 @@
+{
+  "subjectCommit": "b1de0611a3d93e5a58a740d2fb97ffe54b0bf923",
+  "sourceBaseCommit": "74dd20378651d366ed53fb7de08fe60ba9d33c67",
+  "subjects": {
+    "url-origin-ledger.ts": {
+      "sha256": "e96a2783771ae5c22e9ca7403bb40a161a964d7bf603a53a653ebf65786a2a4c",
+      "primaryCloneFrozenEqual": true
+    },
+    "url-origin-ledger.test.ts": {
+      "sha256": "84c792bdfcf5a6aa0a1c7c8660ce2d9ce9731de26246e7a12962062a19c747ca",
+      "primaryCloneFrozenEqual": true
+    }
+  },
+  "scope": "Private receipt staging only; R1 REVISE retained, corrected expanded R2 PASS. Original reader pre/post checks, secret screening, fresh final authority, finite budgets and timer checks remain. Genuine completion, wall-clock performance and hosted timing remain Unknown.",
+  "artifacts": {
+    "r1/INDEPENDENT-REVIEW-RAW.md": "0d9bc5a471c010636425dfc5907a8420474e6431df9ba761c7bc0df79f4ba2a2",
+    "r1/change.patch": "9b2ed3d4633ca05832ff7f859d5b7b80241923482c4dc1e50995795f32218a0a",
+    "r1/review.json": "58dce401e30a3e92781dcfae4c5820eb27b20c6f852502b5306b497353ebf6df",
+    "r2/INDEPENDENT-REVIEW-RAW.md": "0e7d8b4627c9b7cc4da1b18eeab6906c4942f1917c2ff782fbc51e64840d3ab0",
+    "r2/aggregate-staging.log.gz": "151184f401105d02572efc099a47c382f36931b275540c36c7499eeb4f888431",
+    "r2/change.patch": "d549f5d4f05fbafd0f25e63a2c5f9fa9a5fff6f653220f1f4a1c7f7bf7d1f7fb",
+    "r2/ledger-tests.log.gz": "06d7f2bc83e000958fd2b31be6aabb29684f892b38686c5fa1413848d24b8f3d",
+    "r2/mutation-results.json.gz": "d3ef9a0b4b461d075ad70fe04a0c93e7a2f23656585d92b02bf48d1f388c75db",
+    "r2/npm-ci.log.gz": "fdd52cc55d47a8833890b388669f37bf5439944fb5dceda67cab19eff1e7441f",
+    "r2/predecessor-runtime-replacement.json.gz": "f1116800128ce798294fae86f0f272a8be3dae10a4236240d3b6621ae6aa194a",
+    "r2/predecessor-runtime.log.gz": "8d90d94fd97d955978d72eea0c127db7d1f0473fa0e640767c2bd523e0d7355b",
+    "r2/receipt-staging.log.gz": "6cd3d6984c9ca71679a616d830fb54b3456467dce013372fd67bb68e061f4781",
+    "r2/review.json": "5cbf1faa123f598f1c0133397d2ddf4f96c7ab1f4015a21c55b1044624aa6a52",
+    "r2/typecheck.log.gz": "6e88a952198ce48f4a7e3a73d4d51e84d16109347fb7fa639bf86c5308c29130",
+    "r2/verification.json": "a65f4be38f3b15aa5f939cf34fb3b6fd80f920e9736316cf3347b1a1a25b4227"
+  }
+}

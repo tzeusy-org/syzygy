@@ -1,0 +1,154 @@
+diff --git a/packages/polaris-dossier/src/url-origin-ledger.test.ts b/packages/polaris-dossier/src/url-origin-ledger.test.ts
+index 724281a52..341afd75c 100644
+--- a/packages/polaris-dossier/src/url-origin-ledger.test.ts
++++ b/packages/polaris-dossier/src/url-origin-ledger.test.ts
+@@ -91,6 +91,21 @@ describe('host-owned URL origin ledger', () => {
+   it('checks fixed authority once and verifies the exact subject before returning its receipt', () => {
+     const f = fixture(), current = vi.fn(() => true);
+     const ledger = createUrlOriginLedger({ ...f.options, current });
++    // Constructor authority brackets all screened fixed roots, regardless of population.
++    expect(current).toHaveBeenCalledTimes(2);
++    expect(ledger.plannedOrigins()).toHaveLength(f.options.fixed.length);
++    let authorized = true;
++    const finalCurrent = vi.fn(() => authorized);
++    const lastFixed = Buffer.from(f.options.fixed.at(-1)!.bytes).toString('utf8');
++    let returned: ReturnType<typeof createUrlOriginLedger> | undefined;
++    expect(() => { returned = createUrlOriginLedger({ ...f.options, current: finalCurrent,
++      screen: { ...f.options.screen, screenBody: (text, file) => {
++        const result = f.options.screen.screenBody(text, file);
++        if (text === lastFixed) authorized = false;
++        return result;
++      } } }); }).toThrow('url-origin-refused');
++    expect(returned).toBeUndefined();
++    expect(finalCurrent).toHaveBeenCalledTimes(2);
+     const subject = f.options.fixed[0]!;
+     current.mockClear();
+     const receipt = ledger.fixed(subject.id, subject.bytes);
+@@ -192,11 +207,11 @@ describe('host-owned URL origin ledger', () => {
+   it('bounds the full screened read including slow pre/post authority and honors a tighter caller limit', async () => {
+     const f = fixture(), selected = { path: f.file, offset: 0, limit: 1 };
+     for (const readMilliseconds of [undefined, 5000]) {
+-      let elapsed = 0, charge = false, screened = false, postScreenChecks = 0;
++      let elapsed = 0, charge = false, screened = false, postScreenChecks = 0, authorityCalls = 0;
+       const ledger = createUrlOriginLedger({ ...f.options,
+         ...(readMilliseconds === undefined ? {} : { limits: { readMilliseconds } }),
+         current: () => {
+-          if (charge) { elapsed += 3000; if (screened) postScreenChecks++; }
++          if (charge) { elapsed += 3000; authorityCalls++; if (screened) postScreenChecks++; }
+           return true;
+         },
+         screen: { ...f.options.screen, screenTargetBody: (text, file) => {
+@@ -212,7 +227,15 @@ describe('host-owned URL origin ledger', () => {
+         const pending = ledger.sourceSpan(selected);
+         if (readMilliseconds === undefined) {
+           const receipt = await pending, expected = bytes('Own source line one.\n');
++          // Entry, reader pre/post, post-read and final issuance remain fresh;
++          // private body/structure receipts add no separate blocking probes.
++          expect(authorityCalls).toBe(5);
+           expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
++          const firstPlan = ledger.plannedOrigins(), beforeDuplicate = authorityCalls;
++          const duplicate = await ledger.sourceSpan(selected);
++          expect(authorityCalls - beforeDuplicate).toBe(5);
++          expect(ledger.origins(duplicate, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
++          expect(ledger.plannedOrigins()).toEqual(firstPlan);
+         } else {
+           await expect(pending).rejects.toThrow('url-origin-refused');
+           expect(ledger.plannedOrigins()).toEqual(before);
+@@ -225,20 +248,26 @@ describe('host-owned URL origin ledger', () => {
+   it('checks current authority after private source screening and publishes no receipt on withdrawal or timeout', async () => {
+     const f = fixture();
+     const screen = f.options.screen, selected = { path: f.file, offset: 0, limit: 1 };
+-    for (const gate of ['authority', 'deadline'] as const) {
+-      let current = true, elapsed = 0, screened = false;
++    const structural = canonical({ commit: f.commit, path: f.file, objectId: f.blob, offset: 0, limit: 1 });
++    for (const gate of ['authority', 'deadline', 'issuance'] as const) {
++      let current = true, elapsed = 0, screened = false, structureScreened = false;
+       const ledger = createUrlOriginLedger({ ...f.options, current: () => current,
+         screen: { ...screen, screenTargetBody: (text, file) => {
+           screened = true;
+           if (gate === 'authority') current = false;
+-          else elapsed = 10_000;
++          else if (gate === 'deadline') elapsed = 10_000;
+           return screen.screenTargetBody(text, file);
++        }, screenBody: (text, file) => {
++          const result = screen.screenBody(text, file);
++          if (gate === 'issuance' && text === structural) { structureScreened = true; current = false; }
++          return result;
+         } } });
+       const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+       const originPlan = ledger.plannedOrigins();
+       try {
+         await expect(ledger.sourceSpan(selected)).rejects.toThrow('url-origin-refused');
+         expect(screened).toBe(true);
++        if (gate === 'issuance') expect(structureScreened).toBe(true);
+         current = true;
+         expect(ledger.plannedOrigins()).toEqual(originPlan);
+       } finally { clock.mockRestore(); }
+diff --git a/packages/polaris-dossier/src/url-origin-ledger.ts b/packages/polaris-dossier/src/url-origin-ledger.ts
+index 1f64a8eae..494053d4a 100644
+--- a/packages/polaris-dossier/src/url-origin-ledger.ts
++++ b/packages/polaris-dossier/src/url-origin-ledger.ts
+@@ -134,7 +134,13 @@ function create(given: UrlOriginLedgerOptions) {
+   }
+   function issue(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] },
+     provenance?: { readonly parents: readonly UrlOriginReceipt[]; readonly derivation: UrlOriginDerivation }): UrlOriginReceipt {
+-    live(); if (bytes.length > limits.itemBytes) fail(); if (++count > limits.receipts || (storedBytes += bytes.length) > limits.bytes) fail();
++    live(); return insertReceipt(bytes, classes, originIds, plan, provenance);
++  }
++  /** Private insertion only: callers must sample authority immediately before
++   * their synchronous insertions, with no intervening callback or await. */
++  function insertReceipt(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] },
++    provenance?: { readonly parents: readonly UrlOriginReceipt[]; readonly derivation: UrlOriginDerivation }): UrlOriginReceipt {
++    if (bytes.length > limits.itemBytes) fail(); if (++count > limits.receipts || (storedBytes += bytes.length) > limits.bytes) fail();
+     const receipt = Object.freeze({}) as UrlOriginReceipt;
+     const receiptId = plan?.id ?? `origin:item-${sha256(canonical([runId, count, sha256(bytes)])).slice(0, 32)}`;
+     const value: Entry = deepFreeze({ receipt, id: receiptId, digest: sha256(bytes), bytes: bytes.length, classes: union([classes]), originIds: union([originIds]) });
+@@ -165,12 +171,12 @@ function create(given: UrlOriginLedgerOptions) {
+       derivation: reportKind === undefined ? { kind: 'composition' } : { kind: 'report', report: reportKind, role: role! } });
+   }
+   const fixedReceipts = new Map<string, UrlOriginReceipt>();
++  const checkedFixed: { readonly id: string; readonly kind: UrlRootOriginKind; readonly bytes: Uint8Array }[] = [];
+   for (const fixed of given.fixed) {
+     if (!exact(fixed, ['id', 'kind', 'bytes']) || !id(fixed.id) || registry.has(fixed.id) || typeof fixed.kind !== 'string' || !Object.hasOwn(ROOTS, fixed.kind)) fail();
+     const bytes = snapshot(fixed.bytes as Uint8Array); safe(bytes); const kind = fixed.kind as UrlRootOriginKind;
+     registry.set(fixed.id, { kind, digest: sha256(bytes), bytes: bytes.length });
+-    // Root entries have no parents; their own id is returned by origins(), not a self-edge in plannedOrigins.
+-    fixedReceipts.set(fixed.id, issue(bytes, [ROOTS[kind][1]], [], { id: fixed.id, species: ROOTS[kind][0] }, { parents: [], derivation: { kind: 'fixed', id: fixed.id } }));
++    checkedFixed.push({ id: fixed.id, kind, bytes });
+   }
+   async function planRendererScaffold(renderer: UrlLoadedRenderer): Promise<UrlOriginReceipt> {
+     const species = 'authenticated-local-renderer-design-product-and-inert-view';
+@@ -373,11 +379,15 @@ function create(given: UrlOriginLedgerOptions) {
+       const bodyId = `origin:body-${sha256(canonical([record.subject.pinnedRevision.commit, file, objectId, offset, limit])).slice(0, 32)}`;
+       const structureBytes = Buffer.from(canonical({ commit: record.subject.pinnedRevision.commit, path: file, objectId, offset, limit })); safe(structureBytes);
+       const structureId = `origin:structure-${sha256(structureBytes).slice(0, 32)}`;
+-      if (!plans.some(plan => plan.id === bodyId)) {
+-        issue(bytes, [contentClass], [], { id: bodyId, species: 'pinned-repository-body' });
+-        issue(structureBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' });
++      const registerRoots = !plans.some(plan => plan.id === bodyId);
++      // Screening may withdraw authority. This final public issuance sample
++      // precedes every private insertion; nothing calls out or awaits below.
++      live();
++      if (registerRoots) {
++        insertReceipt(bytes, [contentClass], [], { id: bodyId, species: 'pinned-repository-body' });
++        insertReceipt(structureBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' });
+       }
+-      return { receipt: issue(bytes, [contentClass, 'code-structure'], [bodyId, structureId], undefined,
++      return { receipt: insertReceipt(bytes, [contentClass, 'code-structure'], [bodyId, structureId], undefined,
+         { parents: [], derivation: { kind: 'source-span', path: file, objectId, offset, limit } }), reply: { ok: true, kind: 'source-span', path: file, text: Buffer.from(bytes).toString('utf8'), offset,
+         nextOffset: offset + limit < lines.length ? offset + limit : null, contentClass, redacted: false, provenance: { commit: record.subject.pinnedRevision.commit, objectId } } };
+     } catch { return fail(); }
+@@ -595,6 +605,13 @@ function create(given: UrlOriginLedgerOptions) {
+     });
+   }
+   live();
++  // All fixed subjects were screened before this final constructor sample.
++  // No receipt or plan escapes until the complete synchronous insertion ends.
++  for (const { id, kind, bytes } of checkedFixed) {
++    // Root entries have no parents; origins() returns their own id.
++    fixedReceipts.set(id, insertReceipt(bytes, [ROOTS[kind][1]], [], { id, species: ROOTS[kind][0] },
++      { parents: [], derivation: { kind: 'fixed', id } }));
++  }
+   return Object.freeze({
+     captureProvenance, restoreFrozenOrigins, sourceManifestRemainder,
+     inspectProvenance: (receipts: readonly UrlOriginReceipt[]) => guarded(() => inspectProvenance(receipts)),
