@@ -1405,7 +1405,7 @@ describe('prepared private CLI launch',()=>{
     await expect(prepareRestrictedUrlSession({ ...ordered.launch, profile: { ...ordered.launch.profile } })).rejects.toThrow('url-session-launch-refused');
   }, 20_000);
 
-  it.each(['three-second-authority', 'withdrawn', 'authority-timeout', 'resource-timeout', 'confirmation-expired'] as const)(
+  it.each(['three-second-authority', 'blocking-authority', 'withdrawn', 'authority-timeout', 'resource-timeout', 'confirmation-expired'] as const)(
     'keeps ordered inspection authority and resource deadlines distinct for %s', async disposition => {
       const f = await orderedInspectionFixture();
       let releaseCensus!: () => void, censusEntered!: (value: true) => void, verificationEntered!: (value: true) => void;
@@ -1419,8 +1419,16 @@ describe('prepared private CLI launch',()=>{
         if (disposition === 'confirmation-expired') Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5_000);
         return verified && authorityCurrent;
       });
+      const verify = vi.fn(() => {
+        verificationEntered(true);
+        if (disposition === 'blocking-authority') {
+          Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2_250);
+          return true;
+        }
+        return verification;
+      });
       const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: {
-        verify: () => { verificationEntered(true); return verification; }, confirm,
+        verify, confirm,
       } });
       const inspect = observeUrlSessionInspectionForTest(preparation)!;
       filesystem.beforeOpen = async file => {
@@ -1436,19 +1444,22 @@ describe('prepared private CLI launch',()=>{
         expect(f.captured()?.commandSha256).toBe(child.commandSha256);
         const ended = child.finished.then(() => false);
         expect(await Promise.race([enteredCensus, ended])).toBe(true);
-        expect(await Promise.race([enteredVerification, ended])).toBe(true);
+        expect(verify).not.toHaveBeenCalled();
         let sampled: boolean | undefined;
         const sample = child.waitForSample().then(current => { sampled = current; return current; });
         if (disposition === 'resource-timeout') {
           resolveVerification(true);
           await new Promise<void>(resolve => setTimeout(resolve, 2_500));
           expect(sampled).toBe(false);
+          expect(verify).not.toHaveBeenCalled();
           expect(confirm).not.toHaveBeenCalled();
           expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'bounded-timeout' });
           expect(inspect().firstRefusal?.phases.storage?.outcome).toBeUndefined();
           expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
         } else {
           releaseCensus();
+          expect(await Promise.race([enteredVerification, ended])).toBe(true);
+          expect(inspect().latest?.phases).toMatchObject({ storage: { outcome: 'accepted' }, process: { outcome: 'accepted' } });
           if (disposition === 'authority-timeout') {
             expect(await sample).toBe(false);
             expect(confirm).not.toHaveBeenCalled();
@@ -1458,14 +1469,15 @@ describe('prepared private CLI launch',()=>{
             await new Promise<void>(resolve => setImmediate(resolve));
             expect(confirm).not.toHaveBeenCalled();
           } else {
-            if (disposition !== 'confirmation-expired') await new Promise<void>(resolve => setTimeout(resolve, 3_000));
+            if (disposition !== 'confirmation-expired' && disposition !== 'blocking-authority')
+              await new Promise<void>(resolve => setTimeout(resolve, 3_000));
             authorityCurrent = disposition !== 'withdrawn';
             resolveVerification(true);
-            expect(await sample).toBe(disposition === 'three-second-authority');
+            expect(await sample).toBe(disposition === 'three-second-authority' || disposition === 'blocking-authority');
             expect(confirm).toHaveBeenCalledExactlyOnceWith(true);
             expect(inspect().latest?.phases).toMatchObject({ storage: { outcome: 'accepted' }, process: { outcome: 'accepted' },
               verify: { outcome: 'accepted' }, confirm: { outcome: disposition === 'withdrawn' ? 'refused' : 'accepted' } });
-            if (disposition === 'three-second-authority') expect(inspect().firstRefusal).toBeUndefined();
+            if (disposition === 'three-second-authority' || disposition === 'blocking-authority') expect(inspect().firstRefusal).toBeUndefined();
             else expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'confirm',
               cause: disposition === 'withdrawn' ? 'authority-refused' : 'sample-deadline' });
           }

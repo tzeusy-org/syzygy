@@ -660,13 +660,20 @@ export async function launchRestrictedUrlSession(input: {
     // and the shared host may delay descriptor IO; admit no partial census.
     pendingSample = bounded(async () => {
       const authority = state.inspectionAuthority;
-      // Verification reads authority only. Census refusal takes precedence and
-      // the exact live guard runs when both the census and verification settle.
-      if (authority !== undefined) observation?.begin('verify');
-      const verification = authority === undefined ? undefined : Promise.resolve().then(authority.verify).then(result => {
-        observation?.settle('verify', result === true ? 'accepted' : 'refused');
-        return result === true;
-      }, () => { observation?.settle('verify', 'rejected'); return false; });
+      // Ordered verification can perform synchronous work on this event loop.
+      // Complete its independently bounded census before starting that work;
+      // both phases still share the original aggregate deadline. Ordinary
+      // profiles retain their parallel verification and census scheduling.
+      const verify = (): Promise<boolean> | undefined => {
+        if (authority === undefined) return undefined;
+        observation?.begin('verify');
+        return Promise.resolve().then(authority.verify).then(result => {
+          observation?.settle('verify', result === true ? 'accepted' : 'refused');
+          return result === true;
+        }, () => { observation?.settle('verify', 'rejected'); return false; });
+      };
+      const ordered = isOrderedDesignSessionProfile(state.profile);
+      let verification = ordered ? undefined : verify();
       await bounded(async () => {
         // The walks share a deadline. Keep storage's earlier refusal and
         // publication order even if the process walk completes first.
@@ -713,6 +720,7 @@ export async function launchRestrictedUrlSession(input: {
         observation.note(error, phase, 'bounded-timeout');
       });
       if (reason !== 'exited') return;
+      if (ordered) verification = verify();
       phase = verification === undefined ? 'current' : 'verify';
       if (verification === undefined) observation?.begin('current');
       let stillCurrent = await (verification ?? state.current());
