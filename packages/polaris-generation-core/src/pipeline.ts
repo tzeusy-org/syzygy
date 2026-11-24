@@ -313,21 +313,20 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       return frozen.sources.filter(source => referenced.has(source.sourceId)).flatMap(source => source.spans.map(span => ({ sourceId: source.sourceId, anchorId: span.anchorId, text: span.text,
         ...(source.redaction === undefined ? {} : { redaction: { redactionClass: source.redaction.redactionClass, withheldLines: source.redaction.withheldLines } }) })));
     };
-    const stage = async (name: GenerationStage, inputs: Readonly<Record<string, unknown>>, repairFindings?: readonly RepairFinding[]): Promise<unknown> => {
+    const stage = async (name: GenerationStage, inputs: Readonly<Record<string, unknown>>): Promise<unknown> => {
       check();
       if (calls >= budget.maxCalls) stop('budget-exhausted');
       const prompt = promptForStage(name, promptProfile);
       const promptDigest = sha256(prompt.system);
       const schema = ports.responseSchema(name);
-      const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema,
-        inputs: repairFindings === undefined ? inputs : { ...inputs, findings: repairFindings } };
+      const envelope = { promptVersion: prompt.version, system: prompt.system, responseSchemaVersion: schema.version, responseSchema: schema.schema, inputs };
       let encoded: string;
       try { encoded = encodeCanonicalJson(envelope, dataLimits(budget.maxInputBytes)); }
       catch (error) { stop(error instanceof CanonicalJsonError && error.code === 'byte-limit' ? 'budget-exhausted' : 'invalid-request'); }
       const size = Buffer.byteLength(encoded, 'utf8');
       if (inputBytes + size > budget.maxInputBytes || outputBytes >= budget.maxOutputBytes || usage >= budget.maxUsageUnits) stop('budget-exhausted');
       const boundEnvelope = JSON.parse(encoded) as typeof envelope;
-      const boundFindings = repairFindings === undefined ? undefined : boundEnvelope.inputs.findings as readonly RepairFinding[];
+      const boundFindings = name === 'repair' ? boundEnvelope.inputs.findings as readonly RepairFinding[] : undefined;
       const validationContext = name === 'edit' || name === 'repair'
         ? { ...context, draft: boundEnvelope.inputs.draft, ...(boundFindings === undefined ? {} : { repairFindings: boundFindings }) }
         : context;
@@ -495,7 +494,7 @@ export async function runGenerationPipeline(request: PipelineRequest, ports: Pip
       for (const quote of verdict.quoteFindings) issues.push({ finding: quoteFindingAsReviewFinding(quote), blocking: false });
       const repairFindings = issues.map(({ finding }, index): RepairFinding => ({ id: `finding-${repairs + 1}-${index + 1}`, finding }));
       const repaired = await stage('repair', { sources: citedSpans(context.draft), readerQuestions: context.readerQuestions, inventory: context.inventory,
-        draft: context.draft, requestedAssets: context.requestedAssets }, repairFindings) as RepairReply;
+        draft: context.draft, findings: repairFindings, requestedAssets: context.requestedAssets }) as RepairReply;
       const unrepairable = new Set(repaired.findingDispositions.filter(row => row.action === 'unrepairable').map(row => row.findingId));
       const unrepairableBlock = repairFindings.some(({ id }, index) => issues[index]!.blocking && unrepairable.has(id));
       context.draft = repaired.draft;
