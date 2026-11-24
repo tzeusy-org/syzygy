@@ -29,6 +29,7 @@ import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSes
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
 import * as runMachine from './url-run-machine.js';
+import * as machineLifecycle from './url-machine-lifecycle.js';
 import * as machineStore from './url-machine-store.js';
 import * as rolePlan from './url-role-plan.js';
 import * as urlRuntime from './url-runtime.js';
@@ -709,6 +710,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   let firstRefusedCurrent: CurrentTrace | undefined;
   let firstRefusedHostCurrent: CurrentTrace | undefined;
   let hostActivation: (ResumeStamp & { deadline: number }) | undefined;
+  type PublicationTransaction = ResumeStamp & { refusal?: string };
+  const firstDesignPublication: { match?: ResumeStamp; transaction?: PublicationTransaction } = {};
   let designLaunchWrite: ResumeStamp | undefined;
   let designLaunchCommit: ResumeStamp | undefined;
   let designLaunchRegistration: ResumeStamp | undefined;
@@ -774,6 +777,23 @@ async function observeDesignRun(run: string, traceInference = false) {
     },
   };
   if (traceInference) {
+    const matchPublication = machinePeer.matchesResumedDesignPeerPublication;
+    vi.spyOn(machinePeer, 'matchesResumedDesignPeerPublication').mockImplementation((...args) => {
+      if (firstDesignPublication.match !== undefined) return matchPublication(...args);
+      const stamp = firstDesignPublication.match = { startedMs: clock() };
+      return timed(stamp, () => matchPublication(...args), result => result);
+    });
+    const publish = machineLifecycle.publishUrlMachineLifecycle;
+    vi.spyOn(machineLifecycle, 'publishUrlMachineLifecycle').mockImplementation((input, store) => {
+      if (firstDesignPublication.match?.outcome !== 'accepted' || firstDesignPublication.transaction !== undefined
+        || input.context.role !== 'design' || input.context.kind !== 'inference-bridge') return publish(input, store);
+      const stamp: PublicationTransaction = { startedMs: clock() };
+      firstDesignPublication.transaction = stamp;
+      return timed(stamp, () => publish(input, store), result => {
+        if (!result.ok) stamp.refusal = result.code;
+        return result.ok;
+      });
+    });
     const launchWriteScope = new AsyncLocalStorage<true>();
     const writeLaunch = launchHistory.writeUrlLaunchHistory;
     vi.spyOn(launchHistory, 'writeUrlLaunchHistory').mockImplementation(input => {
@@ -1111,7 +1131,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     roleInspections: roleInspections(),
     launchHistory: { write: designLaunchWrite, syncs: launchSyncs, commit: designLaunchCommit, register: designLaunchRegistration },
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
-      hostActivation, hostCurrent, firstRefusedHostCurrent } } : {}),
+      hostActivation, hostCurrent, firstRefusedHostCurrent, firstDesignPublication } } : {}),
     orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
     broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
