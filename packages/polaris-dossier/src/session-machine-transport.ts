@@ -15,6 +15,8 @@ export interface SessionMachineEffectContext {
     Promise<{ readonly ok: true; readonly value: T } | { readonly ok: false }>;
 }
 interface TransportPorts {
+  /** Trusted setup selection only; no authentication or effect authority. */
+  readonly captureMilliseconds?: number;
   /** Configure sender metadata on the actual listener before any client launch. */
   readonly prepare: (server: Server) => boolean | Promise<boolean>;
   /** The trusted closure selects the genuine launch and captures this exact socket.
@@ -23,7 +25,7 @@ interface TransportPorts {
   /** Complete protected issuance while the captured raw socket remains paused. */
   readonly authorize?: (peer: UrlMachinePeer, stillOpening: () => boolean) => Promise<boolean>;
 }
-const transports = new WeakMap<SessionMachineTransport, TransportPorts>();
+const transports = new WeakMap<SessionMachineTransport, TransportPorts & { readonly captureMilliseconds: number }>();
 interface ConnectionState {
   readonly raw: Socket; readonly peer: UrlMachinePeer; readonly stream: Duplex;
   readonly deadline: number;
@@ -70,9 +72,11 @@ export function assertSessionMachineEffectCurrent(): void {
 export function createSessionMachineTransport(ports: TransportPorts): SessionMachineTransport | null {
   if (typeof ports?.prepare !== 'function' || typeof ports.accept !== 'function'
     || (ports.authorize !== undefined && typeof ports.authorize !== 'function')) return null;
+  const captureMilliseconds = ports.captureMilliseconds === undefined ? 5000 : ports.captureMilliseconds;
+  if (!Number.isSafeInteger(captureMilliseconds) || captureMilliseconds <= 0 || captureMilliseconds > 30_000) return null;
   const transport: SessionMachineTransport = Object.freeze({ authentication: 'url-machine-peer/1' });
   const { prepare, accept, authorize } = ports;
-  transports.set(transport, Object.freeze({ prepare, accept, ...(authorize === undefined ? {} : { authorize }) }));
+  transports.set(transport, Object.freeze({ prepare, accept, captureMilliseconds, ...(authorize === undefined ? {} : { authorize }) }));
   return transport;
 }
 export const isSessionMachineTransport = (transport: SessionMachineTransport): boolean => transports.has(transport);
@@ -98,11 +102,12 @@ export function stopSessionMachineIngress(stream: Duplex): boolean {
 export async function openSessionMachineConnection(raw: Socket, transport: SessionMachineTransport,
   limits: { readonly bytes: number; readonly milliseconds: number }): Promise<Duplex | null> {
   const ports = transports.get(transport), began = performance.now();
-  const deadline = began + limits.milliseconds, captureDeadline = Math.min(deadline, began + 5000);
+  const deadline = began + limits.milliseconds;
   if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
     || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
     || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
     || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
+  const captureDeadline = Math.min(deadline, began + ports.captureMilliseconds);
   let expired = false;
   const before = async <T>(until: number, work: () => Promise<T>): Promise<T | null> => {
     let timer: ReturnType<typeof setTimeout> | undefined;

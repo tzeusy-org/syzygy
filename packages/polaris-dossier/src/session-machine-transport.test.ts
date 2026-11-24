@@ -1,4 +1,4 @@
-import { createConnection, createServer, type Socket } from 'node:net';
+import { createConnection, createServer, type Socket, type Server } from 'node:net';
 import { once } from 'node:events';
 import type { Duplex } from 'node:stream';
 import { join } from 'node:path';
@@ -202,8 +202,16 @@ describe('verified-chunk session transport adapter', () => {
     expect(await c.output).toBe(''); expect(checks).toBe(scenario === 'async-guard' ? 1 : 0);
   });
 
-  it.each(['published', 'capture-expired', 'connection-expired', 'publication-refused'] as const)(
-    'keeps staged admission paused until protected publication is %s', async outcome => {
+  it.each([
+    ['published', undefined, 4000, 8000, false],
+    ['capture-expired', undefined, 5001, 8000, true],
+    ['connection-expired', undefined, 4000, 8000, false],
+    ['publication-refused', undefined, 4000, 8000, false],
+    ['bounded ordered capture', 30_000, 6000, 40_000, false],
+    ['capture boundary', 30_000, 30_000, 40_000, true],
+    ['original caller expiry', 30_000, 8001, 8000, true],
+  ] as const)(
+    'keeps staged admission paused until protected publication: %s', async (outcome, captureMilliseconds, captureElapsed, milliseconds, captureExpired) => {
       vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'performance'] });
       let opening: (() => boolean) | undefined, peer: UrlMachinePeer | undefined;
       let startCapture!: () => void, finishCapture!: (value: UrlMachinePeer | null) => void;
@@ -218,17 +226,21 @@ describe('verified-chunk session transport adapter', () => {
         startAuthorization();
         return authorized;
       });
-      const transport = createSessionMachineTransport({ prepare: server => server.listening, authorize, accept: async raw => {
+      const ports = { captureMilliseconds: captureMilliseconds as number | undefined, prepare: (server: Server) => server.listening, authorize, accept: async (raw: Socket) => {
         peer = Object.freeze({ verifier: {} }) as UrlMachinePeer;
         backend.states.set(peer, { socket: raw, chunks: [Buffer.from('checked')], live: true });
         startCapture();
         return captured;
-      } })!;
-      let result!: (stream: Duplex | null) => void;
+      } };
+      const transport = createSessionMachineTransport(ports)!;
+      // The trusted selection is a snapshot, even if its caller later mutates ports.
+      ports.captureMilliseconds = 5000;
+      let settled = false, result!: (stream: Duplex | null) => void;
       const connected = new Promise<Duplex | null>(resolve => { result = resolve; });
       const socketPath = join(tempDir('machine-staged-'), 's.sock');
       const server = createServer({ pauseOnConnect: true, allowHalfOpen: true }, raw => {
-        void openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds: 8000 }).then(stream => {
+        void openSessionMachineConnection(raw, transport, { bytes: 128, milliseconds }).then(stream => {
+          settled = true;
           if (stream === null) raw.destroy();
           result(stream);
         });
@@ -238,9 +250,10 @@ describe('verified-chunk session transport adapter', () => {
       const connection = client(socketPath);
       try {
         await capturing;
-        await vi.advanceTimersByTimeAsync(outcome === 'capture-expired' ? 5001 : 4000);
+        await vi.advanceTimersByTimeAsync(captureElapsed);
+        expect(settled).toBe(captureExpired);
         finishCapture(peer!);
-        if (outcome === 'capture-expired') await vi.advanceTimersByTimeAsync(0);
+        if (captureExpired) await vi.advanceTimersByTimeAsync(0);
         else {
           await authorizing;
           expect(opening?.()).toBe(true);
@@ -251,7 +264,7 @@ describe('verified-chunk session transport adapter', () => {
           finishAuthorization(outcome !== 'publication-refused');
         }
         const stream = await connected;
-        if (outcome === 'published') {
+        if (outcome === 'published' || outcome === 'bounded ordered capture') {
           expect(stream).not.toBeNull();
           expect(sessionMachineEffectContext(stream!)?.peer).toBe(peer);
           stream!.destroy();
@@ -260,7 +273,7 @@ describe('verified-chunk session transport adapter', () => {
           expect(backend.states.get(peer!)?.live).toBe(false);
           expect(backend.reads).toBe(0);
         }
-        expect(authorize).toHaveBeenCalledTimes(outcome === 'capture-expired' ? 0 : 1);
+        expect(authorize).toHaveBeenCalledTimes(captureExpired ? 0 : 1);
         await connection.output;
       } finally {
         finishCapture(null);
@@ -269,6 +282,10 @@ describe('verified-chunk session transport adapter', () => {
       }
     },
   );
+
+  it.each([0, -1, 1.5, NaN, Infinity, 30_001, null as unknown as number])('refuses invalid trusted capture bound %s', captureMilliseconds => {
+    expect(createSessionMachineTransport({ captureMilliseconds, prepare: () => true, accept: async () => null })).toBeNull();
+  });
 
   it('retains the exact async effect guard across awaits and revokes escaped descendants', async () => {
     let opened!: (stream: Duplex) => void;

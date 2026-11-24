@@ -17,6 +17,18 @@ import type { UrlMachineLifecyclePublication } from './url-machine-lifecycle.js'
 
 export const URL_MACHINE_PEER_LIMITS = Object.freeze({ ancestors: 64, chunks: 4096, bytes: 8_388_608,
   chunkBytes: 65_536, procBytes: 2_097_152, programBytes: 262_144, setupMilliseconds: 5000 });
+
+/** Capture has its own bounded setup envelope. Selecting it grants no peer or
+ * effect authority: both capture and the transport retain their fresh guards.
+ * Parent authority checks keep their independent five-second bound. */
+export function urlMachinePeerCaptureMilliseconds(profile: NativeSessionProfile,
+  context: Pick<UrlMachineClientContext, 'profileSha256' | 'runId' | 'role'>): number | null {
+  if (!isNativeSessionProfile(profile) || profile.digest !== context.profileSha256
+    || profile.input.binding.run !== context.runId || profile.input.binding.role !== context.role) return null;
+  const milliseconds = isOrderedDesignSessionProfile(profile) ? profile.transcript.nativeEffectMilliseconds
+    : URL_MACHINE_PEER_LIMITS.setupMilliseconds;
+  return Number.isSafeInteger(milliseconds) && milliseconds > 0 && milliseconds <= 30_000 ? milliseconds : null;
+}
 const META = { maxBytes: 65_536, maxNodes: 4096, maxDepth: 16 };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, META);
 const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
@@ -340,10 +352,10 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
   const held: HeldProcess[] = []; let state: PeerState | undefined;
   const began = performance.now();
   try {
+    const captureMilliseconds = urlMachinePeerCaptureMilliseconds(options.profile, options.context);
     if ((options.effectCurrent !== undefined && options.effectCurrent() !== true)
       || !(options.socket instanceof Socket) || claimed.has(options.socket) || !listenerCurrent(options) || !isUrlSessionProcess(options.launch)
-      || !isNativeSessionProfile(options.profile) || options.profile.digest !== options.context.profileSha256
-      || options.profile.input.binding.run !== options.context.runId || options.profile.input.binding.role !== options.context.role
+      || captureMilliseconds === null
       || !digest(options.binding.parentBindingSha256) || !digest(options.binding.controllerSha256)
       || !Array.isArray(options.protectedPaths) || options.protectedPaths.length < 1 || options.protectedPaths.length > 64
       || options.protectedPaths.some(file => !safePath(file))) return null;
@@ -385,7 +397,7 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
         const now = selected.now();
         if ((readImageCurrent !== undefined && readImageCurrent() !== true)
           || !isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
-          || performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();
+          || performance.now() - began >= captureMilliseconds) throw refused();
         pinNow = now;
       });
     if (selected.effectCurrent !== undefined && selected.effectCurrent() !== true) throw refused();
@@ -406,7 +418,7 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
       closed: false, finished: false, reading: false, mediating: false, chunks: 0, bytes: 0, lastNow: pinNow };
     void selected.launch.finished.then(() => { if (state) state.finished = true; }, () => { if (state) state.finished = true; });
     await current(state);
-    if (performance.now() - began >= URL_MACHINE_PEER_LIMITS.setupMilliseconds) throw refused();
+    if (performance.now() - began >= captureMilliseconds) throw refused();
     const processIdentitySha256 = sha256(canonical({ lifetime: observed.lifetime, pid: observed.pid, uid: observed.uid, gid: observed.gid,
       ancestry: held.map(entry => ({ identity: entry.identity, pid: entry.sample.pid, start: entry.sample.start, parent: entry.sample.parent })),
       namespaces, mountSha256: state.mountSha256, commandSha256: sha256(command), executableSha256: selected.installed.sha256,

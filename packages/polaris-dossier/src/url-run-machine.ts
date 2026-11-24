@@ -9,7 +9,7 @@ import { createSessionMachineTransport, type SessionMachineTransport } from './s
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import type { UrlMachineLifecycleResult, UrlMachineLifecycleSnapshot } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, type UrlMachineClientContext, type UrlMachineClientKind, type UrlMachineClientRecord, type UrlMachineOperation } from './url-machine-instance.js';
-import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync, waitForUrlMachinePeerPublication,
+import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync, urlMachinePeerCaptureMilliseconds, waitForUrlMachinePeerPublication,
   type UrlMachinePeer, type UrlMachinePeerAudit } from './url-machine-peer.js';
 import { initializeUrlMachineStore, openUrlMachineStore } from './url-machine-store.js';
 import { isColdUrlRunMachineHistory, type ColdUrlRunMachineHistory } from './url-machine-cold-history.js';
@@ -245,11 +245,14 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
         sourcePin: input.pin, runId: input.runId, role: plan.role, kind, allowedScopes: scopes(plan.role, kind),
         profileSha256: plan.profile.digest, now: input.now(), deadline: input.deadline });
       const client: Client = { context, witnessSha256: slot.witnessSha256, record: null, head: null };
+      const captureMilliseconds = urlMachinePeerCaptureMilliseconds(plan.profile, context);
+      if (captureMilliseconds === null) throw refuse();
       const key = `${plan.role}/${kind}`;
       if (clients.has(key)) throw refuse();
       clients.set(key, client);
       let listener: Awaited<ReturnType<typeof prepareUrlMachineListenerAsync>> = null;
       const transport = createSessionMachineTransport({
+        captureMilliseconds,
         prepare: async server => {
           if (!current()) return false;
           listener = await prepareUrlMachineListenerAsync(server, reader, input.chargeNativeCpuMicroseconds);

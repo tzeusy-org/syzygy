@@ -10,10 +10,11 @@ import { randomBytes } from 'node:crypto';
 import { afterEach, afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
+import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionLaunchOptions } from './session-launch.js';
 import { captureUrlMachinePeer, isUrlMachinePeerFor, prepareUrlMachineListener, prepareUrlMachineListenerAsync,
   closeUrlMachinePeer, mediateUrlMachinePeer, readUrlMachinePeer, waitForUrlMachinePeerPublication,
+  urlMachinePeerCaptureMilliseconds,
   type UrlMachinePeer, type UrlMachinePeerOptions } from './url-machine-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
@@ -59,7 +60,8 @@ beforeAll(async () => {
 });
 
 async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live',
-  chargeNativeCpuMicroseconds?: (capacity: number) => void, captureGuards?: Partial<Pick<UrlMachinePeerOptions, 'current' | 'effectCurrent' | 'readImageCurrent'>>) {
+  chargeNativeCpuMicroseconds?: (capacity: number) => void, captureGuards?: Partial<Pick<UrlMachinePeerOptions, 'current' | 'effectCurrent' | 'readImageCurrent'>>,
+  captureTiming?: (options: UrlMachinePeerOptions) => Partial<Pick<UrlMachinePeerOptions, 'now' | 'current' | 'readImageCurrent'>>) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -139,7 +141,7 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
     protectedPaths: [path.join(root, 'hidden'), governanceRoot], now: () => now, current: () => current,
     audit: () => { audited++; if (expireDuringAudit) now = deadline; if (failAudit) throw new Error('owned audit failure'); },
     chargeNativeCpuMicroseconds, ...captureGuards };
-  const peer = await captureUrlMachinePeer(options);
+  const peer = await captureUrlMachinePeer({ ...options, ...captureTiming?.(options) });
   if (peer) cleanup.push(() => closeUrlMachinePeer(peer));
   const record = (credential: UrlMachinePeer): UrlMachineClientRecord => ({ format: 'polaris-dossier-local-machine-client/1', clientId: slot.clientId, issuanceId: id(),
     policySha256: context.policySha256, revision: 1, projectId: 'project:syzygy', sourcePin: context.sourcePin, runId, role: 'author', kind: 'mcp-shim', scopes: ['artifact_read'],
@@ -161,6 +163,55 @@ async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live
 }
 
 describe('live URL machine peer binding', { timeout: 60_000 }, () => {
+  it('selects capture time only from a nominal matching profile (selector evidence, no peer claim)', () => {
+    const input = { binding: { run: 'own-capture-run', role: 'design' as const, sourceBinding: id(), policy: id(),
+      provider: 'anthropic' as const, model: DEFAULT_SESSION_MODEL }, sessionId: '12345678-1234-4234-8234-123456789012',
+      systemPrompt: 'Own capture selector.', initialPrompt: 'Own fixture.', utcDate: '2026-11-24', kernelRelease: 'own-kernel' };
+    const ordinary = createSessionProfile(input), ordered = createOrderedDesignSessionProfile(input);
+    expect(ordinary.ok && ordered.ok).toBe(true);
+    if (!ordinary.ok || !ordered.ok) return;
+    for (const [profile, expected] of [[ordinary.value.profile, 5000], [ordered.value.profile, 30_000]] as const) {
+      const context = { profileSha256: profile.digest, runId: input.binding.run, role: input.binding.role };
+      expect(urlMachinePeerCaptureMilliseconds(profile, context)).toBe(expected);
+      expect(urlMachinePeerCaptureMilliseconds({ ...profile }, context)).toBeNull();
+      for (const changed of [{ ...context, profileSha256: id() }, { ...context, runId: 'another-run' },
+        { ...context, role: 'author' as const }]) expect(urlMachinePeerCaptureMilliseconds(profile, changed)).toBeNull();
+    }
+    expect(urlMachinePeerCaptureMilliseconds(null as unknown as UrlMachinePeerOptions['profile'],
+      { profileSha256: id(), runId: input.binding.run, role: 'design' })).toBeNull();
+  });
+
+  it.each(['image', 'final'] as const)('keeps the real ordinary intrinsic five-second capture bound at %s', async boundary => {
+    const monotonic = performance.now.bind(performance);
+    let offset = 0, parents = 0;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => monotonic() + offset);
+    try {
+      const f = await fixture('live', undefined, {
+        current: async () => { if (++parents === 3 && boundary === 'final') offset = 6000; return true; },
+        readImageCurrent: () => { if (boundary === 'image') offset = 6000; return true; },
+      });
+      expect(offset).toBe(6000); expect(f.peer).toBeNull();
+    } finally { clock.mockRestore(); }
+  });
+
+  it('clips real capture to its original run expiry during the image read', async () => {
+    const f = await fixture('live', undefined, undefined, options => {
+      let expired = false;
+      return { now: () => expired ? options.context.deadline : options.context.now,
+        readImageCurrent: () => { expired = true; return true; } };
+    });
+    expect(f.peer).toBeNull();
+  });
+
+  it('keeps fresh parent authority independently bounded at five seconds', async () => {
+    const first = nativeObservations.calls().length;
+    let began = NaN;
+    const f = await fixture('live', undefined, { current: () => { began = performance.now(); return new Promise<boolean>(() => {}); } });
+    expect(f.peer).toBeNull(); expect(performance.now() - began).toBeGreaterThanOrEqual(5000);
+    expect(nativeObservations.calls().slice(first).map(call => (call[1] as readonly string[]).at(-1)))
+      .toEqual(['listener', 'listener']);
+  });
+
   it.each(['activate', 'refuse', 'withdraw-parent', 'close-peer'] as const)(
     'holds a captured peer pending activation and checks its currentness on %s', async outcome => {
       const f = await fixture();
