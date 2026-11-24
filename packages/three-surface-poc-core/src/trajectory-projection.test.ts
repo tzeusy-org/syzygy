@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { projectTrajectory, STATUS_TO_COLUMN } from './trajectory-projection.js';
+import { projectTrajectory, projectTrajectoryView, STATUS_TO_COLUMN, type TrajectoryProjection } from './trajectory-projection.js';
 import { governingIntentUnknown, workItemTitlesWithheld, type WorkItemsObserved } from './work-items.js';
 
 function itemsFixture(): WorkItemsObserved {
@@ -18,6 +18,14 @@ function itemsFixture(): WorkItemsObserved {
     governedByUnknownCount: 4,
     titles: workItemTitlesWithheld(),
   };
+}
+
+function recent(fixture: WorkItemsObserved, options: { nonClosedLimit: number; recentClosedWindow: number }): TrajectoryProjection {
+  const view = projectTrajectoryView(projectTrajectory(fixture, options), fixture, {
+    status: null, governingIntent: null, group: null, selection: 'recent', changed: null, page: 1,
+  });
+  if ('refused' in view) throw new Error('unreachable');
+  return view;
 }
 
 describe('Trajectory projection', () => {
@@ -42,14 +50,18 @@ describe('Trajectory projection', () => {
     expect(projection.totalCount).toBe(4);
     expect(projection.renderedCount).toBe(2);
     expect(projection.excludedCount).toBe(2);
-    expect(projection.rendered.map((item) => item.id)).toEqual(['bu-2', 'bu-3']);
-    expect(projection.selectionRule).toBe('up to 1 most recently updated non-closed items, plus up to 1 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id');
-    // The shared observation remains complete; neither sorting nor capping mutates it.
+    expect(projection.rendered.map((item) => item.id)).toEqual(['bu-1', 'bu-2']);
+    expect(projection.grouping).toMatchObject({
+      positions: 2,
+      groups: [{ key: { kind: 'parent-unknown', reason: 'work-item-revision-unavailable' }, onPage: ['bu-1', 'bu-2'] }],
+    });
+    expect(projection.selectionRule).toContain('page 1 of 1 of the 2 observed items with a status other than closed, grouped by parent: 2 positions');
+    // The entire observation remains available in its original order.
     expect(fixture.items.map((item) => item.id)).toEqual(['bu-4', 'bu-3', 'bu-2', 'bu-1']);
   });
 
   it('never renders activity/closure as verification satisfaction (POC-REQ-043)', () => {
-    const projection = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 5 });
+    const projection = recent(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 5 });
     if (projection.kind !== 'observed') throw new Error('unreachable');
     const closedItem = projection.rendered.find((item) => item.id === 'bu-3');
     expect(closedItem?.status).toBe('closed');
@@ -77,10 +89,10 @@ describe('Trajectory projection', () => {
   });
 
   it('answers the five questions over every served item, not the rendered selection (POC-REQ-044)', () => {
-    // recentClosedWindow 1 renders three of four items; the answers count four.
+    // The outline renders two of four items; the answers count four.
     const projection = projectTrajectory(itemsFixture(), { nonClosedLimit: 10, recentClosedWindow: 1 });
     if (projection.kind !== 'observed') throw new Error('unreachable');
-    expect(projection.renderedCount).toBe(3);
+    expect(projection.renderedCount).toBe(2);
     expect(projection.answers).toEqual([
       { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 } },
       { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: 'activity-undetermined' },
@@ -186,10 +198,10 @@ describe('Trajectory projection', () => {
     try {
       for (const timezone of ['UTC', 'Asia/Singapore']) {
         vi.stubEnv('TZ', timezone);
-        const projection = projectTrajectory(fixture, options);
+        const projection = recent(fixture, options);
         if (projection.kind !== 'observed') throw new Error('unreachable');
         expect(projection.rendered.map((item) => item.id), timezone).toEqual(expected);
-        expect(projectTrajectory({ ...fixture, items: [...items].reverse() }, options)).toEqual(projection);
+        expect(recent({ ...fixture, items: [...items].reverse() }, options)).toEqual(projection);
       }
     } finally {
       vi.unstubAllEnvs();

@@ -406,6 +406,7 @@ POC_SCENARIO_AMENDMENTS = (
     ('three-surface-poc-trajectory-dependency-eligibility-amendment-v1.0', {"062": 7}),  # syzygy-t3jk.19
     ('three-surface-poc-outline-amendment-v1.0', {"042": 1}),  # syzygy-t3jk.20
     ('three-surface-poc-changes-amendment-v1.0', {"044": 2}),  # syzygy-t3jk.21
+    ('three-surface-poc-grouped-default-amendment-v1.0', {"042": 1}),  # syzygy-t3jk.22
 )
 DECLARED_SOURCE_COMMIT = '182a703b2dbae97a16ae7334cd84a32b634cedc0'
 DECLARED_SOURCE_TAG = 'polaris-dossier-declared-source-model-v2.0'
