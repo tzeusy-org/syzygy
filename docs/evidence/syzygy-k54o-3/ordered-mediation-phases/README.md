@@ -1,0 +1,11 @@
+# Ordered preparation and effect phases
+
+[Observed] A-236 gives ordered profile8 a30000ms preparation phase and an independently bounded30000ms actual effect, under one fixed60000ms total. The trusted one-use transition follows the original audit and reattestation, immediately before the original first effect boundary. It cannot refresh the total or original caller/run deadline. Every original authority check, await and reply-release guard remains. Suspended phases have their own timer; duplicate or reentrant transition refuses.
+
+[Observed] Ordered product capacity is render60000 + mediation60000 =120000ms; prospective effect coverage reserves mediation60000. The original broker85000 bound remains independently tighter, may refuse, and is counted once by the work planner. Ordinary profile2 wire identity remains; the ordered actual effect remains30000ms. Old ordered7 credentials fail the new profile binding; no migration is provided.
+
+[Observed] Fresh combined design/source review returned PASS. The exact frozen overlay passed typecheck,21 unit cases,156 complete store/peer cases, two targeted product-lease cases and four targeted launch/profile cases. Seventy-two other artifact cases and54 other launch cases were excluded; genuine cases were not part of that run. Thirteen regression cases were added. Four corrected mutation runs each failed their one selected intended regression: old total30000, disabled phase guard, repeat transition and missing phase timer. The first mutation attempt matched no quoted matrix label; its zero-test result was rejected and retained separately. The archive retains full original/new source, design, review, exact commands, outputs and old/new mutants.
+
+[Observed] These focused results use a clean77be base plus the frozen12-file overlay. Maincb5 was subsequently merged, preserving those12 baseline files exactly, before the identical reviewed candidate was committed. Current-main question-file changes and the merge of its new reconciliation fixture require the final canonical checks; the retained77be679-witness result is historical evidence for that subject.
+
+[Unknown] Current-main genuine interrupted and eligible recovery completion, durable record/replay, full canonical acceptance, final rendering and hosted timing remain pending.

@@ -1,0 +1,441 @@
+{
+  "adoption": "A-236",
+  "sourceCommit": "b2221bf94400bb87ee43bcc1f9422ff7dfb22499",
+  "mainIncluded": "cb5d7fcec5876592dfcf393839cab0c5ea05f14d",
+  "frozenCandidateBindingSha256": "2c01a5e7810b2f7864f6c424bbf49fbf9004150cc9f62a65cc4793deccf54b28",
+  "sourceReview": "PASS",
+  "reviewScope": "combined design/source/test; no native acceptance",
+  "focusedBaseCommit": "77be72c353eb031dcb03db0bae82b5e4bbf27faa",
+  "focusedResults": [
+    {
+      "name": "typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck",
+        "--",
+        "--pretty",
+        "false"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 20.066730914986692,
+      "logSha256": "c60442528cbded773cc0eed9660ceb12e8d32164711bf04fab32e3235727b16d"
+    },
+    {
+      "name": "profile-planning-unit",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-dossier/src/session-profile.test.ts",
+        "packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-mediation-phase-focused-R1/profile-planning-unit.json"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 3.942696388985496,
+      "logSha256": "5681787ad41de1ee0dc2684edd20c5eb8a3be423f01a62ebb68c7ed8be5733de"
+    },
+    {
+      "name": "store-peer-integration",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-mediation-phase-focused-R1/store-peer-integration.json"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 88.4952956730267,
+      "logSha256": "28f486733bda15cf0502a2b935507b84cfad0c6647ce40450dbfc3d10f6d339b"
+    },
+    {
+      "name": "product-lease-integration",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+        "--testNamePattern=reserves native time on an immutable",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-mediation-phase-focused-R1/product-lease-integration.json"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 4.079623763973359,
+      "logSha256": "603da623f921f13348457fabf417858a7df0a549e882c411e3ad37cc134c11a0"
+    },
+    {
+      "name": "launch-profile-integration",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/session-launch.test.ts",
+        "--testNamePattern=compiles the independently named design profile|checks exact canonical ordered result|refuses forged preparation/profile|selects inspection ceilings",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-mediation-phase-focused-R1/launch-profile-integration.json"
+      ],
+      "exit": 0,
+      "elapsedSeconds": 12.221349833009299,
+      "logSha256": "71baf5c1bfd0a9cc78a80f13469df8538e5397c058cd4b3257fa7d1458fd574e"
+    }
+  ],
+  "passedCases": {
+    "unit": 21,
+    "storeAndPeer": 156,
+    "targetedProductLease": 2,
+    "targetedLaunch": 4
+  },
+  "excludedCases": {
+    "productFile": 72,
+    "launchFile": 54,
+    "genuineComposed": "not run"
+  },
+  "caseGrowth": 13,
+  "mutationOutcome": {
+    "R1": "INVALID selector matched zero tests; retained, not a mutation proof",
+    "R2": [
+      {
+        "id": "old-outer30",
+        "exit": 1,
+        "failed": 1,
+        "pending": 129
+      },
+      {
+        "id": "effect-phase-guard",
+        "exit": 1,
+        "failed": 1,
+        "pending": 129
+      },
+      {
+        "id": "one-use-transition",
+        "exit": 1,
+        "failed": 1,
+        "pending": 129
+      },
+      {
+        "id": "phase-timer",
+        "exit": 1,
+        "failed": 1,
+        "pending": 129
+      }
+    ]
+  },
+  "archiveSha256": "a92da1a9c2ba54c34fba7d1df584b39985807a9d2dec1bf2b44b33a35ad42138",
+  "files": [
+    {
+      "path": "baseline/packages/polaris-dossier/src/session-launch.test.ts",
+      "bytes": 119619,
+      "sha256": "67b75a5d3b4945d02e79f8b5c335c32dcbe15b4aba17d4876165f98b106006ee"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/session-profile.ts",
+      "bytes": 22442,
+      "sha256": "6fb93ce4f0b829f3110094ea09e59abff0feeb050f776a6e687134b7943366c2"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-machine-peer.ts",
+      "bytes": 38140,
+      "sha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-machine-store.test.ts",
+      "bytes": 94600,
+      "sha256": "a7661ccafd624b06ae33bf95cc59d3c4952210ccfb4f0317932458830ef8e58a"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-machine-store.ts",
+      "bytes": 62441,
+      "sha256": "5a926ed31da2cbc5bb631b5a0a061e5d41e2e034dd1cafdf6b8f4215fe3b754a"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "bytes": 37349,
+      "sha256": "68c7f5015ef316461accee889ca8f6d31daa29de54d5da02228b81e357569253"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "bytes": 25946,
+      "sha256": "93b1f46140e0a2e42aa1f4638b95c985fac8632fd6477de8b7c7d4eaa92cd462"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+      "bytes": 20900,
+      "sha256": "eb06df2578525dc316c8bd0383aaab34211306daa415738713b3fb9987e59d50"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-product-read-limits.ts",
+      "bytes": 722,
+      "sha256": "103aacefcde3769194f2b4c1e5b20a72e257388d586d1a837643206b0b44d50d"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150166,
+      "sha256": "e2153e505cbee0f9164c16b5f4a200127202f11d27bba55a770e0dfd80b0357e"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "bytes": 222727,
+      "sha256": "0cc7d0baeba24550d4133168a273c223273f1f0435fb0d05f3c875f7dcbe25cd"
+    },
+    {
+      "path": "baseline/packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "bytes": 22379,
+      "sha256": "4553a3c3b01efc6372f49363cc8ceaa637d72bf8c4d96beff5e3bad9d0c34ec4"
+    },
+    {
+      "path": "c52-interrupted-store-diagnosis-RAW.md",
+      "bytes": 20263,
+      "sha256": "13510125b8fe3f164cb5e638029d42e9ceb613f9c47fa8a561402a509eac3025"
+    },
+    {
+      "path": "c52-interrupted-store-diagnosis-bindings.json",
+      "bytes": 5252,
+      "sha256": "3a3e408c9a0e2830fb9609c1c6262a6795a8fd56557ee7ece5b65fd02cb9ab22"
+    },
+    {
+      "path": "c52-interrupted-store-diagnosis-metrics.json",
+      "bytes": 3925,
+      "sha256": "ba8910c702c8ab650e78dea9b7963045a7feffc63598acfc5bedaf62ea9d48de"
+    },
+    {
+      "path": "frozen/DESIGN.md",
+      "bytes": 9134,
+      "sha256": "73af31796e0e21300140e37fff719cb132b9f07e1440361871d75a28a14a0274"
+    },
+    {
+      "path": "frozen/bindings.json",
+      "bytes": 6051,
+      "sha256": "2c01a5e7810b2f7864f6c424bbf49fbf9004150cc9f62a65cc4793deccf54b28"
+    },
+    {
+      "path": "frozen/candidate.patch",
+      "bytes": 32642,
+      "sha256": "b50e8d2a092b4d430fb953eb06051fa760ac2f63bd96d0c7f19c07bc4303fd6c"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/session-launch.test.ts",
+      "bytes": 119854,
+      "sha256": "c01f69603a9433ad08cd3dcd517e8f54a413e31c5d691f5d990894bcc91f2a4e"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/session-profile.ts",
+      "bytes": 22684,
+      "sha256": "c40ad6030bdc4f91d7b0b25649a211c6966ec6557a4f62f91d751d8e324966b2"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-machine-peer.ts",
+      "bytes": 38414,
+      "sha256": "e484b8649debcfb170f456fd69172d651635bc380b79a19191fd469ecedc410c"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-machine-store.test.ts",
+      "bytes": 101849,
+      "sha256": "88061fd7d526a5fc6a261579720651ec6e7d44c1e6a08309d18da42506463976"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-machine-store.ts",
+      "bytes": 65750,
+      "sha256": "28e2074c28a21d21e9deef4c30d56a00b8ae9734777505ebdd028286e6044f40"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "bytes": 37426,
+      "sha256": "65906032d8b0192c615fd68526bea5b6bfd8b76e604d75ee750f8503f8b0528d"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "bytes": 26862,
+      "sha256": "5fdb34e9089460de256ba9bbb1edfdc87060bf97cd8a737e8d7d394312729253"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+      "bytes": 21298,
+      "sha256": "6904332379f22a294a73f5ae34a0555a2a05bcd50a3f163a0821f9a4773bf0b5"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-product-read-limits.ts",
+      "bytes": 1130,
+      "sha256": "bc653a3a8913b8e0c2843105b00d2a8a3ad6e48c665acd07a49eec682239d112"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150171,
+      "sha256": "4a25a7ff5717fdaa0e241e2db41bd9d564ca08e4ccfbeeafdfda247d09a42f0a"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-run-composed.test.ts",
+      "bytes": 222729,
+      "sha256": "d4a8155506722cad0d989bc24401a9bcde4c2485beb99531f43e53683fd58139"
+    },
+    {
+      "path": "frozen/candidate/packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "bytes": 22382,
+      "sha256": "d4f08b0f81ffd24cb04950196d0c9a28d5c105e6f424b158e454cf6d9db53062"
+    },
+    {
+      "path": "frozen/governing-excerpts.md",
+      "bytes": 11580,
+      "sha256": "d6ee2e3bd3c178c80934f25f83484980896b8c07ddfca9211c0ee1f5e1318ebf"
+    },
+    {
+      "path": "main-cb5-merge-resolution.json",
+      "bytes": 395,
+      "sha256": "a3c2b0cf6c4c0540621891556f656c7352daf7cc28f6a309c0bf2f1f873cd97f"
+    },
+    {
+      "path": "mutate-ordered-mediation-phases-R2.py",
+      "bytes": 3811,
+      "sha256": "48b3c9a7ce2341cf64bfecd19830c45441f87a6b7540b37e1522a343365be212"
+    },
+    {
+      "path": "mutate-ordered-mediation-phases.py",
+      "bytes": 3220,
+      "sha256": "c9244f5bb0b6b0201763dca92a4b447d4e611ce9723f8a4f03bb02d6d6a0a944"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/launch-profile-integration.json",
+      "bytes": 18687,
+      "sha256": "dcb1be648455b92c5e99e583d3cfdcd72cb8554992f9abb3103d74544c30ed6c"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/launch-profile-integration.log",
+      "bytes": 765,
+      "sha256": "71baf5c1bfd0a9cc78a80f13469df8538e5397c058cd4b3257fa7d1458fd574e"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/product-lease-integration.json",
+      "bytes": 25677,
+      "sha256": "4d0069fcf0e8ac1fecff6bdaf25b95c9316aceadb642e06988e120ffc98d7bfb"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/product-lease-integration.log",
+      "bytes": 498,
+      "sha256": "603da623f921f13348457fabf417858a7df0a549e882c411e3ad37cc134c11a0"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/profile-planning-unit.json",
+      "bytes": 9019,
+      "sha256": "0e8b620218f671b807c25f2a6fdb85967aef558379a72886fd4eb5bbdf7bfabb"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/profile-planning-unit.log",
+      "bytes": 698,
+      "sha256": "5681787ad41de1ee0dc2684edd20c5eb8a3be423f01a62ebb68c7ed8be5733de"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/results.json",
+      "bytes": 7507,
+      "sha256": "e31c08d91cc301241604166dde2baf92c8762c4e312a9e27702d826e636ed2d8"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/store-peer-integration.json",
+      "bytes": 57586,
+      "sha256": "d9dea60d393dd7168a4fa346945e0ebd06adb9e0cc1ab5849eb3357e41dde400"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/store-peer-integration.log",
+      "bytes": 5241,
+      "sha256": "28f486733bda15cf0502a2b935507b84cfad0c6647ce40450dbfc3d10f6d339b"
+    },
+    {
+      "path": "ordered-mediation-phase-focused-R1/typecheck.log",
+      "bytes": 52,
+      "sha256": "c60442528cbded773cc0eed9660ceb12e8d32164711bf04fab32e3235727b16d"
+    },
+    {
+      "path": "ordered-mediation-phase-independent-bindings.json",
+      "bytes": 12855,
+      "sha256": "c1b3346b2b2013e05ffbe553149241f5beb31315c530ee7018267828332fa0d1"
+    },
+    {
+      "path": "ordered-mediation-phase-independent-review-RAW.md",
+      "bytes": 21792,
+      "sha256": "328e036db8d8f7a3e71508f06390ff97db5abdb6247884713f38d44d6abd0e06"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R1/old-outer30.json",
+      "bytes": 44831,
+      "sha256": "96cce2275049ec331fb02e481d73dbf1edf2fd4ab5da1884d508a3878cef9d21"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R1/old-outer30.log",
+      "bytes": 117,
+      "sha256": "7d770d80e4984c32ff8fa0f21d4b3ba14cde981cf0327c61e19ed579eb603376"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R1/results.json",
+      "bytes": 1062,
+      "sha256": "36ed05d52186f321b445d53b47f40538a0ba0e674dfb039525e8b5132ee45025"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/effect-phase-guard.json",
+      "bytes": 45168,
+      "sha256": "db997e506de422c805138b981a72ca75442cf0f4567822868997fcdc14e4a773"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/effect-phase-guard.log",
+      "bytes": 124,
+      "sha256": "2bfcd31001a6e7d47de12deb8e1cb8d5450289757b08a472eb9d54900df969b9"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/old-outer30.json",
+      "bytes": 45170,
+      "sha256": "807243858eeedd7082d82da289d9164333210d0ba46d75b204eeaee8a0ed0aca"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/old-outer30.log",
+      "bytes": 117,
+      "sha256": "37b748f8201c9e3e868108f9b89b40582011472c45af2ecef8dfdb4963cb641c"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/one-use-transition.json",
+      "bytes": 45175,
+      "sha256": "c37ca3cfb68894b54a73fdfc416475eb7afc03c99b924bff44b0ad4b501db463"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/one-use-transition.log",
+      "bytes": 124,
+      "sha256": "ef8e54a5c7819f17876485663a9be33b6e4307b347127346326b0992bb27815f"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/phase-timer.json",
+      "bytes": 45170,
+      "sha256": "479c33d69010fab30945b636d9532cd9d88f6c54efd71f5da936a35fbeb5bad9"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/phase-timer.log",
+      "bytes": 117,
+      "sha256": "e072117607f1ea6fff49ace59ad93a014f63b5c2bda0dc121c28d7c977c52b25"
+    },
+    {
+      "path": "ordered-mediation-phase-mutants-R2/results.json",
+      "bytes": 6547,
+      "sha256": "1401e01dcab813cc003146c4b8a89f5912a15ea3d068b2e900c4410cce279daf"
+    },
+    {
+      "path": "ordered-mediation-phase-parse-R1.json",
+      "bytes": 2505,
+      "sha256": "8ae2a46125734ef61af7767f50cbcaa167af5e7a0466313df9b89f191da5be5e"
+    },
+    {
+      "path": "verify-ordered-mediation-phases.py",
+      "bytes": 2950,
+      "sha256": "338f1d17fcfce75f6c107cfa662431d8766370d84101a2f5241620ea52446fc4"
+    }
+  ]
+}
