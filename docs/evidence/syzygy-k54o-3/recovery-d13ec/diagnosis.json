@@ -1,0 +1,32 @@
+{
+  "label": "Observed",
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "observedAt": "2026-11-24T19:00:06.819213+00:00",
+  "supervisor": {
+    "sourceSha256": "9f4b76280924b84d381af7dd17d8d2084bf4927e9210376cd80c430f9302ea22",
+    "stopped": "2026-11-24T18:41:17.177Z",
+    "donePresent": false,
+    "finalSitePresent": false,
+    "siteFor": {
+      "0": 0
+    }
+  },
+  "executionRecordInspection": {
+    "path": "/home/orca/.tmp/url-composed-wjID2B/runs/run-27065403f89bda41e49af348be8d6dac/record.json",
+    "exists": false
+  },
+  "retainedManifestInspection": {
+    "directory": "/home/orca/.tmp/f3-native-eligible-d13ec/retained",
+    "files": [
+      "native-cut-e8dd9b6f43a86e70c39fee03cbcb356ededfc89ffa8a272d1430c87bc1501ba7.json"
+    ],
+    "failureFiles": []
+  },
+  "conclusions": {
+    "stop": "Observed: original stopped cut retained with ordered Design eligibility and exited Design terminal.",
+    "runner": "Observed: selected eligible-stop-resume case timed out at runner600000ms; reported case606859ms; suite616.75s,1failed6skipped/7.",
+    "runtimeRefusal": "Unknown: no terminal first-refusal or recovery-phase diagnostic identifies a runtime refusing predicate.",
+    "completedExecution": "Unknown: no completed Execution Record observed; inspected run/record.json does not exist.",
+    "productLease": "The startup activation deadline bounds activation only; later operations admit fresh checked product replacements. The340s snapshot reports an open lease with22984ms remaining. Neither establishes a later expiry cause."
+  }
+}

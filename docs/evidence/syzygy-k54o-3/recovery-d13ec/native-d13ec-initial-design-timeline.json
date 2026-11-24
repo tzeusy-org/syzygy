@@ -1,0 +1,659 @@
+{
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "cutRawSha256": "e8dd9b6f43a86e70c39fee03cbcb356ededfc89ffa8a272d1430c87bc1501ba7",
+  "auditPath": "/home/orca/.tmp/url-composed-host-3137324-1795545264806/acquisitions/attempt-fgMwFB/sessions-design.jsonl",
+  "auditSha256": "4c9417b1f29501508dc203442d2b18d984008816f202b29dce881601b962b4ba",
+  "designAuditRows": 103,
+  "runExpiryUTC": "2026-11-24T20:34:44.092000+00:00",
+  "timeline": [
+    {
+      "sequence": 314,
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "at": "2026-11-24T18:38:11.373Z",
+      "recordSha256": "947afe1ea951c998afaca4c793047ef5a3bfb72d97b88e9ded4df2341b16510c"
+    },
+    {
+      "sequence": 323,
+      "kind": "relay",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:38:18.247Z",
+      "recordSha256": "6598939ba11608040c0304b16cb0d5225a6bb08af83bb72818039e7ee5020e9f"
+    },
+    {
+      "sequence": 326,
+      "kind": "design-ordered",
+      "event": "prepared",
+      "at": "2026-11-24T18:38:25.726Z",
+      "recordSha256": "2ad53347f5d433e3c2fa7c94be9dd2e2cf9c45c3b1d48111555d91769c97dd87"
+    },
+    {
+      "sequence": 330,
+      "kind": "design-ordered",
+      "event": "request-admitted",
+      "at": "2026-11-24T18:38:36.936Z",
+      "recordSha256": "d17d7584e08b0058ec441075e23bf53aef4655a6def811c7a74185cf5b848bb0"
+    },
+    {
+      "sequence": 331,
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "at": "2026-11-24T18:38:35.687Z",
+      "recordSha256": "d5163904a61141c4cde37d960e06ea0a3421cd564e7dbd62b06f74b7cd45cd45"
+    },
+    {
+      "sequence": 334,
+      "kind": "design-ordered",
+      "event": "send-attempt",
+      "at": "2026-11-24T18:38:39.593Z",
+      "recordSha256": "dd47d9788976a2d95fb5bdbed2a827b8f5c4d4d310275d9d3babaf302825e3c1"
+    },
+    {
+      "sequence": 337,
+      "kind": "design-ordered",
+      "event": "send-outcome",
+      "at": "2026-11-24T18:38:41.122Z",
+      "recordSha256": "089534989eb2d68fe496500823ddec90e8856c7f632df724701d723db742ef09"
+    },
+    {
+      "sequence": 341,
+      "kind": "design-ordered",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:38:44.518Z",
+      "recordSha256": "5e81c1547a55a94d57d1656f2dc5fcb80924546df7d3589a853e9ca93c441cce"
+    },
+    {
+      "sequence": 343,
+      "kind": "relay",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:38:43.343Z",
+      "recordSha256": "295497ffbc7687454ed37aed27e359b6b30114b239a93675ab068b06fb8dc6b0"
+    },
+    {
+      "sequence": 346,
+      "kind": "design-ordered",
+      "event": "part-receipt",
+      "at": "2026-11-24T18:38:51.074Z",
+      "recordSha256": "170f159df83bd0942f9d8c50dd96f87531d41b6138849033223506f8c197b371"
+    },
+    {
+      "sequence": 350,
+      "kind": "design-ordered",
+      "event": "request-admitted",
+      "at": "2026-11-24T18:39:11.790Z",
+      "recordSha256": "d53617c245543eb5cdd9e26ead43459100fae7c6317f1ed8309b4edd04d724a9"
+    },
+    {
+      "sequence": 351,
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "at": "2026-11-24T18:39:10.596Z",
+      "recordSha256": "f19155cab5e90b6766638137c65596b3984c6e351129f9c29bbf75b01ce0458e"
+    },
+    {
+      "sequence": 354,
+      "kind": "design-ordered",
+      "event": "send-attempt",
+      "at": "2026-11-24T18:39:14.598Z",
+      "recordSha256": "a62ffed2a5fc913ff89f7597fbdc1da39ba0ca5885610c2db4604e3c6ae04311"
+    },
+    {
+      "sequence": 357,
+      "kind": "design-ordered",
+      "event": "send-outcome",
+      "at": "2026-11-24T18:39:16.245Z",
+      "recordSha256": "823972186823552c0f5dacd7f5215a80badd867e2572afe4ceaeef25eac117a1"
+    },
+    {
+      "sequence": 361,
+      "kind": "design-ordered",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:39:19.800Z",
+      "recordSha256": "ec6889dc0b3e936948c9634fbb36b0f82bffd08de195f904ebf25416a0f30e92"
+    },
+    {
+      "sequence": 363,
+      "kind": "relay",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:39:18.519Z",
+      "recordSha256": "faae112e80de125d3d850402bbb1b58b080299328d37fbc5200b797805a4441c"
+    },
+    {
+      "sequence": 366,
+      "kind": "design-ordered",
+      "event": "part-receipt",
+      "at": "2026-11-24T18:39:26.819Z",
+      "recordSha256": "701f44656adfb6b7ac1158788b55cb7c4859957c91522b22c0cfe145453383e4"
+    },
+    {
+      "sequence": 370,
+      "kind": "design-ordered",
+      "event": "request-admitted",
+      "at": "2026-11-24T18:39:53.679Z",
+      "recordSha256": "d8c5be8419f3ee8266db11d84225e15e9aa4294963dd8f23491260d6faff5e6a"
+    },
+    {
+      "sequence": 371,
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "at": "2026-11-24T18:39:52.374Z",
+      "recordSha256": "017fb9cb8eec09edb21939d772f2697e4939a20692d3b3a39bed36d723a43f92"
+    },
+    {
+      "sequence": 374,
+      "kind": "design-ordered",
+      "event": "send-attempt",
+      "at": "2026-11-24T18:39:56.600Z",
+      "recordSha256": "24027c19bbb1b0ecee646d4c1c09f65cfb412fde2014a5e1b18a63bea4d4404c"
+    },
+    {
+      "sequence": 377,
+      "kind": "design-ordered",
+      "event": "send-outcome",
+      "at": "2026-11-24T18:39:58.367Z",
+      "recordSha256": "208ef1add00d1d21ba51c981a009d74c2720a7b10c97a7cd7855af7e4416827e"
+    },
+    {
+      "sequence": 381,
+      "kind": "design-ordered",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:40:02.471Z",
+      "recordSha256": "83d3bd871a8ebe14a03fae0195cb3a4ba2546e27ea0efb609407b97e2dbeadab"
+    },
+    {
+      "sequence": 383,
+      "kind": "relay",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:40:01.126Z",
+      "recordSha256": "fd4896ce4685aa9d90b1a85f42b292f270799dcb0313977d4a27b503b2e3ee0c"
+    },
+    {
+      "sequence": 386,
+      "kind": "design-ordered",
+      "event": "delivery-completed",
+      "at": "2026-11-24T18:40:14.339Z",
+      "recordSha256": "859b7c1ebc972c0b9e4d65218ad633ed54ba6b19d065fcbb473914e04ee12d92"
+    },
+    {
+      "sequence": 387,
+      "kind": "design-ordered",
+      "event": "verdict-staged",
+      "at": "2026-11-24T18:40:18.649Z",
+      "recordSha256": "a0f69e28132c5d6bfc8f9ae893782ea5ea128e20003f176521f3ff1b28d0ce43"
+    },
+    {
+      "sequence": 388,
+      "kind": "design-ordered",
+      "event": "acknowledgment-receipt",
+      "at": "2026-11-24T18:40:18.998Z",
+      "recordSha256": "0cac37147fac979c2e7f11af7b8bf84f13518e72fd0415e66eed76d5e848f248"
+    },
+    {
+      "sequence": 392,
+      "kind": "design-ordered",
+      "event": "request-admitted",
+      "at": "2026-11-24T18:40:49.327Z",
+      "recordSha256": "c5c37ff89f11b13845f4958b3cd69aaf07cc77008dd53072bbda77a48d760b58"
+    },
+    {
+      "sequence": 393,
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "at": "2026-11-24T18:40:47.752Z",
+      "recordSha256": "4d553215276e5f3a034177746f8fb7a5e7cc26380033aa71d73da9e1e162676f"
+    },
+    {
+      "sequence": 396,
+      "kind": "design-ordered",
+      "event": "send-attempt",
+      "at": "2026-11-24T18:40:52.705Z",
+      "recordSha256": "acb14cdf6ee8a3932570643a3c4c45c0812351db5c67f343553d16c16b7a55e5"
+    },
+    {
+      "sequence": 399,
+      "kind": "design-ordered",
+      "event": "send-outcome",
+      "at": "2026-11-24T18:40:54.672Z",
+      "recordSha256": "7b7dca23360ed355e5531eddeedbcf6fbf4b820d485c7d1a00340f639fb377ec"
+    },
+    {
+      "sequence": 403,
+      "kind": "design-ordered",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:40:59.333Z",
+      "recordSha256": "e45070b744009155c0f6e1228cc5b51737e86511728769008e39505a751e03fc"
+    },
+    {
+      "sequence": 404,
+      "kind": "design-ordered",
+      "event": "eligible",
+      "at": "2026-11-24T18:40:59.697Z",
+      "recordSha256": "9dc5431e1505800911f0990e90323346018b595de31a72db9cc8cd60cf0c4b4f"
+    },
+    {
+      "sequence": 406,
+      "kind": "relay",
+      "event": "response-admitted",
+      "at": "2026-11-24T18:40:57.708Z",
+      "recordSha256": "7be35e28c3d39fb0b784cefe74cb061b24830b2b299c42d4f60772623e919102"
+    }
+  ],
+  "limits": "Timestamp gaps bound stages; no CPU or leaf timing attribution.",
+  "designRelayBoundaries": [
+    {
+      "sequence": 314,
+      "role": "design",
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "atMs": 1795545491373.0,
+      "atUTC": "2026-11-24T18:38:11.373000+00:00"
+    },
+    {
+      "sequence": 323,
+      "role": "design",
+      "kind": "relay",
+      "event": "response-admitted",
+      "atMs": 1795545498247.0,
+      "atUTC": "2026-11-24T18:38:18.247000+00:00"
+    },
+    {
+      "sequence": 331,
+      "role": "design",
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "atMs": 1795545515687.0,
+      "atUTC": "2026-11-24T18:38:35.687000+00:00"
+    },
+    {
+      "sequence": 343,
+      "role": "design",
+      "kind": "relay",
+      "event": "response-admitted",
+      "atMs": 1795545523343.0,
+      "atUTC": "2026-11-24T18:38:43.343000+00:00"
+    },
+    {
+      "sequence": 351,
+      "role": "design",
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "atMs": 1795545550596.0,
+      "atUTC": "2026-11-24T18:39:10.596000+00:00"
+    },
+    {
+      "sequence": 363,
+      "role": "design",
+      "kind": "relay",
+      "event": "response-admitted",
+      "atMs": 1795545558519.0,
+      "atUTC": "2026-11-24T18:39:18.519000+00:00"
+    },
+    {
+      "sequence": 371,
+      "role": "design",
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "atMs": 1795545592374.0,
+      "atUTC": "2026-11-24T18:39:52.374000+00:00"
+    },
+    {
+      "sequence": 383,
+      "role": "design",
+      "kind": "relay",
+      "event": "response-admitted",
+      "atMs": 1795545601126.0,
+      "atUTC": "2026-11-24T18:40:01.126000+00:00"
+    },
+    {
+      "sequence": 393,
+      "role": "design",
+      "kind": "relay",
+      "event": "attempt-allowed",
+      "atMs": 1795545647752.0,
+      "atUTC": "2026-11-24T18:40:47.752000+00:00"
+    },
+    {
+      "sequence": 406,
+      "role": "design",
+      "kind": "relay",
+      "event": "response-admitted",
+      "atMs": 1795545657708.0,
+      "atUTC": "2026-11-24T18:40:57.708000+00:00"
+    }
+  ],
+  "largestChronologicalDesignGaps": [
+    {
+      "gapMs": 22213.0,
+      "from": {
+        "sequence": 388,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "acknowledgment-receipt",
+        "atMs": 1795545618998.0,
+        "atUTC": "2026-11-24T18:40:18.998000+00:00"
+      },
+      "to": {
+        "sequence": 389,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545641211,
+        "atUTC": "2026-11-24T18:40:41.211000+00:00"
+      }
+    },
+    {
+      "gapMs": 19388.0,
+      "from": {
+        "sequence": 366,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "part-receipt",
+        "atMs": 1795545566819.0,
+        "atUTC": "2026-11-24T18:39:26.819000+00:00"
+      },
+      "to": {
+        "sequence": 367,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545586207,
+        "atUTC": "2026-11-24T18:39:46.207000+00:00"
+      }
+    },
+    {
+      "gapMs": 13852.0,
+      "from": {
+        "sequence": 346,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "part-receipt",
+        "atMs": 1795545531074.0,
+        "atUTC": "2026-11-24T18:38:51.074000+00:00"
+      },
+      "to": {
+        "sequence": 347,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545544926,
+        "atUTC": "2026-11-24T18:39:04.926000+00:00"
+      }
+    },
+    {
+      "gapMs": 9860,
+      "from": {
+        "sequence": 384,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545603898,
+        "atUTC": "2026-11-24T18:40:03.898000+00:00"
+      },
+      "to": {
+        "sequence": 385,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545613758,
+        "atUTC": "2026-11-24T18:40:13.758000+00:00"
+      }
+    },
+    {
+      "gapMs": 6060,
+      "from": {
+        "sequence": 389,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545641211,
+        "atUTC": "2026-11-24T18:40:41.211000+00:00"
+      },
+      "to": {
+        "sequence": 390,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545647271,
+        "atUTC": "2026-11-24T18:40:47.271000+00:00"
+      }
+    },
+    {
+      "gapMs": 5689,
+      "from": {
+        "sequence": 367,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545586207,
+        "atUTC": "2026-11-24T18:39:46.207000+00:00"
+      },
+      "to": {
+        "sequence": 368,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545591896,
+        "atUTC": "2026-11-24T18:39:51.896000+00:00"
+      }
+    },
+    {
+      "gapMs": 5283,
+      "from": {
+        "sequence": 347,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545544926,
+        "atUTC": "2026-11-24T18:39:04.926000+00:00"
+      },
+      "to": {
+        "sequence": 348,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545550209,
+        "atUTC": "2026-11-24T18:39:10.209000+00:00"
+      }
+    },
+    {
+      "gapMs": 5239,
+      "from": {
+        "sequence": 364,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545560987,
+        "atUTC": "2026-11-24T18:39:20.987000+00:00"
+      },
+      "to": {
+        "sequence": 365,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545566226,
+        "atUTC": "2026-11-24T18:39:26.226000+00:00"
+      }
+    }
+  ],
+  "largestChronologicalAllRoleGaps": [
+    {
+      "gapMs": 22213.0,
+      "from": {
+        "sequence": 388,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "acknowledgment-receipt",
+        "atMs": 1795545618998.0,
+        "atUTC": "2026-11-24T18:40:18.998000+00:00"
+      },
+      "to": {
+        "sequence": 389,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545641211,
+        "atUTC": "2026-11-24T18:40:41.211000+00:00"
+      }
+    },
+    {
+      "gapMs": 19388.0,
+      "from": {
+        "sequence": 366,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "part-receipt",
+        "atMs": 1795545566819.0,
+        "atUTC": "2026-11-24T18:39:26.819000+00:00"
+      },
+      "to": {
+        "sequence": 367,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545586207,
+        "atUTC": "2026-11-24T18:39:46.207000+00:00"
+      }
+    },
+    {
+      "gapMs": 13852.0,
+      "from": {
+        "sequence": 346,
+        "role": "design",
+        "kind": "design-ordered",
+        "event": "part-receipt",
+        "atMs": 1795545531074.0,
+        "atUTC": "2026-11-24T18:38:51.074000+00:00"
+      },
+      "to": {
+        "sequence": 347,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545544926,
+        "atUTC": "2026-11-24T18:39:04.926000+00:00"
+      }
+    },
+    {
+      "gapMs": 11745,
+      "from": {
+        "sequence": 307,
+        "role": "fidelity",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545477209,
+        "atUTC": "2026-11-24T18:37:57.209000+00:00"
+      },
+      "to": {
+        "sequence": 311,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545488954,
+        "atUTC": "2026-11-24T18:38:08.954000+00:00"
+      }
+    },
+    {
+      "gapMs": 9860,
+      "from": {
+        "sequence": 384,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545603898,
+        "atUTC": "2026-11-24T18:40:03.898000+00:00"
+      },
+      "to": {
+        "sequence": 385,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545613758,
+        "atUTC": "2026-11-24T18:40:13.758000+00:00"
+      }
+    },
+    {
+      "gapMs": 6321,
+      "from": {
+        "sequence": 291,
+        "role": "fidelity",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545460202,
+        "atUTC": "2026-11-24T18:37:40.202000+00:00"
+      },
+      "to": {
+        "sequence": 294,
+        "role": "fidelity",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545466523,
+        "atUTC": "2026-11-24T18:37:46.523000+00:00"
+      }
+    },
+    {
+      "gapMs": 6060,
+      "from": {
+        "sequence": 389,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545641211,
+        "atUTC": "2026-11-24T18:40:41.211000+00:00"
+      },
+      "to": {
+        "sequence": 390,
+        "role": "design",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545647271,
+        "atUTC": "2026-11-24T18:40:47.271000+00:00"
+      }
+    },
+    {
+      "gapMs": 5842,
+      "from": {
+        "sequence": 250,
+        "role": "inventory",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545421341,
+        "atUTC": "2026-11-24T18:37:01.341000+00:00"
+      },
+      "to": {
+        "sequence": 253,
+        "role": "inventory",
+        "kind": "machine-peer",
+        "event": "machine-peer-effect",
+        "atMs": 1795545427183,
+        "atUTC": "2026-11-24T18:37:07.183000+00:00"
+      }
+    }
+  ],
+  "fixtureGates": {
+    "design": "Five serial turns: poll, part1, part2, submit, terminal text. Shared design.allow released before Fidelity; scripted provider waits300ms percall. No additional per-Design fixture wait.",
+    "ordinary": "Final ordinary responses serialize author\u2192inventory\u2192fidelity using releaseProvider; eligible fixture SIGSTOP holds each child after admitted endturn. All three already settled at340s snapshot.",
+    "stop": "Public stop is requested only after first live final-render continuation; cut is not an earlier arbitrary time."
+  },
+  "terminal": {
+    "outcome": "runner-timeout",
+    "limitMilliseconds": 600000,
+    "caseReportedMilliseconds": 606859,
+    "fileDurationSeconds": 616.75,
+    "tests": {
+      "failed": 1,
+      "skipped": 6,
+      "total": 7
+    },
+    "runtimeFirstFailure": "Unknown: no terminal retained failureJSON",
+    "sourceLog": "/home/orca/.tmp/f3-native-eligible-d13ec/native-recovery.log"
+  },
+  "deadlineDistinction": {
+    "originalRunExpiryUTC": "2026-11-24T20:34:44.092Z",
+    "startupActivationDeadlineUTC": "2026-11-24T18:39:21.297Z",
+    "activationDeadlineUse": "Only initial host activation; subsequent operations use fresh checked product replacements bounded by their own lease and original run deadline.",
+    "latest340SnapshotProductLease": {
+      "state": "open",
+      "remainingMs": 22984
+    }
+  }
+}

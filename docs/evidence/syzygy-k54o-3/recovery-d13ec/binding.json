@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "subjectTree": "03a4bb24a3969543f55005d8b94e77f887f2ff69",
+  "sourceRuntime": "447b23e7672fc63e860d03498b08050a7bbc4c9e",
+  "adoption": "A-221",
+  "capturedAt": "2026-11-24T19:00:06.821463+00:00",
+  "scenario": "eligible-stop-resume",
+  "exit": 1,
+  "failed": 1,
+  "skipped": 6,
+  "population": 7,
+  "runnerTimeoutMilliseconds": 600000,
+  "caseReportedMilliseconds": 606859,
+  "durationSeconds": 616.75,
+  "workerObservation": {
+    "maxNumberedVitestWorkers": 1,
+    "workerPids": [
+      3137324
+    ],
+    "method": "proc cwd+numbered Vitest process title sampled every500ms; internal threads not counted"
+  },
+  "originalRunExpiryUTC": "2026-11-24T20:34:44.092000+00:00",
+  "originalAttemptDirectory": "/home/orca/.tmp/f3-native-eligible-d13ec",
+  "cutRawSha256": "e8dd9b6f43a86e70c39fee03cbcb356ededfc89ffa8a272d1430c87bc1501ba7",
+  "artifacts": {
+    "capture-index.json": {
+      "sha256": "bd290bcf3ed30ed93ab0a010f348d49e2a76aa1e21d9dde946288b9f06c3794d",
+      "bytes": 364
+    },
+    "commit": {
+      "sha256": "09ba7ea435bc61461c77e6022360782100593228fe5249c995ae1f83975d574f",
+      "bytes": 41
+    },
+    "diagnosis.json": {
+      "sha256": "c1d9fc25d8ebafbb28930aa358becc7fae2e72366733baf202521133c461a48d",
+      "bytes": 1570
+    },
+    "exit": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "native-d13ec-initial-design-timeline.json": {
+      "sha256": "108cbdbf3e8e422b2dd9857fcec11cd62c815329f6f4dee766883b8a2ae65445",
+      "bytes": 19480
+    },
+    "native-recovery.log.gz": {
+      "sha256": "fd60d49c68e6c5e5d9e18238355c416c4962504166073744020ed002c7101e05",
+      "bytes": 1889,
+      "uncompressedSha256": "120377d590803f1fbe2c6cd98c07a7b267f62b6367e440e8a6179b83a2a17b38",
+      "uncompressedBytes": 7238
+    },
+    "retained/native-cut-e8dd9b6f43a86e70c39fee03cbcb356ededfc89ffa8a272d1430c87bc1501ba7.json": {
+      "sha256": "e8dd9b6f43a86e70c39fee03cbcb356ededfc89ffa8a272d1430c87bc1501ba7",
+      "bytes": 139953
+    },
+    "sessions-design.jsonl.gz": {
+      "sha256": "d5432041e4dd4c795077973c2c7bc3d2eb55dcaafacb11cd7b3eb687b7627267",
+      "bytes": 19973,
+      "uncompressedSha256": "4c9417b1f29501508dc203442d2b18d984008816f202b29dce881601b962b4ba",
+      "uncompressedBytes": 195452
+    },
+    "supervisor-state.json": {
+      "sha256": "9f4b76280924b84d381af7dd17d8d2084bf4927e9210376cd80c430f9302ea22",
+      "bytes": 1821
+    },
+    "tree": {
+      "sha256": "4c905505451f52f11384ee7c8fb7f7abc5358ef1cfe3d461c86af3a8fc8e1a31",
+      "bytes": 41
+    },
+    "worker-samples.jsonl": {
+      "sha256": "3ecd8cfa83fc18e91dbd0a55d0d2f5ca7006efc0c939e3e026b04a5ff9a7cef9",
+      "bytes": 45
+    },
+    "worker-summary.json": {
+      "sha256": "69e803b6e161d63ab020ce26c01b7314fa89dfc3c723518f334c3350d911c0b4",
+      "bytes": 174
+    },
+    "README.md": {
+      "sha256": "ea48f10786636b1b181da26010138371f79eed164b292ce1bba98617fbdb3495",
+      "bytes": 2408
+    }
+  },
+  "acceptance": "This attempt retained a valid Stop cut, then timed out in the test runner. Runtime refusal cause and completed recovery remain Unknown; no final candidate or CI timing acceptance is claimed."
+}
