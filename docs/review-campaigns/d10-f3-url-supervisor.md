@@ -58,6 +58,7 @@
 - `F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW\.md`
 - `F3-SOURCE-CENSUS-AUTHORITY-REVIEW-RAW\.md`
 - `F3-TERMINAL-STATE-AUTHORITY-REVIEW-RAW\.md`
+- `F3-ONE-SHOT-CENSUS-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -202,3 +203,5 @@
 [Observed] The source census authority review records `PASS` for `8a094f393` (F3-SOURCE-CENSUS-AUTHORITY-REVIEW-RAW.md:1). A-175 keeps the pinned descriptor walk and the original time limit. The focused controls detected duplicate authority sampling, late release and missing withdrawal checks after object I/O. [Unknown] Native Resume closure.
 
 [Observed] The terminal state authority review records `PASS` for `33b41df35` (F3-TERMINAL-STATE-AUTHORITY-REVIEW-RAW.md:1). A-176 shares the post-census sample with the immediate first private state read. The executable controls detect a repeated sample, a missing check before client reads, and sharing after the caller yields. [Unknown] Hosted native Resume closure.
+
+[Observed] The one-shot census review records `PASS` for `4a766451f` (F3-ONE-SHOT-CENSUS-AUTHORITY-REVIEW-RAW.md:1). A-177 shares private binding with the immediate pre-walk authority and identity check. The original limit and the post-walk proof apply. The focused controls detect an extra capture sample and removal of either object-I/O boundary check. [Unknown] Native Resume closure.
