@@ -98,10 +98,9 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     }
   });
 
-  // syzygy-t3jk.15: the board reads as columns and the page never scrolls
-  // sideways. On the 252-row fixture, at 1440 px the seven headings share one
-  // row; at 1440 and 390 px the document is no wider than the viewport.
-  it.each([1440, 390])('at %i px the document is no wider than the viewport, and at 1440 the seven columns share one row', async (width) => {
+  // At 1440 px the seven status headings share one row. The outline and
+  // the recent-work page both fit the document width at each viewport.
+  it.each([1440, 390])('at %i px the outline and recent board fit the viewport', async (width) => {
     const instant = '2026-08-01T00:00:00Z';
     const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked'];
     const rows = [
@@ -111,9 +110,11 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
     const directory = tempDir('syzygy-trajectory-layout-');
     const file = join(directory, 'trajectory.html');
+    const outline = join(directory, 'outline.html');
     const recent = renderTrajectoryRoute(model, '', undefined, new URLSearchParams('selection=recent'));
     if (typeof recent !== 'string') throw new Error('refused');
     writeFileSync(file, recent);
+    writeFileSync(outline, renderTrajectoryPage(model));
     const page = await browser.newPage();
     try {
       await page.setViewport(width, 1000);
@@ -132,6 +133,14 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       expect(measured.tops).toHaveLength(7);
       expect(measured.scrollWidth, measured.widest).toBeLessThanOrEqual(measured.viewport);
       if (width === 1440) expect(new Set(measured.tops).size).toBe(1);
+      await page.navigate(pathToFileURL(outline).href);
+      const grouped = await page.evaluate<{ scrollWidth: number; viewport: number; groups: number }>(`({
+        scrollWidth: document.documentElement.scrollWidth,
+        viewport: document.documentElement.clientWidth,
+        groups: document.querySelectorAll('.outline-group').length,
+      })`);
+      expect(grouped.groups).toBe(1);
+      expect(grouped.scrollWidth).toBeLessThanOrEqual(grouped.viewport);
     } finally {
       await page.close();
     }

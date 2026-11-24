@@ -357,6 +357,7 @@ export function projectTrajectoryView(
   workItems: WorkItemsResult,
   request: TrajectoryViewRequest,
 ): TrajectoryProjection | TrajectoryViewRefusal {
+  if (request.selection === 'recent' && request.page > 1) return pastEnd(1);
   if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;
   const { grouping: _grouping, narrowing, ...population } = base;
   return projectObservedView({ ...population, totalCount: workItems.items.length }, workItems.items, request, narrowing.recentLimits);
@@ -368,9 +369,7 @@ function projectObservedView(
   request: TrajectoryViewRequest,
   recentLimits: RecentLimits,
 ): TrajectoryProjectionObserved | TrajectoryViewRefusal {
-  if (request.selection === 'recent') {
-    return request.page > 1 ? pastEnd(1) : recentView(base, served, request, recentLimits);
-  }
+  if (request.selection === 'recent') return recentView(base, served, request, recentLimits);
   // syzygy-t3jk.20: the grouped view holds the non-closed set unless a
   // status is asked for, closed included.
   const matching = served

@@ -236,16 +236,15 @@ parameter set with `status` (one of the seven tracker statuses),
 `governing-intent=unknown`, `group=parent`, `selection=recent`, `changed`
 (day, week or since-last) and `page` (a positive integer). An ungrouped
 filter or all-items page renders matching items in ascending id, 250 per
-page. Its scope
-sentence naming the page, the page count and the matching count, with
-rendered plus excluded equal to the total. `changed` selects the answer
+page. Its scope statement names the page, the page count and the matching
+count. Rendered plus excluded equals the total. `changed` selects the answer
 window and keeps the selection. Recent work accepts `changed` and optional
 `page=1`. Another name, a repeated name, a value outside its set, an
-incompatible parameter combination, a
-page that is not a positive integer or a page past the last is refused with
+incompatible parameter combination, a page that is not a positive integer
+or a page past the last is refused with
 HTTP 400 and a JSON body naming the parameter, the reason and the allowed
-set. Every page carries real links to the default outline, recent work, every item by
-id, each status and the governing-intent Unknown with their whole-population
+set. Every page carries real links to the default outline, recent work,
+every item by id, each status and the governing-intent Unknown with their whole-population
 counts, and the previous and next page. The machine answer takes no
 parameter. `trajectory.narrowing` declares the selection, parameters,
 recency limits, page size and ordering so a checker can recompute any page
@@ -270,10 +269,11 @@ with its members, in its first member's group; the other members' groups
 link there, and the cycle is not followed. A parent row with no target counts
 as outside this tracker. No heading says a parent is complete or how far
 along it is. The machine answer carries the parent facts once, as
-`trajectory.outline`, so a checker regroups any page itself. The default
-selection is unchanged.
+`trajectory.outline`, so a checker can reproduce the grouping on any page.
 
-**Trajectory eligibility.** Work-item status still sets the board column.
+**Trajectory eligibility.** On the status board, each work item's tracker
+status sets its column. The outline displays the recorded status on each
+card.
 Eligibility comes from the work-item observation and one dependency metadata
 read at that same Dolt commit (POC-REQ-062). The board and machine report
 ready, planned, blocked, undetermined and absent values across the served

@@ -677,6 +677,7 @@ export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, stat
 export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus, changed: ChangeWindow = 'day'): string {
   const trajectory = model.trajectory;
   const workerChange = model.workerChange.kind === 'observed' ? model.workerChange : null;
+  let lede = 'Five work-item questions and the tracker observation status.';
   let body: string;
   if (trajectory.kind === 'unknown') {
     const unknown = unknownSubject(model, 'region:work-items');
@@ -700,6 +701,8 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
       );
     const grouping = trajectory.grouping;
     const view = trajectory.narrowing.view;
+    const layout = grouping === undefined ? 'in tracker status columns' : 'grouped by parent';
+    lede = `Five answers over the full observed work-item population, then selected work items ${layout}. Times come from recorded instants.`;
     const board = grouping !== undefined
       ? outlineRegion(grouping, view, mountPrefix, card, trajectory.rendered)
       : statusBoard(trajectory.rendered, card);
@@ -735,7 +738,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     current: 'trajectory',
     eyebrow: `Trajectory · ${escapeHtml(model.project.name)} ${model.project.revision.slice(0, 12)}`,
     heading: 'Work and time, observed',
-    lede: 'Five answers over every observed work item, then a board of a selection: columns from a declared status mapping, time from recorded instants only.',
+    lede,
     extraStyle: TRAJECTORY_STYLE,
     body,
     status,

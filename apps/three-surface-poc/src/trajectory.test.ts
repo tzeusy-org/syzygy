@@ -309,7 +309,7 @@ describe('Trajectory', () => {
     expect(closedCard).not.toMatch(/verified|satisfied/i);
   });
 
-  it('renders the Unknown state distinctly from an empty-but-observed board (POC-REQ-013 rendering)', () => {
+  it('renders the Unknown state distinctly from observed empty and refuses intrinsically invalid Recent pages', async () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const unknownModel = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -325,6 +325,17 @@ describe('Trajectory', () => {
     const unknownHtml = renderTrajectoryPage(unknownModel);
     expect(unknownHtml).toContain('data-unknown-disclosure="region:work-items"');
     expect(unknownHtml).not.toContain('class="outline"');
+    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, '127.0.0.1'], [TRAJECTORY_TAILNET_PATH, 'tzeusy.parrot-hen.ts.net']] as const) {
+      const route = pocRoutes(() => unknownModel).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
+      for (const query of ['selection=recent&page=1', 'page=2']) {
+        const response = await route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
+        expect(response.status, query).toBe(200);
+        expect(response.body, query).toContain('data-unknown-disclosure="region:work-items"');
+      }
+      const refused = await route.handle({ request: { method: 'GET', path, query: new URLSearchParams('selection=recent&page=2'), headers: { host } } });
+      expect(refused.status).toBe(400);
+      expect(JSON.parse(refused.body)).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 1'] });
+    }
 
     const emptyObservedModel = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -1389,11 +1400,13 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     }
     const plain = await get(model, TRAJECTORY_HUMAN_PATH, '');
     expect(plain.status).toBe(200);
+    expect(plain.body).toMatch(/class="lede"[^>]*>[^<]*selected work items grouped by parent/);
     expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Non-closed items grouped by parent');
     expect(scope(plain.body)!.rule).toMatch(/^page 1 of 3 of the 549 observed items with a status other than closed, grouped by parent: 549 positions/);
     expect(plain.body).toContain('rel="next" href="/trajectory?group=parent&amp;page=2"');
     const recent = await get(model, TRAJECTORY_HUMAN_PATH, 'selection=recent&changed=week');
     expect(recent.status).toBe(200);
+    expect(recent.body).toMatch(/class="lede"[^>]*>[^<]*selected work items in tracker status columns/);
     expect(recent.body).toContain('href="/trajectory?selection=recent&amp;changed=week" aria-current="page">Recent work');
     expect(recent.body).toContain('class="board"');
     expect(recent.body).not.toContain('class="outline"');
