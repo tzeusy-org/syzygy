@@ -41,6 +41,7 @@
 
 - [Observed] Only a draft in schema v13 changes a rendered byte, and only the issued brief and inventory brief change for a new run. Re-rendering the seven stored runs' drafts (schemas v2, v3 and v4, every stored run with a stored draft) at `main` `fb635704` and at `2f00edee` (this branch after the merge) gives the same bytes for every file of every site, 7 of 7 (`docs/evidence/syzygy-5dhm-41/worth-knowing-rerender-2026-11-24.json`, harness `docs/evidence/syzygy-5dhm-41/worth_knowing_render_all.sh`, which passes each run's placement subject, content classes and stored fidelity verdict). The provider golden is unchanged.
 - [Inferred] So, under CONTRIBUTING.md rule 1, a stored run's reader share is the same before and after: the reader reads the same bytes.
+- [Observed] The re-render was not repeated after the merge with `main` at `3a24d409`. The branch's code delta against `main` (`packages/`, `apps/`) is, added and removed line for line, the delta it had against `fb635704`, apart from the version label in comments (2.25 to 2.26). [Inferred] So the parity above still holds over the merged renderer; this is an inference from the unchanged delta, not a new render.
 - [Unknown] Reader share under brief v19: no run has been made with it, so whether the callout raises the share of required facts a reader takes away is unknown until a new run (CONTRIBUTING.md rule A-38 as amended by A-63). No gain is claimed.
 
 ## D8. Evidence
