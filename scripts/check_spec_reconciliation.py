@@ -716,6 +716,16 @@ MODEL_SUBJECTS = {
 }
 MODEL_BOUND_PARTS = len(MODEL_SUBJECTS)
 
+EDIT_ACCOUNT_CHANGE = "polaris-edit-repair-deletion-accounting"
+EDIT_ACCOUNT_HOME = f"{CHANGES}/{EDIT_ACCOUNT_CHANGE}"
+EDIT_ACCOUNT_SPEC = f"{EDIT_ACCOUNT_HOME}/proposed/polaris-generation/spec.md"
+EDIT_ACCOUNT_TAG = "polaris-edit-repair-deletion-accounting-v2.25"
+EDIT_ACCOUNT_STATUS_PREFIX = f"[Edit and repair accounting amendment 2.25]({EDIT_ACCOUNT_HOME})"
+EDIT_ACCOUNT_SUBJECTS = {
+    EDIT_ACCOUNT_SPEC: "1f0ba725aea6c0660e2da7ffbe653fd0921452d0a1c4a11dcc8792aae5e9fa74",
+}
+EDIT_ACCOUNT_REPLACES = (POLARIS_ID + "006",)
+
 RAW_READ_CHANGE = "dossier-raw-read-disclosure"
 RAW_READ_HOME = f"{CHANGES}/{RAW_READ_CHANGE}"
 RAW_READ_SPEC = f"{RAW_READ_HOME}/proposed/polaris-generation/spec.md"
@@ -1480,6 +1490,46 @@ def model_disposition(root, rows):
         return recorded_disposition(root, identity, commit.strip("`"), MODEL_TAG,
                                     MODEL_SUBJECTS, plain_revert=True)
     return None
+
+def is_edit_account_row(line):
+    """Recognize an adoption claim by its tag or its own subject snapshot."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{EDIT_ACCOUNT_TAG}`"
+    if (len(cells) == 7 and cells[6] == tag) or (len(cells) != 7 and tag in cells):
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return f"]({snapshot}{EDIT_ACCOUNT_SPEC})" in cells[3]
+
+
+def edit_account_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_edit_account_row(line)]
+
+
+def edit_account_identity_unique(root, identity):
+    return sum(line.split("|", 2)[1].strip() == identity
+               for line in adoption_table_rows(root)) == 1
+
+
+def edit_account_index_adopted(cells):
+    if len(cells) != 4:
+        return False
+    return bool(re.match(r"Agent-adopted(?:[.\s]|$)", cells[2].replace("**", "")))
+
+
+def edit_account_disposition(root, rows):
+    if len(rows) != 1 or len(rows[0]) != 7:
+        return None
+    identity, _date, commit, _changed, _reason, _revert, _tag = rows[0]
+    if not edit_account_identity_unique(root, identity):
+        return None
+    return recorded_disposition(root, identity, commit.strip("`"), EDIT_ACCOUNT_TAG,
+                                EDIT_ACCOUNT_SUBJECTS, plain_revert=True)
+
 
 def polaris_additions(root):
     """Signed-addition candidates: [(change, spec path)], by change name.
@@ -2623,6 +2673,40 @@ def model_binding(root):
             subjects.append(f"system model: `{rel}` differs from the reviewed v2.24 subject")
     return (None if records or subjects else read_text(root, MODEL_SPEC), records, subjects)
 
+def edit_account_binding(root):
+    """Verify the recorded v2.25 REQ-006 replacement over effective v2.24."""
+    rows = edit_account_rows(root)
+    if not rows or edit_account_disposition(root, rows):
+        return None, [], []
+
+    records = []
+    if model_binding(root)[0] is None:
+        records.append("edit and repair accounting: prior v2.24 system-model adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("edit and repair accounting: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        oid = commit[1:-1] if re.fullmatch(r"`[0-9a-f]{40}`", commit) else None
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date) or not oid
+                or not reason or tag != f"`{EDIT_ACCOUNT_TAG}`"):
+            records.append("edit and repair accounting: malformed adoption identity, date, commit, reason or tag")
+        if not edit_account_identity_unique(root, identity):
+            records.append("edit and repair accounting: adoption identity is not unique in the ledger")
+        if oid:
+            if revert not in (f"`git revert {oid}`", f"`git revert -m 1 {oid}`"):
+                records.append("edit and repair accounting: revert does not name the installing commit")
+            snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{EDIT_ACCOUNT_SPEC}"
+            if f"]({snapshot})" not in changed:
+                records.append("edit and repair accounting: adoption row does not name the reviewed specification")
+
+    body = read_bytes(root, EDIT_ACCOUNT_SPEC)
+    subjects = []
+    if body is None or sha(body) != EDIT_ACCOUNT_SUBJECTS[EDIT_ACCOUNT_SPEC]:
+        subjects.append(f"edit and repair accounting: `{EDIT_ACCOUNT_SPEC}` differs from the reviewed v2.25 subject")
+    return (None if records or subjects else body.decode("utf-8"), records, subjects)
+
+
 def is_raw_read_row(line):
     """A tag or a link to the subject at this row's own commit claims adoption."""
     if not line.startswith("|"):
@@ -3405,6 +3489,15 @@ def check_outcomes(root, report):
         subjects_seen += MODEL_BOUND_PARTS
     r1 += model_records
     r2 += model_subjects
+    edit_account_retired_by = edit_account_disposition(root, edit_account_rows(root))
+    edit_account_amendment, edit_account_records, edit_account_subjects = edit_account_binding(root)
+    if edit_account_retired_by:
+        records += 2
+    elif edit_account_amendment is not None or edit_account_records or edit_account_subjects:
+        records += 1
+        subjects_seen += len(EDIT_ACCOUNT_SUBJECTS)
+    r1 += edit_account_records
+    r2 += edit_account_subjects
     readmit_retired_by = readmit_disposition(root, readmit_rows(root))
     readmit_amendment, readmit_records, readmit_subjects = readmit_binding(root)
     if readmit_retired_by:
@@ -4413,6 +4506,13 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, model_amendment)
                 pa += extra_a
                 pb += extra_b
+        edit_account_amendment, edit_account_records, edit_account_subjects = edit_account_binding(root)
+        findings += edit_account_records + edit_account_subjects
+        if edit_account_amendment is not None:
+            a, extra_a = compose_figure_by_id(a, edit_account_amendment, EDIT_ACCOUNT_REPLACES)
+            b, extra_b = compose_figure_by_name(b, edit_account_amendment, EDIT_ACCOUNT_REPLACES)
+            pa += extra_a
+            pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -4695,6 +4795,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS verify text: cannot count predecessor and successor for 033")
         else:
             n_scen += current[ident] - prior[ident]
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    if edit_account_amendment is not None:
+        ident = EDIT_ACCOUNT_REPLACES[0]
+        prior_text = read_text(root, POLARIS_OVERLAY_SPEC) or ""
+        previous = [len(scenarios) for kind, ids, _name, scenarios in _polaris_blocks_regex(prior_text)
+                    if kind == "MODIFIED" and tuple(ids) == (ident,)]
+        replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(edit_account_amendment)
+                       if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(previous) != 1 or len(replacement) != 1:
+            findings.append("POLARIS edit and repair accounting: cannot count predecessor and successor for 006")
+        else:
+            n_scen += replacement[0] - previous[0]
     return n_req, n_scen, ids
 
 
@@ -4890,6 +5002,9 @@ def check_generated(root, pop, report):
     model_amendment, _records, _subjects = model_binding(root)
     if model_amendment is not None:
         files += tracked(root, MODEL_HOME)
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    if edit_account_amendment is not None:
+        files.append(EDIT_ACCOUNT_SPEC)
     reach_amendment, _records, _subjects = reach_binding(root)
     if reach_amendment is not None:
         files += tracked(root, REACH_HOME)
@@ -5458,6 +5573,32 @@ def check_routes(root, pop, report):
         examined += 2
         if any("is agent-adopted" in field for field in model_fields):
             findings.append(f"`{STATUS}` calls system model v2.24 adopted while it is not in force")
+    edit_account_amendment, _records, _subjects = edit_account_binding(root)
+    edit_account_fields = [line.strip() for line in visible_route_lines(status)
+                           if line.strip().startswith(EDIT_ACCOUNT_STATUS_PREFIX)]
+    edit_account_routes = [[cell.strip() for cell in line.split("|")[1:-1]]
+                           for line in rows.get(EDIT_ACCOUNT_CHANGE, [])]
+    if edit_account_amendment is not None:
+        examined += 2
+        identity = edit_account_rows(root)[0][0]
+        spec_link = f"[`{EDIT_ACCOUNT_CHANGE}`](changes/{EDIT_ACCOUNT_CHANGE})"
+        ledger_link = f"[Agent adoption {identity}](../{AGENT_ADOPTIONS}) (`{EDIT_ACCOUNT_TAG}`)"
+        if (len(edit_account_routes) != 1
+                or not edit_account_index_adopted(edit_account_routes[0])
+                or edit_account_routes[0][0] != spec_link
+                or edit_account_routes[0][3] != ledger_link):
+            findings.append(f"`{OPENSPEC_README}` does not route edit and repair accounting v2.25 "
+                            f"to exact adoption {identity} in `{AGENT_ADOPTIONS}` and its version tag")
+        if AGENT_ADOPTIONS not in status or edit_account_fields != [
+            f"{EDIT_ACCOUNT_STATUS_PREFIX} is agent-adopted in {identity}."
+        ]:
+            findings.append(f"`{STATUS}` does not route edit and repair accounting v2.25 and its adoption {identity}")
+    elif EDIT_ACCOUNT_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in edit_account_fields):
+            findings.append(f"`{STATUS}` calls edit and repair accounting v2.25 adopted while it is not in force")
+        if any(edit_account_index_adopted(cells) for cells in edit_account_routes):
+            findings.append(f"`{OPENSPEC_README}` calls edit and repair accounting v2.25 adopted while it is not in force")
     readmit_amendment, _records, _subjects = readmit_binding(root)
     readmit_fields = [line.strip() for line in visible_route_lines(status)
                       if line.strip().startswith(READMIT_STATUS_PREFIX)]
@@ -6136,6 +6277,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
     had_treeread = any(is_treeread_row(line) for line in original.splitlines())
     had_verify = any(is_verify_row(line) for line in original.splitlines())
+    edit_rows = edit_account_rows(tree)
+    edit_retired = edit_account_disposition(tree, edit_rows)
+    edit_records = 2 if edit_retired else int(bool(edit_rows))
+    edit_subjects = len(EDIT_ACCOUNT_SUBJECTS) if edit_rows and not edit_retired else 0
     absent_ledger = "".join(line for line in original.splitlines(keepends=True)
                             if line.rstrip("\n") != row and not is_url_source_row(line)
                             and not is_figure_row(line) and not is_derived_row(line)
@@ -6146,7 +6291,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
                       and not is_verify_row(line)
                       and not is_infra_row(line)
-                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line))
+                      and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line)
+                      and not is_edit_account_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
     check_outcomes(tree, report)
@@ -6159,8 +6305,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_raw_read - had_treeread - had_verify
-            and examined(report, "R2") == examined(clean, "R2") - 3
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_raw_read - had_treeread - had_verify - edit_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -8853,6 +8999,157 @@ def cont_cases(tmp, base, witnesses, failures):
                "both parsers refuse without partial application", ida + names,
                bool(ida and names and a == b == kin_pop), False)
 
+def edit_account_cases(tmp, base, witnesses, failures):
+    """Exercise the v2.25 binding and sole REQ-006 replacement in a disposable tree."""
+    reviewed = read_text(base, EDIT_ACCOUNT_SPEC)
+    if reviewed is None or model_binding(base)[0] is None:
+        return
+
+    def record(case, path, old, new, expected, findings, caught, control=False):
+        outcome = ("held" if control else "killed") if caught else "SURVIVED"
+        name = f"edit-account-{case}"
+        witnesses.append({"mutant": name, "path": path, "old": old, "new": new,
+                          "expected": expected, "failed": findings, "outcome": outcome})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "edit-account-v225"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_edit_account_row(line))
+    ledger.write_text(pending)
+    baseline, findings = census(tree)
+    predecessor = baseline["POLARIS"]
+    ident = EDIT_ACCOUNT_REPLACES[0]
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>",
+           "candidate stays out of effective REQ-006", findings,
+           not findings and edit_account_binding(tree) == (None, [], [])
+           and len(predecessor[ident]["scenarios"]) == 5, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{EDIT_ACCOUNT_SPEC}"
+    row = (f"| A-999 | 2026-11-24 | `{oid}` | [spec]({snapshot}) | Selftest "
+           f"| `git revert {oid}` | `{EDIT_ACCOUNT_TAG}` |\n")
+    ledger.write_text(pending + row)
+    installed, findings = census(tree)
+    expected_scenarios = [
+        *predecessor[ident]["scenarios"],
+        "Edit or repair drops a prior block without account",
+    ]
+    expected = {**predecessor, ident: {**predecessor[ident], "scenarios": expected_scenarios}}
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row,
+           "binding activates one extra scenario and preserves the other requirements", findings,
+           not findings and edit_account_binding(tree) == (reviewed, [], [])
+           and installed["POLARIS"] == expected, True)
+
+    bad_rows = (
+        ("wrong-tag", EDIT_ACCOUNT_TAG, EDIT_ACCOUNT_TAG.replace("2.25", "2.99"), "malformed adoption"),
+        ("bad-sha", f"| `{oid}` |", "| `0123456` |", "malformed adoption"),
+        ("wrong-revert", f"git revert {oid}", f"git revert {'f' * 40}", "revert does not name"),
+        ("wrong-snapshot", snapshot, snapshot.replace(oid, "f" * 40), "does not name the reviewed"),
+        ("duplicate", row, row + row.replace("A-999", "A-1000"), "expected one seven-column"),
+        ("reused-identity", "A-999", "A-64", "adoption identity is not unique"),
+    )
+    for case, old, new, reason in bad_rows:
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, records, subjects = edit_account_binding(tree)
+        record(case, AGENT_ADOPTIONS, old, new, reason, records + subjects,
+               effective is None and any(reason in line for line in records) and not subjects)
+
+    prior_row = next(line for line in pending.splitlines(keepends=True) if is_model_row(line))
+    ledger.write_text(pending.replace(prior_row, "", 1) + row)
+    effective, records, subjects = edit_account_binding(tree)
+    record("prior-missing", AGENT_ADOPTIONS, prior_row, "", "reject missing effective v2.24",
+           records + subjects, effective is None and any("prior v2.24" in line for line in records))
+
+    ledger.write_text(pending + row)
+    subject = tree / EDIT_ACCOUNT_SPEC
+    previous = subject.read_bytes()
+    subject.write_bytes(previous + b"\n")
+    effective, records, subjects = edit_account_binding(tree)
+    record("subject-drift", EDIT_ACCOUNT_SPEC, "<end of file>", "\n", "reject changed subject bytes",
+           records + subjects, effective is None and not records and bool(subjects))
+    subject.unlink()
+    effective, records, subjects = edit_account_binding(tree)
+    record("subject-missing", EDIT_ACCOUNT_SPEC, "<reviewed file>", "<file missing>",
+           "reject a missing reviewed subject", records + subjects,
+           effective is None and not records and bool(subjects))
+    subject.write_bytes(previous)
+
+    veto = ("| A-1000 | 2026-11-24 | `8a468bc` | Veto A-999 | Selftest "
+            "| `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    retired, findings = census(tree)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto,
+           "a valid later veto restores the exact predecessor composition", findings,
+           not findings and edit_account_disposition(tree, edit_account_rows(tree)) == "A-1000"
+           and retired == baseline, True)
+
+    ledger.write_text(pending + row)
+    status = tree / STATUS
+    index = tree / OPENSPEC_README
+    prior_status = status.read_text()
+    prior_index = index.read_text()
+    adopted_status = f"    {EDIT_ACCOUNT_STATUS_PREFIX} is agent-adopted in A-999."
+    status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
+                                 if not line.strip().startswith(EDIT_ACCOUNT_STATUS_PREFIX))
+    index_row = next(line for line in prior_index.splitlines(keepends=True)
+                     if line.startswith(f"| [`{EDIT_ACCOUNT_CHANGE}`]("))
+    adopted_index = (f"| [`{EDIT_ACCOUNT_CHANGE}`](changes/{EDIT_ACCOUNT_CHANGE}) | Edit and repair accounting "
+                     f"| Agent-adopted | [Agent adoption A-999](../{AGENT_ADOPTIONS}) (`{EDIT_ACCOUNT_TAG}`) |\n")
+    status.write_text(status_without_route + adopted_status + "\n")
+    index.write_text(prior_index.replace(index_row, adopted_index, 1))
+
+    def route_findings(population):
+        report = Report()
+        check_routes(tree, population, report)
+        return [f for f in report.findings.get("R5", []) if "edit and repair accounting v2.25" in f]
+
+    findings = route_findings(installed)
+    record("route-installed", STATUS, "<candidate route>", adopted_status, "route agrees with binding",
+           findings, not findings, True)
+    status.write_text(status_without_route)
+    findings = route_findings(installed)
+    record("status-route-missing", STATUS, adopted_status, "", "status must link the active adoption",
+           findings, len(findings) == 1 and STATUS in findings[0])
+    status.write_text(status_without_route + adopted_status + "\n")
+    index_cases = (
+        ("wrong-tag", EDIT_ACCOUNT_TAG, "incorrect-tag"),
+        ("wrong-ledger-path", f"../{AGENT_ADOPTIONS}", "../README.md#AGENT-ADOPTIONS.md"),
+        ("wrong-ledger-identity", "Agent adoption A-999", "Agent adoption A-998"),
+        ("wrong-change-path", f"changes/{EDIT_ACCOUNT_CHANGE}", f"../{EDIT_ACCOUNT_HOME}"),
+        ("candidate-stated", "Agent-adopted", "Candidate"),
+    )
+    for case, old, new in index_cases:
+        assert old in adopted_index, case
+        index.write_text(prior_index.replace(index_row, adopted_index.replace(old, new, 1), 1))
+        findings = route_findings(installed)
+        record(f"index-route-{case}", OPENSPEC_README, old, new, "refuse the inaccurate index route",
+               findings, len(findings) == 1 and OPENSPEC_README in findings[0])
+    index.write_text(prior_index.replace(index_row, adopted_index.replace("Agent adoption A-999", "Historical record"), 1))
+    ledger.write_text(pending)
+    findings = route_findings(baseline)
+    record("pending-adoption-claimed", AGENT_ADOPTIONS, row, "", "both routes refuse a false adoption",
+           findings, len(findings) == 2 and any(STATUS in f for f in findings)
+           and any(OPENSPEC_README in f for f in findings))
+    status.write_text(prior_status)
+    index.write_text(prior_index)
+
+    content_cases = (
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "005"),
+        ("wrong-name", "### Requirement: Independent review and repair", "### Requirement: Other review"),
+        ("wrong-operation", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+    )
+    for case, old, new in content_cases:
+        assert old in reviewed, case
+        candidate = reviewed.replace(old, new, 1)
+        by_id, id_findings = compose_figure_by_id(predecessor, candidate, EDIT_ACCOUNT_REPLACES)
+        by_name, name_findings = compose_figure_by_name(predecessor, candidate, EDIT_ACCOUNT_REPLACES)
+        record(case, EDIT_ACCOUNT_SPEC, old, new, "both parsers reject without partial application",
+               id_findings + name_findings, bool(id_findings and name_findings) and by_id == by_name == predecessor)
+
+
 def model_cases(tmp, base, witnesses, failures):
     """The v2.24 pending-to-adopted transition over v2.23, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, MODEL_SPEC)
@@ -9932,24 +10229,21 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     declared_source_historical_cases(tmp, base, clean, witnesses, failures)
     declared_source_composition_cases(witnesses, failures)
     url_source_cases(tmp, base, witnesses, failures)
-    figure_cases(tmp, base, witnesses, failures)
-    derived_cases(tmp, base, witnesses, failures)
-    ledger_cases(tmp, base, witnesses, failures)
-    kinds_cases(tmp, base, witnesses, failures)
-    manifests_cases(tmp, base, witnesses, failures)
-    repairs_cases(tmp, base, witnesses, failures)
-    maps_cases(tmp, base, witnesses, failures)
-    bounds_cases(tmp, base, witnesses, failures)
-    corr_cases(tmp, base, witnesses, failures)
-    coverage_cases(tmp, base, witnesses, failures)
-    infra_cases(tmp, base, witnesses, failures)
-    findpages_cases(tmp, base, witnesses, failures)
-    subsec_cases(tmp, base, witnesses, failures)
-    reltype_cases(tmp, base, witnesses, failures)
-    hero_cases(tmp, base, witnesses, failures)
-    readers_cases(tmp, base, witnesses, failures)
-    cont_cases(tmp, base, witnesses, failures)
-    model_cases(tmp, base, witnesses, failures)
+    # These cases reconstruct historical REQ-034 floors, including versions
+    # at which the v2.24 prerequisite for edit accounting cannot exist.
+    figure_base = base
+    if edit_account_rows(base):
+        figure_base = Path(tmp) / "before-edit-accounting"
+        shutil.copytree(base, figure_base)
+        ledger = figure_base / AGENT_ADOPTIONS
+        rows = ledger.read_text().splitlines(keepends=True)
+        ledger.write_text("".join(line for line in rows if not is_edit_account_row(line)))
+    for case in (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+                 repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
+                 infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
+                 readers_cases, cont_cases, model_cases):
+        case(tmp, figure_base, witnesses, failures)
+    edit_account_cases(tmp, base, witnesses, failures)
     poc_d10_cases(base, witnesses, failures)
     reach_cases(tmp, base, witnesses, failures)
     readmit_cases(tmp, base, witnesses, failures)

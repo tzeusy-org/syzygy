@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 538 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 539 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -240,6 +240,11 @@ authority and no model yet called on the current path.
     it, the model and view findings, a pure migration from schema v10 and v11, brief v18); its code is not yet landed.
     *(2026-11-24: the predecessor figure "524 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
+    [Edit and repair accounting amendment 2.25](openspec/changes/polaris-edit-repair-deletion-accounting) is agent-adopted in A-208.
+    REQ-polaris-generation-006 carries six scenarios. The new scenario requires edits and repairs to account
+    for each input block, and repairs to give each finding a disposition. Generator implementation is tracked
+    by syzygy-dov.6.3.
+    *(2026-11-24: edit and repair accounting supersedes the predecessor figure of 538 scenarios.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
