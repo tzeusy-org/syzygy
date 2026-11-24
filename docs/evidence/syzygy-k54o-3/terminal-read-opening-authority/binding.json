@@ -1,0 +1,69 @@
+{
+  "subjectCommit": "0a58dbfc9667078e9308c868ae7f0ebb3cfe0e68",
+  "baseCommit": "1c678dad579b7beb8aa5adf3c916ce3b72c73292",
+  "binaryDeltaSha256": "ee1b789c3a00da54bd178f87aad345cc6d28846ae8b298d9735245a5c72c82fb",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-TERMINAL-READ-OPENING-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "1fef778de5859333342f2064db63caefb61e254649b2e265f7090662455a7f47"
+  },
+  "hostedPredecessor": {
+    "subjectCommit": "4671923156915f2cf6176b3e20f3fcef502c9c00",
+    "workflowRun": 45288858680,
+    "job": 138094013744,
+    "logSha256": "cb3477587a8af81e9135558273f5db1faceafd0278b4d44cc24d6439064c7a1f",
+    "firstTerminalRead": {
+      "kind": "terminal-read",
+      "startedMs": 694450.829601,
+      "runRemainingMs": 6735377,
+      "asyncAuthority": {
+        "started": 6,
+        "accepted": 6,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 2315.8636569998926
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "settledMs": 699708.594774,
+      "outcome": "refused"
+    },
+    "terminalReadElapsedMs": 5257.765173000051
+  },
+  "focused": {
+    "passed": 119,
+    "logSha256": "e1616310946339585f5ef84f3504cdee9ce47a51f1ce2e36997bb21209436272",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "controls": [
+      {
+        "kind": "duplicate-sync",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "(!synchronousAnchor && !joinedTerminalLock && deadline <= live())",
+        "new": "(!synchronousAnchor && deadline <= live())",
+        "selector": "under both authority latency",
+        "detectedFailures": 1,
+        "logSha256": "56d01823b3cfdc44b630bd98a32791eb7a75098e97a0e7d6ae89069789b6cee4"
+      },
+      {
+        "kind": "missing-sync",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "                check();\n                verifyNamedRoots();\n                checkDeadline();",
+        "new": "                checkDeadline();\n                verifyNamedRoots();\n                checkDeadline();",
+        "selector": "when sync authority is withdrawn",
+        "detectedFailures": 1,
+        "logSha256": "8cbc6eb5f09d2367006b06910a3220099ee9b36cd1f6c602237e99ef6a4bfc74"
+      },
+      {
+        "kind": "missing-async",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "        else await checkAsync(currentAsync);\n        // The staged publication guard",
+        "new": "        else if (!joinedTerminalLock) await checkAsync(currentAsync);\n        // The staged publication guard",
+        "selector": "when async authority is withdrawn",
+        "detectedFailures": 1,
+        "logSha256": "16ee9516bd3470b65ebc6f2daa5ac1cff00c6793cb2bda3d53fbd2568b71acdc"
+      }
+    ]
+  },
+  "nativeSuccessorCompletion": "Unknown"
+}
