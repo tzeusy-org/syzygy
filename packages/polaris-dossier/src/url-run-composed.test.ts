@@ -41,6 +41,7 @@ import * as runArtifacts from './url-run-artifacts.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
+import * as sessionView from './session-url-view.js';
 import * as launchHistory from './url-launch-history.js';
 import * as sessionPeer from './session-peer.js';
 import * as policySnapshot from './policy-snapshot.js';
@@ -566,6 +567,62 @@ type PrepareNativeRole = typeof sessionLaunch.prepareRestrictedUrlSession;
 type RoleInspection = NonNullable<ReturnType<typeof sessionLaunch.observeUrlSessionInspectionForTest>>;
 type RoleSample = () => ResumeSample | undefined;
 type DesignSetup = { preparation?: ResumeStamp; launch?: ResumeStamp };
+type RestorePreparationPhase = 'current' | 'view-verification' | 'namespace-probe';
+type RestorePreparationStep = ResumeStamp & { phase: RestorePreparationPhase; code?: sessionView.UrlSessionViewRefusal };
+type RestoreRolePreparation = ResumeStamp & {
+  role: Parameters<PrepareNativeRole>[0]['profile']['input']['binding']['role'];
+  steps: RestorePreparationStep[]; omittedSteps: number;
+};
+type RestorePreparationTrace = { roles: RestoreRolePreparation[]; omittedRoles: number };
+const restoringPlans = new AsyncLocalStorage<RestorePreparationTrace>();
+const restoringRole = new AsyncLocalStorage<RestoreRolePreparation>();
+const restoreRefusalCodes: readonly sessionView.UrlSessionViewRefusal[] = ['invalid-input', 'unverified-path', 'unsupported-runtime',
+  'support-unavailable', 'nonempty-directory', 'socket-unavailable', 'probe-unavailable', 'probe-bound-exceeded', 'probe-failed'];
+
+function restorePreparationStep(phase: RestorePreparationPhase): RestorePreparationStep | undefined {
+  const role = restoringRole.getStore();
+  if (role === undefined) return;
+  if (role.steps.length >= 12) { role.omittedSteps++; return; }
+  const step: RestorePreparationStep = { phase, startedMs: performance.now() };
+  role.steps.push(step);
+  return step;
+}
+function settleRestorePreparation(stamp: ResumeStamp, outcome: ResumeObservation): void {
+  Object.assign(stamp, { settledMs: performance.now(), outcome });
+}
+function observeRestorePreparation(input: Parameters<PrepareNativeRole>[0], invoke: PrepareNativeRole): ReturnType<PrepareNativeRole> {
+  const trace = restoringPlans.getStore();
+  if (trace === undefined) return invoke(input);
+  if (trace.roles.length >= 4) { trace.omittedRoles++; return invoke(input); }
+  const role: RestoreRolePreparation = { role: input.profile.input.binding.role, startedMs: performance.now(), steps: [], omittedSteps: 0 };
+  trace.roles.push(role);
+  return restoringRole.run(role, () => observe(() => invoke({ ...input, current: () => {
+    const stamp = restorePreparationStep('current');
+    if (stamp === undefined) return input.current();
+    try {
+      const original = input.current();
+      const settle = (value: boolean) => settleRestorePreparation(stamp, value === true ? 'accepted' : 'refused');
+      if (typeof original === 'boolean') settle(original);
+      else void original.then(settle, () => settleRestorePreparation(stamp, 'rejected'));
+      return original;
+    } catch (error) { settleRestorePreparation(stamp, 'rejected'); throw error; }
+  } }), () => settleRestorePreparation(role, 'accepted'), () => settleRestorePreparation(role, 'rejected')));
+}
+function observeRestorePreparationPhases(): void {
+  const record = <T extends sessionView.UrlSessionVerification | sessionView.UrlSessionProbe>(
+    phase: RestorePreparationPhase, invoke: () => Promise<T>,
+  ): Promise<T> => {
+    const stamp = restorePreparationStep(phase);
+    if (stamp === undefined) return invoke();
+    return observe(invoke, value => {
+      if (!value.ok && restoreRefusalCodes.includes(value.code)) stamp.code = value.code;
+      settleRestorePreparation(stamp, value.ok ? 'accepted' : 'refused');
+    }, () => settleRestorePreparation(stamp, 'rejected'));
+  };
+  const verify = sessionView.verifyUrlSessionViewInputs, probe = sessionView.probeUrlSessionView;
+  vi.spyOn(sessionView, 'verifyUrlSessionViewInputs').mockImplementation((...args) => record('view-verification', () => verify(...args)));
+  vi.spyOn(sessionView, 'probeUrlSessionView').mockImplementation((...args) => record('namespace-probe', () => probe(...args)));
+}
 
 async function observeRoleLaunches(
   prepareWithTrace?: (prepare: PrepareNativeRole, input: Parameters<PrepareNativeRole>[0],
@@ -586,9 +643,9 @@ async function observeRoleLaunches(
       const inspect = sessionLaunch.observeUrlSessionInspectionForTest(result);
       if (inspect !== null) preparations.set(result, { role, inspect, sample });
     };
-    const invoke = () => prepareWithTrace === undefined
-      ? observe(() => prepare(input), remember, () => {})
-      : prepareWithTrace(prepare, input, remember);
+    const invoke = () => observeRestorePreparation(input, selected => prepareWithTrace === undefined
+      ? observe(() => prepare(selected), remember, () => {})
+      : prepareWithTrace(prepare, selected, remember));
     if (role !== 'design' || observeDesignSetup === undefined) return invoke();
     const { timing, clock } = observeDesignSetup;
     const stamp: ResumeStamp = { startedMs: clock() };
@@ -1286,6 +1343,8 @@ describe('composed URL run with actual role processes', () => {
     const resumeChecks: unknown[] = [];
     type BootstrapPhase = 'restore-plans' | 'load-renderer' | 'create-origins' | 'restore-products' | 'start-sessions' | 'open-store' | 'create-machine';
     const resumeBootstrap: Partial<Record<BootstrapPhase, ResumeStamp>> = {};
+    const resumePreparations: RestorePreparationTrace = { roles: [], omittedRoles: 0 };
+    if (resumeAfterStop) observeRestorePreparationPhases();
     const resumeOriginSteps: ResumeOriginStep[] = [];
     const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
@@ -1309,7 +1368,7 @@ describe('composed URL run with actual role processes', () => {
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRuntimeFailure, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
@@ -1869,7 +1928,7 @@ describe('composed URL run with actual role processes', () => {
             resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
             const restore = rolePlan.restoreUrlRolePlans, load = urlRuntime.loadUrlDossierRenderer, origins = runOrigins.createUrlRunOrigins;
             vi.spyOn(rolePlan, 'restoreUrlRolePlans').mockImplementationOnce((...args) =>
-              observeBootstrap('restore-plans', () => restore(...args), value => value !== null));
+              restoringPlans.run(resumePreparations, () => observeBootstrap('restore-plans', () => restore(...args), value => value !== null)));
             vi.spyOn(urlRuntime, 'loadUrlDossierRenderer').mockImplementationOnce((...args) =>
               observeBootstrap('load-renderer', () => load(...args), value => value !== null));
             vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce(options =>
@@ -2091,7 +2150,7 @@ describe('composed URL run with actual role processes', () => {
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
             resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
@@ -2136,7 +2195,7 @@ describe('composed URL run with actual role processes', () => {
           && ['cold-final-prepared', 'cold-final-factory', 'resumed-render', 'resumed-exit'].includes(String(check.phase)));
         console.error('owned native resume failure', JSON.stringify({ scenario, phase: eligiblePhase,
           coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal,
-          bootstrap: resumeBootstrap, latestStoreSteps: resumeStoreSteps.slice(-2) }));
+          bootstrap: resumeBootstrap, resumePreparations, latestStoreSteps: resumeStoreSteps.slice(-2) }));
       }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
@@ -2163,7 +2222,7 @@ describe('composed URL run with actual role processes', () => {
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
@@ -2173,7 +2232,7 @@ describe('composed URL run with actual role processes', () => {
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
         initialInference: initialTrace?.inference, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
