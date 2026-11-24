@@ -51,9 +51,9 @@ it('refuses a successful object read whose currentness changed before return', a
 it('checks bound tree authority again after the descriptor walk', async () => {
   const f = fixture();
   let samples = 0;
-  await expect(listBoundUrlSourceTree({ ...f, store: 'owned-loose', current: () => ++samples < 3 }))
+  await expect(listBoundUrlSourceTree({ ...f, store: 'owned-loose', current: () => ++samples < 2 }))
     .rejects.toThrow(/source binding/);
-  expect(samples).toBe(3);
+  expect(samples).toBe(2);
 });
 
 it('refuses a replacement object directory on the same path', async () => {

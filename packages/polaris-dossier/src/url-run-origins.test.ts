@@ -144,7 +144,7 @@ describe('initial URL run provenance from genuine native preparations', () => {
     expect((await createUrlRunOrigins(codeOnly.options)).source.report.representedClasses).toEqual(['code-content']);
   });
   it('completes the guarded tree walk within its original limit and refuses a late live check', async () => {
-    let reading = false, elapsed = 0, samples = 0, sampleMilliseconds = 1550;
+    let reading = false, elapsed = 0, samples = 0, sampleMilliseconds = 2200;
     const list = boundSource.listBoundUrlSourceTree;
     const listTree = vi.spyOn(boundSource, 'listBoundUrlSourceTree').mockImplementation(async input => {
       reading = true;
@@ -159,11 +159,11 @@ describe('initial URL run provenance from genuine native preparations', () => {
     try {
       const origins = await createUrlRunOrigins(options);
       expect(origins.source.report).toMatchObject({ treeEntries: 3, eligibleRegularPaths: 3 });
-      expect(samples).toBe(3);
-      sampleMilliseconds = 1750;
+      expect(samples).toBe(2);
+      sampleMilliseconds = 2600;
       samples = 0;
       await expect(createUrlRunOrigins(options)).rejects.toThrow('url-run-origins-unavailable');
-      expect(samples).toBe(3);
+      expect(samples).toBe(2);
     } finally { clock.mockRestore(); listTree.mockRestore(); }
   });
 

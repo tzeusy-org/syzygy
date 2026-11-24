@@ -42,6 +42,7 @@ interface SourceReaderBinding {
  * The role never chooses read limits, store profile, clone or pin. */
 export function bindUrlSourceReader(input: SourceReaderBinding): ReaderFactory {
   const { check, open } = captureSourceReader(input);
+  check();
   const factory: ReaderFactory = options => {
     check();
     return open(options);
@@ -53,6 +54,8 @@ export function bindUrlSourceReader(input: SourceReaderBinding): ReaderFactory {
 /** Complete the census under one binding and one guarded descriptor walk. */
 export async function listBoundUrlSourceTree(input: SourceReaderBinding): ReturnType<PinnedObjectReader['listTree']> {
   const { gitDir, revision, open } = captureSourceReader(input);
+  // Keep capture private. The immediate walk checks authority and the names
+  // captured above before object I/O, and samples both again on return.
   return open({ gitDir, revision }).listTree();
 }
 
@@ -73,7 +76,6 @@ function captureSourceReader(input: SourceReaderBinding) {
     } catch { /* All binding faults use the same refusal. */ }
     refuse();
   };
-  check();
   const open: ReaderFactory = options => {
     if (options.gitDir !== gitDir || options.revision !== revision) return refuse();
     const reader = openPinnedObjectReader({
