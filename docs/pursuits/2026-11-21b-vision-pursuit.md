@@ -772,6 +772,32 @@ called a win.
 - The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
   the traits from the shape packs' own selectors.
 
+## R4 slice 2: the review waits for coverage (2026-11-25)
+
+Bead syzygy-5dhm.29, spec version 2.27 (REQ-polaris-generation-035,
+`openspec/changes/dossier-coverage-hold/`). Slice 1 told the author, as advice, which inventory
+entries no draft block covers. Now Syzygy issues no fidelity packet while such an entry has no
+outcome. An outcome is either coverage by check's rule or a line in `inventoryOmissions` with a
+reason. This holds `review-packet`, a review `session-prompt` and a delivery to a waiting
+reviewer, and so the URL supervisor.
+
+- [Observed] The refusal has the stage `coverage`. It names each entry by identifier and cited
+  paths only, never its statement, and never names a path a secret detector matches. It ends
+  with the next step: represent the entry with a citation, or record the omission with a
+  reason, then check again.
+- [Observed] The supervisor tells the author once for each pair of draft and inventory
+  revisions. It does not count the hold as a refused delivery, so it never gives up on it. At
+  the repair-cycle limit the run ends blocked and names the hold.
+- [Observed] These are unchanged: drafts of schema v2 to v4 (they cannot record an omission),
+  entries screening withholds, the packet's bytes, verdict validation and the review of record.
+  `review-check` rebuilds the packet without the hold, so an older verdict counts as before.
+- [Observed] Rule 6: 14 of 14 mutants killed over the hold, the three issuing points and the
+  supervisor's notice (`docs/evidence/syzygy-5dhm-29/coverage-hold-mutation-2026-11-25.json`).
+- [Inferred] The hold uses check's mechanical rule. So an entry the draft represents in words,
+  without a citation or a path, holds the review until the author adds one.
+- [Unknown] Review rounds per run under the hold. Slice 4 (syzygy-5dhm.86) measures them before
+  and after. No run has been made under this change.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner
