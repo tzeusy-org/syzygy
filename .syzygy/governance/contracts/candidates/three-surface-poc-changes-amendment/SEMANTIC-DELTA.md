@@ -202,9 +202,12 @@ served fixtures also compare every changed item's from and to statuses
 against the machine answer, and assert the typed HTTP 400 and return link
 in the direct and both tailnet request forms.
 
-[Observed] Nine served HTML responses covered the three selected windows in
-each request form on the fixture with 260 changed items and 260 status rows.
-The largest was 537,231 UTF-8 bytes, below half the 2,097,152-byte ceiling.
+[Observed] Eighteen served HTML responses covered the three selected
+windows on the default and all-items selections in all three request
+forms. The fixture holds 260 changed items and 260 status rows. The
+largest was 537,231 UTF-8 bytes, below half the 2,097,152-byte ceiling.
+The day answer also served identical bytes at two explicitly distinct
+ambient system instants over the same captured model.
 
 ## Downstream impact
 
@@ -562,3 +565,29 @@ the commit after it, or answered here.
     Answered, not changed: the spec states the all-or-nothing outcome, and
     one statement keeps both windows on one read. Per-window statements
     are a later change if a too-old week start is ever observed to fail.
+
+## Hosted recovery dispositions
+
+[Observed] [The hosted recovery review](../../../../../docs/reviews/R-T6S1-CHANGES-2-HOSTED-RAW.md)
+returned `REVISE` over `680245038e6f9ea0ef2f044e33779e854d02950a`.
+Its SHA-256 is `dc4252e5708a9851987fa0ee4487c0160dfec18426d27d472b1f6eb8e40ba436`.
+
+1. **F1.** The parser admits actual UTC Gregorian instants at Dolt's
+   reported precision, from whole seconds through microseconds. It
+   preserves the returned bytes. A malformed or after-bound start and
+   a malformed or future observed instant fail before the diff. Fixtures
+   assert the closed reasons and preserve short history and observed zero.
+2. **F2.** The date cut must agree with ancestry in both directions. An
+   ancestor of the start dated later than the bound or a descendant of
+   the start in the observed history dated at or before it makes that
+   window `history-non-linear`. Independent synthetic replay checks the
+   emitted SQL in both directions, together and when neither applies.
+3. **F3.** The protected predecessor's ledger bytes are the only prefix
+   for adoption. The existing hosted commit stays reachable, while a
+   separate source commit carries the effective amendment and the
+   adoption row records its exact identity and source rollback. The
+   version tag follows the protected merge.
+4. **F4.** The fixture in §"Recovery verification" measures complete
+   served bodies, and the distinct-clock replay proves byte equivalence
+   for one captured model. The hosted delivery also requires an exact
+   complete battery and protected required checks.

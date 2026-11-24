@@ -1682,17 +1682,34 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     const changed = page.trajectory.kind === 'observed' ? page.trajectory.answers.find((answer) => answer.id === 'changed') : undefined;
     if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
     expect(changed.windows[0].facts.length - 250).toBe(10);
-    expect(renderTrajectoryPage(page)).toBe(renderTrajectoryPage(page));
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      const earlier = Date.parse('2026-11-24T17:00:00Z');
+      const later = Date.parse('2027-01-01T00:00:00Z');
+      vi.setSystemTime(earlier);
+      expect(Date.now()).toBe(earlier);
+      const first = await getChanged(page, mounts[0], 'changed=day');
+      vi.setSystemTime(later);
+      expect(Date.now()).toBe(later);
+      const second = await getChanged(page, mounts[0], 'changed=day');
+      expect(first.status).toBe(200);
+      expect(second).toEqual(first);
+    } finally {
+      vi.useRealTimers();
+    }
     const bytes: number[] = [];
     for (const mount of mounts) {
       for (const window of ['day', 'week', 'since-last']) {
-        const response = await getChanged(page, mount, `page=1&changed=${window}`);
-        expect(response.status).toBe(200);
-        bytes.push(Buffer.byteLength(response.body, 'utf8'));
+        const selections = [`changed=${window}`, `page=1&changed=${window}`];
+        for (const selection of selections) {
+          const response = await getChanged(page, mount, selection);
+          expect(response.status).toBe(200);
+          bytes.push(Buffer.byteLength(response.body, 'utf8'));
+        }
       }
     }
     const largest = Math.max(...bytes);
-    expect(bytes).toHaveLength(9);
+    expect(bytes).toHaveLength(18);
     expect(largest).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes / 2);
     console.info(`Trajectory change fixture served ${bytes.length} pages, largest ${largest} UTF-8 bytes`);
   });
