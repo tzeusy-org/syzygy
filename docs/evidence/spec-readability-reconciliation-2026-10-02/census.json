@@ -631,7 +631,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 545,
+      "scenarios": 546,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1228,6 +1228,7 @@
             "Shared element in a later containment and a witnessed relationship",
             "Brief v18 states the system model",
             "A worth-knowing block leads its page",
+            "A marked block that does not render Inferred stays in its section",
             "A Pole with none found",
             "A misplaced, uncited or judged mark refused",
             "Count advice without a quota",
