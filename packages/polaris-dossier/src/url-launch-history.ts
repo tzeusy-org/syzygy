@@ -10,7 +10,7 @@ import { RUN_ID } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { isPreparedUrlRolePlan, type UrlRolePlan } from './url-role-plan.js';
 import { urlSessionViewFor } from './session-url-view.js';
-import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS } from './session-launch.js';
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, URL_ORDERED_INSPECTION_MILLISECONDS } from './session-launch.js';
 import type { DossierScreen } from './screen.js';
 import type { SessionBinding } from './session-egress-policy.js';
 import { readEffectiveRunDeclaration, type UrlRoleDeclaration } from './url-run-record.js';
@@ -156,7 +156,8 @@ export async function writeUrlLaunchHistory(given: UrlLaunchHistoryOptions) {
     const initial = fs.fstatSync(root, { bigint: true }), anchor = `/proc/self/fd/${root}`;
     if (!initial.isDirectory() || initial.uid !== BigInt(process.getuid?.() ?? -1)) return refuse();
     const check = async (): Promise<void> => {
-      if (waitForSample !== undefined) await requireCurrent(waitForSample, URL_LAUNCH_LIMITS.inspectionMilliseconds);
+      if (waitForSample !== undefined) await requireCurrent(waitForSample, isOrderedDesignSessionProfile(plan.profile)
+        ? URL_ORDERED_INSPECTION_MILLISECONDS : URL_LAUNCH_LIMITS.inspectionMilliseconds);
       await requireCurrent(current);
       if (fs.realpathSync(run) !== run || !same(initial, fs.lstatSync(run, { bigint: true })) || !same(initial, fs.fstatSync(root!, { bigint: true }))) return refuse();
     };

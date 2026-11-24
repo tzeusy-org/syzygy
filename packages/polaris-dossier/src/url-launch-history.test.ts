@@ -741,10 +741,11 @@ describe('protected URL design delivery audit', () => {
 });
 
 describe('URL stored launch history', () => {
-  it('checks the live sample before starting the independent writer authority deadline', async () => {
-    const input = options('design'), calls: string[] = [];
+  it.each(['ordinary', 'ordered'] as const)('checks the %s live sample before starting the independent writer authority deadline', async profile => {
+    if (profile === 'ordered') plans = orderedPlans;
+    const input = options('design'), calls: string[] = [], sampleMilliseconds = profile === 'ordered' ? 3_000 : 1_500;
     const waitForSample = async (): Promise<boolean> => {
-      if (calls.length === 0) await new Promise<void>(resolve => setTimeout(resolve, 1_500));
+      if (calls.length === 0) await new Promise<void>(resolve => setTimeout(resolve, sampleMilliseconds));
       calls.push('sample');
       return true;
     };
@@ -757,7 +758,7 @@ describe('URL stored launch history', () => {
     try {
       const writing = writeUrlLaunchHistory({ ...input, waitForSample, current });
       const observed = writing.then(result => ({ result }), error => ({ error }));
-      await vi.advanceTimersByTimeAsync(1_500);
+      await vi.advanceTimersByTimeAsync(sampleMilliseconds);
       expect(calls).toEqual(['sample']);
       await vi.advanceTimersByTimeAsync(550);
       const completed = await observed;
@@ -768,17 +769,18 @@ describe('URL stored launch history', () => {
     } finally { vi.useRealTimers(); }
   });
 
-  it.each(['sample', 'authority'] as const)('refuses a stalled writer %s at its independent limit', async stage => {
+  it.each(['sample', 'authority', 'ordered-sample'] as const)('refuses a stalled writer %s at its independent limit', async stage => {
+    if (stage === 'ordered-sample') plans = orderedPlans;
     const input = options('design');
     const stalled = new Promise<boolean>(() => {});
-    const waitForSample = vi.fn(async () => stage === 'sample' ? stalled : true);
+    const waitForSample = vi.fn(async () => stage !== 'authority' ? stalled : true);
     const current = vi.fn(() => stage === 'authority' ? stalled : true);
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     try {
       let settled = false, refused: unknown;
       void writeUrlLaunchHistory({ ...input, waitForSample, current }).then(
         () => { settled = true; }, error => { settled = true; refused = error; });
-      const bound = stage === 'sample' ? 2_000 : 1_000;
+      const bound = stage === 'ordered-sample' ? 5_000 : stage === 'sample' ? 2_000 : 1_000;
       await vi.advanceTimersByTimeAsync(bound - 1);
       expect(settled).toBe(false);
       await vi.advanceTimersByTimeAsync(1);

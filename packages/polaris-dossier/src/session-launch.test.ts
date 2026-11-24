@@ -33,8 +33,10 @@ import { createUrlSessionBudget } from './url-session-budget.js';
 import { createUrlSessionAudit } from './url-session-audit.js';
 import { urlSessionMcpSupportPath } from './url-runtime.js';
 import { selectResumedRolesAfterSample } from './url-run-sessions.js';
-import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, finishUrlSessionPreparation, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
+import { URL_CLI_PROGRAM, URL_LAUNCH_LIMITS, URL_ORDERED_INSPECTION_MILLISECONDS, finishUrlSessionPreparation, launchRestrictedUrlSession, isUrlSessionProcess, observeUrlSessionInspectionForTest,
   prepareRestrictedUrlSession, restrictedSessionCliArgs, verifySupportedUrlCli, type UrlSessionLaunchOptions } from './session-launch.js';
+import { startOrderedDesignHost } from './url-ordered-design-host.js';
+import { createSessionMachineTransport } from './session-machine-transport.js';
 import { URL_SESSION_BWRAP, urlSessionBwrapArgs, urlSessionCommand, urlSessionViewFor } from './session-url-view.js';
 
 const nativeSpawns = vi.hoisted(() => ({
@@ -218,6 +220,30 @@ async function launchFixture(limits: UrlSessionLaunchOptions['limits'] = {}) {
     expect(event.event).toBe('session-launch-attempt'); f.events.push('launch-audit');
   }, limits);
   return {...f,launch};
+}
+
+// Actual nominal ordered profile/host and native child; these closed transport
+// ports issue no peer, and the controller remains pending throughout sampling.
+async function orderedInspectionFixture() {
+  const f = await fixture();
+  const compiled = createOrderedDesignSessionProfile({ ...f.profile.input, binding: { ...f.profile.input.binding, role: 'design' } });
+  if (!compiled.ok) throw new Error('owned ordered inspection profile refused');
+  const profile = compiled.value.profile;
+  let captured: Parameters<UrlSessionLaunchOptions['audit']>[0] | undefined;
+  const launch = await privateLaunchOptions(f.root, profile, 'design', event => { captured = event; }, { milliseconds: 15_000 }, 'ordered-design');
+  const start = async () => {
+    const machine = createSessionMachineTransport({ prepare: async () => true, accept: async () => null });
+    if (machine === null) throw new Error('owned ordered inspection transport refused');
+    const host = await startOrderedDesignHost({ controller: new Promise<ReturnType<typeof createOrderedDesignSession>>(() => {}),
+      activationDeadline: Date.now() + 20_000, profile,
+      subject: { binding: profile.input.binding, project: 'project:syzygy', pin: 'd'.repeat(40), principal: 'own-operator' },
+      credential: f.options.credential, brokerSocket: path.join(f.root, 'broker/b.sock'), relaySocket: path.join(f.root, 'relay/r.sock'),
+      brokerMachine: machine, relayMachine: machine, current: () => true,
+      admit: () => { throw new Error('inspection fixture must not admit a request'); }, audit: () => {} });
+    cleanup.push(() => host.close());
+    return host;
+  };
+  return { launch, start, captured: () => captured };
 }
 
 async function compiledSessionSupport(): Promise<ReadonlyMap<string, Buffer>> {
@@ -1361,6 +1387,98 @@ describe('prepared private CLI launch',()=>{
       }
     } finally { vi.useRealTimers(); }
   }, 15000);
+
+  it('selects inspection ceilings from genuine ordered profiles and permits caller tightening', async () => {
+    const ordinary = await launchFixture(), ordered = await orderedInspectionFixture();
+    for (const [input, expected] of [
+      [ordinary.launch, 2_000], [ordered.launch, 5_000],
+      [{ ...ordered.launch, limits: { ...ordered.launch.limits, inspectionMilliseconds: 5_000 } }, 5_000],
+      [{ ...ordered.launch, limits: { ...ordered.launch.limits, inspectionMilliseconds: 1_000 } }, 1_000],
+      [{ ...ordinary.launch, limits: { ...ordinary.launch.limits, inspectionMilliseconds: 1_000 } }, 1_000],
+    ] as const) {
+      const preparation = await prepareRestrictedUrlSession(input);
+      expect(observeUrlSessionInspectionForTest(preparation)!().inspectionMs).toBe(expected);
+    }
+    expect(URL_ORDERED_INSPECTION_MILLISECONDS).toBe(5_000);
+    await expect(prepareRestrictedUrlSession({ ...ordinary.launch, limits: { inspectionMilliseconds: 2_001 } })).rejects.toThrow('url-session-launch-refused');
+    await expect(prepareRestrictedUrlSession({ ...ordered.launch, limits: { inspectionMilliseconds: 5_001 } })).rejects.toThrow('url-session-launch-refused');
+    await expect(prepareRestrictedUrlSession({ ...ordered.launch, profile: { ...ordered.launch.profile } })).rejects.toThrow('url-session-launch-refused');
+  }, 20_000);
+
+  it.each(['three-second-authority', 'withdrawn', 'authority-timeout', 'resource-timeout', 'confirmation-expired'] as const)(
+    'keeps ordered inspection authority and resource deadlines distinct for %s', async disposition => {
+      const f = await orderedInspectionFixture();
+      let releaseCensus!: () => void, censusEntered!: (value: true) => void, verificationEntered!: (value: true) => void;
+      let resolveVerification!: (value: true) => void;
+      const census = new Promise<void>(resolve => { releaseCensus = resolve; });
+      const enteredCensus = new Promise<true>(resolve => { censusEntered = resolve; });
+      const enteredVerification = new Promise<true>(resolve => { verificationEntered = resolve; });
+      const verification = new Promise<true>(resolve => { resolveVerification = resolve; });
+      let authorityCurrent = true;
+      const confirm = vi.fn((verified: boolean) => {
+        if (disposition === 'confirmation-expired') Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5_000);
+        return verified && authorityCurrent;
+      });
+      const preparation = await prepareRestrictedUrlSession({ ...f.launch, inspectionAuthority: {
+        verify: () => { verificationEntered(true); return verification; }, confirm,
+      } });
+      const inspect = observeUrlSessionInspectionForTest(preparation)!;
+      filesystem.beforeOpen = async file => {
+        if (file === f.launch.view.workDirectory) { censusEntered(true); await census; }
+      };
+      const child = await launchRestrictedUrlSession({ preparation, host: await f.start() });
+      cleanup.push(child.stop);
+      const native = nativeSpawns.latest();
+      try {
+        expect(native?.pid).toBe(child.pid);
+        process.kill(-child.pid, 'SIGSTOP');
+        expect(f.captured()?.limits.inspectionMilliseconds).toBe(5_000);
+        expect(f.captured()?.commandSha256).toBe(child.commandSha256);
+        const ended = child.finished.then(() => false);
+        expect(await Promise.race([enteredCensus, ended])).toBe(true);
+        expect(await Promise.race([enteredVerification, ended])).toBe(true);
+        let sampled: boolean | undefined;
+        const sample = child.waitForSample().then(current => { sampled = current; return current; });
+        if (disposition === 'resource-timeout') {
+          resolveVerification(true);
+          await new Promise<void>(resolve => setTimeout(resolve, 2_500));
+          expect(sampled).toBe(false);
+          expect(confirm).not.toHaveBeenCalled();
+          expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'storage', cause: 'bounded-timeout' });
+          expect(inspect().firstRefusal?.phases.storage?.outcome).toBeUndefined();
+          expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
+        } else {
+          releaseCensus();
+          if (disposition === 'authority-timeout') {
+            expect(await sample).toBe(false);
+            expect(confirm).not.toHaveBeenCalled();
+            expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'verify', cause: 'bounded-timeout' });
+            expect(inspect().firstRefusal!.refusal!.elapsedMs).toBeGreaterThanOrEqual(5_000);
+            resolveVerification(true);
+            await new Promise<void>(resolve => setImmediate(resolve));
+            expect(confirm).not.toHaveBeenCalled();
+          } else {
+            if (disposition !== 'confirmation-expired') await new Promise<void>(resolve => setTimeout(resolve, 3_000));
+            authorityCurrent = disposition !== 'withdrawn';
+            resolveVerification(true);
+            expect(await sample).toBe(disposition === 'three-second-authority');
+            expect(confirm).toHaveBeenCalledExactlyOnceWith(true);
+            expect(inspect().latest?.phases).toMatchObject({ storage: { outcome: 'accepted' }, process: { outcome: 'accepted' },
+              verify: { outcome: 'accepted' }, confirm: { outcome: disposition === 'withdrawn' ? 'refused' : 'accepted' } });
+            if (disposition === 'three-second-authority') expect(inspect().firstRefusal).toBeUndefined();
+            else expect(inspect().firstRefusal?.refusal).toMatchObject({ phase: 'confirm',
+              cause: disposition === 'withdrawn' ? 'authority-refused' : 'sample-deadline' });
+          }
+        }
+      } finally {
+        releaseCensus(); resolveVerification(true);
+        const stopped = child.stop();
+        try { process.kill(-child.pid, 'SIGCONT'); }
+        catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ESRCH') throw error; }
+        await stopped;
+      }
+    }, 20_000,
+  );
 
   it.each(['current', 'current-after-one-second', 'withdrawn', 'timed-out', 'census-timed-out', 'confirmation-expired'] as const)(
     'joins independent inspection authority with the live census when %s', async disposition => {

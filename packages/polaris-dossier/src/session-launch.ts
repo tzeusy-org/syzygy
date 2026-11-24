@@ -17,6 +17,10 @@ export { URL_CLI_PROGRAM };
 export const URL_LAUNCH_LIMITS = Object.freeze({ milliseconds: 1_800_000, setupMilliseconds: 20_000, cleanupMilliseconds: 2500,
   cpuSeconds: 600, addressBytes: 68_719_476_736, fileBytes: 2_097_152, storageBytes: 16_777_216,
   entries: 16_384, processes: 64, outputBytes: 8_388_608, descriptors: 256, sampleMilliseconds: 200, inspectionMilliseconds: 2_000 });
+// Ordered Design joins fresh asynchronous parent/claim verification and the
+// final synchronous authority check. Its resource census retains the ordinary
+// two-second bound; only the complete authority join gets this finite envelope.
+export const URL_ORDERED_INSPECTION_MILLISECONDS = 5_000;
 export type UrlLaunchLimits = { readonly [K in keyof typeof URL_LAUNCH_LIMITS]: number };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const TOOLS = ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] as const;
@@ -243,13 +247,15 @@ export async function prepareRestrictedUrlSession(input: UrlSessionLaunchOptions
   const profile = input.profile, current = input.current, audit = input.audit;
   if (!isNativeSessionProfile(profile) || typeof current !== 'function' || typeof audit !== 'function') throw refused();
   const view = urlSessionViewFor(input.view), expected = deepFreeze(JSON.parse(canonical(input.expected))) as UrlSessionLaunchOptions['expected'];
-  const limits: UrlLaunchLimits = Object.freeze({ ...URL_LAUNCH_LIMITS, ...input.limits });
+  const maximum: UrlLaunchLimits = isOrderedDesignSessionProfile(profile)
+    ? { ...URL_LAUNCH_LIMITS, inspectionMilliseconds: URL_ORDERED_INSPECTION_MILLISECONDS } : URL_LAUNCH_LIMITS;
+  const limits: UrlLaunchLimits = Object.freeze({ ...maximum, ...input.limits });
   const canaries = Object.freeze([...input.canaries]), port = input.hostLoopbackPort;
   const expectedDirectories = input.expectedDirectoryIdentities === undefined
     ? undefined : Object.freeze([...input.expectedDirectoryIdentities]);
   if (profile.input.binding.role !== view.role || Object.keys(limits).length !== Object.keys(URL_LAUNCH_LIMITS).length
     || Object.entries(limits).some(([key, value]) => !Object.hasOwn(URL_LAUNCH_LIMITS, key) || !Number.isSafeInteger(value) || value <= 0
-      || value > URL_LAUNCH_LIMITS[key as keyof UrlLaunchLimits])
+      || value > maximum[key as keyof UrlLaunchLimits])
     || Object.keys(expected).sort().join(',') !== 'nodeSha256,supportSha256'
     || Object.keys(expected.supportSha256).sort().join(',') !== 'session-bridge.js,session-mcp.js'
     || [expected.nodeSha256, ...Object.values(expected.supportSha256)].some(value => typeof value !== 'string' || !/^[a-f0-9]{64}$/u.test(value))
@@ -640,9 +646,11 @@ export async function launchRestrictedUrlSession(input: {
     const sampleBegan = performance.now();
     const observation = trace === undefined ? undefined : beginInspectionTrace(trace, sampleBegan);
     let phase: InspectionPhase = 'storage', processRejection: unknown;
+    const resourceMilliseconds = Math.min(limits.inspectionMilliseconds, URL_LAUNCH_LIMITS.inspectionMilliseconds);
     const checkSample = (source = phase): void => {
       const inactive = !sampleActive || exited || finishedCapture || reason !== 'exited';
-      if (inactive || performance.now() - sampleBegan >= limits.inspectionMilliseconds) {
+      const milliseconds = source === 'storage' || source === 'process' ? resourceMilliseconds : limits.inspectionMilliseconds;
+      if (inactive || performance.now() - sampleBegan >= milliseconds) {
         const error = refused();
         observation?.note(error, source, inactive ? 'sample-inactive' : 'sample-deadline');
         throw error;
@@ -651,23 +659,6 @@ export async function launchRestrictedUrlSession(input: {
     // Cadence and completion are separate finite limits. Other native roles
     // and the shared host may delay descriptor IO; admit no partial census.
     pendingSample = bounded(async () => {
-      // The walks share a deadline. Keep storage's earlier refusal and
-      // publication order even if the process walk completes first.
-      let processCount: Promise<number | null> | undefined;
-      if (child.pid !== undefined) {
-        if (observation === undefined) processCount = descendants(child.pid, limits.processes, checkSample).catch(() => null);
-        else {
-          observation.begin('process');
-          processCount = descendants(child.pid, limits.processes, () => checkSample('process')).then(count => {
-            observation.settle('process', 'accepted');
-            return count;
-          }, error => {
-            processRejection = error;
-            observation.settle('process', 'rejected');
-            return null;
-          });
-        }
-      }
       const authority = state.inspectionAuthority;
       // Verification reads authority only. Census refusal takes precedence and
       // the exact live guard runs when both the census and verification settle.
@@ -676,30 +667,52 @@ export async function launchRestrictedUrlSession(input: {
         observation?.settle('verify', result === true ? 'accepted' : 'refused');
         return result === true;
       }, () => { observation?.settle('verify', 'rejected'); return false; });
-      observation?.begin('storage');
-      let storageBytes: number;
-      try { storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample, observation?.storageFailure); }
-      catch (error) { observation?.settle('storage', 'rejected'); throw error; }
-      observation?.settle('storage', 'accepted');
-      checkSample();
-      sampledStorageBytes = storageBytes;
-      if (sampledStorageBytes > limits.storageBytes) {
-        observation?.refuse('storage', 'resource-limit'); stop('storage-limit'); return;
-      }
-      if (processCount !== undefined) {
-        phase = 'process';
-        const count = await processCount;
+      await bounded(async () => {
+        // The walks share a deadline. Keep storage's earlier refusal and
+        // publication order even if the process walk completes first.
+        let processCount: Promise<number | null> | undefined;
+        if (child.pid !== undefined) {
+          if (observation === undefined) processCount = descendants(child.pid, limits.processes, checkSample).catch(() => null);
+          else {
+            observation.begin('process');
+            processCount = descendants(child.pid, limits.processes, () => checkSample('process')).then(count => {
+              observation.settle('process', 'accepted');
+              return count;
+            }, error => {
+              processRejection = error;
+              observation.settle('process', 'rejected');
+              return null;
+            });
+          }
+        }
+        observation?.begin('storage');
+        let storageBytes: number;
+        try { storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample, observation?.storageFailure); }
+        catch (error) { observation?.settle('storage', 'rejected'); throw error; }
+        observation?.settle('storage', 'accepted');
         checkSample();
-        if (count === null) {
-          const error = refused();
-          observation?.inherit(error, processRejection);
-          throw error;
+        sampledStorageBytes = storageBytes;
+        if (sampledStorageBytes > limits.storageBytes) {
+          observation?.refuse('storage', 'resource-limit'); stop('storage-limit'); return;
         }
-        peakProcesses = Math.max(peakProcesses ?? 0, count);
-        if (count > limits.processes) {
-          observation?.refuse('process', 'resource-limit'); stop('process-limit'); return;
+        if (processCount !== undefined) {
+          phase = 'process';
+          const count = await processCount;
+          checkSample();
+          if (count === null) {
+            const error = refused();
+            observation?.inherit(error, processRejection);
+            throw error;
+          }
+          peakProcesses = Math.max(peakProcesses ?? 0, count);
+          if (count > limits.processes) {
+            observation?.refuse('process', 'resource-limit'); stop('process-limit'); return;
+          }
         }
-      }
+      }, resourceMilliseconds, observation === undefined ? undefined : error => {
+        observation.note(error, phase, 'bounded-timeout');
+      });
+      if (reason !== 'exited') return;
       phase = verification === undefined ? 'current' : 'verify';
       if (verification === undefined) observation?.begin('current');
       let stillCurrent = await (verification ?? state.current());

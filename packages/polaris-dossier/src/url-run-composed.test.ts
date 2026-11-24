@@ -1821,10 +1821,10 @@ describe('composed URL run with actual role processes', () => {
     };
     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
-    // The Author rereads its brief after checked packet registration. Its
-    // next exchange settles before Inventory and Fidelity finish their work.
+    // Keep the genuine Author recheck without parking its HTTP response on
+    // another role's packet. Fidelity gates its own packet read below; the
+    // durable end-turn gates still order Author, Inventory and Fidelity.
     const authorBeforeEligibleStop = waitForFidelityPacket === undefined ? [] : [async () => {
-      await waitForFidelityPacket;
       return tool('recheck', 'artifact_read', { path: 'brief.md' });
     }];
     const relationCitation = (id: string) => [{ id, path: 'src/kestrel.c', startLine: 1, endLine: 1 }];
