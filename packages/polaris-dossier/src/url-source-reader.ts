@@ -32,13 +32,31 @@ function identity(directory: string): string {
   return `${stat.dev}:${stat.ino}`;
 }
 
-/** Keep the already selected clone and full pin at each object reader boundary.
- * The role never chooses read limits, store profile, clone or pin. */
-export function bindUrlSourceReader(input: {
+interface SourceReaderBinding {
   readonly clone: string; readonly revision: string; readonly store: UrlSourceStore;
   readonly current: () => boolean;
   readonly objectBytes?: number; readonly callObjects?: number;
-}): ReaderFactory {
+}
+
+/** Keep the already selected clone and full pin at each object reader boundary.
+ * The role never chooses read limits, store profile, clone or pin. */
+export function bindUrlSourceReader(input: SourceReaderBinding): ReaderFactory {
+  const { check, open } = captureSourceReader(input);
+  const factory: ReaderFactory = options => {
+    check();
+    return open(options);
+  };
+  readers.add(factory);
+  return factory;
+}
+
+/** Complete the census under one binding and one guarded descriptor walk. */
+export async function listBoundUrlSourceTree(input: SourceReaderBinding): ReturnType<PinnedObjectReader['listTree']> {
+  const { gitDir, revision, open } = captureSourceReader(input);
+  return open({ gitDir, revision }).listTree();
+}
+
+function captureSourceReader(input: SourceReaderBinding) {
   const { clone, revision, store, current, objectBytes = MAX_OBJECT_BYTES, callObjects = MAX_CALL_OBJECTS } = input;
   if (!path.isAbsolute(clone) || path.resolve(clone) !== clone || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(revision)
     || (store !== 'owned-loose' && store !== 'supplied') || !Number.isSafeInteger(objectBytes) || objectBytes < 1 || objectBytes > MAX_OBJECT_BYTES
@@ -56,8 +74,7 @@ export function bindUrlSourceReader(input: {
     refuse();
   };
   check();
-  const factory: ReaderFactory = options => {
-    check();
+  const open: ReaderFactory = options => {
     if (options.gitDir !== gitDir || options.revision !== revision) return refuse();
     const reader = openPinnedObjectReader({
       gitDir, revision, looseOnly: store === 'owned-loose',
@@ -78,6 +95,5 @@ export function bindUrlSourceReader(input: {
       storedType: () => checked(reader.storedType), readBlobs: paths => checked(() => reader.readBlobs(paths)),
     };
   };
-  readers.add(factory);
-  return factory;
+  return { gitDir, revision, check, open };
 }

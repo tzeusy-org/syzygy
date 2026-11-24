@@ -489,20 +489,9 @@ function observeResumedOrigins(
       planRendererScaffold: renderer => observing ? measure(begin('renderer'), () => ledger.planRendererScaffold(renderer)) : ledger.planRendererScaffold(renderer),
     });
   });
-  const bindReader = sourceReader.bindUrlSourceReader;
-  const readerSpy = vi.spyOn(sourceReader, 'bindUrlSourceReader').mockImplementation(given => {
-    // The tree census uses its own binding. The ledger binds a separate byte
-    // reader for the representative source checks.
-    if (given.callObjects === undefined) return bindReader(given);
-    const step = begin('list-tree');
-    const open = bindReader(given);
-    return input => {
-      const reader = open(input);
-      return { ...reader,
-        listTree: () => measure(step, reader.listTree),
-      };
-    };
-  });
+  const listTree = sourceReader.listBoundUrlSourceTree;
+  const readerSpy = vi.spyOn(sourceReader, 'listBoundUrlSourceTree').mockImplementation(given =>
+    measure(begin('list-tree'), () => listTree(given)));
   const finish = (outcome: ResumeObservation): void => {
     observing = false;
     settle(phase, outcome);

@@ -3,7 +3,7 @@ import { mkdirSync, renameSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
 import { expect, it } from 'vitest';
-import { bindUrlSourceReader, isBoundUrlSourceReader } from './url-source-reader.js';
+import { bindUrlSourceReader, isBoundUrlSourceReader, listBoundUrlSourceTree } from './url-source-reader.js';
 
 function fixture() {
   const clone = tempDir('url-source-reader');
@@ -46,6 +46,14 @@ it('refuses a successful object read whose currentness changed before return', a
   await expect(reader.listTree()).rejects.toThrow(/source binding/);
   readsAllowed = 2;
   await expect(reader.listTree()).resolves.toHaveLength(1);
+});
+
+it('checks bound tree authority again after the descriptor walk', async () => {
+  const f = fixture();
+  let samples = 0;
+  await expect(listBoundUrlSourceTree({ ...f, store: 'owned-loose', current: () => ++samples < 3 }))
+    .rejects.toThrow(/source binding/);
+  expect(samples).toBe(3);
 });
 
 it('refuses a replacement object directory on the same path', async () => {

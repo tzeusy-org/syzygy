@@ -1,7 +1,6 @@
-import path from 'node:path';
 import { encodeCanonicalJson, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { bindUrlSourceReader } from './url-source-reader.js';
+import { listBoundUrlSourceTree } from './url-source-reader.js';
 import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, designVerdictSchemaDocument,
   localDraftSchema, localInventorySchema, localVerdictSchema, localDesignVerdictSchema } from './draft-schema.js';
 import { sourceBindingSha256 } from './run-record.js';
@@ -113,14 +112,15 @@ async function create(given: UrlRunOriginsOptions) {
     aliases.set(metadata.id, role.declaration.inputOriginId);
   }
   let active = true, timer: ReturnType<typeof setTimeout> | undefined;
+  const started = performance.now();
+  const checkTime = (): void => { if (!active || performance.now() - started >= limits.milliseconds) refuse(); };
   const deadline = new Promise<never>((_resolve, reject) => { timer = setTimeout(() => { active = false; reject(new Error('url-run-origins-unavailable')); }, limits.milliseconds); });
   const readTree = async () => {
-    const check = (): void => { live(); if (!active) refuse(); };
-    check();
-    const openReader = bindUrlSourceReader({ clone: record.subject.clone.path, revision: pin, store: sourceStore,
-      current: () => { check(); return true; }, callObjects: limits.treeEntries });
-    const reader = openReader({ gitDir: path.join(record.subject.clone.path, '.git'), revision: pin });
-    const listed = await reader.listTree(); check(); if (listed.length > limits.treeEntries) refuse(); return listed;
+    const listed = await listBoundUrlSourceTree({ clone: record.subject.clone.path, revision: pin, store: sourceStore,
+      current: () => { checkTime(); live(); checkTime(); return true; }, callObjects: limits.treeEntries });
+    checkTime();
+    if (listed.length > limits.treeEntries) refuse();
+    return listed;
   };
   let tree;
   try { tree = await Promise.race([readTree(), deadline]); } finally { active = false; clearTimeout(timer); }

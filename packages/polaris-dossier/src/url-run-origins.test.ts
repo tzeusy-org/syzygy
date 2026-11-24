@@ -4,7 +4,7 @@ import os from 'node:os';
 import { createHash } from 'node:crypto';
 import { createRequire, syncBuiltinESMExports } from 'node:module';
 import { deflateSync } from 'node:zlib';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { buildDossierScreen } from './screen.js';
@@ -12,6 +12,7 @@ import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig } from './run-record.js';
 import { isPreparedUrlRolePlan, prepareUrlRolePlans, type UrlRolePlanningOptions } from './url-role-plan.js';
 import { createUrlRunOrigins, type UrlRunOriginsOptions } from './url-run-origins.js';
+import * as boundSource from './url-source-reader.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
 const cleanup: string[] = [];
@@ -142,6 +143,30 @@ describe('initial URL run provenance from genuine native preparations', () => {
     } finally { Object.assign(promises, { open: originalOpen, opendir: originalDir }); syncBuiltinESMExports(); await fs.rm(pack, { recursive: true }); }
     expect((await createUrlRunOrigins(codeOnly.options)).source.report.representedClasses).toEqual(['code-content']);
   });
+  it('completes the guarded tree walk within its original limit and refuses a late live check', async () => {
+    let reading = false, elapsed = 0, samples = 0, sampleMilliseconds = 1550;
+    const list = boundSource.listBoundUrlSourceTree;
+    const listTree = vi.spyOn(boundSource, 'listBoundUrlSourceTree').mockImplementation(async input => {
+      reading = true;
+      try { return await list(input); }
+      finally { reading = false; }
+    });
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    const options = { ...own.options, current: () => {
+      if (reading) { samples++; elapsed += sampleMilliseconds; }
+      return true;
+    } };
+    try {
+      const origins = await createUrlRunOrigins(options);
+      expect(origins.source.report).toMatchObject({ treeEntries: 3, eligibleRegularPaths: 3 });
+      expect(samples).toBe(3);
+      sampleMilliseconds = 1750;
+      samples = 0;
+      await expect(createUrlRunOrigins(options)).rejects.toThrow('url-run-origins-unavailable');
+      expect(samples).toBe(3);
+    } finally { clock.mockRestore(); listTree.mockRestore(); }
+  });
+
   it('refuses shaped or foreign role populations, stale policies and bounded tree excess without fabricating origins', async () => {
     await expect(createUrlRunOrigins({ ...own.options, roles: own.options.roles.map(plan => ({ ...plan })) })).rejects.toThrow('url-run-origins-unavailable');
     await expect(createUrlRunOrigins({ ...own.options, roles: [...own.options.roles].reverse() })).rejects.toThrow('url-run-origins-unavailable');
