@@ -75,11 +75,14 @@ PINNED_SOURCE = {
     "materialize-routes": MATERIALIZE,
     "materialize-control": MATERIALIZE_TEST,
 }
-# Independent frozen review of the complete declaration inputs. The manifest
-# records per-source drift, while this subject prevents a manifest-only repin
-# from certifying a syntax the deliberately scoped extractor did not read.
-DECLARATION_SOURCES = ("effect-authority", "materialize-routes", "observer-registry", "poc-routes")
-REVIEWED_DECLARATIONS_SHA256 = "66a83b4ef7124179ebbad4a50681869c73f93b8f8d8e8b08ecc2617637a60f19"
+# Independent frozen review of the declaration bytes and the authorities that
+# give those declarations meaning. Refreshing the manifest cannot certify a
+# changed declaration, scheduling decision, or observer act.
+DECLARATION_SOURCES = (
+    "effect-authority", "materialize-routes", "observer-registry", "poc-routes",
+    "briefing-scheduling-decision", "observer-act",
+)
+REVIEWED_DECLARATIONS_SHA256 = "30e9b5fef8fc2743be75895c81174f9fba8f4ed1ed3055eefd6f41812be32cad"
 FORECLOSURE = {
     "reason": "foreclosed",
     "effect": "butlers-tracker-write",
@@ -346,7 +349,7 @@ def render(manifest, clauses, specs, units, effects, pins):
         f"Reviewed scope at `{manifest['reviewed_base']}` covers {len(clauses)} governing clauses",
         f"and {len(units)} source units, including explanatory context. The input digests below",
         "bind the selected doctrine, specification and evidence bytes. Source repinning alone",
-        "cannot update the independently reviewed context and complete declaration subjects.",
+        "cannot update the independently reviewed context, declaration and authority inputs.",
         "",
         "## Governing boundary dispositions",
         "",
@@ -407,7 +410,7 @@ def build(read, *, context_sha256=REVIEWED_CONTEXT_SHA256,
     drift = [key for key, value in pins.items() if manifest["pins"][key] != value]
     require(not drift, f"scoped sources changed; reconcile exact bytes: {', '.join(drift)}")
     require(declaration_digest(pins) == declarations_sha256,
-            "declared effect sources differ from the exact independently reviewed declaration inputs")
+            "declared effects differ from the independently reviewed declaration and authority inputs")
 
     units = boundary_units(clauses)
     mappings = manifest["boundaries"]
@@ -589,7 +592,7 @@ def selftest_cases():
     changed[MANIFEST] = json.dumps(new_manifest)
     count, failure = result(changed)
     cases.append(("new HEAD exact source review still required after source repin", count == 0
-                  and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+                  and failure == "declared effects differ from the independently reviewed declaration and authority inputs"))
     count, failure = result(changed, reviewed_declarations=declaration_digest(new_manifest["pins"]))
     cases.append(("new HEAD remains unmapped after source repin", count == 0 and failure is not None
                   and "missing ['route/HEAD POC_HUMAN_PATH']" in failure))
@@ -622,7 +625,7 @@ def selftest_cases():
         changed = {**data, ROUTES: routes, MANIFEST: json.dumps(new_manifest)}
         count, failure = result(changed)
         cases.append((name, count == 0
-                      and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+                      and failure == "declared effects differ from the independently reviewed declaration and authority inputs"))
 
     # One synthetic conditional machine pair with independent literal outcomes.
     briefing_block = (
@@ -660,7 +663,7 @@ def selftest_cases():
                   and bound[REGISTER].count("[SEC-5]") == 2))
     count, failure = result(bound)
     cases.append(("briefing repin alone refuses a new declaration subject", count == 0
-                  and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+                  and failure == "declared effects differ from the independently reviewed declaration and authority inputs"))
 
     for name, routes, reason in (
         ("briefing cannot drop one mount", briefing_block.replace(briefing_block.splitlines(keepends=True)[2], ""),
@@ -693,6 +696,21 @@ def selftest_cases():
     count, failure = result({**bound, BRIEFING_DECISION: "unreviewed"}, reviewed_declarations=approved)
     cases.append(("briefing scheduling decision bytes are pinned", count == 0
                   and failure == "scoped sources changed; reconcile exact bytes: briefing-scheduling-decision"))
+
+    for name, path, replacement in (
+        ("briefing cannot repin and regenerate a different scheduling decision",
+         BRIEFING_DECISION, "Synthetic unrelated decision\n"),
+        ("briefing cannot repin and regenerate a different observer act with the same registry digest",
+         ACT, "Synthetic unrelated act\n" + briefing_inputs[ACT]),
+    ):
+        changed, altered_subject = briefing_case({**briefing_inputs, path: replacement})
+        changed[REGISTER], regenerated = build(
+            changed.__getitem__, context_sha256=context_sha256,
+            declarations_sha256=altered_subject,
+        )
+        count, failure = result(changed, reviewed_declarations=approved)
+        cases.append((name, altered_subject != approved and regenerated == 19 and count == 0
+                      and failure == "declared effects differ from the independently reviewed declaration and authority inputs"))
 
     trials = (
         ("relabelled prohibition", "boundaries", first,

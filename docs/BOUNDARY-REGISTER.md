@@ -10,7 +10,7 @@ They record no live read, operation, credential or deployment result.
 Reviewed scope at `1e30b1c196c691565fc2d858649aa4942306e305` covers 8 governing clauses
 and 72 source units, including explanatory context. The input digests below
 bind the selected doctrine, specification and evidence bytes. Source repinning alone
-cannot update the independently reviewed context and complete declaration subjects.
+cannot update the independently reviewed context, declaration and authority inputs.
 
 ## Governing boundary dispositions
 
@@ -127,4 +127,4 @@ cannot update the independently reviewed context and complete declaration subjec
 | source-read-spec-act | `fc7f1585a2ff05e0f09a68faa5bf1b176c94e69186fb512238d6cc9288f2327e` |
 
 The reviewed declared-effect source subject is
-`66a83b4ef7124179ebbad4a50681869c73f93b8f8d8e8b08ecc2617637a60f19`.
+`30e9b5fef8fc2743be75895c81174f9fba8f4ed1ed3055eefd6f41812be32cad`.
