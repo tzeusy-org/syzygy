@@ -79,6 +79,24 @@ describe('close (S10)', () => {
     });
   });
 
+  it('records the step measures Unknown with the reader\'s reason when the step log stands at its path but cannot be read', async () => {
+    const { run } = await fullRun({ beforeClose: (dir) => { fs.rmSync(path.join(dir, 'steps.jsonl')); fs.mkdirSync(path.join(dir, 'steps.jsonl')); } });
+    const record = readJson(path.join(run, 'record.json'));
+    expect(record.stepMeasures.label).toBe('Unknown');
+    expect(record.stepMeasures.why).toBe(record.steps.why);
+    expect(record.stepMeasures.why).toMatch(/^steps\.jsonl cannot be read \(/u);
+  });
+
+  it('counts step-log lines past the 10,000 it reads as unreadable rows in the step measures', async () => {
+    const extra = `${JSON.stringify({ format: 'polaris-dossier-step/1', step: 'await', at: '2026-01-01T00:00:00.000Z', outcome: 'delivered' })}\n`;
+    const { run } = await fullRun({ beforeClose: (dir) => fs.appendFileSync(path.join(dir, 'steps.jsonl'), extra.repeat(10_000)) });
+    const record = readJson(path.join(run, 'record.json'));
+    const over = record.steps.unreadable;
+    expect(over).toBeGreaterThan(0);
+    expect(record.stepMeasures.unreadableRows).toBe(over);
+    expect(record.stepMeasures.rows).toBe(10_000);
+  });
+
   it('refuses a zero, negative, fractional or non-decimal figure before it opens the run, and writes nothing', async () => {
     for (const figure of ['0', '-1', '1.5', '01', '1e3', '', ' 5', '9007199254740993']) {
       expect(typeof parseUsageFigure('--usage-tokens', figure)).toBe('string');

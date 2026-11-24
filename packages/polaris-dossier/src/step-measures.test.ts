@@ -77,6 +77,19 @@ describe('stepMeasures (REQ-polaris-generation-033 version 2.27)', () => {
     expect(stepMeasures(['{}', 'x'], CLOSED)).toMatchObject({ label: 'Unknown', why: 'no row of the step log is readable (2 unreadable)' });
   });
 
+  it('opens a round at an issued review prompt too (the handover mode), and never at another role\'s or kind\'s prompt', () => {
+    const issued = row({ step: 'session-prompt', at: '2026-11-06T10:00:00.000Z', outcome: 'issued', role: 'review', kind: 'design', session: 2, round: 1 });
+    const inventory = row({ step: 'session-prompt', at: '2026-11-06T10:00:30.000Z', outcome: 'issued', role: 'inventory', kind: 'design' });
+    const otherKind = row({ step: 'review-check', at: '2026-11-06T10:01:00.000Z', outcome: 'validated', kind: 'fidelity' });
+    const ends = row({ step: 'review-check', at: '2026-11-06T10:02:00.000Z', outcome: 'validated', kind: 'design' });
+    expect(stepMeasures([issued, inventory, otherKind, ends], CLOSED)).toMatchObject({
+      reviewRounds: {
+        design: { state: 'counted', opened: 1, completed: 1, ms: 120_000, rounds: [{ round: 1, session: 2, ms: 120_000, refusedSubmissions: 0 }] },
+        fidelity: { state: 'unknown' },
+      },
+    });
+  });
+
   it('refuses out-of-order instants rather than reporting a negative time', () => {
     const late = row({ step: 'session-prompt', at: '2026-11-06T10:40:00.000Z', outcome: 'issued', role: 'all' });
     expect(stepMeasures([late, LOG[2]!], CLOSED)).toMatchObject({
