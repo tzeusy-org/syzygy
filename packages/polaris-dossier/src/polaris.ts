@@ -645,6 +645,15 @@ export function fidelityDeliveryDue(passedDraft: number | null, inventoryRevisio
   return true;
 }
 
+/** The notice key recording that the fidelity review of this draft and inventory pair waits on inventory coverage (version 2.27). */
+export const coverageHoldKey = (draftRevision: number, inventoryRevision: number): string => `coverage-held-${draftRevision}/${inventoryRevision}`;
+
+/** What Syzygy types into the authoring session when its passed draft leaves inventory entries without an outcome: the refusal's own
+ * paragraph, which names the entries by identifier and path (as JSON strings) and says what to do next. */
+export function coverageHoldMessage(reason: string): string {
+  return `Syzygy: ${flatten(reason, 4000)} This repair counts against the run's repair-cycle limit like any other draft revision.`;
+}
+
 /** Whether a blocking fidelity verdict ends the run: a side that must repair has no revision left under the limit. */
 export function fidelityRepairSpent(sides: RepairSides, draftRevision: number, inventoryRevision: number, maxRepairCycles: number): 'draft' | 'inventory' | null {
   if (sides.author && draftRevision >= maxRepairCycles) return 'draft';
@@ -796,11 +805,25 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       state.notified.push(`inventory-draft-${passedDraft}`); saveState(options.stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
-    if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
+    const heldPair = fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])
+      && state.notified.includes(coverageHoldKey(passedDraft!, inventoryRevision!));
+    if (heldPair && draft !== null && draft.n >= maxRepairCycles) {
+      phase = `blocked: draft revision ${draft.n} leaves inventory entries without an outcome, so the fidelity review waits, and all ${maxRepairCycles} repair cycles of the draft are spent${cycleBreakdown(run)}`;
+      break;
+    }
+    if (!heldPair && fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
       const pair = `${passedDraft!}/${inventoryRevision!}`;
       const r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], ports);
-      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
+      const held = r.exit !== 0 && r.doc?.['stage'] === 'coverage';
+      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}`
+        : held ? `fidelity review waits: draft revision ${passedDraft!} leaves inventory entries without an outcome` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
+      if (held) {
+        // The hold is decided by the frozen pair alone, so it is told once and not retried: the next passed draft or inventory revision is
+        // a new pair (version 2.27).
+        tellAuthor(state, coverageHoldMessage(String(r.doc!['reason'])));
+        state.notified.push(coverageHoldKey(passedDraft!, inventoryRevision!)); saveState(options.stateRoot, state);
+        screen.event(`told the author: inventory entries without an outcome hold the fidelity review of draft revision ${passedDraft!}`);
+      } else if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
         (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
       }
     }
@@ -849,7 +872,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       break;
     }
     const repairing = state.pendingRepair === undefined ? null : [state.pendingRepair.draftAbove !== undefined ? 'author' : null, state.pendingRepair.inventoryAbove !== undefined ? 'inventory' : null].filter((x) => x !== null).join(' and ');
-    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
+    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory'
+      : heldPair ? 'author settling inventory coverage before the fidelity review' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
       : designState === 'none' ? 'rendered-design review' : 'author repairing after design review';
     const left = Math.max(0, deadline - Date.now());
     screen.draw([

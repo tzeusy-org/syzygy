@@ -74,6 +74,8 @@ export async function reviewPacket(runDir: string, request: { readonly kind: str
   }
   const built = await buildFidelityPacket(opened, deps);
   if (!built.ok) return refuse(built.stage, built.reason, undefined, opened.run);
+  // The review waits until every listed inventory entry has an outcome (version 2.27): nothing is written.
+  if (built.coverageHold !== undefined) return refuse('coverage', built.coverageHold.reason, built.coverageHold.reasons, opened.run);
   let directory: string;
   try { directory = writePacket(opened.run, 'fidelity', built); } catch (cause) { return refuse('write', `the packet could not be written (${errno(cause)})`, undefined, opened.run); }
   logStep(opened.run, 'review-packet', now, { outcome: 'built', kind: 'fidelity', packetSha256: built.sha256 });

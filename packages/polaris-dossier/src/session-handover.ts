@@ -291,6 +291,8 @@ async function reviewSession(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.27): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return refuse('coverage', fidelity.coverageHold.reason, fidelity.coverageHold.reasons);
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
@@ -476,6 +478,8 @@ async function deliverReview(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.27): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return refuse('coverage', fidelity.coverageHold.reason, fidelity.coverageHold.reasons);
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
