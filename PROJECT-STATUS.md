@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 524 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 530 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -233,6 +233,13 @@ authority and no model yet called on the current path.
     `containment-size` and `containment-flat` findings, nestings witnessed as `contains` edges, brief v17); its code is
     not yet landed.
     *(2026-11-24: the predecessor figure "514 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Worth-knowing amendment 2.25](openspec/changes/dossier-worth-knowing) is agent-adopted in A-64.
+    It replaces REQ-polaris-generation-034 again (193 to 199 scenarios: draft schema v13 lets a cited section paragraph
+    carry the worth-knowing mark and a Pole say why it marks none, the `worth-knowing` finding and count advice, one
+    "Worth knowing" callout per page, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
+    (syzygy-5dhm.41) lands with it, built over schema v10 and brief v16 until 2.23's containment kind is implemented.
+    *(2026-11-24: the predecessor figure "524 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

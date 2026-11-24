@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 524,
+      "scenarios": 530,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1199,7 +1199,13 @@
             "Nesting challenged where coverage is complete",
             "Nesting of other units is Unknown, never a finding",
             "Earlier schema keeps its bytes",
-            "Brief v17 states the containment kind"
+            "Brief v17 states the containment kind",
+            "A worth-knowing block leads its page",
+            "A Pole with none found",
+            "A misplaced, uncited or judged mark refused",
+            "Count advice without a quota",
+            "A pre-v13 draft keeps its bytes",
+            "Brief v19 and inventory brief v4 ask for the facts"
           ]
         },
         "REQ-polaris-generation-035": {
