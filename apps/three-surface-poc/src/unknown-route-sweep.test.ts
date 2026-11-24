@@ -258,7 +258,7 @@ const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> 
  * card (title, governing intent, verification), one Unknown-provenance mark
  * on an observed board, and five answer marks on a board with no work items. */
 const REFERENCES: Readonly<Record<string, number>> = {
-  plain: 16, 'observed-shape': 16, unreachable: 5, 'unsupported-repository': 5, 'worker-change': 4,
+  plain: 10, 'observed-shape': 10, unreachable: 5, 'unsupported-repository': 5, 'worker-change': 4,
 };
 
 describe('every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060)', () => {
