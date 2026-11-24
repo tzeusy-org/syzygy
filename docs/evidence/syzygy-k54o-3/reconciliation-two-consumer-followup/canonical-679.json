@@ -1,0 +1,32 @@
+{
+  "subject": "77be72c353eb031dcb03db0bae82b5e4bbf27faa",
+  "checkerSha256": "c8ec9e2c1fd950024c64ca7bc8499d230072792f87e5ff03285edc6fb80b76d5",
+  "elapsedSeconds": 227.05119536805432,
+  "exit": 0,
+  "mutantsKilled": 566,
+  "controlsHeld": 113,
+  "uniqueWitnesses": 679,
+  "archiveSha256": "552d64101500bf8bb4f194716c8aa9f08ecbe76602b626d841937866e623c18d",
+  "files": [
+    {
+      "path": "result.json",
+      "bytes": 655,
+      "sha256": "c2c41a18d729099a750524fcb7fe5ad860b63c00c4cc00d0c2eebd08fae3d738"
+    },
+    {
+      "path": "run.log",
+      "bytes": 176818,
+      "sha256": "2bb3c550f978ff4691cf3b620dd16341aee601e3724b690ad24685c3448e883c"
+    },
+    {
+      "path": "subject.json",
+      "bytes": 519,
+      "sha256": "0a0c4879469aae970410984033f15c54c897f24baaa034edff71fd2ddbd40d52"
+    },
+    {
+      "path": "witnesses.json",
+      "bytes": 678828,
+      "sha256": "f5bb4f9ace83d7b0e19008a327f6ebf7f0cc8148a12ca38bc78b2421eb2bacea"
+    }
+  ]
+}

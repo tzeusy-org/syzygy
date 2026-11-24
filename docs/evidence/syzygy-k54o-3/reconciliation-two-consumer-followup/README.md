@@ -8,4 +8,6 @@
 
 [Observed] check_routes: 2797.367ms original and 416.748ms candidate; actual D10 lookups 38 to 1. These are scoped local measurements, not hosted acceptance.
 
-[Unknown] Full canonical679-witness verification and exact published hosted timing under420 seconds remain pending. The dominant prefix-mutant phase is unchanged. Frozen preparation records retain their original unexecuted labels; the separate executed result supplies the current verification state.
+[Observed] The original full selftest with structured witnesses passed at exact clean commit 77be72c353eb031dcb03db0bae82b5e4bbf27faa in 227.051 seconds:566 expected-predicate mutants killed and113 controls held. The independently counted witness file has679 unique IDs and the same566/113 outcome split. The canonical-679 archive retains complete output, command, subject and re-runnable old/new witness fragments. This is the reconciliation selftest, not the full repository battery.
+
+[Unknown] Exact final published hosted timing under420 seconds and the complete repository battery remain pending. The dominant prefix-mutant phase is unchanged. Frozen preparation records retain their original unexecuted labels; the separate executed result supplies the current verification state.
