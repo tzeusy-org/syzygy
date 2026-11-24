@@ -1,0 +1,1833 @@
+{
+  "format": "syzygy-dossier-stored-run-measures/1",
+  "bead": "syzygy-5dhm.127",
+  "status": "Not authority. A measurement over stored records; no session, no dossier run, no provider call.",
+  "script": "scripts/dossier_stored_run_measures.py",
+  "inputRoots": {
+    "run-*": "the operator's dossier state directory (default ~/.local/state/syzygy-dossier); run-*.agents and run-*.sessions never opened or listed",
+    "pilot/": "docs/evidence/pursuit-2026-11-21b/pilot/",
+    "readers/": "docs/evidence/syzygy-5dhm-136/readers-2026-11-23/"
+  },
+  "inputs": [
+    {
+      "name": "pilot/answers-D.json",
+      "sha256": "0dc5e596718456e302be163dfeff44b6f46e420293a1825270a4ac86dfab2261",
+      "bytes": 12669
+    },
+    {
+      "name": "pilot/answers-E.json",
+      "sha256": "1e5502e9a8c443a331f73dc2892259269938cb107ed8f8d32f6db25fb179ce66",
+      "bytes": 17450
+    },
+    {
+      "name": "pilot/grading/grades.json",
+      "sha256": "6d4274c05890d300b462faa59f65c49f89907e00bd79ee64f19ec1b9c8a70133",
+      "bytes": 3812
+    },
+    {
+      "name": "pilot/grading2/grades.json",
+      "sha256": "5a7f1095de48d31e2b5179a6e7a6e145f5b8039c5aaa5839d226607c57df69f8",
+      "bytes": 4807
+    },
+    {
+      "name": "pilot/grading3/grades.json",
+      "sha256": "3ca4a22549239a164c0d2f3c3a997a28cb3077c117d00039600aff7f9c6acd39",
+      "bytes": 6813
+    },
+    {
+      "name": "pilot/key.json",
+      "sha256": "0dd376661de598819730357aa844fe026a7113959e30b9f863d8159af72b3690",
+      "bytes": 41978
+    },
+    {
+      "name": "pilot/labels-first-grading.json",
+      "sha256": "d27cfe41b07043a3db56464dd39189592b21424798014f0c5dbe3b819f8d1af3",
+      "bytes": 105
+    },
+    {
+      "name": "pilot/labels-second-grading.json",
+      "sha256": "755a15b71d972e5ae11925c5c870bd7df90be681f25403b512d2bdfb5e391a62",
+      "bytes": 40
+    },
+    {
+      "name": "pilot/labels-third-grading.json",
+      "sha256": "2910b0a41ccbf6f0fab1e1f2fa9be69727fa3c97901fef33e8c8a846ae23cf62",
+      "bytes": 60
+    },
+    {
+      "name": "readers/answers-Y.json",
+      "sha256": "a96856ddb61b20c258553aec3f932fadca4934d0127a14b70909dfa2678d8908",
+      "bytes": 9996
+    },
+    {
+      "name": "readers/answers-Z.json",
+      "sha256": "6f1e14b6a50c3366633f0c2ca413e36496d23bfcea2dc7ef8dd400ab76746a55",
+      "bytes": 16621
+    },
+    {
+      "name": "readers/grade/grades.json",
+      "sha256": "37709e196c561a420737528464712f16fbf336d606fee53aa209d53edcf3ff59",
+      "bytes": 11817
+    },
+    {
+      "name": "readers/labels/labels.json",
+      "sha256": "b9a71a24a2b695afe9a934a43ad5aa67fde6c1a8ceec39e34471b6c02e34537d",
+      "bytes": 110
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/brief.json",
+      "sha256": "e315578d0c9c19dfb3a086fdd4e5a999ae830cc0eb3db74e023361d5e173aa5a",
+      "bytes": 1735
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/drafts/rev-2.json",
+      "sha256": "9f8390d30e72f8c47e4ef3592d8b2fec31e379d4ca9339037bf134d925225abb",
+      "bytes": 139913
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/inventory/rev-2.json",
+      "sha256": "d5e9c648af712ea844803d5d81cbe98979a51bdfbb8a361f26b40dd69c050cd7",
+      "bytes": 46085
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/design-verdict-0.json",
+      "sha256": "f454dd9a95dae72df18035b36241fb36630ba143450ec1c20628aced8e926c71",
+      "bytes": 18969
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-packet-a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2/packet.json",
+      "sha256": "a8e9e304ce6df7b3984bfb3dcbe54c2883fa1eae8f5cabd4610e317a63f4a8d2",
+      "bytes": 607609
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-0.json",
+      "sha256": "65378908ff12b22bbbdfb613b06c7b20bba12ca5f556458a299cb3ca8760259e",
+      "bytes": 60354
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-1.json",
+      "sha256": "93ea5896adf106c3d8b192df1953b614cd3ad519ceb5bee590f353a0f677fa17",
+      "bytes": 60814
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/reviews/fidelity-verdict-2.json",
+      "sha256": "1728cbe5520c26bdcf261ab361aa16295e70e9da951f4bb9b552b3adca0f4c97",
+      "bytes": 50971
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/run.json",
+      "sha256": "b6414422f7fa0bb574c62fcacee49ae8221e89ad04c471fdce860ff53eafa02b",
+      "bytes": 2181
+    },
+    {
+      "name": "run-2ecdcab0c77e228f6ad9d3e0acfa1414/steps.jsonl",
+      "sha256": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+      "bytes": 4489
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/brief.json",
+      "sha256": "0a75cb962c35da4a1d3bfda4b5820c7f9136ea5f8359dce1836dfd41391d39ec",
+      "bytes": 1735
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/drafts/rev-3.json",
+      "sha256": "47dd2b54d9eda4098255b3b8e0b47265c9fa71515133c5376ae8a4e5ad2024e3",
+      "bytes": 106667
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/inventory/rev-1.json",
+      "sha256": "a4cdec3a3756d87820e0af3b5a4b32891c4d6ffa91ed9f3a36b196d7afc29b6b",
+      "bytes": 34988
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-packet-461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393/packet.json",
+      "sha256": "461b1b61c2f99c54589f2f2d2748e37e9d33888b7a60f4aee8bda7c40b8ec393",
+      "bytes": 454779
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-0.json",
+      "sha256": "762a2735f109e15fee6fb44d6f9ea46b614cb6774daf78619d72e8bb99c5ef5a",
+      "bytes": 50369
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-1.json",
+      "sha256": "eb251f1e2f4d6fe5c8e5cf63d23d458abea0becf5aebabd327fd5693964e738f",
+      "bytes": 50329
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-2.json",
+      "sha256": "cec296760e44809fdf5cae7c2a508f5ae6e94c42b27eafe3fbae32a356936860",
+      "bytes": 50294
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/reviews/fidelity-verdict-3.json",
+      "sha256": "ea6d9d3265a6b9ba686a5e256ba3b3c79ad4df03022405b847eefa7ccd079e3c",
+      "bytes": 42874
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/run.json",
+      "sha256": "daf964162f3374f5be729bf9354a7684a53c555389ad5bd524e9cfd559a80238",
+      "bytes": 2181
+    },
+    {
+      "name": "run-36df95faf04a4c98eabbb32a18a4e833/steps.jsonl",
+      "sha256": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+      "bytes": 3652
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/brief.json",
+      "sha256": "e3a320f50e6650e96bca88eee55d5c7cf0df7ff2d2fa13ca3ded1952485cdef0",
+      "bytes": 2452
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/drafts/rev-3.json",
+      "sha256": "971da40a4a0abf751b77e40fd3327b975dad574ca2076f9748bd953d83ea95fb",
+      "bytes": 101989
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/inventory/rev-2.json",
+      "sha256": "a4b78e3b9b1e502440c4db523d524e67213f040562838d58fd702c0079bad0d9",
+      "bytes": 16778
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/design-verdict-0.json",
+      "sha256": "2ed983e545ce26a95a651460adb52796627dc88bf09ef3e336f2a8c04d74fff6",
+      "bytes": 16568
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/fidelity-packet-2c5ea81d20d1bf88c55d5415a71a586bddfcf559653cc61f8f9b781412d5c12b/packet.json",
+      "sha256": "2c5ea81d20d1bf88c55d5415a71a586bddfcf559653cc61f8f9b781412d5c12b",
+      "bytes": 328212
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/fidelity-verdict-0.json",
+      "sha256": "d0a70214ec1997248ca16daf1ddb4e8fe4ef45ce68706a91a2fbdfc93bc305dc",
+      "bytes": 49220
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/fidelity-verdict-1.json",
+      "sha256": "8e0a79c22f88c545762d2cf3101add0dd55aa405b36f419ff425407105b6324c",
+      "bytes": 35207
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/fidelity-verdict-2.json",
+      "sha256": "5e2df7931a200e99185a942055621e49439715e52356929e61769f00af484d4b",
+      "bytes": 35186
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/reviews/fidelity-verdict-3.json",
+      "sha256": "93a47522e3eda04e810af7b7eb6a38308815180ea3e048fbfcdf5346db846ca5",
+      "bytes": 30669
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/run.json",
+      "sha256": "afca0926f970384357ca0d4268928b3455da5ea7e3b635c6b7d0e7a085e5919b",
+      "bytes": 2401
+    },
+    {
+      "name": "run-3744945f44ecdc31a06d43be3d38818c/steps.jsonl",
+      "sha256": "bbc8a81770ec2e525d2d96bc0a9a5a705b1f71ff6e28bb17c8a79d698de1a1e7",
+      "bytes": 5109
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/brief.json",
+      "sha256": "66b99d4bd3d51fb8be38ce908c4bb43b9a5937909afc6c799e8dc5ad5932302c",
+      "bytes": 1735
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/drafts/rev-3.json",
+      "sha256": "ae9524fd705b12b18b37bf3e2978e013238e0cb2689a495c197fd602b967ebd4",
+      "bytes": 79101
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/inventory/rev-2.json",
+      "sha256": "385ce0a6d8018008424b99768e06d659a9c02afd3a702f69dcce50380219318c",
+      "bytes": 21853
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/design-verdict-0.json",
+      "sha256": "cafd73a628c9098a4522d3dee97af38d097a5418901f54749dbd75bc327479a5",
+      "bytes": 13795
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-packet-c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a/packet.json",
+      "sha256": "c293d632536671e6a2f60897cba623791682c9ff8f31904ca4a2b2f167d35e8a",
+      "bytes": 317563
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-0.json",
+      "sha256": "b20d4a962bf2fc951d584a2131a2cc1187aad23200a4ffc133a031645cf349bf",
+      "bytes": 39809
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-1.json",
+      "sha256": "a96dba8646ac39d6aafa76d48f41010518222af8aed8abb3b7d135d2e35e5b76",
+      "bytes": 33124
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/reviews/fidelity-verdict-2.json",
+      "sha256": "32b8ac4a3f076f75c54d8c007433cd5d25bd02afccfb32cf469b13703bc353bf",
+      "bytes": 32179
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/run.json",
+      "sha256": "1152d14e0c06bb6786cb3b3bfb930ad48b4245470ae2562ccd50c77015682fa8",
+      "bytes": 2181
+    },
+    {
+      "name": "run-4465d22f5ce1829ca49059a5b8451bb0/steps.jsonl",
+      "sha256": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+      "bytes": 5111
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/brief.json",
+      "sha256": "90e54f68fd2a9b79b9c9d477801272673d39c7a783965d9cd45202340fa00358",
+      "bytes": 2284
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/drafts/rev-4.json",
+      "sha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+      "bytes": 93863
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/inventory/rev-1.json",
+      "sha256": "a25a7858f64bcb1e5910e47a3602b143b3bf009ec805442a808c7e29f9abdd1f",
+      "bytes": 30318
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-verdict-0.json",
+      "sha256": "04e65ef1a07c92321a62d105b3d79e6d7a2df5b9797704c7ad4bde276eb54226",
+      "bytes": 18780
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/design-verdict-1.json",
+      "sha256": "6968af87d13c111987985d456c8e371253bfbbfe368327817b6d9976b52867c6",
+      "bytes": 15543
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-packet-e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6/packet.json",
+      "sha256": "e12a7315470bca0b899b141d374410d3b0c29132befb9580cbe8454a42b821d6",
+      "bytes": 423130
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-0.json",
+      "sha256": "8f3371c50052af970dcb3d98198286bdc494a85ab825cfe16542df5a970e7346",
+      "bytes": 43065
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-1.json",
+      "sha256": "3ea63792592f510faff704e297156c33489da32bc56221470f30828fa6bb7dbc",
+      "bytes": 38816
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-2.json",
+      "sha256": "9b03283f47764c0b9c384550f22fbd3c249c28a389fa49711697b8c761cfd528",
+      "bytes": 36598
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/reviews/fidelity-verdict-3.json",
+      "sha256": "5aac9d5cdf150504420dbe47d74c160d34bc56701e8e8b8f1487a7376a7f72c8",
+      "bytes": 34753
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/run.json",
+      "sha256": "52950308c9e5ab039bd6714585cfc04ea545730bc2a12f625e18e2a72bc8f8a7",
+      "bytes": 2172
+    },
+    {
+      "name": "run-658f2f90470f73eea1dc1d90209c5ef7/steps.jsonl",
+      "sha256": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+      "bytes": 6250
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/brief.json",
+      "sha256": "bc0b200cde98bd497fd7efda809fc852eeb54a72dad18ddf71834ff9bd6985a2",
+      "bytes": 1735
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/drafts/rev-4.json",
+      "sha256": "01ebbfd1abef9ea1d18e25dfd49c02c0be4c7b022635c1618e051e4f84d5a84c",
+      "bytes": 225789
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/inventory/rev-3.json",
+      "sha256": "aa9d8afd596693adb71af3c0bcb17cc427022b75d9f956e2792af68626a486fc",
+      "bytes": 48589
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-verdict-0.json",
+      "sha256": "5c3fd47f20e6fa91b467fd420c37ddb43d2066834ed25996d858c1cfbef29f98",
+      "bytes": 28617
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/design-verdict-1.json",
+      "sha256": "aed3518fceace2567d93135869127fa0bedbec600b6d28da554c0aeac01f6a24",
+      "bytes": 29517
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-packet-227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd/packet.json",
+      "sha256": "227bd5c56c1d97a155a6e98f37379a8291b10f154667e789baf6d6fc9f9ce4fd",
+      "bytes": 787115
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-0.json",
+      "sha256": "48668f4f7accfb0bce4d3715c3326ef85f2015bdb03737300430caaa6acdf083",
+      "bytes": 64886
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-1.json",
+      "sha256": "30c3326e3cdb4ab4374afef2e09e2d5d4de53dc1ab3e96e76ad5545b966206a7",
+      "bytes": 65249
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-2.json",
+      "sha256": "df5086fb1fe9243ae564f331eacec6e31466ab69541a47e9443456d8b9f74ecf",
+      "bytes": 60460
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-3.json",
+      "sha256": "38a4a52251f419e6b95c175b5ac651d762a917bd04b1170da04cb21e4741fa22",
+      "bytes": 59733
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-4.json",
+      "sha256": "c00e4b2be54b4ef0d13b53475257da1c0e0a35b4e2a35b90e7837587c91accbd",
+      "bytes": 59425
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/reviews/fidelity-verdict-5.json",
+      "sha256": "17d963cee22a7d596d646f2b80951b175e35d28aa80b7fd7eb0fc8a7a09d35fa",
+      "bytes": 60624
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/run.json",
+      "sha256": "bbe4353180aeb556b93f1daea8658354150aae5bf9cee36a484246b3f534d2a3",
+      "bytes": 2181
+    },
+    {
+      "name": "run-d9411d26ca55ebe0250e2e9b94dc0e32/steps.jsonl",
+      "sha256": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+      "bytes": 7639
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/brief.json",
+      "sha256": "3c831224dbc4691815caf717e8eb2c271e347343e19e7e75f95822f56097f0b3",
+      "bytes": 1890
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/drafts/rev-6.json",
+      "sha256": "ae7c654cd41997b48fe4e00546ae591a919341f242f90503660f07d6c30b4890",
+      "bytes": 128872
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/inventory/rev-2.json",
+      "sha256": "afcfc394a8ae3b592e4e252a5c51a9db9fb7c17f270e5d35e5b615b844fc7ead",
+      "bytes": 31853
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/design-verdict-0.json",
+      "sha256": "a8da37fc9b485415a3b276e80ea1338e14b4c92061882db73e8c854c01c1c807",
+      "bytes": 20108
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-packet-5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9/packet.json",
+      "sha256": "5546152f77ebfd98a746f0c71cb7c4bfddb9eb5afc73e547fbebdb6cc27bb1d9",
+      "bytes": 476298
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-0.json",
+      "sha256": "3b930bc6d95d373187034beebb1e8c9f97bd917e513196cb75cde3a124c44987",
+      "bytes": 42579
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-1.json",
+      "sha256": "601e19f34517a1df9ffcf455ac845be293f820b8d4c6144424c54a24e1b843d7",
+      "bytes": 42547
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-2.json",
+      "sha256": "47590d0bb60471c4614195bdd26afc7220ad203584c540c3a1bed54757a11794",
+      "bytes": 43906
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-3.json",
+      "sha256": "22c9c564fdd4a26e22125d14a2d85f84a7143bedcc0ee101061e2633b73d64dc",
+      "bytes": 43902
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-4.json",
+      "sha256": "cedb83c28019183a23ebb9b5f502767d92e7d0f7605ea99c07550af39189d94d",
+      "bytes": 42263
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-5.json",
+      "sha256": "5510ac8d1228196ada462f96e2cbff6d2b42f4e0392d536d6b9673486488acf2",
+      "bytes": 41365
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/reviews/fidelity-verdict-6.json",
+      "sha256": "12c2e73d74cba52efa0272d4800c1cb785088b169cd8eef241e5aa479f54d340",
+      "bytes": 42935
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/run.json",
+      "sha256": "950a11756083fb605a1edf20e297d458b3db7270f3d25564402b43101453ef27",
+      "bytes": 2181
+    },
+    {
+      "name": "run-ffe579c77dc21d9f6dd87ca6e2bc9301/steps.jsonl",
+      "sha256": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6",
+      "bytes": 7281
+    }
+  ],
+  "inputsDigest": "ce922fc7e9844601c96633082a036d129031e98eb4d83f3d0bd7f307a6efb148",
+  "launchRecordsListed": {
+    "2ecdcab0": 3,
+    "36df95fa": 3,
+    "3744945f": 3,
+    "4465d22f": 3,
+    "658f2f90": 3,
+    "d9411d26": 3,
+    "ffe579c7": 3
+  },
+  "runs": {
+    "2ecdcab0": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v2",
+      "draftSchema": "polaris-dossier-local-draft-v4",
+      "lastDraftRevision": 2
+    },
+    "36df95fa": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v1",
+      "draftSchema": "polaris-dossier-local-draft-v2",
+      "lastDraftRevision": 3
+    },
+    "3744945f": {
+      "repositoryId": "tzeusy-org-butlers",
+      "commit": "563078d0838b6f8a5274f6dd46e8ee150e839c08",
+      "briefVersion": "polaris-dossier-brief-v9",
+      "draftSchema": "polaris-dossier-local-draft-v4",
+      "lastDraftRevision": 3
+    },
+    "4465d22f": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v1",
+      "draftSchema": "polaris-dossier-local-draft-v2",
+      "lastDraftRevision": 3
+    },
+    "658f2f90": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v7",
+      "draftSchema": "polaris-dossier-local-draft-v4",
+      "lastDraftRevision": 4
+    },
+    "d9411d26": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v1",
+      "draftSchema": "polaris-dossier-local-draft-v3",
+      "lastDraftRevision": 4
+    },
+    "ffe579c7": {
+      "repositoryId": "redis-redis",
+      "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "briefVersion": "polaris-dossier-brief-v4",
+      "draftSchema": "polaris-dossier-local-draft-v4",
+      "lastDraftRevision": 6
+    }
+  },
+  "fixedInputCohort": {
+    "repositoryId": "redis-redis",
+    "commit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+    "runs": [
+      "2ecdcab0",
+      "36df95fa",
+      "4465d22f",
+      "658f2f90",
+      "d9411d26",
+      "ffe579c7"
+    ],
+    "leftOut": {
+      "3744945f": "another repository or commit"
+    },
+    "caveat": "the cohort's runs span several brief versions and draft schemas, so (a) and (b) mix author variance with the mechanism changing"
+  },
+  "figures": {
+    "a_author_variance": {
+      "label": "Observed",
+      "runs": {
+        "2ecdcab0": {
+          "lastDraftRevision": 2,
+          "blocks": 245,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v2",
+          "draftSchema": "polaris-dossier-local-draft-v4"
+        },
+        "36df95fa": {
+          "lastDraftRevision": 3,
+          "blocks": 126,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v1",
+          "draftSchema": "polaris-dossier-local-draft-v2"
+        },
+        "4465d22f": {
+          "lastDraftRevision": 3,
+          "blocks": 98,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v1",
+          "draftSchema": "polaris-dossier-local-draft-v2"
+        },
+        "658f2f90": {
+          "lastDraftRevision": 4,
+          "blocks": 153,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v7",
+          "draftSchema": "polaris-dossier-local-draft-v4"
+        },
+        "d9411d26": {
+          "lastDraftRevision": 4,
+          "blocks": 415,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v1",
+          "draftSchema": "polaris-dossier-local-draft-v3"
+        },
+        "ffe579c7": {
+          "lastDraftRevision": 6,
+          "blocks": 214,
+          "blocksWithoutLineCitation": 0,
+          "briefVersion": "polaris-dossier-brief-v4",
+          "draftSchema": "polaris-dossier-local-draft-v4"
+        }
+      },
+      "pathLevel": {
+        "perRun": {
+          "2ecdcab0": 18,
+          "36df95fa": 28,
+          "4465d22f": 20,
+          "658f2f90": 19,
+          "d9411d26": 36,
+          "ffe579c7": 18
+        },
+        "union": 39,
+        "inEveryRun": 14,
+        "inOneRunOnly": 8,
+        "meanPairwiseJaccard": 0.613
+      },
+      "claimLevel": {
+        "loose": {
+          "meanOrderedPairShareMatched": 0.787,
+          "minPair": 0.571,
+          "maxPair": 0.953,
+          "shareOfBlocksMatchedInEveryOtherRun": {
+            "2ecdcab0": 0.465,
+            "36df95fa": 0.675,
+            "4465d22f": 0.714,
+            "658f2f90": 0.595,
+            "d9411d26": 0.381,
+            "ffe579c7": 0.565
+          }
+        },
+        "strict": {
+          "meanOrderedPairShareMatched": 0.317,
+          "minPair": 0.096,
+          "maxPair": 0.575,
+          "shareOfBlocksMatchedInEveryOtherRun": {
+            "2ecdcab0": 0.053,
+            "36df95fa": 0.095,
+            "4465d22f": 0.122,
+            "658f2f90": 0.078,
+            "d9411d26": 0.022,
+            "ffe579c7": 0.089
+          }
+        }
+      },
+      "polesAndThesis": {
+        "polesPerRun": {
+          "2ecdcab0": 3,
+          "36df95fa": 0,
+          "4465d22f": 0,
+          "658f2f90": 3,
+          "d9411d26": 0,
+          "ffe579c7": 3
+        },
+        "runsWithPoles": 3,
+        "meanPairwiseJaccardPoleLabelWords": 0.29,
+        "sectionsPerRun": {
+          "2ecdcab0": 4,
+          "36df95fa": 5,
+          "4465d22f": 5,
+          "658f2f90": 4,
+          "d9411d26": 5,
+          "ffe579c7": 4
+        },
+        "meanPairwiseJaccardSectionTitleWords": 0.284,
+        "meanPairwiseJaccardIntroductionWords": 0.26,
+        "propositionItemsPerRun": {
+          "2ecdcab0": 1,
+          "36df95fa": 1,
+          "4465d22f": 1,
+          "658f2f90": 1,
+          "d9411d26": 1,
+          "ffe579c7": 1
+        },
+        "meanPairwiseJaccardPropositionWords": 0.284,
+        "meanPairwiseJaccardPropositionCitedLines": 0.107
+      },
+      "predicates": {
+        "draft": "each run's highest-numbered drafts/rev-<n>.json",
+        "block": "any dict under introduction, sections, diagrams, deepDives or unresolved with a non-empty citations list whose items carry a path (the understanding record is excluded)",
+        "citedLines": "the set of (path, line) over a block's citations, each closed range startLine..endLine",
+        "loose": "block X of run A is matched in run B when some block of B shares a cited (path, line) with X",
+        "strict": "block X of run A is matched in run B when some block of B has cited-line Jaccard >= 0.5 with X; a block with no line citation is never matched",
+        "words": "lowercased regex [a-z][a-z0-9-]{2,}, minus {the,and,for,how,what,with,its,are,from,that,this,into} and the words of the repository id",
+        "thesis": "understanding.proposition: its statements' words and its cited lines",
+        "pairs": "mean over unordered run pairs (Jaccard) or ordered pairs (share matched); a pair of two empty sets is left out"
+      },
+      "denominator": "6 runs at one repository and commit; blocks per run in runs[*].blocks"
+    },
+    "b_pooled_ceiling": {
+      "label": "Observed (counts); Inferred (that the union stands in for a depth ceiling)",
+      "inputsPerRun": {
+        "2ecdcab0": {
+          "fidelityVerdict": "fidelity-verdict-2.json",
+          "draftRevisionInPacket": 2,
+          "inventory": "rev-2.json"
+        },
+        "36df95fa": {
+          "fidelityVerdict": "fidelity-verdict-3.json",
+          "draftRevisionInPacket": 3,
+          "inventory": "rev-1.json"
+        },
+        "4465d22f": {
+          "fidelityVerdict": "fidelity-verdict-2.json",
+          "draftRevisionInPacket": 3,
+          "inventory": "rev-2.json"
+        },
+        "658f2f90": {
+          "fidelityVerdict": "fidelity-verdict-3.json",
+          "draftRevisionInPacket": 4,
+          "inventory": "rev-1.json"
+        },
+        "d9411d26": {
+          "fidelityVerdict": "fidelity-verdict-5.json",
+          "draftRevisionInPacket": 4,
+          "inventory": "rev-3.json"
+        },
+        "ffe579c7": {
+          "fidelityVerdict": "fidelity-verdict-6.json",
+          "draftRevisionInPacket": 6,
+          "inventory": "rev-2.json"
+        }
+      },
+      "supportedClaims": {
+        "perRunItems": {
+          "2ecdcab0": 204,
+          "36df95fa": 97,
+          "4465d22f": 80,
+          "658f2f90": 112,
+          "d9411d26": 314,
+          "ffe579c7": 139
+        },
+        "byThreshold": {
+          "any": {
+            "unionClusters": 80,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.237,
+              "36df95fa": 0.138,
+              "4465d22f": 0.075,
+              "658f2f90": 0.1,
+              "d9411d26": 0.8,
+              "ffe579c7": 0.138
+            },
+            "clustersInOneRunOnly": 63,
+            "clustersInEveryRun": 2
+          },
+          "0.3": {
+            "unionClusters": 384,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.385,
+              "36df95fa": 0.193,
+              "4465d22f": 0.154,
+              "658f2f90": 0.195,
+              "d9411d26": 0.622,
+              "ffe579c7": 0.232
+            },
+            "clustersInOneRunOnly": 261,
+            "clustersInEveryRun": 19
+          },
+          "0.5": {
+            "unionClusters": 545,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.33,
+              "36df95fa": 0.163,
+              "4465d22f": 0.136,
+              "658f2f90": 0.18,
+              "d9411d26": 0.508,
+              "ffe579c7": 0.22
+            },
+            "clustersInOneRunOnly": 396,
+            "clustersInEveryRun": 10
+          },
+          "0.7": {
+            "unionClusters": 687,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.278,
+              "36df95fa": 0.135,
+              "4465d22f": 0.114,
+              "658f2f90": 0.154,
+              "d9411d26": 0.424,
+              "ffe579c7": 0.192
+            },
+            "clustersInOneRunOnly": 552,
+            "clustersInEveryRun": 5
+          },
+          "1.0": {
+            "unionClusters": 776,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.25,
+              "36df95fa": 0.122,
+              "4465d22f": 0.103,
+              "658f2f90": 0.14,
+              "d9411d26": 0.38,
+              "ffe579c7": 0.175
+            },
+            "clustersInOneRunOnly": 689,
+            "clustersInEveryRun": 4
+          }
+        }
+      },
+      "inventoryEntries": {
+        "perRunItems": {
+          "2ecdcab0": 66,
+          "36df95fa": 63,
+          "4465d22f": 46,
+          "658f2f90": 55,
+          "d9411d26": 90,
+          "ffe579c7": 63
+        },
+        "byThreshold": {
+          "any": {
+            "unionClusters": 112,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.518,
+              "36df95fa": 0.464,
+              "4465d22f": 0.357,
+              "658f2f90": 0.429,
+              "d9411d26": 0.696,
+              "ffe579c7": 0.455
+            },
+            "clustersInOneRunOnly": 42,
+            "clustersInEveryRun": 22
+          },
+          "0.3": {
+            "unionClusters": 150,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.42,
+              "36df95fa": 0.373,
+              "4465d22f": 0.3,
+              "658f2f90": 0.353,
+              "d9411d26": 0.58,
+              "ffe579c7": 0.387
+            },
+            "clustersInOneRunOnly": 76,
+            "clustersInEveryRun": 18
+          },
+          "0.5": {
+            "unionClusters": 185,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.357,
+              "36df95fa": 0.33,
+              "4465d22f": 0.249,
+              "658f2f90": 0.297,
+              "d9411d26": 0.486,
+              "ffe579c7": 0.335
+            },
+            "clustersInOneRunOnly": 108,
+            "clustersInEveryRun": 9
+          },
+          "0.7": {
+            "unionClusters": 227,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.291,
+              "36df95fa": 0.278,
+              "4465d22f": 0.203,
+              "658f2f90": 0.242,
+              "d9411d26": 0.396,
+              "ffe579c7": 0.278
+            },
+            "clustersInOneRunOnly": 147,
+            "clustersInEveryRun": 2
+          },
+          "1.0": {
+            "unionClusters": 263,
+            "perRunShareOfUnion": {
+              "2ecdcab0": 0.251,
+              "36df95fa": 0.24,
+              "4465d22f": 0.175,
+              "658f2f90": 0.209,
+              "d9411d26": 0.342,
+              "ffe579c7": 0.24
+            },
+            "clustersInOneRunOnly": 198,
+            "clustersInEveryRun": 2
+          }
+        }
+      },
+      "supportedCitedLines": {
+        "union": 3819,
+        "perRunShareOfUnion": {
+          "2ecdcab0": 0.454,
+          "36df95fa": 0.447,
+          "4465d22f": 0.249,
+          "658f2f90": 0.389,
+          "d9411d26": 0.355,
+          "ffe579c7": 0.236
+        }
+      },
+      "secondRunGain": {
+        "sameBriefPairs": [
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "36df95fa",
+            "second": "4465d22f",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v2",
+              "polaris-dossier-local-draft-v2"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 0.176,
+              "0.3": 0.42,
+              "0.5": 0.533,
+              "0.7": 0.589,
+              "1.0": 0.642
+            }
+          },
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "36df95fa",
+            "second": "d9411d26",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v2",
+              "polaris-dossier-local-draft-v3"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 3.6,
+              "0.3": 2.817,
+              "0.5": 3.031,
+              "0.7": 3.146,
+              "1.0": 3.177
+            }
+          },
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "4465d22f",
+            "second": "36df95fa",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v2",
+              "polaris-dossier-local-draft-v2"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 0.667,
+              "0.3": 0.736,
+              "0.5": 0.792,
+              "0.7": 0.911,
+              "1.0": 0.95
+            }
+          },
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "4465d22f",
+            "second": "d9411d26",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v2",
+              "polaris-dossier-local-draft-v3"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 3.974,
+              "0.3": 3.52,
+              "0.5": 3.557,
+              "0.7": 3.725,
+              "1.0": 3.75
+            }
+          },
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "d9411d26",
+            "second": "36df95fa",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v3",
+              "polaris-dossier-local-draft-v2"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 0.115,
+              "0.3": 0.199,
+              "0.5": 0.24,
+              "0.7": 0.268,
+              "1.0": 0.277
+            }
+          },
+          {
+            "briefVersion": "polaris-dossier-brief-v1",
+            "first": "d9411d26",
+            "second": "4465d22f",
+            "draftSchemas": [
+              "polaris-dossier-local-draft-v3",
+              "polaris-dossier-local-draft-v2"
+            ],
+            "secondAddsShareOfFirstClusters": {
+              "any": 0.086,
+              "0.3": 0.149,
+              "0.5": 0.176,
+              "0.7": 0.208,
+              "1.0": 0.214
+            }
+          }
+        ],
+        "allOrderedPairsAtStrict": {
+          "pairs": 30,
+          "min": 0.176,
+          "median": 0.722,
+          "max": 3.557
+        },
+        "r28Threshold": 0.25
+      },
+      "predicates": {
+        "supportedClaim": "a block of the draft inside the packet of the run's last fidelity verdict whose blockSupport verdict is 'supported' and which cites at least one line",
+        "sameClaim": "items of different runs join one cluster (union-find, transitive) when their cited (path, line) sets have Jaccard >= the threshold; 'any' joins on one shared line; items of one run never join directly",
+        "sameEntry": "inventory entries (each run's last inventory revision) join when kinds are equal and cited (path, line) sets meet the threshold; an entry with no line citation is its own cluster",
+        "share": "clusters holding at least one item of the run / all clusters",
+        "secondRunGain": "clustering A and B together: clusters with no item of A / clusters with an item of A; the R28 rule builds two-author mode only if a fresh second run at the same brief adds at least 0.25"
+      },
+      "denominator": "6 runs at one repository and commit; union cluster counts per threshold stated"
+    },
+    "e_reviewer_consistency": {
+      "label": "Observed",
+      "consecutiveVerdictPairsExamined": 26,
+      "pairsWithEqualPacket": 6,
+      "readinessAgreeing": 6,
+      "pairsInDifferentSessions": 0,
+      "pairs": [
+        {
+          "run": "2ecdcab0",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-0.json",
+            "fidelity-verdict-1.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "validated"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            46,
+            47
+          ],
+          "findingSetJaccard": 0.979,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 0.985
+        },
+        {
+          "run": "36df95fa",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-0.json",
+            "fidelity-verdict-1.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "refused"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            38,
+            37
+          ],
+          "findingSetJaccard": 0.974,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 1.0
+        },
+        {
+          "run": "36df95fa",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-1.json",
+            "fidelity-verdict-2.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "validated"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            37,
+            37
+          ],
+          "findingSetJaccard": 1.0,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 0.984
+        },
+        {
+          "run": "3744945f",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-1.json",
+            "fidelity-verdict-2.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "validated"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            3,
+            3
+          ],
+          "findingSetJaccard": 1.0,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 1.0
+        },
+        {
+          "run": "d9411d26",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-0.json",
+            "fidelity-verdict-1.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "validated"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            27,
+            27
+          ],
+          "findingSetJaccard": 1.0,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 0.967
+        },
+        {
+          "run": "ffe579c7",
+          "kind": "fidelity",
+          "verdicts": [
+            "fidelity-verdict-0.json",
+            "fidelity-verdict-1.json"
+          ],
+          "reviewCheckOutcomes": [
+            "refused",
+            "validated"
+          ],
+          "sameSession": true,
+          "readiness": [
+            "not-ready",
+            "not-ready"
+          ],
+          "readinessAgrees": true,
+          "findings": [
+            14,
+            14
+          ],
+          "findingSetJaccard": 1.0,
+          "blockSupportAgreement": 1.0,
+          "coverageAgreement": 1.0
+        }
+      ],
+      "predicates": {
+        "pair": "consecutive verdict files N and N+1 of one kind in one run with equal packetSha256",
+        "findingSet": "set of (severity, subject, target or page); Jaccard between the two verdicts",
+        "agreement": "share of block ids (entry ids) in both verdicts with equal blockSupport verdict (coverage disposition)",
+        "reviewCheckOutcome": "the steps.jsonl review-check row of that kind whose number equals the verdict's number"
+      },
+      "denominator": "consecutiveVerdictPairsExamined, over every run and both review kinds"
+    },
+    "e_comprehension_instrument_noise": {
+      "label": "Observed (spreads and differences); Inferred (the sampling error, which treats facts as independent draws)",
+      "requiredFacts": 81,
+      "factsPerKind": {
+        "purpose": 13,
+        "structure": 14,
+        "mechanism": 15,
+        "rationale": 13,
+        "change": 13,
+        "limits": 13
+      },
+      "pointsPerFactByKind": {
+        "purpose": 7.7,
+        "structure": 7.1,
+        "mechanism": 6.7,
+        "rationale": 7.7,
+        "change": 7.7,
+        "limits": 7.7
+      },
+      "pointsPerFactOverall": 1.23,
+      "regrade": {
+        "D": {
+          "gradings": [
+            "first",
+            "second",
+            "third",
+            "fourth"
+          ],
+          "overall": {
+            "first": 0.34,
+            "second": 0.327,
+            "third": 0.333,
+            "fourth": 0.302
+          },
+          "overallSpreadPoints": 3.7,
+          "perKindSpreadPoints": {
+            "purpose": 3.8,
+            "structure": 3.6,
+            "mechanism": 6.7,
+            "rationale": 0.0,
+            "change": 0.0,
+            "limits": 7.7
+          },
+          "maxKindSpreadPoints": 7.7,
+          "factLevel": {
+            "pairs": 6,
+            "minShareEqual": 0.901,
+            "maxMeanAbsoluteGradeDifference": 0.049
+          }
+        },
+        "E": {
+          "gradings": [
+            "second",
+            "third",
+            "fourth"
+          ],
+          "overall": {
+            "second": 0.574,
+            "third": 0.605,
+            "fourth": 0.599
+          },
+          "overallSpreadPoints": 3.1,
+          "perKindSpreadPoints": {
+            "purpose": 3.8,
+            "structure": 0.0,
+            "mechanism": 6.7,
+            "rationale": 3.8,
+            "change": 7.7,
+            "limits": 3.8
+          },
+          "maxKindSpreadPoints": 7.7,
+          "factLevel": {
+            "pairs": 3,
+            "minShareEqual": 0.914,
+            "maxMeanAbsoluteGradeDifference": 0.043
+          }
+        },
+        "P": {
+          "gradings": [
+            "first",
+            "second",
+            "third",
+            "fourth"
+          ],
+          "overall": {
+            "first": 0.481,
+            "second": 0.457,
+            "third": 0.469,
+            "fourth": 0.463
+          },
+          "overallSpreadPoints": 2.5,
+          "perKindSpreadPoints": {
+            "purpose": 7.7,
+            "structure": 3.6,
+            "mechanism": 6.7,
+            "rationale": 7.7,
+            "change": 3.8,
+            "limits": 3.8
+          },
+          "maxKindSpreadPoints": 7.7,
+          "factLevel": {
+            "pairs": 6,
+            "minShareEqual": 0.889,
+            "maxMeanAbsoluteGradeDifference": 0.056
+          }
+        },
+        "T": {
+          "gradings": [
+            "first",
+            "second"
+          ],
+          "overall": {
+            "first": 0.944,
+            "second": 0.951
+          },
+          "overallSpreadPoints": 0.6,
+          "perKindSpreadPoints": {
+            "purpose": 3.8,
+            "structure": 3.6,
+            "mechanism": 0.0,
+            "rationale": 3.8,
+            "change": 0.0,
+            "limits": 0.0
+          },
+          "maxKindSpreadPoints": 3.8,
+          "factLevel": {
+            "pairs": 1,
+            "minShareEqual": 0.963,
+            "maxMeanAbsoluteGradeDifference": 0.019
+          }
+        }
+      },
+      "readerRepeat": [
+        {
+          "arms": [
+            "D",
+            "Y"
+          ],
+          "text": "run 658f2f90, original stored site",
+          "grading": "fourth",
+          "overall": [
+            0.302,
+            0.29
+          ],
+          "overallDifferencePoints": -1.2,
+          "perKindDifferencePoints": {
+            "purpose": 0.0,
+            "structure": -3.6,
+            "mechanism": 0.0,
+            "rationale": 0.0,
+            "change": -3.8,
+            "limits": 0.0
+          },
+          "maxAbsKindDifferencePoints": 3.8,
+          "factLevel": {
+            "factsEqual": 79,
+            "facts": 81,
+            "shareEqual": 0.975,
+            "meanAbsoluteGradeDifference": 0.012
+          },
+          "sameTextEveryMeasurement": {
+            "measurements": 5,
+            "overallSpreadPoints": 4.9,
+            "perKindSpreadPoints": {
+              "purpose": 3.8,
+              "structure": 7.1,
+              "mechanism": 6.7,
+              "rationale": 0.0,
+              "change": 3.8,
+              "limits": 7.7
+            },
+            "maxKindSpreadPoints": 7.7
+          }
+        },
+        {
+          "arms": [
+            "E",
+            "Z"
+          ],
+          "text": "run d9411d26, original stored site",
+          "grading": "fourth",
+          "overall": [
+            0.599,
+            0.593
+          ],
+          "overallDifferencePoints": -0.6,
+          "perKindDifferencePoints": {
+            "purpose": -3.8,
+            "structure": 3.6,
+            "mechanism": 0.0,
+            "rationale": 0.0,
+            "change": -3.8,
+            "limits": 0.0
+          },
+          "maxAbsKindDifferencePoints": 3.8,
+          "factLevel": {
+            "factsEqual": 78,
+            "facts": 81,
+            "shareEqual": 0.963,
+            "meanAbsoluteGradeDifference": 0.019
+          },
+          "sameTextEveryMeasurement": {
+            "measurements": 4,
+            "overallSpreadPoints": 3.1,
+            "perKindSpreadPoints": {
+              "purpose": 3.8,
+              "structure": 3.6,
+              "mechanism": 6.7,
+              "rationale": 3.8,
+              "change": 7.7,
+              "limits": 3.8
+            },
+            "maxKindSpreadPoints": 7.7
+          }
+        }
+      ],
+      "binomialSamplingError": {
+        "D": {
+          "share": 0.302,
+          "overallPoints": 5.1,
+          "perKindPointsAt13Facts": 12.7
+        },
+        "E": {
+          "share": 0.599,
+          "overallPoints": 5.4,
+          "perKindPointsAt13Facts": 13.6
+        }
+      },
+      "maxima": {
+        "overallRegradePoints": 3.7,
+        "kindRegradePoints": 7.7,
+        "overallReaderPoints": 1.2,
+        "kindReaderPoints": 3.8,
+        "overallSameTextPoints": 4.9,
+        "kindSameTextPoints": 7.7
+      },
+      "predicates": {
+        "share": "sum of fact grades (0, 0.5, 1) / required facts, overall or over one kind's questions",
+        "spreadPoints": "(max - min) * 100 over the listed gradings of one arm's unchanged answers",
+        "readerRepeat": "two reader sessions given the same stored run's site, graded in the same (fourth) grading",
+        "sameTextEveryMeasurement": "every grading of the kept arm plus the new reader's grading: reader and grader together",
+        "factLevel": "facts given an equal grade in two gradings (or by two readers), over all required facts",
+        "samplingError": "100 * sqrt(p (1 - p) / n), n the facts in the share"
+      },
+      "denominator": "81 required facts over 24 questions; gradings first to fourth; arms graded at least twice with unchanged answers, and two reader pairs",
+      "caveat": "That arms D, E and P in the fourth grading are the pilot's stored answers, and that Y and Z read the same text as D and E, rests on the reader record's README; the record stores no fourth grading input"
+    },
+    "f_stage_time_and_operator_actions": {
+      "label": "Observed (times, records); Inferred (the operator-action total is a floor: preflight, clone agreement, init, the run-configuration answer and any consent step leave no step record)",
+      "reviewRounds": {
+        "fidelity": {
+          "rounds": 25,
+          "medianMinutes": 5.06,
+          "minMinutes": 2.25,
+          "maxMinutes": 12.25,
+          "sumMinutes": 149.1
+        },
+        "design": {
+          "rounds": 8,
+          "medianMinutes": 6.35,
+          "minMinutes": 1.55,
+          "maxMinutes": 7.46,
+          "sumMinutes": 42.8
+        }
+      },
+      "allRuns": {
+        "wallMinutes": 378.3,
+        "reviewMinutes": 191.9,
+        "reviewShareOfWallTime": 0.507
+      },
+      "fixedInputCohort": {
+        "wallMinutes": 301.9,
+        "reviewMinutes": 170.6,
+        "reviewShareOfWallTime": 0.565
+      },
+      "operatorActionsObservableRange": [
+        6,
+        6
+      ],
+      "perRun": {
+        "2ecdcab0": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 42.7,
+          "authorMinutesToFirstCheck": 8.6,
+          "reviewRoundMinutesSum": 24.0,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 10.95,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 5.64,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 7.46,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "36df95fa": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 46.8,
+          "authorMinutesToFirstCheck": 17.2,
+          "reviewRoundMinutesSum": 16.5,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 12.25,
+              "refusedSubmissions": 2
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 4.27,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 2,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 1,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "3744945f": {
+          "repositoryId": "tzeusy-org-butlers",
+          "inFixedInputCohort": false,
+          "wallMinutesFirstToLastStep": 76.4,
+          "authorMinutesToFirstCheck": 46.1,
+          "reviewRoundMinutesSum": 21.3,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 6.89,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 5.06,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 3,
+              "session": 1,
+              "minutes": 2.34,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 6.99,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "4465d22f": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 30.0,
+          "authorMinutesToFirstCheck": 6.4,
+          "reviewRoundMinutesSum": 14.3,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 5.79,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 3.13,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 3,
+              "session": 1,
+              "minutes": 2.25,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 3.15,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "658f2f90": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 34.3,
+          "authorMinutesToFirstCheck": 5.0,
+          "reviewRoundMinutesSum": 22.6,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 5.99,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 3.43,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 3,
+              "session": 1,
+              "minutes": 2.66,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 5.84,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 4,
+              "session": 1,
+              "minutes": 3.08,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 2,
+              "session": 1,
+              "minutes": 1.55,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "d9411d26": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 66.8,
+          "authorMinutesToFirstCheck": 12.0,
+          "reviewRoundMinutesSum": 44.9,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 11.36,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 8.83,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 3,
+              "session": 1,
+              "minutes": 6.16,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 4,
+              "session": 1,
+              "minutes": 3.7,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 7.08,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 5,
+              "session": 1,
+              "minutes": 3.87,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 2,
+              "session": 1,
+              "minutes": 3.86,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        },
+        "ffe579c7": {
+          "repositoryId": "redis-redis",
+          "inFixedInputCohort": true,
+          "wallMinutesFirstToLastStep": 81.3,
+          "authorMinutesToFirstCheck": 7.0,
+          "reviewRoundMinutesSum": 48.3,
+          "closed": true,
+          "rounds": [
+            {
+              "kind": "fidelity",
+              "round": 1,
+              "session": 1,
+              "minutes": 11.54,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 2,
+              "session": 1,
+              "minutes": 8.83,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 3,
+              "session": 1,
+              "minutes": 8.47,
+              "refusedSubmissions": 1
+            },
+            {
+              "kind": "fidelity",
+              "round": 4,
+              "session": 1,
+              "minutes": 4.62,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 5,
+              "session": 1,
+              "minutes": 3.67,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "design",
+              "round": 1,
+              "session": 1,
+              "minutes": 6.86,
+              "refusedSubmissions": 0
+            },
+            {
+              "kind": "fidelity",
+              "round": 6,
+              "session": 1,
+              "minutes": 4.32,
+              "refusedSubmissions": 0
+            }
+          ],
+          "operatorActionsObservable": {
+            "sessionsStarted": 3,
+            "launchFormRecords": 3,
+            "clarificationsAnswered": 0,
+            "usageFiguresGivenAtClose": 0
+          },
+          "operatorActionsObservableTotal": 6
+        }
+      },
+      "predicates": {
+        "round": "a steps.jsonl session-prompt row with role review and outcome delivered; it ends at the next review-check row of the same kind with outcome validated; refused review-check rows between are counted",
+        "minutes": "end.at minus delivery.at",
+        "wall": "last step row's at minus the first's",
+        "authorMinutesToFirstCheck": "first check row's at minus the first step row's",
+        "sessionsStarted": "distinct (role, kind, session) over await rows: each is a terminal the operator started",
+        "launchFormRecords": "names of inventory/*.launch.json and reviews/*.launch.json (listed, never read)",
+        "clarificationsAnswered": "length of clarifications in the last draft revision",
+        "usageFiguresGivenAtClose": "the close row carries a usage other than null, 'not-recorded' or {}"
+      },
+      "denominator": "7 runs; rounds counted per kind in reviewRounds"
+    }
+  },
+  "fivePointRule": {
+    "label": "Inferred (from the Observed maxima above)",
+    "rulePoints": 5,
+    "overall": {
+      "observedNoisePoints": 4.9,
+      "insideObservedNoise": false,
+      "factsInFivePoints": 4.1
+    },
+    "perKind": {
+      "observedNoisePoints": 7.7,
+      "insideObservedNoise": true,
+      "smallestPointsPerFact": 6.7,
+      "oneFactExceedsRule": true
+    }
+  }
+}
