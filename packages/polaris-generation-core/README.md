@@ -107,8 +107,8 @@ flowchart LR
   identities, diagram endpoints and review population declarations.
   - These checks cannot establish semantic truth.
 
-**Draft shape (schema v2).** Draft stages use schema v2 (prompts v2 for plan,
-author, edit and repair).
+**Draft shape.** The author stage returns a schema v2 draft. Edit and repair
+use version 3 schemas and prompts. Each returns the draft with its block account.
 
 - Section and deep-dive blocks are one-level trees: a parent paragraph and
   0–12 leaf children, all counted as blocks for handles and review coverage.
@@ -119,6 +119,15 @@ author, edit and repair).
   sufficient.
 - `diagramToMermaid` derives the reviewable Mermaid text from the structured
   record, which stays the declarative source.
+- Edit and repair account for every input block exactly once. A missing output
+  identity needs a reasoned removal or at least two distinct split destinations
+  present in that output. The validator compares the account with both drafts.
+- Repair also accounts for every finding supplied to that attempt. The accepted
+  artifact retains the finding identities and dispositions. The private journal
+  stores the supplied findings beside the validated reply and matches them to the
+  current stage input before reuse. An unrepairable blocking review finding
+  still prevents readiness after independent review. Quote disclosures describe
+  the final draft, while earlier quote findings stay in the repair record.
 
 **Sources and citations.** `GenerationSource` binds each countable source to
 repository, revision, Git object and evaluation identities.
