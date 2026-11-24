@@ -8,9 +8,9 @@
 
 The POC-REQ-042 amendment makes the non-closed parent outline the default selection. The Recent work link keeps the recorded-time selection reachable. The semantic delta is at `.syzygy/governance/contracts/candidates/three-surface-poc-grouped-default-amendment/SEMANTIC-DELTA.md`.
 
-## Independent review
+## Last verdict of record, and where the findings landed
 
-The retained [R1](../reviews/T3JK22-GROUPED-DEFAULT-R1-RAW.md) returned **REVISE** for source `901eecc51120891157c2aaa97b8a1f935adb2328`. The raw SHA-256 is `1de34343c7b7b245ae85356d3707edc26387e1224dae150335cff55983ca8264`. The reviewer independently replayed both HTTP mounts, ruled on the exact predecessor and proposed wording, and recomputed the grouped counts at the owner-scale fixture size.
+The independent review returned `REVISE` ([`T3JK22-GROUPED-DEFAULT-R1-RAW.md:1`](../reviews/T3JK22-GROUPED-DEFAULT-R1-RAW.md#L1)) for source `901eecc51120891157c2aaa97b8a1f935adb2328`. The raw SHA-256 is `1de34343c7b7b245ae85356d3707edc26387e1224dae150335cff55983ca8264`. The reviewer independently replayed both HTTP mounts, ruled on the exact predecessor and proposed wording, and recomputed the grouped counts at the owner-scale fixture size.
 
 The product correction commit is `6174c31585c0c9edc0a218f2669ee749d1f45920`. The final source test fixture pins the declared direct host at `df80ffed5158087ee5ba5a4f104015be2a03824d`.
 
