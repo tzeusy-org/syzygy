@@ -42,10 +42,13 @@ SPEC_SECTION = re.compile(r"^#{1,2} ")
 
 BOUNDARY_HEADER = re.compile(r"^\*\*((?:VIS|SEC)-[0-9]+) —")
 BOUNDARY_UNIT = re.compile(r"^(?:- | {2,4}(?:[-*]|[0-9]+\.) )")
-ROUTE = re.compile(r"\{\s*method: '(GET|POST)',\s*path: ([^,\n]+),"
+ROUTE = re.compile(r"\{\s*method: '([A-Z]+)',\s*path: ([^,\n]+),"
                    r"\s*credentialClass: '([a-z-]+)',\s*handle\b")
-MOUNT_PAIR = re.compile(r"^\s*\.\.\.humanSurfaceRoutes\((\w+), (\w+),", re.M)
-EFFECT = re.compile(r"export const (\w+): Effect = \{\s*id: '([a-z-]+)',"
+ROUTE_PROPERTY = re.compile(r"(?:^|\{)[ \t]*method\s*:", re.M)
+MOUNT_PAIR = re.compile(r"^[ \t]*\.\.\.humanSurfaceRoutes\((\w+), (\w+),", re.M)
+SPREAD_ROW = re.compile(r"^[ \t]*\.\.\.", re.M)
+EFFECT_PROPERTY = re.compile(r"^\s*(?:export )?const \w+\s*:\s*Effect\s*=", re.M)
+EFFECT = re.compile(r"(?:export )?const (\w+): Effect = \{\s*id: '([^']+)',"
                     r"\s*surface: '([^']+)',\s*\};")
 PINNED_SOURCE = {
     "poc-spec-authorization": ".syzygy/governance/decisions/THREE-SURFACE-POC-SPEC-AUTHORIZATION.md",
@@ -170,6 +173,13 @@ def spec_sources(read):
     return result
 
 
+def route_declarations(body, subject):
+    rows = ROUTE.findall(body)
+    require(len(rows) == len(ROUTE_PROPERTY.findall(body)),
+            f"{subject}: unsupported route declaration")
+    return rows
+
+
 def declared_effects(sources):
     registry = decode_json(sources[REGISTRY])
     entries = [entry for entry in registry["entries"]
@@ -185,18 +195,30 @@ def declared_effects(sources):
     effects = [(f"observer/{key}", (REGISTRY, version, json.dumps(authority[key], ensure_ascii=False)))
                for key in properties]
 
-    direct_routes = ROUTE.findall(sources[ROUTES])
+    direct_routes = route_declarations(sources[ROUTES], "POC routes")
     require(direct_routes[:2] == [("GET", "directPath", "human-open"),
                                   ("GET", "tailnetPath", "human-open")],
             "POC routes: paired route declaration is missing or changed")
     routes = direct_routes[2:]
-    for direct, tailnet in MOUNT_PAIR.findall(sources[ROUTES]):
+    route_array = sources[ROUTES].partition("const routes: readonly Route[] = [")[2]
+    require(bool(route_array), "POC routes: selected route array missing")
+    mounted_pairs = MOUNT_PAIR.findall(route_array)
+    require(len(mounted_pairs) == len(SPREAD_ROW.findall(route_array)),
+            "POC routes: unsupported indirect route declaration")
+    for direct, tailnet in mounted_pairs:
         routes.extend((("GET", direct, "human-open"), ("GET", tailnet, "human-open")))
-    for path, rows in ((ROUTES, routes), (MATERIALIZE, ROUTE.findall(sources[MATERIALIZE]))):
+    materialize_routes = route_declarations(sources[MATERIALIZE], "Materialize routes")
+    return_array = sources[MATERIALIZE].rpartition("return [")[2]
+    require(bool(return_array) and not SPREAD_ROW.search(return_array),
+            "Materialize routes: missing or unsupported indirect return")
+    for path, rows in ((ROUTES, routes), (MATERIALIZE, materialize_routes)):
         effects.extend((f"route/{method} {route}", (path, method, credential))
                        for method, route, credential in rows)
+    named = EFFECT.findall(sources[CORE])
+    require(len(named) == len(EFFECT_PROPERTY.findall(sources[CORE])),
+            "Effect authority: unsupported effect declaration")
     effects.extend((f"effect/{identity}", (CORE, name, surface))
-                   for name, identity, surface in EFFECT.findall(sources[CORE]))
+                   for name, identity, surface in named)
     return unique_index(effects, "effect declarations")
 
 
@@ -389,10 +411,12 @@ def selftest_cases():
         CORE_TEST: "effectAuthority({ writeSurface: ['butlers:.beads'] }, BUTLERS_TRACKER_WRITE)\n",
         ROUTES: ("{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n"
                  "{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\n"
-                 "{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n"),
+                 "const routes: readonly Route[] = [\n"
+                 "{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n];\n"),
         MATERIALIZE: ("const verdict = (options.authorize ?? dispatchAuthorization)();\n"
                       "    if (!verdict.authorized) {\n}\n"
-                      "{ method: 'POST', path: MATERIALIZE_HUMAN_PATH, credentialClass: 'human-open', handle },\n"),
+                      "return [\n"
+                      "{ method: 'POST', path: MATERIALIZE_HUMAN_PATH, credentialClass: 'human-open', handle },\n];\n"),
         MATERIALIZE_TEST: ("it('refuses the foreclosed write with a bounded typed refusal and "
                            "never runs Beads (P-71-Q5)', syntheticTest);\n"),
     }
@@ -499,6 +523,36 @@ def selftest_cases():
     count, failure = result(changed)
     cases.append(("unrelated POST cannot borrow foreclosure", count == 0 and failure is not None
                   and failure == "route/POST UNRELATED_POST_PATH: no reviewed effect authority"))
+
+    head_route = data[ROUTES].replace("];", "{ method: 'HEAD', path: POC_HUMAN_PATH, "
+                                      "credentialClass: 'human-open', handle },\n];")
+    changed = {**data, ROUTES: head_route}
+    count, failure = result(changed)
+    cases.append(("new HEAD stale source", count == 0 and failure is not None
+                  and "scoped sources changed; reconcile exact bytes: poc-routes" in failure))
+
+    new_manifest = deepcopy(manifest)
+    new_manifest["pins"]["poc-routes"] = digest(head_route)
+    changed[MANIFEST] = json.dumps(new_manifest)
+    count, failure = result(changed)
+    cases.append(("new HEAD remains unmapped after source repin", count == 0 and failure is not None
+                  and "missing ['route/HEAD POC_HUMAN_PATH']" in failure))
+
+    new_manifest["effects"]["route/HEAD POC_HUMAN_PATH"] = "Three-Surface POC reader notes"
+    changed[MANIFEST] = json.dumps(new_manifest)
+    count, failure = result(changed)
+    cases.append(("new HEAD cannot borrow GET authority", count == 0
+                  and failure == "route/HEAD POC_HUMAN_PATH: no reviewed effect authority"))
+
+    for name, source in (
+        ("dynamic method", data[ROUTES].replace("method: 'GET', path: POC_HUMAN_PATH", "method: requestMethod, path: POC_HUMAN_PATH")),
+        ("extra spread", data[ROUTES].replace("];", "  ...additionalRoutes,\n];")),
+    ):
+        new_manifest = deepcopy(manifest)
+        new_manifest["pins"]["poc-routes"] = digest(source)
+        changed = {**data, ROUTES: source, MANIFEST: json.dumps(new_manifest)}
+        count, failure = result(changed)
+        cases.append((name, count == 0 and failure is not None and failure.startswith("POC routes: unsupported")))
 
     trials = (
         ("relabelled prohibition", "boundaries", first,
