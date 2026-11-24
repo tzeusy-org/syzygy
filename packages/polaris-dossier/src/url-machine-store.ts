@@ -688,6 +688,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       effectProfile?: NativeSessionProfile, publication?: StagedBoundary, terminalRead = false): Promise<boolean> => {
       if (!digest(clientId) || (effectProfile !== undefined && !isNativeSessionProfile(effectProfile))) return false;
       const orderedEffect = effectProfile !== undefined && isOrderedDesignSessionProfile(effectProfile);
+      const ordinaryEffect = effectProfile !== undefined && !orderedEffect;
+      const synchronousOrdinaryRead = ordinaryEffect && currentAsync === undefined && publication === undefined && !terminalRead;
       const operationMilliseconds = orderedEffect
         ? effectProfile.transcript.nativeEffectMilliseconds : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
@@ -733,7 +735,9 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           checkWork(); return true;
         };
         const read = async (): Promise<UrlMachineLifecycleSnapshot | null> => {
-          checkWork();
+          // The synchronous state's I/O entry checks the same authority and
+          // clocks before opening either root. Keep the other read paths.
+          if (!synchronousOrdinaryRead) checkWork();
           const current = await state(), entry = current.clients.find(client => client.clientId === clientId);
           if (!entry || (entry.anchor.kind === 'pending' && phase === 0)) return null;
           const [canonicalBytes, projectionBytes] = await Promise.all([
@@ -807,7 +811,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await operation(Object.freeze({ now: () => live(), current: () => sampleCurrent() !== null,
           sampleCurrent, read, preflightCanonical, advance }));
         if (phase !== 0 && phase !== 5) throw refused();
-      }, { operationMilliseconds, ordinaryEffect: effectProfile !== undefined && !orderedEffect, staging: publication, terminalRead });
+      }, { operationMilliseconds, ordinaryEffect, staging: publication, terminalRead });
     };
     const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
       allocateClient, allocateClients,

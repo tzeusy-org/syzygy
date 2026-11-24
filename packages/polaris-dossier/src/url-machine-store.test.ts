@@ -159,6 +159,35 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     }
   });
 
+  it.each([true, false])('ordinary synchronous lease reads check currentness once before the first private root read when current is %s', async allowed => {
+    const profile = effectProfile(false), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    let reading = false, checks = 0, checksAtFirstAnchor: number | undefined;
+    const current = (): boolean => {
+      if (!reading) return true;
+      checks++;
+      return allowed;
+    };
+    const reopened = await openUrlMachineStore({ ...f.options, current }, f.store.identitySha256);
+    if (reopened === null) throw new Error('owned machine store failed to reopen');
+    cleanup.push(() => reopened.close());
+    filesystem.afterLstat = file => {
+      if (reading && file === f.options.protectedRoot) checksAtFirstAnchor ??= checks;
+    };
+    let read: 'committed' | 'refused' | 'other' = 'other';
+    const completed = await reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      reading = true;
+      try {
+        if ((await lease.read())?.anchor.kind === 'committed') read = 'committed';
+      } catch { read = 'refused'; }
+      finally { reading = false; }
+    }, profile);
+    expect(completed).toBe(true);
+    expect(read).toBe(allowed ? 'committed' : 'refused');
+    expect(checksAtFirstAnchor).toBe(allowed ? 1 : undefined);
+    if (!allowed) expect(checks).toBe(1);
+  });
+
   it('rejects copied, oversized and mismatched effect profiles before entry', async () => {
     const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
