@@ -1,0 +1,114 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-23T17:44:24.388739+00:00",
+  "commit": "9a9256519c04cce8863617b1c2303d9f56c5fff6",
+  "method": "Each baseline requires the named tests to execute and pass. Each source control must fail those same named tests. Production edits are confined to a detached verification worktree and restored afterward.",
+  "subject": {
+    "packages/polaris-dossier/src/polaris.ts": "26c7dce999f00b043549d8d5af3ce117aa7000ed609eed060f3b2a9edcc003a1",
+    "packages/polaris-dossier/src/run-tree-readers.test.ts": "dcc2bb99a5c09fe9c02a927c10fcf9ede738d9ac2927922ad55e9d9f10de08e3",
+    "packages/polaris-dossier/src/waiting-sessions.ts": "cc5b2ab13341d292db282879ea7b85e1d57931edc3aaaeb9c3b5b25582e80c7b",
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": "6c6299ca2e3475ba6b9d91fd81fecf5d2f1db900629809b4b1fb8b2f01ff5315",
+    "packages/polaris-dossier/src/run-tree-read.ts": "03b7a1084401cecb057ac5b7e4f4b4b3a654b862dfdbc2d6b7617c8f1bc0edbf"
+  },
+  "baseline": [
+    {
+      "id": "resume-rereads-state",
+      "exitCode": 0,
+      "tests": [
+        "resumes a live view using the supervisor state it already read"
+      ]
+    },
+    {
+      "id": "present-invalid-bound-accepted",
+      "exitCode": 0,
+      "tests": [
+        "refuses a stated but invalid packetBytes before reading the round files (syzygy-3efd.80)"
+      ]
+    },
+    {
+      "id": "unreadable-entry-is-absent",
+      "exitCode": 0,
+      "tests": [
+        "close returns Unknown for logs whose links cannot be opened",
+        "refuses a named supervisor whose state is a dangling link"
+      ]
+    }
+  ],
+  "mutants": [
+    {
+      "id": "resume-rereads-state",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts",
+        "-t",
+        "resumes a live view using the supervisor state it already read",
+        "--reporter=json"
+      ],
+      "old": "if (tmuxHas(state.tmuxSession)) return attachTo(state.tmuxSession);",
+      "new": "if (tmuxHas(state.tmuxSession)) return attach({ ...options, run: state.runId });",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "resumes a live view using the supervisor state it already read"
+      ]
+    },
+    {
+      "id": "present-invalid-bound-accepted",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts",
+        "-t",
+        "refuses a stated but invalid packetBytes before reading the round files",
+        "--reporter=json"
+      ],
+      "old": "  if (packetBound !== undefined && (typeof packetBound !== 'number' || !Number.isSafeInteger(packetBound) || packetBound < 0)) return mismatch();\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "refuses a stated but invalid packetBytes before reading the round files (syzygy-3efd.80)"
+      ]
+    },
+    {
+      "id": "unreadable-entry-is-absent",
+      "file": "packages/polaris-dossier/src/run-tree-read.ts",
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/run-tree-readers.test.ts",
+        "-t",
+        "close returns Unknown for logs whose links cannot be opened|refuses a named supervisor whose state is a dangling link",
+        "--reporter=json"
+      ],
+      "old": "return lstatSync(file, { throwIfNoEntry: false }) === undefined;",
+      "new": "return true;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "close returns Unknown for logs whose links cannot be opened",
+        "refuses a named supervisor whose state is a dangling link"
+      ]
+    }
+  ],
+  "summary": {
+    "mutants": 3,
+    "killed": 3,
+    "survived": 0
+  }
+}

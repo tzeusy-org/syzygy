@@ -9,6 +9,7 @@ import { launchedMarkerState } from './launched.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { RUN_TREE_BOUNDS, isNotFound, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier allow-execution <run> --revision <pinned> --declare <declarations>` (REQ-polaris-generation-033).
  *
@@ -154,10 +155,13 @@ export function readExecutionChoice(runDir: string): Awaited<ReturnType<Executio
   const file = path.join(path.resolve(runDir), RUN_LAYOUT.executionChoice);
   let text: string;
   try {
-    text = fs.readFileSync(file, 'utf8');
+    text = readBoundedText(file, RUN_TREE_BOUNDS.executionChoice);
   } catch (cause) {
-    const code = (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
-    return code === 'ENOENT' ? { state: 'absent', why: `no ${RUN_LAYOUT.executionChoice} in the run directory` } : { state: 'refused', why: `${RUN_LAYOUT.executionChoice} cannot be read (${code})` };
+    // The plain ENOENT test, not close's `isMissingEntry`: a dangling link here has always read as no choice, and 2.18 bounds this read
+    // without changing what absence means for it, where REQ-033 makes close's dangling log Unknown (2.18 code review, note 9).
+    return isNotFound(cause)
+      ? { state: 'absent', why: `no ${RUN_LAYOUT.executionChoice} in the run directory` }
+      : { state: 'refused', why: `${RUN_LAYOUT.executionChoice} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.executionChoice)})` };
   }
   let value: unknown;
   try {

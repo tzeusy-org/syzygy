@@ -82,7 +82,8 @@
 - [Inferred] A node whose label misnames its unit sits next to a solid arrow; the evidence text names the fact, and the fidelity review judges the label.
 - [Unknown] Whether authors type arrows well without examples beyond the brief paragraph.
 - [Inferred] Review N6: any `unitsNotListed` above zero makes every `contains` absence partial, though the absence of a target that sorts before the 250th listed directory is decidable; a possible refinement for a later version, not made here.
-- [Unknown] Review N5: whether a review packet carries a draft's diagram members, `unit` among them, as written; the spec keeps unit values out of every finding, page, `machine.json` and check record or report, and the frozen draft revision holds them as written.
+- [Observed] Runtime review F1 resolved the open question from specification review N5. The fidelity packet screens the new graph unit fields and omits a matched unit, recording the number omitted. The draft and its digest still identify the frozen revision. The review-packet integration test exercises a matched path, a matched name and a retained binding.
+- [Observed] Runtime review N1 found that the machine view could include a relation edge when its drawing was refused. The renderer now publishes those rows after the drawing passes the inert SVG check. An integration test exercises the refusal.
 
 ## Renumbered 2.19 (2026-11-23)
 

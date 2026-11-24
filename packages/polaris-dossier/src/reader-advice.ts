@@ -20,7 +20,7 @@ export interface ReaderAdvice {
   readonly standards: typeof READER_STANDARDS_VERSION;
   readonly note: string;
   readonly advisories: readonly ReaderAdvisory[];
-  /** The worth-knowing count advice (version 2.23): on a schema-v11 draft only, so an earlier draft's advice keeps its bytes. */
+  /** The worth-knowing count advice (version 2.25): on a schema-v13 draft only, so an earlier draft's advice keeps its bytes. */
   readonly worthKnowing?: readonly WorthKnowingAdvisory[];
 }
 
@@ -33,9 +33,9 @@ export interface WorthKnowingAdvisory {
   readonly detail: string;
 }
 
-/** The count advice for the worth-knowing mark (REQ-polaris-generation-034 version 2.23). Counts the blocks marked `worthKnowing: true`
+/** The count advice for the worth-knowing mark (REQ-polaris-generation-034 version 2.25). Counts the blocks marked `worthKnowing: true`
  * among the section paragraphs of each Pole (each section counted in the first Pole naming it), or of the whole draft where it declares no
- * Poles: none, where the Pole gives no `worthKnowingNone`, and more than the ceiling are each one advisory. Undefined for a draft before v11. */
+ * Poles: none, where the Pole gives no `worthKnowingNone`, and more than the ceiling are each one advisory. Undefined for a draft before v13. */
 export function worthKnowingAdvice(doc: Readonly<Record<string, unknown>>): readonly WorthKnowingAdvisory[] | undefined {
   if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;
   const marks = new Map<string, number>();

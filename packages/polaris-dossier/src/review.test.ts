@@ -21,6 +21,9 @@ import { buildDossierScreen, type ScreenLoad } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { READ_CASES, growOnceSized, patchFs, placeReadCase, trackReads, underReadCase, type ReadCase } from './fs-patch.testkit.js';
+
+const FROZEN_AT_BOUND = 'is not the bytes its check recorded';
 import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
@@ -582,6 +585,62 @@ describe('review-check', () => {
     }
   });
 
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): the verdict given to review check and every frozen verdict are read by the
+  // reader rule under 4,194,304 bytes, in every case of the Case line (2.18 code review, note 2). A regular file is NUL bytes, so one at
+  // the bound is read to its end and then refused for what it holds.
+  const NOT_REGULAR = ['a FIFO', 'a symbolic link to /dev/zero', 'a directory'];
+  const readsFor = (kase: ReadCase): number[] => (NOT_REGULAR.includes(kase) || kase === 'one byte past its bound' ? [0] : kase === 'exactly at its bound' ? [4_194_304] : [4_194_305]);
+  it.each(READ_CASES)('reads the verdict given to review check under 4,194,304 bytes: %s, freezing nothing it refuses (syzygy-3efd.80)', async (kase) => {
+    const run = await prepared();
+    const dir = await reviewSessionOf(run);
+    const file = path.join(dir, 'verdict.json');
+    let result: unknown;
+    expect(await underReadCase(kase, file, 4_194_304, async () => { result = await reviewCheck(run, {}, deps()); })).toEqual(readsFor(kase));
+    if (kase === 'exactly at its bound') {
+      // Read whole, then checked as any verdict is: NUL bytes are no verdict, so the check records a refused outcome.
+      expect(result).toMatchObject({ ok: true, report: { outcome: 'refused' } });
+      return;
+    }
+    const reason = NOT_REGULAR.includes(kase) ? `${file} is not a regular file` : `${file} is larger than the 4194304-byte verdict bound`;
+    expect(result).toMatchObject({ ok: false, refusal: { stage: 'verdict', reason } });
+    expect(fs.existsSync(path.join(run, 'reviews', 'fidelity-verdict-0.json'))).toBe(false);
+  });
+
+  it.each(READ_CASES)('reads a frozen verdict under 4,194,304 bytes: %s, counting no review from one it cannot read (syzygy-3efd.80)', async (kase) => {
+    const run = await prepared();
+    const dir = await reviewSessionOf(run);
+    writeVerdict(dir, verdict(sha256(expectedPacket(run))));
+    await reviewCheck(run, {}, deps());
+    await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
+    expect((await reviewOfRecord(await opened(run), deps())).counts).toBe(true);
+    const frozen = path.join(run, 'reviews', 'fidelity-verdict-0.json');
+    let record: unknown;
+    expect(await underReadCase(kase, frozen, 4_194_304, async () => { record = await reviewOfRecord(await opened(run), deps()); })).toEqual(readsFor(kase));
+    const words = NOT_REGULAR.includes(kase) ? 'cannot be read (not a regular file)' : kase === 'exactly at its bound' ? FROZEN_AT_BOUND : 'cannot be read (larger than 4194304 bytes)';
+    expect(record).toEqual({ counts: false, why: `the frozen verdict reviews/fidelity-verdict-0.json ${words}` });
+  });
+
+  // The packet's own read (review-packet.ts) is told apart from the counting reads before it (inventory.ts, which the packet also calls)
+  // by the stack of the open: the case is placed at that open only, so every earlier read saw the regular file it counted.
+  const isPacketRead = (stack: string): boolean => stack.includes('review-packet.ts') && !/[/\\]inventory\.ts:/u.test(stack);
+  it.each(READ_CASES)('builds no fidelity packet from a frozen inventory that is %s when the packet reads it, though a regular file when counted (syzygy-3efd.80)', async (kase) => {
+    const run = await prepared();
+    const frozen = path.join(run, 'inventory', 'rev-0.json');
+    let placed = 0;
+    const growth = kase === 'grown past its bound after its size was taken' ? growOnceSized(frozen, 4_194_304) : undefined;
+    const restore = patchFs('openSync', (original) => ((file: fs.PathLike, ...rest: unknown[]) => {
+      if (file === frozen && placed === 0 && isPacketRead(new Error().stack ?? '')) { placed += 1; placeReadCase(kase, frozen, 4_194_304); }
+      return (original as (...args: unknown[]) => number)(file, ...rest);
+    }) as typeof original);
+    const reads = trackReads(frozen);
+    let built;
+    try { built = await buildFidelityPacket(await opened(run), deps()); } finally { reads.restore(); restore(); growth?.restore(); }
+    expect(placed).toBe(1);
+    expect(reads.totals.at(-1)).toEqual(readsFor(kase)[0]);
+    const words = NOT_REGULAR.includes(kase) ? 'cannot be read (not a regular file)' : kase === 'exactly at its bound' ? 'changed after it was counted' : 'cannot be read (larger than 4194304 bytes)';
+    expect(built).toEqual({ ok: false, stage: 'inventory', reason: `the frozen inventory inventory/rev-0.json ${words}` });
+  });
+
   it('validates a ready verdict with no blocking row', async () => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
@@ -811,10 +870,46 @@ describe('fidelity criteria for presentation elements (syzygy-mea.10.5)', () => 
   });
 });
 
-// syzygy-8hm6: a cited path both denied and matched by a secret detector is a span without its path or object id, under the outcome
-// screening gave. The packet's copy of the draft still carries the citation as the author wrote it; this is the span record alone.
+it('screens graph units and citation paths together while preserving frozen bindings', async () => {
+  const hiddenPath = `${BOTH_PATH}/package.json`;
+  const hiddenName = BOTH_PATH.split('/')[1]!;
+  const units = [
+    { kind: 'top-level-directory', path: 'src' },
+    { kind: 'package-manifest', path: hiddenPath },
+    { kind: 'dependency-name', name: hiddenName },
+  ];
+  const run = await prepared(undefined, (d) => {
+    d.schemaVersion = 'polaris-dossier-local-draft-v9';
+    d.thesisBasis = 'stated';
+    d.diagrams = [{
+      id: 'graph', title: 'Project units', kind: 'boundary', relationship: 'Related parts of the project.',
+      home: { kind: 'section', target: 'core-ideas' }, disposition: { kind: 'produced', assetIds: ['graph'] },
+      nodes: units.map((unit, index) => ({
+        id: `n${index}`, label: `Node ${index}`, epistemic: 'inferred', citations: [cite(`c-n${index}`, index === 1 ? BOTH_PATH : undefined)], unit,
+      })),
+      edges: [{ id: 'e1', from: 'n0', to: 'n1', relation: 'relates-to', label: 'Related', epistemic: 'inferred', citations: [cite('c-e1')] }],
+    }];
+  });
+  const built = await buildFidelityPacket(await opened(run), deps());
+  if (!built.ok) throw new Error(built.reason);
+  expect(built.bytes.includes(hiddenName)).toBe(false);
+  const packet = JSON.parse(built.bytes);
+  expect(packet.draft.withheldDiagramUnits).toBe(2);
+  expect(packet.draft.withheldCitationPaths).toBe(1);
+  expect(packet.draft.document.diagrams[0].nodes[1].citations[0]).toMatchObject({ id: 'c-n1', path: null });
+  expect(packet.spans).toContainEqual(expect.objectContaining({ path: null, objectId: null, outcome: 'denied-path',
+    citedBy: [{ subject: 'draft', citationId: 'c-n1' }],
+  }));
+  expect(packet.draft.document.diagrams[0].nodes.map((node: Doc) => node.unit)).toEqual([units[0], undefined, undefined]);
+  const frozen = fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'));
+  expect(packet.draft.sha256).toBe(sha256(frozen));
+  const frozenNode = JSON.parse(frozen.toString()).diagrams[0].nodes[1];
+  expect(frozenNode.unit.path === hiddenPath).toBe(true);
+  expect(frozenNode.citations[0].path === BOTH_PATH).toBe(true);
+});
+
 describe('a cited path both denied and secret-matching in the fidelity packet', () => {
-  it('carries the span with neither path nor object id, outcome denied-path', async () => {
+  it('withholds the path in both the span and the copy of the draft, preserving the denied-path outcome', async () => {
     const run = await prepared(undefined, (d) => { d['unresolved'] = [{ id: 'q0', question: 'Why?', reason: 'Not stated.', citations: [cite('c-q0', BOTH_PATH, 1, 1)] }]; });
     const result = await reviewPacket(run, { kind: 'fidelity' }, deps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -823,7 +918,11 @@ describe('a cited path both denied and secret-matching in the fidelity packet', 
       { id: 'span-1', path: '.env', startLine: 1, endLine: 1, objectId: objectIds['.env'], outcome: 'denied-path', citedBy: [{ subject: 'inventory', citationId: 'c-e-env' }] },
       { id: 'span-2', path: null, startLine: 1, endLine: 1, objectId: null, outcome: 'denied-path', citedBy: [{ subject: 'draft', citationId: 'c-q0' }] },
     ]);
-    // A boolean, so a failure prints no span.
-    expect(JSON.stringify(packet.spans).includes('x'.repeat(24))).toBe(false);
+    // A boolean, so a failure prints no path.
+    expect(JSON.stringify(packet).includes('x'.repeat(24))).toBe(false);
+    expect(packet.draft.withheldCitationPaths).toBe(1);
+    expect(packet.draft.document.unresolved[0].citations).toEqual([{ id: 'c-q0', path: null, startLine: 1, endLine: 1 }]);
+    const frozen = JSON.parse(fs.readFileSync(path.join(run, 'drafts', 'rev-0.json'), 'utf8'));
+    expect(frozen.unresolved[0].citations[0].path === BOTH_PATH).toBe(true);
   });
 });

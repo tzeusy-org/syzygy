@@ -4,9 +4,10 @@ import { isRecord } from '@syzygy/support';
 import { readCheckRecord } from './check-record-read.js';
 import type { FigureFit } from './figure-fit.js';
 import { containerProseWords, proseWords, type ReaderAdvice, type ReaderStandardId } from './reader-advice.js';
-import { hasHomeForm } from './draft-schema.js';
+import { hasHomeForm, heroOf } from './draft-schema.js';
 import { readRunRecord } from './run-record.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** The reading ledger (REQ-polaris-generation-034 version 2.4, syzygy-3efd.21): per narrative page the draft lays out on, the words of
  * its own prose, the reading minutes, the figures, the reader advisories per counted standard and the figure-fit counts, computed from
@@ -100,11 +101,17 @@ export function readingLedger(subject: unknown, fit: FigureFit, advice: ReaderAd
   const pageOfSectionId = (id: string | undefined): string | null => { const i = sectionIndex(id); return i < 0 ? null : sectionPage(i); };
   const sectionPages = sections.map((_, i) => sectionPage(i));
 
-  // Units and their words: the introduction, the produced sections, the produced deep dives, in the draft's order.
-  if (isRecord(doc['introduction'])) {
-    const words = proseWords(doc['introduction']);
+  // Units and their words: the introduction and any hero omission, then the produced sections and deep dives.
+  const hero = heroOf(doc);
+  const overviewBlocks = [
+    ['introduction', doc['introduction']],
+    ['hero-omission', hero?.form === 'omitted' ? hero.value : undefined],
+  ] as const;
+  for (const [unit, block] of overviewBlocks) {
+    if (!isRecord(block)) continue;
+    const words = proseWords(block);
     const landing = page('index.html');
-    landing.units.push('introduction');
+    landing.units.push(unit);
     landing.tally.proseWords += words;
     draft.proseWords += words;
   }
@@ -301,7 +308,7 @@ export function readingDifference(run: string, repositoryId: string, checkedAt: 
     if (!entry.isDirectory() || !RUN_ID.test(entry.name) || entry.name === self) continue;
     const dir = path.join(root, entry.name);
     let stored;
-    try { stored = readRunRecord(fs.readFileSync(path.join(dir, RUN_LAYOUT.config), 'utf8')); } catch { unreadableRuns += 1; continue; }
+    try { stored = readRunRecord(readBoundedText(path.join(dir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)); } catch { unreadableRuns += 1; continue; }
     if (!stored.ok) { unreadableRuns += 1; continue; }
     if (stored.record.subject.repository.repositoryId !== repositoryId) continue;
     let records: number[];

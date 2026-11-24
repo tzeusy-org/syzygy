@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { removeFixtureDirectory } from './test-cleanup.js';
+import { removeFixtureDirectory } from './test-cleanup.testkit.js';
 
 describe('fixture cleanup', () => {
   it('retries transient ENOTEMPTY failures and succeeds within the bound', () => {

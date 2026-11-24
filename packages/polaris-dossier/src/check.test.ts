@@ -1227,15 +1227,19 @@ describe('check: nothing Observed rests on a stored record', () => {
 });
 
 describe('check: the adapter-credential check after a permitting brief', () => {
-  it('reports a readable credential as a finding of the step, telling the agent to run nothing further, and logs it', async () => {
+  it.each([
+    ['adapter-credential-readable', 'adapter credentials readable by the operator\'s user: /fixture/token'],
+    ['adapter-credential-configuration-refused', 'the fixture credential list could not be read'],
+    ['adapter-credential-undetermined', 'the read attempt could not decide for: /fixture/token'],
+  ] as const)('reports and logs the %s finding and tells the agent to stop observed execution', async (kind, why) => {
     const run = await briefedRun();
     const record = JSON.parse(read(run, 'brief.json'));
     fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ ...record, executionRule: { arm: 'permitting' } }));
     writeDraft(run, valid());
-    const failing = { probe: async () => ({ passed: false as const, why: 'adapter credentials readable by the operator\'s user: /fixture/token' }) };
+    const failing = { probe: async () => ({ passed: false as const, kind, why }) };
     const result = report(await checkDraft(run, {}, deps({ probe: failing })));
-    expect(result.findings).toEqual([{ kind: 'adapter-credential-readable', at: '$', detail: 'adapter credentials readable by the operator\'s user: /fixture/token. Run no further observed code: the permission to build and run the observed project has lapsed for this run.' }]);
-    expect(JSON.parse(read(run, 'credential-breaches.jsonl'))).toMatchObject({ kind: 'adapter-credential-readable', step: 'check' });
+    expect(result.findings).toEqual([{ kind, at: '$', detail: `${why}. Run no further observed code: the permission to build and run the observed project has lapsed for this run.` }]);
+    expect(JSON.parse(read(run, 'credential-breaches.jsonl'))).toMatchObject({ kind, step: 'check' });
     expect(result.disclosures).toContain('The adapter-credential check is an operating-system read attempt as the operator\'s user at the instant of each step; its list comes from the source it names, which the agent sessions can write. That no process the session started could read a credential between checks, after close or through privilege escalation is Inferred. An agent tool\'s permission or deny rule does not satisfy it.');
   });
 });
@@ -2138,12 +2142,97 @@ describe('check: the reader rule for the draft and the brief record (syzygy-3efd
   });
 });
 
-// REQ-polaris-generation-034 version 2.23 (syzygy-5dhm.41): schema v11's worth-knowing mark. A marked block is a cited Inferred block that
-// is one of a section's own paragraphs and carries no judgement mark; in a v8 or earlier draft the mark and a Pole's `worthKnowingNone`
+describe('check: overview hero (schema v10)', () => {
+  const version = 'polaris-dossier-local-draft-v10';
+  const reason = { id: 'hero-reason', label: 'inferred', basis: 'source', text: 'The project describes one runtime process.', citations: [cite('c-hero-reason')], quotations: [] };
+  const heroFigure = (home: unknown, kind = 'flow') => {
+    const figure = homed(home);
+    if (kind === 'flow') return { ...figure, edges: figure.edges.map((edge) => ({ ...edge, relation: 'sends-to' })) };
+    const { nodes: _nodes, edges: _edges, ...shared } = figure;
+    return { ...shared, kind: 'sequence', participants: figure.nodes, messages: figure.edges };
+  };
+  const submit = async (change: (draft: Draft) => void) => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((draft) => { draft.schemaVersion = version; draft.thesisBasis = 'stated'; change(draft); }));
+    return report(await checkDraft(run, {}, deps()));
+  };
+
+  it.each([
+    [undefined, 'a v10 draft names its hero figure or declares it omitted with a reason'],
+    [null, 'MALFORMED'],
+    [{}, 'MALFORMED'],
+    [{ figure: 'flow-1', omitted: reason }, 'MALFORMED'],
+    [{ figure: 'flow-1', extra: true }, 'MALFORMED'],
+  ])('refuses a missing or malformed top-level hero %j', async (hero, detail) => {
+    const result = await submit((draft) => { if (hero !== undefined) draft.hero = hero; });
+    expect(result.outcome).toBe('findings');
+    expect(result.findings.filter(({ at }) => at === '$.hero')).toEqual([{
+      kind: 'hero', at: '$.hero',
+      detail: detail === 'MALFORMED' ? '`hero` is exactly one of {"figure": <diagram id>} and {"omitted": <claim block>}' : detail,
+    }]);
+  });
+
+  it.each([
+    [2, 'hero', '`hero.figure` names a diagram by its identity'],
+    ['missing', 'unresolved-reference', 'no diagram has the identity named by `hero.figure`'],
+  ])('refuses a figure reference %j with its own finding', async (value, kind, detail) => {
+    const result = await submit((draft) => { draft.hero = { figure: value }; });
+    expect(result.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual([{ kind, at: '$.hero.figure', detail }]);
+  });
+
+  it.each([
+    [{ kind: 'section', target: 'core-ideas' }, 'flow', ['flow-1: the hero is a figure homed on the overview']],
+    [{ kind: 'overview' }, 'sequence', ['flow-1: the hero is a figure of a graph kind']],
+    [{ kind: 'section', target: 'core-ideas' }, 'sequence', ['flow-1: the hero is a figure homed on the overview', 'flow-1: the hero is a figure of a graph kind']],
+  ] as const)("checks a referenced figure’s home and graph kind", async (home, kind, details) => {
+    const result = await submit((draft) => { draft.diagrams = [heroFigure(home, kind)]; draft.hero = { figure: 'flow-1' }; });
+    expect(result.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual(details.map((detail) => ({ kind: 'hero', at: '$.hero.figure', detail })));
+  });
+
+  it('uses a claim block for the omission and places its words in the overview ledger', async () => {
+    const result = await submit((draft) => { draft.hero = { omitted: reason }; });
+    expect(result.outcome).toBe('passed');
+    expect(result.findings).toEqual([]);
+    expect(result.readingLedger?.pages[0]).toMatchObject({
+      page: 'index.html', units: ['introduction', 'hero-omission', 'section:core-ideas'], proseWords: 50,
+    });
+    const nonNormative = await submit((draft) => { draft.hero = { omitted: { id: 'hero-reason', label: 'non-normative', text: 'Read on.' } }; });
+    expect(nonNormative.findings).toEqual([{ kind: 'hero', at: '$.hero.omitted', detail: "an omitted hero's reason is an Inferred or Unknown claim block" }]);
+    const presentation = await submit((draft) => { draft.hero = { omitted: STEPS }; });
+    expect(presentation.findings.filter(({ at }) => at.startsWith('$.hero'))).toEqual([{
+      kind: 'schema', at: '$.hero.omitted', detail: expect.any(String),
+    }]);
+  });
+
+  it('refuses either form with a detector-matched identity before writing a check record', async () => {
+    const id = SECRET_PATH.split('/').at(-1)!;
+    for (const hero of [{ figure: id }, { omitted: { ...reason, id } }]) {
+      const run = await briefedRun();
+      writeDraft(run, mutate((draft) => { draft.schemaVersion = version; draft.thesisBasis = 'stated'; draft.hero = hero; }));
+      const result = await checkDraft(run, {}, deps());
+      expect(result).toMatchObject({ ok: false, refusal: { stage: 'screen', reason: 'the hero identity is withheld by screening' } });
+      expect(JSON.stringify(result).includes(id)).toBe(false);
+      expect(fs.existsSync(path.join(run, 'checks', 'rev-0.json'))).toBe(false);
+    }
+  });
+
+  it('keeps the schema-v9 version finding and passes a legitimate v10 graph, including an undrawn diagram', async () => {
+    const earlier = await submit((draft) => { draft.schemaVersion = 'polaris-dossier-local-draft-v9'; draft.hero = { figure: 'flow-1' }; });
+    expect(earlier.findings).toEqual([{ kind: 'field-version', at: '$.hero', detail: '`hero` needs draft schema polaris-dossier-local-draft-v10' }]);
+    for (const disposition of [{ kind: 'produced', assetIds: ['flow-1'] }, { kind: 'omitted', reason: 'No useful drawing.', citations: [] }]) {
+      const result = await submit((draft) => { draft.diagrams = [{ ...heroFigure({ kind: 'overview' }), disposition }]; draft.hero = { figure: 'flow-1' }; });
+      expect(result.findings).toEqual([]);
+    }
+  });
+});
+
+// REQ-polaris-generation-034 version 2.25 (syzygy-5dhm.41): schema v13's worth-knowing mark. A marked block is a cited Inferred block that
+// is one of a section's own paragraphs and carries no judgement mark; in a v10 or earlier draft the mark and a Pole's `worthKnowingNone`
 // are field-version. Expected values are literals written from the specification.
-describe('check: the worth-knowing mark (schema v11)', () => {
-  const V11 = 'polaris-dossier-local-draft-v11';
-  const drafted = (version: string, change: (d: Draft) => void) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; change(d); });
+describe('check: the worth-knowing mark (schema v13)', () => {
+  const V13 = 'polaris-dossier-local-draft-v13';
+  const HERO_OMITTED = { omitted: { id: 'hero-reason', label: 'inferred', basis: 'source', text: 'The project describes one runtime process.', citations: [cite('c-hero-reason')], quotations: [] } };
+  const drafted = (version: string, change: (d: Draft) => void) => mutate((d) => { d.schemaVersion = version; d.thesisBasis = 'stated'; if (version.endsWith('v10') || version.endsWith('v13')) d.hero = HERO_OMITTED; change(d); });
   const findingsOf = async (draft: Draft) => {
     const run = await briefedRun();
     writeDraft(run, draft);
@@ -2155,15 +2244,15 @@ describe('check: the worth-knowing mark (schema v11)', () => {
   const PLACE = 'only a block that is one of a section\'s own paragraphs carries the worth-knowing mark: not a child, an element\'s claim, a subsection, a deep dive, the introduction or a route step';
   const poles = (d: Draft, none?: string) => { d.poles = [{ label: 'Ideas', sections: ['core-ideas'], ...(none === undefined ? {} : { worthKnowingNone: none }) }]; d.whySection = 'core-ideas'; };
 
-  it('passes a v11 draft whose section paragraphs carry the mark, and one whose Pole says why it marks none', async () => {
-    const marked = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].worthKnowing = true; d.sections[0].paragraphs[1].worthKnowing = true; poles(d); }));
+  it('passes a v13 draft whose section paragraphs carry the mark, and one whose Pole says why it marks none', async () => {
+    const marked = await findingsOf(drafted(V13, (d) => { d.sections[0].paragraphs[0].worthKnowing = true; d.sections[0].paragraphs[1].worthKnowing = true; poles(d); }));
     expect([marked.outcome, listed(marked)]).toEqual(['passed', []]);
-    const none = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[1].worthKnowing = false; poles(d, 'No fact here meets the test.'); }));
+    const none = await findingsOf(drafted(V13, (d) => { d.sections[0].paragraphs[1].worthKnowing = false; poles(d, 'No fact here meets the test.'); }));
     expect([none.outcome, listed(none)]).toEqual(['passed', []]);
   });
 
   it('refuses a marked block that cites nothing, beside the citation rule\'s own finding', async () => {
-    const result = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'Snapshots are periodic.', citations: [], quotations: [], worthKnowing: true }); }));
+    const result = await findingsOf(drafted(V13, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'Snapshots are periodic.', citations: [], quotations: [], worthKnowing: true }); }));
     expect(listed(result)).toEqual([
       { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: CITES },
       { kind: 'citation-by-kind', at: '$.sections[0].paragraphs[1].citations', detail: 'an inferred block cites at least one source, unless it is your own judgement of the project, asserting no fact about it, and carries "judgement": true' }]);
@@ -2171,28 +2260,28 @@ describe('check: the worth-knowing mark (schema v11)', () => {
   });
 
   it('refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it', async () => {
-    const cited = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { judgement: true, worthKnowing: true }); }));
+    const cited = await findingsOf(drafted(V13, (d) => { Object.assign(d.sections[0].paragraphs[1], { judgement: true, worthKnowing: true }); }));
     expect(listed(cited)).toEqual([{ kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: NOT_JUDGED }]);
-    const uncited = await findingsOf(drafted(V11, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'The design is sound.', citations: [], quotations: [], judgement: true, worthKnowing: true }); }));
+    const uncited = await findingsOf(drafted(V13, (d) => { Object.assign(d.sections[0].paragraphs[1], { text: 'The design is sound.', citations: [], quotations: [], judgement: true, worthKnowing: true }); }));
     expect(listed(uncited)).toEqual([
       { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: CITES },
       { kind: 'worth-knowing', at: '$.sections[0].paragraphs[1].worthKnowing', detail: NOT_JUDGED }]);
   });
 
   it('refuses the mark anywhere but a section\'s own paragraphs: a child and the introduction', async () => {
-    const result = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].children[2].worthKnowing = true; d.introduction.worthKnowing = true; }));
+    const result = await findingsOf(drafted(V13, (d) => { d.sections[0].paragraphs[0].children[2].worthKnowing = true; d.introduction.worthKnowing = true; }));
     expect(listed(result)).toEqual([
       { kind: 'worth-knowing', at: '$.introduction.worthKnowing', detail: PLACE },
       { kind: 'worth-knowing', at: '$.sections[0].paragraphs[0].children[2].worthKnowing', detail: PLACE }]);
   });
 
   it('reports the mark on an unknown block as schema alone', async () => {
-    const result = await findingsOf(drafted(V11, (d) => { d.sections[0].paragraphs[0].children[0].worthKnowing = true; }));
+    const result = await findingsOf(drafted(V13, (d) => { d.sections[0].paragraphs[0].children[0].worthKnowing = true; }));
     expect(listed(result)).toEqual([{ kind: 'schema', at: '$.sections[0].paragraphs[0].children[0].worthKnowing', detail: 'is not a field of this form' }]);
   });
 
-  it('reports the mark and a Pole\'s reason in a v8 or earlier draft as field-version in place of the schema finding, and judges neither', async () => {
-    for (const version of ['polaris-dossier-local-draft-v8', 'polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v4']) {
+  it('reports the mark and a Pole\'s reason in a v10 or earlier draft as field-version in place of the schema finding, and judges neither', async () => {
+    for (const version of ['polaris-dossier-local-draft-v10', 'polaris-dossier-local-draft-v9', 'polaris-dossier-local-draft-v8', 'polaris-dossier-local-draft-v7', 'polaris-dossier-local-draft-v4']) {
       const result = await findingsOf(drafted(version, (d) => {
         if (version.endsWith('v4')) delete d.thesisBasis;
         Object.assign(d.sections[0].paragraphs[1], { judgement: true, worthKnowing: true });
@@ -2200,16 +2289,24 @@ describe('check: the worth-knowing mark (schema v11)', () => {
         poles(d, 'None.');
       }));
       expect(listed(result), version).toEqual([
-        { kind: 'field-version', at: '$.introduction.worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v11' },
-        { kind: 'field-version', at: '$.sections[0].paragraphs[1].worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v11' },
-        { kind: 'field-version', at: '$.poles[0].worthKnowingNone', detail: '`worthKnowingNone` needs draft schema polaris-dossier-local-draft-v11' }]);
+        { kind: 'field-version', at: '$.introduction.worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v13' },
+        { kind: 'field-version', at: '$.sections[0].paragraphs[1].worthKnowing', detail: '`worthKnowing` needs draft schema polaris-dossier-local-draft-v13' },
+        { kind: 'field-version', at: '$.poles[0].worthKnowingNone', detail: '`worthKnowingNone` needs draft schema polaris-dossier-local-draft-v13' }]);
     }
   });
 
-  it('gives a v11 draft without marks the findings the same v8 draft gets', async () => {
+  it('gives a v13 draft without marks the findings the same v10 draft gets', async () => {
     const faulty = (version: string) => drafted(version, (d) => { d.sections[0].paragraphs[1].citations[0].path = 'docs/absent.txt'; d.sections[0].paragraphs[0].quotations = []; });
-    const v11 = listed(await findingsOf(faulty(V11)));
-    expect(v11).toEqual(listed(await findingsOf(faulty('polaris-dossier-local-draft-v8'))));
-    expect(v11.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
+    const v13 = listed(await findingsOf(faulty(V13)));
+    expect(v13).toEqual(listed(await findingsOf(faulty('polaris-dossier-local-draft-v10'))));
+    expect(v13.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['quotation-count $.sections[0].paragraphs[0].quotations', 'path-absent $.sections[0].paragraphs[1].citations[0].path']);
+  });
+
+  it('refuses a draft naming v11 or v12, numbers other changes hold and this code does not implement, as an unknown version, never as v10 or v13', async () => {
+    for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
+      const result = await findingsOf(drafted(version, (d) => { d.hero = HERO_OMITTED; d.sections[0].paragraphs[0].worthKnowing = true; }));
+      expect(result.outcome, version).toBe('findings');
+      expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }]);
+    }
   });
 });

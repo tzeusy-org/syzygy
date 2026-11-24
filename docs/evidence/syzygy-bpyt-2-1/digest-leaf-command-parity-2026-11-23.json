@@ -1,0 +1,259 @@
+{
+  "epistemic": "Observed",
+  "scope": "First GT-1 slice. SHA-256 leaf and its two live generated-view callers.",
+  "baseCommit": "e329883b265639bd1e56e3f7983ded08126ef277",
+  "inputTree": "8ad1564c60a248df7d32bf43d3a064d26b107ae0",
+  "implementationCommit": "59139bbd33edc82e95477da89590683b4c4c329a",
+  "comparison": "Run the listed Python arguments from the repository root using a clean base and the same base with only the implementation patch applied. The test compared exact stdout bytes, stderr bytes and exit status before and after for each runtime.",
+  "runtimes": [
+    "3.10.22",
+    "3.11.17",
+    "3.14.4"
+  ],
+  "casesPerRuntime": 11,
+  "streamsComparedPerRuntime": 22,
+  "currentDigestCitationSweep": {
+    "scripts/build_polaris_dependency_unions.py": {
+      "baseSha256": "4b910c855a7d1f5624c32386904d17f2061ef852025dbb1f576e15833ae4567a",
+      "citations": [
+        "docs/evidence/syzygy-k54o-1/adoption-tail/d10-f1-tail-full-787ec185e6-result.json"
+      ],
+      "disposition": "Frozen historical test result for 787ec185e60f3717fa71dec05fdada37e7e7585d"
+    },
+    "scripts/build_polaris_project_wide_contract_coverage.py": {
+      "baseSha256": "53735c38d18c8aaf939beb2fdb9d94e3766283aa0db603c77012705e6cb688e2",
+      "citations": [],
+      "disposition": "No tracked exact current-digest citer at the base"
+    }
+  },
+  "cases": [
+    {
+      "case": "coverage-check",
+      "arguments": [
+        "scripts/build_polaris_project_wide_contract_coverage.py",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 76,
+        "sha256": "9e1d0ea2a1cb12ac8216d82697980f213ec46e73f6f7f9507102e5bc0a4846b7"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "coverage-selftest",
+      "arguments": [
+        "scripts/build_polaris_project_wide_contract_coverage.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 101,
+        "sha256": "787b2a84dba649ffb2c77efcc59aec63ceae58cf71b9606e38f3cbdeaada0bce"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "coverage-render",
+      "arguments": [
+        "-c",
+        "import sys; sys.path.insert(0, 'scripts'); import build_polaris_project_wide_contract_coverage as coverage; sys.stdout.write(coverage.render())"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 1817,
+        "sha256": "d54acd212916fb83047874484c9e47acd1fade453384403ba600a7b2a0244d9c"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-check",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 49,
+        "sha256": "3ed865f9c9dd76bbaf30fbe6da5917d72d02c25c59ffdf48fca04810dbd36afb"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-selftest",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--selftest"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 1290,
+        "sha256": "964e017a4a755df18c604e61d9996bb57c8acec7cfde305b99e9cfb6751a754b"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-invalid-render",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "synthetic-missing-package"
+      ],
+      "exit": 2,
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "bytes": 314,
+        "sha256": "3e53613ba960108f36af22ae88d92e5d76794be80a3f27ad2a1d10a202523e38"
+      }
+    },
+    {
+      "case": "dependency-unions-render-base",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "base"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 2828,
+        "sha256": "4edf4fe9744370fc61c250926d353890ee6283eb4898e83709ab76e2b627dfa3"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-render-understanding",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "understanding"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 997,
+        "sha256": "e6067cf6b9dcb901d06734b5f97667b81e258b4dff3f5667b80d70c5b8a6685d"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-render-polaris-dossier-launch-consent",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "polaris-dossier-launch-consent"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 876,
+        "sha256": "5b9019207a063cd191aa4efa40f956016e3cfa9ea48ba702a0dbd5c1784b45e2"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-render-polaris-dossier-local-agent-mode",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "polaris-dossier-local-agent-mode"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 1675,
+        "sha256": "9e253e8f7b41f99a24dd6bf3d670f677110010b333f896fb55e6454373f6a0d3"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "case": "dependency-unions-render-polaris-non-governed-narrative-profile",
+      "arguments": [
+        "scripts/build_polaris_dependency_unions.py",
+        "--render",
+        "polaris-non-governed-narrative-profile"
+      ],
+      "exit": 0,
+      "stdout": {
+        "bytes": 773,
+        "sha256": "5eeca513c48855ea9ff6835e50274ce156dd1383821ffba4c5ea29666ba701cc"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "python3.14.4Override": {
+    "case": "dependency-unions-invalid-render",
+    "arguments": [
+      "scripts/build_polaris_dependency_unions.py",
+      "--render",
+      "synthetic-missing-package"
+    ],
+    "exit": 2,
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "bytes": 356,
+      "sha256": "09646ed11a5a329e7eb608581bc6b14a2d6b45c3f88985fc16ddf92efc804bc8"
+    }
+  },
+  "remainingScope": "Other live callers, historical-recorder dependencies, manifest, Git I/O, patch, report and selftest helpers. GT-1 remains open.",
+  "mutation": {
+    "subjectCommit": "59139bbd33edc82e95477da89590683b4c4c329a",
+    "path": "scripts/syzygy_gov/digest.py",
+    "old": "return hashlib.sha256(data).hexdigest()",
+    "new": "return hashlib.sha256(data).hexdigest().upper()",
+    "checks": [
+      {
+        "arguments": [
+          "scripts/build_polaris_project_wide_contract_coverage.py",
+          "--check"
+        ],
+        "baselineExit": 0,
+        "mutantExit": 1,
+        "mutantStdoutMarker": "DRIFT: CONTRACT-COVERAGE.md",
+        "mutantStdoutSha256": "d5ba0c7e8cbb23dd9a6ffb92f49c4e534fd5545165cbba6cec1df42d88229b50"
+      },
+      {
+        "arguments": [
+          "scripts/build_polaris_dependency_unions.py",
+          "--selftest"
+        ],
+        "baselineExit": 0,
+        "mutantExit": 1,
+        "mutantStdoutMarker": "FAIL the installed union reverses to its signed predecessor",
+        "mutantStdoutSha256": "fc37fe2b2123aeff14017229b6b009a6b8e3495116ca102873c28a03c678d729"
+      }
+    ]
+  }
+}

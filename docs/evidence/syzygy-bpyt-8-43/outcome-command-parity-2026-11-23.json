@@ -1,0 +1,217 @@
+{
+  "epistemic": "Observed",
+  "bead": "syzygy-bpyt.8.43",
+  "scope": "G6 / greenfield:reconciliation:R5:outcome-stragglers. Same public CLI and persistence behavior, shared internal Outcome only.",
+  "authority": [
+    "OWNER-DIRECTION-GREENFIELD-PARITY-SIMPLIFICATION-2026-10-20 items 2\u20133",
+    "OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21 GP-Q0",
+    "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03 item 4",
+    "docs/evidence/syzygy-bpyt-8-7/reconciliation-gen1.json G6"
+  ],
+  "baselineCommit": "560e1211e3add913f3b3c62544c3169661430468",
+  "implementationCommit": "18fefdf2f85d0b0db99decf0bf04312cceb9cf4d",
+  "sourcePaths": {
+    "packages/polaris-dossier/src/cli.ts": {
+      "baselineSha256": "f3ca4780dc5271b261a07b64689eb0dfa57e8689340a3d7a6d61a32b3a229af0",
+      "implementationSha256": "7440c0601e78ce5776283459455765773ca5df02edfef58e62489702befe32f4"
+    },
+    "packages/polaris-dossier/src/preflight.ts": {
+      "baselineSha256": "9272093d78182445656a55370db1ea8aba6235280cee8392c0f344ceb4ac4e81",
+      "implementationSha256": "4143528150eb5a34070450cffb219c2ce9a2340e815c384124e8ea6c56a36aab"
+    },
+    "packages/polaris-dossier/src/run-tree-readers.test.ts": {
+      "baselineSha256": "154d320d6e90a1a7bbc4fce9abb048d8431859ec1462363e84a6d76897184439",
+      "implementationSha256": "ff4c1f401fad5509470fb99567f48fa7fb2d419d8a47f2c813b5de85fb96d03b"
+    },
+    "packages/polaris-dossier/src/session-handover.ts": {
+      "baselineSha256": "06f8ba67c829121e9bb11d6c0aa9b8c4df66c1fb9674cc3899e19e2dffe35dd1",
+      "implementationSha256": "e3f4efb6ff3742512940ade8dbca9860677ec4876377fb78bedd7ef13031b2b1"
+    },
+    "packages/polaris-dossier/src/start-gates.test.ts": {
+      "baselineSha256": "4fe898a2e7ae898be1c898232b80c021a446ea72449d58cd671dcfda84c439a9",
+      "implementationSha256": "90b071e6216f46866027ee2c27447dae4ec5d81c1498861fd3952258a258bce3"
+    },
+    "packages/polaris-dossier/src/status.test.ts": {
+      "baselineSha256": "9e2f2a75240eb83e8ec013766038e82f5631952ade76fe693350fcdbd8518d8f",
+      "implementationSha256": "40bd7a9934972f2a56be49518f92f34af727bf3499dea415d7f9c3c2819f8173"
+    },
+    "packages/polaris-dossier/src/status.ts": {
+      "baselineSha256": "eefeb6ca3159280598c50d3c2c577852cbae08303a4a9267cc73f977370d5eb9",
+      "implementationSha256": "f0e69043d5b8187152bffec239fcc8a3bcaeaf92d6b5c134aed8da9afcf5af71"
+    },
+    "packages/polaris-dossier/src/waiting-sessions.ts": {
+      "baselineSha256": "cc5b2ab13341d292db282879ea7b85e1d57931edc3aaaeb9c3b5b25582e80c7b",
+      "implementationSha256": "e4932d77fae46f978ebf4b51ca697352c58b7a28373f000145d8fada73eb9e2b"
+    }
+  },
+  "custody": {
+    "base": "c0ba677ecc505f752c4277817fad95dca54d9d4c",
+    "previousCliMerge": "74c44cc0d38888316a268ff1111f709c4a98dc2f",
+    "previousCliReviewedHead": "62e1a54601f39ea7bb582a0c9a26d68c6ea42f5f",
+    "previousCliAncestor": true,
+    "openPullRequests": 9,
+    "overlapPaths": [],
+    "parallelCustody": [
+      "lane-three confirms no claim and independent CLI scope sweep",
+      "lane-four will not claim overlapping .8.15 and holds no G6 path"
+    ],
+    "heldRoots": [
+      "apps/three-surface-poc/src",
+      "packages/three-surface-poc-core/src"
+    ],
+    "heldRootOverlap": [],
+    "baselineUsed": "560e1211e3add913f3b3c62544c3169661430468",
+    "preflightPathsUnchangedAtBaseline": true
+  },
+  "unionCensus": {
+    "predicate": "AST union with a literal ok true and report arm and a literal ok false arm; excludes *.test.ts and *.testkit.ts in the five PD-2 roots. No additional permanent gate.",
+    "ast": [
+      {
+        "commit": "560e1211e3add913f3b3c62544c3169661430468",
+        "roots": [
+          "packages/polaris-dossier/src",
+          "packages/polaris-generation-core/src",
+          "packages/polaris-generation-consent/src",
+          "apps/syzygy/src",
+          "apps/three-surface-poc/src/polaris-generation"
+        ],
+        "typescript": "5.9.3",
+        "candidatePaths": 324,
+        "excluded": 161,
+        "census": 163,
+        "results": [
+          {
+            "path": "packages/polaris-dossier/src/outcome.ts",
+            "line": 2,
+            "declaredBy": "Outcome"
+          },
+          {
+            "path": "packages/polaris-dossier/src/preflight.ts",
+            "line": 33,
+            "declaredBy": "PreflightResult"
+          },
+          {
+            "path": "packages/polaris-dossier/src/status.ts",
+            "line": 65,
+            "declaredBy": "StatusResult"
+          },
+          {
+            "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+            "line": 320,
+            "declaredBy": "deliverToWaiting"
+          }
+        ]
+      },
+      {
+        "commit": "18fefdf2f85d0b0db99decf0bf04312cceb9cf4d",
+        "roots": [
+          "packages/polaris-dossier/src",
+          "packages/polaris-generation-core/src",
+          "packages/polaris-generation-consent/src",
+          "apps/syzygy/src",
+          "apps/three-surface-poc/src/polaris-generation"
+        ],
+        "typescript": "5.9.3",
+        "candidatePaths": 324,
+        "excluded": 161,
+        "census": 163,
+        "results": [
+          {
+            "path": "packages/polaris-dossier/src/outcome.ts",
+            "line": 2,
+            "declaredBy": "Outcome"
+          }
+        ]
+      }
+    ],
+    "independentTextScan": {
+      "560e1211e3add913f3b3c62544c3169661430468": {
+        "census": 163,
+        "matchingPaths": [
+          "packages/polaris-dossier/src/outcome.ts",
+          "packages/polaris-dossier/src/preflight.ts",
+          "packages/polaris-dossier/src/status.ts",
+          "packages/polaris-dossier/src/waiting-sessions.ts"
+        ]
+      },
+      "18fefdf2f85d0b0db99decf0bf04312cceb9cf4d": {
+        "census": 163,
+        "matchingPaths": [
+          "packages/polaris-dossier/src/outcome.ts"
+        ]
+      }
+    }
+  },
+  "testDelta": {
+    "forecast": "+0 ~0 -0",
+    "actual": "+0 ~41 -0",
+    "details": "2 preflight, 3 status direct callers + 30 stored-record parameter cases, and 6 reader cases sharing the status envelope unwrap. No expected CLI bytes or test names changed."
+  },
+  "focusedTests": {
+    "command": "node_modules/.bin/vitest run packages/polaris-dossier/src/{cli,cli-table,status,start-gates,gate-acts,waiting-sessions,run-tree-readers}.test.ts",
+    "filesPassed": 7,
+    "testsPassed": 656
+  },
+  "npmRunCheck": {
+    "commit": "18fefdf2f85d0b0db99decf0bf04312cceb9cf4d",
+    "unitFilesPassed": 215,
+    "unitPassed": 5486,
+    "unitSkipped": 1,
+    "typecheck": "passed"
+  },
+  "goldenComparison": {
+    "harness": "docs/evidence/syzygy-bpyt-8-2/dossier-golden-harness.ts with a focused test-only status fixture",
+    "historicalCorpus": "docs/evidence/syzygy-bpyt-8-2/dossier-corpus.json",
+    "archivedRows": 1617,
+    "focusedAddedRows": 16,
+    "relocatedAbsoluteArguments": 1893,
+    "pipeline": "Same immutable base paths and fixture bytes, fixed clock, empty CLI env and no real stdin. Scratch integration capture permits synchronous read-only Git with all protocols closed. Existing process/socket guard remains in the repo and unchanged.",
+    "check": "cmp before.json after.json over argv, unnormalised stdout and stderr bytes, exit and throw for each row. The invalid stored-record JSON preserved its ordered optional refusals array.",
+    "exits": {
+      "0": 7,
+      "1": 1031,
+      "2": 595
+    },
+    "raw": {
+      "before": {
+        "sha256": "6394ec1d4c2c35b8fb1f6476dfe417a6ebe9184a24ef6aea07f300be49669078",
+        "bytes": 8284012,
+        "retained": "/home/orca/.tmp/szgolden.1fO0Zf/before.json"
+      },
+      "after": {
+        "sha256": "6394ec1d4c2c35b8fb1f6476dfe417a6ebe9184a24ef6aea07f300be49669078",
+        "bytes": 8284012,
+        "retained": "/home/orca/.tmp/szgolden.1fO0Zf/after.json"
+      },
+      "mutant": {
+        "sha256": "0c13623b37c2862f466c462f33f257e7140877194685dcd96b26bad75cc257ff",
+        "bytes": 8284075,
+        "retained": "/home/orca/.tmp/szgolden.1fO0Zf/mutant.json"
+      }
+    },
+    "replayTools": {
+      "prepare_corpus.py": "3ff4b2696f0559d0ec4e7df02a40d8d095520ac765b177674f6a32cc465ffc59",
+      "replay.sh": "cc2a2c08f06cddd4c7d6a66fef5f12b7d93e141f36cfffbd9a0b5ad45bb9d03d",
+      "config.mts": "a098039c23d80bedf12c5dc8f847a1ea80f5ad38cd96b9c81b47c86f75d93d04",
+      "fixture.ts": "511678865b87457ada884cfc4a8aebe342b392278b31e463278dd054e353c14a",
+      "guard.ts": "868894dbf14684638737a285a007a6a494b2ff00b646a027b5d40f97b18dfee8",
+      "corpus.json": "592b6556630369283495cc6b81e077c8274b3d7db7c18c9ea8b322a267e2ac92"
+    }
+  },
+  "mutation": {
+    "sourceCommit": "18fefdf2f85d0b0db99decf0bf04312cceb9cf4d",
+    "path": "packages/polaris-dossier/src/preflight.ts",
+    "sourceSha256": "4143528150eb5a34070450cffb219c2ce9a2340e815c384124e8ea6c56a36aab",
+    "old": "reason: parsed.reason",
+    "new": "reason: `${parsed.reason} [G6 changed refusal]`",
+    "predicate": "a changed refusal must perturb the exact CLI bytes at fixed roots",
+    "changedComparatorRows": [
+      1623,
+      1631
+    ],
+    "controlSha256": "6394ec1d4c2c35b8fb1f6476dfe417a6ebe9184a24ef6aea07f300be49669078",
+    "mutantSha256": "0c13623b37c2862f466c462f33f257e7140877194685dcd96b26bad75cc257ff",
+    "result": "killed by exact stdout or stderr comparison with neutral exit"
+  },
+  "independentReviewClass": "CC-REV-1 class 2 on exact published head"
+}

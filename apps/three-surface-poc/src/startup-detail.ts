@@ -26,6 +26,9 @@ export function daemonStartDetail(failure: StartFailure): string {
 
 export function gitObservationDetail(cause: unknown): string {
   if (cause instanceof Error && cause.message === 'observer-checkout-dirty') return 'POC runtime inputs have uncommitted changes';
+  if (cause instanceof Error && cause.message === 'observer-checkout-overlaps-configured-repository') {
+    return 'observer checkout overlaps the configured repository';
+  }
   const status = typeof cause === 'object' && cause !== null && 'status' in cause ? cause.status : undefined;
   return Number.isSafeInteger(status) && (status as number) >= 0 && (status as number) <= 255
     ? `a required git revision could not be observed (git exit ${status})`

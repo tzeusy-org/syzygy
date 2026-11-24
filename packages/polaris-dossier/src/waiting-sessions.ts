@@ -17,6 +17,8 @@ import {
 } from './review.js';
 import type { ScreenLoader } from './screen.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { readBoundedFile, readFileAsSized } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** Pre-started waiting sessions (owner direction `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`; the candidate v1.2 of
  * `polaris-dossier-local-agent-mode`, REQ-polaris-generation-035 as amended there).
@@ -310,19 +312,30 @@ export const DELIVERY_DISCLOSURES = [
   `A round after the first is delivered to a session that reviewed an earlier revision: it has seen its own earlier verdict, which may anchor this one. The review page discloses it (${WAIT_MODE_DIRECTION}).`,
 ];
 
+interface DeliveryRefusal {
+  readonly command: 'session-prompt';
+  readonly outcome: 'refused';
+  readonly stage: 'write';
+  readonly reason: string;
+  readonly disclosures: readonly string[];
+}
+
 /** Deliver a built packet to a waiting review session as its next round: the run's delivery record first, then the session's
  * `round-N/` files, `delivery.json` last and by rename, so a waiting slice never sees a partial round. */
 export function deliverToWaiting(
   run: string, runId: string, kind: ReviewKind, waiting: WaitingSession, built: { readonly bytes: string; readonly sha256: string },
   packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined,
-): { readonly ok: true; readonly report: DeliveryReport } | { readonly ok: false; readonly reason: string } {
+): Outcome<DeliveryReport, DeliveryRefusal> {
+  const refuse = (reason: string): Outcome<DeliveryReport, DeliveryRefusal> => ({
+    ok: false, refusal: { command: 'session-prompt', outcome: 'refused', stage: 'write', reason, disclosures: DELIVERY_DISCLOSURES },
+  });
   const { session } = waiting;
   const relative = waiting.record['directory'];
-  if (typeof relative !== 'string') return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names no directory` };
+  if (typeof relative !== 'string') return refuse(`the prompt record of waiting ${kind} session ${session} names no directory`);
   const directory = path.join(path.dirname(run), relative);
-  if (path.dirname(directory) !== sessionsRoot(run)) return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root` };
+  if (path.dirname(directory) !== sessionsRoot(run)) return refuse(`the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root`);
   const resolved = resolveSessionDirectory(sessionsRoot(run), directory);
-  if (!resolved.ok) return { ok: false, reason: resolved.reason };
+  if (!resolved.ok) return refuse(resolved.reason);
   // `afterCheck` is a test seam, run in the window between the check and the writes; every write for the session goes through `resolved.real`.
   afterCheck();
   const earlier = deliveries(run, kind, session);
@@ -343,7 +356,7 @@ export function deliverToWaiting(
     fs.writeFileSync(pending, `${JSON.stringify({ format: DELIVERY_FORMAT, kind, runId, session, round, packetSha256: built.sha256 }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
     fs.renameSync(pending, path.join(roundDir, DELIVERY_FILE));
   } catch (cause) {
-    return { ok: false, reason: `round ${round} could not be delivered to waiting ${kind} session ${session} (${errno(cause)}); anything already written stays, and the next delivery takes the next round` };
+    return refuse(`round ${round} could not be delivered to waiting ${kind} session ${session} (${errno(cause)}); anything already written stays, and the next delivery takes the next round`);
   }
   logStep(run, 'session-prompt', now, { outcome: 'delivered', role: 'review', kind, session, round, packetSha256: built.sha256 });
   return { ok: true, report: {
@@ -601,7 +614,8 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     const brief = prompt['brief'];
     const expected = isRecord(brief) && typeof brief['sha256'] === 'string' ? brief['sha256'] : undefined;
     let bytes: Uint8Array;
-    try { bytes = new Uint8Array(fs.readFileSync(path.join(directory, INVENTORY_BRIEF_FILE))); } catch (cause) { return refuse('rehash', `the inventory brief cannot be read (${errno(cause)})`); }
+    // Read under its own size (REQ-polaris-generation-035 version 2.18): Syzygy records the brief's digest, not its size.
+    try { bytes = new Uint8Array(readFileAsSized(path.join(directory, INVENTORY_BRIEF_FILE))); } catch (cause) { return refuse('rehash', `the inventory brief cannot be read (${readCause(cause)})`); }
     if (expected === undefined || sha256(bytes) !== expected) return refuse('rehash', `${INVENTORY_BRIEF_FILE} does not hash to the digest Syzygy recorded when it wrote it; stop, and tell the operator`);
     logStep(run, 'await', startedAt, { outcome: 'delivered', role: 'inventory', session: role.session, round });
     return { ok: true, report: {
@@ -642,19 +656,30 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const at = deps.now();
   const reopened = await openRun(run, deps.sources, at, what, deps.openReader ? { openReader: deps.openReader } : {});
   if (!reopened.ok) return refuse(reopened.stage, reopened.reason, reopened.reasons, reopened.refusals);
-  let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
-  try {
-    delivery = parseBoundedJson(fs.readFileSync(path.join(roundDir, DELIVERY_FILE), 'utf8'), DELIVERY_JSON_LIMITS);
-    packetBytes = new Uint8Array(fs.readFileSync(path.join(roundDir, PACKET_FILE)));
-    digestLine = fs.readFileSync(path.join(roundDir, PACKET_DIGEST_FILE), 'utf8');
-  } catch (cause) { return refuse('rehash', `round ${round} cannot be read (${errno(cause)}); stop, and tell the operator`); }
-  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
-  const actual = sha256(packetBytes);
-  const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
-  if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record === undefined || record['packetSha256'] !== actual) {
+  const mismatch = (): AwaitResult => {
     logStep(run, 'await', at, { outcome: 'refused', stage: 'rehash', role: 'review', kind: role.kind, session: role.session, round });
     return refuse('rehash', `round ${round}'s ${PACKET_FILE} does not hash to the digest in ${DELIVERY_FILE}, ${PACKET_DIGEST_FILE} and the delivery record Syzygy wrote; do not read it: stop, and tell the operator`);
-  }
+  };
+  // The run directory's delivery record is read first, before any round file (REQ-polaris-generation-035 version 2.18): it states the
+  // packet's bound, and where it cannot be read the command refuses without reading a round file.
+  const record = readRecord(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(role.kind, role.session, round)));
+  if (record === undefined) return mismatch();
+  const packetBound = record['packetBytes'];
+  if (packetBound !== undefined && (typeof packetBound !== 'number' || !Number.isSafeInteger(packetBound) || packetBound < 0)) return mismatch();
+  let delivery: unknown, packetBytes: Uint8Array, digestLine: string;
+  const unreadable = (cause: unknown, bound?: number): AwaitResult =>
+    refuse('rehash', `round ${round} cannot be read (${readCause(cause, bound)}); stop, and tell the operator`);
+  try { delivery = parseBoundedJson(readBoundedText(path.join(roundDir, DELIVERY_FILE), RUN_TREE_BOUNDS.roundDelivery), DELIVERY_JSON_LIMITS); }
+  catch (cause) { return unreadable(cause, RUN_TREE_BOUNDS.roundDelivery); }
+  try {
+    const packetFile = path.join(roundDir, PACKET_FILE);
+    packetBytes = new Uint8Array(packetBound === undefined ? readFileAsSized(packetFile) : readBoundedFile(packetFile, packetBound));
+  } catch (cause) { return unreadable(cause, packetBound); }
+  try { digestLine = readBoundedText(path.join(roundDir, PACKET_DIGEST_FILE), RUN_TREE_BOUNDS.packetDigestLine); }
+  catch (cause) { return unreadable(cause, RUN_TREE_BOUNDS.packetDigestLine); }
+  const actual = sha256(packetBytes);
+  const named = isRecord(delivery) && delivery['round'] === round && delivery['kind'] === role.kind && delivery['session'] === role.session ? delivery['packetSha256'] : undefined;
+  if (named !== actual || digestLine !== `${actual}  ${PACKET_FILE}\n` || record['packetSha256'] !== actual) return mismatch();
   logStep(run, 'await', at, { outcome: 'delivered', role: 'review', kind: role.kind, session: role.session, round, packetSha256: actual });
   const verdictFile = path.join(roundDirName(round), 'verdict.json');
   return { ok: true, report: {

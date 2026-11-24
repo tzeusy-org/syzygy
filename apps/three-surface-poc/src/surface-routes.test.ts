@@ -14,7 +14,7 @@ import { renderOrreryPage } from './orrery.js';
 import { POLARIS_HUMAN_PATH, renderPolarisPage } from './polaris.js';
 import { POC_HUMAN_PATH, pocRoutes } from './routes.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { fetchWithHost } from './test-http-client.js';
+import { fetchWithHost } from './test-http-client.testkit.js';
 import { buildFixtureModel } from './test-model-fixture.js';
 import { ADMITTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 import { TRAJECTORY_HUMAN_PATH } from './trajectory.js';

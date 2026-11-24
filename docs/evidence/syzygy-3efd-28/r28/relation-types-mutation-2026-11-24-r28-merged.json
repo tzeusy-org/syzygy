@@ -1,0 +1,1335 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-23T20:56:39.888Z",
+  "commit": "3385247c14d49b72f868e9692ac4ba03ee64bee2",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "9eb73660ec0f3941488566ce25942b2a88f04af91e15d2904d101f87bf2ce9d5",
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": "e887132baa605f695dff50787f45be773b3ea16a1a96ad7a47fd23d1d5d8fa36",
+    "packages/polaris-dossier/src/brief.ts": "33f60913883030b67bae67037203bb15a69bf56022e2660cac1b4fd4f087b716",
+    "packages/polaris-dossier/src/check-derive.ts": "7380b50c98db44853884bd9953a3bb2d062ed986af82d6306390373484ad3f1c",
+    "packages/polaris-dossier/src/check.ts": "8ced01bdcef2ae4e88085ce15ada2b25801483eaeb86c8085d62f175f0c4a9d0",
+    "packages/polaris-dossier/src/draft-schema.ts": "d2c4b6ef370b08bff4a7c15a8ed017a68156e42e37527e536ce40ad52e047d5e",
+    "packages/polaris-dossier/src/relation-witness.ts": "a92a33f2f071790cbbc47344c89af8a358a150b4f6727f48fe4bfe5b49171889",
+    "packages/polaris-dossier/src/render.ts": "c549c4e318b135a23f5a3e892326b737afc8560ca000372bbe42d24e2c6fc5d8"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 600 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/relation-witness.ts": [
+      "packages/polaris-dossier/src/relation-witness.test.ts",
+      "packages/polaris-dossier/src/relation-types.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/relation-types.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/relation-types.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/draft-schema.test.ts",
+      "packages/polaris-dossier/src/relation-types.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/render.ts": [
+      "packages/polaris-dossier/src/relation-types.test.ts",
+      "packages/polaris-dossier/src/render.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": [
+      "packages/polaris-dossier/src/relation-types.test.ts",
+      "packages/polaris-dossier/src/render.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/figure-kinds.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/svg-inert.ts": [
+      "packages/polaris-dossier/src/relation-types.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "exitCode": 0,
+      "tests": 185,
+      "failedTests": []
+    },
+    {
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "exitCode": 0,
+      "tests": 28,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 41,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 320,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 320,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 371,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "exitCode": 0,
+      "tests": 50,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/render.ts",
+      "exitCode": 0,
+      "tests": 161,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "unasserted-decided",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (!edge.asserted) return unknown('edge-not-inferred');",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in decides an edge the draft does not assert unknown first, before any other case",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "no-row-reason-swapped",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (row === undefined) return unknown('no-witness-rule');",
+      "new": "if (row === undefined) return unknown('endpoint-without-unit');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives no-witness-rule for each of the seven relation types no fact witnesses, whatever its ends",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "without-unit-reason-swapped",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (edge.from === undefined || edge.to === undefined) return unknown('endpoint-without-unit');",
+      "new": "if (edge.from === undefined || edge.to === undefined) return unknown('endpoint-unit-invalid');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives endpoint-without-unit where either end carries no unit, before an invalid or mismatched end",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "invalid-source-end-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (edge.from.invalid || edge.to.invalid) return unknown('endpoint-unit-invalid');",
+      "new": "if (edge.to.invalid) return unknown('endpoint-unit-invalid');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives endpoint-unit-invalid where either end drew a unit-reference finding, before a kind mismatch"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "invalid-target-end-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (edge.from.invalid || edge.to.invalid) return unknown('endpoint-unit-invalid');",
+      "new": "if (edge.from.invalid) return unknown('endpoint-unit-invalid');",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives endpoint-unit-invalid where either end drew a unit-reference finding, before a kind mismatch",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "target-kind-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (from.kind !== row.from || to.kind !== row.to) return",
+      "new": "if (from.kind !== row.from) return",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives endpoint-kind-mismatch where an end is of another kind than the row takes there",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "source-kind-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (from.kind !== row.from || to.kind !== row.to) return",
+      "new": "if (to.kind !== row.to) return",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives endpoint-kind-mismatch where an end is of another kind than the row takes there"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "eligibility-ignores-version",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "!table.some((entry) => entry.rule === rule.id && entry.version === rule.version)",
+      "new": "!table.some((entry) => entry.rule === rule.id)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives recognizer-not-eligible for every recognizer relation at version 1, though a fact joins the units"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "eligibility-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (rule === undefined || !table.some(",
+      "new": "if (rule === undefined || false && !table.some(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives recognizer-not-eligible for every recognizer relation at version 1, though a fact joins the units",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "facts-unknown-reads-structure-only",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "(row.record === 'structure' ? inputs.structure : inputs.manifest).state",
+      "new": "inputs.structure.state",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives facts-unknown only where the record the relation's row reads is unknown"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (!coverageComplete(relation, from, to, inputs, rule)) return unknown('coverage-partial');",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with a path a secret detector matches",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "witness-after-coverage",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "  if (fact !== undefined) return { state: 'witnessed'",
+      "new": "  if (!coverageComplete(relation, from, to, inputs, rule)) return unknown('coverage-partial');\n  if (fact !== undefined) return { state: 'witnessed'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-ignores-secret-paths",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "s.secretPathsLeftOut === 0 && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with a path a secret detector matches",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-ignores-submodules",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "s.submodules === 0 && ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-ignores-unlisted-units",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": " && s.unitsNotListed === 0;",
+      "new": ";",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-ignores-hidden-end",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if ([pathOf(from), pathOf(to)].some((at) => at !== undefined && inputs.hidden(at))) return false;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-ignores-facts-not-listed",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": " || m.factsNotListed !== 0",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-any-listed-file",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "file.path === source && file.epistemic === 'inferred' && file.valuesLeftOut === 0",
+      "new": "file.path === source",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "coverage-any-recognizer",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "m.recognizers.some((entry) => entry.rule === rule.id && entry.ruleVersion === rule.version",
+      "new": "m.recognizers.some((entry) => true",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "contains-any-target",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "unitAt.get(fact.to) === to.path)",
+      "new": "unitAt.has(fact.to))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in witnesses a contains arrow from the root to a directory the tree holds, naming the first joining fact",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in matches the target by exact code units: no case folding, no normalisation",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in challenges a contains arrow to a directory the tree lacks only under complete coverage",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in takes contains coverage from the three counts alone, so a directory name a detector would match is challenged where it is absent",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: at a render keeps a witness only where its fact renders Observed, and otherwise gives fact-not-current",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact reports relation-challenged at the edge, naming its identity, relation, fact kind, rule and version and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the draft from review until a resubmitted revision passes",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "contains-case-folded",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "unitAt.get(fact.to) === to.path)",
+      "new": "unitAt.get(fact.to)?.toLowerCase() === to.path.toLowerCase())",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in matches the target by exact code units: no case folding, no normalisation"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "contains-last-fact",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "return facts.find((fact) => fact.fact === 'contains'",
+      "new": "return facts.findLast((fact) => fact.fact === 'contains'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in names the first joining fact in the record's order where more than one joins"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "manifest-fact-any-rule",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (fact.fact !== kind || fact.rule !== rule.id || fact.ruleVersion !== rule.version) return false;",
+      "new": "if (fact.fact !== kind) return false;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "manifest-fact-any-kind",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (fact.fact !== kind || fact.rule",
+      "new": "if (fact.rule",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "dependency-any-name",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "fact.path === from.path && fact['name'] === to.name",
+      "new": "fact.path === from.path",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "needs-job-reversed-allowed",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "fact['from'] === from.job && fact['to'] === to.job",
+      "new": "((fact['from'] === from.job && fact['to'] === to.job) || (fact['from'] === to.job && fact['to'] === from.job))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "needs-job-one-path",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "fact.path === from.path && fact.path === to.path && fact['from'] === from.job",
+      "new": "fact.path === from.path && fact['from'] === from.job",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "service-reversed-allowed",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "fact['from'] === from.service && fact['to'] === to.service",
+      "new": "((fact['from'] === from.service && fact['to'] === to.service) || (fact['from'] === to.service && fact['to'] === from.service))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) never takes a fact of another kind, direction, path or rule as a witness",
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: a recognizer row once eligible (a table no version adopts) is complete for a recognizer only where the member lists no fact unlisted and the source file is listed Inferred dropping no value"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "render-currency-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "decision.state === 'witnessed' && !rendersObserved(decision.fact)",
+      "new": "false",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: at a render keeps a witness only where its fact renders Observed, and otherwise gives fact-not-current",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "dependency-words-relation-name",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "words: 'declares a dependency on'",
+      "new": "words: 'declares-dependency'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: at a render names a witnessed arrow in Syzygy's words for its relation, and has none for a relation no fact witnesses"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "contains-words-draft",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "to: 'top-level-directory', words: 'contains'",
+      "new": "to: 'top-level-directory', words: 'holds'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: at a render names a witnessed arrow in Syzygy's words for its relation, and has none for a relation no fact witnesses",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "tld-dot-segments-pass",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "unit.path.includes('/') || unit.path === '.' || unit.path === '..'",
+      "new": "unit.path.includes('/')",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "tld-slash-passes",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "unit.path.includes('/') || unit.path === '.'",
+      "new": "unit.path === '.'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "manifest-basename-by-suffix",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "!PACKAGE_MANIFEST_BASENAMES.includes(lastSegment(unit.path))",
+      "new": "!PACKAGE_MANIFEST_BASENAMES.some((name) => unit.path.endsWith(name))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "workflow-path-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "case 'workflow-job': if (!isWorkflowPath(unit.path)) return 'workflow-job'; break;",
+      "new": "case 'workflow-job': break;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 8
+    },
+    {
+      "id": "compose-path-unchecked",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "case 'compose-service': if (!isComposePath(unit.path)) return 'compose-service'; break;",
+      "new": "case 'compose-service': break;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "hidden-path-blob-tested",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "tree.hidden(unit.path) || tree.isBlob(unit.path)",
+      "new": "tree.isBlob(unit.path)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind raises none for a package-manifest unit a secret detector matches, whether or not the tree holds it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "blob-untested",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "tree.isBlob(unit.path) ? undefined",
+      "new": "true ? undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind fails each form the requirement names, and nothing else",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "no-tree-blob-fails",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "return tree === undefined || tree.hidden",
+      "new": "return tree !== undefined && tree.hidden",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind tests no blob where the tree could not be listed, but still each path rule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "unit-extra-member-read",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "Object.keys(value).length !== members.length + 1 || ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > unit-reference: a unit that names no unit of its kind reads a node's unit only in one of the six forms"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "table-holds-a-recognizer",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "Object.freeze([Object.freeze({ rule: TOP_LEVEL_UNIT.id, version: TOP_LEVEL_UNIT.version, record: null })])",
+      "new": "Object.freeze([Object.freeze({ rule: TOP_LEVEL_UNIT.id, version: TOP_LEVEL_UNIT.version, record: null }), Object.freeze({ rule: NPM_PACKAGE_MANIFEST.id, version: NPM_PACKAGE_MANIFEST.version, record: null })])",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in gives recognizer-not-eligible for every recognizer relation at version 1, though a fact joins the units",
+        "packages/polaris-dossier/src/relation-witness.test.ts > the eligibility table holds top-level-unit version 1 alone at version 1, naming no record, so the freshness test is vacuous and asserted to be",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "stale-module-hash-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "sha256(module) !== entry['sha256']",
+      "new": "false",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > the eligibility table fails where a module a named record lists no longer has the SHA-256 the record gives it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "stale-record-hash-ignored",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "bytes === undefined || sha256(bytes) !== row.record.sha256",
+      "new": "bytes === undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > the eligibility table fails where a module a named record lists no longer has the SHA-256 the record gives it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "stale-empty-record-passes",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "if (!Array.isArray(modules) || modules.length === 0)",
+      "new": "if (!Array.isArray(modules))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > the eligibility table fails where a module a named record lists no longer has the SHA-256 the record gives it"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "field-version-not-reported",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (Object.hasOwn(element, field)) out.push(`${at}.${field}`);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports them in a v8 draft as field-version in place of the schema findings version 2.16 reports, beside every other finding"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "field-version-in-v9",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  if (hasRelationForm(doc['schemaVersion'])) return [];\n  const out: string[] = [];",
+      "new": "  const out: string[] = [];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: overview hero (schema v10) keeps the schema-v9 version finding and passes a legitimate v10 graph, including an undrawn diagram",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type passes check with no finding for e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type omits relation edges from the machine view when their drawing is refused",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact reports relation-challenged at the edge, naming its identity, relation, fact kind, rule and version and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the draft from review until a resubmitted revision passes",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact decides no edge of a draft with a schema finding, and none in a figure the draft does not produce",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the v9 edge gate and finding order when a draft carries a v10 hero",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with a path a secret detector matches",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports each in a v9 draft as schema at the edge's relation or at the node's unit, one finding per unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind raises none for a package-manifest unit a secret detector matches, whether or not the tree holds it"
+      ],
+      "seconds": 18
+    },
+    {
+      "id": "field-version-schema-kept",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "subsectionPaths.has(path) || relationPaths.has(path)",
+      "new": "subsectionPaths.has(path)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports them in a v8 draft as field-version in place of the schema findings version 2.16 reports, beside every other finding"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "code-unit-bound-unchecked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (over !== undefined) add(",
+      "new": "if (false) add(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "code-unit-finding-below-unit",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "add({ kind: 'schema', at: `${at}.${UNIT_FIELD}`, detail: `\\`${over[0]}\\`",
+      "new": "add({ kind: 'schema', at: `${at}.${UNIT_FIELD}.${over[0]}`, detail: `\\`${over[0]}\\`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "code-unit-twice-with-schema",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (texts.some(([, value]) => [...value].length > UNIT_TEXT_LIMIT)) return;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "unit-fault-at-member",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const replaced = !hasRelationForm(version) ? unnamed :",
+      "new": "const replaced = true ? unnamed :",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports each in a v9 draft as schema at the edge's relation or at the node's unit, one finding per unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points"
+      ],
+      "seconds": 18
+    },
+    {
+      "id": "unit-fault-reported-per-member",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "          if (unitsReported.has(unit)) return [];\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports each in a v9 draft as schema at the edge's relation or at the node's unit, one finding per unit"
+      ],
+      "seconds": 18
+    },
+    {
+      "id": "unit-fault-own-detail",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "return [{ path: unit, detail: unitFormsDetail }];",
+      "new": "return [{ path: unit, detail: fault.detail }];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports each in a v9 draft as schema at the edge's relation or at the node's unit, one finding per unit"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "contains-coverage-reads-hidden",
+      "file": "packages/polaris-dossier/src/relation-witness.ts",
+      "old": "  if (relation === 'contains') {\n    const s = inputs.structure;",
+      "new": "  if (relation === 'contains') {\n    if ([pathOf(from), pathOf(to)].some((at) => at !== undefined && inputs.hidden(at))) return false;\n    const s = inputs.structure;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 50,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-witness.test.ts > rule relation-witness version 1: the order it decides in takes contains coverage from the three counts alone, so a directory name a detector would match is challenged where it is absent",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "edges-of-unproduced-figures",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "!isRecord(diagram['disposition']) || diagram['disposition']['kind'] !== 'produced' || ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact decides no edge of a draft with a schema finding, and none in a figure the draft does not produce"
+      ],
+      "seconds": 25
+    },
+    {
+      "id": "unit-reference-not-reported",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (unit !== undefined && fault !== undefined) units.push(",
+      "new": "if (false) units.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "invalid-end-not-marked",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "{ unit, invalid: fault !== undefined }",
+      "new": "{ unit, invalid: false }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 25
+    },
+    {
+      "id": "findings-order-swapped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "  return [\n    ...decisions.units.map(",
+      "new": "  return [\n    ...[].map(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "challenge-detail-names-unit",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "correct the arrow, its relation or its units`",
+      "new": "correct the arrow, its relation or its units ${JSON.stringify(decision)}`",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact reports relation-challenged at the edge, naming its identity, relation, fact kind, rule and version and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "check-withheld-asserted",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "edge['epistemic'] === 'inferred' && !isWithheldElement(edge, reach)",
+      "new": "edge['epistemic'] === 'inferred'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "check-unknown-asserted",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "edge['epistemic'] === 'inferred' && !isWithheldElement(edge, reach)",
+      "new": "!isWithheldElement(edge, reach)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "check-decides-with-schema-findings",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "findings.some((finding) => finding.kind === 'schema') ? { ...decisions, edges: [] } : decisions",
+      "new": "decisions",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact decides no edge of a draft with a schema finding, and none in a figure the draft does not produce",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the v9 edge gate and finding order when a draft carries a v10 hero"
+      ],
+      "seconds": 37
+    },
+    {
+      "id": "check-secret-path-not-hidden",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path'",
+      "new": "screen.screenPath(repositoryPath) === 'denied-path'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 320,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind raises none for a package-manifest unit a secret detector matches, whether or not the tree holds it"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "relation-optional",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "relation: choice(RELATION_TYPES), ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 371,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: overview hero (schema v10) keeps the schema-v9 version finding and passes a legitimate v10 graph, including an undrawn diagram",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type passes check with no finding for e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type omits relation edges from the machine view when their drawing is refused",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact reports relation-challenged at the edge, naming its identity, relation, fact kind, rule and version and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact challenges an arrow to an absent directory whose name a secret detector would match, naming the edge and never the unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the draft from review until a resubmitted revision passes",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact decides no edge of a draft with a schema finding, and none in a figure the draft does not produce",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact keeps the v9 edge gate and finding order when a draft carries a v10 hero",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact places the finding after every finding version 2.16 reports and the unit-reference findings",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with a path a secret detector matches",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding over a tree with docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports each in a v9 draft as schema at the edge's relation or at the node's unit, one finding per unit",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind reports each at its unit, naming the node and never the path, and no challenge for the edge to the first",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a unit that names no unit of its kind raises none for a package-manifest unit a secret detector matches, whether or not the tree holds it"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "unit-code-points-257",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "maxLength: UNIT_TEXT_LIMIT }",
+      "new": "maxLength: UNIT_TEXT_LIMIT + 1 }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 371,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports a unit's key past 256 code units as schema though it holds no more than 256 code points"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "v8-has-relation-form",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);",
+      "new": "export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || version === LOCAL_DRAFT_SCHEMA_VERSION_V8 || hasHeroForm(version);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 371,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: relation types and unit forms outside the lists reports them in a v8 draft as field-version in place of the schema findings version 2.16 reports, beside every other finding"
+      ],
+      "seconds": 21
+    },
+    {
+      "id": "render-withheld-asserted",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? '')",
+      "new": "edge['epistemic'] === 'inferred'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds"
+      ],
+      "seconds": 36
+    },
+    {
+      "id": "render-witness-without-record",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "if (decision.state === 'witnessed' && derived.state === 'derived') {",
+      "new": "if (decision.state === 'witnessed' && derived.state !== 'derived') {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "render-every-fact-current",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "facts.get(factId)?.epistemic === 'observed'",
+      "new": "true",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "render-submodules-ignored",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "submodules: derived.tree.submodules,",
+      "new": "submodules: 0,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "render-unlisted-ignored",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "unitsNotListed: derived.tree.unitsNotListed }",
+      "new": "unitsNotListed: 0 }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "render-no-relations",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations })",
+      "new": "...{}",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 161,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type omits relation edges from the machine view when their drawing is refused",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "site-draft-label-kept",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "label: said, ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "site-draft-marking-kept",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "epistemic: 'observed' as const, ",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them"
+      ],
+      "seconds": 26
+    },
+    {
+      "id": "site-witnessed-claim",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (relation?.evidence !== undefined) return witnessItem(e, relation);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them"
+      ],
+      "seconds": 25
+    },
+    {
+      "id": "site-no-svg-attributes",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "id => edgeAttrs.get(id) ?? ''",
+      "new": "() => ''",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "site-no-edges-member",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "...(local.edgeRelations === undefined ? {} : { edges:",
+      "new": "...(true ? {} : { edges:",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type omits relation edges from the machine view when their drawing is refused",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged labelled Unknown with a reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact an arrow the draft does not assert is never upgraded or challenged citing only spans that screening withholds",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "site-edges-before-draw",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "if (relation !== undefined) diagramRelationEdges.push(",
+      "new": "if (relation !== undefined) relationEdges.push(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type omits relation edges from the machine view when their drawing is refused"
+      ],
+      "seconds": 23
+    },
+    {
+      "id": "site-no-relation-attribute",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation=\"${escape(relation.relation)}\"${",
+      "new": "const witnessAttrs = (relation: LocalEdgeRelation): string => `${",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a fact of another relation type never witnesses raises no finding, draws nothing solid, and decides each edge unknown with its own reason",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: a witness needs a fact that renders Observed keeps e1 the draft's where the currency policy's bytes are missing, and check's outcome unchanged"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "site-mark-words",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<span class=\"derived-mark\">Witnessed by Syzygy</span>",
+      "new": "<span class=\"derived-mark\">Derived by Syzygy</span>",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 185,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "inert-witness-fact-refused",
+      "file": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts",
+      "old": "'data-relation', 'data-witness-fact', ",
+      "new": "'data-relation', ",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 28,
+      "failedTests": [
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type draws e1 solid and Observed in Syzygy's words, with the fact's provenance, and the boxes as the draft marks them",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: an arrow witnessed by a fact of its identical type counts e1 in none of the draft's counts: the page and appendix counts equal those of the same draft without e1",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over a secret path",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over 251 top-level directories",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs a submodule",
+        "packages/polaris-dossier/src/relation-types.test.ts > relation types: complete coverage with no witnessing fact partial coverage is Unknown, never a finding renders the docs edge with the draft's marking, coverage-partial, while e1 is still witnessed, over docs holding only a submodule"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    RELATION_TYPES_PARAGRAPH,\n",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 41,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph and task-routes section"
+      ],
+      "seconds": 3
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 82,
+    "killed": 82,
+    "survived": 0,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

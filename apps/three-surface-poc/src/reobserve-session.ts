@@ -28,6 +28,8 @@ export interface ReobserveSessionOptions {
   readonly build: (capture: PocRuntimeCapture) => PocModel;
   /** A full re-observation: repository, observer and horizon. */
   readonly observe: () => Promise<PocRuntimeCapture>;
+  /** Called after a complete re-observation replaces the served evaluation. */
+  readonly onReobserved?: () => void;
   /** The current head compared with a pinned revision, metadata only. */
   readonly observeHorizon: (pinnedRevision: string) => Pick<GitHorizonObservation, 'currentRevision' | 'changedSources' | 'addedSources'>;
   readonly observeRevisionChange: (fromRevision: string, toRevision: string) => { readonly changedSources: number; readonly addedSources: number } | null;
@@ -72,6 +74,7 @@ export function createReobserveSession(options: ReobserveSessionOptions): Reobse
     } catch (cause) {
       return { kind: 'failed', reason: cause instanceof Error ? cause.message : 'the re-evaluation could not be named' };
     }
+    options.onReobserved?.();
     return { kind: 'reobserved', reevaluation: latest };
   })().finally(() => { reobserving = undefined; }));
 

@@ -41,16 +41,24 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v17 (REQ-polaris-generation-034 version 2.23, syzygy-5dhm.41): brief v14 with draft schema v11 and the one worth-knowing paragraph
- * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed (v15 and v16 are the numbers adopted versions 2.19 and 2.20 give their briefs, not yet implemented here). v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
+/** v19 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
+ * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed. v17 and v18 are the numbers adopted version
+ * 2.23 and the open version 2.24 give their briefs; neither is implemented here.
+ * v16 (REQ-polaris-generation-034 version 2.20): brief v15 with schema v10 and the hero paragraph after relation types.
+ * v15 (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): brief v14 with draft schema v9 and the one relation-types paragraph
+ * (`RELATION_TYPES_PARAGRAPH`) immediately after the subsections paragraph, and this line changed. v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v17';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v19';
+const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
-/** The paragraph brief v17 adds immediately after the Poles paragraph, in the requirement's words (version 2.23). It carries no project
+/** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.25). It carries no project
  * content. */
 export const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole.';
+
+/** The paragraph brief v15 adds immediately after the subsections paragraph, in the requirement's words (version 2.19). */
+export const RELATION_TYPES_PARAGRAPH = 'Every arrow of a graph diagram (an item of `edges`) carries `relation`, the one relation it asserts: `contains`, `declares-dependency`, `needs-job`, `depends-on-service`, `calls`, `imports`, `reads`, `writes`, `sends-to`, `starts` or `relates-to`, the last where none of the others fits. A node may carry `unit`, the one part of the repository it is: `{"kind": "repository-root"}`, `{"kind": "top-level-directory", "path": "<directory name>"}`, `{"kind": "package-manifest", "path": "<path of a package.json, Cargo.toml, pyproject.toml or go.mod>"}`, `{"kind": "dependency-name", "name": "<name as declared>"}`, `{"kind": "workflow-job", "path": "<workflow path>", "job": "<job key>"}` or `{"kind": "compose-service", "path": "<Compose file path>", "service": "<service key>"}`. Give a node a unit only when it is exactly that unit; Syzygy never matches by label. Where Syzygy derives a fact of an arrow\'s exact relation between its two nodes\' units, it draws the arrow solid as Observed, in its own words; where its derivation is complete and holds no such fact, check reports a finding to repair. Today only `contains`, from the repository root to a top-level directory, can be witnessed.';
 
 /** The paragraph brief v14 adds immediately after the figure-kinds paragraph, in the requirement's words (version 2.16). */
 export const SUBSECTIONS_PARAGRAPH = 'A section may also carry `subsections`, two to twelve, in reading order, when it answers more than one question. Each subsection has `id`, `title`, `answer` and `paragraphs`: `title` names the question in a short label; `answer` is one Inferred or Unknown claim block, with the members that form of a paragraph takes, whose `text` is one sentence that answers the question; and `paragraphs`, zero to thirty, hold what supports that answer, as a section\'s paragraphs do. Check counts a full stop, question mark or exclamation mark that a space follows, outside a quotation, as the end of a sentence, so write `for example`, not `e.g.`, in an answer. A section\'s own paragraphs open it, before its subsections. Syzygy renders each subsection under its own heading with its answer first, and lists the page\'s sections and subsections at the top of the page. A figure is never homed in a subsection, and a deep dive has none.';
@@ -183,6 +191,10 @@ export function renderBrief(input: BriefInput): string {
     FIGURE_KINDS_PARAGRAPH,
     '',
     SUBSECTIONS_PARAGRAPH,
+    '',
+    RELATION_TYPES_PARAGRAPH,
+    '',
+    HERO_PARAGRAPH,
     '',
     '## Poles',
     '',

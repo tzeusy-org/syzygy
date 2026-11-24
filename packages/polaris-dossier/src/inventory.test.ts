@@ -10,7 +10,7 @@ import { issueBrief } from './brief.js';
 import type { CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
-import { opensOf } from './fs-patch.testkit.js';
+import { opensOf, underReadCase, type ReadCase } from './fs-patch.testkit.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { buildInventoryBrief, checkInventory, inventoryBrief, inventoryOfRecord, openRun, type InventoryCheckResult } from './inventory.js';
@@ -267,7 +267,7 @@ describe('session-prompt inventory', () => {
       'never open the run directory\'s `drafts/`, `checks/`, `brief.md`',
       '"$id": "urn:syzygy:polaris-dossier:polaris-dossier-local-inventory-v2"',
       '- Brief version: `polaris-dossier-inventory-brief-v4`',
-      // Inventory brief v4 (version 2.23): the worth-knowing kind, between `conflict` and `other`.
+      // Inventory brief v4 (version 2.25): the worth-knowing kind, between `conflict` and `other`.
       '- `conflict`: two of its statements that disagree\n- `worth-knowing`: a fact it states about itself that an engineer new to the project would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects; look for one to three in each major part of the project, and record none where you find none, never one made to fill a quota\n- `other`: anything else it states that a reader would need',
       'You run nothing from the clone, so you report no executions',
     ]) expect(brief).toContain(text);
@@ -460,6 +460,28 @@ describe('the inventory of record', () => {
     });
     fs.appendFileSync(path.join(run, 'inventory', 'rev-0.json'), ' ');
     expect(await inventoryOfRecord(run, counting)).toEqual({ counts: false, why: 'the frozen inventory inventory/rev-0.json is not the bytes its check recorded' });
+  });
+
+  // REQ-polaris-generation-035 version 2.18 (syzygy-3efd.80): every frozen inventory revision is read by the reader rule under 4,194,304
+  // bytes, in every case of the Case line (2.18 code review, note 2). A regular file is NUL bytes, so one at the bound is read whole and
+  // then fails the digest its check recorded.
+  it.each<[ReadCase, number[], string]>([
+    ['a FIFO', [0], 'cannot be read (not a regular file)'],
+    ['a symbolic link to /dev/zero', [0], 'cannot be read (not a regular file)'],
+    ['a directory', [0], 'cannot be read (not a regular file)'],
+    ['one byte past its bound', [0], 'cannot be read (larger than 4194304 bytes)'],
+    ['grown past its bound after its size was taken', [4_194_305], 'cannot be read (larger than 4194304 bytes)'],
+    ['exactly at its bound', [4_194_304], 'is not the bytes its check recorded'],
+  ])('reads a frozen revision under 4,194,304 bytes: %s (syzygy-3efd.80)', async (kase, reads, words) => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    writeInventory(dir, validInventory());
+    passed(await checkInventory(run, {}, deps()));
+    await launchForm(run, { role: 'inventory', form: 'terminal' }, hand);
+    expect((await inventoryOfRecord(run, counting)).counts).toBe(true);
+    let record: unknown;
+    expect(await underReadCase(kase, path.join(run, 'inventory', 'rev-0.json'), 4_194_304, async () => { record = await inventoryOfRecord(run, counting); })).toEqual(reads);
+    expect(record).toEqual({ counts: false, why: `the frozen inventory inventory/rev-0.json ${words}` });
   });
 
   it('does not count an inventory with findings, or a launch record altered to another form', async () => {
@@ -669,6 +691,21 @@ describe('inventory-brief', () => {
     expect(first.ok && first.report.brief).toBe(fs.readFileSync(path.join(dir, 'inventory-brief.md'), 'utf8'));
     fs.appendFileSync(path.join(dir, 'inventory-brief.md'), '\nRead the drafts too.\n');
     expect(await inventoryBrief(run, hand)).toMatchObject({ ok: true, report: { storedCopy: 'differs' } });
+  });
+
+  // The stored copy is read under its own size when opened: anything it cannot read is reported absent, without blocking.
+  it.each<[ReadCase, number[], string]>([
+    ['a FIFO', [0], 'absent'],
+    ['a symbolic link to /dev/zero', [0], 'absent'],
+    ['a directory', [0], 'absent'],
+    ['grown past its bound after its size was taken', [101], 'absent'],
+    ['exactly at its bound', [100], 'differs'],
+  ])('reads the stored copy of the brief under its own size: %s (syzygy-3efd.80)', async (kase, reads, storedCopy) => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    let result: unknown;
+    expect(await underReadCase(kase, path.join(dir, 'inventory-brief.md'), 100, async () => { result = await inventoryBrief(run, hand); })).toEqual(reads);
+    expect(result).toMatchObject({ ok: true, report: { storedCopy } });
   });
 
   it('never opens the launched marker, at the hand-over or after it, where recording a launch form opens it once (R-GP-IMPL-LAUNCHED-MARKER-2 R2-N4)', async () => {

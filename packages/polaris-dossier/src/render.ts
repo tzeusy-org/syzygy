@@ -4,13 +4,17 @@ import * as path from 'node:path';
 import {
   backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
-  type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
+  type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
-import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasSubsectionForm, hasThesisBasisForm, hasWorthKnowingForm } from './draft-schema.js';
+import { applyHeroFindings, relationDecisions } from './check-derive.js';
+import { secretOrUnder } from './derive.js';
+import { BLOB_MODES } from './git-object-reader.js';
+import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
+import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
+import { UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -32,6 +36,7 @@ import { continuationOf } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 import { poleLimitOf } from './run-config.js';
+import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
 
 /** `syzygy dossier render <run>` (REQ-polaris-generation-033, 034, 036; design "Command surface", `render`; syzygy-qkea.10).
  *
@@ -145,7 +150,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // A retained legacy run is read-only and gets its restart explanation even
   // when no renderer is installed; do not append a step or inspect its sources.
   try {
-    const stored = readRunRecord(fs.readFileSync(path.join(runDir, RUN_LAYOUT.config), 'utf8'));
+    const stored = readRunRecord(readBoundedText(path.join(runDir, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord));
     if (!stored.ok && stored.legacy) return refuse('run', stored.detail);
   } catch { /* existing missing-run / missing-renderer handling below */ }
   if (deps.renderer === undefined) return refuse('renderer', NO_RENDERER);
@@ -171,6 +176,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
+  if (hasWithheldHeroIdentity(doc, secretPathOf(screen))) return refuse('screen', 'the hero identity is withheld by screening');
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   let derived: Derived;
   try {
@@ -179,9 +185,11 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     if (cause instanceof GitObjectReadRefusal) return refuse('object-read', `an object at the pinned revision could not be read: ${cause.message}`, { objectRead: cause.toJSON() });
     throw cause;
   }
-  if (derived.findings.length > 0) {
-    return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${derived.findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
-      { reasons: derived.findings.map((finding) => `${finding.kind} at ${finding.at}`) });
+  const findings = [...derived.findings];
+  applyHeroFindings(doc, findings);
+  if (findings.length > 0) {
+    return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
+      { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
   }
 
   const review = await reviewOfRecord(opened, deps);
@@ -198,7 +206,10 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // blobs a pinned reader whose object bound is 1 MiB reads one call per file, the bound screen and the run's content classes, as check
   // derives its member. Never read from a stored check record, which lies within the agent sessions' write reach.
   const manifestFacts = await renderManifestFacts(subject.clone.path, pinned, deps, screen, opened.contentClasses, reader);
-  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts } };
+  // Version 2.19 (syzygy-3efd.28): a v9 draft's edges, each decided again by rule `relation-witness` from the facts this render derives itself.
+  const edgeRelations = hasRelationForm(doc['schemaVersion'])
+    ? edgeRelationsAt({ doc, derivedStructure, manifestFacts, screen, withheld: input.local.withheldElements ?? new Map(), listTree: () => reader.listTree() }) : undefined;
+  const built = { ...input, local: { ...input.local, derivedStructure, manifestFacts, ...(edgeRelations === undefined ? {} : { edgeRelations: await edgeRelations }) } };
 
   const renderer = deps.renderer;
   const draw = (local: LocalRenderInput): ReadonlyMap<string, string> | string => {
@@ -267,6 +278,51 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   };
   logStep(run, 'render', now, { outcome: 'rendered', site: path.relative(run, site), draftRevision: draftRev.revision, draftLayer: report.draftLayer.state });
   return { ok: true, report };
+}
+
+/** A v9 draft's graph edges at a render (REQ-polaris-generation-034 version 2.19), by edge id: rule `relation-witness` version 1 decided again
+ * from the derived structure the region states at this render (its facts, and the counts this render re-derives from the tree) and the
+ * render's own manifest member, a unit tested for a blob against the tree this render lists. An edge is witnessed only where its joining fact
+ * renders Observed here; otherwise `fact-not-current`. An edge the draft labels Unknown or that renders as a withheld item is never asserted. */
+export async function edgeRelationsAt(inputs: {
+  readonly doc: Readonly<Record<string, unknown>>;
+  readonly derivedStructure: LocalDerivedStructure;
+  readonly manifestFacts: ManifestFacts;
+  readonly screen: Pick<DossierScreen, 'screenPath' | 'screenBody'>;
+  readonly withheld: ReadonlyMap<string, unknown>;
+  readonly listTree: () => Promise<readonly Pick<TreeEntry, 'path' | 'mode'>[]>;
+}): Promise<ReadonlyMap<string, LocalEdgeRelation>> {
+  const { doc, derivedStructure: derived, manifestFacts, screen, withheld } = inputs;
+  const isSecretPath = secretPathOf(screen);
+  const hidden = (repositoryPath: string): boolean => secretOrUnder(repositoryPath.split('/'), isSecretPath) || screen.screenPath(repositoryPath) === 'denied-path';
+  let blobs: ReadonlySet<string> | undefined;
+  try {
+    blobs = new Set((await inputs.listTree()).filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
+  } catch (cause) {
+    if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+  }
+  // An edge is asserted where it is labelled Inferred and is no withheld item. `withheld` is the render's `withheldElements`, whose graph
+  // edges are keyed by bare id and entered by `isWithheldItem` (review-reach.ts), the predicate check's `isWithheldElement` applies, over
+  // the same frozen revision: one notion of a withheld edge in both.
+  const decisions = relationDecisions(doc, (edge) => edge['epistemic'] === 'inferred' && !withheld.has(text(edge['id']) ?? ''),
+    blobs === undefined ? undefined : { hidden, isBlob: (repositoryPath) => blobs.has(repositoryPath) }, {
+      structure: derived.state !== 'derived' ? { state: 'unknown' }
+        : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },
+      manifest: manifestFacts.state === 'derived' ? manifestFacts : { state: 'unknown' },
+      hidden,
+    });
+  const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
+  return new Map(decisions.edges.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
+    // At version 1 every eligible fact is a structure fact, so `facts` (the structure record's, as this render derives them) holds every
+    // fact a decision can name, and the evidence names that record; a fact found in no rendered record is not current.
+    const decision = witnessAtRender(checked, (factId) => facts.get(factId)?.epistemic === 'observed');
+    if (decision.state === 'witnessed' && derived.state === 'derived') {
+      return [id, { relation, witness: { state: 'witnessed', reason: null, fact: decision.fact, rule: decision.rule, ruleVersion: decision.ruleVersion },
+        evidence: { words: witnessWords(relation as RelationType)!, factKind: decision.factKind, revision: derived.recordRevision, recordSha256: derived.sha256 } }];
+    }
+    const reason = decision.state === 'witnessed' ? 'fact-not-current' : decision.reason;
+    return [id, { relation, witness: { state: decision.state === 'witnessed' ? 'unknown' : decision.state, reason, fact: null, rule: null, ruleVersion: null } }];
+  }));
 }
 
 /** The render's own manifest-facts member (version 2.9): the tree listed by `reader`, each manifest read alone through a second pinned
@@ -840,6 +896,10 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     designStatusItem(design, run),
   ];
 
+  const declaredHero = heroOf(doc);
+  const hero: LocalRenderInput['hero'] = declaredHero?.form === 'figure' && typeof declaredHero.value === 'string'
+    ? { form: 'figure', diagram: declaredHero.value }
+    : declaredHero?.form === 'omitted' ? { form: 'omitted', reason: paragraph(declaredHero.value) } : undefined;
   const editorial = draftLayer.state === 'editorial-draft';
   const pages = editorial ? [understandingPage, discoveryPage, clarificationsPage, executionsPage, reviewPage] : [discoveryPage, executionsPage, reviewPage];
   return {
@@ -855,6 +915,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         value: doc['thesisBasis'],
         lineRendered: doc['thesisBasis'] === 'code-reading' && editorial && blocks.get(draft.introduction.id)?.withheld === undefined,
       } } : {}),
+      ...(hero === undefined ? {} : { hero }),
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
         whySection: doc['whySection'],
@@ -875,7 +936,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { paragraph: paragraph(step), ...(see === undefined ? {} : { see: { kind: see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const, id: text(see['target'])! } }) };
         }),
       })) } : {}),
-      // A v11 draft's worth-knowing marks (version 2.23): the marked blocks of the sections' own paragraphs, where check admits the mark,
+      // A v13 draft's worth-knowing marks (version 2.25): the marked blocks of the sections' own paragraphs, where check admits the mark,
       // and the Poles that say none was found. The reason a Pole gives is never rendered.
       ...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {
         blockIds: list(doc['sections']).filter(isRecord).flatMap((section) => list(section['paragraphs'])
@@ -956,9 +1017,26 @@ function disclosureItems(inputs: {
       : { id: 'draft-layer', text: `Draft layer: Unknown (missing-declaration), so no part of the draft is shown: ${draftLayer.why.join('; ')}.`, label: 'Unknown' },
   ];
   if (credential.required) {
-    items.push(credential.passed
-      ? { id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' }
-      : { id: 'adapter-credential', text: `At this render an adapter credential was readable as the operator's user: ${credential.finding.why}. ${credential.finding.instruction}`, label: 'Observed' });
+    if (credential.passed) {
+      items.push({ id: 'adapter-credential', text: `At this render no adapter credential of the ${credential.checked} listed was readable as the operator's user.`, label: 'Observed' });
+    } else {
+      for (const finding of credentialFindings(credential)) {
+        const id = finding === credential.finding ? 'adapter-credential' : 'adapter-credential-readable';
+        items.push(credentialFindingDisclosure(id, finding));
+      }
+    }
   }
   return items;
+}
+
+function credentialFindingDisclosure(id: string, finding: CredentialBreachFinding): LocalDisclosureItem {
+  const detail = `${finding.why}. ${finding.instruction}`;
+  switch (finding.kind) {
+    case 'adapter-credential-readable':
+      return { id, text: `At this render an adapter credential was readable as the operator's user: ${detail}`, label: 'Observed' };
+    case 'adapter-credential-configuration-refused':
+      return { id, text: `The adapter-credential check at this render refused the configuration because ${detail}`, label: 'Unknown' };
+    case 'adapter-credential-undetermined':
+      return { id, text: `The adapter-credential check at this render ended without a definite result because ${detail}`, label: 'Unknown' };
+  }
 }

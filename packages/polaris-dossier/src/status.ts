@@ -3,9 +3,12 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { briefIssuedAt } from './check.js';
 import { USAGE_NOT_RECORDED } from './close.js';
+import type { Outcome } from './outcome.js';
+import type { RunConfigRefusal } from './run-config.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
 import { REVIEW_PACKET_DIR, REVIEW_VERDICT_FILE, REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { RUN_TREE_BOUNDS, readBoundedText, readCause } from './run-tree-read.js';
 
 /** `syzygy dossier status <run>`: the run's state, limits spent, open findings and reviews still
  * required, read from the run directory. Status reads and writes nothing else. Everything it reports
@@ -60,17 +63,22 @@ export interface StatusReport {
   readonly unrecognizedEntries: readonly string[];
 }
 
-export type StatusResult =
-  | { readonly ok: true; readonly report: StatusReport }
-  | { readonly ok: false; readonly reason: string; readonly refusals?: readonly { readonly field?: string; readonly kind: string; readonly detail: string }[] };
+interface StatusRefusal {
+  readonly command: 'status';
+  readonly outcome: 'refused';
+  readonly reason: string;
+  readonly refusals?: readonly RunConfigRefusal[];
+}
+
+export type StatusResult = Outcome<StatusReport, StatusRefusal>;
 
 const KNOWN_ENTRIES: ReadonlySet<string> = new Set(Object.values(RUN_LAYOUT));
 
 /** The agent usage the Execution Record carries, in words: the operator's declared figure, or not recorded. Never zero. */
-function closedUsage(file: string): string {
+export function closedUsage(file: string): string {
   let usage: unknown;
   try {
-    const record = parseBoundedJson(fs.readFileSync(file, 'utf8'), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
+    const record = parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.closeRecord), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
     usage = record.agentUsage;
   } catch {
     return `${NOT_RECORDED}; the Execution Record cannot be read`;
@@ -90,22 +98,25 @@ function closedUsage(file: string): string {
 export const NO_RECORD_DEADLINE_PASSED = 'not written, and it will not be: the deadline passed before the run was closed, and close, like every step, refuses after it; the agent usage is therefore not recorded';
 
 export function runStatus(runDir: string, now: () => number = Date.now): StatusResult {
+  const refuse = (reason: string, refusals?: readonly RunConfigRefusal[]): StatusResult => ({
+    ok: false, refusal: { command: 'status', outcome: 'refused', reason, ...(refusals ? { refusals } : {}) },
+  });
   const run = path.resolve(runDir);
   let stats: fs.Stats;
   try {
     stats = fs.statSync(run);
   } catch (cause) {
-    return { ok: false, reason: `run directory ${run} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+    return refuse(`run directory ${run} cannot be read (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
   }
-  if (!stats.isDirectory()) return { ok: false, reason: `${run} is not a run directory` };
+  if (!stats.isDirectory()) return refuse(`${run} is not a run directory`);
   let configText: string;
   try {
-    configText = fs.readFileSync(path.join(run, RUN_LAYOUT.config), 'utf8');
+    configText = readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord);
   } catch (cause) {
-    return { ok: false, reason: `${run} holds no readable ${RUN_LAYOUT.config} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
+    return refuse(`${run} holds no readable ${RUN_LAYOUT.config} (${readCause(cause, RUN_TREE_BOUNDS.runRecord)})`);
   }
   const record = readRunRecord(configText);
-  if (!record.ok) return { ok: false, reason: record.detail, ...(record.refusals ? { refusals: record.refusals } : {}) };
+  if (!record.ok) return refuse(record.detail, record.refusals);
 
   const entries = fs.readdirSync(run).sort();
   const has = (name: string): boolean => entries.includes(name);

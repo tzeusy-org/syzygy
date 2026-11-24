@@ -5,7 +5,8 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
-import { readBoundedFile, readCheckRecord } from './check-record-read.js';
+import { readBoundedFile, readCheckRecord, readFileAsSized } from './check-record-read.js';
+import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
 import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
@@ -38,7 +39,7 @@ export type { OpenedRun } from './run-dir.js';
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-/** v4 (REQ-polaris-generation-034 version 2.23, syzygy-5dhm.41): inventory brief v3 with inventory schema v2 and the `worth-knowing` kind
+/** v4 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): inventory brief v3 with inventory schema v2 and the `worth-knowing` kind
  * in the list of kinds, and this line changed. */
 export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v4';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
@@ -217,7 +218,8 @@ export async function inventoryBrief(runDir: string, deps: { readonly sources: G
   const built = await buildInventoryBrief(opened, session, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   let stored: string | undefined;
-  try { stored = fs.readFileSync(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE), 'utf8'); } catch { stored = undefined; }
+  // Read under its own size (REQ-polaris-generation-035 version 2.18): one it cannot read, a FIFO or a device among them, is `absent`.
+  try { stored = readFileAsSized(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE)).toString('utf8'); } catch { stored = undefined; }
   return { ok: true, report: {
     command: 'inventory-brief', outcome: 'rendered', run: opened.run, session, sha256: sha256(built.text),
     storedCopy: stored === undefined ? 'absent' : stored === built.text ? 'matches' : 'differs', brief: built.text, disclosures: BRIEF_DISCLOSURES,
@@ -381,7 +383,7 @@ export async function inventoryOfRecord(runDir: string, recheck: { readonly sour
   if (typeof sessionId !== 'string' || declaredSessionId({ sessionId }) === null) return no(`inventory revision ${revision} declares no session identifier`);
   let bytes: Uint8Array;
   const frozen = path.join(RUN_LAYOUT.inventory, `rev-${revision}.json`);
-  try { bytes = new Uint8Array(fs.readFileSync(path.join(run, frozen))); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${errno(cause)})`); }
+  try { bytes = new Uint8Array(readBoundedFile(path.join(run, frozen), RUN_TREE_BOUNDS.inventory)); } catch (cause) { return no(`the frozen inventory ${frozen} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.inventory)})`); }
   if (inventory['file'] !== frozen || inventory['sha256'] !== sha256(bytes)) return no(`the frozen inventory ${frozen} is not the bytes its check recorded`);
   if (authoringSessionIds(run).ids.has(sessionId)) return no(`inventory revision ${revision} declares the authoring session's identifier`);
   const prompt = readRecord(path.join(run, RUN_LAYOUT.inventory, promptRecordName(number)));

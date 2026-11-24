@@ -4,7 +4,7 @@ import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
+  type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
@@ -253,6 +253,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // While the draft layer is Unknown no part of the draft renders: not its title, argument, assets, glossary or open questions.
   const withheld = local !== undefined && local.draftLayer.state === 'unknown';
   const title = withheld ? local!.withheldTitle : draft.title;
+  const hero = local?.hero;
+  const heroFigureAttribute = ' data-hero="figure"';
+  let heroRendered = false;
   if (view.review !== null) reviewVerdict(view.review);
   const support = new Map(view.review === null ? [] : (view.review as { blockSupport: { blockId: string; verdict: string }[] }).blockSupport.map(row => [row.blockId, row.verdict]));
   validateGenerationSources(input.sources);
@@ -574,32 +577,63 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (source === undefined) return escape(id);
     return sourcePaths.has(id) ? refs(from, [id]) : escape(source.path);
   }).join(', ');
-  const notice = (from: string, id: string, disposition: { kind: string; reason?: string; references?: string[] }): string =>
-    `<aside class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
-  const diagram = (from: string, d: DraftDiagram, index: number): string => {
-    if (d.disposition.kind !== 'produced') return notice(from, d.id, d.disposition);
-    if (d.figure !== undefined) return kindedFigure(from, d, d.figure, index);
+  const notice = (from: string, id: string, disposition: { kind: string; reason?: string; references?: string[] }, asHero = false): string =>
+    `<aside${asHero ? heroFigureAttribute : ''} class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
+  // A schema-v9 draft's graph edges (version 2.19): each arrow and list item carries `data-relation`; a witnessed edge is Syzygy's statement
+  // of the fact that witnesses it, not the draft's claim: drawn solid and Observed in Syzygy's words, with the fact's provenance in its
+  // `data-witness-*` attributes, no claim anchor, and in none of the draft's counts. `machine.json` lists every such edge as drawn.
+  const relationEdges: { readonly index: number; readonly entry: Record<string, unknown> }[] = [];
+  const relationOf = (id: string): LocalEdgeRelation | undefined => local?.edgeRelations?.get(id);
+  type WitnessedRelation = Extract<LocalEdgeRelation, { readonly evidence: object }>;
+  const witnessAttrs = (relation: LocalEdgeRelation): string => ` data-relation="${escape(relation.relation)}"${relation.evidence === undefined ? ''
+    : ` data-witness-fact="${escape(relation.witness.fact)}" data-witness-rule="${escape(relation.witness.rule)}" data-witness-rule-version="${relation.witness.ruleVersion}"`}`;
+  const diagram = (from: string, asDrafted: DraftDiagram, index: number, asHero = false): string => {
+    if (asDrafted.disposition.kind !== 'produced') return notice(from, asDrafted.id, asDrafted.disposition, asHero);
+    if (asDrafted.figure !== undefined) return kindedFigure(from, asDrafted, asDrafted.figure, index);
+    // `d` is the figure as drawn: a witnessed edge in Syzygy's words and marked Observed, every other element keeping the draft's label
+    // and marking.
+    const words = (id: string): string | undefined => relationOf(id)?.evidence?.words;
+    const d: DraftDiagram = local?.edgeRelations === undefined ? asDrafted
+      : { ...asDrafted, edges: asDrafted.edges.map(e => { const said = words(e.id); return said === undefined ? e : { ...e, label: said, epistemic: 'observed' as const, sourceIds: [] }; }) };
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
     const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
-    const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, heldAttrs(e.id), held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources })).join('');
+    const witnessItem = (e: DraftDiagram['edges'][number], relation: WitnessedRelation): string =>
+      `<li${witnessAttrs(relation)} data-epistemic="observed">${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(relation.evidence.words)} <span class="derived-mark">Witnessed by Syzygy</span>`
+      + `<span class="visually-hidden ev"> ${escape(`Evidence: label Observed; witnessed by fact ${relation.witness.fact} (${relation.evidence.factKind}), derived by Syzygy by rule ${relation.witness.rule} version ${relation.witness.ruleVersion} at revision ${relation.evidence.revision}; record sha256:${relation.evidence.recordSha256}.`)}</span></li>`;
+    const diagramRelationEdges: typeof relationEdges = [];
+    const edgeList = d.edges.map(e => {
+      const relation = relationOf(e.id);
+      if (relation !== undefined) diagramRelationEdges.push({ index, entry: { diagram: d.id, page: from, id: e.id, from: e.from, to: e.to, epistemic: e.epistemic, text: e.label, relation: relation.relation, witness: relation.witness } });
+      if (relation?.evidence !== undefined) return witnessItem(e, relation);
+      return claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, `${heldAttrs(e.id)}${relation === undefined ? '' : witnessAttrs(relation)}`, held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources });
+    }).join('');
+    // A witnessed arrow's group also carries `data-epistemic="observed"`; its line style is the `observed` class every arrow's marking gives.
+    // Keyed by edge id: `renderDiagramSvg` asks the hook for nodes too, which get nothing here because check's `duplicate-id` keeps every
+    // identity of a rendered (passed) draft unique, so no node shares an edge's id.
+    const edgeAttrs = new Map(d.edges.flatMap(e => {
+      const relation = relationOf(e.id);
+      return relation === undefined ? [] : [[e.id, `${witnessAttrs(relation)}${relation.evidence === undefined ? '' : ' data-epistemic="observed"'}`] as const];
+    }));
     let svg: string;
     try {
-      svg = renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING);
+      svg = edgeAttrs.size === 0 ? renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING)
+        : renderDiagramSvg(d, index, escape, READABLE_SPACING, id => edgeAttrs.get(id) ?? '');
       assertInertSvg(svg);
     } catch {
-      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
+      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] }, asHero);
     }
+    for (const entry of diagramRelationEdges) relationEdges.push(entry);
     // The provider mode keeps its fixed legend (its bytes are pinned); an operator-agent figure legends only the styles it draws, with a
     // tally of its boxes and arrows by marking (syzygy-3efd.17): no figure element is observed there, so "Solid: observed" was false.
     const legend = local === undefined ? FIXED_DIAGRAM_LEGEND : figureLegend([...d.nodes, ...d.edges].map(element => element.epistemic), d.nodes.length, d.edges.length);
     // An operator-agent figure is a fragment target, so the index can send a reader to it; it is never drawn inside a folded element.
     if (local !== undefined) figureHomes.push({ id: d.id, title: d.title, home: { page: from, fragment: `figure-${d.id}`, label: 'Figure' } });
     const ids = figureIds(index);
-    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    return `<figure${asHero ? heroFigureAttribute : ''}${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id="figure-${escape(d.id)}"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary>${ids.textOpen}<ul>${nodeList}</ul><ol>${edgeList}</ol>${ids.textClose}<details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   // A v7 sequence or swimlane (REQ-polaris-generation-034 version 2.5): the figure a graph figure with its home takes, holding its drawing and
   // its phone form, of which the stylesheet displays one by the width of the `figure-forms` box. Each participant, lane and step is a claim
@@ -727,7 +761,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
-    // A worth-knowing block (version 2.23) renders once, in its page's callout, and not again here.
+    // A worth-knowing block (version 2.25) renders once, in its page's callout, and not again here.
     const body = section.paragraphs.filter(b => !worthKnowingIds.has(b.id)).map(b => block(from, b)).join('');
     // A v8 section's subsections follow its own paragraphs and precede its deep-dive links (version 2.16): each its title as an `h3`, its
     // answer first, rendered as the introduction's block is, then its paragraphs as the section's own are.
@@ -735,9 +769,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (subsections !== '') subsectionPages.add(from);
     return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${subsections}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
   };
-  // The worth-knowing callout (version 2.23): on a page that draws sections, before them, the marked blocks of the sections it draws, in
+  // The worth-knowing callout (version 2.25): on a page that draws sections, before them, the marked blocks of the sections it draws, in
   // draft order, each a claim block rendered as any is and followed by a link to its section. A Pole that marks none and says why gets
-  // Syzygy's sentence that none was found; the author's reason is never rendered. Only a v11 draft carries marks, so an earlier draft's
+  // Syzygy's sentence that none was found; the author's reason is never rendered. Only a v13 draft carries marks, so an earlier draft's
   // pages keep their bytes.
   const worthKnowingIds: ReadonlySet<string> = new Set(withheld ? [] : local?.worthKnowing?.blockIds ?? []);
   const worthKnowingCallout = (from: string, shown: readonly DossierDraft['sections'][number][], noneFound: boolean): string => {
@@ -788,12 +822,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // outside it, carrying no label token, citation or anchor; none where the introduction or the draft layer is withheld.
     const thesisLine = local?.thesisBasis?.lineRendered === true ? THESIS_BASIS_LINE : '';
     const introduction = view.drafted ? `${thesisLine}${paragraph(from, draft.introduction, 'p')}` : '';
+    const overviewQuestions = hero === undefined ? unresolved : draft.unresolved.length === 0 ? ''
+      : `<div id="open-questions">${openQuestionClaims(from)}</div>`;
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    // Figures whose home is the overview lead the first page, after its introduction and before its sections, in a region of their own
-    // at reading level 1 with no topics; none where the page shows no part of the draft (syzygy-3efd.18).
-    const overviewDrawn = view.drafted ? draft.diagrams.map((d, i) => d.home?.kind === 'overview' ? diagram(from, d, i) : '').join('') : '';
+    // The named hero or reasoned omission leads the overview's own figures. Other figures keep their draft order.
+    const overviewDiagrams = view.drafted
+      ? draft.diagrams.flatMap((entry, index) => entry.home?.kind === 'overview' ? [{ entry, index }] : []) : [];
+    const heroDiagram = hero?.form === 'figure' ? overviewDiagrams.find(({ entry }) => entry.id === hero.diagram) : undefined;
+    const lead = !view.drafted ? '' : hero?.form === 'omitted'
+      ? `<div data-hero="omitted"><p class="hero-omitted">The authoring session left out the overview figure, for the reason that follows.</p>${paragraph(from, hero.reason, 'p')}</div>`
+      : heroDiagram === undefined ? '' : diagram(from, heroDiagram.entry, heroDiagram.index, true);
+    heroRendered = lead !== '';
+    const overviewDrawn = lead + overviewDiagrams.filter((entry) => entry !== heroDiagram).map(({ entry, index }) => diagram(from, entry, index)).join('');
     const overviewFigures = overviewDrawn === '' ? '' : `<section id="overview-figures" data-reading-level="1" data-topics="">${overviewDrawn}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${overviewFigures}${poleMap}${sections}${missingList}${derivedRegion}`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${overviewQuestions}</header>${overviewFigures}${poleMap}${sections}${missingList}${derivedRegion}`);
   }
 
   // --- find by task (the index-and-task-routes change): the draft's task routes, right after the overview in the reading order. A step is a claim block and
@@ -987,7 +1029,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ['withheld-excerpts', `Code excerpts withheld: ${counts.withheldExcerpts}.`],
       ['withheld-inventory-entries', counts.withheldInventoryEntries === null ? 'Inventory entries withheld: Unknown, since no fidelity review counts at this render.' : `Inventory entries withheld, rendered nowhere: ${counts.withheldInventoryEntries}.`],
     ];
-    const questions = openQuestionClaims(APPENDIX);
+    const questions = hero === undefined ? openQuestionClaims(APPENDIX) : !withheld && draft.unresolved.length > 0
+      ? `<p><a href="${href(APPENDIX, from, 'open-questions')}">Read the open questions in the overview.</a></p>` : '';
     add(APPENDIX, 1, 'Appendix', `<section id="appendix"><h1>Appendix</h1><p>${escape(runSentence)}</p>`
       + `<section id="appendix-disclosure" class="run-disclosure" aria-label="How this dossier was made"><h2>How this dossier was made</h2>${disclosureList(local.disclosure, escape)}<p>Syzygy can see only the marking: whether an unmarked claim rests on the agent's building or running of the project is the agent's report.</p></section>`
       + `<section id="appendix-counts"><h2>Counts</h2><ul>${countRows.map(([id, words]) => `<li data-count="${id}">${escape(words)}</li>`).join('')}<li data-count="unknown-claims">${escape(`Unknown claims in the argument: ${unknownClaims}.`)}</li><li data-count="open-questions">${escape(`Open questions: ${openQuestions}.`)}</li></ul></section>`
@@ -1032,10 +1075,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       disclosure: local.disclosure,
       reviewStatus: local.reviewStatus,
       ...(local.thesisBasis === undefined ? {} : { thesisBasis: { value: local.thesisBasis.value, declaredBy: 'the authoring session', label: 'Inferred', lineRendered: local.thesisBasis.lineRendered } }),
+      ...(hero === undefined ? {} : { hero: { form: hero.form, diagram: !withheld && hero.form === 'figure' ? hero.diagram : null, rendered: heroRendered } }),
       ...(local.derivedStructure === undefined ? {} : { derivedStructure: derivedMachine(local.derivedStructure) }),
       ...(maps === undefined || mapFigures === undefined ? {} : { computedMaps: computedMapsMachine(maps.derived, maps.manifests, mapFigures) }),
       // Present only for a render holding a sequence or swimlane figure (version 2.5), so every other machine view keeps its bytes.
       ...(figureStructures.length === 0 ? {} : { figureStructures: [...figureStructures].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
+      // Present only for a schema-v9 draft (version 2.19): each graph edge as drawn, with its relation and witness state. A witnessed edge is
+      // labelled `observed`, its text is Syzygy's words, and it is in no list of `claims`.
+      ...(local.edgeRelations === undefined ? {} : { edges: [...relationEdges].sort((a, b) => a.index - b.index).map(({ entry }) => entry) }),
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,

@@ -14,7 +14,7 @@ import { ORRERY_HUMAN_PATH } from './orrery.js';
 import { copyText } from './polaris-copy.js';
 import { POLARIS_HUMAN_PATH, renderPolarisPage } from './polaris.js';
 import { POC_HUMAN_PATH, pocRoutes } from './routes.js';
-import { fetchWithHost } from './test-http-client.js';
+import { fetchWithHost } from './test-http-client.testkit.js';
 import { SHARED_FIXTURE_TIMEOUT_MS, buildFixtureModel, sharedFixtureModels } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,
