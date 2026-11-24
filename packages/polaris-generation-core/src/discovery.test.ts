@@ -62,6 +62,36 @@ describe('REQ-030 hierarchical budgeted discovery', () => {
     for (const call of map.mock.calls) expect(call[0].items.length).toBeLessThanOrEqual(20);
   });
 
+  // The large synthetic corpus needs its own time budget on a shared unit worker.
+  it('keeps ordered discovery results for a large accepted rank population', async () => {
+    // Distribute the files to keep this case focused on collecting the ranking.
+    const files = Array.from({ length: 150_000 }, (_, index) =>
+      make(`fixture-${index % 1024}/source-${index}.c`, 'int fixture;\n')[0]!);
+    const architecture = make('docs/architecture.md', 'Fixture architecture.')[0]!;
+    const reference = make('docs/reference.md', 'Fixture reference.')[0]!;
+    const sources = [...files, architecture, reference];
+    const ranked = [reference.sourceId, architecture.sourceId, ...files.map(file => file.sourceId)];
+    // The predecessor append must exceed this runtime's native argument limit.
+    const canary: string[] = [];
+    expect(() => canary.push(...ranked)).toThrow(RangeError);
+
+    const selected = await discoverAndSelect(sources, Q, { ...budget, maxSelected: 2, maxMapCalls: 1 }, model({
+      map: mapOf(() => 5),
+      reduce: async () => ({ ranked, usageUnits: 1 }),
+    }));
+    expect(selected.report).toMatchObject({
+      population: { sources: 150_002, alreadyExcluded: 0, candidateBlobs: 150_002 },
+      rankingBasis: 'model-reduce',
+      reduceCalls: 1,
+      reduceFailures: 0,
+      droppedUnknownIds: 0,
+      selected: { blobs: 2, sources: 2 },
+    });
+    expect(selected.report.ledger.map(claim => claim.blobId)).toEqual([reference.sourceId, architecture.sourceId]);
+    expect(quotableGenerationSources(selected.sources).map(source => source.sourceId)).toEqual([architecture.sourceId, reference.sourceId]);
+    expect(selected.report.deferred).toHaveLength(150_000);
+  }, 30_000);
+
   it('finds relevant material outside the conventional entry points', async () => {
     const sources = [...population(250, 5), ...make('internal/zz/q/r/s/obscure_notes.c', 'The real design lives here.\n')];
     const without = await discoverAndSelect(sources, Q, { ...budget, maxSelected: 3 }, { permitted: allow });

@@ -336,7 +336,7 @@ async function discover(
     if (outcome === undefined) reduceFailures++;
     else {
       dropped += outcome.dropped;
-      rankedIds.push(...(outcome.reply as { ranked: string[] }).ranked);
+      for (const id of outcome.reply.ranked) rankedIds.push(id);
       if (rankedIds.length > 0) basis = 'model-reduce';
     }
   }
