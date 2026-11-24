@@ -1,0 +1,387 @@
+{
+  "actualCommit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+  "predecessorCommit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+  "actualTerminal": "SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 566 of 566 mutants killed by their expected predicate; 113 of 113 controls held (commit b47cd8290c8d)",
+  "actualExit": 0,
+  "elapsedSeconds": 719.0796580230235,
+  "witnessCount": 679,
+  "independentTokenParserCount": 679,
+  "terminalSum": 679,
+  "distinctIds": 679,
+  "outcomes": {
+    "killed": 566,
+    "held": 113
+  },
+  "predecessorOutcomes": {
+    "killed": 304,
+    "SURVIVED": 326,
+    "held": 49
+  },
+  "orderedIdentityExpectationPairsEqual": true,
+  "statusTransitions": {
+    "killed->killed": 304,
+    "SURVIVED->killed": 262,
+    "held->held": 49,
+    "SURVIVED->held": 64
+  },
+  "changedStatusCount": 326,
+  "actualProfileCount": 57,
+  "profileTotalMs": 718812.588246,
+  "prefixMs": 231940.085722,
+  "entryPhaseWallMs": 153558.508031,
+  "entryTaskElapsedSumMs": 1092560.25716,
+  "entryTaskWitnesses": 17,
+  "editionTaskElapsedSumMs": 310283.040513,
+  "editionTaskWitnesses": 359,
+  "editionPoolWallMs": null,
+  "remainderIncludingEditionPoolAndUnprofiledWorkMs": 73170.42017200007,
+  "profiles": [
+    {
+      "elapsedMs": 336.438787,
+      "outcome": "returned",
+      "phase": "prepare-base"
+    },
+    {
+      "elapsedMs": 0.266598,
+      "outcome": "returned",
+      "phase": "propose-candidate"
+    },
+    {
+      "elapsedMs": 5858.753207,
+      "outcome": "returned",
+      "phase": "check-base"
+    },
+    {
+      "elapsedMs": 97.684901,
+      "outcome": "returned",
+      "phase": "copy-added"
+    },
+    {
+      "elapsedMs": 3931.971103,
+      "outcome": "returned",
+      "phase": "install-added"
+    },
+    {
+      "elapsedMs": 5450.519373,
+      "outcome": "returned",
+      "phase": "check-added"
+    },
+    {
+      "elapsedMs": 104.799132,
+      "outcome": "returned",
+      "phase": "copy-adopted"
+    },
+    {
+      "elapsedMs": 6152.832125,
+      "outcome": "returned",
+      "phase": "check-adopted"
+    },
+    {
+      "elapsedMs": 231940.085722,
+      "outcome": "returned",
+      "phase": "prefix-mutants"
+    },
+    {
+      "elapsedMs": 127515.571822,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-loop",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 127821.367889,
+      "outcome": "returned",
+      "phase": "signoff-entry-dangling-symlink",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 127872.768318,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-block-device",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 128272.990734,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-directory",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 128433.107133,
+      "outcome": "returned",
+      "phase": "signoff-entry-socket",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 128490.694438,
+      "outcome": "returned",
+      "phase": "signoff-entry-not-utf8",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 555.922063,
+      "outcome": "returned",
+      "phase": "signoff-entry-fifo-after-refusal",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 493.60107,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-fifo-after-refusal",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 129054.358385,
+      "outcome": "returned",
+      "phase": "signoff-entry-unreadable",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 242.914354,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-dev-zero-after-refusal",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 260.906173,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-ptmx-after-refusal",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 288.443523,
+      "outcome": "returned",
+      "phase": "signoff-entry-symlink-to-regular-after-refusal",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 133154.306129,
+      "outcome": "returned",
+      "phase": "signoff-entry-directory",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 11608.034019,
+      "outcome": "returned",
+      "phase": "signoff-entry-control-symlink-to-file",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 11598.082217,
+      "outcome": "returned",
+      "phase": "signoff-entry-control-symlink-to-dev-null",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 11675.398873,
+      "outcome": "returned",
+      "phase": "signoff-entry-control-crlf-record",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 25221.79002,
+      "outcome": "returned",
+      "phase": "signoff-entry-control-live-writer-fifo",
+      "witnessesAdded": 1
+    },
+    {
+      "elapsedMs": 153558.508031,
+      "outcome": "returned",
+      "phase": "_entry_kind_cases",
+      "witnessesAdded": 17
+    },
+    {
+      "elapsedMs": 29806.960148,
+      "outcome": "returned",
+      "phase": "declared_source_historical_cases",
+      "witnessesAdded": 10
+    },
+    {
+      "elapsedMs": 169.086717,
+      "outcome": "returned",
+      "phase": "declared_source_composition_cases",
+      "witnessesAdded": 12
+    },
+    {
+      "elapsedMs": 87509.422568,
+      "outcome": "returned",
+      "phase": "url_source_cases",
+      "witnessesAdded": 55
+    },
+    {
+      "elapsedMs": 8077.047789,
+      "outcome": "returned",
+      "phase": "figure_cases",
+      "witnessesAdded": 25
+    },
+    {
+      "elapsedMs": 8875.066796,
+      "outcome": "returned",
+      "phase": "derived_cases",
+      "witnessesAdded": 20
+    },
+    {
+      "elapsedMs": 9241.022011,
+      "outcome": "returned",
+      "phase": "ledger_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 9708.880145,
+      "outcome": "returned",
+      "phase": "kinds_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 10809.922868,
+      "outcome": "returned",
+      "phase": "manifests_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 11362.077214,
+      "outcome": "returned",
+      "phase": "repairs_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 12709.848811,
+      "outcome": "returned",
+      "phase": "maps_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 13324.30416,
+      "outcome": "returned",
+      "phase": "bounds_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 15008.066507,
+      "outcome": "returned",
+      "phase": "corr_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 15699.007268,
+      "outcome": "returned",
+      "phase": "coverage_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 17045.235446,
+      "outcome": "returned",
+      "phase": "infra_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 19290.261628,
+      "outcome": "returned",
+      "phase": "findpages_cases",
+      "witnessesAdded": 22
+    },
+    {
+      "elapsedMs": 19909.618213,
+      "outcome": "returned",
+      "phase": "subsec_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 21116.388709,
+      "outcome": "returned",
+      "phase": "reltype_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 23032.297321,
+      "outcome": "returned",
+      "phase": "hero_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 24365.639807,
+      "outcome": "returned",
+      "phase": "readers_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 22348.629116,
+      "outcome": "returned",
+      "phase": "cont_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 23462.504542,
+      "outcome": "returned",
+      "phase": "model_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 24897.222162,
+      "outcome": "returned",
+      "phase": "worth_cases",
+      "witnessesAdded": 22
+    },
+    {
+      "elapsedMs": 38111.632603,
+      "outcome": "returned",
+      "phase": "edit_account_cases",
+      "witnessesAdded": 23
+    },
+    {
+      "elapsedMs": 8286.337109,
+      "outcome": "returned",
+      "phase": "poc_d10_cases",
+      "witnessesAdded": 5
+    },
+    {
+      "elapsedMs": 18265.599204,
+      "outcome": "returned",
+      "phase": "reach_cases",
+      "witnessesAdded": 20
+    },
+    {
+      "elapsedMs": 19187.875725,
+      "outcome": "returned",
+      "phase": "readmit_cases",
+      "witnessesAdded": 20
+    },
+    {
+      "elapsedMs": 7898.762111,
+      "outcome": "returned",
+      "phase": "raw_read_cases",
+      "witnessesAdded": 10
+    },
+    {
+      "elapsedMs": 8383.355135,
+      "outcome": "returned",
+      "phase": "treeread_cases",
+      "witnessesAdded": 10
+    },
+    {
+      "elapsedMs": 20591.277775,
+      "outcome": "returned",
+      "phase": "verify_cases",
+      "witnessesAdded": 18
+    },
+    {
+      "elapsedMs": 718812.588246,
+      "outcome": "returned",
+      "phase": "total"
+    }
+  ],
+  "interleavedProfileFragments": [
+    {
+      "phase": "total",
+      "rawPrecedingCharacter": ")"
+    }
+  ],
+  "limits": [
+    "Predecessor comparison is to a failed hosted run, not a repaired serial baseline.",
+    "Printed witness identities/expectations/outcomes are complete; printed output omits the original structured path/old/new fields, so full structured tuple equality is not claimed.",
+    "Worker task durations overlap. Their sum is not pool wall time. Edition pool wall time has no dedicated aggregate measurement.",
+    "719-second local pass does not establish a performance win or either hosted seven-minute clock.",
+    "Actual runtime worker count and resource-isolation details were not captured in the supplied result JSON."
+  ],
+  "statusChangeInterpretation": "Inferred: changes are consistent with the independently proved one-LF ledger repair. These runs also differ in source/commit/environment, so this is not an isolated causal or repaired serial/parallel equivalence experiment.",
+  "actualWorkerCount": null
+}

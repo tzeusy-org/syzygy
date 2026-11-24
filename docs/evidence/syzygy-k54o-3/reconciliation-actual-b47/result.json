@@ -1,0 +1,7 @@
+{
+  "commit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+  "command": "SELFTEST_PROFILE=1 python3 scripts/check_spec_reconciliation.py --selftest",
+  "exit": 0,
+  "elapsedSeconds": 719.0796580230235,
+  "log": "/home/orca/.tmp/f3-composed-fix-verify-2zcu1v00/reconciliation-parallel.log"
+}

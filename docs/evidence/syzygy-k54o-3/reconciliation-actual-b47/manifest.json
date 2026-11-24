@@ -1,0 +1,49 @@
+{
+  "subjectCommit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+  "files": {
+    "README.md": {
+      "sha256": "8f3079984f5a382d6b55e777522a3f2cce091477eec6b6b9b85b470b076736cf",
+      "bytes": 3604
+    },
+    "actual-witness-population.json.gz": {
+      "sha256": "9b713170111d1ec78395d71089e55d53369a2750d836cb30039324b300ec8f7c",
+      "bytes": 17933
+    },
+    "actual.log.gz": {
+      "sha256": "6720bf82df11200ca37e19b79055a5d71ee9dd8daf57189cbb4c1de0dd4b5551",
+      "bytes": 13558
+    },
+    "predecessor-witness-population.json.gz": {
+      "sha256": "6fc3fd7d66a75b7d1ed5b72838e748c36bd8f25d7fea89931019c3c5f2a3d29f",
+      "bytes": 14484
+    },
+    "predecessor.log.gz": {
+      "sha256": "89cad4542223558b51344a4c1e22e47d061d307a5017a89bfac657a82e87cf97",
+      "bytes": 28717
+    },
+    "result.json": {
+      "sha256": "ef73d4fc2a4aa9d9ad65b959590417616a58ad46b1b123c40701dfa2bd9309e1",
+      "bytes": 290
+    },
+    "retain_analysis.py": {
+      "sha256": "f446aba8340fb3e67745cd8c50be2c81ff7095e30e030008757a06991c080237",
+      "bytes": 11742
+    },
+    "run-subject.json": {
+      "sha256": "5e77b168ac0c2fe0d118cf7366975a37a7595c33be02238dc5550d1e33dc49c6",
+      "bytes": 197
+    },
+    "selected-report.json": {
+      "sha256": "09fcab702f6d45e762033339af9cb29119e6e6531fd6ff5b14e974752cb4bbac",
+      "bytes": 9984
+    },
+    "source-binding.json": {
+      "sha256": "77cf38bb6facfb21e69c659caf353f867e3e8eb7d19bf13815fe5ce7c9264f4f",
+      "bytes": 4299
+    },
+    "status-changes.json.gz": {
+      "sha256": "a49b235fef06dc0a469f5b58e81543af90d77d6ab63b5ebd6f2ab283f3d1bb62",
+      "bytes": 2711
+    }
+  }
+}

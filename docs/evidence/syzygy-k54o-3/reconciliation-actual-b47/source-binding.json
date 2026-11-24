@@ -1,0 +1,93 @@
+{
+  "actualCommit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+  "actualTree": "f1f05f057d1c169f3802a305a52b507bde1dc0bc",
+  "actualParents": [
+    "c049222af3cb197dac5c73136b9a3e9c12795089"
+  ],
+  "sources": [
+    {
+      "commit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+      "path": "scripts/check_spec_reconciliation.py",
+      "sha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+      "gitBlob": "b402674847257706aa3550c3035f86ad024e8bd6"
+    },
+    {
+      "commit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "sha256": "4951e0c637b5ccd15198495f17b4b606a4e768ad36846069646073c5a414355a",
+      "gitBlob": "205c998f0d3a755b089d3295b261d855266b01c5"
+    },
+    {
+      "commit": "b47cd8290c8d4a981789a6d779054ecaa5f3d14c",
+      "path": ".github/workflows/governance-docs.yml",
+      "sha256": "5f6b95a12f2003a2b20f1fcffae00008b3331ce2729d0678832b829dd571f2b6",
+      "gitBlob": "a54b4531444d7bfa1825fec18693c9f987bd8f95"
+    },
+    {
+      "commit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+      "path": "scripts/check_spec_reconciliation.py",
+      "sha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f",
+      "gitBlob": "f3785f464aee2f9d04ed9faa5008d666a2e6f326"
+    },
+    {
+      "commit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+      "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "sha256": "147a4ff838d733511d50958defd4c2d715236473abc157f5f6d780fe2cb2874d",
+      "gitBlob": "900a0fdef247d1b6feacef480ba39a2a08f84a4b"
+    },
+    {
+      "commit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+      "path": ".github/workflows/governance-docs.yml",
+      "sha256": "5f6b95a12f2003a2b20f1fcffae00008b3331ce2729d0678832b829dd571f2b6",
+      "gitBlob": "a54b4531444d7bfa1825fec18693c9f987bd8f95"
+    }
+  ],
+  "compressedRecords": [
+    {
+      "path": "actual.log.gz",
+      "uncompressedSha256": "913855be9cfa7f20a2e13474433778be50b542772e797e39ec98f7f24fb41362",
+      "uncompressedBytes": 177170,
+      "mtime": 0
+    },
+    {
+      "path": "predecessor.log.gz",
+      "uncompressedSha256": "4f09872cb7edc2517855e468bd0315b769027c0c57b69d753dd67618497ecf29",
+      "uncompressedBytes": 263313,
+      "mtime": 0
+    },
+    {
+      "path": "actual-witness-population.json.gz",
+      "uncompressedSha256": "40812a85358617c916df559b7b27507ef0e1e8fabe16b8523e58f044fac535d7",
+      "uncompressedBytes": 397719,
+      "mtime": 0
+    },
+    {
+      "path": "predecessor-witness-population.json.gz",
+      "uncompressedSha256": "0b0dd582e1b2612c9b8779710bd76daecbdf7e9b9dffb8e7af88d2062cd6e73d",
+      "uncompressedBytes": 341959,
+      "mtime": 0
+    },
+    {
+      "path": "status-changes.json.gz",
+      "uncompressedSha256": "9f0454a3dd2085ad9a178affe2d91a03a1d4c1f38042e8dc3d1ad8dfb1650062",
+      "uncompressedBytes": 36293,
+      "mtime": 0
+    }
+  ],
+  "sourceMatchesFrozenCombinedCandidate": true,
+  "currentVerificationCloneHead": "74dd20378651d366ed53fb7de08fe60ba9d33c67",
+  "cloneNowMatchesActualSourceFiles": {
+    "scripts/check_spec_reconciliation.py": true,
+    ".syzygy/governance/decisions/AGENT-ADOPTIONS.md": true,
+    ".github/workflows/governance-docs.yml": true
+  },
+  "runIdentityProvenance": "Retained result and run-subject JSON name b47; terminal selftest summary names b47. Clone HEAD has since moved; current clone inspection is not a fresh b47 checkout certification.",
+  "comparisonBoundary": [
+    "Predecessor comparison is to a failed hosted run, not a repaired serial baseline.",
+    "Printed witness identities/expectations/outcomes are complete; printed output omits the original structured path/old/new fields, so full structured tuple equality is not claimed.",
+    "Worker task durations overlap. Their sum is not pool wall time. Edition pool wall time has no dedicated aggregate measurement.",
+    "719-second local pass does not establish a performance win or either hosted seven-minute clock."
+  ],
+  "normalization": "Only JSON-decoded SELFTEST_PROFILE fragments are removed before parsing witness lines. Optional hosted ISO timestamps are stripped. The raw byte-exact logs remain retained with hashes.",
+  "analysisScriptSha256": "f446aba8340fb3e67745cd8c50be2c81ff7095e30e030008757a06991c080237"
+}
