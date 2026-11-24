@@ -154,7 +154,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       expect(expected).toEqual([
         '/trajectory', '/trajectory?page=1',
         ...statuses.map((status) => `/trajectory?status=${status}&page=1`),
-        '/trajectory?governing-intent=unknown&page=1', '/trajectory?page=1', '/trajectory?page=3',
+        '/trajectory?governing-intent=unknown&page=1', '/trajectory?group=parent&page=1', '/trajectory?page=1', '/trajectory?page=3',
       ].map((href) => `${prefix}${href}`));
       const reached: string[] = [];
       for (let press = 0; press < 400 && reached.length < expected.length; press += 1) {
@@ -227,6 +227,75 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
         await new Promise<void>((resolve, reject) => {
           server.close((error) => error === undefined ? resolve() : reject(error));
           // The browser assertions are complete. Drain the fixture's remaining HTTP connections.
+          server.closeAllConnections();
+        });
+      }
+    }
+  });
+
+  it.each(['', '/butlers-syzygy'])('follows a split group and a parent link in the grouped view by keyboard (mount prefix %j)', async (prefix) => {
+    // syzygy-t3jk.20: 260 children under bu-p, so the group continues on page 2; bu-p sits under
+    // bu-root, whose group follows bu-p's by parent id and so starts on page 2.
+    const revision = '0123456789abcdefghijklmnopqrstuv';
+    const instant = '2026-08-01T00:00:00Z';
+    const rows = [
+      { ...fixtureWorkItemRow('bu-p', 'open', instant, instant, null), revision },
+      { ...fixtureWorkItemRow('bu-root', 'open', instant, instant, null), revision },
+      ...Array.from({ length: 260 }, (_, index) => ({ ...fixtureWorkItemRow(`bu-c${String(index).padStart(3, '0')}`, 'open', instant, instant, null), revision })),
+    ];
+    const edge = (child: string, parent: string) => ({ revision: null, issue_id: child, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0 });
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows,
+      runDependencyQuery: () => JSON.stringify([
+        { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+        edge('bu-p', 'bu-root'),
+        ...Array.from({ length: 260 }, (_, index) => edge(`bu-c${String(index).padStart(3, '0')}`, 'bu-p')),
+      ]),
+    });
+    const policy = "script-src 'none'";
+    const server = createServer((request, response) => {
+      const url = new URL(request.url ?? '/', 'http://127.0.0.1');
+      if (url.pathname !== `${prefix}/trajectory`) { response.writeHead(404).end(); return; }
+      const html = renderTrajectoryRoute(model, prefix, undefined, url.searchParams);
+      if (typeof html !== 'string') { response.writeHead(400).end(); return; }
+      response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'content-security-policy': policy }).end(html);
+    });
+    const listening = once(server, 'listening');
+    server.listen(0, '127.0.0.1');
+    await listening;
+    let page: BrowserPage | undefined;
+    const follow = async (selector: string, hash: string): Promise<unknown> => {
+      const href = await page!.evaluate(`(() => {
+        const link = document.querySelector('${selector}');
+        link.focus();
+        return [link.getAttribute('href'), link.closest('details') === null, document.activeElement === link];
+      })()`);
+      await page!.press('Enter');
+      for (let attempt = 0; attempt < 50; attempt++) {
+        if (await page!.evaluate(`location.hash === '${hash}' && document.readyState === 'complete'`)) break;
+        await setTimeout(20);
+      }
+      return href;
+    };
+    try {
+      page = await browser.newPage();
+      const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+      await page.navigate(`${base}${prefix}/trajectory?group=parent&page=1`);
+      expect(await follow('a[data-group-continues="next"]', '#group-bu-p'))
+        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-bu-p`, true, true]);
+      expect(await page.evaluate(`(() => {
+        const target = document.querySelector(':target');
+        return [location.search, target?.id, target?.closest('details') === null];
+      })()`)).toEqual(['?group=parent&page=2', 'group-bu-p', true]);
+      expect(await follow('a[data-group-under="bu-root"]', '#group-bu-root'))
+        .toEqual([`${prefix}/trajectory?group=parent&page=2#group-bu-root`, true, true]);
+      expect(await page.evaluate(`[location.search, document.querySelector(':target')?.id]`)).toEqual(['?group=parent&page=2', 'group-bu-root']);
+    } finally {
+      try {
+        await page?.close();
+      } finally {
+        await new Promise<void>((resolve, reject) => {
+          server.close((error) => error === undefined ? resolve() : reject(error));
           server.closeAllConnections();
         });
       }

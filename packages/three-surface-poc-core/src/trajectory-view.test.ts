@@ -58,15 +58,15 @@ function allPages(workItems: WorkItemsObserved, query: string): string[] {
 describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () => {
   it('reads no parameter as the default selection and a valid set as a view', () => {
     expect(parseTrajectoryView(new URLSearchParams(''))).toBeNull();
-    expect(parseTrajectoryView(new URLSearchParams('status=blocked&governing-intent=unknown&page=2'))).toEqual({ status: 'blocked', governingIntent: 'unknown', page: 2 });
-    expect(parseTrajectoryView(new URLSearchParams('page=1'))).toEqual({ status: null, governingIntent: null, page: 1 });
-    expect(parseTrajectoryView(new URLSearchParams('status=open'))).toEqual({ status: 'open', governingIntent: null, page: 1 });
+    expect(parseTrajectoryView(new URLSearchParams('status=blocked&governing-intent=unknown&page=2'))).toEqual({ status: 'blocked', governingIntent: 'unknown', group: null, page: 2 });
+    expect(parseTrajectoryView(new URLSearchParams('page=1'))).toEqual({ status: null, governingIntent: null, group: null, page: 1 });
+    expect(parseTrajectoryView(new URLSearchParams('status=open'))).toEqual({ status: 'open', governingIntent: null, group: null, page: 1 });
   });
 
   it('refuses a name, value or page outside the declared set, naming it and the allowed set', () => {
     const refusal = (query: string) => parseTrajectoryView(new URLSearchParams(query));
-    expect(refusal('type=bug')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'type', reason: 'unknown-parameter', allowed: ['status', 'governing-intent', 'page'] });
-    expect(refusal('status=open&status=closed')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'repeated-parameter', allowed: ['status', 'governing-intent', 'page'] });
+    expect(refusal('type=bug')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'type', reason: 'unknown-parameter', allowed: ['status', 'governing-intent', 'group', 'page'] });
+    expect(refusal('status=open&status=closed')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'repeated-parameter', allowed: ['status', 'governing-intent', 'group', 'page'] });
     expect(refusal('status=done')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'unknown-value', allowed: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'] });
     expect(refusal('governing-intent=known')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'governing-intent', reason: 'unknown-value', allowed: ['unknown'] });
     for (const page of ['0', '-1', '1.5', '01', 'two', '', '1e3']) {
@@ -80,7 +80,7 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
 
   it('renders the Unknown board for a well-formed view over an Unknown population', () => {
     const unknownBase = projectTrajectory({ kind: 'unknown', reason: 'db unreachable' }, { nonClosedLimit: 200, recentClosedWindow: 50 });
-    expect(projectTrajectoryView(unknownBase, { kind: 'unknown', reason: 'db unreachable' }, { status: 'open', governingIntent: null, page: 7 })).toBe(unknownBase);
+    expect(projectTrajectoryView(unknownBase, { kind: 'unknown', reason: 'db unreachable' }, { status: 'open', governingIntent: null, group: null, page: 7 })).toBe(unknownBase);
   });
 
   it('puts every served item on exactly one page of the unnarrowed view, in ascending id (640 items, 3 pages)', () => {
@@ -117,10 +117,10 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     expect(projection.totalCount).toBe(640);
     expect(projection.selectionRule).toBe('page 1 of 1 of the 60 observed items with status closed and governing intent Unknown, 250 per page by ascending item id');
     expect(projection.narrowing).toEqual({
-      parameters: { status: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'], 'governing-intent': ['unknown'], page: 'positive integer' },
+      parameters: { status: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'], 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
       pageSize: 250,
       order: 'ascending item id',
-      view: { status: 'closed', governingIntent: 'unknown', page: 1, matching: 60, pageCount: 1 },
+      view: { status: 'closed', governingIntent: 'unknown', group: null, page: 1, matching: 60, pageCount: 1 },
     });
     const defaultProjection = base(workItems);
     if (defaultProjection.kind !== 'observed') throw new Error('unreachable');
@@ -128,8 +128,8 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     expect(projection.timeMeasures).toEqual(defaultProjection.timeMeasures);
     expect(defaultProjection.narrowing.view).toBeNull();
     // A status with no item renders page 1 empty, never refused.
-    const none = projectTrajectoryView(defaultProjection, { ...workItems, items: workItems.items.filter((item) => item.status !== 'pinned') }, { status: 'pinned', governingIntent: null, page: 1 });
+    const none = projectTrajectoryView(defaultProjection, { ...workItems, items: workItems.items.filter((item) => item.status !== 'pinned') }, { status: 'pinned', governingIntent: null, group: null, page: 1 });
     if ('refused' in none || none.kind !== 'observed') throw new Error('unreachable');
-    expect([none.renderedCount, none.narrowing.view]).toEqual([0, { status: 'pinned', governingIntent: null, page: 1, matching: 0, pageCount: 1 }]);
+    expect([none.renderedCount, none.narrowing.view]).toEqual([0, { status: 'pinned', governingIntent: null, group: null, page: 1, matching: 0, pageCount: 1 }]);
   });
 });

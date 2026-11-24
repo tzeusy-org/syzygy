@@ -1029,7 +1029,7 @@ that selection, so an excluded-item population is never silently invisible.
 Every served item SHALL be reachable: the route SHALL accept a closed
 parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
 `governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
-Unknown) and `page` (a positive integer), and any of them SHALL give a view
+Unknown), `group=parent` and `page` (a positive integer), and any of them SHALL give a view
 of the matching items in ascending item id, one page of a declared fixed
 size, whose scope statement names the page, the page count and the matching
 count. No parameter SHALL give the default selection. Any other name, a
@@ -1039,15 +1039,46 @@ parameter, the reason and the allowed set, never ignored. When the
 work-item population is Unknown, a well-formed view SHALL render the
 Unknown board, since no served item gives a view or a last page. Every page SHALL
 link, by real anchors outside any collapsed element and reachable by
-keyboard, to the default selection, every item by id, each status and the
-governing-intent Unknown with their whole-population counts, and the
-current view's previous and next page. The machine answer SHALL take no
-parameter and SHALL declare the parameter set, the page size and the order
-(`trajectory.narrowing`), so any page is recomputable from
-`workItems.items`.
+keyboard, to the default selection, every item by id, each status, the
+governing-intent Unknown and the grouped view with their whole-population
+counts, and the current view's previous and next page. The machine answer
+SHALL take no parameter and SHALL declare the parameter set, the page size
+and the order (`trajectory.narrowing`), so any page is recomputable from
+`workItems.items` and `trajectory.outline`.
+
+**Grouped by parent.** `group=parent` SHALL group the matching items by
+parent, where the matching items are the non-closed served items unless
+`status` names a status, closed included. An item's parents are the
+`depends_on_issue_id` of its `parent-child` rows, read by POC-REQ-062's
+same-revision dependency read and its identifier rules. The machine answer
+SHALL carry them once, as `trajectory.outline`: each served item's served
+parents, the items whose parent row names an external item, a wisp or
+another prefix, the items whose in-prefix parent is not served, and every
+set of served items whose parent links form a cycle; or, when that read is
+Unknown, the read's reason. An item SHALL sit under each served parent it
+has, once per parent; under "parent outside this tracker" and "parent not
+served" for those rows; under "no parent recorded" when it has none of
+these; and, when the read is Unknown, every item SHALL sit under one
+"parent Unknown" group that states the reason. A parent outside the tracker
+or not served SHALL be counted and never named. Parent groups SHALL come
+first in ascending parent id, then those four groups in that order, and
+items in ascending id within a group; the page size counts positions, so
+an item under two parents takes two, and the view SHALL state the position
+total and that an item with several parents sits under each. A group's
+heading SHALL name its parent with the parent's tracker status as recorded,
+link to the parent's card and to the groups the parent itself sits under,
+state the group's whole count and its count on this page, and mark a group
+split across pages at both ends with a link to the other page. A parent in
+a cycle SHALL be stated with the cycle's members and the cycle SHALL NOT be
+followed. A closed parent with non-closed items, or the reverse, SHALL be
+shown as recorded: no group states completion, progress or a percentage of
+its parent (RFC8-15, RFC8-30). An item rendered twice on one page SHALL
+carry its fragment target once. The default selection is unchanged by this
+parameter; making the grouped view the default is a further amendment.
 
 - **Scope.** the rendered scope statement against the full observed item
-  set; the route's parameters, refusals and view links.
+  set; the route's parameters, refusals and view links; the grouped view and
+  `trajectory.outline`.
 
 - **Case**: a checker loads Trajectory over a database whose total item
   count exceeds the rendered selection; then, over 640 items (three pages),
@@ -1072,7 +1103,10 @@ parameter and SHALL declare the parameter set, the page size and the order
   database total, or no visible scope statement; a served item on no page
   or on two; a parameter outside the set ignored rather than refused; a
   view link missing, inside a collapsed element or unreachable by keyboard;
-  or a page the machine answer cannot reproduce.
+  or a page the machine answer cannot reproduce; in the grouped view, a
+  non-closed item missing from a parent it has, a parent outside the tracker
+  named, a cycle followed past its members, a group stating its parent's
+  completion, or a split group unmarked.
 
 #### Scenario: Bounded board over a large history
 
@@ -1080,6 +1114,18 @@ parameter and SHALL declare the parameter set, the page size and the order
   selection of 192
 - **THEN** the surface states the selection rule and that 6,772 items
   are outside it, and the three numbers reconcile
+
+#### Scenario: Items grouped under their parents
+
+- **WHEN** a closed parent has two open items, one of them also sits under
+  a second parent, two items are each other's parent, one item's parent is
+  in another tracker and the reader opens `group=parent`
+- **THEN** the shared item appears under both parents with one fragment
+  target, the closed parent is shown closed with its items' own statuses,
+  the two-item cycle is stated once and not followed, the other tracker's
+  parent is counted under "parent outside this tracker" and never named,
+  and the groups' items equal the checker's own grouping of the machine
+  answer
 
 #### Scenario: Every item reachable by state and page
 
@@ -1092,11 +1138,11 @@ parameter and SHALL declare the parameter set, the page size and the order
 warrants:
   primary: VIS-2
   doctrine: [VIS-1, VIS-2, VIS-3]
-  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23, RFC8-23]
+  contracts: [RFC2-6, RFC6-14, RFC6-16, RFC6-17, RFC6-22, RFC6-23, RFC8-15, RFC8-23, RFC8-30]
   policies: []
   decisions: [POC-DIR-2026-08-30]
   topology: []
-  parent_requirements: []
+  parent_requirements: [POC-REQ-062]
 ```
 
 ### Requirement: POC-REQ-043 — Activity is never rendered as satisfaction
@@ -1788,7 +1834,7 @@ Group: Trajectory. Form: **state projection/query**.
 
 The dependency statement SHALL return exactly one distinguishable revision witness from Dolt resolving the same immutable revision as the table read, including when there are no dependency rows. The reader SHALL verify the witness before accepting the data. A request value echoed by the caller, a missing, extra or invalid witness, a mismatched revision, an unreadable response or an unexpected result shape makes the dependency observation unavailable. A valid witness with no edge rows makes the dependency set observed empty. The work-item observation and its substrate statuses retain their own epistemic states and their one served provenance record under POC-REQ-010.
 
-The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact in this slice. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, titles, descriptions, notes, metadata values and external-reference text never enter either channel.
+The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact; `parent-child` rows derive only the parent facts POC-REQ-042's grouped view reads, under the same identifier rules. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, titles, descriptions, notes, metadata values and external-reference text never enter either channel.
 
 For an observed dependency feed, a known blocker is the served target of a `blocks` edge whose observed tracker status is other than `closed`, where the row has neither the external nor the wisp flag. Deduplicate blocker identifiers. An unlisted edge type, external or wisp blocker, out-of-prefix blocker, or absent blocker status makes the applicable item's eligibility undetermined. Use a fixed reason for each applicable failure class and stable reason ordering if several apply. Count these rows even where their targets or raw types are withheld. A row with an unidentifiable dependent or a malformed input that prevents reliable row accounting makes the feed unavailable. No malformed record can create an observed-empty or ready result.
 
@@ -1808,7 +1854,7 @@ A derived `blocked` result and an observed tracker `blocked` status each require
 
 On Trajectory, each card SHALL show the derived eligibility where present, and any fixed reason. A card with a derived blocked result or a tracker `blocked` status SHALL show its cause set or cause-Unknown, and each of its known blocker identifiers SHALL link to its existing work-item card via the paging rules of POC-REQ-042. Links SHALL work without client script from the default and narrowed views on the direct and tailnet paths. Trajectory SHALL declare the served non-closed denominator, each of the four eligibility counts, and the count of records with absent eligibility so those figures reconcile. It SHALL likewise disclose dependency rows observed, each recognized type's count, unlisted type rows, and external, wisp, and out-of-prefix target counts. One dependency row may contribute to more than one target-withholding count. When the feed is unavailable the edge counts SHALL be unavailable with the fixed reason, preserving the observed work-item denominator. The machine answer SHALL carry the same facts and link identities from the one shared model.
 
-- **Scope.** An identified work-item evaluation and its same-revision dependency metadata, every served item's state, and the displayed totals and links over that exact population. No live tracker readiness call, source-body read, parent grouping, changed trajectory selection parameter, or derivation of PR, external-event or decision causes enters this slice.
+- **Scope.** An identified work-item evaluation and its same-revision dependency metadata, every served item's state, and the displayed totals and links over that exact population. No live tracker readiness call, source-body read, changed default selection, or derivation of PR, external-event or decision causes enters this slice.
 - **Case (fixture, counterexamples and sweep).** An independent checker supplies fixed work statuses and dependency rows at a captured revision A. A distinct revision B carries different rows. The checker exercises the complete table, witnessed empty, witnessed and unwitnessed refusal cases, unsupported types, missing/foreign targets, a known and a withheld blocker on the same item, and dependency read failure. The checker reads both channels, including a blocker on another page, and sweeps every relevant card and board count.
 - **Observable.** Fixed-column queries, source-returned revision witness, classified edge totals, four eligibility counts and absent count, item-local reasons, blocked-cause set, exact blocker card targets, and unchanged epistemic status for the work-item observation.
 - **Oracle.** Literal fixture expectations independently classify every included row and every served status, compare the complete wire counts and card outcomes, follow every blocker link, and check query shape, one exact source revision, and no dependency read when that revision cannot be established. A changed-only revision B may not affect results from A. Captured metadata values not admitted by the output alternatives are absent from both wire forms.

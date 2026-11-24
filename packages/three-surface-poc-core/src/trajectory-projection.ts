@@ -141,13 +141,19 @@ interface TrajectoryProjectionObserved {
   readonly eligibility: TrajectoryEligibility;
   /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
   readonly answers: readonly TrajectoryAnswer[];
+  /** POC-REQ-042 (syzygy-t3jk.20): every served item's served parents, the
+   * children whose parent is outside the tracker or not served, and the
+   * parent-child cycles, from the dependency rows at the work-item revision. */
+  readonly outline: TrajectoryOutline;
+  /** Present only on a view with `group=parent`: this page's groups. */
+  readonly grouping?: TrajectoryGrouping;
   /** POC-REQ-042 (syzygy-t3jk.18): the declared narrowing and paging, and
    * the view this projection renders (null: the default selection). */
   readonly narrowing: TrajectoryNarrowing;
 }
 
 /** The closed query parameter set of GET /trajectory (POC-REQ-042). */
-export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'page'] as const;
+export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'group', 'page'] as const;
 export type TrajectoryViewParameter = (typeof TRAJECTORY_VIEW_PARAMETERS)[number];
 /** Items per page of a narrowed or paged view, in ascending item id. */
 export const TRAJECTORY_PAGE_SIZE = 250;
@@ -155,13 +161,69 @@ export const TRAJECTORY_PAGE_SIZE = 250;
 export interface TrajectoryViewRequest {
   readonly status: WorkItemStatus | null;
   readonly governingIntent: 'unknown' | null;
+  /** syzygy-t3jk.20: group the matching items by parent. */
+  readonly group: 'parent' | null;
   readonly page: number;
+}
+
+/** syzygy-t3jk.20: the parent structure, read from parent-child rows. */
+export type TrajectoryOutline =
+  | { readonly kind: 'unknown'; readonly reason: DependencyFeedReason }
+  | {
+      readonly kind: 'observed';
+      /** Child id → its served parents, ascending; only children that have one. */
+      readonly parents: Readonly<Record<string, readonly string[]>>;
+      /** Children with a parent outside this tracker (external, wisp or another prefix), ascending. */
+      readonly outsideTracker: readonly string[];
+      /** Children with an in-prefix parent that is not a served item, ascending. */
+      readonly unobserved: readonly string[];
+      /** Each set of served items whose parent links form a cycle, ascending; never followed. */
+      readonly cycles: readonly (readonly string[])[];
+    };
+
+/** A group of the grouped view. The four classes after `parent` hold the
+ * items with no served parent to sit under, each for its stated cause. */
+export type TrajectoryGroupKey =
+  | { readonly kind: 'parent'; readonly id: string }
+  | { readonly kind: 'parent-outside-tracker' }
+  | { readonly kind: 'parent-unobserved' }
+  | { readonly kind: 'no-parent' }
+  | { readonly kind: 'parent-unknown'; readonly reason: DependencyFeedReason };
+
+export interface TrajectoryGroupSlice {
+  readonly key: TrajectoryGroupKey;
+  /** The group's element id, stable across pages. */
+  readonly anchor: string;
+  /** Matching items in the whole group, over every page. */
+  readonly total: number;
+  /** The group's items on this page, ascending id. */
+  readonly onPage: readonly string[];
+  readonly continuedFromPage: number | null;
+  readonly continuesOnPage: number | null;
+  /** For a parent group: the parent's own facts, as recorded. */
+  readonly parent?: {
+    readonly status: WorkItemStatus;
+    /** The page of the all-items view that holds the parent's card. */
+    readonly cardPage: number;
+    /** The parent's own served parents, each with the first page of its group in this view
+     * (null: not a group here) and the all-items page of its card. */
+    readonly under: readonly { readonly id: string; readonly groupPage: number | null; readonly cardPage: number }[];
+    /** The cycle the parent belongs to, ascending; null when none. */
+    readonly cycle: readonly string[] | null;
+  };
+}
+
+export interface TrajectoryGrouping {
+  /** Matching items placed: an item with several parents has one position per parent. */
+  readonly positions: number;
+  readonly groups: readonly TrajectoryGroupSlice[];
 }
 
 export interface TrajectoryNarrowing {
   readonly parameters: {
     readonly status: readonly WorkItemStatus[];
     readonly 'governing-intent': readonly ['unknown'];
+    readonly group: readonly ['parent'];
     readonly page: 'positive integer';
   };
   readonly pageSize: number;
@@ -178,7 +240,7 @@ export interface TrajectoryViewRefusal {
 
 function narrowingDeclaration(view: TrajectoryNarrowing['view']): TrajectoryNarrowing {
   return {
-    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], page: 'positive integer' },
+    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
     pageSize: TRAJECTORY_PAGE_SIZE,
     order: 'ascending item id',
     view,
@@ -211,11 +273,20 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
   if (intent !== null && intent !== 'unknown') {
     return { refused: 'trajectory-view-parameter', parameter: 'governing-intent', reason: 'unknown-value', allowed: ['unknown'] };
   }
+  const group = query.get('group');
+  if (group !== null && group !== 'parent') {
+    return { refused: 'trajectory-view-parameter', parameter: 'group', reason: 'unknown-value', allowed: ['parent'] };
+  }
   const page = query.get('page');
   if (page !== null && !/^[1-9][0-9]*$/.test(page)) {
     return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] };
   }
-  return { status: status as WorkItemStatus | null, governingIntent: intent === null ? null : 'unknown', page: page === null ? 1 : Number(page) };
+  return {
+    status: status as WorkItemStatus | null,
+    governingIntent: intent === null ? null : 'unknown',
+    group: group === null ? null : 'parent',
+    page: page === null ? 1 : Number(page),
+  };
 }
 
 /** Does an item carry the governing-intent Unknown POC-REQ-014 counts? */
@@ -238,19 +309,23 @@ export function projectTrajectoryView(
   request: TrajectoryViewRequest,
 ): TrajectoryProjection | TrajectoryViewRefusal {
   if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;
+  // syzygy-t3jk.20: the grouped view holds the non-closed set unless a
+  // status is asked for, closed included.
   const matching = [...workItems.items]
-    .filter((item) => (request.status === null || item.status === request.status) && (request.governingIntent === null || carriesGoverningIntentUnknown(item)))
+    .filter((item) =>
+      (request.status === null ? request.group === null || item.status !== 'closed' : item.status === request.status) &&
+      (request.governingIntent === null || carriesGoverningIntentUnknown(item)))
     .sort(byId);
-  const pageCount = Math.max(1, Math.ceil(matching.length / TRAJECTORY_PAGE_SIZE));
-  if (request.page > pageCount) {
-    return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: [`1 to ${pageCount}`] };
-  }
-  const rendered = matching.slice((request.page - 1) * TRAJECTORY_PAGE_SIZE, request.page * TRAJECTORY_PAGE_SIZE).map(laneItem);
   const narrowed = [
-    request.status === null ? null : `status ${request.status}`,
+    request.status === null ? (request.group === null ? null : 'a status other than closed') : `status ${request.status}`,
     request.governingIntent === null ? null : 'governing intent Unknown',
   ].filter((part): part is string => part !== null);
   const scope = narrowed.length === 0 ? `all ${workItems.items.length} observed items` : `the ${matching.length} observed items with ${narrowed.join(' and ')}`;
+  if (request.group === 'parent') return groupedView(base, workItems.items, matching, request, scope);
+
+  const pageCount = Math.max(1, Math.ceil(matching.length / TRAJECTORY_PAGE_SIZE));
+  if (request.page > pageCount) return pastEnd(pageCount);
+  const rendered = matching.slice((request.page - 1) * TRAJECTORY_PAGE_SIZE, request.page * TRAJECTORY_PAGE_SIZE).map(laneItem);
   return {
     ...base,
     selectionRule: `page ${request.page} of ${pageCount} of ${scope}, ${TRAJECTORY_PAGE_SIZE} per page by ascending item id`,
@@ -260,6 +335,174 @@ export function projectTrajectoryView(
     totalCount: workItems.items.length,
     verificationUnknown: { served: workItems.items.length, inside: rendered.length, outside: workItems.items.length - rendered.length },
     narrowing: narrowingDeclaration({ ...request, matching: matching.length, pageCount }),
+  };
+}
+
+function pastEnd(pageCount: number): TrajectoryViewRefusal {
+  return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: [`1 to ${pageCount}`] };
+}
+
+const SPECIAL_GROUP_ORDER = ['parent-outside-tracker', 'parent-unobserved', 'no-parent', 'parent-unknown'] as const;
+
+function groupAnchor(key: TrajectoryGroupKey): string {
+  return key.kind === 'parent' ? `group-${key.id}` : `group-${key.kind}`;
+}
+
+/**
+ * syzygy-t3jk.20: the matching items grouped by parent. An item sits under
+ * each served parent it has, once per parent, and under each class of
+ * parent it cannot name; with neither it sits under `no-parent`, and with
+ * the dependency rows unread every item sits under `parent-unknown`. Parent
+ * groups come first by parent id, then the four classes in their declared
+ * order; items by id. Positions are paged; a group split across pages says
+ * where it continues. No group states a verdict about its parent.
+ */
+function groupedView(
+  base: TrajectoryProjectionObserved,
+  served: readonly WorkItemFact[],
+  matching: readonly WorkItemFact[],
+  request: TrajectoryViewRequest,
+  scope: string,
+): TrajectoryProjection | TrajectoryViewRefusal {
+  const outline = base.outline;
+  const members = new Map<string, { key: TrajectoryGroupKey; ids: string[] }>();
+  const join = (key: TrajectoryGroupKey, id: string): void => {
+    const anchor = groupAnchor(key);
+    let group = members.get(anchor);
+    if (group === undefined) members.set(anchor, (group = { key, ids: [] }));
+    group.ids.push(id);
+  };
+  const outside = new Set(outline.kind === 'observed' ? outline.outsideTracker : []);
+  const unobserved = new Set(outline.kind === 'observed' ? outline.unobserved : []);
+  for (const item of matching) {
+    if (outline.kind === 'unknown') {
+      join({ kind: 'parent-unknown', reason: outline.reason }, item.id);
+      continue;
+    }
+    const parents = outline.parents[item.id] ?? [];
+    for (const parent of parents) join({ kind: 'parent', id: parent }, item.id);
+    if (outside.has(item.id)) join({ kind: 'parent-outside-tracker' }, item.id);
+    if (unobserved.has(item.id)) join({ kind: 'parent-unobserved' }, item.id);
+    if (parents.length === 0 && !outside.has(item.id) && !unobserved.has(item.id)) join({ kind: 'no-parent' }, item.id);
+  }
+  const rank = (key: TrajectoryGroupKey): number => key.kind === 'parent' ? -1 : SPECIAL_GROUP_ORDER.indexOf(key.kind);
+  const groups = [...members.values()].sort((a, b) =>
+    rank(a.key) - rank(b.key) || (a.key.kind === 'parent' && b.key.kind === 'parent' ? (a.key.id < b.key.id ? -1 : 1) : 0));
+
+  const positions = groups.reduce((sum, group) => sum + group.ids.length, 0);
+  const pageCount = Math.max(1, Math.ceil(positions / TRAJECTORY_PAGE_SIZE));
+  if (request.page > pageCount) return pastEnd(pageCount);
+
+  const pageOf = (position: number): number => Math.floor(position / TRAJECTORY_PAGE_SIZE) + 1;
+  const firstPage = new Map<string, number>();
+  let start = 0;
+  const placed = groups.map((group) => {
+    firstPage.set(groupAnchor(group.key), pageOf(start));
+    const at = start;
+    start += group.ids.length;
+    return { group, at };
+  });
+
+  const statusById = new Map(served.map((item) => [item.id, item.status]));
+  const cardPage = new Map([...served].sort(byId).map((item, index) => [item.id, pageOf(index)]));
+  const cycleOf = new Map<string, readonly string[]>();
+  if (outline.kind === 'observed') for (const cycle of outline.cycles) for (const id of cycle) cycleOf.set(id, cycle);
+
+  const pageStart = (request.page - 1) * TRAJECTORY_PAGE_SIZE;
+  const pageEnd = pageStart + TRAJECTORY_PAGE_SIZE;
+  const slices: TrajectoryGroupSlice[] = [];
+  const onPageIds = new Set<string>();
+  for (const { group, at } of placed) {
+    const end = at + group.ids.length;
+    if (end <= pageStart || at >= pageEnd) continue;
+    const onPage = group.ids.slice(Math.max(0, pageStart - at), Math.min(group.ids.length, pageEnd - at));
+    for (const id of onPage) onPageIds.add(id);
+    const key = group.key;
+    const parent = key.kind !== 'parent' ? undefined : {
+      status: statusById.get(key.id) as WorkItemStatus,
+      cardPage: cardPage.get(key.id) as number,
+      under: (outline.kind === 'observed' ? outline.parents[key.id] ?? [] : []).map((id) => ({ id, groupPage: firstPage.get(`group-${id}`) ?? null, cardPage: cardPage.get(id) as number })),
+      cycle: cycleOf.get(key.id) ?? null,
+    };
+    slices.push({
+      key,
+      anchor: groupAnchor(key),
+      total: group.ids.length,
+      onPage,
+      continuedFromPage: at < pageStart ? request.page - 1 : null,
+      continuesOnPage: end > pageEnd ? request.page + 1 : null,
+      ...(parent === undefined ? {} : { parent }),
+    });
+  }
+  const rendered = matching.filter((item) => onPageIds.has(item.id)).map(laneItem);
+  return {
+    ...base,
+    selectionRule: `page ${request.page} of ${pageCount} of ${scope}, grouped by parent: ${positions} positions, since an item with several parents sits under each; ${TRAJECTORY_PAGE_SIZE} positions per page, parent groups by ascending parent id, then items whose parent is outside this tracker, not served, absent or unread; items by ascending id`,
+    rendered,
+    renderedCount: rendered.length,
+    excludedCount: served.length - rendered.length,
+    totalCount: served.length,
+    verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },
+    grouping: { positions, groups: slices },
+    narrowing: narrowingDeclaration({ ...request, matching: matching.length, pageCount }),
+  };
+}
+
+/** Sets of served items whose parent links form a cycle (Tarjan, iterative:
+ * a deep chain must not exhaust the stack). A self-parent is a cycle of one. */
+function parentCycles(parents: ReadonlyMap<string, readonly string[]>): string[][] {
+  const index = new Map<string, number>();
+  const low = new Map<string, number>();
+  const onStack = new Set<string>();
+  const stack: string[] = [];
+  const cycles: string[][] = [];
+  let next = 0;
+  for (const root of [...parents.keys()].sort()) {
+    if (index.has(root)) continue;
+    const work: { id: string; edge: number }[] = [{ id: root, edge: 0 }];
+    index.set(root, next); low.set(root, next); next++; stack.push(root); onStack.add(root);
+    while (work.length > 0) {
+      const frame = work[work.length - 1]!;
+      const edges = parents.get(frame.id) ?? [];
+      if (frame.edge < edges.length) {
+        const target = edges[frame.edge++]!;
+        if (!index.has(target)) {
+          index.set(target, next); low.set(target, next); next++; stack.push(target); onStack.add(target);
+          work.push({ id: target, edge: 0 });
+        } else if (onStack.has(target)) {
+          low.set(frame.id, Math.min(low.get(frame.id)!, index.get(target)!));
+        }
+        continue;
+      }
+      work.pop();
+      if (work.length > 0) {
+        const caller = work[work.length - 1]!.id;
+        low.set(caller, Math.min(low.get(caller)!, low.get(frame.id)!));
+      }
+      if (low.get(frame.id) === index.get(frame.id)) {
+        const members: string[] = [];
+        let member: string;
+        do {
+          member = stack.pop()!;
+          onStack.delete(member);
+          members.push(member);
+        } while (member !== frame.id);
+        if (members.length > 1 || (parents.get(frame.id) ?? []).includes(frame.id)) cycles.push(members.sort());
+      }
+    }
+  }
+  return cycles.sort((a, b) => (a[0]! < b[0]! ? -1 : 1));
+}
+
+function projectOutline(dependencies: WorkItemDependencyObservation): TrajectoryOutline {
+  if (dependencies.kind === 'unknown') return { kind: 'unknown', reason: dependencies.reason };
+  const facts = dependencies.parentFacts;
+  return {
+    kind: 'observed',
+    parents: Object.fromEntries([...facts.parents].sort(([a], [b]) => (a < b ? -1 : 1))),
+    outsideTracker: [...facts.outsideTracker].sort(),
+    unobserved: [...facts.unobserved].sort(),
+    cycles: parentCycles(facts.parents),
   };
 }
 
@@ -438,6 +681,7 @@ export function projectTrajectory(
     timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
     eligibility: projectEligibility(sorted, options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
     answers: observedAnswers(workItems, options.reconciliationChain),
+    outline: projectOutline(options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
     narrowing: narrowingDeclaration(null),
   };
 }

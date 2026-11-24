@@ -245,6 +245,24 @@ order, so a checker recomputes any page from `workItems.items`. When the
 work-item population is Unknown, a well-formed view renders the Unknown
 board.
 
+**Grouped by parent.** `group=parent` (`syzygy-t3jk.20`, POC-REQ-042) groups
+the non-closed items, or the items of a `status` named, by the parents their
+`parent-child` rows give, read by the same dependency read as eligibility.
+An item sits under each served parent it has, so the 250-per-page count is of
+positions and the page states their total. Items whose parent row names an
+external item, a wisp or another prefix sit under "Parent outside this
+tracker", which counts and never names that parent; items whose in-prefix
+parent is not served sit under "Parent not served"; items with no parent row
+sit under "No parent recorded"; and when the dependency read is Unknown every
+item sits under one "Parent Unknown" group with its reason. Each parent's
+heading shows its tracker status as recorded, links to its card and to the
+groups it sits under, states its count and its count on the page, and marks a
+group split across pages at both ends. A parent-child cycle is stated with its
+members and not followed. No heading says a parent is complete or how far
+along it is. The machine answer carries the parent facts once, as
+`trajectory.outline`, so a checker regroups any page itself. The default
+selection is unchanged.
+
 **Trajectory eligibility.** Work-item status still sets the board column.
 Eligibility comes from the work-item observation and one dependency metadata
 read at that same Dolt commit (POC-REQ-062). The board and machine report

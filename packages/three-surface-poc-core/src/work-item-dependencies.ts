@@ -40,12 +40,26 @@ interface ItemDependencyFacts {
   readonly reasons: ReadonlySet<DependencyEdgeReason>;
 }
 
+/** syzygy-t3jk.20: what the parent-child rows say about each child. A
+ * parent is the depends_on_issue_id of a parent-child row whose dependent
+ * is the child. Only a served parent is named; any other target is counted
+ * by its class, never by its identifier. */
+export interface ParentFacts {
+  /** Child id → its served parents, ascending, distinct. */
+  readonly parents: ReadonlyMap<string, readonly string[]>;
+  /** Children with a parent row whose target is external, a wisp or outside the prefix. */
+  readonly outsideTracker: ReadonlySet<string>;
+  /** Children with a parent row whose in-prefix target is not a served item. */
+  readonly unobserved: ReadonlySet<string>;
+}
+
 export type WorkItemDependencyObservation =
   | { readonly kind: 'unknown'; readonly reason: DependencyFeedReason }
   | {
       readonly kind: 'observed';
       readonly counts: DependencyEdgeCounts;
       readonly byItem: ReadonlyMap<string, ItemDependencyFacts>;
+      readonly parentFacts: ParentFacts;
     };
 
 const EDGE_FIELDS = ['issue_id', 'depends_on_issue_id', 'type', 'has_external', 'has_wisp'] as const;
@@ -100,6 +114,9 @@ export function observeWorkItemDependencies(
     outOfPrefix: 0,
   };
   const byItem = new Map<string, { blockers: Set<string>; reasons: Set<DependencyEdgeReason> }>();
+  const parents = new Map<string, Set<string>>();
+  const outsideTracker = new Set<string>();
+  const unobserved = new Set<string>();
   let witnessed = false;
   for (const row of rows as readonly unknown[]) {
     if (!isRecord(row) || Object.keys(row).length !== 6 || !Object.hasOwn(row, 'revision') || EDGE_FIELDS.some((key) => !Object.hasOwn(row, key))) {
@@ -128,6 +145,15 @@ export function observeWorkItemDependencies(
     if (wisp) counts.wisp++;
     if (outOfPrefix) counts.outOfPrefix++;
 
+    if (type === 'parent-child') {
+      if (external || wisp || outOfPrefix || target === null) outsideTracker.add(dependent);
+      else if (!statusById.has(target)) unobserved.add(dependent);
+      else {
+        let set = parents.get(dependent);
+        if (set === undefined) parents.set(dependent, (set = new Set<string>()));
+        set.add(target);
+      }
+    }
     if (isDependencyType(type)) {
       counts.byType[type]++;
       if (type !== 'blocks') continue;
@@ -154,7 +180,11 @@ export function observeWorkItemDependencies(
     else if (target !== null && targetStatus !== 'closed') facts.blockers.add(target);
   }
 
-  return witnessed
-    ? { kind: 'observed', counts, byItem }
-    : { kind: 'unknown', reason: 'dependency-revision-unverified' };
+  if (!witnessed) return { kind: 'unknown', reason: 'dependency-revision-unverified' };
+  const parentFacts: ParentFacts = {
+    parents: new Map([...parents].map(([child, set]) => [child, [...set].sort()])),
+    outsideTracker,
+    unobserved,
+  };
+  return { kind: 'observed', counts, byItem, parentFacts };
 }
