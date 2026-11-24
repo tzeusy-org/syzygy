@@ -34,12 +34,6 @@
       "import": "./dist/clone-shape.js",
       "default": "./dist/clone-shape.js"
     },
-    "./corpus": {
-      "source": "./src/corpus.ts",
-      "types": "./dist/corpus.d.ts",
-      "import": "./dist/corpus.js",
-      "default": "./dist/corpus.js"
-    },
     "./full-run.testkit": {
       "source": "./src/full-run.testkit.ts",
       "types": "./dist/full-run.testkit.d.ts",
