@@ -42,6 +42,7 @@ describe('same-revision dependency observation (POC-REQ-062)', () => {
     expect(result.dependencies).toEqual({
       kind: 'observed', byItem: new Map(),
       counts: { total: 0, byType: { blocks: 0, 'parent-child': 0, 'discovered-from': 0, related: 0, 'relates-to': 0, tracks: 0 }, unlisted: 0, external: 0, wisp: 0, outOfPrefix: 0 },
+      parentFacts: { parents: new Map(), outsideTracker: new Set(), unobserved: new Set() },
     });
     expect(result.calls).toHaveLength(2);
     expect(result.calls[0]).toContain("FROM issues AS OF 'HEAD'");

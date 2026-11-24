@@ -245,7 +245,7 @@ authority and no model yet called on the current path.
     for each input block, and repairs to give each finding a disposition. Generator implementation is tracked
     by syzygy-dov.6.3.
     *(2026-11-24: edit and repair accounting supersedes the predecessor figure of 538 scenarios.)*
-    [Worth-knowing amendment 2.26](openspec/changes/dossier-worth-knowing) is agent-adopted in A-210.
+    [Worth-knowing amendment 2.26](openspec/changes/dossier-worth-knowing) is agent-adopted in A-213.
     It replaces REQ-polaris-generation-034 again (207 to 214 scenarios: draft schema v13 lets a cited section paragraph
     carry the worth-knowing mark and a Pole say why it marks none, the `worth-knowing` finding and count advice, one
     "Worth knowing" callout per page for blocks that render Inferred, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
