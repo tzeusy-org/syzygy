@@ -1,0 +1,175 @@
+{
+  "base": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "planSha256": "accb887106b723dfd632eb4b82ddf5d98236925eda2ebc9c3f56d2245862de60",
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--project",
+    "unit",
+    "--maxWorkers",
+    "1",
+    "--reporter",
+    "verbose",
+    "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+    "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+    "--testNamePattern",
+    "verifies both cleanly stopped generations within the same sixteen-client lifetime store|refuses capacity before reservation while retaining room for client-wide terminal cleanup"
+  ],
+  "TMPDIR": "/home/orca/.tmp/f3-audit-private-tmp.s5ao000l",
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+      "originalSha256": "622c7a7adc9435ff699ba7eb22095c95df5b35b9440676ffbb49d74dee9aa7a7",
+      "diagnosticSha256": "98691fac82f15477697bb4d67ba2f68d524938bf79c0146c6c7821e4ef89bb64",
+      "restoredSha256": "622c7a7adc9435ff699ba7eb22095c95df5b35b9440676ffbb49d74dee9aa7a7",
+      "exactRestored": true
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+      "originalSha256": "7e223bb683732f8fd93330cd2e30b6cf584b71c0e20073cfb2a3db046d32ddbf",
+      "diagnosticSha256": "9508128a4347089efbbc2fd2a93039ca4cb3b6b439f8dc9a55a22835165178e5",
+      "restoredSha256": "7e223bb683732f8fd93330cd2e30b6cf584b71c0e20073cfb2a3db046d32ddbf",
+      "exactRestored": true
+    }
+  ],
+  "patchSha256": "99fb6e5c4cc8872ded6a956720fb7906f29fc2c94819ab7c345c3836f88646fd",
+  "exit": 0,
+  "postRestoreStatus": "",
+  "log": "/home/orca/.tmp/f3-native-admission-fixes/history-two-case-stage.log",
+  "logSha256": "37ca0ca12d4a44d6112eb92677d27f8e47eae1509e313c62f5373cc680bbc4f9",
+  "stages": [
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "fixture-start",
+      "elapsedMs": 0.024025000000051477
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "fixture-end",
+      "elapsedMs": 2756.6902290000003
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "verification-start",
+      "elapsedMs": 2756.869889
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "verification-end",
+      "elapsedMs": 3664.216552
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "duplicate-refusal-start",
+      "elapsedMs": 3665.9083760000003
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "duplicate-refusal-end",
+      "elapsedMs": 3667.3933290000004
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "overflow-refusal-start",
+      "elapsedMs": 3667.4473319999997
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "sixteen-client",
+      "phase": "overflow-refusal-end",
+      "elapsedMs": 3668.568244
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "fixture-start",
+      "elapsedMs": 0.02795300000025236
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "fixture-end",
+      "elapsedMs": 623.7874080000001
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "fixture-close-end",
+      "elapsedMs": 624.430836
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "synthetic-capacity-fill-start",
+      "elapsedMs": 625.6212310000001
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "synthetic-capacity-fill-end",
+      "elapsedMs": 1178.8678730000001
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-persist-end",
+      "elapsedMs": 1196.983013
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-open-start",
+      "elapsedMs": 1197.0640670000003
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-open-end",
+      "elapsedMs": 1276.529435
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-allocation-start",
+      "elapsedMs": 1276.616971
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-allocation-end",
+      "elapsedMs": 1414.9701320000004
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-rejection-start",
+      "elapsedMs": 1415.8428350000004
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "capacity-rejection-end",
+      "elapsedMs": 1442.8223349999998
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "terminal-cleanup-start",
+      "elapsedMs": 2293.6433850000003
+    },
+    {
+      "event": "existing-history-case-stage",
+      "case": "capacity-cleanup",
+      "phase": "terminal-cleanup-end",
+      "elapsedMs": 2650.010246
+    }
+  ]
+}

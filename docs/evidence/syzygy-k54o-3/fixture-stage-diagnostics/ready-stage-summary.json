@@ -1,0 +1,202 @@
+{
+  "executionBase": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "patchBase": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "exitCode": 0,
+  "passed": 1,
+  "skipped": 50,
+  "total": 51,
+  "marks": [
+    {
+      "ordinal": 1,
+      "stage": "helper-begin",
+      "elapsedMs": 0.049
+    },
+    {
+      "ordinal": 2,
+      "stage": "launch-inputs-begin",
+      "elapsedMs": 248.59
+    },
+    {
+      "ordinal": 3,
+      "stage": "native-image-request",
+      "elapsedMs": 798.354
+    },
+    {
+      "ordinal": 4,
+      "stage": "native-image-resolve-begin",
+      "elapsedMs": 798.473
+    },
+    {
+      "ordinal": 5,
+      "stage": "native-image-copy-begin",
+      "elapsedMs": 799.587
+    },
+    {
+      "ordinal": 6,
+      "stage": "native-image-copy-end",
+      "elapsedMs": 4629.102
+    },
+    {
+      "ordinal": 7,
+      "stage": "native-image-verify-begin",
+      "elapsedMs": 4629.256
+    },
+    {
+      "ordinal": 8,
+      "stage": "native-image-verify-end",
+      "elapsedMs": 4899.126
+    },
+    {
+      "ordinal": 9,
+      "stage": "launch-inputs-end",
+      "elapsedMs": 5698.678
+    },
+    {
+      "ordinal": 10,
+      "stage": "negative-support-prepare-begin",
+      "elapsedMs": 5725.378
+    },
+    {
+      "ordinal": 11,
+      "stage": "negative-support-prepare-end",
+      "elapsedMs": 5728.162
+    },
+    {
+      "ordinal": 12,
+      "stage": "negative-host-prepare-begin",
+      "elapsedMs": 5728.208
+    },
+    {
+      "ordinal": 13,
+      "stage": "negative-host-prepare-end",
+      "elapsedMs": 6718.473
+    },
+    {
+      "ordinal": 14,
+      "stage": "negative-host-launch-begin",
+      "elapsedMs": 6718.542
+    },
+    {
+      "ordinal": 15,
+      "stage": "negative-host-launch-end",
+      "elapsedMs": 6719.444
+    },
+    {
+      "ordinal": 16,
+      "stage": "final-prepare-begin",
+      "elapsedMs": 6719.47
+    },
+    {
+      "ordinal": 17,
+      "stage": "final-prepare-end",
+      "elapsedMs": 7774.07
+    },
+    {
+      "ordinal": 18,
+      "stage": "audit-setup-begin",
+      "elapsedMs": 7784.69
+    },
+    {
+      "ordinal": 19,
+      "stage": "audit-setup-end",
+      "elapsedMs": 7871.594
+    },
+    {
+      "ordinal": 20,
+      "stage": "worker-build-begin",
+      "elapsedMs": 7873.34
+    },
+    {
+      "ordinal": 21,
+      "stage": "worker-build-end",
+      "elapsedMs": 8140.487
+    },
+    {
+      "ordinal": 22,
+      "stage": "relay-setup-begin",
+      "elapsedMs": 8142.126
+    },
+    {
+      "ordinal": 23,
+      "stage": "relay-setup-end",
+      "elapsedMs": 8143.689
+    },
+    {
+      "ordinal": 24,
+      "stage": "broker-setup-begin",
+      "elapsedMs": 8143.735
+    },
+    {
+      "ordinal": 25,
+      "stage": "broker-setup-end",
+      "elapsedMs": 8144.332
+    },
+    {
+      "ordinal": 26,
+      "stage": "child-wait-begin",
+      "elapsedMs": 8144.36
+    },
+    {
+      "ordinal": 27,
+      "stage": "child-spawn-begin",
+      "elapsedMs": 8145.24
+    },
+    {
+      "ordinal": 28,
+      "stage": "child-spawn-returned",
+      "elapsedMs": 8165.949
+    },
+    {
+      "ordinal": 29,
+      "stage": "child-close",
+      "elapsedMs": 24232.975
+    },
+    {
+      "ordinal": 30,
+      "stage": "child-wait-end",
+      "elapsedMs": 24233.271
+    },
+    {
+      "ordinal": 31,
+      "stage": "retire-begin",
+      "elapsedMs": 24233.326
+    },
+    {
+      "ordinal": 32,
+      "stage": "retire-end",
+      "elapsedMs": 24233.479
+    },
+    {
+      "ordinal": 33,
+      "stage": "terminal-read-begin",
+      "elapsedMs": 24233.497
+    },
+    {
+      "ordinal": 34,
+      "stage": "terminal-read-end",
+      "elapsedMs": 24251.53
+    },
+    {
+      "ordinal": 35,
+      "stage": "audit-read-begin",
+      "elapsedMs": 24251.591
+    },
+    {
+      "ordinal": 36,
+      "stage": "audit-read-end",
+      "elapsedMs": 24252.062
+    },
+    {
+      "ordinal": 37,
+      "stage": "helper-end",
+      "elapsedMs": 24252.414
+    }
+  ],
+  "restoredSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+  "workingTreeStatus": "",
+  "logSha256": "bb4555222798bb76361d913e708c293cc9d8b79626a21aa919904c53acb54dfd",
+  "patchSha256": "2c3737e200b3eccd0898dbcd894c3bf7bdd40cb66926fa2962b9d2f3e94e72b2",
+  "wallTimerObserved": false,
+  "assertionSource": "All existing assertions unchanged; stage marks only.",
+  "earlierFailureCause": "Unknown; no reproduction on this single diagnostic replay."
+}

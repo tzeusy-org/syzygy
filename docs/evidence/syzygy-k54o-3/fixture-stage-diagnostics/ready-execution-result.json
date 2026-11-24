@@ -1,0 +1,27 @@
+{
+  "executionBase": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "patchBase": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "candidateState": "temporary-dirty-test-diagnostic",
+  "command": [
+    "./node_modules/.bin/vitest",
+    "run",
+    "--project",
+    "integration",
+    "packages/polaris-dossier/src/session-launch.test.ts",
+    "-t",
+    "actual ordered design CLI exchange \\(ready\\)"
+  ],
+  "environment": {
+    "TMPDIR": "/home/orca/.tmp/f3-audit-private-tmp.s5ao000l"
+  },
+  "patchSha256": "2c3737e200b3eccd0898dbcd894c3bf7bdd40cb66926fa2962b9d2f3e94e72b2",
+  "reviewedSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+  "startEpochSeconds": 1795539457.4905689,
+  "diagnosticSha256": "5a45dace5ccc229487e98cd7d62cd7cec7e38fd27edd1cfc6abeb63e891064e7",
+  "pid": 2403522,
+  "exitCode": 0,
+  "restoredSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+  "workingTreeStatus": "",
+  "endEpochSeconds": 1795539486.3048036,
+  "logSha256": "bb4555222798bb76361d913e708c293cc9d8b79626a21aa919904c53acb54dfd"
+}

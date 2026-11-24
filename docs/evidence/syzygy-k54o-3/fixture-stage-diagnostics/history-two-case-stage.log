@@ -1,0 +1,129 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+stderr | packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"fixture-start","elapsedMs":0.024025000000051477}
+
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority
+stderr | packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"fixture-end","elapsedMs":2756.6902290000003}
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"verification-start","elapsedMs":2756.869889}
+
+stderr | packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"verification-end","elapsedMs":3664.216552}
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"duplicate-refusal-start","elapsedMs":3665.9083760000003}
+
+stderr | packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"duplicate-refusal-end","elapsedMs":3667.3933290000004}
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"overflow-refusal-start","elapsedMs":3667.4473319999997}
+
+stderr | packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store
+{"event":"existing-history-case-stage","case":"sixteen-client","phase":"overflow-refusal-end","elapsedMs":3668.568244}
+
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store 3670ms
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses identity expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses controller expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses parent expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses run expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses origin expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses profile expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses deadline expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses client-count expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses duplicate expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses role-cli expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses scope expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses witness expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses head expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-cut expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses early-cut expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses coherent-identity expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses wrong-slot expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-context expectation drift
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses an active actual canonical head even when a supplied seal labels it revoked
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a lifecycle event published after the sealed close even when its canonical revoke timestamp was backdated
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a later protected revision instead of silently advancing an independently retained closed head
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses expire without renewing the original deadline
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses withdraw without renewing the original deadline
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > rechecks clean-stop exclusion after an awaited genuine store open
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual canonical-projection-rollback and leaves its bytes unrepaired
+ ↓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual missing-archive and leaves its bytes unrepaired
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"fixture-start","elapsedMs":0.02795300000025236}
+
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > checks 220 exact captured rows using one genuine protected read and no per-row filesystem work
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses snapshot copies, successful-result copies and genuine result substitution for another row
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > binds the genuine snapshot to each exact independently expected immutable audit subject field
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a new capture once the independently retained original deadline expires
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > retains exact hash, process, scope and temporal checks after caches have been populated
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > reads exact protected revisions from a genuine reopened store and joins retained old bytes without reviving revocation
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins exact archived old bytes after cold reopen without caller-supplied canonical text
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > keeps historical legacy bytes explicitly unavailable and archives only the next real publication
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses missing archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses mutated archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses extra-entry archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses orphan-file archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses relinked archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses interrupted-pack archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-drop archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-extra archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-mutation archive without repair on reopen
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses reordered archive without repair on reopen
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"fixture-end","elapsedMs":623.7874080000001}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"fixture-close-end","elapsedMs":624.430836}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"synthetic-capacity-fill-start","elapsedMs":625.6212310000001}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"synthetic-capacity-fill-end","elapsedMs":1178.8678730000001}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-persist-end","elapsedMs":1196.983013}
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-open-start","elapsedMs":1197.0640670000003}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-open-end","elapsedMs":1276.529435}
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-allocation-start","elapsedMs":1276.616971}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-allocation-end","elapsedMs":1414.9701320000004}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-rejection-start","elapsedMs":1415.8428350000004}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"capacity-rejection-end","elapsedMs":1442.8223349999998}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"terminal-cleanup-start","elapsedMs":2293.6433850000003}
+
+stderr | packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+{"event":"existing-history-case-stage","case":"capacity-cleanup","phase":"terminal-cleanup-end","elapsedMs":2650.010246}
+
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup 2652ms
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > uses only the exact current canonical bytes when the requested revision is still the latest
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed canonical-hash
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed process
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed channel
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed scope
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed instance
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed role
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed run
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed parent
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed store-identity
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed future-revision
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed after-next-revision
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a captured claim against the revoked latest revision even when all verifier fields match
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses store-shaped copies, stale exact heads and withdrawn parent authority
+ ↓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses canonical plus ordinary projection rollback against the independent protected high-water history
+
+ Test Files  2 passed (2)
+      Tests  2 passed | 62 skipped (64)
+   Start at  00:58:49
+   Duration  10.06s (transform 2.21s, setup 65ms, collect 3.04s, tests 6.33s, environment 0ms, prepare 149ms)
+

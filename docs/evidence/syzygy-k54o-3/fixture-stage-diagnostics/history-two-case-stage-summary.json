@@ -1,0 +1,51 @@
+{
+  "subject": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "result": "2passed62skipped/64cases in2files; focused diagnostic only, not full gate",
+  "totals": [
+    "Test Files  2 passed (2)",
+    "Tests  2 passed | 62 skipped (64)",
+    "Duration  10.06s (transform 2.21s, setup 65ms, collect 3.04s, tests 6.33s, environment 0ms, prepare 149ms)"
+  ],
+  "phaseDurationMilliseconds": {
+    "sixteen-client": {
+      "fixture": 2756.666204,
+      "verification": 907.3466629999998,
+      "duplicate-refusal": 1.4849530000001323,
+      "overflow-refusal": 1.1209120000003168
+    },
+    "capacity-cleanup": {
+      "fixture": 623.7594549999999,
+      "synthetic-capacity-fill": 553.2466420000001,
+      "capacity-open": 79.46536799999967,
+      "capacity-allocation": 138.35316100000045,
+      "capacity-rejection": 26.97949999999946,
+      "terminal-cleanup": 356.3668609999995
+    }
+  },
+  "finalMarksMilliseconds": {
+    "sixteen-client": 3668.568244,
+    "capacity-cleanup": 2650.010246
+  },
+  "observed": "Both existing cases pass with original5000ms Vitest timers and all original production calls/assertions; sixteen-client fixture consumes~2.757s before~0.907s verification. Capacity fixture+syntheticfill consumes~1.197s before open/allocation/refusedpublication/cleanup. No timeout occurred in this run.",
+  "unknown": "Actual phase of the two prior full-gate5000ms timeouts remains Unknown; this focused success does not establish resource load as their sole cause.",
+  "recommendation": {
+    "coldFixture": "Proportional candidate: existing fixture allocates8clients separately per generation though this case tests cold reconstruction. Use actual allocateClients(8) once per generation (2batches for16), preserving exact generation/role/kind order, all real lifecycle publications, nominal slots/witnesses and four existing assertions. Store supports maximum8 per call; generic unstaged budget remains5000ms. No timer changes.",
+    "capacityFixture": "No correction demonstrated yet. Its focused total~2.650s comprises multiple separately bounded operations and nontrivial syntheticsetup+statechecks; leave source unchanged until a reproducible failure identifies the stage. Do not extend production or test limits merely for this focused pass."
+  },
+  "artifacts": {
+    "rawResult": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/history-two-case-stage-result.json",
+      "sha256": "8924acfb8a6de11728de1452c015e239ff38fc313298dfde2254e4d4be857094"
+    },
+    "log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/history-two-case-stage.log",
+      "sha256": "37ca0ca12d4a44d6112eb92677d27f8e47eae1509e313c62f5373cc680bbc4f9"
+    },
+    "patch": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/history-two-case-stage.patch",
+      "sha256": "99fb6e5c4cc8872ded6a956720fb7906f29fc2c94819ab7c345c3836f88646fd"
+    }
+  },
+  "restoredExactly": true,
+  "postRestoreStatus": ""
+}

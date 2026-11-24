@@ -1,0 +1,90 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":1,"stage":"helper-begin","elapsedMs":0.049}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":2,"stage":"launch-inputs-begin","elapsedMs":248.59}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":3,"stage":"native-image-request","elapsedMs":798.354}
+owned ready diagnostic {"ordinal":4,"stage":"native-image-resolve-begin","elapsedMs":798.473}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":5,"stage":"native-image-copy-begin","elapsedMs":799.587}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":6,"stage":"native-image-copy-end","elapsedMs":4629.102}
+owned ready diagnostic {"ordinal":7,"stage":"native-image-verify-begin","elapsedMs":4629.256}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":8,"stage":"native-image-verify-end","elapsedMs":4899.126}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":9,"stage":"launch-inputs-end","elapsedMs":5698.678}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":10,"stage":"negative-support-prepare-begin","elapsedMs":5725.378}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":11,"stage":"negative-support-prepare-end","elapsedMs":5728.162}
+owned ready diagnostic {"ordinal":12,"stage":"negative-host-prepare-begin","elapsedMs":5728.208}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":13,"stage":"negative-host-prepare-end","elapsedMs":6718.473}
+owned ready diagnostic {"ordinal":14,"stage":"negative-host-launch-begin","elapsedMs":6718.542}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":15,"stage":"negative-host-launch-end","elapsedMs":6719.444}
+owned ready diagnostic {"ordinal":16,"stage":"final-prepare-begin","elapsedMs":6719.47}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":17,"stage":"final-prepare-end","elapsedMs":7774.07}
+owned ready diagnostic {"ordinal":18,"stage":"audit-setup-begin","elapsedMs":7784.69}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":19,"stage":"audit-setup-end","elapsedMs":7871.594}
+owned ready diagnostic {"ordinal":20,"stage":"worker-build-begin","elapsedMs":7873.34}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":21,"stage":"worker-build-end","elapsedMs":8140.487}
+owned ready diagnostic {"ordinal":22,"stage":"relay-setup-begin","elapsedMs":8142.126}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":23,"stage":"relay-setup-end","elapsedMs":8143.689}
+owned ready diagnostic {"ordinal":24,"stage":"broker-setup-begin","elapsedMs":8143.735}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":25,"stage":"broker-setup-end","elapsedMs":8144.332}
+owned ready diagnostic {"ordinal":26,"stage":"child-wait-begin","elapsedMs":8144.36}
+owned ready diagnostic {"ordinal":27,"stage":"child-spawn-begin","elapsedMs":8145.24}
+owned ready diagnostic {"ordinal":28,"stage":"child-spawn-returned","elapsedMs":8165.949}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":29,"stage":"child-close","elapsedMs":24232.975}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":30,"stage":"child-wait-end","elapsedMs":24233.271}
+owned ready diagnostic {"ordinal":31,"stage":"retire-begin","elapsedMs":24233.326}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":32,"stage":"retire-end","elapsedMs":24233.479}
+owned ready diagnostic {"ordinal":33,"stage":"terminal-read-begin","elapsedMs":24233.497}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":34,"stage":"terminal-read-end","elapsedMs":24251.53}
+owned ready diagnostic {"ordinal":35,"stage":"audit-read-begin","elapsedMs":24251.591}
+
+stderr | packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+owned ready diagnostic {"ordinal":36,"stage":"audit-read-end","elapsedMs":24252.062}
+owned ready diagnostic {"ordinal":37,"stage":"helper-end","elapsedMs":24252.414}
+
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts (51 tests | 50 skipped) 24302ms
+   ✓ prepared private CLI launch > observes the actual ordered design CLI exchange (ready)  24267ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 50 skipped (51)
+   Start at  00:57:38
+   Duration  28.05s (transform 2.51s, setup 15ms, collect 3.24s, tests 24.30s, environment 0ms, prepare 86ms)
+

@@ -1,0 +1,91 @@
+diff --git a/packages/polaris-dossier/src/url-machine-cold-history.test.ts b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+index 51e8bdc23..daf613921 100644
+--- a/packages/polaris-dossier/src/url-machine-cold-history.test.ts
++++ b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+@@ -104,15 +104,25 @@ describe('cold protected machine reconstruction', () => {
+   });
+ 
+   it('verifies both cleanly stopped generations within the same sixteen-client lifetime store', async () => {
++    const began = performance.now();
++    const mark = (phase: string): void => { console.error(JSON.stringify({ event: 'existing-history-case-stage', case: 'sixteen-client', phase, elapsedMs: performance.now() - began })); };
++    mark('fixture-start');
+     const f = await fixture(false, false, 2);
++    mark('fixture-end');
++    mark('verification-start');
+     const history = await reconstructColdUrlRunMachineHistory(f.options);
++    mark('verification-end');
+     expect(history?.clients).toHaveLength(16);
+     expect(history?.snapshots).toHaveLength(2);
+     const duplicate = clone(f.options.sealed);
+     duplicate.clients[15] = duplicate.clients[0]!;
++    mark('duplicate-refusal-start');
+     expect(await reconstructColdUrlRunMachineHistory({ ...f.options, sealed: duplicate })).toBeNull();
++    mark('duplicate-refusal-end');
++    mark('overflow-refusal-start');
+     expect(await reconstructColdUrlRunMachineHistory({ ...f.options, sealed: { ...f.options.sealed,
+       clients: [...f.options.sealed.clients, f.options.sealed.clients[0]!] } })).toBeNull();
++    mark('overflow-refusal-end');
+   });
+ 
+   it.each(['identity', 'controller', 'parent', 'run', 'pin', 'origin', 'profile', 'deadline', 'client-count', 'duplicate', 'role-cli', 'scope', 'witness', 'head', 'future-cut', 'early-cut', 'coherent-identity', 'wrong-slot', 'future-context'] as const)('refuses %s expectation drift', async fault => {
+diff --git a/packages/polaris-dossier/src/url-machine-peer-history.test.ts b/packages/polaris-dossier/src/url-machine-peer-history.test.ts
+index b5eb2ada2..00513b3a1 100644
+--- a/packages/polaris-dossier/src/url-machine-peer-history.test.ts
++++ b/packages/polaris-dossier/src/url-machine-peer-history.test.ts
+@@ -250,7 +250,13 @@ describe('cold historical machine-peer joins', () => {
+   });
+ 
+   it('refuses capacity before reservation while retaining room for client-wide terminal cleanup', async () => {
+-    const f = await fixture(false); await f.options.store.close();
++    const began = performance.now();
++    const mark = (phase: string): void => { console.error(JSON.stringify({ event: 'existing-history-case-stage', case: 'capacity-cleanup', phase, elapsedMs: performance.now() - began })); };
++    mark('fixture-start');
++    const f = await fixture(false);
++    mark('fixture-end');
++    await f.options.store.close();
++    mark('fixture-close-end');
+     const state = JSON.parse((await readFile(f.files[1]!)).toString());
+     const pack = JSON.parse((await readFile(f.files[4]!)).toString());
+     const template = state.clients[0].audit[0];
+@@ -258,6 +264,7 @@ describe('cold historical machine-peer joins', () => {
+     // Owned synthetic persisted state uses the actual writer schema and exact
+     // record encoder. Fill to the real byte/reservation boundary without
+     // repeatedly executing hundreds of unrelated setup transactions.
++    mark('synthetic-capacity-fill-start');
+     for (let ordinal = 1; ordinal < 256; ordinal++) {
+       const record: UrlMachineClientRecord = { ...f.record, clientId: id(), issuanceId: id(), runId: `run-${ordinal.toString(16).padStart(32, '0')}`,
+         instances: [{ ...f.record.instances[0]!, instanceId: id() }] };
+@@ -274,23 +281,33 @@ describe('cold historical machine-peer joins', () => {
+       await writeFile(path.join(path.dirname(f.files[3]!), `${record.clientId}.json`), bytes);
+       await writeFile(path.join(f.storeOptions.protectedRoot, `projection-${record.clientId}.json`), canon(next));
+     }
++    mark('synthetic-capacity-fill-end');
+     const archive = encodeUrlMachineArchive(pack);
+     expect(active).toBeGreaterThan(100); expect(archive.length + active * URL_MACHINE_ARCHIVE_LIMITS.terminalBytes).toBeLessThanOrEqual(URL_MACHINE_ARCHIVE_LIMITS.bytes);
+     state.archive = { ...state.archive, sha256: sha256(archive), bytes: archive.length, records: pack.entries.length };
+     await writeFile(f.files[4]!, archive);
+     await writeFile(f.files[1]!, encodeCanonicalJson(state, { maxBytes: 8_388_608, maxNodes: 524_288, maxDepth: 32 }));
++    mark('capacity-persist-end');
++    mark('capacity-open-start');
+     const store = await openUrlMachineStore(f.storeOptions, f.options.expectedIdentitySha256); if (!store) throw new Error('capacity fixture refused'); close.push(() => store.close());
++    mark('capacity-open-end');
++    mark('capacity-allocation-start');
+     const slot = await store.allocateClient(f.options.context.deadline); if (!slot) throw new Error('capacity slot refused');
++    mark('capacity-allocation-end');
+     const context = { ...f.options.context, clientId: slot.clientId, runId: `run-${'e'.repeat(32)}`, now: NOW + 3000 };
+     const record: UrlMachineClientRecord = { ...f.record, clientId: slot.clientId, issuanceId: id(), runId: context.runId,
+       instances: [{ ...f.record.instances[0]!, instanceId: id() }] };
+     const before = await readFile(f.files[1]!);
++    mark('capacity-rejection-start');
+     expect((await publishUrlMachineLifecycle({ context, binding: f.options.expectedHead.binding, next: canon(record), expected: null }, store)).ok).toBe(false);
++    mark('capacity-rejection-end');
+     expect(await readFile(f.files[1]!)).toEqual(before);
+     expect((await readdir(f.storeOptions.protectedRoot)).includes('lock')).toBe(false);
++    mark('terminal-cleanup-start');
+     const revoked = { ...f.rotated, revision: 3, revokedAt: new Date(NOW + 3000).toISOString() };
+     expect((await publishUrlMachineLifecycle({ context: { ...f.options.context, now: NOW + 3000 }, binding: f.options.expectedHead.binding,
+       next: canon(revoked), expected: { revision: 2, sha256: sha256(canon(f.rotated)) } }, store)).ok).toBe(true);
++    mark('terminal-cleanup-end');
+   });
+ 
+   it('uses only the exact current canonical bytes when the requested revision is still the latest', async () => {

@@ -1,0 +1,12 @@
+{
+  "executionBase": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "candidateState": "temporary-uncommitted-test-only-diagnostic",
+  "file": "packages/polaris-dossier/src/session-launch.test.ts",
+  "reviewedSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+  "diagnosticSha256": "5a45dace5ccc229487e98cd7d62cd7cec7e38fd27edd1cfc6abeb63e891064e7",
+  "patchSha256": "2c3737e200b3eccd0898dbcd894c3bf7bdd40cb66926fa2962b9d2f3e94e72b2",
+  "maximumMarks": 64,
+  "stagePopulation": 41,
+  "applied": false,
+  "executed": false
+}

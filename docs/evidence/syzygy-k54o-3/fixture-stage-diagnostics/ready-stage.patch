@@ -1,0 +1,203 @@
+--- a/packages/polaris-dossier/src/session-launch.test.ts
++++ b/packages/polaris-dossier/src/session-launch.test.ts
+@@ -231,18 +231,29 @@
+ // Package-manager cleanup must not unlink the native image midway through
+ // this file's cases. Each test process owns one copy and still verifies its
+ // fixed release digest at the real launch boundary.
++const READY_NATIVE_STAGES = ['helper-begin', 'launch-inputs-begin', 'launch-inputs-end', 'native-image-request', 'native-image-cache-hit', 'native-image-resolve-begin', 'native-image-copy-begin', 'native-image-copy-end', 'native-image-verify-begin', 'native-image-verify-end', 'negative-support-prepare-begin', 'negative-support-prepare-end', 'negative-host-prepare-begin', 'negative-host-prepare-end', 'negative-host-launch-begin', 'negative-host-launch-end', 'final-prepare-begin', 'final-prepare-end', 'audit-setup-begin', 'audit-setup-end', 'worker-build-begin', 'worker-build-end', 'relay-setup-begin', 'relay-setup-end', 'broker-setup-begin', 'broker-setup-end', 'child-wait-begin', 'child-spawn-begin', 'child-spawn-returned', 'child-wall-fired', 'child-error', 'child-close', 'child-wait-end', 'retire-begin', 'retire-end', 'terminal-read-begin', 'terminal-read-refused', 'terminal-read-end', 'audit-read-begin', 'audit-read-end', 'helper-end'] as const;
++type ReadyNativeStage = typeof READY_NATIVE_STAGES[number];
++type ObserveReadyNativeStage = (stage: ReadyNativeStage) => void;
++
+ let nativeImage: Promise<string> | undefined;
+ let nativeImageRoot: string | undefined;
+ afterAll(async () => {
+   if (nativeImageRoot !== undefined) await rm(nativeImageRoot, { recursive: true, force: true });
+ });
+-function pinnedNativeImage(): Promise<string> {
++function pinnedNativeImage(observeStage?: ObserveReadyNativeStage): Promise<string> {
++  observeStage?.('native-image-request');
++  if (nativeImage !== undefined) observeStage?.('native-image-cache-hit');
+   return nativeImage ??= (async () => {
++    observeStage?.('native-image-resolve-begin');
+     const source = await realpath(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version));
+     nativeImageRoot = await mkdtemp(path.join(os.tmpdir(), 'syzygy-native-image-'));
+     const target = path.join(nativeImageRoot, 'claude');
++    observeStage?.('native-image-copy-begin');
+     await copyFile(source, target);
++    observeStage?.('native-image-copy-end');
++    observeStage?.('native-image-verify-begin');
+     if (!await verifySupportedUrlCli(target)) throw new Error('owned native image verification refused');
++    observeStage?.('native-image-verify-end');
+     return target;
+   })();
+ }
+@@ -263,7 +274,7 @@
+ }
+ 
+ async function privateLaunchOptions(root: string, profile: NativeSessionProfile, role: 'author' | 'design',
+-  audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary',
++  audit: UrlSessionLaunchOptions['audit'], limits: UrlSessionLaunchOptions['limits'] = {}, support: 'ordinary' | 'ordered-design' = 'ordinary', observeStage?: ObserveReadyNativeStage,
+ ): Promise<UrlSessionLaunchOptions> {
+   const compiled = await compiledSessionSupport();
+   const mcpPath = urlSessionMcpSupportPath(role, support);
+@@ -279,7 +290,7 @@
+   await new Promise<void>((resolve,reject)=>{listener.once('error',reject);listener.listen(0,'127.0.0.1',resolve)});
+   cleanup.push(()=>new Promise<void>(resolve=>listener.close(()=>resolve())));
+   const address=listener.address();if(!address||typeof address==='string')throw Error('own listener');
+-  return {view:{role,cliExecutable:await pinnedNativeImage(),nodeExecutable,
++  return {view:{role,cliExecutable:await pinnedNativeImage(observeStage),nodeExecutable,
+     supportDirectory:path.join(root,'support'),homeDirectory:path.join(root,'home'),workDirectory:path.join(root,'work'),
+     brokerSocketDirectory:path.join(root,'broker'),relaySocketDirectory:path.join(root,'relay'),protectedPaths:[path.join(root,'hidden')]},
+     profile,expected:{nodeSha256:sha256(await readFile(nodeExecutable)),supportSha256},current:()=>true,
+@@ -294,7 +305,7 @@
+ /** Run only the prepared byte-identical namespace command, with its native
+  * resource limits and an independent fixture timeout. The production sampled
+  * supervisor has separate tests. It grants no authority to this fixture. */
+-async function runOwnedPreparedCommand(launch: UrlSessionLaunchOptions, commandSha256: string) {
++async function runOwnedPreparedCommand(launch: UrlSessionLaunchOptions, commandSha256: string, observeStage?: ObserveReadyNativeStage) {
+   const limits = { ...URL_LAUNCH_LIMITS, ...launch.limits };
+   const mountArgs = urlSessionBwrapArgs(urlSessionViewFor(launch.view));
+   mountArgs.splice(mountArgs.indexOf('--tmpfs'), 0, '--size', String(limits.storageBytes));
+@@ -304,14 +315,16 @@
+     ...mountArgs, '--remount-ro', '/dev', '--remount-ro', '/', '--', ...urlSessionCommand(restrictedSessionCliArgs(launch.profile))];
+   expect(sha256(orderedCanonical({ program, args }))).toBe(commandSha256);
+   return await new Promise<{ exitCode: number | null; signal: NodeJS.Signals | null; stdoutBytes: number }>((resolve, reject) => {
++    observeStage?.('child-spawn-begin');
+     const child = spawn(program, args, { env: { PATH: '/usr/bin:/bin', LANG: 'C.UTF-8' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
++    observeStage?.('child-spawn-returned');
+     const stop = (): void => {
+       if (child.pid !== undefined) {
+         try { process.kill(-child.pid, 'SIGKILL'); }
+         catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ESRCH') reject(new Error('owned CLI process group unavailable')); }
+       }
+     };
+-    const timer = setTimeout(stop, limits.milliseconds);
++    const timer = setTimeout(() => { observeStage?.('child-wall-fired'); stop(); }, limits.milliseconds);
+     let stdoutBytes = 0, output = 0;
+     const collect = (chunk: Buffer, stdout: boolean): void => {
+       output += chunk.length;
+@@ -320,14 +333,22 @@
+     };
+     child.stdout.on('data', (chunk: Buffer) => collect(chunk, true));
+     child.stderr.on('data', (chunk: Buffer) => collect(chunk, false));
+-    child.once('error', () => { clearTimeout(timer); reject(new Error('owned CLI spawn unavailable')); });
+-    child.once('close', (exitCode, signal) => { clearTimeout(timer); resolve({ exitCode, signal, stdoutBytes }); });
++    child.once('error', () => { observeStage?.('child-error'); clearTimeout(timer); reject(new Error('owned CLI spawn unavailable')); });
++    child.once('close', (exitCode, signal) => { observeStage?.('child-close'); clearTimeout(timer); resolve({ exitCode, signal, stdoutBytes }); });
+   });
+ }
+ 
+ /** The pinned CLI talks to the host's ordered session and physical audit store.
+  * Provider responses, source/currentness and ordinary verdict storage are fixture ports. */
+ async function runNativeOrderedFixture(scenario: OrderedScenario) {
++  const diagnosticBegan = performance.now();
++  let diagnosticMarks = 0;
++  const observeStage: ObserveReadyNativeStage | undefined = scenario === 'ready' ? stage => {
++    if (++diagnosticMarks > 64) return;
++    console.error('owned ready diagnostic', JSON.stringify({ ordinal: diagnosticMarks, stage,
++      elapsedMs: Math.round((performance.now() - diagnosticBegan) * 1000) / 1000 }));
++  } : undefined;
++  observeStage?.('helper-begin');
+   const root = await mkdtemp(path.join(os.tmpdir(), 'so-'));
+   cleanup.push(() => rm(root, { force: true, recursive: true }));
+   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await mkdir(path.join(root, name), { mode: 0o700 });
+@@ -394,17 +415,27 @@
+       + event('message_delta', { delta: { stop_reason: call ? 'tool_use' : 'end_turn', stop_sequence: null }, usage: { output_tokens: 4 } })
+       + event('message_stop', {}));
+   }
+-  const launch = await privateLaunchOptions(root, profile, role, () => {}, { milliseconds: 30_000 }, 'ordered-design');
++  observeStage?.('launch-inputs-begin');
++  const launch = await privateLaunchOptions(root, profile, role, () => {}, { milliseconds: 30_000 }, 'ordered-design', observeStage);
++  observeStage?.('launch-inputs-end');
+   if (scenario === 'ready') {
+     const ordinary = (await compiledSessionSupport()).get('support/session-mcp.js')!;
++    observeStage?.('negative-support-prepare-begin');
+     await expect(prepareRestrictedUrlSession({ ...launch, expected: { ...launch.expected,
+       supportSha256: { ...launch.expected.supportSha256, 'session-mcp.js': sha256(ordinary) } } }))
+       .rejects.toThrow('url-session-launch-refused');
++    observeStage?.('negative-support-prepare-end');
++    observeStage?.('negative-host-prepare-begin');
+     const preparation = await prepareRestrictedUrlSession(launch);
++    observeStage?.('negative-host-prepare-end');
+     const unreachable = new Proxy({} as SessionHost, { get() { throw new Error('ordered profile reached a production host'); } });
++    observeStage?.('negative-host-launch-begin');
+     await expect(launchRestrictedUrlSession({ preparation, host: unreachable })).rejects.toThrow('url-session-launch-refused');
++    observeStage?.('negative-host-launch-end');
+   }
++  observeStage?.('final-prepare-begin');
+   const preparation = await prepareRestrictedUrlSession(launch);
++  observeStage?.('final-prepare-end');
+   const audit: SessionAuditEvent[] = [], forwarded: string[] = [], delivered: string[] = [], faults: string[] = [], cachePositions: number[][] = [];
+   const receivedParts: string[] = [];
+   const responseUsage: SessionResponseUsage[] = [];
+@@ -417,10 +448,12 @@
+   });
+   const auditParent = path.join(root, 'hidden'), { project, originPolicySha256 } = plan.manifest.binding;
+   const principal = 'own-operator';
++  observeStage?.('audit-setup-begin');
+   const protectedAudit = await createUrlSessionAudit({ parent: auditParent, name: 'audit', binding: scopeBinding, originPolicySha256,
+     project, pin, principal, profiles: [...otherProfiles, profile], declaredClasses: SESSION_CONTENT_CLASSES, screen, current: () => true });
+   if (!protectedAudit.ok) throw new Error('own protected audit refused');
+   cleanup.push(protectedAudit.close);
++  observeStage?.('audit-setup-end');
+   let orderedSession: ReturnType<typeof createOrderedDesignSession>;
+   const writer = protectedAudit.beginOrderedDesignAudit(plan, () => true, bytes => orderedSession.chargeAuditRead(bytes));
+   const budget = createUrlSessionBudget({ deadline: Date.parse(plan.manifest.binding.deadline), now: Date.now,
+@@ -433,6 +466,7 @@
+   let screening: Parameters<typeof createOrderedDesignSession>[0]['screening'] = { kind: 'test-only-detectors',
+     detectors: { scanSecrets: text => screen.screenSecrets(text) !== undefined, scanDesignView: text => screen.screenBody(text) !== undefined } };
+   if (scenario === 'ready') {
++    observeStage?.('worker-build-begin');
+     const { compileDossierOrderedScreen } = await import(new URL('../../../scripts/compile_dossier_ordered_screen.mjs', import.meta.url).href) as {
+       compileDossierOrderedScreen(root: string): Promise<{ outputFiles: { contents: Uint8Array }[] }> };
+     const compiledWorker = await compileDossierOrderedScreen(new URL('../../../', import.meta.url).pathname);
+@@ -442,6 +476,7 @@
+     const program: OrderedScreenProgram = { node: { path: node, bytes: nodeBytes.length, sha256: sha256(nodeBytes) },
+       worker: { path: worker, bytes: bytes.length, sha256: sha256(bytes) } };
+     screening = { kind: 'bounded-worker', program, policyBytes: policyFixture().bytes, planInput };
++    observeStage?.('worker-build-end');
+   }
+   const remainingWorkCpu = () => (scenario === 'insufficient-work' && responseUsage.length > 0 ? 64_000_000 : 3_000_000_000) - workerCpu;
+   let continuationReserved = false;
+@@ -476,6 +511,7 @@
+   expect(isProductionOrderedDesignSession(orderedSession, profile)).toBe(scenario === 'ready');
+   expect(isProductionOrderedDesignSession(orderedSession, { ...profile })).toBe(false);
+   expect(isProductionOrderedDesignSession({ ...orderedSession })).toBe(false);
++  observeStage?.('relay-setup-begin');
+   relay = await sessionRelayTestPort(async input => {
+     const index = forwarded.length;
+     if (input.route !== '/v1/messages?beta=true' || index >= 5) throw new Error('own route refused');
+@@ -610,6 +646,8 @@
+     },
+   });
+   cleanup.push(relay.close);
++  observeStage?.('relay-setup-end');
++  observeStage?.('broker-setup-begin');
+   const broker = await sessionBrokerTestPort(path.join(root, 'broker/b.sock'), async (invocation, release) => {
+     const step = steps[delivered.length];
+     if (!relay.responseFlushed() || !step || !sameWireValue(invocation, { tool: step.tool, input: step.input })) throw new Error('own broker order refused');
+@@ -621,12 +659,22 @@
+     });
+   }, () => { faults.push('own broker fault'); });
+   cleanup.push(broker.close);
+-  const result = await runOwnedPreparedCommand(launch, preparation.commandSha256);
++  observeStage?.('broker-setup-end');
++  observeStage?.('child-wait-begin');
++  const result = await runOwnedPreparedCommand(launch, preparation.commandSha256, observeStage);
++  observeStage?.('child-wait-end');
++  observeStage?.('retire-begin');
+   await orderedSession.retire('interrupted');
+-  const terminal = await orderedSession.readTerminal().catch(() => null);
++  observeStage?.('retire-end');
++  observeStage?.('terminal-read-begin');
++  const terminal = await orderedSession.readTerminal().catch(() => { observeStage?.('terminal-read-refused'); return null; });
++  observeStage?.('terminal-read-end');
++  observeStage?.('audit-read-begin');
+   const stored = await readFile(path.join(auditParent, 'audit-design.jsonl'), 'utf8');
++  observeStage?.('audit-read-end');
+   const orderedRecords = stored.trimEnd().split('\n').map(line => JSON.parse(line)).filter(row => row.event.kind === 'design-ordered')
+     .map(row => row.event.payload as { kind: string; payload: unknown });
++  observeStage?.('helper-end');
+   return { result, checked, screened, terminalResponseDecoded, verdictValidated, audit, forwarded, delivered, faults, cachePositions, workerCpu, work: orderedSession.workSnapshot(), budget: budget.snapshot(),
+     reconstructed: receivedParts.join('') === new TextDecoder().decode(view.bytes), plan, terminal, orderedRecords };
+ }
