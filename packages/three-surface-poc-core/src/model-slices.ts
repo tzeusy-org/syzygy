@@ -188,7 +188,7 @@ export interface TrajectorySlice {
 export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObservation): TrajectorySlice {
   const { seeds } = input;
   const capturedAt = input.evaluation.asOf;
-  const { workItems, dependencies } = observeTrajectoryWorkItems({
+  const { workItems, dependencies, changes } = observeTrajectoryWorkItems({
     repoRoot: seed.repoRoot,
     beadPrefix: seeds.beadPrefix,
     capturedAt,
@@ -227,6 +227,7 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
       nonClosedLimit: NON_CLOSED_LIMIT,
       recentClosedWindow: RECENT_CLOSED_WINDOW,
       dependencies,
+      changes,
       reconciliationChain: { materializedBeadId: materialization.beadId, workerChange },
     }),
     dispatch: dispatch === null ? null : deepFreeze(dispatch),

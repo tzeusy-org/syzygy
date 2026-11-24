@@ -84,7 +84,12 @@ describe('Trajectory projection', () => {
     expect(projection.answers).toEqual([
       { id: 'remains', state: 'observed', served: 4, byStatus: { open: 1, in_progress: 1, blocked: 0, deferred: 0, pinned: 0, hooked: 0, closed: 2 } },
       { id: 'running', state: 'observed', claimed: 1, served: 4, liveness: 'activity-undetermined' },
-      { id: 'changed', state: 'unknown', disclosure: 'region:trajectory-changed' },
+      // syzygy-t3jk.21: no history supplied reads as not read, each window Unknown.
+      { id: 'changed', state: 'observed', windows: [
+        { window: 'day', kind: 'unknown', reason: 'history-not-read', disclosure: 'region:trajectory-changed' },
+        { window: 'week', kind: 'unknown', reason: 'history-not-read', disclosure: 'region:trajectory-changed' },
+        { window: 'since-last', kind: 'unknown', reason: 'no-previous-evaluation-recorded', disclosure: 'region:trajectory-changed' },
+      ] },
       { id: 'cost', state: 'unknown', disclosure: 'region:trajectory-cost' },
       {
         id: 'intent',

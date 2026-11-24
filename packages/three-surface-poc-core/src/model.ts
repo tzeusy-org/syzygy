@@ -1,6 +1,7 @@
 import type { CodeStructureResult } from './code-structure.js';
 import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
+import type { ChangeWindow, ChangeWindowReason } from './work-item-history.js';
 import type { OrreryProjection } from './orrery-projection.js';
 import {
   GOVERNING_INTENT_REGION_ID,
@@ -275,7 +276,30 @@ const WORK_ITEM_VERIFICATION_BASIS =
   'Activity is not verification: no test evidence has been ingested for any work item.';
 
 /** POC-REQ-044 basis sentences for the five answers' Unknown parts. */
-const CHANGED_BASIS = 'No movement source is read: the observation holds each work item\'s current status and recorded instants, not its history of changes.';
+/** syzygy-t3jk.21: why a change window is Unknown, one sentence per reason. */
+export const CHANGE_WINDOW_REASON_TEXT: Readonly<Record<ChangeWindowReason, string>> = {
+  'work-item-revision-unavailable': 'no exact work-item revision was available to end the window at',
+  'observation-instant-unavailable': 'the observation instant could not be read, so the window bound is not known',
+  'history-read-failed': 'the tracker history read failed',
+  'history-result-malformed': 'the tracker history read returned rows of an unexpected shape',
+  'history-revision-unverified': 'the tracker history did not confirm the observed revision',
+  'history-shorter-than-window': 'the retained tracker history holds no commit as old as the window bound',
+  'history-non-linear': 'the tracker history between the window start and the observed revision holds a merge or out-of-order commit dates, so the start found by date is not a point on one line of history',
+  'history-not-read': 'no tracker history read was attempted for this observation',
+  'no-previous-evaluation-recorded': 'no previous evaluation\'s work-item revision is recorded, so there is no start to diff from',
+};
+
+const CHANGE_WINDOW_LABEL: Readonly<Record<ChangeWindow, string>> = {
+  day: 'the day window',
+  week: 'the week window',
+  'since-last': 'the since-last-evaluation window',
+};
+
+/** The one changed disclosure: every Unknown window with its reason. */
+function changedBasis(windows: readonly { readonly window: ChangeWindow; readonly kind: string; readonly reason?: ChangeWindowReason }[]): string {
+  const parts = windows.flatMap((window) => (window.kind === 'unknown' && window.reason !== undefined ? [`${CHANGE_WINDOW_LABEL[window.window]} is Unknown because ${CHANGE_WINDOW_REASON_TEXT[window.reason]}`] : []));
+  return `What changed is answered from the tracker's own history between two named revisions, where it can be read; ${parts.join('; ')}. An Unknown window is never a zero.`;
+}
 const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';
 
@@ -336,7 +360,10 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       // the observation's own `titles` with its basis sentence.
       subjects.push({ id: WORK_ITEM_TITLES_REGION_ID, epistemic: workItemTitlesDisclosure(input.workItems.titles) });
       // POC-REQ-044 (syzygy-t3jk.16): the five answers' Unknown parts.
-      add(TRAJECTORY_CHANGED_ID, CHANGED_BASIS, 'source-uncaptured-or-unreachable');
+      const changed = input.trajectory.answers.find((answer) => answer.id === 'changed');
+      if (changed !== undefined && 'windows' in changed && changed.windows.some((window) => window.kind === 'unknown')) {
+        add(TRAJECTORY_CHANGED_ID, changedBasis(changed.windows), 'source-uncaptured-or-unreachable');
+      }
       add(TRAJECTORY_COST_ID, COST_BASIS, 'source-uncaptured-or-unreachable');
       add(TRAJECTORY_ORPHANED_WORK_ID, ORPHANED_WORK_BASIS, 'source-uncaptured-or-unreachable');
       const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
