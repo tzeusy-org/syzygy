@@ -1,0 +1,380 @@
+{
+  "task": "syzygy-bpyt.74",
+  "finding": "R-GP-IMPL-SPREAD-LOOPS-2 N3, PR #555",
+  "subject": {
+    "baseCommit": "1563daf84a7e64499cb76b6eb88eab0e4ea30f81",
+    "toolCommit": "1fdd9ede67ba7bb87fbf68c7f0c2d06fc626015d",
+    "path": "scripts/test-inventory.mjs",
+    "sha256": "367a79e85eaeed7718c592ec1e7026fd6119d1924f75a72b7a77dc8f5c7dc439"
+  },
+  "archivedBytes": {
+    "docs/evidence/syzygy-bpyt-16/test-inventory.mjs": "d4c14e4d271308070fc6b3552e32481ca4a611affb317be42c71ce7a03721a5d",
+    "docs/evidence/syzygy-bpyt-16/test-delta.py": "f7549e14c735337fd3f53133f5c15d98636aea4e35f11476d9fadf6f680a5e69",
+    "docs/reviews/R-GP-IMPL-SPREAD-LOOPS-2-RAW.md": "83dd4c0b59bafd5c0784ce3fc22baa3738d8285e89795c655d49b41638b5e248",
+    "docs/evidence/spread-loops-review-2026-10-28/r2/tools/callback-compare.mjs": "8d16d0ebdd311f7c6f58f9f445af8cb1f4c30ffaa1871cba38ce830cb77e0776"
+  },
+  "observations": [
+    "The four historic test-blob pairs yield 140 matched call templates and 11 new call templates. The old file-scope collector reports two changed matched calls against the hoisted ENDS table. Both expand the same three literal rows.",
+    "The exact scoped comparator reports ~0 and no unresolved matched table across the historic pairs. It preserves the independent reviewer’s observed matched and added call populations.",
+    "One changed literal row contributes one affected instance per matched test template. A dynamic table comparison is Unknown. These are static observations without evaluating a callback, expression, generated table or test suite."
+  ],
+  "replay": {
+    "dependencyRoot": "Clean project clone with the project lockfile’s TypeScript installed. The CLI parses only the requested test files.",
+    "historical": "Materialize the recorded file bytes at each side with git show <commit>:<path>. Run node scripts/test-inventory.mjs <dependency root> <before tree> <after tree> <listed relative file paths>. Compare the exact observed name populations with the archived comparator and check the named historic digests.",
+    "synthetic": "Materialize the before and after source in each syntheticControls entry at its relative file path. Run the same CLI with the two directories and that one path. Verify stdout digest and named row indexes in each report.",
+    "continuityControl": "Run the sealed original test-inventory tool under each historic tree with TypeScript available and compare its matched template bodies. The two recorded false positives survive under the sealed behavior.",
+    "rowControl": "At the bound tool commit replace exactly the missRowMutation.old fragment with missRowMutation.new in a separate scratch copy. Run the single-row scenario and confirm its recorded ~1 expectation fails with observed ~0. Check exactly the named assertion."
+  },
+  "history": {
+    "base": "29db2b11153990f465c0b86fb3341865ae6459ac",
+    "head": "45f7d85571f2d216313a2ee399b9d091c37a9e68",
+    "files": [
+      {
+        "path": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+        "baseSha256": "55af28f6e007b98d8e383bad70a6db02f38f7668541206c04e7163b65f07e7d7",
+        "headSha256": "216d343d147cea0cd61528bbd13d0cd139057de6fbec02d2808034b595481ace"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+        "baseSha256": "8aa47a4d55f3fe563c8205d2c74fa5302550101fa1608b077bf3952a0d8c851b",
+        "headSha256": "3aa5fb8ab103be3586a6a86359d1196a1c817d48d7702cbbc145f5c8b7cc0c6b"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+        "baseSha256": "fb71c5294c048b844eb04d7b0d17ac1e614cb5c9354e65c764f0eac6133a6a93",
+        "headSha256": "8408549d2b500bfbe2b5a44733b1011228750155d2c077fd3d1cb23f363a47e3"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+        "baseSha256": "33bb156f847f091ebdf7ae493373315ea4012ab7d878ee11f2c63b630f85d182",
+        "headSha256": "95da8902001b4f9af66b81b9dd1cfb0f5896d5b940cde83449201c82c0bd2faf"
+      }
+    ],
+    "report": {
+      "matchedCalls": 140,
+      "addedCalls": 11,
+      "removedCalls": 0,
+      "changedCalls": 0,
+      "knownChangedInstances": 0,
+      "unknownChangedInstanceCalls": 0,
+      "unknownRowComparisons": 0,
+      "files": {
+        "packages/three-surface-poc-core/src/git-object-reader.test.ts": {
+          "matched": 39,
+          "added": [
+            {
+              "name": "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+              "occurrence": 1
+            },
+            {
+              "name": "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: a script element after a 200,000-line closed fence is found, with a body-free record",
+              "occurrence": 1
+            },
+            {
+              "name": "a 200,000-line closed fence under the read limit (GP-B2 Q1) > %s: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+              "occurrence": 1
+            }
+          ],
+          "removed": [],
+          "changed": [],
+          "unknownRows": []
+        },
+        "packages/three-surface-poc-core/src/markdown-code-context.test.ts": {
+          "matched": 30,
+          "added": [
+            {
+              "name": "a very long closed fence > one spread call over 200,002 arguments still overflows the stack in this test process",
+              "occurrence": 1
+            },
+            {
+              "name": "a very long closed fence > %s: 200,000 lines are blanked, every line end and the text after the fence kept",
+              "occurrence": 1
+            },
+            {
+              "name": "a very long closed fence > %s: a script element inside the fence is blanked, and the line after the fence keeps its own",
+              "occurrence": 1
+            },
+            {
+              "name": "a very long closed fence > %s: the same lines left unclosed are still malformed at the opener",
+              "occurrence": 1
+            }
+          ],
+          "removed": [],
+          "changed": [],
+          "unknownRows": []
+        },
+        "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": {
+          "matched": 42,
+          "added": [
+            {
+              "name": "a source whose class holds 130,000 items > one spread call over 130,002 arguments still overflows the stack in this test process",
+              "occurrence": 1
+            },
+            {
+              "name": "a source whose class holds 130,000 items > is extracted, every item kept in class order",
+              "occurrence": 1
+            }
+          ],
+          "removed": [],
+          "changed": [],
+          "unknownRows": []
+        },
+        "packages/three-surface-poc-core/src/project-shape-model.test.ts": {
+          "matched": 29,
+          "added": [
+            {
+              "name": "a very long fence or list does not abort the observation > %s: a 200,000-line closed fence at the end of vision.md is classified as a 10-line one is",
+              "occurrence": 1
+            },
+            {
+              "name": "a very long fence or list does not abort the observation > a 130,000-item success list is extracted whole",
+              "occurrence": 1
+            }
+          ],
+          "removed": [],
+          "changed": [],
+          "unknownRows": []
+        }
+      },
+      "changedInstances": "~0"
+    },
+    "reportSha256": "6846c35cce71297158d912890919ffac73a0e626160194b4b16862b410b93cbb",
+    "legacyFalseChanges": [
+      {
+        "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+        "template": "a CRLF or CR blob gets the outcome its LF form gets > %s: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record"
+      },
+      {
+        "file": "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+        "template": "a CRLF or CR blob gets the outcome its LF form gets > %s: a script element inside a closed tilde fence reads as text, byte for byte"
+      }
+    ],
+    "independentReportSha256": "9d8421c045ca15c6c9250bbb71a4bbdb6b0cd224d6705c10af9f0b94451ac2bc",
+    "legacyBeforeReportSha256": "f6187086f0b599a921e7f0c775f2858f1843b0c8788b01b5f35edfc54d24fdf6",
+    "legacyAfterReportSha256": "7aa0d3b8cb364b08f7381d6f9b4987f4ec6716f6028d4645d6020073c94a5f87"
+  },
+  "syntheticControls": {
+    "lexical-hoist": {
+      "before": "describe('rows', () => {\n  const VALUES = [\n    [1, 'first'],\n    [2, 'second'],\n    [3, 'third'],\n  ] as const;\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "file": "inventory.test.ts",
+      "report": {
+        "matchedCalls": 1,
+        "addedCalls": 0,
+        "removedCalls": 0,
+        "changedCalls": 0,
+        "knownChangedInstances": 0,
+        "unknownChangedInstanceCalls": 0,
+        "unknownRowComparisons": 0,
+        "files": {
+          "inventory.test.ts": {
+            "matched": 1,
+            "added": [],
+            "removed": [],
+            "changed": [],
+            "unknownRows": []
+          }
+        },
+        "changedInstances": "~0"
+      },
+      "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+    },
+    "single-row": {
+      "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "after": "const VALUES = [[1, 'first'], [2, 'replaced'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "file": "inventory.test.ts",
+      "report": {
+        "matchedCalls": 1,
+        "addedCalls": 0,
+        "removedCalls": 0,
+        "changedCalls": 1,
+        "knownChangedInstances": 1,
+        "unknownChangedInstanceCalls": 0,
+        "unknownRowComparisons": 0,
+        "files": {
+          "inventory.test.ts": {
+            "matched": 1,
+            "added": [],
+            "removed": [],
+            "changed": [
+              {
+                "name": "rows > case %d",
+                "occurrence": 1,
+                "callback": false,
+                "options": false,
+                "table": true,
+                "changedRows": [
+                  2
+                ],
+                "changedInstances": 1
+              }
+            ],
+            "unknownRows": []
+          }
+        },
+        "changedInstances": "~1"
+      },
+      "reportSha256": "555401394b365540150d44b3ff7818efcaf468e9423f29a04ddfcf5ac611d091"
+    },
+    "nearest-shadow": {
+      "before": "const VALUES = [[4, 'outer']];\ndescribe('rows', () => {\n  const VALUES = [\n    [1, 'first'],\n    [2, 'second'],\n    [3, 'third'],\n  ] as const;\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "after": "const VALUES = [[4, 'outer']];\ndescribe('rows', () => {\n  const VALUES = [\n    [1, 'first'],\n    [2, 'replaced'],\n    [3, 'third'],\n  ] as const;\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "file": "inventory.test.ts",
+      "report": {
+        "matchedCalls": 1,
+        "addedCalls": 0,
+        "removedCalls": 0,
+        "changedCalls": 1,
+        "knownChangedInstances": 1,
+        "unknownChangedInstanceCalls": 0,
+        "unknownRowComparisons": 0,
+        "files": {
+          "inventory.test.ts": {
+            "matched": 1,
+            "added": [],
+            "removed": [],
+            "changed": [
+              {
+                "name": "rows > case %d",
+                "occurrence": 1,
+                "callback": false,
+                "options": false,
+                "table": true,
+                "changedRows": [
+                  2
+                ],
+                "changedInstances": 1
+              }
+            ],
+            "unknownRows": []
+          }
+        },
+        "changedInstances": "~1"
+      },
+      "reportSha256": "555401394b365540150d44b3ff7818efcaf468e9423f29a04ddfcf5ac611d091"
+    },
+    "shared-table": {
+      "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n  test.each(VALUES)('again %d', (_id, value) => observe(value));\n});\n",
+      "after": "const VALUES = [[1, 'first'], [2, 'replaced'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n  test.each(VALUES)('again %d', (_id, value) => observe(value));\n});\n",
+      "file": "inventory.test.ts",
+      "report": {
+        "matchedCalls": 2,
+        "addedCalls": 0,
+        "removedCalls": 0,
+        "changedCalls": 2,
+        "knownChangedInstances": 2,
+        "unknownChangedInstanceCalls": 0,
+        "unknownRowComparisons": 0,
+        "files": {
+          "inventory.test.ts": {
+            "matched": 2,
+            "added": [],
+            "removed": [],
+            "changed": [
+              {
+                "name": "rows > case %d",
+                "occurrence": 1,
+                "callback": false,
+                "options": false,
+                "table": true,
+                "changedRows": [
+                  2
+                ],
+                "changedInstances": 1
+              },
+              {
+                "name": "rows > again %d",
+                "occurrence": 1,
+                "callback": false,
+                "options": false,
+                "table": true,
+                "changedRows": [
+                  2
+                ],
+                "changedInstances": 1
+              }
+            ],
+            "unknownRows": []
+          }
+        },
+        "changedInstances": "~2"
+      },
+      "reportSha256": "7616139155d2dd01f373a97be3a3ae8773adb004eac3fce2204bc1b49ff1d657"
+    },
+    "unavailable-rows": {
+      "before": "const VALUES = buildRows();\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "after": "const VALUES = buildDifferentRows();\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+      "file": "inventory.test.ts",
+      "report": {
+        "matchedCalls": 1,
+        "addedCalls": 0,
+        "removedCalls": 0,
+        "changedCalls": 1,
+        "knownChangedInstances": 0,
+        "unknownChangedInstanceCalls": 1,
+        "unknownRowComparisons": 1,
+        "files": {
+          "inventory.test.ts": {
+            "matched": 1,
+            "added": [],
+            "removed": [],
+            "changed": [
+              {
+                "name": "rows > case %d",
+                "occurrence": 1,
+                "callback": false,
+                "options": false,
+                "table": true,
+                "changedRows": null,
+                "changedInstances": null
+              }
+            ],
+            "unknownRows": [
+              {
+                "name": "rows > case %d",
+                "occurrence": 1
+              }
+            ]
+          }
+        },
+        "changedInstances": "Unknown"
+      },
+      "reportSha256": "bec8ffebb208ab9e4dd3c00350ab6f4a795be500505a75c25d9e83a160687645"
+    }
+  },
+  "missRowMutation": {
+    "old": "row !== prior.table.rows[index]",
+    "new": "false",
+    "assertion": "one altered literal row per affected call must count once",
+    "report": {
+      "matchedCalls": 1,
+      "addedCalls": 0,
+      "removedCalls": 0,
+      "changedCalls": 1,
+      "knownChangedInstances": 0,
+      "unknownChangedInstanceCalls": 0,
+      "unknownRowComparisons": 0,
+      "files": {
+        "inventory.test.ts": {
+          "matched": 1,
+          "added": [],
+          "removed": [],
+          "changed": [
+            {
+              "name": "rows > case %d",
+              "occurrence": 1,
+              "callback": false,
+              "options": false,
+              "table": true,
+              "changedRows": [],
+              "changedInstances": 0
+            }
+          ],
+          "unknownRows": []
+        }
+      },
+      "changedInstances": "~0"
+    },
+    "reportSha256": "fe57f8c738b25f911e975927b253989a948f834d026af79ed6103b8b25f23b55"
+  }
+}
