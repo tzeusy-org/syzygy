@@ -86,6 +86,9 @@ counts its one replacement (033).
 The question-file version2.27 amendment replaces 033 after the verify-text
 version2.21 when its own adoption binding verifies; each parser counts its one
 replacement (033).
+The coverage-hold version 2.28 amendment replaces 035 after the run-tree
+read-bounds version 2.18 when its own adoption binding verifies; each parser
+counts its one replacement (035).
 
 The declared-source reach version2.6 amendment follows version2.0 when its own
 adoption binding verifies; each parser counts its one replacement (046).
@@ -719,6 +722,16 @@ def qfile_amendment(root: Path) -> str | None:
     return text
 
 
+def covhold_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.covhold_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("coverage hold adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def build_composition(root: Path) -> CompositionResult:
     import check_spec_reconciliation as adoption
     sources = [(path.relative_to(root).as_posix(), path.read_text(encoding="utf-8"))
@@ -744,6 +757,7 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.TREEREAD_SPEC, treeread_amendment(root)),
                         (adoption.VERIFY_SPEC, verify_amendment(root)),
                         (adoption.QFILE_SPEC, qfile_amendment(root)),
+                        (adoption.COVHOLD_SPEC, covhold_amendment(root)),
                         (adoption.RELTYPE_SPEC, reltype_amendment(root)),
                         (adoption.HERO_SPEC, hero_amendment(root)),
                         (adoption.READERS_SPEC, readers_amendment(root)),
@@ -803,6 +817,7 @@ def composition_inputs(root: Path) -> list[Path]:
     raw_read_amendment(root)
     treeread_amendment(root)
     verify_amendment(root)
+    covhold_amendment(root)
     reltype_amendment(root)
     qfile_amendment(root)
     hero_amendment(root)
@@ -818,7 +833,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
-        *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
+        *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]

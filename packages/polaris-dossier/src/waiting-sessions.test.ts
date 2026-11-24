@@ -898,6 +898,22 @@ describe('delivery to a waiting review session', () => {
     expect(awaited.doc['next']).toContain(`pass the verdict's JSON as the standard input of ${handOverText(`syzygy dossier await ${fid}/ --submit round-1/verdict.json --stdin`)}. Syzygy writes`);
   });
 
+  it('delivers nothing while a listed inventory entry has no outcome in the passed draft (syzygy-5dhm.29, version 2.28; mutant: drop the delivery hold)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    const fid = path.join(h.sessions, 'fidelity-1');
+    // Revision 1 keeps only each section's first paragraph, so it cites no line of docs/notes.txt: `e-snap` has no outcome.
+    const sections = draft(h.commit)['sections'] as Doc[];
+    write(path.join(h.run, 'drafts', 'next.json'), { ...draft(h.commit), schemaVersion: 'polaris-dossier-local-draft-v5', sections: [{ ...sections[0], paragraphs: [sections[0]!['paragraphs'][0]] }] });
+    expect((await h.cli(['check', h.run])).doc['outcome']).toBe('passed');
+    const refusal = await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
+    expect(refusal.exit).toBe(1);
+    expect(refusal.doc).toMatchObject({ outcome: 'refused', stage: 'coverage', coverage: { draftRevision: 1, inventoryRevision: 0 }, reasons: ['"e-snap" ("docs/notes.txt")'] });
+    expect(refusal.doc['reason']).toContain('1 entry of inventory revision 0 has no outcome in draft revision 1.');
+    expect(fs.existsSync(path.join(fid, 'round-1'))).toBe(false);
+    expect(fs.readdirSync(path.join(h.run, 'reviews')).filter((name) => name.startsWith('fidelity-packet-') || name.includes('.delivery-'))).toEqual([]);
+  });
+
   it.each<[string, (fid: string, run: string) => void]>([
     ['the packet', (fid) => fs.appendFileSync(path.join(fid, 'round-1', 'packet.json'), ' ')],
     ['the run\'s delivery record', (_fid, run) => { const file = path.join(run, 'reviews', 'fidelity-session-1.delivery-1.json'); write(file, { ...readJson(file), packetSha256: 'b'.repeat(64) }); }],
