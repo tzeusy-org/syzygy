@@ -686,45 +686,91 @@ ladder's tier, which is not built.
 | C13 | tzeusy-org/syzygy | `21e73d5c` | owned TypeScript governance polyglot | owner-owned | XL | yes |
 | C14 | synthetic notebook pipeline | `fb635704` (this repository, holding the kit) | synthetic, private | synthetic private visibility | XS | — |
 
-The file holds the full 40-hex commits. [Observed] Both owned repositories are public on
-GitHub, so the private stratum is the synthetic fixture alone; the owned ones fill the owned
-stratum. Five candidates were left out, each with its reason in the file (Sentry for its
-licence, OpenBSD because its listing is truncated).
+The file holds the full 40-hex commits. Five candidates were left out, each with its reason in
+the file (Sentry for its licence, OpenBSD because its listing is truncated).
 
-**Mechanism version.** SHA-256 over a format line and one `<sha256>  <path>` line per member
-file, sorted: the brief (`brief.ts`, `reader-standards.ts`, the shape packs), the draft schema,
-check and the structure rules it derives from, the renderer (`render.ts`, `dossier-render*.ts`,
-`dossier-site.ts`) and the screen (`screen.ts`, `policy-snapshot.ts`, the declared-source
-policies), test files left out. [Observed] At `3a24d409` (main on 2026-11-24) it is
-`da891d2e…` over 22 files. It read `b9506ac8…` at `fb635704`, where the file was first
-drafted, and moved because main changed `dossier-render.ts` and `dossier-site.ts` in
-between; the seal was taken again before adoption, so no adopted seal changed. Session
-prompts, review packets and the supervisor are not covered, so a change there starts no pass; a
-comment in a covered file does.
+**Mechanism version.** One SHA-256 over a format line and one `<sha256>  <path>` line per member
+file, sorted, test files left out. It covers everything that shapes what a run produces, in six
+groups: the brief (`brief.ts`, `reader-standards.ts`, the shape packs); the draft schema; check
+(the structure rules, the census, the manifest recognizers, the relation witness); the renderer
+(`render.ts`, `figure-fit.ts`, `dossier-render*.ts`, `dossier-site.ts`, findings, diagram
+layout, draft preview, SVG inertness, design tokens); the screen (`screen.ts`,
+`policy-snapshot.ts`, the declared-source policies, and the detectors and classifiers it calls
+in `three-surface-poc-core` and `polaris-generation-core`); and the agent texts (the
+`polaris-dossier` skill and its references, `polaris.ts`, `session-handover.ts`, `review*.ts`,
+`design-review.ts`). The agent texts are a group of the one digest, not a second digest, so two
+passes compare only at one equal digest. [Observed] At `ed1e65bf` (main on 2026-11-24) it is
+`0d28717d…` over 60 files. Earlier drafts read `b9506ac8…` over 22 files at `fb635704`, then
+`da891d2e…` at `3a24d409` (main had changed `dossier-render.ts` and `dossier-site.ts`). The
+review of #976 then widened the members. The seal was taken again each time before adoption,
+so no adopted seal changed. The command surface and run bookkeeping (`cli.ts`, `close.ts`, the
+inventory) are not covered, so a change there starts no pass; a comment in a covered file does.
 
-**Budget.** Each entry is run twice per pass, with one re-run only after a recorded
-infrastructure fault. Per run: `claude-opus-5-5`, PT4H, 30,000,000 tokens, 1,000 turns, six repair
-cycles, the supervisor's four sessions. One plain-arm session per public entry (PT1H, 5,000,000
-tokens). Per pass: at most two runs at once, 72 wall hours, 485,000,000 tokens, and at most one
-pass started per ISO week. Whatever the budget does not reach is recorded Unknown.
+**Budget.** Runs go in entry-id order: for each entry, dossier run 1, dossier run 2, then its
+plain-arm sessions, at most two at once. Each entry is run twice per pass. A run is re-run once
+only after one of four infrastructure faults, a closed list: provider unavailable, provider
+throttled, host interrupted, runner defect. A second fault leaves the run Unknown
+(`infrastructure-fault`). Per run: `claude-opus-5-5`, PT4H, 30,000,000 tokens, 1,000 turns, six
+repair cycles, the supervisor's four sessions. Two plain-arm sessions per public entry, on the
+same pinned model (PT1H, 5,000,000 tokens each). Per pass: 72 wall hours, 550,000,000 tokens,
+and at most one pass started per ISO week. [Unknown] The token figures are unmeasured
+allowances: Syzygy cannot observe usage, a run's usage is only what the runner declares at
+close (Inferred), and with undeclared usage the pass's token spend is Unknown. Whatever the
+budget does not reach is recorded Unknown. Every started pass is recorded to its end, and the
+current verdict is the latest started pass's once it ends.
 
 **Generality pass rule.** The verdict is `pass`, `fail` or `incomplete`; an Unknown is never a
-pass. For every entry: G1, both runs reach a reviewed close within their limits; G2, public
-entries only, the dossier (mean of two runs) is below the plain arm on at most one of the six
-question kinds, where "below" means by more than one required fact (A-63's per-kind bar); G3,
-no required figure view missing; G4, per-Pole depth minimums; G5, each run names the traits no
-shape pack matched and the units left derived-only. Reviewer calibration: nine seeded
-known-false blocks per pass, and below seven caught the pass's readiness verdicts read
-`uncalibrated`. Cost: [Observed] the six stored runs' medians are 44.75 wall minutes and five
-review rounds, recomputed by the test from `measure-now.json`. Targets for the Redis anchor
-from the second pass: at most 31.325 minutes and three rounds. [Unknown] Tokens: no stored run
-recorded usage, so the token target is 0.7 of the first pass's anchor median, fixed before the
-second pass. A regression needs a drop in both runs (A-38, A-63), and no rise is called a win.
+pass, and a clause that does not apply to an entry is not counted for it. The clauses:
 
-**Deviations from R16's text.** The cost targets bind the anchor repository, not every
-dossier, because the baseline is of one repository. The pass-wide medians are reported against
-the same figures but decide nothing. The token baseline is not "the six stored runs' medians"
-because those runs recorded no tokens.
+- G1: both runs close `closed`, not `closed-with-finding`, with the last fidelity and design
+  verdicts non-blocking.
+- G2 (public entries): the dossier, as the mean of two runs, is below the plain arm, as the
+  mean of two sessions, on at most one applicable question kind. "Below" means by more than
+  one required fact (A-63's per-kind bar). G2 is a no-worse floor: a pass establishes parity
+  at most.
+- G3: no required figure view is missing.
+- G4: per-Pole depth minimums.
+- G5: each run names the traits no shape pack matched and the units left derived-only.
+
+The key that G2 grades against is fixed before the pass:
+
+- It is written, before the pass, by a session that has seen neither arm.
+- Its digest is frozen in the pass record.
+- Each kind needs at least three facts, or is marked not-applicable beforehand.
+- It is held out as CONTRIBUTING rule 4 holds the pilot key.
+- Comparisons across passes are made only at an equal key digest.
+
+The pass record attributes each G2 miss to reach or to authoring, without changing the
+verdict.
+
+The advantage measure is reported beside the verdict and gates nothing. It is dossier share
+minus plain share, per entry and pooled, overall and per kind. Its fixed vision target is a
+pooled overall advantage of at least 10 points, called met only when two consecutive passes
+reach it.
+
+Reviewer calibration: nine known-false blocks are seeded into a copy of C01 run 1's first
+fidelity packet. If fewer than seven are caught, or there is no calibration review, the pass
+is uncalibrated and its verdict is at most `incomplete`.
+
+Cost: [Observed] the six stored runs' medians are 44.75 wall minutes and five review rounds,
+recomputed by the test from `measure-now.json`. The targets for the Redis anchor are at most
+31.325 minutes and three rounds. [Unknown] Tokens: no stored run recorded usage, so the token
+target is 0.7 of the anchor's median declared usage in the first pass that records it.
+
+A regression needs a drop in both runs at an equal key digest (A-38, A-63), and no rise is
+called a win.
+
+**Deviations from R16's text.**
+
+- The cost targets bind the anchor repository, not every dossier, because the baseline is of
+  one repository. The pass-wide medians are reported against the same figures but decide
+  nothing.
+- The token baseline is not "the six stored runs' medians", because those runs recorded no
+  tokens.
+- [Observed] Both owned repositories are public on GitHub. So the private stratum is the
+  synthetic fixture alone, and the owned repositories fill the owned stratum.
+- The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
+  the traits from the shape packs' own selectors.
 
 ## Known ledger and deviations
 

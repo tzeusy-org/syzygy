@@ -186,37 +186,191 @@
   "mechanismVersion": {
     "format": "polaris-dossier-mechanism/1",
     "members": [
-      { "group": "brief", "path": "packages/polaris-dossier/src/brief.ts" },
-      { "group": "brief", "path": "packages/polaris-dossier/src/reader-standards.ts" },
-      { "group": "brief", "path": "packages/polaris-dossier/src/shape-packs.ts" },
-      { "group": "brief", "path": "packages/polaris-dossier/src/shape-packs/*.json" },
-      { "group": "draft-schema", "path": "packages/polaris-dossier/src/draft-schema.ts" },
-      { "group": "check", "path": "packages/polaris-dossier/src/check.ts" },
-      { "group": "check", "path": "packages/polaris-dossier/src/check-derive.ts" },
-      { "group": "check", "path": "packages/polaris-dossier/src/check-model.ts" },
-      { "group": "check", "path": "packages/polaris-dossier/src/derive.ts" },
-      { "group": "check", "path": "packages/polaris-dossier/src/derive-rules.ts" },
-      { "group": "renderer", "path": "packages/polaris-dossier/src/render.ts" },
-      { "group": "renderer", "path": "apps/three-surface-poc/src/polaris-generation/dossier-render*.ts" },
-      { "group": "renderer", "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts" },
-      { "group": "screen", "path": "packages/polaris-dossier/src/screen.ts" },
-      { "group": "screen", "path": "packages/polaris-dossier/src/policy-snapshot.ts" },
-      { "group": "screen", "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v*.json" }
+      {
+        "group": "brief",
+        "path": "packages/polaris-dossier/src/brief.ts"
+      },
+      {
+        "group": "brief",
+        "path": "packages/polaris-dossier/src/reader-standards.ts"
+      },
+      {
+        "group": "brief",
+        "path": "packages/polaris-dossier/src/shape-packs.ts"
+      },
+      {
+        "group": "brief",
+        "path": "packages/polaris-dossier/src/shape-packs/*.json"
+      },
+      {
+        "group": "draft-schema",
+        "path": "packages/polaris-dossier/src/draft-schema.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/check.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/check-derive.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/check-model.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/derive.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/derive-rules.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/census.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/manifest-*.ts"
+      },
+      {
+        "group": "check",
+        "path": "packages/polaris-dossier/src/relation-witness.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "packages/polaris-dossier/src/render.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "packages/polaris-dossier/src/figure-fit.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-render*.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/polaris-generation/svg-inert.ts"
+      },
+      {
+        "group": "renderer",
+        "path": "apps/three-surface-poc/src/design-tokens.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/polaris-dossier/src/screen.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/polaris-dossier/src/policy-snapshot.ts"
+      },
+      {
+        "group": "screen",
+        "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v*.json"
+      },
+      {
+        "group": "screen",
+        "path": "packages/three-surface-poc-core/src/content-classification.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/three-surface-poc-core/src/git-object-reader.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/polaris-generation-core/src/public-source-classification.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/polaris-generation-core/src/secret-redaction.ts"
+      },
+      {
+        "group": "screen",
+        "path": "packages/polaris-generation-core/src/source-visibility.ts"
+      },
+      {
+        "group": "agent-texts",
+        "path": ".claude/skills/polaris-dossier/SKILL.md"
+      },
+      {
+        "group": "agent-texts",
+        "path": ".claude/skills/polaris-dossier/references/*.md"
+      },
+      {
+        "group": "agent-texts",
+        "path": "packages/polaris-dossier/src/polaris.ts"
+      },
+      {
+        "group": "agent-texts",
+        "path": "packages/polaris-dossier/src/session-handover.ts"
+      },
+      {
+        "group": "agent-texts",
+        "path": "packages/polaris-dossier/src/review*.ts"
+      },
+      {
+        "group": "agent-texts",
+        "path": "packages/polaris-dossier/src/design-review.ts"
+      }
     ],
-    "excludeSuffixes": [".test.ts", ".testkit.ts"],
+    "excludeSuffixes": [
+      ".test.ts",
+      ".testkit.ts"
+    ],
     "encoding": "SHA-256 of the text `polaris-dossier-mechanism/1` and a newline, then one line `<sha256 of the file's bytes>  <path>` per member file, sorted by path (code units), each ending in a newline. A member with `*` names every file in its directory whose name matches, less those ending in an excluded suffix; a member naming no file refuses. Computed by mechanismVersion (packages/polaris-dossier/src/corpus.ts), printed by `node scripts/dossier_corpus.mjs --digest`",
-    "covers": "What an author is told (brief, reader standards, shape packs), may write (draft schema), is checked against (check and the structure rules it derives from), is rendered as (renderer), and what is screened out of reach (screen and the declared-source policies). Not covered, so a change there starts no pass: session prompts and the supervisor (polaris.ts, session-handover.ts), review packets and verdict reading (review*.ts), the inventory, census and every module these import. A cosmetic change to a covered file (a comment) does move the digest",
+    "covers": "One digest over everything that shapes what a run produces: what an author is told and the agent texts it and its reviewers run under (brief, reader standards, shape packs, the polaris-dossier skill and its references, the supervisor's prompts and handover in polaris.ts and session-handover.ts, review packets and verdict reading in review*.ts and design-review.ts), what it may write (draft schema), what it is checked against (check, the structure rules, the census, the manifest recognizers, the relation witness), how it is rendered (renderer, figure fit, findings, diagram layout, draft preview, SVG inertness, design tokens) and what is screened out of reach (screen, the declared-source policies, and the detectors and classifiers in three-surface-poc-core and polaris-generation-core the screen calls). Agent texts are a group of the one digest, not a second digest, so two passes are comparable only at one equal digest. polaris.ts and session-handover.ts are covered whole, so a change to their non-prompt code also moves the digest. Not covered, so a change there starts no pass: the command surface and run bookkeeping (cli.ts, close.ts, inventory.ts, run-dir.ts, state-directory.ts and every other module of these packages not listed). A cosmetic change to a covered file (a comment) does move the digest",
     "atWriting": {
-      "measuredOn": "3a24d409a07d0ba5c04aabb4ace79161ac44503d",
-      "digest": "da891d2e7def53364604fc46f7e19b9245987cd98952f716dd89c7bd1d4f0e19",
-      "files": 22
+      "measuredOn": "ed1e65bf7ec02d0093a490e013b2795c798db524",
+      "digest": "0d28717d5a8e713b902055c44010e937d1e26f601b1ea61c573deb9c993d1e19",
+      "files": 60
     }
   },
   "passBudget": {
     "passDue": "A pass is due when the mechanism version differs from the last pass's. At most one pass starts per ISO week (UTC); a pass runs at the mechanism version of the commit it starts from, and a change during a pass starts no second one",
+    "runOrder": "Entries in id order (C01 first). For each entry: dossier run 1, dossier run 2, then its plain-arm sessions. At most maxConcurrentRuns run at once, each next one starting in this order; nothing is reordered, skipped or chosen by result",
     "runsPerEntry": 2,
     "maxRerunsPerEntry": 1,
-    "rerunWhen": "Only a run the runner records as an infrastructure fault (provider outage or refusal, host restart, a runner defect) is run again, once; the failed attempt stays a recorded result. A run that ends for any other reason is the result",
+    "rerunWhen": "Only a run or session that ends in one of the infrastructure faults below, as the runner records it, is run again, once; the failed attempt stays a recorded result. Any other ending is the result",
+    "infrastructureFaults": {
+      "closedWorld": "These four and no other. A session's own error, a model refusal, a reviewer's verdict, a failed check, a missed deadline or a spent per-run budget is never an infrastructure fault",
+      "faults": [
+        {
+          "id": "provider-unavailable",
+          "when": "the provider answered with HTTP 5xx, or the connection to it failed or timed out, and the session ended because of it"
+        },
+        {
+          "id": "provider-throttled",
+          "when": "the provider answered HTTP 429 or a quota or rate-limit refusal, and the session ended because of it"
+        },
+        {
+          "id": "host-interrupted",
+          "when": "the host restarted, or the run's process ended on a signal the runner did not send"
+        },
+        {
+          "id": "runner-defect",
+          "when": "the runner's own code raised an error it did not handle (not a session, check or Syzygy command)"
+        }
+      ],
+      "beyondAllowance": "A run or session whose re-run also ends in an infrastructure fault is Unknown with the reason `infrastructure-fault` naming both faults: never a pass, never a fail"
+    },
     "perRun": {
       "model": "claude-opus-5-5",
       "deadline": "PT4H",
@@ -226,7 +380,8 @@
       "sessions": "the four the supervisor starts (author, inventory, fidelity review, design review), no more"
     },
     "plainArm": {
-      "sessionsPerPublicEntry": 1,
+      "sessionsPerPublicEntry": 2,
+      "model": "claude-opus-5-5",
       "deadline": "PT1H",
       "agentTokenBudget": 5000000,
       "reach": "the whole clone minus detector matches (the owner's 2026-11-21 answer), public entries only"
@@ -234,22 +389,29 @@
     "perPass": {
       "maxConcurrentRuns": 2,
       "wallHours": 72,
-      "tokenBudget": 485000000,
-      "tokenBudgetBasis": "15,000,000 tokens (half the per-run ceiling) for each of the 28 runs of fourteen entries, plus 5,000,000 for each of the 13 plain-arm sessions: 420,000,000 + 65,000,000"
+      "tokenBudget": 550000000,
+      "tokenBudgetBasis": "15,000,000 tokens (half the per-run ceiling) for each of the 28 runs of fourteen entries, plus 5,000,000 for each of the 26 plain-arm sessions (two per public entry): 420,000,000 + 130,000,000",
+      "tokenBudgetStatus": "Unmeasured: an allowance, not an estimate. None of the six stored runs recorded usage, so no figure here rests on a measured run"
     },
-    "whenSpent": "When the pass's wall hours or token budget is spent, no further run or session starts; a running one finishes under its own limits. Every entry or arm not reached is recorded Unknown with the reason `pass-budget-spent`, never as a pass or a fail"
+    "usage": "Syzygy cannot observe an agent session's usage (close.ts). A run's tokens and turns are only the figures the runner declares at close (`syzygy dossier close --usage-tokens N --usage-turns N`), which the Execution Record labels Inferred and attributes to the operator. A run with no declared figure has Unknown usage. While any run or session of a pass has Unknown usage, the pass's token spend is Unknown: the pass token budget cannot be found spent, and only the wall-hour budget and each run's own limits stop the pass",
+    "whenSpent": "When the pass's wall hours are spent, or its declared token spend reaches the token budget, no further run or session starts; a running one finishes under its own limits. Every entry or arm not reached is recorded Unknown with the reason `pass-budget-spent`, never as a pass or a fail",
+    "passRecord": "Every started pass is recorded to its end, whether it finishes, spends its budget or is abandoned (with the reason; an abandoned pass's verdict is `incomplete`). No pass is discarded, and none is re-run to replace another. The current generality verdict is the verdict of the latest started pass once it has ended"
   },
   "passRule": {
-    "verdicts": ["pass", "fail", "incomplete"],
-    "verdictRule": "A pass's generality verdict is `pass` when every clause below holds for every entry; `fail` when any clause fails for any entry; otherwise `incomplete` (some clause is Unknown and none fails). An Unknown is never a pass (VIS-2)",
+    "verdicts": [
+      "pass",
+      "fail",
+      "incomplete"
+    ],
+    "verdictRule": "A pass's generality verdict is `pass` when every clause below that applies to an entry holds for every entry; `fail` when any applicable clause fails for any entry; otherwise `incomplete` (some applicable clause is Unknown and none fails). A clause that does not apply to an entry (G2 for the synthetic entry) is not counted for it: neither held nor Unknown. An Unknown is never a pass (VIS-2). Calibration below can cap `pass` at `incomplete`",
     "clauses": [
       {
         "id": "G1-close",
-        "statement": "Both runs of the entry reach a reviewed close (the run closes with a fidelity verdict and a design verdict recorded) within the per-run limits. One of two closing fails the clause; the result says which"
+        "statement": "Both runs of the entry close with outcome `closed` (not `closed-with-finding`; close.ts) within the per-run limits, and in each run the last fidelity verdict and the last design verdict before close are both non-blocking (`derivedBlocking` false; review-verdict.ts). A run with no verdict of either kind, or whose last verdict of either kind blocks, fails the clause. One of two runs meeting it fails the clause; the result says which"
       },
       {
         "id": "G2-plain-arm",
-        "statement": "Public entries only. For each of the six question kinds (purpose, structure, mechanism, rationale, change, limits), the dossier's reader share is the mean over its two runs, and it is below the plain arm's when it is lower by more than one required fact of that kind (A-63's per-kind bar, 1/n for a kind with n facts in the entry's key). The clause holds when at most one kind is below. With no key for the entry, or no plain-arm session, the clause is Unknown. The synthetic entry has no plain arm and the clause does not apply to it"
+        "statement": "Public entries only. For each kind the entry's key marks applicable (of purpose, structure, mechanism, rationale, change, limits), the dossier's reader share is the mean over its two runs and the plain arm's is the mean over its two sessions; the dossier is below the plain arm in a kind when it is lower by more than one required fact of that kind (A-63's per-kind bar, 1/n for a kind with n facts in the key). The clause holds when at most one applicable kind is below. With no frozen key for the entry, or fewer than two plain-arm sessions, the clause is Unknown. G2 is a no-worse floor: a pass establishes at most parity with a plain session, never an advantage; the advantage measure below is reported beside it"
       },
       {
         "id": "G3-figures",
@@ -264,11 +426,33 @@
         "statement": "Each run records which traits matched no shape pack and which units were left derived-only (or that the scale ladder is not built). A run that records neither fails the clause: a thin dossier must be a named gap"
       }
     ],
+    "key": {
+      "author": "One session per entry that has seen neither arm's output for that entry: it is given the repository at the pinned commit and the six kind definitions, and writes the questions and required facts",
+      "when": "Written before the pass's first run starts, never during or after the pass",
+      "frozen": "The SHA-256 of each entry's key file is written into the pass record before the first run starts. A key whose bytes differ from that digest judges no run of the pass",
+      "minimumFacts": "At least three required facts in each kind. A kind the author cannot fill to three is marked `not-applicable` in the key before the pass, and G2 and the advantage measure count only applicable kinds",
+      "heldOut": "Held out as CONTRIBUTING.md 'Changing the dossier brief, draft schema or renderer' rule 4 (A-38) holds the pilot key: no question or required fact enters a brief, packet, skill text or any text an authoring, review or plain-arm session is given, and the key is stored outside every clone a session works in",
+      "comparison": "Between passes, an entry's G2 results, regressions and advantages are compared only when its key digest is the same in both. A new key digest starts a new series for that entry: reported, never a regression or a gain"
+    },
+    "missAttribution": "The pass record attributes each required fact the dossier's runs missed and the plain arm recovered to `reach` (every basis for the fact lies in a file the screen withheld from the authoring session) or `authoring` (otherwise). Reported per entry and kind; the verdict does not change",
+    "advantage": {
+      "status": "A reported vision target, never a pass condition: missing it fails nothing and meeting it passes nothing",
+      "measure": "Per public entry with a frozen key: the dossier's two-run mean share minus the plain arm's two-session mean share, overall and per applicable kind, in points (0.01 of share). Pooled: the mean of the per-entry overall advantages, reported with every per-entry value, their minimum and maximum, and the pooled per-kind means",
+      "target": {
+        "pooledOverallPoints": 10,
+        "statement": "The pooled overall advantage is at least 10 points. It is reported against this fixed figure in every pass, and called met only when two consecutive passes at equal key digests both reach it (A-38 rule 3: one result is never called a win)"
+      }
+    },
     "calibration": {
       "seededBlocks": 9,
-      "seededKinds": { "wrong-line-range": 3, "inverted-claim": 3, "unsupported-number": 3 },
+      "seededKinds": {
+        "wrong-line-range": 3,
+        "inverted-claim": 3,
+        "unsupported-number": 3
+      },
       "minimumRecall": 7,
-      "statement": "Each pass seeds nine known-false blocks into one copy of one review packet (never a dossier) and records how many the fidelity reviewer flags. Below seven, every readiness verdict of that pass reads `uncalibrated`; the generality verdict is unchanged"
+      "seededPacket": "A copy of the first fidelity review packet of C01 run 1; if that run produces none, the first fidelity packet of the next run in run order. A separate fidelity session reviews the seeded copy; the run's own review uses the original",
+      "statement": "Each pass seeds nine known-false blocks into the seeded packet (never into a dossier) and records how many the reviewer flags. With fewer than seven flagged, or with no calibration review in the pass, the pass is uncalibrated: every readiness verdict of the pass reads `uncalibrated`, and its generality verdict is at most `incomplete` (a `pass` becomes `incomplete`; a `fail` stays `fail`)"
     },
     "costTargets": {
       "baseline": {
@@ -283,16 +467,22 @@
         "medianReviewRounds": 3,
         "medianTokensRatio": 0.7
       },
-      "statement": "Wall time: the median of the cost-baseline-anchor entry's runs is at most 0.7 of the baseline median (31.325 minutes); review rounds: its median is at most three. The baseline is one repository, so the like-for-like comparison is that repository; the pass-wide medians are reported beside it against the same figures and decide nothing. Tokens: the baseline is Unknown, so the token target is 0.7 of the first pass's anchor median, fixed in that pass's record before the second pass starts. Cost targets judge from the second pass; the first pass reports them",
+      "statement": "Wall time: the median of the cost-baseline-anchor entry's runs is at most 0.7 of the baseline median (31.325 minutes); review rounds: its median is at most three. The baseline is one repository, so the like-for-like comparison is that repository; the pass-wide medians are reported beside it against the same figures and decide nothing. Tokens: the baseline is Unknown, so the token target is 0.7 of the anchor's median declared usage in the first pass whose anchor runs both declare usage, fixed in that pass's record; until then the token target is Unknown. Cost targets judge from the pass after the one that fixes them; earlier passes report them",
       "refreshTarget": "When R14's refresh exists: a refresh of a dossier whose cited spans changed by under ten percent costs at most a third of a full run's tokens and wall time. Unknown until then"
     },
     "regression": {
-      "statement": "Between two passes, an entry regresses when (a) it met G1 before and fails it now, or (b) its reader share falls in both runs against the previous pass's two-run mean: overall by more than five points, or in one kind by more than one required fact, or by a full fact in each of three or more kinds (A-63). A drop in one run only is reported as noise and is not called a regression; no rise is called a win (A-38 rule 3)"
+      "statement": "Between two passes at equal key digests for the entry, an entry regresses when (a) it met G1 before and fails it now, or (b) its reader share falls in both runs against the previous pass's two-run mean: overall by more than five points, or in one kind by more than one required fact, or by a full fact in each of three or more kinds (A-63). A drop in one run only is reported as noise and is not called a regression; no rise is called a win (A-38 rule 3)"
     },
     "goalposts": "This rule, the entries, the tiers, the mechanism-version definition and the budget are sealed (seal below). A pass record names the corpus version and the seal it ran under, and a pass is judged only by the rule it started under. Changing a sealed member is a new corpus file (dossier-corpus-v2.json) with its own adoption row, applying to passes that start after it lands; this file is never edited in place"
   },
   "seal": {
-    "covers": ["entries", "tiers", "mechanismVersion", "passBudget", "passRule"],
-    "sha256": "2622cc82d8ee362b8645688cdeb04849b6865c6bfc8a0dc1f3bbb01826511cac"
+    "covers": [
+      "entries",
+      "tiers",
+      "mechanismVersion",
+      "passBudget",
+      "passRule"
+    ],
+    "sha256": "b68e7826af426bf8e60d8e6f0b23b5aa41f8a88d46a44fe29217add160cc4f10"
   }
 }

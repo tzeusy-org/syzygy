@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.
 const CORPUS = 'docs/polaris-generation/dossier-corpus-v1.json';
 const MEASURE_NOW = 'docs/evidence/pursuit-2026-11-21b/measure-now.json';
 /** The seal of corpus version 1. Editing a sealed member fails this test: write dossier-corpus-v2.json and a new adoption row instead. */
-const SEAL_V1 = '2622cc82d8ee362b8645688cdeb04849b6865c6bfc8a0dc1f3bbb01826511cac';
+const SEAL_V1 = 'b68e7826af426bf8e60d8e6f0b23b5aa41f8a88d46a44fe29217add160cc4f10';
 
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 let corpus: Json;
@@ -66,12 +66,27 @@ describe('dossier corpus v1: the file', () => {
       + publicEntries * budget['plainArm']['sessionsPerPublicEntry'] * budget['plainArm']['agentTokenBudget']).toBe(budget['perPass']['tokenBudget']);
   });
 
+  it('pins the rule\'s binding parts: closed infra faults, two pinned plain sessions, frozen key, binding calibration, a target that gates nothing', () => {
+    const budget = corpus['passBudget'];
+    const rule = corpus['passRule'];
+    expect((budget['infrastructureFaults']['faults'] as Json[]).map((fault) => fault['id']))
+      .toEqual(['provider-unavailable', 'provider-throttled', 'host-interrupted', 'runner-defect']);
+    expect([budget['plainArm']['sessionsPerPublicEntry'], budget['plainArm']['model'], budget['perPass']['tokenBudget']]).toEqual([2, 'claude-opus-5-5', 550_000_000]);
+    expect(Object.keys(rule['key'])).toEqual(['author', 'when', 'frozen', 'minimumFacts', 'heldOut', 'comparison']);
+    expect(rule['clauses'][0]['statement']).toContain('`closed` (not `closed-with-finding`');
+    expect(rule['clauses'][0]['statement']).toContain('`derivedBlocking` false');
+    expect(rule['calibration']['minimumRecall']).toBe(7);
+    expect(rule['calibration']['statement']).toContain('at most `incomplete`');
+    expect(rule['advantage']['target']['pooledOverallPoints']).toBe(10);
+    expect(rule['advantage']['status']).toContain('never a pass condition');
+  });
+
   it('takes the mechanism version over this checkout: every member names a file', () => {
     const version = mechanismVersion(corpus['mechanismVersion'], checkoutTree);
     expect(version.ok).toBe(true);
     if (!version.ok) return;
     expect(version.files.some((file) => file.path.endsWith('.test.ts') || file.path.endsWith('.testkit.ts'))).toBe(false);
-    expect([...new Set(version.files.map((file) => file.group))].sort()).toEqual(['brief', 'check', 'draft-schema', 'renderer', 'screen']);
+    expect([...new Set(version.files.map((file) => file.group))].sort()).toEqual(['agent-texts', 'brief', 'check', 'draft-schema', 'renderer', 'screen']);
   });
 });
 

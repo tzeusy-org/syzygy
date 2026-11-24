@@ -142,6 +142,8 @@ export function corpusRefusals(value: unknown): string[] {
   if (shapes.size < MIN_SHAPES) out.push(`the corpus names at least ${MIN_SHAPES} shapes, not ${shapes.size}`);
   for (const stratum of REQUIRED_STRATA) if (!held.has(stratum)) out.push(`no entry holds the stratum ${stratum}`);
   for (const tier of TIERS) if (!tiersHeld.has(tier)) out.push(`no surveyed entry is of tier ${tier}`);
+  // The trait check is hard-coded to the one trait that selects a shape pack today (server-entry); a corpus v2 should read the
+  // traits from the shape packs' own selectors, so a new pack's trait is required without editing this function.
   if (!serverEntry.has(true)) out.push('no surveyed entry holds the server-entry trait (the server shape pack)');
   if (!serverEntry.has(false)) out.push('no surveyed entry lacks the server-entry trait (the default shape pack alone)');
   const mechanism = value['mechanismVersion'];
