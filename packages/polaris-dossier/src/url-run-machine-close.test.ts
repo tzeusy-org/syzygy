@@ -14,6 +14,7 @@ import { URL_ORIGIN_POLICY_PATH, URL_ROLES } from './url-run-record.js';
 import type { UrlRolePlan } from './url-role-plan.js';
 import type { UrlRuntime } from './url-runtime.js';
 import * as peerPort from './url-machine-peer.js';
+import * as sessionProfile from './session-profile.js';
 import * as transportPort from './session-machine-transport.js';
 
 // Unit scope: upstream installation/plan admission is substituted. The actual
@@ -33,7 +34,7 @@ const canon = (value: unknown) => Buffer.from(encodeCanonicalJson(value, URL_MAC
 const cleanup: (() => Promise<unknown>)[] = [];
 afterEach(async () => { vi.restoreAllMocks(); for (const close of cleanup.splice(0).reverse()) await close(); });
 
-async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 'reverify'>> = {}) {
+async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 'reverify' | 'waitForDesignActivation'>> = {}) {
   const root = tempDir('machine-close-'), runId = `run-${'b'.repeat(32)}`;
   let now = NOW, current = true, effects = true;
   const runtime = { inputTreeSha256: id(1), worker: { node: '/not-executed', nodeSha256: id(3) },
@@ -51,12 +52,41 @@ async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 
     parent: { rowId: 'A-1', landedCommit: 'a'.repeat(40), defaultCommit: 'a'.repeat(40), tagObject: 'b'.repeat(40),
       subjects: [{ path: URL_ORIGIN_POLICY_PATH, sha256: id(2) }] }, current: () => current, effectCurrent: () => effects,
     reverify: () => true, launch: () => undefined, audit: () => {},
+    waitForDesignActivation: async () => false,
     chargeNativeCpuMicroseconds: () => { throw new Error('unit closure invoked native helper'); }, ...overrides };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   return { root, options, machine, expire: () => { now = options.deadline; }, withdraw: () => { current = false; }, withdrawEffects: () => { effects = false; } };
 }
 
 describe('machine accept authorization ordering', () => {
+  it('keeps both initial ordered Design clients unpublished across a Stop before activation', async () => {
+    const createTransport = vi.spyOn(transportPort, 'createSessionMachineTransport');
+    const child: NonNullable<ReturnType<UrlRunMachineOptions['launch']>> = {
+      pid: 1, commandSha256: id(7), waitForSample: async () => true, finished: new Promise(() => {}),
+      stop: async () => { throw new Error('fixture launch cannot be stopped'); },
+    };
+    let activate!: (active: boolean) => void;
+    const activation = new Promise<boolean>(resolve => { activate = resolve; });
+    const waitForDesignActivation = vi.fn(() => activation);
+    const f = await fixture({ waitForDesignActivation });
+    vi.spyOn(sessionProfile, 'isOrderedDesignSessionProfile').mockReturnValue(true);
+    const wait = vi.spyOn(peerPort, 'waitForUrlMachinePeerPublication').mockImplementation(async (_peer, activate, current) =>
+      await activate(child) && current());
+    const designPorts = createTransport.mock.calls.slice(-2).map(([ports]) => ports);
+    const admissions = designPorts.map(ports => ports.authorize!(Object.freeze({}) as peerPort.UrlMachinePeer, () => true));
+    try {
+      expect(waitForDesignActivation.mock.calls).toEqual([[child], [child]]);
+      expect(wait).toHaveBeenCalledTimes(2);
+      const stopped = await f.machine.close();
+      expect(stopped).toEqual({ lifecycle: 'retired' });
+      const history = readUrlRunMachineClosedHistory(stopped);
+      expect(history?.clients).toHaveLength(8);
+      expect(history?.clients.filter(({ context }) => context.role === 'design').map(({ terminal }) => terminal.kind))
+        .toEqual(['never-issued', 'never-issued']);
+    } finally { activate(true); await Promise.allSettled(admissions); }
+    await expect(Promise.all(admissions)).resolves.toEqual([false, false]);
+  });
+
   it.each(['sample-refused', 'verification-refused', 'verified'] as const)('checks the fresh verifier after the live sample for %s', async outcome => {
     const events: string[] = [];
     let constructed = false;

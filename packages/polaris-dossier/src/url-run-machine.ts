@@ -54,7 +54,6 @@ export interface UrlRunMachineOptions {
     readonly identitySha256: string;
     readonly current: () => boolean;
     readonly currentAsync?: () => Promise<boolean>;
-    readonly waitForDesignActivation?: (launch: UrlSessionProcess) => Promise<boolean>;
   };
   readonly deadline: number;
   readonly now: () => number;
@@ -63,6 +62,7 @@ export interface UrlRunMachineOptions {
   readonly effectCurrent?: () => boolean;
   readonly reverify: () => boolean | Promise<boolean>;
   readonly launch: (role: ViewRole) => UrlSessionProcess | undefined;
+  readonly waitForDesignActivation: (launch: UrlSessionProcess) => Promise<boolean>;
   readonly audit: (event: UrlMachinePeerAudit) => void | Promise<void>;
   readonly chargeNativeCpuMicroseconds?: (capacity: number) => void;
 }
@@ -284,11 +284,10 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
           peers.add(peer);
           let permitted = false;
           try {
-            const waitForActivation = resumed?.waitForDesignActivation;
-            // The raw socket stays paused while the exact resumed attempt
-            // registers its launch and activates. Hold no publication lock.
-            if (plan.role === 'design' && waitForActivation !== undefined
-              && !(await waitForUrlMachinePeerPublication(peer, waitForActivation, authority))) return false;
+            const orderedDesign = plan.role === 'design' && isOrderedDesignSessionProfile(plan.profile);
+            // Keep the socket paused and the store free for retirement while
+            // this exact attempt registers its launch and activates.
+            if (orderedDesign && !(await waitForUrlMachinePeerPublication(peer, input.waitForDesignActivation, authority))) return false;
             permitted = await serialize(async () => {
               if (!authority() || !current()) return false;
               const now = input.now(), old = client.record, stamp = new Date(now).toISOString();
@@ -301,8 +300,8 @@ export async function createUrlRunMachine(input: UrlRunMachineOptions) {
                   expiresAt: new Date(input.deadline).toISOString(), revokedAt: null, instances: [instance] }
                 : { ...old, revision: old.revision + 1,
                   instances: [...old.instances.map((value, index) => index === old.instances.length - 1 ? { ...value, retiredAt: stamp } : value), instance] };
-              const firstResumedDesignPeer = old === null && waitForActivation !== undefined && plan.role === 'design'
-                && kind === 'inference-bridge' && isOrderedDesignSessionProfile(plan.profile) ? peer : undefined;
+              const firstResumedDesignPeer = old === null && resumed !== undefined && orderedDesign && kind === 'inference-bridge'
+                ? peer : undefined;
               const published = await store.publish({ context: { ...context, now }, binding,
                 expected: old === null ? null : { revision: old.revision, sha256: client.head!.record.sha256 }, next: canonical(next) },
               authority, firstResumedDesignPeer);

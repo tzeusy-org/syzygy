@@ -133,6 +133,7 @@ async function fixture(sampleGate?: {
       if ((block !== undefined || sampleGate !== undefined) && launch !== undefined) { admissionChecks = 0; countAdmissionChecks = true; }
       return launch;
     },
+    waitForDesignActivation: async () => false,
     audit: () => { auditing++; }, chargeNativeCpuMicroseconds: capacity => { nativeCapacity += capacity; } };
   const machine = await createUrlRunMachine(options); cleanup.push(() => machine.close());
   const canonicalRoot = path.join(options.governanceRoot, 'governance/policies/dossier-machine-clients');

@@ -474,11 +474,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         // immediately before checking these local effect conditions.
         effectCurrent: () => effectBudgetCurrent() && effectEnvironmentCurrent(),
         launch: role => processes.get(role), audit: event => audit.appendMachinePeer(event),
+        waitForDesignActivation: async child => await designHosts.get(child)?.waitForActivation() === true
+          && processes.get('design') === child,
         ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
           identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim),
-          currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim),
-          waitForDesignActivation: async child => await designHosts.get(child)?.waitForActivation() === true
-            && processes.get('design') === child } }),
+          currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim) } }),
         chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
     }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
