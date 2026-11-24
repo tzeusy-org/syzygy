@@ -17,7 +17,7 @@ import type { UrlPlannedOrigin } from './url-run-record.js';
 import { isLoadedUrlRenderer, urlRendererCurrent, type UrlLoadedRenderer } from './url-runtime.js';
 
 const JSON_LIMITS = { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 } as const;
-export const URL_ORIGIN_LEDGER_LIMITS = Object.freeze({ receipts: 1024, bytes: 8_388_608, artifactBindings: 1024, parents: 128, itemBytes: 1_048_576, readMilliseconds: 5000 });
+export const URL_ORIGIN_LEDGER_LIMITS = Object.freeze({ receipts: 1024, bytes: 8_388_608, artifactBindings: 1024, parents: 128, itemBytes: 1_048_576, readMilliseconds: 10_000 });
 type Limits = { readonly [K in keyof typeof URL_ORIGIN_LEDGER_LIMITS]: number };
 type Role = 'author' | 'inventory' | 'fidelity' | 'design';
 export type UrlRootOriginKind = 'policy' | 'schema' | 'structure' | 'run-control';
@@ -533,8 +533,7 @@ function create(given: UrlOriginLedgerOptions) {
   }, waitForSamples: () => Promise<boolean>) {
     const transfer = takeUrlRecoveryProducts(capability, { ...expected, runId, sourcePin: record.subject.pinnedRevision.commit, originPolicySha256: origin.sha256, sourceBindingSha256: sourceBindingSha256(record.subject), basePolicySha256: screen.policySha256, current });
     const history = transfer.history, graph = history.provenance;
-    const sameSubject = (receipt: UrlOriginReceipt, metadata: UrlOriginMetadata): void => {
-      const value = entry(receipt);
+    const sameSubject = (value: Entry, metadata: UrlOriginMetadata): void => {
       if (value.digest !== metadata.digest || value.bytes !== metadata.bytes
         || canonical(value.classes) !== canonical(metadata.classes) || canonical(value.originIds) !== canonical(metadata.originIds)) fail();
     };
@@ -547,15 +546,17 @@ function create(given: UrlOriginLedgerOptions) {
       if (!(await waitForSamples())) fail(); live();
       if (d.kind === 'fixed' || d.kind === 'renderer') {
         const receipt = d.kind === 'fixed' ? fixedReceipts.get(d.id) : issuedById.get('origin:renderer-scaffold');
-        if (!receipt) fail(); sameSubject(receipt, node.metadata);
+        // The fresh live() above authorizes this private synchronous lookup.
+        // Source branches still sample again after their awaited work.
+        if (!receipt) fail(); sameSubject(lookup(receipt), node.metadata);
       } else if (d.kind === 'source-span') {
         const result = await verifiedSpan({ path: d.path, expectedObjectId: d.objectId, offset: d.offset, limit: d.limit });
-        sameSubject(result.receipt, node.metadata);
+        sameSubject(entry(result.receipt), node.metadata);
       } else if (d.kind === 'source-whole') {
         const body = await sourceOperation((_check, checkTime) => verifiedSource(d.path, checkTime));
         if (body.objectId !== d.objectId) fail();
         const checked = await verifyWholeSourceBody({ path: d.path, objectId: d.objectId, bytes: body.bytes });
-        sameSubject(inspectWholeSourceBody(checked).origin, node.metadata);
+        sameSubject(entry(inspectWholeSourceBody(checked).origin), node.metadata);
       } else if (d.kind === 'source-tree') {
         const result = await sourceOperation(async check => {
           const reader = openReader(), tree = await reader.tree(); check();

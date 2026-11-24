@@ -189,20 +189,38 @@ describe('host-owned URL origin ledger', () => {
     await expect(packed.ledger.sourceSpan({ path: 'own.ts' })).rejects.toThrow('url-origin-refused');
 
   });
-  it('finishes the first screened source span within the read limit under slow live authority', async () => {
-    const f = fixture();
-    let elapsed = 0, charge = false;
-    const ledger = createUrlOriginLedger({ ...f.options, current: () => {
-      if (charge) elapsed += 1800;
-      return true;
-    } });
-    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
-    try {
-      charge = true;
-      const receipt = await ledger.sourceSpan({ path: f.file, offset: 0, limit: 1 });
-      const expected = bytes('Own source line one.\n');
-      expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
-    } finally { clock.mockRestore(); }
+  it('bounds the full screened read including slow pre/post authority and honors a tighter caller limit', async () => {
+    const f = fixture(), selected = { path: f.file, offset: 0, limit: 1 };
+    for (const readMilliseconds of [undefined, 5000]) {
+      let elapsed = 0, charge = false, screened = false, postScreenChecks = 0;
+      const ledger = createUrlOriginLedger({ ...f.options,
+        ...(readMilliseconds === undefined ? {} : { limits: { readMilliseconds } }),
+        current: () => {
+          if (charge) { elapsed += 3000; if (screened) postScreenChecks++; }
+          return true;
+        },
+        screen: { ...f.options.screen, screenTargetBody: (text, file) => {
+          screened = true;
+          return f.options.screen.screenTargetBody(text, file);
+        } },
+      });
+      const before = ledger.plannedOrigins();
+      const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+      try {
+        charge = true;
+        // The actual reader spends 6000ms on its two fresh authority samples.
+        const pending = ledger.sourceSpan(selected);
+        if (readMilliseconds === undefined) {
+          const receipt = await pending, expected = bytes('Own source line one.\n');
+          expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
+        } else {
+          await expect(pending).rejects.toThrow('url-origin-refused');
+          expect(ledger.plannedOrigins()).toEqual(before);
+        }
+        expect(screened).toBe(true);
+        expect(postScreenChecks).toBeGreaterThan(0);
+      } finally { clock.mockRestore(); }
+    }
   });
   it('checks current authority after private source screening and publishes no receipt on withdrawal or timeout', async () => {
     const f = fixture();
@@ -213,7 +231,7 @@ describe('host-owned URL origin ledger', () => {
         screen: { ...screen, screenTargetBody: (text, file) => {
           screened = true;
           if (gate === 'authority') current = false;
-          else elapsed = 5000;
+          else elapsed = 10_000;
           return screen.screenTargetBody(text, file);
         } } });
       const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
