@@ -2605,6 +2605,58 @@ describe('render: subsections (schema v8)', () => {
 });
 
 // syzygy-5dhm.70 and syzygy-5dhm.71: the find-by-task page and the generated index through the whole chain (the index-and-task-routes change).
+describe('render: glossary definitions and first-use links', () => {
+  const term = (id: string) => ({
+    id, label: 'inferred', statement: 'A term for the server\'s storage.', scope: 'The server.',
+    citations: [cite(`term-cite-${id}`, 'src/kestrel.c', 1, 1)],
+  });
+
+  it('displays the written glossary terms as definitions, with one first-use link and one index entry per term', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only_file'), term('AOF')];
+    doc.introduction.text += ' An append-only file supports AOF. The append-only file explains AOF.';
+    doc.sections[0].paragraphs[1].text += ' The handle is `append-only_file`.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const glossary = files.get('glossary.html')!;
+    expect(glossary.match(/<dt\b/gu)).toHaveLength(2);
+    expect([...glossary.matchAll(/<dt id="(term-glossary\/[^"]+)"><dfn>([^<]+)<\/dfn><\/dt>/gu)].map((entry) => entry.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+    ]);
+
+    const overview = files.get('index.html')!;
+    expect([...overview.matchAll(/<a class="term" href="glossary\.html#([^"]+)" aria-label="[^"]+">([^<]+)/gu)].map((link) => link.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+    ]);
+    expect(overview).toContain('<code>append-only_file</code>');
+    const index = files.get('name-index.html')!;
+    expect(index).toContain('data-index-name="append-only file"');
+    expect(index).not.toContain('data-index-name="append-only_file"');
+    const machine = JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string; home: { fragment: string }; blocks: { fragment: string }[] }[] } };
+    expect(machine.nameIndex.names.filter((entry) => entry.kind === 'term').map((entry) => [entry.name, entry.home.fragment, entry.blocks.map((block) => block.fragment)])).toEqual([
+      ['AOF', 'term-glossary/AOF', ['block-intro']],
+      ['append-only file', 'term-glossary/append-only_file', ['block-intro', 'block-p2']],
+    ]);
+    expect(machine.nameIndex.names.some((entry) => entry.name === 'append-only_file')).toBe(false);
+  });
+
+  it('still links the earlier hyphenated glossary term from its space-separated form', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only-file')];
+    doc.introduction.text += ' This uses an append only file.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    expect(files.get('index.html')).toContain('<a class="term" href="glossary.html#term-glossary/append-only-file" aria-label="append only file, glossary entry">append only file<span class="term-pop"');
+    expect(files.get('glossary.html')!.match(/<dt\b[^<]*><dfn>[^<]*<\/dfn><\/dt>/gu)).toEqual([
+      '<dt id="term-glossary/append-only-file"><dfn>append-only-file</dfn></dt>',
+    ]);
+  });
+});
+
 describe('render: task routes and the generated index', () => {
   const step = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `Add the handler beside main zq-${id}.`, citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });
   const routedDraft = (change: (doc: Doc) => void = () => {}): Doc => {

@@ -16,6 +16,16 @@ import { backtickSpans } from '@syzygy/polaris-generation-core/live';
 export const FIND_BY_TASK_PAGE = 'find-by-task.html';
 export const NAME_INDEX_PAGE = 'name-index.html';
 
+/** Turn a screened glossary handle into its display spelling. Fragments still use the handle. */
+export function glossaryDisplayName(name: string): string {
+  return name.replace(/_/gu, ' ');
+}
+
+/** Recognise the display spelling alongside the exact handle and the earlier hyphen-space form. */
+export function glossaryNameForms(name: string): readonly string[] {
+  return [...new Set([name, name.replace(/-/gu, ' '), glossaryDisplayName(name)])];
+}
+
 /** A place a reader can be sent: a page, a fragment on it and the words the link shows. */
 export interface IndexTarget { readonly page: string; readonly fragment: string; readonly label: string }
 
@@ -120,8 +130,9 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   const shown = (block: IndexedBlock): string => `${block.prose}\n${block.quoted}`;
   const entries: IndexEntry[] = [];
 
-  for (const term of [...input.terms].sort(byName)) {
-    const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);
+  const glossary = input.terms.map((term) => ({ id: term.id, handle: term.name, name: glossaryDisplayName(term.name) }));
+  for (const term of glossary.sort(byName)) {
+    const pattern = wordPattern(glossaryNameForms(term.handle));
     entries.push({ kind: 'term', name: term.name, home: { page: 'glossary.html', fragment: `term-${term.id}`, label: 'Glossary entry' }, blocks: naming(input.blocks, (block) => pattern.test(shown(block))) });
   }
 
