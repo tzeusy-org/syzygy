@@ -16,6 +16,16 @@ import { backtickSpans } from '@syzygy/polaris-generation-core/live';
 export const FIND_BY_TASK_PAGE = 'find-by-task.html';
 export const NAME_INDEX_PAGE = 'name-index.html';
 
+/** Turn a screened glossary handle into its display spelling. Fragments still use the handle. */
+export function glossaryDisplayName(name: string): string {
+  return name.replace(/_/gu, ' ');
+}
+
+/** Recognise the display spelling alongside the exact handle and the earlier hyphen-space form. */
+export function glossaryNameForms(name: string): readonly string[] {
+  return [...new Set([name, name.replace(/-/gu, ' '), glossaryDisplayName(name)])];
+}
+
 /** A place a reader can be sent: a page, a fragment on it and the words the link shows. */
 export interface IndexTarget { readonly page: string; readonly fragment: string; readonly label: string }
 
@@ -120,7 +130,8 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   const shown = (block: IndexedBlock): string => `${block.prose}\n${block.quoted}`;
   const entries: IndexEntry[] = [];
 
-  for (const term of [...input.terms].sort(byName)) {
+  const glossary = input.terms.map((term) => ({ id: term.id, name: glossaryDisplayName(term.name) }));
+  for (const term of glossary.sort(byName)) {
     const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);
     entries.push({ kind: 'term', name: term.name, home: { page: 'glossary.html', fragment: `term-${term.id}`, label: 'Glossary entry' }, blocks: naming(input.blocks, (block) => pattern.test(shown(block))) });
   }
@@ -147,7 +158,7 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   // An identifier: a backticked token of some block's prose that is not already a path, a unit or a term of this index.
   const taken = new Set([...pathNames, ...unitNames, ...[...unitNames].map((unit) => `${unit}/`)]);
   for (const span of input.unindexed ?? []) taken.add(span);
-  const termNames = new Set(input.terms.map((term) => term.name.toLowerCase()));
+  const termNames = new Set(glossary.map((term) => term.name.toLowerCase()));
   const spans = new Map<string, Set<string>>();
   for (const block of input.blocks) spans.set(block.id, new Set(identifiersIn(block.prose)));
   const identifiers = new Set([...spans.values()].flatMap((own) => [...own]).filter((span) => !taken.has(span) && !termNames.has(span.toLowerCase())));
