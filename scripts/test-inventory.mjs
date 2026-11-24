@@ -11,26 +11,88 @@ if (!dependencyRoot || !beforeRoot || !afterRoot || files.length === 0) {
 const ts = createRequire(resolve(dependencyRoot, 'package.json'))('typescript');
 const printer = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed });
 
+function isExpressionWrapper(node) {
+  return ts.isParenthesizedExpression(node) || ts.isAsExpression(node) ||
+    ts.isTypeAssertionExpression(node) || ts.isSatisfiesExpression(node);
+}
+
 function unwrap(expression) {
   let node = expression;
-  while (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) ||
-      ts.isTypeAssertionExpression(node) || ts.isSatisfiesExpression(node)) {
-    node = node.expression;
-  }
+  while (isExpressionWrapper(node)) node = node.expression;
   return node;
 }
 
-function readTable(argument, source, checker) {
+function literalPrimitive(expression) {
+  const node = unwrap(expression);
+  return ts.isStringLiteralLike(node) || ts.isNumericLiteral(node) || ts.isBigIntLiteral(node) ||
+    node.kind === ts.SyntaxKind.TrueKeyword || node.kind === ts.SyntaxKind.FalseKeyword ||
+    node.kind === ts.SyntaxKind.NullKeyword;
+}
+
+function hasPrimitiveTuples(table) {
+  return table.elements.every((row) => {
+    const tuple = unwrap(row);
+    return ts.isArrayLiteralExpression(tuple) && tuple.elements.every(literalPrimitive);
+  });
+}
+
+function isTupleBinding(pattern) {
+  return ts.isArrayBindingPattern(pattern) && pattern.elements.every((item) =>
+    ts.isOmittedExpression(item) || (ts.isIdentifier(item.name) && !item.initializer && !item.dotDotDotToken),
+  );
+}
+
+function isTupleProjection(call) {
+  if (!ts.isCallExpression(call) || call.arguments.length !== 1) return false;
+  const project = call.arguments[0];
+  if (!ts.isArrowFunction(project) || project.parameters.length !== 1 || !ts.isIdentifier(project.body)) return false;
+  const parameter = project.parameters[0];
+  return !parameter.initializer && !parameter.dotDotDotToken && isTupleBinding(parameter.name) &&
+    parameter.name.elements.some((item) => !ts.isOmittedExpression(item) && item.name.text === project.body.text);
+}
+
+function tableConsumer(reference, table, source) {
+  let use = reference;
+  while (isExpressionWrapper(use.parent) && use.parent.expression === use) use = use.parent;
+  const enclosing = use.parent;
+  if (ts.isCallExpression(enclosing) && enclosing.arguments[0] === use &&
+      ts.isCallExpression(enclosing.parent) && enclosing.parent.expression === enclosing) {
+    const callee = enclosing.expression.getText(source);
+    return callee === 'it.each' || callee === 'test.each';
+  }
+  // These two tuple reads pass neither the table nor a mutable row value onward.
+  if (ts.isPropertyAccessExpression(enclosing) && enclosing.expression === use && enclosing.name.text === 'map') {
+    return isTupleProjection(enclosing.parent) && hasPrimitiveTuples(table);
+  }
+  if (!ts.isForOfStatement(enclosing) || enclosing.expression !== use) return false;
+  const binding = enclosing.initializer;
+  return ts.isVariableDeclarationList(binding) && (binding.flags & ts.NodeFlags.Const) !== 0 &&
+    binding.declarations.length === 1 && isTupleBinding(binding.declarations[0].name) && hasPrimitiveTuples(table);
+}
+
+function lexicalSymbol(reference, checker) {
+  const { parent } = reference;
+  if (ts.isShorthandPropertyAssignment(parent) && parent.name === reference) {
+    return checker.getShorthandAssignmentValueSymbol(parent);
+  }
+  if (ts.isExportSpecifier(parent)) return checker.getExportSpecifierLocalTargetSymbol(parent);
+  return checker.getSymbolAtLocation(reference);
+}
+
+function readTable(argument, source, checker, references) {
   if (!argument) return { text: '', rows: null };
   const reference = unwrap(argument);
   let expression = reference;
+  let binding = null;
   if (ts.isIdentifier(reference)) {
-    const declaration = checker.getSymbolAtLocation(reference)?.valueDeclaration;
+    const symbol = lexicalSymbol(reference, checker);
+    const declaration = symbol?.valueDeclaration;
     if (!declaration || !ts.isVariableDeclaration(declaration) ||
         declaration.getSourceFile() !== source || !declaration.initializer) {
       return { text: reference.text, rows: null };
     }
     expression = unwrap(declaration.initializer);
+    binding = { symbol, declaration };
   }
   const print = (node) => printer.printNode(ts.EmitHint.Expression, node, source);
   if (!ts.isArrayLiteralExpression(expression) || expression.elements.some(
@@ -39,7 +101,18 @@ function readTable(argument, source, checker) {
     return { text: print(expression), rows: null };
   }
   const rows = expression.elements.map(print);
-  return { text: JSON.stringify(rows), rows };
+  const text = JSON.stringify(rows);
+  if (binding) {
+    const { symbol, declaration } = binding;
+    const list = declaration.parent;
+    const statement = list.parent;
+    const stable = symbol.declarations.length === 1 && (list.flags & ts.NodeFlags.Const) !== 0 &&
+      (!ts.isVariableStatement(statement) || (ts.getCombinedModifierFlags(statement) & ts.ModifierFlags.Export) === 0) &&
+      references.get(reference.text).every((use) => use === declaration.name ||
+        lexicalSymbol(use, checker) !== symbol || tableConsumer(use, expression, source));
+    if (!stable) return { text, rows: null };
+  }
+  return { text, rows };
 }
 
 function inventory(root, file) {
@@ -50,6 +123,16 @@ function inventory(root, file) {
     throw new Error(`Cannot parse test file ${path}`);
   }
   const checker = program.getTypeChecker();
+  const references = new Map();
+  function collectReferences(node) {
+    if (ts.isIdentifier(node)) {
+      const sameName = references.get(node.text);
+      if (sameName) sameName.push(node);
+      else references.set(node.text, [node]);
+    }
+    ts.forEachChild(node, collectReferences);
+  }
+  collectReferences(source);
   const calls = new Map();
   const occurrences = new Map();
   const callName = (node) => node && ts.isStringLiteralLike(node) ? node.text : node?.getText(source) ?? '';
@@ -74,7 +157,7 @@ function inventory(root, file) {
           occurrence,
           callback: node.arguments[1]?.getText(source) ?? '',
           options: node.arguments.slice(2).map((argument) => argument.getText(source)),
-          table: each ? readTable(callee.arguments[0], source, checker) : null,
+          table: each ? readTable(callee.arguments[0], source, checker, references) : null,
         });
         return;
       }
