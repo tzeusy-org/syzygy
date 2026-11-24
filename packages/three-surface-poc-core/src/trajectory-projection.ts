@@ -582,7 +582,7 @@ export type TrajectoryChangeWindow =
   | (Extract<ChangeWindowObservation, { kind: 'unknown' }> & { readonly disclosure: typeof TRAJECTORY_CHANGED_ID });
 
 function changeWindows(changes: readonly ChangeWindowObservation[] | undefined): readonly TrajectoryChangeWindow[] {
-  const unread: readonly ChangeWindowObservation[] = CHANGE_WINDOWS.map((window) => ({ window, kind: 'unknown', reason: window === 'since-last' ? 'no-previous-evaluation-recorded' : 'history-read-failed' }));
+  const unread: readonly ChangeWindowObservation[] = CHANGE_WINDOWS.map((window) => ({ window, kind: 'unknown', reason: window === 'since-last' ? 'no-previous-evaluation-recorded' : 'history-not-read' }));
   return (changes ?? unread).map((window) => (window.kind === 'unknown' ? { ...window, disclosure: TRAJECTORY_CHANGED_ID } : window));
 }
 

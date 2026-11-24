@@ -221,15 +221,19 @@ function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow
   const selected = windows.find((window) => window.window === context.window)!;
   const links = CHANGE_WINDOWS.map((name) => {
     const window = windows.find((entry) => entry.window === name)!;
-    const figure = window.kind === 'observed' ? `${window.facts.length} changed` : 'Unknown';
+    const figure = window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${escapeHtml(window.reason)}</code>`;
     const label = `${escapeHtml(CHANGE_WINDOW_NAME[name])} (<span data-parity-field="answer-changed-${name}-count">${figure}</span>)`;
     return name === context.window
       ? `<strong aria-current="true" data-change-window-link="${name}">${label}</strong>`
       : `<a data-change-window-link="${name}" href="${viewHref(context.mountPrefix, { ...context.view, changed: name })}#answers-heading">${label}</a>`;
   }).join(' · ');
   const head = `<p class="change-windows">Window: ${links}.</p>`;
+  // R-T6S1-CHANGES-1 F2: an Unknown window keeps its reason and route on
+  // every page, not only when it is the selected one.
+  const unknownElsewhere = windows.some((window) => window.kind === 'unknown' && window.window !== context.window);
+  const disclosureId = windows.find((window) => window.kind === 'unknown')?.disclosure;
   if (selected.kind === 'unknown') {
-    return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}">${escapeHtml(CHANGE_WINDOW_NAME[selected.window])}: Unknown, because ${escapeHtml(CHANGE_WINDOW_REASON_TEXT[selected.reason])} (<code data-parity-field="answer-changed-reason">${escapeHtml(selected.reason)}</code>); never a zero. ${answerDisclosure(model, 'answer-changed-disclosure', selected.disclosure, 'What changed')}</p>`;
+    return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}" data-change-state="unknown">${escapeHtml(CHANGE_WINDOW_NAME[selected.window])}: Unknown, because ${escapeHtml(CHANGE_WINDOW_REASON_TEXT[selected.reason])} (<code data-parity-field="answer-changed-reason">${escapeHtml(selected.reason)}</code>); never a zero. ${answerDisclosure(model, 'answer-changed-disclosure', selected.disclosure, 'What changed')}</p>`;
   }
   const point = (field: string, label: string, commit: { readonly revision: string; readonly at: string }): string =>
     `${label} <code data-parity-field="${field}" data-revision="${escapeHtml(commit.revision)}">${escapeHtml(commit.revision.slice(0, 8))}</code> (<time datetime="${escapeHtml(commit.at)}">${escapeHtml(commit.at)}</time>)`;
@@ -247,7 +251,10 @@ function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow
   const list = selected.facts.length === 0
     ? '<p>No item changed state between these revisions: an observed zero.</p>'
     : `<ol class="change-list">${listed}</ol>${remainder === 0 ? '' : `<p><span data-parity-field="answer-changed-unlisted">${remainder}</span> more changed items are not listed here; the machine answer lists every one.</p>`}`;
-  return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}">Between ${point('answer-changed-from', 'revision', selected.from)} and ${point('answer-changed-to', 'the observed revision', selected.to)}: <span data-parity-field="answer-changed-total">${selected.facts.length}</span> items changed state (${counts}). <span data-parity-field="answer-changed-updated-only">${selected.updatedWithoutStatusChange}</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">${selected.outsidePrefix}</span> changed rows are outside this tracker's prefix, counted only. Net change between the two revisions, from the tracker's history; not a rate or a verdict.</p>${list}`;
+  const elsewhere = unknownElsewhere && disclosureId !== undefined
+    ? `<p class="answer-note">${answerDisclosure(model, 'answer-changed-disclosure', disclosureId, 'Other windows')}</p>`
+    : '';
+  return `${head}${elsewhere}<p data-parity-field="answer-changed" data-change-window="${selected.window}">Between ${point('answer-changed-from', 'revision', selected.from)} and ${point('answer-changed-to', 'the observed revision', selected.to)}: <span data-parity-field="answer-changed-total">${selected.facts.length}</span> items changed state (${counts}). <span data-parity-field="answer-changed-updated-only">${selected.updatedWithoutStatusChange}</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">${selected.outsidePrefix}</span> changed rows are outside this tracker's prefix, counted only. Net change between the two revisions, from the tracker's history; not a rate or a verdict.</p>${list}`;
 }
 
 function answerBody(model: PocModel, answer: TrajectoryAnswer, context: ChangedContext): string {

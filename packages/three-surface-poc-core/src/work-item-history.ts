@@ -38,6 +38,8 @@ export type ChangeWindowReason =
   | 'history-result-malformed'
   | 'history-revision-unverified'
   | 'history-shorter-than-window'
+  | 'history-non-linear'
+  | 'history-not-read'
   | 'no-previous-evaluation-recorded';
 
 export interface ChangeFact {
@@ -163,9 +165,16 @@ export function observeWorkItemChanges(
   const inPrefix = `(COALESCE(from_id, '') LIKE '${prefix}%' OR COALESCE(to_id, '') LIKE '${prefix}%')`;
   const parts = [...starts].flatMap(([window, from]) => {
     const diff = `dolt_diff('${from.revision}', '${revision}', 'issues')`;
+    // R-T6S1-CHANGES-1 F1: the start is chosen by date among all ancestors,
+    // which is the chain position only on a linear history with ordered
+    // dates. Two counts test that: merge commits between the start and the
+    // revision, and ancestors of the start dated after the bound.
+    const bound = sqlInstant(capturedMs - WINDOW_MILLISECONDS[window]);
     return [
       `SELECT '${window}' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM ${diff} WHERE ${inPrefix}`,
       `SELECT '${window}', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM ${diff} WHERE NOT ${inPrefix}`,
+      `SELECT '${window}', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${revision}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${from.revision}'))`,
+      `SELECT '${window}', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${from.revision}') WHERE date > '${bound}'`,
     ];
   });
   const rowsByWindow = new Map<string, Record<string, unknown>[]>();
@@ -192,12 +201,13 @@ export function observeWorkItemChanges(
     const counts = Object.fromEntries(CHANGE_KINDS.map((kind) => [kind, 0])) as Record<ChangeKind, number>;
     const facts: ChangeFact[] = [];
     let updatedWithoutStatusChange = 0;
-    let outsidePrefix: number | null = null;
+    const tallies = new Map<string, number>();
     const seen = new Set<string>();
     for (const row of rowsByWindow.get(window) ?? []) {
-      if (row.diff_type === 'outside-prefix') {
-        if (outsidePrefix !== null || typeof row.n !== 'number' || !Number.isInteger(row.n) || row.n < 0) return unknownAll('history-result-malformed');
-        outsidePrefix = row.n;
+      if (row.diff_type === 'outside-prefix' || row.diff_type === 'merges' || row.diff_type === 'inverted') {
+        if (tallies.has(row.diff_type) || typeof row.n !== 'number' || !Number.isInteger(row.n) || row.n < 0 ||
+            [row.from_id, row.to_id, row.from_status, row.to_status].some((value) => value !== null)) return unknownAll('history-result-malformed');
+        tallies.set(row.diff_type, row.n);
         continue;
       }
       const fromStatus = row.from_status === null ? null : isStatus(row.from_status) ? row.from_status : undefined;
@@ -218,7 +228,12 @@ export function observeWorkItemChanges(
       counts[kind]++;
       facts.push({ id, kind, from: fromStatus as WorkItemStatus | null, to: toStatus as WorkItemStatus | null });
     }
-    if (outsidePrefix === null) return unknownAll('history-result-malformed');
+    const outsidePrefix = tallies.get('outside-prefix');
+    if (outsidePrefix === undefined || !tallies.has('merges') || !tallies.has('inverted')) return unknownAll('history-result-malformed');
+    if (tallies.get('merges') !== 0 || tallies.get('inverted') !== 0) {
+      observed.set(window, { window, kind: 'unknown', reason: 'history-non-linear' });
+      continue;
+    }
     facts.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
     observed.set(window, { window, kind: 'observed', from, to, counts, facts, updatedWithoutStatusChange, outsidePrefix });
   }

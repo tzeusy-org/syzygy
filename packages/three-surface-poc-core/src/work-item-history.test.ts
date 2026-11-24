@@ -30,7 +30,9 @@ const bounds = (overrides: Record<string, unknown> = {}) => ({
 });
 const row = (w: string, diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
   ({ w, diff_type, from_id, to_id, from_status, to_status, n: null });
-const outside = (w: string, n: number) => ({ w, diff_type: 'outside-prefix', from_id: null, to_id: null, from_status: null, to_status: null, n });
+const tally = (w: string, diff_type: string, n: number) => ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n });
+/** A window's three counts: outside-prefix rows, and the linearity checks (merges, inverted dates). */
+const outside = (w: string, n: number, merges = 0, inverted = 0) => [tally(w, 'outside-prefix', n), tally(w, 'merges', merges), tally(w, 'inverted', inverted)];
 
 const DAY_ROWS = [
   row('day', 'added', null, 'bu-new', null, 'open'),
@@ -40,9 +42,9 @@ const DAY_ROWS = [
   row('day', 'modified', 'bu-move', 'bu-move', 'open', 'blocked'),
   row('day', 'modified', 'bu-touch', 'bu-touch', 'open', 'open'),
   row('day', 'removed', 'bu-gone', null, 'deferred', null),
-  outside('day', 3),
+  ...outside('day', 3),
 ];
-const WEEK_ROWS = [row('week', 'modified', 'bu-shut', 'bu-shut', 'open', 'closed'), outside('week', 0)];
+const WEEK_ROWS = [row('week', 'modified', 'bu-shut', 'bu-shut', 'open', 'closed'), ...outside('week', 0)];
 
 function run(responses: { bounds?: () => string; diff?: () => string }, input: WorkItemsObserved = workItems()) {
   const calls: string[] = [];
@@ -107,8 +109,12 @@ describe('what changed, between two named revisions (syzygy-t3jk.21)', () => {
     expect(calls[1]).toBe([
       `SELECT 'day' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM dolt_diff('${DAY_FROM}', '${REVISION}', 'issues') WHERE ${inPrefix}`,
       `SELECT 'day', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_diff('${DAY_FROM}', '${REVISION}', 'issues') WHERE NOT ${inPrefix}`,
+      `SELECT 'day', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${REVISION}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${DAY_FROM}'))`,
+      `SELECT 'day', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${DAY_FROM}') WHERE date > '2026-08-30 12:00:00.000'`,
       `SELECT 'week' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM dolt_diff('${WEEK_FROM}', '${REVISION}', 'issues') WHERE ${inPrefix}`,
       `SELECT 'week', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_diff('${WEEK_FROM}', '${REVISION}', 'issues') WHERE NOT ${inPrefix}`,
+      `SELECT 'week', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${REVISION}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${WEEK_FROM}'))`,
+      `SELECT 'week', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${WEEK_FROM}') WHERE date > '2026-08-24 12:00:00.000'`,
     ].join(' UNION ALL '));
     // SEC-5: no free-text or person column is named by either statement.
     for (const sql of calls) expect(sql).not.toMatch(/\b(title|description|notes|message|committer|email|author|created_by|metadata)\b/i);
@@ -128,7 +134,7 @@ describe('what changed, between two named revisions (syzygy-t3jk.21)', () => {
     const none = run({ bounds: () => JSON.stringify([bounds({ day_from: null, day_at: null, week_from: null, week_at: null })]) });
     expect(none.calls).toHaveLength(1);
     expect(none.windows.map((window) => window.kind === 'unknown' ? window.reason : 'observed')).toEqual(['history-shorter-than-window', 'history-shorter-than-window', 'no-previous-evaluation-recorded']);
-    const zero = run({ diff: () => JSON.stringify([outside('day', 0), outside('week', 0)]) });
+    const zero = run({ diff: () => JSON.stringify([...outside('day', 0), ...outside('week', 0)]) });
     expect(zero.windows[0]).toMatchObject({ kind: 'observed', facts: [], counts: { added: 0, closed: 0, reopened: 0, 're-stated': 0, removed: 0 } });
   });
 
@@ -144,14 +150,29 @@ describe('what changed, between two named revisions (syzygy-t3jk.21)', () => {
     // The diff answers only for the intact window, so a half-read start cannot pass as a short history.
     ['a start without its instant', { bounds: () => JSON.stringify([bounds({ day_at: null })]), diff: () => JSON.stringify(WEEK_ROWS) }, 'history-result-malformed'],
     ['an instant without its start', { bounds: () => JSON.stringify([bounds({ week_from: null })]), diff: () => JSON.stringify(DAY_ROWS) }, 'history-result-malformed'],
-    ['a diff row names another prefix', { diff: () => JSON.stringify([row('day', 'added', null, 'other-1', null, 'open'), outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
-    ['a diff row carries an unknown status', { diff: () => JSON.stringify([row('day', 'modified', 'bu-a', 'bu-a', 'open', 'done'), outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
-    ['a diff row names an unknown window', { diff: () => JSON.stringify([...DAY_ROWS, ...WEEK_ROWS, outside('month', 0)]) }, 'history-result-malformed'],
-    ['a window lacks its outside count', { diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0]]) }, 'history-result-malformed'],
+    ['a diff row names another prefix', { diff: () => JSON.stringify([row('day', 'added', null, 'other-1', null, 'open'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['a diff row carries an unknown status', { diff: () => JSON.stringify([row('day', 'modified', 'bu-a', 'bu-a', 'open', 'done'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['a diff row names an unknown window', { diff: () => JSON.stringify([...DAY_ROWS, ...WEEK_ROWS, ...outside('month', 0)]) }, 'history-result-malformed'],
+    ['a window lacks its outside count', { diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0], tally('week', 'merges', 0), tally('week', 'inverted', 0)]) }, 'history-result-malformed'],
+    ['a window lacks its merge count', { diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0], tally('week', 'outside-prefix', 0), tally('week', 'inverted', 0)]) }, 'history-result-malformed'],
+    ['a count is repeated', { diff: () => JSON.stringify([...DAY_ROWS, ...WEEK_ROWS, tally('week', 'merges', 0)]) }, 'history-result-malformed'],
+    ['a count is not an integer', { diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0], tally('week', 'outside-prefix', 1.5), tally('week', 'merges', 0), tally('week', 'inverted', 0)]) }, 'history-result-malformed'],
+    ['a count row names an item', { diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0], { ...tally('week', 'outside-prefix', 0), to_id: 'bu-x' }, tally('week', 'merges', 0), tally('week', 'inverted', 0)]) }, 'history-result-malformed'],
+    ['an added row has a start id', { diff: () => JSON.stringify([row('day', 'added', 'bu-a', 'bu-a', null, 'open'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['a removed row keeps a status', { diff: () => JSON.stringify([row('day', 'removed', 'bu-a', null, 'open', 'open'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['a diff row carries an extra column', { diff: () => JSON.stringify([{ ...row('day', 'added', null, 'bu-a', null, 'open'), title: 'sample text' }, ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['an unknown diff type', { diff: () => JSON.stringify([row('day', 'renamed', 'bu-a', 'bu-a', 'open', 'closed'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
     ['an item appears twice in a window', { diff: () => JSON.stringify([...DAY_ROWS, DAY_ROWS[0], ...WEEK_ROWS]) }, 'history-result-malformed'],
-    ['a modified row changes its id', { diff: () => JSON.stringify([row('day', 'modified', 'bu-a', 'bu-b', 'open', 'closed'), outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
+    ['a modified row changes its id', { diff: () => JSON.stringify([row('day', 'modified', 'bu-a', 'bu-b', 'open', 'closed'), ...outside('day', 0), ...WEEK_ROWS]) }, 'history-result-malformed'],
   ])('reads every timed window as Unknown when %s, never a partial count', (_case, responses, reason) => {
     expect(run(responses).windows).toEqual(unknownWindows(reason));
+  });
+
+  it('states a window whose history is not one line as Unknown (R-T6S1-CHANGES-1 F1)', () => {
+    const merged = run({ diff: () => JSON.stringify([...DAY_ROWS.slice(0, -3), ...outside('day', 3, 1, 0), ...WEEK_ROWS]) });
+    expect(merged.windows.map((window) => window.kind === 'unknown' ? window.reason : 'observed')).toEqual(['history-non-linear', 'observed', 'no-previous-evaluation-recorded']);
+    const inverted = run({ diff: () => JSON.stringify([...DAY_ROWS, WEEK_ROWS[0], ...outside('week', 0, 0, 2)]) });
+    expect(inverted.windows.map((window) => window.kind === 'unknown' ? window.reason : 'observed')).toEqual(['observed', 'history-non-linear', 'no-previous-evaluation-recorded']);
   });
 
   it('reads nothing without an exact revision or a readable instant', () => {

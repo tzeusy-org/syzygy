@@ -59,11 +59,17 @@ A window is Unknown with its reason, never zero, in these cases:
 - A read fails, returns another shape or does not confirm the revision.
   This makes both timed windows Unknown, never a partial count.
 - The history holds no commit that old. This affects that window only.
+- The history between the start and the revision holds a merge, or the
+  start has an ancestor dated after the bound, so the start found by date is
+  not a point on one line of history (`history-non-linear`, that window
+  only; added after review finding F1).
 - For `since-last`: no previous evaluation's revision is recorded, which is
   true at this base.
 
 Every Unknown window is stated in the one `region:trajectory-changed`
-disclosure, with each window's reason and the route.
+disclosure, with each window's reason and the route, and every page shows
+each Unknown window's reason and that disclosure, whichever window it
+selects.
 
 The machine answer carries every window and every fact. The page shows
 one window, selected by the new `changed` parameter of POC-REQ-042, with
@@ -141,17 +147,18 @@ free text is read and nothing is written, so the change is not owner-class.
 
 ## Evidence or decision basis
 
-- `work-item-history.test.ts` (new, 21 tests):
+- `work-item-history.test.ts` (new, 30 tests after the review repairs):
   - The literal facts of both windows, over a fixture of each kind plus a
     status-only update and an out-of-prefix count.
   - Both statements literal: pinned to the revision, five diff columns, and
     no free-text or person column, by regex.
   - A week window older than the history, with no week diff statement.
   - No diff when no window has a start; an observed zero.
-  - Sixteen failed or malformed reads, each making both timed windows
+  - Twenty-four failed or malformed reads, each making both timed windows
     Unknown.
+  - A merge, and an inverted date, each making only its window Unknown.
   - No read without a revision or an instant.
-- `trajectory.test.ts` "what changed" (6 tests, plus the five-answers test
+- `trajectory.test.ts` "what changed" (8 tests, plus the five-answers test
   amended):
   - The day window's revisions, counts and list, served items linked and a
     removed one named, with no rate or verdict words.
@@ -159,17 +166,20 @@ free text is read and nothing is written, so the change is not owner-class.
     item, and the disclosure's basis.
   - `changed=week` keeps the default board, with window links on both
     paths and inside a view.
-  - The since-last Unknown, with its reason and disclosure.
+  - The since-last Unknown, with its reason and disclosure, both when
+    selected and beside an observed window.
   - The refusal of `changed=month`.
   - 260 changes give 250 listed and 10 counted, and two renders are
     byte-equal.
-- Rule 6: five mutants each fail a test:
+- Rule 6: seven mutants each fail a test:
   - reopened read as re-stated;
   - the prefix check dropped;
   - a half-read start passing as a short history (it survived at first,
     and the tests were tightened until it failed);
   - the 250 cap dropped;
-  - `changed` alone making a view.
+  - `changed` alone making a view;
+  - after the review, merges ignored, and the other windows' disclosure
+    dropped.
 - [Observed 2026-11-24] Both statements run as written against this
   repository's tracker, through `bd --readonly --json sql`.
   - The day window returned 198 rows of the expected keys, one of them
@@ -268,7 +278,7 @@ index ee7a26861..e09c2d08b 100644
  **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
  The signed RFC1-26 row whose consequence reads "Relations outside the closed
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index b615b3b27..2811d9124 100644
+index b615b3b27..ac1a20d01 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 @@ -1032,7 +1032,11 @@ parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
@@ -294,7 +304,7 @@ index b615b3b27..2811d9124 100644
  the order, and the grouped order and its page unit, `position`
  (`trajectory.narrowing`), so any page is recomputable from
  `workItems.items` and `trajectory.outline`.
-@@ -1269,9 +1274,40 @@ equal values (`trajectory.answers`). Today:
+@@ -1269,9 +1274,45 @@ equal values (`trajectory.answers`). Today:
    state `activity-undetermined` while no staleness bound is declared
    (RFC8-16): state-local, carrying no RFC2-24 reason and no machine
    Unknown, with what resolves it.
@@ -325,20 +335,25 @@ index b615b3b27..2811d9124 100644
 +  revision or the observation instant is unavailable, when a history read
 +  fails, returns another shape or does not confirm the observed revision
 +  (any of these makes every timed window Unknown, never a partial count),
-+  when the history holds no commit as old as the window bound, or, for
++  when the history holds no commit as old as the window bound, when the
++  history between the window start and the observed revision holds a
++  merge or a commit dated after the bound behind the start (so the start
++  found by date is not a point on one line of history), or, for
 +  `since-last`, while no previous evaluation's revision is recorded. The
 +  machine answer SHALL carry every window with every changed item; the page
 +  SHALL show one window (the `changed` parameter of POC-REQ-042, `day` by
 +  default), link to the others with their counts, and list at most 250
 +  changed items, counting the rest. Every Unknown window SHALL be stated in
-+  one disclosure with each window's reason and the route.
++  one disclosure with each window's reason and the route, and every page
++  SHALL show each Unknown window's reason and that disclosure, whichever
++  window it selects.
 +- *What it cost* SHALL be an Unknown with its closed reason and route
 +  while no cost record is read (RFC8-19: absent cost is Unknown, never
 +  zero).
  - *Verified against intent* SHALL give three separately labelled counts,
    each with its own denominator, and no element SHALL add any two of them:
    (a) Unknown-provenance, the served items with no traceable warrant, n of
-@@ -1289,14 +1325,19 @@ When work items are not observed, all five answers SHALL render, each an
+@@ -1289,14 +1330,19 @@ When work items are not observed, all five answers SHALL render, each an
  Unknown referring to the work-items disclosure, and no count SHALL appear.
  
  - **Scope.** the answers region of Trajectory and `trajectory.answers` on
@@ -362,7 +377,7 @@ index b615b3b27..2811d9124 100644
  - **Observable**: five answers in order before the scope statement; the
    status counts, claimed count and three fifth-answer counts with their
    denominators; the liveness state; each Unknown part's reason and route.
-@@ -1312,8 +1353,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1312,8 +1358,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
    machine answer's; count (a) equals `workItems.governedByUnknownCount`;
    count (b) is 1 of 1 with a merged materialized item and 0 of 0 without
    one while (a) is unchanged; (c) renders Unknown, never a number; with
@@ -379,7 +394,7 @@ index b615b3b27..2811d9124 100644
  - **Oracle independence**: expected counts are the checker's own fixture
    rows, counted by the checker, never the renderer's model.
  - **Falsifier**: an answer missing, out of order or dropped for being
-@@ -1321,7 +1368,10 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1321,7 +1373,10 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
    do not sum to the served total; a running count worded as observed
    activity, or liveness rendered as `active` or under an RFC2-24 reason;
    a count shown without its denominator; an Unknown part with no reason
@@ -391,7 +406,7 @@ index b615b3b27..2811d9124 100644
    of the fifth answer's counts; orphaned work rendered as 0; a chain member
    stated under an RFC2-24 reason; or "verified" naming a state.
  
-@@ -1330,8 +1380,8 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1330,8 +1385,8 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
  - **WHEN** 252 work items are served and the selection renders 250
  - **THEN** five answers render first, in order: the served count of each
    tracker status summing to 252, the tracker's claimed count with liveness
@@ -402,7 +417,7 @@ index b615b3b27..2811d9124 100644
    machine answer carries the same five with equal values
  
  #### Scenario: A merged materialized item enters the chain
-@@ -1347,11 +1397,32 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1347,11 +1402,32 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
  - **THEN** all five answers render, each an Unknown referring to the
    work-items disclosure, and no count appears
  
@@ -437,3 +452,59 @@ index b615b3b27..2811d9124 100644
    decisions: []
    topology: []
 ````
+
+## Dispositions
+
+Review R-T6S1-CHANGES-1 (`docs/reviews/R-T6S1-CHANGES-1-RAW.md`), verdict
+`CONFIRM WITH EXCEPTIONS` (line 2) over commit `a12e25991`: 0 blocking,
+3 should-fix, 7 notes. One round, not gating; each finding repaired once in
+the commit after it, or answered here.
+
+1. **Should-fix: the start chosen by date on a non-linear history.**
+   Taken. The diff statement now carries two more counts per window: merge
+   commits between the start and the revision (`dolt_commit_ancestors`,
+   `parent_index > 0`, commits in `dolt_log(revision)` and not in
+   `dolt_log(start)`), and ancestors of the start dated after the bound.
+   Either above zero makes that window Unknown, `history-non-linear`, never
+   a count. The spec says so. Tests: a merge and an inverted date, each
+   affecting only its window; a missing or repeated count is malformed. A
+   mutant ignoring merges fails. [Observed 2026-11-25] both counts are 0 on
+   this repository's tracker for the day window.
+2. **Should-fix: Unknown windows without reason or route on the default
+   page.** Taken. Each window link now shows its reason code when Unknown,
+   and a page showing an observed window also shows the one
+   `region:trajectory-changed` disclosure (label "Other windows") with its
+   reason and route. The spec now says every page shows them, whichever
+   window it selects. New test over an observed day window; a mutant
+   dropping the disclosure fails it.
+3. **Should-fix: parity gaps.** Taken. The parity test now compares both
+   revisions and instants and every window's link figure with the served
+   machine answer, and the cap test checks the unlisted remainder against
+   the projection's facts.
+4. **Note: untested fail-closed predicates.** Taken: eight new malformed
+   cases (missing merge count, repeated count, non-integer count, a count
+   row naming an item, an added row with a start id, a removed row keeping
+   a status, an extra column, an unknown diff type), 24 in all.
+5. **Note: the byte-equality test proves nothing about once-per-observation
+   derivation.** Taken: a new test counts the history statements at model
+   build (2) and after five renders across windows and a view (still 2).
+6. **Note: `history-read-failed` when nothing was read.** Taken: a direct
+   caller passing no history now gets `history-not-read`, with its own
+   sentence.
+7. **Note: the disclosure's opening claimed a read.** Taken: it now opens
+   "What changed is answered from the tracker's own history between two
+   named revisions, where it can be read;".
+8. **Note: item and status links drop `changed`.** Answered, not changed:
+   the window and page links keep it; an item link goes to that item's
+   card on the all-items page, and the status and default links are the
+   POC-REQ-042 navigation, whose expected hrefs are pinned literally. The
+   spec states only that `changed` rides a view it is given with.
+9. **Note: response size.** Answered. The page lists at most 250 changed
+   items (about 65 KB [Inferred]) against the 2 MiB human ceiling, and the
+   reviewer observed 38 KB for both windows' facts in the machine answer on
+   this tracker, against the 16 MiB machine ceiling. The served Trajectory
+   page on the live tracker was not measured in this change [Unknown].
+10. **Note: one UNION statement blanks both timed windows on one failure.**
+    Answered, not changed: the spec states the all-or-nothing outcome, and
+    one statement keeps both windows on one read. Per-window statements
+    are a later change if a too-old week start is ever observed to fail.

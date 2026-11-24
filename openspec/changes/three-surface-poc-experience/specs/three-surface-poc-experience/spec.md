@@ -1298,13 +1298,18 @@ equal values (`trajectory.answers`). Today:
   revision or the observation instant is unavailable, when a history read
   fails, returns another shape or does not confirm the observed revision
   (any of these makes every timed window Unknown, never a partial count),
-  when the history holds no commit as old as the window bound, or, for
+  when the history holds no commit as old as the window bound, when the
+  history between the window start and the observed revision holds a
+  merge or a commit dated after the bound behind the start (so the start
+  found by date is not a point on one line of history), or, for
   `since-last`, while no previous evaluation's revision is recorded. The
   machine answer SHALL carry every window with every changed item; the page
   SHALL show one window (the `changed` parameter of POC-REQ-042, `day` by
   default), link to the others with their counts, and list at most 250
   changed items, counting the rest. Every Unknown window SHALL be stated in
-  one disclosure with each window's reason and the route.
+  one disclosure with each window's reason and the route, and every page
+  SHALL show each Unknown window's reason and that disclosure, whichever
+  window it selects.
 - *What it cost* SHALL be an Unknown with its closed reason and route
   while no cost record is read (RFC8-19: absent cost is Unknown, never
   zero).

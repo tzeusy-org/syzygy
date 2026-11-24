@@ -284,6 +284,8 @@ export const CHANGE_WINDOW_REASON_TEXT: Readonly<Record<ChangeWindowReason, stri
   'history-result-malformed': 'the tracker history read returned rows of an unexpected shape',
   'history-revision-unverified': 'the tracker history did not confirm the observed revision',
   'history-shorter-than-window': 'the retained tracker history holds no commit as old as the window bound',
+  'history-non-linear': 'the tracker history between the window start and the observed revision holds a merge or out-of-order commit dates, so the start found by date is not a point on one line of history',
+  'history-not-read': 'no tracker history read was attempted for this observation',
   'no-previous-evaluation-recorded': 'no previous evaluation\'s work-item revision is recorded, so there is no start to diff from',
 };
 
@@ -296,7 +298,7 @@ const CHANGE_WINDOW_LABEL: Readonly<Record<ChangeWindow, string>> = {
 /** The one changed disclosure: every Unknown window with its reason. */
 function changedBasis(windows: readonly { readonly window: ChangeWindow; readonly kind: string; readonly reason?: ChangeWindowReason }[]): string {
   const parts = windows.flatMap((window) => (window.kind === 'unknown' && window.reason !== undefined ? [`${CHANGE_WINDOW_LABEL[window.window]} is Unknown because ${CHANGE_WINDOW_REASON_TEXT[window.reason]}`] : []));
-  return `Changes are read from the tracker's own history between two named revisions; ${parts.join('; ')}. An Unknown window is never a zero.`;
+  return `What changed is answered from the tracker's own history between two named revisions, where it can be read; ${parts.join('; ')}. An Unknown window is never a zero.`;
 }
 const COST_BASIS = 'No cost record is read: no effort, compute, token, money or blocked-time measure is captured for any work item, so those costs are Unknown, never zero; elapsed time alone is measured, as lead time and age.';
 const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the observation does not read who created each tracker item, which that check would compare with materialization records, so how many items are orphaned is Unknown, never 0.';

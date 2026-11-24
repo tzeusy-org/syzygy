@@ -310,8 +310,10 @@ eligibility reason remains visible when a separate edge is unresolved.
      updates and out-of-prefix rows counted, not listed. `?changed=week`
      (or `since-last`) picks the window; alone it keeps the default board.
      The since-last window is Unknown until a previous evaluation's
-     revision is recorded, and a window the history cannot answer is
-     Unknown with its reason, never zero;
+     revision is recorded, and a window the history cannot answer (no
+     commit that old, a failed read, or a merge or out-of-order dates
+     between the start and the observed revision) is Unknown with its
+     reason, never zero;
    - what it cost: Unknown, with reason and route;
    - verified against intent: three separate counts, never added together.
      They are the items with no traceable warrant; the materialized work on

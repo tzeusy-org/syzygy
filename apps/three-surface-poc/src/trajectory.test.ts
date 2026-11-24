@@ -1539,8 +1539,9 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
   const WEEK_FROM = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
   const diffRow = (w: string, diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
     ({ w, diff_type, from_id, to_id, from_status, to_status, n: null });
-  const outside = (w: string, n: number) => ({ w, diff_type: 'outside-prefix', from_id: null, to_id: null, from_status: null, to_status: null, n });
-  function history(dayRows: readonly Record<string, unknown>[], weekRows: readonly Record<string, unknown>[] = [outside('week', 0)]) {
+  const tally = (w: string, diff_type: string, n: number) => ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n });
+  const outside = (w: string, n: number) => [tally(w, 'outside-prefix', n), tally(w, 'merges', 0), tally(w, 'inverted', 0)];
+  function history(dayRows: readonly Record<string, unknown>[], weekRows: readonly Record<string, unknown>[] = outside('week', 0)) {
     return (sql: string): string => sql.includes('dolt_diff(')
       ? JSON.stringify([...dayRows, ...weekRows])
       : JSON.stringify([{
@@ -1553,7 +1554,7 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     diffRow('day', 'added', null, 'bu-open1', null, 'open'),
     diffRow('day', 'removed', 'bu-gone', null, 'blocked', null),
     diffRow('day', 'modified', 'bu-progress1', 'bu-progress1', 'in_progress', 'in_progress'),
-    outside('day', 2),
+    ...outside('day', 2),
   ];
   const model = () => buildFixtureModel(cleanups, { runHistoryQuery: history(DAY) });
   const route = (page: PocModel, query: string, prefix = ''): string => {
@@ -1588,11 +1589,17 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     for (const kind of ['added', 'closed', 'reopened', 're-stated', 'removed'] as const) expect(Number(values.get(`answer-changed-${kind}`)), kind).toBe(day.counts[kind]);
     expect(Number(values.get('answer-changed-updated-only'))).toBe(day.updatedWithoutStatusChange);
     expect(Number(values.get('answer-changed-outside-prefix'))).toBe(day.outsidePrefix);
+    // R-T6S1-CHANGES-1 F3: both revisions and instants, and every window's link figure.
+    for (const [field, point] of [['answer-changed-from', day.from], ['answer-changed-to', day.to]] as const) {
+      expect(body).toContain(`data-parity-field="${field}" data-revision="${point.revision}">${point.revision.slice(0, 8)}</code> (<time datetime="${point.at}">`);
+    }
+    const figures = new Map([...body.matchAll(/data-parity-field="answer-changed-([a-z-]+)-count">([^<]*(?:<code>[^<]*<\/code>)?)/g)].map((match) => [match[1], match[2]]));
+    expect([...figures]).toEqual(changed.windows.map((window) => [window.window, window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${window.reason}</code>`]));
     expect([...body.matchAll(/data-change-kind="([^"]+)" data-change-id="([^"]+)"/g)].map((match) => [match[2], match[1]]))
       .toEqual(day.facts.map((fact) => [fact.id, fact.kind]));
     expect(served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-changed')?.epistemic).toMatchObject({
       label: 'Unknown',
-      reason: "Changes are read from the tracker's own history between two named revisions; the since-last-evaluation window is Unknown because no previous evaluation's work-item revision is recorded, so there is no start to diff from. An Unknown window is never a zero.",
+      reason: "What changed is answered from the tracker's own history between two named revisions, where it can be read; the since-last-evaluation window is Unknown because no previous evaluation's work-item revision is recorded, so there is no start to diff from. An Unknown window is never a zero.",
     });
   });
 
@@ -1611,11 +1618,27 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     expect(answerBody(route(page, 'changed=week', '/butlers-syzygy'), 'changed')).toContain('href="/butlers-syzygy/trajectory?changed=day#answers-heading"');
   });
 
+  it('keeps every Unknown window\'s reason and route on a page showing an observed window (R-T6S1-CHANGES-1 F2)', () => {
+    const body = answerBody(renderTrajectoryPage(model()), 'changed');
+    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown: <code>no-previous-evaluation-recorded</code></span>)');
+    expect(body).toContain('data-parity-field="answer-changed-disclosure" data-unknown-disclosure="region:trajectory-changed" data-unknown-reason="source-uncaptured-or-unreachable"');
+    expect(body.replace(/<[^>]+>/g, '')).toContain('Route: Repair the observer/source; new snapshot.');
+  });
+
   it('renders an Unknown window with its reason and the disclosure, never a zero', () => {
     const body = answerBody(route(model(), 'changed=since-last'), 'changed');
     expect(body).toContain('Since the last evaluation: Unknown, because no previous evaluation&#39;s work-item revision is recorded, so there is no start to diff from (<code data-parity-field="answer-changed-reason">no-previous-evaluation-recorded</code>); never a zero.');
     expect(body).toContain('data-unknown-disclosure="region:trajectory-changed"');
-    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown</span>)');
+    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown: <code>no-previous-evaluation-recorded</code></span>)');
+  });
+
+  it('reads the history once per observation, never per render (R-T6S1-CHANGES-1 note 5)', () => {
+    const calls: string[] = [];
+    const read = history(DAY);
+    const page = buildFixtureModel(cleanups, { runHistoryQuery: (sql) => { calls.push(sql); return read(sql); } });
+    expect(calls).toHaveLength(2);
+    for (const query of ['', 'changed=week', 'changed=since-last', 'status=open&changed=day']) route(page, query);
+    expect(calls).toHaveLength(2);
   });
 
   it('refuses a window outside the declared set with its allowed values', () => {
@@ -1625,10 +1648,13 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
 
   it('lists at most 250 changed items and counts the rest, and renders the same bytes twice', () => {
     const many = Array.from({ length: 260 }, (_, i) => diffRow('day', 'added', null, `bu-n${String(i).padStart(3, '0')}`, null, 'open'));
-    const page = buildFixtureModel(cleanups, { runHistoryQuery: history([...many, outside('day', 0)]) });
+    const page = buildFixtureModel(cleanups, { runHistoryQuery: history([...many, ...outside('day', 0)]) });
     const body = answerBody(renderTrajectoryPage(page), 'changed');
     expect(body.match(/data-change-id=/g)).toHaveLength(250);
     expect(body).toContain('<span data-parity-field="answer-changed-unlisted">10</span> more changed items are not listed here; the machine answer lists every one.');
+    const changed = page.trajectory.kind === 'observed' ? page.trajectory.answers.find((answer) => answer.id === 'changed') : undefined;
+    if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
+    expect(changed.windows[0].facts.length - 250).toBe(10);
     expect(renderTrajectoryPage(page)).toBe(renderTrajectoryPage(page));
   });
 });
