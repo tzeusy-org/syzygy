@@ -1,11 +1,11 @@
 {
  "subject": {
-  "commit": "999b9ca70fc57365ce471607d8d22d25e5f3e037",
+  "commit": "d937255781e97c9aa99bed1f9b9802686d20e33d",
   "population": "git ls-files packages/polaris-dossier/src/*.ts apps/three-surface-poc/src/polaris-generation/*.ts, less *.test.ts and *.testkit.ts",
   "files": 123
  },
  "predicate": "Python re per line: \\b(readFileSync|readFile|readRecord|readFileAsSized|readBoundedFile|readSync)\\( ; lines matching ^\\s*import\\b|function (readRecord|readBoundedFile|readFileAsSized)\\b|\\b(readRecord|readBoundedFile|readFileAsSized) =  are excluded; one site per match",
- "sweepScriptSha256": "6c8a71cf7a0660c56f7317343f1ecef719f3e0bfca42900288c03bf641b64c98",
+ "sweepScriptSha256": "bd8b74abc6966f4c0d66fc05c6b3ea99c07318f4e782c77ef9bb56d46332995c",
  "prior": {
   "record": "docs/evidence/syzygy-3efd-80/run-tree-read-sweep-2026-11-23.json",
   "sha256": "22b1708a43351011895fb88d756c83abbac8b87b3fae8423fd50f5d62957424f"
@@ -37,6 +37,18 @@
    "requirement": "REQ-polaris-generation-033 (verify --text)"
   }
  },
+ "classes": {
+  "already-bounded": "read by the version 2.10 reader rule or an equivalent descriptor-bounded loop before this bead",
+  "bounded-code-stated": "read by the reader rule since this bead, under a bound the code states and no requirement does yet (syzygy-nffo)",
+  "in-scope": "carried from the 3efd-80 record, where it meant a run-tree read that bead bounded (through readRecord, REQ-035 2.18); bounded, not open work",
+  "not-a-file-read": "a match that reads no file: a comment or a directory listing",
+  "not-agent-writable": "a stat-then-read of a file no agent session can write when it is read; recorded, not changed",
+  "not-run-tree": "carried from the 3efd-80 record: a read outside the run tree, with its reason",
+  "residual": "carried from the 3efd-80 record: a read left unbounded, with its reason"
+ },
+ "preExisting": [
+  "R83 review note 4: O_NOFOLLOW refuses a link at the last component only. In clone-head.ts and launch-clone.ts a .git or refs directory swapped for a link after the .git lstat is still followed, and clone-head.ts fs.existsSync(loose) follows a link (a dangling link at the loose ref falls through to packed-refs). The byte bound holds on every path. Unchanged from main before this bead; not repaired here."
+ ],
  "rows": [
   {
    "site": "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts:33",
@@ -159,7 +171,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check-record-read.ts:74",
+   "site": "packages/polaris-dossier/src/check-record-read.ts:88",
    "call": "readSync",
    "text": "const read = fs.readSync(fd, buffer, total, buffer.length - total, null);",
    "class": "already-bounded",
@@ -167,7 +179,7 @@
    "from": "syzygy-3efd.83"
   },
   {
-   "site": "packages/polaris-dossier/src/check-record-read.ts:89",
+   "site": "packages/polaris-dossier/src/check-record-read.ts:104",
    "call": "readBoundedFile",
    "text": "return parseBoundedJson(readBoundedFile(file, CHECK_RECORD_LIMITS.maxBytes).toString('utf8'), CHECK_RECORD_LIMITS);",
    "class": "already-bounded",
@@ -175,7 +187,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check.ts:435",
+   "site": "packages/polaris-dossier/src/check.ts:439",
    "call": "readBoundedFile",
    "text": "record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), BRIEF_JSON_LIMITS.maxBytes).toString('utf8'), BRIEF_JSON_LIMITS);",
    "class": "already-bounded",
@@ -183,7 +195,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/check.ts:458",
+   "site": "packages/polaris-dossier/src/check.ts:462",
    "call": "readBoundedFile",
    "text": "return new Uint8Array(readBoundedFile(file, DRAFT_MAX_BYTES));",
    "class": "already-bounded",
@@ -203,7 +215,7 @@
    "call": "readBoundedFile",
    "text": "return { text: readBoundedFile(file, limit, { followLink: false }).toString('utf8') };",
    "class": "bounded-code-stated",
-   "why": "the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false), bounds code-stated (4096 per reference, 16777216 for packed-refs and config); no requirement states them yet, a residual for syzygy-nffo (REQ-polaris-generation-033 and -047)",
+   "why": "the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false; the launch reader also refuseGrowth), bounds code-stated (4096 per reference, 16777216 for packed-refs and config); no requirement states them yet, a residual for syzygy-nffo (REQ-polaris-generation-033 and -047)",
    "from": "syzygy-3efd.83"
   },
   {
@@ -247,7 +259,7 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/credential-probe.ts:206",
+   "site": "packages/polaris-dossier/src/credential-probe.ts:237",
    "call": "readBoundedFile",
    "text": "const record = parseBoundedJson(readBoundedFile(path.join(run, RUN_LAYOUT.briefRecord), 262_144).toString('utf8'), { maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 }) as { executionRule?: { arm?: unknown } };",
    "class": "already-bounded",
@@ -363,11 +375,11 @@
    "from": "syzygy-3efd.80"
   },
   {
-   "site": "packages/polaris-dossier/src/launch-clone.ts:90",
+   "site": "packages/polaris-dossier/src/launch-clone.ts:91",
    "call": "readBoundedFile",
-   "text": "return { text: readBoundedFile(file, limit, { followLink: false }).toString('utf8') };",
+   "text": "return { text: readBoundedFile(file, limit, { followLink: false, refuseGrowth: true }).toString('utf8') };",
    "class": "bounded-code-stated",
-   "why": "the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false), bounds code-stated (4096 per reference, 16777216 for packed-refs and config); no requirement states them yet, a residual for syzygy-nffo (REQ-polaris-generation-033 and -047)",
+   "why": "the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false; the launch reader also refuseGrowth), bounds code-stated (4096 per reference, 16777216 for packed-refs and config); no requirement states them yet, a residual for syzygy-nffo (REQ-polaris-generation-033 and -047)",
    "from": "syzygy-3efd.83"
   },
   {

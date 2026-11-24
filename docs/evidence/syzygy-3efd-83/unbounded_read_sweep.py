@@ -23,7 +23,7 @@ CALL = re.compile(r'\b(readFileSync|readFile|readRecord|readFileAsSized|readBoun
 DEFINES = re.compile(r'^\s*import\b|function (readRecord|readBoundedFile|readFileAsSized)\b|\b(readRecord|readBoundedFile|readFileAsSized) = ')
 
 AGENT_WRITABLE_CLONE = ('the clone .git HEAD, references, packed-refs and configuration, within the agent sessions write reach: '
-                        'read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false), bounds code-stated '
+                        'read by the version 2.10 reader rule with no-follow (readBoundedFile, followLink false; the launch reader also refuseGrowth), bounds code-stated '
                         '(4096 per reference, 16777216 for packed-refs and config); no requirement states them yet, a residual for '
                         'syzygy-nffo (REQ-polaris-generation-033 and -047)')
 VERIFY_TEXT = ('the operator-named verify --text file: read by the version 2.10 reader rule (readBoundedFile), a link to a regular '
@@ -32,7 +32,7 @@ VERIFY_TEXT = ('the operator-named verify --text file: read by the version 2.10 
 # Rules this bead adds, for sites the 3efd-80 record does not carry by exact text: (file, line-text substring) -> (class, why).
 RULES: list[tuple[str, str, str, str]] = [
     ('packages/polaris-dossier/src/clone-head.ts', 'readBoundedFile(file, limit, { followLink: false })', 'bounded-code-stated', AGENT_WRITABLE_CLONE),
-    ('packages/polaris-dossier/src/launch-clone.ts', 'readBoundedFile(file, limit, { followLink: false })', 'bounded-code-stated', AGENT_WRITABLE_CLONE),
+    ('packages/polaris-dossier/src/launch-clone.ts', 'readBoundedFile(file, limit, { followLink: false, refuseGrowth: true })', 'bounded-code-stated', AGENT_WRITABLE_CLONE),
     ('packages/polaris-dossier/src/verify-text-run.ts', 'readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES)', 'bounded-code-stated', VERIFY_TEXT),
     ('packages/polaris-dossier/src/check-record-read.ts', 'readSync(fd', 'already-bounded', 'the reader rule itself: at most bound + 1 bytes read from the one descriptor'),
     ('packages/polaris-dossier/src/launch-copy.ts', "fs.readFileSync(path.join(gitDir, 'HEAD')", 'not-agent-writable',
