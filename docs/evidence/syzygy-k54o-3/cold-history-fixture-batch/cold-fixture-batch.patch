@@ -1,0 +1,31 @@
+diff --git a/packages/polaris-dossier/src/url-machine-cold-history.test.ts b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+index 51e8bdc23..09217e956 100644
+--- a/packages/polaris-dossier/src/url-machine-cold-history.test.ts
++++ b/packages/polaris-dossier/src/url-machine-cold-history.test.ts
+@@ -34,14 +34,18 @@ async function fixture(active = false, lateAudit = false, generations = 1) {
+   const binding = { controllerSha256: id(1), parentBindingSha256: id(2) };
+   const clients: { context: UrlMachineClientContext; terminal: UrlRunMachineClosedHistory['clients'][number]['terminal'] }[] = [];
+   const issued: { client: typeof clients[number]; first: UrlMachineClientRecord; final: UrlMachineClientRecord; firstHead: Extract<UrlMachineLifecycleResult, { ok: true }>['receipt'] }[] = [];
+-  for (let generation = 0; generation < generations; generation++) for (const role of URL_ROLES) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
+-    const slot = await store.allocateClient(deadline); if (!slot) throw new Error('owned slot refused');
+-    const allowedScopes: UrlMachineOperation[] = kind === 'inference-bridge' ? ['inference-forward'] : role === 'author'
+-      ? ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] : role === 'inventory'
+-        ? ['source_read', 'artifact_read', 'dossier_step'] : ['artifact_read', 'dossier_step'];
+-    const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: id(3), profileSha256: profiles[role], sourcePin: 'a'.repeat(40),
+-      runId, role, kind, allowedScopes, now: NOW, deadline };
+-    clients.push({ context, terminal: { kind: 'never-issued', ...slot } });
++  for (let generation = 0; generation < generations; generation++) {
++    const slots = await store.allocateClients(URL_ROLES.length * 2, deadline); if (!slots) throw new Error('owned slots refused');
++    let slotIndex = 0;
++    for (const role of URL_ROLES) for (const kind of ['mcp-shim', 'inference-bridge'] as const) {
++      const slot = slots[slotIndex++]; if (!slot) throw new Error('owned slot refused');
++      const allowedScopes: UrlMachineOperation[] = kind === 'inference-bridge' ? ['inference-forward'] : role === 'author'
++        ? ['source_read', 'artifact_read', 'artifact_write', 'dossier_step'] : role === 'inventory'
++          ? ['source_read', 'artifact_read', 'dossier_step'] : ['artifact_read', 'dossier_step'];
++      const context: UrlMachineClientContext = { clientId: slot.clientId, policySha256: id(3), profileSha256: profiles[role], sourcePin: 'a'.repeat(40),
++        runId, role, kind, allowedScopes, now: NOW, deadline };
++      clients.push({ context, terminal: { kind: 'never-issued', ...slot } });
++    }
+   }
+   for (const index of [0, 3]) {
+     const client = clients[index]!, c = client.context;

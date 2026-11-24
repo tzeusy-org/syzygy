@@ -1,0 +1,38 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority 1321ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store 1497ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses identity expectation drift 959ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses controller expectation drift 977ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses parent expectation drift 929ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses run expectation drift 889ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift 916ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses origin expectation drift 1044ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses profile expectation drift 972ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses deadline expectation drift 958ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses client-count expectation drift 1016ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses duplicate expectation drift 956ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses role-cli expectation drift 1036ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses scope expectation drift 1189ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses witness expectation drift 1091ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses head expectation drift 1116ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-cut expectation drift 1069ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses early-cut expectation drift 996ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses coherent-identity expectation drift 995ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses wrong-slot expectation drift 1026ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-context expectation drift 969ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses an active actual canonical head even when a supplied seal labels it revoked 792ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a lifecycle event published after the sealed close even when its canonical revoke timestamp was backdated 981ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a later protected revision instead of silently advancing an independently retained closed head 1097ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses expire without renewing the original deadline 945ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses withdraw without renewing the original deadline 1066ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > rechecks clean-stop exclusion after an awaited genuine store open 985ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual canonical-projection-rollback and leaves its bytes unrepaired 1002ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual missing-archive and leaves its bytes unrepaired 977ms
+
+ Test Files  1 passed (1)
+      Tests  29 passed (29)
+   Start at  01:00:58
+   Duration  30.72s (transform 479ms, setup 66ms, collect 584ms, tests 29.79s, environment 0ms, prepare 57ms)
+

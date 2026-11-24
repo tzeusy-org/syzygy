@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW\.md`
+
 - `F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW\.md`
 
 - `F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW\.md`
@@ -283,3 +285,5 @@
 [Observed] The [temporary fixture stage diagnostics](../evidence/syzygy-k54o-3/fixture-stage-diagnostics/binding.json) pass the existing ordered native ready case in 24.267 seconds and the two existing unit cases with their original timers. Setup completes at 8.144 seconds before the native child; it closes at 24.233 seconds without the child wall timer firing. In the sixteen-client unit case, fixture creation costs 2.757 seconds and verification 0.907 seconds. The original files were restored exactly. [Unknown] The earlier timeout phases and final native recovery; these diagnostic passes do not supersede the failed full gate.
 
 [Observed] Main `a7b969c0f` is composed with all 77 of its adoption rows preserved byte for byte. The 204 composed rows have distinct IDs. The unlanded F3 row for `236df7ecd` is reassigned A-217 while main's briefing-scope A-213 remains intact. Earlier frozen branch records retain their labels and subjects; no runtime source or reviewed verdict changes.
+
+[Observed] The cold-history fixture batch review records `PASS` for `0b94e69f7` (F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW.md). One genuine eight-slot allocation per generation replaces eight single-slot transactions. All 29 existing cases, 37 complete assertion statements and 23 expect lines remain unchanged. The [binding](../evidence/syzygy-k54o-3/cold-history-fixture-batch/binding.json) records the 29-case focused pass and explicit source-state mapping. No runtime or timer changes. [Unknown] Full-gate acceptance and the historical timeout phase; source review and focused verification do not establish native recovery.

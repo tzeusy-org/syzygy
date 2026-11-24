@@ -1,0 +1,7 @@
+{
+  "completeAssertionExpressionStatements": 37,
+  "assertionsByteIdentical": true,
+  "entireDescribeBlockByteIdentical": true,
+  "secondMethodExpectLinesBefore": 23,
+  "secondMethodExpectLinesAfter": 23
+}

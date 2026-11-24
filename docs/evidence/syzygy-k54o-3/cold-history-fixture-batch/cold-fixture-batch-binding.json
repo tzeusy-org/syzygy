@@ -1,0 +1,73 @@
+{
+  "base": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "candidate": {
+    "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+    "originalSha256": "622c7a7adc9435ff699ba7eb22095c95df5b35b9440676ffbb49d74dee9aa7a7",
+    "sha256": "faafb98f1a2b94ce9631ff4de9e3826612a30746b31f0f826c96f500e034de9d",
+    "insertions": 12,
+    "deletions": 8,
+    "netLines": 4,
+    "changedPaths": [
+      "packages/polaris-dossier/src/url-machine-cold-history.test.ts"
+    ],
+    "status": " M packages/polaris-dossier/src/url-machine-cold-history.test.ts\n",
+    "frozen": true
+  },
+  "verification": {
+    "command": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l node node_modules/vitest/vitest.mjs run --project unit --maxWorkers 1 --reporter verbose packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+    "exit": 0,
+    "files": 1,
+    "tests": 29,
+    "passed": 29,
+    "failed": 0,
+    "totals": [
+      "Test Files  1 passed (1)",
+      "Tests  29 passed (29)",
+      "Duration  30.72s (transform 479ms, setup 66ms, collect 584ms, tests 29.79s, environment 0ms, prepare 57ms)"
+    ],
+    "sixteenClientCase": [
+      "\u2713 |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store 1497ms"
+    ],
+    "assertionPreservation": {
+      "completeAssertionExpressionStatements": 37,
+      "assertionsByteIdentical": true,
+      "entireDescribeBlockByteIdentical": true,
+      "secondMethodExpectLinesBefore": 23,
+      "secondMethodExpectLinesAfter": 23
+    },
+    "noOtherChecks": "No typecheck, fullsuite, native run, mutations or runtime edits for this candidate."
+  },
+  "footprint": {
+    "perGeneration": {
+      "slots": 8,
+      "allocationTransactionsBefore": 8,
+      "allocationTransactionsAfter": 1,
+      "allocationStateWritesBefore": 8,
+      "allocationStateWritesAfter": 1
+    },
+    "twoGenerationCase": {
+      "slots": 16,
+      "allocationTransactionsBefore": 16,
+      "allocationTransactionsAfter": 2,
+      "allocationStateWritesBefore": 16,
+      "allocationStateWritesAfter": 2
+    },
+    "unchanged": "Genuine store allocator creates random slot IDs and never-issued witnesses; role/kind order is retained. Actual lifecycle publications, canonical/projection/audit writes and cold verification remain unchanged. Whole describe block including all cases/assertion expressions/literal expected values is byte-identical. Unstaged batch still uses existing5000ms operation budget and originalcaller/run deadlines.",
+    "intermediateStateDifference": "Each generation publishes8never-issued entries atomically, so allocation-only1..7client membership prefixes are not persisted. No per-allocation lifecycle revision/audit event exists; same per-client issued/rotated/revoked revision semantics and terminal heads are retained. The two-generation fixture still issues/rotates/revokes only its original indices0and3; other slots remain never-issued."
+  },
+  "artifacts": {
+    "patch": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/cold-fixture-batch.patch",
+      "sha256": "ed20cb0dc7ca20c5160c0cf34f1ab871c65ac5003753dc78590eefd3562c4175"
+    },
+    "log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/cold-fixture-batch-focused.log",
+      "sha256": "24a0f0f68c2c9a2e9d6d351b557b4f1bfcb3c0426cb76702b27b866c70293b1b"
+    },
+    "assertionComparison": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/cold-fixture-batch-assertions.json",
+      "sha256": "917c16eccd62c68f26ced539bfa62c39f75b5d34d6d45468db2074e1f283e06a"
+    }
+  },
+  "limitations": "Focused29-case success does not make the prior full gate green or prove its timeout phase; no capacity fixture change. No commit or tracker mutation."
+}

@@ -1,0 +1,47 @@
+{
+  "format": "f3-cold-history-fixture-batch/1",
+  "capturedAt": "2026-11-24T17:06:49.139875+00:00",
+  "subjectCommit": "0b94e69f71e6609ad6b04c1fca0e11681ef7f6c1",
+  "parentCommit": "83f0ff9341d6ecc52bc1f9b91807ecb9ba7bf4d4",
+  "subject": {
+    "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+    "sha256": "faafb98f1a2b94ce9631ff4de9e3826612a30746b31f0f826c96f500e034de9d"
+  },
+  "review": {
+    "path": "docs/reviews/F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW.md",
+    "sha256": "6c762b8987d99fcc6025bde26a5d6654110c36f081019b96f7e9445eff60888b",
+    "verdict": "PASS",
+    "scope": "one-file fixture source review only"
+  },
+  "verification": {
+    "authorFocused": {
+      "passed": 29,
+      "population": 29,
+      "sourceState": "dirty81e37 fixture bytes match committedsubject",
+      "assertionStatementsUnchanged": 37,
+      "expectLinesUnchanged": 23,
+      "caseDelta": 0
+    },
+    "fullUnitGate": "Running at exactsubject0b94 under dedicated0700TMPDIR; no result claimed.",
+    "nativeRecovery": "Pending."
+  },
+  "change": "Eight genuine store allocations per generation become one actual eight-slot batch. Removed allocation-only intermediate membership prefixes are not asserted cold-history observations. Slot/witness and lifecycle/cold-read paths remain real. No runtime or timer changes.",
+  "artifacts": {
+    "cold-fixture-batch-binding.json": {
+      "sha256": "bc2cddabb7d328f880640367a519d727df250fd6736310515e5a3ac9e046848f",
+      "bytes": 3836
+    },
+    "cold-fixture-batch.patch": {
+      "sha256": "ed20cb0dc7ca20c5160c0cf34f1ab871c65ac5003753dc78590eefd3562c4175",
+      "bytes": 2825
+    },
+    "cold-fixture-batch-focused.log": {
+      "sha256": "24a0f0f68c2c9a2e9d6d351b557b4f1bfcb3c0426cb76702b27b866c70293b1b",
+      "bytes": 5309
+    },
+    "cold-fixture-batch-assertions.json": {
+      "sha256": "917c16eccd62c68f26ced539bfa62c39f75b5d34d6d45468db2074e1f283e06a",
+      "bytes": 206
+    }
+  }
+}
