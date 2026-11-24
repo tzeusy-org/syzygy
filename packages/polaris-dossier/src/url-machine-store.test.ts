@@ -10,7 +10,7 @@ import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { initializeUrlMachineStore, openUrlMachineStore, type UrlMachineStore, type UrlMachineStoreOptions } from './url-machine-store.js';
+import { initializeUrlMachineStore, openUrlMachineStore, type UrlMachineStore, type UrlMachineStoreOptions, type UrlMachineStoreRefusal } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, type NativeSessionProfile } from './session-profile.js';
 import { URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext, type UrlMachineClientRecord } from './url-machine-instance.js';
@@ -68,7 +68,7 @@ afterEach(async () => {
   for (const clean of cleanup.splice(0).reverse()) await clean();
 });
 
-async function fixture(duration = 60_000) {
+async function fixture(duration = 60_000, onRefusal?: UrlMachineStoreOptions['onRefusal']) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'machine-store-'));
   cleanup.push(() => rm(root, { recursive: true, force: true }));
   const governanceRoot = path.join(root, 'observing/.syzygy');
@@ -76,7 +76,8 @@ async function fixture(duration = 60_000) {
   await mkdir(canonicalRoot, { recursive: true });
   let now = NOW, valid = true;
   const options: UrlMachineStoreOptions = { governanceRoot, protectedRoot: path.join(root, 'protected'),
-    deadline: NOW + duration, now: () => now, current: () => valid };
+    deadline: NOW + duration, now: () => now, current: () => valid,
+    ...(onRefusal === undefined ? {} : { onRefusal }) };
   const store = await initializeUrlMachineStore(options);
   expect(store).not.toBeNull();
   cleanup.push(() => store!.close());
@@ -211,7 +212,11 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
   });
 
   it.each(['unprofiled', 'ordinary', 'ordered'] as const)('bounds %s effects by the matching declared profile while retaining finite expiry', async kind => {
-    const profile = effectProfile(kind === 'ordered'), f = await fixture(), slot = await f.allocate(profile);
+    const refusals: UrlMachineStoreRefusal[] = [];
+    const profile = effectProfile(kind === 'ordered'), f = await fixture(60_000, refusal => {
+      refusals.push(refusal);
+      throw new Error('owned observer failure');
+    }), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
     expect(slot.context.policySha256).not.toBe(profile.input.binding.policy);
     let offset = 0;
@@ -227,6 +232,11 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(atTwentySeconds).toBe(kind === 'ordered');
       expect(atThirtySeconds).toBe(false);
       expect(result).toBe(false);
+      expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
+        operationMilliseconds: kind === 'ordered' ? 30_000 : kind === 'ordinary' ? 20_000 : 5000,
+        operationElapsedMs: kind === 'unprofiled' ? 6000 : kind === 'ordinary' ? 20_000 : 30_000,
+        runRemainingMs: 60_000 }]);
+      expect(Object.isFrozen(refusals[0])).toBe(true);
     } finally { clock.mockRestore(); }
   });
 
@@ -394,7 +404,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
   // genuine native peer; the composed native run verifies that separate gate.
   it.each(['selected', 'selected-eleven-seconds', 'ordinary', 'operation-expired', 'run-expired', 'connection-closed'] as const)(
     'isolates archive and audit timing behind the resumed publication selector in mode %s', async scenario => {
-      const f = await fixture(), slot = await f.allocate(), root = f.options.protectedRoot;
+      const refusals: UrlMachineStoreRefusal[] = [];
+      const f = await fixture(60_000, refusal => { refusals.push(refusal); }), slot = await f.allocate(), root = f.options.protectedRoot;
       const archive = path.join(root, 'canonical-history.json'), stateFile = path.join(root, 'state.json');
       const previousArchive = await readFile(archive);
       const previousPointer = JSON.parse(await readFile(stateFile, 'utf8')).archive;
@@ -420,6 +431,15 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
         const result = await store.publish(published, stillOpening, peer);
         expect(result.ok).toBe(accepted);
         expect(offset).toBe(elapsed);
+        if (scenario === 'connection-closed') expect(refusals).toEqual([
+          { phase: 'check-deadline', reason: 'staging-current', operationMilliseconds: 15_000 },
+        ]);
+        else if (scenario === 'operation-expired' || scenario === 'ordinary') {
+          expect(refusals).toHaveLength(1);
+          expect(refusals[0]).toMatchObject({ phase: 'check-deadline', reason: 'operation-limit',
+            operationMilliseconds: scenario === 'ordinary' ? 5000 : 15_000, runRemainingMs: 60_000 });
+          expect(refusals[0]!.operationElapsedMs).toBeGreaterThanOrEqual(elapsed);
+        } else expect(refusals).toEqual([]);
         if (peer !== undefined) expect(proof).toHaveBeenCalledExactlyOnceWith(peer, store, published, stillOpening);
         else expect(proof).not.toHaveBeenCalled();
         const state = JSON.parse(await readFile(stateFile, 'utf8'));
@@ -1333,7 +1353,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
   });
 
   it('discards filesystem results when authority outlasts the exclusive deadline', async () => {
-    const f = await fixture(), slot = await f.allocate();
+    const refusals: UrlMachineStoreRefusal[] = [];
+    const f = await fixture(60_000, refusal => { refusals.push(refusal); }), slot = await f.allocate();
     expect((await slot.publish()).ok).toBe(true);
     let afterSync = false;
     const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
@@ -1344,6 +1365,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     filesystem.afterSync = file => { if (file === f.options.protectedRoot) afterSync = true; };
     const run = vi.fn();
     expect(await reopened!.exclusive(slot.context.clientId, NOW + 1000, run)).toBe(false);
+    expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'run-deadline',
+      operationMilliseconds: 5000, runRemainingMs: 0 }]);
     expect(afterSync).toBe(true);
     expect(run).not.toHaveBeenCalled();
     expect(await readFile(slot.file)).toEqual(canon(slot.record));
@@ -1545,7 +1568,11 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(await readdir(path.join(durable.options.protectedRoot, 'lock'))).toEqual([]);
     filesystem.afterSync = undefined;
 
-    const late = await fixture(300), next = await late.allocate();
+    const refusals: UrlMachineStoreRefusal[] = [];
+    const late = await fixture(300, refusal => {
+      refusals.push(refusal);
+      throw new Error('owned observer failure');
+    }), next = await late.allocate();
     let entered!: () => void, release!: () => void;
     const syncing = new Promise<void>(resolve => { entered = resolve; });
     const held = new Promise<void>(resolve => { release = resolve; });
@@ -1555,10 +1582,15 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const publishing = next.publish();
     await syncing;
     expect((await publishing).ok).toBe(false);
+    expect(refusals).toHaveLength(1);
+    expect(refusals[0]).toMatchObject({ phase: 'timer', reason: 'timer-fired',
+      operationMilliseconds: 5000, runRemainingMs: 300, timerDelayMs: 300 });
+    expect(refusals[0]!.operationElapsedMs).toBeGreaterThanOrEqual(0);
     release();
     await new Promise(resolve => setTimeout(resolve, 20));
     await expect(readFile(next.file)).rejects.toMatchObject({ code: 'ENOENT' });
     expect(await readdir(path.join(late.options.protectedRoot, 'lock'))).toEqual([]);
+    expect(refusals).toHaveLength(1);
   });
 
   it('fails closed when an operation exhausts its finite I/O-call ceiling', async () => {

@@ -17,6 +17,15 @@ import type { UrlRunDeclaration } from './url-run-record.js';
 import { urlRendererCurrent, type UrlLoadedRenderer } from './url-runtime.js';
 import type { DossierScreen } from './screen.js';
 
+/** Trusted host diagnostic, emitted once after an inspection refuses. No source
+ * material, binding, error, or additional authority/clock sample is exposed. */
+export interface UrlDesignProductInspectionRefusal {
+  readonly phase: 'entry-lease' | 'entry-sample' | 'first-stable' | 'renderer' | 'exit-sample'
+    | 'second-stable' | 'pre-copy-lease' | 'post-copy-lease' | 'exception';
+  readonly termination: 'expired' | 'retired';
+  readonly deadline: number | null;
+}
+
 export interface DesignProductOptions {
   readonly run: string;
   readonly record: RecordedRunConfig;
@@ -28,6 +37,8 @@ export interface DesignProductOptions {
   readonly products: RunProductReads;
   readonly current: () => boolean;
   readonly continuationDeadline?: number;
+  /** Synchronous, trusted host observer. Exceptions cannot affect inspection. */
+  readonly observeInspectionRefusal?: (refusal: UrlDesignProductInspectionRefusal) => void;
 }
 
 declare const productBrand: unique symbol;
@@ -78,6 +89,7 @@ interface ProductEntry {
   readonly leaseCurrent: () => boolean;
   readonly signalCurrent: () => boolean;
   readonly waitForSample?: () => Promise<void>;
+  readonly observeInspectionRefusal?: DesignProductOptions['observeInspectionRefusal'];
 }
 const validated = new WeakMap<ValidatedUrlDesignProduct, ProductEntry>();
 const checkedExpiryErrors = new WeakMap<Error, ValidatedUrlDesignProduct>();
@@ -157,7 +169,8 @@ export function describeCheckedUrlDesignProduct(input: ProducedSiteInput, option
 
 async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: DesignProductOptions,
   finish: (entry: ProductEntry, deadline: number) => T): Promise<T | null> {
-  const { run, record, declaration, screen, renderer, ledger, scaffold, products, current, continuationDeadline } = options;
+  const { run, record, declaration, screen, renderer, ledger, scaffold, products, current, continuationDeadline,
+    observeInspectionRefusal } = options;
   const signal = input.signal;
   const waitForValidation = (): Promise<void> => products.waitForSample?.() ?? yieldToPoll();
   const live = (): boolean => input.signal === signal && !signal.aborted
@@ -261,7 +274,7 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
       output: { files: screened.files, pages: screened.pages, bytes: screened.bytes, population }, rawActive: checkedView.rawActive });
     if (stable() !== 'open') return null;
     const entry: ProductEntry = { metadata, original: Uint8Array.from(original), view: Uint8Array.from(checkedView.bytes),
-      parents, rendererCurrent, stable, checkLease, readTermination, leaseCurrent, signalCurrent,
+      parents, rendererCurrent, stable, checkLease, readTermination, leaseCurrent, signalCurrent, observeInspectionRefusal,
       ...(products.waitForSample === undefined ? {} : { waitForSample: products.waitForSample }) };
     // Copying can itself cross the deadline. Publish only after a fresh cheap
     // lease sample, with no await between that sample and publication.
@@ -273,9 +286,13 @@ async function checkUrlDesignProduct<T>(input: ProducedSiteInput, options: Desig
 /** Materialize the defensive copy in the same synchronous continuation as the
  * final lease/registry check. Never return a live entry across another await. */
 async function withCurrentProduct<T>(capability: ValidatedUrlDesignProduct, expected: UrlDesignProductBinding,
-  materialize: (entry: ProductEntry) => T): Promise<T | null> {
+  materialize: (entry: ProductEntry) => T, observeInspection = false): Promise<T | null> {
   const entry = validated.get(capability);
   if (entry === undefined) return null;
+  const observer = observeInspection ? entry.observeInspectionRefusal : undefined;
+  // Capture metadata only; do not sample dynamic lease/authority or the clock.
+  const deadline = observer === undefined ? undefined : lifetimes.get(capability)?.deadline;
+  let phase: UrlDesignProductInspectionRefusal['phase'] = 'entry-lease';
   const matching = (): boolean => expected.run === entry.metadata.run && expected.runId === entry.metadata.runId
     && expected.pinnedRevision === entry.metadata.pinnedRevision;
   let cause: ProductTermination = 'retired';
@@ -293,22 +310,39 @@ async function withCurrentProduct<T>(capability: ValidatedUrlDesignProduct, expe
     return current();
   };
   try {
-    if (current() && (waitForSample === undefined || await currentAfterSample())
-      && checked(entry.stable()) && await entry.rendererCurrent()
-      && (waitForSample === undefined ? current() : await currentAfterSample()) && checked(entry.stable()) && current()) {
+    // The original conjunction, in the same short-circuit and await order.
+    do {
+      if (!current()) break;
+      phase = 'entry-sample';
+      if (!(waitForSample === undefined || await currentAfterSample())) break;
+      phase = 'first-stable';
+      if (!checked(entry.stable())) break;
+      phase = 'renderer';
+      if (!(await entry.rendererCurrent())) break;
+      phase = 'exit-sample';
+      if (!(waitForSample === undefined ? current() : await currentAfterSample())) break;
+      phase = 'second-stable';
+      if (!checked(entry.stable())) break;
+      phase = 'pre-copy-lease';
+      if (!current()) break;
       const value = materialize(entry);
       // Defensive copies may be costly too; an expired/aborted lease must
       // discard the prepared value before any host caller receives it.
+      phase = 'post-copy-lease';
       if (current()) return value;
-    }
-  } catch { cause = 'retired'; }
-  terminateProduct(capability, cause);
+    } while (false);
+  } catch { cause = 'retired'; phase = 'exception'; }
+  const termination = terminateProduct(capability, cause);
+  if (observer !== undefined) {
+    try { observer({ phase, termination, deadline: Number.isSafeInteger(deadline) ? deadline! : null }); }
+    catch { /* Diagnostics never change the original inspection result. */ }
+  }
   return null;
 }
 
 /** Host inspection, scoped to the still-active genuine render operation. */
 export async function inspectUrlDesignProduct(capability: ValidatedUrlDesignProduct, expected: UrlDesignProductBinding): Promise<UrlDesignProductMetadata | null> {
-  return withCurrentProduct(capability, expected, entry => copy(entry.metadata));
+  return withCurrentProduct(capability, expected, entry => copy(entry.metadata), true);
 }
 
 /** Cancellation and expiry check for an operation already verified by the caller. */

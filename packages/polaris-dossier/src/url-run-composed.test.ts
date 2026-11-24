@@ -399,7 +399,7 @@ function observeColdFinalPreparation() {
   type Step = ResumeStamp & { ordinal: number; phase: Phase; remainingMs?: number; observationUnavailable?: true };
   type Projection = { basis: 'after-original-null'; history: { present: boolean; eligible: boolean; number: boolean; site: boolean };
     comparisons?: { predicate: string; accepted: boolean }[]; unavailable?: true };
-  type Entry = ResumeStamp & { ordinal: number; steps: Step[]; stepCalls: number; productRemainingMs?: number; projection?: Projection };
+  type Entry = ResumeStamp & { ordinal: number; steps: Step[]; stepCalls: number; productRemainingMs?: number; projection?: Projection; inspectionRefusal?: designProduct.UrlDesignProductInspectionRefusal };
   type Frame = { entry: Entry; number: number; site: number;
     lastAttempt?: NonNullable<ReturnType<typeof auditHistory.readVerifiedUrlAuditLaunches>>['ordered'][number];
     product?: designProduct.UrlDesignProductMetadata };
@@ -490,6 +490,15 @@ function observeColdFinalPreparation() {
     watch(productFiles, 'snapshotProductFile', original => (...args) => measure('snapshot-file', () => original(...args), value => value.bytes !== null));
   };
   return {
+    productOptions(options: designProduct.DesignProductOptions): designProduct.DesignProductOptions {
+      return { ...options, observeInspectionRefusal: refusal => {
+        const frame = scope.getStore();
+        if (frame !== undefined) frame.entry.inspectionRefusal ??= {
+          phase: refusal.phase, termination: refusal.termination, deadline: refusal.deadline,
+        };
+        options.observeInspectionRefusal?.(refusal);
+      } };
+    },
     run<T>(input: Pick<Parameters<typeof sessionAudit.prepareRecoveredUrlDesignRenderContinuation>[0], 'number' | 'site'>, invoke: () => T): T {
       if (active++ === 0) install();
       const entry: Entry = { ordinal: ++calls, startedMs: performance.now(), steps: [], stepCalls: 0 };
@@ -1197,6 +1206,14 @@ function observeScopedCurrent<T extends ResumeStamp, R extends boolean | Promise
   } catch (error) { settle('rejected'); throw error; }
 }
 
+// These observer-owned spies have no call-history contract. Clear synchronously:
+// Tinyspy appends this call's result after the implementation returns, leaving
+// one result and at most two settled-result slots even with overlapping promises.
+function withoutObserverHistory<T>(history: { mockClear(): unknown }, invoke: () => T): T {
+  try { return invoke(); }
+  finally { history.mockClear(); }
+}
+
 async function observeDesignRun(run: string, traceInference = false) {
   const began = performance.now();
   const clock = () => Math.round((performance.now() - began) * 1000) / 1000;
@@ -1209,6 +1226,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     timing: ResumeStamp;
     stages: Array<{ phase: AppendStage; timing: ResumeStamp }>;
     attemptCurrent?: ScopedCurrentCalls<CurrentTrace>;
+    responseStopReason?: 'tool_use' | 'end_turn';
   };
   const appendContext = new AsyncLocalStorage<AppendTrace>();
   let preparedAppend: AppendTrace | undefined, latestAppend: AppendTrace | undefined, firstRefusedAppend: AppendTrace | undefined;
@@ -1262,8 +1280,9 @@ async function observeDesignRun(run: string, traceInference = false) {
   await descriptor.close();
   for (const operation of ['read', 'write', 'sync', 'stat'] as const) {
     const original = prototype[operation];
-    vi.spyOn(prototype, operation).mockImplementation(function (this: fs.FileHandle, ...args: unknown[]) {
-      return observeAppendStage(operation, () => original.apply(this, args), () => true);
+    const history = vi.spyOn(prototype, operation);
+    history.mockImplementation(function (this: fs.FileHandle, ...args: unknown[]) {
+      return withoutObserverHistory(history, () => observeAppendStage(operation, () => original.apply(this, args), () => true));
     });
   }
   const socketLinks = new WeakMap<Parameters<typeof machineTransport.openSessionMachineConnection>[0], ResumeConnection>();
@@ -1572,7 +1591,9 @@ async function observeDesignRun(run: string, traceInference = false) {
   vi.spyOn(orderedWriter, 'createOrderedDesignAuditWriter').mockImplementation((context, store, observeRead) => {
     const append = store.append, current = store.current;
     vi.spyOn(store, 'append').mockImplementation(record => {
-      const trace: AppendTrace = { kind: record.kind, timing: { startedMs: clock() }, stages: [] };
+      const trace: AppendTrace = { kind: record.kind, timing: { startedMs: clock() }, stages: [],
+        ...(record.kind === 'response-admitted' && 'native' in record.payload
+          ? { responseStopReason: record.payload.native.stopReason } : {}) };
       latestAppend = trace;
       if (record.kind === 'prepared') preparedAppend ??= trace;
       const pending = appendContext.run(trace, () => record.kind === 'prepared'
@@ -1898,6 +1919,55 @@ describe('bounded restoration observer (no native authority fixture)', () => {
     expect(summary.entries[0]!.runRemainingMs).toBeLessThanOrEqual(60_000);
     const diagnostic = JSON.stringify(summary);
     for (const excluded of [root, 'owned.txt', 'OWN_OBSERVER_BODY', 'OWN_PRIVATE_EXCEPTION']) expect(diagnostic).not.toContain(excluded);
+
+    // Exercise the same history-only wrapper as the FileHandle observers. These
+    // local ports issue no filesystem operation, capability or authority call.
+    const marker = new Error('OWN_OBSERVER_HISTORY_ERROR');
+    const boundary = { call(value: unknown): unknown {
+      expect(this).toBe(boundary);
+      if (value === marker) throw value;
+      return value;
+    } };
+    const original = boundary.call, history = vi.spyOn(boundary, 'call');
+    history.mockImplementation(function (this: typeof boundary, value: unknown) {
+      return withoutObserverHistory(history, () => original.call(this, value));
+    });
+    const bounded = () => {
+      expect(history.mock.calls).toHaveLength(0);
+      expect(history.mock.contexts).toHaveLength(0);
+      expect(history.mock.instances).toHaveLength(0);
+      expect(history.mock.invocationCallOrder).toHaveLength(0);
+      expect(history.mock.results).toHaveLength(1);
+      expect(history.mock.settledResults.length).toBeLessThanOrEqual(2);
+    };
+    for (let index = 0; index < 80; index++) {
+      const value = { bytes: Uint8Array.of(index) };
+      expect(boundary.call(value)).toBe(value);
+      expect(history.mock.results[0]?.value).toBe(value);
+      bounded();
+    }
+    const pending = Array.from({ length: 40 }, () => {
+      let resolve!: (value: object) => void, reject!: (reason: unknown) => void;
+      const promise = new Promise<object>((accept, refuse) => { resolve = accept; reject = refuse; });
+      return { promise, resolve, reject };
+    });
+    const completed = Promise.allSettled(pending.map(item => item.promise));
+    for (const item of pending) { expect(boundary.call(item.promise)).toBe(item.promise); bounded(); }
+    const fulfilled = Object.freeze({ bytes: Uint8Array.of(7) });
+    for (const [index, item] of pending.entries()) {
+      if (index % 2 === 0) item.resolve(fulfilled); else item.reject(marker);
+    }
+    const outcomes = await completed;
+    for (const [index, outcome] of outcomes.entries()) {
+      if (index % 2 === 0) { expect(outcome.status).toBe('fulfilled'); if (outcome.status === 'fulfilled') expect(outcome.value).toBe(fulfilled); }
+      else { expect(outcome.status).toBe('rejected'); if (outcome.status === 'rejected') expect(outcome.reason).toBe(marker); }
+    }
+    bounded();
+    let caught: unknown;
+    try { boundary.call(marker); } catch (error) { caught = error; }
+    expect(caught).toBe(marker);
+    expect(history.mock.results[0]).toEqual({ type: 'throw', value: marker });
+    bounded();
   });
 
   it('observes the actual history re-export and unissued transfer without adding authority calls', () => {
@@ -2082,9 +2152,13 @@ describe('bounded restoration observer (no native authority fixture)', () => {
       const authorityCurrent = vi.fn(() => true), storedReply = Object.freeze({ private: 'OWN_PRIVATE_COLD_BODY' });
       const readStored = vi.fn((within: () => boolean) => { expect(within()).toBe(true); return storedReply; });
       const fakeVerified = capability as Parameters<typeof recovery.isClaimedStoppedUrlRun>[0];
+      const inspectionRefusal = Object.freeze({ phase: 'first-stable' as const, termination: 'retired' as const, deadline });
+      let observedInspection: designProduct.UrlDesignProductInspectionRefusal | undefined;
+      const coldOptions = cold.productOptions({ observeInspectionRefusal: value => { observedInspection = value; } } as designProduct.DesignProductOptions);
       let originalPreparation!: Promise<null>;
       const preparing = cold.run(coldInput, () => originalPreparation = Promise.resolve().then(async () => {
         for (let index = 0; index < 80; index++) expect(recovery.isClaimedStoppedUrlRun(fakeVerified, token)).toBe(index !== 40);
+        coldOptions.observeInspectionRefusal!(inspectionRefusal);
         expect(auditHistory.readVerifiedUrlAuditLaunches(capability)).toBe(history);
         expect(designProduct.inspectUrlDesignProduct(token, coldBinding)).toBe(inspection); await inspection;
         expect(designProduct.isUrlDesignProductLeaseOpen(token)).toBe(true);
@@ -2101,6 +2175,8 @@ describe('bounded restoration observer (no native authority fixture)', () => {
       expect(sitePort).toHaveBeenCalledExactlyOnceWith('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_SITE', output, fileGuard);
       expect(filePort).toHaveBeenCalledExactlyOnceWith('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_FILE', 64, fileGuard);
       const coldFailure = structuredClone(cold.summary().firstPreparationRefusal);
+      expect(coldFailure?.inspectionRefusal).toEqual(inspectionRefusal);
+      expect(observedInspection).toBe(inspectionRefusal);
       expect(coldFailure?.steps).toHaveLength(32);
       expect(cold.summary().firstStepRefusal).toMatchObject({ preparation: 1, step: { ordinal: 41, phase: 'claim', outcome: 'refused' } });
       expect(coldFailure?.projection?.comparisons?.filter(value => !value.accepted)).toEqual([{ predicate: 'draft-revision', accepted: false }]);
@@ -2302,6 +2378,12 @@ describe('composed URL run with actual role processes', () => {
     const resumeOriginSteps: ResumeOriginStep[] = [];
     let resumeProducts: ReturnType<typeof observeProductRestoration> | undefined;
     const coldFinal = eligibleStop ? observeColdFinalPreparation() : undefined;
+    if (coldFinal !== undefined) {
+      const validate = designProduct.validateUrlDesignProduct;
+      vi.spyOn(designProduct, 'validateUrlDesignProduct').mockImplementation((input, options) =>
+        validate(input, coldFinal.productOptions(options)));
+    }
+    const resumeStoreRefusals = { entries: [] as Array<machineStore.UrlMachineStoreRefusal & { atMs: number }>, omitted: 0 };
     const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
@@ -2334,7 +2416,7 @@ describe('composed URL run with actual role processes', () => {
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
@@ -2344,7 +2426,7 @@ describe('composed URL run with actual role processes', () => {
         // Existing in-memory metadata only: no extra authority checks or IO.
         console.error('owned eligible stop finished', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
           resumeBootstrap, coldFinal: coldFinal?.summary(), latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
-          resumeAuditEnteredMs, resumeAuditSetup, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary() }));
+          resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary() }));
       });
     }
     let releaseFinalResponses: (() => void) | undefined;
@@ -2970,7 +3052,11 @@ describe('composed URL run with actual role processes', () => {
             };
             const openObservation = vi.spyOn(machineStore, 'openUrlMachineStore').mockImplementationOnce(async (storeOptions, identity) => {
               const currentAsync = storeOptions.currentAsync;
-              const observedOptions = currentAsync === undefined ? storeOptions : { ...storeOptions, currentAsync: () => {
+              const observedOptions = { ...storeOptions, onRefusal: (refusal: machineStore.UrlMachineStoreRefusal) => {
+                if (resumeStoreRefusals.entries.length < 32) resumeStoreRefusals.entries.push({ ...refusal, atMs: performance.now() });
+                else resumeStoreRefusals.omitted++;
+                storeOptions.onRefusal?.(refusal);
+              }, ...(currentAsync === undefined ? {} : { currentAsync: () => {
                 const authority = storeStepScope.getStore()?.asyncAuthority;
                 if (authority === undefined) return currentAsync();
                 authority.started++;
@@ -2980,7 +3066,7 @@ describe('composed URL run with actual role processes', () => {
                   authority.totalMs += performance.now() - started;
                 };
                 return observe(currentAsync, value => { settled(value ? 'accepted' : 'refused'); }, () => { settled('rejected'); });
-              } };
+              } }) };
               const store = await observeBootstrap('open-store', () =>
                 observeStoreStep({ kind: 'open', ...startStoreStep() }, () => open(observedOptions, identity), value => value !== null), value => value !== null);
               if (store === null) return null;
@@ -3170,7 +3256,7 @@ describe('composed URL run with actual role processes', () => {
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
           await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
-            resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
+            resumeAuditSetup, resumeStoreRefusals, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
             launchesBeforeResume, launchesAfterResume: [...relayRoles],
@@ -3242,7 +3328,7 @@ describe('composed URL run with actual role processes', () => {
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
-          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
+          resumeAuditSetup, resumeStoreRefusals, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
           initialOrderedAudit: initialTrace?.orderedAudit, initialInference: initialTrace?.inference }, null, 2));
@@ -3251,7 +3337,7 @@ describe('composed URL run with actual role processes', () => {
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
         initialInference: initialTrace?.inference, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),

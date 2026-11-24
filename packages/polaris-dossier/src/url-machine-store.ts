@@ -65,6 +65,18 @@ const pathValid = (value: string): boolean => path.isAbsolute(value) && path.nor
   && value.length <= 4096 && !/[\0-\x1f\x7f]/u.test(value);
 const below = (file: string, root: string): boolean => file === root || file.startsWith(`${root}/`);
 
+/** Metadata from the first selected guard refusal in one held operation.
+ * Missing samples were not taken by that original guard. Timer samples describe
+ * scheduling, not the later firing instant or a proven winning bound. */
+export type UrlMachineStoreRefusal = Readonly<{
+  phase: 'check-deadline' | 'timer';
+  reason: 'inactive' | 'staging-current' | 'run-deadline' | 'operation-limit' | 'timer-fired';
+  operationMilliseconds: number;
+  operationElapsedMs?: number;
+  runRemainingMs?: number;
+  timerDelayMs?: number;
+}>;
+
 export interface UrlMachineStoreOptions {
   /** The observing project's declared .syzygy governance root. */
   readonly governanceRoot: string;
@@ -76,6 +88,9 @@ export interface UrlMachineStoreOptions {
   readonly current: () => boolean;
   /** The same fresh authority check around asynchronous filesystem work. */
   readonly currentAsync?: () => Promise<boolean>;
+  /** Trusted synchronous metadata observer only; exceptions cannot grant, refuse
+   * or replace the original result. No paths, subjects or raw errors are sent. */
+  readonly onRefusal?: (refusal: UrlMachineStoreRefusal) => void;
 }
 interface UrlMachineStoreLease extends UrlMachineLifecycleLease {
   sampleCurrent(): number | null;
@@ -442,15 +457,31 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         terminalRead = false } = bounds;
       const began = performance.now();
       let active = true, held = false, uncertain = false, contended = false;
+      let refusalReported = false;
+      const reportRefusal = (refusal: Omit<UrlMachineStoreRefusal, 'operationMilliseconds'>): void => {
+        if (refusalReported) return;
+        refusalReported = true;
+        try { options.onRefusal?.(Object.freeze({ ...refusal, operationMilliseconds })); } catch { /* Diagnostic only. */ }
+      };
       const pending = new Set<Promise<unknown>>();
       const allocation = staging?.allocation === true;
       const stagedPublication = staging !== undefined && !allocation;
       const resumedDesignPublication = stagedPublication && operationMilliseconds === RESUMED_DESIGN_PUBLICATION_MILLISECONDS;
       const joinedTerminalLock = terminalRead && currentAsync !== undefined;
       const checkDeadline = (): number => {
-        if (!active || (staging?.current !== undefined && staging.current() !== true)) throw refused();
+        if (!active) { reportRefusal({ phase: 'check-deadline', reason: 'inactive' }); throw refused(); }
+        if (staging?.current !== undefined && staging.current() !== true) {
+          reportRefusal({ phase: 'check-deadline', reason: 'staging-current' }); throw refused();
+        }
         const now = clock();
-        if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();
+        if (now >= deadline) {
+          reportRefusal({ phase: 'check-deadline', reason: 'run-deadline', runRemainingMs: deadline - now }); throw refused();
+        }
+        const operationElapsedMs = performance.now() - began;
+        if (operationElapsedMs >= operationMilliseconds) {
+          reportRefusal({ phase: 'check-deadline', reason: 'operation-limit', operationElapsedMs,
+            runRemainingMs: deadline - now }); throw refused();
+        }
         return now;
       };
       const check = (): number => {
@@ -648,9 +679,15 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
       try {
         return await Promise.race([work, new Promise<never>((_, reject) => {
-          const operationRemaining = operationMilliseconds - (performance.now() - began);
-          timer = setTimeout(() => { uncertain = true; active = false; reject(refused()); },
-            Math.max(1, Math.min(operationRemaining, deadline - clock())));
+          const operationElapsedMs = performance.now() - began;
+          const operationRemaining = operationMilliseconds - operationElapsedMs;
+          const runRemainingMs = deadline - clock();
+          const timerDelayMs = Math.max(1, Math.min(operationRemaining, runRemainingMs));
+          timer = setTimeout(() => {
+            uncertain = true; active = false;
+            reportRefusal({ phase: 'timer', reason: 'timer-fired', operationElapsedMs, runRemainingMs, timerDelayMs });
+            reject(refused());
+          }, timerDelayMs);
         })]);
       } catch { uncertain = true; return false; }
       finally {
