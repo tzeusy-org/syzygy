@@ -1,0 +1,10 @@
+{
+  "adoption": "A-233",
+  "subject": "de00d56019b48060ae782786033a715ab7dbb4be",
+  "candidatePatchSha256": "b983920191b9fa00c07f215969687744d6ba9646baa54e552552bf0a50bc351f",
+  "archiveSha256": "6fb3da9529f9123787038b94705ca4538272225cf52c06ed21d53883a8629d71",
+  "archiveBytes": 177299,
+  "members": 41,
+  "review": "PASS",
+  "verification": "20unit+125integration pass in sixfiles; typecheckPASS; threeold180s mutants fail, transportmutant by positive-case timeout (see limitations); genuine andfullcanonicalverificationpending"
+}
