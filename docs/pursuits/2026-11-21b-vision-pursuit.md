@@ -653,6 +653,76 @@ implementation (`d2b84f57`), "after" is the code after its review corrections (`
   the quote marks around its rendered quotations. The dossier's 17 missing paths are mostly its
   own pages and generator files. Neither arm's figures say whether an unquoted claim is true.
 
+## R16 slice 1: the corpus, written before any pass (2026-11-24)
+
+Bead syzygy-5dhm.74. The corpus, the mechanism-version definition, the pass budget and the
+generality pass rule are one sealed file, `docs/polaris-generation/dossier-corpus-v1.json`,
+written before any corpus pass has run (none can until syzygy-k54o.3 and the runner,
+syzygy-5dhm.75, land). `node scripts/dossier_corpus.mjs --check` validates it and
+`packages/polaris-dossier/src/corpus.test.ts` holds its seal as a literal, so editing the rule
+fails a check; a changed rule is a new file, `dossier-corpus-v2.json`, with its own adoption
+row, and applies only to passes that start after it.
+
+[Observed] Fourteen entries, chosen by tree listing and public metadata only (no body read,
+nothing cloned). Each survey is the script's `--survey` output on 2026-11-24, which applies the
+structure record's own rules to the listing; the tier is a selection label over listed blob
+bytes (XS under 256 KiB, S under 4 MiB, M under 16 MiB, L under 128 MiB), not the scale
+ladder's tier, which is not built.
+
+| Id | Repository | Commit | Shape | Strata it fills | Tier | Server trait |
+|---|---|---|---|---|---|---|
+| C01 | redis/redis | `498ecd0d` | C server, data store | cost-baseline anchor | L | yes |
+| C02 | psf/requests | `6e83187b` | Python library | | M | no |
+| C03 | BurntSushi/ripgrep | `e89fff89` | Rust CLI workspace | | S | no |
+| C04 | caddyserver/caddy | `edcdfa0e` | Go server | | M | yes |
+| C05 | excalidraw/excalidraw | `9c2e462e` | TypeScript web app workspace | | L | no |
+| C06 | kubernetes/kubernetes | `43cbb94e` | Go large monorepo | large monorepo | XL | yes |
+| C07 | terraform-aws-modules/terraform-aws-vpc | `577ad620` | Terraform module | infrastructure-only | S | no |
+| C08 | github/gitignore | `eeb775f7` | data-only templates | data or documentation only | XS | no |
+| C09 | rust-lang/rfcs | `f43d5789` | documentation-only design records | data or documentation only | M | no |
+| C10 | dromara/hutool | `87ec1186` | Java library workspace, Chinese docs | non-English documentation | M | no |
+| C11 | torvalds/pesconvert | `d6d7001b` | C tool, no README, no docs root | no README or documentation root | XS | no |
+| C12 | tzeusy-org/butlers | `be3a18d7` | owned Python application workspace | owner-owned | L | yes |
+| C13 | tzeusy-org/syzygy | `21e73d5c` | owned TypeScript governance polyglot | owner-owned | XL | yes |
+| C14 | synthetic notebook pipeline | `fb635704` (this repository, holding the kit) | synthetic, private | synthetic private visibility | XS | — |
+
+The file holds the full 40-hex commits. [Observed] Both owned repositories are public on
+GitHub, so the private stratum is the synthetic fixture alone; the owned ones fill the owned
+stratum. Five candidates were left out, each with its reason in the file (Sentry for its
+licence, OpenBSD because its listing is truncated).
+
+**Mechanism version.** SHA-256 over a format line and one `<sha256>  <path>` line per member
+file, sorted: the brief (`brief.ts`, `reader-standards.ts`, the shape packs), the draft schema,
+check and the structure rules it derives from, the renderer (`render.ts`, `dossier-render*.ts`,
+`dossier-site.ts`) and the screen (`screen.ts`, `policy-snapshot.ts`, the declared-source
+policies), test files left out. [Observed] At `fb635704` it is `b9506ac8…` over 22 files. Session
+prompts, review packets and the supervisor are not covered, so a change there starts no pass; a
+comment in a covered file does.
+
+**Budget.** Each entry is run twice per pass, with one re-run only after a recorded
+infrastructure fault. Per run: `claude-opus-5-5`, PT4H, 30,000,000 tokens, 1,000 turns, six repair
+cycles, the supervisor's four sessions. One plain-arm session per public entry (PT1H, 5,000,000
+tokens). Per pass: at most two runs at once, 72 wall hours, 485,000,000 tokens, and at most one
+pass started per ISO week. Whatever the budget does not reach is recorded Unknown.
+
+**Generality pass rule.** The verdict is `pass`, `fail` or `incomplete`; an Unknown is never a
+pass. For every entry: G1, both runs reach a reviewed close within their limits; G2, public
+entries only, the dossier (mean of two runs) is below the plain arm on at most one of the six
+question kinds, where "below" means by more than one required fact (A-63's per-kind bar); G3,
+no required figure view missing; G4, per-Pole depth minimums; G5, each run names the traits no
+shape pack matched and the units left derived-only. Reviewer calibration: nine seeded
+known-false blocks per pass, and below seven caught the pass's readiness verdicts read
+`uncalibrated`. Cost: [Observed] the six stored runs' medians are 44.75 wall minutes and five
+review rounds, recomputed by the test from `measure-now.json`. Targets for the Redis anchor
+from the second pass: at most 31.325 minutes and three rounds. [Unknown] Tokens: no stored run
+recorded usage, so the token target is 0.7 of the first pass's anchor median, fixed before the
+second pass. A regression needs a drop in both runs (A-38, A-63), and no rise is called a win.
+
+**Deviations from R16's text.** The cost targets bind the anchor repository, not every
+dossier, because the baseline is of one repository. The pass-wide medians are reported against
+the same figures but decide nothing. The token baseline is not "the six stored runs' medians"
+because those runs recorded no tokens.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner

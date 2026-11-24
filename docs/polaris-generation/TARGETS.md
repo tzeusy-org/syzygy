@@ -49,6 +49,15 @@ admission.
 - One thin-documentation repository, chosen later: does the generator invent a
   thesis where none is stated, or say Unknown?
 
+**The dossier corpus (2026-11-24).** The stratified corpus that agent-started
+dossier runs use (pursuit 2026-11-21b R16) is
+[`dossier-corpus-v1.json`](dossier-corpus-v1.json): fourteen repositories
+pinned to commits, the mechanism-version definition, the pass budget and the
+generality pass rule, sealed before any pass. It reuses T1, T2 and ripgrep at
+the pins above and leaves T3 out for a permissively licensed large monorepo.
+`node scripts/dossier_corpus.mjs --check` validates it; `--digest` prints the
+current mechanism version.
+
 ## Changed-source regeneration: Redis's licence history
 
 The portability proof needs a real change of source meaning — "retract a
