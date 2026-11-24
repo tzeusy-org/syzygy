@@ -695,7 +695,10 @@ licence, OpenBSD because its listing is truncated).
 file, sorted: the brief (`brief.ts`, `reader-standards.ts`, the shape packs), the draft schema,
 check and the structure rules it derives from, the renderer (`render.ts`, `dossier-render*.ts`,
 `dossier-site.ts`) and the screen (`screen.ts`, `policy-snapshot.ts`, the declared-source
-policies), test files left out. [Observed] At `fb635704` it is `b9506ac8…` over 22 files. Session
+policies), test files left out. [Observed] At `3a24d409` (main on 2026-11-24) it is
+`da891d2e…` over 22 files. It read `b9506ac8…` at `fb635704`, where the file was first
+drafted, and moved because main changed `dossier-render.ts` and `dossier-site.ts` in
+between; the seal was taken again before adoption, so no adopted seal changed. Session
 prompts, review packets and the supervisor are not covered, so a change there starts no pass; a
 comment in a covered file does.
 

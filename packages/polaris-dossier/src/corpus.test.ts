@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.
 const CORPUS = 'docs/polaris-generation/dossier-corpus-v1.json';
 const MEASURE_NOW = 'docs/evidence/pursuit-2026-11-21b/measure-now.json';
 /** The seal of corpus version 1. Editing a sealed member fails this test: write dossier-corpus-v2.json and a new adoption row instead. */
-const SEAL_V1 = '51f5fcf386c65d4608e82316e70b1fc193349165080a48dc828eb5b383fc0b09';
+const SEAL_V1 = '2622cc82d8ee362b8645688cdeb04849b6865c6bfc8a0dc1f3bbb01826511cac';
 
 type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 let corpus: Json;

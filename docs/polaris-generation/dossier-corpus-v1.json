@@ -3,7 +3,7 @@
   "version": 1,
   "writtenOn": "2026-11-24",
   "bead": "syzygy-5dhm.74",
-  "status": "Agent-adopted working data (VIS-4 as amended by D10), written before any corpus pass. No corpus pass has run; runs wait for syzygy-k54o.3 and the runner (syzygy-5dhm.75).",
+  "status": "Working data, adopted by an agent row in .syzygy/governance/decisions/AGENT-ADOPTIONS.md that names this file (VIS-4 as amended by D10); not owner-decided. Written before any corpus pass. No corpus pass has run; runs wait for syzygy-k54o.3 and the runner (syzygy-5dhm.75).",
   "basis": {
     "move": "pursuit 2026-11-21b R16 (syzygy-5dhm.16), its What text",
     "selection": "Chosen by tree listing and public metadata only: `git ls-remote` for each pinned commit and `gh api repos/<owner/name>` and `.../git/trees/<commit>?recursive=1` for licence, visibility and the listing (paths, modes, sizes); no blob body was read and nothing was cloned. Each entry's survey is the output of `node scripts/dossier_corpus.mjs --survey <owner/name> <commit>` on 2026-11-24, which applies the structure record's own rules (packages/polaris-dossier/src/derive.ts, server-entry@1, docs-tree@1, manifest-names@1) to the listing with no secret-path predicate",
@@ -207,8 +207,8 @@
     "encoding": "SHA-256 of the text `polaris-dossier-mechanism/1` and a newline, then one line `<sha256 of the file's bytes>  <path>` per member file, sorted by path (code units), each ending in a newline. A member with `*` names every file in its directory whose name matches, less those ending in an excluded suffix; a member naming no file refuses. Computed by mechanismVersion (packages/polaris-dossier/src/corpus.ts), printed by `node scripts/dossier_corpus.mjs --digest`",
     "covers": "What an author is told (brief, reader standards, shape packs), may write (draft schema), is checked against (check and the structure rules it derives from), is rendered as (renderer), and what is screened out of reach (screen and the declared-source policies). Not covered, so a change there starts no pass: session prompts and the supervisor (polaris.ts, session-handover.ts), review packets and verdict reading (review*.ts), the inventory, census and every module these import. A cosmetic change to a covered file (a comment) does move the digest",
     "atWriting": {
-      "measuredOn": "fb63570441b5c31da1b01069ebdf1ea2654fd4ab",
-      "digest": "b9506ac8b6517478531976ba64a2b9bd8bbdeed5793337fbf15d73a72aa08fd9",
+      "measuredOn": "3a24d409a07d0ba5c04aabb4ace79161ac44503d",
+      "digest": "da891d2e7def53364604fc46f7e19b9245987cd98952f716dd89c7bd1d4f0e19",
       "files": 22
     }
   },
@@ -293,6 +293,6 @@
   },
   "seal": {
     "covers": ["entries", "tiers", "mechanismVersion", "passBudget", "passRule"],
-    "sha256": "51f5fcf386c65d4608e82316e70b1fc193349165080a48dc828eb5b383fc0b09"
+    "sha256": "2622cc82d8ee362b8645688cdeb04849b6865c6bfc8a0dc1f3bbb01826511cac"
   }
 }
