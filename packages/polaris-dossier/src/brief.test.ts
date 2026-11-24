@@ -135,7 +135,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v16', schemaVersion: 'polaris-dossier-local-draft-v10',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v19', schemaVersion: 'polaris-dossier-local-draft-v13',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     expect(JSON.parse(read(run, 'raw-read-disclosure.json'))).toEqual({
@@ -146,7 +146,7 @@ describe('brief: issued', () => {
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v13\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -169,8 +169,8 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v16', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v10', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v19', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      schemaVersion: 'polaris-dossier-local-draft-v13', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -380,6 +380,8 @@ const TASK_ROUTES_PARAGRAPH = 'Write `taskRoutes`: 8 to 15 tasks a reader brings
 const SUBSECTIONS_PARAGRAPH = 'A section may also carry `subsections`, two to twelve, in reading order, when it answers more than one question. Each subsection has `id`, `title`, `answer` and `paragraphs`: `title` names the question in a short label; `answer` is one Inferred or Unknown claim block, with the members that form of a paragraph takes, whose `text` is one sentence that answers the question; and `paragraphs`, zero to thirty, hold what supports that answer, as a section\'s paragraphs do. Check counts a full stop, question mark or exclamation mark that a space follows, outside a quotation, as the end of a sentence, so write `for example`, not `e.g.`, in an answer. A section\'s own paragraphs open it, before its subsections. Syzygy renders each subsection under its own heading with its answer first, and lists the page\'s sections and subsections at the top of the page. A figure is never homed in a subsection, and a deep dive has none.';
 /** Brief v15's paragraph (version 2.19), copied by hand from the requirement's text. */
 const RELATION_TYPES_PARAGRAPH = 'Every arrow of a graph diagram (an item of `edges`) carries `relation`, the one relation it asserts: `contains`, `declares-dependency`, `needs-job`, `depends-on-service`, `calls`, `imports`, `reads`, `writes`, `sends-to`, `starts` or `relates-to`, the last where none of the others fits. A node may carry `unit`, the one part of the repository it is: `{"kind": "repository-root"}`, `{"kind": "top-level-directory", "path": "<directory name>"}`, `{"kind": "package-manifest", "path": "<path of a package.json, Cargo.toml, pyproject.toml or go.mod>"}`, `{"kind": "dependency-name", "name": "<name as declared>"}`, `{"kind": "workflow-job", "path": "<workflow path>", "job": "<job key>"}` or `{"kind": "compose-service", "path": "<Compose file path>", "service": "<service key>"}`. Give a node a unit only when it is exactly that unit; Syzygy never matches by label. Where Syzygy derives a fact of an arrow\'s exact relation between its two nodes\' units, it draws the arrow solid as Observed, in its own words; where its derivation is complete and holds no such fact, check reports a finding to repair. Today only `contains`, from the repository root to a top-level directory, can be witnessed.';
+// Brief v19's paragraph, as REQ-polaris-generation-034 version 2.26 states it (a literal, never imported from brief.ts).
+const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole and has no place to say why it marks none.';
 const SERVER_ONLY = ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided', '(server and'];
 const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ readonly run: string; readonly brief: string; readonly record: Record<string, unknown> }> => {
   const run = runDirectory(SUBJECT, configOf(), name);
@@ -395,9 +397,9 @@ describe('brief: shape packs (version 2.4)', () => {
     const schemaSha = sha(read(run, 'draft.schema.json'));
     const lines = golden.split('\n');
     const swap = (from: string, to: string): void => { const at = lines.indexOf(from); expect(at).toBeGreaterThan(-1); lines[at] = to; };
-    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v16`');
+    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v19`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
-      `- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
+      `- Draft schema: \`polaris-dossier-local-draft-v13\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
     swap('SEC-2 and SEC-5 bind your own reads and sends: use only content classified and screened under the bound screening policy for this run, preserve its exclusions and private metadata protections, and send content only to the declared provider for this run. Never send secrets or unclassifiable content. A provider declaration grants no screening exception. Your read account and tool transmissions are self-reported, never observed compliance.', D11_BRIEF_RULE);
     const sections = lines.findIndex((line) => line.startsWith('Write one section per topic, in this order, each section\'s `id` the topic\'s id'));
     expect(sections).toBeGreaterThan(-1);
@@ -409,6 +411,8 @@ describe('brief: shape packs (version 2.4)', () => {
     const understanding = lines.indexOf('## The understanding record');
     expect(lines[understanding - 2]!.startsWith('Divide the sections into Poles in `poles`')).toBe(true);
     lines.splice(understanding, 0, '## Task routes', '', TASK_ROUTES_PARAGRAPH, '');
+    // Brief v19 (version 2.26) added the worth-knowing paragraph immediately after the Poles paragraph.
+    lines.splice(lines.indexOf('## Task routes'), 0, WORTH_KNOWING_PARAGRAPH, '');
     expect(brief).toBe(lines.join('\n'));
     expect(schemaSha).not.toBe('36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc');
     expect(record['readerStandards']).toEqual({ version: 'polaris-reader-standards-v1', sha256: V1_SHA });

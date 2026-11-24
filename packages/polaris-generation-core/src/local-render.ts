@@ -333,6 +333,10 @@ export interface LocalRenderInput {
   /** Backticked spans of the blocks' own text that the path secret detector matches (the index-and-task-routes change). The generated index lists none of
    * them as an identifier. Absent or empty when no block writes one. */
   readonly unindexedNames?: readonly string[];
+  /** A schema-v13 draft's worth-knowing marks (REQ-polaris-generation-034 version 2.26): the ids of its marked blocks, each one of a
+   * section's own paragraphs, in draft order, and the indexes into `poles` of the Poles that say none of their blocks meets the test.
+   * Absent for every earlier draft, so its pages keep their bytes. */
+  readonly worthKnowing?: { readonly blockIds: readonly string[]; readonly nonePoles: readonly number[] };
 }
 
 /** One task route: a reader's task as a short label, and the cited steps that answer it. A step may name, in `see`, the section or deep

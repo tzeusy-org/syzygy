@@ -821,13 +821,31 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
-    const body = section.paragraphs.map(b => block(from, b)).join('');
+    // A worth-knowing block (version 2.26) renders once, in its page's callout, and not again here.
+    const body = section.paragraphs.filter(b => !worthKnowingIds.has(b.id)).map(b => block(from, b)).join('');
     // A v8 section's subsections follow its own paragraphs and precede its deep-dive links (version 2.16): each its title as an `h3`, its
     // answer first, rendered as the introduction's block is, then its paragraphs as the section's own are.
     const subsections = (section.subsections ?? []).map(sub => `<section class="subsection" id="subsection-${escape(sub.id)}"><h3>${escape(sub.title)}</h3><div class="subsection-answer">${paragraph(from, sub.answer, 'p')}</div>${sub.paragraphs.map(b => block(from, b)).join('')}</section>`).join('');
     if (subsections !== '') subsectionPages.add(from);
     return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${subsections}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
   };
+  // The worth-knowing callout (version 2.26): on a page that draws sections, before them, the marked blocks of the sections it draws, in
+  // draft order, each a claim block rendered as any is and followed by a link to its section. A Pole that marks none and says why gets
+  // Syzygy's sentence that none was found; the author's reason is never rendered. Only a v13 draft carries marks, so an earlier draft's
+  // pages keep their bytes.
+  const worthKnowingIds: ReadonlySet<string> = new Set(withheld ? [] : local?.worthKnowing?.blockIds ?? []);
+  const worthKnowingCallout = (from: string, shown: readonly DossierDraft['sections'][number][], noneFound: boolean): string => {
+    const items = shown.filter(section => !view.deferredSections.has(section.id) && section.disposition.kind === 'produced').flatMap(section => section.paragraphs
+      .filter(b => worthKnowingIds.has(b.id)).map(b => {
+        termsShown.clear();
+        place = section.title;
+        rank = 1;
+        return `<div class="worth-knowing-item">${block(from, b)}<p class="worth-knowing-from">In <a href="${escape(sectionPage(section.id) === from ? `#section-${section.id}` : sectionHref(from, section.id))}">${escape(section.title)}</a></p></div>`;
+      }));
+    if (items.length > 0) return `<aside class="callout callout-important worth-knowing" id="worth-knowing" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> What a newcomer would not guess</p>${items.join('')}</aside>`;
+    return noneFound ? `<aside class="callout callout-note worth-knowing" id="worth-knowing" data-worth-knowing="none" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> None found</p><p>The authoring session reports that no fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>` : '';
+  };
+  const noneFoundFor = (poleIndex: number): boolean => !withheld && (local?.worthKnowing?.nonePoles ?? []).includes(poleIndex);
   // The on-page contents list (version 2.16): on a page that renders at least one subsection, one item per section the page renders, in
   // page order, each holding its rendered subsections. A section that renders no content of the draft renders no subsection.
   const rendersSubsections = (section: DossierDraft['sections'][number]): boolean =>
@@ -836,7 +854,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     : `<nav class="page-contents" aria-label="On this page"><p class="page-contents-title">On this page</p><ol>${shown.map(section => `<li><a href="#section-${escape(section.id)}">${escape(section.title)}</a>${rendersSubsections(section)
       ? `<ol>${section.subsections!.map(sub => `<li><a href="#subsection-${escape(sub.id)}">${escape(sub.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}</ol></nav>`;
   const onLanding = poleSpec === undefined ? draft.sections : draft.sections.filter(section => section.id === poleSpec.whySection);
-  const sections = withheld ? '' : `${pageContents(onLanding)}${onLanding.map(section => sectionMarkup(from, section, draft.sections.indexOf(section))).join('')}`;
+  // The landing page's callout holds the why section's marked blocks, or every section's in a draft with no Poles; the none-found sentence
+  // of a Pole with no page of its own (one holding only the why section) is drawn here.
+  const landingCallout = withheld ? '' : worthKnowingCallout(from, onLanding, poles.some((pole, index) => pole.path === null && noneFoundFor(index)));
+  const sections = withheld ? '' : `${landingCallout}${pageContents(onLanding)}${onLanding.map(section => sectionMarkup(from, section, draft.sections.indexOf(section))).join('')}`;
   // The map of the Poles: each Pole's label linking to its page (the why section's Pole to the section here), with its sections.
   const poleMap = poles.length === 0 ? '' : `<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol>${poles.map(pole => {
     const target = pole.path === null ? href(from, 'index.html', `section-${poleSpec!.whySection}`) : href(from, pole.path);
@@ -923,17 +944,18 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- Pole pages, in the map's order, after the landing page: each draws its sections; the why section stays on the landing page,
   // and its Pole's page links back to it rather than repeating it.
-  for (const pole of poles) {
+  for (const [poleIndex, pole] of poles.entries()) {
     if (pole.path === null) continue;
     const at = pole.path;
     const rendered = pole.sections.filter(id => id !== poleSpec!.whySection).map(id => draft.sections.find(candidate => candidate.id === id)!);
+    const callout = worthKnowingCallout(at, rendered, noneFoundFor(poleIndex));
     const body = pole.sections.map(id => {
       const section = draft.sections.find(candidate => candidate.id === id)!;
       return id === poleSpec!.whySection
         ? `<p class="pole-why"><a href="${escape(href(at, 'index.html', `section-${id}`))}">${escape(section.title)}</a> is on the overview.</p>`
         : sectionMarkup(at, section, draft.sections.indexOf(section));
     }).join('');
-    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${pageContents(rendered)}${body}</section>`);
+    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${callout}${pageContents(rendered)}${body}</section>`);
   }
 
   // --- deep dives

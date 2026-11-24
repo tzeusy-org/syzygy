@@ -3223,3 +3223,126 @@ describe('render: overview hero (schema v10)', () => {
     expect(index.indexOf('id="figure-system-hero"')).toBeGreaterThan(index.indexOf('id="figure-overview-secondary"'));
   });
 });
+
+// REQ-polaris-generation-034 version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing marks through the render command. A marked block
+// renders once, in its page's callout before the page's sections, followed by a link to its section; a Pole that says why it marks none
+// gets Syzygy's none-found sentence and never its reason; a v13 draft without marks renders as the same v10 draft does. Literals throughout.
+describe('render: the worth-knowing callout (schema v13)', () => {
+  const V10 = 'polaris-dossier-local-draft-v10', V13 = 'polaris-dossier-local-draft-v13';
+  // A v10 or later draft names its hero; both versions here name the same overview graph.
+  const HERO_FIGURE: Doc = {
+    id: 'system-hero', title: 'system-hero', kind: 'boundary', home: { kind: 'overview' }, relationship: 'Related parts of one system.',
+    nodes: [{ id: 'hero-a', label: 'Client', epistemic: 'inferred', citations: [cite('hero-ca', 'src/kestrel.c', 1, 1)] },
+      { id: 'hero-b', label: 'Server', epistemic: 'inferred', citations: [cite('hero-cb', 'src/kestrel.c', 1, 1)] }],
+    edges: [{ id: 'hero-ab', from: 'hero-a', to: 'hero-b', label: 'Communicates', relation: 'relates-to', epistemic: 'inferred', citations: [cite('hero-cab', 'src/kestrel.c', 1, 1)] }],
+    disposition: { kind: 'produced', assetIds: ['system-hero'] },
+  };
+  const REASON = 'REASON-NEVER-RENDERED no fact here meets the test.';
+  const sectionOf = (id: string, title: string, paragraphs: Doc[]): Doc => ({ id, title, paragraphs, disposition: { kind: 'produced', assetIds: [id] } });
+  const versioned = (version: string, mark: boolean, poles: boolean): Doc => {
+    const doc: Doc = { ...draft(), schemaVersion: version, thesisBasis: 'stated', hero: { figure: 'system-hero' }, diagrams: [HERO_FIGURE] };
+    const sections = doc['sections'] as Doc[];
+    // p1 carries the member set false: only `true` marks a block.
+    if (mark) { (sections[0]!['paragraphs'] as Doc[])[1]!['worthKnowing'] = true; (sections[0]!['paragraphs'] as Doc[])[0]!['worthKnowing'] = false; }
+    if (poles) {
+      sections.unshift(sectionOf('why', 'Why Kestrel exists', [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }]));
+      sections.push(sectionOf('later', 'Later', [{ id: 'l1', label: 'non-normative', text: 'Later words.', children: [] }]));
+      doc['poles'] = [{ label: 'Why', sections: ['why'] }, { label: 'How it works', sections: ['core-ideas'] },
+        { label: 'Later on', sections: ['later'], ...(mark ? { worthKnowingNone: REASON } : {}) }];
+      doc['whySection'] = 'why';
+    }
+    return doc;
+  };
+  // Reviewed, so a supported block renders Inferred: only such a block is lifted into the callout.
+  const unreviewed = async (doc: Doc): Promise<ReadonlyMap<string, string>> => {
+    const result = await renderRun(await prepared(doc, false), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const rendered = async (doc: Doc, extraSupport: readonly Doc[] = []): Promise<ReadonlyMap<string, string>> => {
+    const framing = (doc['poles'] === undefined ? [] : ['w1', 'l1']).map((blockId) => ({ blockId, verdict: 'supported', spanIds: [], reason: 'Non-normative fits.', quotations: [] }));
+    // A supported Inferred row names a span: the added rows take the span of the line they cite, src/kestrel.c line 1.
+    const run = await prepared(doc, true, [...framing, ...extraSupport], { verdict: (v, spans) => {
+      for (const row of v['blockSupport'] as Doc[]) if (extraSupport.includes(row) && row['verdict'] === 'supported') row['spanIds'] = spans.filter((span) => span.path === 'src/kestrel.c' && span.startLine === 1).slice(0, 1).map((span) => span.id);
+    } });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    return readSite(result.report.site);
+  };
+  const OPEN = '<aside class="callout callout-important worth-knowing" id="worth-knowing" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> What a newcomer would not guess</p><div class="worth-knowing-item"><p ';
+  const FROM = (href: string) => `<p class="worth-knowing-from">In <a href="${href}">Core ideas</a></p></div></aside>`;
+  const NONE = '<aside class="callout callout-note worth-knowing" id="worth-knowing" data-worth-knowing="none" aria-label="Worth knowing"><p class="callout-title"><span class="callout-tone">Worth knowing</span> None found</p><p>The authoring session reports that no fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>';
+
+  it('draws a Pole\'s marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why', async () => {
+    const files = await rendered(versioned(V13, true, true));
+    const pole = files.get('poles/2.html')!;
+    const at = pole.indexOf(OPEN);
+    expect(at).toBeGreaterThan(-1);
+    expect(pole.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeGreaterThan(at);
+    expect(pole.indexOf('id="block-p2"')).toBeLessThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(pole.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+    expect(pole.indexOf('id="block-p1"')).toBeGreaterThan(pole.indexOf('<section id="section-core-ideas"'));
+    expect(files.get('poles/3.html')).toContain(NONE);
+    for (const [file, page] of files) {
+      expect(page, file).not.toContain('REASON-NEVER-RENDERED');
+      if (file.endsWith('.html')) expect(page.toLowerCase(), file).not.toContain('<script');
+    }
+    expect(files.get('index.html')).not.toContain('worth-knowing');
+    const claims = (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] }).claims;
+    expect(claims.filter((claim) => claim.id === 'p2').map((claim) => claim.page)).toEqual(['poles/2.html']);
+  });
+
+  it('draws the callout on the landing page, before the sections, for a draft with no Poles', async () => {
+    const index = (await rendered(versioned(V13, true, false))).get('index.html')!;
+    const at = index.indexOf(OPEN);
+    expect(at).toBeGreaterThan(index.indexOf('</header>'));
+    expect(index.indexOf(FROM('#section-core-ideas'), at)).toBeGreaterThan(at);
+    expect(index.indexOf(FROM('#section-core-ideas'))).toBeLessThan(index.indexOf('<section id="section-core-ideas"'));
+    expect(index.match(/data-claim-id="p2"/gu)).toHaveLength(1);
+  });
+
+  it('lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section', async () => {
+    const doc = versioned(V13, true, false);
+    const paragraphs = (doc['sections'] as Doc[])[0]!['paragraphs'] as Doc[];
+    // p1 is marked, but the review finds its anchor does not support it, so it renders Unknown.
+    paragraphs[0]!['worthKnowing'] = true;
+    paragraphs.push(
+      { id: 'p7', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [cite('c-p7', '.env', 1, 1)], quotations: [], children: [], worthKnowing: true },
+      { id: 'p8', label: 'inferred', basis: 'source', text: `zq-matched ${SECRET_PATH} paragraph.`, citations: [cite('c-p8', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: true },
+      // Supported and Inferred, but `worthKnowing: false` marks nothing.
+      { id: 'p9', label: 'inferred', basis: 'source', text: 'zq-unmarked paragraph.', citations: [cite('c-p9', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: false });
+    // Unreviewed, every block renders Unknown, so none is lifted and no callout renders.
+    expect((await unreviewed(doc)).get('index.html')).not.toContain('class="worth-knowing-item"');
+    const files = await rendered(doc, [
+      { blockId: 'p7', verdict: 'withheld', spanIds: [], reason: 'Withheld.', quotations: [] },
+      { blockId: 'p8', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] },
+      { blockId: 'p9', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }]);
+    const index = files.get('index.html')!;
+    const at = index.indexOf(OPEN);
+    const section = index.indexOf('<section id="section-core-ideas"');
+    expect(at).toBeGreaterThan(-1);
+    expect(index.indexOf('id="block-p2"')).toBeGreaterThan(at);
+    expect(index.indexOf('id="block-p2"')).toBeLessThan(section);
+    expect(index.slice(at, section).match(/class="worth-knowing-item"/gu)).toHaveLength(1);
+    for (const id of ['p1', 'p7', 'p8', 'p9']) {
+      expect(index.match(new RegExp(`data-claim-id="${id}"`, 'gu')), id).toHaveLength(1);
+      expect(index.indexOf(`id="block-${id}"`), id).toBeGreaterThan(section);
+    }
+    expect(marked(index, 'p1')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+    expect(marked(index, 'p7')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'p8')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'p9')).toEqual({ epistemic: 'inferred', reason: null });
+  });
+
+  it('renders a v13 draft without marks as the same v10 draft, page for page', async () => {
+    for (const poles of [true, false]) {
+      // Unreviewed, so no record digest of the draft's bytes differs between the two.
+      const v10 = await unreviewed(versioned(V10, false, poles));
+      const v13 = await unreviewed(versioned(V13, false, poles));
+      expect([...v13.keys()].sort(), String(poles)).toEqual([...v10.keys()].sort());
+      for (const [file, page] of v10) if (file.endsWith('.html')) expect(v13.get(file)!.replaceAll(V13, V10), `${poles} ${file}`).toBe(page);
+      for (const page of v13.values()) expect(page).not.toContain('worth-knowing');
+    }
+  });
+});

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkDraftShape, draftSchemaDocument, localDraftSchema } from './draft-schema.js';
+import { checkDraftShape, draftSchemaDocument, localDraftSchema, localInventorySchema } from './draft-schema.js';
 
 // syzygy-qkea.6 (S5): the local-agent draft schema (design "The local-agent draft schema"). A hand-built valid draft passes; each
 // mutation below breaks one labelling, citation, revision or limit rule and must be refused at the path named. Expected paths and
@@ -72,7 +72,7 @@ describe('local-agent draft schema', () => {
     ['a non-normative block carries a citation', (d) => { d.sections[0].paragraphs[0].children[1].citations = [cite('x')]; }, { path: '$.sections[0].paragraphs[0].children[1].citations', detail: 'is not a field of this form' }],
     ['an execution-based claim names no execution', (d) => { d.sections[0].paragraphs[0].children[2].executionIds = []; }, { path: '$.sections[0].paragraphs[0].children[2].executionIds', detail: 'must hold 1 to 20 items; holds 0' }],
     ['the draft names another revision', (d) => { d.pinnedRevision = 'a'.repeat(40); }, { path: '$.pinnedRevision', detail: `must be one of ${REV}` }],
-    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10' }],
+    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }],
     ['the understanding record omits an item', (d) => { delete d.understanding.tradeOffs; }, { path: '$.understanding.tradeOffs', detail: 'is required' }],
     ['an understanding item is left empty rather than Unknown', (d) => { d.understanding.limits = []; }, { path: '$.understanding.limits', detail: 'must hold 1 to 100 items; holds 0' }],
     ['the draft has no understanding record', (d) => { delete d.understanding; }, { path: '$.understanding', detail: 'is required' }],
@@ -178,7 +178,7 @@ describe('draft.schema.json', () => {
 
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v10');
+    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v13');
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);
@@ -201,5 +201,84 @@ describe('draft.schema.json', () => {
 
   it('nowhere offers an observed label', () => {
     expect(JSON.stringify(document).includes('"observed"')).toBe(false);
+  });
+});
+
+// Version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing mark and a Pole's `worthKnowingNone`. Where the mark may stand, and that a marked
+// block cites, is check's (`check.test.ts`); the schema holds only the shape.
+describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
+  const V10_SCHEMA = localDraftSchema({ pinnedRevision: REV, maxQuestions: 1 }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
+  const marked = (): Draft => mutate((d) => {
+    d.sections[0].paragraphs[0].worthKnowing = true;
+    d.sections[0].paragraphs[0].children[2].worthKnowing = false;
+    d.poles = [{ label: 'Ideas', sections: ['core-ideas'], worthKnowingNone: 'No fact here meets the test.' }];
+    d.whySection = 'core-ideas';
+  });
+
+  it('admits the mark on either Inferred form and the reason on a Pole', () => {
+    expect(checkDraftShape(SCHEMA, marked())).toEqual([]);
+  });
+
+  it.each<[string, (draft: Draft) => void, { path: string; detail: string }]>([
+    ['an unknown block carries the mark', (d) => { d.sections[0].paragraphs[0].children[0].worthKnowing = true; }, { path: '$.sections[0].paragraphs[0].children[0].worthKnowing', detail: 'is not a field of this form' }],
+    ['a non-normative block carries the mark', (d) => { d.sections[0].paragraphs[0].children[1].worthKnowing = true; }, { path: '$.sections[0].paragraphs[0].children[1].worthKnowing', detail: 'is not a field of this form' }],
+    ['the mark is not a boolean', (d) => { d.sections[0].paragraphs[0].worthKnowing = 'yes'; }, { path: '$.sections[0].paragraphs[0].worthKnowing', detail: 'must be a boolean' }],
+    ['a Pole\'s reason is empty', (d) => { d.poles[0].worthKnowingNone = ''; }, { path: '$.poles[0].worthKnowingNone', detail: 'must be 1 to 8000 characters; is 0' }],
+  ])('refuses a v13 draft where %s', (_name, change, error) => {
+    const draft = marked();
+    change(draft);
+    expect(checkDraftShape(SCHEMA, draft)).toEqual([error]);
+  });
+
+  it('a v10 form has neither member', () => {
+    expect(checkDraftShape(V10_SCHEMA, marked())).toEqual([
+      { path: '$.sections[0].paragraphs[0].worthKnowing', detail: 'is not a field of this form' },
+      { path: '$.sections[0].paragraphs[0].children[2].worthKnowing', detail: 'is not a field of this form' },
+      { path: '$.poles[0].worthKnowingNone', detail: 'is not a field of this form' },
+    ]);
+  });
+
+  it('names no v11 or v12 schema: those numbers belong to changes this code does not implement, so neither reads as v10 or v13', () => {
+    for (const version of ['polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12']) {
+      const errors = checkDraftShape(SCHEMA, mutate((d) => { d.schemaVersion = version; }));
+      expect(errors.map(({ path }) => path), version).toEqual(['$.schemaVersion']);
+      expect(errors[0]!.detail).toBe('must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13');
+    }
+  });
+
+  it('describes both members to the authoring session in draft.schema.json', () => {
+    const document = draftSchemaDocument({ pinnedRevision: REV, maxQuestions: 1 }) as { $defs: Record<string, { oneOf: Record<string, any>[] }>; properties: Record<string, any> }; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const forms = document.$defs['block']!.oneOf;
+    expect(forms.map((form) => Object.hasOwn(form['properties'], 'worthKnowing'))).toEqual([true, true, false, false]);
+    expect(forms[0]!['properties']['worthKnowing']).toEqual({ type: 'boolean', description: 'Set true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is. Such a block cites at least one source and is never a judgement. Syzygy renders the marked blocks of a page in one callout near its top.' });
+    expect(document.properties['poles']['items']['properties']['worthKnowingNone']['description']).toBe('Optional. Why no block of this Pole\'s sections carries the worth-knowing mark: no fact you found in them meets the test. Syzygy renders that none was found and never renders this reason; the fidelity reviewer reads it.');
+  });
+});
+
+describe('local-agent inventory schema: version 2 (version 2.26)', () => {
+  const INVENTORY = localInventorySchema({ pinnedRevision: REV });
+  const inventoryOf = (schemaVersion: string, kind: string): Record<string, unknown> => ({
+    schemaVersion, pinnedRevision: REV, sessionId: 'inventory-1',
+    entries: [{ id: 'e1', kind, label: 'inferred', statement: 'The tool renders pages.', citations: [cite('e1-c')], quotations: [] }],
+    coverage: { inspected: ['README.md'], excluded: [], deferred: [], stoppingReason: 'Done.' },
+  });
+
+  it('admits the worth-knowing kind, and a version 1 inventory still validates', () => {
+    expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v2', 'worth-knowing'))).toEqual([]);
+    expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v1', 'choice'))).toEqual([]);
+  });
+
+  it('checks a version 1 inventory against the v1 kinds alone, which lack worth-knowing', () => {
+    const V1 = localInventorySchema({ pinnedRevision: REV }, 'v1');
+    expect(checkDraftShape(V1, inventoryOf('polaris-dossier-local-inventory-v1', 'choice'))).toEqual([]);
+    expect(checkDraftShape(V1, inventoryOf('polaris-dossier-local-inventory-v1', 'worth-knowing'))).toEqual([
+      { path: '$.entries[0].kind', detail: 'must be one of purpose, beneficiary, thesis, capability, choice, term, qualification, conflict, other' }]);
+  });
+
+  it('refuses another version or kind', () => {
+    expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v3', 'choice'))).toEqual([
+      { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-inventory-v1, polaris-dossier-local-inventory-v2' }]);
+    expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v2', 'surprise'))).toEqual([
+      { path: '$.entries[0].kind', detail: 'must be one of purpose, beneficiary, thesis, capability, choice, term, qualification, conflict, worth-knowing, other' }]);
   });
 });
