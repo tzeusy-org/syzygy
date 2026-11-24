@@ -774,7 +774,7 @@ called a win.
 
 ## R4 slice 2: the review waits for coverage (2026-11-25)
 
-Bead syzygy-5dhm.29, spec version 2.27 (REQ-polaris-generation-035,
+Bead syzygy-5dhm.29, spec version 2.28 (REQ-polaris-generation-035,
 `openspec/changes/dossier-coverage-hold/`). Slice 1 told the author, as advice, which inventory
 entries no draft block covers. Now Syzygy issues no fidelity packet while such an entry has no
 outcome. An outcome is either coverage by check's rule or a line in `inventoryOmissions` with a

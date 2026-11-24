@@ -1,4 +1,4 @@
-# Dossier coverage hold: the fidelity review waits until every listed entry has an outcome — version 2.27
+# Dossier coverage hold: the fidelity review waits until every listed entry has an outcome — version 2.28
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit, no change to secret detection or SEC-5's fail-closed rule (a path a detector matches is counted and never named, as in check's advice), no foreign repository write, no exposure, release or multi-user use.
 

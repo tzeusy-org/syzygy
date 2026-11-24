@@ -5,7 +5,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { runDossierCli, type CliPorts } from './cli.js';
 import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, draft, fixtureSources, inventory, makeClone, type Doc } from './full-run.testkit.js';
 
-// syzygy-5dhm.29 (REQ-polaris-generation-035 version 2.27): the fidelity review waits until every listed inventory entry has an outcome.
+// syzygy-5dhm.29 (REQ-polaris-generation-035 version 2.28): the fidelity review waits until every listed inventory entry has an outcome.
 // The fixture inventory has two entries, `e-kestrel` (src/kestrel.c line 1) and `e-snap` (docs/notes.txt line 1); a draft whose sections
 // keep only the first paragraph cites no line of docs/notes.txt and names no path of it, so `e-snap` has no outcome. Every expected
 // value is written out.

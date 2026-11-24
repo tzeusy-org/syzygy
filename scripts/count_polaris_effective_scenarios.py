@@ -83,7 +83,7 @@ The verify-text version2.21 amendment replaces 033 after the run-tree
 read-bounds version2.18 when its own adoption binding verifies; each parser
 counts its one replacement (033).
 
-The coverage-hold version 2.27 amendment replaces 035 after the run-tree
+The coverage-hold version 2.28 amendment replaces 035 after the run-tree
 read-bounds version 2.18 when its own adoption binding verifies; each parser
 counts its one replacement (035).
 

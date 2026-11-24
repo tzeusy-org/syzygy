@@ -898,7 +898,7 @@ describe('delivery to a waiting review session', () => {
     expect(awaited.doc['next']).toContain(`pass the verdict's JSON as the standard input of ${handOverText(`syzygy dossier await ${fid}/ --submit round-1/verdict.json --stdin`)}. Syzygy writes`);
   });
 
-  it('delivers nothing while a listed inventory entry has no outcome in the passed draft (syzygy-5dhm.29, version 2.27; mutant: drop the delivery hold)', async () => {
+  it('delivers nothing while a listed inventory entry has no outcome in the passed draft (syzygy-5dhm.29, version 2.28; mutant: drop the delivery hold)', async () => {
     const h = await harness();
     await readyForReview(h);
     const fid = path.join(h.sessions, 'fidelity-1');

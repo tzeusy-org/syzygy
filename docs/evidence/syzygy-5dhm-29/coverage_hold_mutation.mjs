@@ -1,5 +1,5 @@
 // Recorded mutation run over the predicates of the fidelity review's coverage hold (syzygy-5dhm.29, REQ-polaris-generation-035
-// version 2.27), adapted from docs/evidence/syzygy-5dhm-41/worth_knowing_mutation.mjs.
+// version 2.28), adapted from docs/evidence/syzygy-5dhm-41/worth_knowing_mutation.mjs.
 // Usage: node coverage_hold_mutation.mjs <worktree> <out.json> <scratch-dir> [--dry] [--only <id>,<id>]
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the checks of its group, and restores the source in
 // `finally`. vitest runs with a 120 s test timeout, so a loaded machine's slow test is not scored as a kill. `--dry` only asserts that

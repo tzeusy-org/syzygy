@@ -783,7 +783,7 @@ VERIFY_SUBJECTS = {
     VERIFY_SPEC: "a5453cb1a5c8813fbba513e0b232e6cfc483ceb7ee87061b7f7b67516f0d9cd7",
 }
 VERIFY_BOUND_PARTS = len(VERIFY_SUBJECTS)
-# The v2.27 coverage-hold amendment (syzygy-5dhm.29): one MODIFIED
+# The v2.28 coverage-hold amendment (syzygy-5dhm.29): one MODIFIED
 # REQ-polaris-generation-035 (the fidelity review waits until every listed
 # inventory entry has an outcome) after its v2.18 run-tree read-bounds text,
 # pending until its own VIS-4 ledger row.
@@ -791,11 +791,11 @@ COVHOLD_CHANGE = "dossier-coverage-hold"
 COVHOLD_HOME = f"{CHANGES}/{COVHOLD_CHANGE}"
 COVHOLD_SPEC = f"{COVHOLD_HOME}/proposed/polaris-generation/spec.md"
 COVHOLD_UNION = f"{COVHOLD_HOME}/GOVERNING-DEPENDENCIES.json"
-COVHOLD_TAG = "polaris-dossier-coverage-hold-v2.27"
-COVHOLD_STATUS_PREFIX = f"[Coverage-hold amendment 2.27]({COVHOLD_HOME})"
+COVHOLD_TAG = "polaris-dossier-coverage-hold-v2.28"
+COVHOLD_STATUS_PREFIX = f"[Coverage-hold amendment 2.28]({COVHOLD_HOME})"
 COVHOLD_REPLACES = (POLARIS_ID + "035",)
 COVHOLD_SUBJECTS = {
-    COVHOLD_SPEC: "0fdec5bb33714c83ad6d965756d2e3fec378785ae7d09a55b9f0a9725a1f7d1f",
+    COVHOLD_SPEC: "0cc85d6b61d7d251ad8b32c005dcd373990cec433034bf2057628ff046f30181",
 }
 COVHOLD_BOUND_PARTS = len(COVHOLD_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
@@ -2980,7 +2980,7 @@ def verify_binding(root):
 
 
 def is_covhold_row(line):
-    """A ledger row claiming the v2.27 coverage-hold amendment, well formed or not."""
+    """A ledger row claiming the v2.28 coverage-hold amendment, well formed or not."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
@@ -3009,7 +3009,7 @@ def covhold_disposition(root, rows):
 
 
 def covhold_binding(root):
-    """Read v2.27's published composition: pending until its row, like v2.21's.
+    """Read v2.28's published composition: pending until its row, like v2.21's.
 
     The row names the installing commit (a plain commit, so its revert may
     omit `-m 1`), the reviewed spec at that commit and the version tag. Its
@@ -3043,7 +3043,7 @@ def covhold_binding(root):
     for rel, digest in COVHOLD_SUBJECTS.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"coverage hold: `{rel}` differs from the reviewed v2.27 subject")
+            subjects.append(f"coverage hold: `{rel}` differs from the reviewed v2.28 subject")
     return (None if records or subjects else read_text(root, COVHOLD_SPEC), records, subjects)
 
 
@@ -3755,7 +3755,7 @@ def check_outcomes(root, report):
     if verify_retired_by:
         retirement += f"; v2.21 inactive by {verify_retired_by}"
     if covhold_retired_by:
-        retirement += f"; v2.27 inactive by {covhold_retired_by}"
+        retirement += f"; v2.28 inactive by {covhold_retired_by}"
     if readers_retired_by:
         retirement += f"; v2.22 inactive by {readers_retired_by}"
     if cont_retired_by:
@@ -3801,7 +3801,7 @@ def check_outcomes(root, report):
                "one v2.23 row over effective v2.22, pending until recorded; system model: "
                "one v2.24 row over effective v2.23, pending until recorded; worth-knowing: "
                "one v2.26 row over effective v2.24, pending until recorded; coverage hold: "
-               "one v2.27 row over effective v2.18's 035, pending until recorded" + retirement)
+               "one v2.28 row over effective v2.18's 035, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -5741,17 +5741,17 @@ def check_routes(root, pop, report):
         examined += 2
         if not any(Path(AGENT_ADOPTIONS).name in line and COVHOLD_TAG in line
                    for line in rows.get(COVHOLD_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` does not route coverage hold v2.27 "
+            findings.append(f"`{OPENSPEC_README}` does not route coverage hold v2.28 "
                             f"to `{AGENT_ADOPTIONS}` and its version tag")
         identity = covhold_rows(root)[0][0]
         if AGENT_ADOPTIONS not in status or covhold_fields != [f"{COVHOLD_STATUS_PREFIX} is agent-adopted in {identity}."]:
-            findings.append(f"`{STATUS}` does not route coverage hold v2.27 and its adoption {identity}")
+            findings.append(f"`{STATUS}` does not route coverage hold v2.28 and its adoption {identity}")
     elif COVHOLD_CHANGE in changes:
         examined += 2
         if any("is agent-adopted" in field for field in covhold_fields):
-            findings.append(f"`{STATUS}` calls coverage hold v2.27 adopted while it is not in force")
+            findings.append(f"`{STATUS}` calls coverage hold v2.28 adopted while it is not in force")
         if any(COVHOLD_TAG in line and "Agent adoption" in line for line in rows.get(COVHOLD_CHANGE, [])):
-            findings.append(f"`{OPENSPEC_README}` calls coverage hold v2.27 adopted while it is not in force")
+            findings.append(f"`{OPENSPEC_README}` calls coverage hold v2.28 adopted while it is not in force")
     reltype_amendment, _records, _subjects = reltype_binding(root)
     reltype_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
@@ -10112,7 +10112,7 @@ COVHOLD_SCENARIOS_ADDED = 4
 
 
 def covhold_cases(tmp, base, witnesses, failures):
-    """The v2.27 pending-to-adopted transition over v2.18's 035, its ledger and byte guards, and the predecessor guard."""
+    """The v2.28 pending-to-adopted transition over v2.18's 035, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, COVHOLD_SPEC)
     if original is None or treeread_binding(base)[0] is None:
         return
@@ -10135,8 +10135,8 @@ def covhold_cases(tmp, base, witnesses, failures):
     ident = COVHOLD_REPLACES[0]
     held = (covhold_binding(tree) == (None, [], []) and not pending_findings
             and len(predecessor[ident]["scenarios"]) == COVHOLD_PREDECESSOR_SCENARIOS)
-    record("covhold-pending", AGENT_ADOPTIONS, "<no v2.27 row>", "<unchanged>",
-           "landed package alone keeps v2.27 pending", pending_findings, held, True)
+    record("covhold-pending", AGENT_ADOPTIONS, "<no v2.28 row>", "<unchanged>",
+           "landed package alone keeps v2.28 pending", pending_findings, held, True)
 
     oid = "0123456789abcdef" * 2 + "01234567"
     row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{COVHOLD_SPEC}) "
@@ -10149,8 +10149,8 @@ def covhold_cases(tmp, base, witnesses, failures):
             and len(current[ident]["scenarios"]) == COVHOLD_PREDECESSOR_SCENARIOS + COVHOLD_SCENARIOS_ADDED
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
-    record("covhold-adopted", AGENT_ADOPTIONS, "<no v2.27 row>", row,
-           "v2.27 replaces exactly 035 (40 to 44 scenarios)", current_findings, held, True)
+    record("covhold-adopted", AGENT_ADOPTIONS, "<no v2.28 row>", row,
+           "v2.28 replaces exactly 035 (40 to 44 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", COVHOLD_TAG, COVHOLD_TAG + "-wrong"),
@@ -10192,12 +10192,12 @@ def covhold_cases(tmp, base, witnesses, failures):
                effective is None and not r1 and bool(r2), False)
     union = tree / COVHOLD_UNION
     previous = union.read_text()
-    assert '"REQ-polaris-generation-017"' in previous
-    union.write_text(previous.replace('"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', 1))
+    assert '"REQ-polaris-generation-033"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-033"', '"REQ-polaris-generation-099"', 1))
     report = Report()
     check_generated(tree, current_pop, report)
     union.write_text(previous)
-    record("covhold-union-changed", COVHOLD_UNION, '"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', "R4 refusal",
+    record("covhold-union-changed", COVHOLD_UNION, '"REQ-polaris-generation-033"', '"REQ-polaris-generation-099"', "R4 refusal",
            report.findings.get("R4", []), any(COVHOLD_UNION in f for f in report.findings.get("R4", [])), False)
     status = tree / STATUS
     previous = status.read_text()
@@ -10208,7 +10208,7 @@ def covhold_cases(tmp, base, witnesses, failures):
     status.write_text(previous)
     record("covhold-status-route-missing", STATUS, COVHOLD_STATUS_PREFIX, "", "R5 refusal",
            report.findings.get("R5", []),
-           any("coverage hold v2.27" in f for f in report.findings.get("R5", [])), False)
+           any("coverage hold v2.28" in f for f in report.findings.get("R5", [])), False)
     ledger.write_text(pending)
     report = Report()
     check_routes(tree, pending_pop, report)

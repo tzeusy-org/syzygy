@@ -6,7 +6,7 @@ import { standingBySubject } from './review-verdict.js';
 import { isWithheldItem } from './withheld-items.js';
 
 /** The fidelity review waits until every listed inventory entry has an outcome (syzygy-5dhm.29, pursuit 2026-11-21b move R4 slice 2;
- * REQ-polaris-generation-035 version 2.27).
+ * REQ-polaris-generation-035 version 2.28).
  *
  * Syzygy issues no fidelity packet, by `review-packet` or by a review `session-prompt` (and so by the launched run's delivery), while an
  * entry of the inventory of record has no outcome in the passed draft. An entry has an outcome when the coverage rule of version 2.12

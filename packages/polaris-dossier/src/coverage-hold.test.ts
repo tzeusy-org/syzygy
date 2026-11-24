@@ -3,7 +3,7 @@ import { HELD_ENTRIES_NAMED, fidelityCoverageHold, heldEntryLine, heldSchema } f
 import type { PacketSpan } from './review-model.js';
 import { coverageHoldKey, coverageHoldMessage } from './polaris.js';
 
-// syzygy-5dhm.29 (REQ-polaris-generation-035 version 2.27). Every expected value is a literal written here.
+// syzygy-5dhm.29 (REQ-polaris-generation-035 version 2.28). Every expected value is a literal written here.
 
 const V5 = 'polaris-dossier-local-draft-v5';
 const cite = (id: string, p: string, startLine: number, endLine = startLine): Record<string, unknown> => ({ id, path: p, startLine, endLine });

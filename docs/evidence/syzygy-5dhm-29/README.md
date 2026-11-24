@@ -1,4 +1,4 @@
-# syzygy-5dhm.29 — the fidelity review waits for inventory coverage (spec 2.27)
+# syzygy-5dhm.29 — the fidelity review waits for inventory coverage (spec 2.28)
 
 | File | What it holds |
 |---|---|

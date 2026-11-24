@@ -1,6 +1,6 @@
 # dossier-coverage-hold
 
-[Inferred] Candidate version 2.27 of the dossier specification line, for bead syzygy-5dhm.29 (pursuit 2026-11-21b, move R4 slice 2): one MODIFIED requirement, REQ-polaris-generation-035, after its version 2.18 text. The fidelity review waits until every listed inventory entry has an outcome: Syzygy issues no fidelity packet while an entry of the inventory of record is neither covered by the draft (the coverage rule of version 2.12) nor recorded in its `inventoryOmissions` with a reason. It binds nothing until its row in [AGENT-ADOPTIONS.md](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and the tag `polaris-dossier-coverage-hold-v2.27`; adoption state is read from that ledger and from `PROJECT-STATUS.md`, never from this page.
+[Inferred] Candidate version 2.28 of the dossier specification line, for bead syzygy-5dhm.29 (pursuit 2026-11-21b, move R4 slice 2): one MODIFIED requirement, REQ-polaris-generation-035, after its version 2.18 text. The fidelity review waits until every listed inventory entry has an outcome: Syzygy issues no fidelity packet while an entry of the inventory of record is neither covered by the draft (the coverage rule of version 2.12) nor recorded in its `inventoryOmissions` with a reason. It binds nothing until its row in [AGENT-ADOPTIONS.md](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and the tag `polaris-dossier-coverage-hold-v2.28`; adoption state is read from that ledger and from `PROJECT-STATUS.md`, never from this page.
 
 | File | What it holds |
 |---|---|

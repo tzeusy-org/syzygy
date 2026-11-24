@@ -69,7 +69,7 @@ export type PacketBuild =
     /** The raw text of every admitted blob a span reads, by path, for verifying the verdict's quotations; for a body retained as
      * `redacted-span`, its retained text, every withheld line emptied. */
     readonly blobs: ReadonlyMap<string, string>;
-    /** Why the packet may not be issued yet: inventory entries with no outcome in the draft (`coverage-hold.ts`, version 2.27). Absent
+    /** Why the packet may not be issued yet: inventory entries with no outcome in the draft (`coverage-hold.ts`, version 2.28). Absent
      * when it may. It never changes the packet's bytes; `review-check` and the review of record ignore it. */
     readonly coverageHold?: CoverageHold;
   }

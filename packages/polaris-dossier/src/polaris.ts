@@ -645,7 +645,7 @@ export function fidelityDeliveryDue(passedDraft: number | null, inventoryRevisio
   return true;
 }
 
-/** The notice key recording that the fidelity review of this draft and inventory pair waits on inventory coverage (version 2.27). */
+/** The notice key recording that the fidelity review of this draft and inventory pair waits on inventory coverage (version 2.28). */
 export const coverageHoldKey = (draftRevision: number, inventoryRevision: number): string => `coverage-held-${draftRevision}/${inventoryRevision}`;
 
 /** What Syzygy types into the authoring session when its passed draft leaves inventory entries without an outcome: the refusal's own
@@ -819,7 +819,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
         : held ? `fidelity review waits: draft revision ${passedDraft!} leaves inventory entries without an outcome` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
       if (held) {
         // The hold is decided by the frozen pair alone, so it is told once and not retried: the next passed draft or inventory revision is
-        // a new pair (version 2.27).
+        // a new pair (version 2.28).
         tellAuthor(state, coverageHoldMessage(String(r.doc!['reason'])));
         state.notified.push(coverageHoldKey(passedDraft!, inventoryRevision!)); saveState(options.stateRoot, state);
         screen.event(`told the author: inventory entries without an outcome hold the fidelity review of draft revision ${passedDraft!}`);

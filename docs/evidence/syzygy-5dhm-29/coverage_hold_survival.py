@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Count the predecessor REQ-polaris-generation-035 lines (version 2.18) carried in order in version 2.27, and the lines added.
+"""Count the predecessor REQ-polaris-generation-035 lines (version 2.18) carried in order in version 2.28, and the lines added.
 Usage: python3 coverage_hold_survival.py <repository root>"""
 import sys
 from pathlib import Path

@@ -1,4 +1,4 @@
-# Design — dossier coverage hold, version 2.27
+# Design — dossier coverage hold, version 2.28
 
 ## Decisions
 

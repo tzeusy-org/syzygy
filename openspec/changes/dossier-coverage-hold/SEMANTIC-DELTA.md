@@ -1,4 +1,4 @@
-# Version 2.27 semantic delta
+# Version 2.28 semantic delta
 
 [Inferred] Candidate agent-decided amendment under VIS-4. No adoption is claimed; this file states exactly what changes so the change is reviewable as a delta (`NORMATIVE-CHANGE-WORKFLOW.md`).
 
