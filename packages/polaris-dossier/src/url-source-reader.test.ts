@@ -3,7 +3,7 @@ import { mkdirSync, renameSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
 import { expect, it } from 'vitest';
-import { bindUrlSourceReader, isBoundUrlSourceReader, listBoundUrlSourceTree } from './url-source-reader.js';
+import { bindUrlSourceReader, captureUrlOriginSourceReader, isBoundUrlSourceReader, listBoundUrlSourceTree } from './url-source-reader.js';
 
 function fixture() {
   const clone = tempDir('url-source-reader');
@@ -54,6 +54,23 @@ it('checks bound tree authority again after the descriptor walk', async () => {
   await expect(listBoundUrlSourceTree({ ...f, store: 'owned-loose', current: () => ++samples < 2 }))
     .rejects.toThrow(/source binding/);
   expect(samples).toBe(2);
+});
+
+it('checks authority before a private blob read and again after its synchronous screen', async () => {
+  const f = fixture();
+  let current = false, screened = 0;
+  const reader = captureUrlOriginSourceReader({ ...f, store: 'owned-loose', current: () => current });
+  const read = () => reader.readScreenedBlob('README.md', () => {}, blob => {
+    expect(blob?.path).toBe('README.md');
+    screened++;
+    current = false;
+    return blob?.id;
+  });
+  await expect(read()).rejects.toThrow(/source binding/);
+  expect(screened).toBe(0);
+  current = true;
+  await expect(read()).rejects.toThrow(/source binding/);
+  expect(screened).toBe(1);
 });
 
 it('refuses a replacement object directory on the same path', async () => {
