@@ -98,10 +98,14 @@ describeLive('live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gat
           doltRevisionAtCreation: null,
           attribution: 'live-test',
         },
-        runWorkItemQuery: () =>
-          JSON.stringify([
+        runWorkItemQuery: (_repoRoot, sql) => sql.includes('FROM issues ')
+          ? JSON.stringify([
             {
-              revision: 'dolt-live',
+              revision: 'adpe9hi1llmdh05mr8aja5kagtu36eli', id: null, status: null, issue_type: null,
+              priority: null, created_at: null, updated_at: null, closed_at: null,
+            },
+            {
+              revision: 'adpe9hi1llmdh05mr8aja5kagtu36eli',
               id: 'bu-live-capture-1',
               title: 'live capture',
               status: 'in_progress',
@@ -111,7 +115,7 @@ describeLive('live real focused-pytest verification (SYZYGY_POC_BUTLERS_REPO gat
               updated_at: new Date().toISOString(),
               closed_at: null,
             },
-          ]),
+          ]) : '[]',
         runGit: (root, args) => {
           if (args[0] === 'symbolic-ref') return 'refs/remotes/origin/main';
           if (args[0] === 'rev-parse') return repositoryCommit;

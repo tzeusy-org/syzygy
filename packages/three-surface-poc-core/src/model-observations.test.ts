@@ -7,6 +7,12 @@ import { tempDir } from '@syzygy/test-kit';
 import { buildPocModel } from './model.js';
 import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 
+const WORK_ITEM_REVISION = 'adpe9hi1llmdh05mr8aja5kagtu36eli';
+const WORK_ITEM_WITNESS = {
+  revision: WORK_ITEM_REVISION, id: null, status: null, issue_type: null, priority: null,
+  created_at: null, updated_at: null, closed_at: null,
+};
+
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
     encoding: 'utf8',
@@ -77,7 +83,7 @@ describe('shared model observation wiring', () => {
     } as const;
     const confirmedRows = [
       {
-        revision: 'dolt-rev-2',
+        revision: WORK_ITEM_REVISION,
         id: 'bu-worker-change-1',
         title: 'Single-event WhatsApp sender normalization (Syzygy POC materialization)',
         status: 'open',
@@ -89,7 +95,7 @@ describe('shared model observation wiring', () => {
       },
     ];
     const runWorkItemQuery = (_repoRoot: string, sql: string): string =>
-      sql.includes('WHERE id LIKE') ? JSON.stringify(confirmedRows) : JSON.stringify([{ revision: 'dolt-rev-2' }]);
+      sql.includes('FROM issues ') ? JSON.stringify([WORK_ITEM_WITNESS, ...confirmedRows]) : '[]';
 
     // Planned: bead is materialized (confirmed present) but no matching
     // git activity has landed yet on the bounded seam.
@@ -163,10 +169,11 @@ describe('shared model observation wiring', () => {
   it('folds code-structure and work-item observations into the one shared model', () => {
     const { repoRoot, revision } = butlersFixtureWithGit();
     const runWorkItemQuery = (_repoRoot: string, sql: string): string =>
-      sql.includes('WHERE id LIKE')
+      sql.includes('FROM issues ')
         ? JSON.stringify([
+            WORK_ITEM_WITNESS,
             {
-              revision: 'dolt-rev-fixture',
+              revision: WORK_ITEM_REVISION,
               id: 'bu-1',
               title: 'fixture item',
               status: 'open',
@@ -177,7 +184,7 @@ describe('shared model observation wiring', () => {
               closed_at: null,
             },
           ])
-        : JSON.stringify([{ revision: 'dolt-rev-fixture' }]);
+        : '[]';
 
     const model = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -195,7 +202,7 @@ describe('shared model observation wiring', () => {
 
     expect(model.workItems.kind).toBe('observed');
     if (model.workItems.kind !== 'observed') throw new Error('unreachable');
-    expect(model.workItems.provenance.revision).toBe('dolt-rev-fixture');
+    expect(model.workItems.provenance.revision).toBe(WORK_ITEM_REVISION);
     expect(model.workItems.items).toHaveLength(1);
 
     expect(model.orrery.kind).toBe('observed');

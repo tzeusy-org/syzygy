@@ -1,5 +1,12 @@
 import { recordedInstant, trajectoryTimeMeasures, type TrajectoryTimeMeasures } from './trajectory-time-measures.js';
 import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items.js';
+import {
+  DEPENDENCY_EDGE_REASONS,
+  type DependencyEdgeCounts,
+  type DependencyEdgeReason,
+  type DependencyFeedReason,
+  type WorkItemDependencyObservation,
+} from './work-item-dependencies.js';
 
 export const STATUS_TO_COLUMN = {
   open: 'Backlog',
@@ -12,6 +19,26 @@ export const STATUS_TO_COLUMN = {
 } as const satisfies Record<WorkItemStatus, string>;
 
 export type TrajectoryColumn = (typeof STATUS_TO_COLUMN)[WorkItemStatus];
+
+export type TrajectoryEligibilityState = 'ready' | 'planned' | 'blocked' | 'eligibility-undetermined';
+export type TrajectoryEligibilityReason = DependencyEdgeReason | DependencyFeedReason | 'tracker-deferred';
+
+export interface TrajectoryItemEligibility {
+  readonly state: TrajectoryEligibilityState;
+  readonly reasons: readonly TrajectoryEligibilityReason[];
+  readonly block?: {
+    readonly causes: readonly ['dependency'] | readonly [];
+    readonly blockers: readonly { readonly id: string; readonly page: number }[];
+  };
+}
+
+export interface TrajectoryEligibility {
+  readonly served: number;
+  readonly counts: Readonly<Record<TrajectoryEligibilityState | 'absent', number>>;
+  readonly feed: { readonly kind: 'unknown'; readonly reason: DependencyFeedReason } |
+    { readonly kind: 'observed'; readonly counts: DependencyEdgeCounts };
+  readonly items: Readonly<Partial<Record<string, TrajectoryItemEligibility>>>;
+}
 
 export interface TrajectoryLaneItem {
   readonly id: string;
@@ -110,6 +137,8 @@ interface TrajectoryProjectionObserved {
   readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
   /** POC-REQ-045 (syzygy-t3jk.17): elapsed-time measures over every served item. */
   readonly timeMeasures: TrajectoryTimeMeasures;
+  /** POC-REQ-062: eligibility and dependency counts over every served item. */
+  readonly eligibility: TrajectoryEligibility;
   /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
   readonly answers: readonly TrajectoryAnswer[];
   /** POC-REQ-042 (syzygy-t3jk.18): the declared narrowing and paging, and
@@ -248,6 +277,7 @@ interface ProjectTrajectoryOptions {
   readonly recentClosedWindow: number;
   /** Absent: nothing was materialized, so the chain has no member. */
   readonly reconciliationChain?: ReconciliationChainInput;
+  readonly dependencies?: WorkItemDependencyObservation;
 }
 
 /** RFC2-18: only materialized work that reached merge enters the chain.
@@ -286,6 +316,53 @@ function byId(a: WorkItemFact, b: WorkItemFact): number {
   return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 }
 
+function itemEligibility(item: WorkItemFact, dependencies: WorkItemDependencyObservation, pageById: ReadonlyMap<string, number>): TrajectoryItemEligibility | null {
+  if (item.status === 'closed') return null;
+  if (dependencies.kind === 'unknown') {
+    return {
+      state: 'eligibility-undetermined',
+      reasons: [dependencies.reason],
+      ...(item.status === 'blocked' ? { block: { causes: [], blockers: [] } } : {}),
+    };
+  }
+  if (item.status === 'in_progress' || item.status === 'pinned' || item.status === 'hooked') return null;
+
+  const facts = dependencies.byItem.get(item.id);
+  const reasons = DEPENDENCY_EDGE_REASONS.filter((reason) => facts?.reasons.has(reason));
+  const blockers = [...(facts?.blockers ?? [])].sort().flatMap((id) => {
+    const page = pageById.get(id);
+    return page === undefined ? [] : [{ id, page }];
+  });
+  const block: NonNullable<TrajectoryItemEligibility['block']> = {
+    blockers,
+    causes: blockers.length > 0 ? ['dependency'] : [],
+  };
+  if (reasons.length > 0) {
+    return { state: 'eligibility-undetermined', reasons, ...(item.status === 'blocked' ? { block } : {}) };
+  }
+  if (item.status === 'deferred') return { state: 'planned', reasons: ['tracker-deferred'] };
+  if (item.status === 'blocked' || blockers.length > 0) return { state: 'blocked', reasons: [], block };
+  return { state: 'ready', reasons: [] };
+}
+
+function projectEligibility(sorted: readonly WorkItemFact[], dependencies: WorkItemDependencyObservation): TrajectoryEligibility {
+  const pageById = new Map(sorted.map((item, index) => [item.id, Math.floor(index / TRAJECTORY_PAGE_SIZE) + 1]));
+  const counts = { ready: 0, planned: 0, blocked: 0, 'eligibility-undetermined': 0, absent: 0 };
+  const items: [string, TrajectoryItemEligibility][] = [];
+  let served = 0;
+  for (const item of sorted) {
+    if (item.status === 'closed') continue;
+    served++;
+    const eligibility = itemEligibility(item, dependencies, pageById);
+    if (eligibility === null) counts.absent++;
+    else {
+      counts[eligibility.state]++;
+      items.push([item.id, eligibility]);
+    }
+  }
+  const feed = dependencies.kind === 'unknown' ? dependencies : { kind: 'observed' as const, counts: dependencies.counts };
+  return { served, counts, feed, items: Object.fromEntries(items) };
+}
 
 /** Missing or invalid recorded times rank last; never substitute another field. */
 function newestFirst(a: string | null, b: string | null): number {
@@ -359,6 +436,7 @@ export function projectTrajectory(
       outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
     },
     timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
+    eligibility: projectEligibility(sorted, options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
     answers: observedAnswers(workItems, options.reconciliationChain),
     narrowing: narrowingDeclaration(null),
   };

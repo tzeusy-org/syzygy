@@ -30,7 +30,7 @@ import {
 } from './seed-graph.js';
 import { resolveTestArtifactVerification, type TestArtifactVerificationResult } from './test-artifact-verification.js';
 import { projectTrajectory, type TrajectoryProjection } from './trajectory-projection.js';
-import { observeWorkItems, type WorkItemsResult } from './work-items.js';
+import { observeTrajectoryWorkItems, type WorkItemsResult } from './work-items.js';
 import { observeWorkerChange, type WorkerChangeResult } from './worker-change-observation.js';
 
 // Fixed populations keep the human board bounded as the live backlog grows.
@@ -188,7 +188,7 @@ export interface TrajectorySlice {
 export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObservation): TrajectorySlice {
   const { seeds } = input;
   const capturedAt = input.evaluation.asOf;
-  const workItems = observeWorkItems({
+  const { workItems, dependencies } = observeTrajectoryWorkItems({
     repoRoot: seed.repoRoot,
     beadPrefix: seeds.beadPrefix,
     capturedAt,
@@ -226,6 +226,7 @@ export function buildTrajectorySlice(input: BuildPocModelInput, seed: SeedObserv
     trajectory: projectTrajectory(workItems, {
       nonClosedLimit: NON_CLOSED_LIMIT,
       recentClosedWindow: RECENT_CLOSED_WINDOW,
+      dependencies,
       reconciliationChain: { materializedBeadId: materialization.beadId, workerChange },
     }),
     dispatch: dispatch === null ? null : deepFreeze(dispatch),

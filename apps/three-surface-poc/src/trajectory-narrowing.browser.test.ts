@@ -4,15 +4,19 @@
 // toggle. Every card carries the Unknown, so the narrowed board equals the
 // un-narrowed one; a card this test injects without the mark proves the
 // toggle narrows at all (a no-op toggle would pass the first half alone).
+import { once } from 'node:events';
 import { rmSync, writeFileSync } from 'node:fs';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { join } from 'node:path';
+import { setTimeout } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { tempDir } from '@syzygy/test-kit';
 
-import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
+import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from './cdp-browser.js';
 import { buildFixtureModel, fixtureWorkItemRow } from './test-model-fixture.js';
 import { renderTrajectoryPage, renderTrajectoryRoute } from './trajectory.js';
 
@@ -168,6 +172,60 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       expect(reached).toEqual(expected);
     } finally {
       await page.close();
+    }
+  });
+
+  it.each(['', '/butlers-syzygy'])('follows a cross-page blocker with page scripts forbidden (mount prefix %j)', async (prefix) => {
+    const revision = '0123456789abcdefghijklmnopqrstuv';
+    const rows = Array.from({ length: 251 }, (_, index) => ({
+      ...fixtureWorkItemRow(`bu-${String(index).padStart(3, '0')}`, index === 0 ? 'blocked' : 'open', '2026-08-01T00:00:00Z', '2026-08-01T00:00:00Z', null),
+      revision,
+    }));
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows,
+      runDependencyQuery: () => JSON.stringify([
+        { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+        { revision: null, issue_id: 'bu-000', depends_on_issue_id: 'bu-250', type: 'blocks', has_external: 0, has_wisp: 0 },
+      ]),
+    });
+    const policy = "script-src 'none'";
+    const server = createServer((request, response) => {
+      const url = new URL(request.url ?? '/', 'http://127.0.0.1');
+      if (url.pathname !== `${prefix}/trajectory`) { response.writeHead(404).end(); return; }
+      const html = renderTrajectoryRoute(model, prefix, undefined, url.searchParams);
+      if (typeof html !== 'string') { response.writeHead(400).end(); return; }
+      response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'content-security-policy': policy }).end(html);
+    });
+    const listening = once(server, 'listening');
+    server.listen(0, '127.0.0.1');
+    await listening;
+    let page: BrowserPage | undefined;
+    try {
+      page = await browser.newPage();
+      const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+      const start = `${base}${prefix}/trajectory?status=blocked&page=1`;
+      expect((await fetch(start)).headers.get('content-security-policy')).toBe(policy);
+      await page.navigate(start);
+      expect(await page.evaluate(`(() => {
+        const link = document.querySelector('a[data-blocker-id="bu-250"]');
+        link.focus();
+        return [link.getAttribute('href'), link.closest('details') === null, document.activeElement === link];
+      })()`)).toEqual([`${prefix}/trajectory?page=2#workitem-bu-250`, true, true]);
+      await page.press('Enter');
+      for (let attempt = 0; attempt < 50; attempt++) {
+        if (await page.evaluate(`location.hash === '#workitem-bu-250' && document.readyState === 'complete'`)) break;
+        await setTimeout(20);
+      }
+      expect(await page.evaluate(`(() => {
+        const target = document.querySelector(':target');
+        return [location.pathname, location.search, target?.id, target?.closest('details') === null];
+      })()`)).toEqual([`${prefix}/trajectory`, '?page=2', 'workitem-bu-250', true]);
+    } finally {
+      try {
+        await page?.close();
+      } finally {
+        await new Promise<void>((resolve, reject) => server.close((error) => error === undefined ? resolve() : reject(error)));
+      }
     }
   });
 });
