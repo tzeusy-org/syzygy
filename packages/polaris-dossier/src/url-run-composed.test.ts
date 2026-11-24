@@ -2022,7 +2022,7 @@ describe('composed URL run with actual role processes', () => {
       const resumeEvidence = resumeDiagnostic === undefined ? undefined : { ...resumeDiagnostic(), audit: resumedAudit };
       const initialTrace = initialDiagnostic?.();
       const initialDelivery = { setup: initialTrace?.designSetup, commit: initialTrace?.designDelivery, fixture: initialFixtureDelivery,
-        activation: initialTrace?.inference.hostActivation };
+        activation: initialTrace?.inference?.hostActivation };
       const stoppedEvidence = {
         failure: stopped.failure, budgetReason: stopped.budget.reason, heldDesignTurns: stopped.budget.heldDesignTurns,
         pendingRoles: stopped.budget.pendingRoles, auditPoisoned: stopped.audit.poisoned, auditTail: stopped.audit.tail,
