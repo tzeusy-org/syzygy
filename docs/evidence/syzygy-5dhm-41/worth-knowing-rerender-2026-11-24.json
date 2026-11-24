@@ -1,7 +1,7 @@
 {
   "subject": "syzygy-5dhm.41: re-render of the seven stored runs' latest passed drafts, main tree against the worth-knowing branch",
-  "before": "fb63570441b5c31da1b01069ebdf1ea2654fd4ab",
-  "after": "2f00edee45bab772277eb6c2587c202614d941ee",
+  "before": "3a24d409a07d0ba5c04aabb4ace79161ac44503d",
+  "after": "e89cfa892d1e7b366550bdbd7b68ed50bed684dc",
   "harness": "docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts (syzygy-a70b form: placement subject, run content classes, injected stored verdict)",
   "runs": [
     {
@@ -21,7 +21,7 @@
       "filesBefore": 53,
       "filesAfter": 53,
       "differing": [],
-      "siteSha256": "f732b0defba228986e11ac8694f15fe1a1ca9fff4141b01bd656a4bb1d8c9aba",
+      "siteSha256": "0e60ccda93f02d00da1cd7e0c19c7503cd8e2f1c4024bfa0e3339f62df8f787e",
       "worthKnowingMentions": 0
     },
     {
@@ -41,7 +41,7 @@
       "filesBefore": 62,
       "filesAfter": 62,
       "differing": [],
-      "siteSha256": "ab04ff905b9af40064c49313870c6da96ec0b9ba766b997f673dc85b96def1d5",
+      "siteSha256": "fc3d9d0e539c1a0870ecd4972d86e78d981e5ec41612d9bab8060dd14e8d33f0",
       "worthKnowingMentions": 0
     },
     {
@@ -61,7 +61,7 @@
       "filesBefore": 54,
       "filesAfter": 54,
       "differing": [],
-      "siteSha256": "e16ef4b897000448fd86bc520221b6c2b584fd7ffc88cbc2a7007283dcabaefc",
+      "siteSha256": "f935e07ff7050bbfd141bf04adfc55b446a8d3ee682e9ecad7e49bda9f0ec6aa",
       "worthKnowingMentions": 0
     },
     {
@@ -81,7 +81,7 @@
       "filesBefore": 55,
       "filesAfter": 55,
       "differing": [],
-      "siteSha256": "2c6bf58003e038c9194ea5cdd5ec7d4f19ba7b5140822e5f3a528cc0385e8407",
+      "siteSha256": "f08193e452efc5523f2523c062e085d05854a55aa589fa165020c8a989f08441",
       "worthKnowingMentions": 0
     },
     {
@@ -101,7 +101,7 @@
       "filesBefore": 52,
       "filesAfter": 52,
       "differing": [],
-      "siteSha256": "a37752b37df9a9aa945a354adb27da04f4f7741eeb6e22f4837fb387c601c2fe",
+      "siteSha256": "60b22bd7eac3d3dae26a17386e02e9b45f734085a71a70f8fceb499166b01b26",
       "worthKnowingMentions": 0
     },
     {
@@ -121,7 +121,7 @@
       "filesBefore": 72,
       "filesAfter": 72,
       "differing": [],
-      "siteSha256": "11c721e1d04c5c3bdfddfee3b0acef0a18fdb86c9e9e31ebe92d1452d8d917dd",
+      "siteSha256": "3e4949f1cbc37635e565b59f9d8aa28332c05b30d6f904ddb8f7726c980cab1d",
       "worthKnowingMentions": 0
     },
     {
@@ -141,7 +141,7 @@
       "filesBefore": 55,
       "filesAfter": 55,
       "differing": [],
-      "siteSha256": "67dec8e6009a17a4fc3fc613d74f86b12f69e685c8bc8cad4b8c5f6c445db66a",
+      "siteSha256": "548510cea7bd188e1cca16f73d121c765f5396b8574507e63eb70002739a39bf",
       "worthKnowingMentions": 0
     }
   ],

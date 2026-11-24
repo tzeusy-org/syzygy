@@ -1,15 +1,15 @@
 {
   "format": "mutation-run/1",
-  "ranAt": "2026-11-24T01:51:32.051Z",
-  "commit": "2f00edee45bab772277eb6c2587c202614d941ee",
+  "ranAt": "2026-11-24T15:38:49.384Z",
+  "commit": "d00322ab23c15bb53218f6c6cf4db02268dfbfcc",
   "subject": {
-    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "9250bac4db9c7de4d3f9f69c727fb0af165df2abb1ec2e6b990ad442e1dd7d68",
-    "packages/polaris-dossier/src/brief.ts": "9aecaa5444116e5242011c8a1d5cdd80bbcb1b25e924faac192b16a376ea3d86",
-    "packages/polaris-dossier/src/check-derive.ts": "82e0d4a8b818a4a24b47a229950cb649033919134c61f858c9416b9ff7c55d8f",
-    "packages/polaris-dossier/src/draft-schema.ts": "58798bf3502749dcdea8bc3892a63f90d7f65a6aee9b23916c778bb6211d9bf4",
-    "packages/polaris-dossier/src/inventory.ts": "17c2ad3775c2302a1326b91646ef3d9304b2859777524dfe72655add170b85ce",
-    "packages/polaris-dossier/src/reader-advice.ts": "33f1623676e49b49a28afcb0d0d91e565f6a42d7385bdd148019db9199aedfac",
-    "packages/polaris-dossier/src/render.ts": "5de41550c02b938c5695248ab94765123e3e4e46447c713a15790e2246aeb3c8"
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "877411e47627f9864ed2800b6ade430c84b3353a93b62af435bf565bbc6dae53",
+    "packages/polaris-dossier/src/brief.ts": "ba46a705002c8e46eba2315b0b13eef1a743d4c432edb3ae8bc97e64d90b813a",
+    "packages/polaris-dossier/src/check-derive.ts": "1154b153ae78ffe4f5614e32158ce2e352a14bc63474870cd17d1c539a5264f2",
+    "packages/polaris-dossier/src/draft-schema.ts": "6c762919e926a9230d5b385d031a08a4f544354eb5f64131ef11033ca3101c44",
+    "packages/polaris-dossier/src/inventory.ts": "68719564c026a21e47744af185f13e3f718c89fca65c27647f01533cf634adb8",
+    "packages/polaris-dossier/src/reader-advice.ts": "5f4bace9f26c5393e51b4b99740078572c34ba02e4b60bd213d69c3fd1988a85",
+    "packages/polaris-dossier/src/render.ts": "2c2abe2db35021549755c186896b3e659c88af5c3c957b96d05ced2b4b94c0cd"
   },
   "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
   "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
@@ -42,7 +42,7 @@
     {
       "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
       "exitCode": 0,
-      "tests": 140,
+      "tests": 141,
       "failedTests": []
     },
     {
@@ -60,13 +60,13 @@
     {
       "file": "packages/polaris-dossier/src/draft-schema.ts",
       "exitCode": 0,
-      "tests": 363,
+      "tests": 364,
       "failedTests": []
     },
     {
       "file": "packages/polaris-dossier/src/inventory.ts",
       "exitCode": 0,
-      "tests": 71,
+      "tests": 72,
       "failedTests": []
     },
     {
@@ -78,7 +78,7 @@
     {
       "file": "packages/polaris-dossier/src/render.ts",
       "exitCode": 0,
-      "tests": 139,
+      "tests": 140,
       "failedTests": []
     }
   ],
@@ -94,7 +94,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses the mark anywhere but a section's own paragraphs: a child and the introduction"
       ],
-      "seconds": 144
+      "seconds": 48
     },
     {
       "id": "check-cites-dropped",
@@ -108,7 +108,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked block that cites nothing, beside the citation rule's own finding",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it"
       ],
-      "seconds": 153
+      "seconds": 31
     },
     {
       "id": "check-judgement-dropped",
@@ -121,7 +121,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it"
       ],
-      "seconds": 153
+      "seconds": 34
     },
     {
       "id": "check-any-label",
@@ -134,7 +134,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark on an unknown block as schema alone"
       ],
-      "seconds": 131
+      "seconds": 39
     },
     {
       "id": "check-mark-field-version-dropped",
@@ -147,7 +147,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark and a Pole's reason in a v10 or earlier draft as field-version in place of the schema finding, and judges neither"
       ],
-      "seconds": 40
+      "seconds": 39
     },
     {
       "id": "check-none-field-version-dropped",
@@ -160,7 +160,7 @@
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark and a Pole's reason in a v10 or earlier draft as field-version in place of the schema finding, and judges neither"
       ],
-      "seconds": 29
+      "seconds": 49
     },
     {
       "id": "check-v13-judged-as-v10",
@@ -176,7 +176,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses the mark anywhere but a section's own paragraphs: a child and the introduction",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark and a Pole's reason in a v10 or earlier draft as field-version in place of the schema finding, and judges neither"
       ],
-      "seconds": 26
+      "seconds": 62
     },
     {
       "id": "schema-mark-in-v8",
@@ -185,7 +185,7 @@
       "new": "const mark: Record<string, DraftSchema> = true ?",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) a v10 form has neither member",
         "packages/polaris-dossier/src/check.test.ts > check: the thesis basis (schema v6) passes a code-reading introduction citing two code files and quoting nothing",
@@ -220,7 +220,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark and a Pole's reason in a v10 or earlier draft as field-version in place of the schema finding, and judges neither",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) gives a v13 draft without marks the findings the same v10 draft gets"
       ],
-      "seconds": 25
+      "seconds": 35
     },
     {
       "id": "schema-mark-dropped",
@@ -229,7 +229,7 @@
       "new": "const mark: Record<string, DraftSchema> = false ?",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) admits the mark on either Inferred form and the reason on a Pole",
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) refuses a v13 draft where an unknown block carries the mark",
@@ -242,7 +242,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses the mark anywhere but a section's own paragraphs: a child and the introduction"
       ],
-      "seconds": 29
+      "seconds": 31
     },
     {
       "id": "schema-none-in-v8",
@@ -251,11 +251,11 @@
       "new": "poles: list(true",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) a v10 form has neither member"
       ],
-      "seconds": 27
+      "seconds": 32
     },
     {
       "id": "chain-v10-marked",
@@ -266,7 +266,7 @@
       "killedBy": null,
       "tests": 302,
       "failedTests": [],
-      "seconds": 26
+      "seconds": 31
     },
     {
       "id": "chain-v13-read-as-v10",
@@ -282,7 +282,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked judgement, cited or not: an uncited one has no citation-by-kind finding to stand in for it",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses the mark anywhere but a section's own paragraphs: a child and the introduction"
       ],
-      "seconds": 27
+      "seconds": 45
     },
     {
       "id": "chain-v13-without-hero",
@@ -291,7 +291,7 @@
       "new": "version === LOCAL_DRAFT_SCHEMA_VERSION_V10;",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) passes a v13 draft whose section paragraphs carry the mark, and one whose Pole says why it marks none",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a marked block that cites nothing, beside the citation rule's own finding",
@@ -300,7 +300,7 @@
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) reports the mark on an unknown block as schema alone",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) gives a v13 draft without marks the findings the same v10 draft gets"
       ],
-      "seconds": 27
+      "seconds": 81
     },
     {
       "id": "chain-v11-v12-admitted",
@@ -309,13 +309,39 @@
       "new": "LOCAL_DRAFT_SCHEMA_VERSION_V10, 'polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12', LOCAL_DRAFT_SCHEMA_VERSION] as const",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema refuses a draft where the draft names another schema version",
         "packages/polaris-dossier/src/draft-schema.test.ts > local-agent draft schema: the worth-knowing mark (v13) names no v11 or v12 schema: those numbers belong to changes this code does not implement, so neither reads as v10 or v13",
         "packages/polaris-dossier/src/check.test.ts > check: the worth-knowing mark (schema v13) refuses a draft naming v11 or v12, numbers other changes hold and this code does not implement, as an unknown version, never as v10 or v13"
       ],
-      "seconds": 27
+      "seconds": 83
+    },
+    {
+      "id": "inventory-v1-kinds-widened",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "defs: kinds === 'v1' ? INVENTORY_DEFS_V1 : INVENTORY_DEFS",
+      "new": "defs: INVENTORY_DEFS",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 364,
+      "failedTests": [
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent inventory schema: version 2 (version 2.26) checks a version 1 inventory against the v1 kinds alone, which lack worth-knowing"
+      ],
+      "seconds": 86
+    },
+    {
+      "id": "inventory-v1-schema-unused",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "{ schema: localInventorySchema({ pinnedRevision: pinned }, 'v1')",
+      "new": "{ schema: localInventorySchema({ pinnedRevision: pinned })",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 72,
+      "failedTests": [
+        "packages/polaris-dossier/src/inventory.test.ts > inventory-check takes the worth-knowing kind in a v2 inventory and refuses it in a v1 inventory, whose kinds are v1's alone (version 2.26)"
+      ],
+      "seconds": 21
     },
     {
       "id": "inventory-kind-dropped",
@@ -324,12 +350,12 @@
       "new": "'conflict', 'other'] as const);",
       "killed": true,
       "killedBy": "tests",
-      "tests": 363,
+      "tests": 364,
       "failedTests": [
-        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent inventory schema: version 2 (version 2.25) admits the worth-knowing kind, and a version 1 inventory still validates",
-        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent inventory schema: version 2 (version 2.25) refuses another version or kind"
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent inventory schema: version 2 (version 2.26) admits the worth-knowing kind, and a version 1 inventory still validates",
+        "packages/polaris-dossier/src/draft-schema.test.ts > local-agent inventory schema: version 2 (version 2.26) refuses another version or kind"
       ],
-      "seconds": 29
+      "seconds": 42
     },
     {
       "id": "advice-reason-ignored",
@@ -340,9 +366,9 @@
       "killedBy": "tests",
       "tests": 89,
       "failedTests": [
-        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.25) advises a Pole that marks none without a reason, and one that marks more than three, at the Pole"
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) advises a Pole that marks none without a reason, and one that marks more than three, at the Pole"
       ],
-      "seconds": 3
+      "seconds": 5
     },
     {
       "id": "advice-ceiling-off-by-one",
@@ -353,10 +379,10 @@
       "killedBy": "tests",
       "tests": 89,
       "failedTests": [
-        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.25) advises a Pole that marks none without a reason, and one that marks more than three, at the Pole",
-        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.25) counts a draft with no Poles as one, a mark only when true and only on a section's own paragraph, and a section once"
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) advises a Pole that marks none without a reason, and one that marks more than three, at the Pole",
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) counts a draft with no Poles as one, a mark only when true and only on a section's own paragraph, and a section once"
       ],
-      "seconds": 3
+      "seconds": 4
     },
     {
       "id": "advice-section-counted-twice",
@@ -367,7 +393,20 @@
       "killedBy": "tests",
       "tests": 89,
       "failedTests": [
-        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.25) counts a draft with no Poles as one, a mark only when true and only on a section's own paragraph, and a section once"
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) counts a draft with no Poles as one, a mark only when true and only on a section's own paragraph, and a section once"
+      ],
+      "seconds": 3
+    },
+    {
+      "id": "advice-draft-names-member",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "detail: group.at === '$.sections'\n        ?",
+      "new": "detail: false\n        ?",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 89,
+      "failedTests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) counts a draft with no Poles as one, a mark only when true and only on a section's own paragraph, and a section once"
       ],
       "seconds": 3
     },
@@ -381,7 +420,7 @@
       "tests": 89,
       "failedTests": [
         "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards gives no advice on a draft that meets every counted standard, and none on a draft that is not an object",
-        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.25) gives an earlier draft no worth-knowing member at all, so its advice keeps its bytes"
+        "packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the worth-knowing count (version 2.26) gives an earlier draft no worth-knowing member at all, so its advice keeps its bytes"
       ],
       "seconds": 3
     },
@@ -392,11 +431,37 @@
       "new": "entry[WORTH_KNOWING_FIELD] !== undefined && typeof",
       "killed": true,
       "killedBy": "tests",
-      "tests": 139,
+      "tests": 140,
       "failedTests": [
-        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why"
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section"
       ],
-      "seconds": 51
+      "seconds": 42
+    },
+    {
+      "id": "render-lift-dropped",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "&& liftable(blocks.get(entry['id'])) ? [entry['id']]",
+      "new": "? [entry['id']]",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 140,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section"
+      ],
+      "seconds": 112
+    },
+    {
+      "id": "render-lift-any-marking",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "block.marking === 'inferred' && block.judgement === undefined",
+      "new": "block.marking !== 'non-normative' && block.judgement === undefined",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 140,
+      "failedTests": [
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section"
+      ],
+      "seconds": 55
     },
     {
       "id": "render-none-dropped",
@@ -405,11 +470,11 @@
       "new": "[]",
       "killed": true,
       "killedBy": "tests",
-      "tests": 139,
+      "tests": 140,
       "failedTests": [
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why"
       ],
-      "seconds": 48
+      "seconds": 52
     },
     {
       "id": "site-block-drawn-twice",
@@ -418,12 +483,13 @@
       "new": ".map(b => block(from, b))",
       "killed": true,
       "killedBy": "tests",
-      "tests": 140,
+      "tests": 141,
       "failedTests": [
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why",
-        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws the callout on the landing page, before the sections, for a draft with no Poles"
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws the callout on the landing page, before the sections, for a draft with no Poles",
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section"
       ],
-      "seconds": 51
+      "seconds": 52
     },
     {
       "id": "site-none-dropped",
@@ -432,11 +498,11 @@
       "new": "return false ? `<aside",
       "killed": true,
       "killedBy": "tests",
-      "tests": 140,
+      "tests": 141,
       "failedTests": [
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why"
       ],
-      "seconds": 62
+      "seconds": 86
     },
     {
       "id": "site-landing-dropped",
@@ -445,11 +511,12 @@
       "new": "const landingCallout = withheld || true ? '' : worthKnowingCallout(",
       "killed": true,
       "killedBy": "tests",
-      "tests": 140,
+      "tests": 141,
       "failedTests": [
-        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws the callout on the landing page, before the sections, for a draft with no Poles"
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws the callout on the landing page, before the sections, for a draft with no Poles",
+        "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) lifts only a supported Inferred block: an Unknown, a withheld or a detector-matched marked block stays in its section"
       ],
-      "seconds": 66
+      "seconds": 61
     },
     {
       "id": "site-callout-after-sections",
@@ -458,11 +525,11 @@
       "new": "${bannerFor(`run-stopped/pole/${at}`)}${pageContents(rendered)}${body}${callout}",
       "killed": true,
       "killedBy": "tests",
-      "tests": 140,
+      "tests": 141,
       "failedTests": [
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why"
       ],
-      "seconds": 63
+      "seconds": 45
     },
     {
       "id": "site-section-link-dropped",
@@ -471,12 +538,12 @@
       "new": "<p class=\"worth-knowing-from\">In <a data-href=",
       "killed": true,
       "killedBy": "tests",
-      "tests": 140,
+      "tests": 141,
       "failedTests": [
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws a Pole's marked block once, in a callout before its sections, linked to its section, and says none was found on a Pole that says why",
         "packages/polaris-dossier/src/render.test.ts > render: the worth-knowing callout (schema v13) draws the callout on the landing page, before the sections, for a draft with no Poles"
       ],
-      "seconds": 41
+      "seconds": 43
     },
     {
       "id": "brief-paragraph-dropped",
@@ -489,7 +556,20 @@
       "failedTests": [
         "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section and worth-knowing paragraph"
       ],
-      "seconds": 4
+      "seconds": 5
+    },
+    {
+      "id": "brief-no-poles-sentence-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "counts as one Pole and has no place to say why it marks none.",
+      "new": "counts as one Pole.",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 41,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section and worth-knowing paragraph"
+      ],
+      "seconds": 5
     },
     {
       "id": "inventory-brief-old-version",
@@ -498,19 +578,41 @@
       "new": "'polaris-dossier-inventory-brief-v3'",
       "killed": true,
       "killedBy": "tests",
-      "tests": 71,
+      "tests": 72,
       "failedTests": [
         "packages/polaris-dossier/src/inventory.test.ts > session-prompt inventory states the inventory's quotation form, its session-identifier rule, its schema and where to check it"
       ],
-      "seconds": 12
+      "seconds": 19
     }
   ],
-  "equivalent": [],
+  "equivalent": [
+    {
+      "id": "render-lift-withheld-unchecked",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "&& block.withheld === undefined && block.secretMatched === undefined;",
+      "new": "&& block.secretMatched === undefined;",
+      "reason": "render.ts builds every withheld item with marking unknown, so no block reaching this clause with marking inferred is withheld; the clause restates the marking test"
+    },
+    {
+      "id": "render-lift-secret-unchecked",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "&& block.withheld === undefined && block.secretMatched === undefined;",
+      "new": "&& block.withheld === undefined;",
+      "reason": "render.ts gives every detector-matched block marking unknown (excluded-content), so no inferred block carries secretMatched; the clause restates the marking test"
+    },
+    {
+      "id": "render-lift-judgement-unchecked",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "block.marking === 'inferred' && block.judgement === undefined",
+      "new": "block.marking === 'inferred'",
+      "reason": "check refuses a worth-knowing mark on a block carrying the judgement mark, and only a passed draft is rendered, so no marked block reaching render carries one"
+    }
+  ],
   "summary": {
-    "mutants": 28,
-    "killed": 27,
+    "mutants": 34,
+    "killed": 33,
     "survived": 1,
     "byTimeout": 0,
-    "equivalentNotRun": 0
+    "equivalentNotRun": 3
   }
 }
