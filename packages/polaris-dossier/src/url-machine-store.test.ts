@@ -204,7 +204,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(await Promise.race([excess, new Promise(resolve => setImmediate(() => resolve('queued')))])).toBe(false);
       expect(settled).toBe(0);
       await f.store.close();
-      expect((await Promise.all(queued)).every(result => result === false)).toBe(true);
+      const closed = await Promise.race([Promise.all(queued), new Promise(resolve => setImmediate(() => resolve('pending')))]);
+      expect(closed).toEqual(Array(256).fill(false));
       expect(effect).not.toHaveBeenCalled();
     } finally { await f.store.close(); release(); await first; await excess; await Promise.allSettled(queued); }
   });
