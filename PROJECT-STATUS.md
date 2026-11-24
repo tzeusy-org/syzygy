@@ -580,7 +580,10 @@ output; it is the canonical battery.
 ```sh
 python3 scripts/check_governance.py
 python3 scripts/check_governance.py --selftest
+python3 scripts/check_merge_conflict_markers.py  # unresolved delimiters in the checked-out Git commit
+python3 scripts/check_merge_conflict_markers.py --selftest
 python3 scripts/record_polaris_understanding_adoption.py --selftest
+python3 scripts/count_polaris_effective_scenarios.py --selftest
 python3 scripts/launch_gate_results.py --selftest            # historical Markdown records
 python3 scripts/validate_launch_administration.py --selftest # the structured record path
 python3 scripts/render_launch_administration.py --selftest
@@ -719,7 +722,7 @@ python3 scripts/dossier_pilot_runs.py --selftest   # page classes and one mutati
 python3 scripts/test_dossier_pilot.py   # the pilot harness tests, literal expectations; needs node and git for the screened-tree cases
 ```
 
-The one hundred and thirty-five checks above are the same one hundred and thirty-five the hosted workflow runs
+The one hundred and thirty-eight checks above are the same one hundred and thirty-eight the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
