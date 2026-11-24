@@ -55,6 +55,7 @@
 - `F3-CONSUMED-CLAIM-AND-SOURCE-AUTHORITY-REVIEW-RAW\.md`
 - `F3-DESIGN-PRODUCT-BEFORE-NATIVE-EFFECT-REVIEW-RAW\.md`
 - `F3-TERMINAL-READ-OPENING-AUTHORITY-REVIEW-RAW\.md`
+- `F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -193,3 +194,5 @@
 [Observed] The Design product preparation review records `PASS` for `e1b7d513d` (F3-DESIGN-PRODUCT-BEFORE-NATIVE-EFFECT-REVIEW-RAW.md:1). A-171 places checked same-delivery reproduction before the independently timed machine effect. The relay wiring control detects a missing preparation callback. The native interrupted replay reached preparation and refused before the first protected request callback. [Unknown] Native Resume closure.
 
 [Observed] The joined terminal-read opening review records `PASS` for `0a58dbfc9` (F3-TERMINAL-READ-OPENING-AUTHORITY-REVIEW-RAW.md:1). A-172 shares the opening authority proof with the existing pre-lock asynchronous and same-turn synchronous checks. The combined latency test and the two withdrawal controls detect the duplicate and either missing authority guard. [Unknown] Hosted native Resume closure.
+
+[Observed] The manifest remainder authority review records `PASS` for `a77a79e99` (F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW.md:1). A-174 preserves the bound reader’s fresh authority and named-store checks, the original time limit, and the post-screen release check. The producer and cold-restore clock cases both detect the prior implementation. [Unknown] Native Resume closure.

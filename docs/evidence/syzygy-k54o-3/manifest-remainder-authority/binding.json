@@ -1,0 +1,41 @@
+{
+  "subjectCommit": "a77a79e994ce7a62efd14a0ae4cc53db0866a6e5",
+  "baseCommit": "91555323be8a376ff06442ab4407a92bbd310e2f",
+  "binaryDeltaSha256": "f2d8bb52bff4dd2f12a47a655181daf2d2c8040e5f976c7acbb8cb5b57be09f2",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "81190565c2e07a5d84339fc1856a357d9f35230b14f4a083845471eaea2b695f"
+  },
+  "hostedPredecessor": {
+    "subjectCommit": "1c678dad579b7beb8aa5adf3c916ce3b72c73292",
+    "workflowRun": 45292888381,
+    "job": 138107000712,
+    "logSha256": "29bbf56e4826304b895b5b62b559a8f1918332832f2f63b38615a2f19236a7f5",
+    "eligibleRestoreProducts": {
+      "outcome": "rejected",
+      "elapsedMilliseconds": 58412,
+      "failureWithinRestore": "Unknown"
+    }
+  },
+  "focused": {
+    "files": [
+      "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "packages/polaris-dossier/src/url-run-artifacts.test.ts"
+    ],
+    "passed": 97,
+    "selected": 97,
+    "typecheck": "passed",
+    "control": {
+      "kind": "predecessor",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "old": "  async function verifiedManifestRemainder(check: () => void, checkTime: () => void): Promise<Buffer> {\n    // The bound reader checks live authority and store identity around its\n    // descriptor walk. Check the timer here and live authority after screening.\n    checkTime();\n    const entries = await openReader().listTree();\n    checkTime();\n    // Reuse the check's bounded path-only projection. Neither the raw tree\n    // listing nor a blob identifier or body enters this receipt's subject.\n    const bytes = Buffer.from(canonical(deriveManifestRemainder(entries, screen)));\n    if (bytes.length > limits.itemBytes) fail();\n    safe(bytes);\n    check();\n    return bytes;\n  }\n",
+      "new": "  async function verifiedManifestRemainder(check: () => void): Promise<Buffer> {\n    check();\n    const entries = await openReader().listTree();\n    check();\n    // Reuse the check's bounded path-only projection. Neither the raw tree\n    // listing nor a blob identifier or body enters this receipt's subject.\n    const bytes = Buffer.from(canonical(deriveManifestRemainder(entries, screen)));\n    if (bytes.length > limits.itemBytes) fail();\n    safe(bytes);\n    check();\n    return bytes;\n  }\n",
+      "sourceRestoration": "The predecessor helper and its one explicit producer call were used as a unit.",
+      "selector": "authenticates the exact manifest remainder|checks cold origin authority",
+      "detectedFailures": 2,
+      "logSha256": "3ab2153077bed7cdcd0a5146a6e0dcc41062f3f6c9e75d0e3201ba89485b4a67"
+    }
+  },
+  "nativeSuccessorCompletion": "Unknown"
+}
