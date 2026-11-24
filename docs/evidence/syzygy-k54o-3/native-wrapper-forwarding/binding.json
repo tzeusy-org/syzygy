@@ -1,0 +1,54 @@
+{
+  "testSuccessorCommit": "9e1a83b1e175264ccc815f1eb6045894db1b61e7",
+  "baseCommit": "6de8867ab774894046e08a54443fec1751acefe1",
+  "binaryDeltaSha256": "e047ccafb529e556679ca28b1eb4dd92f911a83ec2bba408071f412f91998d30",
+  "hostedPredecessor": {
+    "subjectCommit": "76763c74d705b35519f2eeb29f08697d40996972",
+    "workflowRun": 45307719575,
+    "job": 138156722884,
+    "rawLogSha256": "05fee68d2440a99475a0c1b25a57a129e389c7822ee82a2f5e948e3b55522c97",
+    "complete": {
+      "outcome": "passed",
+      "rawLine": 1925,
+      "elapsedMs": 79531
+    },
+    "deliveryStop": {
+      "outcome": "passed",
+      "rawLine": 1926,
+      "elapsedMs": 50354
+    },
+    "interruptedResume": {
+      "rawLine": 1928,
+      "parsedLogSha256": "8bc0da09b25bdba6380a5895d03236b3a0628d1ad6be2df62f49935a572df878",
+      "renderPreparation": "accepted",
+      "leaseStillOpen": true,
+      "leaseRemainingMs": 28680,
+      "nativeEffectMilliseconds": 30000,
+      "nativeEffectEntered": false,
+      "resumedExit": 1
+    },
+    "eligibleResume": {
+      "rawLine": 1913,
+      "parsedLogSha256": "79d83e16241f566847ced5796bc952a9dfe3958851f46c36422bf5997f2234c0",
+      "verifiedProductionStopReached": true,
+      "bootstrap": {
+        "restore-plans": "accepted",
+        "load-renderer": "accepted",
+        "create-origins": "accepted",
+        "restore-products": "accepted",
+        "start-sessions": "accepted",
+        "create-machine": "accepted",
+        "open-store": "accepted"
+      },
+      "coldContinuationCountAtSnapshot": 1,
+      "failureCause": "Unknown"
+    }
+  },
+  "successorNativeClosure": "Unknown",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-NATIVE-WRAPPER-FORWARDING-REVIEW-RAW.md",
+    "sha256": "eda0c35b394d4413cecdf2d00605cfb8b270d151c42ff90438e83d44f3ea58f4"
+  },
+  "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+}

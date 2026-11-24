@@ -1,0 +1,109 @@
+{
+  "instrumentedPredecessor": {
+    "subjectCommit": "0cdbd616a413b9a6451f3be24ac8a13004f574b0",
+    "baseCommit": "db86604212598031ca4c352391c1ea899b0a598b",
+    "binaryDeltaSha256": "11aa1c32412b920a6816f9eb9ace12c9e6840f8f68ce06ec0a0335016d95789c",
+    "sourceReview": {
+      "verdict": "REVISE",
+      "path": "docs/reviews/F3-ORDINARY-LOCK-DIAGNOSTIC-R1-RAW.md",
+      "sha256": "02c06fb6b0336958bd00996a31d89df70e801396dfd4369334a44bbb8066ff4a"
+    },
+    "failureManifestSha256": "3b947705564fe443a9eb1c444fa000f299cf3adebef9a389d9f00fb13373a99e",
+    "testLogSha256": "433fc110c80bb21b2488074d8431e7bf740c0dd3f753e41f1340cb619ea6db2c",
+    "runtimeInputTreeSha256": "797620a3b686b8fcc109fc9d75fbaa63247982932f47164e4c418688c21f4f4d",
+    "runtimeFailure": {
+      "reason": "transport-unavailable",
+      "atMs": 140244.795365
+    },
+    "scenario": "stop-resume",
+    "beforeDesign": true,
+    "machineLifecycle": "retired",
+    "machineHistorySealed": true,
+    "firstInventoryRefusal": {
+      "observedAtMs": 138498.281639,
+      "relayPhase": "Unknown",
+      "peerMediation": {
+        "role": "inventory",
+        "startedMs": 137265.409012,
+        "stages": [
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 137284.187002,
+              "settledMs": 137287.795615,
+              "outcome": "accepted"
+            }
+          }
+        ],
+        "store": {
+          "startedMs": 137440.298797,
+          "conflicts": 33,
+          "lastConflictAt": 138497.997603,
+          "settledMs": 138498.127368,
+          "outcome": "refused"
+        },
+        "settledMs": 138498.157765,
+        "outcome": "refused"
+      }
+    }
+  },
+  "reviewedDiagnostic": {
+    "subjectCommit": "6de8867ab774894046e08a54443fec1751acefe1",
+    "baseCommit": "0cdbd616a413b9a6451f3be24ac8a13004f574b0",
+    "binaryDeltaSha256": "37541e70a6ef95349ff02d2451c036269316a811d621710e755f522786d92a5e",
+    "sourceReview": {
+      "verdict": "PASS",
+      "path": "docs/reviews/F3-ORDINARY-LOCK-DIAGNOSTIC-R2-RAW.md",
+      "sha256": "50565ae955ba22f961849eade696135edc00ae88fa18b417bd787cb62b1ca726"
+    },
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "nativeReplay": {
+      "failureManifestSha256": "30e1a884264ccb9320b437edf523c897a33e0c9bcbb1368fade245d334b03065",
+      "testLogSha256": "1d3c4814345713f4b0ad0ef09607e22bb0feb4ffc332e06643bb2a872a929a88",
+      "sealedStopSha256": "3ed24d883ad3bc0c3eb79c6ecea23f7dc0896db7a5b14f6d5f34d80538e0ec1f",
+      "stoppedHistoryVerified": true,
+      "exactCutClaimed": true,
+      "allocation": {
+        "kind": "allocation",
+        "count": 8,
+        "startedMs": 125972.218586,
+        "runRemainingMs": 7084966,
+        "asyncAuthority": {
+          "started": 6,
+          "accepted": 6,
+          "refused": 0,
+          "rejected": 0,
+          "totalMs": 415.1354209999845
+        },
+        "settledMs": 127045.681927,
+        "outcome": "accepted"
+      },
+      "runFailure": {
+        "phase": "resumed-exit",
+        "exit": 1,
+        "failure": "role-ended",
+        "roles": [
+          {
+            "role": "author",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "inventory",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "fidelity",
+            "outcome": "Unknown"
+          },
+          {
+            "role": "design",
+            "outcome": "inspection-failed",
+            "exitCode": null,
+            "signal": "SIGTERM"
+          }
+        ]
+      }
+    }
+  },
+  "hostedDeliveryCutCause": "Unknown"
+}
