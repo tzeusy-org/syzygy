@@ -772,6 +772,37 @@ called a win.
 - The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
   the traits from the shape packs' own selectors.
 
+## R3 slice 1: stage timings in the record, and what the agent tool reports about usage (2026-11-25)
+
+Bead syzygy-5dhm.25. `syzygy dossier close` now writes `stepMeasures` into the Execution Record,
+derived from the run's step log (`packages/polaris-dossier/src/step-measures.ts`; spec version
+2.29, `openspec/changes/dossier-step-measures/`). The round predicate is the one
+`scripts/dossier_stored_run_measures.py` (figure f) already used, except that a round also ends
+at the next prompt of its kind.
+
+- [Observed] Applied read-only to the seven stored runs
+  (`docs/evidence/syzygy-5dhm-25/step-measures-stored-2026-11-25.json`): wall time 29.9 to 81.3
+  minutes; first draft check after 5.0 to 46.1 minutes; 3 to 7 draft revisions; 2 to 6 fidelity
+  rounds opened, and 1 or 2 design rounds in the six runs that rendered. The seventh never
+  rendered, so its time to render and its design rounds are Unknown, not zero.
+- [Observed] Of figure f's 33 rounds, 31 agree. In two runs a fidelity round was superseded by
+  the next prompt before any check validated it. Figure f lets both rounds end at the same check;
+  the record counts the first unfinished, so no time is counted twice.
+- [Observed] Syzygy reads no usage. `close.ts` records only what the operator declares, and the
+  skill asks the operator for it.
+- [Observed] In a launched run each session is an interactive `claude` whose `HOME` and
+  `CLAUDE_CONFIG_DIR` are the run's private agent home (`session-view.ts:55-56`). The session
+  can write that home.
+- [Observed, key names only, from this host's own transcripts at Claude Code 2.1.331] Claude Code
+  writes per-message `usage` (input, output, cache-read and cache-creation tokens) and a
+  `cost-state` row (cost, durations, tokens per model) into its transcript. The Agent tool
+  reports `totalTokens`, `totalDurationMs` and `totalToolUseCount` to its parent session only.
+- [Inferred] So slice 2 can read a launched session's usage from its own agent home without the
+  operator. It is Inferred, never Observed, since the session can write the file. The reader
+  must copy numbers only, never a body. An operator-started run's sessions stay Unknown. The
+  corpus's `passBudget.usage` sentence stays true until slice 2 lands.
+- The full finding, with code locations, is in the change's `design.md`.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner

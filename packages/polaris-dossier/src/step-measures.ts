@@ -1,7 +1,7 @@
 import { isRecord } from '@syzygy/support';
 
 /** Stage timings, draft and inventory revisions and review rounds, derived at close from the run's step log (syzygy-5dhm.25, pursuit
- * 2026-11-21b move R3 slice 1; REQ-polaris-generation-033 version 2.27).
+ * 2026-11-21b move R3 slice 1; REQ-polaris-generation-033 version 2.29).
  *
  * The step log lies within the agent sessions' write reach, so every figure is Inferred, never Observed. A figure whose rows the log does
  * not carry is Unknown with its reason, never zero (VIS-2): no check row means the time to the first check is Unknown, and no delivered
@@ -11,15 +11,20 @@ import { isRecord } from '@syzygy/support';
  * The round predicate is the one `scripts/dossier_stored_run_measures.py` (figure f) states over the stored runs: a round opens at a
  * `session-prompt` row with role `review`, a kind and outcome `delivered` (or `issued`, the handover mode's prompt), and ends at the next
  * `review-check` row of the same kind with outcome `validated`; the `review-check` rows of that kind with outcome `refused` between are its
- * refused submissions. A round no validated row ends is unfinished and adds no time. Every duration is in whole milliseconds between two
+ * refused submissions. A round also ends, unfinished, at the next review prompt of its kind, so no two rounds share a check or a
+ * millisecond; a round no validated row ends is unfinished and adds no time. Figure f lets two prompts end at one validated check; in
+ * the seven stored runs that happens twice, and there figure f counts the earlier round completed where this counts it unfinished
+ * (docs/evidence/syzygy-5dhm-25/step-measures-stored-2026-11-25.json); the other 31 rounds agree. Every duration is in whole milliseconds between two
  * logged instants. */
 
 export const STEP_MEASURES_BASIS = 'derived by Syzygy at close from the run\'s step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero';
 
-export const ROUND_PREDICATE = 'a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time';
+export const ROUND_PREDICATE = 'a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time';
 
 const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/u;
 export const REVIEW_KINDS = ['fidelity', 'design'] as const;
+/** The outcomes `check` and `inventory-check` log; a row with any other outcome, or none, is counted under `other`. */
+export const KNOWN_OUTCOMES = ['passed', 'findings', 'refused'] as const;
 export type ReviewKind = (typeof REVIEW_KINDS)[number];
 
 export interface StepRow {
@@ -95,22 +100,30 @@ function span(from: StepRow, to: { readonly at: string; readonly ms: number } | 
 function revisions(rows: readonly StepRow[], step: string): RevisionCount {
   const own = rows.filter((row) => row.step === step);
   if (own.length === 0) return unknown(`the step log records no ${step} row`);
+  // Only the outcome words Syzygy's own steps write become keys; any other string, which an agent session could have written, is counted
+  // under `other` and never copied into the record.
   const byOutcome: Record<string, number> = {};
-  for (const row of own) byOutcome[row.outcome ?? 'none'] = (byOutcome[row.outcome ?? 'none'] ?? 0) + 1;
+  for (const row of own) {
+    const key = row.outcome !== null && (KNOWN_OUTCOMES as readonly string[]).includes(row.outcome) ? row.outcome : 'other';
+    byOutcome[key] = (byOutcome[key] ?? 0) + 1;
+  }
   const numbered = new Set(own.map((row) => row.revision).filter((revision): revision is number => revision !== null));
   if (numbered.size === 0) return unknown(`no ${step} row in the step log names a revision`);
   return { state: 'counted', revisions: numbered.size, rows: Object.fromEntries(Object.entries(byOutcome).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) };
 }
 
+const isOpener = (row: StepRow, kind: ReviewKind): boolean =>
+  row.step === 'session-prompt' && row.role === 'review' && row.kind === kind && (row.outcome === 'delivered' || row.outcome === 'issued');
+
 function reviewRounds(rows: readonly StepRow[], kind: ReviewKind): Rounds {
-  const opened = rows.map((row, index) => ({ row, index }))
-    .filter(({ row }) => row.step === 'session-prompt' && row.role === 'review' && row.kind === kind && (row.outcome === 'delivered' || row.outcome === 'issued'));
+  const opened = rows.map((row, index) => ({ row, index })).filter(({ row }) => isOpener(row, kind));
   if (opened.length === 0) return unknown(`the step log records no delivered or issued ${kind} review prompt`);
   const rounds: Round[] = [];
   for (const { row, index } of opened) {
     let refused = 0;
     let end: StepRow | undefined;
     for (const later of rows.slice(index + 1)) {
+      if (isOpener(later, kind)) break;
       if (later.step !== 'review-check' || later.kind !== kind) continue;
       if (later.outcome === 'validated') { end = later; break; }
       if (later.outcome === 'refused') refused++;

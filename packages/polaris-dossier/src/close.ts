@@ -225,7 +225,7 @@ export function stepInstants(run: string): Readonly<Record<string, unknown>> {
   return { label: 'Inferred', basis: 'the run\'s step log, which the agent sessions can write', entries, unreadable: unreadable + Math.max(0, lines.length - STEP_LINES_MAX) };
 }
 
-/** Stage timings, draft and inventory revisions and review rounds from the step log (REQ-polaris-generation-033 version 2.27): Inferred,
+/** Stage timings, draft and inventory revisions and review rounds from the step log (REQ-polaris-generation-033 version 2.29): Inferred,
  * and Unknown, never zero, where the log cannot be read or lacks the rows a figure needs. The same lines `stepInstants` reads. */
 export function closeStepMeasures(run: string, closedAt: string): ReturnType<typeof stepMeasures> {
   const read = readLog(run, RUN_LAYOUT.steps);

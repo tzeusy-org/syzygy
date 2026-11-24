@@ -1,0 +1,214 @@
+{
+  "format": "syzygy-5dhm-25-step-measures-mutation/1",
+  "commit": "d1a7cf9b4eebab25a3601765d70653fa32130af3",
+  "subjects": {
+    "packages/polaris-dossier/src/step-measures.ts": "88c0488841eedc96ac334a8160bc9a91635c884ec965eb0f0e5019dbf4b8e51f",
+    "packages/polaris-dossier/src/close.ts": "e1d8a6a024ee61f6feba4d2745a753884f066b10741f8b74ce15648513013144"
+  },
+  "tests": [
+    "packages/polaris-dossier/src/step-measures.test.ts",
+    "packages/polaris-dossier/src/close.test.ts"
+  ],
+  "mutants": 22,
+  "killed": 21,
+  "results": [
+    {
+      "id": "span-order",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (to.ms < from.ms) return unknown(",
+      "new": "if (false) return unknown(",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-order",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (end !== undefined && end.ms < row.ms) return unknown(",
+      "new": "if (false) return unknown(",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-issued",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "(row.outcome === 'delivered' || row.outcome === 'issued')",
+      "new": "row.outcome === 'delivered'",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-role",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'session-prompt' && row.role === 'review' && row.kind === kind",
+      "new": "row.step === 'session-prompt' && row.kind === kind",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-first-validated",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (later.outcome === 'validated') { end = later; break; }",
+      "new": "if (later.outcome === 'validated') { end = later; }",
+      "outcome": "SURVIVED",
+      "failedTests": 0,
+      "exit": 0
+    },
+    {
+      "id": "round-refused",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (later.outcome === 'refused') refused++;",
+      "new": "if (later.outcome === 'refused') refused += 0;",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "round-kind",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (later.step !== 'review-check' || later.kind !== kind) continue;",
+      "new": "if (later.step !== 'review-check') continue;",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "rounds-unknown",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (opened.length === 0) return unknown(",
+      "new": "if (false) return unknown(",
+      "outcome": "killed",
+      "failedTests": 2,
+      "exit": 1
+    },
+    {
+      "id": "rounds-sum",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "ms: completed.reduce((sum, round) => sum + round.ms!, 0)",
+      "new": "ms: 0",
+      "outcome": "killed",
+      "failedTests": 2,
+      "exit": 1
+    },
+    {
+      "id": "revisions-unknown",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (own.length === 0) return unknown(",
+      "new": "if (false) return unknown(",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "revisions-unnumbered",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (numbered.size === 0) return unknown(",
+      "new": "if (false) return unknown(",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "first-passed-draft",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'check' && row.outcome === 'passed'",
+      "new": "row.step === 'check'",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "first-passed-inventory",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'inventory-check' && row.outcome === 'passed'",
+      "new": "row.step === 'inventory-check'",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "first-render",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'render' && row.outcome === 'rendered'",
+      "new": "row.step === 'check'",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "wall-end",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "{ at: closedAt, ms: close }",
+      "new": "{ at: first.at, ms: first.ms }",
+      "outcome": "killed",
+      "failedTests": 3,
+      "exit": 1
+    },
+    {
+      "id": "instant-shape",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "!INSTANT.test(at)",
+      "new": "false",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "instant-parse",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (Number.isNaN(ms)) return null;",
+      "new": "",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "count-nonnegative",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "value >= 0 ?",
+      "new": "value >= -1 ?",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "empty-reason",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "unreadable === 0 ? 'the step log records no step'",
+      "new": "true ? 'the step log records no step'",
+      "outcome": "killed",
+      "failedTests": 1,
+      "exit": 1
+    },
+    {
+      "id": "close-field",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "    stepMeasures: closeStepMeasures(run, isoOf(now)),\n",
+      "new": "",
+      "outcome": "killed",
+      "failedTests": 9,
+      "exit": 1
+    },
+    {
+      "id": "close-unreadable",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (!read.ok) return stepMeasures({ why: read.why }, closedAt);",
+      "new": "if (!read.ok) return stepMeasures([], closedAt);",
+      "outcome": "killed",
+      "failedTests": 6,
+      "exit": 1
+    },
+    {
+      "id": "close-over-cap",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "unreadableRows: measures.unreadableRows + over",
+      "new": "unreadableRows: measures.unreadableRows",
+      "outcome": "killed",
+      "failedTests": 5,
+      "exit": 1
+    }
+  ]
+}

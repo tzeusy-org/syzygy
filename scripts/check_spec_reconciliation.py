@@ -783,6 +783,20 @@ VERIFY_SUBJECTS = {
     VERIFY_SPEC: "a5453cb1a5c8813fbba513e0b232e6cfc483ceb7ee87061b7f7b67516f0d9cd7",
 }
 VERIFY_BOUND_PARTS = len(VERIFY_SUBJECTS)
+# The v2.29 step-measures amendment (syzygy-5dhm.25): one MODIFIED
+# REQ-polaris-generation-033 (the Execution Record's step measures) after its
+# v2.21 verify-text text, pending until its own VIS-4 ledger row.
+STEPM_CHANGE = "dossier-step-measures"
+STEPM_HOME = f"{CHANGES}/{STEPM_CHANGE}"
+STEPM_SPEC = f"{STEPM_HOME}/proposed/polaris-generation/spec.md"
+STEPM_UNION = f"{STEPM_HOME}/GOVERNING-DEPENDENCIES.json"
+STEPM_TAG = "polaris-dossier-step-measures-v2.29"
+STEPM_STATUS_PREFIX = f"[Step-measures amendment 2.29]({STEPM_HOME})"
+STEPM_REPLACES = (POLARIS_ID + "033",)
+STEPM_SUBJECTS = {
+    STEPM_SPEC: "bff72fdd270e9abc987cbbb82c415cc312177a4d469e6eb22e55f8919c380714",
+}
+STEPM_BOUND_PARTS = len(STEPM_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -2964,6 +2978,73 @@ def verify_binding(root):
     return (None if records or subjects else read_text(root, VERIFY_SPEC), records, subjects)
 
 
+def is_stepm_row(line):
+    """A ledger row claiming the v2.29 step-measures amendment, well formed or not."""
+    if not line.startswith("|"):
+        return False
+    cells = [cell.strip() for cell in line.split("|")[1:-1]]
+    tag = f"`{STEPM_TAG}`"
+    if len(cells) == 7 and cells[6] == tag:
+        return True
+    if len(cells) != 7 and tag in cells:
+        return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
+    return all(f"]({snapshot}{path})" in cells[3] for path in STEPM_SUBJECTS)
+
+
+def stepm_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_stepm_row(line)]
+
+
+def stepm_disposition(root, rows):
+    if len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), STEPM_TAG,
+                                    STEPM_SUBJECTS, plain_revert=True)
+    return None
+
+
+def stepm_binding(root):
+    """Read v2.29's published composition: pending until its row, like v2.21.
+
+    The row names the installing commit (a plain commit, so its revert may
+    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    predecessor is v2.21's text of REQ-polaris-generation-033 (verify text,
+    itself after run-tree read bounds v2.18), so v2.21 must itself be in force.
+    """
+    rows = stepm_rows(root)
+    if not rows or stepm_disposition(root, rows):
+        return None, [], []
+    records, subjects = [], []
+    if verify_binding(root)[0] is None:
+        records.append("step measures: prior v2.21 verify-text adoption is unavailable")
+    if len(rows) != 1 or len(rows[0]) != 7:
+        records.append("step measures: expected one seven-column agent adoption row")
+    else:
+        identity, date, commit, changed, reason, revert, tag = rows[0]
+        landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
+        if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
+                or not valid_adoption_date(date)
+                or not landed or tag != f"`{STEPM_TAG}`" or not reason):
+            records.append("step measures: malformed adoption identity, date, commit, reason or tag")
+        if landed:
+            oid = landed.group(1)
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+                records.append("step measures: revert does not name the landed commit")
+            for rel in STEPM_SUBJECTS:
+                snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
+                if f"]({snapshot})" not in changed:
+                    records.append(f"step measures: adoption row does not name `{rel}`")
+    for rel, digest in STEPM_SUBJECTS.items():
+        body = read_bytes(root, rel)
+        if body is None or sha(body) != digest:
+            subjects.append(f"step measures: `{rel}` differs from the reviewed v2.29 subject")
+    return (None if records or subjects else read_text(root, STEPM_SPEC), records, subjects)
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -3623,6 +3704,15 @@ def check_outcomes(root, report):
         subjects_seen += VERIFY_BOUND_PARTS
     r1 += verify_records
     r2 += verify_subjects
+    stepm_retired_by = stepm_disposition(root, stepm_rows(root))
+    stepm_amendment, stepm_records, stepm_subjects = stepm_binding(root)
+    if stepm_retired_by:
+        records += 2
+    elif stepm_amendment is not None or stepm_records or stepm_subjects:
+        records += 1
+        subjects_seen += STEPM_BOUND_PARTS
+    r1 += stepm_records
+    r2 += stepm_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -3662,6 +3752,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.20 inactive by {hero_retired_by}"
     if verify_retired_by:
         retirement += f"; v2.21 inactive by {verify_retired_by}"
+    if stepm_retired_by:
+        retirement += f"; v2.29 inactive by {stepm_retired_by}"
     if readers_retired_by:
         retirement += f"; v2.22 inactive by {readers_retired_by}"
     if cont_retired_by:
@@ -3706,7 +3798,8 @@ def check_outcomes(root, report):
                "one v2.22 row over effective v2.20, pending until recorded; containment figure: "
                "one v2.23 row over effective v2.22, pending until recorded; system model: "
                "one v2.24 row over effective v2.23, pending until recorded; worth-knowing: "
-               "one v2.26 row over effective v2.24, pending until recorded" + retirement)
+               "one v2.26 row over effective v2.24, pending until recorded; step measures: "
+               "one v2.29 row over effective v2.21's 033, pending until recorded" + retirement)
     report.add("R2", "reviewed and signed subjects hash to their rows", subjects_seen, r2)
 
 
@@ -4554,6 +4647,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, verify_amendment, VERIFY_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        stepm_amendment, stepm_records, stepm_subjects = stepm_binding(root)
+        findings += stepm_records + stepm_subjects
+        if stepm_amendment is not None:
+            if verify_amendment is None:
+                findings.append("POLARIS: step measures requires effective verify text v2.21")
+            else:
+                a, extra_a = compose_figure_by_id(a, stepm_amendment, STEPM_REPLACES)
+                b, extra_b = compose_figure_by_name(b, stepm_amendment, STEPM_REPLACES)
+                pa += extra_a
+                pb += extra_b
         reltype_amendment, reltype_records, reltype_subjects = reltype_binding(root)
         findings += reltype_records + reltype_subjects
         if reltype_amendment is not None:
@@ -4911,6 +5014,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS verify text: cannot count predecessor and successor for 033")
         else:
             n_scen += current[ident] - prior[ident]
+    stepm_amendment, _records, _subjects = stepm_binding(root)
+    if stepm_amendment is not None:
+        # Only 033 moves, after the verify text v2.21.
+        ident = STEPM_REPLACES[0]
+        prior = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(verify_amendment or "")
+                 if len(b["ids"]) == 1}
+        current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(stepm_amendment)
+                   if len(b["ids"]) == 1}
+        if set(current) != {ident} or ident not in prior:
+            findings.append("POLARIS step measures: cannot count predecessor and successor for 033")
+        else:
+            n_scen += current[ident] - prior[ident]
     edit_account_amendment, _records, _subjects = edit_account_binding(root)
     if edit_account_amendment is not None:
         ident = EDIT_ACCOUNT_REPLACES[0]
@@ -5139,6 +5254,9 @@ def check_generated(root, pop, report):
     verify_amendment, _records, _subjects = verify_binding(root)
     if verify_amendment is not None:
         files += tracked(root, VERIFY_HOME)
+    stepm_amendment, _records, _subjects = stepm_binding(root)
+    if stepm_amendment is not None:
+        files += tracked(root, STEPM_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -5200,7 +5318,8 @@ def check_generated(root, pop, report):
                         (worth_amendment, WORTH_UNION),
                         (raw_read_amendment, RAW_READ_UNION),
                         (treeread_amendment, TREEREAD_UNION),
-                        (verify_amendment, VERIFY_UNION)):
+                        (verify_amendment, VERIFY_UNION),
+                        (stepm_amendment, STEPM_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -5613,6 +5732,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls verify text v2.21 adopted while it is not in force")
         if any(VERIFY_TAG in line and "Agent adoption" in line for line in rows.get(VERIFY_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls verify text v2.21 adopted while it is not in force")
+    stepm_amendment, _records, _subjects = stepm_binding(root)
+    stepm_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(STEPM_STATUS_PREFIX)]
+    if stepm_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and STEPM_TAG in line
+                   for line in rows.get(STEPM_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route step measures v2.29 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = stepm_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or stepm_fields != [f"{STEPM_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route step measures v2.29 and its adoption {identity}")
+    elif STEPM_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in stepm_fields):
+            findings.append(f"`{STATUS}` calls step measures v2.29 adopted while it is not in force")
+        if any(STEPM_TAG in line and "Agent adoption" in line for line in rows.get(STEPM_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls step measures v2.29 adopted while it is not in force")
     reltype_amendment, _records, _subjects = reltype_binding(root)
     reltype_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
@@ -6031,6 +6168,7 @@ def inputs(root):
     paths |= {RAW_READ_UNION, *RAW_READ_SUBJECTS}
     paths |= {TREEREAD_UNION, *TREEREAD_SUBJECTS}
     paths |= {VERIFY_UNION, *VERIFY_SUBJECTS}
+    paths |= {STEPM_UNION, *STEPM_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -6415,6 +6553,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_raw_read = any(is_raw_read_row(line) for line in original.splitlines())
     had_treeread = any(is_treeread_row(line) for line in original.splitlines())
     had_verify = any(is_verify_row(line) for line in original.splitlines())
+    had_stepm = any(is_stepm_row(line) for line in original.splitlines())
     edit_rows = edit_account_rows(tree)
     edit_retired = edit_account_disposition(tree, edit_rows)
     edit_records = 2 if edit_retired else int(bool(edit_rows))
@@ -6427,7 +6566,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line)
+                      and not is_verify_row(line) and not is_stepm_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -6443,7 +6582,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - edit_records
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_stepm - edit_records
             and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
@@ -6469,7 +6608,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             - (WORTH_BOUND_PARTS if had_worth else 0)
             - (len(RAW_READ_SUBJECTS) if had_raw_read else 0)
             - (len(TREEREAD_SUBJECTS) if had_treeread else 0)
-            - (VERIFY_BOUND_PARTS if had_verify else 0))
+            - (VERIFY_BOUND_PARTS if had_verify else 0)
+            - (STEPM_BOUND_PARTS if had_stepm else 0))
     witnesses.append({"mutant": "declared-historical-control", "path": change,
                       "old": "<no amendment, row, subjects or D10 act>",
                       "new": "<unchanged>", "expected": "inactive; no phantom R1/R2 subjects",
@@ -6598,7 +6738,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line))
+                      and not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -9579,7 +9719,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line))
+                      and not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -9699,7 +9839,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line))
+                      and not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -9771,7 +9911,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line))
+                      and not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -9856,7 +9996,7 @@ def verify_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_verify_row(line))
+                      if not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -9965,6 +10105,136 @@ def verify_cases(tmp, base, witnesses, failures):
                bool(ida and names and a == b == predecessor), False)
 
 
+STEPM_PREDECESSOR_SCENARIOS = 16
+STEPM_SCENARIOS_ADDED = 4
+
+
+def stepm_cases(tmp, base, witnesses, failures):
+    """The v2.29 pending-to-adopted transition over v2.21's 033, its ledger and byte guards, and the predecessor guard."""
+    original = read_text(base, STEPM_SPEC)
+    if original is None or verify_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expect, found, caught, stood):
+        witnesses.append({"mutant": name, "path": rel, "old": old, "new": new,
+                          "expected": expect, "failed": found,
+                          "outcome": ("held" if stood else "killed") if caught else "SURVIVED"})
+        if not caught:
+            failures.append(name)
+
+    tree = Path(tmp) / "step-measures"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_stepm_row(line))
+    ledger.write_text(pending)
+    pending_pop, pending_findings = census(tree)
+    predecessor = pending_pop["POLARIS"]
+    ident = STEPM_REPLACES[0]
+    held = (stepm_binding(tree) == (None, [], []) and not pending_findings
+            and len(predecessor[ident]["scenarios"]) == STEPM_PREDECESSOR_SCENARIOS)
+    record("step-measures-pending", AGENT_ADOPTIONS, "<no v2.29 row>", "<unchanged>",
+           "landed package alone keeps v2.29 pending", pending_findings, held, True)
+
+    oid = "0123456789abcdef" * 2 + "01234567"
+    row = (f"| A-999 | 2026-11-22 | `{oid}` | [spec](https://github.com/tzeusy-org/syzygy/blob/{oid}/{STEPM_SPEC}) "
+           f"| Selftest | `git revert {oid}` | `{STEPM_TAG}` |\n")
+    ledger.write_text(pending + row)
+    current_pop, current_findings = census(tree)
+    current = current_pop["POLARIS"]
+    held = (stepm_binding(tree) == (original, [], []) and not current_findings
+            and set(current) == set(predecessor)
+            and len(current[ident]["scenarios"]) == STEPM_PREDECESSOR_SCENARIOS + STEPM_SCENARIOS_ADDED
+            and current[ident]["name"] == predecessor[ident]["name"]
+            and all(current[i] == r for i, r in predecessor.items() if i != ident))
+    record("step-measures-adopted", AGENT_ADOPTIONS, "<no v2.29 row>", row,
+           "v2.29 replaces exactly 033 (16 to 20 scenarios)", current_findings, held, True)
+
+    for name, old, new in (("duplicate-row", row, row + row),
+                           ("wrong-tag", STEPM_TAG, STEPM_TAG + "-wrong"),
+                           ("wrong-revert", f"git revert {oid}", "git revert " + "0" * 40),
+                           ("missing-spec-link", f"/blob/{oid}/{STEPM_SPEC})", f"/blob/other/{STEPM_SPEC})"),
+                           ("bad-date", "2026-11-22", "2026-99-22"),
+                           ("no-reason", "| Selftest |", "|  |")):
+        assert old in row
+        ledger.write_text(pending + row.replace(old, new, 1))
+        effective, r1, r2 = stepm_binding(tree)
+        record(f"step-measures-{name}", AGENT_ADOPTIONS, old, new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
+
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + row + veto)
+    pop, found = census(tree)
+    held = (stepm_disposition(tree, stepm_rows(tree)) == "A-1000" and not found
+            and pop["POLARIS"] == predecessor)
+    record("step-measures-vetoed", AGENT_ADOPTIONS, row, veto, "restore the v2.21 033", found, held, True)
+    prior_row = next((line for line in pending.splitlines(keepends=True) if is_verify_row(line)), None)
+    if prior_row is not None:
+        no_prior = "".join(line for line in pending.splitlines(keepends=True) if not is_verify_row(line))
+        ledger.write_text(no_prior + row)
+        effective, r1, r2 = stepm_binding(tree)
+        record("step-measures-predecessor-missing", AGENT_ADOPTIONS, prior_row, "",
+               "R1 refusal while v2.21 is not in force", r1 + r2,
+               effective is None and any("prior v2.21" in f for f in r1), False)
+
+    ledger.write_text(pending + row)
+    for rel in STEPM_SUBJECTS:
+        subject = tree / rel
+        previous = subject.read_bytes()
+        subject.write_bytes(previous + b"\n")
+        effective, r1, r2 = stepm_binding(tree)
+        subject.write_bytes(previous)
+        record(f"step-measures-subject-changed-{Path(rel).name}", rel, "<end of file>", "\n",
+               "R2 refusal with no effective amendment", r1 + r2,
+               effective is None and not r1 and bool(r2), False)
+    union = tree / STEPM_UNION
+    previous = union.read_text()
+    assert '"REQ-polaris-generation-017"' in previous
+    union.write_text(previous.replace('"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', 1))
+    report = Report()
+    check_generated(tree, current_pop, report)
+    union.write_text(previous)
+    record("step-measures-union-changed", STEPM_UNION, '"REQ-polaris-generation-017"', '"REQ-polaris-generation-099"', "R4 refusal",
+           report.findings.get("R4", []), any(STEPM_UNION in f for f in report.findings.get("R4", [])), False)
+    status = tree / STATUS
+    previous = status.read_text()
+    status.write_text("\n".join(line for line in previous.split("\n")
+                                if not line.strip().startswith(STEPM_STATUS_PREFIX)))
+    report = Report()
+    check_routes(tree, current_pop, report)
+    status.write_text(previous)
+    record("step-measures-status-route-missing", STATUS, STEPM_STATUS_PREFIX, "", "R5 refusal",
+           report.findings.get("R5", []),
+           any("step measures v2.29" in f for f in report.findings.get("R5", [])), False)
+    ledger.write_text(pending)
+    report = Report()
+    check_routes(tree, pending_pop, report)
+    claims = [f for f in report.findings.get("R5", []) if "while it is not in force" in f]
+    adopted_status = any(line.strip().startswith(STEPM_STATUS_PREFIX) and "is agent-adopted" in line
+                         for line in previous.split("\n"))
+    record("step-measures-pending-claims-adoption", AGENT_ADOPTIONS, row, "",
+           "R5 refuses an adopted route while the row is missing", claims,
+           bool(claims) if adopted_status else not claims, not adopted_status)
+    ledger.write_text(pending + row)
+
+    cases = [
+        ("added-section", DECLARED_SOURCE_MODIFIED, ADDED_HEADING),
+        ("wrong-id", "ID: " + ident, "ID: " + POLARIS_ID + "035"),
+        ("renamed", "### Requirement: Operator-agent authoring mode",
+         "### Requirement: Operator-agent authoring mode and step measures"),
+        ("second-block", "ID: " + ident, "ID: " + ident + "\n\n### Requirement: Extra\n\nID: " + POLARIS_ID + "099"),
+    ]
+    for name, old, new in cases:
+        assert old in original, name
+        mutant = original.replace(old, new, 1)
+        a, ida = compose_figure_by_id(predecessor, mutant, STEPM_REPLACES)
+        b, names = compose_figure_by_name(predecessor, mutant, STEPM_REPLACES)
+        record(f"step-measures-compose-{name}", STEPM_SPEC, old, new,
+               "both parsers refuse without partial application", ida + names,
+               bool(ida and names and a == b == predecessor), False)
+
+
 def readmit_cases(tmp, base, witnesses, failures):
     """The v2.13 pending-to-adopted transition over v2.6, its ledger and byte guards, and the predecessor guard."""
     original = read_text(base, READMIT_SPEC)
@@ -9984,7 +10254,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line))
+                      and not is_verify_row(line) and not is_stepm_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10534,6 +10804,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     raw_read_cases(tmp, base, witnesses, failures)
     treeread_cases(tmp, base, witnesses, failures)
     verify_cases(tmp, base, witnesses, failures)
+    stepm_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.

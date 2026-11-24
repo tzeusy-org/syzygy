@@ -21,7 +21,7 @@ const LOG = [
 ];
 const CLOSED = '2026-11-06T10:30:00.000Z';
 
-describe('stepMeasures (REQ-polaris-generation-033 version 2.27)', () => {
+describe('stepMeasures (REQ-polaris-generation-033 version 2.29)', () => {
   it('derives stage timings, revisions and review rounds from a literal step log, Inferred', () => {
     expect(stepMeasures(LOG, CLOSED)).toEqual({
       label: 'Inferred',
@@ -45,7 +45,7 @@ describe('stepMeasures (REQ-polaris-generation-033 version 2.27)', () => {
           rounds: [{ round: 1, session: 1, ms: 180_000, refusedSubmissions: 0 }],
         },
       },
-      roundPredicate: 'a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time',
+      roundPredicate: 'a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time',
     });
   });
 
@@ -88,6 +88,33 @@ describe('stepMeasures (REQ-polaris-generation-033 version 2.27)', () => {
         fidelity: { state: 'unknown' },
       },
     });
+  });
+
+  it('ends a round at its first validated check, and at the next prompt of its kind, so no two rounds share a check (review F2)', () => {
+    const prompt = (at: string, round: number): string => row({ step: 'session-prompt', at, outcome: 'delivered', role: 'review', kind: 'fidelity', session: 1, round });
+    const check = (at: string, outcome: string): string => row({ step: 'review-check', at, outcome, kind: 'fidelity' });
+    // Round 1 ends at its first validated check; the second validated check, with no prompt between, ends no round.
+    expect(stepMeasures([prompt('2026-11-06T10:00:00.000Z', 1), check('2026-11-06T10:01:00.000Z', 'validated'), check('2026-11-06T10:05:00.000Z', 'validated')], CLOSED))
+      .toMatchObject({ reviewRounds: { fidelity: { opened: 1, completed: 1, ms: 60_000 } } });
+    // Two prompts before one validated check: the first round is unfinished at the second prompt, and the refused check after the
+    // second prompt counts once, for the second round.
+    expect(stepMeasures([prompt('2026-11-06T10:00:00.000Z', 1), check('2026-11-06T10:01:00.000Z', 'refused'), prompt('2026-11-06T10:02:00.000Z', 2),
+      check('2026-11-06T10:03:00.000Z', 'refused'), check('2026-11-06T10:04:00.000Z', 'validated')], CLOSED)).toMatchObject({
+      reviewRounds: {
+        fidelity: {
+          state: 'counted', opened: 2, completed: 1, unfinished: 1, refusedSubmissions: 2, ms: 120_000,
+          rounds: [{ round: 1, ms: null, refusedSubmissions: 1 }, { round: 2, ms: 120_000, refusedSubmissions: 1 }],
+        },
+      },
+    });
+  });
+
+  it('counts an outcome Syzygy does not log under other, never copying an agent-written string into a key (review F1)', () => {
+    const odd = row({ step: 'check', at: '2026-11-06T10:05:00.000Z', outcome: 'AKIA-like text written by a session', revision: 3 });
+    const none = row({ step: 'check', at: '2026-11-06T10:06:00.000Z', revision: 4 });
+    const measures = stepMeasures([LOG[0]!, LOG[2]!, odd, none], CLOSED);
+    expect(measures).toMatchObject({ draftRevisions: { state: 'counted', revisions: 3, rows: { findings: 1, other: 2 } } });
+    expect(JSON.stringify(measures)).not.toContain('AKIA-like');
   });
 
   it('refuses out-of-order instants rather than reporting a negative time', () => {

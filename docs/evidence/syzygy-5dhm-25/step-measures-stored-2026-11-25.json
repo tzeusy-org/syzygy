@@ -8,9 +8,33 @@
     "figureRecordSha256": "69bc23e7a2d8c004f20b6d7b019b0f291aadc920970e5c5fb9df5baa8fe4a077"
   },
   "comparisonWithFigureF": {
-    "rounds": 33,
-    "agree": 33,
-    "disagreements": []
+    "figureFRounds": 33,
+    "agree": 31,
+    "supersededByNextPrompt": 2,
+    "differ": 0,
+    "codeCompletedRounds": 31,
+    "notAgreeing": [
+      {
+        "run": "d9411d26",
+        "kind": "fidelity",
+        "round": 2,
+        "scriptMinutes": 8.83,
+        "scriptRefused": 1,
+        "codeMinutes": null,
+        "codeRefused": 0,
+        "outcome": "superseded-by-next-prompt"
+      },
+      {
+        "run": "ffe579c7",
+        "kind": "fidelity",
+        "round": 2,
+        "scriptMinutes": 8.83,
+        "scriptRefused": 1,
+        "codeMinutes": null,
+        "codeRefused": 0,
+        "outcome": "superseded-by-next-prompt"
+      }
+    ]
   },
   "perRun": {
     "run-2ecdcab0c77e228f6ad9d3e0acfa1414": {
@@ -109,7 +133,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-36df95faf04a4c98eabbb32a18a4e833": {
@@ -194,7 +218,7 @@
             "why": "the step log records no delivered or issued design review prompt"
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-3744945f44ecdc31a06d43be3d38818c": {
@@ -299,7 +323,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-4465d22f5ce1829ca49059a5b8451bb0": {
@@ -404,7 +428,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-658f2f90470f73eea1dc1d90209c5ef7": {
@@ -519,7 +543,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-d9411d26ca55ebe0250e2e9b94dc0e32": {
@@ -582,10 +606,10 @@
           "fidelity": {
             "state": "counted",
             "opened": 5,
-            "completed": 5,
-            "unfinished": 0,
-            "refusedSubmissions": 3,
-            "ms": 2035240,
+            "completed": 4,
+            "unfinished": 1,
+            "refusedSubmissions": 2,
+            "ms": 1505618,
             "rounds": [
               {
                 "round": 1,
@@ -596,8 +620,8 @@
               {
                 "round": 2,
                 "session": 1,
-                "ms": 529622,
-                "refusedSubmissions": 1
+                "ms": null,
+                "refusedSubmissions": 0
               },
               {
                 "round": 3,
@@ -642,7 +666,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     },
     "run-ffe579c77dc21d9f6dd87ca6e2bc9301": {
@@ -705,10 +729,10 @@
           "fidelity": {
             "state": "counted",
             "opened": 6,
-            "completed": 6,
-            "unfinished": 0,
-            "refusedSubmissions": 3,
-            "ms": 2487249,
+            "completed": 5,
+            "unfinished": 1,
+            "refusedSubmissions": 2,
+            "ms": 1957181,
             "rounds": [
               {
                 "round": 1,
@@ -719,8 +743,8 @@
               {
                 "round": 2,
                 "session": 1,
-                "ms": 530068,
-                "refusedSubmissions": 1
+                "ms": null,
+                "refusedSubmissions": 0
               },
               {
                 "round": 3,
@@ -765,7 +789,7 @@
             ]
           }
         },
-        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round that reaches the next such prompt of its kind first, or no validated row, is unfinished and adds no time"
       }
     }
   }

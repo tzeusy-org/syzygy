@@ -17,31 +17,32 @@ const figure = JSON.parse(fs.readFileSync(figureRecord, 'utf8')).figures.f_stage
   Record<string, { rounds: { kind: string; round: number; minutes: number; refusedSubmissions: number }[] }>;
 
 const perRun: Record<string, unknown> = {};
-const comparison: { run: string; kind: string; round: number | null; codeMinutes: number; scriptMinutes: number | null; codeRefused: number; scriptRefused: number | null; agree: boolean }[] = [];
+// Each figure-f round is matched to the code's round of the same kind and number. They agree, or the code ends the round unfinished at
+// the next prompt of its kind where figure f lets that round run on to a validated check the next round also ends at (review F2).
+type Compared = { run: string; kind: string; round: number; scriptMinutes: number; scriptRefused: number; codeMinutes: number | null; codeRefused: number | null; outcome: 'agree' | 'superseded-by-next-prompt' | 'differ' };
+const comparison: Compared[] = [];
+let codeCompleted = 0;
 for (const run of runs) {
   const stepsBytes = fs.readFileSync(path.join(stateRoot, run, 'steps.jsonl'));
   const recordBytes = fs.readFileSync(path.join(stateRoot, run, 'record.json'));
   const closedAt = JSON.parse(recordBytes.toString('utf8')).closedAt as string;
-  const lines = stepsBytes.toString('utf8').split('\n').filter((line) => line !== '');
-  const measures = stepMeasures(lines, closedAt);
+  const measures = stepMeasures(stepsBytes.toString('utf8').split('\n').filter((line) => line !== ''), closedAt);
   perRun[run] = { stepsSha256: sha(stepsBytes), recordSha256: sha(recordBytes), closedAt, stepMeasures: measures };
   if (measures.label !== 'Inferred') continue;
   const short = run.slice(4, 12);
-  const scriptRounds = figure[short]?.rounds ?? [];
   for (const kind of ['fidelity', 'design'] as const) {
     const rounds = measures.reviewRounds[kind];
-    if (rounds.state !== 'counted') continue;
-    const scriptKind = scriptRounds.filter((r) => r.kind === kind);
-    rounds.rounds.filter((r) => r.ms !== null).forEach((r, i) => {
-      const codeMinutes = Math.round((r.ms! / 60_000) * 100) / 100;
-      const match = scriptKind[i];
-      comparison.push({
-        run: short, kind, round: r.round, codeMinutes, scriptMinutes: match?.minutes ?? null, codeRefused: r.refusedSubmissions,
-        scriptRefused: match?.refusedSubmissions ?? null, agree: match !== undefined && match.minutes === codeMinutes && match.refusedSubmissions === r.refusedSubmissions,
-      });
-    });
-    const completed = rounds.rounds.filter((r) => r.ms !== null).length;
-    if (completed !== scriptKind.length) comparison.push({ run: short, kind, round: null, codeMinutes: NaN, scriptMinutes: null, codeRefused: completed, scriptRefused: scriptKind.length, agree: false });
+    const codeRounds = rounds.state === 'counted' ? rounds.rounds : [];
+    codeCompleted += codeRounds.filter((r) => r.ms !== null).length;
+    for (const scriptRound of (figure[short]?.rounds ?? []).filter((r) => r.kind === kind)) {
+      const position = codeRounds.findIndex((r) => r.round === scriptRound.round);
+      const code = position === -1 ? undefined : codeRounds[position]!;
+      const codeMinutes = code?.ms == null ? null : Math.round((code.ms / 60_000) * 100) / 100;
+      const outcome = code !== undefined && codeMinutes === scriptRound.minutes && code.refusedSubmissions === scriptRound.refusedSubmissions ? 'agree'
+        : code !== undefined && code.ms === null && position < codeRounds.length - 1 ? 'superseded-by-next-prompt' : 'differ';
+      comparison.push({ run: short, kind, round: scriptRound.round, scriptMinutes: scriptRound.minutes, scriptRefused: scriptRound.refusedSubmissions,
+        codeMinutes, codeRefused: code?.refusedSubmissions ?? null, outcome });
+    }
   }
 }
 const record = {
@@ -49,8 +50,15 @@ const record = {
   label: 'Inferred',
   basis: 'stepMeasures (packages/polaris-dossier/src/step-measures.ts) over each stored run\'s steps.jsonl, ending its wall time at its record.json closedAt; the stored runs were read only and nothing was written into them',
   subject: { runs: runs.length, figureRecord: path.basename(figureRecord), figureRecordSha256: sha(fs.readFileSync(figureRecord)) },
-  comparisonWithFigureF: { rounds: comparison.length, agree: comparison.filter((c) => c.agree).length, disagreements: comparison.filter((c) => !c.agree) },
+  comparisonWithFigureF: {
+    figureFRounds: comparison.length,
+    agree: comparison.filter((c) => c.outcome === 'agree').length,
+    supersededByNextPrompt: comparison.filter((c) => c.outcome === 'superseded-by-next-prompt').length,
+    differ: comparison.filter((c) => c.outcome === 'differ').length,
+    codeCompletedRounds: codeCompleted,
+    notAgreeing: comparison.filter((c) => c.outcome !== 'agree'),
+  },
   perRun,
 };
 fs.writeFileSync(out, `${JSON.stringify(record, null, 2)}\n`);
-console.log(`runs ${runs.length}; rounds compared ${comparison.length}; agree ${record.comparisonWithFigureF.agree}`);
+console.log(`runs ${runs.length}; figure-f rounds ${comparison.length}; agree ${record.comparisonWithFigureF.agree}; superseded ${record.comparisonWithFigureF.supersededByNextPrompt}; differ ${record.comparisonWithFigureF.differ}; code completed ${codeCompleted}`);

@@ -10,6 +10,7 @@ import * as path from 'node:path';
 const args = process.argv.slice(2);
 const dry = args.includes('--dry');
 const [root, out] = args.filter((arg) => !arg.startsWith('--'));
+const env = { ...process.env, ...(process.env.MUTATION_TMPDIR ? { TMPDIR: process.env.MUTATION_TMPDIR } : {}) };
 if (!root || !out) throw new Error('usage: node step_measures_mutation.mjs <worktree> <out.json> [--dry]');
 
 const P = 'packages/polaris-dossier/src';
@@ -21,6 +22,8 @@ const MUTANTS = [
   ['round-issued', MEASURES, "(row.outcome === 'delivered' || row.outcome === 'issued')", "row.outcome === 'delivered'"],
   ['round-role', MEASURES, "row.step === 'session-prompt' && row.role === 'review' && row.kind === kind", "row.step === 'session-prompt' && row.kind === kind"],
   ['round-first-validated', MEASURES, "if (later.outcome === 'validated') { end = later; break; }", "if (later.outcome === 'validated') { end = later; }"],
+  ['round-next-prompt', MEASURES, '      if (isOpener(later, kind)) break;\n', ''],
+  ['outcome-known', MEASURES, '(KNOWN_OUTCOMES as readonly string[]).includes(row.outcome) ? row.outcome', 'true ? row.outcome'],
   ['round-refused', MEASURES, "if (later.outcome === 'refused') refused++;", "if (later.outcome === 'refused') refused += 0;"],
   ['round-kind', MEASURES, "if (later.step !== 'review-check' || later.kind !== kind) continue;", "if (later.step !== 'review-check') continue;"],
   ['rounds-unknown', MEASURES, 'if (opened.length === 0) return unknown(', 'if (false) return unknown('],
@@ -51,7 +54,7 @@ for (const [id, file, from, to] of MUTANTS) {
   if (dry) continue;
   try {
     fs.writeFileSync(full, original.replace(from, to));
-    const run = spawnSync('npx', ['vitest', 'run', '--testTimeout', '120000', ...TESTS], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    const run = spawnSync('npx', ['vitest', 'run', '--testTimeout', '120000', ...TESTS], { cwd: root, env, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
     const failed = (run.stdout.match(/Tests\s+(\d+) failed/u) ?? [])[1] ?? '0';
     const outcome = run.status === 0 ? 'SURVIVED' : 'killed';
     results.push({ id, file, old: from, new: to, outcome, failedTests: Number(failed), exit: run.status });
