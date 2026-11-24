@@ -1,0 +1,57 @@
+{
+  "asOf": "2026-11-24T16:41:38.385738+00:00",
+  "subjectCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "publishedCommit": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "command": "TMPDIR=/home/orca/.tmp npm run check",
+  "clone": "/home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w",
+  "logSha256": "c1825359eb230903c5b80b97541e32c75375a53a9852946853570df26994efee",
+  "exit": 1,
+  "files": {
+    "failed": 5,
+    "passed": 249,
+    "total": 254
+  },
+  "tests": {
+    "failed": 8,
+    "passed": 6322,
+    "skipped": 1,
+    "total": 6331
+  },
+  "failureNames": [
+    "FAIL  |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > joins the exact independently anchored helper row and retained files without granting recovery",
+    "FAIL  |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > publishes terminal cleanup at production maximum size under the unchanged store bounds",
+    "FAIL  |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-cut expectation drift",
+    "FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings",
+    "FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority",
+    "FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > accepts a declared but unstarted design helper while still requiring proof for a started helper",
+    "FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation",
+    "FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > bounds a delayed kernel read and cannot publish a late successful result"
+  ],
+  "privateTmpdir": {
+    "cleanup": true,
+    "errors": [],
+    "leftovers": []
+  },
+  "discovery": {
+    "missing": [],
+    "extra": [],
+    "unexecuted": []
+  },
+  "repairedCloseUnit": {
+    "passed": 37,
+    "failed": 0,
+    "total": 37
+  },
+  "review": {
+    "path": "docs/reviews/F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW.md",
+    "sha256": "90ac0ed5b6ef134c4850f633d09c5c5d7e306cae214f883ee2463666d8981a03",
+    "verdict": "PASS",
+    "scope": "source review only"
+  },
+  "integration": {
+    "session": 8872,
+    "status": "running",
+    "log": "/home/orca/.tmp/f3-native-admission-fixes/session-launch-final.log"
+  },
+  "nativeReplay": "Pending final candidate. Both925 attempts failed beforeStop. No recovery completion claimed."
+}

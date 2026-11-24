@@ -1,0 +1,190 @@
+{
+  "format": "f3-inspection-and-native-fixture-followup/1",
+  "capturedAt": "2026-11-24T16:48:00.508058+00:00",
+  "subjectCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "baseCommit": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "subjects": {
+    "packages/polaris-dossier/src/session-launch.ts": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "packages/polaris-dossier/src/session-launch.test.ts": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": "84765fa7d032daf2d29eaf9591065fbc90ddc29b00bba3ab9b4f805228d15fef",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "17ebca69f8a151bf3078f25a4daf0e7d74a69b9771b1870047b778663012cddf"
+  },
+  "binaryDeltaSha256": "e83931c0baa1f434a630618981aea2f2c7ac2bb10d6b2f2c961058cccedca328",
+  "review": {
+    "path": "docs/reviews/F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW.md",
+    "sha256": "90ac0ed5b6ef134c4850f633d09c5c5d7e306cae214f883ee2463666d8981a03",
+    "verdict": "PASS",
+    "scope": "source review only"
+  },
+  "verification": {
+    "fullCheck": {
+      "passed": 6322,
+      "failed": 8,
+      "skipped": 1,
+      "population": 6331,
+      "files": 254,
+      "failedFiles": 5,
+      "typecheck": "passed before unit tier",
+      "result": "FAIL",
+      "details": "official-check-summary.json"
+    },
+    "integration": {
+      "passed": 50,
+      "failed": 1,
+      "population": 51,
+      "result": "FAIL",
+      "failure": "existing ordered Design ready case timed out at60000ms; exact stage Unknown",
+      "details": "session-launch-final-summary.json"
+    },
+    "closeUnit": {
+      "passed": 37,
+      "population": 37,
+      "scope": "hermetic genuine compiled profiles; no native authority"
+    },
+    "mutationControls": {
+      "attempted": 5,
+      "intendedAssertionDetections": 3,
+      "inconclusiveTestTimeouts": 2,
+      "details": "final-controls.json"
+    },
+    "existingAssertions": {
+      "closeAstStatements": 84,
+      "composedAstStatements": 156,
+      "closeExpectLines": 66,
+      "composedExpectLines": 145,
+      "nativeExpectLines": 107,
+      "byteIdentical": true,
+      "independentlyReviewed": true
+    },
+    "serialHistoryDiagnostic": {
+      "subjectCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+      "passed": 107,
+      "failed": 13,
+      "population": 120,
+      "files": 5,
+      "failedFiles": 4,
+      "maxWorkers": 1,
+      "result": "FAIL",
+      "details": "serial-unit120-result.json",
+      "interpretation": "Fast positive audit nulls reproduce; exact refusal predicate not yet identified. Other timings changed. No environmental-only classification or budget change."
+    },
+    "nativeRecovery": "Pending final candidate; historical925 attempts ended before Stop.",
+    "renderingComparison": "Pending final candidate.",
+    "governanceBasic": {
+      "command": "python3 scripts/check_governance.py",
+      "ok": 21,
+      "warn": 17,
+      "fail": 0,
+      "population": 38,
+      "scope": "basic check on adoption/evidence working tree, not canonical full battery",
+      "log": "followup-governance.log"
+    }
+  },
+  "adoption": {
+    "diagnosticId": "A-215",
+    "sourceCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+    "scope": "Opt-in finite storage refusal metadata; no guard, authority, retry or budget change."
+  },
+  "artifacts": {
+    "final-binding.json": {
+      "sha256": "7bd16291270c4214ed768abac773420ccd3d2c4e3d2a37ca2111d8e97ea1a79e",
+      "bytes": 2852
+    },
+    "final-controls.json": {
+      "sha256": "a31d966d1fb5eefd94a82685a7d1233ba7ae6ebd811d4975a93f40de958d11c8",
+      "bytes": 6343
+    },
+    "final-candidate.patch": {
+      "sha256": "473e0cf378a74351b4d6994c4870f77530d3f0cea0ac0ebdb0485b9898a2e654",
+      "bytes": 21015
+    },
+    "focused.log": {
+      "sha256": "c70211860dff0f8dd74a25a2cad5031ba59d83baa6891af5867b746c0d1d55f9",
+      "bytes": 7661
+    },
+    "held-stat-confirmation.log": {
+      "sha256": "879c627029e0a1c3e700255a9770fc018d98ceec652a786146530e84fdcd798d",
+      "bytes": 7359
+    },
+    "close-classification.log": {
+      "sha256": "6f85a756e20c771d180034954bbeedea2a7acabb1bc999085bee1faf6823177b",
+      "bytes": 7196
+    },
+    "known-refusal-precedence.log": {
+      "sha256": "ffea6be5ba6f71d09ee2ae0fb63b0979d415db05afb3c3e3cb0dae2cc9c118b6",
+      "bytes": 7284
+    },
+    "trace-wiring.log": {
+      "sha256": "e2d6218bc3acb441737bb27599bb894b1caa546bf01d54789af8458bef30acd7",
+      "bytes": 7242
+    },
+    "errno-allowlist.log": {
+      "sha256": "e1b7b8bbd67baccd232e54d35ac1788d3d13dc5bf3cec7919a509b621ea3b266",
+      "bytes": 7317
+    },
+    "multiple-disappearances.log": {
+      "sha256": "4a1a6730bb61415374bb58c9e3d1601e95779f4aa7e69471724f593a165725f3",
+      "bytes": 7324
+    },
+    "official-check.log": {
+      "sha256": "c1825359eb230903c5b80b97541e32c75375a53a9852946853570df26994efee",
+      "bytes": 2111196
+    },
+    "official-check-summary.json": {
+      "sha256": "33a8e3fbb3dcef97ea88b1952d57b811b18f107841aea4e9801f3ef564ea784e",
+      "bytes": 2990
+    },
+    "official-check-readonly-diagnosis.json": {
+      "sha256": "5524e13e3cd640476f475a2dbac6053519ccf5308244238bf61285bf9172db0c",
+      "bytes": 6241
+    },
+    "session-launch-final.log": {
+      "sha256": "5261a8579548471cdbac135afc7519b170159a58f194628bd1e70cc620a4e575",
+      "bytes": 7253
+    },
+    "session-launch-final-summary.json": {
+      "sha256": "bb448ddcc8e7d654bacbe85ef8192a968007214b98d649e067bb4ee43047fcee",
+      "bytes": 646
+    },
+    "fixture-binding.json": {
+      "sha256": "6e7a4f52172bc093f9a1cc2e98f07425434ed9351314424784872736bad2a3c4",
+      "bytes": 1607
+    },
+    "fixture-handoff.json": {
+      "sha256": "3d1d1a7afa9b19d5397923b808a808bc7e6ca44536f118cf329ce72fe9a8d4a8",
+      "bytes": 1535
+    },
+    "fixture-focused.log": {
+      "sha256": "5c11592411ba3174ce5a0375c4a0e5ecf587597bae9e27007195d4f9eb243f1e",
+      "bytes": 344
+    },
+    "failure-summary.json": {
+      "sha256": "bbfb49bf59010013c1f87c51a7dec7641a3aa9b4ad6736c9ed58f58c03ba0829",
+      "bytes": 8368
+    },
+    "diagnosis-first-transport.json": {
+      "sha256": "93eea38cb784d2f7d39e28291b36b205c22263f82e74c99c64def1b472fd639f",
+      "bytes": 6664
+    },
+    "recommendation-fixture-sequencing.json": {
+      "sha256": "70ea9a3f0f1af393ba53ad13f4edefa081651cd4e2d2c0fc71a005805ff9ce67",
+      "bytes": 7140
+    },
+    "sequencing-assertion-comparison.json": {
+      "sha256": "08145433a4e32dac3885322eb3284fb505ea99c3b7a636252fc18efe68b1b911",
+      "bytes": 377
+    },
+    "serial-unit120.log": {
+      "sha256": "2c79fdcb6c338b7a479fd9839889cb9475aa9582d2fd0d311035362c93d96a52",
+      "bytes": 31825
+    },
+    "serial-unit120-result.json": {
+      "sha256": "5835441e0d874afef5239c20a7c3ba97d263344c8b0c85fbdd4e27a87a771ba1",
+      "bytes": 3110
+    },
+    "followup-governance.log": {
+      "sha256": "24ffcafaa87fdfdf0db5e7f998d86a6e4347d9b25a24bd0fa6ffccf3ede8aab4",
+      "bytes": 190294
+    }
+  }
+}

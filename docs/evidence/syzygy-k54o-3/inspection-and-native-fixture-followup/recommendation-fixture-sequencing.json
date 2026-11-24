@@ -1,0 +1,73 @@
+{
+  "subjectCommit": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "diagnosisFile": "/home/orca/.tmp/f3-native-925e84-eligible.QOst0wzZ/diagnosis-first-transport.json",
+  "diagnosisSha256": "93eea38cb784d2f7d39e28291b36b205c22263f82e74c99c64def1b472fd639f",
+  "governingArtifactSha256": {
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md": "84fc7c71221705b6a2b614e3acf4496d10bb2e3ba4815c1e776ad450b3bc19a5",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md": "03e86ef1007d127060d90c8cd21dafc0b9ce3c3885414eaebc0a72cea606b810"
+  },
+  "governingReferences": [
+    {
+      "identifier": "REQ-polaris-generation-035",
+      "file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "line": 162,
+      "quote": "The inventory context SHALL start from Syzygy's inventory brief and SHALL NOT be given the draft; Syzygy SHALL check its quotations and citations as REQ-polaris-generation-034 checks a draft, and SHALL freeze it before the fidelity review.",
+      "inference": "The prerequisite for Fidelity is checked/frozen Inventory and the exact packet; this clause does not make the Inventory model end_turn the delivery gate."
+    },
+    {
+      "identifier": "REQ-polaris-generation-035",
+      "file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "line": 168,
+      "quote": "An inventory or review session MAY be started before its input exists",
+      "inference": "The current fixture exercises this permitted early-wait path. Retain its genuine native waiting-result assertion. Whole-role launch deferral would remove that exercised case, although it is a permitted production schedule."
+    },
+    {
+      "identifier": "REQ-polaris-generation-048",
+      "file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "line": 477,
+      "quote": "independent inventory/check/freeze, fidelity packet/review validation",
+      "inference": "This is the required pipeline ordering; actual receipt, packet verification, verdict validation and completion evidence remain required."
+    },
+    {
+      "identifier": "REQ-polaris-generation-048",
+      "file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "line": 511,
+      "quote": "The supervisor SHALL enforce033's deadline/repair/question gates and positive finite startup, relay, bridge, broker, request/response/SSE buffer, output and child-process limits recorded before use.",
+      "inference": "A fixture must fit existing transport/run bounds; no guard increase is warranted."
+    },
+    {
+      "identifier": "RFC3-16(d)(6)",
+      "file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/.syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+      "line": 402,
+      "quote": "Maintain finite record/instance/client/parse/I/O/lock/output/wall bounds under the original run deadline",
+      "inference": "Keep the 180000ms production connection lifetime and original run deadline unchanged."
+    }
+  ],
+  "assessment": {
+    "classification": "Inferred: artificial provider scheduling dependency, not an Inventory end_turn prerequisite established by the cited adopted protocol.",
+    "sourceEvidence": [
+      "url-run-composed.test.ts:1866-1875 places waitForInventoryEndTurn inside Fidelity provider response generation after observing its real waiting tool result and enabling Inventory.",
+      "url-run-composed.test.ts:1593-1614 already orders real Author/Inventory/Fidelity end_turn responses through releaseProvider plus afterEndTurn; the wait before packet read duplicates a later completion constraint at an earlier stage.",
+      "url-run-composed.test.ts:1995-2001 resolves packet readiness only after actual f.artifacts.registerPacket; do not replace that promise with a timer or file-presence guess.",
+      "url-run-composed.test.ts:1615-1624 requires durable admitted end_turn for every ordinary role before Stop; preserve this and usage/capture/native role assertions."
+    ]
+  },
+  "recommendation": {
+    "minimalCandidate": "Delete only the waitForInventoryEndTurn dependency before Fidelity packet read and its unused resolver/notification. Retain waitForFidelityPacket and the real waiting-result assertion, actual packet extraction, verdict submission and finalResponse(fidelity) wait. This allows the checked packet exchange to finish while Author/Inventory perform their final exchanges, while the existing final-response chain still enforces Author -> Inventory -> Fidelity completion.",
+    "whyNotDelayWholeFidelityLaunch": "The existing fixture deliberately proves a genuine native waiting result before input exists. Deferring Fidelity until Inventory end_turn would replace that exercised behavior.",
+    "whyNotDelayAlreadyOpenRequest": "The selected provider callback is reached only after actual native socket and request exist. Waiting there consumes the finite transport lifetime. There is currently no dedicated test seam that parks only the next native connection before its lifetime begins; adding one would be larger scope and must preserve pinned CLI/support identity and every transport boundary.",
+    "retainedRequirements": [
+      "Actual frozen draft and Inventory, exact packet/receipt/provenance and native waiting result.",
+      "Actual Author recheck and completion; actual Inventory completion; actual Fidelity packet read, verdict and completion.",
+      "Existing end_turn ordering and stop-time completion assertions; role isolation and supported native launch bindings.",
+      "Usage capture population/assertions, protected audit, original run/operation bounds, ordinary authority and private failure closure."
+    ],
+    "requiredVerification": "Focused fixture controls prove only the redundant pre-packet wait moved: packet cannot read before actual registration; Fidelity final end_turn cannot admit before Inventory actual end_turn; Author and Inventory final order remains. Then a genuine native eligible pair verifies behavior under unchanged limits. No placeholder model turns and no assertion deletion.",
+    "minimalDiagnosticStillNeeded": "Record the first connection-destruction origin as a closed finite enum with role and monotonic began/deadline/time, distinguishing lifetime timer from raw-close/raw-error/ingress failure and relay deadline. Until that origin is observed, exact timeout callback remains Unknown."
+  },
+  "limitations": [
+    "No source edits or tests performed.",
+    "This is a concrete fixture repair recommendation, not evidence that the next native run completes.",
+    "The initial failure occurs before stop/resume/Design; asynchronous terminal or capture budget changes are not its demonstrated repair."
+  ]
+}

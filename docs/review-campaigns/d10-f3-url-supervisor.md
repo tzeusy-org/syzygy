@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW\.md`
+
 - `F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW\.md`
 
 - `F3-ORDERED-NATIVE-CAPTURE-REVIEW-R2-RAW\.md`
@@ -260,10 +262,16 @@
 
 [Observed] Hosted `2446c64ed` passed unit, browser and governance checks. Its native complete and delivery-stop cases passed; interrupted and already-eligible Resume failed. The [retained hosted summary](../evidence/syzygy-k54o-3/local-store-admission/hosted-2446.json) records the interrupted startup interval and the eligible restoration refusal. The complete integration denominator and the eligible nested restoration predicate are Unknown. A twenty-minute job timeout is not established.
 
-[Observed] The ordered native capture review records `PASS` for `e13658970` (F3-ORDERED-NATIVE-CAPTURE-REVIEW-R2-RAW.md:3). A-212 uses one exact nominal profile/context selector for the transport and intrinsic capture envelopes. The [binding](../evidence/syzygy-k54o-3/ordered-native-capture/binding.json) records 65 clean-clone cases, typecheck, seven detected controls and their scope limits. [Unknown] Genuine ordered capture beyond five seconds and native recovery completion.
+[Observed] The ordered native capture review records `PASS` for `e13658970` (F3-ORDERED-NATIVE-CAPTURE-REVIEW-R2-RAW.md:3). The capture adoption (historically labeled A-212 on this branch; reassigned A-216 on 2026-11-25 to preserve main's corpus adoption A-212) uses one exact nominal profile/context selector for the transport and intrinsic capture envelopes. The [binding](../evidence/syzygy-k54o-3/ordered-native-capture/binding.json) records 65 clean-clone cases, typecheck, seven detected controls and their scope limits. [Unknown] Genuine ordered capture beyond five seconds and native recovery completion.
 
 [Observed] Hosted `f0d182e7a` passed unit, browser and governance checks; integration failed. Its four native cases passed complete and delivery-stop and failed interrupted and already-eligible Resume. The [retained hosted summary](../evidence/syzygy-k54o-3/ordered-native-capture/hosted-f0d182.json) distinguishes an interrupted terminal currentness refusal from an eligible product-restoration rejection. Their exact nested rejecting predicates remain Unknown. These earlier recovery failures are outside the capture-only fix.
 
 [Observed] The merge of main `ed1e65bf7ec02d0093a490e013b2795c798db524` preserves its 75 adoption rows byte for byte. The combined ledger contains 200 distinct IDs after the unlanded branch row for `236df7ecd` changes from A-210 to A-213. Main owns A-210. Earlier frozen branch records keep their historical labels and exact subjects.
 
 [Observed] The recovery terminal and product trace review records `PASS` for `9840d8a39` (F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW.md). A-214 gives only asynchronous terminal reads ten seconds, retaining all authority and expiry checks. The [binding](../evidence/syzygy-k54o-3/async-terminal-read-envelope/binding.json) records 121 clean-clone cases, four skipped native cases, typecheck and ten detected store/observer controls. The [acceptance matrix](../evidence/syzygy-k54o-3/async-terminal-read-envelope/recovery-acceptance-matrix.md) keeps native recovery, durable closure and final rendering evidence pending. Test-only restoration diagnostics retain the first failure independently of their entry cap. [Unknown] Genuine recovery completion and exact hosted acceptance.
+
+[Observed] The inspection and native fixture follow-up review records `PASS` for `4a5e601c5` (F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW.md). A-215 adds finite opt-in storage refusal metadata. Genuine compiled profiles repair the 37-case close unit fixture; the redundant Inventory end-turn barrier before reading an already registered Fidelity packet is removed. The separate terminal-order chain and existing assertions remain. The [binding](../evidence/syzygy-k54o-3/inspection-and-native-fixture-followup/binding.json) records the final 51-case inspection run: 50 passed and the ordered Design ready case timed out at 60 seconds. The full unit gate passed 6,322 cases, failed eight and skipped one out of 6,331; its five failing files are under diagnosis. Three mutation controls reached their intended assertion and two remained inconclusive. [Unknown] Native recovery, durable closure and final rendering acceptance.
+
+[Observed] On 2026-11-25 the fresh-main preflight found two different A-212 subjects. The unlanded F3 capture row is reassigned A-216; its frozen reviews and historical evidence retain the original label. Main's adopted corpus A-212 row remains byte-for-byte intact when composed. This identifier correction changes no captured source or verdict.
+
+[Observed] The same `4a5e601c5` source was checked serially across the five affected historical-read/archive unit files: 107 passed and 13 failed out of 120. Fast positive audit-history refusals reproduce; other timeout cases change. The retained result is separate from the full 6,331-case gate and does not replace it. [Unknown] The exact audit refusal predicate and the causes of the other timeouts.

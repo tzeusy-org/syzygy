@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+ ✓ |unit| packages/polaris-dossier/src/url-run-machine-close.test.ts (37 tests) 4056ms
+
+ Test Files  1 passed (1)
+      Tests  37 passed (37)
+   Start at  00:21:14
+   Duration  7.66s (transform 2.04s, setup 47ms, collect 2.79s, tests 4.06s, environment 0ms, prepare 245ms)
+

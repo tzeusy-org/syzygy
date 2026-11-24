@@ -1,0 +1,8 @@
+{
+  "baseCommit": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "completeAssertionStatementsBefore": 156,
+  "completeAssertionStatementsAfter": 156,
+  "identical": true,
+  "scope": "Complete direct expect expression statements plus independent Python whole-file and native-describe expect-line comparisons."
+}

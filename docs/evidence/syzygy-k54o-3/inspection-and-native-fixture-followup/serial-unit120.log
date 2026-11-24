@@ -1,0 +1,320 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority 2099ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store 2926ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses identity expectation drift 1722ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses controller expectation drift 1787ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses parent expectation drift 3029ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses run expectation drift 4590ms
+ × |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift 5011ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses origin expectation drift 1916ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses profile expectation drift 1425ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses deadline expectation drift 1453ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses client-count expectation drift 1517ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses duplicate expectation drift 1437ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses role-cli expectation drift 1631ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses scope expectation drift 1597ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses witness expectation drift 1732ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses head expectation drift 1341ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-cut expectation drift 1773ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses early-cut expectation drift 1731ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses coherent-identity expectation drift 1446ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses wrong-slot expectation drift 1513ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses future-context expectation drift 2180ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses an active actual canonical head even when a supplied seal labels it revoked 1366ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a lifecycle event published after the sealed close even when its canonical revoke timestamp was backdated 1393ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses a later protected revision instead of silently advancing an independently retained closed head 2645ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses expire without renewing the original deadline 1576ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses withdraw without renewing the original deadline 2159ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > rechecks clean-stop exclusion after an awaited genuine store open 3998ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual canonical-projection-rollback and leaves its bytes unrepaired 3904ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses actual missing-archive and leaves its bytes unrepaired 1757ms
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings 1338ms
+   → expected null to match object { capturedMachineEffects: 1, …(3) }
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > checks 220 exact captured rows using one genuine protected read and no per-row filesystem work 1380ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses snapshot copies, successful-result copies and genuine result substitution for another row 1600ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > binds the genuine snapshot to each exact independently expected immutable audit subject field 2298ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a new capture once the independently retained original deadline expires 2688ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > retains exact hash, process, scope and temporal checks after caches have been populated 1730ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > reads exact protected revisions from a genuine reopened store and joins retained old bytes without reviving revocation 871ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins exact archived old bytes after cold reopen without caller-supplied canonical text 847ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > keeps historical legacy bytes explicitly unavailable and archives only the next real publication 1280ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses missing archive without repair on reopen 975ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses mutated archive without repair on reopen 691ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses extra-entry archive without repair on reopen 793ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses orphan-file archive without repair on reopen 784ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses relinked archive without repair on reopen 774ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses interrupted-pack archive without repair on reopen 724ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-drop archive without repair on reopen 1234ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-extra archive without repair on reopen 1231ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses coherent-mutation archive without repair on reopen 761ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses reordered archive without repair on reopen 1990ms
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup 5317ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > uses only the exact current canonical bytes when the requested revision is still the latest 2476ms
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed canonical-hash 5001ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed process 5001ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed channel 5004ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed scope 5002ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ × |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed instance 5001ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed role 4275ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed run 786ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed parent 746ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed store-identity 988ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed future-revision 870ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed after-next-revision 781ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses a captured claim against the revoked latest revision even when all verifier fields match 1340ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses store-shaped copies, stale exact heads and withdrawn parent authority 1338ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses canonical plus ordinary projection rollback against the independent protected high-water history 991ms
+ × |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority 490ms
+   → expected null to match object { runId: 'own-run', …(1) }
+ × |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > accepts a declared but unstarted design helper while still requiring proof for a started helper 296ms
+   → expected null to match object { capturedLaunchTerminals: 1, …(2) }
+ × |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation 673ms
+   → expected null to match object { authorization: 'none', …(6) }
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-without-continuation 512ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-repeated 983ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-with-usage 698ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-wrong-origin 699ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with different-consumed-receipt 776ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses dropped physical bytes without repairing them 512ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses truncated physical bytes without repairing them 465ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses appended physical bytes without repairing them 457ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses relinked physical bytes without repairing them 522ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses symlink physical bytes without repairing them 571ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses hardlink physical bytes without repairing them 538ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses public-mode physical bytes without repairing them 420ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent global-tip disagreement 501ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent role-tip disagreement 404ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent global-count disagreement 431ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent role-count disagreement 668ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent bytes disagreement 609ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent scope disagreement 1349ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent pin disagreement 1230ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent declaration disagreement 1727ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses global-link even when supplied tips match the altered archive 1902ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses global-sequence even when supplied tips match the altered archive 1624ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses role-sequence even when supplied tips match the altered archive 1882ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses record-hash even when supplied tips match the altered archive 1808ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses noncanonical even when supplied tips match the altered archive 1897ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with incomplete-send 1358ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with uncertain-send 602ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unknown-cleanup 693ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with missing-usage 582ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with missing-terminal 1408ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unfinished-tool 1699ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unsupported-kind 2465ms
+ ✓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses withdrawal during an actual held descriptor read 2240ms
+ × |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > bounds a delayed kernel read and cannot publish a late successful result 5005ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > fits the actual eight-client maximum rotation distribution and terminal records 3642ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(9934000,4095,1) is true 1ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(9934001,4095,1) is false 0ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(9934000,4096,1) is false 0ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(10000000,4096,0) is true 0ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(10000001,4096,0) is false 0ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > capacity(1,1,Infinity) is false 0ms
+ ✓ |unit| packages/polaris-dossier/src/url-machine-archive.test.ts > bounded canonical revision archive > publishes terminal cleanup at production maximum size under the unchanged store bounds 7766ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > verifies only metadata for the inventory role without a writer or a current grant 102ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > verifies only metadata for the fidelity role without a writer or a current grant 120ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > verifies only metadata for the design role without a writer or a current grant 55ms
+ × |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > joins the exact independently anchored helper row and retained files without granting recovery 50ms
+   → expected null to match object { capturedHelperLaunches: 1, …(4) }
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > refuses substituted protected payload fields and independently pinned subjects 25ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > checks the complete canonical launch shape and independent role configuration even with matching audit bytes 35ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > checks the compatible prompt subject and refuses unscreenable bodies with a fixed error 35ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > refuses a same-byte launch replacement at the currentness boundary 11ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > refuses a same-byte prompt replacement at the currentness boundary 18ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > refuses a same-byte declaration replacement at the currentness boundary 14ms
+ ✓ |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > refuses lost currentness and symlinked, nonprivate or oversized launch files 52ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > joins the exact independently anchored helper row and retained files without granting recovery
+AssertionError: expected null to match object { capturedHelperLaunches: 1, …(4) }
+
+- Expected: 
+{
+  "authorization": "none",
+  "capturedHelperLaunches": 1,
+  "capturedLaunchTerminals": 1,
+  "completeness": "Unknown",
+  "replay": "forbidden",
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-launch-history-retained.test.ts:164:82
+    162|     const subject = { run, runId, coreSha256, declarationSha256, roleD…
+    163|     const retainedLaunches = { [role]: subject };
+    164|     expect(await verifyUrlSessionAuditHistory({ ...options, retainedLa…
+       |                                                                                  ^
+    165|       capturedLaunchTerminals: 1, authorization: 'none', replay: 'forb…
+    166|     expect(await verifyUrlSessionAuditHistory({ ...options, retainedLa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/polaris-dossier/src/url-machine-cold-history.test.ts:118:252
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings
+AssertionError: expected null to match object { capturedMachineEffects: 1, …(3) }
+
+- Expected: 
+{
+  "authorization": "none",
+  "capturedMachineEffects": 1,
+  "completeness": "Unknown",
+  "replay": "forbidden",
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-machine-peer-history.test.ts:106:80
+    104|     const options = { parent, name: 'own', expected, current: () => tr…
+    105|     const machineHistory = { identitySha256: f.options.expectedIdentit…
+    106|     expect(await verifyUrlSessionAuditHistory({ ...options, machineHis…
+       |                                                                                ^
+    107|       capturedMachineEffects: 1, authorization: 'none', replay: 'forbi…
+    108|     expect(await verifyUrlSessionAuditHistory(options)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/polaris-dossier/src/url-machine-peer-history.test.ts:252:3
+    250|   });
+    251| 
+    252|   it('refuses capacity before reservation while retaining room for cli…
+       |   ^
+    253|     const f = await fixture(false); await f.options.store.close();
+    254|     const state = JSON.parse((await readFile(f.files[1]!)).toString());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed canonical-hash
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed process
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed channel
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed scope
+ FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed instance
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/polaris-dossier/src/url-machine-peer-history.test.ts:304:166
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority
+AssertionError: expected null to match object { runId: 'own-run', …(1) }
+
+- Expected: 
+{
+  "helperLaunchFiles": {},
+  "runId": "own-run",
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-session-audit-history.test.ts:115:52
+    113|     const f = await fixture(), before = ROLES.map(role => fs.readFileS…
+    114|     const verified = await verifyUrlSessionAuditHistory(f.options);
+    115|     expect(readVerifiedUrlAuditLaunches(verified)).toMatchObject({ run…
+       |                                                    ^
+    116|     expect(readVerifiedUrlAuditLaunches(JSON.parse(JSON.stringify(veri…
+    117|     expect(verified).toEqual({ kind: 'verified-local-audit-history', a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > accepts a declared but unstarted design helper while still requiring proof for a started helper
+AssertionError: expected null to match object { capturedLaunchTerminals: 1, …(2) }
+
+- Expected: 
+{
+  "capturedHelperLaunches": 0,
+  "capturedLaunchTerminals": 1,
+  "capturedQuestions": 0,
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-session-audit-history.test.ts:130:84
+    128|       roleDeclaration: { role: 'design', compiledProfileSha256: declar…
+    129|       NonNullable<Parameters<typeof verifyUrlSessionAuditHistory>[0]['…
+    130|     expect(await verifyUrlSessionAuditHistory({ ...f.options, retained…
+       |                                                                                    ^
+    131|       capturedHelperLaunches: 0, capturedQuestions: 0 });
+    132|     const started = await fixture();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation
+AssertionError: expected null to match object { authorization: 'none', …(6) }
+
+- Expected: 
+{
+  "authorization": "none",
+  "capturedCompleteExchanges": 2,
+  "capturedCountExchanges": 1,
+  "capturedLaunchTerminals": 4,
+  "capturedReportedTokens": 6,
+  "completeness": "Unknown",
+  "replay": "forbidden",
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-session-audit-history.test.ts:138:59
+    136|   it('joins a checked count estimate to its completed tool and separat…
+    137|     const f = await fixture(undefined, 'complete-tool');
+    138|     expect(await verifyUrlSessionAuditHistory(f.options)).toMatchObjec…
+       |                                                           ^
+    139|       capturedLaunchTerminals: 4, capturedCompleteExchanges: 2, captur…
+    140|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > bounds a delayed kernel read and cannot publish a late successful result
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ packages/polaris-dossier/src/url-session-audit-history.test.ts:220:3
+    218|   });
+    219| 
+    220|   it('bounds a delayed kernel read and cannot publish a late successfu…
+       |   ^
+    221|     const f = await fixture(), probe = await open(f.file(), 'r'), prot…
+    222|     let began!: () => void, release!: () => void;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+
+ Test Files  4 failed | 1 passed (5)
+      Tests  13 failed | 107 passed (120)
+   Start at  00:46:22
+   Duration  199.28s (transform 4.00s, setup 357ms, collect 10.11s, tests 184.28s, environment 2ms, prepare 1.82s)
+

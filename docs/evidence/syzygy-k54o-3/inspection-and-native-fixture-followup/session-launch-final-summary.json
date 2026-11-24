@@ -1,0 +1,14 @@
+{
+  "subjectCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "command": "TMPDIR=/home/orca/.tmp ./node_modules/.bin/vitest run --project integration packages/polaris-dossier/src/session-launch.test.ts",
+  "exitCode": 1,
+  "files": 1,
+  "passed": 50,
+  "failed": 1,
+  "skipped": 0,
+  "population": 51,
+  "durationSeconds": 337.38,
+  "failure": "observes the actual ordered design CLI exchange (ready): Test timed out in60000ms",
+  "diagnosticFixtures": "All retained final census/close/authority cases passed; this does not classify native ready timeout.",
+  "logSha256": "5261a8579548471cdbac135afc7519b170159a58f194628bd1e70cc620a4e575"
+}

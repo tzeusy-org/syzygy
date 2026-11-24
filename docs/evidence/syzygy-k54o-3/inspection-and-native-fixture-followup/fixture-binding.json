@@ -1,0 +1,37 @@
+{
+  "base": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+  "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+  "subjectSha256": "84765fa7d032daf2d29eaf9591065fbc90ddc29b00bba3ab9b4f805228d15fef",
+  "baselineSha256": "8042b358c205c1d6b48bab2dd98f3b69ce26c0b4430a96b00b72cb7278856d69",
+  "patchSha256": "204ebf1e49c3d239a2639f8c67f8f5bde1e2409ae05d05b36d4a5e5a96c53fbd",
+  "assertionComparison": {
+    "method1": {
+      "name": "TypeScript AST closest complete expect expression statements, raw bytes in source order",
+      "count": 84,
+      "equal": true,
+      "sequenceSha256": "bbcc6ba19b5d25019a98aad1f51a4e214aaff52968fce42f7bc80faef1ce5273"
+    },
+    "method2": {
+      "name": "Independent exact expect-containing line sequence",
+      "count": 66,
+      "equal": true,
+      "sequenceSha256": "d2f2c80d334a871c4a070fbb3a29e61ba6d16a86929bc1dd80af79d5d543e09a"
+    }
+  },
+  "verification": {
+    "focused": {
+      "passed": 37,
+      "population": 37,
+      "log": "fixture-focused.log",
+      "logSha256": "5c11592411ba3174ce5a0375c4a0e5ecf587597bae9e27007195d4f9eb243f1e"
+    },
+    "typecheck": "pending one combined clone check by inspection worker"
+  },
+  "growth": {
+    "addedLines": 10,
+    "removedLines": 2,
+    "netLines": 8,
+    "addedCases": 0
+  },
+  "fixtureBoundary": "Pure hermetic compilers issue nominal ordinary and ordered Design metadata bound to run/role/policy. Upstream installation/plan admission remains the existing explicit unit substitution; no native support, kernel or peer grant is claimed. No production nominal guard is weakened or mocked."
+}

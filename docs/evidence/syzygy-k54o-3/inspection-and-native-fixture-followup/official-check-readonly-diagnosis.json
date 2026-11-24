@@ -1,0 +1,123 @@
+{
+  "subject": {
+    "commit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+    "checkout": "/home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w",
+    "actualHeadAtPreparation": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834"
+  },
+  "evidence": {
+    "log": "/home/orca/.tmp/f3-native-admission-fixes/official-check.log",
+    "sha256": "c1825359eb230903c5b80b97541e32c75375a53a9852946853570df26994efee"
+  },
+  "officialResult": {
+    "testFiles": 254,
+    "failedFiles": 5,
+    "passedFiles": 249,
+    "tests": 6331,
+    "failed": 8,
+    "passed": 6322,
+    "skipped": 1
+  },
+  "affectedPopulation": {
+    "files": 5,
+    "tests": 120,
+    "failed": 8,
+    "passed": 112
+  },
+  "files": [
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history-retained.test.ts",
+      "sha256": "cbbf3149f99e2f9c1fd8f6cf7c38009a325e079c7b2ab34b9590e2f04e4f982b",
+      "tests": 11,
+      "failed": 1,
+      "failureWholeTestMilliseconds": [
+        57
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-archive.test.ts",
+      "sha256": "9ed40834dcaaf65efd6b43928130f1f8c4ae616bce619f0757a8dbfade9f7bb8",
+      "tests": 8,
+      "failed": 1,
+      "failureWholeTestMilliseconds": [
+        9572
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+      "sha256": "622c7a7adc9435ff699ba7eb22095c95df5b35b9440676ffbb49d74dee9aa7a7",
+      "tests": 29,
+      "failed": 1,
+      "failureWholeTestMilliseconds": [
+        5010
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+      "sha256": "7e223bb683732f8fd93330cd2e30b6cf584b71c0e20073cfb2a3db046d32ddbf",
+      "tests": 35,
+      "failed": 1,
+      "failureWholeTestMilliseconds": [
+        4855
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+      "sha256": "6ac85b73d0766d627d7fc901b7e6c121e11c255165310fff7f6179502c1fb530",
+      "tests": 37,
+      "failed": 4,
+      "failureWholeTestMilliseconds": [
+        809,
+        708,
+        1796,
+        5009
+      ]
+    }
+  ],
+  "classification": {
+    "auditPositiveNulls": {
+      "state": "Unknown",
+      "observed": "Five positive assertions converge on verifyUrlSessionAuditHistory; four whole-test durations are below 1800 ms, excluding the verifier elapsed>=5000 predicate as their explanation under its ordinary monotonic clock. No trace identifies their actual refusal predicate.",
+      "source": "packages/polaris-dossier/src/url-session-audit-history.ts:93,125-226"
+    },
+    "delayedAuditReadTimeout": {
+      "state": "Unknown",
+      "observed": "Vitest timeout5009 ms. Test awaits entered before its try/finally; an early null before FileHandle.read would leave that promise unresolved. Log does not prove early refusal or actual kernel delay.",
+      "source": "packages/polaris-dossier/src/url-session-audit-history.test.ts:220-238"
+    },
+    "futureCutTimeout": {
+      "state": "Unknown",
+      "observed": "Vitest timeout5010 ms. Fixture performs eight real allocations and five lifecycle publications. Future-cut itself is observedAt=NOW+501 while now=NOW+500; source rejects synchronously before history I/O. Exact stage reached is not retained.",
+      "source": "packages/polaris-dossier/src/url-machine-cold-history.test.ts:118-140; url-machine-cold-history.ts:82"
+    },
+    "archivePositiveFalse": {
+      "state": "Unknown",
+      "observed": "Whole test9572 ms includes fixture, reopen, three read probes and lifecycle publication. Generic lifecycle passes no native profile to store.exclusive; runLocked retains5000 ms. False alone does not distinguish deadline, state/publication or authority.",
+      "source": "packages/polaris-dossier/src/url-machine-archive.test.ts:85-116; url-machine-lifecycle.ts:219-245; url-machine-store.ts:440-453"
+    }
+  },
+  "recentDiff": {
+    "from": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+    "to": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+    "files": [
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "packages/polaris-dossier/src/session-launch.ts",
+      "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "packages/polaris-dossier/src/url-run-machine-close.test.ts"
+    ],
+    "observation": "No history verifier/store/affected-test source changed in this interval; this does not classify the failures as environmental."
+  },
+  "governing": {
+    "VIS-2": "No evidence means Unknown, not success.",
+    "REQ-048": "Finite registry/audit I/O/output/lock/operation wall limits under the original deadline; exhaustion refuses.",
+    "RFC3-16(d)": "All adopted derivation/currentness predicates remain required; no authority follows from a path/format/controller claim alone."
+  },
+  "nextDiagnostic": {
+    "status": "prepared-not-run",
+    "script": "/home/orca/.tmp/f3-native-admission-fixes/serial-unit120.sh",
+    "scriptSha256": "25d323d419fbc012f70dea3c60359d77d273e7b2f2bc5e3e100829bb08f3b72a",
+    "command": "cd /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w\nnode node_modules/vitest/vitest.mjs run --project unit --maxWorkers 1 --reporter verbose packages/polaris-dossier/src/url-launch-history-retained.test.ts packages/polaris-dossier/src/url-machine-archive.test.ts packages/polaris-dossier/src/url-machine-cold-history.test.ts packages/polaris-dossier/src/url-machine-peer-history.test.ts packages/polaris-dossier/src/url-session-audit-history.test.ts > /home/orca/.tmp/f3-native-admission-fixes/serial-unit120.log 2>&1\n",
+    "scope": "Exactly five unit files /120 cases, maxWorkers1; no production edits or budget changes. Run only after coordinator releases native verification window.",
+    "ifStillFailing": "Retain actual result code and elapsed boundary around existing fixture and operation calls. For audit null, use temporary bounded test-only wrappers around existing metadata/open/read/parse/current calls to locate last completed phase without extra authority calls or content capture; a null without phase remains Unknown. Do not add permanent stage-only tests."
+  },
+  "changes": "Read-only source inspection only. Wrote this diagnostic and unrun script outside repository; no tests/typecheck/build or source mutations."
+}

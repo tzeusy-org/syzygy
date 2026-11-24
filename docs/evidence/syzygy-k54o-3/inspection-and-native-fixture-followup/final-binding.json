@@ -1,0 +1,61 @@
+{
+  "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+  "candidateState": "uncommitted",
+  "files": {
+    "packages/polaris-dossier/src/session-launch.ts": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "packages/polaris-dossier/src/session-launch.test.ts": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0"
+  },
+  "binaryDeltaSha256": "473e0cf378a74351b4d6994c4870f77530d3f0cea0ac0ebdb0485b9898a2e654",
+  "testDelta": 1,
+  "testPopulation": {
+    "base": 50,
+    "candidate": 51
+  },
+  "controls": {
+    "attempted": 5,
+    "detectedAtIntendedAssertion": 3,
+    "inconclusiveTestTimeout": 2,
+    "survivedExercisedAssertion": 0
+  },
+  "restored": true,
+  "logs": {
+    "held-stat-confirmation.log": "879c627029e0a1c3e700255a9770fc018d98ceec652a786146530e84fdcd798d",
+    "focused.log": "c70211860dff0f8dd74a25a2cad5031ba59d83baa6891af5867b746c0d1d55f9",
+    "known-refusal-precedence.log": "ffea6be5ba6f71d09ee2ae0fb63b0979d415db05afb3c3e3cb0dae2cc9c118b6",
+    "multiple-disappearances.log": "4a1a6730bb61415374bb58c9e3d1601e95779f4aa7e69471724f593a165725f3",
+    "errno-allowlist.log": "e1b7b8bbd67baccd232e54d35ac1788d3d13dc5bf3cec7919a509b621ea3b266",
+    "close-classification.log": "6f85a756e20c771d180034954bbeedea2a7acabb1bc999085bee1faf6823177b",
+    "controls-run.log": "2f94dd7c91fc0a4b3df356250334fc6ac356908b350b7832145ba748aeff3159",
+    "trace-wiring.log": "e2d6218bc3acb441737bb27599bb894b1caa546bf01d54789af8458bef30acd7"
+  },
+  "focused": {
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "bounds storage census retries|vanishing at directory open|joins a .*close before publishing|joins the storage listing at EOF|holds the storage directory|joins independent inspection authority|keeps the 200ms cadence"
+    ],
+    "initial": {
+      "passed": 26,
+      "failed": 1,
+      "skipped": 25,
+      "total": 52
+    },
+    "initialFailure": "Added observed enumeration case wrongly expected propagated read failure; pending held stat meant watchdog won. The duplicate added case was subsequently removed. Existing original anchor test remains unchanged.",
+    "confirmation": {
+      "passed": 1,
+      "failed": 1,
+      "skipped": 50,
+      "total": 52
+    },
+    "confirmationFailure": "Unobserved duplicate hit existing15s test timeout; observed corrected assertion passed. No timeout changed.",
+    "finalPositiveSingleInvocation": false,
+    "retainedPredicates": "All26 selected cases remaining in final candidate passed in the initial invocation; no final full subset rerun."
+  },
+  "typecheck": "Not run per root instruction; official committed npm run check pending.",
+  "nativeReplay": "Not run.",
+  "primaryCheckout": "Not edited."
+}

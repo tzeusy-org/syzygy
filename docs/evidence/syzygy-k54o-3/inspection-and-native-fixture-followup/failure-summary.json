@@ -1,0 +1,211 @@
+{
+  "workflowRun": 45434395002,
+  "job": 138588140801,
+  "headSha": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "jobConclusion": "failure",
+  "failedSteps": [
+    {
+      "name": "unit tests (npm test)",
+      "number": 12,
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "files": {
+    "population": 254,
+    "passed": 253,
+    "failed": 1
+  },
+  "tests": {
+    "passed": 6293,
+    "failed": 37,
+    "skipped": 1,
+    "todo": 0,
+    "population": 6331
+  },
+  "failedFiles": [
+    {
+      "project": "unit",
+      "path": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+      "state": "fail",
+      "passed": 0,
+      "failed": 37,
+      "skipped": 0,
+      "todo": 0,
+      "tests": [
+        {
+          "name": "machine accept authorization ordering > keeps both initial ordered Design clients unpublished across a Stop before activation",
+          "state": "fail"
+        },
+        {
+          "name": "machine accept authorization ordering > checks the fresh verifier after the live sample for sample-refused",
+          "state": "fail"
+        },
+        {
+          "name": "machine accept authorization ordering > checks the fresh verifier after the live sample for verification-refused",
+          "state": "fail"
+        },
+        {
+          "name": "machine accept authorization ordering > checks the fresh verifier after the live sample for verified",
+          "state": "fail"
+        },
+        {
+          "name": "retained production machine closure evidence > retains eight actual never-issued anchors and immutable selected contexts from the exact clean result",
+          "state": "fail"
+        },
+        {
+          "name": "retained production machine closure evidence > emits no clean evidence after expire",
+          "state": "fail"
+        },
+        {
+          "name": "retained production machine closure evidence > emits no clean evidence after withdraw",
+          "state": "fail"
+        },
+        {
+          "name": "retained production machine closure evidence > refuses clean closure when actual committed state contradicts in-memory never-issued state",
+          "state": "fail"
+        },
+        {
+          "name": "retained production machine closure evidence > refuses clean closure when actual pending state contradicts in-memory never-issued state",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > retains exact old anchors and allocates only 0 freshly prepared roles in the same store",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > retains exact old anchors and allocates only 1 freshly prepared roles in the same store",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > retains exact old anchors and allocates only 4 freshly prepared roles in the same store",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses copy drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses identity drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses controller drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses parent drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses run drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses pin drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses origin drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses profile drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses missing-store drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses clock drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses claim drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses unprepared drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses extra-plan drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses duplicate-role drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses role-order drift without allocating fresh endpoints",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 0)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 1)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 2)",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > withdraws both live currentness and retirement when run-authority is lost",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > withdraws both live currentness and retirement when claim is lost",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses run-authority withdrawal after awaited revalidation before any fresh allocation",
+          "state": "fail"
+        },
+        {
+          "name": "same-store machine continuation seam > refuses claim withdrawal after awaited revalidation before any fresh allocation",
+          "state": "fail"
+        }
+      ]
+    }
+  ],
+  "reportErrors": [],
+  "tmpdir": {
+    "mode": "full-current-unit",
+    "cleanup": true,
+    "errors": [],
+    "censusCounts": {
+      "entries": 0,
+      "leftovers": 0,
+      "errors": 0
+    },
+    "denominatorProblems": [
+      "failed-files"
+    ]
+  },
+  "cause": {
+    "status": "Observed source/log relation; no local reproduction run",
+    "throw": "url-run-machine-unavailable during fixture construction at createUrlRunMachine catch line328",
+    "rejectingSource": "urlMachinePeerCaptureMilliseconds returns null for non-nominal fake profiles; new caller refuses before transport construction",
+    "introducedBy": "e1365897035fe5c8eeecfc0b8a25ccd9732fd599",
+    "unchangedFixture": "url-run-machine-close.test.ts:45",
+    "recommendedFix": "Compile genuine hermetic nominal profiles for ordinary roles and ordered Design; preserve production guards and existing close assertions"
+  },
+  "logSha256": "be639033c5508bc907df80541f95093022d67c9f7f1e130411eeb9220ca7584d",
+  "jobSha256": "6eca11d3c6263934e06a29c2da2d4c97195a3a0292a1dbbc882a6f95a999a597"
+}

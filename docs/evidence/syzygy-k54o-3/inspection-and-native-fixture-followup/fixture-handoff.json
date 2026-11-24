@@ -1,0 +1,31 @@
+{
+  "verificationClone": "/home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w",
+  "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+  "sourceSha256": "84765fa7d032daf2d29eaf9591065fbc90ddc29b00bba3ab9b4f805228d15fef",
+  "fixtureBindingSha256": "6e7a4f52172bc093f9a1cc2e98f07425434ed9351314424784872736bad2a3c4",
+  "patchSha256": "204ebf1e49c3d239a2639f8c67f8f5bde1e2409ae05d05b36d4a5e5a96c53fbd",
+  "hostedFailureSummarySha256": "bbfb49bf59010013c1f87c51a7dec7641a3aa9b4ad6736c9ed58f58c03ba0829",
+  "hostedLogSha256": "be639033c5508bc907df80541f95093022d67c9f7f1e130411eeb9220ca7584d",
+  "focused": {
+    "passed": 37,
+    "population": 37,
+    "log": "fixture-focused.log",
+    "logSha256": "5c11592411ba3174ce5a0375c4a0e5ecf587597bae9e27007195d4f9eb243f1e"
+  },
+  "assertionPreservation": {
+    "method1": {
+      "name": "TypeScript AST closest complete expect expression statements, raw bytes in source order",
+      "count": 84,
+      "equal": true,
+      "sequenceSha256": "bbcc6ba19b5d25019a98aad1f51a4e214aaff52968fce42f7bc80faef1ce5273"
+    },
+    "method2": {
+      "name": "Independent exact expect-containing line sequence",
+      "count": 66,
+      "equal": true,
+      "sequenceSha256": "d2f2c80d334a871c4a070fbb3a29e61ba6d16a86929bc1dd80af79d5d543e09a"
+    }
+  },
+  "officialCheck": "Root will run npm run check once on final combined committed source; no standalone worker typecheck requested.",
+  "sourceStatus": "frozen, no further edits; main implementation checkout untouched by this worker"
+}

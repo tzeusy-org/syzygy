@@ -1,0 +1,118 @@
+{
+  "subjectCommit": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+  "subjectTree": "114ac205e8c35ea47690a5a6fa2849f821d76dbb",
+  "artifactSha256": {
+    "/home/orca/.tmp/f3-native-925e84-eligible.QOst0wzZ/eligible-stop-resume.json.failure.json": "28b57e70d4034c1c272f4018a6b648d3320b0c8b00ec04186c4d31ac3e851272",
+    "/home/orca/.tmp/f3-native-925e84-eligible.QOst0wzZ/vitest.log": "1fe3514a7b0578a70a7b5a823276edce1220766fa50116287e862772583a435d",
+    "/home/orca/.tmp/f3-native-925e84-eligible.QOst0wzZ/commit": "4a58632f4d9ca2dbf34c92cadcde7a6bae0b546bd85177ecc21be1d2e8d642db",
+    "/home/orca/.tmp/f3-native-925e84-eligible.QOst0wzZ/tree": "276372ca91243a4cf147dbd6595b83051a1311b70fe0796dd9827be253dde195",
+    "/home/orca/.tmp/url-composed-host-1418069-1795536841322/acquisitions/attempt-r4zTpx/sessions-author.jsonl": "74e80bc10af05fe3252e7229663ce28fc6a07fea78b9e2eea98a142f0dd88e01",
+    "/home/orca/.tmp/url-composed-host-1418069-1795536841322/acquisitions/attempt-r4zTpx/sessions-design.jsonl": "46967ef3c15a322c30154a8af0119376fe45bfce654620ff1e26d18805f03f33",
+    "/home/orca/.tmp/url-composed-host-1418069-1795536841322/acquisitions/attempt-r4zTpx/sessions-fidelity.jsonl": "4dd782ce353b82dee7034491dc3e490255e67cbe5072b002af4858d9e942111a",
+    "/home/orca/.tmp/url-composed-host-1418069-1795536841322/acquisitions/attempt-r4zTpx/sessions-inventory.jsonl": "a5f1e92a7718ae18f9b1b83a0a7e1a845ee8abbae5efa178306eb7e73b36bf11",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-run-composed.test.ts": "2cd6e51025c9732f1002dc9727a6529da0173ebf5f2e6910772b9c4c6ecb582d",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/session-relay.ts": "789bb656bf92bf94b1005869b262abebbd29bf03f8e3d8f45ad15808c08e53e5",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/session-machine-transport.ts": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-run-sessions.ts": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+    "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/session-host.ts": "b1bdd14e24ef4fa4410463847b259dcd3cfea0a401bc1dd2350425493b3b56a3"
+  },
+  "observed": {
+    "scenario": "eligible-stop-resume",
+    "events": [
+      "told the inventory session: draft revision 0 is frozen",
+      "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+      "run ended: checked session boundary unavailable"
+    ],
+    "firstRuntimeFailure": {
+      "reason": "transport-unavailable",
+      "atMs": 334965.984192
+    },
+    "firstRetainedOrdinaryFailure": {
+      "role": "fidelity",
+      "attemptOrdinal": 2,
+      "phase": "forward",
+      "atMs": 334962.581871,
+      "forward": {
+        "startedMs": 164116.232115,
+        "settledMs": 334962.494326,
+        "outcome": "rejected"
+      },
+      "forwardDurationMs": 170846.262211,
+      "store": {
+        "startedMs": 163371.171839,
+        "conflicts": 0,
+        "acquiredAt": 163372.129269,
+        "callbackAt": 163392.488442,
+        "settledMs": 164135.312622,
+        "outcome": "accepted"
+      },
+      "effect": {
+        "startedMs": 164111.093762,
+        "settledMs": 164116.862306,
+        "outcome": "accepted"
+      },
+      "stepOutcome": "accepted"
+    },
+    "eligibleRelayInterruptions": [
+      {
+        "role": "fidelity",
+        "event": "socket-error",
+        "atMs": 334961.685938,
+        "connectionMs": 178257.855104,
+        "responseMs": 177174.12293999997
+      },
+      {
+        "role": "inventory",
+        "event": "socket-error",
+        "atMs": 334972.108309,
+        "connectionMs": 48124.173983999994,
+        "responseMs": 46139.99365599995
+      },
+      {
+        "role": "author",
+        "event": "socket-error",
+        "atMs": 334976.937317,
+        "connectionMs": 21577.474456000025,
+        "responseMs": 20173.87453099998
+      }
+    ],
+    "auditPopulation": {
+      "sessions-author.jsonl": 135,
+      "sessions-design.jsonl": 1,
+      "sessions-fidelity.jsonl": 28,
+      "sessions-inventory.jsonl": 97
+    },
+    "relayEventPopulation": 60,
+    "endTurnRecords": [
+      {
+        "file": "sessions-author.jsonl",
+        "line": 134,
+        "at": "2026-11-24T16:19:32.144Z",
+        "event": "response-admitted",
+        "requestId": "1721f616-bbf1-455e-bd9d-a62de488c31d",
+        "stopReason": "end_turn"
+      }
+    ],
+    "relayRefusalRecords": [],
+    "resumeCheckCount": 0,
+    "resumeBootstrap": {}
+  },
+  "inferred": [
+    "Fidelity provider script for attempt 2 waits for inventory end_turn inside an already active HTTP exchange (url-run-composed.test.ts:1866-1875).",
+    "The first socket error precedes the forwarding rejection and runtime transport failure; accepted enclosing store/effect and zero lock conflicts do not support a store-bound or lock-contention cause.",
+    "Observed Fidelity connection duration 178257.855104 ms approaches the 180000 ms lifetime that begins before peer capture/authorization. Connection lifetime expiry is the leading explanation, not an observed exact callback.",
+    "Author end_turn at 2026-11-24T16:19:32.144Z releases Inventory final script shortly before the first Fidelity socket error; no Inventory end_turn was retained. Fidelity cannot pass its inventory gate."
+  ],
+  "unknown": [
+    "Exact originating socket error or timeout callback; stream socket-error merges distinct causes.",
+    "Whether removing the active Fidelity inventory gate alone completes a subsequent native run."
+  ],
+  "nextConcreteAction": {
+    "candidateFixtureFix": "Remove await waitForInventoryEndTurn before readFidelityPacket (line1874). Keep packet-registration and waiting-result checks. Existing finalResponse(role) chain at1593-1614 independently orders author/inventory/fidelity durable end_turns; preserve assertions for that ordering. Do not increase production bounds.",
+    "minimalDiagnostic": "Retain first finite-enum origin for machine connection lifetime callback vs raw-close/raw-error/ingress-failure and relay absolute deadline/outgoing-error/outgoing-close, plus monotonic began/deadline/observed instant and role/request ordinal; no bodies, paths or exception strings. Needed before claiming exact timer root cause."
+  },
+  "excludedClaims": [
+    "No async terminal read, resumed bootstrap or Design was reached. Ten-second terminal and thirty-second capture changes do not resolve this failure.",
+    "No tests, provider calls or source modifications were performed for this diagnosis."
+  ]
+}

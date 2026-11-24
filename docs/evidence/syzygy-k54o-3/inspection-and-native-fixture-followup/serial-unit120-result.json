@@ -1,0 +1,36 @@
+{
+  "subject": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "cleanStatus": "",
+  "commandScript": "/home/orca/.tmp/f3-native-admission-fixes/serial-unit120.sh",
+  "environment": {
+    "TMPDIR": "/home/orca/.tmp"
+  },
+  "exit": 1,
+  "log": "/home/orca/.tmp/f3-native-admission-fixes/serial-unit120.log",
+  "logSha256": "2c79fdcb6c338b7a479fd9839889cb9475aa9582d2fd0d311035362c93d96a52",
+  "result": {
+    "files": 5,
+    "failedFiles": 4,
+    "passedFiles": 1,
+    "tests": 120,
+    "failed": 13,
+    "passed": 107,
+    "durationSeconds": 199.28
+  },
+  "failedTests": [
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > refuses pin expectation drift 5011ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > joins actual protected machine and audit cuts under their distinct policy bindings 1338ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup 5317ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed canonical-hash 5001ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed process 5001ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed channel 5004ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed scope 5002ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses changed instance 5001ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority 490ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > accepts a declared but unstarted design helper while still requiring proof for a started helper 296ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation 673ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > bounds a delayed kernel read and cannot publish a late successful result 5005ms",
+    " \u00d7 |unit| packages/polaris-dossier/src/url-launch-history-retained.test.ts > retained URL helper launch history > joins the exact independently anchored helper row and retained files without granting recovery 50ms"
+  ],
+  "sourceChanges": "none"
+}

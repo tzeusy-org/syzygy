@@ -1,0 +1,162 @@
+[
+  {
+    "id": "trace-wiring",
+    "old": "limits, checkSample, observation?.storageFailure); }",
+    "new": "limits, checkSample, undefined); }",
+    "filter": "two missing entries in one batch",
+    "originalSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "mutantSha256": "b3cdd1305c919ced80da27ef3044a5726c2609d20522a62e00f5fcd2623cc438",
+    "exitCode": 1,
+    "restoredSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "candidateState": "uncommitted",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "two missing entries in one batch"
+    ],
+    "environment": {
+      "TMPDIR": "/home/orca/.tmp"
+    },
+    "testFileSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "logSha256": "e2d6218bc3acb441737bb27599bb894b1caa546bf01d54789af8458bef30acd7",
+    "result": "detected-at-intended-assertion",
+    "denominator": {
+      "failed": 1,
+      "skipped": 50,
+      "total": 51
+    }
+  },
+  {
+    "id": "errno-allowlist",
+    "old": "return STORAGE_ERRNOS.find(known => known === code) ?? 'Unknown';",
+    "new": "return code as StorageInspectionFailure['errno'];",
+    "filter": "an unlisted stat error code",
+    "originalSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "mutantSha256": "52ac6bc16665fdb1dd792502b614115c61cef262179294840c590241c598c8be",
+    "exitCode": 1,
+    "restoredSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "candidateState": "uncommitted",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "an unlisted stat error code"
+    ],
+    "environment": {
+      "TMPDIR": "/home/orca/.tmp"
+    },
+    "testFileSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "logSha256": "e1b7b8bbd67baccd232e54d35ac1788d3d13dc5bf3cec7919a509b621ea3b266",
+    "result": "detected-at-intended-assertion",
+    "denominator": {
+      "failed": 1,
+      "skipped": 50,
+      "total": 51
+    }
+  },
+  {
+    "id": "multiple-disappearances",
+    "old": "throw reject('stat-entry', 'multiple-disappearances', later.reason);",
+    "new": "throw reject('stat-entry', 'filesystem-rejected', later.reason);",
+    "filter": "two missing entries in one batch",
+    "originalSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "mutantSha256": "1634d79a3643dc2e8ba9ad56d829d699b7a2ba5631fd5ee04b27228748002103",
+    "exitCode": 1,
+    "restoredSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "candidateState": "uncommitted",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "two missing entries in one batch"
+    ],
+    "environment": {
+      "TMPDIR": "/home/orca/.tmp"
+    },
+    "testFileSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "logSha256": "4a1a6730bb61415374bb58c9e3d1601e95779f4aa7e69471724f593a165725f3",
+    "result": "detected-at-intended-assertion",
+    "denominator": {
+      "failed": 1,
+      "skipped": 50,
+      "total": 51
+    }
+  },
+  {
+    "id": "close-classification",
+    "old": "failure = { error, detail: failedClose ?? { operation: 'Unknown', cause: 'close-failed', errno: 'Unknown' } };",
+    "new": "failure = { error, detail: { operation: 'Unknown', cause: 'close-failed', errno: 'Unknown' } };",
+    "filter": "joins a failed-close before publishing",
+    "originalSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "mutantSha256": "6cc91b181605309a44a801d0b6f5b84f0e111090b7e4b4fcd5f471d5108c026b",
+    "exitCode": 1,
+    "restoredSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "candidateState": "uncommitted",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "joins a failed-close before publishing"
+    ],
+    "environment": {
+      "TMPDIR": "/home/orca/.tmp"
+    },
+    "testFileSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "logSha256": "6f85a756e20c771d180034954bbeedea2a7acabb1bc999085bee1faf6823177b",
+    "result": "inconclusive-test-timeout",
+    "denominator": {
+      "failed": 1,
+      "skipped": 50,
+      "total": 51
+    }
+  },
+  {
+    "id": "known-refusal-precedence",
+    "old": "const cause = causes.get(error);\n      if (cause === undefined) settle(phase, 'rejected');",
+    "new": "const cause = undefined;\n      if (cause === undefined) settle(phase, 'rejected');",
+    "filter": "joins independent inspection authority with the live census when census-timed-out",
+    "originalSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "mutantSha256": "0836bedabe7a0bb78db12abc52f6dc92acf6ac92dca67d797ccc976171d929d1",
+    "exitCode": 1,
+    "restoredSha256": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "executionHead": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "candidateState": "uncommitted",
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/session-launch.test.ts",
+      "-t",
+      "joins independent inspection authority with the live census when census-timed-out"
+    ],
+    "environment": {
+      "TMPDIR": "/home/orca/.tmp"
+    },
+    "testFileSha256": "f3e58d68c17589e01f4047c791d679799ad5019ebda647dd44da4ebe43e8a8e0",
+    "logSha256": "ffea6be5ba6f71d09ee2ae0fb63b0979d415db05afb3c3e3cb0dae2cc9c118b6",
+    "result": "inconclusive-test-timeout",
+    "denominator": {
+      "failed": 1,
+      "skipped": 50,
+      "total": 51
+    }
+  }
+]
