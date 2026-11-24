@@ -216,22 +216,31 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    the change and after it. The steps and commands are in
    `docs/evidence/pursuit-2026-11-21b/pilot/README.md`; the kept arms there
    are the "before" for a stored run.
-2. **Explain a drop of more than five points.** A point is 0.01 of share. If
-   the overall share or any kind's share falls by more than five points, the
-   change says why, or is repaired.
+2. **Explain a drop beyond the instrument's noise.** A point is 0.01 of
+   share. If the overall share falls by more than five points, or any kind's
+   share falls by more than one required fact (a kind has 13 to 15 facts, so
+   one fact is 6.7 to 7.7 points; a grade moves in half facts), or three or
+   more kinds each fall by a full fact, the change says why, or is repaired.
+   The last clause catches many one-fact drops in one direction, which can
+   otherwise stay under five points overall.
 3. **Do not call one result a regression, and never call one a win.**
-   [Observed] Five points is inside the noise of this instrument on one
-   repository: the same stored answers, graded again (arms D and P were
-   graded three times, E twice), gave overall shares that moved by up to 3.1
-   points (arm E, 0.574 and 0.605) and per-kind shares that moved by up to 8
-   points (arm E on "change", 0.42 and 0.50; arm P on "rationale", 0.19 to
-   0.27). [Unknown] How much a second
-   reader of the same dossier moves the share: the record has one reader per
-   arm. So a drop is reported and explained as a drop, and is called a
-   regression only after it holds on two runs or under a second key. The
-   pilot is uncalibrated (one repository, model readers, a model grader), so
-   a rise is reported as a number and never as evidence that a change is
-   better.
+   [Observed] Over one repository
+   (`docs/evidence/syzygy-5dhm-127/stored-run-measures.json`,
+   `scripts/dossier_stored_run_measures.py --check`): the same stored answers
+   graded again (arms D and P four times, E three times) moved the overall
+   share by up to 3.7 points (arm D, 0.302 to 0.340) and a kind's share by up
+   to 7.7 points, one fact; a second reader of the same stored site moved the
+   overall share by 1.2 and 0.6 points (arms D and Y, E and Z) and a kind's by
+   up to 3.8; every measurement of one site together, readers and gradings,
+   spans 4.9 points overall. So five points overall sits at the edge of the
+   measured noise, and a kind moves by a whole fact without any change.
+   [Inferred] Treating facts as independent, one standard error is about five
+   points overall and about thirteen in a kind (error over the choice of
+   questions, not the repeat noise of a before/after on this key). So a drop is reported and
+   explained as a drop, and is called a regression only after it holds on two
+   runs or under a second key. The pilot is uncalibrated (one repository,
+   model readers, a model grader), so a rise is reported as a number and
+   never as evidence that a change is better.
 4. **The key stays held out.** The regression's questions and key are never
    put in a brief, a packet or any other text an authoring session is given.
    `packages/polaris-dossier/src/regression-hold-out.test.ts` fails if any
