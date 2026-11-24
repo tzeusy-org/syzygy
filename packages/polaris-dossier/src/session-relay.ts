@@ -17,7 +17,7 @@ export interface SessionRelayLimits {
   readonly milliseconds: number; readonly connections: number;
 }
 export const SESSION_RELAY_LIMITS: SessionRelayLimits = Object.freeze({
-  requestBytes: 2_097_152, responseBytes: 8_388_608, milliseconds: 180_000, connections: 4,
+  requestBytes: 2_097_152, responseBytes: 8_388_608, milliseconds: 300_000, connections: 4,
 });
 export interface SessionRelaySubject {
   readonly binding: SessionBinding;

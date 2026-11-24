@@ -15,7 +15,7 @@ export interface SessionBridgeLimits {
 }
 export const SESSION_BRIDGE_LIMITS: SessionBridgeLimits = Object.freeze({
   requestBytes: 8 * 1024 * 1024, responseBytes: 8 * 1024 * 1024,
-  milliseconds: 180_000, connections: 4,
+  milliseconds: 300_000, connections: 4,
 });
 export interface SessionBridge {
   readonly baseUrl: string;

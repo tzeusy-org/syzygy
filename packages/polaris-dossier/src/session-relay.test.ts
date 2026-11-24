@@ -159,7 +159,7 @@ describe('session relay choke point ordering', () => {
     const ports: SessionRelayPorts = { current: () => true, request: () => ({ ok: true, body: Buffer.from(BODY), admission: ADMISSION, consumedToolResults: [] }),
       providerHeaders: headers => headers, response: () => ACCEPTED, audit: () => undefined };
     const { responseBytes: _required, ...missing } = SESSION_RELAY_LIMITS;
-    for (const limits of [missing, { ...SESSION_RELAY_LIMITS, milliseconds: Infinity },
+    for (const limits of [missing, { ...SESSION_RELAY_LIMITS, milliseconds: Infinity }, { ...SESSION_RELAY_LIMITS, milliseconds: 300_001 },
       { ...SESSION_RELAY_LIMITS, requestBytes: 2_097_153 }, { ...SESSION_RELAY_LIMITS, unexpected: 1 }]) {
       const socket = path.join(tempDir('relay-invalid-bounds-'), 'r.sock');
       await expect(start(socket, SUBJECT, ports, limits as typeof SESSION_RELAY_LIMITS)).rejects.toThrow('invalid-session-relay-configuration');

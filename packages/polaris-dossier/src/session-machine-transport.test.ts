@@ -207,7 +207,7 @@ describe('verified-chunk session transport adapter', () => {
     ['capture-expired', undefined, 5001, 8000, true],
     ['connection-expired', undefined, 4000, 8000, false],
     ['publication-refused', undefined, 4000, 8000, false],
-    ['bounded ordered capture', 30_000, 6000, 40_000, false],
+    ['bounded ordered capture', 30_000, 6000, 300_000, false],
     ['capture boundary', 30_000, 30_000, 40_000, true],
     ['original caller expiry', 30_000, 8001, 8000, true],
   ] as const)(
@@ -266,7 +266,19 @@ describe('verified-chunk session transport adapter', () => {
         const stream = await connected;
         if (outcome === 'published' || outcome === 'bounded ordered capture') {
           expect(stream).not.toBeNull();
-          expect(sessionMachineEffectContext(stream!)?.peer).toBe(peer);
+          const context = sessionMachineEffectContext(stream!)!;
+          expect(context.peer).toBe(peer);
+          if (outcome === 'bounded ordered capture') {
+            // Capture and publication consumed 8s of the original 300s lifetime.
+            await vi.advanceTimersByTimeAsync(180_000);
+            expect(stream!.destroyed).toBe(false);
+            expect(await context.mediate('artifact_read', () => 'still-current')).toEqual({ ok: true, value: 'still-current' });
+            await vi.advanceTimersByTimeAsync(112_000);
+            expect(stream!.destroyed).toBe(true);
+            const afterExpiry = vi.fn();
+            expect(await context.mediate('artifact_read', afterExpiry)).toEqual({ ok: false });
+            expect(afterExpiry).not.toHaveBeenCalled();
+          }
           stream!.destroy();
         } else {
           expect(stream).toBeNull();

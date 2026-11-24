@@ -151,6 +151,13 @@ describe('ordered design live work reservation', () => {
     const { plan } = fixture();
     // Four 50ms broker/relay waits and 37 operation envelopes of 10ms.
     expect(plan.expiresAt).toBe(571);
+    const longerRelay = { ...enforcement, relayMilliseconds: 300_000 };
+    const longer = planOrderedDesignWork({ ...input, enforcement: longerRelay, deadline: 1_200_492 });
+    expect(longer?.enforcement.relayMilliseconds).toBe(300_000);
+    expect(longer?.expiresAt).toBe(1_200_491);
+    expect(longer?.originalDeadline).toBe(1_200_492);
+    expect(planOrderedDesignWork({ ...input, enforcement: longerRelay, deadline: 1_200_491 })).toBeNull();
+    expect(planOrderedDesignWork({ ...input, enforcement: { ...longerRelay, relayMilliseconds: 300_001 }, deadline: 2_000_000 })).toBeNull();
     expect(plan.cpuMicroseconds).toBe(370);
     expect(plan.auditReadBytes).toBe(3700);
     expect(plan.turns).toHaveLength(4);

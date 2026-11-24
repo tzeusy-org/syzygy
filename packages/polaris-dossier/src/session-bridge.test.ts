@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as http from 'node:http';
 import path from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { SESSION_BRIDGE_LIMITS, startSessionBridge, type SessionBridge } from './session-bridge.js';
 
@@ -34,17 +34,30 @@ Promise<{ status: number; body: string; headers: http.IncomingHttpHeaders }> {
 
 describe('private-role HTTP to fixed Unix transport', () => {
   it('preserves request bytes and supported authentication between processes, stripping routing headers', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    cleanup.push(async () => { vi.useRealTimers(); });
+    let entered!: () => void, release!: () => void, settled = false;
+    const arrived = new Promise<void>(resolve => { entered = resolve; });
     const received: { path: string | undefined; body: string; auth: boolean; routed: boolean; host: string | undefined }[] = [];
     const bridge = await setup((request, response) => {
       const chunks: Buffer[] = [];
       request.on('data', (chunk: Buffer) => chunks.push(chunk));
       request.on('end', () => {
         received.push({ path: request.url, body: Buffer.concat(chunks).toString('utf8'), auth: request.headers.authorization === 'Bearer NONSECRET-fixture', routed: request.headers['x-forwarded-host'] !== undefined, host: request.headers.host });
-        response.writeHead(200, { 'content-type': 'text/event-stream' });
-        response.end('event: message_stop\ndata: {"type":"message_stop"}\n\n');
+        release = () => {
+          response.writeHead(200, { 'content-type': 'text/event-stream' });
+          response.end('event: message_stop\ndata: {"type":"message_stop"}\n\n');
+        };
+        entered();
       });
     });
-    const result = await send(bridge, BODY, '/v1/messages?beta=true', { authorization: 'Bearer NONSECRET-fixture', host: 'untrusted.invalid', 'x-forwarded-host': 'untrusted.invalid' });
+    const pending = send(bridge, BODY, '/v1/messages?beta=true', { authorization: 'Bearer NONSECRET-fixture', host: 'untrusted.invalid', 'x-forwarded-host': 'untrusted.invalid' });
+    void pending.then(() => { settled = true; }, () => { settled = true; });
+    await arrived;
+    await vi.advanceTimersByTimeAsync(180_001);
+    expect(settled).toBe(false);
+    release();
+    const result = await pending;
     expect(result.status).toBe(200);
     expect(result.body).toBe('event: message_stop\ndata: {"type":"message_stop"}\n\n');
     expect(received).toEqual([{ path: '/v1/messages?beta=true', body: BODY, auth: true, routed: false, host: 'syzygy-session-relay' }]);

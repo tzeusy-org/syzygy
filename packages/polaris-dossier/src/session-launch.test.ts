@@ -674,7 +674,7 @@ describe('prepared private CLI launch',()=>{
     const base = ordinary.value.profile, profile = ordered.value.profile;
     expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
       digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-6');
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-7');
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
@@ -741,7 +741,7 @@ describe('prepared private CLI launch',()=>{
     const ordinary = compiled.get('support/session-mcp.js')!;
     const design = compiled.get('design-support/session-mcp.js')!;
     // Measured independently from the exact predecessor's ordinary build.
-    expect(sha256(compiled.get('support/session-bridge.js')!)).toBe('33a3f07df8001244cebefec75fe2110073196b9cb11fb2994553659a6865bac3');
+    expect(sha256(compiled.get('support/session-bridge.js')!)).toBe('588dc7a85739f804696c598be0e31100b4a95b70893049c5bf76d861895f3b24');
     expect(sha256(ordinary)).toBe('7ab492fb6a69e8476049068b5bcf820a95cfcb1a1ea656f34f3c7bdaa6a2fd33');
     expect(sha256(design)).not.toBe(sha256(ordinary));
     for (const role of ['author', 'inventory', 'fidelity'] as const) {

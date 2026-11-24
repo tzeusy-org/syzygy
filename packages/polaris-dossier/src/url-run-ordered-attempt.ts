@@ -328,7 +328,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       inputCodeUnits: 8_388_608, secretCodeUnits: 103_000_000, secretCalls: 524_361, activeCodeUnits: 16_777_216, activeCalls: 32 };
     const enforcement: OrderedDesignWorkEnforcement = { runtimeSha256: input.runtime.inputTreeSha256, workerSha256: program.worker.sha256,
       operations: { request: envelope, response: envelope, tool: envelope, audit: envelope, terminal: envelope },
-      relayMilliseconds: 180_000, brokerMilliseconds: 85_000 };
+      relayMilliseconds: 300_000, brokerMilliseconds: 85_000 };
     writer = input.audit.beginOrderedDesignAudit(plan, current, bytes => {
       input.work.observeProtectedRead(bytes); controller!.chargeAuditRead(bytes);
     });

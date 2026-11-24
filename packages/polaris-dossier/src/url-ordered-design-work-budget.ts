@@ -110,7 +110,7 @@ export function planOrderedDesignWork(input: {
       || !digest(input.expectedRuntimeSha256) || !digest(input.expectedWorkerSha256)
       || enforcement.runtimeSha256 !== input.expectedRuntimeSha256 || enforcement.workerSha256 !== input.expectedWorkerSha256
       || !positive(deadline) || !nonnegative(now) || deadline <= now || !positive(remainingRunCpuMicroseconds)
-      || !positive(enforcement.relayMilliseconds) || enforcement.relayMilliseconds > 180_000
+      || !positive(enforcement.relayMilliseconds) || enforcement.relayMilliseconds > 300_000
       || !positive(enforcement.brokerMilliseconds) || enforcement.brokerMilliseconds > 85_000) return null;
     const cpu = calculateOrderedDesignCpuRequirement(enforcement);
     if (cpu === null) return null;

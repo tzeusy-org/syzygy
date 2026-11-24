@@ -106,7 +106,7 @@ export async function openSessionMachineConnection(raw: Socket, transport: Sessi
   if (!ports || !(raw instanceof Socket) || !raw.isPaused() || raw.readableLength !== 0
     || raw.listenerCount('data') !== 0 || raw.listenerCount('readable') !== 0
     || !Number.isSafeInteger(limits.bytes) || limits.bytes <= 0 || limits.bytes > 8_388_608
-    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 180_000) return null;
+    || !Number.isSafeInteger(limits.milliseconds) || limits.milliseconds <= 0 || limits.milliseconds > 300_000) return null;
   const captureDeadline = Math.min(deadline, began + ports.captureMilliseconds);
   let expired = false;
   const before = async <T>(until: number, work: () => Promise<T>): Promise<T | null> => {
