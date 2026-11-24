@@ -10557,12 +10557,17 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows if not is_edit_account_row(line)))
-    for case in (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+    families = (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
                  repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
                  infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
-                 readers_cases, cont_cases, model_cases, worth_cases):
-        _profile_selftest_call(case.__name__, case, tmp, figure_base,
-                               witnesses, failures, witnesses=witnesses)
+                 readers_cases, cont_cases, model_cases, worth_cases)
+    global _EDITION_STATE
+    _EDITION_STATE = (tmp, figure_base, families)
+    try:
+        results = _map_cases(len(families), _run_edition)
+    finally:
+        _EDITION_STATE = None
+    _join_case_results(results, len(families), witnesses, failures)
     _profile_selftest_call("edit_account_cases", edit_account_cases,
                            tmp, base, witnesses, failures, witnesses=witnesses)
     _profile_selftest_call("poc_d10_cases", poc_d10_cases,
@@ -10634,6 +10639,8 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
 
 
 _CASE_STATE = None
+_ENTRY_STATE = None
+_EDITION_STATE = None
 
 
 def _selftest_workers():
@@ -10643,13 +10650,55 @@ def _selftest_workers():
     return max(1, min(os.cpu_count() or 1, 8))
 
 
-def _map_cases(count):
+def _map_cases(count, worker=None):
     """Run every case, in parallel under fork, returning results in order."""
+    if worker is None:
+        worker = _run_case
     workers = _selftest_workers()
     if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
-        return [_run_case(i) for i in range(count)]
+        return [worker(i) for i in range(count)]
     with multiprocessing.get_context("fork").Pool(workers) as pool:
-        return pool.map(_run_case, range(count), chunksize=1)
+        return pool.map(worker, range(count), chunksize=1)
+
+
+def _run_entry(index):
+    tmp, base, tasks = _ENTRY_STATE
+    kind, name, case = tasks[index]
+    witnesses, failures, messages = [], [], []
+    if kind == 'kind':
+        function, arguments = _entry_kind_case, (name, case, witnesses, failures, messages)
+    elif kind == 'control':
+        function, arguments = _entry_control_case, (name, case, witnesses, failures)
+    elif kind == 'fifo':
+        function, arguments = _fifo_control, (witnesses, failures)
+    elif kind == 'after':
+        setup, expected = case
+        function, arguments = _after_refusal_case, (
+            name, setup, expected, witnesses, failures, messages)
+    else:
+        raise RuntimeError('unknown entry fixture kind')
+    _profile_selftest_call(name, function, tmp, base, *arguments, witnesses=witnesses)
+    return index, witnesses, failures, messages
+
+
+def _run_edition(index):
+    tmp, figure_base, families = _EDITION_STATE
+    family = families[index]
+    witnesses, failures = [], []
+    _profile_selftest_call(family.__name__, family, tmp, figure_base,
+                           witnesses, failures, witnesses=witnesses)
+    return index, witnesses, failures, []
+
+
+def _join_case_results(results, count, witnesses, failures):
+    indices = [index for index, _witnesses, _failures, _messages in results]
+    if any(type(index) is not int for index in indices) or indices != list(range(count)):
+        raise RuntimeError('selftest task result population differs')
+    for _index, task_witnesses, task_failures, messages in results:
+        for message in messages:
+            print(message)
+        witnesses.extend(task_witnesses)
+        failures.extend(task_failures)
 
 
 def _run_case(index):
@@ -10943,66 +10992,80 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
     `census`, `check_outcomes`, `check_census`), refuse by name when
     collected, and refuse in the CLI (exit 1, no write); each control must
     pass exactly as it did before."""
-    for name, (entry, setup, kind, cls) in ENTRY_KIND_CASES.items():
-        if name.endswith("block-device") and _block_device() is None:
-            print(f"SKIPPED  {name}: no unreadable block device under /dev")
-            continue
-        tree = Path(tmp) / name
-        shutil.copytree(base, tree)
-        path = tree / DECISIONS / entry
-        setup(path, tree)
-        needle = f"`{DECISIONS}/{entry}`: {kind}"
-        got = []
-        for label, method in (("run", run), ("census", census),
-                              ("check_outcomes",
-                               lambda t: check_outcomes(t, Report())),
-                              ("check_census",
-                               lambda t: check_census(t, Report()))):
-            got += _library_error(label, method, tree, path, cls)
-        try:
-            signoff_texts(tree, collect=True)
-            got.append("collected: not refused")
-        except SignoffEntriesRefused as exc:
-            if not any(f.startswith(needle) for f in exc.findings):
-                got.append(f"collected: refused {exc.findings}")
-            if exc.filename is None or Path(exc.filename) != path:
-                got.append(f"collected: filename {exc.filename!r}")
-        if name == "signoff-entry-directory":
-            # The CLI's polarity, once: exit 1 with the refusal in every
-            # mode, and `--regenerate` writes nothing.
-            codes, wrote = _cli_exits(tree)
-            got += [f"{flag}: exit {code}, refusal printed {printed}"
-                    for flag, (code, printed) in codes.items()
-                    if (code, printed) != (1, True)]
-            if wrote:
-                got.append("the CLI wrote a file")
-        if path.is_file():
-            path.chmod(0o644)
-        witnesses.append({"mutant": name, "path": f"{DECISIONS}/{entry}",
-                          "old": "<no entry>", "new": f"<{kind}>",
-                          "expected": f"REFUSED:{kind}", "failed": got,
-                          "outcome": "SURVIVED" if got else "killed"})
-        if got:
-            failures.append(f"{name}: expected REFUSED {needle}; {got}")
-    for name, setup in ENTRY_CONTROLS.items():
-        tree = Path(tmp) / name
-        shutil.copytree(base, tree)
-        setup(tree)
-        try:
-            report = run(tree)
-            census(tree)
-            signoff_texts(tree, collect=True)
-            got = sorted(report.failed)
-        except (OSError, ValueError) as exc:
-            got = [f"raised {type(exc).__name__}: {exc}"]
-        witnesses.append({"mutant": name, "path": "<scripted control>",
-                          "old": "<no entry>", "new": "<control>",
-                          "expected": "PASS", "failed": got,
-                          "outcome": "BROKEN" if got else "held"})
-        if got:
-            failures.append(f"{name}: must read as before and pass; {got}")
-    _fifo_control(tmp, base, witnesses, failures)
-    _after_refusal_cases(tmp, base, witnesses, failures)
+    tasks = ([('kind', name, case) for name, case in ENTRY_KIND_CASES.items()]
+             + [('control', name, setup) for name, setup in ENTRY_CONTROLS.items()]
+             + [('fifo', 'signoff-entry-control-live-writer-fifo', None)]
+             + [('after', name, case) for name, case in AFTER_REFUSAL_CASES.items()])
+    global _ENTRY_STATE
+    _ENTRY_STATE = (tmp, base, tasks)
+    try:
+        results = _map_cases(len(tasks), _run_entry)
+    finally:
+        _ENTRY_STATE = None
+    _join_case_results(results, len(tasks), witnesses, failures)
+
+
+def _entry_kind_case(tmp, base, name, case, witnesses, failures, messages):
+    entry, setup, kind, cls = case
+    if name.endswith("block-device") and _block_device() is None:
+        messages.append(f"SKIPPED  {name}: no unreadable block device under /dev")
+        return
+    tree = Path(tmp) / name
+    shutil.copytree(base, tree)
+    path = tree / DECISIONS / entry
+    setup(path, tree)
+    needle = f"`{DECISIONS}/{entry}`: {kind}"
+    got = []
+    for label, method in (("run", run), ("census", census),
+                          ("check_outcomes",
+                           lambda t: check_outcomes(t, Report())),
+                          ("check_census",
+                           lambda t: check_census(t, Report()))):
+        got += _library_error(label, method, tree, path, cls)
+    try:
+        signoff_texts(tree, collect=True)
+        got.append("collected: not refused")
+    except SignoffEntriesRefused as exc:
+        if not any(f.startswith(needle) for f in exc.findings):
+            got.append(f"collected: refused {exc.findings}")
+        if exc.filename is None or Path(exc.filename) != path:
+            got.append(f"collected: filename {exc.filename!r}")
+    if name == "signoff-entry-directory":
+        # The CLI's polarity, once: exit 1 with the refusal in every
+        # mode, and `--regenerate` writes nothing.
+        codes, wrote = _cli_exits(tree)
+        got += [f"{flag}: exit {code}, refusal printed {printed}"
+                for flag, (code, printed) in codes.items()
+                if (code, printed) != (1, True)]
+        if wrote:
+            got.append("the CLI wrote a file")
+    if path.is_file():
+        path.chmod(0o644)
+    witnesses.append({"mutant": name, "path": f"{DECISIONS}/{entry}",
+                      "old": "<no entry>", "new": f"<{kind}>",
+                      "expected": f"REFUSED:{kind}", "failed": got,
+                      "outcome": "SURVIVED" if got else "killed"})
+    if got:
+        failures.append(f"{name}: expected REFUSED {needle}; {got}")
+
+
+def _entry_control_case(tmp, base, name, setup, witnesses, failures):
+    tree = Path(tmp) / name
+    shutil.copytree(base, tree)
+    setup(tree)
+    try:
+        report = run(tree)
+        census(tree)
+        signoff_texts(tree, collect=True)
+        got = sorted(report.failed)
+    except (OSError, ValueError) as exc:
+        got = [f"raised {type(exc).__name__}: {exc}"]
+    witnesses.append({"mutant": name, "path": "<scripted control>",
+                      "old": "<no entry>", "new": "<control>",
+                      "expected": "PASS", "failed": got,
+                      "outcome": "BROKEN" if got else "held"})
+    if got:
+        failures.append(f"{name}: must read as before and pass; {got}")
 
 
 #: Entries sorted after a refused directory (round 4 F7): name ->
@@ -11051,45 +11114,42 @@ except module.SignoffEntriesRefused as exc:
 """
 
 
-def _after_refusal_cases(tmp, base, witnesses, failures):
-    """Each `AFTER_REFUSAL_CASES` entry, sorted after a refused directory,
-    must be named with its expected finding beside the directory's, in a
-    child given 30 seconds and 1 GiB of address space."""
-    for name, (setup, expected) in AFTER_REFUSAL_CASES.items():
-        if "ptmx" in name and not Path("/dev/ptmx").exists():
-            print(f"SKIPPED  {name}: no /dev/ptmx")
-            continue
-        tree = Path(tmp) / name
-        shutil.copytree(base, tree)
-        (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
-        setup(tree / DECISIONS / AFTER_REFUSAL_ENTRY, tree)
-        got = []
-        try:
-            child = subprocess.run(
-                [sys.executable, "-c", _COLLECT_CHILD,
-                 str(Path(__file__).resolve()), str(tree)],
-                capture_output=True, text=True, timeout=30)
-            if child.returncode != 0:
-                tail = (child.stderr.strip().splitlines() or [""])[-1]
-                got.append(f"collection exited {child.returncode}: {tail}")
-                findings = None
-            else:
-                findings = json.loads(child.stdout)
-        except subprocess.TimeoutExpired:
-            got.append("collection opened the entry and blocked")
+def _after_refusal_case(tmp, base, name, setup, expected,
+                        witnesses, failures, messages):
+    if "ptmx" in name and not Path("/dev/ptmx").exists():
+        messages.append(f"SKIPPED  {name}: no /dev/ptmx")
+        return
+    tree = Path(tmp) / name
+    shutil.copytree(base, tree)
+    (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
+    setup(tree / DECISIONS / AFTER_REFUSAL_ENTRY, tree)
+    got = []
+    try:
+        child = subprocess.run(
+            [sys.executable, "-c", _COLLECT_CHILD,
+             str(Path(__file__).resolve()), str(tree)],
+            capture_output=True, text=True, timeout=30)
+        if child.returncode != 0:
+            tail = (child.stderr.strip().splitlines() or [""])[-1]
+            got.append(f"collection exited {child.returncode}: {tail}")
             findings = None
-        wanted = [f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
-                  f"`{DECISIONS}/{AFTER_REFUSAL_ENTRY}`: {expected}"]
-        if not got and findings != wanted:
-            got.append(f"collected: {findings!r}")
-        witnesses.append({"mutant": name,
-                          "path": f"{DECISIONS}/{AFTER_REFUSAL_ENTRY}",
-                          "old": "<no entry>",
-                          "new": "<directory, then entry>",
-                          "expected": f"REFUSED:{expected}", "failed": got,
-                          "outcome": "SURVIVED" if got else "killed"})
-        if got:
-            failures.append(f"{name}: expected {wanted}; {got}")
+        else:
+            findings = json.loads(child.stdout)
+    except subprocess.TimeoutExpired:
+        got.append("collection opened the entry and blocked")
+        findings = None
+    wanted = [f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
+              f"`{DECISIONS}/{AFTER_REFUSAL_ENTRY}`: {expected}"]
+    if not got and findings != wanted:
+        got.append(f"collected: {findings!r}")
+    witnesses.append({"mutant": name,
+                      "path": f"{DECISIONS}/{AFTER_REFUSAL_ENTRY}",
+                      "old": "<no entry>",
+                      "new": "<directory, then entry>",
+                      "expected": f"REFUSED:{expected}", "failed": got,
+                      "outcome": "SURVIVED" if got else "killed"})
+    if got:
+        failures.append(f"{name}: expected {wanted}; {got}")
 
 
 def _fifo_control(tmp, base, witnesses, failures):
