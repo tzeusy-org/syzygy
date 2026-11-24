@@ -1,11 +1,12 @@
 import type { PocModel } from '@syzygy/three-surface-poc-core';
 
 type ServedEvaluation = PocModel['evaluation'];
+export type ServedResponseLimit = 'maxHumanResponseBytes' | 'maxMachineResponseBytes' | 'maxBriefingResponseBytes';
 
 interface ServedResponseBreach {
   readonly sequence: number;
   readonly evaluation: { readonly inputsDigest: string; readonly asOf: string };
-  readonly limit: 'maxHumanResponseBytes' | 'maxMachineResponseBytes';
+  readonly limit: ServedResponseLimit;
   readonly declared: number;
   readonly observed: number;
   readonly population:

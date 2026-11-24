@@ -581,12 +581,13 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(await run).toBe(0);
   }, TEST_TIMEOUT_MS);
 
-  it('keeps captured data but refuses fresh verbatim reads after withdrawal, then resumes on an admitted refresh', async () => {
+  it('keeps the complete captured machine answer and pauses the briefing and fresh verbatim reads until an admitted refresh', async () => {
     const fake = fakeIo();
     const model = buildFixtureModel(fixtureDirectories, {
+      evaluationAsOf: ADMITTING_AUTHORITY.evaluationInstant,
       projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
     });
-    const grant = { kind: 'admitted' as const, locator: repoRoot, authority: ADMITTING_AUTHORITY };
+    const grant = { kind: 'admitted' as const, locator: repoRoot, authority: ADMITTING_AUTHORITY, briefingResponseLimit: 20_480 };
     const authorizePwbLocator = vi.fn<PocMainDeps['authorizePwbLocator']>()
       .mockReturnValueOnce(grant)
       .mockReturnValueOnce({ kind: 'rejected', reason: 'body-read-not-admitted' })
@@ -600,11 +601,23 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
 
     const page = routeOf(h, 'GET', '/polaris');
     const machine = routeOf(h, 'GET', '/api/poc');
+    const briefing = routeOf(h, 'GET', '/api/poc/briefing');
+    const readBriefing = () => briefing.handle({
+      request: {
+        method: 'GET', path: briefing.path, headers: LOCAL_BROWSER,
+        query: new URLSearchParams({ for: 'claim:item:baseline-spec:switchboard-identity' }),
+      },
+    });
     const refresh = routeOf(h, 'POST', '/polaris/reobserve');
     const request = { method: 'POST' as const, path: refresh.path, query: new URLSearchParams(), headers: LOCAL_BROWSER };
     expect((await get(page)).body).toContain(text);
     const readsBefore = blobReader.objectIds.length;
     const prior = (await get(machine)).body;
+    expect(briefing.credentialClass).toBe('machine-credentialed');
+    const initialBriefing = await readBriefing();
+    expect(initialBriefing.status).toBe(200);
+    expect(JSON.parse(initialBriefing.body).evaluation.snapshot).toBe(model.evaluation.snapshot);
+    expect(blobReader.objectIds).toHaveLength(readsBefore);
 
     expect((await refresh.handle({ request })).status).toBe(502);
     const refused = await get(page);
@@ -612,8 +625,15 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(refused.body).not.toContain(text);
     expect(blobReader.objectIds).toHaveLength(readsBefore);
     expect((await get(machine)).body).toBe(prior);
+    expect(await readBriefing()).toEqual({
+      status: 503, contentType: 'application/json', body: '{"served":"nothing","failure":"briefing-ceiling-unavailable"}',
+    });
 
     expect((await refresh.handle({ request })).status).toBe(200);
+    const nextBriefing = await readBriefing();
+    expect(nextBriefing.status).toBe(200);
+    expect(JSON.parse(nextBriefing.body).evaluation.snapshot).toBe(refreshed.evaluation.snapshot);
+    expect(blobReader.objectIds).toHaveLength(readsBefore);
     expect((await get(page)).body).toContain(text);
     expect(blobReader.objectIds).toHaveLength(readsBefore + 1);
     fake.signal('SIGINT');
