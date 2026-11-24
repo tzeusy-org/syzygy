@@ -61,6 +61,8 @@
 - `F3-ONE-SHOT-CENSUS-AUTHORITY-REVIEW-RAW\.md`
 - `F3-ORDERED-DESIGN-REPLACEMENT-LEASE-REVIEW-RAW\.md`
 - `F3-SCREENED-SOURCE-BODY-AUTHORITY-(R1|R2|CONTROLS)-RAW\.md`
+- `F3-STAGED-ALLOCATION-OPENING-AUTHORITY-REVIEW-RAW\.md`
+- `F3-NATIVE-DELIVERY-CLOSE-DIAGNOSTIC-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -211,3 +213,7 @@
 [Observed] The ordered Design replacement lease review records `PASS` for `0ea9df087` (F3-ORDERED-DESIGN-REPLACEMENT-LEASE-REVIEW-RAW.md:1). A-178 reserves the existing 30-second native effect inside the immutable same-delivery replacement lease. The artifact suite and all five selected controls passed. The isolated final proof case passed after a timeout in the combined run. [Unknown] Native Resume closure.
 
 [Observed] The screened source body review records `HOLD` for `6ba18123b` (F3-SCREENED-SOURCE-BODY-AUTHORITY-R1-RAW.md:1) and `PASS` for `81313b224` (F3-SCREENED-SOURCE-BODY-AUTHORITY-R2-RAW.md:1). A-179 keeps the verified body inside the authority bracket through synchronous screening. The direct reader controls review records `PASS` for `753e2762d` (F3-SCREENED-SOURCE-BODY-AUTHORITY-CONTROLS-RAW.md:1). The focused tests passed and each of five mutations produced the expected refusal or failed assertion. [Unknown] Native Resume closure and whole-body latency on the successor.
+
+[Observed] The staged allocation opening review records `PASS` for `526dc344` (F3-STAGED-ALLOCATION-OPENING-AUTHORITY-REVIEW-RAW.md:1). A-181 keeps the first synchronous check before protected I/O. The focused controls detect both repeating that check and omitting it. [Unknown] Native Resume closure.
+
+[Observed] The native delivery-close diagnostic review records `PASS` for `f038181b` (F3-NATIVE-DELIVERY-CLOSE-DIAGNOSTIC-REVIEW-RAW.md:1). The test observes outcomes from the real protected store, including the two terminal verifier samples. [Unknown] The cause of the hosted machine close refusal.
