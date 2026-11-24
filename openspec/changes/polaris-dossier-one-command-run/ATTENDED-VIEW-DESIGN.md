@@ -31,6 +31,31 @@
 
 [Observed] The [inert transcript pairs](../../../docs/evidence/syzygy-zwja/attended-view-transcripts-2026-11-25.json) are the exact nine pairs from the independent design review. Their SHA-256 is `5769e0fe452613aebc41c89ca71cc47e90ccea284627265ba8f937a07c576cb7`. They show good and adverse variants for first acknowledgement, detach, reattach, missing evidence, unverified cleanup, verified stop, refused resume, keyboard text and repeated attachment. They illustrate the stated cues, without binding literal copy or claiming a tool run.
 
+The original detached pair demonstrates that the run stays live, and the original keyboard pair demonstrates text without pointer or color. The detached example omits the original deadline and the keyboard example names no keystrokes. The following additional inert controls cover those two gaps.
+
+**Original deadline on detach.** The fixture starts attempt 1 with original deadline `09:20Z`. A current same-attempt detach must keep that value visible in the first state cue. The illustrative output is:
+
+```text
+Run demo-17 | attempt 1
+Detached at 09:02:10Z
+Original deadline 09:20Z
+Reattach: syzygy polaris --attach demo-17
+```
+
+Remove `Original deadline 09:20Z` and keep all other lines. Replace only `09:20Z` with `09:26Z` in a second adverse control. Both fail the design acceptance for the same run and attempt. Correct timing from another attempt fails for the same reason.
+
+**Discoverable keyboard focus.** The fixture configures a multiplexer prefix of `Ctrl-b` and a window menu on `w`. The Run pane's help gives the available binding for this configuration. The illustrative path conveys the question, the action and how to find the binding again:
+
+```text
+Waiting for operator
+Question in Author pane
+Keyboard: Ctrl-b, then w
+Select Author with arrows, then Enter
+Find this binding in Run help.
+```
+
+Replace only the action lines with `Use keyboard to focus Author` or with `Click the highlighted pane`. Either loses the keyboard path even though the question and help cue stay visible. In a real configuration with other bindings, the design requires the actual available sequence in the first cue or its reachable help. The keys in this fixture illustrate a declared configuration. They make no claim about deployment defaults, actual focus or assistive-terminal behavior.
+
 [Inferred] A later independent implementation witness can hold the underlying run and observation fixed while removing the interval endpoint, substituting another run or attempt, replaying an old receipt, swapping attach and resume, repeating attach or stop, or withholding cleanup evidence. Each control should produce the applicable bounded state and no unintended action. Separate controls for an unavailable wait, a question in a different pane, pointer-only wording, ordinary waiting and an attempted helper input verify the cue, the existing permission boundary and readable recovery. Inspect the cue order with color disabled and with narrow plain text. Keep actual wait time, focus, terminal accessibility and child cleanup evidence Unknown pending authorized observations.
 
 [Unknown] This candidate and its design review cover the attended-view portion of criterion 3. A complete P-111 successor still requires its separate impact, coverage, dependency and recorder evidence, exact adopted specification and protected integration. The role boundary, implementation and actual hosted or operator trial remain under their existing authorities and custody.
