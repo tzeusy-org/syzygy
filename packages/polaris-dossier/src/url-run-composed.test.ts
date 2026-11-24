@@ -1128,6 +1128,61 @@ async function observeDesignRun(run: string, traceInference = false) {
 }
 
 type SeenReceipt = { role: string; id: string; digest: string; bytes: number; toolName: string; inputSha256: string; committed: boolean };
+
+function observeInitialMachineClose() {
+  type Step = ResumeStamp & { kind: 'publish' | 'terminal' | 'close'; client?: number; role?: string;
+    peer?: string; revocation?: boolean; code?: string; read?: string; current?: number[] };
+  let cutMs: number | undefined;
+  const steps: Step[] = [], clients = new Map<string, number>();
+  const clientNumber = (id: string): number => {
+    const existing = clients.get(id);
+    if (existing !== undefined) return existing;
+    const next = clients.size + 1;
+    clients.set(id, next);
+    return next;
+  };
+  const timed = <T>(step: Step, invoke: () => Promise<T>, accepted: (value: T) => boolean): Promise<T> => {
+    steps.push(step);
+    const mark = (outcome: ResumeObservation) => Object.assign(step, { settledMs: performance.now(), outcome });
+    return observe(invoke, value => { mark(accepted(value) ? 'accepted' : 'refused'); }, () => { mark('rejected'); });
+  };
+  const initialize = machineStore.initializeUrlMachineStore;
+  vi.spyOn(machineStore, 'initializeUrlMachineStore').mockImplementationOnce(async options => {
+    const store = await initialize(options);
+    if (store === null) return null;
+    return Object.freeze({
+      ...store,
+      publish(...args: Parameters<typeof store.publish>) {
+        const [publication, stillOpening] = args;
+        const { clientId, kind, role } = publication.context, client = clientNumber(clientId);
+        if (cutMs === undefined && role !== 'design') return store.publish(...args);
+        const step: Step = { kind: 'publish', startedMs: performance.now(), client, role, peer: kind, revocation: stillOpening === undefined };
+        return timed(step, () => store.publish(...args), result => {
+          if (!result.ok) step.code = result.code;
+          return result.ok;
+        });
+      },
+      readTerminal(...[id, deadline, verify]: Parameters<typeof store.readTerminal>) {
+        const step: Step = { kind: 'terminal', startedMs: performance.now(), client: clientNumber(id), current: [] };
+        return timed(step, () => store.readTerminal(id, deadline, lease => verify({
+          read: async () => {
+            const value = await lease.read();
+            step.read = value?.anchor.kind ?? 'unavailable';
+            return value;
+          },
+          sampleCurrent: () => {
+            const value = lease.sampleCurrent();
+            step.current!.push(value === null ? 0 : 1);
+            return value;
+          },
+        })), value => value);
+      },
+      close: () => timed({ kind: 'close', startedMs: performance.now() }, store.close, () => true),
+    });
+  });
+  return { recordCut: () => { cutMs = performance.now(); }, summary: () => ({ cutMs, steps }) };
+}
+
 async function start(f: Fixture, failures: string[], onFailure: (reason: string) => void, receipts: SeenReceipt[], stopRequested: () => boolean,
   handoffStates: ('unknown' | 'reached')[]) {
   const credential = await loadSessionCredential({ environment: { ANTHROPIC_API_KEY: 'OWN_SYNTHETIC_COMPOSED_CREDENTIAL' },
@@ -1328,6 +1383,7 @@ describe('composed URL run with actual role processes', () => {
     const beginOrdered = vi.fn(), resumedBegins = vi.fn();
     const createAudit = sessionAudit.createUrlSessionAudit;
     let cutTaken = false, resumeGuardsChecked = false;
+    const initialMachineClose = scenario === 'delivery-stop' ? observeInitialMachineClose() : undefined;
     if (stoppingCut) vi.spyOn(sessionAudit, 'createUrlSessionAudit').mockImplementation(async options => {
       if (cutTaken && resumeAfterStop) resumeAuditEnteredMs ??= performance.now();
       if (cutTaken && resumeAfterStop && !resumeGuardsChecked) {
@@ -1427,6 +1483,7 @@ describe('composed URL run with actual role processes', () => {
           delivered = view;
           if (!cut) return view;
           cutTaken = true;
+          initialMachineClose?.recordCut();
           // Confirm the earlier ordinary exchanges have durably settled, then
           // begin the real stop before releasing their final delivery guards.
           await settleOrdinaryResponses();
@@ -2022,7 +2079,7 @@ describe('composed URL run with actual role processes', () => {
       const resumeEvidence = resumeDiagnostic === undefined ? undefined : { ...resumeDiagnostic(), audit: resumedAudit };
       const initialTrace = initialDiagnostic?.();
       const initialDelivery = { setup: initialTrace?.designSetup, commit: initialTrace?.designDelivery, fixture: initialFixtureDelivery,
-        activation: initialTrace?.inference?.hostActivation };
+        activation: initialTrace?.inference?.hostActivation, machineClose: initialMachineClose?.summary() };
       const stoppedEvidence = {
         failure: stopped.failure, budgetReason: stopped.budget.reason, heldDesignTurns: stopped.budget.heldDesignTurns,
         pendingRoles: stopped.budget.pendingRoles, auditPoisoned: stopped.audit.poisoned, auditTail: stopped.audit.tail,
