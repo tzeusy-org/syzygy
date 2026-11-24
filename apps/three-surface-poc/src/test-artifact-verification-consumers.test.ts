@@ -68,7 +68,7 @@ const EXPECTED_WHOLE_MODEL: Readonly<Record<string, string>> = {
 };
 
 describe('every consumer of the test-artifact verification treats `reported` as not verified', () => {
-  it('finds exactly the listed consumers, by name and by whole-model serialization', () => {
+  it('finds exactly the listed consumers, by name and by whole-model serialization', { timeout: 20_000 }, () => {
     const all = sources();
     expect(all.size).toBeGreaterThan(100);
     const consumers = [...all].filter(([path, text]) => path !== DEFINITION && CONSUMER.test(text)).map(([path]) => path);

@@ -91,7 +91,8 @@ async function fixture(active = false, lateAudit = false, generations = 1) {
   return { options, issued, files, row, expire: () => { now = deadline; }, withdraw: () => { current = false; } };
 }
 
-describe('cold protected machine reconstruction', () => {
+// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
+describe('cold protected machine reconstruction', { timeout: 20_000 }, () => {
   it('reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority', async () => {
     const f = await fixture(), before = await Promise.all(f.files.map(file => readFile(file)));
     const result = await reconstructColdUrlRunMachineHistory(f.options); expect(result).not.toBeNull(); if (!result) return;

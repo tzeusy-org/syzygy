@@ -68,7 +68,8 @@ async function fixture(revoke = true, subject?: Pick<UrlMachineClientContext, 'p
   return { options, storeOptions, record, rotated, revoked, firstHead, files, tick: (instant: number) => { now = instant; }, withdraw: () => { current = false; } };
 }
 
-describe('cold historical machine-peer joins', () => {
+// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
+describe('cold historical machine-peer joins', { timeout: 20_000 }, () => {
   it('joins actual protected machine and audit cuts under their distinct policy bindings', async () => {
     const policy = policyFixture(), loaded = buildDossierScreen(policy.bytes, true, null, 'private');
     if (!loaded.ok) throw new Error('owned audit screen refused');

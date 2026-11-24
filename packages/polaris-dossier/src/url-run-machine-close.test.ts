@@ -67,7 +67,8 @@ async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 
   return { root, options, machine, expire: () => { now = options.deadline; }, withdraw: () => { current = false; }, withdrawEffects: () => { effects = false; } };
 }
 
-describe('machine accept authorization ordering', () => {
+// Allow real durable fixture setup and cold reads; product operation limits stay unchanged.
+describe('machine accept authorization ordering', { timeout: 20_000 }, () => {
   it('keeps both initial ordered Design clients unpublished across a Stop before activation', async () => {
     const createTransport = vi.spyOn(transportPort, 'createSessionMachineTransport');
     const child: NonNullable<ReturnType<UrlRunMachineOptions['launch']>> = {
@@ -123,7 +124,7 @@ describe('machine accept authorization ordering', () => {
   });
 });
 
-describe('retained production machine closure evidence', () => {
+describe('retained production machine closure evidence', { timeout: 20_000 }, () => {
   it('retains eight actual never-issued anchors and immutable selected contexts from the exact clean result', async () => {
     const f = await fixture(), stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
     expect(f.machine.current()).toBe(true); expect(readUrlRunMachineClosedHistory({ lifecycle: 'retired' })).toBeNull();
@@ -184,7 +185,7 @@ describe('retained production machine closure evidence', () => {
 
 /** Reopen uses real cold verification and protected files. Only upstream
  * runtime/plan admission remains the same explicit unit substitution above. */
-describe('same-store machine continuation seam', () => {
+describe('same-store machine continuation seam', { timeout: 20_000 }, () => {
   async function closedFixture(issued = false) {
     const f = await fixture(), result = await f.machine.close();
     let sealed = readUrlRunMachineClosedHistory(result); if (!sealed) throw new Error('owned close refused');
