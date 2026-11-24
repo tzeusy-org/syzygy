@@ -619,7 +619,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 524,
+      "scenarios": 538,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1199,7 +1199,21 @@
             "Nesting challenged where coverage is complete",
             "Nesting of other units is Unknown, never a finding",
             "Earlier schema keeps its bytes",
-            "Brief v17 states the containment kind"
+            "Brief v17 states the containment kind",
+            "Two views share one element",
+            "Migration renders the same figures",
+            "View naming a missing element refused",
+            "View showing a relationship without its ends refused",
+            "Element parents that loop refused",
+            "Element type disagreeing with its unit refused",
+            "Derived relationship stated by Syzygy",
+            "Derived relationship with nothing to derive it refused",
+            "Element no view shows refused",
+            "Schema v11 and earlier keep their bytes",
+            "Derived relationship Syzygy cannot derive drawn Unknown",
+            "Findings beside a schema finding not computed",
+            "Shared element in a later containment and a witnessed relationship",
+            "Brief v18 states the system model"
           ]
         },
         "REQ-polaris-generation-035": {
