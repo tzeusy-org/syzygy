@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 29,
-      "scenarios": 53,
+      "scenarios": 54,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -393,6 +393,7 @@
           "scenarios": [
             "Bounded board over a large history",
             "Items grouped under their parents",
+            "Recent work remains reachable",
             "Every item reachable by state and page"
           ]
         },
