@@ -479,7 +479,8 @@ function create(given: UrlRunArtifactsOptions) {
   const census = (v: unknown): boolean => shape({ state: lit('unknown'), why: text, note: text })(v)
     || shape({ state: lit('listed'), policy, files: integer, secretDetectorPathMatches: integer, note: text,
       groups: array(shape({ outcome: text, count: integer, listed: strings, notListed: integer })) })(v);
-  const advice = shape({ standards: text, note: text, advisories: array(shape({ standard: lit('RS-13', 'RS-14', 'RS-16', 'RS-17', 'RS-19'), at: text, detail: text })) });
+  const advice = shape({ standards: text, note: text, advisories: array(shape({ standard: lit('RS-13', 'RS-14', 'RS-16', 'RS-17', 'RS-19'), at: text, detail: text })) },
+    { worthKnowing: array(shape({ at: text, marked: integer, detail: text })) });
   const pixels: Predicate = v => typeof v === 'number' && Number.isFinite(v) && v >= 0;
   const fitEntry = (v: unknown): boolean => shape({ diagram: text, unknown: text })(v)
     || shape({ diagram: text, viewportPx: pixels, laidOutPx: pixels, drawnPx: pixels, columnPx: pixels,

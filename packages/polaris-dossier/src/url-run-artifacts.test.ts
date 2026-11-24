@@ -17,7 +17,7 @@ import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { buildDossierScreen } from './screen.js';
 import { parseRunConfig } from './run-config.js';
 import { DOSSIER_CONTENT_CLASSES, NO_WORK_ITEM_REASON, recordRunConfig, sourceBindingSha256, encodeRunRecord } from './run-record.js';
-import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, designVerdictSchemaDocument, LOCAL_DRAFT_SCHEMA_VERSION,
+import { checkDraftShape, draftSchemaDocument, inventorySchemaDocument, verdictSchemaDocument, designVerdictSchemaDocument, LOCAL_DRAFT_SCHEMA_VERSION, LOCAL_DRAFT_SCHEMA_VERSION_V10,
   localDraftSchema, localInventorySchema, localVerdictSchema, localDesignVerdictSchema, UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { createSessionProfile } from './session-profile.js';
 import { createUrlOriginLedger } from './url-origin-ledger.js';
@@ -644,12 +644,13 @@ describe('trusted URL artifact producer bridge', () => {
     expect(briefing).toMatchObject({ ok: true });
     if (!briefing.ok) throw Error('own URL brief refused');
     let holdProducer: Promise<void> | null = null;
+    let lastHelperReply: BrokerResponse | undefined;
     const bridge = createUrlRunArtifacts({ ...f.options, initializedCoreBytes: Buffer.from(core), effectiveDeclaration,
       runDossier: role => {
         const actual = f.options.runDossier(role);
         return async (...args) => {
           if (holdProducer !== null) await holdProducer;
-          return actual(...args);
+          const reply = await actual(...args); lastHelperReply = reply; return reply;
         };
       } });
     const schema = bridge.registerInitial(f.produceInitial(briefing.report)).find(artifact => artifact.path === 'draft.schema.json');
@@ -792,7 +793,15 @@ describe('trusted URL artifact producer bridge', () => {
         const coverage = result.report.inventoryCoverageAdvice!;
         if (coverage.state !== 'compared') throw Error('own coverage comparison missing');
         expect(coverage.rule).toEqual({ id: 'overlap-or-path-named', version: 2 });
+        const advice = result.report.readerAdvice!;
+        expect(advice.worthKnowing).toEqual([{ at: '$.sections', marked: 0, detail: expect.any(String) }]);
         const mutants = [
+          ...[null, {}, [{ at: '$.sections', marked: -1, detail: 'own malformed advice' }],
+            [{ at: '$.sections', marked: 0.5, detail: 'own malformed advice' }],
+            [{ at: '$.sections', marked: '0', detail: 'own malformed advice' }],
+            [{ marked: 0, detail: 'own malformed advice' }], [{ at: '$.sections', marked: 0 }],
+            [{ at: '$.sections', marked: 0, detail: 'own malformed advice', extra: true }]]
+            .map(worthKnowing => ({ ...result.report, readerAdvice: { ...advice, worthKnowing } })),
           { ...result.report, inventoryCoverageAdvice: { ...coverage, rule: { ...coverage.rule, version: 1 } } },
           { ...result.report, inventoryCoverageAdvice: { ...coverage, extra: true } },
           { ...result.report, inventoryCoverageAdvice: { ...coverage, inventory: { ...coverage.inventory, sha256: '0'.repeat(64) } } },
@@ -810,8 +819,12 @@ describe('trusted URL artifact producer bridge', () => {
           { ...result.report, figureFit: { ...result.report.figureFit, extra: true } },
         ];
         for (const mutant of mutants) {
-          f.replyQueue.push({ ...response, stdout: JSON.stringify(mutant) });
+          const seeded = { ...response, stdout: JSON.stringify(mutant) };
+          expect(f.replyQueue).toHaveLength(0);
+          f.replyQueue.push(seeded);
           await expect(bridge.runDossier('author')(argv, null)).rejects.toThrow();
+          expect(lastHelperReply).toBe(seeded);
+          expect(f.replyQueue).toHaveLength(0);
         }
         const { remainder } = result.report.manifestFacts;
         // Editing both products preserves their mutual agreement and every
@@ -913,6 +926,8 @@ describe('trusted URL artifact producer bridge', () => {
       }
       fs.rmdirSync(path.join(f.run, 'run-advice.json'));
       for (const revision of [1, 2]) {
+        // Earlier draft advice has no worthKnowing field; it still passes the protected bridge.
+        f.draft.schemaVersion = revision === 1 ? LOCAL_DRAFT_SCHEMA_VERSION_V10 : LOCAL_DRAFT_SCHEMA_VERSION;
         f.draft.title = `Own dossier revision ${revision}`;
         const next = b(f.draft), args = { path: 'drafts/next.json', content: next.toString() };
         f.write(args.path, next);
@@ -927,6 +942,7 @@ describe('trusted URL artifact producer bridge', () => {
           expect(result).toMatchObject({ ok: true, report: { revision, figureFit: { examined: 1, entries: [] },
             mechanismAdvice: { file: 'run-advice.json', thisRevision: 1, inRun: revision + 1 } } });
           if (!result.ok) throw Error('own protected later check');
+          if (revision === 1) expect(result.report.readerAdvice).not.toHaveProperty('worthKnowing');
           const response = { stdout: JSON.stringify(result.report), stderr: '', exit: 0 }, argv = ['dossier', 'check', f.run];
           if (revision === 2) {
             const previous = JSON.parse(fs.readFileSync(path.join(f.run, 'checks/rev-0.json'), 'utf8'));
