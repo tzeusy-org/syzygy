@@ -1,0 +1,11 @@
+{
+  "adoption": "A-232",
+  "subject": "7cf85e08d80b8b0c7e31d83b951a4deeb52b1c32",
+  "sourceSha256": "f6359eb4d2d694196f7836d88619b04e94ed5ae2bbab3f2c8659c3689fe71f47",
+  "testSha256": "35c5fec88f5b9209a31f1f4597e76540f48f68a533cb24ea6ef127e58f659c00",
+  "archiveSha256": "c0a7b0d3d149d57bb5557c6e4321cc9b85a4bf401ec31c4aee3002c550e0712b",
+  "archiveBytes": 22919,
+  "members": 16,
+  "review": "R1 REVISE: absent limits key; R2 PASS after test correction",
+  "verification": "120 audit cases and protected-history suite pass; typecheck pass; old5000default mutation killed; genuine recovery completion and full canonical checks pending"
+}
