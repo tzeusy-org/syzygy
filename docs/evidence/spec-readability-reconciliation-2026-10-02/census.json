@@ -276,7 +276,7 @@
     },
     "POC": {
       "requirements": 29,
-      "scenarios": 51,
+      "scenarios": 53,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -409,7 +409,9 @@
           "scenarios": [
             "Five answers before the board",
             "A merged materialized item enters the chain",
-            "Work items not observed"
+            "Work items not observed",
+            "What changed in the last day",
+            "A window the history cannot answer"
           ]
         },
         "POC-REQ-045": {
