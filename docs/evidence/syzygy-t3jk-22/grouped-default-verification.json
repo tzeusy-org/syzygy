@@ -1,0 +1,147 @@
+{
+  "subjectCommit": "df80ffed5158087ee5ba5a4f104015be2a03824d",
+  "kind": "synthetic-author-rule-6-controls",
+  "cases": [
+    {
+      "id": "default-recency",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "const DEFAULT_VIEW = { status: null, governingIntent: null, group: 'parent', changed: null, page: 1 }",
+      "new": "const DEFAULT_VIEW = { status: null, governingIntent: null, group: null, selection: 'recent', changed: null, page: 1 }",
+      "predicate": "serves the full machine population and reconciles the default outline",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "edc7ae0ecdc4e92b7e4dbb3d40cfb059926a41869630428386b67007c2fe9694"
+    },
+    {
+      "id": "grouped-counts-positions",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "renderedCount: rendered.length,\n    excludedCount: served.length - rendered.length,\n    verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },\n    grouping:",
+      "new": "renderedCount: slices.reduce((count, group) => count + group.onPage.length, 0),\n    excludedCount: served.length - rendered.length,\n    verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },\n    grouping:",
+      "predicate": "reproduces the grouping from the served machine answer",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "b4a88c278462e019fc43d102c270f03b575cceda4739623f2538d174e36b6600"
+    },
+    {
+      "id": "closed-in-default",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "request.group === null || item.status !== 'closed'",
+      "new": "true",
+      "predicate": "serves the full machine population and reconciles the default outline",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "809532246b0695aed60588b8a623b4e52323b7ad6cc57baffd4140fd5963d42f"
+    },
+    {
+      "id": "changed-falls-to-all",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "group: group === 'parent' || changedOnly ? DEFAULT_VIEW.group : null",
+      "new": "group: group === 'parent' ? DEFAULT_VIEW.group : null",
+      "predicate": "switches window by the changed parameter",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "5c71de0a284bdae6827f08d40ade2ef26587fdc6d816c54243f240d1a2e76260"
+    },
+    {
+      "id": "recent-link-removed",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "), 'Recent work', view.selection === 'recent')",
+      "new": "), 'Recent work', view.selection === 'recent').replace(/<li>[\\s\\S]*<\\/li>/, '')",
+      "predicate": "links each view with its count",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "64f5e2a0640fd2ae4191a31ffcb8c3df05f8890053ddcd72cb5c48bbfe38176a"
+    },
+    {
+      "id": "recent-page-bound-after-unknown",
+      "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+      "old": "  if (request.selection === 'recent' && request.page > 1) return pastEnd(1);\n  if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;",
+      "new": "  if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;\n  if (request.selection === 'recent' && request.page > 1) return pastEnd(1);",
+      "predicate": "refuses intrinsically invalid Recent pages",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "9c77ed7d2f05a1c6b229c57ae109ccfa546aa5fa965d7848b4a626a85107971f"
+    },
+    {
+      "id": "stale-default-status-lede",
+      "file": "apps/three-surface-poc/src/trajectory.ts",
+      "old": "const layout = grouping === undefined ? 'in tracker status columns' : 'grouped by parent';",
+      "new": "const layout = 'in tracker status columns';",
+      "predicate": "no parameter gives the default selection",
+      "exitCode": 1,
+      "failedTests": 1,
+      "logSha256": "10303fdf68e5a6d9380073810c402ea694bb034478088db09bb17b410b37a9c1"
+    }
+  ],
+  "subjectTree": "0aa029725c230f3f854e67dc30fa9cd3e8148324",
+  "ownerScaleFixture": {
+    "file": "apps/three-surface-poc/src/trajectory.test.ts",
+    "historicalSizeReference": "docs/evidence/syzygy-blbu-trajectory-selection-2026-10-20.json",
+    "input": {
+      "nonClosed": 954,
+      "closed": 8240,
+      "total": 9194,
+      "parentGroups": 16,
+      "positions": 1145
+    },
+    "humanByteCeiling": 2097152,
+    "pages": [
+      {
+        "mount": "/trajectory",
+        "page": 1,
+        "bytes": 455878
+      },
+      {
+        "mount": "/trajectory",
+        "page": 2,
+        "bytes": 456132
+      },
+      {
+        "mount": "/trajectory",
+        "page": 3,
+        "bytes": 456700
+      },
+      {
+        "mount": "/trajectory",
+        "page": 4,
+        "bytes": 456159
+      },
+      {
+        "mount": "/trajectory",
+        "page": 5,
+        "bytes": 284154
+      },
+      {
+        "mount": "/butlers-syzygy/trajectory",
+        "page": 1,
+        "bytes": 456253
+      },
+      {
+        "mount": "/butlers-syzygy/trajectory",
+        "page": 2,
+        "bytes": 456537
+      },
+      {
+        "mount": "/butlers-syzygy/trajectory",
+        "page": 3,
+        "bytes": 457120
+      },
+      {
+        "mount": "/butlers-syzygy/trajectory",
+        "page": 4,
+        "bytes": 456564
+      },
+      {
+        "mount": "/butlers-syzygy/trajectory",
+        "page": 5,
+        "bytes": 284514
+      }
+    ],
+    "maxBytes": 457120,
+    "integration": {
+      "passed": 3503,
+      "skipped": 3,
+      "logSha256": "a274a16247ec5cfd29942120d6cf3efda060b03ce9d2a1a9805dfd86eeed49ba"
+    }
+  }
+}

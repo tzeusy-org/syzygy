@@ -8,7 +8,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, layoutDiagram, layoutSequence, layoutSwimlane, renderDiagramSvg, renderSequenceSvg, renderSwimlaneSvg } from './diagram-layout.js';
-import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
+import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_ROUTES_WITHHELD, buildNameIndex, glossaryDisplayName, glossaryNameForms, indexLinkCount, renderNameIndex, type IndexTarget, type IndexedBlock } from './dossier-finding.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -210,7 +210,7 @@ interface PageChrome {
   readonly notice: string;
   readonly disclosure: (path: string) => string;
   readonly mainAttributes: string;
-  readonly region: string;
+  readonly region: (path: string) => string;
   readonly pageTurn: (path: string) => string;
 }
 
@@ -223,7 +223,7 @@ const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-d
   + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
-  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main>`;
+  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region(path) ?? ''}</main>`;
   // Wayfinding follows the reading text so the main-only converter retains its original input.
   const turn = chrome?.pageTurn(path) ?? '';
   const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;
@@ -406,7 +406,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       const name = term.title ?? term.id;
       // A term the understanding record marks Unknown keeps its reason on the glossary page, its one home, and links nothing.
       if (term.marking !== 'inferred') continue;
-      for (const base of new Set([name, name.replace(/-/gu, ' ')])) {
+      for (const base of glossaryNameForms(name)) {
         const [first = '', ...rest] = [...base];
         const capitalised = `${first.toUpperCase()}${rest.join('')}`;
         // The record's ids are often lower case where prose writes an acronym (`aof`, AOF).
@@ -976,7 +976,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const glossary = local !== undefined
     ? withheld ? '<p>The draft layer is Unknown, so the agent\'s terminology is not shown.</p>'
       : local.glossary.length === 0 ? '<p>The understanding record states no terms, so this glossary is empty.</p>'
-      : `<dl class="glossary">${local.glossary.map(term => `<dt id="term-${escape(term.id)}">${escape(term.title ?? term.id)}</dt>${item('glossary.html', 'dd', { ...term, title: null })}`).join('')}</dl>`
+      : `<dl class="glossary">${local.glossary.map(term => `<dt id="term-${escape(term.id)}"><dfn>${escape(glossaryDisplayName(term.title ?? term.id))}</dfn></dt>${item('glossary.html', 'dd', { ...term, title: null })}`).join('')}</dl>`
     : !Array.isArray(entries)
     ? claim('p', 'glossary/not-generated', 'unknown', `No inventory was produced before the run stopped (${escape(stop!.shown)}), so this glossary is empty. ${marking('unknown')}`)
     : terms.length === 0

@@ -72,7 +72,7 @@ describe('page sinks under the renderCondition', () => {
     expectEncodedPages(files);
     const index = files.get('index.html')!;
     for (const region of ['class="verified-quote"', 'class="run-sentence"', 'data-review-status-region="review-status"']) expect(index, region).toContain(region);
-    expect(files.get('glossary.html')!).toContain(`<dt id="term-glossary/canary">${ENCODED}</dt>`);
+    expect(files.get('glossary.html')!).toContain(`<dt id="term-glossary/canary"><dfn>${ENCODED}</dfn></dt>`);
   });
 
   it('the draft preview writes the canary body entity-encoded, never raw, under the policy CSP', () => {

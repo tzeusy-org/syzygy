@@ -200,7 +200,7 @@ function answerDisclosure(model: PocModel, field: string, id: string, label: str
 /** syzygy-t3jk.21: what the changed answer needs from the request. */
 interface ChangedContext {
   readonly window: ChangeWindow;
-  /** The current view, so a window link keeps it; null on the default selection. */
+  /** The current view, so a window link keeps it. */
   readonly view: Partial<TrajectoryViewRequest> | null;
   readonly mountPrefix: string;
 }
@@ -219,13 +219,15 @@ export const CHANGED_LIST_LIMIT = 250;
  * revisions: never a velocity, a verdict or a per-person figure. */
 function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow[], context: ChangedContext): string {
   const selected = windows.find((window) => window.window === context.window)!;
+  const view = context.view;
+  const firstOutlinePage = view?.group === 'parent' && view.status === null && view.governingIntent === null && view.page === 1;
   const links = CHANGE_WINDOWS.map((name) => {
     const window = windows.find((entry) => entry.window === name)!;
     const figure = window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${escapeHtml(window.reason)}</code>`;
     const label = `${escapeHtml(CHANGE_WINDOW_NAME[name])} (<span data-parity-field="answer-changed-${name}-count">${figure}</span>)`;
     return name === context.window
       ? `<strong aria-current="true" data-change-window-link="${name}">${label}</strong>`
-      : `<a data-change-window-link="${name}" href="${viewHref(context.mountPrefix, { ...context.view, changed: name })}#answers-heading">${label}</a>`;
+      : `<a data-change-window-link="${name}" href="${viewHref(context.mountPrefix, { ...(firstOutlinePage ? null : view), changed: name })}#answers-heading">${label}</a>`;
   }).join(' · ');
   const head = `<p class="change-windows">Window: ${links}.</p>`;
   // R-T6S1-CHANGES-1 F2: an Unknown window keeps its reason and route on
@@ -507,6 +509,7 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
   if (view?.status) query.set('status', view.status);
   if (view?.governingIntent) query.set('governing-intent', view.governingIntent);
   if (view?.group) query.set('group', view.group);
+  if (view?.selection) query.set('selection', view.selection);
   if (view?.changed) query.set('changed', view.changed);
   if (view?.page !== undefined) query.set('page', String(view.page));
   const text = query.toString();
@@ -516,8 +519,8 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
 /**
  * POC-REQ-042 (syzygy-t3jk.18): every served item is reachable. Real links,
  * never inside a details element and needing no script: the default
- * selection, every item by id, each status and the governing-intent Unknown
- * with their whole-population counts, and the current view's neighbours.
+ * parent-grouped outline, recent work, every item by id, each status and
+ * the governing-intent Unknown, as well as the current view's neighbours.
  */
 function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers: readonly TrajectoryAnswer[], mountPrefix: string): string {
   if (model.workItems.kind !== 'observed') return '';
@@ -527,22 +530,22 @@ function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers
   const link = (href: string, text: string, current: boolean): string =>
     `<li><a href="${href}"${current ? ' aria-current="page"' : ''}>${text}</a></li>`;
   const isView = (status: string | null, intent: string | null, group: string | null = null): boolean =>
-    view !== null && view.status === status && view.governingIntent === intent && view.group === group;
+    view.selection === undefined && view.status === status && view.governingIntent === intent && view.group === group;
   const nonClosed = byStatus === null ? null : model.workItems.items.length - byStatus.closed;
   const statuses = byStatus === null ? '' : (Object.keys(byStatus) as WorkItemStatus[])
     .map((status) => link(viewHref(mountPrefix, { status, page: 1 }), `<code>${escapeHtml(status)}</code> <span data-parity-field="trajectory-view-status-count" data-status="${escapeHtml(status)}">${byStatus[status]}</span>`, isView(status, null)))
     .join('');
-  const pages = view === null ? '' : `<p class="view-pages" data-parity-field="trajectory-view-page">Page <span data-parity-field="trajectory-view-page-number">${view.page}</span> of <span data-parity-field="trajectory-view-page-count">${view.pageCount}</span>, over <span data-parity-field="trajectory-view-matching">${view.matching}</span> matching items.
+  const pages = `<p class="view-pages" data-parity-field="trajectory-view-page">Page <span data-parity-field="trajectory-view-page-number">${view.page}</span> of <span data-parity-field="trajectory-view-page-count">${view.pageCount}</span>, over <span data-parity-field="trajectory-view-matching">${view.matching}</span> matching items.
         ${view.page > 1 ? `<a rel="prev" href="${viewHref(mountPrefix, { ...view, page: view.page - 1 })}">Previous page</a>` : ''}
         ${view.page < view.pageCount ? `<a rel="next" href="${viewHref(mountPrefix, { ...view, page: view.page + 1 })}">Next page</a>` : ''}</p>`;
   return `<nav class="view-nav" aria-labelledby="view-nav-heading" data-parity-field="trajectory-view-navigation">
       <h2 id="view-nav-heading" class="answers-heading">Reach every work item</h2>
       <ul class="view-links">
-        ${link(viewHref(mountPrefix, null), 'Default selection', view === null)}
+        ${nonClosed === null ? '' : link(viewHref(mountPrefix, { changed: view.changed }), `Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">${nonClosed}</span>`, isView(null, null, 'parent'))}
+        ${link(viewHref(mountPrefix, { selection: 'recent', changed: view.changed }), 'Recent work', view.selection === 'recent')}
         ${link(viewHref(mountPrefix, { page: 1 }), `All items by id <span data-parity-field="trajectory-view-all-count">${model.workItems.items.length}</span>`, isView(null, null))}
         ${statuses}
         ${link(viewHref(mountPrefix, { governingIntent: 'unknown', page: 1 }), `Governing intent Unknown <span data-parity-field="trajectory-view-intent-count">${model.workItems.governedByUnknownCount}</span>`, isView(null, 'unknown'))}
-        ${nonClosed === null ? '' : link(viewHref(mountPrefix, { group: 'parent', page: 1 }), `Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">${nonClosed}</span>`, isView(null, null, 'parent'))}
       </ul>
       <p class="view-note">${narrowing.pageSize} items per page, by ascending item id; grouped by parent, ${narrowing.pageSize} positions per page.</p>
       ${pages}
@@ -621,7 +624,7 @@ function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNa
 }
 
 /** syzygy-t3jk.20: the grouped view's page, one region per group. */
-function outlineRegion(grouping: TrajectoryGrouping, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string,
+function outlineRegion(grouping: TrajectoryGrouping, view: TrajectoryNarrowing['view'], mountPrefix: string,
   card: (item: TrajectoryLaneItem, anchor: boolean) => string, rendered: readonly TrajectoryLaneItem[]): string {
   const byId = new Map(rendered.map((item) => [item.id, item]));
   const anchored = new Set<string>();
@@ -635,8 +638,26 @@ function outlineRegion(grouping: TrajectoryGrouping, view: NonNullable<Trajector
   return `<section class="outline" aria-labelledby="outline-heading" data-parity-field="trajectory-outline">
       <h2 id="outline-heading" class="answers-heading">Work items grouped by parent</h2>
       <p class="view-note"><span data-parity-field="trajectory-outline-positions">${grouping.positions}</span> positions over every page: an item with several parents sits under each.</p>
-      <ol class="outline-groups">${groups}</ol>
+      ${groups === '' ? '<p class="view-note">No matching work items.</p>' : `<ol class="outline-groups">${groups}</ol>`}
     </section>`;
+}
+
+function statusBoard(rendered: readonly TrajectoryLaneItem[], card: (item: TrajectoryLaneItem) => string): string {
+  const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
+  for (const column of COLUMN_ORDER) {
+    byColumn.set(column, []);
+  }
+  for (const item of rendered) {
+    byColumn.get(item.column)?.push(item);
+  }
+  const columns = COLUMN_ORDER.map((column) => {
+    const items = byColumn.get(column) ?? [];
+    return `<section class="board-column" aria-label="${escapeHtml(column)} column">
+        <h2>${escapeHtml(column)} <span class="count">(${items.length})</span></h2>
+        <ol class="wi-list">${items.map((item) => card(item)).join('')}</ol>
+      </section>`;
+  }).join('');
+  return `<div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
 }
 
 /** The Trajectory route: the default selection, or one declared view, or
@@ -648,7 +669,6 @@ export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, stat
   // syzygy-t3jk.21: `changed` alone picks the changed answer's window and
   // keeps the default selection; with any other parameter it rides the view.
   const window = request.changed ?? 'day';
-  if ([...query.keys()].every((name) => name === 'changed')) return renderTrajectoryPage(model, mountPrefix, status, window);
   const view = projectTrajectoryView(model.trajectory, model.workItems, request);
   if ('refused' in view) return view;
   return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status, window);
@@ -657,19 +677,13 @@ export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, stat
 export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus, changed: ChangeWindow = 'day'): string {
   const trajectory = model.trajectory;
   const workerChange = model.workerChange.kind === 'observed' ? model.workerChange : null;
+  let lede = 'Five work-item questions and the tracker observation status.';
   let body: string;
   if (trajectory.kind === 'unknown') {
     const unknown = unknownSubject(model, 'region:work-items');
     body = `${answersRegion(model, trajectory.answers, { window: changed, view: null, mountPrefix })}
       <p class="unavailable-notice" id="${NOTICE_ELEMENT_ID[WORK_ITEMS_REGION_ID]}"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
   } else {
-    const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
-    for (const column of COLUMN_ORDER) {
-      byColumn.set(column, []);
-    }
-    for (const item of trajectory.rendered) {
-      byColumn.get(item.column)?.push(item);
-    }
     const demonstratedId = currentMaterializedBeadId(model);
     const demonstratedRendered =
       demonstratedId !== null && trajectory.rendered.some((item) => item.id === demonstratedId);
@@ -685,18 +699,13 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
         mountPrefix,
         anchor,
       );
-    const columns = COLUMN_ORDER.map((column) => {
-      const items = byColumn.get(column) ?? [];
-      return `<section class="board-column" aria-label="${escapeHtml(column)} column">
-        <h2>${escapeHtml(column)} <span class="count">(${items.length})</span></h2>
-        <ol class="wi-list">${items.map((item) => card(item)).join('')}</ol>
-      </section>`;
-    }).join('');
     const grouping = trajectory.grouping;
     const view = trajectory.narrowing.view;
-    const board = grouping !== undefined && view !== null
+    const layout = grouping === undefined ? 'in tracker status columns' : 'grouped by parent';
+    lede = `Five answers over the full observed work-item population, then selected work items ${layout}. Times come from recorded instants.`;
+    const board = grouping !== undefined
       ? outlineRegion(grouping, view, mountPrefix, card, trajectory.rendered)
-      : `<div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
+      : statusBoard(trajectory.rendered, card);
 
     const demonstratedCallout =
       demonstratedId === null
@@ -729,7 +738,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     current: 'trajectory',
     eyebrow: `Trajectory · ${escapeHtml(model.project.name)} ${model.project.revision.slice(0, 12)}`,
     heading: 'Work and time, observed',
-    lede: 'Five answers over every observed work item, then a board of a selection: columns from a declared status mapping, time from recorded instants only.',
+    lede,
     extraStyle: TRAJECTORY_STYLE,
     body,
     status,

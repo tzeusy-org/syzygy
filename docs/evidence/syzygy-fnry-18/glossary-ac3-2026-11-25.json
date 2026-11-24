@@ -1,0 +1,162 @@
+{
+  "issue": "syzygy-fnry.18",
+  "criterion": "AC3",
+  "subject": {
+    "protectedBase": "bdfe771a61d4a40c060981ddc6624a8889ce5ef4",
+    "rejectedCommit": "0860277fe115dbac6ad0afde8e4564453e2f3fb3",
+    "rejectedTree": "5f26df67c3a6028bcf588172840fd9553cf6a1f8",
+    "fullIndexPatchSha256": "c34df6d7575612287952fec76e7ab17d2539f9a2c6c96507707c626c7067040b",
+    "files": [
+      {
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "blobSha256": "20f6977a66be43de41e204010e2ae327b0f27b76687a3e4d3ca5cddc53d76ba8"
+      },
+      {
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "blobSha256": "125094f463185ea64d388f58d32c290623f2f13f9f696b06bc0287935b64a168"
+      },
+      {
+        "file": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+        "blobSha256": "a7df5a86e1f74a0bb7ef8377847051729022cca5ba861c8f962b579ad176a123"
+      },
+      {
+        "file": "packages/polaris-dossier/src/render.test.ts",
+        "blobSha256": "6aa01dd61cbcb042ec5039261017ad7e830ad34147f81faed898a8f5b3f3a7e3"
+      }
+    ],
+    "scopedReviewedCommit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+    "scopedReviewedTree": "e7d6431a29179a524d2f593ef41db7287632c568",
+    "acceptedCommit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+    "acceptedTree": "2b5a511dc0eec4e13c3ba2593ed63b76bf1e32e7"
+  },
+  "reviews": [
+    {
+      "round": 1,
+      "verdict": "REVISE",
+      "commit": "0860277fe115dbac6ad0afde8e4564453e2f3fb3",
+      "file": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC3-R1-RAW.md",
+      "sha256": "4594c93e63a6f7cc105e4ca5e599989d4eb0debaac0769fbefafe6049517cd9d"
+    },
+    {
+      "round": 2,
+      "verdict": "CONFIRM",
+      "commit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+      "file": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC3-R2-RAW.md",
+      "sha256": "ae0766997cf466ffca67087c4a2fc64065f3741de0455bcd726c7a50df9e1035"
+    },
+    {
+      "round": 3,
+      "verdict": "CONFIRM",
+      "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+      "file": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC3-R3-RAW.md",
+      "sha256": "b158859d820b2a84fc97fbe7b2c321ee6e17d52a42c906a59c2f58b11876e522"
+    }
+  ],
+  "positive": {
+    "renderIntegration": {
+      "passed": 14,
+      "logSha256": "8d3ca009aaa5fd71e9f6b608d8c999f5c24fd238a4ddaed72cccbdb2511b7315"
+    },
+    "findingAndUnchangedProviderGolden": {
+      "passed": 32,
+      "logSha256": "0457f8e07bce716a97f41254fe3fe466cefa1ef3f163317860e87223a08fcbb7"
+    },
+    "pageSinkFindingAndUnchangedProviderGolden": {
+      "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+      "passed": 35,
+      "logSha256": "91bd7ff223181fbdd9b29585ab1530faa53aea2adf8dc7a7bdd8defd70da7cf5"
+    }
+  },
+  "rule6": {
+    "commit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+    "restoredClean": true,
+    "cases": [
+      {
+        "name": "underscore-display",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "old": "return name.replace(/_/gu, ' ');",
+        "new": "return name;",
+        "selected": "displays the written glossary terms as definitions",
+        "expected": "append-only_file",
+        "outcome": "failed by named assertion",
+        "logSha256": "7842d476b2ad12fa7896fa1df1a45f72bb7d5a468290c16e06f1da1359df187e"
+      },
+      {
+        "name": "legacy-alias",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "old": "return [...new Set([name, name.replace(/-/gu, ' '), glossaryDisplayName(name)])];",
+        "new": "return [...new Set([name, glossaryDisplayName(name)])];",
+        "selected": "still links the earlier hyphenated glossary term",
+        "expected": "append only file",
+        "outcome": "failed by named assertion",
+        "logSha256": "de271d2730f654690a3dc5d9719882c9c9503e883aff03c42e25ea5b2f949341"
+      },
+      {
+        "name": "definition-markup",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "<dfn>${escape(glossaryDisplayName(term.title ?? term.id))}</dfn>",
+        "new": "${escape(glossaryDisplayName(term.title ?? term.id))}",
+        "selected": "still links the earlier hyphenated glossary term",
+        "expected": "<dfn>append-only-file</dfn>",
+        "outcome": "failed by named assertion",
+        "logSha256": "2e6c92eec24ef5ce65547b3a4d3234ff79567589b5b3eab124c9729c790c90a7"
+      },
+      {
+        "name": "require-displayed-title-hyphen-alias",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "old": "const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);",
+        "new": "const pattern = wordPattern([term.name]);",
+        "selected": "displays the written glossary terms as definitions",
+        "expected": "block-p1",
+        "outcome": "failed by named assertion",
+        "logSha256": "6f84c0a9577c9c21e04da65b4cc506d0a4a687e542fac9fd90d2a67be69d4055"
+      },
+      {
+        "name": "reject-index-raw-only-term-association",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "old": "const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);",
+        "new": "const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' '), term.id.slice('glossary/'.length)])]);",
+        "selected": "displays the written glossary terms as definitions",
+        "expected": "block-p2",
+        "outcome": "failed by named assertion",
+        "logSha256": "0edeb62b33f6578fc9d9eaeda1a0456d204aaef2f05796bf528e5f6b4712a5dc"
+      },
+      {
+        "name": "allow-distinct-raw-code-identifier",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+        "old": "const termNames = new Set(glossary.map((term) => term.name.toLowerCase()));",
+        "new": "const termNames = new Set(input.terms.map((term) => term.name.toLowerCase()));",
+        "selected": "displays the written glossary terms as definitions",
+        "expected": "append-only_file",
+        "outcome": "failed by named assertion",
+        "logSha256": "8e2d610efc277998b60e23927c246f78d82098b721f278f86cfcc3f20de15987"
+      }
+    ]
+  },
+  "governing": [
+    "REQ-polaris-generation-034 v2.26, displayed title and exact screened names",
+    "REQ-polaris-generation-035, rendered-design packet binding"
+  ],
+  "residual": [
+    "AC4 brief guidance and version",
+    "three inherited outside-region 390px layout failures"
+  ],
+  "priorSuiteFailure": {
+    "commit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+    "phase": "unit",
+    "namedAssertionFile": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+    "namedAssertionLine": 75,
+    "failed": 1,
+    "passed": 5593,
+    "inheritedSkipped": 1,
+    "logSha256": "8150da4c9074c3c0c9f1baa449d14b571ebd0367be3364f73ad7f84b34368b6a"
+  },
+  "canaryCompatibilityControl": {
+    "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+    "file": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+    "old": "    expect(files.get('glossary.html')!).toContain(`<dt id=\"term-glossary/canary\"><dfn>${ENCODED}</dfn></dt>`);",
+    "new": "    expect(files.get('glossary.html')!).toContain(`<dt id=\"term-glossary/canary\">${ENCODED}</dt>`);",
+    "outcome": "independent legacy one-line expectation fails at escaped glossary canary",
+    "independentReviewSha256": "b158859d820b2a84fc97fbe7b2c321ee6e17d52a42c906a59c2f58b11876e522"
+  }
+}

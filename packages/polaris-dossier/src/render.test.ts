@@ -1438,15 +1438,25 @@ describe('rendered-design review (S9b)', () => {
     const again = await renderRun(run, renderDeps());
     if (!again.ok) throw new Error(again.refusal.reason);
     expect(again.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+    if (!again.report.fidelityReview.counts) throw new Error(again.report.fidelityReview.why);
+    const fidelityDigest = again.report.fidelityReview.packetSha256;
     const before = readSite(site), after = readSite(again.report.site);
     // The published pages equal the reviewed pages outside the region, and the region alone changed: it now states the review.
     expect(outside(after)).toEqual(outside(before));
     const changed = [...after.keys()].filter((file) => after.get(file) !== before.get(file)).sort();
     expect(changed).toEqual([...after.keys()].filter((file) => file.endsWith('.html') || file === 'machine.json').sort());
     const region = regionOf(after.get('glossary.html')!);
-    expect(region).toContain(`Rendered-design review: one counts, bound to packet ${digest}, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.`);
+    expect(region).toContain('Rendered-design review: one counts, bound to the packet shown on the review page, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.');
     expect(region).toContain('data-label="Inferred"');
-    expect(JSON.parse(after.get('machine.json')!).reviewStatus[1]).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    const reviewRegion = regionOf(after.get('review.html')!);
+    const shownDigests = [...reviewRegion.matchAll(/(?:[0-9a-f]{8} ){7}[0-9a-f]{8}/g)].map(([hex]) => hex.replaceAll(' ', ''));
+    expect(shownDigests).toEqual([fidelityDigest, digest]);
+    expect(after.get('review.html')!).toContain(`its digest is ${fidelityDigest}, and the counted verdict names that digest.`);
+    const [fidelityStatus, designStatus] = JSON.parse(after.get('machine.json')!).reviewStatus;
+    expect(fidelityStatus).toMatchObject({ id: 'review-status/fidelity', label: 'Inferred' });
+    expect(fidelityStatus.text).toContain(`bound to packet ${fidelityDigest}`);
+    expect(designStatus).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    expect(designStatus.text).toContain(`bound to packet ${digest}`);
     // A third render, the region unchanged, keeps it counted too.
     const third = await renderRun(run, renderDeps());
     expect(third.ok && third.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
@@ -2595,6 +2605,67 @@ describe('render: subsections (schema v8)', () => {
 });
 
 // syzygy-5dhm.70 and syzygy-5dhm.71: the find-by-task page and the generated index through the whole chain (the index-and-task-routes change).
+describe('render: glossary definitions and first-use links', () => {
+  const term = (id: string) => ({
+    id, label: 'inferred', statement: 'A term for the server\'s storage.', scope: 'The server.',
+    citations: [cite(`term-cite-${id}`, 'src/kestrel.c', 1, 1)],
+  });
+
+  it('displays the written glossary terms as definitions, with one first-use link and one index entry per term', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only_file'), term('AOF')];
+    doc.introduction.text += ' An append-only file supports AOF. The append-only file explains AOF.';
+    doc.sections[0].paragraphs[0].text += ' This is an append only file.';
+    doc.sections[0].paragraphs[1].text += ' The append-only_file marker uses the literal `append-only_file`.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const glossary = files.get('glossary.html')!;
+    expect(glossary.match(/<dt\b/gu)).toHaveLength(2);
+    expect([...glossary.matchAll(/<dt id="(term-glossary\/[^"]+)"><dfn>([^<]+)<\/dfn><\/dt>/gu)].map((entry) => entry.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+    ]);
+
+    const overview = files.get('index.html')!;
+    expect([...overview.matchAll(/<a class="term" href="glossary\.html#([^"]+)" aria-label="[^"]+">([^<]+)/gu)].map((link) => link.slice(1))).toEqual([
+      ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+      ['term-glossary/append-only_file', 'append-only_file'],
+    ]);
+    expect(overview).toContain('<code>append-only_file</code>');
+    const index = files.get('name-index.html')!;
+    expect(index.match(/data-index-name="append-only[ _]file"><span class="index-name">.*?<\/span>/gu)).toEqual([
+      'data-index-name="append-only file"><span class="index-name">append-only file</span>',
+      'data-index-name="append-only_file"><span class="index-name"><code>append-only_file</code></span>',
+    ]);
+    const machine = JSON.parse(files.get('machine.json')!) as {
+      nameIndex: { names: { kind: string; name: string; home: { fragment: string } | null; blocks: { fragment: string }[] }[] };
+    };
+    const names = machine.nameIndex.names;
+    expect(names.filter((entry) => entry.kind === 'term').map((entry) => [entry.name, entry.home?.fragment, entry.blocks.map((block) => block.fragment)])).toEqual([
+      ['AOF', 'term-glossary/AOF', ['block-intro']],
+      ['append-only file', 'term-glossary/append-only_file', ['block-intro', 'block-p1']],
+    ]);
+    expect(names.filter((entry) => entry.name === 'append-only_file')).toEqual([
+      { kind: 'identifier', name: 'append-only_file', home: null, blocks: [{ page: 'index.html', fragment: 'block-p2' }] },
+    ]);
+  });
+
+  it('still links the earlier hyphenated glossary term from its space-separated form', async () => {
+    const doc = draft();
+    doc.understanding.terminology = [term('append-only-file')];
+    doc.introduction.text += ' This uses an append only file.';
+
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    expect(files.get('index.html')).toContain('<a class="term" href="glossary.html#term-glossary/append-only-file" aria-label="append only file, glossary entry">append only file<span class="term-pop"');
+    expect(files.get('glossary.html')!.match(/<dt\b[^<]*><dfn>[^<]*<\/dfn><\/dt>/gu)).toEqual([
+      '<dt id="term-glossary/append-only-file"><dfn>append-only-file</dfn></dt>',
+    ]);
+  });
+});
+
 describe('render: task routes and the generated index', () => {
   const step = (id: string, over: Doc = {}): Doc => ({ id, label: 'inferred', basis: 'source', text: `Add the handler beside main zq-${id}.`, citations: [cite(`c-${id}`, 'src/kestrel.c', 4, 4)], quotations: [], ...over });
   const routedDraft = (change: (doc: Doc) => void = () => {}): Doc => {

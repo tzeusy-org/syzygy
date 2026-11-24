@@ -250,7 +250,7 @@ authority and no model yet called on the current path.
     carry the worth-knowing mark and a Pole say why it marks none, the `worth-knowing` finding and count advice, one
     "Worth knowing" callout per page for blocks that render Inferred, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
     (syzygy-5dhm.41) lands with it; v13 is schema v10 plus the mark and brief v19 is brief v16 plus one paragraph.
-    [Question-file amendment 2.27](openspec/changes/dossier-question-file) is agent-adopted in A-225.
+    [Question-file amendment 2.27](openspec/changes/dossier-question-file) is agent-adopted in A-304.
     It replaces REQ-polaris-generation-033 again (16 to 18 scenarios): the run record names the question file, the one
     source of reader questions, by format, version and digest; its held-out part records opaque evaluator key identifiers, digests and counts
     and leaves the Redis comparison pending genuinely blind lists; its code (syzygy-5dhm.21) lands with it.
