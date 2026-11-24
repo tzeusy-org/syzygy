@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW\.md`
+
 - `F3-ORDERED-NATIVE-CAPTURE-REVIEW-R2-RAW\.md`
 
 - `F3-(FIDELITY-AUDIT-COMPOSITION|COMPOSED-NATIVE-ENVELOPES)-REVIEW-RAW\.md`
@@ -243,7 +245,7 @@
 
 [Observed] The staged allocation readback review records `PASS` for `d45584c52` (F3-STAGED-ALLOCATION-READBACK-AUTHORITY-REVIEW-RAW.md). A-184 retains the authority check after returning across the promise boundary and before lock removal. The 91 focused cases pass. Both added controls detect restoration of the duplicate or removal of the retained check. [Unknown] Hosted allocation completion.
 
-[Observed] The main merge preserves each of its 74 adoption rows byte for byte. Superseded 2026-11-24: "The branch’s historical same-store setup row for `236df7ecd` is recorded as A-210 after main assigned A-64 to the system-model amendment." Main subsequently assigned A-210 to the Three-Surface outline amendment; this branch’s unlanded historical row is now A-213, with its subject and revert unchanged. Earlier frozen reviews retain their original branch identifier and subject commit. The 195 combined rows have distinct identifiers.
+[Observed] Historical merge of main `3a24d409a07d0ba5c04aabb4ace79161ac44503d`: each of its 74 adoption rows was preserved byte for byte. Superseded 2026-11-24: "The branch’s historical same-store setup row for `236df7ecd` is recorded as A-210 after main assigned A-64 to the system-model amendment." Main subsequently assigned A-210 to the Three-Surface outline amendment; this branch’s unlanded historical row is now A-213, with its subject and revert unchanged. Earlier frozen reviews retain their original branch identifier and subject commit. The 195 combined rows have distinct identifiers.
 
 [Observed] The staged batch envelope review records `PASS` for `f6721c73f` (F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW.md). A-185 gives an asynchronous two-to-eight-slot transaction ten seconds under its caller and original run deadline. The focused suite passes 99 cases and four negative controls fail their intended assertions. The native interrupted replay refused on ordinary Fidelity lock contention before Stop. [Unknown] Hosted batch completion.
 
@@ -263,3 +265,5 @@
 [Observed] Hosted `f0d182e7a` passed unit, browser and governance checks; integration failed. Its four native cases passed complete and delivery-stop and failed interrupted and already-eligible Resume. The [retained hosted summary](../evidence/syzygy-k54o-3/ordered-native-capture/hosted-f0d182.json) distinguishes an interrupted terminal currentness refusal from an eligible product-restoration rejection. Their exact nested rejecting predicates remain Unknown. These earlier recovery failures are outside the capture-only fix.
 
 [Observed] The merge of main `ed1e65bf7ec02d0093a490e013b2795c798db524` preserves its 75 adoption rows byte for byte. The combined ledger contains 200 distinct IDs after the unlanded branch row for `236df7ecd` changes from A-210 to A-213. Main owns A-210. Earlier frozen branch records keep their historical labels and exact subjects.
+
+[Observed] The recovery terminal and product trace review records `PASS` for `9840d8a39` (F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW.md). A-214 gives only asynchronous terminal reads ten seconds, retaining all authority and expiry checks. The [binding](../evidence/syzygy-k54o-3/async-terminal-read-envelope/binding.json) records 121 clean-clone cases, four skipped native cases, typecheck and ten detected store/observer controls. The [acceptance matrix](../evidence/syzygy-k54o-3/async-terminal-read-envelope/recovery-acceptance-matrix.md) keeps native recovery, durable closure and final rendering evidence pending. Test-only restoration diagnostics retain the first failure independently of their entry cap. [Unknown] Genuine recovery completion and exact hosted acceptance.

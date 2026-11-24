@@ -1,0 +1,19 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ✓ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (118 tests | 108 skipped) 6368ms
+   ✓ protected URL machine lifecycle files > checks the complete terminal read beyond five seconds under async authority latency  610ms
+   ✓ protected URL machine lifecycle files > checks the complete terminal read beyond five seconds under both authority latency  572ms
+   ✓ protected URL machine lifecycle files > withholds a terminal confirmation at the original caller boundary after reading its snapshot  636ms
+   ✓ protected URL machine lifecycle files > withholds a terminal confirmation at the original run boundary after reading its snapshot  542ms
+   ✓ protected URL machine lifecycle files > withholds a terminal confirmation at the async envelope boundary after reading its snapshot  506ms
+   ✓ protected URL machine lifecycle files > withholds a terminal confirmation at the sync envelope boundary after reading its snapshot  453ms
+   ✓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when withdrawn  1005ms
+   ✓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when root replaced  961ms
+   ✓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when expired  778ms
+
+ Test Files  1 passed (1)
+      Tests  10 passed | 108 skipped (118)
+   Start at  23:58:15
+   Duration  14.40s (transform 3.33s, setup 56ms, collect 7.13s, tests 6.37s, environment 0ms, prepare 143ms)
+

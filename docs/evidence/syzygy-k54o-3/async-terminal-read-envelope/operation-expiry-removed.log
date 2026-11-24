@@ -1,0 +1,151 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (118 tests | 1 failed | 117 skipped) 291ms
+   ↓ protected URL machine lifecycle files > admits same-adapter work in FIFO order after a legitimate holder exceeds one second
+   ↓ protected URL machine lifecycle files > starts the held operation clock after admission while retaining its own five-second limit
+   ↓ protected URL machine lifecycle files > expires a queued call independently of a held callback and removes it before admitting its successor
+   ↓ protected URL machine lifecycle files > rechecks withdrawal before promoting a queued call into filesystem work
+   ↓ protected URL machine lifecycle files > rechecks admission-expiry before promoting a queued call into filesystem work
+   ↓ protected URL machine lifecycle files > bounds queued admissions and settles them on close while the current callback remains held
+   ↓ protected URL machine lifecycle files > bounds unprofiled effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordinary effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > bounds ordered effects by the matching declared profile while retaining finite expiry
+   ↓ protected URL machine lifecycle files > takes one fresh synchronous parent sample before the first private anchor read when current is true
+   ↓ protected URL machine lifecycle files > takes one fresh synchronous parent sample before the first private anchor read when current is false
+   ↓ protected URL machine lifecycle files > ordinary synchronous lease reads check currentness once before the first private root read when current is true
+   ↓ protected URL machine lifecycle files > ordinary synchronous lease reads check currentness once before the first private root read when current is false
+   ↓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry when ordered is false
+   ↓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry when ordered is true
+   ↓ protected URL machine lifecycle files > refuses an effect profile matching the digest but not the durable run when ordered is false
+   ↓ protected URL machine lifecycle files > refuses an effect profile matching the digest but not the durable run when ordered is true
+   ↓ protected URL machine lifecycle files > clips the native effect to the caller deadline when ordered is false
+   ↓ protected URL machine lifecycle files > clips the native effect to the caller deadline when ordered is true
+   ↓ protected URL machine lifecycle files > prevents publication after 'original-deadline' during a declared effect when ordered is false
+   ↓ protected URL machine lifecycle files > prevents publication after 'revocation' during a declared effect when ordered is false
+   ↓ protected URL machine lifecycle files > prevents publication after 'original-deadline' during a declared effect when ordered is true
+   ↓ protected URL machine lifecycle files > prevents publication after 'revocation' during a declared effect when ordered is true
+   ↓ protected URL machine lifecycle files > publishes through actual files, reopens the store, and refuses canonical plus projection rollback after revocation
+   ↓ protected URL machine lifecycle files > publishes through the trusted store with one checked clock at each lifecycle boundary
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode selected
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode selected-eleven-seconds
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode ordinary
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode operation-expired
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode run-expired
+   ↓ protected URL machine lifecycle files > isolates archive and audit timing behind the resumed publication selector in mode connection-closed
+   ↓ protected URL machine lifecycle files > refuses a copied peer before granting the resumed Design publication window
+   ↓ protected URL machine lifecycle files > refuses resumed Design publication if a contended lock arrives after one second
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when parent-withdrawn during a private write
+   ↓ protected URL machine lifecycle files > prevents the first durable rename when connection-closed during a private write
+   ↓ protected URL machine lifecycle files > awaits fresh authority around real protected filesystem work
+   ↓ protected URL machine lifecycle files > allocates an unissued slot within the original bound when fresh policy checks have a cost
+   ↓ protected URL machine lifecycle files > publishes a complete eight-slot allocation in one protected state update
+   ↓ protected URL machine lifecycle files > bounds allocation with async true, count 8, elapsed 6000 and expiry 'none'
+   ↓ protected URL machine lifecycle files > bounds allocation with async false, count 8, elapsed 6000 and expiry 'none'
+   ↓ protected URL machine lifecycle files > bounds allocation with async true, count 1, elapsed 6000 and expiry 'none'
+   ↓ protected URL machine lifecycle files > bounds allocation with async true, count 8, elapsed 10001 and expiry 'none'
+   ↓ protected URL machine lifecycle files > bounds allocation with async true, count 8, elapsed 6000 and expiry 'caller'
+   ↓ protected URL machine lifecycle files > bounds allocation with async true, count 8, elapsed 6000 and expiry 'run'
+   ↓ protected URL machine lifecycle files > staged allocation samples opening authority once before reading either root when current is true
+   ↓ protected URL machine lifecycle files > staged allocation samples opening authority once before reading either root when current is false
+   ↓ protected URL machine lifecycle files > checks staged allocation authority once between readback and cleanup when current is true
+   ↓ protected URL machine lifecycle files > checks staged allocation authority once between readback and cleanup when current is false
+   ↓ protected URL machine lifecycle files > joins the staged allocation lock sync and census before currentness true admits state reads
+   ↓ protected URL machine lifecycle files > joins the staged allocation lock sync and census before currentness false admits state reads
+   ↓ protected URL machine lifecycle files > withholds every batched witness on withdrawal before-rename
+   ↓ protected URL machine lifecycle files > withholds every batched witness on withdrawal after-cleanup
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal before-lock
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal before-rename
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal after-anchor-check
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal after-readback
+   ↓ protected URL machine lifecycle files > refuses allocation on async authority withdrawal after-cleanup
+   ↓ protected URL machine lifecycle files > refuses independent synchronous withdrawal during async allocation before-lock
+   ↓ protected URL machine lifecycle files > refuses independent synchronous withdrawal during async allocation after-lock
+   ↓ protected URL machine lifecycle files > refuses allocation when the named root is replaced during prepublication authority checking
+   ↓ protected URL machine lifecycle files > refuses a staged 1-slot retry when contention clears after its original cutoff
+   ↓ protected URL machine lifecycle files > refuses a staged 8-slot retry when contention clears after its original cutoff
+   ↓ protected URL machine lifecycle files > withholds the reserved slot when cleanup crosses the allocation deadline
+   ↓ protected URL machine lifecycle files > returns 1-slot allocation at the clipped deadline while its late cleanup still owns the descriptor
+   ↓ protected URL machine lifecycle files > returns 8-slot allocation at the clipped deadline while its late cleanup still owns the descriptor
+   ↓ protected URL machine lifecycle files > confirms protected state and client bytes within five seconds of fresh authority checks
+   ↓ protected URL machine lifecycle files > checks the complete terminal read beyond five seconds under async authority latency
+   ↓ protected URL machine lifecycle files > checks the complete terminal read beyond five seconds under both authority latency
+   ↓ protected URL machine lifecycle files > withholds a terminal confirmation at the original caller boundary after reading its snapshot
+   ↓ protected URL machine lifecycle files > withholds a terminal confirmation at the original run boundary after reading its snapshot
+   × protected URL machine lifecycle files > withholds a terminal confirmation at the async envelope boundary after reading its snapshot 283ms
+     → expected true to be false // Object.is equality
+   ↓ protected URL machine lifecycle files > withholds a terminal confirmation at the sync envelope boundary after reading its snapshot
+   ↓ protected URL machine lifecycle files > withholds a terminal confirmation at the sync withdrawal boundary after reading its snapshot
+   ↓ protected URL machine lifecycle files > withholds client and projection reads when async authority is withdrawn while reading terminal state
+   ↓ protected URL machine lifecycle files > resamples async authority before a delayed terminal state read
+   ↓ protected URL machine lifecycle files > refuses terminal lock submission when async authority is withdrawn
+   ↓ protected URL machine lifecycle files > refuses terminal lock submission when sync authority is withdrawn
+   ↓ protected URL machine lifecycle files > refuses to submit the terminal lock census when authority sampling crosses the deadline
+   ↓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when withdrawn
+   ↓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when root replaced
+   ↓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when expired
+   ↓ protected URL machine lifecycle files > refuses a swapped named root before submitting a terminal-read lock
+   ↓ protected URL machine lifecycle files > detaches terminal snapshots from cached lifecycle metadata
+   ↓ protected URL machine lifecycle files > refuses terminal read lock contention that clears after one second
+   ↓ protected URL machine lifecycle files > settles a late terminal read lock under 'synchronous' authority (withdrawal 'none')
+   ↓ protected URL machine lifecycle files > settles a late terminal read lock under 'asynchronous' authority (withdrawal 'none')
+   ↓ protected URL machine lifecycle files > settles a late terminal read lock under 'asynchronous' authority (withdrawal 'during-confirmation')
+   ↓ protected URL machine lifecycle files > settles a late terminal read lock under 'asynchronous' authority (withdrawal 'queued-after-check')
+   ↓ protected URL machine lifecycle files > settles a late terminal read lock under 'asynchronous' authority (withdrawal 'named-root-replaced')
+   ↓ protected URL machine lifecycle files > keeps the 'resumed' lock sync and census before authority-gated state reads when current is true
+   ↓ protected URL machine lifecycle files > keeps the 'resumed' lock sync and census before authority-gated state reads when current is false
+   ↓ protected URL machine lifecycle files > keeps the 'ordinary' lock sync and census before authority-gated state reads when current is true
+   ↓ protected URL machine lifecycle files > keeps the 'ordinary' lock sync and census before authority-gated state reads when current is false
+   ↓ protected URL machine lifecycle files > keeps the 'ordered' lock sync and census before authority-gated state reads when current is true
+   ↓ protected URL machine lifecycle files > keeps the 'unprofiled' lock sync and census before authority-gated state reads when current is true
+   ↓ protected URL machine lifecycle files > reads private state while identity is held and joins both before client access
+   ↓ protected URL machine lifecycle files > joins the held state descriptor after identity fails before refusing the read
+   ↓ protected URL machine lifecycle files > exclusive checks authority after protected state I/O before opening the client
+   ↓ protected URL machine lifecycle files > readTerminal checks authority after protected state I/O before opening the client
+   ↓ protected URL machine lifecycle files > discards filesystem results when authority outlasts the exclusive deadline
+   ↓ protected URL machine lifecycle files > never reinitializes an existing store and refuses missing state, identity mismatch, or symlinked authority
+   ↓ protected URL machine lifecycle files > refuses a replaced protected-root pathname even while its original descriptor remains open
+   ↓ protected URL machine lifecycle files > serializes independent adapters and accepts exactly one publication for one expected predecessor
+   ↓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process
+   ↓ protected URL machine lifecycle files > preserves pending evidence and the unstealable lock after an interrupted transaction
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with omitted-preflight
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-intent
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-bytes
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-id-reservation
+   ↓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-run
+   ↓ protected URL machine lifecycle files > preflights one checked snapshot and rechecks the archive current before reserve
+   ↓ protected URL machine lifecycle files > preflights one checked snapshot and rechecks the archive changed after preflight before reserve
+   ↓ protected URL machine lifecycle files > preflights one checked snapshot and rechecks the archive changed after the reserve predecessor read before reserve
+   ↓ protected URL machine lifecycle files > retains pending evidence when the new pack reached disk but its state pointer did not
+   ↓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters
+   ↓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished
+   ↓ protected URL machine lifecycle files > fails closed when an operation exhausts its finite I/O-call ceiling
+   ↓ protected URL machine lifecycle files > refuses expired, backward-clock and revoked host leases before canonical publication
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-store.test.ts > protected URL machine lifecycle files > withholds a terminal confirmation at the async envelope boundary after reading its snapshot
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/url-machine-store.test.ts:960:84
+    958|     });
+    959|     try {
+    960|       expect(await reopened.readTerminal(slot.context.clientId, deadli…
+       |                                                                                    ^
+    961|     } finally { clock.mockRestore(); }
+    962|     expect(verify).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 117 skipped (118)
+   Start at  23:59:24
+   Duration  5.30s (transform 2.73s, setup 25ms, collect 3.83s, tests 291ms, environment 0ms, prepare 146ms)
+

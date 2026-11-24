@@ -1,0 +1,49 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (7 tests | 1 failed | 6 skipped) 37ms
+   × bounded restoration observer (no native authority fixture) > observes actual descriptor guards and retains a late failure beyond its entry cap without retaining content 36ms
+     → expected { ordinal: 42, …(6) } to match object { ordinal: 42, …(3) }
+(3 matching properties omitted from actual)
+   ↓ bounded restoration observer (no native authority fixture) > observes the actual history re-export and unissued transfer without adding authority calls
+   ↓ bounded restoration observer (no native authority fixture) > forwards adapter method arguments, optional roles, receipt identities and original rejection objects
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to complete
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to delivery-stop
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to stop-resume
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to eligible-stop-resume
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-composed.test.ts > bounded restoration observer (no native authority fixture) > observes actual descriptor guards and retains a late failure beyond its entry cap without retaining content
+AssertionError: expected { ordinal: 42, …(6) } to match object { ordinal: 42, …(3) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -4,7 +4,7 @@
+    "previous": {
+      "ordinal": 41,
+      "outcome": "accepted",
+      "phase": "record-read",
+    },
+-   "reason": "passed-guard-threw",
++   "reason": "threw",
+  }
+
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:1472:34
+    1470|     const summary = trace.summary();
+    1471|     expect(summary.entries).toHaveLength(32); expect(summary.omitted).…
+    1472|     expect(summary.firstRefusal).toMatchObject({ ordinal: 42, phase: '…
+       |                                  ^
+    1473|       previous: { ordinal: 41, phase: 'record-read', outcome: 'accepte…
+    1474|     expect(summary.totals['record-read']).toEqual({ calls: 41, refused…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  00:04:48
+   Duration  5.39s (transform 3.66s, setup 12ms, collect 4.85s, tests 37ms, environment 0ms, prepare 91ms)
+

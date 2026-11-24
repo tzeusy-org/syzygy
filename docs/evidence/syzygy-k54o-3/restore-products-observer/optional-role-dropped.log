@@ -1,0 +1,45 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (7 tests | 1 failed | 6 skipped) 30ms
+   ↓ bounded restoration observer (no native authority fixture) > observes actual descriptor guards and retains a late failure beyond its entry cap without retaining content
+   ↓ bounded restoration observer (no native authority fixture) > observes the actual history re-export and unissued transfer without adding authority calls
+   × bounded restoration observer (no native authority fixture) > forwards adapter method arguments, optional roles, receipt identities and original rejection objects 20ms
+     → expected 1st "spy" call to have been called with [ 'own', Uint8Array[ 1 ], 'design' ]
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to complete
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to delivery-stop
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to stop-resume
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to eligible-stop-resume
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-composed.test.ts > bounded restoration observer (no native authority fixture) > forwards adapter method arguments, optional roles, receipt identities and original rejection objects
+AssertionError: expected 1st "spy" call to have been called with [ 'own', Uint8Array[ 1 ], 'design' ]
+
+- Expected
++ Received
+
+  [
+    "own",
+    Uint8Array [
+      1,
+    ],
+-   "design",
+  ]
+
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:1523:21
+    1521|       expect(ledger.validateReport('author', 'draft', bytes)).toBe(rec…
+    1522|     });
+    1523|     expect(receive).toHaveBeenNthCalledWith(1, 'own', bytes, 'design');
+       |                     ^
+    1524|     expect(receive).toHaveBeenNthCalledWith(2, 'own', bytes);
+    1525|     expect(revalidate).toHaveBeenCalledOnce(); expect(validate).toHave…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  00:04:54
+   Duration  5.60s (transform 3.75s, setup 22ms, collect 4.90s, tests 30ms, environment 0ms, prepare 107ms)
+

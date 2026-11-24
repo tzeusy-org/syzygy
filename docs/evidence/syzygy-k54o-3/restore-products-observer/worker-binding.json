@@ -1,0 +1,42 @@
+{
+  "base": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "2cd6e51025c9732f1002dc9727a6529da0173ebf5f2e6910772b9c4c6ecb582d",
+  "patchSha256": "481229a4b0f1e56c8d3a9b8bb5ae3988a5e79004eb35b2836c5ea4c70f2a7163",
+  "controlsSha256": "011b0737caaee374173e488db45d9261fe2b3f52a266444c7e493ef5d026ccf9",
+  "logs": {
+    "observer-exercise.log": "766b0817b916470f9cd47f2cbdc21f32be1d0dc9c1604955757870a122e5f785",
+    "restored-exercise.log": "cdc4ddd592ac4306f8c188920be656490857b9213a57af83cc9524219e11441a",
+    "controls-run.log": "f77ecac3bfe76658cd71715c7e115c890a3dcc708a754059b285fb7ff6961c90"
+  },
+  "verification": {
+    "isolatedExercise": {
+      "passed": 3,
+      "skippedNative": 4,
+      "population": 7
+    },
+    "mutations": {
+      "failedAsExpected": 5,
+      "population": 5,
+      "restored": true
+    },
+    "unchangedNativeAssertionLines": 107,
+    "typecheck": "pending combined merged-tree check coordinated by root"
+  },
+  "growth": {
+    "addedLines": 207,
+    "removedLines": 12,
+    "netLines": 195,
+    "newCases": 3
+  },
+  "scope": [
+    "Only the existing composed integration test changed; native setup hook moved into its native describe.",
+    "Actual exported history/snapshot/transfer functions are observed without new authority calls.",
+    "Ledger forwarding exercise uses explicit stubs, issuing no provenance or native authority.",
+    "Restoration result decoration adds one promise continuation and a plain frozen object; nominal inputs and issued receipt identities pass through unchanged."
+  ],
+  "limitations": [
+    "Private final clock checks are not directly observed. Generic throws are never labeled deadline expiry.",
+    "No genuine native run was executed; the next pair must verify successful production ledger/transfer wiring."
+  ]
+}

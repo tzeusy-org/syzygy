@@ -1,0 +1,52 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (7 tests | 1 failed | 6 skipped) 26ms
+   ↓ bounded restoration observer (no native authority fixture) > observes actual descriptor guards and retains a late failure beyond its entry cap without retaining content
+   ↓ bounded restoration observer (no native authority fixture) > observes the actual history re-export and unissued transfer without adding authority calls
+   × bounded restoration observer (no native authority fixture) > forwards adapter method arguments, optional roles, receipt identities and original rejection objects 17ms
+     → expected {} to be {} // Object.is equality
+
+If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+Expected: {}
+Received: serializes to the same string
+
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to complete
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to delivery-stop
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to stop-resume
+   ↓ composed URL run with actual role processes > runs the genuine production pipeline to eligible-stop-resume
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-run-composed.test.ts > bounded restoration observer (no native authority fixture) > forwards adapter method arguments, optional roles, receipt identities and original rejection objects
+AssertionError: expected {} to be {} // Object.is equality
+
+If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+Expected: {}
+Received: serializes to the same string
+
+
+Compared values have no visual difference.
+
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:1518:57
+    1516|     expect(recovered.revalidate).toBe(result.revalidate);
+    1517|     trace.run(() => {
+    1518|       expect(recovered.receipt('own', bytes, 'design')).toBe(receipt);
+       |                                                         ^
+    1519|       expect(recovered.receipt('own', bytes)).toBe(receipt);
+    1520|       recovered.revalidate();
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:305:23
+ ❯ measure packages/polaris-dossier/src/url-run-composed.test.ts:303:18
+ ❯ Object.run packages/polaris-dossier/src/url-run-composed.test.ts:353:37
+ ❯ packages/polaris-dossier/src/url-run-composed.test.ts:1517:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  00:05:01
+   Duration  6.32s (transform 4.17s, setup 17ms, collect 5.59s, tests 26ms, environment 0ms, prepare 119ms)
+

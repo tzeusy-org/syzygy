@@ -1,0 +1,113 @@
+{
+  "base": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "2cd6e51025c9732f1002dc9727a6529da0173ebf5f2e6910772b9c4c6ecb582d",
+  "controls": [
+    {
+      "name": "cap-overflow",
+      "old": "if (entries.length < 32)",
+      "new": "if (entries.length < 33)",
+      "count": 1,
+      "mutatedSha256": "54428992e1f58b6cfb6f32ae5448c692596e3a8b90a17220016e5351067b7c5c",
+      "exitCode": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "actual descriptor guards"
+      ],
+      "log": "/home/orca/.tmp/f3-restore-products-observer/cap-overflow.log",
+      "logSha256": "3aa6efbeb257e5b5cdd520b354f32d490ebfa72d9f40d985baa0f05352d5fe8d"
+    },
+    {
+      "name": "late-failure-erased",
+      "old": "firstRefusal ??= {",
+      "new": "if (entries.length === 32) return;\n    firstRefusal ??= {",
+      "count": 1,
+      "mutatedSha256": "2a246b4fd184ba59fcdc9edfa8998c2a8751dffb4ce5208cf2240a732d28fa07",
+      "exitCode": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "actual descriptor guards"
+      ],
+      "log": "/home/orca/.tmp/f3-restore-products-observer/late-failure-erased.log",
+      "logSha256": "69104491bdfdb822e91e97a9495e35018ac37d463e57f79048d7f61f71a3d771"
+    },
+    {
+      "name": "passed-guard-cause-erased",
+      "old": "guard(check)",
+      "new": "check",
+      "count": 3,
+      "mutatedSha256": "f845b9057468344bc98d7e917ec80c0acb06f69f0ce734da43fe5bafd9a57ff7",
+      "exitCode": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "actual descriptor guards"
+      ],
+      "log": "/home/orca/.tmp/f3-restore-products-observer/passed-guard-cause-erased.log",
+      "logSha256": "b9f9b4e2d09e4a077bdeb85fbf0dc9214743508c8f2c0666ca6f800f0fb43080"
+    },
+    {
+      "name": "optional-role-dropped",
+      "old": "recovered.receipt(...receiptArgs)",
+      "new": "recovered.receipt(receiptArgs[0], receiptArgs[1])",
+      "count": 1,
+      "mutatedSha256": "4729bc190cd714b77a7a909cd059e1a2fba0827b93a0c08451d22eaca4a6733a",
+      "exitCode": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "forwards adapter method"
+      ],
+      "log": "/home/orca/.tmp/f3-restore-products-observer/optional-role-dropped.log",
+      "logSha256": "bab50747bb1965bfc62af8e4cdffe4fe29f77d9f98fb248cde1f603e0657dab1"
+    },
+    {
+      "name": "receipt-identity-copied",
+      "old": "() => recovered.receipt(...receiptArgs)",
+      "new": "() => ({ ...recovered.receipt(...receiptArgs) })",
+      "count": 1,
+      "mutatedSha256": "6c5ab6b63dded9f3490cb8799ae08537802e33c16a80319396e60b434404d230",
+      "exitCode": 1,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "forwards adapter method"
+      ],
+      "log": "/home/orca/.tmp/f3-restore-products-observer/receipt-identity-copied.log",
+      "logSha256": "2be4e1fab80cbb2061342eb0282040647ebb13012d29593b8fbca92570ae5b1d"
+    }
+  ],
+  "restored": true
+}

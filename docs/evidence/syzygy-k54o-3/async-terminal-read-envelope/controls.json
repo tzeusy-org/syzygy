@@ -1,0 +1,141 @@
+[
+  {
+    "id": "old-async-five-seconds",
+    "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "sourceSha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "mutantSha256": "acd38524b658a266b4a6ba3a2aeb42db8f6a3b6bec3ec1b62468d2014139523b",
+    "changes": [
+      {
+        "old": "const ASYNC_TERMINAL_READ_MILLISECONDS = 10_000;",
+        "new": "const ASYNC_TERMINAL_READ_MILLISECONDS = 5000;"
+      }
+    ],
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "complete terminal read beyond"
+    ],
+    "exitCode": 1,
+    "log": "/home/orca/.tmp/f3-async-terminal-envelope/old-async-five-seconds.log",
+    "testSha256": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "logSha256": "6fa02cd2a3f7d0fcbac624cef043b46fe6a07855b7f51b25def9b7115dca0c96"
+  },
+  {
+    "id": "caller-expiry-removed",
+    "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "sourceSha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "mutantSha256": "c77447d5aa5407fe36186521cb391352e6be26c1b14ab7390ef6157b936bc65b",
+    "changes": [
+      {
+        "old": "if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();",
+        "new": "if (performance.now() - began >= operationMilliseconds) throw refused();"
+      }
+    ],
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "terminal confirmation at the original caller"
+    ],
+    "exitCode": 1,
+    "log": "/home/orca/.tmp/f3-async-terminal-envelope/caller-expiry-removed.log",
+    "testSha256": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "logSha256": "dcc3765384cf8e84468d53d577f05443996c7016f44a05310e6e334a2474a4ba"
+  },
+  {
+    "id": "run-expiry-removed",
+    "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "sourceSha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "mutantSha256": "c9937679a3335b1024a5afab709802ea00e3327d990603edd9bac3965007bec2",
+    "changes": [
+      {
+        "old": "instant < lastNow || instant >= options.deadline",
+        "new": "instant < lastNow"
+      },
+      {
+        "old": "if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();",
+        "new": "if (performance.now() - began >= operationMilliseconds) throw refused();"
+      }
+    ],
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "terminal confirmation at the original run"
+    ],
+    "exitCode": 1,
+    "log": "/home/orca/.tmp/f3-async-terminal-envelope/run-expiry-removed.log",
+    "testSha256": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "logSha256": "b01a9a8bf09aed435b278db0056e0c9fb79115e745bc00b891f8cd8aa799d2cd"
+  },
+  {
+    "id": "operation-expiry-removed",
+    "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "sourceSha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "mutantSha256": "d1c5900dc6b47f93d894feb5c094b8e25962606d78034f84d9b7f130211f6daf",
+    "changes": [
+      {
+        "old": "if (now >= deadline || performance.now() - began >= operationMilliseconds) throw refused();",
+        "new": "if (now >= deadline) throw refused();"
+      }
+    ],
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "terminal confirmation at the async envelope"
+    ],
+    "exitCode": 1,
+    "log": "/home/orca/.tmp/f3-async-terminal-envelope/operation-expiry-removed.log",
+    "testSha256": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "logSha256": "79b68b54c2dd234baa5cc70e0a4b4119b3e5e18664ef860024d05cee432b03e6"
+  },
+  {
+    "id": "sync-terminal-widened",
+    "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+    "file": "packages/polaris-dossier/src/url-machine-store.ts",
+    "sourceSha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "mutantSha256": "e1acdb55292c20b66dc9efb21ec53fb33fc4d42d26a80db2fc33212e8d34173c",
+    "changes": [
+      {
+        "old": "terminalRead && currentAsync !== undefined ? ASYNC_TERMINAL_READ_MILLISECONDS",
+        "new": "terminalRead ? ASYNC_TERMINAL_READ_MILLISECONDS"
+      }
+    ],
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "terminal confirmation at the sync envelope"
+    ],
+    "exitCode": 1,
+    "log": "/home/orca/.tmp/f3-async-terminal-envelope/sync-terminal-widened.log",
+    "testSha256": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "logSha256": "a1afd18742ecb4ea984f06f8f5f5597f0bb21dec76ebf2c53f00ec94ee2fce83"
+  }
+]

@@ -1,0 +1,247 @@
+{
+  "format": "f3-hosted-terminal-read-refusal/1",
+  "subjectCommit": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "workflowRun": 45422683283,
+  "job": 138548223603,
+  "decodedFullFailure": {
+    "path": "/home/orca/.tmp/f3-hosted-f0d182.kPZmzb3Y/full-failure-1715.json",
+    "sha256": "2bf000a1a4ae16c7a02af1256ae920bf9f6dc154eb032303a91c7e17dfb906c3"
+  },
+  "sourceLog": {
+    "path": "/home/orca/.tmp/f3-hosted-f0d182.kPZmzb3Y/integration.log",
+    "sha256": "97ebc8d4f02d6dab45cc0b3ef99e134e3ba5e7728cf233ef0d6539ef32c97dc5"
+  },
+  "resumeStoreSteps": [
+    {
+      "kind": "open",
+      "startedMs": 626124.226375,
+      "runRemainingMs": 6780266,
+      "asyncAuthority": {
+        "started": 4,
+        "accepted": 4,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1501.0125460000709
+      },
+      "settledMs": 629587.528435,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 629960.23197,
+      "runRemainingMs": 6776430,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1993.512238000054
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "settledMs": 634646.505174,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 635051.816351,
+      "runRemainingMs": 6771339,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1904.4994399999268
+      },
+      "currentChecks": 2,
+      "currentRefusals": 0,
+      "read": "accepted",
+      "settledMs": 639883.749407,
+      "outcome": "accepted"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 640368.141541,
+      "runRemainingMs": 6766022,
+      "asyncAuthority": {
+        "started": 5,
+        "accepted": 5,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 2329.1665830001
+      },
+      "currentChecks": 2,
+      "currentRefusals": 1,
+      "read": "accepted",
+      "settledMs": 645574.627639,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 645574.77863,
+      "runRemainingMs": 6760816,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 973.9644800000824
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 647524.011429,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 647524.039431,
+      "runRemainingMs": 6758866,
+      "asyncAuthority": {
+        "started": 1,
+        "accepted": 1,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 540.9387509999797
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 648538.9253,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 648539.032199,
+      "runRemainingMs": 6757851,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 913.5064740000525
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 650506.461281,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 650506.509891,
+      "runRemainingMs": 6755884,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 903.7956059998833
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 652328.599156,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 652328.641846,
+      "runRemainingMs": 6754062,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1006.715751000098
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 654230.724355,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 654230.852644,
+      "runRemainingMs": 6752160,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 947.5007490001153
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 656121.050233,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 656121.074859,
+      "runRemainingMs": 6750269,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 1005.1025519999675
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 658098.978494,
+      "outcome": "refused"
+    },
+    {
+      "kind": "terminal-read",
+      "startedMs": 658099.001447,
+      "runRemainingMs": 6748291,
+      "asyncAuthority": {
+        "started": 2,
+        "accepted": 2,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 925.3414709999925
+      },
+      "currentChecks": 0,
+      "currentRefusals": 0,
+      "settledMs": 659898.681827,
+      "outcome": "refused"
+    },
+    {
+      "kind": "close",
+      "startedMs": 659898.800187,
+      "runRemainingMs": 6746492,
+      "asyncAuthority": {
+        "started": 0,
+        "accepted": 0,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 0
+      },
+      "settledMs": 659898.939116,
+      "outcome": "accepted"
+    }
+  ],
+  "firstConsumerRefusal": {
+    "kind": "terminal-read",
+    "startedMs": 640368.141541,
+    "runRemainingMs": 6766022,
+    "asyncAuthority": {
+      "started": 5,
+      "accepted": 5,
+      "refused": 0,
+      "rejected": 0,
+      "totalMs": 2329.1665830001
+    },
+    "currentChecks": 2,
+    "currentRefusals": 1,
+    "read": "accepted",
+    "settledMs": 645574.627639,
+    "outcome": "refused"
+  },
+  "firstConsumerRefusalElapsedMs": 5206.486097999965,
+  "interpretation": {
+    "observed": "The terminal bytes were accepted; the first consumer currentness sample succeeded and the second returned null before lock release.",
+    "inferred": "The five-second enclosing operation allowance is the strongest explanation for the 5.206-second result.",
+    "unknown": "The exact collapsed rejecting predicate is not uniquely identified. Accepted asynchronous checks do not prove final synchronous authority."
+  },
+  "scope": "Historical failure motivation; not successor recovery acceptance."
+}

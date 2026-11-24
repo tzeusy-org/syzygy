@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (7 tests | 4 skipped) 25ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 4 skipped (7)
+   Start at  00:05:35
+   Duration  5.85s (transform 3.99s, setup 16ms, collect 5.25s, tests 25ms, environment 0ms, prepare 87ms)
+

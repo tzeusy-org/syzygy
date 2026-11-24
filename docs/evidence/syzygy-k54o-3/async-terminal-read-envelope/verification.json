@@ -1,0 +1,55 @@
+{
+  "focused": {
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "-t",
+      "complete terminal read beyond|terminal confirmation at|withholds a terminal snapshot"
+    ],
+    "exitCode": 0,
+    "passed": 10,
+    "skipped": 108,
+    "population": 118,
+    "log": "focused-final.log"
+  },
+  "fullStore": {
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "--project",
+      "integration",
+      "packages/polaris-dossier/src/url-machine-store.test.ts"
+    ],
+    "exitCode": 0,
+    "passed": 118,
+    "population": 118,
+    "log": "full-store.log"
+  },
+  "testDelta": {
+    "predecessor": 113,
+    "candidate": 118,
+    "netAdded": 5,
+    "description": "four deadline/scope cases and missing final-consumer synchronous withdrawal case; existing latency pair extended"
+  },
+  "typecheck": {
+    "commit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "log": "typecheck.log",
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "limitations": [
+    "No native run performed.",
+    "Hosted final rejecting clock/authority predicate remains unproved; this is an explicit scoped budget adoption.",
+    "Actual filesystem tests use injected monotonic elapsed time for deterministic latency and boundary coverage."
+  ]
+}

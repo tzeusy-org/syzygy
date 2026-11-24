@@ -1,0 +1,11 @@
+{
+  "frozenCommit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+  "parent": "ff12cb11f1866825490814f2ad31d1c4e2e176f6",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "2cd6e51025c9732f1002dc9727a6529da0173ebf5f2e6910772b9c4c6ecb582d",
+  "bindingFile": "binding.json",
+  "bindingSha256": "f49446f446a22dbb884f106cae210b6e7bed42c30990bfbb81741d0533e0d31f",
+  "controlsFile": "controls.json",
+  "controlsSha256": "011b0737caaee374173e488db45d9261fe2b3f52a266444c7e493ef5d026ccf9",
+  "combinedTypecheck": "root-coordinated, pending at retention; no second typecheck run by observer worker"
+}

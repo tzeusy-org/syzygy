@@ -1,0 +1,49 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+ ✓ |integration| packages/polaris-dossier/src/url-run-composed.test.ts (7 tests | 4 skipped) 24ms
+ ✓ |integration| packages/polaris-dossier/src/url-machine-store.test.ts (118 tests) 35304ms
+   ✓ protected URL machine lifecycle files > bounds unprofiled effects by the matching declared profile while retaining finite expiry  336ms
+   ✓ protected URL machine lifecycle files > takes one fresh synchronous parent sample before the first private anchor read when current is false  366ms
+   ✓ protected URL machine lifecycle files > ordinary synchronous lease reads check currentness once before the first private root read when current is true  305ms
+   ✓ protected URL machine lifecycle files > ordinary synchronous lease reads check currentness once before the first private root read when current is false  350ms
+   ✓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry when ordered is false  311ms
+   ✓ protected URL machine lifecycle files > rejects copied, oversized and mismatched effect profiles before entry when ordered is true  419ms
+   ✓ protected URL machine lifecycle files > refuses an effect profile matching the digest but not the durable run when ordered is false  348ms
+   ✓ protected URL machine lifecycle files > refuses an effect profile matching the digest but not the durable run when ordered is true  315ms
+   ✓ protected URL machine lifecycle files > clips the native effect to the caller deadline when ordered is true  409ms
+   ✓ protected URL machine lifecycle files > prevents publication after 'original-deadline' during a declared effect when ordered is false  518ms
+   ✓ protected URL machine lifecycle files > prevents publication after 'revocation' during a declared effect when ordered is false  603ms
+   ✓ protected URL machine lifecycle files > prevents publication after 'original-deadline' during a declared effect when ordered is true  443ms
+   ✓ protected URL machine lifecycle files > prevents publication after 'revocation' during a declared effect when ordered is true  384ms
+   ✓ protected URL machine lifecycle files > publishes through actual files, reopens the store, and refuses canonical plus projection rollback after revocation  633ms
+   ✓ protected URL machine lifecycle files > publishes through the trusted store with one checked clock at each lifecycle boundary  311ms
+   ✓ protected URL machine lifecycle files > awaits fresh authority around real protected filesystem work  325ms
+   ✓ protected URL machine lifecycle files > allocates an unissued slot within the original bound when fresh policy checks have a cost  618ms
+   ✓ protected URL machine lifecycle files > publishes a complete eight-slot allocation in one protected state update  416ms
+   ✓ protected URL machine lifecycle files > returns 1-slot allocation at the clipped deadline while its late cleanup still owns the descriptor  1056ms
+   ✓ protected URL machine lifecycle files > returns 8-slot allocation at the clipped deadline while its late cleanup still owns the descriptor  1074ms
+   ✓ protected URL machine lifecycle files > confirms protected state and client bytes within five seconds of fresh authority checks  489ms
+   ✓ protected URL machine lifecycle files > withholds client and projection reads when async authority is withdrawn while reading terminal state  311ms
+   ✓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when withdrawn  339ms
+   ✓ protected URL machine lifecycle files > withholds a terminal snapshot after its bytes were read when expired  315ms
+   ✓ protected URL machine lifecycle files > detaches terminal snapshots from cached lifecycle metadata  591ms
+   ✓ protected URL machine lifecycle files > keeps the 'ordinary' lock sync and census before authority-gated state reads when current is true  312ms
+   ✓ protected URL machine lifecycle files > keeps the 'ordinary' lock sync and census before authority-gated state reads when current is false  472ms
+   ✓ protected URL machine lifecycle files > reads private state while identity is held and joins both before client access  305ms
+   ✓ protected URL machine lifecycle files > readTerminal checks authority after protected state I/O before opening the client  306ms
+   ✓ protected URL machine lifecycle files > serializes independent adapters and accepts exactly one publication for one expected predecessor  444ms
+   ✓ protected URL machine lifecycle files > retains an OS-process lock after its holder is killed and refuses a successor process  1258ms
+   ✓ protected URL machine lifecycle files > cannot bypass archive preflight with omitted-preflight  352ms
+   ✓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-intent  309ms
+   ✓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-id-reservation  326ms
+   ✓ protected URL machine lifecycle files > cannot bypass archive preflight with changed-run  573ms
+   ✓ protected URL machine lifecycle files > keeps globally consumed identifiers and the sixteen-client run cap across new adapters  5536ms
+   ✓ protected URL machine lifecycle files > rechecks expiry after actual file sync and leaves late timed-out writes unpublished  855ms
+   ✓ protected URL machine lifecycle files > refuses expired, backward-clock and revoked host leases before canonical publication  316ms
+
+ Test Files  2 passed (2)
+      Tests  121 passed | 4 skipped (125)
+   Start at  00:09:02
+   Duration  41.05s (transform 3.57s, setup 21ms, collect 4.99s, tests 35.33s, environment 0ms, prepare 173ms)
+

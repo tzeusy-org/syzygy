@@ -1,0 +1,10 @@
+{
+  "baseCommit": "f8ce8bd84445eddcc6476ccdc2f3e53d2909ac00",
+  "deltaSha256": "77dab8ed2c99282a6685aa7a8ed30f598ff6e5fd4a91f99430f724f4a0aa76aa",
+  "files": {
+    "packages/polaris-dossier/src/url-machine-store.ts": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "packages/polaris-dossier/src/url-machine-store.test.ts": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607"
+  },
+  "subjectCommit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+  "subjectParent": "ff12cb11f1866825490814f2ad31d1c4e2e176f6"
+}

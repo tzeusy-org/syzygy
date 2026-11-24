@@ -1,0 +1,182 @@
+{
+  "format": "f3-recovery-terminal-and-products-evidence/1",
+  "capturedAt": "2026-11-24T16:11:03.047997+00:00",
+  "subjectCommit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+  "baseCommit": "ff12cb11f1866825490814f2ad31d1c4e2e176f6",
+  "binaryDeltaSha256": "a53935bf89dcc322395078b9584fafecfe99ec2407eb4497e6552aad8f5f293c",
+  "subjects": {
+    "packages/polaris-dossier/src/url-machine-store.ts": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+    "packages/polaris-dossier/src/url-machine-store.test.ts": "332b9e85ef56c3915f2fd689494c7dbecfc720dedf3b6a2fd0757bf9cc9f2607",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "2cd6e51025c9732f1002dc9727a6529da0173ebf5f2e6910772b9c4c6ecb582d"
+  },
+  "review": {
+    "path": "docs/reviews/F3-RECOVERY-TERMINAL-AND-PRODUCT-TRACE-REVIEW-R1-RAW.md",
+    "sha256": "ddf76b9357759e7275703025926b061340c10792740366014f6bb8ef57173866",
+    "verdict": "PASS",
+    "scope": "three-file source delta; no native completion claim"
+  },
+  "verification": {
+    "cleanClone": {
+      "commit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+      "checkout": "/home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w",
+      "files": 2,
+      "passed": 121,
+      "skipped": 4,
+      "population": 125,
+      "filePopulationsSecondMethod": [
+        7,
+        118
+      ],
+      "command": "vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-machine-store.test.ts packages/polaris-dossier/src/url-run-composed.test.ts -t protected URL machine lifecycle files|bounded restoration observer"
+    },
+    "authorFullStore": {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-store.test.ts"
+      ],
+      "exitCode": 0,
+      "passed": 118,
+      "population": 118,
+      "log": "full-store.log"
+    },
+    "typecheck": {
+      "commit": "9840d8a395ef8afa5ac6864326562a212761bb3d",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "log": "typecheck.log",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "storeControls": {
+      "detected": 5,
+      "population": 5,
+      "path": "controls.json"
+    },
+    "observerControls": {
+      "detected": 5,
+      "population": 5,
+      "path": "../restore-products-observer/controls.json"
+    },
+    "existingNativeAssertionLines": {
+      "predecessor": 107,
+      "candidate": 107,
+      "identical": true
+    }
+  },
+  "growth": {
+    "productionNetLines": 5,
+    "storeTestNetLines": 33,
+    "observerNetLines": 195,
+    "netAddedCases": 8,
+    "storeAddedCases": 5,
+    "observerAddedCases": 3
+  },
+  "artifacts": {
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/caller-expiry-removed.log": {
+      "sha256": "dcc3765384cf8e84468d53d577f05443996c7016f44a05310e6e334a2474a4ba",
+      "bytes": 16744
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/clean-clone-recovery.log": {
+      "sha256": "46268c80aee61837ca4defae2706853d511205e27be3b30f4e22a027c33b57b9",
+      "bytes": 5754
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/controls.json": {
+      "sha256": "4fa7221388d676a75360bbd0b1ad82e9ff6c381b861fb26473fd91acb7f764d1",
+      "bytes": 5430
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/focused-final.log": {
+      "sha256": "768dae0bb5c34bc70aabddf9f7e70671e6f09a0aa729cd6e8e2f7989c5ce37dd",
+      "bytes": 1610
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/full-store.log": {
+      "sha256": "7e66ffaac5aa52d30311e148a8d557676d7dde9df0441be87d6564303ce4b814",
+      "bytes": 11805
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/hosted-f0d182-terminal.json": {
+      "sha256": "49d6fe59b90a60d5b6632719f614bd166de93ca3ec2c4c1604e2520118fc51cc",
+      "bytes": 6539
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/old-async-five-seconds.log": {
+      "sha256": "6fa02cd2a3f7d0fcbac624cef043b46fe6a07855b7f51b25def9b7115dca0c96",
+      "bytes": 17047
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/operation-expiry-removed.log": {
+      "sha256": "79b68b54c2dd234baa5cc70e0a4b4119b3e5e18664ef860024d05cee432b03e6",
+      "bytes": 16743
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/recovery-acceptance-matrix.md": {
+      "sha256": "1d1db079a0e8625eee6f5432a97892ed6f1cd8a8dc88a95e9dfc2a77db0b6be0",
+      "bytes": 4738
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/run-expiry-removed.log": {
+      "sha256": "b01a9a8bf09aed435b278db0056e0c9fb79115e745bc00b891f8cd8aa799d2cd",
+      "bytes": 16741
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/sync-terminal-widened.log": {
+      "sha256": "a1afd18742ecb4ea984f06f8f5f5597f0bb21dec76ebf2c53f00ec94ee2fce83",
+      "bytes": 16742
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/typecheck.log": {
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "bytes": 37
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/verification.json": {
+      "sha256": "47ba4c3b7fc123bb47644fce5a4e50d5b71ac6413436a28e664b1ca7c07f0d1a",
+      "bytes": 1478
+    },
+    "docs/evidence/syzygy-k54o-3/async-terminal-read-envelope/worker-binding.json": {
+      "sha256": "8bb79b6575d5705e2176425843f6c9c3200dc55b228c60b6cb391d5b4e2cde95",
+      "bytes": 546
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/cap-overflow.log": {
+      "sha256": "3aa6efbeb257e5b5cdd520b354f32d490ebfa72d9f40d985baa0f05352d5fe8d",
+      "bytes": 2339
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/controls.json": {
+      "sha256": "011b0737caaee374173e488db45d9261fe2b3f52a266444c7e493ef5d026ccf9",
+      "bytes": 3784
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/frozen-subject.json": {
+      "sha256": "d79463bd8d9ca9c440f00fe35ba9fc69126b39dc32bafebbb93ff84a195e10bb",
+      "bytes": 627
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/late-failure-erased.log": {
+      "sha256": "69104491bdfdb822e91e97a9495e35018ac37d463e57f79048d7f61f71a3d771",
+      "bytes": 2548
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/optional-role-dropped.log": {
+      "sha256": "bab50747bb1965bfc62af8e4cdffe4fe29f77d9f98fb248cde1f603e0657dab1",
+      "bytes": 2417
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/passed-guard-cause-erased.log": {
+      "sha256": "b9f9b4e2d09e4a077bdeb85fbf0dc9214743508c8f2c0666ca6f800f0fb43080",
+      "bytes": 2659
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/receipt-identity-copied.log": {
+      "sha256": "2be4e1fab80cbb2061342eb0282040647ebb13012d29593b8fbca92570ae5b1d",
+      "bytes": 2817
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/restored-exercise.log": {
+      "sha256": "cdc4ddd592ac4306f8c188920be656490857b9213a57af83cc9524219e11441a",
+      "bytes": 360
+    },
+    "docs/evidence/syzygy-k54o-3/restore-products-observer/worker-binding.json": {
+      "sha256": "f49446f446a22dbb884f106cae210b6e7bed42c30990bfbb81741d0533e0d31f",
+      "bytes": 1871
+    }
+  },
+  "limitations": [
+    "No genuine native recovery was run for this source yet; all four native cases were skipped in the clone command.",
+    "The historical hosted terminal refusal is not uniquely attributed to a timer. This change explicitly adopts a larger scoped operation budget, without removing any authority check.",
+    "Restoration diagnostics are test-only observations; private final guards remain unattributed and generic throws are not called deadline expiry.",
+    "The plain restored ledger-result decoration adds one promise continuation. It forwards actual receipts, guards, arguments and errors; it is not native capability proof.",
+    "Hosted acceptance and final pinned-source/frozen-draft rendering comparison remain required."
+  ]
+}
