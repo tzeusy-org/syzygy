@@ -40,13 +40,18 @@ const MUTANTS = [
   ['check-any-label', CHECK, "if (value[WORTH_KNOWING_FIELD] !== true || value['label'] !== 'inferred') return;", 'if (value[WORTH_KNOWING_FIELD] !== true) return;'],
   ['check-mark-field-version-dropped', CHECK, "walk(doc, '$', (value, at) => { if (Object.hasOwn(value, WORTH_KNOWING_FIELD)) out.push(", "walk(doc, '$', (value, at) => { if (false) out.push("],
   ['check-none-field-version-dropped', CHECK, 'if (isRecord(pole) && Object.hasOwn(pole, WORTH_KNOWING_NONE_FIELD)) out.push(', 'if (false) out.push('],
-  ['check-v11-judged-as-v8', CHECK, 'if (!hasWorthKnowingForm(doc[\'schemaVersion\'])) return;\n  walk(', 'if (hasWorthKnowingForm(doc[\'schemaVersion\'])) return;\n  walk('],
-  // --- schema: the mark on the Inferred forms of v11 only, the reason on a v11 Pole only
+  ['check-v13-judged-as-v10', CHECK, 'if (!hasWorthKnowingForm(doc[\'schemaVersion\'])) return;\n  walk(', 'if (hasWorthKnowingForm(doc[\'schemaVersion\'])) return;\n  walk('],
+  // --- schema: the mark on the Inferred forms of v13 only, the reason on a v13 Pole only
   ['schema-mark-in-v8', SCHEMA, 'const mark: Record<string, DraftSchema> = marked ?', 'const mark: Record<string, DraftSchema> = true ?'],
   ['schema-mark-dropped', SCHEMA, 'const mark: Record<string, DraftSchema> = marked ?', 'const mark: Record<string, DraftSchema> = false ?'],
   ['schema-none-in-v8', SCHEMA, "poles: list(worthKnowing === 'taken'", 'poles: list(true'],
+  // --- the version chain after the merge with main: v13 is v10 plus the mark; v11 and v12 are unknown versions
+  ['chain-v10-marked', CHECK, "const v10 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');", "const v10 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'taken');"],
+  ['chain-v13-read-as-v10', CHECK, 'const schema = hasWorthKnowingForm(version) ? current : hasHeroForm(version) ? v10 :', 'const schema = false ? current : hasHeroForm(version) ? v10 :'],
+  ['chain-v13-without-hero', SCHEMA, 'version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version);', 'version === LOCAL_DRAFT_SCHEMA_VERSION_V10;'],
+  ['chain-v11-v12-admitted', SCHEMA, 'LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION] as const', "LOCAL_DRAFT_SCHEMA_VERSION_V10, 'polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12', LOCAL_DRAFT_SCHEMA_VERSION] as const"],
   ['inventory-kind-dropped', SCHEMA, "'conflict', 'worth-knowing', 'other'] as const);", "'conflict', 'other'] as const);"],
-  // --- advice: count per Pole, a reason excuses zero, the ceiling, a section counted once, v11 only
+  // --- advice: count per Pole, a reason excuses zero, the ceiling, a section counted once, v13 only
   ['advice-reason-ignored', ADVICE, 'if (marked === 0 && !group.none) {', 'if (marked === 0) {'],
   ['advice-ceiling-off-by-one', ADVICE, '} else if (marked > WORTH_KNOWING_CEILING) {', '} else if (marked > WORTH_KNOWING_CEILING + 1) {'],
   ['advice-section-counted-twice', ADVICE, 'if (counted.has(id)) return sum; ', ''],
