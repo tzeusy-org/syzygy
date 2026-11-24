@@ -210,8 +210,10 @@ under `apps/three-surface-poc/src/polaris-generation/`.
 2. **Explain a drop beyond the instrument's noise.** A point is 0.01 of
    share. If the overall share falls by more than five points, or any kind's
    share falls by more than one required fact (a kind has 13 to 15 facts, so
-   one fact is 6.7 to 7.7 points; a grade moves in half facts), the change
-   says why, or is repaired.
+   one fact is 6.7 to 7.7 points; a grade moves in half facts), or three or
+   more kinds each fall by a full fact, the change says why, or is repaired.
+   The last clause catches many one-fact drops in one direction, which can
+   otherwise stay under five points overall.
 3. **Do not call one result a regression, and never call one a win.**
    [Observed] Over one repository
    (`docs/evidence/syzygy-5dhm-127/stored-run-measures.json`,
@@ -224,7 +226,8 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    spans 4.9 points overall. So five points overall sits at the edge of the
    measured noise, and a kind moves by a whole fact without any change.
    [Inferred] Treating facts as independent, one standard error is about five
-   points overall and about thirteen in a kind. So a drop is reported and
+   points overall and about thirteen in a kind (error over the choice of
+   questions, not the repeat noise of a before/after on this key). So a drop is reported and
    explained as a drop, and is called a regression only after it holds on two
    runs or under a second key. The pilot is uncalibrated (one repository,
    model readers, a model grader), so a rise is reported as a number and
