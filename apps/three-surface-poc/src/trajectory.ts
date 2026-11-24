@@ -11,6 +11,9 @@ import {
   type TrajectoryNarrowing,
   type TrajectoryEligibility,
   type TrajectoryEligibilityReason,
+  groupAnchor,
+  type TrajectoryGroupSlice,
+  type TrajectoryGrouping,
   type TrajectoryItemEligibility,
   type TrajectoryViewRefusal,
   type TrajectoryViewRequest,
@@ -357,9 +360,12 @@ function itemCard(
   demonstrated: boolean,
   eligibility: TrajectoryItemEligibility | undefined,
   mountPrefix: string,
+  anchor = true,
 ): string {
   const governedBy = servedGovernedBy(model, item.id);
-  return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}" id="workitem-${escapeHtml(item.id)}" data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
+  // syzygy-t3jk.20: an item under two parents renders twice on a grouped
+  // page; only its first card carries the fragment target.
+  return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}"${anchor ? ` id="workitem-${escapeHtml(item.id)}"` : ''} data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
     ${demonstrated ? '<span class="demo-badge">Demonstrated item</span>' : ''}
     <a class="wi-title" href="#workitem-${escapeHtml(item.id)}" data-parity-field="work-item-id">${escapeHtml(item.id)}</a>
     ${itemTitleWithheld(model)}
@@ -409,7 +415,15 @@ const TRAJECTORY_STYLE = `
   .governing-intent-count, .titles-withheld { max-width: 78ch; }
   .narrow-label { font-family: var(--font-mono); font-size: .78rem; margin-left: .3rem; }
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
-  .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]) { display: none; }
+  .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]),
+  .narrow-toggle:checked ~ .outline .wi-card:not([data-governed-by="Unknown"]) { display: none; }
+  .outline { padding: 1.5rem 0 3rem; }
+  .outline-groups { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.2rem; }
+  .outline-group { border-left: 2px solid var(--line); padding-left: .9rem; display: grid; gap: .4rem; }
+  .outline-group h3 { font-size: 1rem; margin: 0; }
+  .outline-group p { margin: 0; color: var(--muted); max-width: 78ch; }
+  .outline-group .wi-list { grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .outline a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   ${MATERIALIZE_PANEL_STYLE}
   ${TIME_MEASURES_STYLE}
   .view-nav { margin: 0 0 1rem; }
@@ -424,6 +438,7 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
   const query = new URLSearchParams();
   if (view?.status) query.set('status', view.status);
   if (view?.governingIntent) query.set('governing-intent', view.governingIntent);
+  if (view?.group) query.set('group', view.group);
   if (view?.page !== undefined) query.set('page', String(view.page));
   const text = query.toString();
   return escapeHtml(withMountPrefix(mountPrefix, TRAJECTORY_HUMAN_PATH) + (text === '' ? '' : `?${text}`));
@@ -442,8 +457,9 @@ function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers
   const view = narrowing.view;
   const link = (href: string, text: string, current: boolean): string =>
     `<li><a href="${href}"${current ? ' aria-current="page"' : ''}>${text}</a></li>`;
-  const isView = (status: string | null, intent: string | null): boolean =>
-    view !== null && view.status === status && view.governingIntent === intent;
+  const isView = (status: string | null, intent: string | null, group: string | null = null): boolean =>
+    view !== null && view.status === status && view.governingIntent === intent && view.group === group;
+  const nonClosed = byStatus === null ? null : model.workItems.items.length - byStatus.closed;
   const statuses = byStatus === null ? '' : (Object.keys(byStatus) as WorkItemStatus[])
     .map((status) => link(viewHref(mountPrefix, { status, page: 1 }), `<code>${escapeHtml(status)}</code> <span data-parity-field="trajectory-view-status-count" data-status="${escapeHtml(status)}">${byStatus[status]}</span>`, isView(status, null)))
     .join('');
@@ -457,10 +473,101 @@ function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers
         ${link(viewHref(mountPrefix, { page: 1 }), `All items by id <span data-parity-field="trajectory-view-all-count">${model.workItems.items.length}</span>`, isView(null, null))}
         ${statuses}
         ${link(viewHref(mountPrefix, { governingIntent: 'unknown', page: 1 }), `Governing intent Unknown <span data-parity-field="trajectory-view-intent-count">${model.workItems.governedByUnknownCount}</span>`, isView(null, 'unknown'))}
+        ${nonClosed === null ? '' : link(viewHref(mountPrefix, { group: 'parent', page: 1 }), `Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">${nonClosed}</span>`, isView(null, null, 'parent'))}
       </ul>
-      <p class="view-note">${narrowing.pageSize} items per page, by ascending item id.</p>
+      <p class="view-note">${narrowing.pageSize} items per page, by ascending item id; grouped by parent, ${narrowing.pageSize} positions per page.</p>
       ${pages}
     </nav>`;
+}
+
+/** A fragment reference to an element id: URL-encoded, then HTML-escaped
+ * (R-T4S2-OUTLINE-1 finding 2). */
+function fragment(id: string): string {
+  return `#${escapeHtml(encodeURIComponent(id))}`;
+}
+
+/** syzygy-t3jk.20: what a group's heading says. A parent is named with its
+ * tracker status as recorded and never judged from its children; the four
+ * classes say why their items sit under no named parent. */
+function groupHeading(group: TrajectoryGroupSlice, view: TrajectoryNarrowing['view'], mountPrefix: string): string {
+  const key = group.key;
+  switch (key.kind) {
+    case 'parent': {
+      const parent = group.parent!;
+      const card = `${viewHref(mountPrefix, { page: parent.cardPage })}#${encodeURIComponent(`workitem-${key.id}`)}`;
+      return `Parent <a data-group-parent="${escapeHtml(key.id)}" href="${card}">${escapeHtml(key.id)}</a>, tracker status <code data-group-parent-status>${escapeHtml(parent.status)}</code>`;
+    }
+    case 'parent-outside-tracker':
+      return 'Parent outside this tracker';
+    case 'parent-unobserved':
+      return 'Parent not served';
+    case 'no-parent':
+      return 'No parent recorded';
+    case 'parent-unknown':
+      return 'Parent Unknown';
+  }
+}
+
+const GROUP_NOTE = {
+  'parent-outside-tracker': 'A parent row names an external item, a wisp or an item of another tracker; that parent is counted here and never named.',
+  'parent-unobserved': 'A parent row names an item of this tracker that the observation did not serve.',
+  'no-parent': 'No parent-child row names a parent for these items.',
+} as const;
+
+function groupRegion(group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string, cards: string): string {
+  const pageLink = (page: number, text: string, rel: string): string =>
+    `<a data-group-continues="${rel}" href="${viewHref(mountPrefix, { ...view, page })}${fragment(group.anchor)}">${text} ${page}</a>`;
+  const notes: string[] = [];
+  const parent = group.parent;
+  if (parent !== undefined) {
+    if (parent.status === 'closed') notes.push('The parent is closed in the tracker and its items keep their own statuses; neither is read as the other\'s completion.');
+    if (parent.under.length > 0) {
+      notes.push(`The parent sits under ${parent.under.map(({ id, groupPage, cardPage }) => groupPage === null
+        ? `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page: cardPage })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`
+        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}${fragment(groupAnchor({ kind: 'parent', id }))}">${escapeHtml(id)}</a>`).join(', ')}.`);
+    }
+    const cycle = parent.cycle;
+    if (cycle !== null && 'members' in cycle) {
+      notes.push(`<span data-group-cycle="${escapeHtml(cycle.members.join(' '))}">Parent-child cycle among ${cycle.members.map((id) => `<code>${escapeHtml(id)}</code>`).join(', ')}: stated here once and not followed further.</span>`);
+    } else if (cycle !== null) {
+      const anchor = groupAnchor({ kind: 'parent', id: cycle.statedUnder });
+      const href = cycle.page === null ? fragment(anchor) : `${viewHref(mountPrefix, { ...view, page: cycle.page })}${fragment(anchor)}`;
+      notes.push(`<span data-group-cycle-ref="${escapeHtml(cycle.statedUnder)}">The parent is in a parent-child cycle, stated under <a href="${href}">${escapeHtml(cycle.statedUnder)}</a>.</span>`);
+    }
+  } else if (group.key.kind === 'parent-unknown') {
+    notes.push(`<span data-group-reason="${group.key.reason}">The dependency rows were not read. ${ELIGIBILITY_REASONS[group.key.reason]}</span>`);
+  } else if (group.key.kind !== 'parent') {
+    notes.push(GROUP_NOTE[group.key.kind]);
+  }
+  const continuity = [
+    group.continuedFromPage === null ? '' : `Continued from ${pageLink(group.continuedFromPage, 'page', 'prev')}.`,
+    group.continuesOnPage === null ? '' : `Continues on ${pageLink(group.continuesOnPage, 'page', 'next')}.`,
+  ].filter((part) => part !== '').join(' ');
+  return `<li class="outline-group" data-group="${escapeHtml(group.anchor)}">
+      <h3 id="${escapeHtml(group.anchor)}">${groupHeading(group, view, mountPrefix)}</h3>
+      <p><span data-group-total>${group.total}</span> items in this group, <span data-group-on-page>${group.onPage.length}</span> on this page.${continuity === '' ? '' : ` ${continuity}`}</p>
+      ${notes.map((note) => `<p>${note}</p>`).join('')}
+      <ol class="wi-list">${cards}</ol>
+    </li>`;
+}
+
+/** syzygy-t3jk.20: the grouped view's page, one region per group. */
+function outlineRegion(grouping: TrajectoryGrouping, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string,
+  card: (item: TrajectoryLaneItem, anchor: boolean) => string, rendered: readonly TrajectoryLaneItem[]): string {
+  const byId = new Map(rendered.map((item) => [item.id, item]));
+  const anchored = new Set<string>();
+  const groups = grouping.groups.map((group) => groupRegion(group, view, mountPrefix, group.onPage.map((id) => {
+    const item = byId.get(id);
+    if (item === undefined) throw new Error(`grouped work item ${id} is not rendered`);
+    const anchor = !anchored.has(id);
+    anchored.add(id);
+    return card(item, anchor);
+  }).join(''))).join('');
+  return `<section class="outline" aria-labelledby="outline-heading" data-parity-field="trajectory-outline">
+      <h2 id="outline-heading" class="answers-heading">Work items grouped by parent</h2>
+      <p class="view-note"><span data-parity-field="trajectory-outline-positions">${grouping.positions}</span> positions over every page: an item with several parents sits under each.</p>
+      <ol class="outline-groups">${groups}</ol>
+    </section>`;
 }
 
 /** The Trajectory route: the default selection, or one declared view, or
@@ -493,26 +600,30 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     const demonstratedId = currentMaterializedBeadId(model);
     const demonstratedRendered =
       demonstratedId !== null && trajectory.rendered.some((item) => item.id === demonstratedId);
+    const card = (item: TrajectoryLaneItem, anchor = true): string =>
+      itemCard(
+        model,
+        item,
+        workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
+        model.testArtifactVerification,
+        model.governingIntentId,
+        item.id === demonstratedId,
+        trajectory.eligibility.items[item.id],
+        mountPrefix,
+        anchor,
+      );
     const columns = COLUMN_ORDER.map((column) => {
       const items = byColumn.get(column) ?? [];
       return `<section class="board-column" aria-label="${escapeHtml(column)} column">
         <h2>${escapeHtml(column)} <span class="count">(${items.length})</span></h2>
-        <ol class="wi-list">${items
-          .map((item) =>
-            itemCard(
-              model,
-              item,
-              workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
-              model.testArtifactVerification,
-              model.governingIntentId,
-              item.id === demonstratedId,
-              trajectory.eligibility.items[item.id],
-              mountPrefix,
-            ),
-          )
-          .join('')}</ol>
+        <ol class="wi-list">${items.map((item) => card(item)).join('')}</ol>
       </section>`;
     }).join('');
+    const grouping = trajectory.grouping;
+    const view = trajectory.narrowing.view;
+    const board = grouping !== undefined && view !== null
+      ? outlineRegion(grouping, view, mountPrefix, card, trajectory.rendered)
+      : `<div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
 
     const demonstratedCallout =
       demonstratedId === null
@@ -535,7 +646,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
       ${titlesWithheldRegion(model)}
       ${verificationRegion(model, trajectory.verificationUnknown)}
       ${demonstratedCallout}
-      <div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
+      ${board}`;
   }
 
   body += renderMaterializePanel(model, mountPrefix);
