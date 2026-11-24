@@ -23,9 +23,20 @@ export function disclosureList(items: readonly LocalDisclosureItem[], escape: Es
   return `<ul>${items.map(item => labelled(item, escape)).join('')}</ul>`;
 }
 
-/** The named review-status region. It holds no claim and no fragment target, so stripping it changes nothing else on the page. */
-export function regionMarkup(items: readonly LocalDisclosureItem[], escape: Escape): string {
-  return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul style="overflow-wrap:anywhere">${items.map(item => labelled(item, escape)).join('')}</ul></aside>`;
+/** The named review-status region. The review page shows packet identities in readable groups. */
+export function regionMarkup(items: readonly LocalDisclosureItem[], escape: Escape): (path: string) => string {
+  const markup = (showDigests: boolean): string => {
+    const lines = items.map(item => {
+      const text = showDigests || item.label === 'Unknown' ? item.text
+        : item.text.replace(/bound to packet [0-9a-f]{64}(?![0-9a-f])/gi, 'bound to the packet shown on the review page');
+      // Other status text can contain a long identifier, such as a path in a refusal. Keep its visible digits in order.
+      return labelled({ ...item, text: text.replace(/[0-9a-f]{64,}/gi, digits => digits.replace(/.{8}(?=.)/g, '$& ')) }, escape);
+    }).join('');
+    return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul style="overflow-wrap:anywhere">${lines}</ul></aside>`;
+  };
+  const review = markup(true);
+  const other = markup(false);
+  return path => path === 'review.html' ? review : other;
 }
 
 /** The anchor as data attributes, for the inline link beside a quotation. */

@@ -223,18 +223,25 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
   }
 }, 60_000);
 
-it.skipIf(executable === undefined)('fits every dossier page with both counted review digests at 390 by 844', async () => {
+it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and shows both counted packet digests on Review', async () => {
   if (!executable) throw Error('Browser required');
   const { sources, local } = navigationInput();
   const fidelityDigest = '0123456789abcdef'.repeat(4);
   const designDigest = 'fedcba9876543210'.repeat(4);
+  const fidelityGroups = '01234567 89abcdef 01234567 89abcdef 01234567 89abcdef 01234567 89abcdef';
+  const designGroups = 'fedcba98 76543210 fedcba98 76543210 fedcba98 76543210 fedcba98 76543210';
+  const longStatusWord = 'longrunreferenceword'.repeat(10);
   const reviewStatus = [
-    { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render.`, label: 'Observed' },
-    { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Observed' },
+    { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render. ${longStatusWord}`, label: 'Inferred' },
+    { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Inferred' },
   ] as const;
-  const { files } = renderLocalDossier({ sources, local: { ...local, reviewStatus } });
+  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [] };
+  const layoutFixture = { ...local, reviewStatus, pages: [...local.pages, reviewPage] };
+  const { files } = renderLocalDossier({ sources, local: layoutFixture });
   const pages = [...files].filter(([path]) => path.endsWith('.html'));
-  expect(pages).toHaveLength(18);
+  expect(pages).toHaveLength(19);
+  expect(files.has('review.html')).toBe(true);
+  expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
   const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
   let browser: Browser | undefined;
   try {
@@ -257,8 +264,19 @@ it.skipIf(executable === undefined)('fits every dossier page with both counted r
         })`);
         expect([layout.width, layout.height], path).toEqual([390, 844]);
         expect(layout.statuses, path).toHaveLength(1);
-        expect(layout.statuses[0], path).toContain(fidelityDigest);
-        expect(layout.statuses[0], path).toContain(designDigest);
+        const status = layout.statuses[0]!;
+        expect(status, path).not.toMatch(/[0-9a-f]{64}/i);
+        expect(status, path).toContain('Fidelity review: one counts');
+        expect(status, path).toContain('Rendered-design review: one counts');
+        expect(status, path).toContain(longStatusWord);
+        if (path === 'review.html') {
+          expect(status, path).toContain(fidelityGroups);
+          expect(status, path).toContain(designGroups);
+        } else {
+          expect(status, path).toContain('bound to the packet shown on the review page');
+          expect(status, path).not.toContain(fidelityGroups);
+          expect(status, path).not.toContain(designGroups);
+        }
         if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
       }
       expect(overflows).toEqual([]);

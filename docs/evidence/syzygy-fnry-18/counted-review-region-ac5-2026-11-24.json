@@ -1,0 +1,197 @@
+{
+  "format": "syzygy-dossier-counted-review-region-evidence-v1",
+  "scope": "syzygy-fnry.18 AC5 and its AC7 control for the local named review-status region. The provider golden, source inputs, machine view, rendered-design packet and file bytes outside the named region are preserved.",
+  "source": {
+    "commit": "887c8ba10f869bb8bc7fa25b64f3298da84967f4",
+    "protectedParent": "973b1d1911f24b9080c8bcf342a0538c7a5f08fe",
+    "tree": "7b4ef1c9d07814d14c2635cb56723a45f0008653",
+    "exactFourPathDiffSha256": "6fd6c80deed0ad19b075dffd58a5ecad4150814c65f31677924f062362f64c6a",
+    "ownedGitBlobs": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts": "6646da9f340e348f5c8691ca669dacfa2cef6ca1",
+      "packages/polaris-dossier/src/render.test.ts": "be87930365910126f098cec3b07b748e23d088b3",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "f6f19257c7a37dc79e6b8e0f5ec720e920a563c8",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "ff996676e895df238300ce13332ddc766cea1d88"
+    }
+  },
+  "authority": {
+    "requirement": "REQ-polaris-generation-035",
+    "scenarios": [
+      "Independence and completeness disclosed as Inferred",
+      "Design review survives its status region"
+    ],
+    "file": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+    "sha256": "2dbf5fc5378fa4e0cdcb90b4f9261f6b34882403bf20048948bd58c495490d4e"
+  },
+  "checks": {
+    "chrome": {
+      "passed": 3,
+      "failed": 0,
+      "pending": 0,
+      "reportSha256": "b57c245d04ec2e454c4a09490a4020321ceae9e524060e87ccd015e5c1626b94",
+      "source": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "viewport": [
+        390,
+        844
+      ],
+      "htmlPages": 19,
+      "namedStatusRegions": 19,
+      "reviewPageDigestsInOrder": 2,
+      "ungroupedRegionDigests": 0,
+      "scope": "Synthetic local HTML fixture with an additional Review page and a literal long non-hex status token."
+    },
+    "countedRenderIntegration": {
+      "passed": 136,
+      "failed": 0,
+      "pending": 0,
+      "reportSha256": "d46e6b16c9a36548864a5127bc8c1f62998eb3618d89e4b96d904c5badbc9009",
+      "source": "packages/polaris-dossier/src/render.test.ts"
+    },
+    "providerGolden": {
+      "passed": 1,
+      "failed": 0,
+      "pending": 0,
+      "reportSha256": "3d878044364fa63977b06dda74bbb4bd2bb59dbb75a09894222a89d8b54ff9ab",
+      "test": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "goldenPath": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.json",
+      "goldenSha256": "b646604530a8b945f34493b76140d9c906b085caccdca3af6a8684fdb8ed3b6f"
+    },
+    "typecheck": {
+      "exit": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "replay": {
+    "candidateCommit": "887c8ba10f869bb8bc7fa25b64f3298da84967f4",
+    "reportSha256": "c929490312e8d4edd5c243d2b072dfd81d295d54e3abec0e324471b4842ac837",
+    "rule6": {
+      "raw-review-digest": {
+        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "exactOld": "digits => digits.replace(/.{8}(?=.)/g, '$& ')",
+        "exactNew": "digits => digits",
+        "reportSHA256": "e40c5b2c51b0086ad840035a082be1a6c5c9267294b086e44ad3e05153c4713f",
+        "logSHA256": "5b9827a37659c314e0eb8e22a78ddc879cf2367877047e794384859b753d5478",
+        "status": "failed",
+        "durationMs": 715.8352329999999,
+        "title": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
+        "exit": 1,
+        "sawExpectedFailure": "review.html: expected"
+      },
+      "repeated-digests": {
+        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "exactOld": "const text = showDigests || item.label === 'Unknown' ? item.text\n        : item.text.replace(/bound to packet [0-9a-f]{64}(?![0-9a-f])/gi, 'bound to the packet shown on the review page');",
+        "exactNew": "const text = item.text;",
+        "reportSHA256": "8f3aea4cd01a462f232d0d09fa4c882e9da93a813bbf1d4269f23258ff303146",
+        "logSHA256": "b20fc9f9a4e15f834052269b5bff80623deb52b60ef202d639f2272ad1278c07",
+        "status": "failed",
+        "durationMs": 413.54478600000004,
+        "title": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
+        "exit": 1,
+        "sawExpectedFailure": "index.html: expected"
+      },
+      "long-word-overflow": {
+        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "exactOld": "<ul style=\"overflow-wrap:anywhere\">${lines}</ul>",
+        "exactNew": "<ul>${lines}</ul>",
+        "reportSHA256": "ee3e846050e954cba922a8fa2a022709d8bdc071d2c6bc35c1040d03a3d8d110",
+        "logSHA256": "5727dcc48574d39316dd36c2b54d114c5e15a922cc5244b2551db838c4a081f8",
+        "status": "failed",
+        "durationMs": 779.117776,
+        "title": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
+        "exit": 1,
+        "sawExpectedFailure": "to deeply equal []"
+      },
+      "full-source-predecessor": {
+        "oldBlobs": {
+          "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "3879c0475fd7b1e495e6f85ef547c6409003287f0791731d848f811043224f63",
+          "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "4981f171c4c5e043c37f6235876177bdf65755d3c5ca762439203be4f45d0755"
+        },
+        "candidateBlobs": {
+          "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "32303e387c9d57a11bc0ea05a2c5c71fd495c78215c3d052c909d1c666b43e8d",
+          "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "d7bb3dc895400d7149cae89fb656e516b4f33cc6d79ecc572445e5ad385c6f52"
+        },
+        "reportSHA256": "e0b6957b46aa7bd193a32f480a795ddf61c87ca858e805c0510f757555896112",
+        "logSHA256": "2300e2ce78e8391ca6b638ff1c24890bbef0f5f153b590c28cf24e6541a00dd6",
+        "status": "failed",
+        "durationMs": 434.29419500000006,
+        "title": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
+        "exit": 1,
+        "sawExpectedFailure": "index.html: expected"
+      },
+      "predecessor-packet": {
+        "predecessorModuleSHA256": {
+          "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "4981f171c4c5e043c37f6235876177bdf65755d3c5ca762439203be4f45d0755",
+          "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "3879c0475fd7b1e495e6f85ef547c6409003287f0791731d848f811043224f63"
+        },
+        "exactTestOverlaySHA256": "73234a05bfb7a625f7d84ef12b05131ed020442f2612ae5839bd962124619225",
+        "reportSHA256": "5ed65337bdef4a457a24616757db39c3135f21f58f60362ba06f0401d08d82de",
+        "logSHA256": "8d271a2913e1e2097338693a7837ba6b40f25fe8cba518384b0f0143a1dc7cd6",
+        "status": "passed",
+        "durationMs": 648.7382120000002,
+        "title": "keeps a counted design review through a render that changes only the review-status region",
+        "exit": 0,
+        "sawExpectedFailure": null
+      }
+    },
+    "browserExecutable": "Set SYZYGY_POC_BROWSER to an installed Chromium executable.",
+    "focusedTest": "Run Vitest e2e dossier-reading.browser.test.ts filtered to shows both counted packet digests and integration render.test.ts filtered to keeps a counted design review.",
+    "predecessorMethod": "Use the exact two predecessor renderer Git blobs in a detached test clone. Point only the copy of dossier-site.ts at the matching local renderer module copy. Let the predecessor draw the pending review, mint and count its synthetic design verdict, then render from the same run with the candidate. Compare actual built packet bytes, independently extracted outside-region file map, entire machine view, design verdict binding, and fidelity review report. Restore all temporary overlays.",
+    "onlyRestoredSourcesAreLocalRendererPair": true
+  },
+  "independentReview": {
+    "rawPath": "docs/reviews/syzygy-fnry-18/FNRY18-COUNTED-REGION-R1-RAW.md",
+    "rawSha256": "5a190a009701143d01ac769be81cd67f56b7bdd5aefff153df93f2d361fd8a47",
+    "verdict": "CONFIRM",
+    "layoutDifferentialPath": "docs/evidence/syzygy-fnry-18/counted-review-region-ac5-layout-2026-11-24.json",
+    "layoutDifferentialSha256": "d255c9005ee2cacb3867968d597e11b409a30bed41d216d5906104e5364109b8"
+  },
+  "compositionAtSourceReview": {
+    "reportSha256": "461f4c2328a81ea629cb955f361443e0ff59230b89c5d9b7e910548285c0174a",
+    "method": "Both-order merge-tree and independent patch application on each baseline merged tree. Existing conflict paths and payloads preserved.",
+    "openHeadDenominator": 7,
+    "heads": [
+      {
+        "pr": 585,
+        "exactHead": "d13f0582bbdea1a870c9dbfb258a07be7bc44610",
+        "unchangedConflicts": []
+      },
+      {
+        "pr": 741,
+        "exactHead": "a79a052ba46a08a84f7bd91a426d737714a5f435",
+        "unchangedConflicts": []
+      },
+      {
+        "pr": 754,
+        "exactHead": "36bcc375b24e6ebc9537506893b26bf8d45e82b7",
+        "unchangedConflicts": [
+          "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+          "packages/polaris-dossier/src/render.test.ts",
+          "packages/polaris-dossier/src/review.test.ts"
+        ]
+      },
+      {
+        "pr": 776,
+        "exactHead": "b957c7a48c48d2f8294b0466fc9530ea204e27ee",
+        "unchangedConflicts": []
+      },
+      {
+        "pr": 839,
+        "exactHead": "925e84a456de2c142ca5b200fb45a4ab1a1bd231",
+        "unchangedConflicts": [
+          ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "packages/polaris-dossier/src/cli.test.ts"
+        ]
+      },
+      {
+        "pr": 973,
+        "exactHead": "87bd8c7dd09aec4b7ab91883a7b84a29fe8c2de7",
+        "unchangedConflicts": []
+      },
+      {
+        "pr": 979,
+        "exactHead": "ac36c67ee92f52725a5b7c76ea21bdd586c9e349",
+        "unchangedConflicts": []
+      }
+    ]
+  },
+  "residual": "The independently rendered counted fixture has three inherited whole-page overflows outside the status region. Their bytes and the current review-packet exclusion are preserved by this scope. AC3 glossary, AC4 brief, corresponding remaining AC7 and AC8 work, and broader mobile layout remain open. No stored dossier run was read or measured."
+}
