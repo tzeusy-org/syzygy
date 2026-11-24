@@ -41,7 +41,8 @@ type AllocatedClient = { readonly clientId: string; readonly witnessSha256: stri
 // state, 16 KiB identity, a 10 MB archive and one 10 MB temporary fit this cap.
 // A crash retains the lock, so temporary files cannot accumulate across runs.
 export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
-  clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648, operationMilliseconds: 5000, lockMilliseconds: 1000 });
+  clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648,
+  operationMilliseconds: 5000, lockMilliseconds: 1000, admissionMilliseconds: 30_000, waitingAdmissions: 256 });
 const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;
 const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;
 const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
@@ -422,12 +423,13 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       stateSnapshot: () => ReturnType<typeof readStateSnapshot>;
       write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
     }) => Promise<void>;
-    const withLock = async (deadline: number, operation: StoreOperation, bounds: {
+    type OperationBounds = {
       readonly operationMilliseconds?: number;
       readonly staging?: StagedBoundary | undefined;
       readonly ordinaryEffect?: boolean;
       readonly terminalRead?: boolean;
-    } = {}): Promise<boolean> => {
+    };
+    const runLocked = async (deadline: number, operation: StoreOperation, bounds: OperationBounds): Promise<boolean> => {
       const { operationMilliseconds = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging, ordinaryEffect = false,
         terminalRead = false } = bounds;
       const began = performance.now();
@@ -652,6 +654,58 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         }
       }
     };
+    type WaitingAdmission = {
+      readonly deadline: number;
+      readonly began: number;
+      readonly settle: (release: (() => void) | null) => void;
+      readonly timer: ReturnType<typeof setTimeout>;
+    };
+    const waitingAdmissions: WaitingAdmission[] = [];
+    let admissionHeld = false;
+    const admissionCurrent = (deadline: number, began: number): boolean => {
+      try {
+        return Number.isSafeInteger(deadline) && deadline <= options.deadline && clock() < deadline
+          && performance.now() - began < URL_MACHINE_STORE_LIMITS.admissionMilliseconds;
+      } catch { return false; }
+    };
+    const releaseAdmission = (): void => {
+      for (let next = waitingAdmissions.shift(); next !== undefined; next = waitingAdmissions.shift()) {
+        clearTimeout(next.timer);
+        if (admissionCurrent(next.deadline, next.began)) { next.settle(releaseAdmission); return; }
+        next.settle(null);
+      }
+      admissionHeld = false;
+    };
+    const admit = (deadline: number, began: number): Promise<(() => void) | null> => {
+      if (!admissionCurrent(deadline, began)) return Promise.resolve(null);
+      if (!admissionHeld) { admissionHeld = true; return Promise.resolve(releaseAdmission); }
+      if (waitingAdmissions.length >= URL_MACHINE_STORE_LIMITS.waitingAdmissions) return Promise.resolve(null);
+      let milliseconds: number;
+      try {
+        milliseconds = Math.min(URL_MACHINE_STORE_LIMITS.admissionMilliseconds - (performance.now() - began), deadline - clock());
+      } catch { return Promise.resolve(null); }
+      return new Promise(resolve => {
+        const cancel = (): void => {
+          const index = waitingAdmissions.indexOf(entry);
+          if (index < 0) return;
+          waitingAdmissions.splice(index, 1);
+          resolve(null);
+        };
+        const entry: WaitingAdmission = { deadline, began, settle: resolve,
+          timer: setTimeout(cancel, Math.max(1, milliseconds)) };
+        waitingAdmissions.push(entry);
+      });
+    };
+    // Same-adapter work waits without holding a filesystem lock or authority.
+    // Independent adapters still use the existing bounded filesystem exclusion.
+    const withLock = async (deadline: number, operation: StoreOperation, bounds: OperationBounds = {}): Promise<boolean> => {
+      const began = performance.now(), release = await admit(deadline, began);
+      if (release === null) return false;
+      try {
+        if (!admissionCurrent(deadline, began)) return false;
+        return await runLocked(deadline, operation, bounds);
+      } finally { release(); }
+    };
     const allocateClients = async (count: number, deadline: number): Promise<readonly AllocatedClient[] | null> => {
       if (!Number.isSafeInteger(count) || count < 1 || count > 8) return null;
       // Full async checks bracket the protected state and durable write.
@@ -852,6 +906,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       close: async () => {
         if (closed) return;
         closed = true;
+        for (const waiting of waitingAdmissions.splice(0)) {
+          clearTimeout(waiting.timer);
+          waiting.settle(null);
+        }
         // An arbitrary controller callback can remain pending. Invalidate it
         // immediately, retaining descriptors until its actual work settles.
         const closeHandles = async () => { await heldHome.close(); await heldRoot.close(); };

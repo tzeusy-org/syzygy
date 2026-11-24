@@ -111,6 +111,104 @@ function effectProfile(ordered: boolean): NativeSessionProfile {
 }
 
 describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
+  it('admits same-adapter work in FIFO order after a legitimate holder exceeds one second', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let entered!: () => void, release!: () => void, offset = 0, submissions = 0;
+    const holding = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const order: number[] = [];
+    const first = f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { order.push(1); entered(); await held; });
+    await holding;
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + offset);
+    filesystem.beforeMkdir = file => { if (path.basename(file) === 'lock') submissions++; };
+    const queued = [2, 3].map(number => f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      order.push(number); expect(await lease.read()).not.toBeNull();
+    }));
+    try {
+      await new Promise(resolve => setImmediate(resolve));
+      expect(submissions).toBe(0); expect(order).toEqual([1]);
+      offset = 1500; release();
+      expect(await first).toBe(true); expect(await Promise.all(queued)).toEqual([true, true]);
+      expect(order).toEqual([1, 2, 3]); expect(submissions).toBe(2);
+    } finally { release(); clock.mockRestore(); await Promise.allSettled([first, ...queued]); }
+  });
+
+  it('starts the held operation clock after admission while retaining its own five-second limit', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let entered!: () => void, release!: () => void, offset = 0;
+    const holding = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + offset);
+    const first = f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); await held; });
+    await holding;
+    const second = f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      offset = 6000; expect(lease.current()).toBe(true);
+      offset = 7001; expect(lease.current()).toBe(false);
+    });
+    try {
+      offset = 2000; release();
+      expect(await first).toBe(true); expect(await second).toBe(false);
+    } finally { release(); clock.mockRestore(); await Promise.allSettled([first, second]); }
+  });
+
+  it('expires a queued call independently of a held callback and removes it before admitting its successor', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let entered!: () => void, release!: () => void;
+    const holding = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const first = f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); await held; });
+    await holding;
+    const expired = vi.fn(), next = vi.fn(async () => {});
+    const second = f.store.exclusive(slot.context.clientId, NOW + 40, expired);
+    const third = f.store.exclusive(slot.context.clientId, f.options.deadline, next);
+    try {
+      expect(await second).toBe(false); expect(expired).not.toHaveBeenCalled(); expect(next).not.toHaveBeenCalled();
+      release(); expect(await first).toBe(true); expect(await third).toBe(true); expect(next).toHaveBeenCalledOnce();
+    } finally { release(); await Promise.allSettled([first, second, third]); }
+  });
+
+  it.each(['withdrawal', 'admission-expiry'] as const)('rechecks %s before promoting a queued call into filesystem work', async reason => {
+    const f = await fixture(), slot = await f.allocate();
+    let entered!: () => void, release!: () => void, offset = 0, submissions = 0;
+    const holding = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const first = f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); await held; });
+    await holding;
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + offset);
+    filesystem.beforeMkdir = file => { if (path.basename(file) === 'lock') submissions++; };
+    const effect = vi.fn(), second = f.store.exclusive(slot.context.clientId, f.options.deadline, effect);
+    try {
+      if (reason === 'withdrawal') f.revoke(); else offset = 30_001;
+      release(); expect(await first).toBe(false); expect(await second).toBe(false);
+      expect(effect).not.toHaveBeenCalled(); expect(submissions).toBe(0);
+    } finally { release(); clock.mockRestore(); await Promise.allSettled([first, second]); }
+  });
+
+  it('bounds queued admissions and settles them on close while the current callback remains held', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let entered!: () => void, release!: () => void;
+    const holding = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const first = f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); await held; });
+    await holding;
+    const effect = vi.fn();
+    let settled = 0;
+    const queued = Array.from({ length: 256 }, () =>
+      f.store.exclusive(slot.context.clientId, f.options.deadline, effect));
+    for (const waiting of queued) void waiting.then(() => { settled++; });
+    const excess = f.store.exclusive(slot.context.clientId, f.options.deadline, effect);
+    try {
+      expect(await Promise.race([excess, new Promise(resolve => setImmediate(() => resolve('queued')))])).toBe(false);
+      expect(settled).toBe(0);
+      await f.store.close();
+      expect((await Promise.all(queued)).every(result => result === false)).toBe(true);
+      expect(effect).not.toHaveBeenCalled();
+    } finally { await f.store.close(); release(); await first; await excess; await Promise.allSettled(queued); }
+  });
+
   it.each(['unprofiled', 'ordinary', 'ordered'] as const)('bounds %s effects by the matching declared profile while retaining finite expiry', async kind => {
     const profile = effectProfile(kind === 'ordered'), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
