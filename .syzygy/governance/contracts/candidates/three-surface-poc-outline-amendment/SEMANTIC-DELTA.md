@@ -124,21 +124,25 @@ write).
   members; parent facts; closed items only with `status=closed`; the
   Unknown group; a grandparent with no group linked to its card on page 2; 640 positions over three pages against the test's own
   grouping, with split groups marked at both ends; a refused group value.
-- `trajectory.test.ts` "grouped by parent" (5 tests): group regions in
-  order, the two-parent card twice with one fragment target, no foreign
-  parent named; parent heading and "sits under" links; no verdict words in
-  any group heading (population: the four group regions outside their
-  cards); the page's groups equal the test's own grouping of the
-  serialized machine answer; the navigation link on both paths; the
+- `trajectory.test.ts` "grouped by parent" (8 tests after the review
+  repairs): group regions in order, the two-parent card twice with one
+  fragment target, every element id distinct, no foreign parent named;
+  two renders byte-equal; parent heading and "sits under" links; no
+  verdict words in any group region (population: the six group regions
+  outside their cards); a cycle stated once; split-group marks with their
+  counts; the page's groups and members equal the test's own grouping of
+  the served machine answer; the navigation link on both paths; the
   Unknown group with its reason.
 - `trajectory-narrowing.browser.test.ts`: on both paths, Enter on the
-  focused "continues on page 2" link lands on the split group's heading
+  "continues on page 2" link, reached by Tab, lands on the split group's heading
   on page 2, and the "sits under" link lands on the grandparent's group;
   the view-link keyboard sweep now reaches thirteen links.
 - Four rule-6 mutants each fail the suite: closed items admitted to the
   grouped view (3 tests), the no-parent class ignoring outside and
   unobserved parents (1), every duplicate card anchored (1), and the
-  continued-from mark dropped (1).
+  continued-from mark dropped (1); after the review, a continued-from
+  mark on every later-page group and a cycle stated in every member's
+  group each fail one test.
 
 ## Downstream impact
 
