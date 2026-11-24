@@ -1,0 +1,65 @@
+{
+  "sourceCommit": "a303bc56e86f65e252aa13663827d46bdcc104f2",
+  "sourcePath": "scripts/check_spec_reconciliation.py",
+  "sourceSha256": "b0886d00ab1d17251a9bc0b0fc7cfa0485125a1d0b9768c0fab38fe90eb0dd67",
+  "measurementScriptSha256": "413ba1f3698d73d0944fc59dcde0a02fba0e1199c84c2fdb3d4804918915f15e",
+  "fixture": "signoff-entry-socket",
+  "expectedConsumers": 4,
+  "consumers": [
+    {
+      "consumer": "run",
+      "elapsedSeconds": 3.6851934559526853,
+      "invocations": 1,
+      "expectedExceptionClass": "OSError",
+      "observed": [
+        {
+          "type": "OSError",
+          "filenameMatches": true
+        }
+      ],
+      "existingAssertionFailures": []
+    },
+    {
+      "consumer": "census",
+      "elapsedSeconds": 0.00036610098322853446,
+      "invocations": 1,
+      "expectedExceptionClass": "OSError",
+      "observed": [
+        {
+          "type": "OSError",
+          "filenameMatches": true
+        }
+      ],
+      "existingAssertionFailures": []
+    },
+    {
+      "consumer": "check_outcomes",
+      "elapsedSeconds": 65.2928179599694,
+      "invocations": 1,
+      "expectedExceptionClass": "OSError",
+      "observed": [
+        {
+          "type": "OSError",
+          "filenameMatches": true
+        }
+      ],
+      "existingAssertionFailures": []
+    },
+    {
+      "consumer": "check_census",
+      "elapsedSeconds": 0.0005325920064933598,
+      "invocations": 1,
+      "expectedExceptionClass": "OSError",
+      "observed": [
+        {
+          "type": "OSError",
+          "filenameMatches": true
+        }
+      ],
+      "existingAssertionFailures": []
+    }
+  ],
+  "status": "complete",
+  "scope": "One scratch fixture; each existing consumer exactly once in original order. No clean-baseline run, additions, full selftest or benchmark sweep. Reverse cache scope starts cold, so these numbers do not reproduce all hosted selftest conditions.",
+  "executedConsumers": 4
+}

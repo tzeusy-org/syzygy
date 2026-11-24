@@ -1,0 +1,45 @@
+{
+  "candidateSourceSha256": "65ab0c346b962ebe62bac592271181161d877aaaba5fe13e9e09f38c55f6ef51",
+  "harnessSha256": "0d460993cbdefc2307d6f2baadac700dd2423a63cdd2bedeffc635f45aa718ad",
+  "scope": "Only extracted _read_memo_scope, _per_run and reference_signed definitions. Synthetic roots/modules; no project imports, fixtures or subprocesses.",
+  "passed": 16,
+  "expected": 16,
+  "cases": [
+    "outside-scope-uncached",
+    "same-root-cached",
+    "deepcopy-caller-mutation-isolated",
+    "different-root-separated",
+    "resolved-root-shared",
+    "function-key-separated",
+    "keyword-calls-bypass",
+    "extra-positional-bypass",
+    "files-override-bypasses-existing-cache",
+    "nested-scope-reuses-and-retains-owner",
+    "normal-return-restores-original-state",
+    "body-exception-propagates-and-restores",
+    "setup-exception-propagates-and-restores",
+    "fixture-mutation-between-invocations-seen",
+    "binding-exception-not-cached",
+    "d10-memo-deepcopy-and-restoration"
+  ],
+  "mutants": [
+    {
+      "name": "nested-owner-guard",
+      "old": "    if _RUN_MEMO is not None:\n        yield\n        return\n",
+      "new": "",
+      "result": "killed"
+    },
+    {
+      "name": "override-bypass",
+      "old": " or _FILES_OVERRIDE is not None",
+      "new": "",
+      "result": "killed"
+    },
+    {
+      "name": "discard-on-return",
+      "old": "        _SIGNED_MEMO, _RUN_MEMO = previous_signed, previous_run",
+      "new": "        pass  # mutant retains stale memos",
+      "result": "killed"
+    }
+  ]
+}
