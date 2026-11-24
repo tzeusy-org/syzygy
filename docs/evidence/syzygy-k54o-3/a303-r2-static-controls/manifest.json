@@ -1,0 +1,473 @@
+{
+  "format": "a303-r2-static-controls-proof-packet/1",
+  "scope": "Static synthetic proof only; actual final capture pending; no native acceptance claim",
+  "subject": "9c878b13f5ea7b819b4817517c675810d4b0f23c",
+  "main": "1a4903374ea928b0489953e8cdedb22f1a6debf2",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4335,
+      "sha256": "4de80287acb288793cc070a9bdb903efeba0474d9759f4d391814b597bce56af",
+      "origin": "packet scope and transport instructions authored for this bundle"
+    },
+    {
+      "path": "controls-27/execution/mutant-inputs/missing-baseline-file.gz",
+      "bytes": 14651,
+      "sha256": "8d732fc85a1a8cfb12e43d2824f6c2579767920be399c1fbd581872b243af947",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-control-execution-9c/mutant-inputs/missing-baseline-file.gz"
+    },
+    {
+      "path": "controls-27/execution/mutant-inputs/missing-candidate-file.gz",
+      "bytes": 14651,
+      "sha256": "8d732fc85a1a8cfb12e43d2824f6c2579767920be399c1fbd581872b243af947",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-control-execution-9c/mutant-inputs/missing-candidate-file.gz"
+    },
+    {
+      "path": "controls-27/execution/results.json",
+      "bytes": 103460,
+      "sha256": "4f3058e8f844b6f3c62f3e77dabb9586cf3cd3ce7ee4a6d4e395af9094b8d08d",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-control-execution-9c/results.json"
+    },
+    {
+      "path": "controls-27/execution/stdout.log",
+      "bytes": 190,
+      "sha256": "83ebd5c645f9f44949ab317b5fc45a5a725b3f7828732f0a4c2817bf86b97b27",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-controls-9c.log"
+    },
+    {
+      "path": "controls-27/source/README.md",
+      "bytes": 1755,
+      "sha256": "59f72b2237db7a1e6a821766288e03a8013cab0e2c57dffefe12ee708410b00e",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/README.md"
+    },
+    {
+      "path": "controls-27/source/actual-subject-effectiveRun-overlay.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/actual-subject-effectiveRun-overlay.patch"
+    },
+    {
+      "path": "controls-27/source/control-binding.json",
+      "bytes": 3234,
+      "sha256": "3153c6dbb8385e490e5cf3f10af7d64bff047ac10bced14e7e9b06d412461d34",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/control-binding.json"
+    },
+    {
+      "path": "controls-27/source/manifest.json",
+      "bytes": 779,
+      "sha256": "c289994dd72a637497340b59d820a767527f9e16300e889f8d9c7735f97a89d9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/manifest.json"
+    },
+    {
+      "path": "controls-27/source/reproduce_a303_controls.py",
+      "bytes": 19813,
+      "sha256": "9be76865745e5ce8e5e7fb9914c84f8b339d343ec4d54769f60ff73d01892d53",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/reproduce_a303_controls.py"
+    },
+    {
+      "path": "controls-27/source/static-proof.json",
+      "bytes": 1761,
+      "sha256": "ff82eee9287023e610f2cffb17054257cd3c7cec49ce8c56bc2de7baaea1699b",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-A303-controls-R2/static-proof.json"
+    },
+    {
+      "path": "controls-old-233-plus-8/control-summary.json",
+      "bytes": 10282,
+      "sha256": "f6f4eb35aed91bb8755c039a21e4fa68052980a851776771549c8dc53222371f",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/controls-first-run/control-summary.json"
+    },
+    {
+      "path": "controls-old-233-plus-8/retained-202-controls.json",
+      "bytes": 12369,
+      "sha256": "9e52312373559c76f0c58bd8031af016c32890bac76fc6a1f1bb6358f62f901a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/controls-first-run/retained-202-controls.json"
+    },
+    {
+      "path": "controls-old-233-plus-8/retained-31-disclosure-controls.json",
+      "bytes": 12365,
+      "sha256": "64cb8f2ab64114433185c7cad31bc1fc86442100db81c9146e86129fff703c26",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/controls-first-run/retained-31-disclosure-controls.json"
+    },
+    {
+      "path": "controls-old-233-plus-8/stdout.log",
+      "bytes": 295,
+      "sha256": "66b53adc9e96fd246d682d15109217dd0066d1a852258214d0cf9c78176fb4ba",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-existing-controls-9c.log"
+    },
+    {
+      "path": "factory/A303-comparator-source.patch",
+      "bytes": 24920,
+      "sha256": "702aea9027d4e1d3401b85b6635f2f73937820e5cb35c102fbedc47ca0ff49ce",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/A303-comparator-source.patch"
+    },
+    {
+      "path": "factory/R1-SUBJECT-BINDING-INCOMPATIBILITY.json",
+      "bytes": 1806,
+      "sha256": "5c695f16940171308722eada5f198a3c1daeb10b2661f6321ac17678cac0242d",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/R1-SUBJECT-BINDING-INCOMPATIBILITY.json"
+    },
+    {
+      "path": "factory/R2-source-binding.patch",
+      "bytes": 8335,
+      "sha256": "f696b4dd73dc4af5c8ee5ad3714baef0aa5b1bf7276242a895058c4e99cd00e6",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/R2-source-binding.patch"
+    },
+    {
+      "path": "factory/README.md",
+      "bytes": 1595,
+      "sha256": "20ad6ad130588daa2b71a687ee55c2685da62ef4e9b41b64511f34ba31653bc8",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/README.md"
+    },
+    {
+      "path": "factory/SOURCE-REVIEW-A303-R2-BINDINGS.json",
+      "bytes": 13403,
+      "sha256": "6da090df8ccbe5d23c34d51f7a7382967feab1adb2811a1ea118e167b8bafad9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/SOURCE-REVIEW-A303-R2-BINDINGS.json"
+    },
+    {
+      "path": "factory/SOURCE-REVIEW-A303-R2-RAW.md",
+      "bytes": 9815,
+      "sha256": "23c27bd88f2b9241880f89ea382266457068b739d6573a0b1790f6a4260f33e3",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/SOURCE-REVIEW-A303-R2-RAW.md"
+    },
+    {
+      "path": "factory/factory-inputs.json",
+      "bytes": 2516,
+      "sha256": "e8ad76c42b069413c0c8fc0f228aee587dc1fa0f08897bc5b26d282366cc7a93",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/factory-inputs.json"
+    },
+    {
+      "path": "factory/factory-inputs.sha256",
+      "bytes": 86,
+      "sha256": "009ae9975c19c6b021247ec25506854b80bbcca05c954d690057f712c4d9600a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/factory-inputs.sha256"
+    },
+    {
+      "path": "factory/historical-R1-synthetic-control-proposals.json",
+      "bytes": 5175,
+      "sha256": "9510e96e41d9ab6eadc557536e8df8784d57c91534516970fb343418a2e38403",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/historical-R1-synthetic-control-proposals.json"
+    },
+    {
+      "path": "factory/manifest.json",
+      "bytes": 2745,
+      "sha256": "17f91f7db60ad8d5f84828bcea14ea7951f109b0941af726186acb1a9432e76a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/manifest.json"
+    },
+    {
+      "path": "factory/original-factory-inputs.json",
+      "bytes": 2081,
+      "sha256": "93598c9ecc9c13cf0e98ee52b1e1cffc779a9a5708965bc627767f059d566095",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/original-factory-inputs.json"
+    },
+    {
+      "path": "factory/prepare-final-subject.py",
+      "bytes": 13892,
+      "sha256": "ef9686f1420099dd95fc6f491560709c1e94f4cd22d4c7ba6ecc23633a616b6a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/prepare-final-subject.py"
+    },
+    {
+      "path": "factory/retained/run-capture-admission.sh",
+      "bytes": 2355,
+      "sha256": "367630db6b2d54aa0820bb1b736ffb93681a340d7196e509fa267e833752c50a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/retained/run-capture-admission.sh"
+    },
+    {
+      "path": "factory/static-proof.json",
+      "bytes": 1086,
+      "sha256": "bf9d11ed53204660844e4061377a0411fa45121d40a4c9247d45cad36ced0be0",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/static-proof.json"
+    },
+    {
+      "path": "factory/templates/a303-binding.json",
+      "bytes": 5674,
+      "sha256": "9a63c3ddbc4b1afa3df2916b16467b1fe0d9a5721664a7bd8076fb6f82e415d9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/a303-binding.json"
+    },
+    {
+      "path": "factory/templates/a303-subject-overlay.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/a303-subject-overlay.patch"
+    },
+    {
+      "path": "factory/templates/a303_expected.py",
+      "bytes": 6674,
+      "sha256": "5e206d38b6a6a91402a2a90b2aae9a863a55604a884db05a1c7fe7014757dc88",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/a303_expected.py"
+    },
+    {
+      "path": "factory/templates/compare-final.py",
+      "bytes": 11887,
+      "sha256": "9c2c56f6a2b1a3978bc4a0f2a9ec4d4936bd57caa5b608d420c7f9ad69db73ff",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/compare-final.py"
+    },
+    {
+      "path": "factory/templates/pin-inputs.py",
+      "bytes": 3879,
+      "sha256": "47063929293985d9fb4ca345581a6225610bb2cabb6570a5f1ad5dba711d9f1f",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/pin-inputs.py"
+    },
+    {
+      "path": "factory/templates/reproduce-controls.py",
+      "bytes": 6079,
+      "sha256": "6477bfcd6ef70d5eae0cbfeac90ee680a12d614924c036accb11366427732a12",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/reproduce-controls.py"
+    },
+    {
+      "path": "factory/templates/run-capture.sh",
+      "bytes": 1649,
+      "sha256": "de4e8e39092578e76abe98c1697ebe286377e247ff08978c0fbaa2e8797961b0",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/templates/run-capture.sh"
+    },
+    {
+      "path": "omitted-original-inputs.json",
+      "bytes": 64123,
+      "sha256": "118b31fe7c9565308b3d61b1b8ee335e75f13573ea8016e54d39dcce7b2279a0",
+      "origin": "generated complete excluded-file census from original prepared directory"
+    },
+    {
+      "path": "original-input-bindings/MANIFEST.json",
+      "bytes": 27597,
+      "sha256": "57ce8193454a7fcbf7dc660ec840d2d14ff6b6a8ca1aeb31a6788b8aa805e7ac",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/f043-render-retention/MANIFEST.json"
+    },
+    {
+      "path": "original-input-bindings/MANIFEST.sha256",
+      "bytes": 80,
+      "sha256": "04c1e3aac3e8c1d54df800ab999dff79407d65afc33bffe03fe9ad34e53b87a9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/f043-render-retention/MANIFEST.sha256"
+    },
+    {
+      "path": "original-input-bindings/README.md",
+      "bytes": 2250,
+      "sha256": "39c497f13a5fdc3a711c41bcdb17096c1173100ad0eff35f4afa157ea8b4baa5",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/f043-render-retention/README.md"
+    },
+    {
+      "path": "prepared/README.md",
+      "bytes": 2644,
+      "sha256": "311816191f3012f5732bbc1b4d515d5b45c0f3e66f74d8495d74f575f308eddb",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/README.md"
+    },
+    {
+      "path": "prepared/a303-binding.json",
+      "bytes": 5674,
+      "sha256": "9a63c3ddbc4b1afa3df2916b16467b1fe0d9a5721664a7bd8076fb6f82e415d9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/a303-binding.json"
+    },
+    {
+      "path": "prepared/a303-subject-overlay.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/a303-subject-overlay.patch"
+    },
+    {
+      "path": "prepared/a303_expected.py",
+      "bytes": 6674,
+      "sha256": "5e206d38b6a6a91402a2a90b2aae9a863a55604a884db05a1c7fe7014757dc88",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/a303_expected.py"
+    },
+    {
+      "path": "prepared/ancestry.json",
+      "bytes": 453,
+      "sha256": "11ff0e6335a896858b880f8ad50caef0506d14026a3f7bb42c32b5e11f763a27",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/ancestry.json"
+    },
+    {
+      "path": "prepared/compare-final.py",
+      "bytes": 11887,
+      "sha256": "9c2c56f6a2b1a3978bc4a0f2a9ec4d4936bd57caa5b608d420c7f9ad69db73ff",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/compare-final.py"
+    },
+    {
+      "path": "prepared/frozen-manifest.json",
+      "bytes": 22879,
+      "sha256": "676a51fcb49260bc0bc864a7f788a9f2db21a36d76a1c068d67bb76a450a0a4a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/frozen-manifest.json"
+    },
+    {
+      "path": "prepared/pin-inputs.py",
+      "bytes": 3879,
+      "sha256": "47063929293985d9fb4ca345581a6225610bb2cabb6570a5f1ad5dba711d9f1f",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/pin-inputs.py"
+    },
+    {
+      "path": "prepared/plan.json",
+      "bytes": 2222,
+      "sha256": "7734136b5e159629c482f8047dc5bbff5eca1632fbce487c1806c2e589cef93f",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/plan.json"
+    },
+    {
+      "path": "prepared/preparation-manifest.json",
+      "bytes": 23366,
+      "sha256": "c54afd988e0d028d747f3bbe6ac3e0e6c16bea70ab3269aa344ce2e4976155ab",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/preparation-manifest.json"
+    },
+    {
+      "path": "prepared/preparation-result.json",
+      "bytes": 727,
+      "sha256": "fb7924177f7510aba264ebb24fec2650fb392c6a252eefffd5a3241c908f77a3",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-preparation-9c.json"
+    },
+    {
+      "path": "prepared/prepared-input-pins.json",
+      "bytes": 1628,
+      "sha256": "102c9434f4d4ea149e20c00cc190c43bf178eb756bc5c9d2029e6935d8244146",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/prepared-input-pins.json"
+    },
+    {
+      "path": "prepared/reproduce-controls.py",
+      "bytes": 6079,
+      "sha256": "6477bfcd6ef70d5eae0cbfeac90ee680a12d614924c036accb11366427732a12",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/reproduce-controls.py"
+    },
+    {
+      "path": "prepared/retained/COMPARATOR-REVIEW-RAW.md",
+      "bytes": 7187,
+      "sha256": "67b964b4632ed42ee7a53e4d26475a0106e3274af1f5a92c8920211b72fd244d",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/COMPARATOR-REVIEW-RAW.md"
+    },
+    {
+      "path": "prepared/retained/actual-input-binding.json",
+      "bytes": 1062,
+      "sha256": "4fd1b62b4a8215a4c8b7a18f5b72de18a77904f52faf3c5717cdd380fefc22e0",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/actual-input-binding.json"
+    },
+    {
+      "path": "prepared/retained/comparator-selftest-bound-disclosure-v2.json",
+      "bytes": 12369,
+      "sha256": "9e52312373559c76f0c58bd8031af016c32890bac76fc6a1f1bb6358f62f901a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/comparator-selftest-bound-disclosure-v2.json"
+    },
+    {
+      "path": "prepared/retained/compare-bound-disclosure-v2.py",
+      "bytes": 24068,
+      "sha256": "f8e7571292cea78469a48926a825cd08d71348bdb5e2f9610912d6892bcd7e20",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/compare-bound-disclosure-v2.py"
+    },
+    {
+      "path": "prepared/retained/comparison-bound-disclosure-v2.json",
+      "bytes": 82677,
+      "sha256": "e564a22dbacc8652d5e9a15d9bed473d94f54e4082f350f3a262edc70984c4a9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/comparison-bound-disclosure-v2.json"
+    },
+    {
+      "path": "prepared/retained/comparison.json",
+      "bytes": 274,
+      "sha256": "980231a32254c23976989a16f598be8e9a6e058423ff4df2be62eefc6d1ec617",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/comparison.json"
+    },
+    {
+      "path": "prepared/retained/disclosure-canaries-v2.json",
+      "bytes": 12365,
+      "sha256": "64cb8f2ab64114433185c7cad31bc1fc86442100db81c9146e86129fff703c26",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/disclosure-canaries-v2.json"
+    },
+    {
+      "path": "prepared/retained/disclosure-canaries-v2.py",
+      "bytes": 5614,
+      "sha256": "d98a2e3a9f5e28d3d0c0496927e9fb9ca361e93f923879b819c35e5e994a50d9",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/disclosure-canaries-v2.py"
+    },
+    {
+      "path": "prepared/retained/predecessor-packet-manifest.json",
+      "bytes": 27597,
+      "sha256": "57ce8193454a7fcbf7dc660ec840d2d14ff6b6a8ca1aeb31a6788b8aa805e7ac",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/predecessor-packet-manifest.json"
+    },
+    {
+      "path": "prepared/retained/run-capture-admission.sh",
+      "bytes": 2355,
+      "sha256": "367630db6b2d54aa0820bb1b736ffb93681a340d7196e509fa267e833752c50a",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/retained/run-capture-admission.sh"
+    },
+    {
+      "path": "prepared/run-capture.sh",
+      "bytes": 1649,
+      "sha256": "de4e8e39092578e76abe98c1697ebe286377e247ff08978c0fbaa2e8797961b0",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/run-capture.sh"
+    },
+    {
+      "path": "prepared/settings.json",
+      "bytes": 2042,
+      "sha256": "0dc3ac55ec7a3158d85f6c9b8a7148633a56293678f4804c60568ec98258b628",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/final-render-capture-factory-A303-R2/subjects/9c878b13f5ea7b819b4817517c675810d4b0f23c--main-1a4903374ea928b0489953e8cdedb22f1a6debf2/settings.json"
+    },
+    {
+      "path": "reviews/A303-R2-executed-controls-independent-review-RAW.md",
+      "bytes": 6206,
+      "sha256": "43bc430a3224b899e05782610930bdf417c0f3e9abef2224a6c453a8163c7ffc",
+      "origin": "/home/orca/.tmp/f3-native-admission-fixes/A303-R2-executed-controls-independent-review-RAW.md"
+    },
+    {
+      "path": "source-subject-main/1a4903374ea928b0489953e8cdedb22f1a6debf2/A303-adoption-row.txt",
+      "bytes": 815,
+      "sha256": "58b129dc5941dd018e4a3a20fb6c3cae9c73bfb1dcb2b998cf7fde54e214ffcf",
+      "origin": "exact A303 row extracted from git ledger at 1a4903374ea928b0489953e8cdedb22f1a6debf2"
+    },
+    {
+      "path": "source-subject-main/1a4903374ea928b0489953e8cdedb22f1a6debf2/apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "bytes": 15181,
+      "sha256": "20f6977a66be43de41e204010e2ae327b0f27b76687a3e4d3ca5cddc53d76ba8",
+      "origin": "git show 1a4903374ea928b0489953e8cdedb22f1a6debf2:apps/three-surface-poc/src/polaris-generation/dossier-finding.ts"
+    },
+    {
+      "path": "source-subject-main/1a4903374ea928b0489953e8cdedb22f1a6debf2/apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "bytes": 167888,
+      "sha256": "125094f463185ea64d388f58d32c290623f2f13f9f696b06bc0287935b64a168",
+      "origin": "git show 1a4903374ea928b0489953e8cdedb22f1a6debf2:apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+    },
+    {
+      "path": "source-subject-main/1a4903374ea928b0489953e8cdedb22f1a6debf2/commit.txt",
+      "bytes": 1223,
+      "sha256": "5b81afa97782746a20bf714b9c775421a5de16cf77e2114fe766f692128af925",
+      "origin": "git cat-file commit 1a4903374ea928b0489953e8cdedb22f1a6debf2"
+    },
+    {
+      "path": "source-subject-main/9c878b13f5ea7b819b4817517c675810d4b0f23c/A303-adoption-row.txt",
+      "bytes": 815,
+      "sha256": "58b129dc5941dd018e4a3a20fb6c3cae9c73bfb1dcb2b998cf7fde54e214ffcf",
+      "origin": "exact A303 row extracted from git ledger at 9c878b13f5ea7b819b4817517c675810d4b0f23c"
+    },
+    {
+      "path": "source-subject-main/9c878b13f5ea7b819b4817517c675810d4b0f23c/apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
+      "bytes": 15181,
+      "sha256": "20f6977a66be43de41e204010e2ae327b0f27b76687a3e4d3ca5cddc53d76ba8",
+      "origin": "git show 9c878b13f5ea7b819b4817517c675810d4b0f23c:apps/three-surface-poc/src/polaris-generation/dossier-finding.ts"
+    },
+    {
+      "path": "source-subject-main/9c878b13f5ea7b819b4817517c675810d4b0f23c/apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "bytes": 168895,
+      "sha256": "59df14e15b53cd2032d5a7375cbcfc1b97cf49a0f6d933c11c01b9c980944d00",
+      "origin": "git show 9c878b13f5ea7b819b4817517c675810d4b0f23c:apps/three-surface-poc/src/polaris-generation/dossier-site.ts"
+    },
+    {
+      "path": "source-subject-main/9c878b13f5ea7b819b4817517c675810d4b0f23c/commit.txt",
+      "bytes": 278,
+      "sha256": "58889d4863801232dbc067fcbf33b0ea82ae8d8b050603c9a2d61db9535ee438",
+      "origin": "git cat-file commit 9c878b13f5ea7b819b4817517c675810d4b0f23c"
+    },
+    {
+      "path": "source-subject-main/bindings.json",
+      "bytes": 2498,
+      "sha256": "75d65355c6fe98a30d7e77c5934d9af3765e6f0d982d381aefd5ad160cd435d6",
+      "origin": "generated from exact read-only git objects and compared to frozen source-review bindings"
+    },
+    {
+      "path": "source-subject-main/main-first-parent-A303.patch",
+      "bytes": 5799,
+      "sha256": "e3fb500329a191f945cd4686a437f52af969716d4d60ffb78c2249f35970b625",
+      "origin": "read-only git diff main^1 main -- exact reviewed render source paths"
+    },
+    {
+      "path": "source-subject-main/main-to-subject-overlay.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a",
+      "origin": "read-only git diff main subject -- exact reviewed render source paths"
+    }
+  ],
+  "fileCount": 77,
+  "totalFileBytes": 1091088,
+  "selfExclusion": "manifest.json is archive-bound externally, not listed recursively"
+}

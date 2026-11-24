@@ -1,0 +1,247 @@
+{
+  "adoption": "A-235",
+  "sourceCommit": "73a6975118e3068ba974ef2fce01bc8150fb7bd8",
+  "preparedAgainst": "c52b682c705c98d59ef391458fb0dd7fa6580ec7",
+  "sourceSha256": "c8ec9e2c1fd950024c64ca7bc8499d230072792f87e5ff03285edc6fb80b76d5",
+  "review": "PASS source-only",
+  "verification": {
+    "passed": true,
+    "measurements": {
+      "check_generated": {
+        "baseline": {
+          "elapsedMs": 3132.13213,
+          "d10StateCalls": 38,
+          "lines": [
+            "OK    R4  generated dependency and coverage rows resolve \u2014 6485 examined, 0 findings \u2014 36 generated anchors, 6449 identifier mentions (full and continuation forms) over 324 files, 60 of them references to a candidate Polaris requirement under `proposed/`"
+          ],
+          "findings": {
+            "R4": []
+          },
+          "failed": []
+        },
+        "candidate": {
+          "elapsedMs": 652.456412,
+          "d10StateCalls": 1,
+          "lines": [
+            "OK    R4  generated dependency and coverage rows resolve \u2014 6485 examined, 0 findings \u2014 36 generated anchors, 6449 identifier mentions (full and continuation forms) over 324 files, 60 of them references to a candidate Polaris requirement under `proposed/`"
+          ],
+          "findings": {
+            "R4": []
+          },
+          "failed": []
+        }
+      },
+      "check_routes": {
+        "baseline": {
+          "elapsedMs": 2797.367389,
+          "d10StateCalls": 38,
+          "lines": [
+            "OK    R5  default routes name the terminal records \u2014 155 examined, 0 findings \u2014 46 tracked change directories"
+          ],
+          "findings": {
+            "R5": []
+          },
+          "failed": []
+        },
+        "candidate": {
+          "elapsedMs": 416.747629,
+          "d10StateCalls": 1,
+          "lines": [
+            "OK    R5  default routes name the terminal records \u2014 155 examined, 0 findings \u2014 46 tracked change directories"
+          ],
+          "findings": {
+            "R5": []
+          },
+          "failed": []
+        }
+      },
+      "generated-after-fixture-mutation": {
+        "elapsedMs": 613.214411,
+        "d10StateCalls": 1,
+        "lines": [
+          "FAIL  R4  generated dependency and coverage rows resolve \u2014 6485 examined, 1 findings \u2014 36 generated anchors, 6449 identifier mentions (full and continuation forms) over 324 files, 60 of them references to a candidate Polaris requirement under `proposed/`",
+          "        `openspec/changes/project-registration-and-honest-shape-visibility/GOVERNING-DEPENDENCIES.md`: source digest is not the current spec.md"
+        ],
+        "findings": {
+          "R4": [
+            "`openspec/changes/project-registration-and-honest-shape-visibility/GOVERNING-DEPENDENCIES.md`: source digest is not the current spec.md"
+          ]
+        },
+        "failed": [
+          "R4"
+        ]
+      },
+      "generated-after-restoration": {
+        "elapsedMs": 578.585078,
+        "d10StateCalls": 1,
+        "lines": [
+          "OK    R4  generated dependency and coverage rows resolve \u2014 6485 examined, 0 findings \u2014 36 generated anchors, 6449 identifier mentions (full and continuation forms) over 324 files, 60 of them references to a candidate Polaris requirement under `proposed/`"
+        ],
+        "findings": {
+          "R4": []
+        },
+        "failed": []
+      },
+      "routes-after-fixture-mutation": {
+        "elapsedMs": 379.71323,
+        "d10StateCalls": 1,
+        "lines": [
+          "FAIL  R5  default routes name the terminal records \u2014 155 examined, 2 findings \u2014 46 tracked change directories",
+          "        `openspec/README.md`: 0 rows for tracked change `project-registration-and-honest-shape-visibility`, expected 1",
+          "        `openspec/README.md`: the `project-registration-and-honest-shape-visibility` row does not name its terminal record `CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md`"
+        ],
+        "findings": {
+          "R5": [
+            "`openspec/README.md`: 0 rows for tracked change `project-registration-and-honest-shape-visibility`, expected 1",
+            "`openspec/README.md`: the `project-registration-and-honest-shape-visibility` row does not name its terminal record `CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md`"
+          ]
+        },
+        "failed": [
+          "R5"
+        ]
+      },
+      "routes-after-restoration": {
+        "elapsedMs": 373.754451,
+        "d10StateCalls": 1,
+        "lines": [
+          "OK    R5  default routes name the terminal records \u2014 155 examined, 0 findings \u2014 46 tracked change directories"
+        ],
+        "findings": {
+          "R5": []
+        },
+        "failed": []
+      }
+    },
+    "mutants": [
+      {
+        "id": "generated-source-digest",
+        "path": "openspec/changes/project-registration-and-honest-shape-visibility/GOVERNING-DEPENDENCIES.md",
+        "old": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+        "new": "05b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+        "expected": "R4:source digest is not the current",
+        "caught": true
+      },
+      {
+        "id": "missing-route-row",
+        "path": "openspec/README.md",
+        "old": "| [`project-registration-and-honest-shape-visibility`](changes/project-registration-and-honest-shape-visibility) | Capability 1 \u2014 project registration and honest shape visibility | **Adopted 2026-08-20, and implemented.** Amend only through CC-REV-2. *(Marked 2026-10-15: CAP1-REQ-011 and CAP1-REQ-046 are fully replaced by the adopted overlay `cap1-trusted-bootstrap-consent` v1.0, row below; their amended text is not yet implemented.)* | [`CAPABILITY-1-SPECIFICATION-ADOPTION-ACT.md`](../.syzygy/governance/decisions/CAPABILITY-1-SPECIFICATION-ADOPTION-ACT.md) \u00b7 [`CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md`](../.syzygy/governance/decisions/CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md) (2026-09-29) |\n",
+        "new": "",
+        "expected": "R5:rows for tracked change `project-registration-and-honest-shape-visibility`, expected 1",
+        "caught": true
+      },
+      {
+        "id": "remove-check_generated-scope",
+        "subjectCommit": "c52b682c705c98d59ef391458fb0dd7fa6580ec7",
+        "old": "@_read_memo_scope()\ndef check_generated(root, pop, report):",
+        "new": "def check_generated(root, pop, report):",
+        "expected": "d10StateCalls >1 while original findings unchanged",
+        "caught": true,
+        "measurement": {
+          "elapsedMs": 3038.61197,
+          "d10StateCalls": 38,
+          "lines": [
+            "OK    R4  generated dependency and coverage rows resolve \u2014 6485 examined, 0 findings \u2014 36 generated anchors, 6449 identifier mentions (full and continuation forms) over 324 files, 60 of them references to a candidate Polaris requirement under `proposed/`"
+          ],
+          "findings": {
+            "R4": []
+          },
+          "failed": []
+        }
+      },
+      {
+        "id": "remove-check_routes-scope",
+        "subjectCommit": "c52b682c705c98d59ef391458fb0dd7fa6580ec7",
+        "old": "@_read_memo_scope()\ndef check_routes(root, pop, report):",
+        "new": "def check_routes(root, pop, report):",
+        "expected": "d10StateCalls >1 while original findings unchanged",
+        "caught": true,
+        "measurement": {
+          "elapsedMs": 2828.799234,
+          "d10StateCalls": 38,
+          "lines": [
+            "OK    R5  default routes name the terminal records \u2014 155 examined, 0 findings \u2014 46 tracked change directories"
+          ],
+          "findings": {
+            "R5": []
+          },
+          "failed": []
+        }
+      }
+    ],
+    "exceptions": [
+      {
+        "consumer": "check_generated",
+        "sameException": true,
+        "memoD10AndOverrideRestored": true
+      },
+      {
+        "consumer": "check_routes",
+        "sameException": true,
+        "memoD10AndOverrideRestored": true
+      }
+    ]
+  },
+  "archiveSha256": "9c08c64e8ab8a10bcc23318f914485e9f691aea89a68cc3eec1c022456d6a0c8",
+  "files": [
+    {
+      "path": "candidate/README.md",
+      "bytes": 5360,
+      "sha256": "edadc56f3774c5bf88c2b1b836f09f86150783d60b189cee5d9385be8624fe91"
+    },
+    {
+      "path": "candidate/binding.json",
+      "bytes": 1605,
+      "sha256": "2717b3ce82c43625b706f587f0ea95a572495142938be27ff383a1fe380edc93"
+    },
+    {
+      "path": "candidate/candidate.patch",
+      "bytes": 528,
+      "sha256": "4e4161d4b994f50995d5dba30b85e571bd77b5ff807f504d1d184d3c51eb4f0b"
+    },
+    {
+      "path": "candidate/check_spec_reconciliation.py",
+      "bytes": 605386,
+      "sha256": "c8ec9e2c1fd950024c64ca7bc8499d230072792f87e5ff03285edc6fb80b76d5"
+    },
+    {
+      "path": "candidate/hosted-timing-context.json",
+      "bytes": 18345,
+      "sha256": "66e5ccea94798cdd1645e51ff4a77cfc75c74343835b0aecd97e3bfd30c92c0c"
+    },
+    {
+      "path": "candidate/manifest.json",
+      "bytes": 1267,
+      "sha256": "7258cbafa177950478c0768dd37da9cb62602368867740579cf5f4b113eb24d7"
+    },
+    {
+      "path": "candidate/original-check_spec_reconciliation.py",
+      "bytes": 605346,
+      "sha256": "65ab0c346b962ebe62bac592271181161d877aaaba5fe13e9e09f38c55f6ef51"
+    },
+    {
+      "path": "candidate/static-proof.json",
+      "bytes": 565,
+      "sha256": "f715d5d7fbaf726576682bf5d666fc6efc0a5e99a6268fe78ae133e81efdc71a"
+    },
+    {
+      "path": "candidate/verify_real_consumers.py",
+      "bytes": 11525,
+      "sha256": "6c28f30a578ecc3f35edaf2e5e098f0cf75f5d6477183211427cb87139dc24e4"
+    },
+    {
+      "path": "reconciliation-two-consumers-focused-R1.json",
+      "bytes": 26500,
+      "sha256": "7c892049dcd96ce747a510d78f138706af41882f00a976fdbf2cad2c4069a167"
+    },
+    {
+      "path": "reconciliation-two-consumers-focused-R1.log",
+      "bytes": 570,
+      "sha256": "4c9cd42e554c0cfe4dc1dca6b2cdd7644c50726e7f0ee4698d22457bd8e83497"
+    },
+    {
+      "path": "reconciliation-two-read-consumers-source-review-RAW.md",
+      "bytes": 8564,
+      "sha256": "97cee290379a46997f881dd9e0ffd2e33f5bf7a77ea852bef2d8945961584767"
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "subject": "9c878b13f5ea7b819b4817517c675810d4b0f23c",
+  "nodeRun": 45500976261,
+  "governanceRun": 45500976279,
+  "capturedAt": "2026-11-24T23:01:00.377669+00:00",
+  "componentJobCount": 13,
+  "jobs": [
+    {
+      "id": 138823853523,
+      "name": "node (unit)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:26:38Z",
+      "completed_at": "2026-11-24T22:30:03Z",
+      "seconds": 205.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825682944,
+      "name": "node (e2e)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:33:00Z",
+      "seconds": 175.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683160,
+      "name": "node (integration, stop-resume)",
+      "conclusion": "failure",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:37:17Z",
+      "seconds": 432.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683171,
+      "name": "node (integration, eligible-stop-resume)",
+      "conclusion": "failure",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:42:32Z",
+      "seconds": 747.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683184,
+      "name": "node (integration, core-1)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:06Z",
+      "completed_at": "2026-11-24T22:31:50Z",
+      "seconds": 104.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683222,
+      "name": "node (integration, complete)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:32:52Z",
+      "seconds": 167.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683223,
+      "name": "node (integration, core-3)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:36:15Z",
+      "seconds": 370.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683281,
+      "name": "node (integration, core-2)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:33:00Z",
+      "seconds": 175.0,
+      "aggregate": false
+    },
+    {
+      "id": 138825683291,
+      "name": "node (integration, delivery-stop)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:30:05Z",
+      "completed_at": "2026-11-24T22:32:45Z",
+      "seconds": 160.0,
+      "aggregate": false
+    },
+    {
+      "id": 138832378689,
+      "name": "node",
+      "conclusion": "failure",
+      "started_at": "2026-11-24T22:42:35Z",
+      "completed_at": "2026-11-24T22:42:41Z",
+      "seconds": 6.0,
+      "aggregate": true
+    },
+    {
+      "id": 138823853298,
+      "name": "checks (governance)",
+      "conclusion": "failure",
+      "started_at": "2026-11-24T22:26:38Z",
+      "completed_at": "2026-11-24T22:35:43Z",
+      "seconds": 545.0,
+      "aggregate": false
+    },
+    {
+      "id": 138823853812,
+      "name": "checks (P115 recording selftest)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:26:38Z",
+      "completed_at": "2026-11-24T22:29:55Z",
+      "seconds": 197.0,
+      "aggregate": false
+    },
+    {
+      "id": 138823853861,
+      "name": "checks (reconciliation selftest)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:26:38Z",
+      "completed_at": "2026-11-24T22:34:51Z",
+      "seconds": 493.0,
+      "aggregate": false
+    },
+    {
+      "id": 138823853896,
+      "name": "checks (readability selftest)",
+      "conclusion": "success",
+      "started_at": "2026-11-24T22:26:39Z",
+      "completed_at": "2026-11-24T22:31:48Z",
+      "seconds": 309.0,
+      "aggregate": false
+    },
+    {
+      "id": 138828743991,
+      "name": "checks",
+      "conclusion": "failure",
+      "started_at": "2026-11-24T22:35:46Z",
+      "completed_at": "2026-11-24T22:35:50Z",
+      "seconds": 4.0,
+      "aggregate": true
+    }
+  ],
+  "files": [
+    {
+      "path": "hosted-9c878b13f-node-jobs-API.json",
+      "bytes": 28853,
+      "sha256": "a2cd9dda426920e69ded76ed8ff77e5d21faf3da294712bec31cfcf0f756cb20"
+    },
+    {
+      "path": "hosted-9c878b13f-governance-jobs-API.json",
+      "bytes": 35564,
+      "sha256": "e4d625c9e50240da9f944e2c230533a1a2923b3f2822fc9ddaf39d7129e18594"
+    },
+    {
+      "path": "governance-9c878b13f.log",
+      "bytes": 3524,
+      "sha256": "deaf75ba4cc3c96ad7d7a03e195c51df92bd622ed42b2161d268b03dfb0903fd"
+    },
+    {
+      "path": "hosted-9c878b13f-stop-resume.log",
+      "bytes": 715848,
+      "sha256": "900538fba9bf07624ed92bcb00b68bea948668a690921b61518d63c0ad5cc90b"
+    },
+    {
+      "path": "hosted-9c878b13f-stop-resume.json",
+      "bytes": 497757,
+      "sha256": "40f2b5f556e86d5ef3affe008332a0eb5749a7cb1bd72a67ad59893d738ebfda"
+    },
+    {
+      "path": "hosted-9c878b13f-eligible-stop-resume.log",
+      "bytes": 797549,
+      "sha256": "895e117f8ef495b800bbd8c1fa3896ef5970be66058534b40d07cb783fd6e08d"
+    },
+    {
+      "path": "hosted-9c878b13f-eligible-stop-resume-failure.json",
+      "bytes": 442197,
+      "sha256": "028f87a70cccf168bb4e160d8d7d95f4e5b42bb796ad8e42812d185fba791997"
+    },
+    {
+      "path": "hosted-9c878b13f-eligible-stop-resume-diagnostic.json",
+      "bytes": 48445,
+      "sha256": "dfc7fd7160bf34534921c06f17f274178a20660ce60e50349d916e292c8b68c2"
+    }
+  ],
+  "status": "FAILED; not merge readiness or native closure",
+  "unavailable": "Exact private refusing predicates absent from historical trace; first-refusal candidate not yet executed."
+}
