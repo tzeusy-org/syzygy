@@ -73,6 +73,7 @@ describe('PWB admitted consent locator', () => {
     expect(grant).toMatchObject({
       kind: 'admitted',
       locator: '/home/tze/GitHub/butlers',
+      briefingResponseLimit: 20_480,
       authority: { admits: true, consent: { artifactDigest: sha256(readFileSync(join(REPO_ROOT, PWB_AUTHORITY_ARTIFACTS.consent))) } },
     });
   });
@@ -82,6 +83,33 @@ describe('PWB admitted consent locator', () => {
     const signedText = tree.files.get(PWB_AUTHORITY_ARTIFACTS.consent)!;
     tree.files.set(PWB_AUTHORITY_ARTIFACTS.consent, signedText.replace('/home/tze/GitHub/butlers', '/elsewhere/synthetic'));
     expect(authorizePwbLocator(options, () => loaderFor(tree))).toEqual({ kind: 'rejected', reason: 'body-read-not-admitted' });
+  });
+
+  it('refuses an unbound registry ceiling before admitting the configured repository', () => {
+    const tree = fakeTree();
+    const path = PWB_AUTHORITY_ARTIFACTS.registry;
+    tree.files.set(path, tree.files.get(path)!.replace('"maxBriefingResponseBytes": 20480', '"maxBriefingResponseBytes": 20481'));
+    expect(authorizePwbLocator(options, () => loaderFor(tree))).toEqual({ kind: 'rejected', reason: 'body-read-not-admitted' });
+  });
+
+  it.each(['"20480"', '20480.5', '0', undefined])('does not expose a missing or invalid briefing ceiling %s from digest-matched bytes', (ceiling) => {
+    const tree = fakeTree();
+    const path = PWB_AUTHORITY_ARTIFACTS.registry;
+    const prior = tree.files.get(path)!;
+    const altered = ceiling === undefined
+      ? prior.replace(/,\n {8}"maxBriefingResponseBytes": 20480/, '')
+      : prior.replace('"maxBriefingResponseBytes": 20480', `"maxBriefingResponseBytes": ${ceiling}`);
+    expect(altered).not.toBe(prior);
+    tree.files.set(path, altered);
+    const updateBinding = (record: string): string => record.replaceAll(sha256(Buffer.from(prior)), sha256(Buffer.from(altered)));
+    const act = PWB_ACT_RECORDS.registry;
+    tree.files.set(act, updateBinding(tree.files.get(act)!));
+    for (const [key, record] of tree.taggedRecords) {
+      if (key.endsWith(`:${act}`)) tree.taggedRecords.set(key, updateBinding(record));
+    }
+    const result = authorizePwbLocator(options, () => loaderFor(tree));
+    expect(result).toMatchObject({ kind: 'admitted' });
+    expect(result).not.toHaveProperty('briefingResponseLimit');
   });
 
   it('reads one complete absolute locator and its exact optional annotation', () => {
