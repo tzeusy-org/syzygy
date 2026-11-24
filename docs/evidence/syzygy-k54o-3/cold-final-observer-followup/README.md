@@ -1,0 +1,9 @@
+# Cold-final observer revision evidence
+
+[Observed] This deterministic archive preserves R1-R5 frozen test source, patches, bindings, original check logs/results and independent source review raws. R1, R2 and R3 were REVISE. R1 failed transform before test collection; R2 failed forwarding preservation (2 passed, 1 failed, 4 native skipped); R3 passed the focused 3 but failed typecheck. R4 passed the focused 3 and still failed generic-signature typecheck. R5 passed focused 3, skipped 4 native cases (7 total), and passed typecheck. R5's fresh independent source review is PASS and its raw is included.
+
+[Observed] Source bindings name each actual frozen subject and check base. R5 source was committed separately; bindings.json records its full commit. The archive preserves the earlier failed revisions without relabeling their outcomes. No genuine native case ran in these focused checks, and no native completion or acceptance claim is made.
+
+The observer substitutes stored-helper current/read/within callbacks. Original callback invocation values/counts/results/errors are preserved; those callback argument identities change. Other observed port arguments pass through unchanged. Failure-only identity projections are post-return diagnostics, not observed private guard outcomes.
+
+payload.tar.gz contains source copies as inert archive members only. No plain test source is staged by this packaging. packaging-manifest.json enumerates every member's byte count and SHA-256. Tar members are sorted, regular files with mode0644, uid/gid0, empty user/group names and mtime0; gzip has no filename and mtime0. package.py records the explicit input allowlist. Temporary directories, stores, state and credentials are excluded. Raw original inputs remain unchanged. SHA256SUMS binds the external payload, manifest, bindings, README and packaging script.
