@@ -5026,6 +5026,7 @@ def tracked(root, prefix):
                   for p in base.rglob("*") if p.is_file())
 
 
+@_read_memo_scope()
 def check_generated(root, pop, report):
     findings, examined = [], 0
     for family, change in (("CAP1", CAP1_CHANGE), ("POC", POC_CHANGE),
@@ -5264,6 +5265,7 @@ def visible_route_lines(text):
         yield line
 
 
+@_read_memo_scope()
 def check_routes(root, pop, report):
     findings, examined = [], 0
     readme = read_text(root, OPENSPEC_README) or ""
