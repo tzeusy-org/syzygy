@@ -166,3 +166,26 @@ export function computedMapsInput(): { readonly local: LocalRenderInput; readonl
   };
   return { sources, local: { ...local, derivedStructure, manifestFacts } };
 }
+
+/** One deep dive for a why-only Pole, another for a Pole with its own page, and the computed map routes. */
+export function navigationInput(): ReturnType<typeof readingInput> {
+  const { local, sources } = computedMapsInput();
+  const draft = local.draft as unknown as Record<string, unknown>;
+  const blocks = new Map(local.blocks);
+  const deepDives = [
+    { id: 'why-detail', sectionId: 'one', title: 'Purpose detail' },
+    { id: 'words-detail', sectionId: 'two', title: 'Words detail' },
+  ].map(dive => {
+    const paragraph = `${dive.id}-paragraph`;
+    blocks.set(paragraph, claim(dive.title));
+    return { ...dive, paragraphs: [{ id: paragraph, text: dive.title, sourceIds: [READING_SOURCE.sourceId], children: [] }], disposition: { kind: 'produced', assetIds: [] } };
+  });
+  return { sources, local: {
+    ...local, blocks, draft: { ...draft, deepDives } as unknown as LocalRenderInput['draft'],
+    poles: { whySection: 'one', poles: [
+      { label: 'Why it exists', sections: ['one'] },
+      { label: 'Words', sections: ['two', 'three', 'four'] },
+      { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
+    ] },
+  } };
+}
