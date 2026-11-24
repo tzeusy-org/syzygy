@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-11-24T16:57:40.480460+00:00",
+  "subjectCommit": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+  "command": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l npm run check",
+  "privateTmpdirMode": "0700",
+  "sourceState": "clean; all temporary diagnostics restored before official run",
+  "exitCode": 1,
+  "typecheck": "PASS before unit tier",
+  "files": {
+    "passed": 253,
+    "failed": 2,
+    "total": 255
+  },
+  "tests": {
+    "passed": 6363,
+    "failed": 2,
+    "skipped": 1,
+    "todo": 0,
+    "total": 6366
+  },
+  "countsSecondMethod": "Sum of255 per-file report rows equals runner denominator counts.",
+  "failureNames": [
+    "FAIL  |unit| packages/polaris-dossier/src/url-machine-cold-history.test.ts > cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store",
+    "FAIL  |unit| packages/polaris-dossier/src/url-machine-peer-history.test.ts > cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup"
+  ],
+  "failureType": "Both existing Vitest5000ms case timeouts; actual stage Unknown.",
+  "auditHistory": {
+    "passed": 37,
+    "failed": 0,
+    "total": 37
+  },
+  "closeUnit": {
+    "passed": 37,
+    "failed": 0,
+    "total": 37
+  },
+  "logSha256": "8922115875ddf8d8da0567b9fdc65956c1ed6cf1c15eb83ee0078bc6434ec774",
+  "cleanup": true,
+  "cleanupErrors": [],
+  "discovery": {
+    "missing": [],
+    "extra": [],
+    "unexecuted": []
+  }
+}

@@ -42,7 +42,21 @@
     "composedAdoptionRows": 203,
     "collisionCorrection": "Only unlanded F3 capture A-212 reassigned A-216; main corpus A-212 preserved.",
     "preflight": "Full40-character IDs report clear; prior abbreviated-ID invocation was unavailable and is retained separately.",
-    "officialCheck": "Running with original unmodified source under task0700 TMPDIR. No result claimed by this record."
+    "officialCheck": {
+      "result": "FAIL",
+      "typecheck": "PASS",
+      "passed": 6363,
+      "failed": 2,
+      "skipped": 1,
+      "population": 6366,
+      "files": 255,
+      "failedFiles": 2,
+      "auditHistoryPassed": 37,
+      "closeUnitPassed": 37,
+      "remainingFailures": "Two existing Vitest5000ms case timeouts, actual stage Unknown.",
+      "summary": "official-check-81e37-private-summary.json",
+      "scope": "Clean unmodified81e37 source under task0700 TMPDIR; full per-file sums match denominator. Cleanuptrue, no missing/extra/unexecuted files."
+    }
   },
   "artifacts": {
     "audit-positive-catch-diagnosis.json": {
@@ -88,6 +102,14 @@
     "post-main-adoption-preflight-full-sha.json": {
       "sha256": "1839a12d6ba399ef74bfc601df753436d8dbfe12c0df322d581fc6891d971b62",
       "bytes": 250
+    },
+    "official-check-81e37-private.log": {
+      "sha256": "8922115875ddf8d8da0567b9fdc65956c1ed6cf1c15eb83ee0078bc6434ec774",
+      "bytes": 2108667
+    },
+    "official-check-81e37-private-summary.json": {
+      "sha256": "a0ffb52720ba55b4f8cd4ddf6b3cf754bceb5c8d123ea234a095454aa95b123e",
+      "bytes": 1524
     }
   }
 }
