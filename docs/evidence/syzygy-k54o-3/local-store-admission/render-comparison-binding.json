@@ -1,0 +1,26 @@
+{
+  "subjectCommit": "2446c64edb7bb9e0c89169bddd129efca36cad65",
+  "baselineCommit": "584539778f025605885009b5bb80c435cd37515e",
+  "fullComparison": {
+    "path": "matched-stage-historical.json",
+    "sha256": "e7dbaddecce889a9c63b7d9e883a865945a9cb11f84caec2a33c6b07dc2d7d1e"
+  },
+  "mainRegionComparison": {
+    "path": "reader-main-comparison.json",
+    "sha256": "4d5f6c40fd6568dd5c025a3c3a8d414fced13747a4e7c4a912132c560b779c23"
+  },
+  "sourcePin": "498ecd0d6d007db11ddb3aea9428552598a78622",
+  "frozenDraftSha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77",
+  "configSha256": "84b1976143d5b2b653d86193f5c9ea0330b3b0ec3b7e7afdeeca742e86a45068",
+  "draftRevision": 0,
+  "siteStage": 0,
+  "htmlPopulation": 46,
+  "mainInnerExact": 43,
+  "mainRemainders": [
+    "index.html and maps/directories.html: exact after replacing only their one observation time and one data-derived-record digest",
+    "size-report.html: exact after replacing only96 numeric table cells and three summary byte totals, preserving the page/depth/word summary and other text"
+  ],
+  "wholeHtmlExact": 0,
+  "outsideMain": "Paired whole-page digests are retained. Upstream A-209 navigation/style attribution is Inferred; outside-main equivalence is not established.",
+  "nativeAcceptance": "Unknown"
+}

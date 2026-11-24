@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW\.md`
+
 - `F3-LOCAL-STORE-ADMISSION-REVIEW(-R2)?-RAW\.md`
 
 - `F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW\.md`
@@ -242,3 +244,5 @@
 [Observed] The staged batch envelope review records `PASS` for `f6721c73f` (F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW.md). A-185 gives an asynchronous two-to-eight-slot transaction ten seconds under its caller and original run deadline. The focused suite passes 99 cases and four negative controls fail their intended assertions. The native interrupted replay refused on ordinary Fidelity lock contention before Stop. [Unknown] Hosted batch completion.
 
 [Observed] The local store admission reviews record `PASS` for `39827723c` (F3-LOCAL-STORE-ADMISSION-REVIEW-RAW.md) and `303996d40` (F3-LOCAL-STORE-ADMISSION-REVIEW-R2-RAW.md). A-186 bounds local FIFO waiting to 30 seconds and 256 entries before the existing operation clocks start. The home-backed full suite passes 105 cases on the identical implementation; the successor close assertion passes separately. Four source controls detect bypassed ordering, missing expiry, excess admission and unsettled close. The last control times out in cleanup because its queued promises remain pending. [Unknown] Native and hosted completion.
+
+[Observed] The restoration preparation trace review records `PASS` (F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW.md:2) for `0977e6cc6`. The test retains four role preparations and twelve safe phase entries per role with omitted counts. Typecheck and the independent isolated observer exercise passed; 223 existing expect expressions are byte-identical. Runtime source, resource limits and acceptance checks are unchanged. [Unknown] Actual native spy integration and recovery completion.

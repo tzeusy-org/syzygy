@@ -1,0 +1,61 @@
+{
+  "subjectCommit": "2446c64edb7bb9e0c89169bddd129efca36cad65",
+  "scenario": "eligible-stop-resume",
+  "manifestSha256": "e7a4266c731865d738edcd9223bc338759b5c43b08a70c3415742eea239d950e",
+  "logSha256": "9454296859855506b1d111632f461a1dad4e263b11fbec18b1571f9ea82fac9a",
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "run ended: checked session boundary unavailable"
+  ],
+  "firstRuntimeFailure": {
+    "reason": "audit-unavailable",
+    "atMs": 247496.356686
+  },
+  "resumeChecks": [],
+  "resumeBootstrap": {},
+  "publishedAudit": {
+    "records": 131,
+    "bytes": 212441,
+    "poisoned": true,
+    "tipSha256": "7085fb048e234745e884a43c826ebce3cbc248523719893f23e02f3b52f7c673"
+  },
+  "physicalAudit": {
+    "records": 132,
+    "bytes": 214981,
+    "perRoleCounts": {
+      "sessions-author.jsonl": 104,
+      "sessions-inventory.jsonl": 11,
+      "sessions-fidelity.jsonl": 16,
+      "sessions-design.jsonl": 1
+    },
+    "recordPopulationSecondMethod": 132
+  },
+  "ordinaryLockRefusals": {
+    "author": {
+      "role": "author",
+      "startedMs": 246652.575894,
+      "stages": [
+        {
+          "phase": "peer-current",
+          "timing": {
+            "startedMs": 246656.342422,
+            "settledMs": 246668.310868,
+            "outcome": "accepted"
+          }
+        }
+      ],
+      "store": {
+        "startedMs": 247096.01215,
+        "conflicts": 86,
+        "lastConflictAt": 248504.813032,
+        "settledMs": 248504.851905,
+        "outcome": "refused"
+      },
+      "settledMs": 248504.88628,
+      "outcome": "refused"
+    }
+  },
+  "recordJsonExists": false,
+  "exactFailedPredicate": "Unknown",
+  "diagnosis": "Inferred: Fidelity response-admitted physical row132 is unadmitted. The outer ordinary5s lease is a stronger timing hypothesis than the later Author contention; no clock bound is changed by this record."
+}

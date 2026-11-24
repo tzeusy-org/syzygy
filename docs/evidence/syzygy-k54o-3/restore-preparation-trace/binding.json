@@ -1,0 +1,22 @@
+{
+  "subjectCommit": "0977e6cc65d3a268edaedfcd62079dae02974222",
+  "baseCommit": "2446c64edb7bb9e0c89169bddd129efca36cad65",
+  "binaryDeltaSha256": "1ddcf71777fb1179eef2aa6c89f25c910766cac50ff2b2e92b0b91019062d080",
+  "sourceReview": {
+    "path": "docs/reviews/F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW.md",
+    "sha256": "d21065eb82f07aee62c887ef2cbc3ece3941548f14235153e0f65ecbbf8a4644",
+    "verdict": "PASS"
+  },
+  "typecheck": {
+    "exitCode": 0,
+    "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "retainedBounds": {
+    "roles": 4,
+    "stepsPerRole": 12,
+    "omittedCounts": true
+  },
+  "runtimeChanges": "none",
+  "nativeAcceptance": "Unknown; actual scoped replay running",
+  "unchangedExpectExpressions": 223
+}

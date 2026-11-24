@@ -1,0 +1,41 @@
+{
+  "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef",
+  "scenario": "stop-resume",
+  "retainedCutSha256": "e9d84894d6a5d0a3edd27625298d90ed90001ae62b7a885603cf60ed28f47210",
+  "failureManifestSha256": "4ef9afb3cc3f7284823108b91506aed1659b6f7f2329fc37932951763a3afc9e",
+  "executionLogSha256": "74ce4c64ab0b49f3be8a6d11ae9bcf0912265c42179320b5bf76982aedb250d8",
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "Unknown",
+      "roles": []
+    }
+  ],
+  "resumeBootstrap": {
+    "restore-plans": {
+      "startedMs": 339211.843186,
+      "settledMs": 373573.44306,
+      "outcome": "refused"
+    }
+  },
+  "ordinaryStoreRefusals": {},
+  "executionRecordProduced": false,
+  "preciseRolePlanPredicate": "Unknown"
+}

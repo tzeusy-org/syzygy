@@ -1,0 +1,426 @@
+{
+  "subjectCommit": "2446c64edb7bb9e0c89169bddd129efca36cad65",
+  "baselineCommit": "584539778f025605885009b5bb80c435cd37515e",
+  "scriptSha256": "4cd06687754427fe29c6d4bd25ad22ff74b78ad0c0e68343a14f6425382e00d8",
+  "population": 46,
+  "mainInnerExact": 43,
+  "mutations": "Extra main content is detected in every paired path. Extra reader content fails the two observation-only comparisons. A changed size-report heading is not normalized away.",
+  "scope": "Main inner bytes excludes main opening attributes and navigation, styles, wrappers and page-turns outside main. This is not whole-page byte equivalence.",
+  "nativeAcceptance": "Unknown",
+  "paths": [
+    {
+      "path": "appendix.html",
+      "beforeHtmlSha256": "3f0b59ff34ca5ae43f46e5eabc3bf574092bc944e002c8c76532acc9d2ca8412",
+      "afterHtmlSha256": "35eccb5398a0f52ce15bf76d69278d7cf2a686c6f68364d0e3c9269be785be37",
+      "beforeMainInnerSha256": "23acaaba5326b0fd47ca6ab8baa93ee0e8b4ae01a4da6c6ea6948be03b8b3a90",
+      "afterMainInnerSha256": "23acaaba5326b0fd47ca6ab8baa93ee0e8b4ae01a4da6c6ea6948be03b8b3a90",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "clarifications.html",
+      "beforeHtmlSha256": "5b49e4b3d8a7681b1079357284c4b0738962af24a4bb3dc06651b4a29d269d51",
+      "afterHtmlSha256": "70e199496051404075ed9852dcbbab491a0e84291cee809699f6d9fbc7316fec",
+      "beforeMainInnerSha256": "8da484f4da341cef1c465c6df956194e4e9efbeae0fa8488501150792766f9b1",
+      "afterMainInnerSha256": "8da484f4da341cef1c465c6df956194e4e9efbeae0fa8488501150792766f9b1",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "contents.html",
+      "beforeHtmlSha256": "3d21e3da05d1d7ff0f3e914b0121929089aa7d43649e3a068f5fccf80d6d9f1d",
+      "afterHtmlSha256": "3cd9ce2e83989c1831122e8a30dd97f79a3d78cda978175c84e665cc318ebdfe",
+      "beforeMainInnerSha256": "96d7deb76e1da649af2d8513659d2a6ca2bf39f5b6c88e90c04d00d1eb043535",
+      "afterMainInnerSha256": "96d7deb76e1da649af2d8513659d2a6ca2bf39f5b6c88e90c04d00d1eb043535",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "deep-dives/mechanism-deep-dive.html",
+      "beforeHtmlSha256": "459e78f656c4d446389853738bcd88b953e49712159cbe82b32a52d95fcf9c46",
+      "afterHtmlSha256": "9f0827ce6df5d46b43669e9876b6afed8af1f0aa3515c41724060a9c66cc5d46",
+      "beforeMainInnerSha256": "2098e0650ed7ec77a58940efd428531813b71e6121f181cd502939672001a2e6",
+      "afterMainInnerSha256": "2098e0650ed7ec77a58940efd428531813b71e6121f181cd502939672001a2e6",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "discovery.html",
+      "beforeHtmlSha256": "4679ab3a3c010901da31f58eae1b3903d940c6b013719550de95be332095ad5d",
+      "afterHtmlSha256": "6f7fa05dfb6c2807f06cef3562c2a45f53770f49fe73a6aa0a396d3ac77c1e67",
+      "beforeMainInnerSha256": "fd32352886f5af0fea502852fb874617ce2a5062f235cbc8d048fc3387aa7892",
+      "afterMainInnerSha256": "fd32352886f5af0fea502852fb874617ce2a5062f235cbc8d048fc3387aa7892",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "executions.html",
+      "beforeHtmlSha256": "d45cf2bc4bac61ba36a5027b6b4695186086dd3c00b85d68eb0ac629e65e4b08",
+      "afterHtmlSha256": "4f4ccd3c2070b8ff8f86c1b3294261b0f30891fc60afb1ab8d25025c1d87b777",
+      "beforeMainInnerSha256": "14fd1449702a9c1bf89fddfc781ae85e891a04b7ad2e8693e0b91c57ac399948",
+      "afterMainInnerSha256": "14fd1449702a9c1bf89fddfc781ae85e891a04b7ad2e8693e0b91c57ac399948",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "find-by-task.html",
+      "beforeHtmlSha256": "01785f14ffd33328de0368823a306ba04522666772e846e16b6fa4fadb6263cf",
+      "afterHtmlSha256": "92a6f0b2e05385ca5213f8446ba2556b8f0efc40cdc0225cb9a0aaa3ce041133",
+      "beforeMainInnerSha256": "068a6b8b3a9a5d75890bbcddbd697612668ad0e96e879b806bd5078c4375b180",
+      "afterMainInnerSha256": "068a6b8b3a9a5d75890bbcddbd697612668ad0e96e879b806bd5078c4375b180",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "glossary.html",
+      "beforeHtmlSha256": "ddaf2add733a1e2f931fdb96f16c07cf3b2281b6899470eb60cdb996687913e4",
+      "afterHtmlSha256": "66d47bb608a782eaf9c4440f83311514124336059b1ae0120f11eaa2c152731e",
+      "beforeMainInnerSha256": "97cbcc43feed4d9086a02afdc2f8d1f96e293c7662e49a9c09c71429600ef6b6",
+      "afterMainInnerSha256": "97cbcc43feed4d9086a02afdc2f8d1f96e293c7662e49a9c09c71429600ef6b6",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "index.html",
+      "beforeHtmlSha256": "125f0e442058cbab28c20c21fc1956d428bfd099db10c15c781397ff0ed7a4e7",
+      "afterHtmlSha256": "868359a8e960ee31563d71855269913d34755024093f3fe865d8dc3eef9c70f4",
+      "beforeMainInnerSha256": "9ea5382939960582ae5246c362166472cc312d728c988bebaf943175af19e2d3",
+      "afterMainInnerSha256": "b6cbce3ebb6f688e118a1b7dc5186b1ff3fa0823a6c207aadb4d20c1b80a64dd",
+      "mainComparison": "exact-main-after-only-observation-time-and-bound-derived-record",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "maps/ci.html",
+      "beforeHtmlSha256": "f56cc2736853102a2a5e9a14fbd25c3cd37daf52dd00c6f961a172d0fd11af2a",
+      "afterHtmlSha256": "766875938e2ccb0df38f30622a0fb62c4e54d6e2eeec67997d3c280739494b5e",
+      "beforeMainInnerSha256": "aa61290e9434fd1c4b778c8d764ca423dd1b445ad5099287e5992d11266dc225",
+      "afterMainInnerSha256": "aa61290e9434fd1c4b778c8d764ca423dd1b445ad5099287e5992d11266dc225",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "maps/directories.html",
+      "beforeHtmlSha256": "c9280ee0dc8f6173cc05621f713c5d068c66196452335d61f4e4a5861a60cfe1",
+      "afterHtmlSha256": "6abf80c2e53ee258a648ee6deadcf0939a891bb952a09a79e94f7e996671c60a",
+      "beforeMainInnerSha256": "f1cb18630afe89541d294524d0f12e87767ae5b95f2a0d7fb791d1873fa1b66b",
+      "afterMainInnerSha256": "b431ef2e3b0bd18e93ee722b0325f3d0dc4aa375b926069365c0e807cae68dd4",
+      "mainComparison": "exact-main-after-only-observation-time-and-bound-derived-record",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "maps/infrastructure.html",
+      "beforeHtmlSha256": "3da2244a4d6bc73374a79ae199741206697b7cbb2882648472b6d627def3d90e",
+      "afterHtmlSha256": "3690c10fc4e2fa0a1090901ced3170554ae345b36b680dcfcf5ab751670857ea",
+      "beforeMainInnerSha256": "a80be7bad78a87a244729aa59c83549f5f2a7d84cabd0dda5baaba2c4e086a84",
+      "afterMainInnerSha256": "a80be7bad78a87a244729aa59c83549f5f2a7d84cabd0dda5baaba2c4e086a84",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "maps/units.html",
+      "beforeHtmlSha256": "562e204f324944e84c85426a9e74a89b6eb24efaf7610048e23b2fcfce96f2c9",
+      "afterHtmlSha256": "ba9ac44e3fd48291bd32d563891e1263e4bd60822c410657e51fe300f92eb729",
+      "beforeMainInnerSha256": "85eda7e89e8650837b9e7617dd71401fe712afe7e0458e64e287a558b6cdb6b6",
+      "afterMainInnerSha256": "85eda7e89e8650837b9e7617dd71401fe712afe7e0458e64e287a558b6cdb6b6",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "name-index.html",
+      "beforeHtmlSha256": "ccd6468988329af091d044af15076b05d9087982309dc15a573e797aa7261449",
+      "afterHtmlSha256": "7e332d3187d97ccf6d70c6552f73c5174a42f966f37b268ebf7d9f3aaaf22192",
+      "beforeMainInnerSha256": "0b5f3dd095fbc8cbedf2f9508d2524e72850d383ab8a494bdbfaf3427e6a9d2f",
+      "afterMainInnerSha256": "0b5f3dd095fbc8cbedf2f9508d2524e72850d383ab8a494bdbfaf3427e6a9d2f",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "poles/1.html",
+      "beforeHtmlSha256": "384b8d27e5743728a77ed0c2c21569db963a24ac232bbdf251033100ce0888c9",
+      "afterHtmlSha256": "8759a1bcc9fe05a06e4eb58e0aa93f26a5cc5a711ed3fdf2e7726e0243a65dbc",
+      "beforeMainInnerSha256": "b7fd5e63689a62fdd5fb99bbfc76b6c192273f251c90b1bdc4f5026d05a9beac",
+      "afterMainInnerSha256": "b7fd5e63689a62fdd5fb99bbfc76b6c192273f251c90b1bdc4f5026d05a9beac",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "poles/2.html",
+      "beforeHtmlSha256": "38f9a6f96bb3dbc4ff84c9d72eb9f2b20c15a5d0ceda9052a14905302fdd3cb3",
+      "afterHtmlSha256": "5cfbd57d71616ee935d77c0a9d95e9c9ebfa2ee7359b0d738a821397d25c5112",
+      "beforeMainInnerSha256": "f13d6d674418c192b9b7f7852ab15759b85a7e2fd020ac4830ef1b85f4123417",
+      "afterMainInnerSha256": "f13d6d674418c192b9b7f7852ab15759b85a7e2fd020ac4830ef1b85f4123417",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "poles/3.html",
+      "beforeHtmlSha256": "cc6ed9d2b4ae130f89259a59ec150fe819de6a1ada49e71dd0d4fbbe61c0ddd0",
+      "afterHtmlSha256": "acfab2b21dfb75b763be9be1755ab8f3fb42b2d7fde3e62687724b07d29a5236",
+      "beforeMainInnerSha256": "eeaa081457651f9b3e4f85f13d47c7f407621fa9894f964ae6c3a16fff37ba73",
+      "afterMainInnerSha256": "eeaa081457651f9b3e4f85f13d47c7f407621fa9894f964ae6c3a16fff37ba73",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "review.html",
+      "beforeHtmlSha256": "f0d0a61c5c59acdd33ee87fc5019ff1a18211bb4a8fefa018a9acca084e6b1ee",
+      "afterHtmlSha256": "bbbc0947da2fb5ba97273b8dd319f42010d41cbb55abd6e99e9a431883994587",
+      "beforeMainInnerSha256": "e978e2ca64bb3bc459297dc01a41f65ae8bcdc56ef2865ae42d7b07711c54f2e",
+      "afterMainInnerSha256": "e978e2ca64bb3bc459297dc01a41f65ae8bcdc56ef2865ae42d7b07711c54f2e",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "size-report.html",
+      "beforeHtmlSha256": "544e45e9b79caf71ccf8b371fcb73a41f1f2a2126fd519b27a049e3103942ae9",
+      "afterHtmlSha256": "8f5dfd111550ac15da06b9d08af583d069b6407c7269c1a346e048b739251b7c",
+      "beforeMainInnerSha256": "05fd964f06b3be589c76f3a1cc5019b10ff104b77679ef2f27899dbb871ca7b9",
+      "afterMainInnerSha256": "523d3724fa562bbee2f2e53c1294d966805526eba5e764612cf64a8eac762d84",
+      "mainComparison": "main-differs-only-96-metric-cells-and-three-summary-byte-totals",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/10fb8220ed07c4e240ca5234.html",
+      "beforeHtmlSha256": "ceca63f1be5c1f3dbfbaece4ac63a912253bbb7bc0ea6eab4ab4577f68cdec56",
+      "afterHtmlSha256": "5d248e63cbb423f1ec5e35ab3aab82f1997371e698786e12d48d9e37942a8b24",
+      "beforeMainInnerSha256": "977673af41e33ac1d7bc2f0901f4923fe8c3d2965619d0bf02d317341a34da82",
+      "afterMainInnerSha256": "977673af41e33ac1d7bc2f0901f4923fe8c3d2965619d0bf02d317341a34da82",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/119d3bf7aa8929b7d73ab011.html",
+      "beforeHtmlSha256": "39229fa8f06e0b4e4dedd5519ba16f8df16f9e93ed7b7f298cff2b3701f8304e",
+      "afterHtmlSha256": "49bbc233f5f6d7c6069ffcf6a1bbb67f66400648eaa6499a65d7f900a1c983b3",
+      "beforeMainInnerSha256": "860b084ef8d1e03adfb9790541da87bfc43491a1646cb52769fe4177a289ef55",
+      "afterMainInnerSha256": "860b084ef8d1e03adfb9790541da87bfc43491a1646cb52769fe4177a289ef55",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/221a3988d4e9b828a6104511.html",
+      "beforeHtmlSha256": "15ecf72c43b77b03484c7ac0ebf7abaa0b2b47b70619d4fae34ae3b0d548fcdb",
+      "afterHtmlSha256": "5626250e6d904d6812f7f59da4559993f6f5432a4b6747ba290f010c83f0d50e",
+      "beforeMainInnerSha256": "b9db92bb657df859925e655f58c0a7a4faf06bc0277ca0f7b79a8da5319a6663",
+      "afterMainInnerSha256": "b9db92bb657df859925e655f58c0a7a4faf06bc0277ca0f7b79a8da5319a6663",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/277f189444fa71ceaa4f2191.html",
+      "beforeHtmlSha256": "8f7feeb8a063d6c6df7ae1fdba8babe349c8ac64caf3ff09123ec4ca4e6cc13d",
+      "afterHtmlSha256": "7f1d463e9e71ce9150a04efda8aa8c9d5fd115557c54c9e0d424cef77f8caeca",
+      "beforeMainInnerSha256": "b2b6e22b4de02a79a6fdfa49dc146d515e038961daa44dcb90837b50ae6ae87e",
+      "afterMainInnerSha256": "b2b6e22b4de02a79a6fdfa49dc146d515e038961daa44dcb90837b50ae6ae87e",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/3c339cd3867fd7868666c586.html",
+      "beforeHtmlSha256": "6b53f71387084f559f276f3e99f6360de65a629f2eb8a02d7b8c6f071ac3fa12",
+      "afterHtmlSha256": "1a68afc0305aa75732ff087c42d642a929d4ee9555c6032e54b7a4a8d54f4a2e",
+      "beforeMainInnerSha256": "9c464940671229f43848eadaaddbbe66fb7af94a77053cdec8ed000f56bce46e",
+      "afterMainInnerSha256": "9c464940671229f43848eadaaddbbe66fb7af94a77053cdec8ed000f56bce46e",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/424286aa5e69f9611245c070.html",
+      "beforeHtmlSha256": "6dcf5447afacf2f74e5b32ac846feb0fbdf119b1a1a7f543d4435d899e708440",
+      "afterHtmlSha256": "0044664b1dcde3becc036ace492b2d4a64c3b22472e127fabd39e58cc13c4a73",
+      "beforeMainInnerSha256": "f8b4b5f70e083f75403dea82c9bb6363172e13b9ffb9f43f5081813e092d2016",
+      "afterMainInnerSha256": "f8b4b5f70e083f75403dea82c9bb6363172e13b9ffb9f43f5081813e092d2016",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/4b0cc21b1fb86b67d4acc599.html",
+      "beforeHtmlSha256": "7215bf279b3a15627ab8a0bfc115fc91b599e0dd2976cac59c50eb051a94f436",
+      "afterHtmlSha256": "4fd896db3d01920743a7e533b5bf6458ff9583792a34c4be3971289381d23a44",
+      "beforeMainInnerSha256": "869e89bf51cf84c6be0862a7b1daaf1e22d81a7bdf83aa9026c0760c304b15aa",
+      "afterMainInnerSha256": "869e89bf51cf84c6be0862a7b1daaf1e22d81a7bdf83aa9026c0760c304b15aa",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/527819848ba682b28451fc17.html",
+      "beforeHtmlSha256": "e9b27b5c7a475fdc6d2882b2c4e7cb39f6a0bbbcf18c8c1c1043c6707feb8f29",
+      "afterHtmlSha256": "26a850fb16601e17ec3336b913161c2dd24eebc71d31db0e2a296a16c4185c42",
+      "beforeMainInnerSha256": "6e020aa920e470d84b72cf3936b45b0004e6a2f93ebafc045f0da0c185f59cea",
+      "afterMainInnerSha256": "6e020aa920e470d84b72cf3936b45b0004e6a2f93ebafc045f0da0c185f59cea",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/56815d775281cb70dd9c94f7.html",
+      "beforeHtmlSha256": "adabbe6f6aee7566f47d6cbe9189279a1a31a22ac6f7e82d07a664e2833c8888",
+      "afterHtmlSha256": "fa736346c2f34a7a8e3a6e1bcf441f85672bb987fa544bc64e17ff3928b74723",
+      "beforeMainInnerSha256": "82fd3b93eddf6957ab7ca20f6b41262626a6da1db3ed4d9d766710e8c5c0a499",
+      "afterMainInnerSha256": "82fd3b93eddf6957ab7ca20f6b41262626a6da1db3ed4d9d766710e8c5c0a499",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/5695066ec1372a44f8317fdf.html",
+      "beforeHtmlSha256": "6966148ee2dbd55c50c608ce9466a73c4cde9f7f1f89f3129116f6c0a94150d6",
+      "afterHtmlSha256": "7cf90475a582a0c8eba0c4aaea95bc9e3f68f4cc708f5cb44bbad98dc3ebb990",
+      "beforeMainInnerSha256": "b06411d2a8498815c64c88757a17e5c542e211497f4c50e8a3451a32556a41bf",
+      "afterMainInnerSha256": "b06411d2a8498815c64c88757a17e5c542e211497f4c50e8a3451a32556a41bf",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/5b03fac5f7902fed44061a65.html",
+      "beforeHtmlSha256": "1818e6a640ce58c8f45c0a4bd14434d4bbf016c058f76f1ab1044aaec9c2a788",
+      "afterHtmlSha256": "c954619dcf5a040e8f6feed14537fd292c8d8b9466bc8775ee6a640592a1f298",
+      "beforeMainInnerSha256": "0601a28254db453a5b54fcc9f5540be92e63f6307235a237f198a3f10487163d",
+      "afterMainInnerSha256": "0601a28254db453a5b54fcc9f5540be92e63f6307235a237f198a3f10487163d",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/63d77d591c72a9ce870a5ec7.html",
+      "beforeHtmlSha256": "8f80431c6846b3397f5cf000affc807cef11b710876504a35d9bc5c4598dc3ac",
+      "afterHtmlSha256": "e82831910a89968e002667f696034355198fd7ffed5d5d5060fa7678be2e51d2",
+      "beforeMainInnerSha256": "6a5d4a725b42ba3557082577e909f8fac9c180dd5ee201a8a55211cb0b97ffab",
+      "afterMainInnerSha256": "6a5d4a725b42ba3557082577e909f8fac9c180dd5ee201a8a55211cb0b97ffab",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/6b90775db57a9307948b6f36.html",
+      "beforeHtmlSha256": "6ed9e7fb869c2958bbc867ce63016ceb5a93645a2d18d0d31a563ec19d437fbf",
+      "afterHtmlSha256": "5cd90d0beabd64c76ecc16b70177b1eb68ff56ec62c4f361cf5472a5c4128b61",
+      "beforeMainInnerSha256": "64ca6729ff4a1e9d847d8ab89937fd18bec264b9d7e671ed5a3e5a144830876b",
+      "afterMainInnerSha256": "64ca6729ff4a1e9d847d8ab89937fd18bec264b9d7e671ed5a3e5a144830876b",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/6d0c490c27647eb2650d1f97.html",
+      "beforeHtmlSha256": "c0f8d3f62e364fa35bd76819502f9c74e0d768d8bbbdf00ca1dd6b9c94d41fd3",
+      "afterHtmlSha256": "7805927ac02f17a3b62ac0368aed7917c5a0eef0c763fc26c0e93cb0e713f3d3",
+      "beforeMainInnerSha256": "baa601cea5110c6572b049ace132e87d6e4f26f20a5b790f5620ead7851b1c6a",
+      "afterMainInnerSha256": "baa601cea5110c6572b049ace132e87d6e4f26f20a5b790f5620ead7851b1c6a",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/9097a32d7d9ddd450e316bce.html",
+      "beforeHtmlSha256": "b20e5b7f200d33a5491a2c7c158fc08980bad93423958f0065e55200131cc9c7",
+      "afterHtmlSha256": "a52f3935efac00ce625579db5e1822367cfe565c3833defac17760c8064293be",
+      "beforeMainInnerSha256": "ec8b8a28d4d6c3f640b4a79feff4fa77d67d88938001dcbbb79ddd28d1502ce0",
+      "afterMainInnerSha256": "ec8b8a28d4d6c3f640b4a79feff4fa77d67d88938001dcbbb79ddd28d1502ce0",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/99bec5d56e3d54f088fadff4.html",
+      "beforeHtmlSha256": "cacee00dde654c7b543a59f140cedd72c2b692ca6ae1675fb43240fa69361269",
+      "afterHtmlSha256": "0e5df941c02515a18ed1afcb812c1653de59b29d294d6eec49328fbbb23dc081",
+      "beforeMainInnerSha256": "27ab509c49fd2e688a84b3a2169355ae5536a7f90dfa96afb2b18ff7eaf40c20",
+      "afterMainInnerSha256": "27ab509c49fd2e688a84b3a2169355ae5536a7f90dfa96afb2b18ff7eaf40c20",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/9b1298caf6c0ae84e5e49e2a.html",
+      "beforeHtmlSha256": "b151d226b4aa8f8f88fb3946e1e9a7fbd4f331f3125e197a672861a5ce554d14",
+      "afterHtmlSha256": "4f7c174c95b7341c21e61caa4dad1d123ebffabcb0b0e50d661b4fd0ee4dca86",
+      "beforeMainInnerSha256": "778ca9b4dc1a0f589670af02ecb96f3fe9aa1a13634ab7449ec5020457552e11",
+      "afterMainInnerSha256": "778ca9b4dc1a0f589670af02ecb96f3fe9aa1a13634ab7449ec5020457552e11",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/a37fe3e3aad48eb485a746c3.html",
+      "beforeHtmlSha256": "71901e54e2032b4a25bcc6e76d6a5d26cc10f2837de3d6fc553f35fc294a6d4f",
+      "afterHtmlSha256": "9c73cd85bb1a336cea9a92c555283be6b5175b8814496b6d8fee93834db05d1d",
+      "beforeMainInnerSha256": "feee9899cf8cfce2bccebbf8a51c6501fa1b9f66d53e19024c9fbff9e55d16f4",
+      "afterMainInnerSha256": "feee9899cf8cfce2bccebbf8a51c6501fa1b9f66d53e19024c9fbff9e55d16f4",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/a98b9a19685d99a3250107fc.html",
+      "beforeHtmlSha256": "9a0da5f5ff5bf3c9b6aee13b6f3ea5c2c79799ee688e987060914fc7f897b2c5",
+      "afterHtmlSha256": "e0aa2569a2fc3310bddf82455bb9f249f3e80257d56859f97854b8edf540b3cd",
+      "beforeMainInnerSha256": "f261ce60febde6202c4b452f0c2dbf6e75067a8a2cfb8c64b0ac6fdb014e4ff8",
+      "afterMainInnerSha256": "f261ce60febde6202c4b452f0c2dbf6e75067a8a2cfb8c64b0ac6fdb014e4ff8",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/b983b045b2a96a98f12a46f5.html",
+      "beforeHtmlSha256": "92045611f91a9fd744d73bee979599458067a09542587021e67e3dd9b1cfe406",
+      "afterHtmlSha256": "8495bafb7621e5c79b0aea75e16ce46dceb73e0c4d5cf421707c8a183375f8ef",
+      "beforeMainInnerSha256": "87251a5c0e56cd50ec8fb29e4652e44fa5b58ffb650234e55e2406efef5b5c8f",
+      "afterMainInnerSha256": "87251a5c0e56cd50ec8fb29e4652e44fa5b58ffb650234e55e2406efef5b5c8f",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/c538c8563eda0df07cb7e049.html",
+      "beforeHtmlSha256": "f5e3b873814960e676412dd9abd53c6aa76fef99ff32a09c3220120559023617",
+      "afterHtmlSha256": "cc64179ed15dccec6da7b9b26905c4be7c4dd6a58d14d38fde4c45ac1f80cec4",
+      "beforeMainInnerSha256": "96415ada7d091cf13f55318a77389099b96a995ce0306ee478f6512d664659df",
+      "afterMainInnerSha256": "96415ada7d091cf13f55318a77389099b96a995ce0306ee478f6512d664659df",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/d3fc31af418ab162de787455.html",
+      "beforeHtmlSha256": "68d33f37ad3298542a25edcf20afb3cc6d069212c9de0a1400cffdec13854380",
+      "afterHtmlSha256": "1451271bd5dffdcbed6596c81ec3211b76a3e456052450cd0b66d740393feba7",
+      "beforeMainInnerSha256": "13403c105f746baf72c0d0e283118526f5ee6a99432b68effdf9d3c9918f34b1",
+      "afterMainInnerSha256": "13403c105f746baf72c0d0e283118526f5ee6a99432b68effdf9d3c9918f34b1",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/db52e22df3e384223c858fb0.html",
+      "beforeHtmlSha256": "fab5a0f9bc686771b1881a1b7fbf400b7b8c5586395b4ed8c88e2833b7fe3f97",
+      "afterHtmlSha256": "af67f252ba068966abff7ac3b6d7181fc2b584ca9d8445c9b9803bdb11f73853",
+      "beforeMainInnerSha256": "fe4de3adf3fa764c3bbdcbbcd10545dd39bf7cacc6f49bd797f8c5639a73ab8b",
+      "afterMainInnerSha256": "fe4de3adf3fa764c3bbdcbbcd10545dd39bf7cacc6f49bd797f8c5639a73ab8b",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/e56074d1f444f26af2df827b.html",
+      "beforeHtmlSha256": "82c2a49abd3b1d4ba2bbd8ba9bae5c5f6762917ad1d3aa9c77e6e2413e216bf9",
+      "afterHtmlSha256": "53e2a5103728b7b992328cc18fdb6a45a01969969a5501b32adb97efd7984216",
+      "beforeMainInnerSha256": "37c837944586ef164155894b90fd08afa5602c633075effa8bb31cc2eb5c8298",
+      "afterMainInnerSha256": "37c837944586ef164155894b90fd08afa5602c633075effa8bb31cc2eb5c8298",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/eff1ff1bacc371251ea0f630.html",
+      "beforeHtmlSha256": "af594b126def6441ed7cddc91c4d81eff0adee0a32970db02c4e905642123c26",
+      "afterHtmlSha256": "8f09ee5e58517f19d3327252ddd63387d32e105cf180d11c792e2a10cb9a930e",
+      "beforeMainInnerSha256": "ad4ffc566e5346ad715e255d9aad09408ce08d7621dc7c54c868924e2d675419",
+      "afterMainInnerSha256": "ad4ffc566e5346ad715e255d9aad09408ce08d7621dc7c54c868924e2d675419",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "sources/index.html",
+      "beforeHtmlSha256": "365bb0b1fa306c306f76a07028ac08d35354c39089c24b2ab625cdec2017e899",
+      "afterHtmlSha256": "a0a11fd291566e9cd3d5198a9f50fe3d878a38018f6dcb34f6aab1e4a63a4219",
+      "beforeMainInnerSha256": "ba7a54de4e2100ce2ab53035d0c4baf86817f76f7aa41a3a32640b0837ea53eb",
+      "afterMainInnerSha256": "ba7a54de4e2100ce2ab53035d0c4baf86817f76f7aa41a3a32640b0837ea53eb",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    },
+    {
+      "path": "understanding.html",
+      "beforeHtmlSha256": "0b3a5203db4acf2bdad2810e03c59e221022f59fd455a4322d8ace60965ad642",
+      "afterHtmlSha256": "a5239fa9a98be9ba09c21324a1c873077c792a3f3d23ff0cbf292e01520b55f7",
+      "beforeMainInnerSha256": "7a79960253ff689d2dc608452254acb2b6435a786321cbf6f4d810f4dbb363a9",
+      "afterMainInnerSha256": "7a79960253ff689d2dc608452254acb2b6435a786321cbf6f4d810f4dbb363a9",
+      "mainComparison": "exact-main-inner-bytes",
+      "outsideMainComparison": "different; navigation/style attribution to upstream A-209 is Inferred, not an exhaustive equivalence proof"
+    }
+  ]
+}
