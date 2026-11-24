@@ -857,7 +857,7 @@ async function observeDesignRun(run: string, traceInference = false) {
         const stamp = designLaunchRegistration = { startedMs: clock() };
         return timed(stamp, () => input.registerLaunch(committed), () => true);
       },
-      reproduce: () => currentPhase('reproduce', input.reproduce, value => value !== null),
+      reproduce: (...args) => currentPhase('reproduce', () => input.reproduce(...args), value => value !== null),
       machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
       budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
       audit: { ...input.audit, commitLaunchHistory: (...args) => {
@@ -2120,6 +2120,14 @@ describe('composed URL run with actual role processes', () => {
       await writeEvidence({ recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles,
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
+      if (resumeAfterStop) {
+        // Keep the decisive recovery outcomes independently visible when the
+        // long event and receipt diagnostic exceeds the hosted log line limit.
+        const finalChecks = resumeChecks.filter(check => isRecord(check)
+          && ['cold-final-prepared', 'cold-final-factory', 'resumed-render', 'resumed-exit'].includes(String(check.phase)));
+        console.error('owned native resume failure', JSON.stringify({ scenario, phase: eligiblePhase,
+          coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal }));
+      }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
       const initialDesignAudit = eligibleStop && resumeChecks.length === 0
