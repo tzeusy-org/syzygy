@@ -2226,7 +2226,7 @@ describe('check: overview hero (schema v10)', () => {
   });
 });
 
-// REQ-polaris-generation-034 version 2.25 (syzygy-5dhm.41): schema v13's worth-knowing mark. A marked block is a cited Inferred block that
+// REQ-polaris-generation-034 version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing mark. A marked block is a cited Inferred block that
 // is one of a section's own paragraphs and carries no judgement mark; in a v10 or earlier draft the mark and a Pole's `worthKnowingNone`
 // are field-version. Expected values are literals written from the specification.
 describe('check: the worth-knowing mark (schema v13)', () => {

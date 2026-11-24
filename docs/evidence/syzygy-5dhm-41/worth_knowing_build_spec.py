@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the version 2.25 MODIFIED REQ-polaris-generation-034 from the version 2.23 bytes by anchored edits (syzygy-5dhm.41).
+"""Build the version 2.26 MODIFIED REQ-polaris-generation-034 from the version 2.24 bytes by anchored edits (syzygy-5dhm.41).
 
 Every edit asserts its anchor occurs exactly once. Usage: worth_knowing_build_spec.py <worktree> <out>.
 """
@@ -8,7 +8,7 @@ import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-src = (W / 'openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
+src = (W / 'openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
 text = src
 
 
@@ -24,12 +24,12 @@ def replace(old, new):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier containment figure'), lines[0]
-assert lines[2].startswith('Candidate version 2.23;'), lines[2][:40]
+assert lines[0].startswith('# Dossier system model'), lines[0]
+assert lines[2].startswith('Candidate version 2.24;'), lines[2][:40]
 lines[0] = '# Dossier worth-knowing mark: the facts a newcomer would not guess, in a callout near the top'
-lines[2] = ("Candidate version 2.25; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
-            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that containment figure version "
-            "2.23 gave it. A draft in schema v13 may mark a cited Inferred block, one of a section's own paragraphs, as worth knowing: a fact "
+lines[2] = ("Candidate version 2.26; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
+            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that system model version "
+            "2.24 gave it. A draft in schema v13 may mark a cited Inferred block, one of a section's own paragraphs, as worth knowing: a fact "
             "about the project an engineer new to it would not guess from the kind of project it is. Check refuses a mark on any other "
             "block, on an uncited block or on a judgement, and advises a Pole that marks none without saying why, or more than three; the "
             "marked blocks of a page render once, in one callout before its sections; brief v19 asks for one to three per Pole, a ceiling "
@@ -39,11 +39,11 @@ lines[2] = ("Candidate version 2.25; binds nothing until its agent adoption row 
 text = '\n'.join(lines)
 
 # The brief and schema version list.
-replace(' and from version 2.23 as `polaris-dossier-brief-v17`, each with',
-        ', from version 2.23 as `polaris-dossier-brief-v17` and from version 2.25 as `polaris-dossier-brief-v19`, each with')
-replace('brief v16 issues schema v10 and brief v17 issues schema v11 (below)',
-        'brief v16 issues schema v10, brief v17 issues schema v11 and brief v19 issues schema v13 (below)')
-replace('v8, v9, v10 or v11 is accepted', 'v8, v9, v10, v11 or v13 is accepted')
+replace(' and from version 2.24 as `polaris-dossier-brief-v18`, each with',
+        ', from version 2.24 as `polaris-dossier-brief-v18` and from version 2.26 as `polaris-dossier-brief-v19`, each with')
+replace('brief v17 issues schema v11 and brief v18 issues schema v12 (below)',
+        'brief v17 issues schema v11, brief v18 issues schema v12 and brief v19 issues schema v13 (below)')
+replace('v10, v11 or v12 is accepted', 'v10, v11, v12 or v13 is accepted')
 
 BRIEF = ("Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section's "
          "own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, "
@@ -70,7 +70,7 @@ NONE = ('<aside class="callout callout-note worth-knowing" id="worth-knowing" da
         'fact in this part meets the test of what a newcomer would not guess (Inferred, self-reported).</p></aside>')
 
 PARAGRAPHS = [
-    "A draft in schema `polaris-dossier-local-draft-v13` (version 2.25) is a schema-v11 draft in every respect but two optional members, "
+    "A draft in schema `polaris-dossier-local-draft-v13` (version 2.26) is a schema-v12 draft in every respect but two optional members, "
     "the worth-knowing mark. A claim block labelled Inferred MAY carry `worthKnowing`, a boolean; `true` marks the block as worth "
     "knowing, a fact about this project, stated in one of a section's own paragraphs and cited, that an engineer new to the project "
     "would not guess from the kind of project it is, and `false` marks nothing. Each item of `poles` MAY carry `worthKnowingNone`, a "
@@ -108,17 +108,17 @@ PARAGRAPHS = [
     "renders and no marked block is moved. A v13 draft that marks no block and gives no reason renders, apart from its schema version, "
     "as its predecessor schema renders it.",
 
-    "Brief v19 SHALL issue schema v13; it is brief v17 changed only in its version line, its draft-schema line, which names schema v13 "
+    "Brief v19 SHALL issue schema v13; it is brief v18 changed only in its version line, its draft-schema line, which names schema v13 "
     "and that schema's digest, and one paragraph placed immediately before its task-routes heading, `## Task routes`, which reads: "
-    f"\"{BRIEF}\" Every statement above of what brief v17 carries, equals or differs by holds of brief v19 apart from those three "
-    "differences. The inventory session SHALL receive the same request: the inventory brief, from version 2.25 "
+    f"\"{BRIEF}\" Every statement above of what brief v18 carries, equals or differs by holds of brief v19 apart from those three "
+    "differences. The inventory session SHALL receive the same request: the inventory brief, from version 2.26 "
     "`polaris-dossier-inventory-brief-v4`, issues inventory schema `polaris-dossier-local-inventory-v2`, which is inventory schema "
     "`polaris-dossier-local-inventory-v1` with one more entry kind, `worth-knowing`, placed before `other` and glossed in the brief as "
     f"\"{GLOSS}\". An inventory in schema v1 is still accepted. A `worth-knowing` entry is covered, omitted or uncovered by the "
     "inventory-coverage rule exactly as an entry of any other kind is, so that a fact the inventory records and the draft never cites "
     "surfaces as an uncovered entry; whether the draft marks it is compared by no rule.",
 
-    "A draft in schema v11 or earlier SHALL be checked and rendered exactly as version 2.23 checks and renders it, the same findings and "
+    "A draft in schema v12 or earlier SHALL be checked and rendered exactly as version 2.24 checks and renders it, the same findings and "
     "the same bytes of every page, of `machine.json` and of every record check writes, except that a `field-version` finding stands in "
     "place of the `schema` finding at each `worthKnowing` member anywhere in the draft, with the detail "
     "`` `worthKnowing` needs draft schema polaris-dossier-local-draft-v13 ``, and at each Pole's `worthKnowingNone`, with the detail "
@@ -128,7 +128,7 @@ PARAGRAPHS = [
     "closed draft schema gains neither member, and the rendered bytes the provider golden pins do not change.",
 ]
 
-ANCHOR = 'A draft in schema v10 or earlier SHALL be checked and rendered exactly as version 2.22'
+ANCHOR = 'A draft in schema v11 or earlier SHALL be checked and rendered exactly as version 2.23'
 once(ANCHOR)
 start = text.index(ANCHOR)
 end = text.index('\n\n', start)
@@ -160,14 +160,14 @@ SCENARIOS = f"""#### Scenario: A worth-knowing block leads its page
 
 #### Scenario: A pre-v13 draft keeps its bytes
 
-- **WHEN** a draft of schema v11 or earlier is checked and rendered, once as stored and once with `worthKnowing` added to a block and `worthKnowingNone` to a Pole
-- **THEN** the stored draft's findings and the bytes of every page, of `machine.json` and of every record check writes are those version 2.23 gives it, with no `worth-knowing` callout and no `worthKnowing` advice
+- **WHEN** a draft of schema v12 or earlier is checked and rendered, once as stored and once with `worthKnowing` added to a block and `worthKnowingNone` to a Pole
+- **THEN** the stored draft's findings and the bytes of every page, of `machine.json` and of every record check writes are those version 2.24 gives it, with no `worth-knowing` callout and no `worthKnowing` advice
 - **AND** the draft with the members added gets a `field-version` finding at each with the detail naming `polaris-dossier-local-draft-v13`, in place of the `schema` finding at that path
 
 #### Scenario: Brief v19 and inventory brief v4 ask for the facts
 
 - **WHEN** a run is briefed and its inventory session is briefed under this version
-- **THEN** the brief is `polaris-dossier-brief-v19`, issuing schema `polaris-dossier-local-draft-v13`, and equals brief v17 for the same run except its version line, its draft-schema line and the one worth-knowing paragraph placed immediately before `## Task routes`
+- **THEN** the brief is `polaris-dossier-brief-v19`, issuing schema `polaris-dossier-local-draft-v13`, and equals brief v18 for the same run except its version line, its draft-schema line and the one worth-knowing paragraph placed immediately before `## Task routes`
 - **AND** the inventory brief is `polaris-dossier-inventory-brief-v4`, issuing inventory schema `polaris-dossier-local-inventory-v2`, whose entry kinds include `worth-knowing` with its gloss, and an inventory in schema v1 is still accepted
 
 """

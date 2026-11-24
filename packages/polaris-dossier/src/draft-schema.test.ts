@@ -204,7 +204,7 @@ describe('draft.schema.json', () => {
   });
 });
 
-// Version 2.25 (syzygy-5dhm.41): schema v13's worth-knowing mark and a Pole's `worthKnowingNone`. Where the mark may stand, and that a marked
+// Version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing mark and a Pole's `worthKnowingNone`. Where the mark may stand, and that a marked
 // block cites, is check's (`check.test.ts`); the schema holds only the shape.
 describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
   const V10_SCHEMA = localDraftSchema({ pinnedRevision: REV, maxQuestions: 1 }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
@@ -255,7 +255,7 @@ describe('local-agent draft schema: the worth-knowing mark (v13)', () => {
   });
 });
 
-describe('local-agent inventory schema: version 2 (version 2.25)', () => {
+describe('local-agent inventory schema: version 2 (version 2.26)', () => {
   const INVENTORY = localInventorySchema({ pinnedRevision: REV });
   const inventoryOf = (schemaVersion: string, kind: string): Record<string, unknown> => ({
     schemaVersion, pinnedRevision: REV, sessionId: 'inventory-1',

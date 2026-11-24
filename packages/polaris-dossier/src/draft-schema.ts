@@ -50,7 +50,7 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V8 = 'polaris-dossier-local-draft-v8';
 export const LOCAL_DRAFT_SCHEMA_VERSION_V9 = 'polaris-dossier-local-draft-v9';
 /** v10 (REQ-polaris-generation-034 version 2.20): one overview hero figure or a reasoned omission. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V10 = 'polaris-dossier-local-draft-v10';
-/** v13 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): an Inferred block may carry `worthKnowing: true`, the worth-knowing mark,
+/** v13 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an Inferred block may carry `worthKnowing: true`, the worth-knowing mark,
  * and a Pole may say in `worthKnowingNone` why it holds no block so marked. Everything else is v10; a v10 or earlier draft still checks and
  * renders as before, and either member in one is field-version. v11 and v12 are the numbers adopted version 2.23 (containment figure)
  * and the open version 2.24 (system model) give their schemas; neither is implemented here, so this code knows no v11 or v12 draft and
@@ -71,7 +71,7 @@ export const hasSubsectionForm = (version: unknown): boolean => version === LOCA
 export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);
 /** Whether a draft carries the overview `hero`: v10 (version 2.20) and every later version. */
 export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version);
-/** Whether a draft's version has the worth-knowing mark and a Pole's `worthKnowingNone`: v13 (version 2.25). */
+/** Whether a draft's version has the worth-knowing mark and a Pole's `worthKnowingNone`: v13 (version 2.26). */
 export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
 /** The worth-knowing mark (v13) on a claim block, and the member in which a v13 Pole says why it holds no block so marked. */
 export const WORTH_KNOWING_FIELD = 'worthKnowing';
@@ -302,7 +302,7 @@ export interface DraftSchemaParameters {
  * `subsections` (schema v8 and later; version 2.16) or has no such member (schema v7 and earlier). `relations` says whether a graph edge
  * carries its required `relation` and a graph node may carry `unit` (schema v9 and later; version 2.19) or neither (schema
  * v8 and earlier). `worthKnowing` says whether a claim block may carry the worth-knowing mark and a Pole `worthKnowingNone` (schema v13,
- * what the brief publishes; version 2.25) or neither member exists (schema v10 and earlier). */
+ * what the brief publishes; version 2.26) or neither member exists (schema v10 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
   figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken',
   worthKnowing: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
@@ -372,7 +372,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     executions: list(object({ id: handle, command: text, workingDirectory: text, scope: choice(EXECUTION_SCOPES), purpose: text }, ['workingDirectory', 'scope']), 0, 500),
     // Poles (v4, dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections. The run's Pole limit, an
     // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
-    // A v13 Pole may say in `worthKnowingNone` why none of its blocks carries the worth-knowing mark (version 2.25).
+    // A v13 Pole may say in `worthKnowingNone` why none of its blocks carries the worth-knowing mark (version 2.26).
     poles: list(worthKnowing === 'taken'
       ? object({ label: presentationLabel, sections: refs(0, 30), [WORTH_KNOWING_NONE_FIELD]: { ...text, description: WORTH_KNOWING_NONE_DESCRIPTION } }, [WORTH_KNOWING_NONE_FIELD])
       : object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
@@ -397,7 +397,7 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
  * or `unknown` with an RFC2-24 reason, quotations in the one lead-in form, and its own account of what it covered. Syzygy checks its
  * quotations and citations as `check` checks a draft's; its completeness over the clone stays the session's self-report, Inferred. */
 export const LOCAL_INVENTORY_SCHEMA_VERSION_V1 = 'polaris-dossier-local-inventory-v1';
-/** v2 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): an entry's `kind` may also be `worth-knowing`. A v1 inventory still
+/** v2 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an entry's `kind` may also be `worth-knowing`. A v1 inventory still
  * validates; the kinds are the same member's widened set. */
 export const LOCAL_INVENTORY_SCHEMA_VERSION = 'polaris-dossier-local-inventory-v2';
 export const INVENTORY_ENTRY_KINDS = Object.freeze(['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'worth-knowing', 'other'] as const);

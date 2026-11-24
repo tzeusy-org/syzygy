@@ -41,7 +41,7 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v19 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
+/** v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
  * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed. v17 and v18 are the numbers adopted version
  * 2.23 and the open version 2.24 give their briefs; neither is implemented here.
  * v16 (REQ-polaris-generation-034 version 2.20): brief v15 with schema v10 and the hero paragraph after relation types.
@@ -53,7 +53,7 @@ import { issuedBriefStatement } from './launch-statements.js';
 export const BRIEF_VERSION = 'polaris-dossier-brief-v19';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
-/** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.25). It carries no project
+/** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.26). It carries no project
  * content. */
 export const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole.';
 

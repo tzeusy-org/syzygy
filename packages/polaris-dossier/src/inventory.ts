@@ -39,7 +39,7 @@ export type { OpenedRun } from './run-dir.js';
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-/** v4 (REQ-polaris-generation-034 version 2.25, syzygy-5dhm.41): inventory brief v3 with inventory schema v2 and the `worth-knowing` kind
+/** v4 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): inventory brief v3 with inventory schema v2 and the `worth-knowing` kind
  * in the list of kinds, and this line changed. */
 export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v4';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';

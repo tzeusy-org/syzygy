@@ -191,8 +191,8 @@ describe('reader advice: the counted standards', () => {
     'leaves the product name in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
 });
 
-// Version 2.25 (syzygy-5dhm.41): the worth-knowing count advice, on a schema-v13 draft only. Literals from the specification.
-describe('reader advice: the worth-knowing count (version 2.25)', () => {
+// Version 2.26 (syzygy-5dhm.41): the worth-knowing count advice, on a schema-v13 draft only. Literals from the specification.
+describe('reader advice: the worth-knowing count (version 2.26)', () => {
   const V13 = 'polaris-dossier-local-draft-v13';
   const block = (id: string, worthKnowing?: boolean) => ({ id, label: 'inferred', text: 'w', ...(worthKnowing === undefined ? {} : { worthKnowing }) });
   const sec = (id: string, marks: number, plain = 1) => ({ id, title: id, paragraphs: [...Array.from({ length: marks }, (_, k) => block(`${id}-m${k}`, true)), ...Array.from({ length: plain }, (_, k) => block(`${id}-p${k}`, false))] });

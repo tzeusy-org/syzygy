@@ -267,7 +267,7 @@ describe('session-prompt inventory', () => {
       'never open the run directory\'s `drafts/`, `checks/`, `brief.md`',
       '"$id": "urn:syzygy:polaris-dossier:polaris-dossier-local-inventory-v2"',
       '- Brief version: `polaris-dossier-inventory-brief-v4`',
-      // Inventory brief v4 (version 2.25): the worth-knowing kind, between `conflict` and `other`.
+      // Inventory brief v4 (version 2.26): the worth-knowing kind, between `conflict` and `other`.
       '- `conflict`: two of its statements that disagree\n- `worth-knowing`: a fact it states about itself that an engineer new to the project would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects; look for one to three in each major part of the project, and record none where you find none, never one made to fill a quota\n- `other`: anything else it states that a reader would need',
       'You run nothing from the clone, so you report no executions',
     ]) expect(brief).toContain(text);

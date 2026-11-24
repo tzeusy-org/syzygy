@@ -936,7 +936,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { paragraph: paragraph(step), ...(see === undefined ? {} : { see: { kind: see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const, id: text(see['target'])! } }) };
         }),
       })) } : {}),
-      // A v13 draft's worth-knowing marks (version 2.25): the marked blocks of the sections' own paragraphs, where check admits the mark,
+      // A v13 draft's worth-knowing marks (version 2.26): the marked blocks of the sections' own paragraphs, where check admits the mark,
       // and the Poles that say none was found. The reason a Pole gives is never rendered.
       ...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {
         blockIds: list(doc['sections']).filter(isRecord).flatMap((section) => list(section['paragraphs'])

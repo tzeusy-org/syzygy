@@ -815,7 +815,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
-    // A worth-knowing block (version 2.25) renders once, in its page's callout, and not again here.
+    // A worth-knowing block (version 2.26) renders once, in its page's callout, and not again here.
     const body = section.paragraphs.filter(b => !worthKnowingIds.has(b.id)).map(b => block(from, b)).join('');
     // A v8 section's subsections follow its own paragraphs and precede its deep-dive links (version 2.16): each its title as an `h3`, its
     // answer first, rendered as the introduction's block is, then its paragraphs as the section's own are.
@@ -823,7 +823,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (subsections !== '') subsectionPages.add(from);
     return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${subsections}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
   };
-  // The worth-knowing callout (version 2.25): on a page that draws sections, before them, the marked blocks of the sections it draws, in
+  // The worth-knowing callout (version 2.26): on a page that draws sections, before them, the marked blocks of the sections it draws, in
   // draft order, each a claim block rendered as any is and followed by a link to its section. A Pole that marks none and says why gets
   // Syzygy's sentence that none was found; the author's reason is never rendered. Only a v13 draft carries marks, so an earlier draft's
   // pages keep their bytes.

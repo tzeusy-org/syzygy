@@ -2821,7 +2821,7 @@ describe('render: overview hero (schema v10)', () => {
   });
 });
 
-// REQ-polaris-generation-034 version 2.25 (syzygy-5dhm.41): schema v13's worth-knowing marks through the render command. A marked block
+// REQ-polaris-generation-034 version 2.26 (syzygy-5dhm.41): schema v13's worth-knowing marks through the render command. A marked block
 // renders once, in its page's callout before the page's sections, followed by a link to its section; a Pole that says why it marks none
 // gets Syzygy's none-found sentence and never its reason; a v13 draft without marks renders as the same v10 draft does. Literals throughout.
 describe('render: the worth-knowing callout (schema v13)', () => {

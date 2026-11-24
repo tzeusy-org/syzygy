@@ -695,7 +695,7 @@ function heroFindings(doc: Readonly<Record<string, unknown>>): CheckFinding[] {
 }
 
 /** The paths at which a draft of schema v10 or earlier carries the worth-knowing mark or a Pole's `worthKnowingNone`, each a field-version
- * finding (version 2.25). */
+ * finding (version 2.26). */
 function worthKnowingFieldVersionPaths(doc: Readonly<Record<string, unknown>>): string[] {
   if (hasWorthKnowingForm(doc['schemaVersion'])) return [];
   const out: string[] = [];
@@ -708,7 +708,7 @@ function worthKnowingFieldVersionPaths(doc: Readonly<Record<string, unknown>>): 
  * a deep dive, the introduction or a route step. */
 const WORTH_KNOWING_PLACE = /^\$\.sections\[\d+\]\.paragraphs\[\d+\]$/u;
 
-/** The worth-knowing mark (REQ-polaris-generation-034 version 2.25). In a v13 draft, a `worth-knowing` finding at an Inferred block marked
+/** The worth-knowing mark (REQ-polaris-generation-034 version 2.26). In a v13 draft, a `worth-knowing` finding at an Inferred block marked
  * `worthKnowing: true` that is not one of a section's own paragraphs, that cites nothing, or that carries the judgement mark: a marked
  * block states a cited fact. A block of another label carrying the member is already a schema finding. In an earlier draft:
  * `field-version` at each mark and each Pole's `worthKnowingNone`, in place of the schema finding at that path. */
@@ -733,7 +733,7 @@ function worthKnowingStructure(doc: Readonly<Record<string, unknown>>, add: (fin
 export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   const parameters = { pinnedRevision: pinned, maxQuestions };
   const current = localDraftSchema({ ...parameters, hero: 'required' });
-  // Every schema before v13 has no worth-knowing mark (version 2.25).
+  // Every schema before v13 has no worth-knowing mark (version 2.26).
   const v10 = localDraftSchema({ ...parameters, hero: 'required' }, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
   const v9 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'taken', 'absent');
   const v8 = localDraftSchema(parameters, 'home', 'required', 'taken', 'taken', 'absent', 'absent');
@@ -761,7 +761,7 @@ export function draftRules(pinned: string, maxQuestions: number, poleLimit: numb
       const subsectionPaths = new Set(subsectionFieldVersionPaths(doc));
       // A graph edge's `relation` or a graph node's `unit` in a v8 or earlier draft: likewise (version 2.19).
       const relationPaths = new Set(relationFieldVersionPaths(doc));
-      // The worth-knowing mark and a Pole's `worthKnowingNone` in a v10 or earlier draft: likewise (version 2.25).
+      // The worth-knowing mark and a Pole's `worthKnowingNone` in a v10 or earlier draft: likewise (version 2.26).
       for (const at of worthKnowingFieldVersionPaths(doc)) subsectionPaths.add(at);
       const fieldVersioned = (path: string): boolean => subsectionPaths.has(path) || relationPaths.has(path)
         || (hasHeroForm(version) && (path === '$.hero' || path === '$.hero.figure'));

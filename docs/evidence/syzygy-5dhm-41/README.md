@@ -1,6 +1,6 @@
 # Worth-knowing mark evidence (syzygy-5dhm.41)
 
-Not authority. Records of the change that lets a dossier draft mark the facts a newcomer would not guess, and renders them in one callout near the top of their page (version 2.25, draft schema v13, brief v19).
+Not authority. Records of the change that lets a dossier draft mark the facts a newcomer would not guess, and renders them in one callout near the top of their page (version 2.26, draft schema v13, brief v19).
 
 | File | What it is |
 |---|---|
@@ -8,6 +8,6 @@ Not authority. Records of the change that lets a dossier draft mark the facts a 
 | `worth_knowing_mutation.mjs` | The harness, adapted from `docs/evidence/syzygy-5dhm-136/reader_edition_mutation.mjs`. `node worth_knowing_mutation.mjs <worktree> <out.json> <scratch> [--dry] [--only ids]`; it rewrites sources in place, so nothing else may edit or render from the tree while it runs. |
 | `worth-knowing-rerender-2026-11-24.json` | Every stored run with a stored draft (seven; draft schemas v2, v3 and v4), drawn again by `main` at `fb635704` (`before`) and by this branch at `2f00edee`, after the merge with that main (`after`): every file of every site has the same sha256, 7 of 7, and no page mentions `worth-knowing`. |
 | `worth_knowing_render_all.sh`, `worth_knowing_compare.py` | The scratch re-render and the comparison. The render script copies `docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts`, which passes each run's placement subject, its content classes and its stored fidelity verdict, over a copy of each run directory (never the run's agent or session directories), with no model session and no consent. Each form renders from its own detached worktree. |
-| `worth_knowing_build_spec.py`, `worth_knowing_delta.py` | The version 2.25 text and its semantic delta, from the bytes: `worth_knowing_build_spec.py <worktree> <out>` rebuilds `openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md` byte for byte from version 2.23's; `worth_knowing_delta.py <worktree>` writes that package's `SEMANTIC-DELTA.md`. Line and scenario survival: `docs/evidence/syzygy-5dhm-136/readers_edition_survival.py <2.23 spec> <2.25 spec>`. |
+| `worth_knowing_build_spec.py`, `worth_knowing_delta.py` | The version 2.26 text and its semantic delta, from the bytes: `worth_knowing_build_spec.py <worktree> <out>` rebuilds `openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md` byte for byte from version 2.24's (the system model); `worth_knowing_delta.py <worktree>` writes that package's `SEMANTIC-DELTA.md`. Line and scenario survival: `docs/evidence/syzygy-5dhm-136/readers_edition_survival.py <2.24 spec> <2.26 spec>`. |
 
 [Unknown] Reader share under brief v19: no run has been made with it (CONTRIBUTING.md rule A-38).

@@ -1,4 +1,4 @@
-# Dossier worth-knowing mark — version 2.25
+# Dossier worth-knowing mark — version 2.26
 
 [Inferred] Candidate agent-decided change under VIS-4 as amended by GOVERNANCE-SIMPLIFICATION-D10. It binds only once its row in `AGENT-ADOPTIONS.md` and its version tag exist; no owner adoption is claimed. It decides no owner class: no doctrine edit; no change to secret detection or SEC-5's fail-closed rule; no write to a repository the owner does not own; no network exposure, release or multi-user use.
 
@@ -12,13 +12,13 @@
 [Observed] One MODIFIED requirement, REQ-polaris-generation-034 ("Agent brief and mechanically checked draft"), complete text in `proposed/polaris-generation/spec.md`:
 
 - One sentence amended in place: brief v19 and schema v13 join the list of issued briefs and accepted schemas.
-- Five paragraphs added after version 2.23's earlier-schema paragraph:
-  - draft schema v13 (a schema-v11 draft plus two optional members): an Inferred block may carry `worthKnowing`, a Pole `worthKnowingNone`; a `worth-knowing` repair finding, with its literal detail, for a marked block that is not a section's own paragraph, cites nothing or carries the judgement mark;
+- Five paragraphs added after version 2.24's earlier-schema paragraph:
+  - draft schema v13 (a schema-v12 draft plus two optional members): an Inferred block may carry `worthKnowing`, a Pole `worthKnowingNone`; a `worth-knowing` repair finding, with its literal detail, for a marked block that is not a section's own paragraph, cites nothing or carries the judgement mark;
   - count advice on check's report, never a finding: a Pole that marks none without a reason, or more than three;
   - the callout: a page's marked blocks render once, before its contents list and first section, each followed by a link to its section; a Pole with a reason gets Syzygy's none-found sentence and the reason is rendered nowhere;
-  - brief v19, brief v17 plus one paragraph, and inventory brief v4 with inventory schema v2 and its `worth-knowing` entry kind;
-  - a draft of schema v11 or earlier keeps its findings and bytes, with a `field-version` finding for either member it carries; the provider mode is unaffected.
-- Six scenarios added after version 2.23's last (193 to 199 scenarios in REQ-034).
+  - brief v19, brief v18 plus one paragraph, and inventory brief v4 with inventory schema v2 and its `worth-knowing` entry kind;
+  - a draft of schema v12 or earlier keeps its findings and bytes, with a `field-version` finding for either member it carries; the provider mode is unaffected.
+- Six scenarios added after version 2.24's last (207 to 213 scenarios in REQ-034).
 
 [Observed] Every other sentence and scenario of REQ-034 is carried unchanged. REQ-polaris-generation-035 names no inventory entry kind, so it is unchanged.
 
