@@ -1,0 +1,150 @@
+{
+  "subject": "syzygy-5dhm.41: re-render of the seven stored runs' latest passed drafts, main tree against the worth-knowing branch",
+  "before": "e741fa2f8",
+  "after": "a4289a81b",
+  "harness": "docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts (syzygy-a70b form: placement subject, run content classes, injected stored verdict)",
+  "runs": [
+    {
+      "run": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "draftRevision": 2,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-2.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 53,
+      "filesAfter": 53,
+      "differing": [],
+      "siteSha256": "f732b0defba228986e11ac8694f15fe1a1ca9fff4141b01bd656a4bb1d8c9aba",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-36df95faf04a4c98eabbb32a18a4e833",
+      "schemaVersion": "polaris-dossier-local-draft-v2",
+      "draftRevision": 3,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 62,
+      "filesAfter": 62,
+      "differing": [],
+      "siteSha256": "ab04ff905b9af40064c49313870c6da96ec0b9ba766b997f673dc85b96def1d5",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-3744945f44ecdc31a06d43be3d38818c",
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "draftRevision": 3,
+      "inputs": {
+        "placement": "repository:tzeusy-org-butlers@563078d0838b6f8a5274f6dd46e8ee150e839c08",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "run.json",
+        "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 54,
+      "filesAfter": 54,
+      "differing": [],
+      "siteSha256": "e16ef4b897000448fd86bc520221b6c2b584fd7ffc88cbc2a7007283dcabaefc",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-4465d22f5ce1829ca49059a5b8451bb0",
+      "schemaVersion": "polaris-dossier-local-draft-v2",
+      "draftRevision": 3,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-2.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 55,
+      "filesAfter": 55,
+      "differing": [],
+      "siteSha256": "2c6bf58003e038c9194ea5cdd5ec7d4f19ba7b5140822e5f3a528cc0385e8407",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "draftRevision": 4,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-3.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 52,
+      "filesAfter": 52,
+      "differing": [],
+      "siteSha256": "a37752b37df9a9aa945a354adb27da04f4f7741eeb6e22f4837fb387c601c2fe",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+      "schemaVersion": "polaris-dossier-local-draft-v3",
+      "draftRevision": 4,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-5.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 72,
+      "filesAfter": 72,
+      "differing": [],
+      "siteSha256": "11c721e1d04c5c3bdfddfee3b0acef0a18fdb86c9e9e31ebe92d1452d8d917dd",
+      "worthKnowingMentions": 0
+    },
+    {
+      "run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "draftRevision": 6,
+      "inputs": {
+        "placement": "repository:redis-redis@498ecd0d6d007db11ddb3aea9428552598a78622",
+        "contentClasses": [
+          "code-content",
+          "project-documentation",
+          "governance-text"
+        ],
+        "contentClassesFrom": "LEGACY_CLASSES (the run records none)",
+        "review": "injected fidelity-verdict-6.json (stored verdict, packet not rebuilt)"
+      },
+      "filesBefore": 55,
+      "filesAfter": 55,
+      "differing": [],
+      "siteSha256": "67dec8e6009a17a4fc3fc613d74f86b12f69e685c8bc8cad4b8c5f6c445db66a",
+      "worthKnowingMentions": 0
+    }
+  ],
+  "identical": 7,
+  "total": 7
+}
