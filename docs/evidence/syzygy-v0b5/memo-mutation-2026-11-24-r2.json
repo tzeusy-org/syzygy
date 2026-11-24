@@ -1,0 +1,195 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-24T02:43:12.841168+00:00",
+  "commit": "3566e70bb90792a1b77230822996ed69a4cd0e9f",
+  "subject": {
+    "scripts/check_spec_reconciliation.py": "1ce2d64dd71e8210e930a7ccec504ab3ee803b7f97809758ce281c4c3a78d3d6"
+  },
+  "method": "Rule-6 run over the per-run memo and the reverse-apply cache (syzygy-v0b5).\n\nUsage: python3 memo_mutation.py <checkout root> <out.json> [--harness-only] [mutant id ...]\n\nEach mutant replaces fragments that each occur exactly once in\nscripts/check_spec_reconciliation.py, runs `--selftest` (SELFTEST_WORKERS from\nthe environment) and then memo_rerun_harness.py, and restores the file in\n`finally`. A mutant is killed when the selftest exits non-zero or the harness\nexits 1; the record keeps which one, the selftest's last line and the\nharness's verdict line. The unmutated baseline runs both first and must pass.\nWith --harness-only the selftest is not run (its result for those mutants is in\nthe earlier record); naming mutant ids runs only those.",
+  "harnessOnly": true,
+  "baseline": {
+    "selftestExit": 0,
+    "selftestVerdict": "SELFTEST not run (--harness-only)",
+    "selftestFailures": [],
+    "harnessExit": 0,
+    "harnessVerdicts": [
+      "FRESH: the second run over the same path saw the broken record",
+      "CONTRACT HELD: per root, per caller, bypassed under _FILES_OVERRIDE"
+    ],
+    "seconds": 4
+  },
+  "mutants": [
+    {
+      "id": "memo-global-and-kept",
+      "what": "a memo keyed by function alone and kept from one run() to the next",
+      "fragments": [
+        {
+          "old": "        key = (function.__module__, function.__name__, str(Path(args[0]).resolve()))",
+          "new": "        key = (function.__module__, function.__name__)"
+        },
+        {
+          "old": "    _RUN_MEMO = {}\n    import d10_supersession",
+          "new": "    _RUN_MEMO = _RUN_MEMO if _RUN_MEMO is not None else {}\n    import d10_supersession"
+        },
+        {
+          "old": "        _SIGNED_MEMO = None\n        _RUN_MEMO = None\n",
+          "new": "        _SIGNED_MEMO = None\n"
+        }
+      ],
+      "killed": true,
+      "killedBy": [
+        "harness"
+      ],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 1,
+      "harnessVerdicts": [
+        "FRESH: the second run over the same path saw the broken record",
+        "CONTRACT BROKEN: two roots in one run got one answer"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "memo-kept-between-runs",
+      "what": "a memo keyed by root but kept from one run() to the next",
+      "fragments": [
+        {
+          "old": "    _RUN_MEMO = {}\n    import d10_supersession",
+          "new": "    _RUN_MEMO = _RUN_MEMO if _RUN_MEMO is not None else {}\n    import d10_supersession"
+        },
+        {
+          "old": "        _SIGNED_MEMO = None\n        _RUN_MEMO = None\n",
+          "new": "        _SIGNED_MEMO = None\n"
+        }
+      ],
+      "killed": true,
+      "killedBy": [
+        "harness"
+      ],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 1,
+      "harnessVerdicts": [
+        "STALE: the second run over the same path did not see the broken record"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "memo-global-key",
+      "what": "a memo keyed by function alone within one run()",
+      "fragments": [
+        {
+          "old": "        key = (function.__module__, function.__name__, str(Path(args[0]).resolve()))",
+          "new": "        key = (function.__module__, function.__name__)"
+        }
+      ],
+      "killed": true,
+      "killedBy": [
+        "harness"
+      ],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 1,
+      "harnessVerdicts": [
+        "FRESH: the second run over the same path saw the broken record",
+        "CONTRACT BROKEN: two roots in one run got one answer"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "memo-ignores-override",
+      "what": "the memo answers while _FILES_OVERRIDE stands in front of a read",
+      "fragments": [
+        {
+          "old": "        if _RUN_MEMO is None or _FILES_OVERRIDE is not None or len(args) != 1 or kwargs:",
+          "new": "        if _RUN_MEMO is None or len(args) != 1 or kwargs:"
+        }
+      ],
+      "killed": true,
+      "killedBy": [
+        "harness"
+      ],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 1,
+      "harnessVerdicts": [
+        "FRESH: the second run over the same path saw the broken record",
+        "CONTRACT BROKEN: a call while _FILES_OVERRIDE stood was answered from the memo"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "memo-shares-objects",
+      "what": "the memo hands every caller the same object",
+      "fragments": [
+        {
+          "old": "        return copy.deepcopy(_RUN_MEMO[key])",
+          "new": "        return _RUN_MEMO[key]"
+        }
+      ],
+      "killed": true,
+      "killedBy": [
+        "harness"
+      ],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 1,
+      "harnessVerdicts": [
+        "FRESH: the second run over the same path saw the broken record",
+        "CONTRACT BROKEN: a caller's change reached the next caller"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reverse-cache-ignores-body",
+      "what": "the reverse-apply cache key leaves out the body",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (sha(patch), Path(target_rel).as_posix(), zero_context)"
+        }
+      ],
+      "killed": false,
+      "killedBy": [],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 2,
+      "harnessVerdicts": [
+        "HARNESS INVALID: the clean tree must pass and the broken record must fail"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reverse-cache-ignores-patch",
+      "what": "the reverse-apply cache key leaves out the patch",
+      "fragments": [
+        {
+          "old": "    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)",
+          "new": "    key = (Path(target_rel).as_posix(), sha(body), zero_context)"
+        }
+      ],
+      "killed": false,
+      "killedBy": [],
+      "selftestExit": 0,
+      "selftestVerdict": "SELFTEST not run (--harness-only)",
+      "selftestFailures": [],
+      "harnessExit": 0,
+      "harnessVerdicts": [
+        "FRESH: the second run over the same path saw the broken record",
+        "CONTRACT HELD: per root, per caller, bypassed under _FILES_OVERRIDE"
+      ],
+      "seconds": 4
+    }
+  ],
+  "summary": {
+    "mutants": 7,
+    "killed": 5,
+    "survived": 2
+  }
+}
