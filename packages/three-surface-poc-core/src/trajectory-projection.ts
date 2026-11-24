@@ -1,5 +1,6 @@
 import { recordedInstant, trajectoryTimeMeasures, type TrajectoryTimeMeasures } from './trajectory-time-measures.js';
 import type { WorkItemFact, WorkItemsResult, WorkItemStatus } from './work-items.js';
+import { CHANGE_WINDOWS, type ChangeWindow, type ChangeWindowObservation } from './work-item-history.js';
 import {
   DEPENDENCY_EDGE_REASONS,
   type DependencyEdgeCounts,
@@ -95,7 +96,15 @@ export type TrajectoryAnswer =
        * never an RFC2-24 reason, never counted among Unknown reasons. */
       readonly liveness: 'activity-undetermined';
     }
-  | ({ readonly id: 'changed' | 'cost' } & TrajectoryAnswerUnknown)
+  | {
+      /** syzygy-t3jk.21: every window, in CHANGE_WINDOWS order, each observed
+       * or Unknown with its reason; an Unknown window names the one changed
+       * disclosure. The page shows one window; this carries all of them. */
+      readonly id: 'changed';
+      readonly state: 'observed';
+      readonly windows: readonly TrajectoryChangeWindow[];
+    }
+  | ({ readonly id: 'cost' } & TrajectoryAnswerUnknown)
   | {
       readonly id: 'intent';
       readonly state: 'observed';
@@ -153,7 +162,7 @@ interface TrajectoryProjectionObserved {
 }
 
 /** The closed query parameter set of GET /trajectory (POC-REQ-042). */
-export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'group', 'page'] as const;
+export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'group', 'changed', 'page'] as const;
 export type TrajectoryViewParameter = (typeof TRAJECTORY_VIEW_PARAMETERS)[number];
 /** Items per page of a narrowed or paged view, in ascending item id. */
 export const TRAJECTORY_PAGE_SIZE = 250;
@@ -163,6 +172,8 @@ export interface TrajectoryViewRequest {
   readonly governingIntent: 'unknown' | null;
   /** syzygy-t3jk.20: group the matching items by parent. */
   readonly group: 'parent' | null;
+  /** syzygy-t3jk.21: the changed answer's window; null shows the default window. */
+  readonly changed: ChangeWindow | null;
   readonly page: number;
 }
 
@@ -229,8 +240,12 @@ export interface TrajectoryNarrowing {
     readonly status: readonly WorkItemStatus[];
     readonly 'governing-intent': readonly ['unknown'];
     readonly group: readonly ['parent'];
+    /** syzygy-t3jk.21: the window the changed answer shows; alone it keeps the default selection. */
+    readonly changed: readonly ChangeWindow[];
     readonly page: 'positive integer';
   };
+  /** syzygy-t3jk.21: the window shown when `changed` is absent. */
+  readonly changedDefault: 'day';
   readonly pageSize: number;
   readonly order: 'ascending item id';
   /** syzygy-t3jk.20: with `group=parent`, the page counts positions in this order. */
@@ -248,7 +263,8 @@ export interface TrajectoryViewRefusal {
 
 function narrowingDeclaration(view: TrajectoryNarrowing['view']): TrajectoryNarrowing {
   return {
-    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
+    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], changed: [...CHANGE_WINDOWS], page: 'positive integer' },
+    changedDefault: 'day',
     pageSize: TRAJECTORY_PAGE_SIZE,
     order: 'ascending item id',
     groupedOrder: GROUPED_ORDER,
@@ -287,6 +303,10 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
   if (group !== null && group !== 'parent') {
     return { refused: 'trajectory-view-parameter', parameter: 'group', reason: 'unknown-value', allowed: ['parent'] };
   }
+  const changed = query.get('changed');
+  if (changed !== null && !(CHANGE_WINDOWS as readonly string[]).includes(changed)) {
+    return { refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: [...CHANGE_WINDOWS] };
+  }
   const page = query.get('page');
   if (page !== null && !/^[1-9][0-9]*$/.test(page)) {
     return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] };
@@ -295,6 +315,7 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
     status: status as WorkItemStatus | null,
     governingIntent: intent === null ? null : 'unknown',
     group: group === null ? null : 'parent',
+    changed: changed as ChangeWindow | null,
     page: page === null ? 1 : Number(page),
   };
 }
@@ -542,6 +563,8 @@ interface ProjectTrajectoryOptions {
   /** Absent: nothing was materialized, so the chain has no member. */
   readonly reconciliationChain?: ReconciliationChainInput;
   readonly dependencies?: WorkItemDependencyObservation;
+  /** syzygy-t3jk.21: the history read's windows; absent reads as unread. */
+  readonly changes?: readonly ChangeWindowObservation[];
 }
 
 /** RFC2-18: only materialized work that reached merge enters the chain.
@@ -553,14 +576,24 @@ function chainMembers(input: ReconciliationChainInput | undefined): number | Tra
   return input.workerChange.state === 'changed-or-merged' ? 1 : 0;
 }
 
-function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' }>, chain: ReconciliationChainInput | undefined): readonly TrajectoryAnswer[] {
+/** syzygy-t3jk.21: a window as the changed answer carries it. */
+export type TrajectoryChangeWindow =
+  | (Extract<ChangeWindowObservation, { kind: 'observed' }>)
+  | (Extract<ChangeWindowObservation, { kind: 'unknown' }> & { readonly disclosure: typeof TRAJECTORY_CHANGED_ID });
+
+function changeWindows(changes: readonly ChangeWindowObservation[] | undefined): readonly TrajectoryChangeWindow[] {
+  const unread: readonly ChangeWindowObservation[] = CHANGE_WINDOWS.map((window) => ({ window, kind: 'unknown', reason: window === 'since-last' ? 'no-previous-evaluation-recorded' : 'history-read-failed' }));
+  return (changes ?? unread).map((window) => (window.kind === 'unknown' ? { ...window, disclosure: TRAJECTORY_CHANGED_ID } : window));
+}
+
+function observedAnswers(workItems: Extract<WorkItemsResult, { kind: 'observed' }>, chain: ReconciliationChainInput | undefined, changes: readonly ChangeWindowObservation[] | undefined): readonly TrajectoryAnswer[] {
   const byStatus = Object.fromEntries(Object.keys(STATUS_TO_COLUMN).map((status) => [status, 0])) as Record<WorkItemStatus, number>;
   for (const item of workItems.items) byStatus[item.status] += 1;
   const served = workItems.items.length;
   return [
     { id: 'remains', state: 'observed', byStatus, served },
     { id: 'running', state: 'observed', claimed: byStatus.in_progress, served, liveness: 'activity-undetermined' },
-    { id: 'changed', state: 'unknown', disclosure: TRAJECTORY_CHANGED_ID },
+    { id: 'changed', state: 'observed', windows: changeWindows(changes) },
     { id: 'cost', state: 'unknown', disclosure: TRAJECTORY_COST_ID },
     {
       id: 'intent',
@@ -701,7 +734,7 @@ export function projectTrajectory(
     },
     timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
     eligibility: projectEligibility(sorted, options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
-    answers: observedAnswers(workItems, options.reconciliationChain),
+    answers: observedAnswers(workItems, options.reconciliationChain, options.changes),
     outline: projectOutline(options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
     narrowing: narrowingDeclaration(null),
   };

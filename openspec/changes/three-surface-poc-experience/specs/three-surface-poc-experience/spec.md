@@ -1032,7 +1032,11 @@ parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
 Unknown), `group=parent` and `page` (a positive integer), and any of them SHALL give a view
 of the matching items in ascending item id (with `group=parent`, in the
 grouped order below), one page of a declared fixed size, whose scope
-statement names the page, the page count and the matching count. No parameter SHALL give the default selection. Any other name, a
+statement names the page, the page count and the matching count. No parameter SHALL give the default selection. The set also holds
+`changed` (one of POC-REQ-044's change windows, `day`, `week` or
+`since-last`), which selects the window the changed answer shows and
+nothing else: alone it SHALL keep the default selection, and with another
+parameter it SHALL ride that view. Any other name, a
 repeated name, a value outside its set, a page that is not a positive
 integer, or a page past the last SHALL be refused with HTTP 400 naming the
 parameter, the reason and the allowed set, never ignored. When the
@@ -1042,7 +1046,8 @@ link, by real anchors outside any collapsed element and reachable by
 keyboard, to the default selection, every item by id, each status, the
 governing-intent Unknown and the grouped view with their whole-population
 counts, and the current view's previous and next page. The machine answer
-SHALL take no parameter and SHALL declare the parameter set, the page size,
+SHALL take no parameter and SHALL declare the parameter set, the default
+change window, the page size,
 the order, and the grouped order and its page unit, `position`
 (`trajectory.narrowing`), so any page is recomputable from
 `workItems.items` and `trajectory.outline`.
@@ -1269,9 +1274,40 @@ equal values (`trajectory.answers`). Today:
   state `activity-undetermined` while no staleness bound is declared
   (RFC8-16): state-local, carrying no RFC2-24 reason and no machine
   Unknown, with what resolves it.
-- *What changed* and *what it cost* SHALL each be an Unknown with its
-  closed reason and route while no movement source or cost record is read
-  (RFC8-19: absent cost is Unknown, never zero).
+- *What changed* SHALL be the tracker's net change between two named Dolt
+  revisions, for three windows in this order: `day` and `week`, each from
+  the newest commit in the observed revision's own history at or before
+  the observation instant less 24 hours or 7 days, and `since-last`, from
+  the previous evaluation's work-item revision. Every window SHALL end at
+  the observed work-item revision, never a fresh head, and SHALL be read
+  through the same read-only runner as the work items, by two statements
+  naming only commit hash and date (`dolt_log`) and item id, status and
+  diff type (`dolt_diff` over `issues`), never a title, message, committer
+  or other free text (SEC-5). For an observed window the answer SHALL
+  state both revisions with their recorded instants and count each changed
+  item, ascending id, as exactly one of: added (a row the window start did
+  not hold), closed (a status other than `closed` became `closed`),
+  reopened (`closed` became another status), re-stated (another status
+  change) or removed (a row the observed revision no longer holds); the
+  counts SHALL sum to the listed items. A row whose status did not change
+  SHALL be counted as updated without a status change and never listed, and
+  a row outside the observed prefix SHALL be counted and never named. No
+  window SHALL state a rate, a velocity, a verdict or a per-person figure,
+  and a readable window with no change SHALL say it is an observed zero.
+  A window SHALL be Unknown with its reason, never zero, when the work-item
+  revision or the observation instant is unavailable, when a history read
+  fails, returns another shape or does not confirm the observed revision
+  (any of these makes every timed window Unknown, never a partial count),
+  when the history holds no commit as old as the window bound, or, for
+  `since-last`, while no previous evaluation's revision is recorded. The
+  machine answer SHALL carry every window with every changed item; the page
+  SHALL show one window (the `changed` parameter of POC-REQ-042, `day` by
+  default), link to the others with their counts, and list at most 250
+  changed items, counting the rest. Every Unknown window SHALL be stated in
+  one disclosure with each window's reason and the route.
+- *What it cost* SHALL be an Unknown with its closed reason and route
+  while no cost record is read (RFC8-19: absent cost is Unknown, never
+  zero).
 - *Verified against intent* SHALL give three separately labelled counts,
   each with its own denominator, and no element SHALL add any two of them:
   (a) Unknown-provenance, the served items with no traceable warrant, n of
@@ -1289,14 +1325,19 @@ When work items are not observed, all five answers SHALL render, each an
 Unknown referring to the work-items disclosure, and no count SHALL appear.
 
 - **Scope.** the answers region of Trajectory and `trajectory.answers` on
-  the machine answer. The wider charter (what is planned, blocked, and why
-  the work exists), orphaned-work detection and any reconciliation verdict
-  are outside it.
+  the machine answer, and the history read behind the changed answer. The
+  wider charter (what is planned, blocked, and why the work exists),
+  orphaned-work detection, any reconciliation verdict, a record of the
+  previous evaluation's revision, a join to commit subjects, and merge
+  facts are outside it.
 
 - **Case**: a checker serves 252 work items, of which the selection
   renders 250, and reads Trajectory and the machine answer; then repeats
   with a materialized item whose change is on the default branch, and with
-  the work-item observation Unknown.
+  the work-item observation Unknown; then reads the changed answer over a
+  history fixture holding each kind of change, a status-only update and an
+  out-of-prefix row, over a history shorter than the week, over each
+  failed or malformed history read, and with each `changed` value.
 - **Observable**: five answers in order before the scope statement; the
   status counts, claimed count and three fifth-answer counts with their
   denominators; the liveness state; each Unknown part's reason and route.
@@ -1312,8 +1353,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
   machine answer's; count (a) equals `workItems.governedByUnknownCount`;
   count (b) is 1 of 1 with a merged materialized item and 0 of 0 without
   one while (a) is unchanged; (c) renders Unknown, never a number; with
-  work items Unknown, five answers render and none carries a count.
-  Equality decides.
+  work items Unknown, five answers render and none carries a count. For
+  the changed answer: each fixture item is listed once under its kind,
+  ascending id, the kind counts sum to the list, the status-only and
+  out-of-prefix rows are counted and never listed, both revisions and the
+  listed items equal the machine answer's, the history statements name no
+  free-text column, a short history makes only that window Unknown, every
+  failed or malformed read makes both timed windows Unknown, and
+  `since-last` renders Unknown with its reason. Equality decides.
 - **Oracle independence**: expected counts are the checker's own fixture
   rows, counted by the checker, never the renderer's model.
 - **Falsifier**: an answer missing, out of order or dropped for being
@@ -1321,7 +1368,10 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
   do not sum to the served total; a running count worded as observed
   activity, or liveness rendered as `active` or under an RFC2-24 reason;
   a count shown without its denominator; an Unknown part with no reason
-  or route; an element adding two
+  or route; a change window rendered as zero when unread, ending anywhere
+  but the observed revision, stating a rate or a per-person figure, naming
+  a free-text column or an out-of-prefix item, or listing an item twice or
+  under two kinds; an element adding two
   of the fifth answer's counts; orphaned work rendered as 0; a chain member
   stated under an RFC2-24 reason; or "verified" naming a state.
 
@@ -1330,8 +1380,8 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
 - **WHEN** 252 work items are served and the selection renders 250
 - **THEN** five answers render first, in order: the served count of each
   tracker status summing to 252, the tracker's claimed count with liveness
-  `activity-undetermined`, what changed and what it cost as Unknowns with their reasons and
-  routes, and three separate counts for verification against intent; the
+  `activity-undetermined`, what changed per window, what it cost as an
+  Unknown with its reason and route, and three separate counts for verification against intent; the
   machine answer carries the same five with equal values
 
 #### Scenario: A merged materialized item enters the chain
@@ -1347,11 +1397,32 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
 - **THEN** all five answers render, each an Unknown referring to the
   work-items disclosure, and no count appears
 
+#### Scenario: What changed in the last day
+
+- **WHEN** the tracker's history holds a commit older than a day and,
+  between it and the observed revision, one item was added, one closed and
+  one removed, one item was updated without a status change, and two
+  out-of-prefix rows changed
+- **THEN** the changed answer names both revisions with their instants,
+  lists the three items with their kinds and statuses (3 changed: 1 added,
+  1 closed, 1 removed), counts the update and the two outside rows without
+  naming them, links the week and since-last windows with their counts,
+  and the machine answer carries the same window with equal values
+
+#### Scenario: A window the history cannot answer
+
+- **WHEN** the history holds no commit as old as the week bound, or a
+  history read fails
+- **THEN** that window (or, for a failed read, every timed window) renders
+  Unknown with its reason and the disclosure's route, never zero, and
+  `since-last` renders Unknown while no previous evaluation's revision is
+  recorded
+
 ```yaml
 warrants:
   primary: VIS-2
   doctrine: [VIS-2, VIS-3]
-  contracts: [RFC2-18, RFC2-19(a), RFC2-24, RFC6-17, RFC8-8, RFC8-16, RFC8-19, RFC8-23, RFC8-28, RFC8-29]
+  contracts: [RFC2-2, RFC2-18, RFC2-19(a), RFC2-24, RFC6-17, RFC8-2, RFC8-8, RFC8-16, RFC8-19, RFC8-23, RFC8-28, RFC8-29]
   policies: []
   decisions: []
   topology: []

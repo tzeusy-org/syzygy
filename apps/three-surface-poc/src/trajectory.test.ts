@@ -1010,7 +1010,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     expect(body).toContain('data-parity-field="answer-running-served">252<');
   });
 
-  it('renders what changed and what it cost as Unknown with a closed reason and a route', async () => {
+  it('renders what changed (history unread) and what it cost as Unknown with a closed reason and a route', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
@@ -1018,9 +1018,16 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
       const body = answerBody(html, id);
       expect(body).toContain(`data-unknown-disclosure="${subject}" data-unknown-reason="source-uncaptured-or-unreachable"`);
       expect(body.replace(/<[^>]+>/g, '')).toContain('Reason: source-uncaptured-or-unreachable. Route: Repair the observer/source; new snapshot.');
-      expect(served.trajectory.answers.find((answer) => answer.id === id)).toEqual({ id, state: 'unknown', disclosure: subject });
       expect(served.unknownSubjects.some((entry) => entry.id === subject)).toBe(true);
     }
+    expect(served.trajectory.answers.find((answer) => answer.id === 'cost')).toEqual({ id: 'cost', state: 'unknown', disclosure: 'region:trajectory-cost' });
+    // syzygy-t3jk.21: the fixture's history read fails, so each window is Unknown with its reason.
+    expect(served.trajectory.answers.find((answer) => answer.id === 'changed')).toEqual({ id: 'changed', state: 'observed', windows: [
+      { window: 'day', kind: 'unknown', reason: 'history-read-failed', disclosure: 'region:trajectory-changed' },
+      { window: 'week', kind: 'unknown', reason: 'history-read-failed', disclosure: 'region:trajectory-changed' },
+      { window: 'since-last', kind: 'unknown', reason: 'no-previous-evaluation-recorded', disclosure: 'region:trajectory-changed' },
+    ] });
+    expect(answerBody(html, 'changed')).toContain('Last day: Unknown, because the tracker history read failed (<code data-parity-field="answer-changed-reason">history-read-failed</code>); never a zero.');
     expect(answerBody(html, 'cost')).toContain('never zero');
   });
 
@@ -1332,7 +1339,8 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     const served = await servedAnswer(model);
     if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(served.trajectory.narrowing).toEqual({
-      parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], page: 'positive integer' },
+      parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      changedDefault: 'day',
       pageSize: 250,
       order: 'ascending item id',
       groupedOrder: 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
@@ -1523,5 +1531,104 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
     const html = grouped(unread);
     expect(groupOrder(html)).toEqual(['group-parent-unknown']);
     expect(html).toContain('<span data-group-reason="dependency-read-failed">The dependency rows were not read. The dependency read failed.</span>');
+  });
+});
+
+describe('Trajectory answers what changed between two named revisions (T6 S1, syzygy-t3jk.21)', () => {
+  const DAY_FROM = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  const WEEK_FROM = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+  const diffRow = (w: string, diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
+    ({ w, diff_type, from_id, to_id, from_status, to_status, n: null });
+  const outside = (w: string, n: number) => ({ w, diff_type: 'outside-prefix', from_id: null, to_id: null, from_status: null, to_status: null, n });
+  function history(dayRows: readonly Record<string, unknown>[], weekRows: readonly Record<string, unknown>[] = [outside('week', 0)]) {
+    return (sql: string): string => sql.includes('dolt_diff(')
+      ? JSON.stringify([...dayRows, ...weekRows])
+      : JSON.stringify([{
+        revision: FIXTURE_DOLT_REVISION, revision_at: '2026-08-30T11:58:00.000Z',
+        day_from: DAY_FROM, day_at: '2026-08-29T10:00:00.000Z', week_from: WEEK_FROM, week_at: '2026-08-23T10:00:00.000Z',
+      }]);
+  }
+  const DAY = [
+    diffRow('day', 'modified', 'bu-closed-recent', 'bu-closed-recent', 'open', 'closed'),
+    diffRow('day', 'added', null, 'bu-open1', null, 'open'),
+    diffRow('day', 'removed', 'bu-gone', null, 'blocked', null),
+    diffRow('day', 'modified', 'bu-progress1', 'bu-progress1', 'in_progress', 'in_progress'),
+    outside('day', 2),
+  ];
+  const model = () => buildFixtureModel(cleanups, { runHistoryQuery: history(DAY) });
+  const route = (page: PocModel, query: string, prefix = ''): string => {
+    const html = renderTrajectoryRoute(page, prefix, undefined, new URLSearchParams(query));
+    if (typeof html !== 'string') throw new Error(`refused: ${JSON.stringify(html)}`);
+    return html;
+  };
+
+  it('states the day window by default: both revisions, counts per kind, and each changed item', () => {
+    const body = answerBody(renderTrajectoryPage(model()), 'changed');
+    expect(body).toContain(`revision <code data-parity-field="answer-changed-from" data-revision="${DAY_FROM}">aaaaaaaa</code> (<time datetime="2026-08-29T10:00:00.000Z">2026-08-29T10:00:00.000Z</time>)`);
+    expect(body).toContain(`the observed revision <code data-parity-field="answer-changed-to" data-revision="${FIXTURE_DOLT_REVISION}">12345678</code>`);
+    expect(body).toContain('<span data-parity-field="answer-changed-total">3</span> items changed state (<span data-parity-field="answer-changed-added">1</span> added, <span data-parity-field="answer-changed-closed">1</span> closed, <span data-parity-field="answer-changed-reopened">0</span> reopened, <span data-parity-field="answer-changed-re-stated">0</span> re-stated, <span data-parity-field="answer-changed-removed">1</span> removed).');
+    expect(body).toContain('<span data-parity-field="answer-changed-updated-only">1</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">2</span> changed rows are outside');
+    expect([...body.matchAll(/data-change-id="([^"]+)"/g)].map((match) => match[1])).toEqual(['bu-closed-recent', 'bu-gone', 'bu-open1']);
+    // A served item links to its card; a removed one is named, never linked.
+    expect(body).toContain('<li data-change-kind="closed" data-change-id="bu-closed-recent"><a href="/trajectory?page=1#workitem-bu-closed-recent"><code>bu-closed-recent</code></a> closed (<code>open</code> → <code>closed</code>)</li>');
+    expect(body).toContain('<li data-change-kind="removed" data-change-id="bu-gone"><code>bu-gone</code> removed (<code>blocked</code> → —)</li>');
+    expect(body).not.toMatch(/\b(velocity|per day|progress|done|productivity)\b|%/i);
+  });
+
+  it('matches the served machine answer count for count and item for item', async () => {
+    const page = model();
+    const served = await servedAnswer(page);
+    const changed = served.trajectory.answers.find((answer) => answer.id === 'changed');
+    if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
+    const day = changed.windows[0];
+    const body = answerBody(renderTrajectoryPage(page), 'changed');
+    const field = (name: string) => /data-parity-field="([^"]+)"[^>]*>([^<]*)</g;
+    const values = new Map([...body.matchAll(field(''))].map((match) => [match[1], match[2]]));
+    expect(Number(values.get('answer-changed-total'))).toBe(day.facts.length);
+    for (const kind of ['added', 'closed', 'reopened', 're-stated', 'removed'] as const) expect(Number(values.get(`answer-changed-${kind}`)), kind).toBe(day.counts[kind]);
+    expect(Number(values.get('answer-changed-updated-only'))).toBe(day.updatedWithoutStatusChange);
+    expect(Number(values.get('answer-changed-outside-prefix'))).toBe(day.outsidePrefix);
+    expect([...body.matchAll(/data-change-kind="([^"]+)" data-change-id="([^"]+)"/g)].map((match) => [match[2], match[1]]))
+      .toEqual(day.facts.map((fact) => [fact.id, fact.kind]));
+    expect(served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-changed')?.epistemic).toMatchObject({
+      label: 'Unknown',
+      reason: "Changes are read from the tracker's own history between two named revisions; the since-last-evaluation window is Unknown because no previous evaluation's work-item revision is recorded, so there is no start to diff from. An Unknown window is never a zero.",
+    });
+  });
+
+  it('switches window by the changed parameter, keeping the default selection, and links each window', () => {
+    const page = model();
+    const week = route(page, 'changed=week');
+    expect(answerBody(week, 'changed')).toContain(`data-revision="${WEEK_FROM}"`);
+    expect(answerBody(week, 'changed')).toContain('<span data-parity-field="answer-changed-total">0</span> items changed state');
+    expect(answerBody(week, 'changed')).toContain('No item changed state between these revisions: an observed zero.');
+    // The board is the default selection, not a view.
+    expect(week).toContain(renderTrajectoryPage(page).match(/<p class="scope-statement[\s\S]*?<\/p>/)![0]);
+    const links = [...answerBody(renderTrajectoryPage(page), 'changed').matchAll(/<a data-change-window-link="([^"]+)" href="([^"]+)"/g)].map((match) => [match[1], match[2]]);
+    expect(links).toEqual([['week', '/trajectory?changed=week#answers-heading'], ['since-last', '/trajectory?changed=since-last#answers-heading']]);
+    // With a view, the window link keeps it.
+    expect(answerBody(route(page, 'status=open&changed=week'), 'changed')).toContain('href="/trajectory?status=open&amp;changed=day&amp;page=1#answers-heading"');
+    expect(answerBody(route(page, 'changed=week', '/butlers-syzygy'), 'changed')).toContain('href="/butlers-syzygy/trajectory?changed=day#answers-heading"');
+  });
+
+  it('renders an Unknown window with its reason and the disclosure, never a zero', () => {
+    const body = answerBody(route(model(), 'changed=since-last'), 'changed');
+    expect(body).toContain('Since the last evaluation: Unknown, because no previous evaluation&#39;s work-item revision is recorded, so there is no start to diff from (<code data-parity-field="answer-changed-reason">no-previous-evaluation-recorded</code>); never a zero.');
+    expect(body).toContain('data-unknown-disclosure="region:trajectory-changed"');
+    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown</span>)');
+  });
+
+  it('refuses a window outside the declared set with its allowed values', () => {
+    expect(renderTrajectoryRoute(model(), '', undefined, new URLSearchParams('changed=month')))
+      .toEqual({ refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: ['day', 'week', 'since-last'] });
+  });
+
+  it('lists at most 250 changed items and counts the rest, and renders the same bytes twice', () => {
+    const many = Array.from({ length: 260 }, (_, i) => diffRow('day', 'added', null, `bu-n${String(i).padStart(3, '0')}`, null, 'open'));
+    const page = buildFixtureModel(cleanups, { runHistoryQuery: history([...many, outside('day', 0)]) });
+    const body = answerBody(renderTrajectoryPage(page), 'changed');
+    expect(body.match(/data-change-id=/g)).toHaveLength(250);
+    expect(body).toContain('<span data-parity-field="answer-changed-unlisted">10</span> more changed items are not listed here; the machine answer lists every one.');
+    expect(renderTrajectoryPage(page)).toBe(renderTrajectoryPage(page));
   });
 });

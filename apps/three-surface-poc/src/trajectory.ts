@@ -20,6 +20,12 @@ import {
   type PocModel,
   type PocUnknown,
   type WorkerChangeObserved,
+  CHANGE_KINDS,
+  CHANGE_WINDOWS,
+  CHANGE_WINDOW_REASON_TEXT,
+  TRAJECTORY_PAGE_SIZE,
+  type ChangeWindow,
+  type TrajectoryChangeWindow,
 } from '@syzygy/three-surface-poc-core';
 import type { TrajectoryAnswer, TrajectoryAnswerId, TrajectoryColumn, TrajectoryLaneItem, WorkItemStatus } from '@syzygy/three-surface-poc-core';
 import type { TestArtifactVerificationResult } from '@syzygy/three-surface-poc-core';
@@ -191,7 +197,60 @@ function answerDisclosure(model: PocModel, field: string, id: string, label: str
   return `<span class="epistemic epistemic-unknown" data-parity-field="${field}"${unknownMarker(id, unknown)}>${escapeHtml(label)}: Unknown. ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}</span>`;
 }
 
-function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
+/** syzygy-t3jk.21: what the changed answer needs from the request. */
+interface ChangedContext {
+  readonly window: ChangeWindow;
+  /** The current view, so a window link keeps it; null on the default selection. */
+  readonly view: Partial<TrajectoryViewRequest> | null;
+  readonly mountPrefix: string;
+}
+
+const CHANGE_WINDOW_NAME: Readonly<Record<ChangeWindow, string>> = {
+  day: 'Last day',
+  week: 'Last week',
+  'since-last': 'Since the last evaluation',
+};
+
+/** How many changed items the page lists; the rest are counted (POC-REQ-044). */
+export const CHANGED_LIST_LIMIT = 250;
+
+/** syzygy-t3jk.21: the changed answer for the selected window, with links to
+ * the others. Counts are the tracker's net change between the two named
+ * revisions: never a velocity, a verdict or a per-person figure. */
+function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow[], context: ChangedContext): string {
+  const selected = windows.find((window) => window.window === context.window)!;
+  const links = CHANGE_WINDOWS.map((name) => {
+    const window = windows.find((entry) => entry.window === name)!;
+    const figure = window.kind === 'observed' ? `${window.facts.length} changed` : 'Unknown';
+    const label = `${escapeHtml(CHANGE_WINDOW_NAME[name])} (<span data-parity-field="answer-changed-${name}-count">${figure}</span>)`;
+    return name === context.window
+      ? `<strong aria-current="true" data-change-window-link="${name}">${label}</strong>`
+      : `<a data-change-window-link="${name}" href="${viewHref(context.mountPrefix, { ...context.view, changed: name })}#answers-heading">${label}</a>`;
+  }).join(' · ');
+  const head = `<p class="change-windows">Window: ${links}.</p>`;
+  if (selected.kind === 'unknown') {
+    return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}">${escapeHtml(CHANGE_WINDOW_NAME[selected.window])}: Unknown, because ${escapeHtml(CHANGE_WINDOW_REASON_TEXT[selected.reason])} (<code data-parity-field="answer-changed-reason">${escapeHtml(selected.reason)}</code>); never a zero. ${answerDisclosure(model, 'answer-changed-disclosure', selected.disclosure, 'What changed')}</p>`;
+  }
+  const point = (field: string, label: string, commit: { readonly revision: string; readonly at: string }): string =>
+    `${label} <code data-parity-field="${field}" data-revision="${escapeHtml(commit.revision)}">${escapeHtml(commit.revision.slice(0, 8))}</code> (<time datetime="${escapeHtml(commit.at)}">${escapeHtml(commit.at)}</time>)`;
+  const counts = CHANGE_KINDS.map((kind) => `<span data-parity-field="answer-changed-${kind}">${selected.counts[kind]}</span> ${kind}`).join(', ');
+  const served = new Map([...(model.workItems.kind === 'observed' ? model.workItems.items : [])].map((item) => item.id).sort().map((id, index) => [id, Math.floor(index / TRAJECTORY_PAGE_SIZE) + 1]));
+  const listed = selected.facts.slice(0, CHANGED_LIST_LIMIT).map((fact) => {
+    const page = served.get(fact.id);
+    const id = page === undefined
+      ? `<code>${escapeHtml(fact.id)}</code>`
+      : `<a href="${viewHref(context.mountPrefix, { page })}#${escapeHtml(encodeURIComponent(`workitem-${fact.id}`))}"><code>${escapeHtml(fact.id)}</code></a>`;
+    const statuses = `${fact.from === null ? '—' : `<code>${escapeHtml(fact.from)}</code>`} → ${fact.to === null ? '—' : `<code>${escapeHtml(fact.to)}</code>`}`;
+    return `<li data-change-kind="${fact.kind}" data-change-id="${escapeHtml(fact.id)}">${id} ${fact.kind} (${statuses})</li>`;
+  }).join('');
+  const remainder = selected.facts.length - Math.min(selected.facts.length, CHANGED_LIST_LIMIT);
+  const list = selected.facts.length === 0
+    ? '<p>No item changed state between these revisions: an observed zero.</p>'
+    : `<ol class="change-list">${listed}</ol>${remainder === 0 ? '' : `<p><span data-parity-field="answer-changed-unlisted">${remainder}</span> more changed items are not listed here; the machine answer lists every one.</p>`}`;
+  return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}">Between ${point('answer-changed-from', 'revision', selected.from)} and ${point('answer-changed-to', 'the observed revision', selected.to)}: <span data-parity-field="answer-changed-total">${selected.facts.length}</span> items changed state (${counts}). <span data-parity-field="answer-changed-updated-only">${selected.updatedWithoutStatusChange}</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">${selected.outsidePrefix}</span> changed rows are outside this tracker's prefix, counted only. Net change between the two revisions, from the tracker's history; not a rate or a verdict.</p>${list}`;
+}
+
+function answerBody(model: PocModel, answer: TrajectoryAnswer, context: ChangedContext): string {
   if (answer.state === 'unknown' && answer.disclosure === WORK_ITEMS_REGION_ID) {
     const unknown = unknownSubject(model, WORK_ITEMS_REGION_ID);
     return cardMark(`answer-${answer.id}`, WORK_ITEMS_REGION_ID, 'epistemic-unknown', unknown.closedReason, 'Unknown: work items were not observed');
@@ -209,11 +268,13 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
       return `<span data-parity-field="answer-running-claimed">${answer.claimed}</span> of <span data-parity-field="answer-running-served">${answer.served}</span> served work items are claimed in the tracker (status <code>in_progress</code>), which is the tracker's claim. Liveness: <span class="liveness-state" data-parity-field="answer-running-liveness">${escapeHtml(answer.liveness)}</span>. No staleness bound is declared for claims, so no claimed item can be shown as active; declaring the bound in quality policy resolves it.`;
     }
     case 'changed':
+      if ('windows' in answer) return changedAnswer(model, answer.windows, context);
+      break;
     case 'cost':
       if (answer.state === 'unknown') {
-        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, 'Cost');
         // syzygy-t3jk.17: elapsed time is measured; the other costs stay Unknown.
-        return answer.id === 'cost' ? `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.` : disclosure;
+        return `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.`;
       }
       break;
     case 'intent': {
@@ -237,11 +298,11 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
 
 /** POC-REQ-044: the five answers, first on the page, in their fixed order;
  * an Unknown answer is rendered, never dropped. */
-function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[]): string {
+function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[], context: ChangedContext): string {
   return `<section class="answers" aria-labelledby="answers-heading" data-parity-field="trajectory-answers">
       <h2 id="answers-heading" class="answers-heading">Five answers about the work</h2>
       <dl>${answers.map((answer) => `
-        <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer)}</dd></div>`).join('')}
+        <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer, context)}</dd></div>`).join('')}
       </dl>
     </section>`;
 }
@@ -439,6 +500,7 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
   if (view?.status) query.set('status', view.status);
   if (view?.governingIntent) query.set('governing-intent', view.governingIntent);
   if (view?.group) query.set('group', view.group);
+  if (view?.changed) query.set('changed', view.changed);
   if (view?.page !== undefined) query.set('page', String(view.page));
   const text = query.toString();
   return escapeHtml(withMountPrefix(mountPrefix, TRAJECTORY_HUMAN_PATH) + (text === '' ? '' : `?${text}`));
@@ -576,18 +638,22 @@ export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, stat
   const request = parseTrajectoryView(query);
   if (request === null) return renderTrajectoryPage(model, mountPrefix, status);
   if ('refused' in request) return request;
+  // syzygy-t3jk.21: `changed` alone picks the changed answer's window and
+  // keeps the default selection; with any other parameter it rides the view.
+  const window = request.changed ?? 'day';
+  if ([...query.keys()].every((name) => name === 'changed')) return renderTrajectoryPage(model, mountPrefix, status, window);
   const view = projectTrajectoryView(model.trajectory, model.workItems, request);
   if ('refused' in view) return view;
-  return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status);
+  return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status, window);
 }
 
-export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus): string {
+export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus, changed: ChangeWindow = 'day'): string {
   const trajectory = model.trajectory;
   const workerChange = model.workerChange.kind === 'observed' ? model.workerChange : null;
   let body: string;
   if (trajectory.kind === 'unknown') {
     const unknown = unknownSubject(model, 'region:work-items');
-    body = `${answersRegion(model, trajectory.answers)}
+    body = `${answersRegion(model, trajectory.answers, { window: changed, view: null, mountPrefix })}
       <p class="unavailable-notice" id="${NOTICE_ELEMENT_ID[WORK_ITEMS_REGION_ID]}"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
   } else {
     const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
@@ -633,7 +699,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
           : `<p class="demo-callout notice">The demonstrated item <code>${escapeHtml(demonstratedId)}</code> was materialized by this POC but falls outside the current board selection, so no card is shown for it.</p>`;
 
     body = `
-      ${answersRegion(model, trajectory.answers)}
+      ${answersRegion(model, trajectory.answers, { window: changed, view: trajectory.narrowing.view, mountPrefix })}
       ${timeMeasuresRegion(trajectory.timeMeasures)}
       ${eligibilityRegion(trajectory.eligibility)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
