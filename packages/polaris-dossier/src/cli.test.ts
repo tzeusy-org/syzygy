@@ -151,7 +151,7 @@ describe('dossier network module boundaries', () => {
 
   it('finds each named transport and the ordinary command modules', () => {
     expect(files).toEqual(expect.arrayContaining([
-      ...Object.keys(transport), 'cli.ts', 'init.ts', 'check.ts', 'render.ts', 'close.ts', 'relation-witness.ts', 'run-tree-read.ts', 'verify-text-run.ts', 'verify-text.ts',
+      ...Object.keys(transport), 'corpus.ts', 'cli.ts', 'init.ts', 'check.ts', 'render.ts', 'close.ts', 'relation-witness.ts', 'run-tree-read.ts', 'verify-text-run.ts', 'verify-text.ts',
     ]));
     expect(files.length).toBeGreaterThan(Object.keys(transport).length);
   });
