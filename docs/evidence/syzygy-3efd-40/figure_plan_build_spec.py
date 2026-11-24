@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the version 2.NN MODIFIED REQ-polaris-generation-034 (figure plan) from the version 2.23 bytes by anchored edits (syzygy-3efd.40).
+"""Build the version 2.NN MODIFIED REQ-polaris-generation-034 (figure plan) from the version 2.24 bytes by anchored edits (syzygy-3efd.40).
 
 Every edit asserts its anchor occurs exactly once. Usage: figure_plan_build_spec.py <worktree> <out>.
 """
@@ -8,11 +8,11 @@ import sys
 
 W = pathlib.Path(sys.argv[1])
 out = pathlib.Path(sys.argv[2])
-src = (W / 'openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
+src = (W / 'openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md').read_text(encoding='utf-8')
 text = src
 
 # The successor's numbers, kept symbolic so a rebuild over a later predecessor is a change of these constants and the anchors alone.
-NUMS = {'<S>': '12', '<PS>': '11', '<B>': '18', '<PB>': '17', '<PV>': '2.23'}
+NUMS = {'<S>': '13', '<PS>': '12', '<B>': '19', '<PB>': '18', '<PV>': '2.24'}
 
 
 def sym(s):
@@ -33,33 +33,33 @@ def replace(old, new):
 
 
 lines = text.split('\n')
-assert lines[0].startswith('# Dossier containment figure'), lines[0]
-assert lines[2].startswith('Candidate version 2.23;'), lines[2][:40]
+assert lines[0].startswith('# Dossier system model'), lines[0]
+assert lines[2].startswith('Candidate version 2.24;'), lines[2][:40]
 lines[0] = '# Dossier figure plan: the pictures planned before the prose, and advice on figures that carry too little'
 lines[2] = ("Candidate version 2.NN; binds nothing until its agent adoption row in AGENT-ADOPTIONS.md and its version tag. One MODIFIED "
-            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that containment figure version "
+            "requirement, REQ-polaris-generation-034, whose complete text below replaces the effective text that system model version "
             "<PV> gave it. Draft schema v<S> carries a required figure plan: for the overview, each section and each deep dive, the one "
             "question a picture answers better than text, the figure kind it needs and the diagram that answers it, or why that place has "
             "no figure. Check refuses a plan that does not name every place once or whose figure is not the one drawn there, and advises, "
             "gating nothing, on a figure that is a chain of three or fewer, one that draws nothing another figure does not, and one that "
-            "draws a unit beside a unit within it without a contains arrow or a nesting between them. The plan renders nowhere, and brief v<B> asks for it. "
+            "draws a part of the system beside a part within it without a contains arrow or a nesting between them. The plan renders nowhere, and brief v<B> asks for it. "
             "Every other sentence and scenario of the predecessor is carried unchanged; the exact changes are in SEMANTIC-DELTA.md. "
             "Unmentioned effective requirements are unchanged.")
 text = '\n'.join(lines[:2] + [sym(lines[2])] + lines[3:])
 
 # The brief-version list, the schema each brief issues and the schemas accepted (the v5 paragraph).
-replace('from version 2.20 as `polaris-dossier-brief-v16` and from version 2.23 as `polaris-dossier-brief-v17`, each with the same '
+replace('from version 2.23 as `polaris-dossier-brief-v17` and from version 2.24 as `polaris-dossier-brief-v18`, each with the same '
         'readability guidance,',
-        'from version 2.20 as `polaris-dossier-brief-v16`, from version 2.23 as `polaris-dossier-brief-v17` and from version 2.NN as '
+        'from version 2.23 as `polaris-dossier-brief-v17`, from version 2.24 as `polaris-dossier-brief-v18` and from version 2.NN as '
         '`polaris-dossier-brief-v<B>`, each with the same readability guidance,')
-replace('brief v16 issues schema v10 and brief v17 issues schema v11 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, v10 or v11 is '
-        'accepted.',
-        'brief v16 issues schema v10, brief v17 issues schema v11 and brief v<B> issues schema v<S> (below), and a draft in v2, v3, v4, v5, '
-        'v6, v7, v8, v9, v10, v11 or v<S> is accepted.')
+replace('brief v17 issues schema v11 and brief v18 issues schema v12 (below), and a draft in v2, v3, v4, v5, v6, v7, v8, v9, v10, v11 or '
+        'v12 is accepted.',
+        'brief v17 issues schema v11, brief v18 issues schema v12 and brief v<B> issues schema v<S> (below), and a draft in v2, v3, v4, v5, '
+        'v6, v7, v8, v9, v10, v11, v12 or v<S> is accepted.')
 
-# The figure-plan paragraphs, after the containment figure's earlier-schema paragraph (version 2.23).
-ANCHOR = ('the provider stages\' closed draft schema gains no kind or member, and the rendered bytes the provider golden pins do not '
-          'change.')
+# The figure-plan paragraphs, after the system model's earlier-schema paragraph (version 2.24).
+ANCHOR = ('The provider mode is unaffected: the provider stages\' closed draft schema gains no member, and the rendered bytes the '
+          'provider golden pins do not change.')
 KINDS = ('`flow`, `lifecycle`, `state-machine`, `boundary`, `dependency`, `placement`, `sequence`, `swimlane` and `containment`')
 PARAGRAPHS = [
     # P1: the schema.
@@ -74,7 +74,10 @@ PARAGRAPHS = [
     f"versions 2.5 and 2.23, {KINDS}, and `figure` names the diagram that answers the question, which SHALL be homed at that place and "
     "be of that kind. `{\"home\": <place>, \"omitted\": <text>}` says why the place has no planned figure: no question there is answered "
     "better by a picture, or the planned figure could not be drawn. `question` and `omitted` are each a string of 1 to 300 Unicode "
-    "code points holding at least one that is not white space (U+0009 to U+000D and U+0020). A planned figure names one diagram, and its place may hold other diagrams that the plan does not name. The plan is the "
+    "code points holding at least one that is not white space (U+0009 to U+000D and U+0020). A planned figure names one diagram, and its place may hold other diagrams that the plan does not name. "
+    "A graph or containment diagram of a v<S> draft carries the `view` version 2.24 gives it, so a planned figure of one of those kinds "
+    "names the diagram whose view draws it; the plan names diagrams alone, never an element, a relationship or a view, a view having "
+    "no identity of its own, and the view's selection is checked by version 2.24 and never compared with the plan. The plan is the "
     "authoring session's working record, read by check alone: it is no claim block and carries no label, citation or quotation; no page "
     "renders it; `machine.json`, `dossier.json`, `derived-structure.json` and the size report carry none of it; and it enters no claim "
     "count, claim list, fidelity entry or reading ledger. Whether a planned question is the right one, and whether an omission's reason "
@@ -117,7 +120,11 @@ PARAGRAPHS = [
     "diagrams whose disposition is `produced`, which are the figures the rules read; no rule reads a diagram of another disposition, or "
     "compares one with another figure. Each advisory is `{\"rule\", \"diagram\", \"at\", \"detail\"}`, naming the figure it advises on by "
     "its identity and, as `at`, by `$.diagrams[<i>]`, its index in the draft; advisories are ordered by that index and, for one figure, "
-    "by the rule order above, and a rule gives at most one advisory for a figure. A containment's groups are read in draft order, each "
+    "by the rule order above, and a rule gives at most one advisory for a figure. A graph or containment figure of a v<S> draft, which "
+    "carries a `view`, is read by every rule as its expansion, the schema-v11 figure version 2.24 renders it as: its nodes, edges and "
+    "groups are the expansion's, in the expansion's order, a derived relationship's edge among them with the `relation` it carries, "
+    "and a view entry naming no element or relationship of the model adds nothing to it. That two views select one element is no "
+    "duplication in itself: their figures are compared by their keys as any two figures are. A containment's groups are read in draft order, or in its expansion's order, each "
     "group before its children and its children in their order. Rule `figure-information-floor` version 1 advises on a figure that "
     "carries too little to be worth a picture, a chain of three or fewer being a sentence: a figure of one of the six graph kinds with "
     "at most three nodes and at most one edge fewer than it has nodes; a `swimlane` with at most three steps; a `sequence` with at most "
@@ -140,21 +147,24 @@ PARAGRAPHS = [
     "and B comes before A in the draft. The rule advises on A, naming the first such B in draft order, with the detail `` <identity>: "
     "everything it draws is drawn by <other identity>; keep one figure, or draw what the other does not ``; so of two figures "
     "with the same keys only the later is advised on, and a figure with one box, arrow or nesting of its own is not. Rule "
-    "`figure-mixed-levels` version 1 advises on a graph or containment figure that draws a unit beside a unit within it without saying "
-    "that one holds the other. It reads only the `unit` members that version 2.19 lets a node carry and version 2.23 lets a group "
-    "carry, so a node or group without one, and every sequence and swimlane, is in no comparison. An element X's unit encloses an "
-    "element Y's where X's is `{\"kind\": \"repository-root\"}` and Y's is of any kind but `repository-root` and `dependency-name`; or "
+    "`figure-mixed-levels` version 1 advises on a graph or containment figure that draws a part of the system beside a part within it "
+    "without saying that one holds the other. It reads only the `unit` members that version 2.19 lets a node carry and version 2.23 "
+    "lets a group carry and, for a figure drawn from a view, the `parent` members of the model's elements, so every sequence and "
+    "swimlane is in no comparison. An element X encloses an element Y where X is an ancestor of Y in the model: following `parent` "
+    "from Y one element at a time, the walk reaches X before it reaches an element with no `parent`, a `parent` naming no element, or "
+    "an element it has already reached. X also encloses Y where X's unit encloses Y's: where X's is `{\"kind\": \"repository-root\"}` and Y's is of any kind but `repository-root` and `dependency-name`; or "
     "where X's is `{\"kind\": \"top-level-directory\", \"path\": <P>}` and Y's is a `package-manifest`, `workflow-job` or "
     "`compose-service` unit whose `path` begins with P followed by `/`. A graph figure says that X holds Y where a chain of one or "
     "more edges of the figure whose `relation` is `contains`, each starting at the node the one before it ends at, leads from X to Y, and a containment says so where Y is drawn inside X, at any depth. The rule "
-    "advises on a figure holding two elements X and Y, X's unit enclosing Y's, where the figure does not say that X holds Y, naming the "
+    "advises on a figure holding two elements X and Y, X enclosing Y, where the figure does not say that X holds Y, naming the "
     "first such pair, ordered by X's place among the nodes or groups and then by Y's, with the detail `` <identity>: <X's identity> and "
-    "<Y's identity> stand for a unit and a unit within it, and the figure does not show that one holds the other; draw one level, or "
+    "<Y's identity> stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or "
     "show the containment ``; "
     "so a graph of the repository root with its top-level directories joined by `contains` arrows, a containment that draws those "
     "directories inside the root, a figure of two top-level directories, and a figure of one top-level directory beside a package "
     "manifest under another is not advised on, while a containment that draws the root and one of its top-level directories side by "
-    "side as two top-level groups, nesting something else, is. The advice is Inferred, a computation over the draft's bytes alone that reads no blob, layout, record or fact, "
+    "side as two top-level groups, nesting something else, is, and so is a graph view showing an element and its `parent` with no "
+    "`contains` arrow from the one to the other. The advice is Inferred, a computation over the draft's bytes alone that reads no blob, layout, record or fact, "
     "and two checks of the same draft bytes give the same member. A failure to compute it, at any point and for any cause, SHALL NOT "
     "refuse or fail a check: the report then carries no `figureAdvice` member. Each advisory is one a change to the draft clears, so it is advice to "
     "the author in the sense of version 2.9, and, like the inventory-coverage advice of version 2.12, it carries no class member and is "
@@ -166,14 +176,15 @@ PARAGRAPHS = [
     "about the figures.",
     # P4: the brief.
     "Brief v<B> SHALL issue schema v<S>; it is brief v<PB> changed only in its version line, its draft-schema line, which names schema v<S> "
-    "and that schema's digest, and one paragraph placed immediately after the containment paragraph brief v<PB> carries, which reads: "
+    "and that schema's digest, and one paragraph placed immediately after the system-model paragraph brief v<PB> carries, which reads: "
     "\"Plan the figures before you write the prose, in `figurePlan`: one entry for the overview, each section and each deep dive, its "
     "`home` written as a diagram's `home` is. For each place, write the one question a picture there answers better than text in "
-    "`question`, the figure kind it needs in `kind`, and the diagram that answers it in `figure`, homed there and of that kind. Where no "
+    "`question`, the figure kind it needs in `kind`, and the diagram that answers it in `figure`, homed there and of that kind; for a "
+    "graph or containment, that is the diagram whose `view` draws it. Where no "
     "picture would answer better than text, or the planned figure cannot be drawn, write `{\"home\": <place>, \"omitted\": \"<why>\"}` "
     "instead. The plan is not published. A draft whose plan misses a place, names one twice or names a figure that is not the one drawn "
     "there is refused; check only advises where a figure is a chain of three or fewer, draws nothing another figure does not, or draws "
-    "a part beside a part of it without showing that one holds the other, which a containment shows.\" Every statement above of what "
+    "a part beside a part of it, by `unit` or `parent`, without showing that one holds the other.\" Every statement above of what "
     "brief v<PB> carries, equals or differs by holds of brief v<B> apart from those three differences.",
     # P5: earlier schemas, the rendered bytes, the provider.
     "A draft in schema v<PS> or earlier SHALL be checked and rendered exactly as version <PV> checks and renders it, the same findings and "
@@ -184,12 +195,14 @@ PARAGRAPHS = [
     "renders it, that exception holds too. The plan and the advice move no rendered byte: a v<S> draft's pages, `machine.json`, "
     "`dossier.json` and size report are those the same draft gives as a v<PS> draft without `figurePlan`, apart from any byte that names "
     "the draft's schema or digest, and its reading ledger is that draft's. The provider mode is unaffected: the provider stages' closed "
-    "draft schema gains no `figurePlan`, and the rendered bytes the provider golden pins do not change.",
+    "draft schema gains no `figurePlan`, and the rendered bytes the provider golden pins do not change. The migration of version 2.24 "
+    "is unchanged and yields a schema-v<PS> draft; no migration yields a v<S> draft, a figure plan being the authoring session's to "
+    "write.",
 ]
 replace(ANCHOR, ANCHOR + '\n\n' + '\n\n'.join(PARAGRAPHS))
 
 # Scenarios, after version 2.23's last scenario and before the Form block that follows it.
-LAST = '#### Scenario: Brief v17 states the containment kind'
+LAST = '#### Scenario: Brief v18 states the system model'
 once(LAST)
 head, tail = text.split(LAST, 1)
 form_at = tail.index('\nForm: event-response.\n')
@@ -232,21 +245,21 @@ SCENARIOS = r'''
 
 #### Scenario: A chain of three or fewer is advised as a sentence
 
-- **WHEN** a schema-v<S> draft whose check reports no `schema` finding holds, all produced and in this order, a `flow` of three nodes chained by two edges, a `boundary` of three nodes with two edges from one of them, a `flow` of four nodes chained by three edges, a `dependency` of three nodes and three edges, a `swimlane` of three steps, a `swimlane` of four steps, a `sequence` of two messages, a `sequence` of three messages, a `containment` of three groups each inside the one before, and a `containment` of four groups
+- **WHEN** a schema-v<S> draft whose check reports no `schema` finding holds, all produced and in this order, a `flow` whose view shows three elements chained by two relationships, a `boundary` whose view shows three elements and two relationships from one of them, a `flow` whose view shows four elements chained by three relationships, a `dependency` whose view shows three elements and three relationships, a `swimlane` of three steps, a `swimlane` of four steps, a `sequence` of two messages, a `sequence` of three messages, a `containment` whose view shows three elements, each the `parent` of the next, and a `containment` whose view shows four elements
 - **THEN** the report's `figureAdvice` has `examined` 10 and holds a `figure-information-floor` advisory for the first, second, fifth, seventh and ninth figures alone, each at `$.diagrams[<i>]` with the detail `<identity>: a chain of three or fewer is a sentence; say it in the prose, or draw what a sentence cannot hold`
-- **AND** an eleventh diagram, a `flow` of three nodes and two edges whose disposition is `omitted`, gets no advisory and leaves `examined` at 10
+- **AND** an eleventh diagram, a `flow` whose view shows three elements and two relationships and whose disposition is `omitted`, gets no advisory and leaves `examined` at 10
 
 #### Scenario: A figure that draws nothing new is advised as a duplicate
 
-- **WHEN** a schema-v<S> draft holds, all produced and in this order, a `flow` `a` of five nodes chained by four edges; a `dependency` `b` with the same node labels and edges as `a` except for letter case and white space in its labels and its own edge labels; a `flow` `c` drawing four of `a`'s nodes and three of its edges; a `flow` `d` drawing all of `a` and one more node; a `flow` `e` drawing `a` with one edge reversed; a `sequence` whose participants and messages carry `a`'s node labels and edges; a `containment` `k1` of a group `Workspace` holding groups `api` and `web`; a `containment` `k2` of a group `workspace` holding `API`; and two sequences `q1` and `q2` of the same two messages in opposite orders
-- **THEN** the report's `figureAdvice` holds, under rule `figure-duplicate`, an advisory for `a` with the detail `a: everything it draws is drawn by d; keep one figure, or draw what the other does not`, one for `b` naming `a`, one for `c` naming `a`, one for `k2` naming `k1` and one for `q2` naming `q1`
+- **WHEN** a schema-v<S> draft holds, all produced and in this order, a `flow` `a` whose view shows five elements chained by four relationships; a `dependency` `b` whose view shows five other elements, whose labels differ from those of `a`'s only in letter case and white space, joined as `a`'s are by relationships with labels of their own; a `flow` `c` whose view shows four of `a`'s elements and three of its relationships; a `flow` `d` whose view shows all of `a`'s and one more element; a `flow` `e` whose view shows `a`'s elements with one relationship replaced by one in the opposite direction; a `sequence` whose participants and messages carry `a`'s element labels and relationships' ends; a `containment` `k1` whose view shows an element `Workspace` and elements `api` and `web` whose `parent` it is; a `containment` `k2` whose view shows an element labelled `workspace` and an element labelled `API` whose `parent` it is; two sequences `q1` and `q2` of the same two messages in opposite orders; and a `flow` `g` whose view selects exactly the elements and relationships `d`'s does
+- **THEN** the report's `figureAdvice` holds, under rule `figure-duplicate`, an advisory for `a` with the detail `a: everything it draws is drawn by d; keep one figure, or draw what the other does not`, one for `b` naming `a`, one for `c` naming `a`, one for `k2` naming `k1`, one for `q2` naming `q1` and one for `g` naming `d`
 - **AND** it holds none under that rule for `d`, `e`, the first sequence, `k1` or `q1`
 
 #### Scenario: A figure that mixes levels is advised
 
-- **WHEN** a schema-v<S> draft holds produced figures: `f1`, a graph whose node `root` has the unit `{"kind": "repository-root"}` and node `src` the unit `{"kind": "top-level-directory", "path": "src"}`, joined by one edge of `relation` `calls`; `f2`, the same with an edge of `relation` `contains` from `root` to `src`; `f3`, a graph whose nodes have the units `{"kind": "top-level-directory", "path": "packages"}` and `{"kind": "package-manifest", "path": "packages/core/package.json"}` and no edge between them; `f4`, as `f3` with the directory `pack` in place of `packages`; `f5`, a graph of two nodes without `unit`; `f6`, a containment whose top-level group `root` carries the repository-root unit and holds a group `src` carrying the `src` directory's unit; `f7`, a containment whose two top-level groups `root` and `src` carry those same units, `src` holding a group `app` without `unit`; and `f8`, a graph whose nodes `r`, `pkgs` and `core` carry the repository-root unit, the `packages` directory's unit and the unit `{"kind": "package-manifest", "path": "packages/core/package.json"}`, with edges of `relation` `contains` from `r` to `pkgs` and from `pkgs` to `core` and none from `r` to `core`
-- **THEN** the report's `figureAdvice` holds a `figure-mixed-levels` advisory for `f1` with the detail `f1: root and src stand for a unit and a unit within it, and the figure does not show that one holds the other; draw one level, or show the containment`, and one each for `f3` and `f7`
-- **AND** it holds none under that rule for `f2`, `f4`, `f5`, `f6` or `f8`
+- **WHEN** a schema-v<S> draft's model holds, among others, the elements `root` with the unit `{"kind": "repository-root"}`; `src`, whose `parent` is `root`, with the unit `{"kind": "top-level-directory", "path": "src"}`; `lib`, with no `parent`, with the unit `{"kind": "top-level-directory", "path": "lib"}`; `app`, whose `parent` is `lib`, without `unit`; `pkgs` and `pack` with no `parent`, with the units of the top-level directories `packages` and `pack`; `core`, with no `parent`, with the unit `{"kind": "package-manifest", "path": "packages/core/package.json"}`; `svc`, of type `service`, and `mod`, of type `module` and whose `parent` is `svc`, both without `unit`; and `x` and `y`, with no `parent` and without `unit`; and it holds produced figures whose views show: `f1`, a graph of `lib` and the repository root `root`, joined by one relationship of `relation` `calls`; `f2`, the same with a relationship of `relation` `contains` from `root` to `lib`; `f3`, a graph of `pkgs` and `core` with no relationship between them; `f4`, as `f3` with `pack` in place of `pkgs`; `f5`, a graph of `x` and `y`; `f6`, a containment of `root` and `src`, whose expansion draws `src` inside `root`; `f7`, a containment of `root`, `lib` and `app`, whose expansion draws `root` and `lib` side by side as top-level groups, `lib` holding `app`; `f8`, a graph of `root`, `pkgs` and `core`, with relationships of `relation` `contains` from `root` to `pkgs` and from `pkgs` to `core` and none from `root` to `core`; `f9`, a graph of `svc` and `mod` joined by one relationship of `relation` `calls`; `f10`, as `f9` with a relationship of `relation` `contains` from `svc` to `mod`; and `f11`, a containment of `root` and `app` and no other element
+- **THEN** the report's `figureAdvice` holds a `figure-mixed-levels` advisory for `f1` with the detail `f1: root and lib stand for a part and a part within it, and the figure does not show that one holds the other; draw one level, or show the containment`, and one each for `f3`, `f7` and `f9`, the one for `f9` naming `svc` and `mod`
+- **AND** it holds none under that rule for `f2`, `f4`, `f5`, `f6`, `f8`, `f10` or `f11`, `app` being of no unit and its parent `lib` not shown
 
 #### Scenario: Figure advice gates nothing
 
@@ -257,7 +270,7 @@ SCENARIOS = r'''
 #### Scenario: Brief v<B> asks for the figure plan
 
 - **WHEN** a run is briefed under this version
-- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line and the one figure-plan paragraph placed immediately after the containment paragraph
+- **THEN** the brief is `polaris-dossier-brief-v<B>`, issuing schema `polaris-dossier-local-draft-v<S>`, and equals brief v<PB> for the same run except its version line, its draft-schema line and the one figure-plan paragraph placed immediately after the system-model paragraph
 '''
 text = head + LAST + tail[:form_at] + '\n' + sym(SCENARIOS).strip('\n') + '\n' + tail[form_at:]
 
@@ -267,21 +280,22 @@ def extend(end, addition):
     replace(end, end[:-1] + addition)
 
 
-extend("and drafts of schema v10 and earlier with and without a containment.",
+extend("and drafts of schema v11 and earlier with and without `model` and `view`.",
        "; and, for version 2.NN, schema-v<S> drafts with complete, incomplete, repeated and malformed figure plans, planned figures named, "
        "unresolved, misplaced and of the wrong kind, and omitted places; figures on each side of each advice rule's boundary (a third "
        "and a fourth node, a third edge among three nodes, a third and a fourth step, a second and a third message, a third and a fourth "
        "group; equal, contained, extended and reversed keys and another family; a unit enclosing another with and without a `contains` "
-       "arrow, a chain of them or a nesting, and a directory that is only a prefix of a path); entries with an unresolved or non-string "
+       "arrow, a chain of them or a nesting, a directory that is only a prefix of a path, and an element beside its model parent or "
+       "grandparent in a graph view and a containment view); views sharing elements; entries with an unresolved or non-string "
        "`target`; the same drafts with their draft layer withheld; and drafts of schema v<PS> and earlier with and without `figurePlan`.")
-extend("its tally, list, witnessed-nesting items, declarative source and `figureStructures` entry, and figure fit's entries.",
+extend("and the migrated draft and its rendered figures beside the original's.",
        "; for version 2.NN, the plan findings with their paths, details and order, the report's `figureAdvice` member, the check record, "
        "`run-advice.json` and reading ledger beside it, the brief v<B> figure-plan paragraph, and the rendered bytes of a v<S> draft beside "
        "the same draft as v<PS>.")
-extend("and, for every draft of schema v10 or earlier, the bytes version 2.22 renders for it.",
+extend("figure-fit member and `machine.json` figure entries compared byte for byte with those its original renders.",
        "; for version 2.NN, each fixture's expected plan findings and advisories written as literals before check runs, each label key "
-       "computed by hand, and a v<S> draft's pages compared byte for byte with the same draft rendered as v<PS>.")
-extend("changes a byte other than the `field-version` findings in place of `schema` findings.",
+       "computed by hand from each view's expansion, and a v<S> draft's pages compared byte for byte with the same draft rendered as v<PS>.")
+extend("or a provider-mode page, changes a byte other than the `field-version` findings in place of `schema` findings.",
        "; for version 2.NN, a v<S> draft without a plan, with a place unplanned or planned twice, or with a planned figure that is "
        "missing, homed elsewhere or of another kind proceeds to review; a plan entry's text reaches a page or a published file; an "
        "advisory is a finding, changes an outcome or a record, or is counted by the reading ledger or `run-advice.json`; an advisory "

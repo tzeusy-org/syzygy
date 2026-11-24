@@ -3,7 +3,7 @@ import { sha256 } from '@syzygy/support';
 import { type CredentialStepResult } from './credential-probe.js';
 import type { StructureRecord } from './derive.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
-import type { CredentialProbe } from './execution-rule.js';
+import type { CredentialFindingKind, CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import { GitObjectReadRefusal, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import type { Outcome } from './outcome.js';
@@ -33,7 +33,7 @@ export type CheckFindingKind =
   | 'path-absent' | 'range-invalid' | 'range-beyond-blob'
   | 'quotation-count' | 'quotation-citation' | 'quotation-in-unquotable-block' | 'lead-in-without-quote' | 'quotation-unterminated'
   | 'quotation-empty' | 'quotation-elided' | 'quotation-not-in-cited-file' | 'quotation-outside-range'
-  | 'discovery-path-absent' | 'adapter-credential-readable'
+  | 'discovery-path-absent' | CredentialFindingKind
   // v1.3 presentation elements (syzygy-mea.10.5).
   | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version'
   // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.

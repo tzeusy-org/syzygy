@@ -2,7 +2,7 @@ import { rmSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { renderPolarisPage } from './polaris.js';
-import { DEEP_DIVE_MARKERS } from './test-deep-dive-markers.js';
+import { DEEP_DIVE_MARKERS } from './test-deep-dive-markers.testkit.js';
 import { buildFixtureModel } from './test-model-fixture.js';
 import { ADMITTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 

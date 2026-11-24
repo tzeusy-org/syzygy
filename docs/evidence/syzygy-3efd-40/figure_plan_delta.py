@@ -6,7 +6,7 @@ import pathlib
 import sys
 
 W = pathlib.Path(sys.argv[1])
-PRED = 'openspec/changes/dossier-containment-figure/proposed/polaris-generation/spec.md'
+PRED = 'openspec/changes/dossier-system-model/proposed/polaris-generation/spec.md'
 NEW = 'openspec/changes/dossier-figure-plan/proposed/polaris-generation/spec.md'
 pb, nb_ = (W / PRED).read_bytes(), (W / NEW).read_bytes()
 old, new = pb.decode('utf-8').split('\n'), nb_.decode('utf-8').split('\n')
@@ -61,7 +61,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Composition
 
-[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier containment figure version 2.23, row A-59, tag `polaris-dossier-containment-figure-v2.23`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.23, the effective REQ-034 on `main` at this writing. A concurrent candidate of the same requirement, the system model of syzygy-3efd.37, is unadopted and unpushed at this writing and also claims schema v12 and brief v18 over 2.23; whichever of the two is adopted second recomposes over the other and renumbers (`design.md` D1). The version label 2.NN is a placeholder, chosen at adoption. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.23's, byte for byte.
+[Observed] The predecessor is the MODIFIED text in `{PRED}` (dossier system model version 2.24, row A-64, tag `polaris-dossier-system-model-v2.24`; sha256 `{sha(pb)}`). [Inferred] Once adopted, this version's complete MODIFIED REQ-polaris-generation-034 (`{NEW}`, sha256 `{sha(nb_)}`) replaces that text, composed after version 2.24, the effective REQ-034 on `main` at this writing. The system model of syzygy-3efd.37, drafted in parallel over 2.23, was adopted first as 2.24, so this version recomposes over it and takes schema v13 and brief v19 (`design.md` D1). The version label 2.NN is a placeholder, chosen at adoption. Its ID, Source line, Scope line, name and warrants block are unchanged, so `GOVERNING-DEPENDENCIES.json` is version 2.24's, byte for byte.
 
 ## Carried unchanged
 
@@ -87,7 +87,7 @@ Normative: one MODIFIED requirement, REQ-polaris-generation-034, in one home (th
 
 ## Effect on bytes
 
-[Inferred] As `design.md` D7 states: no rendered byte moves. A schema-v12 draft renders as the same draft would as v11 without `figurePlan`; what is new is check's findings on the plan and the report-only `figureAdvice` member. A draft of schema v11 or earlier keeps every finding and byte but for a `field-version` finding at `$.figurePlan`, and no provider-mode byte changes.
+[Inferred] As `design.md` D7 states: no rendered byte moves. A schema-v13 draft renders as the same draft would as v12 without `figurePlan`; what is new is check's findings on the plan and the report-only `figureAdvice` member. A draft of schema v12 or earlier keeps every finding and byte but for a `field-version` finding at `$.figurePlan`, and no provider-mode byte changes.
 '''
 (W / 'openspec/changes/dossier-figure-plan/SEMANTIC-DELTA.md').write_text(out, encoding='utf-8')
 print('changed', len(changed), 'kept', kept, 'paras', len(added_paras), 'scenarios', len(scen))

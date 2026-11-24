@@ -1,0 +1,52 @@
+{
+  "subject": "scripts/count_polaris_effective_scenarios.py",
+  "subjectSha256": "affe1e57267305dee35155318450d8bbaf6ca0e51f8e4fe8a382305df08e574a",
+  "commit": "d55017047d70315ab3cd3341e4c5cc24bdf4734b",
+  "bead": "syzygy-3efd.82",
+  "supersedes": "counter-selftest-mutants-2026-11-24.json (commit 3f610a35, before review notes 1 and 2)",
+  "command": "python3 scripts/count_polaris_effective_scenarios.py --selftest",
+  "rule": "AGENTS.md verification rule 6: each mutant applied alone to the subject at the commit; the selftest must fail",
+  "controlAttribution": "the v2.0 declared-source control runs first and prints five [ok] lines; a failure after its last ([ok] projected declared-source missing binding ...) is in the v2.1 URL declared-source control",
+  "mutants": [
+    {
+      "id": "only-next-row",
+      "old": "    return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep]",
+      "new": "    return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep and name == \"is_url_source_row\"]",
+      "outcome": "killed",
+      "control": "declared-source (v2.0)",
+      "output": "FAIL: raw-read disclosure: URL source v2.1 and source policy v3 must be effective"
+    },
+    {
+      "id": "url-control-on-live-ledger",
+      "old": "    _project_ledger(fixture / adoption.AGENT_ADOPTIONS,\n                    _later_row_predicates(adoption, keep=(\"is_url_source_row\",)))",
+      "new": "    pass",
+      "outcome": "killed",
+      "control": "URL declared-source (v2.1)",
+      "output": "FAIL: scenario total mismatch: recomputed 524, expected 333 (PROJECT-STATUS.md assertion)"
+    },
+    {
+      "id": "raw-read-row-kept",
+      "old": "    return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep]",
+      "new": "    return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep and name != \"is_raw_read_row\"]",
+      "outcome": "killed",
+      "control": "declared-source (v2.0)",
+      "output": "FAIL: raw-read disclosure: URL source v2.1 and source policy v3 must be effective"
+    },
+    {
+      "id": "predicate-escapes-convention",
+      "old": "    names = sorted(name for name in dir(adoption) if re.fullmatch(r\"is_[a-z_]+_row\", name))",
+      "new": "    names = sorted(name for name in dir(adoption) if re.fullmatch(r\"is_[a-z_]+_row\", name) and name != \"is_verify_row\")",
+      "outcome": "killed",
+      "control": "declared-source (v2.0)",
+      "output": "FAIL: selftest setup error: amendment tags and row predicates do not pair: tags without a predicate ['VERIFY_TAG'], predicates without a tag []"
+    },
+    {
+      "id": "predicate-claims-nothing",
+      "old": "    return [(name, getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep]",
+      "new": "    return [(name, (lambda line: False) if name == \"is_cont_row\" else getattr(adoption, name), getattr(adoption, paired[name])) for name in names if name not in keep]",
+      "outcome": "killed",
+      "control": "declared-source (v2.0)",
+      "output": "FAIL: selftest setup error: `is_cont_row` misses a ledger row naming `polaris-dossier-containment-figure-v2.23`"
+    }
+  ]
+}
