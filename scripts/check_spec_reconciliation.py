@@ -722,7 +722,7 @@ VBASE_UNION = f"{VBASE_HOME}/GOVERNING-DEPENDENCIES.json"
 VBASE_TAG = "polaris-dossier-derived-base-views-v2.NN"
 VBASE_STATUS_PREFIX = f"[Derived-base views amendment 2.NN]({VBASE_HOME})"
 VBASE_SUBJECTS = {
-    VBASE_SPEC: "a203e6b7c1d31276ec0b9bb0c5db81390526f2fd76085276f1cba5617ae58448",
+    VBASE_SPEC: "6c312d49cdf58ddc167f5726f48d53ff7076ec7acadd5c71bdc3c597502e2e14",
 }
 VBASE_BOUND_PARTS = len(VBASE_SUBJECTS)
 
@@ -9056,11 +9056,11 @@ def vbase_cases(tmp, base, witnesses, failures):
     current = current_pop["POLARIS"]
     held = (vbase_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 219
+            and len(current[ident]["scenarios"]) == 224
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
     record("vbase-adopted", AGENT_ADOPTIONS, "<no v2.NN row>", row,
-           "v2.NN replaces exactly 034 (207 to 219 scenarios)", current_findings, held, True)
+           "v2.NN replaces exactly 034 (207 to 224 scenarios)", current_findings, held, True)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", VBASE_TAG, VBASE_TAG + "-wrong"),
