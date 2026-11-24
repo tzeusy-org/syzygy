@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 546 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 550 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -251,6 +251,12 @@ authority and no model yet called on the current path.
     "Worth knowing" callout per page for blocks that render Inferred, brief v19, inventory brief v4 with the `worth-knowing` entry kind); its code
     (syzygy-5dhm.41) lands with it; v13 is schema v10 plus the mark and brief v19 is brief v16 plus one paragraph.
     *(2026-11-24: the predecessor figure "539 scenarios" is superseded by that
+    amendment; all 39 identities remain.)*
+    [Step-measures amendment 2.29](openspec/changes/dossier-step-measures) is agent-adopted in A-230.
+    It replaces REQ-polaris-generation-033 again (16 to 20 scenarios: the Execution Record's `stepMeasures`, stage timings,
+    draft and inventory revisions and review rounds derived at close from the step log, Inferred, Unknown and never zero
+    where a row is missing; no usage); its code (syzygy-5dhm.25) lands with it.
+    *(2026-11-25: the predecessor figure "546 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*

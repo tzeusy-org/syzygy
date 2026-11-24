@@ -635,7 +635,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 546,
+      "scenarios": 550,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1018,7 +1018,11 @@
             "Verify gives each claim one of six outcomes",
             "Verify never reads or names a withheld path",
             "Verify's quotation check is check's",
-            "Verify writes nothing into a run"
+            "Verify writes nothing into a run",
+            "Stage timings and review rounds from the step log",
+            "A step measure without its rows is Unknown, never zero",
+            "Step measures are not usage",
+            "Rounds never overlap, and an agent-written outcome is never a key"
           ]
         },
         "REQ-polaris-generation-034": {
