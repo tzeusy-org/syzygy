@@ -7,8 +7,9 @@ import { unknown, type PocUnknown } from './epistemic.js';
 import type { PocProvenance } from './model.js';
 import { resolutionRoute, type ResolutionRoutes } from './project-shape-model.js';
 import { isDoltRevision, observeWorkItemDependencies, type WorkItemDependencyObservation } from './work-item-dependencies.js';
+import { observeWorkItemChanges, type ChangeWindowObservation } from './work-item-history.js';
 
-const WORK_ITEM_STATUSES = [
+export const WORK_ITEM_STATUSES = [
   'open',
   'in_progress',
   'blocked',
@@ -249,8 +250,10 @@ function doltProvenance(beadPrefix: string, revision: string): PocProvenance {
 export function observeTrajectoryWorkItems(input: ObserveWorkItemsInput): {
   readonly workItems: WorkItemsResult;
   readonly dependencies: WorkItemDependencyObservation;
+  readonly changes: readonly ChangeWindowObservation[];
 } {
   const workItems = observeWorkItems(input);
   const runQuery = input.runQuery ?? defaultRunQuery;
-  return { workItems, dependencies: observeWorkItemDependencies(workItems, (sql) => runQuery(input.repoRoot, sql)) };
+  const run = (sql: string): string => runQuery(input.repoRoot, sql);
+  return { workItems, dependencies: observeWorkItemDependencies(workItems, run), changes: observeWorkItemChanges(workItems, run) };
 }
