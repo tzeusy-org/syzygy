@@ -1,0 +1,68 @@
+{
+  "capturedAt": "2026-11-24T19:00:15.727971+00:00",
+  "scope": "Evidence retention only; source reviews and initializer reproduction, not native acceptance",
+  "sourceReviews": [
+    {
+      "sourceCommit": "c1def9545540bc72c7d406d2bb08cfc25f9ae87f",
+      "sourcePath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sourceSha256": "00e9d01fd6dc014994fac2c0aa95369492d0e1a80828cc9591e7c34e8c8052a7",
+      "reviewFile": "native-fixture-parent-review-RAW.md",
+      "verdictAsIssued": "PASS",
+      "reviewSha256": "6875c9536d9f605985d5a7074afeda0a12a2bf549af4a038d60feb504f94b5de",
+      "assessmentLabel": "Inferred",
+      "reviewCapturedAsUncommittedBytes": true,
+      "sourceCommitBindingEstablishedOnRetention": true
+    },
+    {
+      "sourceCommit": "a9d50898d9e29815b94be34ef0e0638be71246de",
+      "sourcePath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sourceSha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+      "reviewFile": "eligible-terminal-snapshot-review-RAW.md",
+      "verdictAsIssued": "PASS",
+      "reviewSha256": "fb7fd3b09e757aecb698c7bef51d87c163af99cf2e2ed4a6f81c10ec2a1487e9",
+      "assessmentLabel": "Inferred",
+      "reviewCapturedAsUncommittedBytes": true,
+      "sourceCommitBindingEstablishedOnRetention": true
+    }
+  ],
+  "rawReviewOriginalCaptureTime": "Unknown; retained verbatim without inventing timestamps",
+  "initializer": {
+    "script": "initializer-reproduction.mjs",
+    "scriptSha256": "2996620106e35ae8912925dd88ed7b4d272267646e5c02533f737dc2e998fd53",
+    "output": "initializer-reproduction.json",
+    "outputSha256": "1287a52e2a1b4d0fa219d13fbd56dcaa5b460f865601040f8e1e3e5732fd0ed6",
+    "subjects": [
+      "c1def9545540bc72c7d406d2bb08cfc25f9ae87f",
+      "a9d50898d9e29815b94be34ef0e0638be71246de"
+    ],
+    "realBuildExecuted": false,
+    "invocation": "node docs/evidence/syzygy-k54o-3/native-fixture-followup/initializer-reproduction.mjs"
+  },
+  "historicalTypecheck": {
+    "file": "c1def-fixture-followup-typecheck.log",
+    "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "command": "npm run typecheck",
+    "producerReportedSessionId": 81144,
+    "producerReportedExitCode": 0,
+    "producerReport": "typecheck-producer-report.txt",
+    "producerReportSha256": "42744adccf100c81c637d1a9ed4610fce68337f03becf51b4131bb1d9c61b86c",
+    "independentlyRerunDuringRetention": false,
+    "producerReportedHead": "90ba1af1337feb045903e4e6d29647da86a8b560",
+    "producerReportedFixtureSha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+    "exactWholeTreeBinding": "Unknown",
+    "cleanCloneEvidence": false,
+    "finalHeadEvidence": false
+  },
+  "currency": "Historical evidence valid only for named source subjects; subsequent source edits retire corresponding review coverage",
+  "retentionValidation": {
+    "payloadChecksumEntries": 8,
+    "verbatimRawReviewsComparedWithOriginals": true,
+    "typecheckLogVerbatim": true,
+    "diffCheckException": {
+      "file": "c1def-fixture-followup-typecheck.log",
+      "line": 4,
+      "diagnostic": "new blank line at EOF",
+      "reason": "Original producer output retained byte-for-byte; do not normalize evidence"
+    }
+  }
+}

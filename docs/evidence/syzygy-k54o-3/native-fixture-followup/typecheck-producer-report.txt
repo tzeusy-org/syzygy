@@ -1,0 +1,3 @@
+Retained parent-agent statement about typecheck provenance (not independently rerun):
+
+Summary from preceding context: typecheck session81144 observed CLOSED exit0; command log /home/orca/.tmp/f3-native-admission-fixes/c1def-fixture-followup-typecheck.log started after final581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec edit and before a9d commit. Actual HEAD then90ba1af13 (full via rev-parse). We do not have a durable exact-tree snapshot of whole worktree at invocation; mark Observed session exit0, exact whole-tree binding Unknown. Do not call it clean-clone/final-head evidence. We'll run final typecheck later.

@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-11-24T18:59:34.080Z",
+  "results": [
+    {
+      "commit": "c1def9545540bc72c7d406d2bb08cfc25f9ae87f",
+      "sha256": "00e9d01fd6dc014994fac2c0aa95369492d0e1a80828cc9591e7c34e8c8052a7",
+      "sourcePath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "initializerSha256": "259b63bfeb081039a506d4decbae3eca3db94529c95b99d799b82e53a74b5283",
+      "extractedActualInitializer": true,
+      "missingParentCreated": true,
+      "privateRootMode": "700",
+      "buildCalls": 1,
+      "collisionCode": "EEXIST",
+      "originalTimeoutMilliseconds": 60000,
+      "realBuildExecuted": false
+    },
+    {
+      "commit": "a9d50898d9e29815b94be34ef0e0638be71246de",
+      "sha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+      "sourcePath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "initializerSha256": "259b63bfeb081039a506d4decbae3eca3db94529c95b99d799b82e53a74b5283",
+      "extractedActualInitializer": true,
+      "missingParentCreated": true,
+      "privateRootMode": "700",
+      "buildCalls": 1,
+      "collisionCode": "EEXIST",
+      "originalTimeoutMilliseconds": 60000,
+      "realBuildExecuted": false
+    }
+  ]
+}
