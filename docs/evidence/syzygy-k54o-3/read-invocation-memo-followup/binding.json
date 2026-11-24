@@ -5,5 +5,6 @@
   "sourceSha256": "65ab0c346b962ebe62bac592271181161d877aaaba5fe13e9e09f38c55f6ef51",
   "sourceReviewVerdict": "PASS",
   "rawReviewSha256": "7edf0d27eeea36eb0885c27b9f464248e3667961feca3f92405c8b1cc8e85566",
-  "scope": "Fresh source review and prior isolated boundary checks plus original socket consumer measurement; candidate actual measurement/full canonical selftest pending. No runtime/native/timing acceptance claimed."
+  "scope": "Fresh source review and prior isolated boundary checks plus original socket consumer measurement; candidate actual measurement/full canonical selftest pending. No runtime/native/timing acceptance claimed.",
+  "rawReviewPath": "docs/reviews/syzygy-k54o-3/READ-INVOCATION-MEMO-INDEPENDENT-REVIEW-RAW.md"
 }
