@@ -1,0 +1,68 @@
+{
+  "classification": "Authored synthetic terminal transcript pairs. These are proposed review witnesses, not terminal captures, a product fixture run or a specification.",
+  "subject": "b4abfcf5c7c1d4a62d1f4341220f89439bafc627",
+  "cases": [
+    {
+      "name": "first acknowledged wait",
+      "good": "Run demo-17 | attempt 1 | observed 09:00:01Z\nPreparing the independent inventory view\nWaiting for view validation. No action needed.\nDeadline 09:20Z | budgets available in run status\nHelp: syzygy polaris --help",
+      "bad": "Run demo-17 | attempt 1 | observed 09:00:01Z\nWorking…\nDeadline 09:20Z | budgets available in run status\nHelp: syzygy polaris --help",
+      "required": ["Preparing the independent inventory view", "Waiting for view validation. No action needed.", "Deadline 09:20Z", "syzygy polaris --help"]
+    },
+    {
+      "name": "same live run detaches",
+      "good": "Run demo-17 | attempt 1 | observed 09:02:10Z\nDetached at 09:02:10Z. Run continues within its existing scope.\nReattach: syzygy polaris --attach demo-17",
+      "bad": "Run demo-17 | attempt 1 | observed 09:02:10Z\nStopped at 09:02:10Z.\nReattach: syzygy polaris --attach demo-17",
+      "required": ["Detached at 09:02:10Z", "Run continues within its existing scope.", "--attach demo-17"],
+      "forbidden": ["Stopped at", "--resume"]
+    },
+    {
+      "name": "reattach to the same live attempt",
+      "good": "Run demo-17 | attempt 1 | observed 09:06:03Z\nReattached. Same attempt and deadline 09:20Z.\nDetached interval 09:02:10Z to 09:06:03Z.\nWaiting for Author pane: operator answer needed.\nFocus Author from the keyboard.\nStop: syzygy polaris --stop demo-17",
+      "bad": "Run demo-17 | attempt 1 | observed 09:06:03Z\nResumed. New deadline 09:26Z.\nDetached interval 09:02:10Z to 09:06:03Z.\nWaiting for Author pane: operator answer needed.\nFocus Author from the keyboard.\nStop: syzygy polaris --stop demo-17",
+      "required": ["Reattached. Same attempt and deadline 09:20Z.", "Detached interval 09:02:10Z to 09:06:03Z.", "Waiting for Author pane: operator answer needed.", "Focus Author from the keyboard"],
+      "forbidden": ["Resumed.", "New deadline"]
+    },
+    {
+      "name": "attachment evidence is missing",
+      "good": "Run demo-17 | attempt 1 | observed 09:06:03Z\nAttachment: Unknown. Current view receipt is unavailable.\nProgress: Unknown until the supervisor is verified.\nUse run help to recheck the same run.",
+      "bad": "Run demo-17 | attempt 1 | observed 09:06:03Z\nAttachment: Unknown. Current view receipt is unavailable.\nProgress: Continuing.\nUse run help to recheck the same run.",
+      "required": ["Attachment: Unknown. Current view receipt is unavailable.", "Progress: Unknown until the supervisor is verified."],
+      "forbidden": ["Progress: Continuing"]
+    },
+    {
+      "name": "stop has been requested but cleanup is unverified",
+      "good": "Run demo-17 | attempt 1 | observed 09:09:00Z\nStopping. Confirming owned processes have exited.\nPause further work. Stop has not yet been verified.",
+      "bad": "Run demo-17 | attempt 1 | observed 09:09:00Z\nStopped. Safe to resume.\nResume: syzygy polaris --resume demo-17",
+      "required": ["Stopping. Confirming owned processes have exited.", "Stop has not yet been verified."],
+      "forbidden": ["Safe to resume", "--resume"]
+    },
+    {
+      "name": "stopped run offers a gated resume",
+      "good": "Run demo-17 | attempt 1 | observed 09:09:05Z\nStopped at 09:09:05Z. Owned process cleanup verified.\nResume: syzygy polaris --resume demo-17\nResume checks the original pin, deadline 09:20Z and current gates.",
+      "bad": "Run demo-17 | attempt 1 | observed 09:09:05Z\nStopped at 09:09:05Z. Owned process cleanup verified.\nReattach: syzygy polaris --attach demo-17\nResume checks the original pin, deadline 09:20Z and current gates.",
+      "required": ["Stopped at 09:09:05Z. Owned process cleanup verified.", "--resume demo-17", "original pin, deadline 09:20Z and current gates"],
+      "forbidden": ["--attach"]
+    },
+    {
+      "name": "resume refusal leaves the same run stopped",
+      "good": "Run demo-17 | attempt 1 | observed 09:10:00Z\nResume refused. Required declaration is unavailable.\nThe run stays stopped. No attempt was started.\nRestore the declared configuration before retrying.",
+      "bad": "Run demo-17 | attempt 2 | observed 09:10:00Z\nResume refused. Required declaration is unavailable.\nRestore the declared configuration before retrying.",
+      "required": ["attempt 1", "Resume refused. Required declaration is unavailable.", "The run stays stopped. No attempt was started.", "Restore the declared configuration"],
+      "forbidden": ["attempt 2"]
+    },
+    {
+      "name": "keyboard and narrow plain text state cues",
+      "good": "Run demo-17 | attempt 1\nWaiting for operator\nQuestion in Author pane\nUse keyboard to focus Author\nHelp: syzygy polaris --help",
+      "bad": "Run demo-17 | attempt 1\nWaiting for operator\nSee highlighted pane\nClick the pane to continue\nHelp: syzygy polaris --help",
+      "required": ["Waiting for operator", "Question in Author pane", "Use keyboard to focus Author"],
+      "forbidden": ["highlighted pane", "Click the pane"]
+    },
+    {
+      "name": "repeated attachment observes without changing the run",
+      "good": "Run demo-17 | attempt 1 | observed 09:06:04Z\nAlready attached to this attempt.\nDeadline 09:20Z. No additional work started.\nWaiting for operator. Question in Author pane.",
+      "bad": "Run demo-17 | attempt 2 | observed 09:06:04Z\nAlready attached to this attempt.\nDeadline 09:20Z. Additional work started.\nWaiting for operator. Question in Author pane.",
+      "required": ["attempt 1", "Already attached to this attempt.", "Deadline 09:20Z. No additional work started."],
+      "forbidden": ["attempt 2"]
+    }
+  ]
+}
