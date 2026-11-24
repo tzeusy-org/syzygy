@@ -3098,6 +3098,25 @@ _REVERSE_CACHE = None
 
 
 @contextlib.contextmanager
+def _read_memo_scope():
+    """Reuse enclosing read memos, or discard fresh memos before returning."""
+    global _SIGNED_MEMO, _RUN_MEMO
+    if _RUN_MEMO is not None:
+        yield
+        return
+    import d10_supersession
+    previous_signed, previous_run = _SIGNED_MEMO, _RUN_MEMO
+    d10_state = d10_supersession.state
+    _SIGNED_MEMO, _RUN_MEMO = {}, {}
+    try:
+        d10_supersession.state = _per_run(d10_state)
+        yield
+    finally:
+        _SIGNED_MEMO, _RUN_MEMO = previous_signed, previous_run
+        d10_supersession.state = d10_state
+
+
+@contextlib.contextmanager
 def _reverse_cache_scope():
     """Reuse an enclosing selftest cache or own a cache for one invocation."""
     global _REVERSE_CACHE
@@ -3323,6 +3342,7 @@ def poc_outcome(root, child, aggregate, r1, r2):
     return seen
 
 
+@_read_memo_scope()
 def check_outcomes(root, report):
     aggregate = read_text(root, AGGREGATE) or ""
     r1, r2, subjects_seen, records = [], [], 0, 0
@@ -4315,6 +4335,7 @@ def compose_cap1(root, text):
     return a, findings
 
 
+@_read_memo_scope()
 def census(root):
     """Return ({family: {id: {name, scenarios}}}, findings)."""
     out, findings = {}, []
@@ -4941,6 +4962,7 @@ def poc_scenarios_added(root):
     return added
 
 
+@_read_memo_scope()
 def check_census(root, report):
     pop, findings = census(root)
     examined = 0
@@ -5896,10 +5918,9 @@ def check_unions(root, report):
                 "a change to a signed union needs a signed successor")
 
 
-# Within one run() the tree is only read, so whether its P115 transaction is
-# signed cannot change between the predicates that ask; it was asked twelve
-# times per run (~4,200 git calls, syzygy-b6dp). The memo lives for one run()
-# call only: a later run, or a caller between runs, asks afresh.
+# Within one read invocation the tree is only read, so its P115 transaction
+# cannot change between the predicates that ask; it was asked twelve
+# times per run (~4,200 git calls, syzygy-b6dp). A later invocation asks afresh.
 _SIGNED_MEMO = None
 
 
@@ -5912,11 +5933,11 @@ def reference_signed(root):
     return _SIGNED_MEMO[key]
 
 
-# Within one run() the tree is only read, so neither D10's state nor any
+# Within one read invocation neither D10's state nor any
 # versioned binding can change between the predicates that ask. Each binding
 # re-derived every predecessor's binding (a call chain that grew with the square
 # of the version count) and each asked D10's recorder afresh (syzygy-v0b5). The
-# memo is keyed by function and resolved root, lives for one run() call only,
+# memo is keyed by function and resolved root, lives for one invocation only,
 # and is bypassed while `_FILES_OVERRIDE` puts other bytes in front of a read.
 _RUN_MEMO = None
 
@@ -5937,25 +5958,15 @@ def _per_run(function):
 
 
 @_reverse_cache_scope()
+@_read_memo_scope()
 def run(root):
-    global _SIGNED_MEMO, _RUN_MEMO
     report = Report()
-    _SIGNED_MEMO = {}
-    _RUN_MEMO = {}
-    import d10_supersession
-    d10_state = d10_supersession.state
-    d10_supersession.state = _per_run(d10_state)
-    try:
-        check_outcomes(root, report)
-        pop = check_census(root, report)
-        check_generated(root, pop, report)
-        check_routes(root, pop, report)
-        check_pins(root, report)
-        check_unions(root, report)
-    finally:
-        _SIGNED_MEMO = None
-        _RUN_MEMO = None
-        d10_supersession.state = d10_state
+    check_outcomes(root, report)
+    pop = check_census(root, report)
+    check_generated(root, pop, report)
+    check_routes(root, pop, report)
+    check_pins(root, report)
+    check_unions(root, report)
     return report
 
 
