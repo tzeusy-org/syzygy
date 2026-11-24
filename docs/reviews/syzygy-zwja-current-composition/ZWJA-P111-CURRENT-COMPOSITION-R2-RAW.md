@@ -1,0 +1,7 @@
+# CONFIRM
+
+[Observed] Independent focused R2 on `7e13ed9b27f4f7a2130b37faee513062bede0459`, direct successor to R1 `11536072a453176de8a8089b0935fc3b0eb5a05e`. The exact tree is `1ca78280c32a8609a756322cf4fae58587014137`. The sole additional file over protected `f7e93102f225712fbb5d7995f3735d360481ef7c` remains `openspec/changes/polaris-dossier-one-command-run/CURRENT-COMPOSITION.md`, SHA-256 `69db90f0069fb261a4087e6c6f7fa880787a515f9b00560939877702c330f7fb`. The checkout was detached and clean, and Git whitespace validation passed.
+
+[Observed] F1 is resolved. The introduction and row 040 distinguish the mandatory historical supplied clone and its no-clone falsifier from the currently adopted owned acquisition and optional externally supplied clone arms. Direct local init retains its strict no-network admission and operator-started orchestration. The remaining no-source-network supervised outcome stays Unknown. The accompanying provider-statement sentence draws the corresponding boundary between frozen proposal 045 and the current URL configuration, provenance and isolation gates.
+
+[Observed] The diff replaces exactly three lines of the sole composition document. Rows 041–045 and all link targets are byte-identical to R1. The Git path comparison preserves the six frozen subjects, historical raw and notes, all effective specs, provider and source authority, and runtime. This CONFIRM binds the corrected candidate-only scope. Design, adoption, implementation and any live result remain open.

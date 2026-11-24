@@ -8,7 +8,7 @@
 > here is overwritten and `--check` fails first. Identifiers only —
 > nothing here quotes or paraphrases any clause.
 >
-> Source: `spec.md` sha256 `bb31834848d326bb939bfcea81818a13468519dda7a318495fb666e2107b2626` — 29 requirement(s), 110 distinct authorities.
+> Source: `spec.md` sha256 `bd781d7ba558a7b529a5e736a37d7f914e55d66cc86443e55186fd78f0d1b8c7` — 29 requirement(s), 111 distinct authorities.
 
 ## doctrine (10)
 
@@ -88,7 +88,7 @@
 | `RFC8-8` | POC-REQ-044 |
 | `RFC8-12` | POC-REQ-040 |
 | `RFC8-13` | POC-REQ-062 |
-| `RFC8-15` | POC-REQ-043 |
+| `RFC8-15` | POC-REQ-042, POC-REQ-043 |
 | `RFC8-16` | POC-REQ-044 |
 | `RFC8-17` | POC-REQ-062 |
 | `RFC8-18` | POC-REQ-045 |
@@ -98,7 +98,7 @@
 | `RFC8-24` | POC-REQ-014, POC-REQ-043 |
 | `RFC8-28` | POC-REQ-044 |
 | `RFC8-29` | POC-REQ-044 |
-| `RFC8-30` | POC-REQ-043 |
+| `RFC8-30` | POC-REQ-042, POC-REQ-043 |
 | `RFC8-31` | POC-REQ-060, POC-REQ-061 |
 | `RFC9-1` | POC-REQ-020 |
 | `RFC9-3` | POC-REQ-050, POC-REQ-052, POC-REQ-053 |
@@ -135,7 +135,7 @@
 
 *(none declared)*
 
-## parent_requirements (8)
+## parent_requirements (9)
 
 | Authority | Cited by |
 |---|---|
@@ -147,3 +147,4 @@
 | `POC-REQ-041` | POC-REQ-045 |
 | `POC-REQ-042` | POC-REQ-062 |
 | `POC-REQ-044` | POC-REQ-045 |
+| `POC-REQ-062` | POC-REQ-042 |
