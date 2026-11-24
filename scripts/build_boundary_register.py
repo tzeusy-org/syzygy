@@ -13,6 +13,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = "scripts/boundary-register-inputs.json"
 REGISTER = "docs/BOUNDARY-REGISTER.md"
+REVIEWED_BASE = "1e30b1c196c691565fc2d858649aa4942306e305"
+REVIEWED_CONTEXT_SHA256 = "a609d181d8473deb8bd3087c74314ee2d8551d638f221d283fb186aea11fa5a4"
 VISION = ".syzygy/governance/doctrine/vision.md"
 SECURITY = ".syzygy/governance/doctrine/security.md"
 RULING = ".syzygy/governance/decisions/POLARIS-PURSUIT-OWNER-RULINGS-P68-P83-DECISION.md"
@@ -30,6 +32,14 @@ MATERIALIZE = "apps/three-surface-poc/src/materialize-action.ts"
 MATERIALIZE_TEST = "apps/three-surface-poc/src/materialize-action.test.ts"
 CLAUSES = {"VIS-4": VISION, "VIS-5": VISION,
            **{f"SEC-{i}": SECURITY for i in range(1, 6)}, "P-71-Q5": RULING}
+POC_READER = "Three-Surface POC reader notes"
+SPEC_SUBJECTS = {
+    POC_SPEC: (POC_READER, "POC-REQ-030", "POC-REQ-042", "POC-REQ-050"),
+    PWB_SPEC: ("PWB-REQ-011", "PWB-REQ-020"),
+}
+REQUIREMENT = re.compile(r"^### Requirement: ([A-Z]+-REQ-[0-9]+)\b")
+SPEC_SECTION = re.compile(r"^#{1,2} ")
+
 BOUNDARY_HEADER = re.compile(r"^\*\*((?:VIS|SEC)-[0-9]+) —")
 BOUNDARY_UNIT = re.compile(r"^(?:- | {2,4}(?:[-*]|[0-9]+\.) )")
 ROUTE = re.compile(r"\{\s*method: '(GET|POST)',\s*path: ([^,\n]+),"
@@ -38,6 +48,9 @@ MOUNT_PAIR = re.compile(r"^\s*\.\.\.humanSurfaceRoutes\((\w+), (\w+),", re.M)
 EFFECT = re.compile(r"export const (\w+): Effect = \{\s*id: '([a-z-]+)',"
                     r"\s*surface: '([^']+)',\s*\};")
 PINNED_SOURCE = {
+    "poc-spec-authorization": ".syzygy/governance/decisions/THREE-SURFACE-POC-SPEC-AUTHORIZATION.md",
+    "source-read-spec-act": ".syzygy/governance/decisions/PWB-EXACT-SOURCE-RENDER-MODE-AMENDMENT-ACT.md",
+    "machine-read-spec-act": ".syzygy/governance/decisions/PWB-MACHINE-VIEW-AMENDMENT-ACT.md",
     "observer-act": ACT,
     "observer-registry": REGISTRY,
     "effect-authority": CORE,
@@ -130,6 +143,33 @@ def boundary_units(clauses):
     return unique_index(result, "governing units")
 
 
+def spec_sources(read):
+    result = {}
+    for path, subjects in SPEC_SUBJECTS.items():
+        lines = read(path).splitlines(keepends=True)
+        openings = {}
+        for offset, line in enumerate(lines):
+            requirement = REQUIREMENT.match(line)
+            if requirement:
+                identity = requirement[1]
+            elif path == POC_SPEC and line.rstrip() == "## ADDED Requirements":
+                identity = POC_READER
+            elif SPEC_SECTION.match(line):
+                identity = None
+            else:
+                continue
+            openings[offset] = identity
+        spans = list(openings)
+        for start, end in zip(spans, [*spans[1:], len(lines)]):
+            identity = openings[start]
+            if identity in subjects:
+                require(identity not in result, f"{identity}: repeated specification subject")
+                result[identity] = (path, start + 1, "".join(lines[start:end]))
+        require(set(subjects) <= set(result), f"{path}: missing specification subjects "
+                f"{sorted(set(subjects) - set(result))}")
+    return result
+
+
 def declared_effects(sources):
     registry = decode_json(sources[REGISTRY])
     entries = [entry for entry in registry["entries"]
@@ -171,7 +211,10 @@ def text_field(value, subject):
             f"{subject}: expected one nonempty line")
 
 
-def validate_boundaries(mappings, units, sources):
+def validate_boundaries(mappings, units, sources, context_sha256):
+    context_ids = sorted(unit for unit, row in mappings.items() if row.get("disposition") == "context")
+    require(digest("\n".join(context_ids)) == context_sha256,
+            "governing context classification diverges from the independently reviewed set")
     identifiers = set()
     for unit, row in mappings.items():
         kind = row.get("disposition")
@@ -222,10 +265,10 @@ def effect_authority(key):
         "POC_HUMAN_PATH", "POC_MACHINE_PATH", "TAILNET_MOUNT_PREFIX",
         "`${TAILNET_MOUNT_PREFIX}/`", "`${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`"),
         f"{key}: no reviewed route authority")
-    return "Three-Surface POC reader notes", POC_SPEC, SECURITY
+    return POC_READER, POC_SPEC, SECURITY
 
 
-def render(manifest, clauses, units, effects, pins):
+def render(manifest, clauses, specs, units, effects, pins):
     def cell(value):
         return str(value).replace("|", "&#124;").replace("`", "&#96;")
 
@@ -270,25 +313,27 @@ def render(manifest, clauses, units, effects, pins):
     for key, (source, mode, value) in sorted(effects.items()):
         authority, path, constraint = effect_authority(key)
         constrained = f" · [SEC-1](../{constraint})" if constraint else ""
+        authority_title = f"{authority} (line {specs[authority][1]})" if authority in specs else authority
         lines.append(f"| {cell(key)} | {link(source)} | {cell(mode)} · {cell(value)} | "
-                     f"[{authority}](../{path}){constrained} |")
+                     f"[{authority_title}](../{path}){constrained} |")
     lines.extend(("", "## Source pins", "", "| Subject | Exact SHA-256 |", "| --- | --- |"))
     lines.extend(f"| {key} | `{value}` |" for key, value in sorted(pins.items()))
     return "\n".join((*lines, ""))
 
 
-def build(read):
+def build(read, *, context_sha256=REVIEWED_CONTEXT_SHA256):
     manifest = decode_json(read(MANIFEST))
     fields(manifest, ("reviewed_base", "pins", "boundaries", "effects"), "input manifest")
-    require(isinstance(manifest["reviewed_base"], str)
-            and re.fullmatch(r"[0-9a-f]{40}", manifest["reviewed_base"]),
-            "input manifest: expected exact reviewed base")
+    require(manifest["reviewed_base"] == REVIEWED_BASE,
+            "input manifest: reviewed base differs from the exact reviewed reference")
 
     for field in ("pins", "boundaries", "effects"):
         require(isinstance(manifest[field], dict), f"input manifest: {field} must be an object")
     clauses = clause_sources(read)
+    specs = spec_sources(read)
     sources = {path: read(path) for path in PINNED_SOURCE.values()}
     pins = {clause: digest("".join(lines)) for clause, (_, _, lines) in clauses.items()}
+    pins.update({identity: digest(body) for identity, (_, _, body) in specs.items()})
     pins.update({key: digest(sources[path]) for key, path in PINNED_SOURCE.items()})
     check_population(pins, manifest["pins"], "source pins")
     drift = [key for key, value in pins.items() if manifest["pins"][key] != value]
@@ -297,13 +342,13 @@ def build(read):
     units = boundary_units(clauses)
     mappings = manifest["boundaries"]
     check_population(units, mappings, "governing units")
-    validate_boundaries(mappings, units, sources)
+    validate_boundaries(mappings, units, sources, context_sha256)
 
     effects = declared_effects(sources)
     check_population(effects, manifest["effects"], "declared effects")
     for key, authority in manifest["effects"].items():
         require(authority == effect_authority(key)[0], f"{key}: governing declaration mismatch")
-    return render(manifest, clauses, units, effects, pins), len(units) + len(effects)
+    return render(manifest, clauses, specs, units, effects, pins), len(units) + len(effects)
 
 
 def reader(root):
@@ -312,9 +357,9 @@ def reader(root):
     return read
 
 
-def check(read):
+def check(read, *, context_sha256=REVIEWED_CONTEXT_SHA256):
     try:
-        output, count = build(read)
+        output, count = build(read, context_sha256=context_sha256)
         require(read(REGISTER) == output, "generated register is stale; regenerate and review")
     except (InvalidRegister, OSError, UnicodeError, KeyError, TypeError, AttributeError,
             json.JSONDecodeError) as error:
@@ -351,12 +396,24 @@ def selftest_cases():
         MATERIALIZE_TEST: ("it('refuses the foreclosed write with a bounded typed refusal and "
                            "never runs Beads (P-71-Q5)', syntheticTest);\n"),
     }
+    fixture_specs = {
+        "Three-Surface POC reader notes": "## ADDED Requirements\nSynthetic adopted read notes.\n",
+        "POC-REQ-030": "### Requirement: POC-REQ-030 — Synthetic Polaris requirement\n",
+        "POC-REQ-042": "### Requirement: POC-REQ-042 — Synthetic Trajectory requirement\n",
+        "POC-REQ-050": "### Requirement: POC-REQ-050 — Synthetic Orrery requirement\n",
+        "PWB-REQ-011": "### Requirement: PWB-REQ-011 — Synthetic source requirement\n",
+        "PWB-REQ-020": "### Requirement: PWB-REQ-020 — Synthetic machine requirement\n",
+    }
+    data[POC_SPEC] = "".join(list(fixture_specs.values())[:4])
+    data[PWB_SPEC] = "".join(list(fixture_specs.values())[4:])
+    for label, path in PINNED_SOURCE.items():
+        data.setdefault(path, f"Synthetic source for {label}\n")
     fixture_clauses = {clause: next(line for line in data[path].splitlines(keepends=True)
                                     if f"**{clause}" in line)
                        for clause, path in CLAUSES.items()}
     manifest = {
-        "reviewed_base": "1" * 40,
-        "pins": {clause: digest(line) for clause, line in fixture_clauses.items()},
+        "reviewed_base": REVIEWED_BASE,
+        "pins": {key: digest(line) for key, line in {**fixture_clauses, **fixture_specs}.items()},
         "boundaries": {},
         "effects": {f"observer/{key}": "PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT"
                     for key in ("readAuthority", "writeSurface", "databaseAccess", "networkAccess",
@@ -381,25 +438,37 @@ def selftest_cases():
                                          "control": ("refuses the foreclosed write with a bounded typed "
                                                      "refusal and never runs Beads (P-71-Q5)"),
                                      }}
+    context = boundary_keys["VIS-5"]
+    manifest["boundaries"][context] = {"disposition": "context",
+                                       "rationale": "Synthetic reviewed heading summary."}
+    context_sha256 = digest(context)
+
+    def result(inputs):
+        return check(inputs.__getitem__, context_sha256=context_sha256)
+
     data[MANIFEST] = json.dumps(manifest)
-    data[REGISTER], _ = build(data.__getitem__)
-    cases = [("complete fixture and explicit Unknown", check(data.__getitem__) == (17, None)
+    data[REGISTER], _ = build(data.__getitem__, context_sha256=context_sha256)
+    cases = [("complete fixture and explicit Unknown", result(data) == (17, None)
               and "Prose-only · typed enforcement Unknown" in data[REGISTER]
               and "Typed refusal · foreclosed" in data[REGISTER])]
     for name, path, body, wanted in (
         ("new boundary", VISION, data[VISION] + "- No new effect.\n", "scoped sources changed"),
         ("changed evidence", CORE_TEST, data[CORE_TEST] + "changed\n", "scoped sources changed"),
+        ("missing cited requirement", POC_SPEC, data[POC_SPEC].replace("POC-REQ-050", "POC-REQ-098"),
+         "missing specification subjects ['POC-REQ-050']"),
+        ("changed cited requirement", PWB_SPEC, data[PWB_SPEC].replace("Synthetic machine", "Changed machine"),
+         "scoped sources changed; reconcile exact bytes: PWB-REQ-020"),
         ("stale generated bytes", REGISTER, data[REGISTER] + "changed\n", "generated register is stale"),
     ):
         changed = {**data, path: body}
-        count, failure = check(changed.__getitem__)
+        count, failure = result(changed)
         cases.append((name, count == 0 and failure is not None and wanted in failure))
 
     new_boundary = {**data, VISION: data[VISION] + "- No new effect.\n"}
     new_manifest = deepcopy(manifest)
     new_manifest["pins"]["VIS-5"] = digest(fixture_clauses["VIS-5"] + "- No new effect.\n")
     new_boundary[MANIFEST] = json.dumps(new_manifest)
-    count, failure = check(new_boundary.__getitem__)
+    count, failure = result(new_boundary)
     cases.append(("unmapped new unit after source repin", count == 0 and failure is not None
                   and "governing units: missing" in failure))
 
@@ -407,16 +476,34 @@ def selftest_cases():
     new_manifest = deepcopy(manifest)
     new_manifest["pins"]["effect-control"] = digest(no_witness[CORE_TEST])
     no_witness[MANIFEST] = json.dumps(new_manifest)
-    count, failure = check(no_witness.__getitem__)
+    count, failure = result(no_witness)
     cases.append(("missing refusal witness after source repin", count == 0 and failure is not None
                   and "typed refusal witness missing" in failure and CORE_TEST in failure))
 
     changed = dict(data)
     changed[MANIFEST] = data[MANIFEST].replace('"reviewed_base":', '"reviewed_base": "", "reviewed_base":', 1)
-    count, failure = check(changed.__getitem__)
+    count, failure = result(changed)
     cases.append(("duplicate input key", count == 0 and failure == "duplicate JSON key: reviewed_base"))
 
+    changed = {**data, MANIFEST: json.dumps({**manifest, "reviewed_base": "0" * 40})}
+    count, failure = result(changed)
+    cases.append(("rewritten reviewed base", count == 0 and failure is not None
+                  and "reviewed base differs" in failure))
+
+    materialize = data[MATERIALIZE].replace("MATERIALIZE_HUMAN_PATH", "UNRELATED_POST_PATH")
+    new_manifest = deepcopy(manifest)
+    new_manifest["pins"]["materialize-routes"] = digest(materialize)
+    del new_manifest["effects"]["route/POST MATERIALIZE_HUMAN_PATH"]
+    new_manifest["effects"]["route/POST UNRELATED_POST_PATH"] = "P-71-Q5"
+    changed = {**data, MATERIALIZE: materialize, MANIFEST: json.dumps(new_manifest)}
+    count, failure = result(changed)
+    cases.append(("unrelated POST cannot borrow foreclosure", count == 0 and failure is not None
+                  and failure == "route/POST UNRELATED_POST_PATH: no reviewed effect authority"))
+
     trials = (
+        ("relabelled prohibition", "boundaries", first,
+         {"disposition": "context", "rationale": "Improper hiding of a boundary."},
+         "governing context classification diverges"),
         ("missing arm", "boundaries", first, None, "governing units: missing"),
         ("orphan arm", "boundaries", "orphan", manifest["boundaries"][first], "orphan ['orphan']"),
         ("missing prose-only rationale", "boundaries", first,
@@ -439,7 +526,7 @@ def selftest_cases():
         else:
             changed_manifest[section][key] = value
         changed = {**data, MANIFEST: json.dumps(changed_manifest)}
-        count, failure = check(changed.__getitem__)
+        count, failure = result(changed)
         cases.append((name, count == 0 and failure is not None and wanted in failure))
     return cases
 
