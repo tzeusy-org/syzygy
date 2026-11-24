@@ -4,6 +4,10 @@ import type { WorkItemsResult } from './work-items.js';
 
 const DOLT_REVISION = /^[0-9a-v]{32}$/;
 
+export function isDoltRevision(value: unknown): value is string {
+  return typeof value === 'string' && DOLT_REVISION.test(value);
+}
+
 export const DEPENDENCY_EDGE_TYPES = ['blocks', 'parent-child', 'discovered-from', 'related', 'relates-to', 'tracks'] as const;
 type DependencyEdgeType = (typeof DEPENDENCY_EDGE_TYPES)[number];
 
@@ -61,7 +65,7 @@ export function observeWorkItemDependencies(
   workItems: WorkItemsResult,
   runQuery: (sql: string) => string,
 ): WorkItemDependencyObservation {
-  if (workItems.kind === 'unknown' || !DOLT_REVISION.test(workItems.provenance.revision)) {
+  if (workItems.kind === 'unknown' || !isDoltRevision(workItems.provenance.revision)) {
     return { kind: 'unknown', reason: 'work-item-revision-unavailable' };
   }
 

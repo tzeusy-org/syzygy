@@ -12,6 +12,8 @@ function workItemWitness(revision: string): Record<string, unknown> {
   return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null };
 }
 
+const ITEM_REVISION = 'adpe9hi1llmdh05mr8aja5kagtu36eli';
+
 describe('same-revision dependency observation (POC-REQ-062)', () => {
   const revisionA = '0123456789abcdefghijklmnopqrstuv';
   const revisionB = '1123456789abcdefghijklmnopqrstuv';
@@ -26,7 +28,7 @@ describe('same-revision dependency observation (POC-REQ-062)', () => {
     revision: null, issue_id: 'bu-open', depends_on_issue_id: 'bu-open', type: 'blocks', has_external: 0, has_wisp: 0,
   };
 
-  function observe(dependencyResponse: () => string, workItemRows = [item]) {
+  function observe(dependencyResponse: () => string, workItemRows: readonly Record<string, unknown>[] = [workItemWitness(revisionA), item]) {
     const runQuery = vi.fn((_repoRoot: string, sql: string) =>
       sql.includes('FROM issues ') ? JSON.stringify(workItemRows) : dependencyResponse(),
     );
@@ -84,10 +86,18 @@ describe('same-revision dependency observation (POC-REQ-062)', () => {
     expect(absent.workItems).toEqual({ kind: 'unknown', reason: 'work-item observation returned no revision witness' });
     expect(absent.dependencies).toEqual({ kind: 'unknown', reason: 'work-item-revision-unavailable' });
     expect(absent.calls).toHaveLength(1);
-    const invalid = observe(() => '[]', [{ ...item, revision: 'invalid-fixture-revision' }]);
-    expect(invalid.workItems.kind).toBe('observed');
-    expect(invalid.dependencies).toEqual({ kind: 'unknown', reason: 'work-item-revision-unavailable' });
-    expect(invalid.calls).toHaveLength(1);
+  });
+
+  it.each([
+    ['nonempty without a revision witness', [item], 'work-item observation returned no revision witness'],
+    ['invalid work-item revision', [workItemWitness('invalid-fixture-revision'), { ...item, revision: 'invalid-fixture-revision' }], 'work-item observation returned a malformed revision'],
+    ['duplicate revision witness', [workItemWitness(revisionA), item, workItemWitness(revisionA)], 'work-item observation returned a malformed revision witness'],
+    ['disagreement between row and revision witness', [workItemWitness(revisionB), item], 'work-item observation spanned more than one Dolt revision'],
+  ])('refuses a first statement %s and skips dependency observation', (_case, rows, reason) => {
+    const result = observe(() => JSON.stringify([witness(revisionA)]), rows);
+    expect(result.workItems).toEqual({ kind: 'unknown', reason });
+    expect(result.dependencies).toEqual({ kind: 'unknown', reason: 'work-item-revision-unavailable' });
+    expect(result.calls).toHaveLength(1);
   });
 });
 
@@ -97,8 +107,9 @@ describe('work-items observer', () => {
     const runQuery = vi.fn((_repoRoot: string, sql: string) => {
       calls.push(sql);
       return rowsResponse([
+        workItemWitness(ITEM_REVISION),
         {
-          revision: 'adpe9hi1llmdh05mr8aja5kagtu36eli',
+          revision: ITEM_REVISION,
           id: 'bu-000rb',
           title: 'Sample item',
           status: 'closed',
@@ -135,8 +146,9 @@ describe('work-items observer', () => {
     const runQuery = vi.fn((_repoRoot: string, sql: string) => {
       expect(sql).toContain("id LIKE 'bu-%'");
       return rowsResponse([
+        workItemWitness(ITEM_REVISION),
         {
-          revision: 'rev1',
+          revision: ITEM_REVISION,
           id: 'other-1',
           title: 'wrong prefix',
           status: 'open',
@@ -155,7 +167,7 @@ describe('work-items observer', () => {
       capturedAt: '2026-08-30T00:00:00Z',
       runQuery,
     });
-    expect(result.kind).toBe('unknown');
+    expect(result).toEqual({ kind: 'unknown', reason: 'work-item observation returned an out-of-prefix identifier' });
   });
 
   it('never touches the passive JSONL export or any derived file (POC-REQ-012)', () => {
@@ -174,8 +186,9 @@ describe('work-items observer', () => {
         // deliberately disagrees with what a mutated export would say, to
         // prove the observer's only source is the injected query channel
         rowsResponse([
+          workItemWitness(ITEM_REVISION),
           {
-            revision: 'rev-live',
+            revision: ITEM_REVISION,
             id: 'bu-divergent',
             title: 'from Dolt, not JSONL',
             status: 'in_progress',
@@ -216,7 +229,7 @@ describe('work-items observer', () => {
   });
 
   it('distinguishes an observed-empty result from Unknown', () => {
-    const runQuery = vi.fn(() => rowsResponse([workItemWitness('rev-empty')]));
+    const runQuery = vi.fn(() => rowsResponse([workItemWitness(ITEM_REVISION)]));
     const result = observeWorkItems({
       repoRoot: '/repo',
       beadPrefix: 'bu',
@@ -226,7 +239,7 @@ describe('work-items observer', () => {
     expect(result.kind).toBe('observed');
     if (result.kind !== 'observed') throw new Error('unreachable');
     expect(result.items).toEqual([]);
-    expect(result.provenance.revision).toBe('rev-empty');
+    expect(result.provenance.revision).toBe(ITEM_REVISION);
     expect(runQuery).toHaveBeenCalledExactlyOnceWith('/repo', expect.stringContaining("FROM issues AS OF 'HEAD'"));
   });
 
@@ -251,7 +264,7 @@ describe('work-items observer', () => {
       resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
     };
     const ITEM_ROW = {
-      revision: 'rev-t', id: 'bu-t1', status: 'open', issue_type: 'task', priority: 2,
+      revision: ITEM_REVISION, id: 'bu-t1', status: 'open', issue_type: 'task', priority: 2,
       created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T01:00:00Z', closed_at: null,
     };
 
@@ -262,7 +275,7 @@ describe('work-items observer', () => {
         capturedAt: '2026-08-30T02:00:00Z',
         runQuery: (_root, sql) => {
           calls.push(sql);
-          return rowsResponse(rows.length === 0 ? [workItemWitness('rev-empty')] : rows);
+          return rowsResponse([workItemWitness(ITEM_REVISION), ...rows]);
         },
       });
     }

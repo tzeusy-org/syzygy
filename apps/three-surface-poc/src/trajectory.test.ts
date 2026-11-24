@@ -7,7 +7,7 @@ import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REA
 
 import { renderTrajectoryPage, renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
-import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, workItemRevisionWitness } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, fixtureWorkItemQuery, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -321,7 +321,7 @@ describe('Trajectory', () => {
       repositoryRevision: revision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@empty', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: () => JSON.stringify([workItemRevisionWitness('dolt-empty')]),
+      runWorkItemQuery: fixtureWorkItemQuery([]),
     });
     expect(emptyObservedModel.trajectory.kind).toBe('observed');
     const emptyHtml = renderTrajectoryPage(emptyObservedModel);
@@ -355,7 +355,7 @@ describe('Trajectory', () => {
     } as const;
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-worker-change-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -374,8 +374,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     expect(model.workerChange.kind).toBe('observed');
     if (model.workerChange.kind !== 'observed') throw new Error('unreachable');
@@ -390,8 +389,7 @@ describe('Trajectory', () => {
       repositoryRevision: changedRevision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const intentOf = (m: PocModel) => m.trajectory.answers.find((answer) => answer.id === 'intent');
     expect(intentOf(model)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 1, materialized: 1 } });
@@ -447,7 +445,7 @@ describe('Trajectory', () => {
     } as const;
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-verified-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -482,8 +480,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf },
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
       testArtifactRecord,
     });
     // Round-2 note 2: a passing, binding record with no provenance (the
@@ -535,7 +532,7 @@ describe('Trajectory', () => {
     const crowdedModel = buildPocModel({
       seeds: alternateSeeds, repoRoot, repositoryRevision: changedRevision, observerRevision: revision,
       evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf }, materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(crowded) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(crowded),
       testArtifactRecord: reported,
     });
     if (crowdedModel.trajectory.kind !== 'observed') throw new Error('unreachable');
@@ -562,7 +559,7 @@ describe('Trajectory', () => {
 
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-demo-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -573,7 +570,7 @@ describe('Trajectory', () => {
         closed_at: null,
       },
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-unrelated-1',
         title: 'Unrelated backlog item',
         status: 'open',
@@ -599,8 +596,7 @@ describe('Trajectory', () => {
         attribution: 'test-actor',
         origin: 'created',
       },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const html = renderTrajectoryPage(model);
 
@@ -633,8 +629,7 @@ describe('Trajectory', () => {
       repositoryRevision: changedRevision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@demo-none', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const noneHtml = renderTrajectoryPage(noneModel);
     expect(noneHtml).not.toContain('class="demo-callout');
@@ -665,7 +660,7 @@ describe('Trajectory', () => {
         attribution: 'test-actor',
         origin: 'created',
       },
-      runWorkItemQuery: () => JSON.stringify(rows),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     expect(model.materializedBeadId).toBe('bu-excluded-demo');
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
@@ -735,9 +730,8 @@ describe('Trajectory', () => {
         throw new Error('refused');
       },
       junk: () => 'not json',
-      empty: (_root, sql) => (sql.includes('WHERE id LIKE') ? '[]' : JSON.stringify([{ revision: 'dolt-empty' }])),
-      rows: (_root, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify([fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null)]) : JSON.stringify([{ revision: 'dolt-rows' }]),
+      empty: fixtureWorkItemQuery([]),
+      rows: fixtureWorkItemQuery([fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null)]),
     };
     const seedSets = { butlers: BUTLERS_POC_SEEDS, badPrefix: { ...BUTLERS_POC_SEEDS, beadPrefix: 'Bad Prefix!' } };
     const kinds = new Set<string>();
@@ -1084,7 +1078,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
 
   it('renders the chain count Unknown, with reason and route, when the materialized item\'s worker change is unobserved', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
-    const rows = [{ revision: 'dolt-rev-2', id: 'bu-unobserved-1', title: 'Materialized work item', status: 'open', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
+    const rows = [{ revision: FIXTURE_DOLT_REVISION, id: 'bu-unobserved-1', title: 'Materialized work item', status: 'open', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
     const model = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
       repoRoot,
@@ -1092,7 +1086,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@chain-unknown', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: { beadId: 'bu-unobserved-1', externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization', targetRepoRoot: repoRoot, createdAt: '2026-08-30T00:00:00Z', doltRevisionAtCreation: 'dolt-rev-1', attribution: 'test-actor' },
-      runWorkItemQuery: (_repoRoot, sql) => (sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }])),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     expect(model.workerChange.kind).toBe('unknown');
     expect(model.trajectory.answers.find((answer) => answer.id === 'intent')).toMatchObject({ reconciliationChain: { members: { state: 'unknown', disclosure: 'region:trajectory-chain-membership' } } });

@@ -6,7 +6,7 @@ import { isRecord } from '@syzygy/support';
 import { unknown, type PocUnknown } from './epistemic.js';
 import type { PocProvenance } from './model.js';
 import { resolutionRoute, type ResolutionRoutes } from './project-shape-model.js';
-import { observeWorkItemDependencies, type WorkItemDependencyObservation } from './work-item-dependencies.js';
+import { isDoltRevision, observeWorkItemDependencies, type WorkItemDependencyObservation } from './work-item-dependencies.js';
 
 const WORK_ITEM_STATUSES = [
   'open',
@@ -187,7 +187,7 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
   let doltRevision: string | undefined;
   let sawRevisionWitness = false;
   for (const raw of rows as readonly unknown[]) {
-    if (!isRecord(raw) || typeof raw.revision !== 'string' || raw.revision.length === 0) {
+    if (!isRecord(raw) || !isDoltRevision(raw.revision)) {
       return { kind: 'unknown', reason: 'work-item observation returned a malformed revision' };
     }
     doltRevision ??= raw.revision;
@@ -227,7 +227,7 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
       governedBy: governingIntentUnknown(),
     });
   }
-  if (doltRevision === undefined) {
+  if (doltRevision === undefined || !sawRevisionWitness) {
     return { kind: 'unknown', reason: 'work-item observation returned no revision witness' };
   }
 
