@@ -113,6 +113,21 @@ def main() -> int:
             'packages/polaris-dossier/src/launch-clone.ts': {'MAX_REF_BYTES': 4096, 'MAX_FILE_BYTES': 16777216, 'requirement': 'REQ-polaris-generation-047 (launch reads)'},
             'packages/polaris-dossier/src/verify-text-run.ts': {'VERIFY_TEXT_MAX_BYTES': 4194304, 'requirement': 'REQ-polaris-generation-033 (verify --text)'},
         },
+        'classes': {
+            'already-bounded': 'read by the version 2.10 reader rule or an equivalent descriptor-bounded loop before this bead',
+            'bounded-code-stated': 'read by the reader rule since this bead, under a bound the code states and no requirement does yet (syzygy-nffo)',
+            'in-scope': 'carried from the 3efd-80 record, where it meant a run-tree read that bead bounded (through readRecord, REQ-035 2.18); bounded, not open work',
+            'not-a-file-read': 'a match that reads no file: a comment or a directory listing',
+            'not-agent-writable': 'a stat-then-read of a file no agent session can write when it is read; recorded, not changed',
+            'not-run-tree': 'carried from the 3efd-80 record: a read outside the run tree, with its reason',
+            'residual': 'carried from the 3efd-80 record: a read left unbounded, with its reason',
+        },
+        'preExisting': [
+            'R83 review note 4: O_NOFOLLOW refuses a link at the last component only. In clone-head.ts and launch-clone.ts a .git or refs '
+            'directory swapped for a link after the .git lstat is still followed, and clone-head.ts fs.existsSync(loose) follows a link (a '
+            'dangling link at the loose ref falls through to packed-refs). The byte bound holds on every path. Unchanged from main before this '
+            'bead; not repaired here.',
+        ],
         'rows': rows,
     }
     print(json.dumps(record, indent=1))

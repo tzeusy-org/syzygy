@@ -144,6 +144,27 @@ describe('launch: the clone snapshot reads HEAD, references, packed-refs and the
     }
   });
 
+  // R83 review note 1: before this reader read by the rule it refused a file that grew while it was read, within its limit too; it still does.
+  it('refuses a HEAD grown within 4,096 bytes after its size was taken, as grown while being read', () => {
+    const { root, gitDir } = clone({ HEAD: `${A}\n` });
+    const head = path.join(gitDir, 'HEAD');
+    expect(grownAfterFstat(head, 41, () => readCloneSnapshot(root))).toEqual({ ok: false, reason: `${head} grew while being read` });
+  });
+
+  // R83 review note 3: a file removed between the existence look and the open is absent, never a refusal.
+  it('treats packed-refs removed after the lstat that found it as absent', () => {
+    const { root, gitDir } = clone({ HEAD: `${A}\n`, config: '[core]\n' });
+    const packed = path.join(gitDir, 'packed-refs');
+    const regular = path.join(tempDir('syzygy-clone-ref-regular-'), 'file');
+    fs.writeFileSync(regular, `${A} refs/heads/main\n`);
+    // The race, staged: the lstat sees a regular file, as it would had packed-refs been removed just after it.
+    const restore = patchFs('lstatSync', (lstatSync) => ((p: fs.PathLike, ...rest: unknown[]) =>
+      (lstatSync as (...args: unknown[]) => fs.Stats)(path.resolve(String(p)) === packed ? regular : p, ...rest)) as typeof fs.lstatSync);
+    let read: ReturnType<typeof readCloneSnapshot>;
+    try { read = readCloneSnapshot(root); } finally { restore(); }
+    expect(read).toMatchObject({ ok: true });
+  });
+
   it('treats an absent packed-refs as none, opening nothing for it', () => {
     const { root } = clone({ HEAD: `${A}\n`, config: '[core]\n' });
     expect(readCloneSnapshot(root)).toMatchObject({ ok: true });
@@ -181,6 +202,13 @@ describe('verify: the --text file is read by the reader rule', () => {
   it('refuses a text grown past 4,194,304 bytes after its size was taken', () => {
     const file = at(sparse(TEXT_BOUND));
     expect(grownAfterFstat(file, TEXT_BOUND, () => readVerifyText(file))).toEqual({ reason: `${file} is larger than the 4194304-byte text bound` });
+  });
+
+  // R83 review note 2: a link that loops is the open's own ELOOP where the reader follows links; only a no-follow read makes it no regular file.
+  it('names the open\'s own ELOOP for a link that loops, as the following reader always did', () => {
+    const file = path.join(tempDir('syzygy-verify-text-bound-'), 'loop.md');
+    fs.symlinkSync(file, file);
+    expect(readVerifyText(file)).toEqual({ reason: `the text ${file} cannot be read (ELOOP)` });
   });
 
   it('names the open\'s own error for an absent text', () => {

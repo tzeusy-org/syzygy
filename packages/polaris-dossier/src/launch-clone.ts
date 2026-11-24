@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
+import { GrewWhileReadError, NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
 import { carriesUserInformation } from './launch-identity.js';
 
 /** What a launch reads of the operator's clone, in process, before any object (REQ-polaris-generation-047's closed list, which the
@@ -76,7 +76,8 @@ const code = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?
 
 /** One file's bytes as text, or null when it does not exist: read by the reader rule of version 2.10 (`readBoundedFile`, syzygy-3efd.83),
  * one open without blocking and without following a link at the path, the type and size taken from that descriptor, and at most one byte
- * past `limit` read, so a FIFO, a link or a file grown past the limit after its size was taken is refused, never read whole. The limits are
+ * past that size read (`refuseGrowth`), so a FIFO, a link or a file grown after its size was taken is refused, never read whole: past the
+ * limit as larger than it, within it as grown while being read, as this reader refused it before it read by the rule. The limits are
  * this reader's own, stated here and in no requirement yet (syzygy-nffo states them in REQ-polaris-generation-047). */
 function readBounded(file: string, limit: number): { readonly text: string } | { readonly reason: string } | null {
   // Whether the entry exists is examined first, so an absent file is never opened (the closed list of REQ-polaris-generation-047 names
@@ -87,10 +88,12 @@ function readBounded(file: string, limit: number): { readonly text: string } | {
     return { reason: `${file} cannot be read (${code(cause)})` };
   }
   try {
-    return { text: readBoundedFile(file, limit, { followLink: false }).toString('utf8') };
+    return { text: readBoundedFile(file, limit, { followLink: false, refuseGrowth: true }).toString('utf8') };
   } catch (cause) {
     if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file; it is refused, never followed` };
     if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };
+    if (cause instanceof GrewWhileReadError) return { reason: `${file} grew while being read` };
+    // A file removed between the existence look and the open is absent, as it would have been had the look come after the removal.
     return code(cause) === 'ENOENT' ? null : { reason: `${file} cannot be read (${code(cause)})` };
   }
 }

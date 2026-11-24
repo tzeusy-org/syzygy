@@ -2,6 +2,7 @@
 // each through the version 2.10 reader rule (readBoundedFile) under its code-stated bound, the clone readers without following a link.
 // Usage: node clone_ref_bounds_mutation.mjs <worktree> <out.json> <scratch dir>
 // Copied from docs/evidence/syzygy-3efd-80/run_tree_bounds_mutation.mjs; only the test files, the mutants and this header differ.
+// Five mutants added after review R83 (docs/reviews/syzygy-3efd-83/R83-REVIEW-RAW.md, notes 1 to 3).
 // Each mutant replaces one fragment that occurs exactly once in its file, runs the test files below, and restores the source in `finally`.
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -42,15 +43,22 @@ const MUTANTS = [
   ['head-stat-then-read', HEAD, `return { text: ${NEW_CLONE} };`,
     "{ const stats = fs.lstatSync(file); if (!stats.isFile()) return { reason: `${file} is not a regular file` }; if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` }; return { text: fs.readFileSync(file, 'utf8') }; }"],
   // launch: the clone snapshot reader.
-  ['launch-follows-link', LAUNCH, '{ followLink: false }', '{ followLink: true }'],
+  ['launch-follows-link', LAUNCH, '{ followLink: false, refuseGrowth: true }', '{ followLink: true, refuseGrowth: true }'],
   ['launch-bound-wider', LAUNCH, 'readBoundedFile(file, limit,', 'readBoundedFile(file, limit + 1,'],
   ['launch-ref-bound-wider', LAUNCH, 'const MAX_REF_BYTES = 4096;', 'const MAX_REF_BYTES = 4097;'],
   ['launch-file-bound-wider', LAUNCH, 'const MAX_FILE_BYTES = 16 * 1024 * 1024;', 'const MAX_FILE_BYTES = 16 * 1024 * 1024 + 1;'],
   ['launch-not-regular-words', LAUNCH, 'if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file; it is refused, never followed` };', ''],
   ['launch-past-bound-words', LAUNCH, 'if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };', ''],
   ['launch-absent-opened', LAUNCH, 'if (fs.lstatSync(file, { throwIfNoEntry: false }) === undefined) return null;', ''],
-  ['launch-stat-then-read', LAUNCH, `return { text: ${NEW_CLONE} };`,
+  ['launch-stat-then-read', LAUNCH, "return { text: readBoundedFile(file, limit, { followLink: false, refuseGrowth: true }).toString('utf8') };",
     "{ const stats = fs.lstatSync(file); if (!stats.isFile()) return { reason: `${file} is not a regular file; it is refused, never followed` }; if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` }; return { text: fs.readFileSync(file, 'utf8') }; }"],
+  // R83 review notes 1 to 3: growth within the limit refused by the launch reader alone, ELOOP as the open's own error where links are
+  // followed, and a file removed after the existence look read as absent.
+  ['reader-growth-accepted', READ, 'if (refuseGrowth && total > stats.size) throw new GrewWhileReadError();', ''],
+  ['launch-growth-accepted', LAUNCH, '{ followLink: false, refuseGrowth: true }', '{ followLink: false, refuseGrowth: false }'],
+  ['launch-grew-words', LAUNCH, 'if (cause instanceof GrewWhileReadError) return { reason: `${file} grew while being read` };', ''],
+  ['reader-eloop-unguarded', READ, 'if (!followLink && (cause as NodeJS.ErrnoException)', 'if ((cause as NodeJS.ErrnoException)'],
+  ['launch-removed-after-look-refused', LAUNCH, "return code(cause) === 'ENOENT' ? null : {", 'return {'],
   // verify: the --text file.
   ['verify-bound-wider', VERIFY, 'export const VERIFY_TEXT_MAX_BYTES = 4 * 1024 * 1024;', 'export const VERIFY_TEXT_MAX_BYTES = 4 * 1024 * 1024 + 1;'],
   ['verify-no-follow', VERIFY, 'readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES)', 'readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES, { followLink: false })'],

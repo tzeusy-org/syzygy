@@ -32,21 +32,35 @@ export class PastBoundError extends BoundedJsonError {
  * size past the bound, before any byte is read; and at most `maxBytes + 1` bytes are read from the descriptor, so a file grown after its
  * size was taken is refused too. Throws `NotARegularFileError`, `BoundedJsonError('byte-limit')` or the open's own error. */
 export function readBoundedFile(file: string, maxBytes: number, options: BoundedReadOptions = {}): Buffer {
-  return readRegularFile(file, () => maxBytes, options.followLink ?? true);
+  return readRegularFile(file, () => maxBytes, options.followLink ?? true, options.refuseGrowth ?? false);
+}
+
+/** Why a read with `refuseGrowth` refused a regular file: more bytes were read than the descriptor's size gave, within the bound. */
+export class GrewWhileReadError extends Error {
+  constructor() {
+    super('the file grew while being read');
+    this.name = 'GrewWhileReadError';
+  }
 }
 
 /** How a bounded read treats a symbolic link at the path itself. By default it follows it, as every run-tree reader does; with `followLink`
  * false (syzygy-3efd.83, the readers of an agent-writable clone's references and configuration, which refuse a link and never follow it)
  * the open refuses a link at the last component, and that refusal is a `NotARegularFileError`, as a link is no regular file. */
-export interface BoundedReadOptions { readonly followLink?: boolean }
+export interface BoundedReadOptions {
+  readonly followLink?: boolean;
+  /** With `refuseGrowth` (syzygy-3efd.83, the launch reader of the clone, which refused it before it read by this rule), at most one byte
+   * past the descriptor's size is read, and a file that yields more bytes than that size is refused as `GrewWhileReadError`, even within
+   * the bound; past the bound it is still a `PastBoundError`. By default growth within the bound is read, as every other reader reads it. */
+  readonly refuseGrowth?: boolean;
+}
 
 /** The bytes of the regular file at `file`, read by the same rule with its own size, as its opened descriptor gives it, for the bound: for
  * a file no stated bound covers (close's digest of every stored file). A file grown after its size was taken is refused. */
 export function readFileAsSized(file: string): Buffer {
-  return readRegularFile(file, (size) => size, true);
+  return readRegularFile(file, (size) => size, true, false);
 }
 
-function readRegularFile(file: string, boundOf: (size: number) => number, followLink: boolean): Buffer {
+function readRegularFile(file: string, boundOf: (size: number) => number, followLink: boolean, refuseGrowth: boolean): Buffer {
   // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open. O_NOFOLLOW, where asked: a link at
   // the path is refused by the open itself (ELOOP), so no link swapped in after any earlier look at the path is followed.
   let fd: number;
@@ -61,7 +75,7 @@ function readRegularFile(file: string, boundOf: (size: number) => number, follow
     if (!stats.isFile()) throw new NotARegularFileError();
     const maxBytes = boundOf(stats.size);
     if (stats.size > maxBytes) throw new PastBoundError(maxBytes);
-    const limit = maxBytes + 1;
+    const limit = (refuseGrowth ? stats.size : maxBytes) + 1;
     let buffer = Buffer.allocUnsafe(Math.min(stats.size + 1, limit));
     let total = 0;
     for (;;) {
@@ -76,6 +90,7 @@ function readRegularFile(file: string, boundOf: (size: number) => number, follow
       total += read;
     }
     if (total > maxBytes) throw new PastBoundError(maxBytes);
+    if (refuseGrowth && total > stats.size) throw new GrewWhileReadError();
     return buffer.subarray(0, total);
   } finally {
     fs.closeSync(fd);
