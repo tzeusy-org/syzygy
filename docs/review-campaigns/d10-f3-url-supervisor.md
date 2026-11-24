@@ -57,6 +57,7 @@
 - `F3-TERMINAL-READ-OPENING-AUTHORITY-REVIEW-RAW\.md`
 - `F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW\.md`
 - `F3-SOURCE-CENSUS-AUTHORITY-REVIEW-RAW\.md`
+- `F3-TERMINAL-STATE-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -199,3 +200,5 @@
 [Observed] The manifest remainder authority review records `PASS` for `a77a79e99` (F3-MANIFEST-REMAINDER-AUTHORITY-REVIEW-RAW.md:1). A-174 preserves the bound reader’s fresh authority and named-store checks, the original time limit, and the post-screen release check. The producer and cold-restore clock cases both detect the prior implementation. [Unknown] Native Resume closure.
 
 [Observed] The source census authority review records `PASS` for `8a094f393` (F3-SOURCE-CENSUS-AUTHORITY-REVIEW-RAW.md:1). A-175 keeps the pinned descriptor walk and the original time limit. The focused controls detected duplicate authority sampling, late release and missing withdrawal checks after object I/O. [Unknown] Native Resume closure.
+
+[Observed] The terminal state authority review records `PASS` for `33b41df35` (F3-TERMINAL-STATE-AUTHORITY-REVIEW-RAW.md:1). A-176 shares the post-census sample with the immediate first private state read. The executable controls detect a repeated sample, a missing check before client reads, and sharing after the caller yields. [Unknown] Hosted native Resume closure.

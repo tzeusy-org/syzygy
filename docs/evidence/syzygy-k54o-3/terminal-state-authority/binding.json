@@ -1,0 +1,72 @@
+{
+  "subjectCommit": "33b41df35e95fbacd45a8d4944ef8e8b29c8af0f",
+  "baseCommit": "1e08443b268f56cae95ace12c58065eff3433a75",
+  "binaryDeltaSha256": "b96b068a94f4e471cc223d94dfb3a4aceb687d016c21cf933c1871239cea210a",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-TERMINAL-STATE-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "14a96d71b469ff0f2986e420e4850743cf25fda768d4bfedd8f3be5d8687a734"
+  },
+  "hostedPredecessor": {
+    "subjectCommit": "91555323be8a376ff06442ab4407a92bbd310e2f",
+    "workflowRun": 45296577095,
+    "job": 138119210575,
+    "logSha256": "ebc9c497b2e8c8d47614f7ce47e339182895b46603401d7348ee623f60b8a7cd",
+    "firstInterruptedTerminalRead": {
+      "outcome": "refused",
+      "elapsedMilliseconds": 5268.072587999981,
+      "asyncAuthorityAccepted": 6,
+      "asyncAuthorityMilliseconds": 2488.617065000115,
+      "pairedSamplesAccepted": 2,
+      "detachedRead": "accepted"
+    }
+  },
+  "focused": {
+    "fileCounts": {
+      "packages/polaris-dossier/src/url-machine-store.test.ts": 85,
+      "packages/polaris-dossier/src/url-run-machine.test.ts": 7,
+      "packages/polaris-dossier/src/url-machine-lifecycle.test.ts": 36
+    },
+    "passed": 128,
+    "selected": 128,
+    "typecheck": "passed",
+    "suiteLogSha256": {
+      "focused.log": "e0277a81efb4d01d3829bf9f64096c280ffa92d413f1af4d7dc0ecbefe1179dd",
+      "lifecycle.log": "5ab75744b56d885967a436772f4596956f68ede6d0c6addee9129070a0965306",
+      "typecheck.log": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    "controls": [
+      {
+        "name": "repeat-entry-sample",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "const entry = shareTerminalEntry ? 'terminal-state' : 'full';",
+        "new": "const entry = 'full';",
+        "test": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "checks the complete terminal read within five seconds",
+        "failed": 2,
+        "logSha256": "19aae2c5bfc5abb46b2a802252978eacf808ce9e1f66325c8c1094e448cdb758"
+      },
+      {
+        "name": "missing-async-exit",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "const value = await promise;\n          if (currentAsync === undefined || staging !== undefined) checkWork();\n          else await checkAsync(currentAsync);",
+        "new": "const value = await promise;\n          if (currentAsync === undefined || staging !== undefined) checkWork();\n          else if (entryAuthority === 'full') await checkAsync(currentAsync);",
+        "test": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "withholds client and projection reads when async authority is withdrawn while reading terminal state",
+        "failed": 1,
+        "logSha256": "773fff983efbc9d002f35d19406d99abc072285db03eaadfeff706f177e9f454"
+      },
+      {
+        "name": "share-after-callback-yields",
+        "path": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "state: async () => (await stateSnapshot()).state, stateSnapshot, write });\n        shareTerminalEntry = false;\n        await operating;",
+        "new": "state: async () => (await stateSnapshot()).state, stateSnapshot, write });\n        await operating;",
+        "test": "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "selector": "resamples async authority before a delayed terminal state read",
+        "failed": 1,
+        "logSha256": "0f2e0e8aab695d85d581ad3b2ea938bfe30f91ce0c7b7750f843729c0bbd7a1d"
+      }
+    ]
+  },
+  "nativeSuccessorCompletion": "Unknown"
+}
