@@ -1,0 +1,220 @@
+{
+  "subjectCommit": "2446c64edb7bb9e0c89169bddd129efca36cad65",
+  "workflowRun": 45413500931,
+  "job": 138514997598,
+  "conclusion": "failure",
+  "logSha256": "bd052194f6b5bc424f7d56780f8801b3787703a066d8d8dd4c6c36b8341c2e4d",
+  "completedNativeCases": [
+    "complete",
+    "delivery-stop"
+  ],
+  "failedNativeCases": [
+    "stop-resume",
+    "eligible-stop-resume"
+  ],
+  "observations": [
+    {
+      "marker": "owned native resume failure",
+      "observation": {
+        "scenario": "stop-resume",
+        "phase": "verify-resumed-result",
+        "coldFinals": 0,
+        "latestRecoveryChecks": [
+          {
+            "phase": "resumed-render",
+            "initialRemainingMs": 59704,
+            "elapsedMs": 53085.41892700002,
+            "remainingMs": 6618,
+            "admission": {
+              "entryMs": 32144.91549299995,
+              "entryRemainingMs": 27559,
+              "outcome": "accepted",
+              "settledMs": 51730.789745999966
+            },
+            "artifactAuthority": {
+              "calls": 79,
+              "totalMs": 23335.292290000827
+            },
+            "outcome": "rendered",
+            "producerRefusal": false
+          },
+          {
+            "phase": "resumed-exit",
+            "exit": 1,
+            "failure": "role-ended",
+            "roles": [
+              {
+                "role": "author",
+                "outcome": "Unknown"
+              },
+              {
+                "role": "inventory",
+                "outcome": "Unknown"
+              },
+              {
+                "role": "fidelity",
+                "outcome": "Unknown"
+              },
+              {
+                "role": "design",
+                "outcome": "stopped",
+                "exitCode": null,
+                "signal": "SIGTERM"
+              }
+            ]
+          }
+        ],
+        "bootstrap": {
+          "restore-plans": {
+            "startedMs": 321825.260004,
+            "settledMs": 332287.905311,
+            "outcome": "accepted"
+          },
+          "load-renderer": {
+            "startedMs": 332595.170661,
+            "settledMs": 332878.217304,
+            "outcome": "accepted"
+          },
+          "create-origins": {
+            "startedMs": 333202.716424,
+            "settledMs": 349214.436496,
+            "outcome": "accepted"
+          },
+          "restore-products": {
+            "startedMs": 352311.450315,
+            "settledMs": 513417.33349,
+            "outcome": "accepted"
+          },
+          "start-sessions": {
+            "startedMs": 515259.508602,
+            "settledMs": 566883.121632,
+            "outcome": "accepted"
+          },
+          "create-machine": {
+            "startedMs": 520942.250967,
+            "settledMs": 565029.499818,
+            "outcome": "accepted"
+          },
+          "open-store": {
+            "startedMs": 522511.36422,
+            "settledMs": 525408.064749,
+            "outcome": "accepted"
+          }
+        },
+        "latestStoreSteps": [
+          {
+            "kind": "terminal-read",
+            "startedMs": 553858.111876,
+            "runRemainingMs": 6830824,
+            "asyncAuthority": {
+              "started": 5,
+              "accepted": 5,
+              "refused": 0,
+              "rejected": 0,
+              "totalMs": 1458.8570320000872
+            },
+            "currentChecks": 2,
+            "currentRefusals": 0,
+            "read": "accepted",
+            "settledMs": 557340.483499,
+            "outcome": "accepted"
+          },
+          {
+            "kind": "allocation",
+            "count": 8,
+            "startedMs": 558366.186701,
+            "runRemainingMs": 6826315,
+            "asyncAuthority": {
+              "started": 6,
+              "accepted": 6,
+              "refused": 0,
+              "rejected": 0,
+              "totalMs": 1859.275982999825
+            },
+            "settledMs": 562634.296435,
+            "outcome": "accepted"
+          }
+        ]
+      }
+    },
+    {
+      "marker": "owned eligible stop pending",
+      "observation": {
+        "phase": "supervised-resume",
+        "settledOrdinaryRoles": [
+          "author",
+          "inventory",
+          "fidelity",
+          "design"
+        ],
+        "designForwards": 5,
+        "finalProductAssertions": 3,
+        "liveFinals": 2,
+        "coldFinals": 0,
+        "cutTaken": true,
+        "resumeChecks": 2,
+        "resumeBootstrap": {
+          "restore-plans": {
+            "startedMs": 963207.681071,
+            "settledMs": 978981.6826,
+            "outcome": "accepted"
+          },
+          "load-renderer": {
+            "startedMs": 979514.304789,
+            "settledMs": 979832.31022,
+            "outcome": "accepted"
+          },
+          "create-origins": {
+            "startedMs": 980383.854545,
+            "settledMs": 1009188.73385,
+            "outcome": "accepted"
+          },
+          "restore-products": {
+            "startedMs": 1014587.78652
+          }
+        }
+      }
+    },
+    {
+      "marker": "owned native resume failure",
+      "observation": {
+        "scenario": "eligible-stop-resume",
+        "phase": "verify-resumed-result",
+        "coldFinals": 0,
+        "latestRecoveryChecks": [
+          {
+            "phase": "resumed-exit",
+            "exit": 1,
+            "failure": "Unknown",
+            "roles": []
+          }
+        ],
+        "bootstrap": {
+          "restore-plans": {
+            "startedMs": 963207.681071,
+            "settledMs": 978981.6826,
+            "outcome": "accepted"
+          },
+          "load-renderer": {
+            "startedMs": 979514.304789,
+            "settledMs": 979832.31022,
+            "outcome": "accepted"
+          },
+          "create-origins": {
+            "startedMs": 980383.854545,
+            "settledMs": 1009188.73385,
+            "outcome": "accepted"
+          },
+          "restore-products": {
+            "startedMs": 1014587.78652,
+            "settledMs": 1097454.157299,
+            "outcome": "rejected"
+          }
+        },
+        "latestStoreSteps": []
+      }
+    }
+  ],
+  "fullIntegrationTotals": "Unknown; archived job output ends after composed-native file failures without whole-suite totals",
+  "eligibleRestorationPredicate": "Unknown; restore-products rejected after82,866ms; jobtimeout is not established"
+}

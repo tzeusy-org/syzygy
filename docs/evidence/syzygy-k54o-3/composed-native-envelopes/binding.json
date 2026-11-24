@@ -1,0 +1,180 @@
+{
+  "format": "f3-composed-native-envelopes-evidence/1",
+  "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+  "baseCommit": "a7bfb025fbe0a9985b7b5026d7d346ddc6d9990e",
+  "binaryDeltaSha256": "e736214512ceb488491453cbfb15517b92bb61d33a9710ecad1f1b86821bca0c",
+  "subjects": [
+    {
+      "bytes": 60122,
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "54e21e191f629452ec5412fc42995bc75cd96ad816e06b310ed3652d355e9d8b"
+    },
+    {
+      "bytes": 90585,
+      "path": "packages/polaris-dossier/src/url-machine-store.test.ts",
+      "sha256": "22cb8c1db9d920ffe002f65be3cd5a4b2470a5288f08b2c26bc3e991ecf15a01"
+    },
+    {
+      "bytes": 70987,
+      "path": "packages/polaris-dossier/src/url-session-audit.test.ts",
+      "sha256": "5e086020c4483845e688da3df6fd39e075537601b2c4809866c06142d3cb3d14"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "sha256": "103aacefcde3769194f2b4c1e5b20a72e257388d586d1a837643206b0b44d50d"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "4298a15b5c346dea6f2763410307e945b21fe917336114f45a027ad70d3e87ad"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "d9d2a0f4dbf9bb2b798babf278aafac0c49a3bc013df424c22a7a3907dbc993f"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "sha256": "eb8415f432ed38f7adf4809e1e38f56990fd38354d6738d76fdb84ef1897c348"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "ed67e8acbe480cd59ce7227a7549fe71154b2655de434ce2ba4f4a9126e2b54a"
+    }
+  ],
+  "limits": {
+    "genericLifecycleMilliseconds": 5000,
+    "localAdmissionMilliseconds": 30000,
+    "lockContentionMilliseconds": 1000,
+    "orderedNativeEffectMilliseconds": 30000,
+    "ordinaryNativeEffectMilliseconds": 20000,
+    "resumedDesignPublicationMilliseconds": 15000,
+    "stagedBatchAllocationMilliseconds": 10000,
+    "orderedDesignStartupMilliseconds": 90000,
+    "renderProducerMilliseconds": 60000,
+    "orderedReplacementMilliseconds": 90000,
+    "auditAppendMilliseconds": 5000
+  },
+  "verification": {
+    "cleanClone": {
+      "commit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+      "npmCiOfflineExit": 0,
+      "command": "TMPDIR=/home/orca/.tmp ./node_modules/.bin/vitest run --project integration --maxWorkers=1 packages/polaris-dossier/src/url-machine-store.test.ts packages/polaris-dossier/src/url-session-audit.test.ts",
+      "filesPassed": 2,
+      "filesTotal": 2,
+      "passed": 233,
+      "total": 233,
+      "logSha256": "a9bdb2638d99dc6afabea830c1684e27039abfcc30badd2b9ba1a62c586cfbfa"
+    },
+    "orderedArtifacts": {
+      "passed": 4,
+      "skipped": 70,
+      "total": 74,
+      "logSha256": "035bcf7a46187366cb1d2bb6a93533db0e5ea58ace7180c9fdb8dde8d4aede42"
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "scope": "All nine committed subject file digests match the combined source tree checked by the worker."
+    }
+  },
+  "negativeControls": [
+    {
+      "name": "ordinary-five-seconds",
+      "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "const ORDINARY_NATIVE_EFFECT_MILLISECONDS = 20_000;",
+      "new": "const ORDINARY_NATIVE_EFFECT_MILLISECONDS = 5_000;",
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-session-audit.test.ts",
+        "-t",
+        "lease at 5100 ms$"
+      ],
+      "exitCode": 1,
+      "logSha256": "9b8a1ac1f7bf4b270880dab4bab993a0f168359250a660bfacf077b394d3a581",
+      "restoredSha256": "54e21e191f629452ec5412fc42995bc75cd96ad816e06b310ed3652d355e9d8b"
+    },
+    {
+      "name": "resumed-publication-ten-seconds",
+      "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 15_000;",
+      "new": "const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;",
+      "command": [
+        "./node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers=1",
+        "packages/polaris-dossier/src/url-machine-store.test.ts",
+        "-t",
+        "selector in mode selected-eleven-seconds$"
+      ],
+      "exitCode": 1,
+      "logSha256": "cd7e7471674e7b5e6c2cad4de7a07e473d566ecb3cd941a8784b0fcf6eca6b5b",
+      "restoredSha256": "54e21e191f629452ec5412fc42995bc75cd96ad816e06b310ed3652d355e9d8b"
+    },
+    {
+      "id": "startup-render-only",
+      "file": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "old": "'ordered-design-startup': productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,",
+      "new": "'ordered-design-startup': productReadMilliseconds.render,",
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-ordered-startup-startup-render-only.log",
+      "originalSha256": "103aacefcde3769194f2b4c1e5b20a72e257388d586d1a837643206b0b44d50d",
+      "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+      "logSha256": "bd03ed46e135394dc7755ed491ef1debc8666eb23fd66a9b3b0632f1e73bc5eb"
+    },
+    {
+      "id": "startup-evidence-unmapped",
+      "file": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "input.operation === 'ordered-design-startup' || input.operation === 'ordered-design-replacement' ? 'render' : input.operation",
+      "new": "input.operation === 'ordered-design-replacement' ? 'render' : input.operation",
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-ordered-startup-startup-evidence-unmapped.log",
+      "originalSha256": "d9d2a0f4dbf9bb2b798babf278aafac0c49a3bc013df424c22a7a3907dbc993f",
+      "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf",
+      "logSha256": "dc8d25d3646de4605f8f3b2b61db66260759212c26273935982c1b53edb7fe36"
+    }
+  ],
+  "testDelta": {
+    "relativeToBase": {
+      "store": 8,
+      "audit": 3,
+      "artifacts": 1,
+      "composed": 0,
+      "total": 12
+    },
+    "componentCompositionBaseline": {
+      "subjectCommit": "a7bfb025fbe0a9985b7b5026d7d346ddc6d9990e",
+      "baseCommit": "dfa3453cb3b1d5185a9da34fcce31f6e4ddcc2d0",
+      "added": 2,
+      "review": "docs/reviews/F3-FIDELITY-AUDIT-COMPOSITION-REVIEW-RAW.md",
+      "rawSha256": "0adfa71ff1c1af797b1ff107ccf0cda837bf29e73d2c1c1c97fe003fca8f39eb"
+    }
+  },
+  "limitations": [
+    "The real-file composition fixture uses synthetic stored identity metadata and makes no genuine-process or native-relay claim.",
+    "The resumed publication timing table isolates the selector using its existing mock; it does not prove a genuine peer.",
+    "The existing resumed peer predicate, secret screening, original deadlines, uncertain-lock retention and independent contention limit apply.",
+    "Native interrupted and already-eligible Resume completion on this successor remains Unknown.",
+    "The earlier hosted2446 result does not establish hosted acceptance for this successor."
+  ],
+  "sourceReview": {
+    "path": "docs/reviews/F3-COMPOSED-NATIVE-ENVELOPES-REVIEW-RAW.md",
+    "sha256": "04cf1221b48bdc4065aa25991d271e7bb62c8c9542d5e67f6e641e8b5d402767",
+    "verdict": "PASS",
+    "subjectCommit": "93a2df9980c278e5452a7b97f4574ed511ce5edf"
+  },
+  "adoptionIdReservation": {
+    "mainCommit": "1e30b1c196c691565fc2d858649aa4942306e305",
+    "id": "A-211"
+  }
+}

@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-(FIDELITY-AUDIT-COMPOSITION|COMPOSED-NATIVE-ENVELOPES)-REVIEW-RAW\.md`
+
 - `F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW\.md`
 
 - `F3-LOCAL-STORE-ADMISSION-REVIEW(-R2)?-RAW\.md`
@@ -245,4 +247,11 @@
 
 [Observed] The local store admission reviews record `PASS` for `39827723c` (F3-LOCAL-STORE-ADMISSION-REVIEW-RAW.md) and `303996d40` (F3-LOCAL-STORE-ADMISSION-REVIEW-R2-RAW.md). A-186 bounds local FIFO waiting to 30 seconds and 256 entries before the existing operation clocks start. The home-backed full suite passes 105 cases on the identical implementation; the successor close assertion passes separately. Four source controls detect bypassed ordering, missing expiry, excess admission and unsettled close. The last control times out in cleanup because its queued promises remain pending. [Unknown] Native and hosted completion.
 
-[Observed] The restoration preparation trace review records `PASS` (F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW.md:2) for `0977e6cc6`. The test retains four role preparations and twelve safe phase entries per role with omitted counts. Typecheck and the independent isolated observer exercise passed; 223 existing expect expressions are byte-identical. Runtime source, resource limits and acceptance checks are unchanged. [Unknown] Actual native spy integration and recovery completion.
+[Observed] The restoration preparation trace review records `PASS` (F3-RESTORE-PREPARATION-TRACE-REVIEW-RAW.md:2) for `0977e6cc6`. The test retains four role preparations and twelve safe phase entries per role with omitted counts. Typecheck and the independent isolated observer exercise passed; 223 existing expect expressions are byte-identical. Runtime source, resource limits and acceptance checks are unchanged. [Observed] Superseded 2026-11-24: "[Unknown] Actual native spy integration and recovery completion." The [native trace](../evidence/syzygy-k54o-3/restore-preparation-trace/native-0977.json) captures five accepted steps for each of four roles without omissions. Recovery completion remains Unknown.
+
+
+[Observed] The Fidelity audit composition baseline review records `PASS` for `a7bfb025f` (F3-FIDELITY-AUDIT-COMPOSITION-REVIEW-RAW.md:2). Its real-file fixture distinguishes the enclosing operation limit from three independently bounded audit appends. Synthetic stored identities do not establish a native peer. The [baseline binding](../evidence/syzygy-k54o-3/composed-native-envelopes/composition-baseline.json) preserves the exact subject and precommit metadata limitation.
+
+[Observed] The composed native envelopes review records `PASS` for `93a2df998` (F3-COMPOSED-NATIVE-ENVELOPES-REVIEW-RAW.md:2). A-211 selects twenty seconds for matching ordinary native effects, fifteen seconds for genuine first resumed Design publication, and ninety seconds for initial ordered Design product reads. The independent producer stays at sixty seconds. The clean-clone store and audit suites passed 233 cases. Four negative controls detect the predecessor envelopes and missing startup evidence mapping. The [binding](../evidence/syzygy-k54o-3/composed-native-envelopes/binding.json) records exact source digests, review and verification scope. [Unknown] Genuine native recovery completion and hosted acceptance for the successor.
+
+[Observed] Hosted `2446c64ed` passed unit, browser and governance checks. Its native complete and delivery-stop cases passed; interrupted and already-eligible Resume failed. The [retained hosted summary](../evidence/syzygy-k54o-3/local-store-admission/hosted-2446.json) records the interrupted startup interval and the eligible restoration refusal. The complete integration denominator and the eligible nested restoration predicate are Unknown. A twenty-minute job timeout is not established.

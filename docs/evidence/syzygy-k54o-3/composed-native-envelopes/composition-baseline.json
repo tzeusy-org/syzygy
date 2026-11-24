@@ -1,0 +1,42 @@
+{
+  "format": "f3-fidelity-audit-composition-baseline-evidence/1",
+  "subjectCommit": "a7bfb025fbe0a9985b7b5026d7d346ddc6d9990e",
+  "baseCommit": "dfa3453cb3b1d5185a9da34fcce31f6e4ddcc2d0",
+  "binaryDeltaSha256": "184c176011d30e9f735065be28f83df761303af022aa56f63dea2c4bc46eade7",
+  "precommitMetadata": {
+    "subject": "Fidelity ordinary-store effect and session-audit composition regression",
+    "head": "dfa3453cb3b1d5185a9da34fcce31f6e4ddcc2d0",
+    "test_file": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-session-audit.test.ts",
+    "test_sha256": "e75787cf45679243e8d0fe5e9afdfdeae16aff9c0c871a49b6eada31bf9f725f",
+    "command": "npx --no-install vitest run --project integration packages/polaris-dossier/src/url-session-audit.test.ts -t 'keeps the Fidelity response audit under its enclosing ordinary store lease'",
+    "log": "/home/orca/.tmp/f3-fidelity-store-audit-composition.log",
+    "log_sha256": "6f824da81024c525d265af0a8a2f323115df9ec80570edaa31bbcec2b980bf80",
+    "exit_code": 0,
+    "passed": 2,
+    "skipped": 115,
+    "test_population": 117,
+    "production_sha256": {
+      "packages/polaris-dossier/src/url-machine-store.ts": "f6803f423548dde6ff02c0a654a1acc05585f168c1a5e906e3ae9eab681da312",
+      "packages/polaris-dossier/src/url-session-audit.ts": "b7ae85bfdc1bb951ba118e385c9bb8f15b827061b0b019645d1c8d8b0ec35bd7"
+    },
+    "limits_changed": false,
+    "production_changed": false,
+    "typecheck_run": false
+  },
+  "precommitMetadataSha256": "ca00be19778e1e1a052fc0cbc82aafaf79f62a2e5c9261cee649ad24de8ebece",
+  "sourceReview": {
+    "path": "docs/reviews/F3-FIDELITY-AUDIT-COMPOSITION-REVIEW-RAW.md",
+    "sha256": "0adfa71ff1c1af797b1ff107ccf0cda837bf29e73d2c1c1c97fe003fca8f39eb",
+    "verdict": "PASS"
+  },
+  "verification": {
+    "passed": 2,
+    "skipped": 115,
+    "total": 117,
+    "logSha256": "6f824da81024c525d265af0a8a2f323115df9ec80570edaa31bbcec2b980bf80"
+  },
+  "limitations": [
+    "The precommit metadata names the base commit but pins the test bytes of the committed subject; the independent reviewer re-ran the committed subject.",
+    "Synthetic identity metadata and real files establish component composition only, not genuine native authentication or end-to-end acceptance."
+  ]
+}
