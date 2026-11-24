@@ -5,7 +5,7 @@ import path from 'node:path';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import { encodeCanonicalJson, PAGE_SINK_CONTRACT, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { deepFreeze, isRecord, sha256 } from '@syzygy/support';
-import { bindUrlSourceReader, isUrlWholeSourcePath, type UrlSourceStore } from './url-source-reader.js';
+import { captureUrlOriginSourceReader, isUrlWholeSourcePath, type UrlSourceStore } from './url-source-reader.js';
 import { urlDossierReportExit } from './url-dossier-result.js';
 import { encodeRunRecord, readRunRecord, sourceBindingSha256, type RecordedRunConfig } from './run-record.js';
 import type { PolicyBinding } from './policy-snapshot.js';
@@ -85,15 +85,12 @@ function create(given: UrlOriginLedgerOptions) {
     || path.resolve(record.subject.clone.path) !== record.subject.clone.path || screen.policySha256 !== record.subject.screeningPolicy.sha256
     || screen.visibility !== record.subject.visibility.value || !(given.basePolicyBytes instanceof Uint8Array) || given.basePolicyBytes.length > JSON_LIMITS.maxBytes || sha256(given.basePolicyBytes) !== screen.policySha256
     || Object.entries(schemas).some(([kind, validator]) => !Object.hasOwn(REPORT_ROLES, kind) || typeof validator !== 'function')) fail();
-  const readerOptions = { gitDir: path.join(record.subject.clone.path, '.git'), revision: record.subject.pinnedRevision.commit };
-  let reader: ReturnType<typeof bindUrlSourceReader> | undefined;
+  let reader: ReturnType<typeof captureUrlOriginSourceReader> | undefined;
   const store = given.sourceStore ?? 'owned-loose';
   if (store !== 'owned-loose' && store !== 'supplied') fail();
-  const openReader = () => {
-    reader ??= bindUrlSourceReader({ clone: record.subject.clone.path, revision: readerOptions.revision,
-      store, current, objectBytes: limits.itemBytes });
-    return reader(readerOptions);
-  };
+  const sourceReader = () => reader ??= captureUrlOriginSourceReader({ clone: record.subject.clone.path,
+    revision: record.subject.pinnedRevision.commit, store, current, objectBytes: limits.itemBytes });
+  const openReader = () => sourceReader().open();
   const origin = copy(given.originPolicy.binding), originBytes = snapshot(given.originPolicy.bytes, JSON_LIMITS.maxBytes);
   const policy = parseBoundedJson(decode(originBytes), JSON_LIMITS);
   if (!exact(given.originPolicy, ['binding', 'bytes']) || !exact(origin, ['path', 'commit', 'policyId', 'policyVersion', 'sha256'])
@@ -279,19 +276,22 @@ function create(given: UrlOriginLedgerOptions) {
     visit(reply);
     if (screen.screenSecrets(text) !== undefined || screen.screenSecrets(fields.join('')) !== undefined || screen.screenSecrets(values.join('')) !== undefined) fail();
   }
-  async function verifiedSource(file: string, check: () => void, checkTime: () => void) {
+  async function verifiedSource(file: string, checkTime: () => void) {
     checkTime(); if (!isUrlWholeSourcePath(file) || screen.screenPath(file) !== undefined) fail();
     const contentClass = screen.contentClass(file);
     if (!contentClass || !['code-content', 'governance-text', 'project-documentation'].includes(contentClass)) fail();
-    // The bound reader samples full authority and the source store on both
-    // sides of its I/O. Recheck the timer here and live authority after screening.
-    const reader = openReader();
-    const blob = (await reader.readBlobs([file]))[0]; checkTime();
-    if (!blob || blob.path !== file || !['100644', '100755'].includes(blob.mode)) fail();
-    const bytes = snapshot(blob.bytes), raw = decode(bytes), treatment = screen.screenTargetBody(raw, file);
-    // Neither a span nor complete coverage can authenticate a redacted body under its original identity.
-    if (treatment.kind !== 'admitted') fail(); safe(bytes, file); check();
-    return { objectId: blob.id, bytes, raw, contentClass };
+    const screened = await sourceReader().readScreenedBlob(file, checkTime, blob => {
+      checkTime();
+      if (!blob || blob.path !== file || !['100644', '100755'].includes(blob.mode)) fail();
+      const bytes = snapshot(blob.bytes), raw = decode(bytes), treatment = screen.screenTargetBody(raw, file);
+      // Neither a span nor complete coverage can authenticate a redacted body under its original identity.
+      if (treatment.kind !== 'admitted') fail();
+      safe(bytes, file);
+      checkTime();
+      return { objectId: blob.id, bytes, raw, contentClass };
+    });
+    checkTime();
+    return screened;
   }
   async function verifiedManifestRemainder(check: () => void, checkTime: () => void): Promise<Buffer> {
     // The bound reader checks live authority and store identity around its
@@ -308,7 +308,7 @@ function create(given: UrlOriginLedgerOptions) {
     return bytes;
   }
   const manifestRemainderOriginId = (digest: string) =>
-    `origin:manifest-remainder-${sha256(canonical([readerOptions.revision, screen.policySha256, digest])).slice(0, 32)}`;
+    `origin:manifest-remainder-${sha256(canonical([record.subject.pinnedRevision.commit, screen.policySha256, digest])).slice(0, 32)}`;
   async function sourceManifestRemainder(remainder: ManifestRemainder): Promise<UrlOriginReceipt> {
     try {
       live();
@@ -348,7 +348,7 @@ function create(given: UrlOriginLedgerOptions) {
         || input.objectId.length !== record.subject.pinnedRevision.commit.length || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(input.objectId)) fail();
       const file = input.path, objectId = input.objectId, supplied = snapshot(input.bytes);
       return await sourceOperation(async (check, checkTime) => {
-        const body = await verifiedSource(file, check, checkTime);
+        const body = await verifiedSource(file, checkTime);
         if (body.objectId !== objectId || !Buffer.from(supplied).equals(body.bytes)) fail();
         return issueWholeSourceBody(file, body, check);
       });
@@ -366,7 +366,7 @@ function create(given: UrlOriginLedgerOptions) {
       live(); if (!isRecord(input) || Object.keys(input).some(key => !['path', 'offset', 'limit', 'expectedObjectId'].includes(key)) || !relative(input.path)) fail();
       const file = input.path, offset = input.offset ?? 0, limit = input.limit ?? 200, expectedObjectId = input.expectedObjectId;
       if (!Number.isSafeInteger(offset) || offset < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 2000) fail();
-      const { raw, contentClass, objectId } = await sourceOperation((check, checkTime) => verifiedSource(file, check, checkTime)); live();
+      const { raw, contentClass, objectId } = await sourceOperation((_check, checkTime) => verifiedSource(file, checkTime)); live();
       if (expectedObjectId !== undefined && expectedObjectId !== objectId) fail();
       const lines = raw.match(/[^\n]*(?:\n|$)/gu) ?? []; if (lines.at(-1) === '') lines.pop();
       const bytes = Buffer.from(lines.slice(offset, offset + limit).join(''));
@@ -552,7 +552,7 @@ function create(given: UrlOriginLedgerOptions) {
         const result = await verifiedSpan({ path: d.path, expectedObjectId: d.objectId, offset: d.offset, limit: d.limit });
         sameSubject(result.receipt, node.metadata);
       } else if (d.kind === 'source-whole') {
-        const body = await sourceOperation((check, checkTime) => verifiedSource(d.path, check, checkTime));
+        const body = await sourceOperation((_check, checkTime) => verifiedSource(d.path, checkTime));
         if (body.objectId !== d.objectId) fail();
         const checked = await verifyWholeSourceBody({ path: d.path, objectId: d.objectId, bytes: body.bytes });
         sameSubject(inspectWholeSourceBody(checked).origin, node.metadata);
@@ -628,7 +628,7 @@ function create(given: UrlOriginLedgerOptions) {
         live(); if (!exact(input, ['path']) || !isUrlWholeSourcePath(input.path)) fail();
         const file = input.path;
         return await sourceOperation(async (check, checkTime) => {
-          const body = await verifiedSource(file, check, checkTime);
+          const body = await verifiedSource(file, checkTime);
           const capability = issueWholeSourceBody(file, body, check);
           return inspectWholeSourceBody(capability).origin;
         });

@@ -193,7 +193,7 @@ describe('host-owned URL origin ledger', () => {
     const f = fixture();
     let elapsed = 0, charge = false;
     const ledger = createUrlOriginLedger({ ...f.options, current: () => {
-      if (charge) elapsed += 860;
+      if (charge) elapsed += 1800;
       return true;
     } });
     const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
@@ -203,6 +203,37 @@ describe('host-owned URL origin ledger', () => {
       const expected = bytes('Own source line one.\n');
       expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
     } finally { clock.mockRestore(); }
+  });
+  it('checks current authority after private source screening and publishes no receipt on withdrawal or timeout', async () => {
+    const f = fixture();
+    const screen = f.options.screen, selected = { path: f.file, offset: 0, limit: 1 };
+    for (const gate of ['authority', 'deadline'] as const) {
+      let current = true, elapsed = 0, screened = false;
+      const ledger = createUrlOriginLedger({ ...f.options, current: () => current,
+        screen: { ...screen, screenTargetBody: (text, file) => {
+          screened = true;
+          if (gate === 'authority') current = false;
+          else elapsed = 5000;
+          return screen.screenTargetBody(text, file);
+        } } });
+      const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+      const originPlan = ledger.plannedOrigins();
+      try {
+        await expect(ledger.sourceSpan(selected)).rejects.toThrow('url-origin-refused');
+        expect(screened).toBe(true);
+        current = true;
+        expect(ledger.plannedOrigins()).toEqual(originPlan);
+      } finally { clock.mockRestore(); }
+    }
+  });
+  it('refuses an exact blob from a replaced store on a subsequent source span', async () => {
+    const f = fixture(), requested = { path: f.file, offset: 0, limit: 1 };
+    const initial = await f.ledger.sourceSpan(requested);
+    const oldStore = path.join(f.clone, '.git', 'objects'), moved = path.join(f.clone, '.git', 'old-objects');
+    fs.renameSync(oldStore, moved);
+    fs.cpSync(moved, oldStore, { recursive: true });
+    await expect(f.ledger.sourceSpan(requested)).rejects.toThrow('url-origin-refused');
+    expect(f.ledger.metadata(initial).classes).toEqual(['code-content', 'code-structure']);
   });
 
   it('authenticates the exact manifest remainder within the original read limit under slow authority', async () => {
