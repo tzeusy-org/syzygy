@@ -64,7 +64,9 @@ describe('REQ-030 hierarchical budgeted discovery', () => {
 
   // The large synthetic corpus needs its own time budget on a shared unit worker.
   it('keeps ordered discovery results for a large accepted rank population', async () => {
-    const files = population(150_000);
+    // Distribute the files to keep this case focused on collecting the ranking.
+    const files = Array.from({ length: 150_000 }, (_, index) =>
+      make(`fixture-${index % 1024}/source-${index}.c`, 'int fixture;\n')[0]!);
     const architecture = make('docs/architecture.md', 'Fixture architecture.')[0]!;
     const reference = make('docs/reference.md', 'Fixture reference.')[0]!;
     const sources = [...files, architecture, reference];
