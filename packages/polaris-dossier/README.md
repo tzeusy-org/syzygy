@@ -49,9 +49,11 @@ Before a change to `src/brief.ts` (or `BRIEF_VERSION`), `src/draft-schema.ts` or
 
 - [ ] The pull request reports the comprehension regression's reader share before and after, overall and per question kind, on at
       least one stored run rendered again or one new run. Commands: `docs/evidence/pursuit-2026-11-21b/pilot/README.md`.
-- [ ] A drop of more than five points (0.05 of share), overall or in any kind, is explained in the change or repaired.
-- [ ] No result is called a regression on one run: five points is inside this instrument's noise on one repository (the same
-      answers regraded moved a kind's share by up to 8 points), so a drop is confirmed on two runs or under a second key first.
+- [ ] A drop of more than five points (0.05 of share) overall, of more than one required fact in any kind, or of a full fact in
+      each of three or more kinds, is explained in the change or repaired.
+- [ ] No result is called a regression on one run: on one repository the same answers regraded moved the overall share by up to
+      3.7 points and a kind's by one fact (7.7 points), and one site measured five times spans 4.9 points overall
+      (`docs/evidence/syzygy-5dhm-127/`), so a drop is confirmed on two runs or under a second key first.
       No result is reported as a win.
 - [ ] No question or required fact of the regression key is in the brief, a packet or an agent text: `src/regression-hold-out.test.ts`
       (unit; the 24 question texts and 81 required facts, by any eight consecutive words) and the rendered-brief case in
