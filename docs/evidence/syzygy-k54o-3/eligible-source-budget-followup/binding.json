@@ -1,0 +1,28 @@
+{
+  "subjectCommit": "026acc2477ac5450e6b26dd1884e8835f68cced8",
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "subjects": [
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "sha256": "3098b2580c67a191a5ce587535b15f8cd349c468f75d37e28c28ae0d5d1262d0",
+      "baseSha256": "0d7cd92825aea17f91b1642816f4f8ae892e19acd3de8faea6236c31d1f80a5c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "sha256": "143c202cfe2aa5d7bb5ff4af2a3c3ae9f08d0ff365115f8a8bc86face96d7304",
+      "baseSha256": "2d116b39ab1e1cca5ac210dba06c15ba8ef23c0ba7196a88a58a13596dfceb2c"
+    }
+  ],
+  "scope": "Reviewed two-file finite source-read budget and synchronous metadata lookup correction only. Native recovery completion, full battery and hosted timing remain Unknown.",
+  "artifacts": {
+    "INDEPENDENT-REVIEW-RAW.md": "0e6b1b8edb37807674751747bd28ae1dbd3e8b34ccc7f764071fc2fc80c39333",
+    "change.patch": "070a4300ddb6fbd204f516744d11192293b214b38d6cebc58ff84943ad1f8c09",
+    "ledger-tests-integration.log.gz": "40f2c9105486b74655cbae6252c56d30c280f80198076ea11ed785f3bd467bde",
+    "ledger-tests.log.gz": "488a17970a18397e05fcc02a302090c92cf127ea437dd32f5a05aaa20922f34d",
+    "npm-ci.log.gz": "a5b80391ba919dcacccbb542d7816e4237ead06752f81a646410303d9d1b321d",
+    "old-budget-mutation.log.gz": "8998f79a5f83496b1d9df98a29ea68acc1bfed346a4edf54eb2a8fa2da1a2276",
+    "review.json": "5eb7443ff058bee42ccee8130a13fb0f680f9933a0deb1107724bbd5e6db4363",
+    "typecheck.log.gz": "6e88a952198ce48f4a7e3a73d4d51e84d16109347fb7fa639bf86c5308c29130",
+    "verification.json": "20ed636f16aaf2f54540df27d20f369d9f33d480eb713351d40891ba72146622"
+  }
+}

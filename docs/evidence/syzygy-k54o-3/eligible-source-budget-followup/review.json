@@ -1,0 +1,36 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "subjects": [
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "sha256": "3098b2580c67a191a5ce587535b15f8cd349c468f75d37e28c28ae0d5d1262d0",
+      "baseSha256": "0d7cd92825aea17f91b1642816f4f8ae892e19acd3de8faea6236c31d1f80a5c"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "sha256": "143c202cfe2aa5d7bb5ff4af2a3c3ae9f08d0ff365115f8a8bc86face96d7304",
+      "baseSha256": "2d116b39ab1e1cca5ac210dba06c15ba8ef23c0ba7196a88a58a13596dfceb2c"
+    }
+  ],
+  "patchSha256": "070a4300ddb6fbd204f516744d11192293b214b38d6cebc58ff84943ad1f8c09",
+  "scope": "Only origin ledger and its existing tests; do not touch unrelated working tree changes",
+  "requirements": {
+    "resourceBudget": "Default sourceOperation readMilliseconds raised5000\u219210000 as explicitly delegated by root; caller limits1..10000 remain finite and honored. Root owns RFC3-16(d) adoption record. No adoption claimed here.",
+    "security": "Original sourceOperation timer, active flag, passed and private checkTime sites, fresh authority samples, source reader pre/post checks, store identities, secret/body screening and cancellation unchanged.",
+    "coalescing": "sameSubject receives a private Entry. Only fixed/renderer branch uses lookup after its fresh outerlive with no await or callback between. Source-span/whole still call entry at same original point after awaited work. Final wait+transfer.revalidate unchanged.",
+    "regression": "Existing real source reader slow-authority test extended to3000ms per pre/post callback: default accepts6000ms actual read cost;5000ms caller rejects without a plan. Default-expiry test now advances to10000. Existing withdrawal, exact secret/store refusal,20ms late-I/O/concurrent-operation tests retained. Nettestcases0."
+  },
+  "checks": {
+    "diffCheck": "passed",
+    "tests": "pending reserved slot",
+    "typecheck": "not run"
+  },
+  "reviewAcceptance": [
+    "Default read budget finite10000; tighter caller budget unchanged",
+    "Guard/screen/store/cancellation code unchanged",
+    "No source branch authority probe dropped",
+    "Fixed/renderer lookup only follows fresh live without await or external callback",
+    "Real-reader regression fails old5000 default and retains strict5000 rejection",
+    "Withdrawal/screen/late-I/O refusal still exercised by existing tests"
+  ]
+}

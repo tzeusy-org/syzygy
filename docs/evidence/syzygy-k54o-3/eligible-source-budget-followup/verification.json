@@ -1,0 +1,86 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "clone": "/home/orca/.tmp/f3-eligible-budget-verify/w",
+  "tmpdir": "/home/orca/.tmp/f3-eligible-budget-verify/tmp",
+  "subjectsSha256": {
+    "packages/polaris-dossier/src/url-origin-ledger.ts": "3098b2580c67a191a5ce587535b15f8cd349c468f75d37e28c28ae0d5d1262d0",
+    "packages/polaris-dossier/src/url-origin-ledger.test.ts": "143c202cfe2aa5d7bb5ff4af2a3c3ae9f08d0ff365115f8a8bc86face96d7304"
+  },
+  "cloneChangedPopulation": [
+    "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+    "packages/polaris-dossier/src/url-origin-ledger.ts"
+  ],
+  "primaryCloneFrozenSourcesEqual": true,
+  "install": {
+    "command": "npm ci --ignore-scripts --no-audit --no-fund",
+    "exit": 0
+  },
+  "fullFile": {
+    "command": "TMPDIR=<private> npx vitest run --project integration --maxWorkers 1 packages/polaris-dossier/src/url-origin-ledger.test.ts",
+    "exit": 0,
+    "filesPassed": 1,
+    "filesTotal": 1,
+    "casesPassed": 27,
+    "casesTotal": 27,
+    "durationSeconds": 3.62,
+    "testMilliseconds": 983
+  },
+  "typecheck": {
+    "command": "TMPDIR=<private> npm run typecheck",
+    "exit": 0,
+    "output": "tsc -p tsconfig.json; no diagnostics"
+  },
+  "regressionMutation": {
+    "subject": "packages/polaris-dossier/src/url-origin-ledger.ts",
+    "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+    "old": "itemBytes: 1_048_576, readMilliseconds: 10_000",
+    "new": "itemBytes: 1_048_576, readMilliseconds: 5000",
+    "command": "TMPDIR=<private> npx vitest run --project integration --maxWorkers 1 packages/polaris-dossier/src/url-origin-ledger.test.ts -t 'bounds the full screened read including slow pre/post authority'",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "filesFailed": 1,
+    "filesTotal": 1,
+    "casesFailed": 1,
+    "casesSelected": 1,
+    "casesSkipped": 26,
+    "casesTotal": 27,
+    "durationSeconds": 2.74,
+    "failure": "url-origin-refused at awaited default-budget sourceSpan",
+    "restoredFrozenSource": true
+  },
+  "coverageNotes": [
+    "Default10k success after6000ms original real reader pre/post authority cost",
+    "Explicit5000caller budget refuses without issuing planned origins",
+    "Default10000expiry and authoritywithdrawal during screening both refuse",
+    "Existing actual secret, changed object/store, late I/O and concurrent independent operation assertions passed in same27case file"
+  ],
+  "selectionCorrection": {
+    "firstCommand": "vitest run --project unit --maxWorkers 1 packages/polaris-dossier/src/url-origin-ledger.test.ts",
+    "exit": 1,
+    "result": "No test files found; file belongs to integration; corrected invocation recorded above"
+  },
+  "diffCheck": "passed for exact2files in clone and primary",
+  "rawLogs": {
+    "npm-ci.log": {
+      "path": "/home/orca/.tmp/f3-eligible-budget-verify/npm-ci.log",
+      "sha256": "002b683ed9e9920ed1c5865c3170a66289c4f0dab59c8313ccc2c9f6e03d5bb6"
+    },
+    "ledger-tests.log": {
+      "path": "/home/orca/.tmp/f3-eligible-budget-verify/ledger-tests.log",
+      "sha256": "1f57e34d0e4ffbeb9a27b0b0ef31162341a0f0cf54ea77bf3374de635be0a985"
+    },
+    "ledger-tests-integration.log": {
+      "path": "/home/orca/.tmp/f3-eligible-budget-verify/ledger-tests-integration.log",
+      "sha256": "109d6f5a541cb77e905aaf625a3d2c22f74e03786f8e94f88364ddebfa1aaa23"
+    },
+    "old-budget-mutation.log": {
+      "path": "/home/orca/.tmp/f3-eligible-budget-verify/old-budget-mutation.log",
+      "sha256": "2cbf89cbfe14cad6866f6e4c2c0e0e8e69d05c0f713ed4f48a1c33bfa825518a"
+    },
+    "typecheck.log": {
+      "path": "/home/orca/.tmp/f3-eligible-budget-verify/typecheck.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "limitations": "No native run, full repository battery or seven-minute CI success claim. Independent review and adoption record remain root-owned."
+}
