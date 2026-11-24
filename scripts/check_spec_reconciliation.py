@@ -2940,7 +2940,11 @@ def _reverse_cache_scope():
 
 def reverse_apply(root, patch_rel, target_rel, body, *, zero_context=False):
     """`body` with the patch reversed, or None when it does not reverse."""
-    patch = (root / patch_rel).read_bytes()
+    try:
+        patch = (root / patch_rel).read_bytes()
+    except OSError:
+        # A removed or unreadable patch fails the reversal, as Git did.
+        return None
     cache = _REVERSE_CACHE
     if cache is None:
         return _reverse_apply(patch, target_rel, body, zero_context=zero_context)

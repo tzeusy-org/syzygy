@@ -60,6 +60,13 @@ def verify_content(root):
         identical = root / "duplicate.patch"
         identical.write_bytes(read_bytes(item))
         assert reverse(path=identical) == body("prior two") and calls["apply"] == 3
+        with patch.object(Path, "read_bytes", side_effect=PermissionError("fixture")):
+            assert reverse() is None, "unreadable patch must refuse the reversal"
+        moved = item.with_suffix(".moved")
+        item.rename(moved)
+        assert reverse() is None, "missing patch must refuse the reversal"
+        assert calls["apply"] == 3
+        moved.rename(item)
     assert checker._REVERSE_CACHE is None, "the reverse cache must end with the owning invocation"
 
 
