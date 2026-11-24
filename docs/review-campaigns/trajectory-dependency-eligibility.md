@@ -5,6 +5,7 @@
 - `T3JK19-TRAJECTORY-DEPENDENCY-DELTA-R1-RAW\.md`
 - `T3JK19-TRAJECTORY-DEPENDENCY-DELTA-DISPOSITION-RAW\.md`
 - `T3JK19-TRAJECTORY-DEPENDENCY-RUNTIME-R1-RAW\.md`
+- `T3JK19-TRAJECTORY-DEPENDENCY-RUNTIME-R2-RAW\.md`
 
 ## What was under review
 
@@ -17,3 +18,5 @@
 [Observed] The exact follow-up on the two dispositions returned `CONFIRM` at `409044a94c25059579e17598b243390f9cbea646` (`T3JK19-TRAJECTORY-DEPENDENCY-DELTA-DISPOSITION-RAW.md:3`).
 
 [Observed] Implementation R1 returned `REVISE` at `04dfaa80cac19164d01c1b6ccdb0b688cad8d7dd` (`T3JK19-TRAJECTORY-DEPENDENCY-RUNTIME-R1-RAW.md:3`). The work-item reader now requires a valid Dolt commit hash and the same-statement revision witness before constructing observed provenance. Tests independently exercise a nonempty result with no witness, a malformed matching revision, duplicate witnesses and witness/row revision disagreement. All four cases skip the dependency statement.
+
+[Observed] Implementation R2 returned `CONFIRM` at `38a94ba79766c334449bf9fdea644c7eb70373c8` (`T3JK19-TRAJECTORY-DEPENDENCY-RUNTIME-R2-RAW.md:3`). Both former counterexamples refuse before a dependency call, and the active spec and render bytes match the preceding subject.
