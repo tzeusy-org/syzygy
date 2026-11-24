@@ -150,9 +150,8 @@ describe('an operator-agent dossier page reads without its machinery', () => {
   });
 
   it('names a size-report source page by its file, not its hashed route', () => {
-    const row = /<tr><td><a href="(sources\/(?!index)[^"]+)">([^<]+)<\/a>/u.exec(files.get('size-report.html')!)!;
-    expect(row[2]).toBe(READING_SOURCE.path);
-    expect(row[1]).not.toBe(row[2]);
+    const row = /<tr><td><a href="(sources\/(?!index)[^"]+)"(?: style="overflow-wrap:anywhere")?>([^<]+)<\/a>/u.exec(files.get('size-report.html')!);
+    expect(row?.slice(1)).toEqual(['sources/6e042a3d943e7663eb4d591e.html', 'docs/reading.md']);
   });
 
   it('folds the desktop navigation with no script, and the page stays under the policy CSP', () => {

@@ -115,10 +115,13 @@ export function fixtureWorkItemQuery(
   rows: readonly Record<string, unknown>[],
   revision = FIXTURE_DOLT_REVISION,
   runDependencyQuery: (sql: string) => string = () => '[]',
+  runHistoryQuery: (sql: string) => string = () => { throw new Error('fixture: no tracker history'); },
 ): (_root: string, sql: string) => string {
   return (_root, sql) => sql.includes('FROM dependencies ')
     ? runDependencyQuery(sql)
-    : JSON.stringify([workItemRevisionWitness(revision), ...rows]);
+    : sql.includes('dolt_log(') || sql.includes('dolt_diff(')
+      ? runHistoryQuery(sql)
+      : JSON.stringify([workItemRevisionWitness(revision), ...rows]);
 }
 
 function workItemRow(
@@ -159,6 +162,8 @@ interface FixtureModelOptions {
   /** Replace the five default work-item rows (built with `fixtureWorkItemRow`). */
   readonly workItemRows?: readonly Record<string, unknown>[];
   readonly runDependencyQuery?: (sql: string) => string;
+  /** syzygy-t3jk.21: the history read; absent, it fails (the windows read Unknown). */
+  readonly runHistoryQuery?: (sql: string) => string;
 }
 
 export function buildFixtureModel(cleanups: string[], options: FixtureModelOptions = {}): PocModel {
@@ -207,7 +212,7 @@ export function buildFixtureModel(cleanups: string[], options: FixtureModelOptio
     observerRevision: revision,
     evaluation: { snapshot: 'butlers@fixture', asOf: options.evaluationAsOf ?? '2026-08-30T12:00:00Z' },
     evidence: fixtureEvidence(revision),
-    runWorkItemQuery: fixtureWorkItemQuery(rows, typeof rows[0]?.revision === 'string' ? rows[0].revision : doltRevision, options.runDependencyQuery),
+    runWorkItemQuery: fixtureWorkItemQuery(rows, typeof rows[0]?.revision === 'string' ? rows[0].revision : doltRevision, options.runDependencyQuery, options.runHistoryQuery),
     ...(options.projectShape === undefined ? {} : { projectShape: options.projectShape }),
     // The production traversal predicate: readiness is assessed whenever a
     // pair is supplied, exactly as the daemon does.

@@ -1,0 +1,172 @@
+{
+  "format": "syzygy-dossier-counted-review-reflow/1",
+  "scope": "syzygy-fnry.18 AC1 counted review status and size-report path wrapping in local operator-agent mode",
+  "source": {
+    "predecessor": "f7e93102f225712fbb5d7995f3735d360481ef7c",
+    "subject": "c08e48fb0a09941ebafee0b2222302d22883a187",
+    "tree": "b1ccd5cc21d624e8f128514bc19141872566656e",
+    "changedBlobs": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts": "79db0ced63188c0631f569d5ec424f72111a2746",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts": "87ad1d984ef0ae2f6820733cc0a5de5ba2fa0e5b",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "1edb6e21ad3106ec0b3a4eba21138e9b083231ad"
+    }
+  },
+  "replay": {
+    "fixture": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+    "viewport": [
+      390,
+      844
+    ],
+    "syntheticHtmlPages": 18,
+    "countedDigestInputs": [
+      "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
+    ],
+    "selectExactTest": "fits every dossier page with both counted review digests at 390 by 844",
+    "command": "SYZYGY_POC_BROWSER=\"$browser\" npx vitest run --project e2e apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts -t \"fits every dossier page with both counted review digests at 390 by 844\"",
+    "mutationProcedure": "In a detached checkout of the subject with locked dependencies installed, set browser to the installed Chromium executable. Keep the fixture and replace exactly one candidate line with the stated predecessor line. Restore the exact subject before the next mutation. Run the same named assertion and confirm it is the sole failure. Only synthetic layout inputs are used."
+  },
+  "focusedChecks": {
+    "chromium": {
+      "tests": 3,
+      "passed": 3,
+      "skipped": 0,
+      "reportSha256": "19ad86cf694ade580425aed89a58062b2a2200d39f3c7d0dae3f3993b6c876b9"
+    },
+    "unit": {
+      "tests": 7,
+      "passed": 7,
+      "skipped": 0,
+      "reportSha256": "da06dbb0c985e7fe0d51652af5c5c644265ee6f04dee85e231235c38b49a19d9"
+    },
+    "integration": {
+      "tests": 189,
+      "passed": 189,
+      "skipped": 0,
+      "reportSha256": "b96e6788811e3589612966f417a4311c67db5b3f907603a583512f22aa96793f"
+    }
+  },
+  "rule6": [
+    {
+      "predicate": "regionWrap",
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+      "expectedCandidateLine": "  return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul style=\"overflow-wrap:anywhere\">${items.map(item => labelled(item, escape)).join('')}</ul></aside>`;",
+      "mutantReplacementLine": "  return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul>${items.map(item => labelled(item, escape)).join('')}</ul></aside>`;",
+      "predecessorBlob": "f24843cccd6d2cf1b4caa0c9df49fa7db440e888",
+      "candidateBlob": "87ad1d984ef0ae2f6820733cc0a5de5ba2fa0e5b",
+      "assertion": "fits every dossier page with both counted review digests at 390 by 844",
+      "pageWidths": {
+        "index.html": 663,
+        "find-by-task.html": 663,
+        "poles/2.html": 663,
+        "poles/3.html": 663,
+        "deep-dives/why-detail.html": 663,
+        "deep-dives/words-detail.html": 663,
+        "contents.html": 663,
+        "glossary.html": 663,
+        "name-index.html": 663,
+        "sources/index.html": 663,
+        "sources/6e042a3d943e7663eb4d591e.html": 663,
+        "maps/directories.html": 663,
+        "maps/units.html": 663,
+        "maps/ci.html": 663,
+        "maps/infrastructure.html": 663,
+        "understanding.html": 663,
+        "appendix.html": 663,
+        "size-report.html": 663
+      },
+      "reportSha256": "5d8909d93bbede22d32ce620fdb3cee388af308bac3b5921fca0adf67cf491ad",
+      "logSha256": "287bfcafd98aaf219fc93050e7dd6e37bc378bf3a4644e9aebd83d3f2a7c6b89",
+      "failedTests": 1
+    },
+    {
+      "predicate": "sizeLinkWrap",
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "expectedCandidateLine": "    + `<table><thead><tr><th>Page</th><th>Depth</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.pages.map(row => `<tr><td><a href=\"${escape(row.path)}\"${local === undefined ? '' : ' style=\"overflow-wrap:anywhere\"'}>${escape(pageNames.get(row.path) ?? row.path)}</a></td><td>${row.depth}</td><td>${row.bytes}</td><td>${Object.values(row.wordsByReadingLevel).reduce((n, w) => n + w, 0) + row.unlabelledWords}</td></tr>`).join('')}</tbody></table>`",
+      "mutantReplacementLine": "    + `<table><thead><tr><th>Page</th><th>Depth</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.pages.map(row => `<tr><td><a href=\"${escape(row.path)}\">${escape(pageNames.get(row.path) ?? row.path)}</a></td><td>${row.depth}</td><td>${row.bytes}</td><td>${Object.values(row.wordsByReadingLevel).reduce((n, w) => n + w, 0) + row.unlabelledWords}</td></tr>`).join('')}</tbody></table>`",
+      "predecessorBlob": "acfb89ffbe391f63e3513179ae8ae22e0d50f87d",
+      "candidateBlob": "1edb6e21ad3106ec0b3a4eba21138e9b083231ad",
+      "assertion": "fits every dossier page with both counted review digests at 390 by 844",
+      "pageWidths": {
+        "size-report.html": 431
+      },
+      "reportSha256": "fa7fbd2619ded227167fea9d3f177a1e149b2555a3f31fd800244f984c1e8d50",
+      "logSha256": "7dc3ba3b34ee2f3a893e4a3e6802e6bbb55873319c637a408eb1eb19fd2e8e34",
+      "failedTests": 1
+    }
+  ],
+  "providerGolden": {
+    "sourcePath": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+    "predecessorGitBlob": "f3b4e5a6972b114c0cb8f1ab5d90e9f698c5fe05",
+    "candidateGitBlob": "f3b4e5a6972b114c0cb8f1ab5d90e9f698c5fe05",
+    "independentlyPassed": true
+  },
+  "syntheticReaderText": {
+    "baseline": "f7e93102f225712fbb5d7995f3735d360481ef7c",
+    "exactSource": "c08e48fb0a09941ebafee0b2222302d22883a187",
+    "converter": "scripts/dossier_site_to_text.py",
+    "converterGitBlob": "6b9ac5eeb12f5b17756700e8d874d29b6a7c9141",
+    "syntheticHtml": {
+      "baseline": 18,
+      "candidate": 18
+    },
+    "comparisons": {
+      "full": {
+        "pages": 17,
+        "changedPaths": [],
+        "baselineSha256": "23d686f64f7aa9f05e9cb35b4ead6b37f346d011656fe918f3b72be31bcde78c",
+        "candidateSha256": "23d686f64f7aa9f05e9cb35b4ead6b37f346d011656fe918f3b72be31bcde78c"
+      },
+      "reader": {
+        "pages": 14,
+        "changedPaths": [],
+        "baselineSha256": "79a72b5ffc64eea5c68f4b761cb9754bcff65a1ff0c1e7748a210df6612b23ef",
+        "candidateSha256": "79a72b5ffc64eea5c68f4b761cb9754bcff65a1ff0c1e7748a210df6612b23ef"
+      }
+    }
+  },
+  "syntheticDesignReviewSubject": {
+    "base": "f7e93102f225712fbb5d7995f3735d360481ef7c",
+    "exactSource": "c08e48fb0a09941ebafee0b2222302d22883a187",
+    "witnesses": {
+      "candidate": {
+        "witnessSha256": "f484578a0faab711636c6a2e977be4b4473e553b8b61311f7682735a41c1bab2",
+        "packetDigest": "120773cca4e64a3a26ca87072642d3fb7db8a1f6714fcc4f1cf054306a38cc78",
+        "pages": 18,
+        "files": 22
+      },
+      "region-only": {
+        "witnessSha256": "2f1320e990ce738f2f9ff16881584e8ff49cfe0431c55d93aa4d9b0cb74d15b4",
+        "packetDigest": "110e49f2406c0e190eef25121d44bcfa0737a3ca221f6c6bb536bf78761a1856",
+        "pages": 18,
+        "files": 22
+      },
+      "baseline": {
+        "witnessSha256": "21b4d4fb454ec44a272c45282be84f931a0f62abc609c918889969a89e6deb7c",
+        "packetDigest": "110e49f2406c0e190eef25121d44bcfa0737a3ca221f6c6bb536bf78761a1856",
+        "pages": 18,
+        "files": 22
+      }
+    },
+    "regionOnlyOutsideIdentical": true,
+    "candidateOutsideChangedPaths": [
+      "size-report.html"
+    ],
+    "candidateRequiresFreshDesignReview": true,
+    "exerciseOnlyUsesSyntheticFixture": true
+  },
+  "firstProtectedProjection": {
+    "priorStage": "1e30b1c196c691565fc2d858649aa4942306e305",
+    "sourceExactCombinedTree": "d738257b31e477e7678fdfa703564231a3183147"
+  },
+  "independentReview": {
+    "outcome": "ACCEPT",
+    "artifact": "docs/reviews/syzygy-fnry-18/FNRY18-COUNTED-REFLOW-R1-RAW.md",
+    "sha256": "46661c70c5d90ea107276d4c5bc2db4572be8498981358d041e75eaad2131fad"
+  },
+  "residual": [
+    "The named region remains in the counted render. The size-report link is outside that region and changes the design-review subject. An earlier design verdict is stale whenever the rebuilt subject digest differs.",
+    "This patch makes no claims about measured reader comprehension on a stored run. No actual counts, consent, or stored-run disposition are produced.",
+    "AC5 digest placement, treated separately from the reflow failure, remains unresolved with the current frozen design subject. AC3 and AC4 also remain separate from this slice."
+  ]
+}

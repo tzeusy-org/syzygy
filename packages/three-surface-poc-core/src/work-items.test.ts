@@ -29,11 +29,14 @@ describe('same-revision dependency observation (POC-REQ-062)', () => {
   };
 
   function observe(dependencyResponse: () => string, workItemRows: readonly Record<string, unknown>[] = [workItemWitness(revisionA), item]) {
-    const runQuery = vi.fn((_repoRoot: string, sql: string) =>
-      sql.includes('FROM issues ') ? JSON.stringify(workItemRows) : dependencyResponse(),
-    );
+    // syzygy-t3jk.21: the history read is its own statement (work-item-history.test.ts); here it fails.
+    const isHistory = (sql: string): boolean => sql.includes('dolt_log(');
+    const runQuery = vi.fn((_repoRoot: string, sql: string) => {
+      if (isHistory(sql)) throw new Error('no history in this fixture');
+      return sql.includes('FROM issues ') ? JSON.stringify(workItemRows) : dependencyResponse();
+    });
     const result = observeTrajectoryWorkItems({ repoRoot: '/fixture', beadPrefix: 'bu', capturedAt: '2026-08-31T00:00:00Z', runQuery });
-    return { ...result, calls: runQuery.mock.calls.map(([, sql]) => sql) };
+    return { ...result, calls: runQuery.mock.calls.map(([, sql]) => sql).filter((sql) => !isHistory(sql)) };
   }
 
   it('observes a witnessed empty set in two named, revision-pinned statements', () => {
