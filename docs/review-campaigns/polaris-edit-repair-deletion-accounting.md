@@ -3,6 +3,7 @@
 ## Patterns
 
 - `syzygy-dov\.23/DOV23-EDIT-REPAIR-ACCOUNTING-R1-RAW\.md`
+- `syzygy-dov\.23/DOV23-EDIT-REPAIR-ACCOUNTING-INTEGRATION-R2-RAW\.md`
 
 ## What was under review
 
@@ -13,7 +14,8 @@ scenario.
 
 ## Last verdict of record, and where the findings landed
 
-ACCEPT (`syzygy-dov.23/DOV23-EDIT-REPAIR-ACCOUNTING-R1-RAW.md:3`). The
-candidate defines the edit or repair outcome separately from readiness.
-Its effective composition, remaining stage implementation and adoption
-record travel in their own changes.
+REVISE (`syzygy-dov.23/DOV23-EDIT-REPAIR-ACCOUNTING-INTEGRATION-R2-RAW.md:3`).
+The packet review recorded ACCEPT in the R1 raw. The campaign validator
+rejected that verbatim verdict as a citation target. The campaign retains
+both raw rounds and cites the exact integration verdict. The six candidate
+files retain their reviewed bytes.
