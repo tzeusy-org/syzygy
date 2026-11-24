@@ -540,12 +540,12 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
-        // Unstaged synchronous operations check authority before the first
-        // anchor read. A joined terminal read checks asynchronous authority in
-        // io, then synchronous authority and both named roots before mkdir.
+        // The first staged allocation check below already verifies currentness
+        // and both clocks before opening either named root. A joined terminal
+        // read instead verifies authority at the lock submission.
         const synchronousAnchor = currentAsync === undefined && staging === undefined;
         if (!Number.isSafeInteger(deadline) || deadline > options.deadline
-          || (!synchronousAnchor && !joinedTerminalLock && deadline <= live())) throw refused();
+          || (!synchronousAnchor && !joinedTerminalLock && !allocation && deadline <= live())) throw refused();
         for (;;) {
           if (!terminalRead) {
             if (!synchronousAnchor) check();
