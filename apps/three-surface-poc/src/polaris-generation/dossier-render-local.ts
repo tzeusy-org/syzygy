@@ -25,7 +25,7 @@ export function disclosureList(items: readonly LocalDisclosureItem[], escape: Es
 
 /** The named review-status region. It holds no claim and no fragment target, so stripping it changes nothing else on the page. */
 export function regionMarkup(items: readonly LocalDisclosureItem[], escape: Escape): string {
-  return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul>${items.map(item => labelled(item, escape)).join('')}</ul></aside>`;
+  return `${REVIEW_STATUS_REGION_OPEN}<h2>Review status</h2><ul style="overflow-wrap:anywhere">${items.map(item => labelled(item, escape)).join('')}</ul></aside>`;
 }
 
 /** The anchor as data attributes, for the inline link beside a quotation. */
