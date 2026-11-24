@@ -1,0 +1,466 @@
+{
+  "format": "f3-native-peer-capture-observation/1",
+  "subjectCommit": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "scenario": "stop-resume",
+  "inputTreeSha256": "68858eb12992f0c4123fe50dca3e0a9af84df010109faaeb4d7f8765c1068c2a",
+  "profileRegistrySha256": "cbd3a50fe5381bad634ad4cf5c83f40cc8c28849defb42bbd619a87f3accaadb",
+  "failureManifestSha256": "f0f46b843118cf95822c96f9fc8fdf446cb630e6733d80327ecdea5ab0055be9",
+  "vitestLogSha256": "4bccd2172cf961da9b0ac83f4e41eca825b9efcc2fc3f99f45cf4d6e84f7af64",
+  "result": {
+    "failed": 1,
+    "skipped": 3,
+    "collected": 4,
+    "totalDurationSeconds": 388.01
+  },
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "rendering draft revision 0",
+    "run ended: operator stop requested, checked history retained"
+  ],
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-render",
+      "initialRemainingMs": 59856,
+      "elapsedMs": 23125.236684000003,
+      "remainingMs": 36730,
+      "admission": {
+        "entryMs": 14070.377196000016,
+        "entryRemainingMs": 45785,
+        "outcome": "accepted",
+        "settledMs": 22322.625540999987
+      },
+      "artifactAuthority": {
+        "calls": 79,
+        "totalMs": 9782.297773000144
+      },
+      "outcome": "rendered",
+      "producerRefusal": false
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "transport-unavailable",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "resumeBootstrap": {
+    "restore-plans": {
+      "startedMs": 172371.192954,
+      "settledMs": 189469.923435,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 189550.369785,
+      "settledMs": 190150.959357,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 190239.732306,
+      "settledMs": 195835.326786,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 196810.328922,
+      "settledMs": 262126.341164,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 263459.848656,
+      "settledMs": 288863.925675,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 268258.185726,
+      "settledMs": 288162.81875,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 268769.129613,
+      "settledMs": 270563.285831,
+      "outcome": "accepted"
+    }
+  },
+  "resumePreparations": {
+    "roles": [
+      {
+        "role": "author",
+        "startedMs": 174685.960074,
+        "steps": [
+          {
+            "phase": "view-verification",
+            "startedMs": 174719.713269,
+            "settledMs": 174767.790534,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 176568.862397,
+            "settledMs": 177096.399339,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "namespace-probe",
+            "startedMs": 177096.4789,
+            "settledMs": 177659.011427,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "view-verification",
+            "startedMs": 177659.063526,
+            "settledMs": 177668.122944,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 178723.173153,
+            "settledMs": 178829.822134,
+            "outcome": "accepted"
+          }
+        ],
+        "omittedSteps": 0,
+        "settledMs": 178837.820983,
+        "outcome": "accepted"
+      },
+      {
+        "role": "inventory",
+        "startedMs": 178917.094027,
+        "steps": [
+          {
+            "phase": "view-verification",
+            "startedMs": 178921.721431,
+            "settledMs": 178934.455037,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 179844.524921,
+            "settledMs": 179941.324388,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "namespace-probe",
+            "startedMs": 179941.379652,
+            "settledMs": 180399.906565,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "view-verification",
+            "startedMs": 180399.957271,
+            "settledMs": 180416.682356,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 181454.121912,
+            "settledMs": 181636.896734,
+            "outcome": "accepted"
+          }
+        ],
+        "omittedSteps": 0,
+        "settledMs": 181662.152094,
+        "outcome": "accepted"
+      },
+      {
+        "role": "fidelity",
+        "startedMs": 181845.36793,
+        "steps": [
+          {
+            "phase": "view-verification",
+            "startedMs": 181855.760012,
+            "settledMs": 181962.263024,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 183400.752569,
+            "settledMs": 183503.888343,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "namespace-probe",
+            "startedMs": 183503.9183,
+            "settledMs": 183846.663028,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "view-verification",
+            "startedMs": 183846.703014,
+            "settledMs": 183851.4216,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 185394.755235,
+            "settledMs": 185547.792593,
+            "outcome": "accepted"
+          }
+        ],
+        "omittedSteps": 0,
+        "settledMs": 185558.259335,
+        "outcome": "accepted"
+      },
+      {
+        "role": "design",
+        "startedMs": 185656.100401,
+        "steps": [
+          {
+            "phase": "view-verification",
+            "startedMs": 185661.822708,
+            "settledMs": 185734.962894,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 186810.191628,
+            "settledMs": 186977.682919,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "namespace-probe",
+            "startedMs": 186977.718176,
+            "settledMs": 187864.224194,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "view-verification",
+            "startedMs": 187864.254391,
+            "settledMs": 187925.75921,
+            "outcome": "accepted"
+          },
+          {
+            "phase": "current",
+            "startedMs": 189255.229495,
+            "settledMs": 189351.501375,
+            "outcome": "accepted"
+          }
+        ],
+        "omittedSteps": 0,
+        "settledMs": 189364.268734,
+        "outcome": "accepted"
+      }
+    ],
+    "omittedRoles": 0
+  },
+  "designSetup": {
+    "preparation": {
+      "startedMs": 175092.283,
+      "settledMs": 183372.921,
+      "outcome": "accepted"
+    },
+    "launch": {
+      "startedMs": 184882.93,
+      "settledMs": 187546.532,
+      "outcome": "accepted"
+    }
+  },
+  "launchHistory": {
+    "write": {
+      "startedMs": 187548.019,
+      "settledMs": 191552.249,
+      "outcome": "accepted"
+    },
+    "syncs": [
+      {
+        "startedMs": 188883.976,
+        "settledMs": 189118.097,
+        "outcome": "accepted"
+      },
+      {
+        "startedMs": 189907.088,
+        "settledMs": 189974.605,
+        "outcome": "accepted"
+      }
+    ],
+    "commit": {
+      "startedMs": 192461.581,
+      "settledMs": 194064.868,
+      "outcome": "rejected"
+    }
+  },
+  "captureRefusals": {
+    "open": {
+      "ordinal": 1,
+      "boundMs": 180000,
+      "kind": "inference-bridge",
+      "open": {
+        "startedMs": 188884.905,
+        "settledMs": 193885.119,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 188885.038
+      },
+      "capture": {
+        "startedMs": 188885.315
+      },
+      "latestSample": {
+        "ordinal": 6,
+        "verify": {
+          "startedMs": 193506.601,
+          "settledMs": 193884.874,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "capture": {
+      "ordinal": 1,
+      "boundMs": 180000,
+      "kind": "inference-bridge",
+      "open": {
+        "startedMs": 188884.905,
+        "settledMs": 193885.119,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 188885.038
+      },
+      "capture": {
+        "startedMs": 188885.315,
+        "settledMs": 194064.58,
+        "outcome": "refused"
+      },
+      "latestSample": {
+        "ordinal": 6,
+        "verify": {
+          "startedMs": 193506.601,
+          "settledMs": 193884.874,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 193919.758,
+          "settledMs": 194063.676,
+          "outcome": "refused"
+        }
+      }
+    },
+    "accept": {
+      "ordinal": 1,
+      "boundMs": 180000,
+      "kind": "inference-bridge",
+      "open": {
+        "startedMs": 188884.905,
+        "settledMs": 193885.119,
+        "outcome": "refused"
+      },
+      "accept": {
+        "startedMs": 188885.038,
+        "settledMs": 194064.634,
+        "outcome": "refused"
+      },
+      "capture": {
+        "startedMs": 188885.315,
+        "settledMs": 194064.58,
+        "outcome": "refused"
+      },
+      "latestSample": {
+        "ordinal": 6,
+        "verify": {
+          "startedMs": 193506.601,
+          "settledMs": 193884.874,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 193919.758,
+          "settledMs": 194063.676,
+          "outcome": "refused"
+        }
+      }
+    }
+  },
+  "firstDesignPublication": {},
+  "roleInspections": {
+    "design": {
+      "samples": 6,
+      "firstRefusal": {
+        "ordinal": 6,
+        "phases": {
+          "process": {
+            "startedMs": 0.05105599999660626,
+            "settledMs": 398.260941000015,
+            "outcome": "accepted"
+          },
+          "verify": {
+            "startedMs": 0.08449999999720603,
+            "settledMs": 378.4471970000304,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.08699400001205504,
+            "settledMs": 413.29280300001847,
+            "outcome": "accepted"
+          },
+          "confirm": {
+            "startedMs": 413.3031530000153,
+            "settledMs": 557.2817510000314,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "confirm",
+          "cause": "authority-refused",
+          "elapsedMs": 557.3373560000327
+        }
+      }
+    }
+  },
+  "captureElapsedMilliseconds": 5000.214,
+  "captureLimitMilliseconds": 5000,
+  "observations": [
+    "The exact stopped cut verified and its exclusive claim was acquired. Seven restoration stages accepted, as did the initial resumed render and fresh Design launch.",
+    "The outer transport capture timer returned unavailable after5000.214ms, while accept and native capture remained pending; publication was not reached.",
+    "A later Design resource sample accepted its process, storage and verification stages, then refused confirmation after transport opening failed.",
+    "Peer capture overlaps launch registration but does not wait for activation; the activation barrier is in the later authorize stage.",
+    "The sixty-second resumed-render report is the initial render producer. Ordered startup reproduction has its separate ninety-second lease and the genuine wrapper asserts that deadline."
+  ],
+  "nativeAcceptance": "Not achieved",
+  "limitations": [
+    "The trace identifies the outer capture timeout, not which nested verification operation consumed the window.",
+    "No second local native attempt on this source is being treated as acceptance.",
+    "The original run, resource inspection and publication guards remain in place."
+  ]
+}

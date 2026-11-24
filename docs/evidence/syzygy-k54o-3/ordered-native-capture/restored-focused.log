@@ -1,0 +1,15 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ✓ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (32 tests | 18 skipped) 125ms
+ ✓ |integration| packages/polaris-dossier/src/url-machine-peer.test.ts (26 tests | 21 skipped) 43526ms
+   ✓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at image  11495ms
+   ✓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at final  12452ms
+   ✓ live URL machine peer binding > clips real capture to its original run expiry during the image read  6243ms
+   ✓ live URL machine peer binding > keeps fresh parent authority independently bounded at five seconds  11786ms
+
+ Test Files  2 passed (2)
+      Tests  19 passed | 39 skipped (58)
+   Start at  23:40:44
+   Duration  54.05s (transform 7.01s, setup 511ms, collect 14.35s, tests 43.65s, environment 0ms, prepare 1.49s)
+

@@ -1,0 +1,207 @@
+{
+  "base": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "subjects": {
+    "packages/polaris-dossier/src/url-machine-peer.ts": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+    "packages/polaris-dossier/src/url-run-machine.ts": "260bc0eb8070b2053857cb8b2bf68de5016f2a05de52d9537832096a762a9827",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "3f0af7fe67dce57fc3a1d9056868742575ade71b3702e3373b9c07f2b0a5711d",
+    "packages/polaris-dossier/src/session-machine-transport.test.ts": "5833c9a2b04fde4657054024a7adf39a2e2c192ff08d22c7dcfc883eb42f5514"
+  },
+  "controls": [
+    {
+      "name": "outer-old-five",
+      "file": "packages/polaris-dossier/src/session-machine-transport.ts",
+      "sourceSha256": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+      "mutatedSha256": "f6684d4e468c2e92f456d34ba1adbc748d444cb462befbdfdaa9408c7f2491aa",
+      "replacements": [
+        {
+          "old": "const captureDeadline = Math.min(deadline, began + ports.captureMilliseconds);",
+          "new": "const captureDeadline = Math.min(deadline, began + 5000);",
+          "count": 1
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/session-machine-transport.test.ts",
+        "-t",
+        "bounded ordered capture"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/outer-old-five.log",
+      "logSha256": "b50fd8d781b262b900869bc63483aacd0e1810a56fa57fcb77f179ea7fc3b2b9"
+    },
+    {
+      "name": "outer-caller-unclipped",
+      "file": "packages/polaris-dossier/src/session-machine-transport.ts",
+      "sourceSha256": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+      "mutatedSha256": "b942f0e343554e6f8e60ad0ad7339a1bf5851b335572c89dce33e474c2dcc48e",
+      "replacements": [
+        {
+          "old": "const captureDeadline = Math.min(deadline, began + ports.captureMilliseconds);",
+          "new": "const captureDeadline = began + ports.captureMilliseconds;",
+          "count": 1
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/session-machine-transport.test.ts",
+        "-t",
+        "original caller expiry"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/outer-caller-unclipped.log",
+      "logSha256": "fee919126cc253db7a5ba97266d555ec3a2598bd74985eecf4bbdceaa31e3b68"
+    },
+    {
+      "name": "copied-profile",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "mutatedSha256": "87eb671825b633220b175a08049b15c1ed5839c0dfd0351fd4ecd3b889f3af11",
+      "replacements": [
+        {
+          "old": "if (!isNativeSessionProfile(profile) || profile.digest !== context.profileSha256",
+          "new": "if (profile.digest !== context.profileSha256",
+          "count": 1
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "-t",
+        "selects capture time only"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/copied-profile.log",
+      "logSha256": "ba22f43a3e3fec47671e690ed4541709f5a7763423b87686eee1f215b1884061"
+    },
+    {
+      "name": "ordinary-intrinsic-image-unbounded",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "mutatedSha256": "13049fd89c9c16b93c0ac544f4e8f0e0d1f5c0301d16c5e82dc13ac8baea06e4",
+      "replacements": [
+        {
+          "old": "performance.now() - began >= captureMilliseconds",
+          "new": "performance.now() - began >= 30_000",
+          "count": 2
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "-t",
+        "real ordinary intrinsic.*image"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/ordinary-intrinsic-image-unbounded.log",
+      "logSha256": "056a275e01cb9e65183d1f5b3a5cd8c7e781d7fde47ea559a9903e776e869c0b"
+    },
+    {
+      "name": "ordinary-intrinsic-final-unbounded",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "mutatedSha256": "13049fd89c9c16b93c0ac544f4e8f0e0d1f5c0301d16c5e82dc13ac8baea06e4",
+      "replacements": [
+        {
+          "old": "performance.now() - began >= captureMilliseconds",
+          "new": "performance.now() - began >= 30_000",
+          "count": 2
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "-t",
+        "real ordinary intrinsic.*final"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/ordinary-intrinsic-final-unbounded.log",
+      "logSha256": "11b8cbfe0a6a2e77e42e610ddb5554ba826bb111fff6285ce73eff98b76e88f7"
+    },
+    {
+      "name": "run-expiry-removed",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "mutatedSha256": "b4045d9b6bf47c2936c8d4ef63887ddf3231450c05974a9e471d43787613990d",
+      "replacements": [
+        {
+          "old": " || now >= context.deadline",
+          "new": "",
+          "count": 1
+        },
+        {
+          "old": " || now >= options.context.deadline",
+          "new": "",
+          "count": 1
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "-t",
+        "original run expiry"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/run-expiry-removed.log",
+      "logSha256": "0905458021fad4c91305da2dc94690fb806cd8420c9a707e1d13dd74f46aaf7b"
+    },
+    {
+      "name": "parent-too-short",
+      "file": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "mutatedSha256": "d9e9aff3e419dd033b66585cd5d9d8b09274e876d86ad09707334d63e31eda58",
+      "replacements": [
+        {
+          "old": "Math.min(URL_MACHINE_PEER_LIMITS.setupMilliseconds, options.context.deadline - options.now())",
+          "new": "Math.min(1000, options.context.deadline - options.now())",
+          "count": 1
+        }
+      ],
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/url-machine-peer.test.ts",
+        "-t",
+        "fresh parent authority independently"
+      ],
+      "exitCode": 1,
+      "log": "/home/orca/.tmp/f3-capture-envelope-review/parent-too-short.log",
+      "logSha256": "3ad291aada2a47a20cf388365e14869c89852ef22d3cfde449a2081837e70ea1"
+    }
+  ],
+  "restored": true
+}

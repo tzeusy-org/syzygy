@@ -1,0 +1,66 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-machine-peer.test.ts (26 tests | 1 failed | 25 skipped) 4570ms
+   ↓ live URL machine peer binding > selects capture time only from a nominal matching profile (selector evidence, no peer claim)
+   × live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at image 4353ms
+     → expected { verifier: { …(4) } } to be null
+   ↓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at final
+   ↓ live URL machine peer binding > clips real capture to its original run expiry during the image read
+   ↓ live URL machine peer binding > keeps fresh parent authority independently bounded at five seconds
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on activate
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on refuse
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on withdraw-parent
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on close-peer
+   ↓ live URL machine peer binding > refuses the fresh parent before invoking any native capture helper
+   ↓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: true)
+   ↓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: false)
+   ↓ live URL machine peer binding > pins the actual Node image with ordered, bounded positional reads and detects a short read
+   ↓ live URL machine peer binding > holds the installed image descriptor until a submitted sibling settles after read failure
+   ↓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: false)
+   ↓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: true)
+   ↓ live URL machine peer binding > refuses the next positioned read after authority is lost during the first batch
+   ↓ live URL machine peer binding > reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses
+   ↓ live URL machine peer binding > captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files
+   ↓ live URL machine peer binding > rejects copied launch objects and an unrelated same-UID socket carrying copied claims
+   ↓ live URL machine peer binding > refuses the inherited descriptor sender rather than authenticating it as the living connector
+   ↓ live URL machine peer binding > refuses the mixed descriptor sender rather than authenticating it as the living connector
+   ↓ live URL machine peer binding > refuses queued bytes and subsequent effects after the captured sender exits
+   ↓ live URL machine peer binding > blocks the effect on current parent failure
+   ↓ live URL machine peer binding > blocks the effect on current audit failure
+   ↓ live URL machine peer binding > blocks the effect on current expiry failure
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-peer.test.ts > live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at image
+AssertionError: expected { verifier: { …(4) } } to be null
+
+- Expected: 
+null
+
++ Received: 
+{
+  "verifier": {
+    "channelIdentitySha256": "0d756bb743551bb7379852ee62176bdda22c616028a7ca70521c5ad127837807",
+    "mechanism": "rfc5-7d",
+    "processIdentitySha256": "13dd68bf1403a5c6bc31b394ee859c6eaa5a76191d464f6ffac477e893e4fffb",
+    "profileSha256": "58ad6b499c17978a2e10d2e5e82c38a7dcfadb058c148998402ced65b869b208",
+  },
+}
+
+ ❯ packages/polaris-dossier/src/url-machine-peer.test.ts:193:49
+    191|         readImageCurrent: () => { if (boundary === 'image') offset = 6…
+    192|       });
+    193|       expect(offset).toBe(6000); expect(f.peer).toBeNull();
+       |                                                 ^
+    194|     } finally { clock.mockRestore(); }
+    195|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 skipped (26)
+   Start at  23:39:06
+   Duration  8.31s (transform 2.32s, setup 16ms, collect 3.03s, tests 4.57s, environment 0ms, prepare 88ms)
+

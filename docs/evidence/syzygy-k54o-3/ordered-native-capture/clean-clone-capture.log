@@ -1,0 +1,44 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+ ✓ |integration| packages/polaris-dossier/src/url-machine-peer.test.ts (26 tests) 174472ms
+   ✓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at image  9779ms
+   ✓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at final  7121ms
+   ✓ live URL machine peer binding > clips real capture to its original run expiry during the image read  7463ms
+   ✓ live URL machine peer binding > keeps fresh parent authority independently bounded at five seconds  11129ms
+   ✓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on activate  10340ms
+   ✓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on refuse  7521ms
+   ✓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on withdraw-parent  6196ms
+   ✓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on close-peer  4891ms
+   ✓ live URL machine peer binding > refuses the fresh parent before invoking any native capture helper  5683ms
+   ✓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: true)  5047ms
+   ✓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: false)  7600ms
+   ✓ live URL machine peer binding > pins the actual Node image with ordered, bounded positional reads and detects a short read  6971ms
+   ✓ live URL machine peer binding > holds the installed image descriptor until a submitted sibling settles after read failure  4088ms
+   ✓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: false)  5206ms
+   ✓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: true)  4212ms
+   ✓ live URL machine peer binding > refuses the next positioned read after authority is lost during the first batch  4497ms
+   ✓ live URL machine peer binding > reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses  8300ms
+   ✓ live URL machine peer binding > captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files  7676ms
+   ✓ live URL machine peer binding > rejects copied launch objects and an unrelated same-UID socket carrying copied claims  5982ms
+   ✓ live URL machine peer binding > refuses the inherited descriptor sender rather than authenticating it as the living connector  5048ms
+   ✓ live URL machine peer binding > refuses the mixed descriptor sender rather than authenticating it as the living connector  5513ms
+   ✓ live URL machine peer binding > refuses queued bytes and subsequent effects after the captured sender exits  5168ms
+   ✓ live URL machine peer binding > blocks the effect on current parent failure  6735ms
+   ✓ live URL machine peer binding > blocks the effect on current audit failure  7923ms
+   ✓ live URL machine peer binding > blocks the effect on current expiry failure  12315ms
+ ✓ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (32 tests) 290ms
+ ✓ |integration| packages/polaris-dossier/src/url-run-machine.test.ts (7 tests) 84154ms
+   ✓ production URL run machine provisioner > refuses changed numeric product limits before selecting a declared runtime  495ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; close defeats awaited effects and permits durable retirement  22889ms
+   ✓ production URL run machine provisioner > issues and rotates only actual peers; withdraw-effects defeats awaited effects and permits durable retirement  11200ms
+   ✓ production URL run machine provisioner > close closes admission while a genuine socket awaits parent revalidation  8926ms
+   ✓ production URL run machine provisioner > withdraw-effects closes admission while a genuine socket awaits parent revalidation  9926ms
+   ✓ production URL run machine provisioner > waits for the pending native sample before repeating the capture authority check  13459ms
+   ✓ production URL run machine provisioner > refuses copied capabilities before creating a store and reports expired retirement as Unknown  13211ms
+
+ Test Files  3 passed (3)
+      Tests  65 passed (65)
+   Start at  23:44:00
+   Duration  275.01s (transform 8.51s, setup 39ms, collect 13.34s, tests 258.92s, environment 1ms, prepare 646ms)
+

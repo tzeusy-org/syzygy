@@ -1,0 +1,127 @@
+{
+  "format": "f3-hosted-recovery-failure-observation/1",
+  "subjectCommit": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "workflowRun": 45422683283,
+  "job": 138548223603,
+  "conclusion": "failure",
+  "log": {
+    "path": "/home/orca/.tmp/f3-hosted-f0d182.kPZmzb3Y/integration.log",
+    "sha256": "97ebc8d4f02d6dab45cc0b3ef99e134e3ba5e7728cf233ef0d6539ef32c97dc5",
+    "bytes": 410084
+  },
+  "nativeCases": {
+    "complete": "passed",
+    "delivery-stop": "passed",
+    "stop-resume": "failed",
+    "eligible-stop-resume": "failed",
+    "population": 4
+  },
+  "observations": [
+    {
+      "marker": "owned native resume failure",
+      "scenario": "stop-resume",
+      "bootstrap": {
+        "restore-plans": {
+          "startedMs": 368676.542796,
+          "settledMs": 381572.924022,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 381948.748107,
+          "settledMs": 382337.05591,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 382709.962905,
+          "settledMs": 403183.894593,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 407237.378136,
+          "settledMs": 614961.126147,
+          "outcome": "accepted"
+        },
+        "start-sessions": {
+          "startedMs": 617338.097565,
+          "settledMs": 660392.91542,
+          "outcome": "rejected"
+        },
+        "create-machine": {
+          "startedMs": 624278.742779,
+          "settledMs": 660386.490123,
+          "outcome": "rejected"
+        },
+        "open-store": {
+          "startedMs": 626124.145133,
+          "settledMs": 629587.555886,
+          "outcome": "accepted"
+        }
+      },
+      "latestStoreSteps": [
+        {
+          "kind": "terminal-read",
+          "startedMs": 658099.001447,
+          "runRemainingMs": 6748291,
+          "asyncAuthority": {
+            "started": 2,
+            "accepted": 2,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 925.3414709999925
+          },
+          "currentChecks": 0,
+          "currentRefusals": 0,
+          "settledMs": 659898.681827,
+          "outcome": "refused"
+        },
+        {
+          "kind": "close",
+          "startedMs": 659898.800187,
+          "runRemainingMs": 6746492,
+          "asyncAuthority": {
+            "started": 0,
+            "accepted": 0,
+            "refused": 0,
+            "rejected": 0,
+            "totalMs": 0
+          },
+          "settledMs": 659898.939116,
+          "outcome": "accepted"
+        }
+      ]
+    },
+    {
+      "marker": "owned native resume failure",
+      "scenario": "eligible-stop-resume",
+      "bootstrap": {
+        "restore-plans": {
+          "startedMs": 1022733.732369,
+          "settledMs": 1043938.220209,
+          "outcome": "accepted"
+        },
+        "load-renderer": {
+          "startedMs": 1044801.233502,
+          "settledMs": 1045201.187325,
+          "outcome": "accepted"
+        },
+        "create-origins": {
+          "startedMs": 1045951.752671,
+          "settledMs": 1085950.44163,
+          "outcome": "accepted"
+        },
+        "restore-products": {
+          "startedMs": 1093817.146777,
+          "settledMs": 1212681.934614,
+          "outcome": "rejected"
+        }
+      },
+      "latestStoreSteps": []
+    }
+  ],
+  "limitations": [
+    "The complete integration-suite denominator is not established by this retained summary.",
+    "The interrupted final sampleCurrent refusal precedes lock release. A five-second operation expiry is inferred, not uniquely identified by this trace.",
+    "The eligible restore-products rejecting predicate remains Unknown; elapsed time alone does not establish a timeout.",
+    "Early intentional runner-selftest failures are not additional failed production cases."
+  ]
+}

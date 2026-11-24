@@ -1,0 +1,59 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-machine-peer.test.ts (26 tests | 1 failed | 25 skipped) 250ms
+   × live URL machine peer binding > selects capture time only from a nominal matching profile (selector evidence, no peer claim) 32ms
+     → expected 5000 to be null
+   ↓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at image
+   ↓ live URL machine peer binding > keeps the real ordinary intrinsic five-second capture bound at final
+   ↓ live URL machine peer binding > clips real capture to its original run expiry during the image read
+   ↓ live URL machine peer binding > keeps fresh parent authority independently bounded at five seconds
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on activate
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on refuse
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on withdraw-parent
+   ↓ live URL machine peer binding > holds a captured peer pending activation and checks its currentness on close-peer
+   ↓ live URL machine peer binding > refuses the fresh parent before invoking any native capture helper
+   ↓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: true)
+   ↓ live URL machine peer binding > rechecks authority once at final native helper dispatch (current: false)
+   ↓ live URL machine peer binding > pins the actual Node image with ordered, bounded positional reads and detects a short read
+   ↓ live URL machine peer binding > holds the installed image descriptor until a submitted sibling settles after read failure
+   ↓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: false)
+   ↓ live URL machine peer binding > checks full authority at the installed image read boundaries (withdrawal: true)
+   ↓ live URL machine peer binding > refuses the next positioned read after authority is lost during the first batch
+   ↓ live URL machine peer binding > reserves hard CPU capacity before every actual helper and executes none when its retained reservation refuses
+   ↓ live URL machine peer binding > captures a genuine isolated descendant and authorizes its scoped effect against actual protected lifecycle files
+   ↓ live URL machine peer binding > rejects copied launch objects and an unrelated same-UID socket carrying copied claims
+   ↓ live URL machine peer binding > refuses the inherited descriptor sender rather than authenticating it as the living connector
+   ↓ live URL machine peer binding > refuses the mixed descriptor sender rather than authenticating it as the living connector
+   ↓ live URL machine peer binding > refuses queued bytes and subsequent effects after the captured sender exits
+   ↓ live URL machine peer binding > blocks the effect on current parent failure
+   ↓ live URL machine peer binding > blocks the effect on current audit failure
+   ↓ live URL machine peer binding > blocks the effect on current expiry failure
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-machine-peer.test.ts > live URL machine peer binding > selects capture time only from a nominal matching profile (selector evidence, no peer claim)
+AssertionError: expected 5000 to be null
+
+- Expected: 
+null
+
++ Received: 
+5000
+
+ ❯ packages/polaris-dossier/src/url-machine-peer.test.ts:176:74
+    174|       const context = { profileSha256: profile.digest, runId: input.bi…
+    175|       expect(urlMachinePeerCaptureMilliseconds(profile, context)).toBe…
+    176|       expect(urlMachinePeerCaptureMilliseconds({ ...profile }, context…
+       |                                                                          ^
+    177|       for (const changed of [{ ...context, profileSha256: id() }, { ..…
+    178|         { ...context, role: 'author' as const }]) expect(urlMachinePee…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 skipped (26)
+   Start at  23:39:01
+   Duration  2.61s (transform 1.39s, setup 21ms, collect 1.83s, tests 250ms, environment 0ms, prepare 107ms)
+

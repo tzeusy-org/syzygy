@@ -1,0 +1,136 @@
+{
+  "format": "f3-native-resource-inspection-observation/1",
+  "subjectCommit": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "scenario": "eligible-stop-resume",
+  "inputTreeSha256": "68858eb12992f0c4123fe50dca3e0a9af84df010109faaeb4d7f8765c1068c2a",
+  "profileRegistrySha256": "cbd3a50fe5381bad634ad4cf5c83f40cc8c28849defb42bbd619a87f3accaadb",
+  "failureManifestSha256": "2be6f807433ba2f2278fb4d9424080db1030ea0c1859a2d2361428db3ac1636e",
+  "vitestLogSha256": "ca35c64a1031013f56349ed36a9d71f5873f3294832432a6f8bcbfe842e7f182",
+  "result": {
+    "passed": 0,
+    "failed": 1,
+    "skipped": 3,
+    "collected": 4,
+    "totalDurationSeconds": 334.51,
+    "failure": "expected undefined to be defined",
+    "firstRuntimeFailure": {
+      "reason": "role-ended",
+      "atMs": 329818.032689
+    }
+  },
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "run ended: checked session boundary unavailable"
+  ],
+  "initialRoleInspections": {
+    "author": {
+      "samples": 766,
+      "firstRefusal": {
+        "ordinal": 766,
+        "phases": {
+          "process": {
+            "startedMs": 0.03340299997944385
+          },
+          "storage": {
+            "startedMs": 0.08532200002809986
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 2872.732054000022
+        }
+      }
+    },
+    "inventory": {
+      "samples": 715,
+      "firstRefusal": {
+        "ordinal": 715,
+        "phases": {
+          "process": {
+            "startedMs": 1.3125279999803752,
+            "settledMs": 97.4243209999986,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 1.3527350000222214,
+            "settledMs": 133.77101100003347,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 133.77823500003433,
+            "settledMs": 133.78035900002578,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 133.78491799999028
+        }
+      }
+    },
+    "fidelity": {
+      "samples": 695,
+      "firstRefusal": {
+        "ordinal": 695,
+        "phases": {
+          "process": {
+            "startedMs": 0.11061999999219552,
+            "settledMs": 132.95850000000792,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.4279910000041127,
+            "settledMs": 144.55958200001623,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 144.56993200001307,
+            "settledMs": 144.57653399999253,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 144.6734680000227
+        }
+      }
+    }
+  },
+  "firstAuthorMediationFailure": {
+    "atMs": 329770.137588,
+    "ordinal": 8,
+    "phase": "mediation",
+    "step": {
+      "role": "author",
+      "startedMs": 326288.895673,
+      "stages": [
+        {
+          "phase": "peer-current",
+          "timing": {
+            "startedMs": 326291.151018,
+            "settledMs": 326291.956565,
+            "outcome": "accepted"
+          }
+        }
+      ],
+      "settledMs": 329769.970541,
+      "outcome": "refused"
+    }
+  },
+  "observations": [
+    "The run ended before Stop and initial Design startup; resumed publication and cold recovery were not reached.",
+    "The first retained Author refusal is storage/bounded-timeout after2872.732054ms under the2000ms inspection limit, with process and storage observations not settled.",
+    "Inventory and Fidelity completed their process/storage observations and refused currentness.",
+    "The trace identifies the awaited storage phase, not the blocked syscall or host scheduling cause."
+  ],
+  "nativeAcceptance": "Not achieved",
+  "limitations": [
+    "A resource-inspection timeout is not proof of a storage or process cap breach.",
+    "The configured finite incomplete-inspection guard remains in place; no efficient census defect is established.",
+    "Successor recovery on this source remains required; this failure is not evidence that a changed resumed-publication limit was exercised."
+  ]
+}

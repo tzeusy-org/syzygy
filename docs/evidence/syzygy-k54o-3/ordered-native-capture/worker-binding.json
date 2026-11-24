@@ -1,0 +1,52 @@
+{
+  "base": "f0d182e7acc1d2e5826035d739b8c17dfa695ccf",
+  "subjects": {
+    "packages/polaris-dossier/src/session-machine-transport.test.ts": "5833c9a2b04fde4657054024a7adf39a2e2c192ff08d22c7dcfc883eb42f5514",
+    "packages/polaris-dossier/src/session-machine-transport.ts": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "3f0af7fe67dce57fc3a1d9056868742575ade71b3702e3373b9c07f2b0a5711d",
+    "packages/polaris-dossier/src/url-machine-peer.ts": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+    "packages/polaris-dossier/src/url-run-machine.test.ts": "c12a7de84145125c8f715bf17d8e2d44c2d1af89faf55a6c12e45b76d7506788",
+    "packages/polaris-dossier/src/url-run-machine.ts": "260bc0eb8070b2053857cb8b2bf68de5016f2a05de52d9537832096a762a9827"
+  },
+  "sourceBindingSha256": "990d32b508277da4b9e98277ae49c77d1505a3b05df5d6761145d8a553b10145",
+  "subjectBindingSha256": "bc00faca00ca75ebd8d5c09b61972b70400bdbaa86ead31ffd94f9e94ef5e426",
+  "patchSha256": "f9ae151b807b1ad7fbd6dca00f847b94976d0d86336f745a1e29fde735dd555a",
+  "controls": "controls.json",
+  "controlsSha256": "6e8d6fccd4011ea9bb400d2d75908a6d4f9da97ac20b9802f64adec5f3a8c5cf",
+  "logs": {
+    "restored-focused.log": "68f9db39727feea140d996c2e3f81946dcb65b6c2fa28379cc460d1aee8d47be",
+    "final-typecheck.log": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "controls-run.log": "ebe368264c7a238c1790dc56d2b4b0226e8349b80c83f9b26c7477d877c58ea1"
+  },
+  "verification": {
+    "restoredFocused": {
+      "passed": 19,
+      "skipped": 39,
+      "population": 58
+    },
+    "typecheck": "passed, no diagnostics",
+    "controls": {
+      "failedAsExpected": 7,
+      "population": 7
+    },
+    "earlierCandidateBaseline": {
+      "passed": 64,
+      "population": 64,
+      "log": "focused.log",
+      "finalByteClaim": false
+    }
+  },
+  "growth": {
+    "addedLines": 110,
+    "removedLines": 22,
+    "netLines": 88,
+    "productionNetLines": 20,
+    "testNetLines": 68,
+    "addedCases": 15
+  },
+  "limitations": [
+    "Ordered 6s/30s transport timing is adapter evidence; selector uses genuine nominal ordered profile.",
+    "No intrinsic ordered >5s success or intrinsic ordered old5 mutation was exercised; next actual native pair must verify that wiring.",
+    "Ordinary intrinsic controls widen both aggregate comparisons together; they do not isolate each redundant comparison."
+  ]
+}

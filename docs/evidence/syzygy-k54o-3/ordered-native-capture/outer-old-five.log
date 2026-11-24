@@ -1,0 +1,65 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ❯ |integration| packages/polaris-dossier/src/session-machine-transport.test.ts (32 tests | 1 failed | 31 skipped) 26ms
+   ↓ verified-chunk session transport adapter > awaits actual broker listener preparation and honors its true result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual broker listener preparation and honors its false result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual relay listener preparation and honors its true result before returning a host
+   ↓ verified-chunk session transport adapter > awaits actual relay listener preparation and honors its false result before returning a host
+   ↓ verified-chunk session transport adapter > binds context to the exact accepted stream and writes only inside its active mediated boundary
+   ↓ verified-chunk session transport adapter > guards the broker raw write after the last machine authority check: current
+   ↓ verified-chunk session transport adapter > guards the broker raw write after the last machine authority check: cpu
+   ↓ verified-chunk session transport adapter > guards the broker raw write after the last machine authority check: wall
+   ↓ verified-chunk session transport adapter > guards the broker raw write after the last machine authority check: revoked
+   ↓ verified-chunk session transport adapter > destroys a deferred guarded write before it can emit or report successful release
+   ↓ verified-chunk session transport adapter > destroys a changed-frame guarded write before it can emit or report successful release
+   ↓ verified-chunk session transport adapter > destroys a async-guard guarded write before it can emit or report successful release
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: published
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: capture-expired
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: connection-expired
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: publication-refused
+   × verified-chunk session transport adapter > keeps staged admission paused until protected publication: bounded ordered capture 24ms
+     → expected true to be false // Object.is equality
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: capture boundary
+   ↓ verified-chunk session transport adapter > keeps staged admission paused until protected publication: original caller expiry
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound 0
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound -1
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound 1.5
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound NaN
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound Infinity
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound 30001
+   ↓ verified-chunk session transport adapter > refuses invalid trusted capture bound null
+   ↓ verified-chunk session transport adapter > retains the exact async effect guard across awaits and revokes escaped descendants
+   ↓ verified-chunk session transport adapter > runs preparation outside the effect and refuses a disconnected socket before calling the effect
+   ↓ verified-chunk session transport adapter > settles an in-flight native data chunk before any protected effect after ingress stops
+   ↓ verified-chunk session transport adapter > settles an in-flight native pending chunk before any protected effect after ingress stops
+   ↓ verified-chunk session transport adapter > refuses missing transport and peer/socket substitution before broker effects
+   ↓ verified-chunk session transport adapter > runs HTTP parsing and protected callbacks on verified chunks and refuses revoked mediation before forward
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/session-machine-transport.test.ts > verified-chunk session transport adapter > keeps staged admission paused until protected publication: bounded ordered capture
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ packages/polaris-dossier/src/session-machine-transport.test.ts:254:25
+    252|         await capturing;
+    253|         await vi.advanceTimersByTimeAsync(captureElapsed);
+    254|         expect(settled).toBe(captureExpired);
+       |                         ^
+    255|         finishCapture(peer!);
+    256|         if (captureExpired) await vi.advanceTimersByTimeAsync(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  23:38:55
+   Duration  1.46s (transform 731ms, setup 18ms, collect 952ms, tests 26ms, environment 0ms, prepare 83ms)
+
