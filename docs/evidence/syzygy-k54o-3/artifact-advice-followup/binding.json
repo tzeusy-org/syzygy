@@ -1,0 +1,22 @@
+{
+  "subjectCommit": "6ab6014d7c1eb698586130ef61aad56baf0b4902",
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "historicalFailureCommit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+  "sourceHashes": {
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "ddfb0a233e864b1da14fa8f572c693f54d6e808fd7474c4aeee7e0a362233c87",
+    "packages/polaris-dossier/src/url-run-artifacts.test.ts": "e2153e505cbee0f9164c16b5f4a200127202f11d27bba55a770e0dfd80b0357e"
+  },
+  "scope": "Strict optional current reader advice wire-shape alignment, with legacy absence and malformed-entry rejection. No native completion or full battery claim.",
+  "artifacts": {
+    "INDEPENDENT-REVIEW-RAW.md": "4dc85896f0868033b6bedfd6e77725435ebd8f597eb6f07a239f705f8bd47854",
+    "causal-single-change/focused.log.gz": "dde97b53be6054e81ec487d1f95922ae40450e9758323d29dbc3158f9f1f96b4",
+    "causal-single-change/result.json": "e0214533b1c24da6bf15a7dfe8396ca41e6c7e2c0cc8226d5b4c63fd07a7ac8b",
+    "fix.patch": "60cc7ea9105e1bb20fcb1a432da0bdcd4da86ac5f6c680d685d8b3d655e7e32d",
+    "full-file/focused.log.gz": "918c921eab266909b23055703b51d1f8cdc3881f81503724340e3bf5feeb838b",
+    "full-file/result.json": "2f659d6ad33caadc3530582e50a814ac049ffc9fed685643c39290a32685c267",
+    "metadata.json": "ed9ff1f51e23d7bf1bbee9b280581253fbd74df961fc315760ac59ca9fa22efc",
+    "typecheck/result.json": "d82ea294dd2b888aa9618951226bb4c8cb857644aabb3c7cf662a8cfbfb445ed",
+    "typecheck/typecheck.log.gz": "6e88a952198ce48f4a7e3a73d4d51e84d16109347fb7fa639bf86c5308c29130",
+    "verified-results.json": "c421db5e003672471b2dea9aa449b5dfa0e4b66da9a83068eb37b91e18ffc871"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "historicalFailureCommit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+  "sourceHashes": {
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "ddfb0a233e864b1da14fa8f572c693f54d6e808fd7474c4aeee7e0a362233c87",
+    "packages/polaris-dossier/src/url-run-artifacts.test.ts": "e2153e505cbee0f9164c16b5f4a200127202f11d27bba55a770e0dfd80b0357e"
+  },
+  "patchSha256": "60cc7ea9105e1bb20fcb1a432da0bdcd4da86ac5f6c680d685d8b3d655e7e32d",
+  "netNewTests": 0,
+  "scope": "strict optional worthKnowing shape; malformed mutants + exact original reply consumption + actual schema10 legacy absence in existing case",
+  "checks": "pending",
+  "createdAt": "2026-11-24T20:21:08.934849+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "exit": 0,
+  "cloneCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "sourceHashes": {
+    "packages/polaris-dossier/src/url-run-artifacts.ts": "ddfb0a233e864b1da14fa8f572c693f54d6e808fd7474c4aeee7e0a362233c87",
+    "packages/polaris-dossier/src/url-run-artifacts.test.ts": "e2153e505cbee0f9164c16b5f4a200127202f11d27bba55a770e0dfd80b0357e"
+  },
+  "summary": [
+    "Test Files  1 passed (1)",
+    "Tests  74 passed (74)",
+    "Duration  22.00s (transform 2.52s, setup 10ms, collect 3.11s, tests 18.47s, environment 0ms, prepare 65ms)"
+  ],
+  "logSha256": "b9004341465683b48d6c53ad5a845d7d7ba148816b8a5297b17d53b17fdfdf6e"
+}
