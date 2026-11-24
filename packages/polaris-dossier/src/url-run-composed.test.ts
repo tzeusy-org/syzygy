@@ -1641,9 +1641,9 @@ describe('composed URL run with actual role processes', () => {
   }, 60_000);
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
-  // The hosted eligible replay was still restoring protected products after
-  // six minutes. Allow the fixture to observe cold recovery and closure while
-  // the runtime continues to enforce its own operation and run deadlines.
+  // The local eligible replay reached a valid Stop cut but exhausted its
+  // ten-minute runner allowance before closure. Its finite observation window
+  // is separate from runtime deadlines and the required hosted timing budget.
   for (const scenario of ['complete', 'delivery-stop', 'stop-resume', 'eligible-stop-resume'] as const) it(`runs the genuine production pipeline to ${scenario}`, async ({ onTestFinished }) => {
     const eligibleStop = scenario === 'eligible-stop-resume';
     const cut = scenario === 'delivery-stop' || scenario === 'stop-resume';
@@ -1687,7 +1687,13 @@ describe('composed URL run with actual role processes', () => {
           firstRuntimeFailure, controlTrace: controlTrace?.summary(), eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
       }, 340_000).unref();
-      onTestFinished(() => { clearTimeout(diagnostic); });
+      onTestFinished(() => {
+        clearTimeout(diagnostic);
+        // Existing in-memory metadata only: no extra authority checks or IO.
+        console.error('owned eligible stop finished', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
+          resumeBootstrap, latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
+          resumeAuditEnteredMs, resumeAuditSetup, firstRuntimeFailure, controlTrace: controlTrace?.summary() }));
+      });
     }
     let releaseFinalResponses: (() => void) | undefined;
     if (cut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
@@ -2553,5 +2559,5 @@ describe('composed URL run with actual role processes', () => {
         producerReports: f.producerReports(),
         reads: f.productReadReports(), relayObservations, receipts }));
     }
-  }, scenario.endsWith('stop-resume') ? 600_000 : 360_000);
+  }, scenario === 'eligible-stop-resume' ? 900_000 : scenario === 'stop-resume' ? 600_000 : 360_000);
 });
