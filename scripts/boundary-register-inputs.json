@@ -11,7 +11,7 @@
     "P-71-Q5": "41008217a29fdb9fff13d6ffbe2627f4e4be191bc1b6250b1ce8bf2be1cb5720",
     "Three-Surface POC reader notes": "0dbae8637bafda5f100827abf8df48959eb35c9562e9e4909ac303ec892098b7",
     "POC-REQ-030": "05e441c9f4776cfbab63f89289cf3292c12dd68971e136adba8bcb2a92d8992a",
-    "POC-REQ-042": "cdfb629f69ecb154b509b2703d37abffd225d05ac0b37a0a98ca287ab4e778a0",
+    "POC-REQ-042": "ec69372dfc8cee0d04e0a2f395d39b32b9924739048f7ac91f16f500a3f9a4a0",
     "POC-REQ-050": "49d89ffd3d1e8ccfe0cb3afea1254848f8ca803af8d912765e3b5b633c5889da",
     "PWB-REQ-011": "6d5bdb246afc69a6d8fa26cec048895420270755d681fcb61c7f7092ff1eb09a",
     "PWB-REQ-020": "c1c991de6d47a2b19d300b2b0311b61305d9a6e69b7af834a87fd9c65d36846f",
@@ -22,9 +22,10 @@
     "observer-registry": "f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556",
     "effect-authority": "bea910d84ba236ac2b28c6423d07b6f9a3976f297734ca79c01708e8638476a1",
     "effect-control": "fa5be4fbfa38f34ffa1166300ce44f9e46e58daefad456f505912bc626b6f3ed",
-    "poc-routes": "8e3edf6424909af35110f84a5b271025372b1640cf8787fb26b3249f1784de68",
+    "poc-routes": "7a943264b1f8942526a48cdad84e9c9d94bd3adaf97ca3e0ebd74ff91ed97a66",
     "materialize-routes": "cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a",
-    "materialize-control": "1bc14408f0d05622c0f4bb0b6c2deb4e68f84f8e3e8e76e739e0bc718e470342"
+    "materialize-control": "1bc14408f0d05622c0f4bb0b6c2deb4e68f84f8e3e8e76e739e0bc718e470342",
+    "briefing-scheduling-decision": "fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0"
   },
   "boundaries": {
     "VIS-4/7badbc4602dde230": {
@@ -427,6 +428,7 @@
     "observer/writeSurface": "PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT",
     "route/GET ORRERY_HUMAN_PATH": "POC-REQ-050",
     "route/GET ORRERY_TAILNET_PATH": "POC-REQ-050",
+    "route/GET POC_BRIEFING_PATH": "PWB-REQ-020",
     "route/GET POC_HUMAN_PATH": "Three-Surface POC reader notes",
     "route/GET POC_MACHINE_PATH": "Three-Surface POC reader notes",
     "route/GET POLARIS_HUMAN_PATH": "POC-REQ-030",
@@ -437,6 +439,7 @@
     "route/GET TAILNET_MOUNT_PREFIX": "Three-Surface POC reader notes",
     "route/GET TRAJECTORY_HUMAN_PATH": "POC-REQ-042",
     "route/GET TRAJECTORY_TAILNET_PATH": "POC-REQ-042",
+    "route/GET `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`": "PWB-REQ-020",
     "route/GET `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`": "Three-Surface POC reader notes",
     "route/GET `${TAILNET_MOUNT_PREFIX}${POLARIS_PRESENTATION_PATH}`": "PWB-REQ-020",
     "route/GET `${TAILNET_MOUNT_PREFIX}/`": "Three-Surface POC reader notes",

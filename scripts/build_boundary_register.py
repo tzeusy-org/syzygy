@@ -19,6 +19,8 @@ VISION = ".syzygy/governance/doctrine/vision.md"
 SECURITY = ".syzygy/governance/doctrine/security.md"
 RULING = ".syzygy/governance/decisions/POLARIS-PURSUIT-OWNER-RULINGS-P68-P83-DECISION.md"
 ACT = ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md"
+BRIEFING_DECISION = (".syzygy/governance/decisions/"
+                     "PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md")
 REGISTRY = (".syzygy/governance/declarations/adapter-registry/"
             "POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json")
 POC_SPEC = ("openspec/changes/three-surface-poc-experience/specs/"
@@ -47,6 +49,16 @@ ROUTE = re.compile(r"\{\s*method: '([A-Z]+)',\s*path: ([^,\n]+),"
 ROUTE_PROPERTY = re.compile(r"(?:^|\{)[ \t]*method\s*:", re.M)
 MOUNT_PAIR = re.compile(r"^[ \t]*\.\.\.humanSurfaceRoutes\((\w+), (\w+),", re.M)
 SPREAD_ROW = re.compile(r"^[ \t]*\.\.\.", re.M)
+BRIEFING_PATHS = ("POC_BRIEFING_PATH", "`${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`")
+BRIEFING_ROUTES = tuple(("GET", path, "machine-credentialed") for path in BRIEFING_PATHS)
+BRIEFING_KEYS = tuple(f"route/GET {path}" for path in BRIEFING_PATHS)
+BRIEFING_SPREAD = (
+    "    ...(briefingResponseLimit === undefined ? [] : [\n"
+    + "".join(f"      {{ method: '{method}', path: {path}, credentialClass: '{credential}', handle: briefingHandle }},\n"
+              for method, path, credential in BRIEFING_ROUTES)
+    + "    ] as const),\n"
+)
+BRIEFING_REGISTRY_DIGEST = re.compile(r"^Exact digest \(SHA-256\): `([a-f0-9]{64})`$", re.M)
 EFFECT_PROPERTY = re.compile(r"^\s*(?:export )?const \w+\s*:\s*Effect\s*=", re.M)
 EFFECT = re.compile(r"(?:export )?const (\w+): Effect = \{\s*id: '([^']+)',"
                     r"\s*surface: '([^']+)',\s*\};")
@@ -55,6 +67,7 @@ PINNED_SOURCE = {
     "source-read-spec-act": ".syzygy/governance/decisions/PWB-EXACT-SOURCE-RENDER-MODE-AMENDMENT-ACT.md",
     "machine-read-spec-act": ".syzygy/governance/decisions/PWB-MACHINE-VIEW-AMENDMENT-ACT.md",
     "observer-act": ACT,
+    "briefing-scheduling-decision": BRIEFING_DECISION,
     "observer-registry": REGISTRY,
     "effect-authority": CORE,
     "effect-control": CORE_TEST,
@@ -66,7 +79,7 @@ PINNED_SOURCE = {
 # records per-source drift, while this subject prevents a manifest-only repin
 # from certifying a syntax the deliberately scoped extractor did not read.
 DECLARATION_SOURCES = ("effect-authority", "materialize-routes", "observer-registry", "poc-routes")
-REVIEWED_DECLARATIONS_SHA256 = "034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75"
+REVIEWED_DECLARATIONS_SHA256 = "66a83b4ef7124179ebbad4a50681869c73f93b8f8d8e8b08ecc2617637a60f19"
 FORECLOSURE = {
     "reason": "foreclosed",
     "effect": "butlers-tracker-write",
@@ -207,9 +220,21 @@ def declared_effects(sources):
     routes = direct_routes[2:]
     route_array = sources[ROUTES].partition("const routes: readonly Route[] = [")[2]
     require(bool(route_array), "POC routes: selected route array missing")
-    mounted_pairs = MOUNT_PAIR.findall(route_array)
-    require(len(mounted_pairs) == len(SPREAD_ROW.findall(route_array)),
+    briefing_spreads = route_array.count(BRIEFING_SPREAD)
+    require(briefing_spreads <= 1, "POC routes: repeated briefing registration")
+    other_routes = route_array.replace(BRIEFING_SPREAD, "")
+    mounted_pairs = MOUNT_PAIR.findall(other_routes)
+    require(len(mounted_pairs) == len(SPREAD_ROW.findall(other_routes)),
             "POC routes: unsupported indirect route declaration")
+    briefing_routes = tuple(row for row in routes if row[1] in BRIEFING_PATHS)
+    require(briefing_routes == BRIEFING_ROUTES * briefing_spreads,
+            "POC routes: briefing routes must be the exact conditional machine pair")
+    if briefing_spreads:
+        ceiling = entry["resourceLimits"].get("maxBriefingResponseBytes")
+        require(type(ceiling) is int and ceiling == 20_480,
+                "Briefing registry: expected the distinct 20,480-byte response ceiling")
+        require(BRIEFING_REGISTRY_DIGEST.findall(sources[ACT]) == [digest(sources[REGISTRY])],
+                "Briefing registry: exact observer act digest does not bind the declaration")
     for direct, tailnet in mounted_pairs:
         routes.extend((("GET", direct, "human-open"), ("GET", tailnet, "human-open")))
     materialize_routes = route_declarations(sources[MATERIALIZE], "Materialize routes")
@@ -217,8 +242,11 @@ def declared_effects(sources):
     require(bool(return_array) and not SPREAD_ROW.search(return_array),
             "Materialize routes: missing or unsupported indirect return")
     for path, rows in ((ROUTES, routes), (MATERIALIZE, materialize_routes)):
-        effects.extend((f"route/{method} {route}", (path, method, credential))
-                       for method, route, credential in rows)
+        for method, route, credential in rows:
+            value = credential
+            if path == ROUTES and route in BRIEFING_PATHS:
+                value += " · conditional on the briefing ceiling callback"
+            effects.append((f"route/{method} {route}", (path, method, value)))
     named = EFFECT.findall(sources[CORE])
     require(len(named) == len(EFFECT_PROPERTY.findall(sources[CORE])),
             "Effect authority: unsupported effect declaration")
@@ -278,6 +306,8 @@ def effect_authority(key):
     if key in ("effect/butlers-tracker-write", "route/POST MATERIALIZE_HUMAN_PATH",
                "route/POST MATERIALIZE_TAILNET_PATH"):
         return "P-71-Q5", RULING, SECURITY
+    if key in BRIEFING_KEYS:
+        return "PWB-REQ-020", PWB_SPEC, SECURITY
     require(key.startswith("route/GET "), f"{key}: no reviewed effect authority")
     for family, identity, path in (
         ("ORRERY_", "POC-REQ-050", POC_SPEC),
@@ -341,6 +371,9 @@ def render(manifest, clauses, specs, units, effects, pins):
     for key, (source, mode, value) in sorted(effects.items()):
         authority, path, constraint = effect_authority(key)
         constrained = f" · [SEC-1](../{constraint})" if constraint else ""
+        if key in BRIEFING_KEYS:
+            constrained += (f" · [SEC-5](../{SECURITY}) · [A-213 scope](../{BRIEFING_DECISION})"
+                            f" · [20,480-byte declaration](../{REGISTRY}) · [exact digest binding](../{ACT})")
         authority_title = f"{authority} (line {specs[authority][1]})" if authority in specs else authority
         lines.append(f"| {cell(key)} | {link(source)} | {cell(mode)} · {cell(value)} | "
                      f"[{authority_title}](../{path}){constrained} |")
@@ -590,6 +623,76 @@ def selftest_cases():
         count, failure = result(changed)
         cases.append((name, count == 0
                       and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+
+    # One synthetic conditional machine pair with independent literal outcomes.
+    briefing_block = (
+        "    ...(briefingResponseLimit === undefined ? [] : [\n"
+        "      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n"
+        "      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n"
+        "    ] as const),\n"
+    )
+    briefing_registry = json.loads(data[REGISTRY])
+    briefing_registry["entries"][0]["resourceLimits"] = {"maxBriefingResponseBytes": 20_480}
+    briefing_inputs = {
+        **data,
+        ROUTES: data[ROUTES].replace("];", briefing_block + "];"),
+        REGISTRY: json.dumps(briefing_registry),
+    }
+    briefing_inputs[ACT] = f"Exact digest (SHA-256): `{digest(briefing_inputs[REGISTRY])}`\n"
+    briefing_manifest = deepcopy(manifest)
+    briefing_manifest["effects"].update({
+        "route/GET POC_BRIEFING_PATH": "PWB-REQ-020",
+        "route/GET `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`": "PWB-REQ-020",
+    })
+
+    def briefing_case(inputs):
+        mapping = deepcopy(briefing_manifest)
+        mapping["pins"].update({key: digest(inputs[path]) for key, path in PINNED_SOURCE.items()})
+        return {**inputs, MANIFEST: json.dumps(mapping)}, declaration_digest(mapping["pins"])
+
+    bound, approved = briefing_case(briefing_inputs)
+    bound[REGISTER], count = build(bound.__getitem__, context_sha256=context_sha256,
+                                    declarations_sha256=approved)
+    cases.append(("conditional briefing machine pair and binding", count == 19
+                  and result(bound, reviewed_declarations=approved) == (19, None)
+                  and bound[REGISTER].count("machine-credentialed · conditional on the briefing ceiling callback") == 2
+                  and bound[REGISTER].count("[A-213 scope]") == 2
+                  and bound[REGISTER].count("[SEC-5]") == 2))
+    count, failure = result(bound)
+    cases.append(("briefing repin alone refuses a new declaration subject", count == 0
+                  and failure == "declared effect sources differ from the exact independently reviewed declaration inputs"))
+
+    for name, routes, reason in (
+        ("briefing cannot drop one mount", briefing_block.replace(briefing_block.splitlines(keepends=True)[2], ""),
+         "POC routes: unsupported indirect route declaration"),
+        ("briefing cannot change credential", briefing_block.replace("'machine-credentialed'", "'human-open'", 1),
+         "POC routes: unsupported indirect route declaration"),
+        ("briefing cannot bypass callback", "".join(briefing_block.splitlines(keepends=True)[1:3]),
+         "POC routes: briefing routes must be the exact conditional machine pair"),
+        ("briefing cannot change callback polarity", briefing_block.replace("=== undefined", "!== undefined"),
+         "POC routes: unsupported indirect route declaration"),
+        ("briefing cannot repeat registration", briefing_block * 2,
+         "POC routes: repeated briefing registration"),
+    ):
+        changed, reviewed = briefing_case({**briefing_inputs, ROUTES: data[ROUTES].replace("];", routes + "];")})
+        count, failure = result(changed, reviewed_declarations=reviewed)
+        cases.append((name, count == 0 and failure == reason))
+
+    incorrect_ceiling = briefing_inputs[REGISTRY].replace("20480", "20481")
+    changed, reviewed = briefing_case({
+        **briefing_inputs, REGISTRY: incorrect_ceiling,
+        ACT: f"Exact digest (SHA-256): `{digest(incorrect_ceiling)}`\n",
+    })
+    count, failure = result(changed, reviewed_declarations=reviewed)
+    cases.append(("briefing cannot borrow an altered registry ceiling", count == 0
+                  and failure == "Briefing registry: expected the distinct 20,480-byte response ceiling"))
+    changed, reviewed = briefing_case({**briefing_inputs, ACT: data[ACT]})
+    count, failure = result(changed, reviewed_declarations=reviewed)
+    cases.append(("briefing requires the act's exact registry digest", count == 0
+                  and failure == "Briefing registry: exact observer act digest does not bind the declaration"))
+    count, failure = result({**bound, BRIEFING_DECISION: "unreviewed"}, reviewed_declarations=approved)
+    cases.append(("briefing scheduling decision bytes are pinned", count == 0
+                  and failure == "scoped sources changed; reconcile exact bytes: briefing-scheduling-decision"))
 
     trials = (
         ("relabelled prohibition", "boundaries", first,

@@ -76,8 +76,9 @@ cannot update the independently reviewed context and complete declaration subjec
 | observer/readAuthority | [POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json](../.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json) | polaris-butlers-project-shape 1.2.0-candidate.1 · "within the one resolved Git object database for the approved opaque-repository locator mapping, phase A reads only the fixed root index, its declared pillar README indexes and Git tree metadata needed to derive the manifest; phase B reads only normalized repository-relative paths addressed as exact Git objects in that revision-bound manifest" | [PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT](../.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md) |
 | observer/workingTreeRead | [POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json](../.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json) | polaris-butlers-project-shape 1.2.0-candidate.1 · false | [PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT](../.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md) |
 | observer/writeSurface | [POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json](../.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json) | polaris-butlers-project-shape 1.2.0-candidate.1 · [] | [PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT](../.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md) |
-| route/GET ORRERY_HUMAN_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-050 (line 1454)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
-| route/GET ORRERY_TAILNET_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-050 (line 1454)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
+| route/GET ORRERY_HUMAN_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-050 (line 1534)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
+| route/GET ORRERY_TAILNET_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-050 (line 1534)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
+| route/GET POC_BRIEFING_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · machine-credentialed · conditional on the briefing ceiling callback | [PWB-REQ-020 (line 2292)](../openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) · [SEC-5](../.syzygy/governance/doctrine/security.md) · [A-213 scope](../.syzygy/governance/decisions/PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md) · [20,480-byte declaration](../.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json) · [exact digest binding](../.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md) |
 | route/GET POC_HUMAN_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [Three-Surface POC reader notes (line 16)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET POC_MACHINE_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · machine-credentialed | [Three-Surface POC reader notes (line 16)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET POLARIS_HUMAN_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-030 (line 803)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
@@ -88,6 +89,7 @@ cannot update the independently reviewed context and complete declaration subjec
 | route/GET TAILNET_MOUNT_PREFIX | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [Three-Surface POC reader notes (line 16)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET TRAJECTORY_HUMAN_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-042 (line 1022)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET TRAJECTORY_TAILNET_PATH | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [POC-REQ-042 (line 1022)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
+| route/GET &#96;${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}&#96; | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · machine-credentialed · conditional on the briefing ceiling callback | [PWB-REQ-020 (line 2292)](../openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) · [SEC-5](../.syzygy/governance/doctrine/security.md) · [A-213 scope](../.syzygy/governance/decisions/PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md) · [20,480-byte declaration](../.syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json) · [exact digest binding](../.syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md) |
 | route/GET &#96;${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}&#96; | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · machine-credentialed | [Three-Surface POC reader notes (line 16)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET &#96;${TAILNET_MOUNT_PREFIX}${POLARIS_PRESENTATION_PATH}&#96; | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · machine-credentialed | [PWB-REQ-020 (line 2292)](../openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
 | route/GET &#96;${TAILNET_MOUNT_PREFIX}/&#96; | [routes.ts](../apps/three-surface-poc/src/routes.ts) | GET · human-open | [Three-Surface POC reader notes (line 16)](../openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md) · [SEC-1](../.syzygy/governance/doctrine/security.md) |
@@ -100,7 +102,7 @@ cannot update the independently reviewed context and complete declaration subjec
 | --- | --- |
 | P-71-Q5 | `41008217a29fdb9fff13d6ffbe2627f4e4be191bc1b6250b1ce8bf2be1cb5720` |
 | POC-REQ-030 | `05e441c9f4776cfbab63f89289cf3292c12dd68971e136adba8bcb2a92d8992a` |
-| POC-REQ-042 | `cdfb629f69ecb154b509b2703d37abffd225d05ac0b37a0a98ca287ab4e778a0` |
+| POC-REQ-042 | `ec69372dfc8cee0d04e0a2f395d39b32b9924739048f7ac91f16f500a3f9a4a0` |
 | POC-REQ-050 | `49d89ffd3d1e8ccfe0cb3afea1254848f8ca803af8d912765e3b5b633c5889da` |
 | PWB-REQ-011 | `6d5bdb246afc69a6d8fa26cec048895420270755d681fcb61c7f7092ff1eb09a` |
 | PWB-REQ-020 | `c1c991de6d47a2b19d300b2b0311b61305d9a6e69b7af834a87fd9c65d36846f` |
@@ -112,6 +114,7 @@ cannot update the independently reviewed context and complete declaration subjec
 | Three-Surface POC reader notes | `0dbae8637bafda5f100827abf8df48959eb35c9562e9e4909ac303ec892098b7` |
 | VIS-4 | `e870e7023770c8ed203028437d818860286e2027cbcc0c25c5ceaf9302259669` |
 | VIS-5 | `e489da6b8c10c5438403f6385b199131144f5fecd51fd7c3ec773e21f45e94fe` |
+| briefing-scheduling-decision | `fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0` |
 | effect-authority | `bea910d84ba236ac2b28c6423d07b6f9a3976f297734ca79c01708e8638476a1` |
 | effect-control | `fa5be4fbfa38f34ffa1166300ce44f9e46e58daefad456f505912bc626b6f3ed` |
 | machine-read-spec-act | `fa8eacb63c2299324d4b8277faea02518545c4e9241be2578a451b3a3212848c` |
@@ -119,9 +122,9 @@ cannot update the independently reviewed context and complete declaration subjec
 | materialize-routes | `cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a` |
 | observer-act | `04662cdfa2c06b6aa3c1dedaa158c37def936fa66afbe283606ae8576c6d6905` |
 | observer-registry | `f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556` |
-| poc-routes | `8e3edf6424909af35110f84a5b271025372b1640cf8787fb26b3249f1784de68` |
+| poc-routes | `7a943264b1f8942526a48cdad84e9c9d94bd3adaf97ca3e0ebd74ff91ed97a66` |
 | poc-spec-authorization | `a5e82deaaf41fa7af26a54ac1723d63d6e757b7086ec417f01d8d978664530ce` |
 | source-read-spec-act | `fc7f1585a2ff05e0f09a68faa5bf1b176c94e69186fb512238d6cc9288f2327e` |
 
 The reviewed declared-effect source subject is
-`034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75`.
+`66a83b4ef7124179ebbad4a50681869c73f93b8f8d8e8b08ecc2617637a60f19`.
