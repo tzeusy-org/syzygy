@@ -293,10 +293,12 @@ function create(given: UrlOriginLedgerOptions) {
     if (treatment.kind !== 'admitted') fail(); safe(bytes, file); check();
     return { objectId: blob.id, bytes, raw, contentClass };
   }
-  async function verifiedManifestRemainder(check: () => void): Promise<Buffer> {
-    check();
+  async function verifiedManifestRemainder(check: () => void, checkTime: () => void): Promise<Buffer> {
+    // The bound reader checks live authority and store identity around its
+    // descriptor walk. Check the timer here and live authority after screening.
+    checkTime();
     const entries = await openReader().listTree();
-    check();
+    checkTime();
     // Reuse the check's bounded path-only projection. Neither the raw tree
     // listing nor a blob identifier or body enters this receipt's subject.
     const bytes = Buffer.from(canonical(deriveManifestRemainder(entries, screen)));
@@ -311,8 +313,8 @@ function create(given: UrlOriginLedgerOptions) {
     try {
       live();
       const supplied = Buffer.from(canonical(remainder));
-      return await sourceOperation(async check => {
-        const bytes = await verifiedManifestRemainder(check);
+      return await sourceOperation(async (check, checkTime) => {
+        const bytes = await verifiedManifestRemainder(check, checkTime);
         if (!bytes.equals(supplied)) fail();
         const id = manifestRemainderOriginId(sha256(bytes));
         check();

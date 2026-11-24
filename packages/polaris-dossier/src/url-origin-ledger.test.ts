@@ -15,6 +15,7 @@ import type { SessionToolsReceipt } from './session-tools.js';
 import * as objectReader from './git-object-reader.js';
 import { createUrlOriginLedger, type UrlOriginLedgerOptions, type UrlOriginReceipt, type UrlWholeSourceBody } from './url-origin-ledger.js';
 import { verifyUrlRenderedSources } from './url-rendered-source-proof.js';
+import { deriveManifestRemainder } from './manifest-facts.js';
 import { fingerprintUrlOriginProvenance } from './url-frozen-product-history.js';
 
 const canonical = (value: unknown): string => encodeCanonicalJson(value, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 });
@@ -202,6 +203,43 @@ describe('host-owned URL origin ledger', () => {
       const expected = bytes('Own source line one.\n');
       expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
     } finally { clock.mockRestore(); }
+  });
+
+  it('authenticates the exact manifest remainder within the original read limit under slow authority', async () => {
+    const f = fixture();
+    const remainder = deriveManifestRemainder([{ path: f.file, mode: '100644' }], f.options.screen);
+    const expected = bytes(canonical(remainder));
+    let charge = false, elapsed = 0;
+    const ledger = createUrlOriginLedger({ ...f.options, current: () => {
+      if (charge) elapsed += 650;
+      return true;
+    } });
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      charge = true;
+      const receipt = await ledger.sourceManifestRemainder(remainder);
+      charge = false;
+      expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-structure'] });
+    } finally { clock.mockRestore(); }
+  });
+
+  it('refuses a manifest remainder when authority is withdrawn during screening', async () => {
+    const f = fixture();
+    const originalScreen = f.options.screen;
+    const remainder = deriveManifestRemainder([{ path: f.file, mode: '100644' }], originalScreen);
+    const expected = canonical(remainder);
+    let current = true, screened = false;
+    const ledger = createUrlOriginLedger({ ...f.options, current: () => current,
+      screen: { ...originalScreen, screenBody: (text, file) => {
+        const result = originalScreen.screenBody(text, file);
+        if (text === expected) { screened = true; current = false; }
+        return result;
+      } } });
+    const original = ledger.plannedOrigins();
+    await expect(ledger.sourceManifestRemainder(remainder)).rejects.toThrow('url-origin-refused');
+    expect(screened).toBe(true);
+    current = true;
+    expect(ledger.plannedOrigins()).toEqual(original);
   });
 
   it('authenticates exact complete byte coverage beyond 2000 lines without accepting span assertions or extending raw active treatment', async () => {

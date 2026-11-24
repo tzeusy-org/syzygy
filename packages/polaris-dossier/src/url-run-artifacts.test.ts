@@ -416,10 +416,22 @@ describe('trusted URL artifact producer bridge', () => {
     expect(reads.length).toBeLessThan(f.frozen.provenance.nodes.length);
     expect(reads.some(({ derivation }) => derivation.kind === 'source-manifest-remainder')).toBe(true);
     const getter = f.fresh().origins.ledger;
-    let waits = 0;
-    const restored = await getter.restoreFrozenOrigins(f.capability, expected, async () => { waits++; return true; });
-    expect(waits).toBe(reads.length + 1);
-    expect(restored.history.provenance).toEqual(f.frozen.provenance);
+    const remainderWait = reads.findIndex(({ derivation }) => derivation.kind === 'source-manifest-remainder') + 1;
+    let waits = 0, elapsed = 0;
+    const current = f.verifyCurrent.getMockImplementation()!;
+    f.verifyCurrent.mockImplementation(() => {
+      if (waits === remainderWait) elapsed += 860;
+      return current();
+    });
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      const restored = await getter.restoreFrozenOrigins(f.capability, expected, async () => { waits++; return true; });
+      expect(waits).toBe(reads.length + 1);
+      expect(restored.history.provenance).toEqual(f.frozen.provenance);
+    } finally {
+      clock.mockRestore();
+      f.verifyCurrent.mockImplementation(current);
+    }
 
     const next = f.fresh().origins.ledger, capability = f.issue();
     if (capability === null) throw new Error('own fresh recovery capability missing');
