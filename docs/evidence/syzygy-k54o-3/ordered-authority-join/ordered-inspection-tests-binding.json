@@ -1,0 +1,89 @@
+{
+  "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+  "baseCommit": "44f5c74126f0e3be9d64ca7f494f213db35138d4",
+  "sourceFiles": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.test.ts",
+      "sha256": "a03053fb8bbe6f1593adcb0da2a81c7fd31224842e03b5188d24025dcd7fb954",
+      "insertions": 119,
+      "deletions": 1,
+      "netLines": 118
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-launch-history.test.ts",
+      "sha256": "bda655d6cf70d452ad662016bda5691824e7d4474e669e16beb93cd5c32d386d",
+      "insertions": 9,
+      "deletions": 7,
+      "netLines": 2
+    }
+  ],
+  "frozen": true,
+  "caseGrowth": {
+    "sessionLaunch": 6,
+    "launchHistory": 2,
+    "totalAdded": 8,
+    "removed": 0,
+    "existingOrdinarySixSamplerCases": "unchanged"
+  },
+  "verification": {
+    "exit": 0,
+    "passed": 11,
+    "skipped": 106,
+    "totalCasesInFiles": 117,
+    "files": 2,
+    "totals": [
+      "Test Files  2 passed (2)",
+      "Tests  11 passed | 106 skipped (117)",
+      "Duration  55.25s (transform 2.68s, setup 23ms, collect 3.93s, tests 50.62s, environment 0ms, prepare 189ms)"
+    ],
+    "scope": "Onefocusedselection; no fullfile/fullsuite/typecheck/nativecomposed or mutationcontrols bythisworker.",
+    "command": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l node node_modules/vitest/vitest.mjs run --project integration --maxWorkers 1 --reporter verbose packages/polaris-dossier/src/session-launch.test.ts packages/polaris-dossier/src/url-launch-history.test.ts --testNamePattern 'selects inspection ceilings|keeps ordered inspection|checks the .* live sample before starting|refuses a stalled writer'",
+    "assertionPreservation": [
+      {
+        "file": "session-launch.test.ts",
+        "beforeMatcherCallExpressions": 301,
+        "afterMatcherCallExpressions": 326,
+        "missingOriginalMatchers": 0,
+        "beforeExpectLines": 289,
+        "afterExpectLines": 314,
+        "originalExpectLinesByteIdentical": true
+      },
+      {
+        "file": "url-launch-history.test.ts",
+        "beforeMatcherCallExpressions": 299,
+        "afterMatcherCallExpressions": 299,
+        "missingOriginalMatchers": 0,
+        "beforeExpectLines": 288,
+        "afterExpectLines": 288,
+        "originalExpectLinesByteIdentical": true
+      }
+    ]
+  },
+  "coverage": [
+    "Ordinarydefault2000; ordereddefault/max5000; callertightening1000; ordinary2001/ordered5001/copiedprofilerefusals.",
+    "Actualordered sampler:3secverifyaccepted,3secverifywithfreshconfirmwithdrawalrefused,2secresourcecap,5secverifytimeoutwithlatetrueignored,syncconfirm5secexpiry.",
+    "Historyactualgenuineorderedplan3secsampleaccepted/5secstallrefused; ordinary2secsample/1secauthority controlsunchanged.",
+    "Selectedlaunch-auditlimits5000; auditcommanddigest equalsactualnativechildcommanddigest."
+  ],
+  "fixtureLimits": "Actualprofile/hostfactories; pendingcontroller; genuine machine transports acceptnull and grantnopeer. Existing syntheticcredential. ActualnativechildgroupSIGSTOP immediatelyafterlaunch; stop/SIGCONT/joinfinally. Controlled authoritycallbacks simulatewait/currentness; noactualrecoveryclaim/kernelpeer/provideracceptanceclaim.",
+  "artifacts": {
+    "ordered-inspection-tests.patch": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/ordered-inspection-tests.patch",
+      "sha256": "6386d6417ea2d0cf0ddf1cf105f082630c555a488ecd7ab542075086985ece24"
+    },
+    "ordered-inspection-focused.log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/ordered-inspection-focused.log",
+      "sha256": "eb0bfff61f349745b723ef54729bd063126459d3aa89cbdf2dd715f870795444"
+    },
+    "ordered-inspection-assertion-preservation.json": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/ordered-inspection-assertion-preservation.json",
+      "sha256": "74dc8acfe56daf570614cfa6c7302cd703f23a3d33a06497a843f02eb8fe9752"
+    }
+  },
+  "controlsNotRun": [
+    "Orderedmax/defaultback2000 shouldreject3secpositive.",
+    "Resourcewrapper5000 shouldleaveheldresourcependingat2500assertion.",
+    "Removefinalconfirmcheck shouldadmitexpiredsyncconfirmandfailrefusalassertion."
+  ],
+  "actions": "Only2assignedtestfilesedited, then frozen. Parentcommittedcandidatewhilebindingprepared; currenttestbytesverifiedagainstsubjectcommit. No runtimeedits/commits/trackerwrites bythisworker."
+}

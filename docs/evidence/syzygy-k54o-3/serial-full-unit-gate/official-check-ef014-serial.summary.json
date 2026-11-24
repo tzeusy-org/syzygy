@@ -1,0 +1,25 @@
+{
+  "commit": "ef014efe505dafbf16475a55851c85fcaafab49d",
+  "exit": 0,
+  "wrapperOk": true,
+  "counts": {
+    "passed": 6365,
+    "failed": 0,
+    "skipped": 1,
+    "todo": 0
+  },
+  "independentFileSums": {
+    "passed": 6365,
+    "failed": 0,
+    "skipped": 1,
+    "todo": 0
+  },
+  "fileCount": 255,
+  "failedFiles": [],
+  "denominatorProblems": [],
+  "cleanup": true,
+  "leftovers": [],
+  "errors": [],
+  "maxNumberedVitestWorkers": 1,
+  "logSha256": "ed72f4a82cb3dfdde7be85fe48be0b619c8fd4ebb126cc8b95b727742d34c70c"
+}

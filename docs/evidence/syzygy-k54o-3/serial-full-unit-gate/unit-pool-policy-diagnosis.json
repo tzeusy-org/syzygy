@@ -1,0 +1,659 @@
+{
+  "executionSubject": "0b94e69f71e6609ad6b04c1fca0e11681ef7f6c1",
+  "inspectionCommit": "ef014efe505dafbf16475a55851c85fcaafab49d",
+  "sourceDriftSinceExecutionForReferencedRepositoryFiles": [],
+  "primarySources": {
+    "CONTRIBUTING.md": {
+      "sha256": "3fd03bce12aa504b71048eda956bbb212d9850d4436ab9cefab52004acde13a2",
+      "lineReferences": [
+        [
+          131,
+          134
+        ],
+        [
+          146,
+          147
+        ],
+        [
+          156,
+          164
+        ]
+      ]
+    },
+    "vitest.tiers.ts": {
+      "sha256": "8641a4e5c4d06253c47b71247e88b66448406701c29b50749edb6e6d676138c8",
+      "lineReferences": [
+        [
+          4,
+          18
+        ],
+        [
+          211,
+          253
+        ]
+      ]
+    },
+    "vitest.config.ts": {
+      "sha256": "a3b641bca9bfba4241a482443c7594e59959e395fffce8ed9c9cfcac6860ce10",
+      "lineReferences": [
+        [
+          27,
+          31
+        ],
+        [
+          34,
+          46
+        ]
+      ]
+    },
+    "vitest.unit-guard.setup.ts": {
+      "sha256": "9e8b1d784cd8edf5aade2e12129dd349600b0d929b280289245d13f567578e2d",
+      "lineReferences": [
+        [
+          35,
+          40
+        ],
+        [
+          89,
+          92
+        ]
+      ]
+    },
+    ".syzygy/governance/policies/craft-and-care/testing-and-verification.md": {
+      "sha256": "8157c0c63ff27341365c9c29e0f620bd7eb7b986fd40432e9c5a30891d3e0782",
+      "lineReferences": [
+        [
+          97,
+          134
+        ],
+        [
+          175,
+          198
+        ]
+      ]
+    },
+    ".github/workflows/node-ci.yml": {
+      "sha256": "5fe81b25a9fbb1b0eb224e1a7d089aa52f3678206450324dc09b8719a3dccef7",
+      "lineReferences": [
+        [
+          1,
+          15
+        ]
+      ]
+    },
+    "scripts/check_unit_tmpdir.mjs": {
+      "sha256": "db158feb8d70d4848dc67c9f667f9746cdc703a32c710bdf764a810eaa10a691",
+      "lineReferences": [
+        [
+          211,
+          231
+        ]
+      ]
+    },
+    "node_modules/vitest/dist/chunks/coverage.DfSpMS-b.js": {
+      "sha256": "37b63dd27952c9779fb1cbcd962cf111147a0c42663f3df83dd8094409ff6500",
+      "lineReferences": [
+        [
+          2612,
+          2613
+        ],
+        [
+          2748,
+          2749
+        ],
+        [
+          3718,
+          3760
+        ]
+      ]
+    },
+    "node_modules/@vitest/runner/dist/chunk-hooks.js": {
+      "sha256": "5e0b0ece2242e3475a0312a375fac6e47287602792d7f4999d2d733ecda2d69a",
+      "lineReferences": [
+        [
+          641,
+          641
+        ],
+        [
+          1597,
+          1599
+        ],
+        [
+          1852,
+          1921
+        ]
+      ]
+    }
+  },
+  "installedVitestVersion": "3.2.7",
+  "policyConclusion": {
+    "state": "Inferred from quoted current repository definitions",
+    "decision": "Keep all4files inunit; no wrapperpreparation, tier moves or timerchanges.",
+    "basis": [
+      {
+        "source": "CONTRIBUTING.md:131-134",
+        "quote": "Unit is hermetic.",
+        "meaning": "Forbidden process/socket/server operations require highertier; localfilesystem notexcluded."
+      },
+      {
+        "source": "CONTRIBUTING.md:156-161",
+        "quote": "list it under the lowest tier that holds what it uses.",
+        "meaning": "Currentunitguardallows their actual dependencies."
+      },
+      {
+        "source": "vitest.unit-guard.setup.ts:38",
+        "quote": "fs (local file work, allowed in the unit tier)",
+        "meaning": "Real descriptor-anchored stores and histories are allowed localfixturework."
+      },
+      {
+        "source": "CC-TEST-7:175-198",
+        "meaning": "Adopts canonicaltiering/targetabilitybar9; no bound assigning all largefilesystemfixtures tointegration. Its external suite-discipline reference is explicitly outsidevendoredlockscope; that reference was unavailable in current localskilltree and was not treated as authority."
+      },
+      {
+        "source": "vitest.config.ts:40-44",
+        "meaning": "Integration30s test/hook allowance is enclosing harnessbudget; it is not a placementcriterion and doesnotamend runtimeoperationbounds."
+      }
+    ]
+  },
+  "actualBoundaries": {
+    "coldHistory": "Real protected filesystem initialization/batchedallocation, actual lifecyclewrites and coldstore/history reconstruction; own-modulecomposition, no nativehelper/process/socket.",
+    "peerHistory": "Real canonical/projection/archive files, capturedhistoricalsnapshot and pure rowjoins; capacityfixture fills actual storedschema. No livekernelpeergrant.",
+    "close": "Real productionmachine setup/close/storehistory, pure genuineprofilecompiler; upstream admission/launchsample/peerports substituted. createServer()/newSocket() objects stayunbound/unconnected under unitguard.",
+    "auditHistory": "Actual protectedaudit writer/files/durableanchors and coldreader; fakeclock/delayedFileHandle.read at boundary. No provider/process/networkeffects."
+  },
+  "costEvidence": {
+    "twoExistingCases": "history-two-case-stage-result.json",
+    "coldFixtureMs": 2756.666204,
+    "coldVerifyMs": 907.3466629999998,
+    "capacityFixtureMs": 623.7594549999999,
+    "capacitySyntheticFillMs": 553.2466420000001,
+    "qualification": "Earlier diagnostic timings on81, not timingobservations of currentfull0b failures. Coldfixture batching laterpassed29cases once; neither focusedpass dispositions original59failures."
+  },
+  "population": {
+    "inventory427": {
+      "unit": 255,
+      "integration": 140,
+      "e2e": 29,
+      "live": 3
+    },
+    "inventoryMethod": "Read-only call to repositorytestFiles/tierOf performed during assessment; no Vitesttestexecution.",
+    "automatedNonLiveFiles": 424,
+    "currentFullUnitCases": 6366,
+    "affectedFiles": 4,
+    "affectedCases": 138,
+    "hypotheticalMoveOnlyForAccounting": {
+      "unit": 251,
+      "integration": 144,
+      "e2e": 29,
+      "live": 3,
+      "inventory": 427,
+      "automatedNonLive": 424
+    },
+    "decision": "No move. Any futureclassification amendmentmust retaininventory, exact existingcases/assertions, complete check:all/hostednodeclosure;3livefiles remainoperator-only, not silently counted as CIexecuted."
+  },
+  "poolPrecedence": {
+    "observedSource": {
+      "defaultPool": "coverage.DfSpMS-b.js:3718 defaults pool tothreads",
+      "environmentDecode": "3719-3760 decodes MAX/MIN_THREADS into threads/vmThreads options; MAX/MIN_FORKS into forks/vmForks.",
+      "threadsMaximum": "2748 poolOptions.maxThreads ?? vitest.config.maxWorkers ?? threadsCount",
+      "threadsMinimum": "2749 poolOptions.minThreads ?? vitest.config.minWorkers ?? Math.min(threadsCount,maxThreads)",
+      "forksMaximum": "2612 poolOptions.maxForks ?? vitest.config.maxWorkers ?? threadsCount"
+    },
+    "preparedCommand": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l VITEST_MAX_THREADS=1 VITEST_MIN_THREADS=1 VITEST_MAX_FORKS=1 VITEST_MIN_FORKS=1 npm run check",
+    "unchanged": "Official unitwrapper still discovers/executes completeunitproject, retry0, allowOnlyfalse, passWithNoTestsfalse, original5000mscasetimers, productionlimits, cleanup/lifetime/censuschecks.",
+    "notYetVerified": "No boundedpoolrun executed here. Root must retain actual spawnedworker observation,255file/6366case denominator, original59failedattempts and terminalresult; environmentintent alone is not actualworker evidence."
+  },
+  "failurePreservation": {
+    "totals": {
+      "passed": 6306,
+      "failed": 59,
+      "skipped": 1,
+      "todo": 0,
+      "total": 6366
+    },
+    "files": {
+      "passed": 251,
+      "failed": 4,
+      "total": 255
+    },
+    "failureKinds": {
+      "packages/polaris-dossier/src/url-machine-cold-history.test.ts": {
+        "Error: Test timed out in 5000ms.": 20
+      },
+      "packages/polaris-dossier/src/url-machine-peer-history.test.ts": {
+        "Error: Test timed out in 5000ms.": 17
+      },
+      "packages/polaris-dossier/src/url-run-machine-close.test.ts": {
+        "Error: Test timed out in 5000ms.": 18,
+        "AssertionError: expected { Object (authentication) } to be { Object (authentication) } // Object.is equality": 1
+      },
+      "packages/polaris-dossier/src/url-session-audit-history.test.ts": {
+        "Error: Test timed out in 5000ms.": 3
+      }
+    },
+    "all59FailedSubjects": [
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > reopens the exact independent cut, verifies eight terminals, and returns genuine row snapshots without writes or live authority",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5021,
+        "logLine": 710
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > verifies both cleanly stopped generations within the same sixteen-client lifetime store",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5007,
+        "logLine": 713
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses identity expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5003,
+        "logLine": 716
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses controller expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5004,
+        "logLine": 719
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses parent expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 722
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses run expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 725
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses role-cli expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 734
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses scope expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 737
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses witness expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 740
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses head expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5000,
+        "logLine": 743
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses future-cut expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 746
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses early-cut expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 749
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses coherent-identity expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 752
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses wrong-slot expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5000,
+        "logLine": 755
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses future-context expectation drift",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 758
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses a later protected revision instead of silently advancing an independently retained closed head",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5100,
+        "logLine": 763
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses expire without renewing the original deadline",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 766
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > rechecks clean-stop exclusion after an awaited genuine store open",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5000,
+        "logLine": 770
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses actual canonical-projection-rollback and leaves its bytes unrepaired",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 773
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-cold-history.test.ts",
+        "name": "cold protected machine reconstruction > refuses actual missing-archive and leaves its bytes unrepaired",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5003,
+        "logLine": 776
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > checks 220 exact captured rows using one genuine protected read and no per-row filesystem work",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5114,
+        "logLine": 876
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses snapshot copies, successful-result copies and genuine result substitution for another row",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 879
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > binds the genuine snapshot to each exact independently expected immutable audit subject field",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 882
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses a new capture once the independently retained original deadline expires",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 885
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > keeps historical legacy bytes explicitly unavailable and archives only the next real publication",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5003,
+        "logLine": 891
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses mutated archive without repair on reopen",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5005,
+        "logLine": 895
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses reordered archive without repair on reopen",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5003,
+        "logLine": 905
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses capacity before reservation while retaining room for client-wide terminal cleanup",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 6206,
+        "logLine": 908
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed canonical-hash",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 912
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed channel",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 916
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed scope",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 919
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed instance",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 922
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed role",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5423,
+        "logLine": 925
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed run",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 928
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed parent",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5003,
+        "logLine": 931
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed future-revision",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 935
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-machine-peer-history.test.ts",
+        "name": "cold historical machine-peer joins > refuses changed after-next-revision",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 938
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "machine accept authorization ordering > keeps both initial ordered Design clients unpublished across a Stop before activation",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5019,
+        "logLine": 794
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "machine accept authorization ordering > checks the fresh verifier after the live sample for sample-refused",
+        "kind": "identity-assertion",
+        "milliseconds": 6357,
+        "logLine": 797
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "retained production machine closure evidence > retains eight actual never-issued anchors and immutable selected contexts from the exact clean result",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5251,
+        "logLine": 807
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses controller drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5898,
+        "logLine": 819
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses parent drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 822
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses deadline drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5441,
+        "logLine": 825
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses pin drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 829
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses origin drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5368,
+        "logLine": 832
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses missing-store drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 836
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses extra-plan drift without allocating fresh endpoints",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5280,
+        "logLine": 842
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > preserves an actually revoked old head through a fresh same-role allocation and close",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5005,
+        "logLine": 847
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 0)",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5000,
+        "logLine": 850
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 1)",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 6387,
+        "logLine": 853
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > uses one held authority and time sample at each terminal boundary (refusal 2)",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 6314,
+        "logLine": 856
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses a changed protected retired head after genuine cold capture and never allocates around it",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5558,
+        "logLine": 859
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > withdraws both live currentness and retirement when run-authority is lost",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 862
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > withdraws both live currentness and retirement when claim is lost",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 865
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses run-authority withdrawal after awaited revalidation before any fresh allocation",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5143,
+        "logLine": 868
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-run-machine-close.test.ts",
+        "name": "same-store machine continuation seam > refuses claim withdrawal after awaited revalidation before any fresh allocation",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 9822,
+        "logLine": 871
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+        "name": "read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5022,
+        "logLine": 465
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+        "name": "read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5002,
+        "logLine": 469
+      },
+      {
+        "file": "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+        "name": "read-only protected audit history > refuses a captured tool exchange with count-repeated",
+        "kind": "vitest-5000ms-timeout",
+        "milliseconds": 5001,
+        "logLine": 473
+      }
+    ],
+    "sourceLogSha256": "7ec473531449ff25fcf23e7e768043fdd837c2109417d4fd16faf2c143563882",
+    "disposition": "Failed; later serialsuccess cannot establish originaltimeoutcause or erase any attempt. CC-TEST-4 forbids retryuntilgreen and implementer-only infrastructureclassification."
+  },
+  "closeIdentityFinding": {
+    "observed": "After first closecase timeout5019ms, sample-refused fails identityassociation at testline113. Sameobjectproductionstorage/return and globalspyindex0 differ; authentication is an objectpropertyshownbydiff, not evidence of failedproductionauthentication.",
+    "inferred": "Uncancelled oldfixture/testcontinuation can enter nextspy after afterEachrestoremocks/cleanup snapshot.",
+    "unknown": "Which exact callback populated firstspyresult and which phase exhausted any58timeouts.",
+    "action": "PreservetoBe; do notaddbespokecase-lifetimeframework."
+  },
+  "actions": "Read-only source/log inspection and this retentiononly. No source edits, test/typecheck/fullsuite/native execution, timerchanges or tierchanges."
+}

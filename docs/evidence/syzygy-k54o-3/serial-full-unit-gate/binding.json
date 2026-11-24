@@ -1,0 +1,29 @@
+{
+  "subjectCommit": "ef014efe505dafbf16475a55851c85fcaafab49d",
+  "command": "npm run check",
+  "scope": "complete unit selection and typecheck; original test budgets and tier routing",
+  "environment": {
+    "TMPDIR": "private0700 scratch directory",
+    "VITEST_MAX_THREADS": "1",
+    "VITEST_MIN_THREADS": "1",
+    "VITEST_MAX_FORKS": "1",
+    "VITEST_MIN_FORKS": "1"
+  },
+  "result": "PASS",
+  "counts": {
+    "passed": 6365,
+    "skipped": 1,
+    "total": 6366,
+    "files": 255
+  },
+  "workerEvidence": "/proc process enumeration at one-second cadence; maximum one numbered Vitest worker observed. This does not count internal threads.",
+  "limits": "This pass is exactef014, before the new ordered inspection and eligible fixture corrections. Prior concurrent failures remain retained; this run does not establish their leaf causes.",
+  "files": {
+    "official-check-ef014-serial.commit": "b480458bb12165df73e36aac54996eea2532ef8fe091d1d9426c3d0462a6073b",
+    "official-check-ef014-serial.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "official-check-ef014-serial.log": "ed72f4a82cb3dfdde7be85fe48be0b619c8fd4ebb126cc8b95b727742d34c70c",
+    "official-check-ef014-serial.summary.json": "2ad23d861fc28df93e6e0eea549546a73ed705f998cd969ea58ef7f5845a2f62",
+    "official-check-ef014-serial.workers.json": "421a1f0a9667e32197fa07c87261424c5599a06c08617bfbb674be5d924a5837",
+    "unit-pool-policy-diagnosis.json": "37934bb40ca0c469b2ea28e598bcea835bf0dfe17474b3218a9b43906d251351"
+  }
+}

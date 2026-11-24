@@ -1,0 +1,102 @@
+{
+  "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+  "attempts": [
+    {
+      "id": "old-aggregate",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "export const URL_ORDERED_INSPECTION_MILLISECONDS = 5_000;",
+      "new": "export const URL_ORDERED_INSPECTION_MILLISECONDS = 2_000;",
+      "exit": 1,
+      "logSha256": "f827e402ddc4a7f6953543e48d816a0c3591fe8ec10fb6968138d52382761f93",
+      "failureLines": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ],
+      "assessment": "inconclusive-test-timeout"
+    },
+    {
+      "id": "widened-resource",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "const resourceMilliseconds = Math.min(limits.inspectionMilliseconds, URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "new": "const resourceMilliseconds = limits.inspectionMilliseconds;",
+      "exit": 1,
+      "logSha256": "2d16edfb22bdaa9c8402197115c26d309706710b3c48c766c3b447b015e61dee",
+      "failureLines": [
+        "\u2192 expected undefined to be false // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected undefined to be false // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ],
+      "assessment": "detected-intended-regression"
+    },
+    {
+      "id": "old-history",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/url-launch-history.ts",
+      "old": "? URL_ORDERED_INSPECTION_MILLISECONDS : URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "new": "? URL_LAUNCH_LIMITS.inspectionMilliseconds : URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "exit": 1,
+      "logSha256": "fa8d732affe411d0401e62693d702feda92b1fb5069dbbde0c25504fad622cef",
+      "failureLines": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 59 skipped (60)"
+      ],
+      "assessment": "detected-intended-regression"
+    },
+    {
+      "id": "missing-confirm-deadline",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "observation?.settle('confirm', stillCurrent === true ? 'accepted' : 'refused');\n        checkSample();",
+      "new": "observation?.settle('confirm', stillCurrent === true ? 'accepted' : 'refused');",
+      "exit": 1,
+      "logSha256": "c4fc2f4583864f7608869e29f64a7477f5ecf121812cdb40aa5d5f746c8da5b2",
+      "failureLines": [
+        "\u2192 expected true to be false // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected true to be false // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ],
+      "assessment": "detected-intended-regression"
+    },
+    {
+      "id": "old-aggregate-outer-only",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "}, limits.inspectionMilliseconds, observation === undefined ? undefined : error => {",
+      "new": "}, 2_000, observation === undefined ? undefined : error => {",
+      "exit": 1,
+      "logSha256": "e23221628cd9331ce65f5222ae261e2f23c33206f1f6a105acb0d3e61c6c4ab5",
+      "failureLines": [
+        "\u2192 expected false to be true // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected false to be true // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ],
+      "assessment": "detected-intended-regression"
+    }
+  ],
+  "summary": {
+    "intendedDetections": 4,
+    "inconclusive": 1,
+    "attempts": 5
+  },
+  "restoredStatus": "",
+  "method": "Each mutation ran sequentially in an isolated clone; original bytes restored in finally. Original case budgets unchanged. Exact fragments, commit and log digests retained. The first default-constant control hit the20s test timeout and is not a detection. The replay changes only the outer aggregate timer so the actual5s audit selection remains; it fails the3s acceptance assertion. The history control throws the intended writer refusal when the admitted3s sample is clipped at2s.",
+  "files": {
+    "aggregate-replay-result.json": "9f34adf16c6c05081ee892ef1a598802947e39ccd9108215794cf749f60878a2",
+    "missing-confirm-deadline.log": "c4fc2f4583864f7608869e29f64a7477f5ecf121812cdb40aa5d5f746c8da5b2",
+    "old-aggregate-outer-only.log": "e23221628cd9331ce65f5222ae261e2f23c33206f1f6a105acb0d3e61c6c4ab5",
+    "old-aggregate.log": "f827e402ddc4a7f6953543e48d816a0c3591fe8ec10fb6968138d52382761f93",
+    "old-history.log": "fa8d732affe411d0401e62693d702feda92b1fb5069dbbde0c25504fad622cef",
+    "result.json": "a6893eb0745dd488c899c56172ce4375470572bc5dde2cd30d9dfba8e23f7493",
+    "widened-resource.log": "2d16edfb22bdaa9c8402197115c26d309706710b3c48c766c3b447b015e61dee"
+  }
+}

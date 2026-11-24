@@ -1,0 +1,126 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w
+
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > compiles the independently named design profile with pinned version-two metadata
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > checks exact canonical ordered result, usage, latest-cache position and terminal shape
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > builds and selects only the design variant with the artifact result hint
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (stale-verdict)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (out-of-order)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (truncated-terminal)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-turns)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (oversized-verdict)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-shape)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-work)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > runs the pinned CLI through actual namespace, bridge, MCP and composed host without raw output
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > reprobes a 'short-lived' unused preparation before binding and spawns only the fresh one
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > reprobes a 'expired' unused preparation before binding and spawns only the fresh one
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'before reprobe'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'after the first authority check'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'after the second authority check'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses forged preparation/profile and changed support identities before actual host work
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > captures frozen selected launch limits before spawn and starts no child when their protected record fails
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > withholds native Author spawn when its disclosure write fails after preflight
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds a stuck launch audit, closes the host and does not launch late when the callback resolves
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > enforces output, storage, wall and explicit stop boundaries on the actual CLI
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > stops an actual private CLI at its sampled process bound and reports bounded unknown host cleanup
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > preserves an observed failed exit when supervisor stop arrives before the pipes close
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps the 200ms cadence, bounds one pending inspection to 2,000ms and withholds both samples on timeout
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > holds the storage directory until a submitted stat settles when enumeration fails
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > overlaps the next storage root and joins a current-close before publishing or retrying
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > overlaps the next storage root and joins a failed-close before publishing or retrying
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for closed while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for close-failed while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for tail-directory while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a task census when an opened listing disappears partway through
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > selects inspection ceilings from genuine ordered profiles and permits caller tightening 13368ms
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for three-second-authority 5225ms
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for withdrawn 5097ms
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for authority-timeout 7120ms
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for resource-timeout 4632ms
+ ✓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for confirmation-expired 7151ms
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when current
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when current-after-one-second
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when withdrawn
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when timed-out
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when census-timed-out
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when confirmation-expired
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'one missing entry'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'two missing entries in one batch'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'one missing entry on each of two walks'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'a non-ENOENT fault after a missing en…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'an unlisted stat error code'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'a sibling stat fault after a nested d…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'the shared entry allowance consumed o…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'an oversized entry before a missing e…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'one child' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'two children' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'three children' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'root' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'replaced child' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (valid)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (prepared-site-drift)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-resumed)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-mutated)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-extra)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-plan-expiry)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (expiry)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (launch-drift)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (sample-refusal)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (material-drift)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (release-site-drift)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (renew-launch-drift)
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (renew-receipt-drift)
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks the ordinary live sample before starting the independent writer authority deadline 17ms
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks the ordered live sample before starting the independent writer authority deadline 11ms
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a stalled writer sample at its independent limit 3ms
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a stalled writer authority at its independent limit 2ms
+ ✓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a stalled writer ordered-sample at its independent limit 1ms
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > waits for the held file and directory flush in order and handles complete
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > waits for the held file and directory flush in order and handles withdraw-file
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > waits for the held file and directory flush in order and handles withdraw-directory
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > waits for the held file and directory flush in order and handles replace-directory
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > waits for the held file and directory flush in order and handles sync-error
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > writes fixed exclusive0600 helper files with exact prompt/profile/command/session identities and Inferred captures
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > issues an opaque capability for exact durable bytes and refuses a same-byte prompt replacement
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > resolves a logical helper launch through its newly audited immutable physical generation
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > authenticates each exact helper history in product contexts after its own durable host audit
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > preserves the captured Fidelity launch revalidation cause for prompt lease at expiry
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > preserves the captured Fidelity launch revalidation cause for audit refusal at expiry
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > preserves the captured Fidelity launch revalidation cause for prompt drift at expiry
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a later writer and audit against a byte-identical replacement of the registered prompt
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > keeps a launch history unpublished while resource polls run and registers each file once
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > keeps helper history unpublished when the sample fails during registration
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > lets a pending sample finish before inspecting or registering launch history
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks authority after yielding before reopening the launch audit
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses launch history when its protected audit changes during registration
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'inventory' 'fsync' with null drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'fsync' with null drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'fsync' with 'prefix' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'fsync' with 'tail' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'fsync' with 'unrelated-file' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'before-write' with null drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'inventory' 'after-write' with null drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with null drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with 'tail' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with 'short-write' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with 'stamp' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with 'mode' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks already committed history during 'design' 'after-write' with 'hard-link' drift
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > withholds ordered launch history when live sample 1 refuses
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > withholds ordered launch history when live sample 3 refuses
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses stale or incorrectly scoped audit registration with safe exact writer bytes
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses an exact audited attempt in a directory outside the genuine prepared view protections
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > returns author metadata without a helper file and discloses missing actual runtime captures
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses copied plans, foreign run bindings, mismatched issued prompts and invalid captured PID without creating history
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses revoked current, a policy mismatch, and detector failures before writing
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a foreign directory with the same runId and byte-identical replaced prompt records
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > refuses a symlink destination and helper directory replaced while current is pending without writing through either
+ ↓ |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > requires Inferred URL history only under actual protected effective authority and preserves legacy marker Observed behavior
+
+ Test Files  2 passed (2)
+      Tests  11 passed | 106 skipped (117)
+   Start at  01:33:37
+   Duration  55.25s (transform 2.68s, setup 23ms, collect 3.93s, tests 50.62s, environment 0ms, prepare 189ms)
+

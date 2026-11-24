@@ -1,0 +1,48 @@
+{
+  "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+  "baseCommit": "44f5c74126f0e3be9d64ca7f494f213db35138d4",
+  "sourceSha256": {
+    "packages/polaris-dossier/src/session-launch.ts": "ae11d188b224c653efef418e7584246a88af36e048faa6b41228bb33a6df2617",
+    "packages/polaris-dossier/src/session-launch.test.ts": "a03053fb8bbe6f1593adcb0da2a81c7fd31224842e03b5188d24025dcd7fb954",
+    "packages/polaris-dossier/src/url-launch-history.ts": "5075dd3b2fe8581acbaafc0a7d499adb5cfd556a75a9a1dccacedb503694e014",
+    "packages/polaris-dossier/src/url-launch-history.test.ts": "bda655d6cf70d452ad662016bda5691824e7d4474e669e16beb93cd5c32d386d",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "e4f5a7f1b3dd936fc488e7f8bfd499ed10e1ac97d385a602668c7125d44fee43"
+  },
+  "review": {
+    "path": "docs/reviews/F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW.md",
+    "verdict": "PASS \u2014 source only",
+    "sha256": "6119d3184e05e860ce4395d7c6d96594b4654bb2010cfad93204db4fc0fbe72f"
+  },
+  "selectedRegression": {
+    "passed": 11,
+    "skipped": 106,
+    "collected": 117,
+    "files": 2,
+    "netAddedCases": 8
+  },
+  "runtimeChange": {
+    "selector": "genuine nominal ordered Design profile",
+    "aggregateInspectionMilliseconds": 5000,
+    "ordinaryInspectionMilliseconds": 2000,
+    "resourceCensusMilliseconds": 2000,
+    "callerMayTighten": true,
+    "audit": "selected limits recorded at actual launch",
+    "commandDigest": "physical command arguments only; does not include host inspection timer",
+    "historySampleWait": "same nominal ordered selector; independent writer authority remains1000ms"
+  },
+  "fixtureChange": "Remove only Author brief reread packet await. Fidelity packet prerequisite and all existing stop/final assertions preserved. Exact predecessor socket-error leaf remainsUnknown.",
+  "limits": "Source review and selected regressions do not establish recovery completion. Full candidate check:all, native durable records and final rendering comparison pending.",
+  "files": {
+    "ordered-inspection-focused.log": "eb0bfff61f349745b723ef54729bd063126459d3aa89cbdf2dd715f870795444",
+    "ordered-inspection-tests-binding.json": "d28ea6c648cce513dcccce7aad5721165c1c58338ea3a11e6bd350362c453eca",
+    "ordered-inspection-tests.patch": "6386d6417ea2d0cf0ddf1cf105f082630c555a488ecd7ab542075086985ece24",
+    "eligible-assertion-preservation.json": "c2c6ecf77ea46ecfe3538089f69d5334bf14cd1756920014a7d38d30fe453302",
+    "source.patch": "50213bcdcb82d616cc7f7142afb568b5d4def7e43330c54a54371ed5c34e5730"
+  },
+  "faultControls": {
+    "path": "controls/binding.json",
+    "sha256": "2a5698cdd5ac19cf682079a4ae835df41c5bc01b680427b1fe8ecf37ed915056",
+    "detected": 4,
+    "inconclusive": 1
+  }
+}

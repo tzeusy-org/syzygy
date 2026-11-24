@@ -1,0 +1,87 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-authority-join-verify.riufsvas/w
+
+ ❯ |integration| packages/polaris-dossier/src/url-launch-history.test.ts (60 tests | 1 failed | 59 skipped) 10422ms
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (valid)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (prepared-site-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-resumed)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-mutated)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-extra)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (ordered-plan-expiry)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (expiry)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (launch-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (sample-refusal)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (material-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (release-site-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (renew-launch-drift)
+   ↓ protected URL design delivery audit > keeps a metadata-only event and rechecks after durability (renew-receipt-drift)
+   ↓ URL stored launch history > checks the ordinary live sample before starting the independent writer authority deadline
+   × URL stored launch history > checks the ordered live sample before starting the independent writer authority deadline 15ms
+     → url-launch-history-unavailable
+   ↓ URL stored launch history > refuses a stalled writer sample at its independent limit
+   ↓ URL stored launch history > refuses a stalled writer authority at its independent limit
+   ↓ URL stored launch history > refuses a stalled writer ordered-sample at its independent limit
+   ↓ URL stored launch history > waits for the held file and directory flush in order and handles complete
+   ↓ URL stored launch history > waits for the held file and directory flush in order and handles withdraw-file
+   ↓ URL stored launch history > waits for the held file and directory flush in order and handles withdraw-directory
+   ↓ URL stored launch history > waits for the held file and directory flush in order and handles replace-directory
+   ↓ URL stored launch history > waits for the held file and directory flush in order and handles sync-error
+   ↓ URL stored launch history > writes fixed exclusive0600 helper files with exact prompt/profile/command/session identities and Inferred captures
+   ↓ URL stored launch history > issues an opaque capability for exact durable bytes and refuses a same-byte prompt replacement
+   ↓ URL stored launch history > resolves a logical helper launch through its newly audited immutable physical generation
+   ↓ URL stored launch history > authenticates each exact helper history in product contexts after its own durable host audit
+   ↓ URL stored launch history > preserves the captured Fidelity launch revalidation cause for prompt lease at expiry
+   ↓ URL stored launch history > preserves the captured Fidelity launch revalidation cause for audit refusal at expiry
+   ↓ URL stored launch history > preserves the captured Fidelity launch revalidation cause for prompt drift at expiry
+   ↓ URL stored launch history > refuses a later writer and audit against a byte-identical replacement of the registered prompt
+   ↓ URL stored launch history > keeps a launch history unpublished while resource polls run and registers each file once
+   ↓ URL stored launch history > keeps helper history unpublished when the sample fails during registration
+   ↓ URL stored launch history > lets a pending sample finish before inspecting or registering launch history
+   ↓ URL stored launch history > checks authority after yielding before reopening the launch audit
+   ↓ URL stored launch history > refuses launch history when its protected audit changes during registration
+   ↓ URL stored launch history > checks already committed history during 'inventory' 'fsync' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'prefix' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'tail' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'fsync' with 'unrelated-file' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'before-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'inventory' 'after-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with null drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'tail' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'short-write' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'stamp' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'mode' drift
+   ↓ URL stored launch history > checks already committed history during 'design' 'after-write' with 'hard-link' drift
+   ↓ URL stored launch history > withholds ordered launch history when live sample 1 refuses
+   ↓ URL stored launch history > withholds ordered launch history when live sample 3 refuses
+   ↓ URL stored launch history > refuses stale or incorrectly scoped audit registration with safe exact writer bytes
+   ↓ URL stored launch history > refuses an exact audited attempt in a directory outside the genuine prepared view protections
+   ↓ URL stored launch history > returns author metadata without a helper file and discloses missing actual runtime captures
+   ↓ URL stored launch history > refuses copied plans, foreign run bindings, mismatched issued prompts and invalid captured PID without creating history
+   ↓ URL stored launch history > refuses revoked current, a policy mismatch, and detector failures before writing
+   ↓ URL stored launch history > refuses a foreign directory with the same runId and byte-identical replaced prompt records
+   ↓ URL stored launch history > refuses a symlink destination and helper directory replaced while current is pending without writing through either
+   ↓ URL stored launch history > requires Inferred URL history only under actual protected effective authority and preserves legacy marker Observed behavior
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/url-launch-history.test.ts > URL stored launch history > checks the ordered live sample before starting the independent writer authority deadline
+Error: url-launch-history-unavailable
+ ❯ refuse packages/polaris-dossier/src/url-launch-history.ts:23:34
+     21| const hex = (v: unknown): v is string => typeof v === 'string' && /^[a…
+     22| const positive = (v: unknown): v is number => Number.isSafeInteger(v) …
+     23| function refuse(): never { throw new Error('url-launch-history-unavail…
+       |                                  ^
+     24| interface LaunchCapture { readonly pid: number | 'Unknown'; readonly s…
+     25| export interface UrlLaunchHistoryOptions {
+ ❯ writeUrlLaunchHistory packages/polaris-dossier/src/url-launch-history.ts:243:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 59 skipped (60)
+   Start at  01:38:03
+   Duration  13.72s (transform 2.24s, setup 11ms, collect 2.94s, tests 10.42s, environment 0ms, prepare 63ms)
+

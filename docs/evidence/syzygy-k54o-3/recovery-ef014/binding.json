@@ -15,7 +15,7 @@
     "eligible-stop-resume": {
       "exit": 1,
       "durationSeconds": 296.86,
-      "state": "failed before clean Stop; author socket error precedes inventory mediation refusal; cause under diagnosis"
+      "state": "Author socket error first; Inventory refusal downstream. Author brief reread unnecessarily waited146.317s for Fidelity packet. Exact socket-error leaf Unknown; no durable final."
     }
   },
   "environment": {
@@ -37,7 +37,8 @@
     "eligible-stop-resume-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
     "eligible-stop-resume-vitest.log": "4e8f70f8e3e52e96d7502584fbb76f800c00656adee560067bbf8bee868eb534",
     "eligible-stop-resume-eligible-stop-resume.json.failure.json": "05164eb428e393677f5c04af8d66c12a5735ca135e57a9f5e381e1c1216d6d78",
-    "ef014-interrupted-diagnosis.json": "488f4feef0597b921b60e516bc3606a05aca365488a6624e2e76cdabe3753acf"
+    "ef014-interrupted-diagnosis.json": "488f4feef0597b921b60e516bc3606a05aca365488a6624e2e76cdabe3753acf",
+    "ef014-eligible-diagnosis.json": "c2574ceea8c3ebdc8100f23fb2a8dd4fb40a91d92ef66ba5ffaccd7761d3d84d"
   },
   "completion": "Not established. Neither selected recovery case passed. These failures supersede no prior frozen evidence."
 }

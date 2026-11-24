@@ -1,0 +1,9 @@
+{
+  "base": "44f5c7412",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "assertionCalls": 157,
+  "assertionsIdentical": true,
+  "expectLines": 145,
+  "expectLinesIdentical": true,
+  "mutationCanary": true
+}

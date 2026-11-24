@@ -1,0 +1,260 @@
+{
+  "sourceCommit": "ef014efe505dafbf16475a55851c85fcaafab49d",
+  "sourceSha256": {
+    "url-run-composed.test.ts": "17ebca69f8a151bf3078f25a4daf0e7d74a69b9771b1870047b778663012cddf",
+    "session-machine-transport.ts": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+    "session-relay.ts": "789bb656bf92bf94b1005869b262abebbd29bf03f8e3d8f45ad15808c08e53e5",
+    "url-machine-peer.ts": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+    "url-run-sessions.ts": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+    "session-launch.ts": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46"
+  },
+  "evidence": {
+    "failureManifest": "/home/orca/.tmp/f3-native-ef014-eligible-stop-resume.VuRkR7mb/eligible-stop-resume.json.failure.json",
+    "failureSha256": "05164eb428e393677f5c04af8d66c12a5735ca135e57a9f5e381e1c1216d6d78",
+    "vitestLogSha256": "4e8f70f8e3e52e96d7502584fbb76f800c00656adee560067bbf8bee868eb534",
+    "protectedAudits": {
+      "author": {
+        "fileSha256": "f3c84d921ecd95a18e51371ade7eecee25be6d8063836b7209a1f28f9d354524",
+        "rows": 118,
+        "lastRelayEvents": [
+          {
+            "event": "attempt-allowed",
+            "at": "2026-11-24T17:18:34.637Z",
+            "outcome": "allowed",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "send-attempt",
+            "at": "2026-11-24T17:18:39.757Z",
+            "outcome": "attempted",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "send-outcome",
+            "at": "2026-11-24T17:21:06.074Z",
+            "outcome": "local-request-flushed",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "response-admitted",
+            "at": "2026-11-24T17:21:17.280Z",
+            "outcome": "response-admitted",
+            "stopReason": "tool_use",
+            "tool": {
+              "id": "toolu_owned_recheck",
+              "name": "mcp__syzygy__artifact_read"
+            }
+          }
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      "inventory": {
+        "fileSha256": "c33290f042654d3fb6ad534fbafce48b19dc6ebf8e86ead464f537c115d75ef9",
+        "rows": 94,
+        "lastRelayEvents": [
+          {
+            "event": "send-attempt",
+            "at": "2026-11-24T17:20:46.152Z",
+            "outcome": "attempted",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "send-outcome",
+            "at": "2026-11-24T17:20:47.752Z",
+            "outcome": "local-request-flushed",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "response-admitted",
+            "at": "2026-11-24T17:20:50.885Z",
+            "outcome": "response-admitted",
+            "stopReason": "tool_use",
+            "tool": {
+              "id": "toolu_owned_inventory_submit",
+              "name": "mcp__syzygy__dossier_step"
+            }
+          },
+          {
+            "event": "attempt-allowed",
+            "at": "2026-11-24T17:21:20.611Z",
+            "outcome": "allowed",
+            "stopReason": null,
+            "tool": null
+          }
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      },
+      "fidelity": {
+        "fileSha256": "ce7a9540c2b72ce9d32e5e13693149cdf2aa76388ab6bc363bdc878499780ab0",
+        "rows": 34,
+        "lastRelayEvents": [
+          {
+            "event": "attempt-allowed",
+            "at": "2026-11-24T17:19:01.146Z",
+            "outcome": "allowed",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "send-attempt",
+            "at": "2026-11-24T17:19:07.708Z",
+            "outcome": "attempted",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "send-outcome",
+            "at": "2026-11-24T17:21:06.074Z",
+            "outcome": "local-request-flushed",
+            "stopReason": null,
+            "tool": null
+          },
+          {
+            "event": "response-admitted",
+            "at": "2026-11-24T17:21:18.792Z",
+            "outcome": "response-admitted",
+            "stopReason": "tool_use",
+            "tool": {
+              "id": "toolu_owned_fidelity_packet",
+              "name": "mcp__syzygy__artifact_read"
+            }
+          }
+        ],
+        "terminal": {
+          "outcome": "inspection-failed",
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0
+        }
+      }
+    }
+  },
+  "firstObservedFailure": {
+    "label": "Observed",
+    "jsonPath": "$.eligibleRelayInterruptions[0]",
+    "event": {
+      "role": "author",
+      "event": "socket-error",
+      "atMs": 290018.454344,
+      "connectionMs": 177876.215617,
+      "responseMs": 177293.98939800003
+    },
+    "firstRuntimeFailure": {
+      "reason": "transport-unavailable",
+      "atMs": 290019.655448
+    },
+    "firstRuntimeFailureDelayMilliseconds": 1.2011039999779314
+  },
+  "inventoryFailure": {
+    "firstRecordedMediationOrdinal": 6,
+    "firstFailedStep": {
+      "role": "inventory",
+      "startedMs": 289942.845623,
+      "stages": [],
+      "settledMs": 290019.7727,
+      "outcome": "refused"
+    },
+    "precedingCurrentStage": {
+      "phase": "current",
+      "timing": {
+        "startedMs": 289935.755747,
+        "settledMs": 289942.782965,
+        "outcome": "accepted"
+      }
+    },
+    "interpretation": "Current stage accepted; subsequent mediation failed after Author socket error. No peer-current/store/effect entry recorded for that failed mediation. This is downstream, not evidence of Inventory policy withdrawal."
+  },
+  "clockAssessment": {
+    "httpAdapterConnectionAgeMs": 177876.215617,
+    "httpRequestAgeMs": 177293.98939800003,
+    "selectedTransportBoundMs": 180000,
+    "nativeLifetimeCause": "Unknown",
+    "explanation": "Native deadline begins at openSessionMachineConnection entry104\u2013105, before capture+authorization; HTTP connection mark is emitted only after open resolves in session-relay.ts399\u2013402. Thus177.876s HTTP age cannot exclude native180s expiry. The missing native opening stamp/error cause is not retained.",
+    "nativePreHttpIntervalIfLifetimeExpiredMs": 2123.784382999991,
+    "httpRequestTimeout": "Request180s clock was not reached at its retained177.294s age.",
+    "genericErrorSources": [
+      "native lifetime timer201",
+      "read pump refusal/ingress/data bounds210\u2013224",
+      "write boundary/reply/current/deadline failure151\u2013165"
+    ],
+    "normalization": "All normalize to session-machine-transport-unavailable; eligible observer records only socket-error/response-closed, no cause."
+  },
+  "avoidableFixtureWait": {
+    "label": "Observed",
+    "protectedSendOutcomeGaps": {
+      "author": {
+        "sendAttemptAt": "2026-11-24T17:18:39.757Z",
+        "sendOutcomeAt": "2026-11-24T17:21:06.074Z",
+        "elapsedMilliseconds": 146317.0
+      },
+      "fidelity": {
+        "sendAttemptAt": "2026-11-24T17:19:07.708Z",
+        "sendOutcomeAt": "2026-11-24T17:21:06.074Z",
+        "elapsedMilliseconds": 118366.0
+      }
+    },
+    "authorTool": "toolu_owned_recheck artifact_read brief.md",
+    "authorSource": "url-run-composed.test.ts1826\u20131828 awaits packet before generating a brief read; packet registration1994\u20131998 releases this.",
+    "fidelityTool": "toolu_owned_fidelity_packet artifact_read round-1/packet.json",
+    "fidelitySource": "1863\u20131871 retains genuine packet prerequisite.",
+    "waitIdentifierPopulation": [
+      {
+        "line": 1695,
+        "text": "const waitForFidelityPacket = eligibleStop ? new Promise<void>(resolve => { fidelityPacketRegistered = resolve; }) : undefined;"
+      },
+      {
+        "line": 1826,
+        "text": "const authorBeforeEligibleStop = waitForFidelityPacket === undefined ? [] : [async () => {"
+      },
+      {
+        "line": 1827,
+        "text": "await waitForFidelityPacket;"
+      },
+      {
+        "line": 1863,
+        "text": "waitForFidelityPacket === undefined ? readFidelityPacket() : async () => {"
+      },
+      {
+        "line": 1869,
+        "text": "await waitForFidelityPacket;"
+      }
+    ],
+    "recommendation": {
+      "label": "Inferred",
+      "edit": "Delete only Author await waitForFidelityPacket1827, retain async wrapper, genuine recheck tool and script count.",
+      "preserved": [
+        "Fidelity real waiting-result check and inv.allow before its packet await",
+        "packet promise resolved only after genuine registerPacket returns",
+        "finalResponse/afterEndTurn durable ordering and eligible SIGSTOP",
+        "eligible3final-product assertions/2live finals/new final site",
+        "settleOrdinaryResponses requires all3durable end-turn audits",
+        "public Stop through runPolarisCli and all existing assertions including Author count8",
+        "original180s transport and2s resource limits"
+      ],
+      "limitation": "Removes directly evidenced avoidable active-response wait; does not establish the generic Author socket-error leaf or prove next native acceptance."
+    }
+  },
+  "initialRoleInspection": "All3 storage/process checks accepted, current refused after global transport-unavailable; downstream only.",
+  "actions": "Read-only; no edits/tests or tracker changes."
+}

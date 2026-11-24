@@ -1,0 +1,21 @@
+{
+  "controls": [
+    {
+      "id": "old-aggregate-outer-only",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "}, limits.inspectionMilliseconds, observation === undefined ? undefined : error => {",
+      "new": "}, 2_000, observation === undefined ? undefined : error => {",
+      "exit": 1,
+      "logSha256": "e23221628cd9331ce65f5222ae261e2f23c33206f1f6a105acb0d3e61c6c4ab5",
+      "failureLines": [
+        "\u2192 expected false to be true // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected false to be true // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ]
+    }
+  ],
+  "restoredStatus": ""
+}

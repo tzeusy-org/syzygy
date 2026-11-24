@@ -1,0 +1,65 @@
+{
+  "controls": [
+    {
+      "id": "old-aggregate",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "export const URL_ORDERED_INSPECTION_MILLISECONDS = 5_000;",
+      "new": "export const URL_ORDERED_INSPECTION_MILLISECONDS = 2_000;",
+      "exit": 1,
+      "logSha256": "f827e402ddc4a7f6953543e48d816a0c3591fe8ec10fb6968138d52382761f93",
+      "failureLines": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ]
+    },
+    {
+      "id": "widened-resource",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "const resourceMilliseconds = Math.min(limits.inspectionMilliseconds, URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "new": "const resourceMilliseconds = limits.inspectionMilliseconds;",
+      "exit": 1,
+      "logSha256": "2d16edfb22bdaa9c8402197115c26d309706710b3c48c766c3b447b015e61dee",
+      "failureLines": [
+        "\u2192 expected undefined to be false // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected undefined to be false // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ]
+    },
+    {
+      "id": "old-history",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/url-launch-history.ts",
+      "old": "? URL_ORDERED_INSPECTION_MILLISECONDS : URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "new": "? URL_LAUNCH_LIMITS.inspectionMilliseconds : URL_LAUNCH_LIMITS.inspectionMilliseconds);",
+      "exit": 1,
+      "logSha256": "fa8d732affe411d0401e62693d702feda92b1fb5069dbbde0c25504fad622cef",
+      "failureLines": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 59 skipped (60)"
+      ]
+    },
+    {
+      "id": "missing-confirm-deadline",
+      "subjectCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "old": "observation?.settle('confirm', stillCurrent === true ? 'accepted' : 'refused');\n        checkSample();",
+      "new": "observation?.settle('confirm', stillCurrent === true ? 'accepted' : 'refused');",
+      "exit": 1,
+      "logSha256": "c4fc2f4583864f7608869e29f64a7477f5ecf121812cdb40aa5d5f746c8da5b2",
+      "failureLines": [
+        "\u2192 expected true to be false // Object.is equality",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+        "AssertionError: expected true to be false // Object.is equality",
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 56 skipped (57)"
+      ]
+    }
+  ],
+  "restoredStatus": ""
+}
