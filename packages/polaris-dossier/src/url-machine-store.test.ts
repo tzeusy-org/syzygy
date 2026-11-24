@@ -901,7 +901,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it.each(['async', 'both'] as const)('checks the complete terminal read within five seconds under %s authority latency', async latency => {
+  it.each(['async', 'both'] as const)('checks the complete terminal read beyond five seconds under %s authority latency', async latency => {
     const f = await fixture(), slot = await f.allocate();
     let elapsed = 0, measuring = false, syncChecks = 0, asyncChecks = 0;
     const reopened = await openUrlMachineStore({ ...f.options, current: () => {
@@ -911,7 +911,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       }
       return f.options.current();
     }, currentAsync: async () => {
-      if (measuring) { asyncChecks++; elapsed += latency === 'both' ? 400 : 940; }
+      if (measuring) { asyncChecks++; elapsed += latency === 'both' ? 480 : 1040; }
       return true;
     } }, f.store.identitySha256);
     if (reopened === null) throw new Error('fixture reopen refused');
@@ -931,8 +931,41 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(verify).toHaveBeenCalledTimes(1);
       expect(asyncChecks).toBe(5);
       expect(syncChecks).toBe(7);
-      expect(elapsed).toBe(latency === 'both' ? 4_800 : 4_700);
+      expect(elapsed).toBe(5_200);
     } finally { clock.mockRestore(); }
+  });
+
+  it.each(['original caller', 'original run', 'async envelope', 'sync envelope', 'sync withdrawal'] as const)(
+    'withholds a terminal confirmation at the %s boundary after reading its snapshot', async boundary => {
+    const f = await fixture(boundary === 'original run' ? 6000 : 60_000), slot = await f.allocate();
+    const reopened = await openUrlMachineStore({ ...f.options,
+      ...(boundary === 'sync envelope' ? {} : { currentAsync: async () => true }),
+    }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    const deadline = boundary === 'original caller' ? NOW + 6000 : f.options.deadline;
+    let elapsed = 0;
+    const original = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + elapsed);
+    let snapshot: unknown, before: number | null | undefined, after: number | null | undefined;
+    const verify = vi.fn<Parameters<typeof reopened.readTerminal>[2]>(async lease => {
+      snapshot = await lease.read();
+      before = lease.sampleCurrent();
+      if (boundary === 'original caller' || boundary === 'original run') f.tick(NOW + 6000);
+      else if (boundary === 'sync withdrawal') f.revoke();
+      else elapsed = boundary === 'async envelope' ? 10_000 : 5000;
+      after = lease.sampleCurrent();
+    });
+    try {
+      expect(await reopened.readTerminal(slot.context.clientId, deadline, verify)).toBe(false);
+    } finally { clock.mockRestore(); }
+    expect(verify).toHaveBeenCalledTimes(1);
+    expect(snapshot).toMatchObject({ canonical: null, projection: null, audit: null,
+      anchor: { kind: 'never-issued', clientId: slot.context.clientId } });
+    expect(before).toBe(NOW);
+    expect(after).toBeNull();
+    // An expired or withdrawn confirmation cannot release an uncertain lock.
+    expect(await readdir(f.options.protectedRoot)).toContain('lock');
   });
 
   it('withholds client and projection reads when async authority is withdrawn while reading terminal state', async () => {

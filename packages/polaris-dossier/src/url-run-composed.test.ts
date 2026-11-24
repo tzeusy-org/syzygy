@@ -3,6 +3,7 @@ import { createRequire, syncBuiltinESMExports } from 'node:module';
 import * as fs from 'node:fs/promises';
 import type { Server as HttpServer } from 'node:http';
 import path from 'node:path';
+import os from 'node:os';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -38,6 +39,9 @@ import * as runOrigins from './url-run-origins.js';
 import * as originLedger from './url-origin-ledger.js';
 import * as sourceReader from './url-source-reader.js';
 import * as runArtifacts from './url-run-artifacts.js';
+import * as recoveryProducts from './url-recovery-products.js';
+import * as frozenProducts from './url-frozen-product-history.js';
+import * as productFiles from './url-product-reads.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
@@ -213,7 +217,6 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall 
 
 let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
-beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
 afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
 afterEach(async () => {
   for (const close of cleanup.splice(0).reverse()) await close();
@@ -259,6 +262,108 @@ type ResumeOriginStep = ResumeStamp & {
   operation?: ResumeStamp;
   authority: { calls: number; refused: number; totalMs: number; longestMs: number };
 };
+type RestoreProductPhase = 'restore' | 'ledger-restore' | 'history-transfer' | 'history' | 'record-read'
+  | 'artifact-read' | 'directory-read' | 'metadata-check' | 'receipt' | 'report-validation' | 'revalidate';
+type RestoreProductEntry = ResumeStamp & {
+  ordinal: number; phase: RestoreProductPhase; parent?: RestoreProductPhase; runRemainingMs: number;
+  authority: { calls: number; refused: number; rejected: number; totalMs: number; longestMs: number };
+  guardChecks: number; guardThrows: number;
+};
+
+/** Test observation only. Measurement preserves values/promises and thrown objects;
+ * call every supplied guard exactly where the actual implementation calls it.
+ * A passed guard throwing is observed; private final guards remain unattributed. */
+function observeProductRestoration(run: string, originalDeadline: number) {
+  const scope = new AsyncLocalStorage<RestoreProductEntry>();
+  const authorityScope = new AsyncLocalStorage<boolean>();
+  const entries: RestoreProductEntry[] = [];
+  const totals: Partial<Record<RestoreProductPhase, { calls: number; refused: number; rejected: number }>> = {};
+  let ordinal = 0, omitted = 0;
+  let lastSettled: { ordinal: number; phase: RestoreProductPhase; outcome: ResumeObservation; settledMs: number } | undefined;
+  let firstRefusal: { ordinal: number; phase: RestoreProductPhase; atMs: number;
+    startedMs: number; runRemainingMs: number; previous?: typeof lastSettled;
+    reason: 'refused' | 'threw' | 'authority-refused' | 'authority-threw' | 'passed-guard-threw' } | undefined;
+  const refuse = (entry: RestoreProductEntry, reason: NonNullable<typeof firstRefusal>['reason']): void => {
+    firstRefusal ??= { ordinal: entry.ordinal, phase: entry.phase, atMs: performance.now(), startedMs: entry.startedMs,
+      runRemainingMs: originalDeadline - Date.now(), ...(lastSettled === undefined ? {} : { previous: lastSettled }), reason };
+  };
+  const measure = <T>(phase: RestoreProductPhase, invoke: () => T, accepts: (value: Awaited<T>) => boolean = () => true): T => {
+    const parent = scope.getStore();
+    const entry: RestoreProductEntry = { ordinal: ++ordinal, phase, ...(parent === undefined ? {} : { parent: parent.phase }),
+      startedMs: performance.now(), runRemainingMs: originalDeadline - Date.now(),
+      authority: { calls: 0, refused: 0, rejected: 0, totalMs: 0, longestMs: 0 }, guardChecks: 0, guardThrows: 0 };
+    const total = totals[phase] ??= { calls: 0, refused: 0, rejected: 0 }; total.calls++;
+    if (entries.length < 32) entries.push(entry); else omitted++;
+    const settle = (outcome: ResumeObservation): void => {
+      entry.settledMs = performance.now(); entry.outcome = outcome;
+      if (outcome === 'refused') { total.refused++; refuse(entry, 'refused'); }
+      if (outcome === 'rejected') { total.rejected++; refuse(entry, 'threw'); }
+      lastSettled = { ordinal: entry.ordinal, phase, outcome, settledMs: entry.settledMs };
+    };
+    return scope.run(entry, () => {
+      try {
+        const value = invoke();
+        if (value instanceof Promise) void value.then(result => settle(accepts(result as Awaited<T>) ? 'accepted' : 'refused'), () => settle('rejected'));
+        else settle(accepts(value as Awaited<T>) ? 'accepted' : 'refused');
+        return value;
+      } catch (error) { settle('rejected'); throw error; }
+    });
+  };
+  const authority = <T extends boolean | Promise<boolean>>(invoke: () => T): T => {
+    const entry = scope.getStore(); if (entry === undefined || authorityScope.getStore() === true) return invoke();
+    const sample = entry.authority, began = performance.now(); sample.calls++;
+    const settle = (accepted: boolean, rejected = false): void => {
+      const elapsed = performance.now() - began; sample.totalMs += elapsed; sample.longestMs = Math.max(sample.longestMs, elapsed);
+      if (rejected) { sample.rejected++; refuse(entry, 'authority-threw'); }
+      else if (!accepted) { sample.refused++; refuse(entry, 'authority-refused'); }
+    };
+    return authorityScope.run(true, () => { try {
+      const value = invoke();
+      if (value instanceof Promise) void value.then(result => settle(result === true), () => settle(false, true));
+      else settle(value === true);
+      return value;
+    } catch (error) { settle(false, true); throw error; } });
+  };
+  const guard = (check: () => void): (() => void) => () => {
+    const entry = scope.getStore(); if (entry !== undefined) entry.guardChecks++;
+    try { check(); }
+    catch (error) { if (entry !== undefined) { entry.guardThrows++; refuse(entry, 'passed-guard-threw'); } throw error; }
+  };
+  const active = <T>(phase: RestoreProductPhase, invoke: () => T, accepts?: (value: Awaited<T>) => boolean): T =>
+    scope.getStore() === undefined ? invoke() : measure(phase, invoke, accepts);
+  const history = frozenProducts.verifyUrlFrozenProductHistory;
+  vi.spyOn(frozenProducts, 'verifyUrlFrozenProductHistory').mockImplementation((run, given, current) =>
+    active('history', () => history(run, given, () => authority(current)), value => value !== null));
+  const take = recoveryProducts.takeUrlRecoveryProducts;
+  vi.spyOn(recoveryProducts, 'takeUrlRecoveryProducts').mockImplementation((...args) => {
+    const result = active('history-transfer', () => take(...args));
+    return scope.getStore() === undefined ? result : Object.freeze({ ...result,
+      revalidate: () => active('revalidate', result.revalidate) });
+  });
+  const snapshot = productFiles.snapshotProductFile;
+  vi.spyOn(productFiles, 'snapshotProductFile').mockImplementation((root, file, maximum, check) =>
+    active(root === run ? 'record-read' : 'artifact-read', () => snapshot(root, file, maximum, guard(check))));
+  const names = productFiles.snapshotProductNames;
+  vi.spyOn(productFiles, 'snapshotProductNames').mockImplementation((root, directory, maximum, check) =>
+    active('directory-read', () => names(root, directory, maximum, guard(check))));
+  const unchanged = productFiles.assertProductFileUnchanged;
+  vi.spyOn(productFiles, 'assertProductFileUnchanged').mockImplementation((root, file, observed, check) =>
+    active('metadata-check', () => unchanged(root, file, observed, guard(check))));
+  return {
+    run: <T>(invoke: () => T): T => measure('restore', invoke), authority,
+    ledger: (ledger: ReturnType<typeof originLedger.createUrlOriginLedger>): typeof ledger => Object.freeze({ ...ledger,
+      restoreFrozenOrigins: (...args: Parameters<typeof ledger.restoreFrozenOrigins>) => {
+        const result = active('ledger-restore', () => ledger.restoreFrozenOrigins(args[0], args[1], () => authority(args[2])));
+        // This plain result is not a nominal capability. One continuation
+        // decorates its methods; actual receipt identities and errors pass through.
+        return result.then(recovered => Object.freeze({ ...recovered,
+          receipt: (...receiptArgs: Parameters<typeof recovered.receipt>) => active('receipt', () => recovered.receipt(...receiptArgs)) }));
+      },
+      validateReport: (...args: Parameters<typeof ledger.validateReport>) => active('report-validation', () => ledger.validateReport(...args)),
+    }),
+    summary: () => ({ entries, omitted, totals, firstRefusal, lastSettled }),
+  };
+}
 type ResumeStoreStep = ResumeStamp & {
   runRemainingMs: number;
   asyncAuthority: { started: number; accepted: number; refused: number; rejected: number; totalMs: number };
@@ -508,6 +613,7 @@ function observeResumedOrigins(
   create: typeof runOrigins.createUrlRunOrigins,
   options: Parameters<typeof create>[0],
   steps: ResumeOriginStep[],
+  restoration?: ReturnType<typeof observeProductRestoration>,
 ): ReturnType<typeof create> {
   const start = (phase: ResumeOriginPhase): ResumeOriginStep => {
     const step = { phase, startedMs: performance.now(), authority: { calls: 0, refused: 0, totalMs: 0, longestMs: 0 } };
@@ -532,7 +638,7 @@ function observeResumedOrigins(
   };
   const createLedger = originLedger.createUrlOriginLedger;
   const ledgerSpy = vi.spyOn(originLedger, 'createUrlOriginLedger').mockImplementationOnce(given => {
-    const ledger = createLedger(given);
+    const actual = createLedger(given), ledger = restoration?.ledger(actual) ?? actual;
     return Object.freeze({ ...ledger,
       sourceSpan: input => observing ? measure(begin('representative'), () => ledger.sourceSpan(input)) : ledger.sourceSpan(input),
       planRendererScaffold: renderer => observing ? measure(begin('renderer'), () => ledger.planRendererScaffold(renderer)) : ledger.planRendererScaffold(renderer),
@@ -548,7 +654,7 @@ function observeResumedOrigins(
     ledgerSpy.mockRestore();
   };
   return observe(() => create({ ...options, current: () => {
-    if (!observing) return options.current();
+    if (!observing) return restoration === undefined ? options.current() : restoration.authority(options.current);
     const sample = phase.authority;
     const started = performance.now();
     sample.calls++;
@@ -1349,7 +1455,91 @@ async function start(f: Fixture, failures: string[], onFailure: (reason: string)
   });
 }
 
+describe('bounded restoration observer (no native authority fixture)', () => {
+  it('observes actual descriptor guards and retains a late failure beyond its entry cap without retaining content', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'restore-observer-'));
+    cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
+    await fs.writeFile(path.join(root, 'owned.txt'), 'OWN_OBSERVER_BODY');
+    const deadline = Date.now() + 60_000, trace = observeProductRestoration(root, deadline), check = vi.fn();
+    trace.run(() => {
+      for (let index = 0; index < 40; index++)
+        expect(Buffer.from(productFiles.snapshotProductFile(root, 'owned.txt', 64, check).bytes!).toString()).toBe('OWN_OBSERVER_BODY');
+      expect(() => productFiles.snapshotProductFile(root, 'owned.txt', 64, () => { throw new Error('OWN_PRIVATE_EXCEPTION'); }))
+        .toThrow('url-product-read-unavailable');
+    });
+    const summary = trace.summary();
+    expect(summary.entries).toHaveLength(32); expect(summary.omitted).toBe(10);
+    expect(summary.firstRefusal).toMatchObject({ ordinal: 42, phase: 'record-read', reason: 'passed-guard-threw',
+      previous: { ordinal: 41, phase: 'record-read', outcome: 'accepted' } });
+    expect(summary.totals['record-read']).toEqual({ calls: 41, refused: 0, rejected: 1 });
+    expect(check).toHaveBeenCalled();
+    expect(summary.entries[0]!.runRemainingMs).toBeGreaterThan(0);
+    expect(summary.entries[0]!.runRemainingMs).toBeLessThanOrEqual(60_000);
+    const diagnostic = JSON.stringify(summary);
+    for (const excluded of [root, 'owned.txt', 'OWN_OBSERVER_BODY', 'OWN_PRIVATE_EXCEPTION']) expect(diagnostic).not.toContain(excluded);
+  });
+
+  it('observes the actual history re-export and unissued transfer without adding authority calls', () => {
+    const trace = observeProductRestoration('/owned-observer-unused', Date.now() + 60_000), current = vi.fn(() => false);
+    const result = trace.run(() => runArtifacts.verifyUrlFrozenProductHistory('/owned-observer-unused',
+      {} as frozenProducts.UrlFrozenProductHistory, () => trace.authority(current)));
+    expect(result).toBeNull(); expect(current).toHaveBeenCalledOnce();
+    expect(trace.summary().firstRefusal).toMatchObject({ phase: 'history', reason: 'authority-refused' });
+    const history = trace.summary().entries.find(entry => entry.phase === 'history');
+    expect(history?.authority.calls).toBe(1); expect(history?.authority.refused).toBe(1);
+    expect(() => trace.run(() => recoveryProducts.takeUrlRecoveryProducts({} as recoveryProducts.UrlVerifiedRecoveryProducts,
+      {} as Parameters<typeof recoveryProducts.takeUrlRecoveryProducts>[1]))).toThrow('url-recovery-products-unavailable');
+    expect(trace.summary().totals['history-transfer']).toEqual({ calls: 1, refused: 0, rejected: 1 });
+  });
+
+  it('forwards adapter method arguments, optional roles, receipt identities and original rejection objects', async () => {
+    // These stubs exercise observer forwarding only; they issue no provenance,
+    // recovery capability, kernel identity or live authority.
+    type Ledger = ReturnType<typeof originLedger.createUrlOriginLedger>;
+    type Restored = Awaited<ReturnType<Ledger['restoreFrozenOrigins']>>;
+    const trace = observeProductRestoration('/owned-observer-unused', Date.now() + 60_000);
+    const capability = Object.freeze({}), expected = Object.freeze({}), bytes = Uint8Array.of(1), receipt = Object.freeze({});
+    const issuedReceipt = receipt as ReturnType<Restored['receipt']>;
+    const receive = vi.fn(() => issuedReceipt), revalidate = vi.fn(), validate = vi.fn(() => receipt);
+    const result = Object.freeze({ history: Object.freeze({}), launches: Object.freeze({}), deadline: 123,
+      receipt: receive, revalidate }) as unknown as Restored;
+    const actual = Promise.resolve(result), sample = Promise.resolve(true), wait = vi.fn(() => sample);
+    const restore = vi.fn((given: unknown, subject: unknown, current: () => Promise<boolean>) => {
+      expect(given).toBe(capability); expect(subject).toBe(expected); expect(current()).toBe(sample); return actual;
+    });
+    const ledger = trace.ledger({ restoreFrozenOrigins: restore, validateReport: validate } as unknown as Ledger);
+    const decorated = trace.run(() => ledger.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
+      expected as Parameters<Ledger['restoreFrozenOrigins']>[1], wait));
+    expect(decorated).not.toBe(actual); // Exactly one forwarding continuation decorates this plain result.
+    const recovered = await decorated;
+    expect(recovered.history).toBe(result.history); expect(recovered.launches).toBe(result.launches); expect(recovered.deadline).toBe(123);
+    expect(recovered.revalidate).toBe(result.revalidate);
+    trace.run(() => {
+      expect(recovered.receipt('own', bytes, 'design')).toBe(receipt);
+      expect(recovered.receipt('own', bytes)).toBe(receipt);
+      recovered.revalidate();
+      expect(ledger.validateReport('author', 'draft', bytes)).toBe(receipt);
+    });
+    expect(receive).toHaveBeenNthCalledWith(1, 'own', bytes, 'design');
+    expect(receive).toHaveBeenNthCalledWith(2, 'own', bytes);
+    expect(revalidate).toHaveBeenCalledOnce(); expect(validate).toHaveBeenCalledExactlyOnceWith('author', 'draft', bytes);
+    expect(wait).toHaveBeenCalledOnce(); expect(restore).toHaveBeenCalledOnce();
+    expect(trace.summary().entries.find(entry => entry.phase === 'ledger-restore')?.authority.calls).toBe(1);
+    const marker = new Error('OWN_NOT_DIAGNOSTIC');
+    expect(() => trace.run(() => { throw marker; })).toThrow(marker);
+    const rejected = Promise.reject(marker);
+    expect(trace.run(() => rejected)).toBe(rejected);
+    await expect(rejected).rejects.toBe(marker);
+    const failing = trace.ledger({ restoreFrozenOrigins: () => rejected } as unknown as Ledger);
+    await expect(trace.run(() => failing.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
+      expected as Parameters<Ledger['restoreFrozenOrigins']>[1], wait))).rejects.toBe(marker);
+    expect(trace.summary().firstRefusal?.reason).toBe('threw');
+    expect(JSON.stringify(trace.summary())).not.toContain('OWN_NOT_DIAGNOSTIC');
+  });
+});
+
 describe('composed URL run with actual role processes', () => {
+  beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
   // The hosted eligible replay was still restoring protected products after
@@ -1365,6 +1555,7 @@ describe('composed URL run with actual role processes', () => {
     const resumePreparations: RestorePreparationTrace = { roles: [], omittedRoles: 0 };
     if (resumeAfterStop) observeRestorePreparationPhases();
     const resumeOriginSteps: ResumeOriginStep[] = [];
+    let resumeProducts: ReturnType<typeof observeProductRestoration> | undefined;
     const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
@@ -1387,7 +1578,7 @@ describe('composed URL run with actual role processes', () => {
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRuntimeFailure, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
@@ -1945,25 +2136,29 @@ describe('composed URL run with actual role processes', () => {
             claimedExactCut = recovery.isClaimedStoppedUrlRun(value, result);
             expect(claimedExactCut).toBe(true);
             resumeChecks.push({ phase: 'claim', exactCut: claimedExactCut, current: result?.current() });
+            resumeProducts = observeProductRestoration(f.run, f.deadline);
             const restore = rolePlan.restoreUrlRolePlans, load = urlRuntime.loadUrlDossierRenderer, origins = runOrigins.createUrlRunOrigins;
             vi.spyOn(rolePlan, 'restoreUrlRolePlans').mockImplementationOnce((...args) =>
               restoringPlans.run(resumePreparations, () => observeBootstrap('restore-plans', () => restore(...args), value => value !== null)));
             vi.spyOn(urlRuntime, 'loadUrlDossierRenderer').mockImplementationOnce((...args) =>
               observeBootstrap('load-renderer', () => load(...args), value => value !== null));
             vi.spyOn(runOrigins, 'createUrlRunOrigins').mockImplementationOnce(options =>
-              observeBootstrap('create-origins', () => observeResumedOrigins(origins, options, resumeOriginSteps), () => true));
+              observeBootstrap('create-origins', () => observeResumedOrigins(origins, options, resumeOriginSteps, resumeProducts), () => true));
             const createArtifacts = runArtifacts.createUrlRunArtifacts;
             vi.spyOn(runArtifacts, 'createUrlRunArtifacts').mockImplementationOnce(options => {
               const bridge = createArtifacts({ ...options, current: () => {
                 const trace = resumedRenderAuthority.getStore();
-                if (trace === undefined) return options.current();
+                if (trace === undefined) return resumeProducts === undefined ? options.current() : resumeProducts.authority(options.current);
                 const began = performance.now();
                 trace.calls++;
                 try { return options.current(); }
                 finally { trace.totalMs += performance.now() - began; }
               } });
-              return Object.freeze({ ...bridge, restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) =>
-                observeBootstrap('restore-products', () => bridge.restoreFrozenProducts(...restoreArgs), () => true) });
+              return Object.freeze({ ...bridge, restoreFrozenProducts: (...restoreArgs: Parameters<typeof bridge.restoreFrozenProducts>) => {
+                const [capability, wait] = restoreArgs;
+                return observeBootstrap('restore-products', () => resumeProducts!.run(() => wait === undefined
+                  ? bridge.restoreFrozenProducts(capability) : bridge.restoreFrozenProducts(capability, () => resumeProducts!.authority(wait))), () => true);
+              } });
             });
             return result;
           });
@@ -2169,7 +2364,7 @@ describe('composed URL run with actual role processes', () => {
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
             resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
@@ -2214,7 +2409,7 @@ describe('composed URL run with actual role processes', () => {
           && ['cold-final-prepared', 'cold-final-factory', 'resumed-render', 'resumed-exit'].includes(String(check.phase)));
         console.error('owned native resume failure', JSON.stringify({ scenario, phase: eligiblePhase,
           coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal,
-          bootstrap: resumeBootstrap, resumePreparations, latestStoreSteps: resumeStoreSteps.slice(-2) }));
+          bootstrap: resumeBootstrap, resumePreparations, resumeProducts: resumeProducts?.summary(), latestStoreSteps: resumeStoreSteps.slice(-2) }));
       }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
@@ -2241,7 +2436,7 @@ describe('composed URL run with actual role processes', () => {
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
@@ -2251,7 +2446,7 @@ describe('composed URL run with actual role processes', () => {
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
         initialInference: initialTrace?.inference, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),

@@ -48,6 +48,10 @@ const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 15_000;
 // append. Their independent five-second limits share this bounded envelope.
 const ORDINARY_NATIVE_EFFECT_MILLISECONDS = 20_000;
 const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;
+// Async terminal verification composes fresh claim checks with the protected
+// snapshot and final consumer checks. Its read-only envelope leaves generic
+// and synchronous operations at five seconds and retains both original deadlines.
+const ASYNC_TERMINAL_READ_MILLISECONDS = 10_000;
 const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
 const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
@@ -755,7 +759,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const synchronousOrdinaryRead = ordinaryEffect && currentAsync === undefined && publication === undefined && !terminalRead;
       const operationMilliseconds = orderedEffect
         ? effectProfile.transcript.nativeEffectMilliseconds : ordinaryEffect ? ORDINARY_NATIVE_EFFECT_MILLISECONDS
-          : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
+          : terminalRead && currentAsync !== undefined ? ASYNC_TERMINAL_READ_MILLISECONDS
+            : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
       return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
         if (effectProfile !== undefined) {
