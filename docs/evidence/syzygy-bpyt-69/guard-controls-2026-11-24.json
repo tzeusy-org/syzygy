@@ -314,7 +314,8 @@
     "oldSelftestAfterMutation": {
       "exit": 0,
       "tally": "selftest: 77/77 mutations make a check fail"
-    }
+    },
+    "archiveTree": "d856c2910fc54f157ac89fc37e5074aba70ada1f"
   },
   "traces": [
     {
@@ -334,7 +335,7 @@
   ],
   "verificationScript": {
     "path": "scripts/check_npm_probe_evidence.py",
-    "sha256": "a369e2de00cf52f07bb7501ca6b0c580a6bfd84e4bfc1144bdc8dbe2179d9a4e"
+    "sha256": "8701ccaeebfd0120d5760bd46e76a6054b9ee322e317940ec5f4722a66da0795"
   },
   "reviewSourceCommit": "e8cd624ecb58e24f763c35276eb7764373f5746e",
   "scope": "synthetic guard entry and archived summary logic",
@@ -343,5 +344,22 @@
     "path": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
     "append": "\n# supplemental source identity control\n",
     "outcome": "reject before running scratch controls"
+  },
+  "floatingInputControl": {
+    "revision": "2c4cf99c4726a1dd16ac95bc65cdcf26b53dbf23",
+    "file": "docs/evidence/syzygy-bpyt-8-39/suite.json",
+    "field": "runs[0].total",
+    "original": 5385,
+    "dirty": 5386,
+    "dirtySha256": "ce268c147a4a6af7bdadc2e6261383baf0743cc89669f6acaef47e72938493c3",
+    "callerBytesPreserved": true,
+    "predecessorExit": 1,
+    "repairedExit": 0
+  },
+  "firstIndependentReview": {
+    "path": "docs/evidence/syzygy-bpyt-69/R-BPYT69-N3N5-OUTCOME-R1-RAW.md",
+    "sha256": "b31ae4f7443eccd9c4680276c592a63cbc7f9f2ef4149e454303462e7cfa10e1",
+    "reviewedCommit": "36046b83a0ab8aeaa2a5761bf1888453d8c96e8c",
+    "verdict": "REVISE"
   }
 }

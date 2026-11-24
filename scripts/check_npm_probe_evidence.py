@@ -88,11 +88,34 @@ def ancestor_prefix(text):
     return "".join(text.splitlines(keepends=True)[:loops[0].end_lineno])
 
 
+def private_environment(private):
+    return {
+        "PATH": os.defpath, "HOME": str(private), "TMPDIR": str(private), "LANG": "C.UTF-8",
+        "GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1", "GIT_TERMINAL_PROMPT": "0",
+        "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": os.devnull,
+    }
+
+
 def child(program, args, private, timeout=20):
-    env = {"PATH": os.defpath, "HOME": str(private), "TMPDIR": str(private), "LANG": "C.UTF-8",
-           "GIT_NO_REPLACE_OBJECTS": "1", "GIT_NO_LAZY_FETCH": "1"}
     return subprocess.run((sys.executable, "-I", "-B", str(program), *map(str, args)),
-                          env=env, text=True, capture_output=True, timeout=timeout, check=False)
+                          env=private_environment(private), text=True, capture_output=True,
+                          timeout=timeout, check=False)
+
+
+def pinned_checkout(tree, revision, private):
+    checkout = private / "checkout"
+    env = private_environment(private)
+    git_prefix = ("git", "-c", f"core.hooksPath={os.devnull}")
+    subprocess.run((*git_prefix, "clone", "--quiet", "--shared", "--no-checkout", "--", str(tree), str(checkout)),
+                   env=env, check=True, timeout=90)
+    subprocess.run((*git_prefix, "-C", str(checkout), "switch", "--quiet", "--detach", revision),
+                   env=env, check=True, timeout=90)
+    actual = subprocess.check_output((*git_prefix, "-C", str(checkout), "rev-parse", "HEAD", "HEAD^{tree}"),
+                                     env=env).decode().splitlines()
+    clean = subprocess.check_output((*git_prefix, "-C", str(checkout), "status", "--porcelain=v1"), env=env)
+    if len(actual) != 2 or actual[0] != revision or clean:
+        raise ValueError("could not recreate a clean checkout at the evidence revision")
+    return checkout, actual[1]
 
 
 def guard_results(probe, data, private):
@@ -201,7 +224,9 @@ def main():
             probe_area = private / Path(path).stem
             probe_area.mkdir()
             guards.append(guard_results(path, sources[path], probe_area))
-        placement = placement_results(tree, sources[RECORD], private)
+        checkout, archive_tree = pinned_checkout(tree, revision, private)
+        placement = placement_results(checkout, sources[RECORD], private)
+        placement["archiveTree"] = archive_tree
         traces = trace_routes(tree, revision, guards[0]["sha256"])
     print(json.dumps({"sourceCommit": revision, "guards": guards, "placement": placement, "traces": traces},
                      indent=2))
