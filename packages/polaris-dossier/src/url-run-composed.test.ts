@@ -319,12 +319,12 @@ type AuditAppendTrace = ResumeStamp & {
   firstCallbackRefusal?: AuditCallbackEntry;
 };
 
-/** Observe only original calls, with a separate async scope for each append.
+/** Observe only original calls, with an async scope for each current check or append.
  * Both rolling tails and the first failure survive a late refusal past the cap. */
 function observeBaseAuditCallbacks() {
   type Instance = { ordinal: number; callbacks: AuditCallbackEntry[]; callbackCalls: number; appends: AuditAppendTrace[];
     appendCalls: number; firstCallbackRefusal?: AuditCallbackEntry; firstAppendRefusal?: AuditAppendTrace };
-  const instances: Instance[] = [], scope = new AsyncLocalStorage<{ instance: Instance; append: AuditAppendTrace }>();
+  const instances: Instance[] = [], scope = new AsyncLocalStorage<{ instance: Instance; append?: AuditAppendTrace }>();
   let count = 0;
   let firstRefusal: { audit: number; callback?: AuditCallbackEntry; append?: AuditAppendTrace } | undefined;
   const tail = <T>(entries: T[], entry: T): void => { if (entries.length >= 32) entries.shift(); entries.push(entry); };
@@ -356,7 +356,10 @@ function observeBaseAuditCallbacks() {
       if (instances.length >= 4) instances.shift();
       instances.push(instance);
       return {
-        current: <T>(call: () => T): T => measure(instance, 'current', call),
+        current: <T>(call: () => T): T => {
+          const active = scope.getStore();
+          return scope.run(active?.instance === instance ? active : { instance }, () => measure(instance, 'current', call));
+        },
         append(original: Extract<sessionAudit.UrlSessionAuditResult, { ok: true }>['append'], limitMs: number): Extract<sessionAudit.UrlSessionAuditResult, { ok: true }>['append'] {
           return event => {
             const append: AuditAppendTrace = { ordinal: ++instance.appendCalls, kind: event.kind, role: event.role,
@@ -1979,6 +1982,20 @@ describe('bounded restoration observer (no native authority fixture)', () => {
     expect(parentCurrent).toHaveBeenCalledTimes(83); expect(effectCurrent).toHaveBeenCalledTimes(2);
     expect(append).toHaveBeenCalledTimes(82);
     for (const args of append.mock.calls) expect(args).toEqual([auditEvent]);
+    // A standalone current callback must retain nested guard outcomes across its own await.
+    const standaloneEffect = vi.fn(() => false);
+    let originalStandalone!: Promise<boolean>;
+    const standaloneCurrent = vi.fn(() => originalStandalone = Promise.resolve().then(() => auditTrace.effect(standaloneEffect)));
+    const standalone = observed.current(standaloneCurrent);
+    expect(standalone).toBe(originalStandalone);
+    await expect(standalone).resolves.toBe(false);
+    expect(standaloneCurrent).toHaveBeenCalledTimes(1); expect(standaloneEffect).toHaveBeenCalledTimes(1);
+    const standaloneCallbacks = auditTrace.summary().retained[0]!.callbacks.slice(-2);
+    expect(standaloneCallbacks).toMatchObject([{ phase: 'current', outcome: 'refused' }, { phase: 'machine-effect', outcome: 'refused' }]);
+    for (const callback of standaloneCallbacks) expect(callback).not.toHaveProperty('append');
+    expect(auditTrace.summary().firstRefusal).toEqual(auditFailure);
+    expect(parentCurrent).toHaveBeenCalledTimes(83); expect(effectCurrent).toHaveBeenCalledTimes(2);
+    expect(append).toHaveBeenCalledTimes(82);
     const auditDiagnostic = JSON.stringify(auditTrace.summary());
     for (const excluded of ['OWN_PRIVATE_BODY', 'OWN_PRIVATE_PATH', 'OWN_NOT_DIAGNOSTIC']) expect(auditDiagnostic).not.toContain(excluded);
   });
