@@ -300,7 +300,21 @@ eligibility reason remains visible when a separate edge is unresolved.
    - what is running: how many items the tracker marks `in_progress`, as
      the tracker's claim, with liveness `activity-undetermined` because no
      staleness bound is declared;
-   - what changed and what it cost: Unknown, with reason and route;
+   - what changed (`syzygy-t3jk.21`): the tracker's net change between two
+     named Dolt revisions, read from its own history (`dolt_log` for the
+     window start, `dolt_diff` over `issues` for the change, by id, status
+     and diff type only). The day and week windows start at the newest
+     commit at or before the observation instant less 24 hours or 7 days
+     and end at the observed revision; each changed item is listed once as
+     added, closed, reopened, re-stated or removed, with status-only
+     updates and out-of-prefix rows counted, not listed. `?changed=week`
+     (or `since-last`) picks the window; alone it keeps the default board.
+     The since-last window is Unknown until a previous evaluation's
+     revision is recorded, and a window the history cannot answer (no
+     commit that old, a failed read, or a merge or out-of-order dates
+     between the start and the observed revision) is Unknown with its
+     reason, never zero;
+   - what it cost: Unknown, with reason and route;
    - verified against intent: three separate counts, never added together.
      They are the items with no traceable warrant; the materialized work on
      the default branch, each with reconciliation evidence absent; and

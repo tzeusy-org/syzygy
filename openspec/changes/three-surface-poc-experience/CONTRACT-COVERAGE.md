@@ -97,7 +97,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC1-31 | Work items: scheduler-owned lifecycle, mirrored with labeled staleness when adapter degrades, never invisibly | covered — Direct match | POC-REQ-013 |
 | RFC1-31 | Observed classes: appear in snapshot / absence is a fact / failed observation renders Unknown with named reason | covered | POC-REQ-003 |
 | RFC2-1 | Observed inputs (repo, Dolt DB) identified by revision/hash, not by description | covered — Only the revision-identification limb of the 11-item list is touched; challenge/evidence/act-record items (4,6,9,11) are unbuilt | POC-REQ-001, POC-REQ-004, POC-REQ-010 |
-| RFC2-2 | Uncaptured/unreachable source never silently influences a claim; affected claims → Unknown with reason | covered — Direct instance of the closed-snapshot rule for structure and Dolt observation | POC-REQ-003, POC-REQ-013 |
+| RFC2-2 | Uncaptured/unreachable source never silently influences a claim; affected claims → Unknown with reason | covered — Direct instance of the closed-snapshot rule for structure and Dolt observation. Amendment row (what changed, syzygy-t3jk.21): each change window ends at the observed work-item revision, never a fresh head, and an unread, unconfirmed or too-short history makes that window Unknown with its reason, never a partial count | POC-REQ-003, POC-REQ-013, POC-REQ-044 |
 | RFC2-3 | Facts deterministic given an identical revision (identity test) | covered — Only the determinism consequence is touched, not the full evaluation/as-of/kind apparatus | POC-REQ-004 |
 | RFC2-3 | Time-sensitive rendering computed from recorded instants, never ambient wall-clock | covered — Matches "as-of instant explicit, never ambient wall-clock" near-verbatim | POC-REQ-041 |
 | RFC2-6 | Coverage record for an executed mapping/oracle, with reconciling counts | covered — Thin/partial touch — only the coverage-record sub-item of the full immutable observation-record artifact is instanced; no persisted record, claim instances, tiers, evidence links, or challenge sets exist | POC-REQ-042, POC-REQ-051 |
@@ -179,7 +179,9 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC7-33 | Narrative claim-block type name kept distinct from kernel Claim entity | **Unknown** | — |
 | RFC7-34 | Every distinction recoverable without colour/position/layout; legended encodings | covered | POC-REQ-061 |
 | RFC7-34 | Disclosure paths operable without a pointing device | covered | POC-REQ-061, POC-REQ-022 |
-| RFC8-2 | Beads closure/activity never rendered as done/green/complete | covered — Anti-thesis limb (b) matches directly, including its wording: closure is headed "Closed", never a word for done (POC-REQ-043 wording limb); limb (a) [no editable store — POC never writes] and limb (c) [fleet-change/cost/authority accounting] aren't touched by POC scope, so only (b) rows here | POC-REQ-043 |
+| RFC8-2 | Beads closure/activity never rendered as done/green/complete | covered — Anti-thesis limb (b) matches directly, including its wording: closure is headed "Closed", never a word for done (POC-REQ-043 wording limb); limb (a) [no editable store — POC never writes] isn't touched by POC scope; limb (c) has its own two rows below (amended by syzygy-t3jk.21) | POC-REQ-043 |
+| RFC8-2 | Limb (c), the change part: Trajectory answers what changed for a past window at the fidelity the preserved records support | covered — Amendment row (what changed, syzygy-t3jk.21): the day and week windows from the tracker's own Dolt history, between two named revisions, each changed item listed with its kind; the since-last window is Unknown while no previous evaluation's revision is recorded | POC-REQ-044 |
+| RFC8-2 | Limb (c), the cost and authority parts: at what cost, and under whose authority, for a past window | **Unknown** — Amendment row (syzygy-t3jk.21); cost stays Unknown (RFC8-19) and no authority record is read for a change | — |
 | RFC8-12 | Kanban state field renders only a declared, closed set of status values — no minted/free-form values | covered — POC's "declared closed status-vocabulary mapping" exercises the closed-vocabulary/no-minting invariant; the specific 13-value partition, chain-state field separation, and `reconciled` carve-out aren't adopted since Trajectory renders no reconciliation chain state | POC-REQ-040 |
 | RFC8-15 | Closure without a merge/verification fact never rendered as a normalized "done"/complete/finished/resolved label | covered — Matches the terminal-state closure-fallacy rule (`closed-unmerged` analog) this clause states directly; the wording limb forbids done/complete/finished/resolved on every heading, label and served column value; amendment row (grouped view): a closed parent's group shows the parent closed and its items' own statuses, and no group heading reads either as the other's completion | POC-REQ-042, POC-REQ-043 |
 | RFC8-22 | The unestablished first link of the chain, work item to warrant, renders Unknown with its RFC2-24 reason, never silently skipped | covered — Amendment row | POC-REQ-014 |
@@ -250,8 +252,8 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **176 consequence rows over 88 clauses — 126 covered,
-50 Unknown.**
+table"]`: **178 consequence rows over 88 clauses — 127 covered,
+51 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
