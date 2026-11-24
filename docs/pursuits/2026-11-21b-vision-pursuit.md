@@ -653,6 +653,125 @@ implementation (`d2b84f57`), "after" is the code after its review corrections (`
   the quote marks around its rendered quotations. The dossier's 17 missing paths are mostly its
   own pages and generator files. Neither arm's figures say whether an unquoted claim is true.
 
+## R16 slice 1: the corpus, written before any pass (2026-11-24)
+
+Bead syzygy-5dhm.74. The corpus, the mechanism-version definition, the pass budget and the
+generality pass rule are one sealed file, `docs/polaris-generation/dossier-corpus-v1.json`,
+written before any corpus pass has run (none can until syzygy-k54o.3 and the runner,
+syzygy-5dhm.75, land). `node scripts/dossier_corpus.mjs --check` validates it and
+`packages/polaris-dossier/src/corpus.test.ts` holds its seal as a literal, so editing the rule
+fails a check; a changed rule is a new file, `dossier-corpus-v2.json`, with its own adoption
+row, and applies only to passes that start after it.
+
+[Observed] Fourteen entries, chosen by tree listing and public metadata only (no body read,
+nothing cloned). Each survey is the script's `--survey` output on 2026-11-24, which applies the
+structure record's own rules to the listing; the tier is a selection label over listed blob
+bytes (XS under 256 KiB, S under 4 MiB, M under 16 MiB, L under 128 MiB), not the scale
+ladder's tier, which is not built.
+
+| Id | Repository | Commit | Shape | Strata it fills | Tier | Server trait |
+|---|---|---|---|---|---|---|
+| C01 | redis/redis | `498ecd0d` | C server, data store | cost-baseline anchor | L | yes |
+| C02 | psf/requests | `6e83187b` | Python library | | M | no |
+| C03 | BurntSushi/ripgrep | `e89fff89` | Rust CLI workspace | | S | no |
+| C04 | caddyserver/caddy | `edcdfa0e` | Go server | | M | yes |
+| C05 | excalidraw/excalidraw | `9c2e462e` | TypeScript web app workspace | | L | no |
+| C06 | kubernetes/kubernetes | `43cbb94e` | Go large monorepo | large monorepo | XL | yes |
+| C07 | terraform-aws-modules/terraform-aws-vpc | `577ad620` | Terraform module | infrastructure-only | S | no |
+| C08 | github/gitignore | `eeb775f7` | data-only templates | data or documentation only | XS | no |
+| C09 | rust-lang/rfcs | `f43d5789` | documentation-only design records | data or documentation only | M | no |
+| C10 | dromara/hutool | `87ec1186` | Java library workspace, Chinese docs | non-English documentation | M | no |
+| C11 | torvalds/pesconvert | `d6d7001b` | C tool, no README, no docs root | no README or documentation root | XS | no |
+| C12 | tzeusy-org/butlers | `be3a18d7` | owned Python application workspace | owner-owned | L | yes |
+| C13 | tzeusy-org/syzygy | `21e73d5c` | owned TypeScript governance polyglot | owner-owned | XL | yes |
+| C14 | synthetic notebook pipeline | `fb635704` (this repository, holding the kit) | synthetic, private | synthetic private visibility | XS | — |
+
+The file holds the full 40-hex commits. Five candidates were left out, each with its reason in
+the file (Sentry for its licence, OpenBSD because its listing is truncated).
+
+**Mechanism version.** One SHA-256 over a format line and one `<sha256>  <path>` line per member
+file, sorted, test files left out. It covers everything that shapes what a run produces, in six
+groups: the brief (`brief.ts`, `reader-standards.ts`, the shape packs); the draft schema; check
+(the structure rules, the census, the manifest recognizers, the relation witness); the renderer
+(`render.ts`, `figure-fit.ts`, `dossier-render*.ts`, `dossier-site.ts`, findings, diagram
+layout, draft preview, SVG inertness, design tokens); the screen (`screen.ts`,
+`policy-snapshot.ts`, the declared-source policies, and the detectors and classifiers it calls
+in `three-surface-poc-core` and `polaris-generation-core`); and the agent texts (the
+`polaris-dossier` skill and its references, `polaris.ts`, `session-handover.ts`, `review*.ts`,
+`design-review.ts`). The agent texts are a group of the one digest, not a second digest, so two
+passes compare only at one equal digest. [Observed] At `ed1e65bf` (main on 2026-11-24) it is
+`0d28717d…` over 60 files. Earlier drafts read `b9506ac8…` over 22 files at `fb635704`, then
+`da891d2e…` at `3a24d409` (main had changed `dossier-render.ts` and `dossier-site.ts`). The
+review of #976 then widened the members. The seal was taken again each time before adoption,
+so no adopted seal changed. The command surface and run bookkeeping (`cli.ts`, `close.ts`, the
+inventory) are not covered, so a change there starts no pass; a comment in a covered file does.
+
+**Budget.** Runs go in entry-id order: for each entry, dossier run 1, dossier run 2, then its
+plain-arm sessions, at most two at once. Each entry is run twice per pass. A run is re-run once
+only after one of four infrastructure faults, a closed list: provider unavailable, provider
+throttled, host interrupted, runner defect. A second fault leaves the run Unknown
+(`infrastructure-fault`). Per run: `claude-opus-5-5`, PT4H, 30,000,000 tokens, 1,000 turns, six
+repair cycles, the supervisor's four sessions. Two plain-arm sessions per public entry, on the
+same pinned model (PT1H, 5,000,000 tokens each). Per pass: 72 wall hours, 550,000,000 tokens,
+and at most one pass started per ISO week. [Unknown] The token figures are unmeasured
+allowances: Syzygy cannot observe usage, a run's usage is only what the runner declares at
+close (Inferred), and with undeclared usage the pass's token spend is Unknown. Whatever the
+budget does not reach is recorded Unknown. Every started pass is recorded to its end, and the
+current verdict is the latest started pass's once it ends.
+
+**Generality pass rule.** The verdict is `pass`, `fail` or `incomplete`; an Unknown is never a
+pass, and a clause that does not apply to an entry is not counted for it. The clauses:
+
+- G1: both runs close `closed`, not `closed-with-finding`, with the last fidelity and design
+  verdicts non-blocking.
+- G2 (public entries): the dossier, as the mean of two runs, is below the plain arm, as the
+  mean of two sessions, on at most one applicable question kind. "Below" means by more than
+  one required fact (A-63's per-kind bar). G2 is a no-worse floor: a pass establishes parity
+  at most.
+- G3: no required figure view is missing.
+- G4: per-Pole depth minimums.
+- G5: each run names the traits no shape pack matched and the units left derived-only.
+
+The key that G2 grades against is fixed before the pass:
+
+- It is written, before the pass, by a session that has seen neither arm.
+- Its digest is frozen in the pass record.
+- Each kind needs at least three facts, or is marked not-applicable beforehand.
+- It is held out as CONTRIBUTING rule 4 holds the pilot key.
+- Comparisons across passes are made only at an equal key digest.
+
+The pass record attributes each G2 miss to reach or to authoring, without changing the
+verdict.
+
+The advantage measure is reported beside the verdict and gates nothing. It is dossier share
+minus plain share, per entry and pooled, overall and per kind. Its fixed vision target is a
+pooled overall advantage of at least 10 points, called met only when two consecutive passes
+reach it.
+
+Reviewer calibration: nine known-false blocks are seeded into a copy of C01 run 1's first
+fidelity packet. If fewer than seven are caught, or there is no calibration review, the pass
+is uncalibrated and its verdict is at most `incomplete`.
+
+Cost: [Observed] the six stored runs' medians are 44.75 wall minutes and five review rounds,
+recomputed by the test from `measure-now.json`. The targets for the Redis anchor are at most
+31.325 minutes and three rounds. [Unknown] Tokens: no stored run recorded usage, so the token
+target is 0.7 of the anchor's median declared usage in the first pass that records it.
+
+A regression needs a drop in both runs at an equal key digest (A-38, A-63), and no rise is
+called a win.
+
+**Deviations from R16's text.**
+
+- The cost targets bind the anchor repository, not every dossier, because the baseline is of
+  one repository. The pass-wide medians are reported against the same figures but decide
+  nothing.
+- The token baseline is not "the six stored runs' medians", because those runs recorded no
+  tokens.
+- [Observed] Both owned repositories are public on GitHub. So the private stratum is the
+  synthetic fixture alone, and the owned repositories fill the owned stratum.
+- The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
+  the traits from the shape packs' own selectors.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner
