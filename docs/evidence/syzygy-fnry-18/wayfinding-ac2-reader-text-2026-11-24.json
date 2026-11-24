@@ -1,0 +1,346 @@
+{
+  "format": "syzygy-wayfinding-reader-text-evidence/1",
+  "scope": "syzygy-fnry.18 AC2 wayfinding and existing provider golden only",
+  "source": {
+    "commit": "32b5e32e04bff3c5b6c5c5d6c929606124379692",
+    "tree": "e3412a8d0dd35ab252f788fc771cf58b5922fd7c",
+    "covered": [
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "sha256": "2b20ec65fcd1732cdd1ac8356a3e3c97e2e5f630f16d2257e8554c3c31a4f9dd"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+        "sha256": "63b87267beb9a5dee0ae1513785debf76717f263e283631ac84ef5e5fc6a45d8"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-derived-region.test.ts",
+        "sha256": "8b9112611ab733dae703118d335501fefcd4835aef2a73c43762953696b17947"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts",
+        "sha256": "b3c20e394270427bac65db38ac5bc1f333d3ea609d04d742d90e587d55916f7f"
+      },
+      {
+        "path": "scripts/dossier_site_to_text.py",
+        "sha256": "db4ca62630cae69e27b2a102f53448bb9e768555cccefedd63b2354412955600"
+      }
+    ]
+  },
+  "predecessorEvidence": {
+    "path": "docs/evidence/syzygy-fnry-18/wayfinding-ac2-2026-11-24.json",
+    "sha256": "0fc9121efeebfb5e8ed3250ef9674232cc582b859759d24aa990616f79517412"
+  },
+  "focusedChecks": {
+    "files": 6,
+    "passed": 88,
+    "chromium": 2,
+    "providerGolden": 1,
+    "rawSha256": "172bdb0d8a29e015ad441779d8b5aacc6665b8517a194b10a35af47335946f7d"
+  },
+  "exactTextComparison": {
+    "baselineRenderer": "a135079ec3dd6e09b876d3d3a62fc08a7018eea0",
+    "previousPlacementSource": "7e0535aa76d78d91c37cc3dfa3254cf2c323abaa",
+    "repairedSource": "32b5e32e04bff3c5b6c5c5d6c929606124379692",
+    "scope": "exact synthetic renders with protected baseline source, earlier placement source and corrected authored renderer",
+    "htmlFiles": 18,
+    "unchangedPageTurnLandmarks": [
+      "appendix.html",
+      "contents.html",
+      "deep-dives/why-detail.html",
+      "deep-dives/words-detail.html",
+      "find-by-task.html",
+      "glossary.html",
+      "index.html",
+      "maps/ci.html",
+      "maps/directories.html",
+      "maps/infrastructure.html",
+      "maps/units.html",
+      "name-index.html",
+      "poles/2.html",
+      "poles/3.html",
+      "size-report.html",
+      "sources/index.html",
+      "understanding.html"
+    ],
+    "forms": {
+      "full": {
+        "textFiles": 17,
+        "changedByPriorPlacement": [
+          "appendix.md",
+          "contents.md",
+          "deep-dives/why-detail.md",
+          "deep-dives/words-detail.md",
+          "find-by-task.md",
+          "glossary.md",
+          "index.md",
+          "maps/ci.md",
+          "maps/directories.md",
+          "maps/infrastructure.md",
+          "maps/units.md",
+          "name-index.md",
+          "poles/2.md",
+          "poles/3.md",
+          "size-report.md",
+          "sources/index.md",
+          "understanding.md"
+        ],
+        "changedInRepairedForm": [
+          "size-report.md"
+        ],
+        "baselineWords": 4104,
+        "priorPlacementWords": 4175,
+        "repairedWords": 4104,
+        "baselineTextDigests": {
+          "appendix.md": "a3c87a43a8a418c4d46c14368eb479576c5b2d353d8ed8eddca1d82fc190e0f5",
+          "contents.md": "f170796d72f1e2fcb6f75395a6424b17af3c6311ccee3924122ccf66b17609bf",
+          "deep-dives/why-detail.md": "3bd18566bf2cbd1b1f56f6984af80ee6899d0769ec7e5354bb797df8aeb2516c",
+          "deep-dives/words-detail.md": "c217a894d007c27dc1e6c06e43d9e0e92b3d810814636ecef42b11a3873354ff",
+          "find-by-task.md": "06aa33303d72a251c0618416ac9997ece806446fcb0c4c6cd40ca5114b0b7b11",
+          "glossary.md": "177a27cfe54ded280f752857d50aa78be71ce19fb67e7ae54f6c31bbd715f687",
+          "index.md": "38a40b629ddc9f2e542fd497fa9f67495006d9405d032adea30775b9cbd66569",
+          "maps/ci.md": "dbb21a909379129cc944eda54680092361c4d3b80056344928ae68df90d45222",
+          "maps/directories.md": "cb1dd7961d3b55ab55d7a6ee96dd33e9efc377951751f650f5d03cf76e82b4f1",
+          "maps/infrastructure.md": "e96cc55aa6530cd409a5404013ea6ffe52a4ab4ab8ba3d83d3f85560917a997e",
+          "maps/units.md": "ad1f149ee7c3a5245e11bb693b295f8dc7dd4ad2e0cad16b2f9bde5c09c7be83",
+          "name-index.md": "a0ab1e834ecb87362da0a919fa6b86d7cab54d00b2fcec9df6457cdb1f9cc9dd",
+          "poles/2.md": "fc5204bdb953b7d984430ebbb5a721b67265ac9a9ed37e2f9b8692dae29adcfd",
+          "poles/3.md": "ba9781fe764d75c373fc205a12d9a8d1339b03cf96b1de89af5aa696ae22a7ee",
+          "size-report.md": "d4f64c3d873c2d374194dd51ef0c5f5f659b45b6a4af51809b19d1eba66c0a76",
+          "sources/index.md": "57f5cbd5216631cafa2a69e75e01c415d092a9011d9a5054a6dbbd9c84110a8e",
+          "understanding.md": "fd02573d234c3dc63c00428aaa18db7d094234593938c422d59cdee61e4f0961"
+        },
+        "repairedTextDigests": {
+          "appendix.md": "a3c87a43a8a418c4d46c14368eb479576c5b2d353d8ed8eddca1d82fc190e0f5",
+          "contents.md": "f170796d72f1e2fcb6f75395a6424b17af3c6311ccee3924122ccf66b17609bf",
+          "deep-dives/why-detail.md": "3bd18566bf2cbd1b1f56f6984af80ee6899d0769ec7e5354bb797df8aeb2516c",
+          "deep-dives/words-detail.md": "c217a894d007c27dc1e6c06e43d9e0e92b3d810814636ecef42b11a3873354ff",
+          "find-by-task.md": "06aa33303d72a251c0618416ac9997ece806446fcb0c4c6cd40ca5114b0b7b11",
+          "glossary.md": "177a27cfe54ded280f752857d50aa78be71ce19fb67e7ae54f6c31bbd715f687",
+          "index.md": "38a40b629ddc9f2e542fd497fa9f67495006d9405d032adea30775b9cbd66569",
+          "maps/ci.md": "dbb21a909379129cc944eda54680092361c4d3b80056344928ae68df90d45222",
+          "maps/directories.md": "cb1dd7961d3b55ab55d7a6ee96dd33e9efc377951751f650f5d03cf76e82b4f1",
+          "maps/infrastructure.md": "e96cc55aa6530cd409a5404013ea6ffe52a4ab4ab8ba3d83d3f85560917a997e",
+          "maps/units.md": "ad1f149ee7c3a5245e11bb693b295f8dc7dd4ad2e0cad16b2f9bde5c09c7be83",
+          "name-index.md": "a0ab1e834ecb87362da0a919fa6b86d7cab54d00b2fcec9df6457cdb1f9cc9dd",
+          "poles/2.md": "fc5204bdb953b7d984430ebbb5a721b67265ac9a9ed37e2f9b8692dae29adcfd",
+          "poles/3.md": "ba9781fe764d75c373fc205a12d9a8d1339b03cf96b1de89af5aa696ae22a7ee",
+          "size-report.md": "918e6f48784164f8c022635b7b310f21c342053f6085961026efdf285b1f80bd",
+          "sources/index.md": "57f5cbd5216631cafa2a69e75e01c415d092a9011d9a5054a6dbbd9c84110a8e",
+          "understanding.md": "fd02573d234c3dc63c00428aaa18db7d094234593938c422d59cdee61e4f0961"
+        },
+        "priorPlacementTextDigests": {
+          "appendix.md": "45c9e6549f6cfd1dc3a3e53da4d26e92f9c1e6a46a3f0e2d556cf35bbea674dc",
+          "contents.md": "61b2ad901b6aac2d63d5ff90c05a18633e684c714ab73022bae06b90eddeb4be",
+          "deep-dives/why-detail.md": "650a2ccee06d2f7b8b4672dc77dc1e2c7e538c53cd00f68413adb98142c4c188",
+          "deep-dives/words-detail.md": "fe96da0f2163537ab8ba54376b0604098c6e3c9ee80ddf8ca23937424fd79b81",
+          "find-by-task.md": "70bf78ce62eb7d46ba355b06aa4405118ee02d233c0747436170b56190b1e896",
+          "glossary.md": "88ea9165aaecdd3650e4761f95133d20ff9e99e83f6af14b84a8419d36da5832",
+          "index.md": "34cc7aa0d923658fa4e73301bb751f89915f59f1eac09207ca22e218f144b6b7",
+          "maps/ci.md": "d46d973563436ec2a4c726e78364b259ac02a895215b530cbf8a16e5d14e2053",
+          "maps/directories.md": "9ec9b2f0547a61d6e4f289886b2190bdc5aa7b27baeb6b5fd51088315e5afe85",
+          "maps/infrastructure.md": "21ffbce9fd8df1241d16fd3a71867b4b53a874a9aa4370def2e9191d7b1154f2",
+          "maps/units.md": "23efefecf3fbeb9ebd504ea6ef4a9c01bd1538926fdd951276c97625740880c7",
+          "name-index.md": "e996f14511e3c3586810c0cc5e7f97dcd01ddfd76ff508da377e60752c89b2c0",
+          "poles/2.md": "2eee01dc16c59d7f7f42fabcc3def618b496749b6323c4a5265fb3c79b24e380",
+          "poles/3.md": "223c7aa98360a208e1edded57b48c07ec12f148c2a0a7aacdda10060f37c017e",
+          "size-report.md": "5fbeaedd962223be60fb9fad40c1e67c9eca74e1207de64d857a459887092217",
+          "sources/index.md": "953316aa8762a0036c298208e9a57b0f70776289181250c50ea56e03e280fd9a",
+          "understanding.md": "4d9790dd789345fe6838bc32ecb0ebaaca827430a77e09597bccc75ca4193cf4"
+        }
+      },
+      "reader": {
+        "textFiles": 14,
+        "changedByPriorPlacement": [
+          "contents.md",
+          "deep-dives/why-detail.md",
+          "deep-dives/words-detail.md",
+          "find-by-task.md",
+          "glossary.md",
+          "index.md",
+          "maps/ci.md",
+          "maps/directories.md",
+          "maps/infrastructure.md",
+          "maps/units.md",
+          "name-index.md",
+          "poles/2.md",
+          "poles/3.md",
+          "sources/index.md"
+        ],
+        "changedInRepairedForm": [],
+        "baselineWords": 3729,
+        "priorPlacementWords": 3789,
+        "repairedWords": 3729,
+        "baselineTextDigests": {
+          "contents.md": "f170796d72f1e2fcb6f75395a6424b17af3c6311ccee3924122ccf66b17609bf",
+          "deep-dives/why-detail.md": "3bd18566bf2cbd1b1f56f6984af80ee6899d0769ec7e5354bb797df8aeb2516c",
+          "deep-dives/words-detail.md": "c217a894d007c27dc1e6c06e43d9e0e92b3d810814636ecef42b11a3873354ff",
+          "find-by-task.md": "06aa33303d72a251c0618416ac9997ece806446fcb0c4c6cd40ca5114b0b7b11",
+          "glossary.md": "177a27cfe54ded280f752857d50aa78be71ce19fb67e7ae54f6c31bbd715f687",
+          "index.md": "38a40b629ddc9f2e542fd497fa9f67495006d9405d032adea30775b9cbd66569",
+          "maps/ci.md": "dbb21a909379129cc944eda54680092361c4d3b80056344928ae68df90d45222",
+          "maps/directories.md": "cb1dd7961d3b55ab55d7a6ee96dd33e9efc377951751f650f5d03cf76e82b4f1",
+          "maps/infrastructure.md": "e96cc55aa6530cd409a5404013ea6ffe52a4ab4ab8ba3d83d3f85560917a997e",
+          "maps/units.md": "ad1f149ee7c3a5245e11bb693b295f8dc7dd4ad2e0cad16b2f9bde5c09c7be83",
+          "name-index.md": "a0ab1e834ecb87362da0a919fa6b86d7cab54d00b2fcec9df6457cdb1f9cc9dd",
+          "poles/2.md": "fc5204bdb953b7d984430ebbb5a721b67265ac9a9ed37e2f9b8692dae29adcfd",
+          "poles/3.md": "ba9781fe764d75c373fc205a12d9a8d1339b03cf96b1de89af5aa696ae22a7ee",
+          "sources/index.md": "57f5cbd5216631cafa2a69e75e01c415d092a9011d9a5054a6dbbd9c84110a8e"
+        },
+        "repairedTextDigests": {
+          "contents.md": "f170796d72f1e2fcb6f75395a6424b17af3c6311ccee3924122ccf66b17609bf",
+          "deep-dives/why-detail.md": "3bd18566bf2cbd1b1f56f6984af80ee6899d0769ec7e5354bb797df8aeb2516c",
+          "deep-dives/words-detail.md": "c217a894d007c27dc1e6c06e43d9e0e92b3d810814636ecef42b11a3873354ff",
+          "find-by-task.md": "06aa33303d72a251c0618416ac9997ece806446fcb0c4c6cd40ca5114b0b7b11",
+          "glossary.md": "177a27cfe54ded280f752857d50aa78be71ce19fb67e7ae54f6c31bbd715f687",
+          "index.md": "38a40b629ddc9f2e542fd497fa9f67495006d9405d032adea30775b9cbd66569",
+          "maps/ci.md": "dbb21a909379129cc944eda54680092361c4d3b80056344928ae68df90d45222",
+          "maps/directories.md": "cb1dd7961d3b55ab55d7a6ee96dd33e9efc377951751f650f5d03cf76e82b4f1",
+          "maps/infrastructure.md": "e96cc55aa6530cd409a5404013ea6ffe52a4ab4ab8ba3d83d3f85560917a997e",
+          "maps/units.md": "ad1f149ee7c3a5245e11bb693b295f8dc7dd4ad2e0cad16b2f9bde5c09c7be83",
+          "name-index.md": "a0ab1e834ecb87362da0a919fa6b86d7cab54d00b2fcec9df6457cdb1f9cc9dd",
+          "poles/2.md": "fc5204bdb953b7d984430ebbb5a721b67265ac9a9ed37e2f9b8692dae29adcfd",
+          "poles/3.md": "ba9781fe764d75c373fc205a12d9a8d1339b03cf96b1de89af5aa696ae22a7ee",
+          "sources/index.md": "57f5cbd5216631cafa2a69e75e01c415d092a9011d9a5054a6dbbd9c84110a8e"
+        },
+        "priorPlacementTextDigests": {
+          "contents.md": "61b2ad901b6aac2d63d5ff90c05a18633e684c714ab73022bae06b90eddeb4be",
+          "deep-dives/why-detail.md": "650a2ccee06d2f7b8b4672dc77dc1e2c7e538c53cd00f68413adb98142c4c188",
+          "deep-dives/words-detail.md": "fe96da0f2163537ab8ba54376b0604098c6e3c9ee80ddf8ca23937424fd79b81",
+          "find-by-task.md": "70bf78ce62eb7d46ba355b06aa4405118ee02d233c0747436170b56190b1e896",
+          "glossary.md": "88ea9165aaecdd3650e4761f95133d20ff9e99e83f6af14b84a8419d36da5832",
+          "index.md": "34cc7aa0d923658fa4e73301bb751f89915f59f1eac09207ca22e218f144b6b7",
+          "maps/ci.md": "d46d973563436ec2a4c726e78364b259ac02a895215b530cbf8a16e5d14e2053",
+          "maps/directories.md": "9ec9b2f0547a61d6e4f289886b2190bdc5aa7b27baeb6b5fd51088315e5afe85",
+          "maps/infrastructure.md": "21ffbce9fd8df1241d16fd3a71867b4b53a874a9aa4370def2e9191d7b1154f2",
+          "maps/units.md": "23efefecf3fbeb9ebd504ea6ef4a9c01bd1538926fdd951276c97625740880c7",
+          "name-index.md": "e996f14511e3c3586810c0cc5e7f97dcd01ddfd76ff508da377e60752c89b2c0",
+          "poles/2.md": "2eee01dc16c59d7f7f42fabcc3def618b496749b6323c4a5265fb3c79b24e380",
+          "poles/3.md": "223c7aa98360a208e1edded57b48c07ec12f148c2a0a7aacdda10060f37c017e",
+          "sources/index.md": "953316aa8762a0036c298208e9a57b0f70776289181250c50ea56e03e280fd9a"
+        }
+      }
+    },
+    "siteDigests": {
+      "baseline": {
+        "appendix.html": "f6c6dce666b81c8e669da5241826b1e9b8198da1daab3469e8b21b1a2747fc54",
+        "contents.html": "cb676dc40ef3fd44a08cc7ac768f2142b4240d1c9741a20aadf574972d519aa0",
+        "deep-dives/why-detail.html": "069978d98c4e07e52a06e182a90775f3400cbf6467f1280d149fd00e9b104bc9",
+        "deep-dives/words-detail.html": "809bc2083c4667f46f2d5f5b4b54ff0162493226df49d5d4360253af6cbe8f90",
+        "find-by-task.html": "5f98b40e7d741914a8045ab4b8e0b082179545b0a257bbd88724255f25a4d3bd",
+        "glossary.html": "2bc3ad7c4dfe270dc7eb378d3b74866c8ad7511e83579b668ede4692804261ef",
+        "index.html": "1508da6c5b3cbb7c241cb23d31b823602e27b4a3886c1cc06b332ecc4d259e41",
+        "maps/ci.html": "6cd264e8a27eddd6e70a3a7319c8fb77b64453457caef21aa99825cd4a221245",
+        "maps/directories.html": "9e317208892fb299055b44741542d3e650848ec4bd5834ed524f567686e62315",
+        "maps/infrastructure.html": "2c3e32299f1348a2532911811b8ae2b710d1f57b77279ce006c1b11085a86691",
+        "maps/units.html": "f5a8ef1aebe6e7ead9fd1d677cc0acfc77cb40d08c553aa7ac68cdedc1739eae",
+        "name-index.html": "39e60b5735c70bb8f7ecdad1b31ee9ce40ecdf62a54c99c926cd6d242925c316",
+        "poles/2.html": "6f79cf8d92c4de123316eab802fc34440bd280ada97343169493cbd2bc5f526d",
+        "poles/3.html": "6a856611e00f9fc90431c3fc8ef3d235a3a15de39b442c1fe77c9e4cab090eb6",
+        "size-report.html": "3f2f45487cf85de2bcf6e1533a1b0a30b968825f8ef85ec724e822bbb72224a9",
+        "sources/6e042a3d943e7663eb4d591e.html": "4158bbf1d7dd53c85c518593c35f66ee2ca09c9df737211b0e64e3698da798fc",
+        "sources/index.html": "3f066c5424771663747a2d4ded120b13c40003680a6f4817d2c8e78fe853591e",
+        "understanding.html": "03f4f5412f3a59e2abab1308ce891d9d99554186666726a89df6f414466912b7"
+      },
+      "exact": {
+        "appendix.html": "4282afe5d0f9c5b8150d339da8cc26e70e884b37325f5b5aa9208c8259ea146d",
+        "contents.html": "aed29c30362e90f2e73d88bc9b487c393043373b2baa0e1661c10ffcc1a6c5b3",
+        "deep-dives/why-detail.html": "4293aeab4c6ffb5c795cd100c78e3901dabbd658e7ae8728a02a65205fb0653e",
+        "deep-dives/words-detail.html": "cb313e8b7b074edcbdb6e64985116e50545bc803eb5a660b8dde3b84a4f8788f",
+        "find-by-task.html": "a177541ce68d4e33fb1e3c387146ee1d50ff5d0686ce79a2f500bf3a4326d3b5",
+        "glossary.html": "f023cb8bd433e389d935346a6e1f8bbf85bfd82d3224cc0271c91221386c2226",
+        "index.html": "83ba771faf16e65e3dd73f09e645e11a9ea3a8c5142ecd907fbde6c7112e7fe4",
+        "maps/ci.html": "bb1f7be3ec30ed244b35685ec54e39e357dbaef90e90bfad4c311bfeae8e3528",
+        "maps/directories.html": "b429c406d8c601a29d1297554814ce57681c7c8c83f324e884f30c64a557978c",
+        "maps/infrastructure.html": "5d81a7752868b82882aa0ffcdcd11eb323dd248941e6190c426dd2ffff13180b",
+        "maps/units.html": "2a40c6ef7624ffb786bcb5bac5d0689cb6ef725d910c73c1862bed8615694530",
+        "name-index.html": "9238d2051a4afc5c6c9acd4408fe5117f407b30e8862880b23a1fee2761ec715",
+        "poles/2.html": "d1ef588b8b4bbe2d13051b7b96c3c8733161644a398892118babdd4269fd8f75",
+        "poles/3.html": "6cf8bf43676ee96c21283bafd014babf3c60c30be8e9e716624b1bf2ac43c518",
+        "size-report.html": "5180aa0bdf797bf68f03cfd859d4adb3a7cce2fb14ef2a1bf8d16c46f12638f6",
+        "sources/6e042a3d943e7663eb4d591e.html": "830c9e01bde2b53de7caf701b7a03e9389bba1e406322367de3e8c0887b1b811",
+        "sources/index.html": "be52e1ece2d3256636ce10bff04fa3990214e22394ee4808169d292e87a91a3c",
+        "understanding.html": "20f73e5bbd37359d1f9b17352240b309415a6227081c61daa8eb24a0d160017c"
+      },
+      "repaired": {
+        "appendix.html": "4014c9425744565626da2c0b2ce761c6bcaf6321a5013b433b1f4547d8d37f12",
+        "contents.html": "9098fc2f518360f8cb001e0b7ed36e3a401669c43401b87a3a535c71347dc05f",
+        "deep-dives/why-detail.html": "fb36755b541f97312127f3474e719975090c55f4878bd08a41ba489aad04a113",
+        "deep-dives/words-detail.html": "2864663c897916e59c356b1939fb8633f5eaea4356166365a9e4d088cedd0990",
+        "find-by-task.html": "90a59f6de132f46d07ce7182e8dafda7adbbc6ebfe0f529e0e74b9f4db53c258",
+        "glossary.html": "fcaef6e3fa264f1d37aa001da84386c7fe541b52e4173012c9aa62e5a01b39da",
+        "index.html": "6f1fee6d1409c14eef0c4566e487d2f66ef4feca2f9a70d1fc84539fc066bc57",
+        "maps/ci.html": "dbc30fd7116ecc496a74714cf142ae391c482334a17ac462f63dfc93a4592119",
+        "maps/directories.html": "9efe2295245a44740df44592728af048b5249e76fc42748d91191815335fe8a9",
+        "maps/infrastructure.html": "7f812ce245fa14eab06a81c70cc4a71853928db078c3b6391395078b8c2c3581",
+        "maps/units.html": "13bb2987504a66fc700427838e01e66fb8f8d3388d4baadcfe59e81b20675826",
+        "name-index.html": "1ef5ef1858ad6306e14833546ed70f6a971298165802f1a2307cf61a89de4f7d",
+        "poles/2.html": "5ea3238138379e9fb8d1fd4b5408650cb716201e9e30d1daa548930ea26b6fab",
+        "poles/3.html": "4356983a80cb5806b745da77106ab22fe3677076cae907fcb46d8bb94bb7d7f0",
+        "size-report.html": "ffa0d5e982dff9942b562e772858365dd52936fb53e7144d3a3aae150aeeb989",
+        "sources/6e042a3d943e7663eb4d591e.html": "a731ebf2a37705b6436418f7f0fa01505d7ab0d30e7dd71ce05797019295dabb",
+        "sources/index.html": "572e76af320c6d5d4be7f9d6d249a1196372b78529e84be1e5c461515695a096",
+        "understanding.html": "d05f2324622277922659a688165fe24326bd00c79214b883fb17af6bf14a1881"
+      }
+    }
+  },
+  "reproduction": {
+    "fixture": "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts",
+    "fixtureFunction": "navigationInput",
+    "renderer": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "rendererFunction": "renderLocalDossier",
+    "inputs": "Use the three exact renderer blobs and the same current synthetic fixture/dependencies through the Vite source condition. Preserve the 18 relative HTML file paths.",
+    "converter": "scripts/dossier_site_to_text.py",
+    "converterFunction": "convert_site",
+    "forms": [
+      "default",
+      "--reader"
+    ],
+    "comparison": "Compare exact relative path sets and sha256 per text file. For full form the one size report may differ on the displayed derived numeric measurements only. Compare previous and corrected turn markup byte-for-byte on each of the 17 ordered pages."
+  },
+  "placementControl": {
+    "mutation": {
+      "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "subject": "32b5e32e04bff3c5b6c5c5d6c929606124379692",
+      "old": "  const column = turn === '' ? content : `<div class=\"reading-column\">${content}${turn}</div>`;",
+      "new": "  const column = turn === '' ? content : content.replace('</main>', `${turn}</main>`);",
+      "beforeSha256": "2b20ec65fcd1732cdd1ac8356a3e3c97e2e5f630f16d2257e8554c3c31a4f9dd",
+      "mutatedSha256": "086230ef448b2f8e87bd9349c58b75470fcfd45f7c4173fff61a9fd8f0fb471b"
+    },
+    "command": [
+      "vitest",
+      "run",
+      "--maxWorkers",
+      "1",
+      "--project",
+      "e2e",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "-t",
+      "keeps every dossier reading page oriented and linked in the same scriptless order"
+    ],
+    "browser": "Chromium, synthetic fixture site with script elements removed",
+    "expectedFailure": {
+      "case": "index.html",
+      "afterMain": false,
+      "inReadingColumn": false
+    },
+    "adverse": {
+      "exit": 1,
+      "failed": 1,
+      "skipped": 1,
+      "rawSha256": "c8fd4ec2ff8db44943103fa864203d9297d6a93677067798bfd36b0d4b3f5af3"
+    },
+    "restored": {
+      "exit": 0,
+      "passed": 1,
+      "skipped": 1,
+      "rawSha256": "7069f943224291ea2185c6f9bb715c546653e17f0b9c8195163efcecb39bf139"
+    }
+  },
+  "residual": [
+    "glossary and brief term handling",
+    "review.html/status digest presentation decision",
+    "complete 390px reflow coverage",
+    "remaining combined P13 acceptance"
+  ]
+}

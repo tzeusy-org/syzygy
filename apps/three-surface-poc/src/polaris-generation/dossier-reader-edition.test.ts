@@ -145,7 +145,7 @@ describe('the reader\'s edition (syzygy-5dhm.136)', () => {
       expect(entries.slice(fold + 1).sort(), file).toEqual(run);
       expect(entries.slice(0, fold).some(page => pageClass(classes, page) === 'run'), file).toBe(false);
     }
-    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!.split('</section>')[0]!;
     const about = contents.indexOf('<h2 id="about-this-run">About this run</h2>');
     expect(about).toBeGreaterThan(0);
     const linked = [...contents.matchAll(/href="([^"#]*)/gu)].map(match => ({ page: match[1]!, at: match.index! }));
@@ -179,10 +179,11 @@ describe('the reader\'s edition (syzygy-5dhm.136)', () => {
     expect(main.indexOf('</section><nav class="pole-map"')).toBeGreaterThan(at[1]!);
   });
 
-  it('resolves every link of the site: 432 of 432, the run pages reached from every page', () => {
+  it('resolves every site link, including page turns and the run links', () => {
     const census = linkCensus(files);
     expect(census.unresolved).toEqual([]);
-    expect(census.links).toBe(432);
+    // The 11 reading pages add 20 page turns. The first and last each have one.
+    expect(census.links).toBe(432 + 20);
     // A canary for the predicate: a link to a page or a fragment the site does not hold is reported.
     const broken = new Map(files);
     broken.set('glossary.html', `${files.get('glossary.html')!}<a href="nowhere.html"></a><a href="index.html#no-such-id"></a>`);

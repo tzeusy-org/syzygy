@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
-import { readingInput } from './dossier-reading.testkit.js';
+import { navigationInput, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -128,6 +128,92 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
       const label = await page.evaluate<{ x: number; y: number }>(`(() => { const r = document.querySelector("g.edge-text rect.edge-label").getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       await page.mouseMove(label.x, label.y);
       expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('inline');
+    } finally {
+      await page.close();
+    }
+  } finally {
+    await browser?.close();
+    await rm(directory, { recursive: true, force: true });
+  }
+}, 60_000);
+
+it.skipIf(executable === undefined)('keeps every dossier reading page oriented and linked in the same scriptless order', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'polaris-wayfinding-'));
+  const order = [
+    'index.html', 'find-by-task.html', 'name-index.html', 'deep-dives/why-detail.html',
+    'poles/2.html', 'deep-dives/words-detail.html', 'poles/3.html', 'contents.html', 'glossary.html',
+    'sources/index.html', 'maps/directories.html', 'maps/units.html', 'maps/ci.html', 'maps/infrastructure.html',
+    'understanding.html', 'size-report.html', 'appendix.html',
+  ];
+  const url = (path: string): string => pathToFileURL(join(directory, path)).href;
+  const urls = order.map(url);
+  const inspectPageTurn = `(() => {
+    const main = document.querySelector('main');
+    const nav = document.querySelector('nav.reading-order');
+    if (!nav) return null;
+    const { left, right, top } = nav.getBoundingClientRect();
+    const content = main.getBoundingClientRect();
+    return { name: nav.getAttribute('aria-label'), afterMain: main.nextElementSibling === nav,
+      insideDetails: nav.closest('details') !== null,
+      inReadingColumn: left >= content.left - 1 && right <= content.right + 1 && top >= content.bottom,
+      previous: nav.querySelector('a[rel="prev"]')?.href ?? null, next: nav.querySelector('a[rel="next"]')?.href ?? null };
+  })()`;
+  const files = renderLocalDossier(navigationInput()).files;
+  const htmlPaths = [...files.keys()].filter(path => path.endsWith('.html'));
+  const sourcePages = htmlPaths.filter(path => path.startsWith('sources/') && path !== 'sources/index.html');
+  expect(sourcePages).toHaveLength(1);
+  expect(htmlPaths.filter(path => !sourcePages.includes(path)).sort()).toEqual([...order].sort());
+  let browser: Browser | undefined;
+  try {
+    for (const path of htmlPaths) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), files.get(path)!.replace(/<script\b[^>]*>.*?<\/script>/gisu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(1440, 900);
+      for (const [index, path] of order.entries()) {
+        await page.navigate(url(path));
+        const navs = await page.evaluate<{ name: string; links: string[]; current: string[]; marked: boolean }[]>(`
+          [...document.querySelectorAll('.contents > nav')].map(nav => {
+            const current = [...nav.querySelectorAll('a[aria-current="page"]')];
+            return { name: nav.getAttribute('aria-label'), links: [...nav.querySelectorAll('a')].map(a => a.href),
+              current: current.map(a => a.href), marked: current.every(a => getComputedStyle(a).textDecorationLine === 'underline') };
+          })
+        `);
+        expect(navs, path).toEqual(['Dossier', 'Dossier (mobile)'].map(name => ({ name, links: urls, current: [url(path)], marked: true })));
+        expect(await page.evaluate(inspectPageTurn), path).toEqual({
+          name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+          previous: urls[index - 1] ?? null, next: urls[index + 1] ?? null,
+        });
+      }
+      await page.navigate(url('index.html'));
+      expect(await page.evaluate(`
+        [...document.querySelectorAll('.contents > nav')].map(nav => [...nav.querySelectorAll('.pole-dive-links')].map(list => [
+          list.previousSibling.textContent, ...[...list.querySelectorAll('a')].map(a => a.textContent),
+        ]))
+      `)).toEqual(Array.from({ length: 2 }, () => [['Why it exists', 'Purpose detail'], ['Words', 'Words detail']]));
+      expect(await page.evaluate('getComputedStyle(document.querySelector(".desktop-contents.nav-panel")).position')).toBe('sticky');
+      expect(await page.evaluate('getComputedStyle(document.querySelector("nav.reading-order")).position')).toBe('static');
+      await page.evaluate('document.querySelector(".reading-order [rel=next]").focus()');
+      expect(await page.evaluate('document.activeElement.matches(".reading-order [rel=next]:focus-visible")')).toBe(true);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('document.querySelector("main")?.dataset.page')).toBe('find-by-task.html');
+      await page.setViewport(390, 844);
+      await page.navigate(url('deep-dives/words-detail.html'));
+      expect(await page.evaluate('getComputedStyle(document.querySelector(".mobile-contents")).position')).toBe('static');
+      await page.evaluate('document.querySelector(".mobile-contents > summary").focus()');
+      await page.press('Enter');
+      expect(await page.evaluate('document.querySelector(".mobile-contents").open')).toBe(true);
+      expect(await page.evaluate('document.querySelector(".mobile-contents [aria-current=page]").href')).toBe(url('deep-dives/words-detail.html'));
+      expect(await page.evaluate(inspectPageTurn)).toEqual({
+        name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+        previous: url('poles/2.html'), next: url('poles/3.html'),
+      });
+      await page.navigate(url(sourcePages[0]!));
+      expect(await page.evaluate('document.querySelector(".reading-order, .contents [aria-current=page]") === null')).toBe(true);
     } finally {
       await page.close();
     }
