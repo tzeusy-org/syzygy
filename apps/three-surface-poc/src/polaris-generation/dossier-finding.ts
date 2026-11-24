@@ -130,9 +130,9 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   const shown = (block: IndexedBlock): string => `${block.prose}\n${block.quoted}`;
   const entries: IndexEntry[] = [];
 
-  const glossary = input.terms.map((term) => ({ id: term.id, handle: term.name, name: glossaryDisplayName(term.name) }));
+  const glossary = input.terms.map((term) => ({ id: term.id, name: glossaryDisplayName(term.name) }));
   for (const term of glossary.sort(byName)) {
-    const pattern = wordPattern(glossaryNameForms(term.handle));
+    const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);
     entries.push({ kind: 'term', name: term.name, home: { page: 'glossary.html', fragment: `term-${term.id}`, label: 'Glossary entry' }, blocks: naming(input.blocks, (block) => pattern.test(shown(block))) });
   }
 
@@ -158,7 +158,7 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   // An identifier: a backticked token of some block's prose that is not already a path, a unit or a term of this index.
   const taken = new Set([...pathNames, ...unitNames, ...[...unitNames].map((unit) => `${unit}/`)]);
   for (const span of input.unindexed ?? []) taken.add(span);
-  const termNames = new Set(input.terms.map((term) => term.name.toLowerCase()));
+  const termNames = new Set(glossary.map((term) => term.name.toLowerCase()));
   const spans = new Map<string, Set<string>>();
   for (const block of input.blocks) spans.set(block.id, new Set(identifiersIn(block.prose)));
   const identifiers = new Set([...spans.values()].flatMap((own) => [...own]).filter((span) => !taken.has(span) && !termNames.has(span.toLowerCase())));

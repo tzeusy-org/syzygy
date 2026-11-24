@@ -2615,7 +2615,8 @@ describe('render: glossary definitions and first-use links', () => {
     const doc = draft();
     doc.understanding.terminology = [term('append-only_file'), term('AOF')];
     doc.introduction.text += ' An append-only file supports AOF. The append-only file explains AOF.';
-    doc.sections[0].paragraphs[1].text += ' The handle is `append-only_file`.';
+    doc.sections[0].paragraphs[0].text += ' This is an append only file.';
+    doc.sections[0].paragraphs[1].text += ' The append-only_file marker uses the literal `append-only_file`.';
 
     const result = await renderRun(await prepared(doc), renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -2629,17 +2630,25 @@ describe('render: glossary definitions and first-use links', () => {
     const overview = files.get('index.html')!;
     expect([...overview.matchAll(/<a class="term" href="glossary\.html#([^"]+)" aria-label="[^"]+">([^<]+)/gu)].map((link) => link.slice(1))).toEqual([
       ['term-glossary/append-only_file', 'append-only file'], ['term-glossary/AOF', 'AOF'],
+      ['term-glossary/append-only_file', 'append-only_file'],
     ]);
     expect(overview).toContain('<code>append-only_file</code>');
     const index = files.get('name-index.html')!;
-    expect(index).toContain('data-index-name="append-only file"');
-    expect(index).not.toContain('data-index-name="append-only_file"');
-    const machine = JSON.parse(files.get('machine.json')!) as { nameIndex: { names: { kind: string; name: string; home: { fragment: string }; blocks: { fragment: string }[] }[] } };
-    expect(machine.nameIndex.names.filter((entry) => entry.kind === 'term').map((entry) => [entry.name, entry.home.fragment, entry.blocks.map((block) => block.fragment)])).toEqual([
-      ['AOF', 'term-glossary/AOF', ['block-intro']],
-      ['append-only file', 'term-glossary/append-only_file', ['block-intro', 'block-p2']],
+    expect(index.match(/data-index-name="append-only[ _]file"><span class="index-name">.*?<\/span>/gu)).toEqual([
+      'data-index-name="append-only file"><span class="index-name">append-only file</span>',
+      'data-index-name="append-only_file"><span class="index-name"><code>append-only_file</code></span>',
     ]);
-    expect(machine.nameIndex.names.some((entry) => entry.name === 'append-only_file')).toBe(false);
+    const machine = JSON.parse(files.get('machine.json')!) as {
+      nameIndex: { names: { kind: string; name: string; home: { fragment: string } | null; blocks: { fragment: string }[] }[] };
+    };
+    const names = machine.nameIndex.names;
+    expect(names.filter((entry) => entry.kind === 'term').map((entry) => [entry.name, entry.home?.fragment, entry.blocks.map((block) => block.fragment)])).toEqual([
+      ['AOF', 'term-glossary/AOF', ['block-intro']],
+      ['append-only file', 'term-glossary/append-only_file', ['block-intro', 'block-p1']],
+    ]);
+    expect(names.filter((entry) => entry.name === 'append-only_file')).toEqual([
+      { kind: 'identifier', name: 'append-only_file', home: null, blocks: [{ page: 'index.html', fragment: 'block-p2' }] },
+    ]);
   });
 
   it('still links the earlier hyphenated glossary term from its space-separated form', async () => {
