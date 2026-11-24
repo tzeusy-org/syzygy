@@ -211,7 +211,8 @@ describe('reader advice: the worth-knowing count (version 2.26)', () => {
 
   it('counts a draft with no Poles as one, a mark only when true and only on a section\'s own paragraph, and a section once', () => {
     const nested = { id: 'n', title: 'n', paragraphs: [{ ...block('n1'), children: [block('n1a', true)] }, { kind: 'callout', id: 'k', children: [block('k1', true)] }] };
-    expect(readerAdvice(doc([sec('a', 0), nested])).worthKnowing).toEqual([{ at: '$.sections', marked: 0, detail: NONE('the draft') }]);
+    // A draft with no Poles has nowhere to give a reason, so its advice names none.
+    expect(readerAdvice(doc([sec('a', 0), nested])).worthKnowing).toEqual([{ at: '$.sections', marked: 0, detail: 'the draft marks no block worth knowing: mark one to 3 cited facts a newcomer would not guess from the kind of project this is, where any meets that test; a draft with no Poles has no place to say why none does, so this advice stands until one is marked' }]);
     expect(readerAdvice(doc([sec('a', 3)])).worthKnowing).toEqual([]);
     expect(readerAdvice(doc([sec('a', 4)])).worthKnowing).toEqual([{ at: '$.sections', marked: 4, detail: 'the draft marks 4 blocks worth knowing, past 3: keep the ones a newcomer would least guess and drop the mark from the rest' }]);
     expect(readerAdvice(doc([sec('a', 2), sec('b', 0)], [{ label: 'One', sections: ['a', 'b'] }, { label: 'Two', sections: ['a'] }])).worthKnowing)

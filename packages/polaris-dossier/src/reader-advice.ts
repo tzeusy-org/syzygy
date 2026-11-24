@@ -54,7 +54,10 @@ export function worthKnowingAdvice(doc: Readonly<Record<string, unknown>>): read
   for (const group of groups) {
     const marked = group.sections.reduce((sum, id) => { if (counted.has(id)) return sum; counted.add(id); return sum + (marks.get(id) ?? 0); }, 0);
     if (marked === 0 && !group.none) {
-      out.push({ at: group.at, marked, detail: `${group.name} marks no block worth knowing: mark one to ${WORTH_KNOWING_CEILING} cited facts a newcomer would not guess from the kind of project this is, or, where none meets that test, say why in its \`${WORTH_KNOWING_NONE_FIELD}\`` });
+      // A draft with no Poles has nowhere to say why it marks none, so its advice names no such member (version 2.26).
+      out.push({ at: group.at, marked, detail: group.at === '$.sections'
+        ? `${group.name} marks no block worth knowing: mark one to ${WORTH_KNOWING_CEILING} cited facts a newcomer would not guess from the kind of project this is, where any meets that test; a draft with no Poles has no place to say why none does, so this advice stands until one is marked`
+        : `${group.name} marks no block worth knowing: mark one to ${WORTH_KNOWING_CEILING} cited facts a newcomer would not guess from the kind of project this is, or, where none meets that test, say why in its \`${WORTH_KNOWING_NONE_FIELD}\`` });
     } else if (marked > WORTH_KNOWING_CEILING) {
       out.push({ at: group.at, marked, detail: `${group.name} marks ${marked} blocks worth knowing, past ${WORTH_KNOWING_CEILING}: keep the ones a newcomer would least guess and drop the mark from the rest` });
     }

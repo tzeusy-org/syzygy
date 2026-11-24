@@ -394,6 +394,23 @@ describe('inventory-check', () => {
     expect(report).not.toHaveProperty('reviewReach');
   });
 
+  it('takes the worth-knowing kind in a v2 inventory and refuses it in a v1 inventory, whose kinds are v1\'s alone (version 2.26)', async () => {
+    const kindsV1 = 'must be one of purpose, beneficiary, thesis, capability, choice, term, qualification, conflict, other';
+    for (const [schemaVersion, expected] of [
+      ['polaris-dossier-local-inventory-v2', []],
+      ['polaris-dossier-local-inventory-v1', [['schema', '$.entries[1].kind', kindsV1]]],
+    ] as const) {
+      const run = await runWithDrafts();
+      const dir = await handedOver(run);
+      const inventory = validInventory();
+      inventory.schemaVersion = schemaVersion;
+      inventory.entries[1].kind = 'worth-knowing';
+      writeInventory(dir, inventory);
+      const report = passed(await checkInventory(run, {}, deps()));
+      expect(report.findings.map((finding) => [finding.kind, finding.at, finding.detail])).toEqual(expected);
+    }
+  });
+
   it('reports a quotation the cited file does not carry, a quotation in an unknown entry and an absent coverage path', async () => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);

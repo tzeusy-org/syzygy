@@ -937,10 +937,13 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         }),
       })) } : {}),
       // A v13 draft's worth-knowing marks (version 2.26): the marked blocks of the sections' own paragraphs, where check admits the mark,
-      // and the Poles that say none was found. The reason a Pole gives is never rendered.
+      // and the Poles that say none was found. The reason a Pole gives is never rendered. Only a block the counted review found supported,
+      // rendering Inferred, neither withheld nor matched by a secret detector, is lifted into the callout; any other marked block stays
+      // in its section, as it renders there unmarked, so the callout never carries an Unknown or withheld claim under "Worth knowing".
       ...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {
         blockIds: list(doc['sections']).filter(isRecord).flatMap((section) => list(section['paragraphs'])
-          .flatMap((entry) => (isRecord(entry) && entry[WORTH_KNOWING_FIELD] === true && typeof entry['id'] === 'string' ? [entry['id']] : []))),
+          .flatMap((entry) => (isRecord(entry) && entry[WORTH_KNOWING_FIELD] === true && typeof entry['id'] === 'string'
+            && liftable(blocks.get(entry['id'])) ? [entry['id']] : []))),
         nonePoles: list(doc['poles']).flatMap((pole, index) => (isRecord(pole) && typeof pole[WORTH_KNOWING_NONE_FIELD] === 'string' ? [index] : [])),
       } } : {}),
       counts: {
@@ -952,6 +955,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     },
   };
 }
+
+/** Whether a block marked worth knowing is lifted into its page's callout (REQ-polaris-generation-034 version 2.26): it renders Inferred
+ * on the counted review's support, carries no judgement mark, is not a withheld item and matches no secret detector. */
+const liftable = (block: LocalBlock | undefined): boolean => block !== undefined && block.marking === 'inferred' && block.judgement === undefined
+  && block.withheld === undefined && block.secretMatched === undefined;
 
 /** The Syzygy-written short label over content that is all withheld (dossier spec v1.5). */
 export const WITHHELD_LABEL = 'Withheld item';

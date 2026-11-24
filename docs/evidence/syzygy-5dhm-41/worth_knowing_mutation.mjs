@@ -50,14 +50,20 @@ const MUTANTS = [
   ['chain-v13-read-as-v10', CHECK, 'const schema = hasWorthKnowingForm(version) ? current : hasHeroForm(version) ? v10 :', 'const schema = false ? current : hasHeroForm(version) ? v10 :'],
   ['chain-v13-without-hero', SCHEMA, 'version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version);', 'version === LOCAL_DRAFT_SCHEMA_VERSION_V10;'],
   ['chain-v11-v12-admitted', SCHEMA, 'LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION] as const', "LOCAL_DRAFT_SCHEMA_VERSION_V10, 'polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v12', LOCAL_DRAFT_SCHEMA_VERSION] as const"],
+  ['inventory-v1-kinds-widened', SCHEMA, "defs: kinds === 'v1' ? INVENTORY_DEFS_V1 : INVENTORY_DEFS", 'defs: INVENTORY_DEFS'],
+  ['inventory-v1-schema-unused', INVENTORY, "{ schema: localInventorySchema({ pinnedRevision: pinned }, 'v1')", '{ schema: localInventorySchema({ pinnedRevision: pinned })'],
   ['inventory-kind-dropped', SCHEMA, "'conflict', 'worth-knowing', 'other'] as const);", "'conflict', 'other'] as const);"],
   // --- advice: count per Pole, a reason excuses zero, the ceiling, a section counted once, v13 only
   ['advice-reason-ignored', ADVICE, 'if (marked === 0 && !group.none) {', 'if (marked === 0) {'],
   ['advice-ceiling-off-by-one', ADVICE, '} else if (marked > WORTH_KNOWING_CEILING) {', '} else if (marked > WORTH_KNOWING_CEILING + 1) {'],
   ['advice-section-counted-twice', ADVICE, 'if (counted.has(id)) return sum; ', ''],
+  ['advice-draft-names-member', ADVICE, "detail: group.at === '$.sections'\n        ?", "detail: false\n        ?"],
   ['advice-every-version', ADVICE, "if (!hasWorthKnowingForm(doc['schemaVersion'])) return undefined;\n  const marks", "if (false) return undefined;\n  const marks"],
   // --- render input: only `true` marks a block; the Poles that say none was found
   ['render-false-marks', RENDER, 'entry[WORTH_KNOWING_FIELD] === true && typeof', 'entry[WORTH_KNOWING_FIELD] !== undefined && typeof'],
+  // --- render input: only a block that renders Inferred is lifted (the review correction of 2.26)
+  ['render-lift-dropped', RENDER, "&& liftable(blocks.get(entry['id'])) ? [entry['id']]", "? [entry['id']]"],
+  ['render-lift-any-marking', RENDER, "block.marking === 'inferred' && block.judgement === undefined", "block.marking !== 'non-normative' && block.judgement === undefined"],
   ['render-none-dropped', RENDER, "isRecord(pole) && typeof pole[WORTH_KNOWING_NONE_FIELD] === 'string' ? [index] : []", '[]'],
   // --- the callout: the block drawn once, before the sections, the none sentence, the landing page
   ['site-block-drawn-twice', SITE, '.filter(b => !worthKnowingIds.has(b.id)).map(b => block(from, b))', '.map(b => block(from, b))'],
@@ -67,11 +73,19 @@ const MUTANTS = [
   ['site-section-link-dropped', SITE, '<p class="worth-knowing-from">In <a href=', '<p class="worth-knowing-from">In <a data-href='],
   // --- the briefs ask for it
   ['brief-paragraph-dropped', BRIEF, "    WORTH_KNOWING_PARAGRAPH,\n    '',\n", ''],
+  ['brief-no-poles-sentence-dropped', BRIEF, 'counts as one Pole and has no place to say why it marks none.', 'counts as one Pole.'],
   ['inventory-brief-old-version', INVENTORY, "'polaris-dossier-inventory-brief-v4'", "'polaris-dossier-inventory-brief-v3'"],
 ].filter(([id]) => only === null || only.has(id));
 
 // A mutant no test can kill, with the reason; recorded, never run and never counted as killed.
-const EQUIVALENT = [];
+const EQUIVALENT = [
+  { id: 'render-lift-withheld-unchecked', file: RENDER, old: '&& block.withheld === undefined && block.secretMatched === undefined;', new: '&& block.secretMatched === undefined;',
+    reason: 'render.ts builds every withheld item with marking unknown, so no block reaching this clause with marking inferred is withheld; the clause restates the marking test' },
+  { id: 'render-lift-secret-unchecked', file: RENDER, old: '&& block.withheld === undefined && block.secretMatched === undefined;', new: '&& block.withheld === undefined;',
+    reason: 'render.ts gives every detector-matched block marking unknown (excluded-content), so no inferred block carries secretMatched; the clause restates the marking test' },
+  { id: 'render-lift-judgement-unchecked', file: RENDER, old: "block.marking === 'inferred' && block.judgement === undefined", new: "block.marking === 'inferred'",
+    reason: 'check refuses a worth-knowing mark on a block carrying the judgement mark, and only a passed draft is rendered, so no marked block reaching render carries one' },
+];
 for (const { id, file, old } of EQUIVALENT) {
   const count = fs.readFileSync(path.join(root, file), 'utf8').split(old).length - 1;
   if (count !== 1) throw new Error(`${id}: the fragment occurs ${count} times in ${file}`);

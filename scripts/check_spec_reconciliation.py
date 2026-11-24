@@ -725,9 +725,12 @@ WORTH_UNION = f"{WORTH_HOME}/GOVERNING-DEPENDENCIES.json"
 WORTH_TAG = "polaris-dossier-worth-knowing-v2.26"
 WORTH_STATUS_PREFIX = f"[Worth-knowing amendment 2.26]({WORTH_HOME})"
 WORTH_SUBJECTS = {
-    WORTH_SPEC: "77d829f5f2958e68ced154a2c9c3e6816c1616d015867618f02c16a763e72c27",
+    WORTH_SPEC: "127e4a8f809211fbff47b118212f94e47d204ef6aaad75a0f357906b9a975928",
 }
 WORTH_BOUND_PARTS = len(WORTH_SUBJECTS)
+# The first install of the v2.26 bytes, before review corrected them; the row's
+# revert may name it after the installing commit, as v2.15's does.
+WORTH_FIRST_INSTALL = "9c10e316e3973921254f63eaac29874c5d40f44b"
 
 EDIT_ACCOUNT_CHANGE = "polaris-edit-repair-deletion-accounting"
 EDIT_ACCOUNT_HOME = f"{CHANGES}/{EDIT_ACCOUNT_CHANGE}"
@@ -1529,7 +1532,8 @@ def worth_disposition(root, rows):
     if len(rows) == 1 and len(rows[0]) == 7:
         identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
         return recorded_disposition(root, identity, commit.strip("`"), WORTH_TAG,
-                                    WORTH_SUBJECTS, plain_revert=True)
+                                    WORTH_SUBJECTS, plain_revert=True,
+                                    also_reverts=WORTH_FIRST_INSTALL)
     return None
 
 def is_edit_account_row(line):
@@ -2718,7 +2722,8 @@ def worth_binding(root):
     """Read v2.26's published composition: pending until its row, like v2.14.
 
     The row names the installing commit (a plain commit, so its revert may
-    omit `-m 1`), the reviewed spec at that commit and the version tag. Its
+    omit `-m 1`, and may also revert the first install of the bytes,
+    WORTH_FIRST_INSTALL), the reviewed spec at that commit and the version tag. Its
     predecessor is v2.24's text of REQ-polaris-generation-034, so v2.24 must
     itself be in force.
     """
@@ -2739,7 +2744,8 @@ def worth_binding(root):
             records.append("worth-knowing: malformed adoption identity, date, commit, reason or tag")
         if landed:
             oid = landed.group(1)
-            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
+            if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"],
+                                               [f"git revert {oid} {WORTH_FIRST_INSTALL}"]):
                 records.append("worth-knowing: revert does not name the landed commit")
             for rel in WORTH_SUBJECTS:
                 snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
@@ -9442,11 +9448,30 @@ def worth_cases(tmp, base, witnesses, failures):
     current = current_pop["POLARIS"]
     held = (worth_binding(tree) == (original, [], []) and not current_findings
             and set(current) == set(predecessor)
-            and len(current[ident]["scenarios"]) == 213
+            and len(current[ident]["scenarios"]) == 214
             and current[ident]["name"] == predecessor[ident]["name"]
             and all(current[i] == r for i, r in predecessor.items() if i != ident))
     record("worth-adopted", AGENT_ADOPTIONS, "<no v2.26 row>", row,
-           "v2.26 replaces exactly 034 (207 to 213 scenarios)", current_findings, held, True)
+           "v2.26 replaces exactly 034 (207 to 214 scenarios)", current_findings, held, True)
+
+    both = row.replace(f"`git revert {oid}`", f"`git revert {oid} {WORTH_FIRST_INSTALL}`", 1)
+    ledger.write_text(pending + both)
+    held = worth_binding(tree) == (original, [], [])
+    record("worth-revert-with-first-install", AGENT_ADOPTIONS, f"git revert {oid}",
+           f"git revert {oid} {WORTH_FIRST_INSTALL}", "the two-commit revert is the row's own revert",
+           [], held, True)
+    veto = (f"| A-1000 | 2026-11-22 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n")
+    ledger.write_text(pending + both + veto)
+    held = worth_disposition(tree, worth_rows(tree)) == "A-1000"
+    record("worth-vetoed-two-commit-revert", AGENT_ADOPTIONS, both, veto,
+           "a veto of the row with the two-commit revert is read", [], held, True)
+    for name, new in (("revert-first-install-alone", f"`git revert {WORTH_FIRST_INSTALL}`"),
+                      ("revert-other-second", f"`git revert {oid} " + "0" * 40 + "`")):
+        ledger.write_text(pending + row.replace(f"`git revert {oid}`", new, 1))
+        effective, r1, r2 = worth_binding(tree)
+        record(f"worth-{name}", AGENT_ADOPTIONS, f"git revert {oid}", new,
+               "R1 refusal with no effective amendment", r1 + r2,
+               effective is None and bool(r1) and not r2, False)
 
     for name, old, new in (("duplicate-row", row, row + row),
                            ("wrong-tag", WORTH_TAG, WORTH_TAG + "-wrong"),

@@ -9,7 +9,7 @@ import { readBoundedFile, readCheckRecord, readFileAsSized } from './check-recor
 import { RUN_TREE_BOUNDS, readCause } from './run-tree-read.js';
 import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
-import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
+import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, LOCAL_INVENTORY_SCHEMA_VERSION_V1, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
@@ -231,6 +231,9 @@ export function inventoryRules(pinned: string): SubjectRules {
   return {
     noun: 'inventory',
     schema: localInventorySchema({ pinnedRevision: pinned }),
+    // A v1 inventory takes the v1 kinds alone: an entry of kind `worth-knowing` in one is a schema finding (version 2.26).
+    earlier: (subject) => (isRecord(subject) && subject['schemaVersion'] === LOCAL_INVENTORY_SCHEMA_VERSION_V1
+      ? { schema: localInventorySchema({ pinnedRevision: pinned }, 'v1'), reported: { test: () => false } } : undefined),
     maxQuestions: null,
     structural: () => undefined,
     blocks: (doc) => (Array.isArray(doc['entries']) ? doc['entries'] : []).flatMap((entry, i): SubjectBlock[] => (isRecord(entry) ? [{

@@ -398,24 +398,29 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
  * quotations and citations as `check` checks a draft's; its completeness over the clone stays the session's self-report, Inferred. */
 export const LOCAL_INVENTORY_SCHEMA_VERSION_V1 = 'polaris-dossier-local-inventory-v1';
 /** v2 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an entry's `kind` may also be `worth-knowing`. A v1 inventory still
- * validates; the kinds are the same member's widened set. */
+ * validates against the v1 kinds alone, so a v1 entry of kind `worth-knowing` is a schema finding. */
 export const LOCAL_INVENTORY_SCHEMA_VERSION = 'polaris-dossier-local-inventory-v2';
 export const INVENTORY_ENTRY_KINDS = Object.freeze(['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'worth-knowing', 'other'] as const);
+/** The entry kinds of inventory schema v1: every v2 kind but `worth-knowing`. */
+export const INVENTORY_ENTRY_KINDS_V1 = Object.freeze(INVENTORY_ENTRY_KINDS.filter((kind) => kind !== 'worth-knowing'));
 
-const INVENTORY_DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
+const inventoryDefs = (kinds: readonly string[]): Readonly<Record<string, DraftSchema>> => Object.freeze({
   citation: DEFS['citation']!,
   unknownReason: DEFS['unknownReason']!,
   pathReason,
   entry: { oneOf: [
-    object({ id: handle, kind: choice(INVENTORY_ENTRY_KINDS), label: one('inferred'), statement: text, citations: citations(1),
+    object({ id: handle, kind: choice(kinds), label: one('inferred'), statement: text, citations: citations(1),
       quotations: quotationRefs(INVENTORY_QUOTATION_FORM) }),
-    object({ id: handle, kind: choice(INVENTORY_ENTRY_KINDS), label: one('unknown'), reason, statement: text, citations: citations(0) }),
+    object({ id: handle, kind: choice(kinds), label: one('unknown'), reason, statement: text, citations: citations(0) }),
   ] },
 });
+const INVENTORY_DEFS = inventoryDefs(INVENTORY_ENTRY_KINDS);
+const INVENTORY_DEFS_V1 = inventoryDefs(INVENTORY_ENTRY_KINDS_V1);
 
-export function localInventorySchema(parameters: { readonly pinnedRevision: string }): DraftSchemaWithDefs {
+/** The inventory schema; `kinds: 'v1'` gives the schema a v1 inventory is checked against, whose entries take the v1 kinds alone. */
+export function localInventorySchema(parameters: { readonly pinnedRevision: string }, kinds: 'v1' | 'v2' = 'v2'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
-  return { defs: INVENTORY_DEFS, root: object({
+  return { defs: kinds === 'v1' ? INVENTORY_DEFS_V1 : INVENTORY_DEFS, root: object({
     schemaVersion: choice([LOCAL_INVENTORY_SCHEMA_VERSION_V1, LOCAL_INVENTORY_SCHEMA_VERSION]),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,

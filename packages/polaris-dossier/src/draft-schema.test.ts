@@ -268,6 +268,13 @@ describe('local-agent inventory schema: version 2 (version 2.26)', () => {
     expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v1', 'choice'))).toEqual([]);
   });
 
+  it('checks a version 1 inventory against the v1 kinds alone, which lack worth-knowing', () => {
+    const V1 = localInventorySchema({ pinnedRevision: REV }, 'v1');
+    expect(checkDraftShape(V1, inventoryOf('polaris-dossier-local-inventory-v1', 'choice'))).toEqual([]);
+    expect(checkDraftShape(V1, inventoryOf('polaris-dossier-local-inventory-v1', 'worth-knowing'))).toEqual([
+      { path: '$.entries[0].kind', detail: 'must be one of purpose, beneficiary, thesis, capability, choice, term, qualification, conflict, other' }]);
+  });
+
   it('refuses another version or kind', () => {
     expect(checkDraftShape(INVENTORY, inventoryOf('polaris-dossier-local-inventory-v3', 'choice'))).toEqual([
       { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-inventory-v1, polaris-dossier-local-inventory-v2' }]);
