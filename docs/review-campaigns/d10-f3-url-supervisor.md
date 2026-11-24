@@ -65,6 +65,7 @@
 - `F3-NATIVE-DELIVERY-CLOSE-DIAGNOSTIC-REVIEW-RAW\.md`
 - `F3-ORDINARY-LOCK-DIAGNOSTIC-(R1|R2)-RAW\.md`
 - `F3-NATIVE-WRAPPER-FORWARDING-REVIEW-RAW\.md`
+- `F3-ORDINARY-STORE-READ-AUTHORITY-REVIEW-RAW\.md`
 
 ## What was under review
 
@@ -223,3 +224,5 @@
 [Observed] The ordinary lock diagnostic review records `REVISE` for `0cdbd616` (F3-ORDINARY-LOCK-DIAGNOSTIC-R1-RAW.md:1) and `PASS` for `6de8867a` (F3-ORDINARY-LOCK-DIAGNOSTIC-R2-RAW.md:1). The revised test scopes the actual lock observations and attributes safe timing data to admitted requests only when the callback establishes the association. An earlier diagnostic observed the Inventory store refuse after 33 lock conflicts. [Unknown] The specific relay phase of that refusal.
 
 [Observed] The native wrapper review records `PASS` for `9e1a83b1` (F3-NATIVE-WRAPPER-FORWARDING-REVIEW-RAW.md:1). Hosted ordinary execution and delivery-only Stop passed at `76763c74`. Its interrupted Resume reproduced the exact replacement and then refused with 28,680 ms left in the lease. The test wrapper had discarded the production replacement purpose. The eligible replay passed bootstrap and issued one cold continuation. [Unknown] Successor Resume closure and the exact hosted eligible refusal.
+
+[Observed] The ordinary protected state read review records `PASS` for `db01507d` (F3-ORDINARY-STORE-READ-AUTHORITY-REVIEW-RAW.md:1). A-182 shares the synchronous read entry with the immediate protected state boundary. The focused controls detected the extra check and a missing pre-I/O check. [Unknown] Native impact on the holder’s time and the observed contention refusal.

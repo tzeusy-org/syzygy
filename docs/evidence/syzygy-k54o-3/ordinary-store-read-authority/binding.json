@@ -1,0 +1,58 @@
+{
+  "subjectCommit": "db01507dfd7a9f6a50129c20132aa0195b26b6d0",
+  "baseCommit": "441bd0b96cd8dac7edf369ad64daf15454e6dada",
+  "binaryDeltaSha256": "fc85d60ded26099bf8f43ba388605876614247d7fde7e58d6d3ea6169c8a58c5",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-ORDINARY-STORE-READ-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "03f033fce5943653cd1f3966abf4406ceee8c676aa967eabc5e1d5c76bf4b282"
+  },
+  "predecessorObservation": {
+    "path": "docs/evidence/syzygy-k54o-3/ordinary-lock-diagnostic/binding.json",
+    "sha256": "0b03c0b45410755f17cc785de75bd88134ed07d675fb1bf55d336ae1e5913186",
+    "lockConflicts": 33,
+    "lastConflictAfterEntryMilliseconds": 1057.698806,
+    "holderWork": "Unknown"
+  },
+  "focusedVerification": {
+    "step": "integration",
+    "testsPassed": 89,
+    "integrationLogSha256": "6f6d5395924920fb76bd1b8420069a8341ad7ea8b5f5bd38e181cb233ebd91c3",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "negativeControls": [
+    {
+      "name": "duplicate-read-entry",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "if (!synchronousOrdinaryRead) checkWork();",
+      "new": "checkWork();",
+      "selector": "ordinary synchronous lease reads.* true$",
+      "assertion": "expected 2 to be 1",
+      "logSha256": "e39e667f3ea90d99e2d32081ecf809dc8f461f9b499ab73512bc2ca762ebc250"
+    },
+    {
+      "name": "missing-private-state-entry",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "          if (currentAsync === undefined || staging !== undefined) checkWork();\n          else await checkAsync(currentAsync);",
+      "new": "          if (currentAsync === undefined || staging !== undefined) {\n            if (!ordinaryEffect) checkWork();\n          } else await checkAsync(currentAsync);",
+      "occurrence": 1,
+      "selector": "ordinary synchronous lease reads.* false$",
+      "assertion": "expected +0 to be undefined",
+      "logSha256": "dc6330294a8c911e90fff5b39cdec45ce0eea72198cc8c38d372705fa0768ed2"
+    }
+  ],
+  "nativeSuccessorContention": "Unknown",
+  "localNativeExercise": {
+    "subjectCommit": "db01507dfd7a9f6a50129c20132aa0195b26b6d0",
+    "arm": "eligible-stop-resume",
+    "failureManifestSha256": "ec1ba97d5a2612d0f283b43125301e80f1e8cc3a3e10bf806c9950b948b66bfa",
+    "testLogSha256": "8866911ca4424c3e4f27ab8dcd66bb4c41eb5012c949bd1657f197a204bb4495",
+    "reachedFidelityPacket": true,
+    "stopReached": false,
+    "runtimeFailure": {
+      "reason": "transport-unavailable",
+      "atMs": 247332.675811
+    },
+    "preciseTransportCause": "Unknown"
+  }
+}
