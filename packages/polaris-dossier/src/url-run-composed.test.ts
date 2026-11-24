@@ -29,6 +29,7 @@ import { orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type Ordered
 import { isOrderedDesignSessionProfile } from './session-profile.js';
 import { reconstructColdUrlRunMachineHistory } from './url-machine-cold-history.js';
 import { readVerifiedUrlAuditLaunches, verifyUrlSessionAuditHistory, type UrlSessionAuditHistoryOptions } from './url-session-audit-history.js';
+import * as auditHistory from './url-session-audit-history.js';
 import { verifyColdOrderedDesignAuditHistory } from './url-ordered-design-audit-history.js';
 import * as recovery from './url-recovery.js';
 import * as runMachine from './url-run-machine.js';
@@ -43,6 +44,7 @@ import * as runArtifacts from './url-run-artifacts.js';
 import * as recoveryProducts from './url-recovery-products.js';
 import * as frozenProducts from './url-frozen-product-history.js';
 import * as productFiles from './url-product-reads.js';
+import * as storedRender from './url-stored-render.js';
 import * as machineTransport from './session-machine-transport.js';
 import * as machinePeer from './url-machine-peer.js';
 import * as sessionLaunch from './session-launch.js';
@@ -385,6 +387,132 @@ function observeBaseAuditCallbacks() {
       return active === undefined ? call() : measure(active.instance, 'machine-effect', call);
     },
     summary: () => structuredClone({ instances: count, retained: instances, firstRefusal }),
+  };
+}
+
+/** Cold final-only preparation observes original calls, never a second authority
+ * sample. Identity projections run only after an original null result, so they
+ * cannot consume the successful preparation's live product lease. */
+function observeColdFinalPreparation() {
+  type Phase = 'claim' | 'history' | 'inspect-product' | 'product-lease' | 'renderer'
+    | 'stored-authority' | 'stored-current' | 'stored-deadline' | 'stored-site' | 'snapshot-file';
+  type Step = ResumeStamp & { ordinal: number; phase: Phase; remainingMs?: number; observationUnavailable?: true };
+  type Projection = { basis: 'after-original-null'; history: { present: boolean; eligible: boolean; number: boolean; site: boolean };
+    comparisons?: { predicate: string; accepted: boolean }[]; unavailable?: true };
+  type Entry = ResumeStamp & { ordinal: number; steps: Step[]; stepCalls: number; productRemainingMs?: number; projection?: Projection };
+  type Frame = { entry: Entry; number: number; site: number;
+    lastAttempt?: NonNullable<ReturnType<typeof auditHistory.readVerifiedUrlAuditLaunches>>['ordered'][number];
+    product?: designProduct.UrlDesignProductMetadata };
+  const scope = new AsyncLocalStorage<Frame>(), entries: Entry[] = [];
+  const totals: Partial<Record<Phase, { calls: number; refused: number; rejected: number }>> = {};
+  let calls = 0, firstStepRefusal: { preparation: number; step: Step } | undefined, firstPreparationRefusal: Entry | undefined;
+  const tail = <T>(values: T[], value: T): void => { if (values.length >= 32) values.shift(); values.push(value); };
+  const project = (frame: Frame): Projection => {
+    const last = frame.lastAttempt, product = frame.product;
+    const history = { present: last !== undefined, eligible: last?.disposition.kind === 'eligible',
+      number: last?.disposition.kind === 'eligible' && last.disposition.checked.number === frame.number,
+      site: last?.receipt.identity.site === frame.site };
+    if (last === undefined || product === undefined) return { basis: 'after-original-null', history };
+    try {
+      const identity = last.receipt.identity, digest = (value: unknown) => sha256(canonical(value));
+      const same = (left: unknown, right: unknown) => digest(left) === digest(right);
+      const comparisons = Object.entries({
+        'operation-render': product.products.operation === 'render', 'raw-active-failed': product.rawActive.status === 'failed',
+        'draft-revision': product.draftRevision === identity.draftRevision,
+        original: same(product.original, identity.original), payload: same(product.payload, identity.payload), view: same(product.view, identity.view),
+        'file-count': product.output.files === identity.files, 'page-count': product.output.pages === identity.pages,
+        renderer: digest(product.renderer) === identity.rendererSha256, 'base-policy': product.basePolicy.sha256 === identity.basePolicySha256,
+        'origin-policy': product.originPolicy.sha256 === identity.originPolicySha256, profile: product.profile.sha256 === identity.registryProfileSha256,
+        'policy-bindings': digest([product.basePolicy, product.originPolicy]) === identity.policyBindingsSha256,
+        'parent-count': product.parents.length === identity.parentCount, 'semantic-parents': product.semanticParentsSha256 === identity.semanticParentsSha256,
+        'semantic-inputs': product.semanticInputsSha256 === identity.semanticInputsSha256,
+        'output-population': digest(product.output) === identity.storedPopulationSha256,
+      }).map(([predicate, accepted]) => ({ predicate, accepted }));
+      return { basis: 'after-original-null', history, comparisons };
+    } catch { return { basis: 'after-original-null', history, unavailable: true }; }
+  };
+  const measure = <T>(phase: Phase, invoke: () => T, accepts: (value: Awaited<T>) => boolean,
+    captured?: (value: Awaited<T>, frame: Frame) => void, deadline?: number): T => {
+    const frame = scope.getStore(); if (frame === undefined) return invoke();
+    const step: Step = { ordinal: ++frame.entry.stepCalls, phase, startedMs: performance.now(),
+      ...(deadline === undefined ? {} : { remainingMs: deadline - Date.now() }) };
+    tail(frame.entry.steps, step);
+    const total = totals[phase] ??= { calls: 0, refused: 0, rejected: 0 }; total.calls++;
+    const settle = (outcome: ResumeObservation): void => {
+      Object.assign(step, { outcome, settledMs: performance.now() });
+      if (outcome !== 'accepted') { total[outcome]++; firstStepRefusal ??= { preparation: frame.entry.ordinal, step: { ...step } }; }
+    };
+    const accepted = (value: Awaited<T>): void => {
+      try { settle(accepts(value) ? 'accepted' : 'refused'); captured?.(value, frame); }
+      catch { step.observationUnavailable = true; }
+    };
+    try {
+      const original = invoke();
+      if (original instanceof Promise) void original.then(accepted, () => settle('rejected'));
+      else accepted(original as Awaited<T>);
+      return original;
+    } catch (error) { settle('rejected'); throw error; }
+  };
+  let active = 0, restorePorts: (() => void)[] = [];
+  const install = (): void => {
+    type Callable = (...args: never[]) => unknown;
+    const watch = <T extends object, K extends keyof T>(target: T, key: K,
+      wrap: (original: Extract<T[K], Callable>) => Extract<T[K], Callable>): void => {
+      type F = Extract<T[K], Callable>;
+      const previous = target[key] as F;
+      const existing = vi.isMockFunction(previous);
+      const implementation = (existing ? previous.getMockImplementation() ?? (() => undefined) : previous) as F;
+      const spy = vi.spyOn(target, key as never);
+      // Vitest may either wrap an existing mock or reuse it. Delegate through
+      // the old mock only when it is distinct, preserving its call counter.
+      const reused = (spy as unknown) === previous, original = existing && !reused ? previous : implementation;
+      spy.mockImplementation(wrap(original) as never);
+      restorePorts.push(() => { if (existing && reused) spy.mockImplementation(implementation as never); else spy.mockRestore(); });
+    };
+    watch(recovery, 'isClaimedStoppedUrlRun', original =>
+      (value: unknown, claim: unknown): claim is NonNullable<Awaited<ReturnType<typeof recovery.claimStoppedUrlRun>>> =>
+        measure('claim', () => original(value, claim), accepted => accepted));
+    watch(auditHistory, 'readVerifiedUrlAuditLaunches', original => (...args) => measure('history', () => original(...args), value => value !== null,
+      (value, frame) => { const last = value?.ordered.at(-1); if (last !== undefined) frame.lastAttempt = last; }));
+    watch(designProduct, 'inspectUrlDesignProduct', original => (...args) => measure('inspect-product', () => original(...args), value => value !== null,
+      (value, frame) => { if (value !== null) { frame.product = value; frame.entry.productRemainingMs = value.products.deadline - Date.now(); } }));
+    watch(designProduct, 'isUrlDesignProductLeaseOpen', original => (...args) => measure('product-lease', () => original(...args), value => value));
+    watch(urlRuntime, 'urlRendererCurrent', original => (...args) => measure('renderer', () => original(...args), value => value));
+    const observeStoredAuthority = (original: typeof storedRender.readStoredUrlRenderWithAuthority): typeof storedRender.readStoredUrlRenderWithAuthority =>
+      <T>(deadline: number, current: () => boolean, read: (within: () => boolean) => T | null): T | null => {
+        if (scope.getStore() === undefined) return original<T>(deadline, current, read);
+        return measure('stored-authority', () => original<T>(deadline,
+          () => measure('stored-current', current, value => value),
+          within => read(() => measure('stored-deadline', within, value => value))), value => value !== null, undefined, deadline);
+      };
+    watch(storedRender, 'readStoredUrlRenderWithAuthority', observeStoredAuthority);
+    watch(storedRender, 'checkStoredUrlRender', original => (...args) => measure('stored-site', () => original(...args), value => value !== null));
+    watch(productFiles, 'snapshotProductFile', original => (...args) => measure('snapshot-file', () => original(...args), value => value.bytes !== null));
+  };
+  return {
+    run<T>(input: Pick<Parameters<typeof sessionAudit.prepareRecoveredUrlDesignRenderContinuation>[0], 'number' | 'site'>, invoke: () => T): T {
+      if (active++ === 0) install();
+      const entry: Entry = { ordinal: ++calls, startedMs: performance.now(), steps: [], stepCalls: 0 };
+      tail(entries, entry);
+      const frame: Frame = { entry, number: input.number, site: input.site };
+      const settle = (outcome: ResumeObservation): void => {
+        Object.assign(entry, { outcome, settledMs: performance.now() });
+        if (outcome === 'refused') entry.projection = project(frame);
+        if (outcome !== 'accepted') firstPreparationRefusal ??= entry;
+        delete frame.lastAttempt; delete frame.product;
+        if (--active === 0) { for (const restore of restorePorts.reverse()) restore(); restorePorts = []; }
+      };
+      return scope.run(frame, () => {
+        try {
+          const original = invoke();
+          const accepted = (value: unknown): void => settle(value === null ? 'refused' : 'accepted');
+          if (original instanceof Promise) void original.then(accepted, () => settle('rejected'));
+          else accepted(original);
+          return original;
+        } catch (error) { settle('rejected'); throw error; }
+      });
+    },
+    summary: () => structuredClone({ calls, entries, totals, firstStepRefusal, firstPreparationRefusal }),
   };
 }
 
@@ -1895,6 +2023,90 @@ describe('bounded restoration observer (no native authority fixture)', () => {
     expect(trace.summary().firstRefusal?.reason).toBe('threw');
     expect(JSON.stringify(trace.summary())).not.toContain('OWN_NOT_DIAGNOSTIC');
 
+    {
+      // Cold-preparation port stubs grant nothing. Existing spies must keep their
+      // original argument/result identities, call counters and implementations.
+      const cold = observeColdFinalPreparation(), coldInput = { number: 0, site: 1 }, deadline = Date.now() + 60_000;
+      const coldBinding = Object.freeze({ run: 'OWN_PRIVATE_COLD_PATH', runId: 'own', pinnedRevision: 'own' });
+      const token = Object.freeze({}) as designProduct.ValidatedUrlDesignProduct;
+      const hash = 'a'.repeat(64), policy = { sha256: hash }, output = { files: 1, pages: 1 };
+      const identityPart = { sha256: hash, bytes: 1 }, digest = (value: unknown) => sha256(canonical(value));
+      const metadata = { products: { operation: 'render', deadline }, rawActive: { status: 'failed' }, draftRevision: 0,
+        original: identityPart, payload: identityPart, view: identityPart, renderer: {}, basePolicy: policy, originPolicy: policy,
+        profile: policy, parents: [], semanticParentsSha256: hash, semanticInputsSha256: hash, output } as unknown as designProduct.UrlDesignProductMetadata;
+      const history = { ordered: [{ disposition: { kind: 'eligible', checked: { number: 0 } }, receipt: { identity: {
+        site: 1, draftRevision: 1, original: identityPart, payload: identityPart, view: identityPart, files: 1, pages: 1,
+        rendererSha256: digest({}), basePolicySha256: hash, originPolicySha256: hash, registryProfileSha256: hash,
+        policyBindingsSha256: digest([policy, policy]), parentCount: 0, semanticParentsSha256: hash,
+        semanticInputsSha256: hash, storedPopulationSha256: digest(output),
+      } } }] } as unknown as NonNullable<ReturnType<typeof auditHistory.readVerifiedUrlAuditLaunches>>;
+      let claims = 0;
+      const claimPort = vi.spyOn(recovery, 'isClaimedStoppedUrlRun').mockImplementation(() => ++claims !== 41);
+      const historyPort = vi.spyOn(auditHistory, 'readVerifiedUrlAuditLaunches').mockReturnValue(history);
+      const inspection = Promise.resolve(metadata);
+      const inspectPort = vi.spyOn(designProduct, 'inspectUrlDesignProduct').mockReturnValue(inspection);
+      const leasePort = vi.spyOn(designProduct, 'isUrlDesignProductLeaseOpen').mockReturnValue(true);
+      const rendererReply = Promise.resolve(true), rendererPort = vi.spyOn(urlRuntime, 'urlRendererCurrent').mockReturnValue(rendererReply);
+      const sitePort = vi.spyOn(storedRender, 'checkStoredUrlRender').mockReturnValue(1);
+      const fileGuard = vi.fn(), fileReply = { bytes: Uint8Array.of(7) } as ReturnType<typeof productFiles.snapshotProductFile>;
+      const filePort = vi.spyOn(productFiles, 'snapshotProductFile').mockReturnValue(fileReply);
+      const authorityCurrent = vi.fn(() => true), storedReply = Object.freeze({ private: 'OWN_PRIVATE_COLD_BODY' });
+      const readStored = vi.fn((within: () => boolean) => { expect(within()).toBe(true); return storedReply; });
+      const fakeVerified = capability as Parameters<typeof recovery.isClaimedStoppedUrlRun>[0];
+      let originalPreparation!: Promise<null>;
+      const preparing = cold.run(coldInput, () => originalPreparation = Promise.resolve().then(async () => {
+        for (let index = 0; index < 80; index++) expect(recovery.isClaimedStoppedUrlRun(fakeVerified, token)).toBe(index !== 40);
+        expect(auditHistory.readVerifiedUrlAuditLaunches(capability)).toBe(history);
+        expect(designProduct.inspectUrlDesignProduct(token, coldBinding)).toBe(inspection); await inspection;
+        expect(designProduct.isUrlDesignProductLeaseOpen(token)).toBe(true);
+        expect(urlRuntime.urlRendererCurrent(capability as Parameters<typeof urlRuntime.urlRendererCurrent>[0])).toBe(rendererReply); await rendererReply;
+        expect(storedRender.readStoredUrlRenderWithAuthority(deadline, authorityCurrent, readStored)).toBe(storedReply);
+        expect(storedRender.checkStoredUrlRender('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_SITE', output as designProduct.UrlDesignProductMetadata['output'], fileGuard)).toBe(1);
+        expect(productFiles.snapshotProductFile('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_FILE', 64, fileGuard)).toBe(fileReply);
+        return null;
+      }));
+      expect(preparing).toBe(originalPreparation); expect(await preparing).toBeNull();
+      expect(claimPort).toHaveBeenCalledTimes(80); expect(historyPort).toHaveBeenCalledExactlyOnceWith(capability);
+      expect(inspectPort).toHaveBeenCalledExactlyOnceWith(token, coldBinding); expect(leasePort).toHaveBeenCalledExactlyOnceWith(token);
+      expect(rendererPort).toHaveBeenCalledOnce(); expect(authorityCurrent).toHaveBeenCalledTimes(2); expect(readStored).toHaveBeenCalledOnce();
+      expect(sitePort).toHaveBeenCalledExactlyOnceWith('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_SITE', output, fileGuard);
+      expect(filePort).toHaveBeenCalledExactlyOnceWith('OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_FILE', 64, fileGuard);
+      const coldFailure = structuredClone(cold.summary().firstPreparationRefusal);
+      expect(coldFailure?.steps).toHaveLength(32);
+      expect(cold.summary().firstStepRefusal).toMatchObject({ preparation: 1, step: { ordinal: 41, phase: 'claim', outcome: 'refused' } });
+      expect(coldFailure?.projection?.comparisons?.filter(value => !value.accepted)).toEqual([{ predicate: 'draft-revision', accepted: false }]);
+      const beforeOutside = cold.summary();
+      expect(recovery.isClaimedStoppedUrlRun(fakeVerified, token)).toBe(true);
+      expect(cold.summary()).toEqual(beforeOutside); // The existing mock survived restoration; no outside call is observed.
+      inspectPort.mockReturnValue(rejected);
+      expect(cold.run(coldInput, () => designProduct.inspectUrlDesignProduct(token, coldBinding))).toBe(rejected);
+      await expect(rejected).rejects.toBe(marker);
+      claimPort.mockImplementation(() => { throw marker; });
+      let thrown: unknown;
+      try { cold.run(coldInput, () => recovery.isClaimedStoppedUrlRun(fakeVerified, token)); } catch (error) { thrown = error; }
+      expect(thrown).toBe(marker);
+      const otherToken = Object.freeze({});
+      claimPort.mockImplementation((_verified, claim) => claim !== otherToken);
+      let releaseFirst!: () => void, releaseSecond!: () => void;
+      const firstHold = new Promise<void>(resolve => { releaseFirst = resolve; }), secondHold = new Promise<void>(resolve => { releaseSecond = resolve; });
+      const concurrentFirst = cold.run(coldInput, () => firstHold.then(() => {
+        expect(recovery.isClaimedStoppedUrlRun(fakeVerified, token)).toBe(true); return () => null;
+      }));
+      const concurrentSecond = cold.run({ number: 1, site: 2 }, () => secondHold.then(() => {
+        expect(recovery.isClaimedStoppedUrlRun(fakeVerified, otherToken)).toBe(false); return null;
+      }));
+      releaseSecond(); await concurrentSecond; releaseFirst(); await concurrentFirst;
+      expect(cold.summary().entries.slice(-2).map(entry => entry.steps)).toMatchObject([
+        [{ phase: 'claim', outcome: 'accepted' }], [{ phase: 'claim', outcome: 'refused' }],
+      ]);
+      for (let index = 0; index < 40; index++) expect(cold.run(coldInput, () => null)).toBeNull();
+      expect(cold.summary().entries).toHaveLength(32);
+      expect(cold.summary().firstPreparationRefusal).toEqual(coldFailure);
+      const coldDiagnostic = JSON.stringify(cold.summary());
+      for (const excluded of ['OWN_PRIVATE_COLD_PATH', 'OWN_PRIVATE_COLD_BODY', 'OWN_PRIVATE_COLD_FILE', 'OWN_PRIVATE_COLD_SITE', 'OWN_NOT_DIAGNOSTIC'])
+        expect(coldDiagnostic).not.toContain(excluded);
+    }
+
     const controlTrace = observeControlCallbacks();
     const event = Object.freeze({ event: 'control-published', role: 'inventory', eventSha256: 'OWN_EVENT_DIGEST', eventBytes: 1 });
     let releaseCurrent!: (value: boolean) => void;
@@ -2023,6 +2235,7 @@ describe('composed URL run with actual role processes', () => {
     if (resumeAfterStop) observeRestorePreparationPhases();
     const resumeOriginSteps: ResumeOriginStep[] = [];
     let resumeProducts: ReturnType<typeof observeProductRestoration> | undefined;
+    const coldFinal = eligibleStop ? observeColdFinalPreparation() : undefined;
     const resumeStoreSteps: ResumeStoreStep[] = [];
     const observeBootstrap = <T>(phase: BootstrapPhase, invoke: () => Promise<T>, accepts: (value: T) => boolean): Promise<T> => {
       const stamp: ResumeStamp = { startedMs: performance.now() };
@@ -2055,7 +2268,7 @@ describe('composed URL run with actual role processes', () => {
       const diagnostic = setTimeout(() => {
         const inference = initialDiagnostic?.().inference;
         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
           firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
@@ -2064,7 +2277,7 @@ describe('composed URL run with actual role processes', () => {
         clearTimeout(diagnostic);
         // Existing in-memory metadata only: no extra authority checks or IO.
         console.error('owned eligible stop finished', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeBootstrap, latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
+          resumeBootstrap, coldFinal: coldFinal?.summary(), latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
           resumeAuditEnteredMs, resumeAuditSetup, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary() }));
       });
     }
@@ -2109,7 +2322,7 @@ describe('composed URL run with actual role processes', () => {
       vi.spyOn(sessionAudit, 'assertUrlFinalDesignProduct').mockImplementation((...args) => { assertFinal(...args); finalProductAssertions++; });
       const recoverFinal = sessionAudit.prepareRecoveredUrlDesignRenderContinuation;
       vi.spyOn(sessionAudit, 'prepareRecoveredUrlDesignRenderContinuation').mockImplementation(async input => {
-        const prepare = await recoverFinal(input);
+        const prepare = await coldFinal!.run(input, () => recoverFinal(input));
         resumeChecks.push({ phase: 'cold-final-prepared', available: prepare !== null });
         if (prepare === null) return null;
         return request => {
@@ -2265,7 +2478,7 @@ describe('composed URL run with actual role processes', () => {
         throw error;
       });
       if (!actual.ok) return actual;
-      if (resumedAudit && scenario === 'stop-resume') resumedDesignAudit = path.join(options.parent, `${options.name}-design.jsonl`);
+      if (resumedAudit) resumedDesignAudit = path.join(options.parent, `${options.name}-design.jsonl`);
       return { ...actual,
         ...(auditObservation === undefined ? {} : { append: auditObservation.append(actual.append, options.limits?.milliseconds ?? sessionAudit.URL_SESSION_AUDIT_LIMITS.milliseconds) }),
         beginOrderedDesignAudit: (...args) => { (resumedAudit ? resumedBegins : beginOrdered)(); return actual.beginOrderedDesignAudit(...args); },
@@ -2852,7 +3065,7 @@ describe('composed URL run with actual role processes', () => {
             probe: createCredentialProbe(credentialListFromEnv({})), loadScreen: async () => ({ ok: true as const, screen: f.screen }) });
           expect(again).toMatchObject({ ok: false, refusal: { stage: 'closed-already' } });
           expect(await fs.readFile(path.join(f.run, 'record.json'))).toEqual(recordBytes);
-          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
+          await writeEvidence({ recordSha256: sha256(recordBytes), state: resumed, events, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
             resumeAuditSetup, resumeDiagnostic: resumeDiagnostic?.(),
             requestsBeforeResume: forwardsBeforeResume,
             requestsAfterResume: [author.count(), inv.count(), fidelity.count(), design.count()],
@@ -2897,7 +3110,7 @@ describe('composed URL run with actual role processes', () => {
           && ['cold-final-prepared', 'cold-final-factory', 'resumed-render', 'resumed-exit'].includes(String(check.phase)));
         console.error('owned native resume failure', JSON.stringify({ scenario, phase: eligiblePhase,
           coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal,
-          bootstrap: resumeBootstrap, resumePreparations, resumeProducts: resumeProducts?.summary(), latestStoreSteps: resumeStoreSteps.slice(-2) }));
+          bootstrap: resumeBootstrap, resumePreparations, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), latestStoreSteps: resumeStoreSteps.slice(-2) }));
       }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
@@ -2924,7 +3137,7 @@ describe('composed URL run with actual role processes', () => {
         // A failure manifest is separate from any already retained valid cut.
         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
           failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
-          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
+          profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
           resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
@@ -2934,7 +3147,7 @@ describe('composed URL run with actual role processes', () => {
         roles: controller.summary(), authorForwards: author.count(), inventoryForwards: inv.count(), fidelityForwards: fidelity.count(), designForwards: design.count(),
         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
         initialRoleInspections: initialRoleInspections(),
-        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+        resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
         initialInference: initialTrace?.inference, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
         producerReports: f.producerReports(),
