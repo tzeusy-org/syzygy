@@ -1,0 +1,95 @@
+{
+  "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef",
+  "baseCommit": "71b25f40bdc523d952729bf135e2c0b1ee1bf904",
+  "implementationCommit": "39827723c20965f87b7d4635d2437ad00d183a4e",
+  "binaryDeltaSha256": "5acf89b70470ef14cb7d857bfb88a0d575e5dc227aeeb67c3ae56fe7dcaf04bd",
+  "sourceReviews": [
+    {
+      "verdict": "PASS",
+      "path": "docs/reviews/F3-LOCAL-STORE-ADMISSION-REVIEW-RAW.md",
+      "sha256": "610212b5827b0fdbf9c7a69d56dd027c52998909f9a97532defda0c722d796be",
+      "subjectCommit": "39827723c20965f87b7d4635d2437ad00d183a4e"
+    },
+    {
+      "verdict": "PASS",
+      "path": "docs/reviews/F3-LOCAL-STORE-ADMISSION-REVIEW-R2-RAW.md",
+      "sha256": "fe4ee7735812dcd8a2b205b3dfd399d9c9bce3a2a348341b96ca17739b7710cf",
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef"
+    }
+  ],
+  "declaredAdmission": {
+    "perAdapter": "FIFO",
+    "milliseconds": 30000,
+    "maximumWaiting": 256,
+    "expiry": "caller and original run deadline",
+    "operationClocks": "start after local admission",
+    "independentAdapterContentionMilliseconds": 1000,
+    "authority": "fresh operation checks after promotion; no authority is carried by a queue entry"
+  },
+  "focusedVerification": {
+    "fullStore": {
+      "subjectCommit": "39827723c20965f87b7d4635d2437ad00d183a4e",
+      "passed": 105,
+      "total": 105,
+      "logSha256": "1bd0b418700b38f5e71d4b0df254899dbd9e081a5ea0c906e0c7b3ab0232ddcb",
+      "temporaryRoot": "home-backed scratch; earlier /tmp run failed ENOSPC"
+    },
+    "successorClose": {
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef",
+      "passed": 1,
+      "skipped": 104,
+      "total": 105,
+      "logSha256": "4378ad6ca1d3a408356ca9ccaac3a040500a0b5085bc7bb0d8d6e1fe89a2ae8f"
+    },
+    "typecheck": {
+      "subjectCommit": "39827723c20965f87b7d4635d2437ad00d183a4e",
+      "exitCode": 0,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "negativeControls": [
+    {
+      "name": "bypass-admission",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "if (!admissionHeld) { admissionHeld = true; return Promise.resolve(releaseAdmission); }",
+      "new": "if (true) { admissionHeld = true; return Promise.resolve(releaseAdmission); }",
+      "selector": "admits same-adapter",
+      "exitCode": 1,
+      "logSha256": "0b20355015a7f365224aa0c92fdb4cc99a5f6e859cb609f842c2ba4a28cb5937",
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef"
+    },
+    {
+      "name": "missing-admission-expiry",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "&& performance.now() - began < URL_MACHINE_STORE_LIMITS.admissionMilliseconds;",
+      "new": "&& true;",
+      "selector": "rechecks admission-expiry",
+      "exitCode": 1,
+      "logSha256": "e77937dc1bda76966438778bcfd0708f87217d64ebad2c9866c77e8c0fbbd48c",
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef"
+    },
+    {
+      "name": "extra-queued-admission",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "waitingAdmissions.length >= URL_MACHINE_STORE_LIMITS.waitingAdmissions",
+      "new": "waitingAdmissions.length > URL_MACHINE_STORE_LIMITS.waitingAdmissions",
+      "selector": "bounds queued admissions",
+      "exitCode": 1,
+      "logSha256": "30aa9d55e96b9dd00e2f4ad45a7c43c7d730580cf84d1408b42f8e479c941f2c",
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef"
+    },
+    {
+      "name": "unsettled-closed-admissions",
+      "file": "packages/polaris-dossier/src/url-machine-store.ts",
+      "old": "waiting.settle(null);",
+      "new": "/* mutant withholds close settlement */",
+      "selector": "bounds queued admissions",
+      "exitCode": 1,
+      "logSha256": "11dea5cbc7d2f096cd00729e716fa755f1d35ecbf2a033264b3c5e55a94199f9",
+      "subjectCommit": "303996d4081995dd3d81717f1f65ab5d802163ef",
+      "observedFailure": "The missing close settlement leaves queued promises pending. Vitest reports a timeout during cleanup. The source has a next-turn assertion before that cleanup; its assertion result is masked by the pending cleanup."
+    }
+  ],
+  "nativeAcceptance": "Unknown; native interrupted run started for this exact subject",
+  "hostedAcceptance": "Unknown"
+}

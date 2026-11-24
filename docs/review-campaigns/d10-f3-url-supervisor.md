@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-LOCAL-STORE-ADMISSION-REVIEW(-R2)?-RAW\.md`
+
 - `F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW\.md`
 
 - `F3-(INITIAL-DESIGN-PUBLICATION-ACTIVATION|STAGED-ALLOCATION-READBACK-AUTHORITY)-REVIEW-RAW\.md`
@@ -238,3 +240,5 @@
 [Observed] The main merge preserves each of its 74 adoption rows byte for byte. The branch’s historical same-store setup row for `236df7ecd` is recorded as A-210 after main assigned A-64 to the system-model amendment. Earlier frozen reviews retain their original branch identifier and subject commit. The 195 combined rows have distinct identifiers.
 
 [Observed] The staged batch envelope review records `PASS` for `f6721c73f` (F3-STAGED-BATCH-ALLOCATION-ENVELOPE-REVIEW-RAW.md). A-185 gives an asynchronous two-to-eight-slot transaction ten seconds under its caller and original run deadline. The focused suite passes 99 cases and four negative controls fail their intended assertions. The native interrupted replay refused on ordinary Fidelity lock contention before Stop. [Unknown] Hosted batch completion.
+
+[Observed] The local store admission reviews record `PASS` for `39827723c` (F3-LOCAL-STORE-ADMISSION-REVIEW-RAW.md) and `303996d40` (F3-LOCAL-STORE-ADMISSION-REVIEW-R2-RAW.md). A-186 bounds local FIFO waiting to 30 seconds and 256 entries before the existing operation clocks start. The home-backed full suite passes 105 cases on the identical implementation; the successor close assertion passes separately. Four source controls detect bypassed ordering, missing expiry, excess admission and unsettled close. The last control times out in cleanup because its queued promises remain pending. [Unknown] Native and hosted completion.
