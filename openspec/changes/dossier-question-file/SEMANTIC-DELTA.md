@@ -10,11 +10,11 @@
 
 ## Carried unchanged
 
-[Observed] Every line of the predecessor requirement, from `### Requirement: Operator-agent authoring mode` to the end of its warrants block, is carried byte for byte: the proposed block is the predecessor block with insertions only. A script over the two blocks (`docs/evidence/syzygy-5dhm-21/question_file_delta.py`) finds all 110 non-empty predecessor lines in the proposed block in their order, 16 and 18 scenarios, and 9 added non-empty lines. The proposed file's SHA-256 is `13cd442575ceef40b6798833f510a29ca0589dc95256f1a9a391e201e9e7b23a`.
+[Observed] Every line of the predecessor requirement, from `### Requirement: Operator-agent authoring mode` to the end of its warrants block, is carried byte for byte: the proposed block is the predecessor block with insertions only. A script over the two blocks (`docs/evidence/syzygy-5dhm-21/question_file_delta.py`) finds all 110 non-empty predecessor lines in the proposed block in their order, 16 and 18 scenarios, and 10 added non-empty lines. The proposed file's SHA-256 is `ec39365ec91faabb26ee8d1799f319d87ae1e840dcf0ef82c41fbe0525e05984`.
 
 ## Added
 
-1. One paragraph, before the paragraph beginning "The run record and the dossier's appendix SHALL disclose in human form": the run record's `questionFile` member (format `polaris-question-file/1`, version, SHA-256), what the question file holds, how an earlier record is read, and that no held-out text enters an authoring, inventory, editor or scout packet.
+1. One paragraph, before the paragraph beginning "The run record and the dossier's appendix SHALL disclose in human form": the run record's `questionFile` member (format `polaris-question-file/1`, version, SHA-256); what the question file holds (a public part the brief and the provider profile read, from which the reader-questions file the reader test and scorecard are given is derived; a held-out part giving per subject and list a frozen reference by path, digest and count, or a not-written state, with the depth and task counts fixed); how an earlier record is read; that the binding is not rendered in this version; and that no held-out text enters the packets of an authoring (author or editor), inventory, reviewer or scout session, with the mechanical check's coverage and its Unknowns stated.
 2. Two scenarios, after the predecessor's last scenario ("Verify writes nothing into a run") and before `Form: event-response.`: "The run record names the question file" and "Held-out text never reaches an authoring packet".
 3. One line after the Form block's "**Case, oracle and falsifier (verify):**" line: "**Case, oracle and falsifier (question file):**" (CC-SPEC-4).
 
