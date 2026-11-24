@@ -376,5 +376,326 @@
       "changedInstances": "~0"
     },
     "reportSha256": "fe57f8c738b25f911e975927b253989a948f834d026af79ed6103b8b25f23b55"
+  },
+  "reviewedRevision": {
+    "predecessorReview": {
+      "head": "690bfd8ec12e443fb0c92b9e3d72c352b563c6fb",
+      "evidencePath": "docs/evidence/syzygy-bpyt-74/test-inventory-lexical-tables-2026-11-24.json",
+      "evidenceSha256": "9be82c51b99a122ae303b5b22b4a27ed4fb1a99e3352e9e9a3eb4d627941723e",
+      "verdict": "REVISE",
+      "rawPath": "docs/evidence/syzygy-bpyt-74/BPYT74-LEXICAL-INVENTORY-R1-RAW.md",
+      "rawSha256": "426c8ced3899ba12f605295eeb1f732e3b6199dc36e70aaca38cc7c0222a921b",
+      "finding": "F1. A mutable literal binding was incorrectly reported as a certain unchanged input."
+    },
+    "subject": {
+      "toolCommit": "9a5cbfbb64298ddfdf08eadff777a454ad2d7324",
+      "path": "scripts/test-inventory.mjs",
+      "sha256": "9ced20f33862ebaf57a697e45cf094de436f803304bd358ad25c97d1c5e2bdb5"
+    },
+    "findings": [
+      "A named literal table now requires a same-file const binding and source references that neither mutate nor expose the table. Unsupported or escaping usage keeps row counts Unknown.",
+      "The historical ENDS primitive tuple loop and the separate literal tuple projection both have non-escaping bindings. Both historical populations and the five earlier controls replayed their exact output bytes.",
+      "The same-initializer push, reassignment, direct alias, shorthand alias and escaping map cases each keep one row comparison Unknown. Removing the conditional Unknown outcome alone makes all five cases return the rejected ~0."
+    ],
+    "historicalReportSha256": "6846c35cce71297158d912890919ffac73a0e626160194b4b16862b410b93cbb",
+    "replay": "Use the actual tool subject in this reviewed revision for the historical and synthetic commands. The added cases use the same one-file procedure. In a temporary copy replace exactly assumeStableMutation.old with assumeStableMutation.new. In each recorded scenario the otherwise unchanged pair yields the rejected ~0 outcome and fails the named assertion.",
+    "additionalControls": {
+      "same-initializer-push": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  VALUES.push([4, 'added']);\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 1,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": [
+                {
+                  "name": "rows > case %d",
+                  "occurrence": 1
+                }
+              ]
+            }
+          },
+          "changedInstances": "Unknown"
+        },
+        "reportSha256": "fa823ad5e43e8d34a80a5502d8ec4e56a228582ff6c66db668d98cf1ae66566e"
+      },
+      "reassigned-rows": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "let VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  VALUES = [[4, 'added']];\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 1,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": [
+                {
+                  "name": "rows > case %d",
+                  "occurrence": 1
+                }
+              ]
+            }
+          },
+          "changedInstances": "Unknown"
+        },
+        "reportSha256": "fa823ad5e43e8d34a80a5502d8ec4e56a228582ff6c66db668d98cf1ae66566e"
+      },
+      "direct-alias": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  const alias = VALUES;\n  alias.push([4, 'added']);\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 1,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": [
+                {
+                  "name": "rows > case %d",
+                  "occurrence": 1
+                }
+              ]
+            }
+          },
+          "changedInstances": "Unknown"
+        },
+        "reportSha256": "fa823ad5e43e8d34a80a5502d8ec4e56a228582ff6c66db668d98cf1ae66566e"
+      },
+      "shorthand-alias": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  const holder = { VALUES };\n  holder.VALUES.push([4, 'added']);\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 1,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": [
+                {
+                  "name": "rows > case %d",
+                  "occurrence": 1
+                }
+              ]
+            }
+          },
+          "changedInstances": "Unknown"
+        },
+        "reportSha256": "fa823ad5e43e8d34a80a5502d8ec4e56a228582ff6c66db668d98cf1ae66566e"
+      },
+      "row-escape-via-map": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  VALUES.map((row) => row)[0][0] = 6;\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 1,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": [
+                {
+                  "name": "rows > case %d",
+                  "occurrence": 1
+                }
+              ]
+            }
+          },
+          "changedInstances": "Unknown"
+        },
+        "reportSha256": "fa823ad5e43e8d34a80a5502d8ec4e56a228582ff6c66db668d98cf1ae66566e"
+      },
+      "primitive-tuple-reads": {
+        "before": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "after": "const VALUES = [[1, 'first'], [2, 'second'], [3, 'third']] as const;\ndescribe('rows', () => {\n  VALUES.map(([, label]) => label);\n  for (const [id, label] of VALUES) observe(id, label);\n  it.each(VALUES)('case %d', (_id, value) => observe(value), { retry: 0 });\n});\n",
+        "file": "inventory.test.ts",
+        "report": {
+          "matchedCalls": 1,
+          "addedCalls": 0,
+          "removedCalls": 0,
+          "changedCalls": 0,
+          "knownChangedInstances": 0,
+          "unknownChangedInstanceCalls": 0,
+          "unknownRowComparisons": 0,
+          "files": {
+            "inventory.test.ts": {
+              "matched": 1,
+              "added": [],
+              "removed": [],
+              "changed": [],
+              "unknownRows": []
+            }
+          },
+          "changedInstances": "~0"
+        },
+        "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+      }
+    },
+    "assumeStableMutation": {
+      "old": "if (!stable) return { text, rows: null };",
+      "new": "if (!stable) return { text, rows };",
+      "scenarios": {
+        "same-initializer-push": {
+          "assertion": "a mutable binding cannot warrant a known row delta",
+          "report": {
+            "matchedCalls": 1,
+            "addedCalls": 0,
+            "removedCalls": 0,
+            "changedCalls": 0,
+            "knownChangedInstances": 0,
+            "unknownChangedInstanceCalls": 0,
+            "unknownRowComparisons": 0,
+            "files": {
+              "inventory.test.ts": {
+                "matched": 1,
+                "added": [],
+                "removed": [],
+                "changed": [],
+                "unknownRows": []
+              }
+            },
+            "changedInstances": "~0"
+          },
+          "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+        },
+        "reassigned-rows": {
+          "assertion": "a mutable binding cannot warrant a known row delta",
+          "report": {
+            "matchedCalls": 1,
+            "addedCalls": 0,
+            "removedCalls": 0,
+            "changedCalls": 0,
+            "knownChangedInstances": 0,
+            "unknownChangedInstanceCalls": 0,
+            "unknownRowComparisons": 0,
+            "files": {
+              "inventory.test.ts": {
+                "matched": 1,
+                "added": [],
+                "removed": [],
+                "changed": [],
+                "unknownRows": []
+              }
+            },
+            "changedInstances": "~0"
+          },
+          "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+        },
+        "direct-alias": {
+          "assertion": "a mutable binding cannot warrant a known row delta",
+          "report": {
+            "matchedCalls": 1,
+            "addedCalls": 0,
+            "removedCalls": 0,
+            "changedCalls": 0,
+            "knownChangedInstances": 0,
+            "unknownChangedInstanceCalls": 0,
+            "unknownRowComparisons": 0,
+            "files": {
+              "inventory.test.ts": {
+                "matched": 1,
+                "added": [],
+                "removed": [],
+                "changed": [],
+                "unknownRows": []
+              }
+            },
+            "changedInstances": "~0"
+          },
+          "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+        },
+        "shorthand-alias": {
+          "assertion": "a mutable binding cannot warrant a known row delta",
+          "report": {
+            "matchedCalls": 1,
+            "addedCalls": 0,
+            "removedCalls": 0,
+            "changedCalls": 0,
+            "knownChangedInstances": 0,
+            "unknownChangedInstanceCalls": 0,
+            "unknownRowComparisons": 0,
+            "files": {
+              "inventory.test.ts": {
+                "matched": 1,
+                "added": [],
+                "removed": [],
+                "changed": [],
+                "unknownRows": []
+              }
+            },
+            "changedInstances": "~0"
+          },
+          "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+        },
+        "row-escape-via-map": {
+          "assertion": "a mutable binding cannot warrant a known row delta",
+          "report": {
+            "matchedCalls": 1,
+            "addedCalls": 0,
+            "removedCalls": 0,
+            "changedCalls": 0,
+            "knownChangedInstances": 0,
+            "unknownChangedInstanceCalls": 0,
+            "unknownRowComparisons": 0,
+            "files": {
+              "inventory.test.ts": {
+                "matched": 1,
+                "added": [],
+                "removed": [],
+                "changed": [],
+                "unknownRows": []
+              }
+            },
+            "changedInstances": "~0"
+          },
+          "reportSha256": "2ba2b890e8667832e1e383e482ddb2a9858eff3e5264749f763c39522655c404"
+        }
+      }
+    }
   }
 }
