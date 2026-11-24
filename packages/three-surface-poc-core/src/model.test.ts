@@ -141,9 +141,15 @@ function committedButlersGitFixture(): ButlersGitFixture {
   return { repoRoot: root, changedCommit, changedCommitAuthoredAt };
 }
 
+const WORK_ITEM_REVISION = 'adpe9hi1llmdh05mr8aja5kagtu36eli';
+const WORK_ITEM_WITNESS = {
+  revision: WORK_ITEM_REVISION, id: null, status: null, issue_type: null, priority: null,
+  created_at: null, updated_at: null, closed_at: null,
+};
+
 const WORK_ITEM_ROWS = [
   {
-    revision: 'dolt-rev-artifact',
+    revision: WORK_ITEM_REVISION,
     id: 'bu-artifact-1',
     title: 'Materialized work item',
     status: 'in_progress',
@@ -156,9 +162,7 @@ const WORK_ITEM_ROWS = [
 ];
 
 function runWorkItemQueryFixture(_repoRoot: string, sql: string): string {
-  return sql.includes('WHERE id LIKE')
-    ? JSON.stringify(WORK_ITEM_ROWS)
-    : JSON.stringify([{ revision: 'dolt-rev-artifact' }]);
+  return sql.includes('FROM issues ') ? JSON.stringify([WORK_ITEM_WITNESS, ...WORK_ITEM_ROWS]) : '[]';
 }
 
 const MATERIALIZATION_RECORD_FIXTURE = {
@@ -166,7 +170,7 @@ const MATERIALIZATION_RECORD_FIXTURE = {
   externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization',
   targetRepoRoot: '',
   createdAt: '2026-08-30T00:00:00Z',
-  doltRevisionAtCreation: 'dolt-rev-artifact',
+  doltRevisionAtCreation: WORK_ITEM_REVISION,
   attribution: 'test-actor',
 } as const;
 
@@ -520,7 +524,7 @@ describe('three-surface Butlers POC model', () => {
 
     const confirmedRows = [
       {
-        revision: 'dolt-rev-2',
+        revision: WORK_ITEM_REVISION,
         id: 'bu-materialized1',
         title: 'Single-event WhatsApp sender normalization (Syzygy POC materialization)',
         status: 'open',
@@ -536,7 +540,7 @@ describe('three-surface Butlers POC model', () => {
       ...baseInput,
       materializationRecord,
       runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(confirmedRows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+        sql.includes('FROM issues ') ? JSON.stringify([WORK_ITEM_WITNESS, ...confirmedRows]) : '[]',
     });
     const confirmedEntities = byId(confirmed.entities);
     expect(confirmedEntities.get('work:whatsapp-single-event-normalization')?.epistemic.label).toBe(
@@ -570,7 +574,7 @@ describe('three-surface Butlers POC model', () => {
     const stale = buildPocModel({
       ...baseInput,
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) => (sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-rev-3' }])),
+      runWorkItemQuery: (_repoRoot, sql) => sql.includes('FROM issues ') ? JSON.stringify([WORK_ITEM_WITNESS]) : '[]',
     });
     const staleEntities = byId(stale.entities);
     expect(staleEntities.get('work:whatsapp-single-event-normalization')?.epistemic.label).toBe(
@@ -618,7 +622,7 @@ describe('three-surface Butlers POC model', () => {
     } as const;
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: WORK_ITEM_REVISION,
         id: 'bu-materialized1',
         title: 'Single-event WhatsApp sender normalization (Syzygy POC materialization)',
         status: 'open',
@@ -630,7 +634,7 @@ describe('three-surface Butlers POC model', () => {
       },
     ];
     const runWorkItemQuery = (_repoRoot: string, sql: string) =>
-      sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]);
+      sql.includes('FROM issues ') ? JSON.stringify([WORK_ITEM_WITNESS, ...rows]) : '[]';
     const basisFor = (materializationRecord: typeof record & { origin?: 'created' | 'reused' }) => {
       const model = buildPocModel({ ...baseInput, materializationRecord, runWorkItemQuery });
       const epistemic = byId(model.relationships).get('relationship:intent-to-work')?.epistemic;

@@ -56,7 +56,7 @@ describeLive('live Butlers observation (SYZYGY_POC_BUTLERS_REPO gated)', () => {
         '-C',
         repoRoot,
         'sql',
-        `SELECT status, created_at, updated_at FROM issues WHERE id = '${sampled?.id}'`,
+        `SELECT status, created_at, updated_at FROM issues AS OF '${workItems.provenance.revision}' WHERE id = '${sampled?.id}'`,
       ],
       { encoding: 'utf8' },
     );

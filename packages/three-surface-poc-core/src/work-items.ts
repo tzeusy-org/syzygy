@@ -1,10 +1,12 @@
 import { execFileSync } from 'node:child_process';
 
 import type { UnknownReason } from '@syzygy/cap1-core';
+import { isRecord } from '@syzygy/support';
 
 import { unknown, type PocUnknown } from './epistemic.js';
 import type { PocProvenance } from './model.js';
 import { resolutionRoute, type ResolutionRoutes } from './project-shape-model.js';
+import { isDoltRevision, observeWorkItemDependencies, type WorkItemDependencyObservation } from './work-item-dependencies.js';
 
 const WORK_ITEM_STATUSES = [
   'open',
@@ -144,17 +146,6 @@ function isWorkItemStatus(value: unknown): value is WorkItemStatus {
   return typeof value === 'string' && (WORK_ITEM_STATUSES as readonly string[]).includes(value);
 }
 
-interface RawRow {
-  readonly revision?: unknown;
-  readonly id?: unknown;
-  readonly status?: unknown;
-  readonly issue_type?: unknown;
-  readonly priority?: unknown;
-  readonly created_at?: unknown;
-  readonly updated_at?: unknown;
-  readonly closed_at?: unknown;
-}
-
 /**
  * Reads work items exclusively through `bd sql` against the live Dolt
  * database (POC-REQ-010/012). This module never opens the passive JSONL
@@ -170,7 +161,8 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
   const runQuery = input.runQuery ?? defaultRunQuery;
   const sql =
     `SELECT dolt_hashof('HEAD') AS revision, id, status, issue_type, priority, ` +
-    `created_at, updated_at, closed_at FROM issues WHERE id LIKE '${input.beadPrefix}-%' ORDER BY id`;
+    `created_at, updated_at, closed_at FROM issues AS OF 'HEAD' WHERE id LIKE '${input.beadPrefix}-%' ` +
+    `UNION ALL SELECT dolt_hashof('HEAD'), NULL, NULL, NULL, NULL, NULL, NULL, NULL ORDER BY id`;
 
   let stdout: string;
   try {
@@ -191,47 +183,27 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
   if (!Array.isArray(rows)) {
     return { kind: 'unknown', reason: 'work-item observation returned an unexpected shape' };
   }
-  if (rows.length === 0) {
-    // Zero items under the registered prefix is a legitimate observed-empty
-    // result, distinct from Unknown (POC-REQ-013) — but the revision still
-    // has to be captured from a live query rather than left unrecorded.
-    let revisionOnly: string;
-    try {
-      revisionOnly = runQuery(input.repoRoot, "SELECT dolt_hashof('HEAD') AS revision");
-    } catch {
-      return {
-        kind: 'unknown',
-        reason: 'the Beads Dolt database was unreachable or unreadable during revision capture',
-      };
-    }
-    let revisionRows: unknown;
-    try {
-      revisionRows = JSON.parse(revisionOnly);
-    } catch {
-      return { kind: 'unknown', reason: 'revision capture returned a non-JSON response' };
-    }
-    const revisionValue = Array.isArray(revisionRows)
-      ? (revisionRows[0] as RawRow | undefined)?.revision
-      : undefined;
-    if (typeof revisionValue !== 'string') {
-      return { kind: 'unknown', reason: 'revision capture returned an unexpected shape' };
-    }
-    return {
-      kind: 'observed',
-      beadPrefix: input.beadPrefix,
-      provenance: doltProvenance(input.beadPrefix, revisionValue),
-      capturedAt: input.capturedAt,
-      items: [],
-      governedByUnknownCount: 0,
-      titles: workItemTitlesWithheld(),
-    };
-  }
-
   const items: WorkItemFact[] = [];
   let doltRevision: string | undefined;
-  for (const raw of rows as readonly RawRow[]) {
+  let sawRevisionWitness = false;
+  for (const raw of rows as readonly unknown[]) {
+    if (!isRecord(raw) || !isDoltRevision(raw.revision)) {
+      return { kind: 'unknown', reason: 'work-item observation returned a malformed revision' };
+    }
+    doltRevision ??= raw.revision;
+    if (raw.revision !== doltRevision) {
+      return { kind: 'unknown', reason: 'work-item observation spanned more than one Dolt revision' };
+    }
+    // The revision row comes from the same statement even for an empty
+    // committed item population. Its null columns cannot describe an item.
+    if (raw.id === null) {
+      if (sawRevisionWitness || [raw.status, raw.issue_type, raw.priority, raw.created_at, raw.updated_at, raw.closed_at].some((value) => value !== null)) {
+        return { kind: 'unknown', reason: 'work-item observation returned a malformed revision witness' };
+      }
+      sawRevisionWitness = true;
+      continue;
+    }
     if (
-      typeof raw.revision !== 'string' ||
       typeof raw.id !== 'string' ||
       !isWorkItemStatus(raw.status) ||
       typeof raw.issue_type !== 'string' ||
@@ -244,10 +216,6 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
     if (!raw.id.startsWith(`${input.beadPrefix}-`)) {
       return { kind: 'unknown', reason: 'work-item observation returned an out-of-prefix identifier' };
     }
-    doltRevision ??= raw.revision;
-    if (raw.revision !== doltRevision) {
-      return { kind: 'unknown', reason: 'work-item observation spanned more than one Dolt revision' };
-    }
     items.push({
       id: raw.id,
       status: raw.status,
@@ -259,11 +227,14 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
       governedBy: governingIntentUnknown(),
     });
   }
+  if (doltRevision === undefined || !sawRevisionWitness) {
+    return { kind: 'unknown', reason: 'work-item observation returned no revision witness' };
+  }
 
   return {
     kind: 'observed',
     beadPrefix: input.beadPrefix,
-    provenance: doltProvenance(input.beadPrefix, doltRevision as string),
+    provenance: doltProvenance(input.beadPrefix, doltRevision),
     capturedAt: input.capturedAt,
     items,
     governedByUnknownCount: countGoverningIntentUnknown(items),
@@ -273,4 +244,13 @@ export function observeWorkItems(input: ObserveWorkItemsInput): WorkItemsResult 
 
 function doltProvenance(beadPrefix: string, revision: string): PocProvenance {
   return { kind: 'dolt-revision', source: `Beads Dolt database (${beadPrefix})`, revision };
+}
+
+export function observeTrajectoryWorkItems(input: ObserveWorkItemsInput): {
+  readonly workItems: WorkItemsResult;
+  readonly dependencies: WorkItemDependencyObservation;
+} {
+  const workItems = observeWorkItems(input);
+  const runQuery = input.runQuery ?? defaultRunQuery;
+  return { workItems, dependencies: observeWorkItemDependencies(workItems, (sql) => runQuery(input.repoRoot, sql)) };
 }

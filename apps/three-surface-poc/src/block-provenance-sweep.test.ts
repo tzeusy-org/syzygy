@@ -18,7 +18,7 @@ import { join } from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 /** The fixture's injected Dolt head and default evaluation instant, typed by hand. */
-const DOLT_REVISION = 'dolt-fixture-revision';
+const DOLT_REVISION = FIXTURE_DOLT_REVISION;
 const CAPTURE_INSTANT = '2026-08-30T12:00:00Z';
 const SAMPLED_PATH = 'src/butlers/identity.py';
 

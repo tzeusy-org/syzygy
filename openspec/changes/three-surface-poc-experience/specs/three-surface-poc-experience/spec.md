@@ -1779,3 +1779,84 @@ warrants:
   topology: []
   parent_requirements: []
 ```
+
+### Requirement: POC-REQ-062 — Trajectory derives eligibility from revision-bound dependencies
+
+Group: Trajectory. Form: **state projection/query**.
+
+**Required behavior.** The POC SHALL observe the work items' dependency metadata at the exact Dolt revision of its work-item observation and use that same evaluation to derive Trajectory eligibility. The work-item statement SHALL read from the same committed revision it identifies, including when the selected work-item set is empty. It retains the seven existing observation columns. With no valid observed work-item revision, the POC SHALL skip the dependency statement. One read-only statement SHALL bind `dependencies AS OF` to the captured revision and restrict the dependent `issue_id` to the observed bead prefix. Its dependency data columns SHALL be `issue_id`, `depends_on_issue_id`, `type`, and only null-presence booleans for `depends_on_external` and `depends_on_wisp_id`.
+
+The dependency statement SHALL return exactly one distinguishable revision witness from Dolt resolving the same immutable revision as the table read, including when there are no dependency rows. The reader SHALL verify the witness before accepting the data. A request value echoed by the caller, a missing, extra or invalid witness, a mismatched revision, an unreadable response or an unexpected result shape makes the dependency observation unavailable. A valid witness with no edge rows makes the dependency set observed empty. The work-item observation and its substrate statuses retain their own epistemic states and their one served provenance record under POC-REQ-010.
+
+The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact in this slice. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, titles, descriptions, notes, metadata values and external-reference text never enter either channel.
+
+For an observed dependency feed, a known blocker is the served target of a `blocks` edge whose observed tracker status is other than `closed`, where the row has neither the external nor the wisp flag. Deduplicate blocker identifiers. An unlisted edge type, external or wisp blocker, out-of-prefix blocker, or absent blocker status makes the applicable item's eligibility undetermined. Use a fixed reason for each applicable failure class and stable reason ordering if several apply. Count these rows even where their targets or raw types are withheld. A row with an unidentifiable dependent or a malformed input that prevents reliable row accounting makes the feed unavailable. No malformed record can create an observed-empty or ready result.
+
+Apply this table in row order. “Undetermined” is the exact state `eligibility-undetermined`.
+
+| Dependency observation | Observed tracker status | Derived eligibility |
+|---|---|---|
+| Any | `closed` | Absent |
+| Feed unavailable | `open`, `blocked`, `deferred`, `in_progress`, `pinned`, `hooked` | Undetermined with a fixed feed reason, with the observed tracker status still shown |
+| Feed observed | `in_progress`, `pinned`, `hooked` | Absent |
+| Feed observed with unresolved item-local edge | `open`, `blocked`, `deferred` | Undetermined with the applicable fixed row reasons, with the observed tracker status still shown |
+| Feed observed with settled item-local edges | `deferred` | `planned`, with the tracker-deferred reason |
+| Feed observed with settled item-local edges | `blocked` | `blocked`, with the cause set below |
+| Feed observed with settled item-local edges | `open` | `blocked` if the known blocker set is nonempty, otherwise `ready` |
+
+A derived `blocked` result and an observed tracker `blocked` status each require cause disclosure. The resolved cause set contains `dependency` exactly when the known blocker set is nonempty. A separate unresolved row can leave whole eligibility undetermined while a known blocker and its cause remain observed. The empty set has the explicit cause-Unknown display. The other RFC8-17 causes have no derivation in this slice. Neither a raw tracker status nor an epistemic absence licenses an inferred dependency. No status derives a recommendation or numeric score.
+
+On Trajectory, each card SHALL show the derived eligibility where present, and any fixed reason. A card with a derived blocked result or a tracker `blocked` status SHALL show its cause set or cause-Unknown, and each of its known blocker identifiers SHALL link to its existing work-item card via the paging rules of POC-REQ-042. Links SHALL work without client script from the default and narrowed views on the direct and tailnet paths. Trajectory SHALL declare the served non-closed denominator, each of the four eligibility counts, and the count of records with absent eligibility so those figures reconcile. It SHALL likewise disclose dependency rows observed, each recognized type's count, unlisted type rows, and external, wisp, and out-of-prefix target counts. One dependency row may contribute to more than one target-withholding count. When the feed is unavailable the edge counts SHALL be unavailable with the fixed reason, preserving the observed work-item denominator. The machine answer SHALL carry the same facts and link identities from the one shared model.
+
+- **Scope.** An identified work-item evaluation and its same-revision dependency metadata, every served item's state, and the displayed totals and links over that exact population. No live tracker readiness call, source-body read, parent grouping, changed trajectory selection parameter, or derivation of PR, external-event or decision causes enters this slice.
+- **Case (fixture, counterexamples and sweep).** An independent checker supplies fixed work statuses and dependency rows at a captured revision A. A distinct revision B carries different rows. The checker exercises the complete table, witnessed empty, witnessed and unwitnessed refusal cases, unsupported types, missing/foreign targets, a known and a withheld blocker on the same item, and dependency read failure. The checker reads both channels, including a blocker on another page, and sweeps every relevant card and board count.
+- **Observable.** Fixed-column queries, source-returned revision witness, classified edge totals, four eligibility counts and absent count, item-local reasons, blocked-cause set, exact blocker card targets, and unchanged epistemic status for the work-item observation.
+- **Oracle.** Literal fixture expectations independently classify every included row and every served status, compare the complete wire counts and card outcomes, follow every blocker link, and check query shape, one exact source revision, and no dependency read when that revision cannot be established. A changed-only revision B may not affect results from A. Captured metadata values not admitted by the output alternatives are absent from both wire forms.
+- **Oracle independence.** The fixture fixes expected status, reason, count, blocker and link-case literals without importing the derivation or rendering implementation. It separately holds the refused-reader calls, inactive shared-model output shape, and expected fixture identities.
+- **Falsifier.** A derived ready result without trustworthy same-revision input, any exported undisclosed raw target or type, wrong membership, an assumed blocked cause, wrong state or card link, drift between channels, or a denominator that does not reconcile.
+
+#### Scenario: Complete revision with a known blocker and a ready item
+
+- **WHEN** captured revision A has one open dependent with an open served blocker, one with only a closed target, and another revision B changes both edges
+- **THEN** A's first item is blocked with only the dependency cause and the open target's link, the second is ready, and B's rows do not change the A output
+
+#### Scenario: Observed empty and unavailable dependencies
+
+- **WHEN** no dependency rows return with one source-resolved witness A, and separate otherwise equal work-item evaluations get an empty response with no witness, an empty response witnessed at B, a nonempty response witnessed at B or an unreadable response
+- **THEN** only the witnessed empty A has observed zero edges and a ready open item. Each refusal preserves the observed tracker status, gives every non-closed item eligibility-undetermined with a fixed feed reason and withholds edge totals
+
+#### Scenario: Missing work-item revision prevents dependency observation
+
+- **WHEN** the work-item reader cannot establish a valid source revision
+- **THEN** no dependency statement runs and neither channel presents observed eligibility
+
+#### Scenario: A blocked card retains a known cause alongside an unsettled edge
+
+- **WHEN** a tracker-blocked item has one unflagged `blocks` edge to a served item with observed open status and a second `blocks` edge with an external or wisp indicator even though its target identifier looks like a served item
+- **THEN** both channels show eligibility-undetermined with the closed row reason, disclose the single known blocker's link and `dependency` cause, and count the second edge without disclosing its identifier as a blocker
+
+#### Scenario: Unsettled edge metadata is counted without disclosing input strings
+
+- **WHEN** known items have unlisted edge types or blocking rows whose targets are external, wisps, out of the observed prefix or absent from the work-item observation
+- **THEN** the board and machine count the classified rows, show eligibility-undetermined with fixed reasons on the applicable items, and disclose none of those source strings or false blocker links
+
+#### Scenario: Planned, blocked without cause, and statuses outside derived eligibility
+
+- **WHEN** a complete settled feed includes a deferred item, a tracker-blocked item without a known unfinished target, and in-progress, pinned, hooked and closed items
+- **THEN** the deferred item is planned with its tracker reason, the blocked item has an empty cause set with visible cause-Unknown, and the in-progress, pinned, hooked and closed items have no derived eligibility
+
+#### Scenario: Blocker reaches its card across pages
+
+- **WHEN** the blocked item and its known blocker are served on different pages and a reader follows the blocker link with scripts disabled
+- **THEN** the direct and tailnet forms both reach the exact blocker card outside a collapsed element, and the machine carries the equal blocker identity and target page
+
+```yaml
+warrants:
+  primary: RFC8-13
+  doctrine: [VIS-2, VIS-4, SEC-5]
+  contracts: [RFC2-2, RFC4-15, RFC6-18, RFC8-13, RFC8-17]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-012, POC-REQ-013, POC-REQ-020, POC-REQ-040, POC-REQ-042]
+```
