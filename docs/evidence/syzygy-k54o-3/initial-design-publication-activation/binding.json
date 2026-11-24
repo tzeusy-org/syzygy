@@ -1,0 +1,32 @@
+{
+  "nativeCompletion": "Unknown",
+  "hostedPredecessorCommit": "441bd0b96cd8dac7edf369ad64daf15454e6dada",
+  "hostedRun": "https://github.com/tzeusy-org/syzygy/actions/runs/45311184441",
+  "subjectCommit": "a1f86c1551463f2c7501d1b0e34d77e244fb3ce8",
+  "baseCommit": "61185f7d4bd5b87333b97ae7081e7a2b7c4020dd",
+  "binaryDeltaSha256": "79e14f2f48d530fad95632941426ad71e0742d748110590d0a3f66970bb41670",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-INITIAL-DESIGN-PUBLICATION-ACTIVATION-REVIEW-RAW.md",
+    "sha256": "668076a2012aaf1f8f5ba1f2c51547148b73e078b6a71b9e5e65a799dcf57210"
+  },
+  "focusedVerification": {
+    "unitTestsPassed": 37,
+    "unitLogSha256": "6a525084f4a65e6fad3659362ecfac5466ca2419fba7a23e4499d654913b0a33",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "predecessorObservation": {
+    "designPublicationBeganBeforeStop": true,
+    "refusalAfterStopMilliseconds": 3.752321000007214,
+    "terminalReadsRefused": 8,
+    "durableLockState": "Unknown"
+  },
+  "localNativeExercise": {
+    "subjectCommit": "d45584c52a5f90a508c084dbe03d2889698be08c",
+    "scenario": "delivery-stop",
+    "manifestSha256": "d8a3e4f8ddab77dc2193a52fe55280c1351867d0a727dcd2132f05257ebec670",
+    "logSha256": "6a82ea8340cd2e83838360659dcd07bb6bcd5c99922bc0b12364962127be8806",
+    "result": "ordinary transport refusal before Design",
+    "preciseTransportCause": "Unknown"
+  }
+}

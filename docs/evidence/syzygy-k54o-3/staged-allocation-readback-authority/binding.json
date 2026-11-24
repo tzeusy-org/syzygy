@@ -1,0 +1,49 @@
+{
+  "nativeCompletion": "Unknown",
+  "hostedPredecessorCommit": "441bd0b96cd8dac7edf369ad64daf15454e6dada",
+  "hostedRun": "https://github.com/tzeusy-org/syzygy/actions/runs/45311184441",
+  "subjectCommit": "d45584c52a5f90a508c084dbe03d2889698be08c",
+  "baseCommit": "a1f86c1551463f2c7501d1b0e34d77e244fb3ce8",
+  "binaryDeltaSha256": "e07e80fd8ce6615b63c16530612b6bd897e21999449ac34fb5f9be83910e15a4",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-STAGED-ALLOCATION-READBACK-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "8cb252ac507a0d00ece7ef282fe0345bd2893dbc935666c9aee23e745fb7e3ba"
+  },
+  "focusedVerification": {
+    "integrationTestsPassed": 91,
+    "integrationLogSha256": "d3f75bbf9fe0cd873317ce9252aa1ca29b1300293b58e7e88d9f2dca97153e98"
+  },
+  "negativeControls": {
+    "subjectCommit": "d45584c52a5f90a508c084dbe03d2889698be08c",
+    "selector": "checks staged allocation authority once",
+    "results": [
+      {
+        "name": "duplicate-readback-check",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "if (staging === undefined) check();\n        else await reverify();",
+        "new": "if (staging !== undefined) await reverify();\n        check();",
+        "exitCode": 1,
+        "logSha256": "0da6f81e340289f5f5a5789d04264aa9db148aa66193a0f23ffc1676c84d8139"
+      },
+      {
+        "name": "missing-post-readback-check",
+        "file": "packages/polaris-dossier/src/url-machine-store.ts",
+        "old": "await operating;\n        check();",
+        "new": "await operating;\n        if (!allocation) check();",
+        "exitCode": 1,
+        "logSha256": "da4c6ef4b6350af33875736ff8de1b3a743338a13fbffe9786d9dea0a25cf481"
+      }
+    ]
+  },
+  "predecessorObservation": {
+    "acceptedTerminalReads": 8,
+    "allocationSlots": 8,
+    "allocationElapsedMilliseconds": 5228.299479999929,
+    "operationLimitMilliseconds": 5000,
+    "acceptedAsyncChecksBeforeRefusal": 5,
+    "finalAsyncCheckStarted": false,
+    "cleanupSubmission": "Unknown",
+    "durableLockState": "Unknown"
+  }
+}

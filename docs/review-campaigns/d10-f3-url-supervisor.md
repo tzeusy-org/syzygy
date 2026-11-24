@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-(INITIAL-DESIGN-PUBLICATION-ACTIVATION|STAGED-ALLOCATION-READBACK-AUTHORITY)-REVIEW-RAW\.md`
+
 - `F3-(STAGED-MACHINE-PUBLICATION-SUCCESSOR|ORDERED-SCREEN-ENTRY|POST-AUDIT-PEER-DRAIN|RENEWAL-SOURCE-SAMPLES|STAGED-ALLOCATION|STAGED-ALLOCATION-INITIAL|PRIVATE-AUDIT-SETUP|PRIVATE-AUDIT-SETUP-INITIAL|CONCURRENT-INSPECTION|SCREEN-IMAGE-BRACKETING|CURRENT-COVERAGE-RULE|CPU-RESERVATION-INITIAL|CPU-RESERVATION-HANDOFF|CPU-RESERVATION|INSPECTION-OBSERVER|STAGE-CENSUS-DRAIN|D11-RUNTIME-INITIAL|D11-RUNTIME-SUCCESSOR)-REVIEW-RAW\.md`
 - `F3-(D11-LAUNCHER|D11-RENDER-PRODUCER|D11-RENDER-RESTART|MANIFEST-PROVENANCE|MANIFEST-CLOSURE|MANIFEST-GIT-PATHS)-REVIEW-RAW\.md`
 - `F3-AUDIT-OVERLAP(-POST-CALLBACK|-AUTHORITY)?-REVIEW-RAW\.md`
@@ -226,3 +228,7 @@
 [Observed] The native wrapper review records `PASS` for `9e1a83b1` (F3-NATIVE-WRAPPER-FORWARDING-REVIEW-RAW.md:1). Hosted ordinary execution and delivery-only Stop passed at `76763c74`. Its interrupted Resume reproduced the exact replacement and then refused with 28,680 ms left in the lease. The test wrapper had discarded the production replacement purpose. The eligible replay passed bootstrap and issued one cold continuation. [Unknown] Successor Resume closure and the exact hosted eligible refusal.
 
 [Observed] The ordinary protected state read review records `PASS` for `db01507d` (F3-ORDINARY-STORE-READ-AUTHORITY-REVIEW-RAW.md:1). A-182 shares the synchronous read entry with the immediate protected state boundary. The focused controls detected the extra check and a missing pre-I/O check. [Unknown] Native impact on the holder’s time and the observed contention refusal.
+
+[Observed] The initial Design publication activation review records `PASS` for `a1f86c155` (F3-INITIAL-DESIGN-PUBLICATION-ACTIVATION-REVIEW-RAW.md). A-183 gates publication on the exact launch before serialized store work. The focused two-client regression verifies retirement while activation is pending. The local delivery replay refused in the ordinary roles before Design. [Unknown] Native delivery Stop on the successor.
+
+[Observed] The staged allocation readback review records `PASS` for `d45584c52` (F3-STAGED-ALLOCATION-READBACK-AUTHORITY-REVIEW-RAW.md). A-184 retains the authority check after returning across the promise boundary and before lock removal. The 91 focused cases pass. Both added controls detect restoration of the duplicate or removal of the retained check. [Unknown] Hosted allocation completion.
