@@ -102,6 +102,7 @@ export function createDurableLifecycle(options: DurableLifecycleOptions): Pipeli
             kind: 'completed', permit: prior.permit, bindingDigest: prior.bindingDigest, inputDigest: prior.inputDigest,
             outputDigest: prior.outcome.outputDigest, outputBytes: prior.outcome.outputBytes,
             model: prior.outcome.model, usageUnits: prior.outcome.usageUnits, value: prior.outcome.value,
+            ...(prior.outcome.repairFindings === undefined ? {} : { repairFindings: prior.outcome.repairFindings }),
           };
           return { kind: 'refused', reason: prior.state === 'reserved' ? 'in-flight' : 'uncertain' };
         }

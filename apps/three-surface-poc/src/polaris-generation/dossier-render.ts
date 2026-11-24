@@ -1,4 +1,5 @@
 import { PAGE_SINK_CONTRACT, validateDraftRecord, validateRequestedAssets, type DossierDraft, type GenerationSource, type LocalRenderInput, type OwnerTopic, type PipelineResult, type RequestedAsset } from '@syzygy/polaris-generation-core';
+import { isRecord } from '@syzygy/support';
 import { DossierRenderError, localView, renderDossierSite, type DossierStop, type DossierView, type RenderedDossier } from './dossier-site.js';
 
 // The `./dossier-render` subpath keeps every name it exported before the renderer moved to `dossier-site.ts`.
@@ -74,7 +75,10 @@ function viewOf(input: DossierRenderInput, result: PipelineResult): DossierView 
   let draft: DossierDraft;
   let review: unknown = null;
   if (draftAt >= 0) {
-    draft = validateDraftRecord(artifacts[draftAt]!.value);
+    const artifact = artifacts[draftAt]!;
+    const value = artifact.value;
+    // Earlier saved runs stored the edit and repair draft directly.
+    draft = validateDraftRecord(artifact.stage !== 'author' && isRecord(value) && Object.hasOwn(value, 'draft') ? value.draft : value);
     const reviewAt = lastIndex(artifacts, artifact => artifact.stage === 'fidelity');
     review = reviewAt > draftAt ? valueAt(reviewAt) : null;
   } else {

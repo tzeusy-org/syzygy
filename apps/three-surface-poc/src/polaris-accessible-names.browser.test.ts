@@ -18,7 +18,7 @@ import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
 import { PWB_RESOURCE_LIMITS, type PocModel } from '@syzygy/three-surface-poc-core';
 import { tempDir } from '@syzygy/test-kit';
 
-import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
+import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from './cdp-browser.js';
 import {
   checkNamesAndHeadings,
   coverageViolations,
@@ -153,6 +153,49 @@ describe('PWB-REQ-016 whole-surface page list (pure)', () => {
     expect(coverageViolations(listed, ['entry', SOURCE_A])).toEqual([]);
     expect(coverageViolations(listed, ['entry']).map((violation) => [violation.kind, violation.where])).toEqual([['page-not-swept', SOURCE_A]]);
     expect(coverageViolations(listed, ['entry', SOURCE_A, 'other']).map((violation) => [violation.kind, violation.where])).toEqual([['page-not-in-machine-answer', 'other']]);
+  });
+
+  it('collects complete large page and coverage populations in order', async () => {
+    const population = 140_000;
+    // Confirm that this population exceeds the engine's argument limit in this run.
+    expect(() => Reflect.apply(Array.prototype.push, [], new Array(population).fill(null))).toThrow(RangeError);
+
+    const headings = [heading(0, 1)];
+    for (let index = 0; index < population; index += 1) {
+      headings.push(heading(2 * index + 1, 2), heading(2 * index + 2, 4));
+    }
+    const sources = Array.from({ length: population }, (_, index) => ({ identity: `source-${index}`, path: `docs/source-${index}.md` }));
+    const evaluations: unknown[] = [[], headings, 0, null];
+    const unexpected = async (): Promise<never> => { throw new Error('unexpected browser operation in this fixture'); };
+    const page: BrowserPage = {
+      navigate: async () => {},
+      evaluate: async <T>() => evaluations.shift() as T,
+      accessibleNames: async () => [],
+      setViewport: unexpected,
+      press: unexpected,
+      mouseMove: unexpected,
+      axTree: unexpected,
+      close: unexpected,
+    };
+    const sweep = sweepPolarisNamesAndHeadings(
+      page, 'http://fixture.invalid', { projectShape: { kind: 'observed', sources } }, '/polaris', '/polaris/source',
+      async (url) => url === 'http://fixture.invalid/polaris' ? 200 : 404,
+    );
+
+    await expect(sweep).resolves.toMatchObject({ pagesListed: population + 1, pagesSwept: 1, interactive: 0, headings: 2 * population + 1 });
+    const report = await sweep;
+    expect(report.violations).toHaveLength(3 * population);
+    const lastSource = `source-${population - 1}`;
+    for (const [offset, kind, first, last] of [
+      [0, 'heading-level-skipped', 'entry: h4[2] "Heading 2"', `entry: h4[${2 * population}] "Heading ${2 * population}"`],
+      [population, 'page-not-served', 'source-0', lastSource],
+      [2 * population, 'page-not-swept', 'source-0', lastSource],
+    ] as const) {
+      const group = report.violations.slice(offset, offset + population);
+      expect(group.every((violation) => violation.kind === kind)).toBe(true);
+      expect(group[0]?.where).toBe(first);
+      expect(group.at(-1)?.where).toBe(last);
+    }
   });
 });
 

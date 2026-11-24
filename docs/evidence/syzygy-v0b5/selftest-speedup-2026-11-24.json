@@ -1,0 +1,122 @@
+{
+  "format": "syzygy-v0b5-selftest-speedup/1",
+  "subject": {
+    "script": "scripts/check_spec_reconciliation.py",
+    "changeCommit": "92f34b12f89dd33d2b1c3ea23b8825d3a1778e99",
+    "measuredAt": "2a1ef3e8e5f4 (origin/main), the change applied uncommitted for the after runs so the witness's commit field is the same"
+  },
+  "host": "ms-a2-dev, 24 cores; SELFTEST_WORKERS=4; TMPDIR under ~/.tmp",
+  "selftest": {
+    "before": {
+      "wallSeconds": 914.36,
+      "userSeconds": 1094.06,
+      "sysSeconds": 433.08,
+      "verdict": "SELFTEST PASS: 485 of 485 mutants killed by their expected predicate; 95 of 95 controls held (commit 2a1ef3e8e5f4)"
+    },
+    "after": {
+      "wallSeconds": 535.25,
+      "userSeconds": 480.33,
+      "sysSeconds": 318.26,
+      "verdict": "SELFTEST PASS: 485 of 485 mutants killed by their expected predicate; 95 of 95 controls held (commit 2a1ef3e8e5f4)"
+    },
+    "note": "The before run shared the host with short vitest runs from another branch's work for part of its time, and the after run with none, so the before figures may overstate somewhat; --check was measured alternately before/after/before/after in a quiet window. [Observed] wall and CPU from /usr/bin/time."
+  },
+  "witness": {
+    "before": "witness-before-2026-11-24.json",
+    "after": "witness-after-2026-11-24.json",
+    "beforeSha256": "42266c0e06dcf7f910cb3ce18887b9afa87acb153419c4c400a76cbc0c3c1518",
+    "afterSha256": "42266c0e06dcf7f910cb3ce18887b9afa87acb153419c4c400a76cbc0c3c1518",
+    "diff": "witness-diff-2026-11-24.txt",
+    "diffBytes": 0,
+    "identical": true
+  },
+  "check": {
+    "before": {
+      "wallSeconds": [
+        8.89,
+        8.65
+      ],
+      "userSeconds": [
+        6.86,
+        6.71
+      ]
+    },
+    "after": {
+      "wallSeconds": [
+        3.45,
+        3.58
+      ],
+      "userSeconds": [
+        2.23,
+        2.25
+      ]
+    },
+    "outputBefore": "check-before-2026-11-24.txt",
+    "outputAfter": "check-after-2026-11-24.txt",
+    "outputBeforeSha256": "ffd21e43c2e6870a5111671a0314caf74c69144d1fa1b8a6f30c5a5e56d5ede9",
+    "outputAfterSha256": "ffd21e43c2e6870a5111671a0314caf74c69144d1fa1b8a6f30c5a5e56d5ede9",
+    "identical": true
+  },
+  "probe": "[Observed] One run(ROOT) at 92f34b12 with every memoized binding and d10_supersession.state wrapped: every call was made with the run's own root, none while _FILES_OVERRIDE stood, all with one positional argument. So a key without the root, a missing override bypass and a shared answer are equivalent for today's callers; the harness checks those three properties directly.",
+  "rule6": {
+    "r1": {
+      "file": "memo-mutation-2026-11-24-r1.json",
+      "commit": "92f34b12f89dd33d2b1c3ea23b8825d3a1778e99",
+      "summary": {
+        "mutants": 7,
+        "killed": 4,
+        "survived": 3
+      },
+      "how": "selftest plus the rerun harness (stale-across-runs part only at that commit)",
+      "outcomes": {
+        "memo-global-and-kept": [
+          "selftest"
+        ],
+        "memo-kept-between-runs": [
+          "selftest",
+          "harness"
+        ],
+        "memo-global-key": "SURVIVED",
+        "memo-ignores-override": "SURVIVED",
+        "memo-shares-objects": "SURVIVED",
+        "reverse-cache-ignores-body": [
+          "selftest"
+        ],
+        "reverse-cache-ignores-patch": [
+          "selftest"
+        ]
+      }
+    },
+    "r2": {
+      "file": "memo-mutation-2026-11-24-r2.json",
+      "commit": "3566e70bb90792a1b77230822996ed69a4cd0e9f",
+      "summary": {
+        "mutants": 7,
+        "killed": 5,
+        "survived": 2
+      },
+      "how": "the rerun harness with the memo-contract checks, selftest not re-run",
+      "outcomes": {
+        "memo-global-and-kept": [
+          "harness"
+        ],
+        "memo-kept-between-runs": [
+          "harness"
+        ],
+        "memo-global-key": [
+          "harness"
+        ],
+        "memo-ignores-override": [
+          "harness"
+        ],
+        "memo-shares-objects": [
+          "harness"
+        ],
+        "reverse-cache-ignores-body": "SURVIVED",
+        "reverse-cache-ignores-patch": "SURVIVED"
+      }
+    },
+    "combined": "Every one of the 7 mutants is killed by at least one method: the two reverse-cache mutants by the selftest (r1), the five memo mutants by the harness (r2), two of them by the selftest as well. The D10-record mutants of the selftest are among the 485 killed after the change, so the memo is per tree."
+  },
+  "notDone": "Steps C (per-predicate pruning), D (copy-on-write trees) and E (worker defaults) were not taken, by the lead's direction."
+}

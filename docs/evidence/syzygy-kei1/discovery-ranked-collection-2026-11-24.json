@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "bead": "syzygy-kei1",
+  "measuredCommit": "4ea2becf5c688d97af0f2aa275f2d313ccb8bb18",
+  "predecessorCommit": "b83abe8751dd60cee71eaf5d98a42af6c64317bd",
+  "inputDigests": {
+    "production": {
+      "path": "packages/polaris-generation-core/src/discovery.ts",
+      "predecessorSha256": "117afe27b01fbc90c4e265338b36e088cef5a46565b1d0be168e82a4420c1f4c",
+      "measuredSha256": "efdf0b19b47452095cf3d6971f4e13cfa1b77928b66278814ade43e4c36840bd"
+    },
+    "unitFixture": {
+      "path": "packages/polaris-generation-core/src/discovery.test.ts",
+      "measuredSha256": "aceae384ebfae6d28670cf9fca727ff3feda9d3ccb7332e0bf416c374878f143"
+    }
+  },
+  "toolchain": {
+    "node": "v24.6.0",
+    "vitest": "vitest/3.2.7 linux-x64 node-v24.6.0"
+  },
+  "ordinaryVerification": {
+    "command": [
+      "./node_modules/.bin/vitest",
+      "run",
+      "--project",
+      "unit",
+      "packages/polaris-generation-core/src/discovery.test.ts",
+      "--reporter=json"
+    ],
+    "predecessor": {
+      "sha256": "266818565ca3aec05385a20b30507c04ab7e8097fe1c4825f130085dfd6d310c",
+      "collectedCases": 62,
+      "passed": 62,
+      "failed": 0,
+      "notRun": 0
+    },
+    "measured": {
+      "sha256": "6937915e0a09fb1904b92241b7127baa04731b17e5f997c6157d5cb3fe321922",
+      "collectedCases": 63,
+      "passed": 63,
+      "failed": 0,
+      "notRun": 0
+    },
+    "existingCaseOrderPreserved": true,
+    "newCase": {
+      "title": "keeps ordered discovery results for a large accepted rank population",
+      "durationMs": 1613.9439049999999,
+      "timeoutMs": 30000
+    },
+    "typecheckExit": 0
+  },
+  "syntheticAcceptance": {
+    "candidateBlobs": 150002,
+    "acceptedRankedIds": 150002,
+    "selectedBlobs": 2,
+    "deferredBlobs": 150000,
+    "rankingBasis": "model-reduce",
+    "droppedUnknownIds": 0,
+    "injectedPortsOnly": true
+  },
+  "negativeControl": {
+    "measuredCommit": "4ea2becf5c688d97af0f2aa275f2d313ccb8bb18",
+    "file": "packages/polaris-generation-core/src/discovery.ts",
+    "old": "      for (const id of outcome.reply.ranked) rankedIds.push(id);\n",
+    "new": "      rankedIds.push(...(outcome.reply as { ranked: string[] }).ranked);\n",
+    "restoredProductionSha256": "117afe27b01fbc90c4e265338b36e088cef5a46565b1d0be168e82a4420c1f4c",
+    "targetedRun": {
+      "sha256": "f0048064c779efda4e6b0ab81d2fe5660f0e4f84505bc10354bf813f0b35b18b",
+      "collectedCases": 63,
+      "passed": 0,
+      "failed": 1,
+      "notRun": 62
+    },
+    "selectTestName": "keeps ordered discovery results for a large accepted rank population",
+    "diagnostic": "RangeError: Maximum call stack size exceeded",
+    "caseDurationMs": 832.6234640000001,
+    "exit": 1
+  },
+  "supersededFixture": {
+    "commit": "117085b402531ddaa075b302d1b5b5f3d7fe8d9d",
+    "rawReportSha256": "5f8fed18b63588020d6c48a324b32377fdc8cb742bbf88c6043ca5e7737c1ac7",
+    "observedCaseDurationMs": 56513.714539,
+    "result": "failed",
+    "qualification": "The original one-root-heavy fixture exercised unrelated subsystem grouping cost. The successor distributes the same count across 1,024 synthetic roots and retains the accepted ranking population and selected order oracle."
+  },
+  "review": {
+    "r1": {
+      "verdict": "REVISE",
+      "rawSha256": "88b3042f3ae6d90e028b45a35eea9b5f9fcb7408a8a7a5176c4e66daeb1977a6"
+    },
+    "r2": {
+      "verdict": "CONFIRM",
+      "rawSha256": "efc0125f7561db341ba9f6957654184056c7e57e0cd68b479167168984725f53"
+    }
+  },
+  "scope": "Existing selection caps, provider reply validation, accepted ID filtering and preserved result order remain in force. No target repository or provider is used. The check and state-directory residuals are separate."
+}

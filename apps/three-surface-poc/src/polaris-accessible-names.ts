@@ -333,9 +333,13 @@ export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: s
     }
     const report = await checkNamesAndHeadings(page, url, listed.page, sourcePaths);
     reports.push(report);
-    violations.push(...report.violations.map((violation) => ({ ...violation, where: `${listed.page}: ${violation.where}` })));
+    for (const violation of report.violations) {
+      violations.push({ ...violation, where: `${listed.page}: ${violation.where}` });
+    }
   }
-  violations.push(...coverageViolations(pages, reports.map((report) => report.page)));
+  for (const violation of coverageViolations(pages, reports.map((report) => report.page))) {
+    violations.push(violation);
+  }
   return {
     pagesListed: pages.length,
     pagesSwept: reports.length,

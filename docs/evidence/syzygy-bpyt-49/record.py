@@ -8,7 +8,7 @@ docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-1-RAW.md. Inputs (all in this directory,
   npmrc-trace-lane-probe-guarded.json  docs/evidence/syzygy-bpyt-39/npmrc_trace.py over CODE's npm_alias_probe.py, run from a
                                     directory holding a `.npmrc`, with the record compared with the committed npm-alias-probe.json.
 Usage: python3 -I record.py <tree> [--check | --selftest]
-  --check: exit 1 unless summary.json equals what the inputs give and no check fails.
+  --check: exit 1 unless summary.json matches, no check fails, and both records identify this helper's exact bytes.
   --selftest: mutate one input at a time in memory (rule 6) and exit 1 unless every mutation makes a check fail.
 """
 import copy, hashlib, json, subprocess, sys
@@ -91,7 +91,15 @@ def summary():
         problems.append('guard: the rows are not each guard mutant of each probe, in order')
     for r in g['rows']:
         source = blob(r['probe']).decode()
-        if r['probeSha256'] != sha(source) or (r['old'] is not None and (source.count(r['old']) != 1 or r['old'] == r['new'])):
+        old, new = r.get('old'), r.get('new')
+        if r['id'] == 'G0-unmutated':
+            fragments_valid = old is None and new is None
+        else:
+            fragments_valid = (
+                isinstance(old, str) and isinstance(new, str)
+                and source.count(old) == 1 and old != new
+            )
+        if r['probeSha256'] != sha(source) or not fragments_valid:
             problems.append(f"guard {r['probe']} {r['id']}: not one edit of CODE's probe")
         if sorted(r['cases']) != sorted(CASES):
             problems.append(f"guard {r['probe']} {r['id']}: the cases are not the three named here")
@@ -121,7 +129,7 @@ def summary():
         'rootExceptionRerunEqual': rerun['equalsCommitted'],
         'laneTrace': {'callerNpmrc': t['callerNpmrcOpened'], 'builtinOpens': sum(x['count'] for x in builtin),
                       'recordEqualsReference': t['recordEqualsReference']},
-        'tools': {name: sha((HERE / name).read_text()) for name in ['mutants.py', 'guard_probe.py', 'site_drop.py', 'record.py']},
+        'tools': {name: sha((HERE / name).read_bytes()) for name in ['mutants.py', 'guard_probe.py', 'site_drop.py', 'record.py']},
         'problems': problems,
     }
 
@@ -132,6 +140,7 @@ SELFTEST = {
     'mutants run at another commit': {'mutants.json': lambda d: (d.update(commit=BASE), d)[1]},
     'a mutants row missing': {'mutants.json': lambda d: (d.update(rows=d['rows'][:-1]), d)[1]},
     'a mutant of another record.py': {'mutants.json': lambda d: (row(d, 'N2-H3-exclusion-widened-to-docs').update(recordSha256='0' * 64), d)[1]},
+    'an unmutated row of the other record': {'mutants.json': lambda d: (row(d, 'N2-0-unmutated').update(record=R39, recordSha256=sha(blob(R39))), d)[1]},
     'a mutant whose fragment is not in the record': {'mutants.json': lambda d: (row(d, 'N3-E5').update(old='kit.count(t) != 2'), d)[1]},
     'a mutant that changes nothing': {'mutants.json': lambda d: (row(d, 'N3-E2').update(new=row(d, 'N3-E2')['old']), d)[1]},
     'an unmutated row carrying an edit': {'mutants.json': lambda d: (row(d, 'N2-0-unmutated').update(old='x', new='y'), d)[1]},
@@ -142,6 +151,9 @@ SELFTEST = {
     'a guard run at another commit': {'guard.json': lambda d: (d.update(commit=BASE), d)[1]},
     'a guard row missing': {'guard.json': lambda d: (d.update(rows=d['rows'][1:]), d)[1]},
     'a guard row of another probe': {'guard.json': lambda d: (guard_row(d, ROOT_PROBE, 'G1-node-modules-not-looked-for').update(probeSha256='0' * 64), d)[1]},
+    'an unmutated guard row carrying a fragment': {'guard.json': lambda d: (guard_row(d, PROBE, 'G0-unmutated').update(new='unused'), d)[1]},
+    'a guard mutant missing its old fragment': {'guard.json': lambda d: (guard_row(d, PROBE, 'G1-node-modules-not-looked-for').update(old=None), d)[1]},
+    'a guard mutant missing its new fragment': {'guard.json': lambda d: (guard_row(d, PROBE, 'G1-node-modules-not-looked-for').update(new=None), d)[1]},
     'a guard mutant whose fragment is not in the probe': {'guard.json': lambda d: (guard_row(d, PROBE, 'G3-only-the-parent-looked-at').update(old='    up = up\n'), d)[1]},
     'a guard case missing': {'guard.json': lambda d: (guard_row(d, PROBE, 'G0-unmutated')['cases'].pop('parent-node-modules'), d)[1]},
     'a guard that lets a node_modules parent through': {'guard.json': lambda d: (guard_row(d, PROBE, 'G0-unmutated')['cases']['parent-node-modules'].update(
@@ -151,7 +163,11 @@ SELFTEST = {
     'a refused case that wrote a record': {'guard.json': lambda d: (guard_row(d, ROOT_PROBE, 'G0-unmutated')['cases']['parent-package-json'].update(recordWritten=True), d)[1]},
     'a refused case that exits 0': {'guard.json': lambda d: (guard_row(d, PROBE, 'G2-package-json-not-looked-for')['cases']['parent-node-modules'].update(exit=0), d)[1]},
     'a root-exception re-run that differs': {'guard.json': lambda d: (d['rootExceptionRerun'].update(equalsCommitted=False), d)[1]},
+    'a root-exception re-run that failed': {'guard.json': lambda d: (d['rootExceptionRerun'].update(exit=1), d)[1]},
+    'a root-exception re-run naming another record': {'guard.json': lambda d: (d['rootExceptionRerun'].update(record=PROBE), d)[1]},
     'a root-exception re-run of another record': {'guard.json': lambda d: (d['rootExceptionRerun'].update(recordSha256='0' * 64), d)[1]},
+    'a lane trace whose run failed': {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(exit=1), d)[1]},
+    'a lane trace naming another probe': {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(probe=ROOT_PROBE), d)[1]},
     'a lane trace of another probe': {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(probeSha256='0' * 64), d)[1]},
     "a lane trace that read the caller's npmrc": {'npmrc-trace-lane-probe-guarded.json': lambda d: (d.update(callerNpmrcOpened=[
         {'path': '/tmp/caller/.npmrc', 'call': 'openat', 'result': 'ok', 'count': 1}]), d)[1]},
@@ -180,14 +196,21 @@ def main():
         MUTATE.clear()
         print(f'selftest: {len(SELFTEST) - len(survived)}/{len(SELFTEST)} mutations make a check fail')
         sys.exit(1 if survived else 0)
-    text = json.dumps(summary(), indent=1) + '\n'
+    result = summary()
+    text = json.dumps(result, indent=1) + '\n'
     if '--check' in sys.argv[2:]:
         same = (HERE / 'summary.json').read_text() == text
-        problems = json.loads(text)['problems']
+        site_drop = load('site-drop.json')
+        site_matches = (
+            isinstance(site_drop, dict) and site_drop.get('record') == f'{HERE_REL}/record.py'
+            and site_drop.get('recordSha256') == result['tools']['record.py']
+        )
+        problems = result['problems']
         print('summary.json', 'matches' if same else 'DIFFERS', '; problems:', len(problems), problems[:3])
-        sys.exit(0 if same and not problems else 1)
+        print('site-drop.json record identity and digest', 'match' if site_matches else 'DIFFER')
+        sys.exit(0 if same and not problems and site_matches else 1)
     (HERE / 'summary.json').write_text(text)
-    print('wrote summary.json; problems:', json.loads(text)['problems'])
+    print('wrote summary.json; problems:', result['problems'])
 
 
 main()

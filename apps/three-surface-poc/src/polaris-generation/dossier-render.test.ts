@@ -490,7 +490,9 @@ describe('a stopped run still renders (syzygy-k4t2)', () => {
     const inventory = structuredClone(stopped.result.artifacts.find(artifact => artifact.stage === 'inventory')!.value) as { entries: unknown[] };
     const term = 'seasonal-term';
     inventory.entries.push({ id: term, kind: 'term', statement: 'A term the glossary lists.', sourceIds: [stopped.sources[0]!.sourceId] });
-    const draft = structuredClone(stopped.result.artifacts[draftAt]!.value) as { unresolved: unknown[]; sections: unknown[]; deepDives: unknown[]; introduction: unknown };
+    const { draft } = structuredClone(stopped.result.artifacts[draftAt]!.value) as {
+      draft: { unresolved: unknown[]; sections: unknown[]; deepDives: unknown[]; introduction: unknown };
+    };
     draft.unresolved.push({ question: 'What is left?', reason: 'Not stated.', references: [stopped.sources[0]!.sourceId] });
     const paragraphs: { id: string }[] = [];
     const walk = (node: unknown): void => {
@@ -504,6 +506,7 @@ describe('a stopped run still renders (syzygy-k4t2)', () => {
     const clashing = ['run-stopped', 'run-stopped:component-depth', 'not-generated:how', 'unresolved-1', `glossary:${term}`];
     expect(paragraphs.length).toBeGreaterThanOrEqual(clashing.length);
     clashing.forEach((id, index) => { paragraphs[index]!.id = id; });
+    // The earlier saved-run format recorded a naked draft at the edit stage.
     const artifacts = stopped.result.artifacts.map((artifact, index) => index === draftAt ? { ...artifact, value: draft } : artifact.stage === 'inventory' ? { ...artifact, value: inventory } : artifact);
     const { files } = renderDossier({ ...stopped, result: { ...stopped.result, artifacts } });
     const claimIds = [...files.values()].flatMap(html => [...html.matchAll(/data-claim-id="([^"]+)"/gu)].map(match => match[1]!));
@@ -519,9 +522,9 @@ describe('a stopped run still renders (syzygy-k4t2)', () => {
   it('refuses a draft handle that carries the slash the renderer reserves', async () => {
     const stopped = await stopAfter({ maxCalls: 4 });
     const draftAt = stopped.result.artifacts.map(artifact => artifact.stage).lastIndexOf('edit');
-    const draft = structuredClone(stopped.result.artifacts[draftAt]!.value) as { introduction: { id: string } };
-    draft.introduction.id = 'run-stopped/x';
-    const artifacts = stopped.result.artifacts.map((artifact, index) => index === draftAt ? { ...artifact, value: draft } : artifact);
+    const reply = structuredClone(stopped.result.artifacts[draftAt]!.value) as { draft: { introduction: { id: string } } };
+    reply.draft.introduction.id = 'run-stopped/x';
+    const artifacts = stopped.result.artifacts.map((artifact, index) => index === draftAt ? { ...artifact, value: reply } : artifact);
     expect(() => renderDossier({ ...stopped, result: { ...stopped.result, artifacts } })).toThrow();
   });
 

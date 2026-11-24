@@ -1,0 +1,84 @@
+{
+  "subject": "8f45b00821be08ad93d4084f93aa692cc5e690cf",
+  "node": "v24.6.0",
+  "source": {
+    "path": "apps/three-surface-poc/src/polaris-accessible-names.ts",
+    "sha256": "e3c2103b5ce1562ac6436eb7c7b16320b6478937819d7306bf24ff9d2e9a7636"
+  },
+  "test": {
+    "path": "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+    "name": "collects complete large page and coverage populations in order",
+    "sha256": "566966682756b6d377a496f808aa4f75f0060aba495b3bcddcbeba3b3e76fe2b"
+  },
+  "command": [
+    "npx",
+    "vitest",
+    "run",
+    "--project",
+    "e2e",
+    "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+    "-t",
+    "collects complete large page and coverage populations in order"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "executed": 1,
+    "outcome": "passed",
+    "rawSha256": "3b5fb7c2207243a536f676885439ce4c81ef917a5175abb8c7202d09deb0c8e0"
+  },
+  "mutants": [
+    {
+      "id": "restore-page-violation-variadic-append",
+      "old": "    for (const violation of report.violations) {\n      violations.push({ ...violation, where: `${listed.page}: ${violation.where}` });\n    }",
+      "new": "    violations.push(...report.violations.map((violation) => ({ ...violation, where: `${listed.page}: ${violation.where}` })));",
+      "exitCode": 1,
+      "executed": 1,
+      "outcome": "failed",
+      "rawSha256": "107e83b5a5ee6562da688564e5364b2ad34cc0c3f92b9918d59811afb6a78497",
+      "assertion": "expected the full audit report to resolve, received RangeError instead"
+    },
+    {
+      "id": "restore-coverage-violation-variadic-append",
+      "old": "  for (const violation of coverageViolations(pages, reports.map((report) => report.page))) {\n    violations.push(violation);\n  }",
+      "new": "  violations.push(...coverageViolations(pages, reports.map((report) => report.page)));",
+      "exitCode": 1,
+      "executed": 1,
+      "outcome": "failed",
+      "rawSha256": "3279c1f838f9825b5296b591c89328da9ad034802fde71063545d4b838cecd14",
+      "assertion": "expected the full audit report to resolve, received RangeError instead"
+    }
+  ],
+  "fullChromiumSuite": {
+    "executed": 27,
+    "passed": 27,
+    "rawSha256": "260657f386054bb650588fe82f3a084b579271c3a340d4c68834415648af56b4",
+    "browserVersion": "Google Chrome for Testing 148.0.7778.96",
+    "subject": "8f45b00821be08ad93d4084f93aa692cc5e690cf"
+  },
+  "predecessorChromiumSuite": {
+    "subject": "4d765f42a1df71ff7bc8d1d38e6a705c8a2f3aa8",
+    "passed": 26,
+    "rawSha256": "ddc25c0f61cd46282938f2b3b1afadbc68510551587aa281cc8d6421503655de",
+    "allExecutedAssertionNamesMatchInOrderWithTheNewCaseRemoved": true
+  },
+  "fixture": {
+    "pagesListed": 140001,
+    "pagesSwept": 1,
+    "headings": 280001,
+    "violations": [
+      {
+        "kind": "heading-level-skipped",
+        "count": 140000
+      },
+      {
+        "kind": "page-not-served",
+        "count": 140000
+      },
+      {
+        "kind": "page-not-swept",
+        "count": 140000
+      }
+    ],
+    "description": "Local synthetic browser measurements and injected status results. The compiler and both Chromium suites use locked dependencies. Each mutant restores one predecessor append and leaves the other fixed."
+  }
+}

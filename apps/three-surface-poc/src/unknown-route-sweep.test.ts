@@ -7,7 +7,7 @@ import { BUTLERS_POC_SEEDS, buildPocModel, type PocModel, type PocUnknown } from
 
 import { renderOrreryPage } from './orrery.js';
 import { renderPolarisPage } from './polaris.js';
-import { buildFixtureModel, fixtureRepoWithGit } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemQuery, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 import { ADMITTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 import { renderTrajectoryPage } from './trajectory.js';
 
@@ -198,7 +198,7 @@ beforeAll(() => {
     const changed = git(repoRoot, ['rev-parse', 'HEAD']);
     git(repoRoot, ['update-ref', 'refs/remotes/origin/main', changed]);
     git(repoRoot, ['symbolic-ref', 'refs/remotes/origin/HEAD', 'refs/remotes/origin/main']);
-    const rows = [{ revision: 'dolt-rev-2', id: 'bu-sweep-1', title: 'Materialized work item', status: 'in_progress', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
+    const rows = [{ revision: FIXTURE_DOLT_REVISION, id: 'bu-sweep-1', title: 'Materialized work item', status: 'in_progress', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
     models.set('worker-change', buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
       repoRoot,
@@ -206,7 +206,7 @@ beforeAll(() => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: { beadId: 'bu-sweep-1', externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization', targetRepoRoot: repoRoot, createdAt: '2026-08-30T00:00:00Z', doltRevisionAtCreation: 'dolt-rev-1', attribution: 'test-actor' },
-      runWorkItemQuery: (_root, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     }));
   }
 });
