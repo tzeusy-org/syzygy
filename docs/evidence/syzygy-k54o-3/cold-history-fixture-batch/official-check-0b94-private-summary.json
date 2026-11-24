@@ -1,0 +1,44 @@
+{
+  "subjectCommit": "0b94e69f71e6609ad6b04c1fca0e11681ef7f6c1",
+  "command": "TMPDIR=/home/orca/.tmp/f3-audit-private-tmp.s5ao000l npm run check",
+  "sourceState": "clean unmodified candidate",
+  "exitCode": 1,
+  "typecheck": "PASS",
+  "tests": {
+    "passed": 6306,
+    "failed": 59,
+    "skipped": 1,
+    "todo": 0,
+    "total": 6366
+  },
+  "files": {
+    "passed": 251,
+    "failed": 4,
+    "total": 255
+  },
+  "failureKinds": {
+    "packages/polaris-dossier/src/url-machine-cold-history.test.ts": {
+      "Error: Test timed out in 5000ms.": 20
+    },
+    "packages/polaris-dossier/src/url-machine-peer-history.test.ts": {
+      "Error: Test timed out in 5000ms.": 17
+    },
+    "packages/polaris-dossier/src/url-run-machine-close.test.ts": {
+      "Error: Test timed out in 5000ms.": 18,
+      "AssertionError: expected { Object (authentication) } to be { Object (authentication) } // Object.is equality": 1
+    },
+    "packages/polaris-dossier/src/url-session-audit-history.test.ts": {
+      "Error: Test timed out in 5000ms.": 3
+    }
+  },
+  "logSha256": "7ec473531449ff25fcf23e7e768043fdd837c2109417d4fd16faf2c143563882",
+  "cleanup": true,
+  "cleanupErrors": [],
+  "discovery": {
+    "missing": [],
+    "extra": [],
+    "unexecuted": []
+  },
+  "interpretation": "Failed full gate; focused29-case/source-review PASS does not override it. Exact pending/refusal predicates remain Unknown.",
+  "failureKindMethod": "Vitest can group several FAIL titles under one following error; assign that error to every pending title, then cross-check59failures against per-file report."
+}

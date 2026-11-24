@@ -1,0 +1,8 @@
+{
+  "main": "a7b969c0f4721b459b44259cea87d38262c03e81",
+  "candidateBeforeMerge": "0b94e69f71e6609ad6b04c1fca0e11681ef7f6c1",
+  "mainRowsPreservedExact": 77,
+  "composedRows": 204,
+  "distinctIds": 204,
+  "correction": "Unlanded branch historical236df7ecd A-213 reassigned A-217; adopted main A-213 preserved exact."
+}

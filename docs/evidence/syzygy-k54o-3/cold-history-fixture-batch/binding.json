@@ -22,7 +22,24 @@
       "expectLinesUnchanged": 23,
       "caseDelta": 0
     },
-    "fullUnitGate": "Running at exactsubject0b94 under dedicated0700TMPDIR; no result claimed.",
+    "fullUnitGate": {
+      "subjectCommit": "0b94e69f71e6609ad6b04c1fca0e11681ef7f6c1",
+      "result": "FAIL",
+      "typecheck": "PASS",
+      "passed": 6306,
+      "failed": 59,
+      "skipped": 1,
+      "population": 6366,
+      "files": 255,
+      "failedFiles": 4,
+      "classification": {
+        "Vitest5000msTimeouts": 58,
+        "closeFixtureTransportIdentityAssertion": 1
+      },
+      "actualPendingOrRefusalPredicates": "Unknown",
+      "summary": "official-check-0b94-private-summary.json",
+      "noOverride": "Focused29-case pass and source-review PASS do not make this failed full gate green."
+    },
     "nativeRecovery": "Pending."
   },
   "change": "Eight genuine store allocations per generation become one actual eight-slot batch. Removed allocation-only intermediate membership prefixes are not asserted cold-history observations. Slot/witness and lifecycle/cold-read paths remain real. No runtime or timer changes.",
@@ -42,6 +59,31 @@
     "cold-fixture-batch-assertions.json": {
       "sha256": "917c16eccd62c68f26ced539bfa62c39f75b5d34d6d45468db2074e1f283e06a",
       "bytes": 206
+    },
+    "official-check-0b94-private.log": {
+      "sha256": "7ec473531449ff25fcf23e7e768043fdd837c2109417d4fd16faf2c143563882",
+      "bytes": 2142738
+    },
+    "official-check-0b94-private-summary.json": {
+      "sha256": "f1c4be872ca04b08b438203a1502b85adf61bde39829b4b05b83befe857f0ad8",
+      "bytes": 1582
+    },
+    "main-merge-a7b969.json": {
+      "sha256": "ef383ea30e65efc6a829afd4bf7537f7cc28c3f475ee44d08b038c1f94c94196",
+      "bytes": 319
+    },
+    "pre-native-adoption-preflight.json": {
+      "sha256": "0c66f524a576936fcf74593e1a062804b9766fa740ac9151c8e5c04f2ab0f3a5",
+      "bytes": 250
     }
+  },
+  "compositionAfterReview": {
+    "main": "a7b969c0f4721b459b44259cea87d38262c03e81",
+    "head": "ef014efe505dafbf16475a55851c85fcaafab49d",
+    "mainRowsPreservedExact": 77,
+    "distinctComposedIds": 204,
+    "preflight": "clear with full40-character IDs",
+    "implementationBytes": "equal0b94",
+    "nativeRecovery": "Sequential genuine pair running at ef014 in clean clone; no completion claimed."
   }
 }
