@@ -87,11 +87,15 @@
 - `F3-NATIVE-WRAPPER-FORWARDING-REVIEW-RAW\.md`
 - `F3-ORDINARY-STORE-READ-AUTHORITY-REVIEW-RAW\.md`
 
+- `syzygy-k54o-3/READ-INVOCATION-MEMO-INDEPENDENT-REVIEW-RAW\.md`
+
 ## What was under review
 
 [Observed] Source changes for Syzygy's supervised URL dossier run in PR #839. The reviews cover staged native peer publication, renewal of a checked input before ordered screening, resource inspection before a protected effect and between whole-source proofs, reserved client slots during resumed machine preparation, and private audit descriptor setup. Each review binds its own frozen source.
 
 ## Last verdict of record, and where the findings landed
+
+[Observed] The invocation-local reconciliation memo review records `PASS` (`syzygy-k54o-3/READ-INVOCATION-MEMO-INDEPENDENT-REVIEW-RAW.md:2`) for its frozen source and manifest. A-231 records the adoption. The review covers read-scope lifetime and preservation of checker predicates; it does not establish native recovery or final PR readiness.
 
 [Observed] The renewal source review records `PASS` (`F3-RENEWAL-SOURCE-SAMPLES-REVIEW-RAW.md:1`) for the source at `8f4c7dc9c`. Agent adoption A-86 records the change and revert command. The interrupted replay timed out after recording fresh launch history. [Unknown] Whether this subject completes interrupted recovery.
 
