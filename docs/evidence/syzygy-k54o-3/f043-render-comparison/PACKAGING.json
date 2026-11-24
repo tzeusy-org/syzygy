@@ -1,0 +1,7 @@
+{
+  "subjectCommit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+  "payloadSha256": "75f0b640d9d8547e458553288a72b195561f49c34f46c76023e6f59c462f86f9",
+  "archiveMembers": 155,
+  "originalManifestSha256": "57ce8193454a7fcbf7dc660ec840d2d14ff6b6a8ca1aeb31a6788b8aa805e7ac",
+  "scope": "Historical frozen static rendering only; actual final composed head requires recapture. Original strict FAIL and corrected bound-disclosure PASS retained separately."
+}
