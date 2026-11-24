@@ -110,11 +110,11 @@ describe('what changed, between two named revisions (syzygy-t3jk.21)', () => {
       `SELECT 'day' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM dolt_diff('${DAY_FROM}', '${REVISION}', 'issues') WHERE ${inPrefix}`,
       `SELECT 'day', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_diff('${DAY_FROM}', '${REVISION}', 'issues') WHERE NOT ${inPrefix}`,
       `SELECT 'day', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${REVISION}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${DAY_FROM}'))`,
-      `SELECT 'day', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${DAY_FROM}') WHERE date > '2026-08-30 12:00:00.000'`,
+      `SELECT 'day', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${REVISION}') WHERE (date > '2026-08-30 12:00:00.000' AND commit_hash IN (SELECT commit_hash FROM dolt_log('${DAY_FROM}'))) OR (date <= '2026-08-30 12:00:00.000' AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${DAY_FROM}')))`,
       `SELECT 'week' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM dolt_diff('${WEEK_FROM}', '${REVISION}', 'issues') WHERE ${inPrefix}`,
       `SELECT 'week', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_diff('${WEEK_FROM}', '${REVISION}', 'issues') WHERE NOT ${inPrefix}`,
       `SELECT 'week', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${REVISION}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${WEEK_FROM}'))`,
-      `SELECT 'week', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${WEEK_FROM}') WHERE date > '2026-08-24 12:00:00.000'`,
+      `SELECT 'week', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${REVISION}') WHERE (date > '2026-08-24 12:00:00.000' AND commit_hash IN (SELECT commit_hash FROM dolt_log('${WEEK_FROM}'))) OR (date <= '2026-08-24 12:00:00.000' AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${WEEK_FROM}')))`,
     ].join(' UNION ALL '));
     // SEC-5: no free-text or person column is named by either statement.
     for (const sql of calls) expect(sql).not.toMatch(/\b(title|description|notes|message|committer|email|author|created_by|metadata)\b/i);
@@ -136,6 +136,30 @@ describe('what changed, between two named revisions (syzygy-t3jk.21)', () => {
     expect(none.windows.map((window) => window.kind === 'unknown' ? window.reason : 'observed')).toEqual(['history-shorter-than-window', 'history-shorter-than-window', 'no-previous-evaluation-recorded']);
     const zero = run({ diff: () => JSON.stringify([...outside('day', 0), ...outside('week', 0)]) });
     expect(zero.windows[0]).toMatchObject({ kind: 'observed', facts: [], counts: { added: 0, closed: 0, reopened: 0, 're-stated': 0, removed: 0 } });
+  });
+
+  it('retains valid Dolt UTC instants at full microsecond precision', () => {
+    const { windows, calls } = run({ bounds: () => JSON.stringify([bounds({
+      revision_at: '2026-08-31T11:59:00.123456Z',
+      day_at: '2026-08-30T12:00:00Z',
+    })]) });
+    expect(calls).toHaveLength(2);
+    expect(windows[0]).toMatchObject({
+      kind: 'observed',
+      from: { at: '2026-08-30T12:00:00Z' },
+      to: { at: '2026-08-31T11:59:00.123456Z' },
+    });
+  });
+
+  it.each([
+    [{ revision_at: '2026-08-31' }, 'history-revision-unverified'],
+    [{ revision_at: '2026-08-31T12:00:00.000001Z' }, 'history-revision-unverified'],
+    [{ day_at: '2026-02-30T10:00:00Z' }, 'history-result-malformed'],
+    [{ day_at: '2026-08-30T12:00:00.000001Z' }, 'history-result-malformed'],
+  ])('stops before diffing when a returned date is malformed or crosses its bound (%j)', (overrides, reason) => {
+    const { windows, calls } = run({ bounds: () => JSON.stringify([bounds(overrides)]) });
+    expect(windows).toEqual(unknownWindows(reason));
+    expect(calls).toHaveLength(1);
   });
 
   it.each([

@@ -3,7 +3,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
+import { BUTLERS_POC_SEEDS, buildPocModel, PWB_RESOURCE_LIMITS, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
 
 import { renderTrajectoryPage, renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
@@ -1537,6 +1537,15 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
 describe('Trajectory answers what changed between two named revisions (T6 S1, syzygy-t3jk.21)', () => {
   const DAY_FROM = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
   const WEEK_FROM = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+  const mounts = [
+    { path: TRAJECTORY_HUMAN_PATH, host: '127.0.0.1:7478', prefix: '' },
+    { path: TRAJECTORY_HUMAN_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
+    { path: TRAJECTORY_TAILNET_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
+  ];
+  const getChanged = (model: PocModel, { path, host }: (typeof mounts)[number], query: string) => {
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
+    return route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
+  };
   const diffRow = (w: string, diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
     ({ w, diff_type, from_id, to_id, from_status, to_status, n: null });
   const tally = (w: string, diff_type: string, n: number) => ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n });
@@ -1595,8 +1604,13 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     }
     const figures = new Map([...body.matchAll(/data-parity-field="answer-changed-([a-z-]+)-count">([^<]*(?:<code>[^<]*<\/code>)?)/g)].map((match) => [match[1], match[2]]));
     expect([...figures]).toEqual(changed.windows.map((window) => [window.window, window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${window.reason}</code>`]));
-    expect([...body.matchAll(/data-change-kind="([^"]+)" data-change-id="([^"]+)"/g)].map((match) => [match[2], match[1]]))
-      .toEqual(day.facts.map((fact) => [fact.id, fact.kind]));
+    const facts = [...body.matchAll(/<li data-change-kind="([^"]+)" data-change-id="([^"]+)">([^]*?)<\/li>/g)]
+      .map(([, kind, id, item]) => {
+        const statuses = /\((?:<code>([^<]+)<\/code>|—) → (?:<code>([^<]+)<\/code>|—)\)$/.exec(item!);
+        if (statuses === null) throw new Error(`missing status transition for ${id}`);
+        return { id, kind, from: statuses[1] ?? null, to: statuses[2] ?? null };
+      });
+    expect(facts).toEqual(day.facts);
     expect(served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-changed')?.epistemic).toMatchObject({
       label: 'Unknown',
       reason: "What changed is answered from the tracker's own history between two named revisions, where it can be read; the since-last-evaluation window is Unknown because no previous evaluation's work-item revision is recorded, so there is no start to diff from. An Unknown window is never a zero.",
@@ -1641,14 +1655,27 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     expect(calls).toHaveLength(2);
   });
 
-  it('refuses a window outside the declared set with its allowed values', () => {
-    expect(renderTrajectoryRoute(model(), '', undefined, new URLSearchParams('changed=month')))
-      .toEqual({ refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: ['day', 'week', 'since-last'] });
+  it('serves the changed-window links and typed HTTP 400 on each mount', async () => {
+    const page = model();
+    for (const mount of mounts) {
+      const invalid = await getChanged(page, mount, 'changed=month');
+      expect(invalid.status).toBe(400);
+      expect(JSON.parse(invalid.body)).toEqual({
+        refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: ['day', 'week', 'since-last'],
+      });
+      const week = await getChanged(page, mount, 'changed=week');
+      expect(week.status).toBe(200);
+      expect(answerBody(week.body, 'changed')).toContain(`href="${mount.prefix}/trajectory?changed=day#answers-heading"`);
+    }
   });
 
-  it('lists at most 250 changed items and counts the rest, and renders the same bytes twice', () => {
-    const many = Array.from({ length: 260 }, (_, i) => diffRow('day', 'added', null, `bu-n${String(i).padStart(3, '0')}`, null, 'open'));
-    const page = buildFixtureModel(cleanups, { runHistoryQuery: history([...many, ...outside('day', 0)]) });
+  it('lists at most 250 changed items and measures complete served pages below half the byte ceiling', async () => {
+    const ids = Array.from({ length: 260 }, (_, i) => `bu-n${String(i).padStart(3, '0')}`);
+    const many = (window: string) => ids.map((id) => diffRow(window, 'added', null, id, null, 'open'));
+    const page = buildFixtureModel(cleanups, {
+      workItemRows: ids.map((id) => fixtureWorkItemRow(id, 'open', '2026-08-29T12:00:00Z', '2026-08-29T12:00:00Z', null)),
+      runHistoryQuery: history([...many('day'), ...outside('day', 0)], [...many('week'), ...outside('week', 0)]),
+    });
     const body = answerBody(renderTrajectoryPage(page), 'changed');
     expect(body.match(/data-change-id=/g)).toHaveLength(250);
     expect(body).toContain('<span data-parity-field="answer-changed-unlisted">10</span> more changed items are not listed here; the machine answer lists every one.');
@@ -1656,5 +1683,17 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
     expect(changed.windows[0].facts.length - 250).toBe(10);
     expect(renderTrajectoryPage(page)).toBe(renderTrajectoryPage(page));
+    const bytes: number[] = [];
+    for (const mount of mounts) {
+      for (const window of ['day', 'week', 'since-last']) {
+        const response = await getChanged(page, mount, `page=1&changed=${window}`);
+        expect(response.status).toBe(200);
+        bytes.push(Buffer.byteLength(response.body, 'utf8'));
+      }
+    }
+    const largest = Math.max(...bytes);
+    expect(bytes).toHaveLength(9);
+    expect(largest).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes / 2);
+    console.info(`Trajectory change fixture served ${bytes.length} pages, largest ${largest} UTF-8 bytes`);
   });
 });

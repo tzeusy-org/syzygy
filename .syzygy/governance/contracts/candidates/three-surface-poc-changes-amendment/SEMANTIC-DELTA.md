@@ -37,8 +37,10 @@ The history is read by two read-only statements through the work-item
 runner. The first is `dolt_log('<revision>')`, by `commit_hash` and `date`
 only. The second is `dolt_diff('<start>', '<revision>', 'issues')`, by
 `diff_type`, `from_id`, `to_id`, `from_status` and `to_status` only. In-prefix
-rows are listed, and one aggregate row per window counts the rest. No title,
-message, committer or other free-text column is named (SEC-5).
+rows are listed, and one aggregate row per window counts the rest. That
+statement also uses commit hash and parent index in `dolt_commit_ancestors`
+to count merges and commit hash and date in `dolt_log` to check the time cut.
+SEC-5 excludes titles, messages, committers and other free text.
 
 Each changed in-prefix item is listed once, in ascending id, as exactly one
 of these kinds:
@@ -57,12 +59,15 @@ A window is Unknown with its reason, never zero, in these cases:
 
 - The work-item revision or the observation instant is unavailable.
 - A read fails, returns another shape or does not confirm the revision.
-  This makes both timed windows Unknown, never a partial count.
+  An invalid UTC instant, a start beyond its window bound, or an end
+  beyond the observation instant invalidates the reply. These cases
+  make both timed windows Unknown.
 - The history holds no commit that old. This affects that window only.
-- The history between the start and the revision holds a merge, or the
-  start has an ancestor dated after the bound, so the start found by date is
-  not a point on one line of history (`history-non-linear`, that window
-  only; added after review finding F1).
+- A merge lies between the start and the revision, an ancestor of the
+  start is dated after the bound, or a descendant of the start in the
+  observed history is dated at or before the bound. Each makes that window
+  `history-non-linear`. The two date cases check the ancestry cut in
+  both directions.
 - For `since-last`: no previous evaluation's revision is recorded, which is
   true at this base.
 
@@ -105,10 +110,11 @@ other value is refused with HTTP 400.
    windows are read when the model is built, so every render of one
    observation is byte-equal, and the machine answer carries all of them
    (RFC2-2).
-5. **The window bound compares Dolt commit dates in UTC to the
-   millisecond.** [Observed 2026-11-24 on this repository's tracker: a
-   bound 1 ms before a commit's date excludes it, and its exact date
-   includes it.]
+5. **The window bound uses the observation's millisecond precision.**
+   The read preserves and compares the commit instant's reported UTC
+   precision, through six fractional digits. [Observed 2026-11-24 on this
+   repository's tracker: a bound 1 ms before a commit's date excludes it,
+   and its exact date includes it.]
 6. **A removed item is named, not linked**: it has no card at the
    observed revision. An added or changed item still served links to its
    card on the all-items page.
@@ -187,6 +193,19 @@ free text is read and nothing is written, so the change is not owner-class.
   - By kind: 66 added, 75 modified with a status change, and 56 with
     none. No row changed its id.
 
+### Recovery verification
+
+[Observed] A synthetic linear history with a descendant dated before the
+window start used to return a zero ancestry-cut count. Replaying the emitted
+SQL against four synthetic histories counts both directions of the cut. The
+served fixtures also compare every changed item's from and to statuses
+against the machine answer, and assert the typed HTTP 400 and return link
+in the direct and both tailnet request forms.
+
+[Observed] Nine served HTML responses covered the three selected windows in
+each request form on the fixture with 260 changed items and 260 status rows.
+The largest was 537,231 UTF-8 bytes, below half the 2,097,152-byte ceiling.
+
 ## Downstream impact
 
 Method: `git grep` over `apps/`, `packages/` and `scripts/` for
@@ -243,7 +262,7 @@ request.
 
 ````diff
 diff --git a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
-index ee7a26861..e09c2d08b 100644
+index ee7a268615cbb4c5c4d9d6de1c4a708a1a010c9c..e09c2d08b3bf010f38cea6f9108a73a4966ecfb9 100644
 --- a/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 +++ b/openspec/changes/three-surface-poc-experience/CONTRACT-COVERAGE.md
 @@ -97,7 +97,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
@@ -268,17 +287,48 @@ index ee7a26861..e09c2d08b 100644
  | RFC8-22 | The unestablished first link of the chain, work item to warrant, renders Unknown with its RFC2-24 reason, never silently skipped | covered — Amendment row | POC-REQ-014 |
 @@ -250,8 +252,8 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
  | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
- 
+
  Part A totals `[Observed, computed by the sweep in "Verifying this
 -table"]`: **176 consequence rows over 88 clauses — 126 covered,
 -50 Unknown.**
 +table"]`: **178 consequence rows over 88 clauses — 127 covered,
 +51 Unknown.**
- 
+
  **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
  The signed RFC1-26 row whose consequence reads "Relations outside the closed
+diff --git a/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md b/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md
+index 510ded51b016aae13a3ebd834be5fceb9e6b4975..1d3aa3b00c71c4855517ba5308dc03ac98076ae1 100644
+--- a/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md
++++ b/openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md
+@@ -8,7 +8,7 @@
+ > here is overwritten and `--check` fails first. Identifiers only —
+ > nothing here quotes or paraphrases any clause.
+ >
+-> Source: `spec.md` sha256 `bd781d7ba558a7b529a5e736a37d7f914e55d66cc86443e55186fd78f0d1b8c7` — 29 requirement(s), 111 distinct authorities.
++> Source: `spec.md` sha256 `cdbe5172f6abb123433e19043039ec3d748abf2a96d977749d1324d69ca5f0c1` — 29 requirement(s), 111 distinct authorities.
+
+ ## doctrine (10)
+
+@@ -42,7 +42,7 @@
+ | `RFC1-26` | POC-REQ-031, POC-REQ-052, POC-REQ-053, POC-REQ-055 |
+ | `RFC1-31` | POC-REQ-003, POC-REQ-013 |
+ | `RFC2-1` | POC-REQ-001, POC-REQ-004, POC-REQ-010 |
+-| `RFC2-2` | POC-REQ-003, POC-REQ-013, POC-REQ-062 |
++| `RFC2-2` | POC-REQ-003, POC-REQ-013, POC-REQ-044, POC-REQ-062 |
+ | `RFC2-3` | POC-REQ-004, POC-REQ-041, POC-REQ-045 |
+ | `RFC2-6` | POC-REQ-042, POC-REQ-051 |
+ | `RFC2-18` | POC-REQ-044 |
+@@ -84,7 +84,7 @@
+ | `RFC7-29` | POC-REQ-031, POC-REQ-032 |
+ | `RFC7-33` | POC-REQ-020, POC-REQ-022 |
+ | `RFC7-34` | POC-REQ-022, POC-REQ-061 |
+-| `RFC8-2` | POC-REQ-043 |
++| `RFC8-2` | POC-REQ-043, POC-REQ-044 |
+ | `RFC8-8` | POC-REQ-044 |
+ | `RFC8-12` | POC-REQ-040 |
+ | `RFC8-13` | POC-REQ-062 |
 diff --git a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
-index b615b3b27..ac1a20d01 100644
+index b615b3b27bafa42da349c07a9018834e059912a3..036e5a39fa83ca0e4a253750a03d3e418425d60e 100644
 --- a/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 +++ b/openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md
 @@ -1032,7 +1032,11 @@ parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
@@ -304,7 +354,7 @@ index b615b3b27..ac1a20d01 100644
  the order, and the grouped order and its page unit, `position`
  (`trajectory.narrowing`), so any page is recomputable from
  `workItems.items` and `trajectory.outline`.
-@@ -1269,9 +1274,45 @@ equal values (`trajectory.answers`). Today:
+@@ -1269,9 +1274,49 @@ equal values (`trajectory.answers`). Today:
    state `activity-undetermined` while no staleness bound is declared
    (RFC8-16): state-local, carrying no RFC2-24 reason and no machine
    Unknown, with what resolves it.
@@ -318,9 +368,10 @@ index b615b3b27..ac1a20d01 100644
 +  the previous evaluation's work-item revision. Every window SHALL end at
 +  the observed work-item revision, never a fresh head, and SHALL be read
 +  through the same read-only runner as the work items, by two statements
-+  naming only commit hash and date (`dolt_log`) and item id, status and
-+  diff type (`dolt_diff` over `issues`), never a title, message, committer
-+  or other free text (SEC-5). For an observed window the answer SHALL
++  naming only commit hash and date (`dolt_log`), commit hash and parent
++  index (`dolt_commit_ancestors`), and item id, status and diff type
++  (`dolt_diff` over `issues`). SEC-5 excludes titles, messages, committers
++  and other free text. For an observed window the answer SHALL
 +  state both revisions with their recorded instants and count each changed
 +  item, ascending id, as exactly one of: added (a row the window start did
 +  not hold), closed (a status other than `closed` became `closed`),
@@ -333,13 +384,16 @@ index b615b3b27..ac1a20d01 100644
 +  and a readable window with no change SHALL say it is an observed zero.
 +  A window SHALL be Unknown with its reason, never zero, when the work-item
 +  revision or the observation instant is unavailable, when a history read
-+  fails, returns another shape or does not confirm the observed revision
-+  (any of these makes every timed window Unknown, never a partial count),
-+  when the history holds no commit as old as the window bound, when the
-+  history between the window start and the observed revision holds a
-+  merge or a commit dated after the bound behind the start (so the start
-+  found by date is not a point on one line of history), or, for
-+  `since-last`, while no previous evaluation's revision is recorded. The
++  fails, returns another shape or does not confirm the observed revision,
++  or when a returned instant is invalid, beyond its window bound for a
++  start, or beyond the observation instant for the observed revision.
++  Each of those cases makes every timed window Unknown. A window SHALL
++  also be Unknown when the history holds no commit as old as the window
++  bound, when the history between the window start and the observed
++  revision holds a merge, when an ancestor of the start is dated after
++  the bound, when a descendant of the start in the observed history is
++  dated at or before the bound, or, for `since-last`, while no previous
++  evaluation's revision is recorded. The
 +  machine answer SHALL carry every window with every changed item; the page
 +  SHALL show one window (the `changed` parameter of POC-REQ-042, `day` by
 +  default), link to the others with their counts, and list at most 250
@@ -353,9 +407,9 @@ index b615b3b27..ac1a20d01 100644
  - *Verified against intent* SHALL give three separately labelled counts,
    each with its own denominator, and no element SHALL add any two of them:
    (a) Unknown-provenance, the served items with no traceable warrant, n of
-@@ -1289,14 +1330,19 @@ When work items are not observed, all five answers SHALL render, each an
+@@ -1289,14 +1334,19 @@ When work items are not observed, all five answers SHALL render, each an
  Unknown referring to the work-items disclosure, and no count SHALL appear.
- 
+
  - **Scope.** the answers region of Trajectory and `trajectory.answers` on
 -  the machine answer. The wider charter (what is planned, blocked, and why
 -  the work exists), orphaned-work detection and any reconciliation verdict
@@ -365,7 +419,7 @@ index b615b3b27..ac1a20d01 100644
 +  orphaned-work detection, any reconciliation verdict, a record of the
 +  previous evaluation's revision, a join to commit subjects, and merge
 +  facts are outside it.
- 
+
  - **Case**: a checker serves 252 work items, of which the selection
    renders 250, and reads Trajectory and the machine answer; then repeats
    with a materialized item whose change is on the default branch, and with
@@ -377,7 +431,7 @@ index b615b3b27..ac1a20d01 100644
  - **Observable**: five answers in order before the scope statement; the
    status counts, claimed count and three fifth-answer counts with their
    denominators; the liveness state; each Unknown part's reason and route.
-@@ -1312,8 +1358,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1312,8 +1362,14 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
    machine answer's; count (a) equals `workItems.governedByUnknownCount`;
    count (b) is 1 of 1 with a merged materialized item and 0 of 0 without
    one while (a) is unchanged; (c) renders Unknown, never a number; with
@@ -394,7 +448,7 @@ index b615b3b27..ac1a20d01 100644
  - **Oracle independence**: expected counts are the checker's own fixture
    rows, counted by the checker, never the renderer's model.
  - **Falsifier**: an answer missing, out of order or dropped for being
-@@ -1321,7 +1373,10 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1321,7 +1377,10 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
    do not sum to the served total; a running count worded as observed
    activity, or liveness rendered as `active` or under an RFC2-24 reason;
    a count shown without its denominator; an Unknown part with no reason
@@ -405,8 +459,8 @@ index b615b3b27..ac1a20d01 100644
 +  under two kinds; an element adding two
    of the fifth answer's counts; orphaned work rendered as 0; a chain member
    stated under an RFC2-24 reason; or "verified" naming a state.
- 
-@@ -1330,8 +1385,8 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+
+@@ -1330,8 +1389,8 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
  - **WHEN** 252 work items are served and the selection renders 250
  - **THEN** five answers render first, in order: the served count of each
    tracker status summing to 252, the tracker's claimed count with liveness
@@ -415,12 +469,12 @@ index b615b3b27..ac1a20d01 100644
 +  `activity-undetermined`, what changed per window, what it cost as an
 +  Unknown with its reason and route, and three separate counts for verification against intent; the
    machine answer carries the same five with equal values
- 
+
  #### Scenario: A merged materialized item enters the chain
-@@ -1347,11 +1402,32 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
+@@ -1347,11 +1406,32 @@ Unknown referring to the work-items disclosure, and no count SHALL appear.
  - **THEN** all five answers render, each an Unknown referring to the
    work-items disclosure, and no count appears
- 
+
 +#### Scenario: What changed in the last day
 +
 +- **WHEN** the tracker's history holds a commit older than a day and,

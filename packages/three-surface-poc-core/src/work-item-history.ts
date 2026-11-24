@@ -84,6 +84,17 @@ function sqlInstant(ms: number): string {
   return new Date(ms).toISOString().replace('T', ' ').replace('Z', '');
 }
 
+function commitInstant(value: unknown): { readonly text: string; readonly micros: bigint } | undefined {
+  if (typeof value !== 'string') return undefined;
+  const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,6}))?Z$/.exec(value);
+  if (match === null) return undefined;
+  const wholeSecond = `${match[1]}.000Z`;
+  const ms = Date.parse(wholeSecond);
+  if (!Number.isFinite(ms) || new Date(ms).toISOString() !== wholeSecond) return undefined;
+  const fraction = (match[2] ?? '').padEnd(6, '0');
+  return { text: value, micros: BigInt(ms) * 1000n + BigInt(fraction) };
+}
+
 function isStatus(value: unknown): value is WorkItemStatus {
   return typeof value === 'string' && (WORK_ITEM_STATUSES as readonly string[]).includes(value);
 }
@@ -147,16 +158,23 @@ export function observeWorkItemChanges(
   if (Object.keys(bounds).length !== BOUND_FIELDS.length || BOUND_FIELDS.some((key) => !Object.hasOwn(bounds, key))) {
     return unknownAll('history-result-malformed');
   }
-  if (bounds.revision !== revision || typeof bounds.revision_at !== 'string') return unknownAll('history-revision-unverified');
-  const to: CommitPoint = { revision, at: bounds.revision_at };
+  const observedInstant = commitInstant(bounds.revision_at);
+  if (bounds.revision !== revision || observedInstant === undefined || observedInstant.micros > BigInt(capturedMs) * 1000n) {
+    return unknownAll('history-revision-unverified');
+  }
+  const to: CommitPoint = { revision, at: observedInstant.text };
 
   const starts = new Map<Exclude<ChangeWindow, 'since-last'>, CommitPoint>();
   for (const window of TIMED) {
     const from = bounds[`${window}_from`];
     const at = bounds[`${window}_at`];
     if (from === null && at === null) continue; // no commit that old: the history is shorter than the window
-    if (!isDoltRevision(from) || typeof at !== 'string') return unknownAll('history-result-malformed');
-    starts.set(window, { revision: from, at });
+    const startInstant = commitInstant(at);
+    const bound = BigInt(capturedMs - WINDOW_MILLISECONDS[window]) * 1000n;
+    if (!isDoltRevision(from) || startInstant === undefined || startInstant.micros > bound) {
+      return unknownAll('history-result-malformed');
+    }
+    starts.set(window, { revision: from, at: startInstant.text });
   }
 
   // (b) The diff of each start against the revision, in-prefix rows listed,
@@ -165,16 +183,16 @@ export function observeWorkItemChanges(
   const inPrefix = `(COALESCE(from_id, '') LIKE '${prefix}%' OR COALESCE(to_id, '') LIKE '${prefix}%')`;
   const parts = [...starts].flatMap(([window, from]) => {
     const diff = `dolt_diff('${from.revision}', '${revision}', 'issues')`;
-    // R-T6S1-CHANGES-1 F1: the start is chosen by date among all ancestors,
-    // which is the chain position only on a linear history with ordered
-    // dates. Two counts test that: merge commits between the start and the
-    // revision, and ancestors of the start dated after the bound.
+    // R-T6S1-CHANGES-1 F1: the date cut must agree with ancestry in both
+    // directions. Also count merges between the start and observed revision.
     const bound = sqlInstant(capturedMs - WINDOW_MILLISECONDS[window]);
+    const revisionCommits = `dolt_log('${revision}')`;
+    const startCommits = `(SELECT commit_hash FROM dolt_log('${from.revision}'))`;
     return [
       `SELECT '${window}' AS w, diff_type, from_id, to_id, from_status, to_status, NULL AS n FROM ${diff} WHERE ${inPrefix}`,
       `SELECT '${window}', 'outside-prefix', NULL, NULL, NULL, NULL, COUNT(*) FROM ${diff} WHERE NOT ${inPrefix}`,
-      `SELECT '${window}', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM dolt_log('${revision}')) AND commit_hash NOT IN (SELECT commit_hash FROM dolt_log('${from.revision}'))`,
-      `SELECT '${window}', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_log('${from.revision}') WHERE date > '${bound}'`,
+      `SELECT '${window}', 'merges', NULL, NULL, NULL, NULL, COUNT(*) FROM dolt_commit_ancestors WHERE parent_index > 0 AND commit_hash IN (SELECT commit_hash FROM ${revisionCommits}) AND commit_hash NOT IN ${startCommits}`,
+      `SELECT '${window}', 'inverted', NULL, NULL, NULL, NULL, COUNT(*) FROM ${revisionCommits} WHERE (date > '${bound}' AND commit_hash IN ${startCommits}) OR (date <= '${bound}' AND commit_hash NOT IN ${startCommits})`,
     ];
   });
   const rowsByWindow = new Map<string, Record<string, unknown>[]>();

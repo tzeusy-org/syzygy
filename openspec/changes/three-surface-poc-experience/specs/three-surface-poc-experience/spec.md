@@ -1281,9 +1281,10 @@ equal values (`trajectory.answers`). Today:
   the previous evaluation's work-item revision. Every window SHALL end at
   the observed work-item revision, never a fresh head, and SHALL be read
   through the same read-only runner as the work items, by two statements
-  naming only commit hash and date (`dolt_log`) and item id, status and
-  diff type (`dolt_diff` over `issues`), never a title, message, committer
-  or other free text (SEC-5). For an observed window the answer SHALL
+  naming only commit hash and date (`dolt_log`), commit hash and parent
+  index (`dolt_commit_ancestors`), and item id, status and diff type
+  (`dolt_diff` over `issues`). SEC-5 excludes titles, messages, committers
+  and other free text. For an observed window the answer SHALL
   state both revisions with their recorded instants and count each changed
   item, ascending id, as exactly one of: added (a row the window start did
   not hold), closed (a status other than `closed` became `closed`),
@@ -1296,13 +1297,16 @@ equal values (`trajectory.answers`). Today:
   and a readable window with no change SHALL say it is an observed zero.
   A window SHALL be Unknown with its reason, never zero, when the work-item
   revision or the observation instant is unavailable, when a history read
-  fails, returns another shape or does not confirm the observed revision
-  (any of these makes every timed window Unknown, never a partial count),
-  when the history holds no commit as old as the window bound, when the
-  history between the window start and the observed revision holds a
-  merge or a commit dated after the bound behind the start (so the start
-  found by date is not a point on one line of history), or, for
-  `since-last`, while no previous evaluation's revision is recorded. The
+  fails, returns another shape or does not confirm the observed revision,
+  or when a returned instant is invalid, beyond its window bound for a
+  start, or beyond the observation instant for the observed revision.
+  Each of those cases makes every timed window Unknown. A window SHALL
+  also be Unknown when the history holds no commit as old as the window
+  bound, when the history between the window start and the observed
+  revision holds a merge, when an ancestor of the start is dated after
+  the bound, when a descendant of the start in the observed history is
+  dated at or before the bound, or, for `since-last`, while no previous
+  evaluation's revision is recorded. The
   machine answer SHALL carry every window with every changed item; the page
   SHALL show one window (the `changed` parameter of POC-REQ-042, `day` by
   default), link to the others with their counts, and list at most 250
