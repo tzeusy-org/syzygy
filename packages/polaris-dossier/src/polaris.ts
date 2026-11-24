@@ -7,6 +7,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
 import { authorRule, awaitRule, startBroker, type Broker, type BrokerResponse } from './broker.js';
 import { cliGateSources, cliVisibilityOf, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
+import { COVERAGE_NOTICE_ATTEMPTS, CoverageHoldNotices, submitCoverageNotice, type CoverageNoticeAttempt, type CoverageRevisionPair, type CoverageSend } from './coverage-hold.js';
 import { INVENTORY_CHECKS, inventoryOfRecord, launchRecordName } from './inventory.js';
 import { writeLaunchRecord, writeLaunchedMarker } from './launched.js';
 import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
@@ -736,6 +737,14 @@ function tell(state: SupervisorState, role: ViewRole, message: string): void {
 }
 const tellAuthor = (state: SupervisorState, message: string): void => tell(state, 'author', message);
 
+function sendCoverageNotice(state: SupervisorState, message: string): CoverageSend {
+  const target = `${state.tmuxSession}:author`;
+  return submitCoverageNotice(
+    () => spawnSync('tmux', ['send-keys', '-t', target, '-l', message], { stdio: 'ignore' }).status === 0,
+    () => spawnSync('tmux', ['send-keys', '-t', target, 'Enter'], { stdio: 'ignore' }).status === 0,
+  );
+}
+
 export function readMaxRepairCycles(run: string): number {
   try {
     const declared = (JSON.parse(readBoundedText(path.join(run, RUN_LAYOUT.config), RUN_TREE_BOUNDS.runRecord)) as { declared?: { maxRepairCycles?: unknown } }).declared?.maxRepairCycles;
@@ -764,6 +773,20 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   // A refused delivery is retried on later polls, a few times, then left for the operator (the event stays in the log).
   const refusals = new Map<string, number>();
   const giveUp = (key: string): boolean => { const n = (refusals.get(key) ?? 0) + 1; refusals.set(key, n); return n >= 5; };
+  const coverage = new CoverageHoldNotices(state.notified);
+  const recordCoverageNotice = (pair: CoverageRevisionPair, outcome: CoverageNoticeAttempt): void => {
+    const subject = `draft revision ${pair.draftRevision} and inventory revision ${pair.inventoryRevision}`;
+    if (outcome === 'sent') {
+      saveState(options.stateRoot, state);
+      screen.event(`sent the author a coverage notice for ${subject}`);
+    } else if (outcome === 'unsubmitted') {
+      screen.event(`coverage notice for ${subject} was typed, but tmux could not submit Enter; inspect the author pane`);
+    } else if (outcome === 'exhausted') {
+      screen.event(`could not send the coverage notice for ${subject} after ${COVERAGE_NOTICE_ATTEMPTS} attempts; inspect the author pane`);
+    } else if (outcome === 'failed') {
+      screen.event(`could not send the coverage notice for ${subject}; will retry the notice`);
+    }
+  };
   for (;;) {
     const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
     if (Date.now() >= deadline) { phase = 'deadline passed'; break; }
@@ -796,12 +819,33 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       state.notified.push(`inventory-draft-${passedDraft}`); saveState(options.stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
-    if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
-      const pair = `${passedDraft!}/${inventoryRevision!}`;
-      const r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], ports);
-      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
-        (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
+    let heldPair = false;
+    if (passedDraft !== null && inventoryRevision !== null
+        && fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
+      const advanced = await coverage.advance({ draftRevision: passedDraft, inventoryRevision },
+        () => step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], ports),
+        (message) => sendCoverageNotice(state, message));
+      if (advanced.kind === 'coverage') {
+        heldPair = advanced.currentHeld;
+        if (advanced.observed) screen.event(`fidelity waits: draft revision ${advanced.pair.draftRevision} leaves inventory revision ${advanced.pair.inventoryRevision} entries without an outcome`);
+        recordCoverageNotice(advanced.pair, advanced.notice);
+      } else {
+        const r = advanced.step;
+        if (r.doc?.['stage'] === 'coverage' && r.exit !== 0) {
+          screen.event('fidelity coverage refusal has no valid revision pair or entry descriptions');
+        } else {
+          screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft} and inventory revision ${inventoryRevision}`
+            : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
+          const pair = `${passedDraft}/${inventoryRevision}`;
+          if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
+            (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft); delete state.pendingRepair;
+            saveState(options.stateRoot, state);
+          }
+        }
+      }
+      if (heldPair && repairsSpent) {
+        phase = `blocked: draft revision ${passedDraft} leaves inventory entries without an outcome, so the fidelity review waits, and all ${maxRepairCycles} repair cycles of the draft are spent${cycleBreakdown(run)}`;
+        break;
       }
     }
     const sides = fidelityState === 'blocking' ? repairSides(readVerdict(run, 'fidelity', fidelity!.n)) : null;
@@ -849,7 +893,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       break;
     }
     const repairing = state.pendingRepair === undefined ? null : [state.pendingRepair.draftAbove !== undefined ? 'author' : null, state.pendingRepair.inventoryAbove !== undefined ? 'inventory' : null].filter((x) => x !== null).join(' and ');
-    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
+    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory'
+      : heldPair ? 'fidelity review waiting for inventory coverage' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
       : designState === 'none' ? 'rendered-design review' : 'author repairing after design review';
     const left = Math.max(0, deadline - Date.now());
     screen.draw([

@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
+import { coverageRefusal, type CoverageRevisionPair } from './coverage-hold.js';
 import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import {
   INVENTORY_BRIEF_FILE, LAUNCH_FORMS, buildInventoryBrief, errno, latestInventorySession, launchRecordName, logStep, openRun, promptRecordName,
@@ -145,6 +146,7 @@ export interface HandoverRefusal {
   readonly reason: string;
   readonly reasons?: readonly string[];
   readonly refusals?: readonly ReverifyRefusal[];
+  readonly coverage?: CoverageRevisionPair;
   readonly disclosures: readonly string[];
 }
 
@@ -291,6 +293,10 @@ async function reviewSession(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.28): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {
+      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: PROMPT_DISCLOSURES,
+    } };
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
@@ -476,6 +482,10 @@ async function deliverReview(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.28): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {
+      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: DELIVERY_DISCLOSURES,
+    } };
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
