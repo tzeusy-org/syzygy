@@ -43,7 +43,10 @@ type AllocatedClient = { readonly clientId: string; readonly witnessSha256: stri
 export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
   clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648,
   operationMilliseconds: 5000, lockMilliseconds: 1000, admissionMilliseconds: 30_000, waitingAdmissions: 256 });
-const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;
+const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 15_000;
+// An ordinary native effect can enclose a peer audit, usage and response
+// append. Their independent five-second limits share this bounded envelope.
+const ORDINARY_NATIVE_EFFECT_MILLISECONDS = 20_000;
 const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;
 const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
@@ -76,7 +79,8 @@ interface UrlMachineStoreLease extends UrlMachineLifecycleLease {
 type UrlMachineTerminalLease = Readonly<Pick<UrlMachineStoreLease, 'read' | 'sampleCurrent'>>;
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
-   * its declared native effect envelope. Ordinary lifecycle I/O keeps five seconds. */
+   * a native effect envelope. Ordinary native effects have twenty seconds;
+   * ordered effects use their declared limit. Lifecycle I/O keeps five seconds. */
   exclusive(clientId: string, deadline: number, run: (lease: UrlMachineStoreLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   /** Run only the trusted lifecycle publication protocol inside one held lock. */
   publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean, resumedDesignPeer?: UrlMachinePeer): Promise<UrlMachineLifecycleResult>;
@@ -750,7 +754,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const ordinaryEffect = effectProfile !== undefined && !orderedEffect;
       const synchronousOrdinaryRead = ordinaryEffect && currentAsync === undefined && publication === undefined && !terminalRead;
       const operationMilliseconds = orderedEffect
-        ? effectProfile.transcript.nativeEffectMilliseconds : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
+        ? effectProfile.transcript.nativeEffectMilliseconds : ordinaryEffect ? ORDINARY_NATIVE_EFFECT_MILLISECONDS
+          : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
       return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
         if (effectProfile !== undefined) {

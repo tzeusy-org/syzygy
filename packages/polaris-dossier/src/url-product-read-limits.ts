@@ -9,9 +9,10 @@ const productReadMilliseconds = {
 };
 
 /** The runtime binds these limits before issuing an immutable read deadline.
- * Only the replacement of an existing ordered Design delivery includes time
- * for the following native effect under the same lease. */
+ * Ordered Design startup and replacement include time for the following
+ * native setup or effect under the same lease. */
 export const URL_PRODUCT_READ_MILLISECONDS = Object.freeze({
   ...productReadMilliseconds,
+  'ordered-design-startup': productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,
   'ordered-design-replacement': productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,
 });

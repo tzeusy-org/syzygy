@@ -80,11 +80,11 @@ async function fixture(duration = 60_000) {
   const store = await initializeUrlMachineStore(options);
   expect(store).not.toBeNull();
   cleanup.push(() => store!.close());
-  const allocate = async (profile?: NativeSessionProfile) => {
+  const allocate = async (profile?: NativeSessionProfile, runId = profile?.input.binding.run ?? `run-${'b'.repeat(32)}`) => {
     const allocated = await store!.allocateClient(options.deadline);
     if (!allocated) throw new Error('owned fixture slot refused');
     const context: UrlMachineClientContext = { clientId: allocated.clientId, policySha256: id(), profileSha256: profile?.digest ?? id(), sourcePin: 'a'.repeat(40),
-      runId: profile?.input.binding.run ?? `run-${'b'.repeat(32)}`, role: 'design', kind: 'mcp-shim', allowedScopes: ['artifact_read', 'dossier_step'], now: NOW, deadline: options.deadline };
+      runId, role: 'design', kind: 'mcp-shim', allowedScopes: ['artifact_read', 'dossier_step'], now: NOW, deadline: options.deadline };
     const record: UrlMachineClientRecord = { format: 'polaris-dossier-local-machine-client/1', clientId: context.clientId, issuanceId: id(),
       revision: 1, projectId: 'project:syzygy', policySha256: context.policySha256, sourcePin: context.sourcePin, runId: context.runId,
       role: context.role, kind: context.kind, scopes: ['artifact_read'], issuedAt: new Date(NOW - 1000).toISOString(),
@@ -214,17 +214,18 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const profile = effectProfile(kind === 'ordered'), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
     expect(slot.context.policySha256).not.toBe(profile.input.binding.policy);
-    const original = performance.now.bind(performance);
     let offset = 0;
-    const clock = vi.spyOn(performance, 'now').mockImplementation(() => original() + offset);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => offset);
     try {
-      let afterSixSeconds: boolean | undefined, afterThirtySeconds: boolean | undefined;
+      let afterSixSeconds: boolean | undefined, atTwentySeconds: boolean | undefined, atThirtySeconds: boolean | undefined;
       const result = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
         offset = 6000; afterSixSeconds = lease.current();
-        offset = 30_001; afterThirtySeconds = lease.current();
+        offset = 20_000; atTwentySeconds = lease.current();
+        offset = 30_000; atThirtySeconds = lease.current();
       }, kind === 'unprofiled' ? undefined : profile);
-      expect(afterSixSeconds).toBe(kind === 'ordered');
-      expect(afterThirtySeconds).toBe(false);
+      expect(afterSixSeconds).toBe(kind !== 'unprofiled');
+      expect(atTwentySeconds).toBe(kind === 'ordered');
+      expect(atThirtySeconds).toBe(false);
       expect(result).toBe(false);
     } finally { clock.mockRestore(); }
   });
@@ -287,13 +288,13 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     if (!allowed) expect(checks).toBe(1);
   });
 
-  it('rejects copied, oversized and mismatched effect profiles before entry', async () => {
-    const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
+  it.each([false, true])('rejects copied, oversized and mismatched effect profiles before entry when ordered is %s', async ordered => {
+    const profile = effectProfile(ordered), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
     for (const candidate of [
       { ...profile },
       { ...profile, transcript: { ...('transcript' in profile ? profile.transcript : {}), nativeEffectMilliseconds: 30_001 } },
-      effectProfile(true),
+      effectProfile(ordered),
     ]) {
       let entered = false;
       expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered = true; }, candidate as NativeSessionProfile)).toBe(false);
@@ -301,8 +302,35 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     }
   });
 
-  it.each(['original-deadline', 'revocation'] as const)('prevents publication after %s during a declared ordered effect', async fault => {
-    const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
+  it.each([false, true])('refuses an effect profile matching the digest but not the durable run when ordered is %s', async ordered => {
+    const profile = effectProfile(ordered), f = await fixture(), slot = await f.allocate(profile, `run-${'c'.repeat(32)}`);
+    expect((await slot.publish()).ok).toBe(true);
+    expect(slot.record.instances[0]!.verifier.profileSha256).toBe(profile.digest);
+    expect(slot.record.runId).not.toBe(profile.input.binding.run);
+    const entered = vi.fn(async () => {});
+    expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, entered, profile)).toBe(false);
+    expect(entered).not.toHaveBeenCalled();
+  });
+
+  it.each([false, true])('clips the native effect to the caller deadline when ordered is %s', async ordered => {
+    const profile = effectProfile(ordered), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    const clock = vi.spyOn(performance, 'now').mockReturnValue(0);
+    try {
+      const completed = await f.store.exclusive(slot.context.clientId, NOW + 1000, async lease => {
+        expect(lease.current()).toBe(true);
+        f.tick(NOW + 1000);
+        expect(lease.current()).toBe(false);
+      }, profile);
+      expect(completed).toBe(false);
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each([
+    { ordered: false, fault: 'original-deadline' }, { ordered: false, fault: 'revocation' },
+    { ordered: true, fault: 'original-deadline' }, { ordered: true, fault: 'revocation' },
+  ] as const)('prevents publication after $fault during a declared effect when ordered is $ordered', async ({ ordered, fault }) => {
+    const profile = effectProfile(ordered), f = await fixture(), slot = await f.allocate(profile);
     expect((await slot.publish()).ok).toBe(true);
     const before = await readFile(slot.file), projection = await readFile(slot.projection);
     const wrapped = { ...f.store, exclusive: (clientId, deadline, operation) => f.store.exclusive(clientId, deadline, lease => operation({ ...lease,
@@ -362,8 +390,10 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     })).resolves.toBe(true);
   });
 
-  it.each(['selected', 'ordinary', 'operation-expired', 'run-expired', 'connection-closed'] as const)(
-    'keeps the archive and audit atomic after five seconds with publication mode %s', async scenario => {
+  // Isolate store timing behind the selector. This stub does not establish a
+  // genuine native peer; the composed native run verifies that separate gate.
+  it.each(['selected', 'selected-eleven-seconds', 'ordinary', 'operation-expired', 'run-expired', 'connection-closed'] as const)(
+    'isolates archive and audit timing behind the resumed publication selector in mode %s', async scenario => {
       const f = await fixture(), slot = await f.allocate(), root = f.options.protectedRoot;
       const archive = path.join(root, 'canonical-history.json'), stateFile = path.join(root, 'state.json');
       const previousArchive = await readFile(archive);
@@ -378,23 +408,25 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       const stillOpening = () => opening;
       const now = performance.now.bind(performance);
       const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + offset);
+      const elapsed = scenario === 'operation-expired' ? 15_000 : scenario === 'selected-eleven-seconds' ? 11_000 : 6_000;
+      const accepted = scenario === 'selected' || scenario === 'selected-eleven-seconds';
       filesystem.afterSync = async file => {
         if (file !== root || offset !== 0 || previousArchive.equals(await readFile(archive))) return;
-        offset = scenario === 'operation-expired' ? 10_001 : 6_000;
+        offset = elapsed;
         if (scenario === 'run-expired') f.tick(f.options.deadline);
         if (scenario === 'connection-closed') opening = false;
       };
       try {
         const result = await store.publish(published, stillOpening, peer);
-        expect(result.ok).toBe(scenario === 'selected');
-        expect(offset).toBe(scenario === 'operation-expired' ? 10_001 : 6_000);
+        expect(result.ok).toBe(accepted);
+        expect(offset).toBe(elapsed);
         if (peer !== undefined) expect(proof).toHaveBeenCalledExactlyOnceWith(peer, store, published, stillOpening);
         else expect(proof).not.toHaveBeenCalled();
         const state = JSON.parse(await readFile(stateFile, 'utf8'));
         const entry = state.clients.find((client: { clientId: string }) => client.clientId === slot.context.clientId);
-        expect(entry.anchor.kind).toBe(scenario === 'selected' ? 'committed' : 'pending');
-        expect(entry.audit).toHaveLength(scenario === 'selected' ? 1 : 0);
-        if (scenario === 'selected') expect(state.archive.sha256).toBe(sha256(await readFile(archive)));
+        expect(entry.anchor.kind).toBe(accepted ? 'committed' : 'pending');
+        expect(entry.audit).toHaveLength(accepted ? 1 : 0);
+        if (accepted) expect(state.archive.sha256).toBe(sha256(await readFile(archive)));
         else expect(state.archive).toEqual(previousPointer);
       } finally {
         proof.mockRestore();

@@ -906,23 +906,42 @@ async function observeDesignRun(run: string, traceInference = false) {
     });
     cleanup.push(async () => { restoreLaunchSync(); });
     const startAttempt = orderedAttempt.startUrlOrderedAttempt;
-    vi.spyOn(orderedAttempt, 'startUrlOrderedAttempt').mockImplementation(input => startAttempt({
-      ...input,
-      current: () => currentPhase('runtime-authority', input.current, value => value === true),
-      waitForSamples: () => currentPhase('wait-for-samples', input.waitForSamples, value => value === true),
-      registerLaunch: committed => {
-        const stamp = designLaunchRegistration = { startedMs: clock() };
-        return timed(stamp, () => input.registerLaunch(committed), () => true);
-      },
-      reproduce: (...args) => currentPhase('reproduce', () => input.reproduce(...args), value => value !== null),
-      machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
-      budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
-      audit: { ...input.audit, commitLaunchHistory: (...args) => {
-        const stamp = designLaunchCommit = { startedMs: clock() };
-        return timed(stamp, () => input.audit.commitLaunchHistory(...args), () => true);
-      }, readDesignDeliveryView: (...args) =>
-        currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
-    }));
+    vi.spyOn(orderedAttempt, 'startUrlOrderedAttempt').mockImplementation(input => {
+      let initialReproduction = true;
+      return startAttempt({
+        ...input,
+        current: () => currentPhase('runtime-authority', input.current, value => value === true),
+        waitForSamples: () => currentPhase('wait-for-samples', input.waitForSamples, value => value === true),
+        registerLaunch: committed => {
+          const stamp = designLaunchRegistration = { startedMs: clock() };
+          return timed(stamp, () => input.registerLaunch(committed), () => true);
+        },
+        reproduce: purpose => currentPhase('reproduce', () => {
+          if (!initialReproduction) return input.reproduce(purpose);
+          initialReproduction = false;
+          expect(purpose).toBe('ordered-design-startup');
+          const began = Date.now(), result = input.reproduce(purpose), issuedBy = Date.now();
+          return result.then(reproduction => {
+            if (reproduction !== null) {
+              const lease = designProduct.urlDesignProductLeaseState(reproduction.product);
+              expect(lease).toHaveProperty('deadline');
+              if ('deadline' in lease) {
+                expect(lease.deadline).toBeGreaterThanOrEqual(Math.min(input.deadline, began + 90_000));
+                expect(lease.deadline).toBeLessThanOrEqual(Math.min(input.deadline, issuedBy + 90_000));
+              }
+            }
+            return reproduction;
+          });
+        }, value => value !== null),
+        machine: { ...input.machine, current: () => currentPhase('machine-authority', input.machine.current, value => value === true) },
+        budget: { ...input.budget, current: () => currentPhase('budget', input.budget.current, value => value === true) },
+        audit: { ...input.audit, commitLaunchHistory: (...args) => {
+          const stamp = designLaunchCommit = { startedMs: clock() };
+          return timed(stamp, () => input.audit.commitLaunchHistory(...args), () => true);
+        }, readDesignDeliveryView: (...args) =>
+          currentPhase('read-reproduced-delivery', () => input.audit.readDesignDeliveryView(...args), () => true) },
+      });
+    });
     const effectCurrent = machineTransport.sessionMachineEffectCurrent;
     vi.spyOn(machineTransport, 'sessionMachineEffectCurrent').mockImplementation(() =>
       currentPhase('machine-effect', effectCurrent, value => value !== false));

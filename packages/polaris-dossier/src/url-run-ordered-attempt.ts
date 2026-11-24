@@ -247,7 +247,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
     const firstResumedLaunch = input.generation !== undefined && input.firstLaunch === null;
     const resumedPreparation = firstResumedLaunch ? await prepare() : undefined;
     let reproduced: UrlDesignReproduction | null;
-    try { reproduced = await input.reproduce(); }
+    try { reproduced = await input.reproduce('ordered-design-startup'); }
     catch (cause) { throw new UrlOrderedReproductionFailure({ cause }); }
     if (reproduced === null) throw new UrlOrderedReproductionFailure(null);
     render = reproduced;

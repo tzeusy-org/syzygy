@@ -137,7 +137,7 @@ async function orderedFixture() {
 }
 
 describe('protected URL session audit', () => {
-  it.each([4000, 5100])('keeps the Fidelity response audit under its enclosing ordinary store lease at %i ms', async elapsedAtResponseWrite => {
+  it.each([4000, 5100, 19_999, 20_000, 20_100])('keeps the Fidelity response audit under its enclosing ordinary store lease at %i ms', async elapsedAtResponseWrite => {
     const f = fixture(), now = Date.now(), deadline = now + 60_000;
     const binding = { ...f.options.binding, run: `run-${'b'.repeat(32)}` };
     const profiles = f.profiles.map(original => {
@@ -204,17 +204,20 @@ describe('protected URL session audit', () => {
           processIdentitySha256: verifier.processIdentitySha256, channelIdentitySha256: verifier.channelIdentitySha256, at: now });
         await writer.append(f.event(writer, 'usage', 'fidelity'));
         publishedPrefix = fs.readFileSync(f.file('fidelity'));
+        // Model other bounded metadata work before the response gets its own
+        // fresh append deadline. No individual append takes five seconds.
+        if (elapsedAtResponseWrite > 5100) elapsed = elapsedAtResponseWrite - 1000;
         responseStarted = performance.now();
         await writer.append(response);
       }, profile);
       effectCurrent = undefined;
-      const accepted = elapsedAtResponseWrite === 4000;
+      const accepted = elapsedAtResponseWrite < 20_000;
       expect(completed).toBe(accepted);
       expect(writes).toEqual(['machine-peer', 'usage', 'relay']);
       // Peer and usage appends each took less than five seconds. The response
       // owns a fresh five seconds, but cannot outlive the enclosing effect.
-      expect(responseStarted).toBe(3000);
-      expect(elapsed - responseStarted).toBe(accepted ? 1000 : 2100);
+      expect(responseStarted).toBe(elapsedAtResponseWrite > 5100 ? elapsedAtResponseWrite - 1000 : 3000);
+      expect(elapsed - responseStarted).toBe(elapsedAtResponseWrite === 5100 ? 2100 : 1000);
       const summary = writer.summary(), physical = fs.readFileSync(f.file('fidelity'));
       expect(summary).toMatchObject({ poisoned: !accepted, durableRecords: before.durableRecords + (accepted ? 3 : 2),
         captured: { 'machine-peer': 1, usage: 1 }, relayEvents: { 'response-admitted': accepted ? 1 : 0 } });
