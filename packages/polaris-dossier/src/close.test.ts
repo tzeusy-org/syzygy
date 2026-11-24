@@ -58,6 +58,27 @@ describe('close (S10)', () => {
     expect(usage).not.toMatch(/\b0\b/u);
   });
 
+  it('records stage timings and review rounds from the step log, Inferred, ending the wall time at the close instant', async () => {
+    const { run } = await fullRun();
+    const record = readJson(path.join(run, 'record.json'));
+    expect(record.stepMeasures).toMatchObject({
+      label: 'Inferred', unreadableRows: 0,
+      wall: { state: 'measured', to: record.closedAt },
+      draftRevisions: { state: 'counted' },
+    });
+    expect(record.stepMeasures.wall.from).toBe(record.steps.entries[0].at);
+  });
+
+  it('records the step measures Unknown, never zero, when the step log is gone', async () => {
+    const { run } = await fullRun({ beforeClose: (dir) => fs.rmSync(path.join(dir, 'steps.jsonl')) });
+    const record = readJson(path.join(run, 'record.json'));
+    expect(record.stepMeasures).toEqual({
+      label: 'Unknown',
+      basis: 'derived by Syzygy at close from the run\'s step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero',
+      why: 'the step log records no step',
+    });
+  });
+
   it('refuses a zero, negative, fractional or non-decimal figure before it opens the run, and writes nothing', async () => {
     for (const figure of ['0', '-1', '1.5', '01', '1e3', '', ' 5', '9007199254740993']) {
       expect(typeof parseUsageFigure('--usage-tokens', figure)).toBe('string');

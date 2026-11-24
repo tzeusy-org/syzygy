@@ -1,0 +1,772 @@
+{
+  "format": "syzygy-5dhm-25-step-measures-stored/1",
+  "label": "Inferred",
+  "basis": "stepMeasures (packages/polaris-dossier/src/step-measures.ts) over each stored run's steps.jsonl, ending its wall time at its record.json closedAt; the stored runs were read only and nothing was written into them",
+  "subject": {
+    "runs": 7,
+    "figureRecord": "stored-run-measures.json",
+    "figureRecordSha256": "69bc23e7a2d8c004f20b6d7b019b0f291aadc920970e5c5fb9df5baa8fe4a077"
+  },
+  "comparisonWithFigureF": {
+    "rounds": 33,
+    "agree": 33,
+    "disagreements": []
+  },
+  "perRun": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414": {
+      "stepsSha256": "0c16183d562af7b4ee7075f285d7440b0aeed9ed1beccaf1b92ddb9357e9832d",
+      "recordSha256": "bcab1b9e6bbb9c9386ad11bea877b723132a06f4396f15d9b901873f9ab3abee",
+      "closedAt": "2026-11-07T12:54:16.736Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 23,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 2557970,
+          "from": "2026-11-07T12:11:38.766Z",
+          "to": "2026-11-07T12:54:16.736Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 516235,
+          "from": "2026-11-07T12:11:38.766Z",
+          "to": "2026-11-07T12:20:15.001Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 560934,
+          "from": "2026-11-07T12:11:38.766Z",
+          "to": "2026-11-07T12:20:59.700Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 818119,
+          "from": "2026-11-07T12:11:38.766Z",
+          "to": "2026-11-07T12:25:16.885Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 2089429,
+          "from": "2026-11-07T12:11:38.766Z",
+          "to": "2026-11-07T12:46:28.195Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 3,
+          "rows": {
+            "findings": 1,
+            "passed": 2
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 3,
+          "rows": {
+            "findings": 1,
+            "passed": 2,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 2,
+            "completed": 2,
+            "unfinished": 0,
+            "refusedSubmissions": 1,
+            "ms": 995398,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 657197,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 338201,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 1,
+            "completed": 1,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 447556,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 447556,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-36df95faf04a4c98eabbb32a18a4e833": {
+      "stepsSha256": "7d42d6603eec72dee90e722d7b7a7bf3905f8b61c8dc64a6b45a71ff905f4e1a",
+      "recordSha256": "94f301cde26164b35d0b3c78fd6f932ef1030b687f80794a1ca338a00c375480",
+      "closedAt": "2026-11-04T02:53:33.302Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 19,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 2809253,
+          "from": "2026-11-04T02:06:44.049Z",
+          "to": "2026-11-04T02:53:33.302Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 1033851,
+          "from": "2026-11-04T02:06:44.049Z",
+          "to": "2026-11-04T02:23:57.900Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 1190645,
+          "from": "2026-11-04T02:06:44.049Z",
+          "to": "2026-11-04T02:26:34.694Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 1396678,
+          "from": "2026-11-04T02:06:44.049Z",
+          "to": "2026-11-04T02:30:00.727Z"
+        },
+        "toFirstRender": {
+          "state": "unknown",
+          "why": "the step log records no rendered render row"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 4,
+          "rows": {
+            "findings": 2,
+            "passed": 2
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 2,
+          "rows": {
+            "findings": 1,
+            "passed": 1,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 2,
+            "completed": 2,
+            "unfinished": 0,
+            "refusedSubmissions": 2,
+            "ms": 991022,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 734982,
+                "refusedSubmissions": 2
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 256040,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "unknown",
+            "why": "the step log records no delivered or issued design review prompt"
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-3744945f44ecdc31a06d43be3d38818c": {
+      "stepsSha256": "bbc8a81770ec2e525d2d96bc0a9a5a705b1f71ff6e28bb17c8a79d698de1a1e7",
+      "recordSha256": "6f69d939ce5e3bca7f398bf1599bd4acbf0420a7fe0138bb4b8307a4a71b63f1",
+      "closedAt": "2026-11-21T18:14:14.133Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 26,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 4583290,
+          "from": "2026-11-21T16:57:50.843Z",
+          "to": "2026-11-21T18:14:14.133Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 2766934,
+          "from": "2026-11-21T16:57:50.843Z",
+          "to": "2026-11-21T17:43:57.777Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 3081903,
+          "from": "2026-11-21T16:57:50.843Z",
+          "to": "2026-11-21T17:49:12.746Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 3194283,
+          "from": "2026-11-21T16:57:50.843Z",
+          "to": "2026-11-21T17:51:05.126Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 4154713,
+          "from": "2026-11-21T16:57:50.843Z",
+          "to": "2026-11-21T18:07:05.556Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 4,
+          "rows": {
+            "findings": 1,
+            "passed": 3
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 3,
+          "rows": {
+            "findings": 1,
+            "passed": 2,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 3,
+            "completed": 3,
+            "unfinished": 0,
+            "refusedSubmissions": 1,
+            "ms": 857484,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 413345,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 303493,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 3,
+                "session": 1,
+                "ms": 140646,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 1,
+            "completed": 1,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 419664,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 419664,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-4465d22f5ce1829ca49059a5b8451bb0": {
+      "stepsSha256": "aea8584097bfcf6197962702a27b18e0634096a11d0a5416421699f1678c25c5",
+      "recordSha256": "0dc9533e8f4302df0e5d842ae1300a37ad208c495b6053d4cd3f7ffe61fb93d1",
+      "closedAt": "2026-11-04T07:57:34.386Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 26,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 1793230,
+          "from": "2026-11-04T07:27:41.156Z",
+          "to": "2026-11-04T07:57:34.386Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 382183,
+          "from": "2026-11-04T07:27:41.156Z",
+          "to": "2026-11-04T07:34:03.339Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 606059,
+          "from": "2026-11-04T07:27:41.156Z",
+          "to": "2026-11-04T07:37:47.215Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 752978,
+          "from": "2026-11-04T07:27:41.156Z",
+          "to": "2026-11-04T07:40:14.134Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 1589807,
+          "from": "2026-11-04T07:27:41.156Z",
+          "to": "2026-11-04T07:54:10.963Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 4,
+          "rows": {
+            "findings": 1,
+            "passed": 3
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 3,
+          "rows": {
+            "findings": 1,
+            "passed": 2,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 3,
+            "completed": 3,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 670474,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 347300,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 187974,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 3,
+                "session": 1,
+                "ms": 135200,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 1,
+            "completed": 1,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 189005,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 189005,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-658f2f90470f73eea1dc1d90209c5ef7": {
+      "stepsSha256": "8a33647ad32651b2681746af20ece424dbff5d8a3930d966112a887c42dd0b64",
+      "recordSha256": "6628b645d939ffd3c7d818288df5d65aec8d70015d25d8b8c993fc4a7a89c47b",
+      "closedAt": "2026-11-15T08:19:02.229Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 32,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 2053950,
+          "from": "2026-11-15T07:44:48.279Z",
+          "to": "2026-11-15T08:19:02.229Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 299418,
+          "from": "2026-11-15T07:44:48.279Z",
+          "to": "2026-11-15T07:49:47.697Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 345193,
+          "from": "2026-11-15T07:44:48.279Z",
+          "to": "2026-11-15T07:50:33.472Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 325762,
+          "from": "2026-11-15T07:44:48.279Z",
+          "to": "2026-11-15T07:50:14.041Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 1306209,
+          "from": "2026-11-15T07:44:48.279Z",
+          "to": "2026-11-15T08:06:34.488Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 5,
+          "rows": {
+            "findings": 1,
+            "passed": 4
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 2,
+          "rows": {
+            "passed": 2
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 4,
+            "completed": 4,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 909497,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 359201,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 205960,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 3,
+                "session": 1,
+                "ms": 159344,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 4,
+                "session": 1,
+                "ms": 184992,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 2,
+            "completed": 2,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 443369,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 350482,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 92887,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32": {
+      "stepsSha256": "1464b3e5c61b8fccc6cfb95da65599c652d3098e453a4385000309afaee76c33",
+      "recordSha256": "cb2c34604b11a7f475163e3deddc2eb8a86167206457fecc9e41780a798f5e96",
+      "closedAt": "2026-11-06T05:49:01.698Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 39,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 4006152,
+          "from": "2026-11-06T04:42:15.546Z",
+          "to": "2026-11-06T05:49:01.698Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 722728,
+          "from": "2026-11-06T04:42:15.546Z",
+          "to": "2026-11-06T04:54:18.274Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 887075,
+          "from": "2026-11-06T04:42:15.546Z",
+          "to": "2026-11-06T04:57:02.621Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 1187145,
+          "from": "2026-11-06T04:42:15.546Z",
+          "to": "2026-11-06T05:02:02.691Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 2929979,
+          "from": "2026-11-06T04:42:15.546Z",
+          "to": "2026-11-06T05:31:05.525Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 5,
+          "rows": {
+            "findings": 1,
+            "passed": 4
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 4,
+          "rows": {
+            "findings": 1,
+            "passed": 3,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 5,
+            "completed": 5,
+            "unfinished": 0,
+            "refusedSubmissions": 3,
+            "ms": 2035240,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 681301,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 529622,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 3,
+                "session": 1,
+                "ms": 369763,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 4,
+                "session": 1,
+                "ms": 222236,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 5,
+                "session": 1,
+                "ms": 232318,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 2,
+            "completed": 2,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 656061,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 424514,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 231547,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    },
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301": {
+      "stepsSha256": "4eb6676194fc72a40a47d00e4663a451ccb5bce10fada2602a4fdd40c0245eb6",
+      "recordSha256": "150a3e1e99df100e932eab174bcec6a6b655e4bc1bdcf83d520a57937c89e06b",
+      "closedAt": "2026-11-08T04:07:27.562Z",
+      "stepMeasures": {
+        "label": "Inferred",
+        "basis": "derived by Syzygy at close from the run's step log, which the agent sessions can write; every figure is Inferred, and a figure whose rows the log does not carry is Unknown, never zero",
+        "rows": 37,
+        "unreadableRows": 0,
+        "wall": {
+          "state": "measured",
+          "ms": 4878132,
+          "from": "2026-11-08T02:46:09.430Z",
+          "to": "2026-11-08T04:07:27.562Z"
+        },
+        "toFirstDraftCheck": {
+          "state": "measured",
+          "ms": 420484,
+          "from": "2026-11-08T02:46:09.430Z",
+          "to": "2026-11-08T02:53:09.914Z"
+        },
+        "toFirstPassedDraft": {
+          "state": "measured",
+          "ms": 469638,
+          "from": "2026-11-08T02:46:09.430Z",
+          "to": "2026-11-08T02:53:59.068Z"
+        },
+        "toFirstPassedInventory": {
+          "state": "measured",
+          "ms": 664270,
+          "from": "2026-11-08T02:46:09.430Z",
+          "to": "2026-11-08T02:57:13.700Z"
+        },
+        "toFirstRender": {
+          "state": "measured",
+          "ms": 2692320,
+          "from": "2026-11-08T02:46:09.430Z",
+          "to": "2026-11-08T03:31:01.750Z"
+        },
+        "draftRevisions": {
+          "state": "counted",
+          "revisions": 7,
+          "rows": {
+            "findings": 1,
+            "passed": 6
+          }
+        },
+        "inventoryRevisions": {
+          "state": "counted",
+          "revisions": 3,
+          "rows": {
+            "findings": 1,
+            "passed": 2,
+            "refused": 1
+          }
+        },
+        "reviewRounds": {
+          "fidelity": {
+            "state": "counted",
+            "opened": 6,
+            "completed": 6,
+            "unfinished": 0,
+            "refusedSubmissions": 3,
+            "ms": 2487249,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 692468,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 2,
+                "session": 1,
+                "ms": 530068,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 3,
+                "session": 1,
+                "ms": 507926,
+                "refusedSubmissions": 1
+              },
+              {
+                "round": 4,
+                "session": 1,
+                "ms": 277127,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 5,
+                "session": 1,
+                "ms": 220272,
+                "refusedSubmissions": 0
+              },
+              {
+                "round": 6,
+                "session": 1,
+                "ms": 259388,
+                "refusedSubmissions": 0
+              }
+            ]
+          },
+          "design": {
+            "state": "counted",
+            "opened": 1,
+            "completed": 1,
+            "unfinished": 0,
+            "refusedSubmissions": 0,
+            "ms": 411482,
+            "rounds": [
+              {
+                "round": 1,
+                "session": 1,
+                "ms": 411482,
+                "refusedSubmissions": 0
+              }
+            ]
+          }
+        },
+        "roundPredicate": "a round opens at a session-prompt row with role review, a kind and outcome delivered or issued, and ends at the next review-check row of that kind with outcome validated; the review-check rows of that kind with outcome refused between are its refused submissions; a round no validated row ends is unfinished and adds no time"
+      }
+    }
+  }
+}

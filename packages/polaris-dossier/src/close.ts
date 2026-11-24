@@ -16,6 +16,7 @@ import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './run-tree-read.js';
+import { stepMeasures } from './step-measures.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -28,7 +29,7 @@ import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './r
  * The agent sessions' tokens and turns are invisible to Syzygy, so the record carries only the figure the operator declares, labelled
  * Inferred and attributed to the operator, and never as Observed or as a provider receipt; with none declared it says the usage was not
  * recorded and that Syzygy cannot observe it. Everything else the record carries from the run directory (the configuration, the brief's
- * execution rule, the agent's reported commands, the step instants, the breach log) is a stored record within the agent sessions' write
+ * execution rule, the agent's reported commands, the step instants and the stage timings and review rounds derived from them, the breach log) is a stored record within the agent sessions' write
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
  * Syzygy made no provider call for the run, issued no credential for it and wrote none to the state directory. */
 
@@ -146,6 +147,7 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     reportedCommands: reportedCommands(run, subject.clone.path, secret),
     agentUsage: usage,
     steps: stepInstants(run),
+    stepMeasures: closeStepMeasures(run, isoOf(now)),
     credential: { atClose: credential, breaches: breachLog(run), ...(credential.required ? { disclosure: CREDENTIAL_CHECK_DISCLOSURE } : {}) },
     declaredProvider: { provider: declared.agentProvider, contentClasses: subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
     noProviderCall: NO_PROVIDER_CALL,
@@ -221,6 +223,18 @@ export function stepInstants(run: string): Readonly<Record<string, unknown>> {
     entries.push({ step: text(entry['step'])!, at: text(entry['at'])!, outcome: text(entry['outcome']) ?? null });
   }
   return { label: 'Inferred', basis: 'the run\'s step log, which the agent sessions can write', entries, unreadable: unreadable + Math.max(0, lines.length - STEP_LINES_MAX) };
+}
+
+/** Stage timings, draft and inventory revisions and review rounds from the step log (REQ-polaris-generation-033 version 2.27): Inferred,
+ * and Unknown, never zero, where the log cannot be read or lacks the rows a figure needs. The same lines `stepInstants` reads. */
+export function closeStepMeasures(run: string, closedAt: string): ReturnType<typeof stepMeasures> {
+  const read = readLog(run, RUN_LAYOUT.steps);
+  if (!read.ok) return stepMeasures({ why: read.why }, closedAt);
+  const kept = read.lines.slice(0, STEP_LINES_MAX);
+  // Lines past the cap are not read, and count as unreadable as they do for the step instants.
+  const measures = stepMeasures(kept, closedAt);
+  const over = Math.max(0, read.lines.length - STEP_LINES_MAX);
+  return over > 0 && measures.label === 'Inferred' ? { ...measures, unreadableRows: measures.unreadableRows + over } : measures;
 }
 
 /** The lines of the step log or the breach log, read by the reader rule under 16,777,216 bytes (REQ-polaris-generation-033 version
