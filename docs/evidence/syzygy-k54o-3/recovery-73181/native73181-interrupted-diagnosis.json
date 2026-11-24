@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "diagnosedAt": "2026-11-24T18:18:37.178937+00:00",
+  "subject": {
+    "commit": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+    "runtimeCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+    "adoption": "A-218",
+    "scenario": "stop-resume",
+    "run": "/home/orca/.tmp/url-composed-bPKKgC/runs/run-b5e15341aa8f6545e37904b183487cf3",
+    "inputTreeSha256": "0a9162dcafc6e2599b00111861ee5bcc4195a2cc3e7ba4c8092aa5ef51106b37",
+    "profileRegistrySha256": "f061f4f3e0dcb59421504f842db976e022a6f47dab0049c8ee4f0ecbe2e93924"
+  },
+  "raw": {
+    "path": "/home/orca/.tmp/f3-native-recovery-73181/retained/native-cut.json.failure-9ce9028a331b0f933a0d7ae4f36bcbfeaaa0f37706229ecd31ca7ac2c1f35e9d.json",
+    "sha256": "9ce9028a331b0f933a0d7ae4f36bcbfeaaa0f37706229ecd31ca7ac2c1f35e9d",
+    "bytes": 98060
+  },
+  "cut": {
+    "path": "/home/orca/.tmp/f3-native-recovery-73181/retained/native-cut-8b95613982d9f6e9f9067665451e0e890a7a311aac84276a89827ddd27ebc418.json",
+    "sha256": "8b95613982d9f6e9f9067665451e0e890a7a311aac84276a89827ddd27ebc418",
+    "bytes": 137090
+  },
+  "log": {
+    "path": "/home/orca/.tmp/f3-native-recovery-73181/native-recovery.log",
+    "sha256": "399315be1c54e3789fe5c41ae25b1ef767316687a4e18ed70b2f88ddf231cdcf",
+    "bytes": 167967
+  },
+  "actualResumedAudit": {
+    "path": "/home/orca/.tmp/url-composed-host-2992300-1795543756993/acquisitions/attempt-nnxQCN/sessions-design.jsonl",
+    "sha256": "652cc27e9d87ced2faf0a341bac612117e3e917b74c0bb454ad0d6bcb4968aa1",
+    "bytes": 7621
+  },
+  "firstRefusal": {
+    "label": "Observed",
+    "sample": {
+      "ordinal": 74,
+      "phases": {
+        "verify": {
+          "startedMs": 0.04147899994859472
+        },
+        "process": {
+          "startedMs": 40.36383499996737
+        },
+        "storage": {
+          "startedMs": 40.42300799995428
+        }
+      },
+      "refusal": {
+        "phase": "storage",
+        "cause": "bounded-timeout",
+        "elapsedMs": 2338.4223289999645
+      }
+    },
+    "resourceCeilingMs": 2000,
+    "aggregateCeilingMs": 5000,
+    "firstRefusingPredicate": "inner resource bounded wait rejected while phase remained storage; storage and process were started but not accepted",
+    "timerDeliveryElapsedMs": 2338.4223289999645,
+    "authorityVerificationDurationMs": 2342.2880000000005,
+    "confirmationReached": false,
+    "causalLeaf": "Unknown: retained trace cannot distinguish filesystem or host scheduling from event-loop delay inside authority verification"
+  },
+  "decisiveTuples": [
+    {
+      "clock": "observeDesignRun-relative monotonic ms",
+      "tuple": "previous-confirmation",
+      "value": {
+        "ordinal": 73,
+        "verify": {
+          "startedMs": 180387.16,
+          "settledMs": 180578.411,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 180590.136,
+          "settledMs": 180723.251,
+          "outcome": "accepted"
+        }
+      }
+    },
+    {
+      "clock": "observeDesignRun-relative monotonic ms",
+      "tuple": "last-verification",
+      "value": {
+        "ordinal": 74,
+        "verify": {
+          "startedMs": 181975.442,
+          "settledMs": 184317.73,
+          "outcome": "accepted"
+        }
+      }
+    },
+    {
+      "clock": "sample-relative monotonic ms",
+      "tuple": "first-refusal",
+      "value": {
+        "ordinal": 74,
+        "phases": {
+          "verify": {
+            "startedMs": 0.04147899994859472
+          },
+          "process": {
+            "startedMs": 40.36383499996737
+          },
+          "storage": {
+            "startedMs": 40.42300799995428
+          }
+        },
+        "refusal": {
+          "phase": "storage",
+          "cause": "bounded-timeout",
+          "elapsedMs": 2338.4223289999645
+        }
+      }
+    },
+    {
+      "clock": "observeDesignRun-relative monotonic ms",
+      "tuple": "terminal",
+      "value": {
+        "atMs": 184530.469,
+        "outcome": "inspection-failed",
+        "latestSample": {
+          "ordinal": 74,
+          "verify": {
+            "startedMs": 181975.442,
+            "settledMs": 184317.73,
+            "outcome": "accepted"
+          }
+        }
+      }
+    },
+    {
+      "clock": "UTC",
+      "tuple": "captured-machine-peer-effect",
+      "at": "2026-11-24T18:14:19.039000+00:00",
+      "operation": "inference-forward",
+      "sequence": 8,
+      "recordSha256": "125e1cf5e5896b369ceed8c347c189aa9945ee561290f9f10d111b1f74acf540"
+    },
+    {
+      "clock": "UTC; second precision from supervisor display",
+      "tuple": "supervisor-boundary-unavailable",
+      "at": "2026-11-24T18:15:03Z",
+      "source": "native-recovery.log:141"
+    }
+  ],
+  "counts": {
+    "started": 74,
+    "verified": 74,
+    "verifyRefused": 0,
+    "verifyRejected": 0,
+    "confirmed": 73,
+    "confirmRefused": 0,
+    "confirmRejected": 0
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-guards",
+      "policyWithdrawal": "refused",
+      "claimWithdrawal": "refused"
+    },
+    {
+      "phase": "machine-claim",
+      "current": true,
+      "claimChecks": 1,
+      "withdrawn": true,
+      "asyncCurrent": true,
+      "asyncWithdrawn": true
+    },
+    {
+      "phase": "resumed-render",
+      "initialRemainingMs": 59917,
+      "elapsedMs": 18345.275864999974,
+      "remainingMs": 41572,
+      "admission": {
+        "entryMs": 10873.494716999994,
+        "entryRemainingMs": 49043,
+        "outcome": "accepted",
+        "settledMs": 17874.358792999992
+      },
+      "artifactAuthority": {
+        "calls": 79,
+        "totalMs": 7234.665246000106
+      },
+      "outcome": "rendered",
+      "producerRefusal": false
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "role-ended",
+      "roles": [
+        {
+          "role": "author",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "inventory",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "fidelity",
+          "outcome": "Unknown"
+        },
+        {
+          "role": "design",
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM"
+        }
+      ]
+    }
+  ],
+  "actualAuditRows": [
+    {
+      "sequence": 4,
+      "roleSequence": 1,
+      "kind": "declaration",
+      "recordSha256": "1f833b8d71f70ade6b26753c4376df1ed488598c78ac843aaeed020be3967c92",
+      "round": null,
+      "operation": null,
+      "inspectionMilliseconds": null
+    },
+    {
+      "sequence": 5,
+      "roleSequence": 2,
+      "kind": "launch-attempt",
+      "recordSha256": "ec05f440a221b73aaec4c14a2f3e407675c0bc0e0c047ea01c88c83566aa3658",
+      "round": null,
+      "operation": null,
+      "inspectionMilliseconds": 5000
+    },
+    {
+      "sequence": 6,
+      "roleSequence": 3,
+      "kind": "launch-history",
+      "recordSha256": "9a215374e126582b395195e97d764f4c153b4761f5177d4f5bf6030612b42fdc",
+      "round": null,
+      "operation": null,
+      "inspectionMilliseconds": null
+    },
+    {
+      "sequence": 7,
+      "roleSequence": 4,
+      "kind": "design-delivery",
+      "recordSha256": "98534fdc0ce1c1114d82cdf5a29c1022afe7123c723c8a0dc552df52df429efd",
+      "round": 2,
+      "operation": null,
+      "inspectionMilliseconds": null
+    },
+    {
+      "sequence": 8,
+      "roleSequence": 5,
+      "kind": "machine-peer",
+      "recordSha256": "125e1cf5e5896b369ceed8c347c189aa9945ee561290f9f10d111b1f74acf540",
+      "round": null,
+      "operation": "inference-forward",
+      "inspectionMilliseconds": null
+    }
+  ],
+  "distinctions": {
+    "resourceVsAggregate": "2s resource timeout rejected before 5s aggregate. Recorded 2338ms is delayed observation, not a raised deadline.",
+    "throwVsWithdrawal": "Error identity classified by inner bounded-timeout observer; 74 verifications accepted, no verification/confirmation refusals, sample74 confirmation not reached. No retained filesystem-rejection detail establishes a thrown filesystem leaf.",
+    "runExpiry": "Deadline 2026-11-24T20:09:48.430Z; supervisor failure displayed 18:15:03Z. Not original run expiry.",
+    "captureVsAuthority": "The last actual audit row captures an inference-forward machine-peer effect; it does not prove provider send, ordered eligibility or completed execution. Audit has five rows and no ordered design record.",
+    "recovery": "Draft0 rendered and design round2 delivery recorded. Exit1 role-ended is downstream of design inspection-failed, not restored render admission."
+  },
+  "sourceReferences": [
+    {
+      "file": "packages/polaris-dossier/src/session-launch.ts",
+      "lines": [
+        17,
+        23,
+        641,
+        650,
+        662,
+        665,
+        668,
+        713,
+        715,
+        724,
+        732,
+        734
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "lines": [
+        303,
+        310,
+        697
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/session-launch.test.ts",
+      "lines": [
+        1409,
+        1439,
+        1481
+      ]
+    },
+    {
+      "file": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+      "lines": [
+        109,
+        223
+      ]
+    }
+  ],
+  "boundedRecommendation": {
+    "label": "Inferred",
+    "change": "For genuine nominal ordered profiles only, complete full storage/process census first within unchanged original-sample-start 2000ms; then begin fresh asynchronous authority verification and fresh synchronous confirmation within unchanged original-sample-start 5000ms aggregate. Preserve ordinary parallel path and caller tightening.",
+    "justification": "Removes the demonstrated overlap between a still-pending census and 2342ms verifier; does not claim verifier CPU is the cause.",
+    "adoption": "Supersedes A-91 parallel sequencing with an explicit agent adoption; preserves A-218 finite resource/aggregate limits.",
+    "guardsToPreserve": [
+      "all-or-refuse full census",
+      "storage-first rejection precedence",
+      "no cached authority",
+      "synchronous confirmation immediately before sample completion",
+      "post-confirmation original deadline check",
+      "every protected effect independently rechecks authority",
+      "original run deadline and withdrawals",
+      "ordinary profile limits and nominal profile admission"
+    ],
+    "verificationNeeded": [
+      "ordered census blocked: verifier must not start; resource deadline rejects",
+      "census complete: slow verifier under remaining aggregate can pass",
+      "aggregate timeout refuses and late verifier cannot confirm",
+      "withdrawal after census refuses confirmation",
+      "confirmation exhausting aggregate refuses",
+      "ordinary concurrency behavior remains",
+      "same native interrupted loop red-before/green-after"
+    ]
+  },
+  "limitations": [
+    "Read-only diagnosis; no tests, builds, process manipulation or tracked edits.",
+    "No CPU/IO trace identifies the 2342ms verifier leaf.",
+    "Native recovery closure remains Unknown."
+  ]
+}

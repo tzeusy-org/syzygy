@@ -1,0 +1,69 @@
+{
+  "subjectCommit": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+  "sourceRuntime": "a22156faec6ad7458cd33371a92fd5d034b79466",
+  "capturedAt": "2026-11-24T18:28:11.896896+00:00",
+  "exit": 1,
+  "passed": 0,
+  "failed": 2,
+  "skipped": 5,
+  "population": 7,
+  "durationSeconds": 476.48,
+  "attempts": "One serial Vitest invocation selected both genuine Stop/Resume cases. No other heavy checks ran concurrently.",
+  "outcomes": {
+    "interrupted": "Resume render accepted and round2 prepared; sample74 storage resource bounded timeout2338ms, asyncverify accepted2342ms. No durableExecutionRecord. Exact IO/scheduling cause Unknown.",
+    "eligible": "Initial inventorycontrol publication failed beforeDesign/resume. Durableauditcapture is not delivery. Detailed callback predicate Unknown."
+  },
+  "artifacts": {
+    "commit": {
+      "sha256": "e2f24c4f08fd1cad5a01c26fa8a7aa080f5ddc9f72d74a2714b4ac228aca8b3e",
+      "bytes": 41
+    },
+    "tree": {
+      "sha256": "005ba3a73995aa30ebcdfb40fe506b473eba56093a9c1caeb6728def8dedcefa",
+      "bytes": 41
+    },
+    "exit": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "worker-summary.json": {
+      "sha256": "981b0a3b714716dc0fa8ca0627752031886bf5e2bac5bbdf317e8786ed8cf57c",
+      "bytes": 174
+    },
+    "worker-samples.jsonl": {
+      "sha256": "304b714d7fb4dd087f4577b2dcf84f53b61a907cebb941b660771a03b8acf859",
+      "bytes": 46
+    },
+    "capture-index.json": {
+      "sha256": "866a0ee41076b2e7b18f09fb54fc2225558a457d16445cbf352d206781bd3eff",
+      "bytes": 1167
+    },
+    "retained/native-cut.json.failure-9ce9028a331b0f933a0d7ae4f36bcbfeaaa0f37706229ecd31ca7ac2c1f35e9d.json": {
+      "sha256": "9ce9028a331b0f933a0d7ae4f36bcbfeaaa0f37706229ecd31ca7ac2c1f35e9d",
+      "bytes": 98060
+    },
+    "retained/native-cut.json.failure-43715751797b1ced87197233d33cdb3016d9c8cf3b94f5263c273c3f4686043c.json": {
+      "sha256": "43715751797b1ced87197233d33cdb3016d9c8cf3b94f5263c273c3f4686043c",
+      "bytes": 44967
+    },
+    "retained/native-cut-8b95613982d9f6e9f9067665451e0e890a7a311aac84276a89827ddd27ebc418.json": {
+      "sha256": "8b95613982d9f6e9f9067665451e0e890a7a311aac84276a89827ddd27ebc418",
+      "bytes": 137090
+    },
+    "native-recovery.log.gz": {
+      "sha256": "f7a88f0cfb49c31b8201799d04e33d4105647f189848eb2d159a567c0361c66d",
+      "bytes": 27735,
+      "uncompressedSha256": "399315be1c54e3789fe5c41ae25b1ef767316687a4e18ed70b2f88ddf231cdcf",
+      "uncompressedBytes": 167967
+    },
+    "native73181-interrupted-diagnosis.json": {
+      "sha256": "b65602cb89be266d3af1e36fb1261ef9aec497f7fd7dae4cb4eff6349a0b59fe",
+      "bytes": 11189
+    },
+    "native73181-eligible-diagnosis.json": {
+      "sha256": "ee32458d75d525993cf91454a9b368c52a401bb9b8a34585f1fb0b4d7fc99607",
+      "bytes": 8082
+    }
+  },
+  "acceptance": "Both recovery requirements remain unproven; this record is a failed attempt, not a completion claim."
+}

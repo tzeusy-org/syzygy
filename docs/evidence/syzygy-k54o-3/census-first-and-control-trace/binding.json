@@ -1,0 +1,83 @@
+{
+  "subjectCommit": "447b23e7672fc63e860d03498b08050a7bbc4c9e",
+  "observerCommit": "11d9c27f1e0a3c885f16a739223c4533d92b1a3c",
+  "capturedAt": "2026-11-24T18:31:02.905704+00:00",
+  "sourceFiles": {
+    "packages/polaris-dossier/src/session-launch.ts": "5d8df34df59458ac5cbf93779ede98bfb8e31774b6a87948d1fc0fb075d747c8",
+    "packages/polaris-dossier/src/session-launch.test.ts": "245916ae5af2ad1e49d9a4b48788bcc9f00b9a3da07617f2f339b6572f487d13",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "b9ace05cd6d1eee02f8af092c6e84a017950d8436a93b429dfe216f87a79c4b1"
+  },
+  "independentReviews": {
+    "sequencing": "PASS",
+    "controlObserver": "PASS"
+  },
+  "verification": {
+    "typecheck": "PASS",
+    "cloneFocused": {
+      "passed": 12,
+      "skipped": 46,
+      "population": 58,
+      "files": 1
+    },
+    "controlObserver": {
+      "passed": 3,
+      "skipped": 4,
+      "population": 7
+    },
+    "mutation": "Eager verification mutant failed intended positive census-reached assertion; source restored. Exact old/new fragments and subject bound in clone-binding.json.",
+    "netCaseGrowth": 1,
+    "attempts": "Initial focused matrix had11passes and one20s runner timeout. Same case passed standalone; subsequent clean-clone full selected matrix passed12. Original failed attempt retained, no underlying hardware-cause claim."
+  },
+  "scope": "Genuine nominal ordered profiles complete resource census before fresh authority verify/confirm. Original sample-start2s resource and5s aggregate ceilings, caller tightening, expiry, all protected-effect guards and ordinary parallel scheduling unchanged. Test-only control trace preserves callbacks and retains bounded metadata, including first closed failure reason after cap.",
+  "recoveryAcceptance": "Unknown;73181failedbothscenarios and is retained separately. New eligible replay first to resolve its control failure leaf.",
+  "artifacts": {
+    "census-first-independent-review-RAW.md": {
+      "sha256": "9918c29690c10736af5fecc9a1122ed8b496b1785967653a125371e53ac3b59a",
+      "bytes": 6415
+    },
+    "control-observer-independent-review-RAW.md": {
+      "sha256": "e2b18bb064143dafcd74c0cf14bb1e4752bd34b8bfb2e3a7519ebf5a224c3ff6",
+      "bytes": 2320
+    },
+    "control-observer.patch": {
+      "sha256": "a93a1f952a5a4bb6d05557df71eab46e338d5fbecc88c523d33907db374a7da5",
+      "bytes": 13570
+    },
+    "control-observer-verification.json": {
+      "sha256": "d2777b4de821ed04106a43cbd7379c27419abe4ff2e87948213b8702f4c6afe3",
+      "bytes": 967
+    },
+    "census-first-focused.log": {
+      "sha256": "6ce34aeb79b6fc36b41941259c635b21bbaf37f26051a41d39bbf53d016555a8",
+      "bytes": 12008
+    },
+    "census-first-three-second-recheck.log": {
+      "sha256": "030de6d00de5cb27077f11d384e5844d5dce301afee9237b220895e43cebae27",
+      "bytes": 10782
+    },
+    "census-first-control-typecheck.log": {
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "bytes": 37
+    },
+    "native73181-interrupted-diagnosis.json": {
+      "sha256": "b65602cb89be266d3af1e36fb1261ef9aec497f7fd7dae4cb4eff6349a0b59fe",
+      "bytes": 11189
+    },
+    "native73181-eligible-diagnosis.json": {
+      "sha256": "ee32458d75d525993cf91454a9b368c52a401bb9b8a34585f1fb0b4d7fc99607",
+      "bytes": 8082
+    },
+    "clone-binding.json": {
+      "sha256": "44f338633305e4ad2f37e3322f1137a19452cfe37c0dd386cdb2c890ad8ea53f",
+      "bytes": 537
+    },
+    "clone-focused.log": {
+      "sha256": "e593b0985af0766d46e910e932b7fd55cfa24ca338078f8cc9749fdf6d8aa390",
+      "bytes": 10861
+    },
+    "clone-eager-verification-mutant.log": {
+      "sha256": "80889b5712e356acde0aa4511d0658b8241b374015f66f8c6596141a0251693c",
+      "bytes": 11750
+    }
+  }
+}

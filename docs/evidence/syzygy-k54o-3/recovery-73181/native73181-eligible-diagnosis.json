@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "diagnosedAt": "2026-11-24T18:20:08.012896+00:00",
+  "subject": {
+    "commit": "73181a2eecc4f549b6955600c94b04f31a6279fc",
+    "runtimeCommit": "a22156faec6ad7458cd33371a92fd5d034b79466",
+    "adoption": "A-218",
+    "scenario": "eligible-stop-resume",
+    "run": "/home/orca/.tmp/url-composed-wdYGK7/runs/run-d8cc8e5d37aa5a908d68d7c0093ed601",
+    "inputTreeSha256": "0a9162dcafc6e2599b00111861ee5bcc4195a2cc3e7ba4c8092aa5ef51106b37",
+    "profileRegistrySha256": "f061f4f3e0dcb59421504f842db976e022a6f47dab0049c8ee4f0ecbe2e93924"
+  },
+  "raw": {
+    "path": "/home/orca/.tmp/f3-native-recovery-73181/retained/native-cut.json.failure-43715751797b1ced87197233d33cdb3016d9c8cf3b94f5263c273c3f4686043c.json",
+    "sha256": "43715751797b1ced87197233d33cdb3016d9c8cf3b94f5263c273c3f4686043c",
+    "bytes": 44967
+  },
+  "actualAuditFiles": [
+    {
+      "path": "/home/orca/.tmp/url-composed-host-2992300-1795543756993/acquisitions/attempt-M36B4d/sessions-author.jsonl",
+      "sha256": "969a3a9b7a7cb6884fec7ed7808078d647851b5546d7bc055e0b23564877789c",
+      "bytes": 174459
+    },
+    {
+      "path": "/home/orca/.tmp/url-composed-host-2992300-1795543756993/acquisitions/attempt-M36B4d/sessions-design.jsonl",
+      "sha256": "5c085230bfd2a1ea2d05661422af0cc2a4a3f7f80a908c1b01bda2e65ecde2e7",
+      "bytes": 1262
+    },
+    {
+      "path": "/home/orca/.tmp/url-composed-host-2992300-1795543756993/acquisitions/attempt-M36B4d/sessions-fidelity.jsonl",
+      "sha256": "071d64608e25d0dd648135bc2351c389bd929faec9fcdce30b26c92b55a422f7",
+      "bytes": 16259
+    },
+    {
+      "path": "/home/orca/.tmp/url-composed-host-2992300-1795543756993/acquisitions/attempt-M36B4d/sessions-inventory.jsonl",
+      "sha256": "959ca864695c7619e101df2cb8b94dcfac536c10b35be464a0647b339c5b1bc4",
+      "bytes": 17262
+    }
+  ],
+  "finding": {
+    "label": "Observed",
+    "firstRuntimeFailure": {
+      "reason": "control-unavailable",
+      "atMs": 463773.766911
+    },
+    "supervisorEvent": [
+      "run ended: typed control delivery refused"
+    ],
+    "failedBoundary": "Initial inventory draft-ready typed control publication; before initial Design launch, any eligible cut or resume bootstrap",
+    "assertionFailure": "stopped-history expects delivered to be defined, but no design delivery occurred",
+    "causalLeaf": "Unknown: control publication does not retain whether record/audit callback exceeded 1000ms, post-record current verification exceeded 1000ms or refused, or another control fault raced the publication.",
+    "sourceOrder": "control.publish validates and verifies, reserves event, records control-published, verifies again, queues event. Generic control onFailure discards its detailed reason when translating to control-unavailable."
+  },
+  "decisiveTuples": [
+    {
+      "clock": "performance.now absolute process ms",
+      "tuple": "first-runtime-failure",
+      "value": {
+        "reason": "control-unavailable",
+        "atMs": 463773.766911
+      }
+    },
+    {
+      "clock": "performance.now absolute process ms",
+      "tuple": "inventory-forward-rejection",
+      "value": {
+        "phase": "forward",
+        "timing": {
+          "startedMs": 372387.598357,
+          "settledMs": 464016.113811,
+          "outcome": "rejected"
+        }
+      },
+      "afterFirstRuntimeFailureMs": 242.3469000000041
+    },
+    {
+      "clock": "performance.now absolute process ms",
+      "tuple": "subsequent-socket-interruptions",
+      "value": [
+        {
+          "role": "inventory",
+          "event": "socket-error",
+          "atMs": 464021.515985,
+          "connectionMs": 94896.13854399999,
+          "responseMs": 94745.10732499999
+        },
+        {
+          "role": "fidelity",
+          "event": "socket-error",
+          "atMs": 464084.886398,
+          "connectionMs": 88166.44698100002,
+          "responseMs": 87745.98952200002
+        }
+      ]
+    },
+    {
+      "clock": "durable audit global sequence, no timestamp field",
+      "tuple": "captured-control-record",
+      "sequence": 126,
+      "recordSha256": "4f0d672db2eb491159db037a2334d5f15353073b097af80e5c793848ece09190",
+      "payload": {
+        "event": "control-published",
+        "eventBytes": 36,
+        "eventSha256": "443afbf77060d7d43115a406545c230f27752e0efde745f097a3c48195501754",
+        "role": "inventory"
+      },
+      "independentlyMatchedEvent": {
+        "event": "draft-ready",
+        "revision": 0
+      }
+    },
+    {
+      "clock": "UTC",
+      "tuple": "role-cleanup",
+      "roles": [
+        {
+          "role": "author",
+          "finishedAt": "2026-11-24T18:16:58.822000+00:00",
+          "outcome": "stopped"
+        },
+        {
+          "role": "inventory",
+          "finishedAt": "2026-11-24T18:16:58.763000+00:00",
+          "outcome": "stopped"
+        },
+        {
+          "role": "fidelity",
+          "finishedAt": "2026-11-24T18:16:58.767000+00:00",
+          "outcome": "stopped"
+        }
+      ]
+    }
+  ],
+  "captureVsDelivery": "A durable control-published row does not establish queued delivery; the audit callback or subsequent verification can refuse before queue push. Captured rows remain evidence of capture only.",
+  "inspectionEvidence": {
+    "roles": {
+      "author": {
+        "samples": 405
+      },
+      "inventory": {
+        "samples": 381
+      },
+      "fidelity": {
+        "samples": 347
+      }
+    },
+    "totalObservedSamples": 1133,
+    "rolesWithFirstRefusal": [],
+    "population": "three started roles: author, inventory, fidelity; design unstarted"
+  },
+  "auditPopulation": {
+    "records": 129,
+    "declaredDurableRecords": 129,
+    "controlRecords": 1,
+    "initialDesignAudit": {
+      "status": "read",
+      "count": 1,
+      "kinds": [
+        "declaration"
+      ]
+    },
+    "budget": {
+      "state": "open",
+      "reason": null,
+      "requestReservations": 8,
+      "completeUsageReports": 6,
+      "pendingRoles": [
+        "inventory",
+        "fidelity"
+      ]
+    },
+    "sourceCurrentness": "No retained per-control verify timing/result; exact authority cause unavailable."
+  },
+  "resumeEvidence": {
+    "resumeChecks": 0,
+    "resumeBootstrapKeys": [],
+    "resumeOriginSteps": 0,
+    "resumeStoreSteps": 0
+  },
+  "sourceReferences": [
+    {
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "lines": [
+        1377
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/session-control.ts",
+      "lines": [
+        52,
+        122,
+        128,
+        141,
+        145,
+        245,
+        252,
+        257,
+        258,
+        262
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "lines": [
+        385,
+        389,
+        741,
+        746
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "lines": [
+        2048,
+        2050
+      ]
+    }
+  ],
+  "boundedRecommendation": {
+    "label": "Inferred",
+    "action": "Add a read-only diagnostic at actual control callback/publication boundaries, retaining first exact phase, result/timeout, monotonic start/settle, and original failure reason. Reproduce this pre-design failure before changing any authority or callback ceiling.",
+    "preserve": [
+      "1000ms callback bound unless separately warranted and adopted",
+      "full fresh current checks before and after audit",
+      "no queue insertion after failed audit/currentness",
+      "original deadline",
+      "fail-closed control behavior"
+    ],
+    "notSupportedByThisEvidence": [
+      "Blame eligible failure on ordered Design inspection",
+      "Raise control callback limit without discriminating timeout from withdrawal",
+      "Treat control-published capture as successful delivery",
+      "Treat cleanup socket errors as first cause"
+    ]
+  },
+  "limitations": [
+    "Read-only diagnosis, no new execution, process changes, tests or tracked edits.",
+    "Exact first low-level control predicate is not recorded by current diagnostics.",
+    "Eligible recovery and final candidate acceptance remain Unknown."
+  ]
+}

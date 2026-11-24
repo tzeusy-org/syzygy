@@ -1,0 +1,90 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-authority-join-verify.riufsvas/w
+
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > compiles the independently named design profile with pinned version-two metadata
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > checks exact canonical ordered result, usage, latest-cache position and terminal shape
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > builds and selects only the design variant with the artifact result hint
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (ready)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (stale-verdict)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (out-of-order)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (truncated-terminal)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-turns)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (oversized-verdict)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-shape)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > observes the actual ordered design CLI exchange (insufficient-work)
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > runs the pinned CLI through actual namespace, bridge, MCP and composed host without raw output
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > reprobes a 'short-lived' unused preparation before binding and spawns only the fresh one
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > reprobes a 'expired' unused preparation before binding and spawns only the fresh one
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'before reprobe'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'after the first authority check'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a changed prepared directory 'after the second authority check'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses forged preparation/profile and changed support identities before actual host work
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > captures frozen selected launch limits before spawn and starts no child when their protected record fails
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > withholds native Author spawn when its disclosure write fails after preflight
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds a stuck launch audit, closes the host and does not launch late when the callback resolves
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > enforces output, storage, wall and explicit stop boundaries on the actual CLI
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > stops an actual private CLI at its sampled process bound and reports bounded unknown host cleanup
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > preserves an observed failed exit when supervisor stop arrives before the pipes close
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps the 200ms cadence, bounds one pending inspection to 2,000ms and withholds both samples on timeout
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > holds the storage directory until a submitted stat settles when enumeration fails
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > overlaps the next storage root and joins a current-close before publishing or retrying
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > overlaps the next storage root and joins a failed-close before publishing or retrying
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for closed while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for close-failed while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins the storage listing at EOF for tail-directory while keeping the anchor for tail recursion
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > refuses a task census when an opened listing disappears partway through
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > selects inspection ceilings from genuine ordered profiles and permits caller tightening
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for three-second-authority
+ × |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for blocking-authority 8756ms
+   → expected false to be true // Object.is equality
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for withdrawn
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for authority-timeout
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for resource-timeout
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for confirmation-expired
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when current
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when current-after-one-second
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when withdrawn
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when timed-out
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when census-timed-out
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > joins independent inspection authority with the live census when confirmation-expired
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'one missing entry'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'two missing entries in one batch'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'one missing entry on each of two walks'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'a non-ENOENT fault after a missing en…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'an unlisted stat error code'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'a sibling stat fault after a nested d…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'the shared entry allowance consumed o…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > bounds storage census retries with 'an oversized entry before a missing e…'
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'one child' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'two children' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'three children' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'root' vanishing at directory open
+ ↓ |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > distinguishes 'replaced child' vanishing at directory open
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| packages/polaris-dossier/src/session-launch.test.ts > prepared private CLI launch > keeps ordered inspection authority and resource deadlines distinct for blocking-authority
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ packages/polaris-dossier/src/session-launch.test.ts:1446:60
+    1444|         expect(f.captured()?.commandSha256).toBe(child.commandSha256);
+    1445|         const ended = child.finished.then(() => false);
+    1446|         expect(await Promise.race([enteredCensus, ended])).toBe(true);
+       |                                                            ^
+    1447|         expect(verify).not.toHaveBeenCalled();
+    1448|         let sampled: boolean | undefined;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 57 skipped (58)
+   Start at  02:29:35
+   Duration  12.21s (transform 2.34s, setup 10ms, collect 3.11s, tests 8.79s, environment 0ms, prepare 54ms)
+

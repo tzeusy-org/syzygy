@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-11-24T18:28:27.847887+00:00",
+  "checkout": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w",
+  "baseCommit": "447b23e7672fc63e860d03498b08050a7bbc4c9e",
+  "file": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "sha256": "b9ace05cd6d1eee02f8af092c6e84a017950d8436a93b429dfe216f87a79c4b1",
+  "diff": "/home/orca/.tmp/f3-native-admission-fixes/control-observer.patch",
+  "diffSha256": "a93a1f952a5a4bb6d05557df71eab46e338d5fbecc88c523d33907db374a7da5",
+  "focusedVerification": {
+    "command": "npx vitest run --project integration packages/polaris-dossier/src/url-run-composed.test.ts -t 'bounded restoration observer'",
+    "testsPassed": 3,
+    "testsSkipped": 4,
+    "testFilesPassed": 1,
+    "testFilesTotal": 1,
+    "durationSeconds": 4.09,
+    "nativeCasesRun": false
+  },
+  "diffCheck": "passed",
+  "scope": "Only url-run-composed.test.ts modified by this agent; parent owns other modified launcher files. No commits."
+}

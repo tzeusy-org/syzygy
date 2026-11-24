@@ -1,0 +1,20 @@
+{
+  "subjectCommit": "447b23e7672fc63e860d03498b08050a7bbc4c9e",
+  "results": [
+    {
+      "name": "focused",
+      "exit": 0,
+      "logSha256": "e593b0985af0766d46e910e932b7fd55cfa24ca338078f8cc9749fdf6d8aa390"
+    },
+    {
+      "name": "eager-verification-mutant",
+      "exit": 1,
+      "logSha256": "80889b5712e356acde0aa4511d0658b8241b374015f66f8c6596141a0251693c"
+    }
+  ],
+  "mutant": {
+    "old": "let verification = ordered ? undefined : verify();",
+    "new": "let verification = verify();"
+  },
+  "sourceRestored": true
+}

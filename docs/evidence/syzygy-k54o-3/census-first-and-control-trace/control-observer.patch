@@ -1,0 +1,177 @@
+diff --git a/packages/polaris-dossier/src/url-run-composed.test.ts b/packages/polaris-dossier/src/url-run-composed.test.ts
+index 60de3d9db..5f3f02f27 100644
+--- a/packages/polaris-dossier/src/url-run-composed.test.ts
++++ b/packages/polaris-dossier/src/url-run-composed.test.ts
+@@ -19,6 +19,7 @@ import { runPolarisCli, runUrlSupervisorLoop, type SupervisorState } from './pol
+ import { openUrlSupervisorStop, readUrlSupervisorState, writeUrlSupervisorState } from './url-supervisor-state.js';
+ import { loadSessionCredential } from './session-credential.js';
+ import * as runSessions from './url-run-sessions.js';
++import * as sessionControl from './session-control.js';
+ import type { UrlRunSessions } from './url-run-sessions.js';
+ import { sessionRelayTestPort, type SessionRelayPorts } from './session-relay.js';
+ import type { UrlRuntime } from './url-runtime.js';
+@@ -256,6 +257,60 @@ type OrdinaryAttempt = {
+   following: OrdinaryMediation[];
+   stages: { phase: OrdinaryStage; timing: ResumeStamp }[];
+ };
++type ControlCallbackEntry = ResumeStamp & { ordinal: number; controller: number; phase: 'current' | 'audit' };
++
++/** Test-only callback observation: retain metadata, never event bodies or errors.
++ * Return the original value/promise and propagate original synchronous throws. */
++function observeControlCallbacks() {
++  const entries: ControlCallbackEntry[] = [], pending = new Map<number, ControlCallbackEntry>();
++  const latest: Partial<Record<ControlCallbackEntry['phase'], ControlCallbackEntry>> = {};
++  const totals = { current: { calls: 0, refused: 0, rejected: 0 }, audit: { calls: 0, refused: 0, rejected: 0 } };
++  let ordinal = 0, controllers = 0, omitted = 0, pendingOmitted = 0;
++  let firstCallbackRefusal: ControlCallbackEntry | undefined;
++  const snapshotPending = () => {
++    const retained = new Map(pending);
++    for (const entry of Object.values(latest)) if (entry.outcome === undefined) retained.set(entry.ordinal, entry);
++    return [...retained.values()].map(entry => ({ ...entry }));
++  };
++  let firstFailure: { controller: number; reason: sessionControl.UrlSessionControlFailure; atMs: number;
++    pending: ControlCallbackEntry[]; pendingOmitted: number } | undefined;
++  const measure = <T>(controller: number, phase: ControlCallbackEntry['phase'], call: () => T): T => {
++    const entry: ControlCallbackEntry = { ordinal: ++ordinal, controller, phase, startedMs: performance.now() };
++    const total = totals[phase]; total.calls++;
++    if (entries.length < 32) entries.push(entry); else omitted++;
++    const retained = pending.size < 32;
++    if (retained) pending.set(entry.ordinal, entry); else pendingOmitted++;
++    latest[phase] = entry;
++    const settle = (outcome: ResumeObservation): void => {
++      Object.assign(entry, { settledMs: performance.now(), outcome });
++      if (retained) pending.delete(entry.ordinal); else pendingOmitted--;
++      if (outcome !== 'accepted') { total[outcome]++; firstCallbackRefusal ??= { ...entry }; }
++    };
++    try {
++      const result = call();
++      const accepted = (value: unknown): void => { settle(phase === 'current' && value !== true ? 'refused' : 'accepted'); };
++      if (result instanceof Promise) void result.then(accepted, () => settle('rejected'));
++      else accepted(result);
++      return result;
++    } catch (error) { settle('rejected'); throw error; }
++  };
++  return {
++    wrap(options: sessionControl.UrlSessionControlOptions): sessionControl.UrlSessionControlOptions {
++      const controller = ++controllers, { current, audit, onFailure } = options;
++      return { ...options,
++        current: () => measure(controller, 'current', () => current()),
++        audit: event => measure(controller, 'audit', () => audit(event)),
++        onFailure: reason => {
++          firstFailure ??= { controller, reason, atMs: performance.now(), pending: snapshotPending(), pendingOmitted };
++          return onFailure(reason);
++        },
++      };
++    },
++    summary: () => structuredClone({ controllers, entries, omitted, totals, latest,
++      pending: snapshotPending(), pendingOmitted, firstCallbackRefusal, firstFailure }),
++  };
++}
++
+ type ResumeOriginPhase = 'register' | 'list-tree' | 'representative' | 'renderer';
+ type ResumeOriginStep = ResumeStamp & {
+   phase: ResumeOriginPhase;
+@@ -1535,6 +1590,46 @@ describe('bounded restoration observer (no native authority fixture)', () => {
+       expected as Parameters<Ledger['restoreFrozenOrigins']>[1], wait))).rejects.toBe(marker);
+     expect(trace.summary().firstRefusal?.reason).toBe('threw');
+     expect(JSON.stringify(trace.summary())).not.toContain('OWN_NOT_DIAGNOSTIC');
++
++    const controlTrace = observeControlCallbacks();
++    const event = Object.freeze({ event: 'control-published', role: 'inventory', eventSha256: 'OWN_EVENT_DIGEST', eventBytes: 1 });
++    let releaseCurrent!: (value: boolean) => void;
++    const heldCurrent = new Promise<boolean>(resolve => { releaseCurrent = resolve; });
++    const current = vi.fn((): boolean | Promise<boolean> => true);
++    const auditResult = Promise.resolve(), audit = vi.fn((): void | Promise<void> => auditResult);
++    const failureResult = Promise.resolve(), onFailure = vi.fn(() => failureResult);
++    const callbacks = controlTrace.wrap({ current, audit, onFailure } as unknown as sessionControl.UrlSessionControlOptions);
++    for (let index = 0; index < 40; index++) expect(callbacks.current()).toBe(true);
++    expect(current).toHaveBeenCalledTimes(40);
++    current.mockReturnValueOnce(heldCurrent);
++    expect(callbacks.current()).toBe(heldCurrent);
++    expect(callbacks.audit(event as sessionControl.UrlSessionControlAudit)).toBe(auditResult);
++    expect(audit).toHaveBeenCalledExactlyOnceWith(event);
++    expect(audit.mock.calls[0]).toHaveLength(1);
++    expect(callbacks.onFailure('binding-changed')).toBe(failureResult);
++    expect(onFailure).toHaveBeenCalledExactlyOnceWith('binding-changed');
++    const firstFailure = controlTrace.summary().firstFailure;
++    expect(firstFailure).toMatchObject({ controller: 1, reason: 'binding-changed', pending: [
++      { ordinal: 41, phase: 'current' }, { ordinal: 42, phase: 'audit' },
++    ] });
++    releaseCurrent(false); await heldCurrent; await auditResult;
++    expect(controlTrace.summary()).toMatchObject({ omitted: 10, pending: [], pendingOmitted: 0,
++      firstCallbackRefusal: { ordinal: 41, phase: 'current', outcome: 'refused' } });
++    expect(controlTrace.summary().entries).toHaveLength(32);
++    // A later callback settlement/failure must not overwrite the first failure's in-flight snapshot.
++    expect(callbacks.onFailure('audit-unavailable')).toBe(failureResult);
++    expect(controlTrace.summary().firstFailure).toEqual(firstFailure);
++    current.mockImplementationOnce(() => { throw marker; });
++    try { callbacks.current(); expect.unreachable(); } catch (error) { expect(error).toBe(marker); }
++    const auditRejected = Promise.reject(marker);
++    audit.mockReturnValueOnce(auditRejected);
++    expect(callbacks.audit(event as sessionControl.UrlSessionControlAudit)).toBe(auditRejected);
++    await expect(auditRejected).rejects.toBe(marker);
++    expect(controlTrace.summary().totals).toEqual({ current: { calls: 42, refused: 1, rejected: 1 },
++      audit: { calls: 2, refused: 0, rejected: 1 } });
++    expect(current).toHaveBeenCalledTimes(42); expect(audit).toHaveBeenCalledTimes(2); expect(onFailure).toHaveBeenCalledTimes(2);
++    const controlDiagnostic = JSON.stringify(controlTrace.summary());
++    for (const excluded of ['OWN_NOT_DIAGNOSTIC', 'OWN_EVENT_DIGEST', 'control-published']) expect(controlDiagnostic).not.toContain(excluded);
+   });
+ });
+ 
+@@ -1572,6 +1667,11 @@ describe('composed URL run with actual role processes', () => {
+     let resumeAuditSetup: ResumeAuditSetup | undefined;
+     let eligiblePhase = 'fixture';
+     let firstRuntimeFailure: { reason: string; atMs: number } | undefined;
++    const controlTrace = stoppingCut ? observeControlCallbacks() : undefined;
++    if (controlTrace !== undefined) {
++      const createControl = sessionControl.createUrlSessionControl;
++      vi.spyOn(sessionControl, 'createUrlSessionControl').mockImplementation(options => createControl(controlTrace.wrap(options)));
++    }
+     let eligibleProgress: () => Record<string, unknown> = () => ({});
+     if (eligibleStop) {
+       // Emit one snapshot before Vitest can abort the test while an awaited production phase is pending.
+@@ -1580,7 +1680,7 @@ describe('composed URL run with actual role processes', () => {
+         console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
+           resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, firstRefusedCurrent: inference?.firstRefusedCurrent,
+           latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
+-          firstRuntimeFailure, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
++          firstRuntimeFailure, controlTrace: controlTrace?.summary(), eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
+           firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
+       }, 340_000).unref();
+       onTestFinished(() => { clearTimeout(diagnostic); });
+@@ -1817,7 +1917,7 @@ describe('composed URL run with actual role processes', () => {
+       const file = process.env['SYZYGY_F3_NATIVE_EVIDENCE_FILE'];
+       if (file !== undefined) await fs.writeFile(file, JSON.stringify({ scenario, inputTreeSha256: runtime.inputTreeSha256,
+         profileRegistrySha256: runtime.profileRegistrySha256,
+-        profiles: f.plans.map(plan => ({ role: plan.role, id: plan.profile.id, sha256: plan.profile.digest })), ...result }, null, 2));
++        profiles: f.plans.map(plan => ({ role: plan.role, id: plan.profile.id, sha256: plan.profile.digest })), controlTrace: controlTrace?.summary(), ...result }, null, 2));
+     };
+     const session = (role: string) => f.plans.find(plan => plan.role === role)!.profile.input.sessionId;
+     const sourceReads = (role: string) => ['src/kestrel.c', 'docs/notes.txt'].map((file, index) => tool(`source_${role === 'author' ? 1 : 2}_${index}`, 'source_read', { path: file }));
+@@ -1946,7 +2046,7 @@ describe('composed URL run with actual role processes', () => {
+       }
+       const initialDesignAudit = eligibleStop ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
+       throw new Error(JSON.stringify({ ownStartFailure: failures, relayRoles, audit, auditReadFailures, initialDesignAudit,
+-        initialRoleInspections: inspections, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(),
++        initialRoleInspections: inspections, firstRuntimeFailure, controlTrace: controlTrace?.summary(), ordinarySend: ordinarySend?.summary(),
+         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()] }));
+     }); cleanup.push(controller.stop);
+     expect(Object.keys(initialRoleInspections())).toEqual(['author', 'inventory', 'fidelity']);
+@@ -2434,7 +2534,7 @@ describe('composed URL run with actual role processes', () => {
+         await fs.writeFile(`${retainedCut}.failure.json`, JSON.stringify({ scenario, run: f.run, root: f.root, hidden: f.hidden,
+           failure: error instanceof Error ? error.message : 'Unknown', initialDelivery, inputTreeSha256: runtime.inputTreeSha256,
+           profileRegistrySha256: runtime.profileRegistrySha256, stopped, events, failures, resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs,
+-          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
++          resumeAuditSetup, resumeDiagnostic: resumeEvidence, firstRuntimeFailure, controlTrace: controlTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
+           eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
+           initialDesignAudit, initialRoleInspections: initialRoleInspections(),
+           initialOrderedAudit: initialTrace?.orderedAudit, initialInference: initialTrace?.inference }, null, 2));
+@@ -2444,7 +2544,7 @@ describe('composed URL run with actual role processes', () => {
+         stoppedEvidence, liveFinalPreparations, liveFinals: liveFinals.length, finalProductAssertions,
+         initialRoleInspections: initialRoleInspections(),
+         resumeChecks, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeDiagnostic: resumeEvidence, initialDesignAudit, initialOrderedAudit: initialTrace?.orderedAudit,
+-        initialInference: initialTrace?.inference, firstRuntimeFailure, ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
++        initialInference: initialTrace?.inference, firstRuntimeFailure, controlTrace: controlTrace?.summary(), ordinarySend: ordinarySend?.summary(), firstReproductionRefusal,
+         eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
+         producerReports: f.producerReports(),
+         reads: f.productReadReports(), relayObservations, receipts }));
