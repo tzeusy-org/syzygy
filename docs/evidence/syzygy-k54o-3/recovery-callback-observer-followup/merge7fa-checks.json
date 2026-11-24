@@ -1,0 +1,35 @@
+{
+  "subjectCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+  "cleanClone": true,
+  "checks": [
+    {
+      "label": "typecheck-repeat",
+      "exit": 0,
+      "elapsedSeconds": 30.09278558503138,
+      "log": "/home/orca/.tmp/f3-native-admission-fixes/typecheck-repeat-7fa.log",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "label": "brief-integration",
+      "exit": 0,
+      "elapsedSeconds": 6.847549594996963,
+      "log": "/home/orca/.tmp/f3-native-admission-fixes/brief-integration-7fa.log",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/brief-7fa-integration-results.json",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ]
+    }
+  ]
+}

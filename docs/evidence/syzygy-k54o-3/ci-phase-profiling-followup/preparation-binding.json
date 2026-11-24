@@ -1,0 +1,55 @@
+{
+  "baseCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+  "subject": "Frozen actual uncommitted three-file CI placement/profiling change",
+  "files": {
+    "scripts/check_spec_reconciliation.py": {
+      "beforeSha256": "82778c08272a8f64c66b74c65652eaeed2013e86ac746081e636368c31517276",
+      "actualSha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f"
+    },
+    ".github/workflows/governance-docs.yml": {
+      "beforeSha256": "7ed51cd405f791cd86ffb0fef9fb3b266e4fcf089fae329ae123048c4801b1f8",
+      "actualSha256": "5f6b95a12f2003a2b20f1fcffae00008b3331ce2729d0678832b829dd571f2b6"
+    },
+    "CONTRIBUTING.md": {
+      "beforeSha256": "5095009d5ebdea2024efd70318f85c4753bf520e2a0d21c16c48adb6ca4bd2f8",
+      "actualSha256": "12252cd5ea432b24acaa29bfd45500b24dfaff09f755a464f63c847e65a93a14"
+    }
+  },
+  "actualDiffSha256": "8d0eb172ce348c8e0577762e75efa10e7771f4e0fa3d92de50bb0d496357804a",
+  "verification": {
+    "originalSelftestAstIncludingAllFixturesAssertionsAndCallOrder": true,
+    "editionFamilies": [
+      "figure_cases",
+      "derived_cases",
+      "ledger_cases",
+      "kinds_cases",
+      "manifests_cases",
+      "repairs_cases",
+      "maps_cases",
+      "bounds_cases",
+      "corr_cases",
+      "coverage_cases",
+      "infra_cases",
+      "findpages_cases",
+      "subsec_cases",
+      "reltype_cases",
+      "hero_cases",
+      "readers_cases",
+      "cont_cases",
+      "model_cases",
+      "worth_cases"
+    ],
+    "editionFamilyCount": 19,
+    "workflowRunLineMultisetPreserved": true,
+    "workflowRunLineCount": 140,
+    "requiredChecksJobByteIdentical": true,
+    "profilingEnvOnlyExistingReconciliationStep": true,
+    "contributingBytesOutsideGovParagraphPreserved": true,
+    "gitDiffCheck": "PASS",
+    "actualHelperByteIdenticalToIsolated16CaseSubject": true
+  },
+  "runtimeBoundary": "Only prior isolated synthetic helper verification inherited by exact byte identity; no canonical selftest/project import/test/build run. Fresh-main witness totals and hosted family durations Unknown.",
+  "timingEvidence": "Observed historical88gov436s/v1.6selftest67s/readability193s/reconciliation908s; placement369s/260s arithmetic is Inferred only.",
+  "index": "No stage/commit by this agent.",
+  "reviewStatus": "Awaiting fresh source-only review of these frozen bytes."
+}

@@ -1,0 +1,150 @@
+{
+  "subject": {
+    "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+    "tree": "03525a5911216977e088b947d1c54149e4a66da6",
+    "scenario": "eligible-stop-resume",
+    "rawFailureSha256": "361d3f136106dc58d2dc7d2770920ec46ac2466515410b0e9a0ed36a3f18d537",
+    "rawLogSha256": "52feca4b16c5b4eeed4df7977166bf5793d17378f744497ca29b1aa10c628318"
+  },
+  "capturedAt": "2026-11-24T19:34:27.756144+00:00",
+  "observed": {
+    "runner": "case715155ms; invocation721.60s; exit1; 900000ms case allowance, runtime limits unchanged",
+    "bootstrap": {
+      "restore-plans": {
+        "startedMs": 458414.41215,
+        "settledMs": 522088.618162,
+        "outcome": "accepted"
+      },
+      "load-renderer": {
+        "startedMs": 523591.876575,
+        "settledMs": 523906.175723,
+        "outcome": "accepted"
+      },
+      "create-origins": {
+        "startedMs": 525378.371047,
+        "settledMs": 610514.484197,
+        "outcome": "accepted"
+      },
+      "restore-products": {
+        "startedMs": 627138.933172,
+        "settledMs": 720308.079483,
+        "outcome": "rejected"
+      }
+    },
+    "firstRefusal": {
+      "ordinal": 2,
+      "phase": "ledger-restore",
+      "atMs": 720307.971938,
+      "startedMs": 629119.813965,
+      "runRemainingMs": 6489518,
+      "previous": {
+        "ordinal": 3,
+        "phase": "history-transfer",
+        "outcome": "accepted",
+        "settledMs": 639389.422927
+      },
+      "reason": "threw"
+    },
+    "ledgerRestore": {
+      "startedMs": 629119.813965,
+      "settledMs": 720307.876146,
+      "elapsedMs": 91188.06218100002,
+      "authority": {
+        "calls": 53,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 80880.15697899985,
+        "longestMs": 1808.6213060000446
+      }
+    },
+    "historyTransfer": {
+      "ordinal": 3,
+      "phase": "history-transfer",
+      "parent": "ledger-restore",
+      "startedMs": 629131.312188,
+      "runRemainingMs": 6580694,
+      "authority": {
+        "calls": 4,
+        "refused": 0,
+        "rejected": 0,
+        "totalMs": 6604.6079880000325,
+        "longestMs": 1845.7776669999585
+      },
+      "guardChecks": 0,
+      "guardThrows": 0,
+      "settledMs": 639389.422927,
+      "outcome": "accepted"
+    },
+    "nodePopulation": 72,
+    "freshCheckNodePopulation": 19,
+    "staticComparison": {
+      "primary": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/derivation-comparison.json",
+      "primarySha256": "67b5f6fc96f5766ba9e0831252573fdc0a12055945508c445c1a71f7af03e9ce",
+      "independent": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/independent-check.json",
+      "independentSha256": "6c85815020fb292d9a436120f43353683796ea97a3558d062eae9df3b3f0234d",
+      "scope": "12 source-span +2 source-whole recomputed from pinned Git bytes;3 fixed +1 renderer compared to retained declaration;1 manifest remainder recomputed; normalized run-control independently recomputed.19/19 metadata comparisons match in both methods. No fresh receipt or authority was issued."
+    },
+    "runRemainingMsAtFirstRefusal": 6489518
+  },
+  "inferred": [
+    "Fresh create-origins succeeded and plannedOrigins equality is checked before restore-products in polaris.ts; fixed/renderer planned digest/classes/origin IDs are therefore consistent with the retained declaration.",
+    "The retained metadata subjects do not explain the rejection in the checked19-node population.",
+    "Repeated fresh authority checks account for80880.157ms of91188.062ms ledger duration, but this aggregate does not establish CPU contention, a failed node or private deadline leaf.",
+    "A5000ms sourceOperation can refuse even when all authority callbacks return true, because original authority work remains inside the elapsed operation. The91s whole restore duration is not itself a5s operation measurement."
+  ],
+  "unknown": [
+    "Exact derivation node and private refusal predicate.",
+    "Whether sourceOperation timed out, a source-reader named-directory guard refused, a screening callback refused, or another unobserved predicate threw.",
+    "No runtime refusal leaf or completed record observed for this eligible attempt; the recorded runtime failure is bootstrap ledger-restore rejection."
+  ],
+  "recommendedNextStep": {
+    "scope": "Bounded per-original-operation metadata diagnostics; no deadline or authority-policy changes.",
+    "shape": [
+      "Record restore derivation ordinal/kind and entry/settlement; retain first refusal independently of rolling cap.",
+      "Record sourceOperation original5000ms elapsed/deadline and first original checkTime rejection, separately from currentfalse or thrown authority.",
+      "If test ports suffice, wrap captureUrlOriginSourceReader original readScreenedBlob/open/listTree calls and existing current callback with per-operation ALS; preserve arguments, promises and errors, no added probes.",
+      "Do not claim public ledger.sourceSpan spy sees restoreFrozenOrigins private verifiedSpan calls; those are lexical. If exact private reason still cannot be obtained, add only an explicit opt-in diagnostic at that private boundary after review."
+    ],
+    "preserve": [
+      "Fresh current checks, screening and secret checks; exact pin/source-store identity; no reconstructed grant; original5s source bound and2h run expiry."
+    ]
+  },
+  "sourceBindings": [
+    {
+      "subject": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "sha256": "0d7cd92825aea17f91b1642816f4f8ae892e19acd3de8faea6236c31d1f80a5c",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/url-source-reader.ts",
+      "sha256": "301f69a55da4589d8ecdfab39bf397d343101db9d2996c25c89f16e8e31cc320",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/url-run-origins.ts",
+      "sha256": "8fdf1af3eb185cea583b634d8142fb22e19b4b97ab95d955505e477da334a38e",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "sha256": "d9d2a0f4dbf9bb2b798babf278aafac0c49a3bc013df424c22a7a3907dbc993f",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "0cca188002c4d50780146b3a8e49182b9e58586350cb3ef8abc310e54985e186",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/run-record.ts",
+      "sha256": "9fb292a10944aea22d47eec0369db4f36142bebd604c604478a403ddc409f9b8",
+      "workingBytesMatch": true
+    },
+    {
+      "subject": "packages/polaris-dossier/src/run-config.ts",
+      "sha256": "4f0091d4e5a152d3395dbf50df9e45785d33ceb5565313d90779f3e218d101cd",
+      "workingBytesMatch": true
+    }
+  ],
+  "distinction": "Local interrupted88e first leaf is earlier attempt-allowed audit rejection; hosted interrupted88e first leaf is response runtime-authority refusal. Neither is the eligible ledger-restore bootstrap refusal."
+}

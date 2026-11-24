@@ -1,0 +1,111 @@
+{
+  "subject": "isolated exact R2 profiling helper; no project imports",
+  "helperSha256": "6b93881b42f397eae5fdc83d268060e3d48852d3319f5e15b9e778fe6dab9408",
+  "cases": [
+    {
+      "id": "StringIO-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "StringIO-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "WriteError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "WriteError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "FlushError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "FlushError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "ClosedError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "ClosedError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "disabled-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 0
+    },
+    {
+      "id": "clock1-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "clock2-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "count-failure-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "disabled-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 0
+    },
+    {
+      "id": "clock1-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "clock2-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "count-failure-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 1
+    }
+  ],
+  "caseCount": 16,
+  "passed": 16,
+  "mutation": {
+    "id": "unguarded-finally-output",
+    "outcome": "killed",
+    "predicate": "return identity preserved despite failing stderr",
+    "observed": "('changed-exception', 'OSError')"
+  },
+  "executionBoundary": "Only extracted helper AST compiled. Fake time/environment/streams and synthetic target callables. No project module, fixture, real selftest or build executed."
+}

@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "diagnosedAt": "2026-11-24T19:13:58.392429+00:00",
+  "subject": {
+    "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+    "tree": "03525a5911216977e088b947d1c54149e4a66da6",
+    "scenario": "stop-resume",
+    "run": "/home/orca/.tmp/url-composed-IGFHB4/runs/run-cf79e13ca27a7be82d19ffeece36a05e",
+    "inputTreeSha256": "59e865bbf8a856431769fb50c442057e75c402bf928f5bd2d708c708a5aed206",
+    "profileRegistrySha256": "93a9bdf5d5a2bc8f236c1616675cff02707e4fa41886e74c6ebf4ea157142b63"
+  },
+  "raw": {
+    "path": "/home/orca/.tmp/f3-native-interrupted-88e122e/retained/native-cut.json.failure-8c9b5084fda64ade5af2ebddfa93aa432d979c0b317af68118a7568a0dacd51d.json",
+    "sha256": "8c9b5084fda64ade5af2ebddfa93aa432d979c0b317af68118a7568a0dacd51d",
+    "bytes": 142372
+  },
+  "cut": {
+    "path": "/home/orca/.tmp/f3-native-interrupted-88e122e/retained/native-cut-c2d8c68c48ae9a87430b893109dec24c63d3ee0fee40a588b0cb810ce10d71f7.json",
+    "sha256": "c2d8c68c48ae9a87430b893109dec24c63d3ee0fee40a588b0cb810ce10d71f7",
+    "bytes": 137090
+  },
+  "rawLog": {
+    "path": "/home/orca/.tmp/f3-native-interrupted-88e122e/native-recovery.log",
+    "sha256": "f3ea264afebbdafeacc00564d3118530309cf879baddb0b77243ac2bdf0367c2",
+    "bytes": 179742
+  },
+  "actualResumedAudit": {
+    "path": "/home/orca/.tmp/url-composed-host-3290971-1795547070445/acquisitions/attempt-JwXgcu/sessions-design.jsonl",
+    "sha256": "2c56dae3d48a1a444e8849855966bf71c0eec55f427c997a9409697e6488ca13",
+    "bytes": 12404,
+    "mtimeUTC": "2026-11-24T19:09:25.210032+00:00",
+    "completeFinalLF": true,
+    "records": 8,
+    "independentCanonicalRecordDigestMatches": 8,
+    "checkedRoleLinks": 7,
+    "lastRecord": {
+      "sequence": 11,
+      "kind": "relay",
+      "recordSha256": "c7c026c42947573c0601fe93cee7ed320a34347507a3d5eaeb81eca0d23ad055",
+      "payloadEvent": "attempt-allowed",
+      "eventAt": "2026-11-24T19:08:04.206Z"
+    },
+    "physicalWriteDoesNotEstablish": "fsync, post-write currentness, publication or successful callback completion"
+  },
+  "sourceBindings": [
+    {
+      "path": "packages/polaris-dossier/src/session-launch.ts",
+      "sha256": "5d8df34df59458ac5cbf93779ede98bfb8e31774b6a87948d1fc0fb075d747c8",
+      "gitBlob": "f528d7ceb0049205ba7a03ec1b6db40d121f2485"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "sha256": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+      "gitBlob": "817d61c795c3c628035ca71723f2666a0e397f16"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-host.ts",
+      "sha256": "32df5239315d089d88db2eaeb6bc38ae94eca343452cc6126280903f2e6ba64f",
+      "gitBlob": "7a06af39ea7fe39bf0fbf349443efd4694c214c1"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "sha256": "4298a15b5c346dea6f2763410307e945b21fe917336114f45a027ad70d3e87ad",
+      "gitBlob": "fed709570999b865dc4f0d6581d7a58d02f90b56"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-audit.ts",
+      "sha256": "b7ae85bfdc1bb951ba118e385c9bb8f15b827061b0b019645d1c8d8b0ec35bd7",
+      "gitBlob": "af59357fb9144ab4ad0a56dee37f714e1ca9ef69"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "sha256": "68c7f5015ef316461accee889ca8f6d31daa29de54d5da02228b81e357569253",
+      "gitBlob": "7ff4196c14e8ea33a40706e0fe49b4f8bfa821ea"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-session-budget.ts",
+      "sha256": "4aab2f6ab455f5d85e57e281b890ae8b2c7774c97fef3b6940f8bf011141e11b",
+      "gitBlob": "95e178509f6b6341332a9333a580a455e1471e91"
+    },
+    {
+      "path": "packages/polaris-dossier/src/session-relay.ts",
+      "sha256": "789bb656bf92bf94b1005869b262abebbd29bf03f8e3d8f45ad15808c08e53e5",
+      "gitBlob": "7036f1613713f3ec05b4374e3b211f691f5316bb"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "sha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+      "gitBlob": "e558c8ae5f823c49b97d725f469337141065fefe"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "sha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "gitBlob": "4ff6f052f06a0c5c0655a58f00312c6d84f1e85a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-store.ts",
+      "sha256": "feba54f7101ea656172e6a67d2238617d5cb1a572c9beb34fbd6cfae1d8f01ca",
+      "gitBlob": "7de220b7ce26afbb6aefe1a1888c0870667d5302"
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "sha256": "103aacefcde3769194f2b4c1e5b20a72e257388d586d1a837643206b0b44d50d",
+      "gitBlob": "14c5f63264e19b79eb63b5fff205979f4bd333b0"
+    }
+  ],
+  "observed": {
+    "firstRefusingObservedOperation": "ordered host audit callback for initial relay attempt-allowed; rejection occurs after the matching relay row is physically written, before confirmed append return",
+    "firstRejectedCallback": {
+      "event": "attempt-allowed",
+      "timing": {
+        "startedMs": 216252.763,
+        "settledMs": 229938.299,
+        "outcome": "rejected"
+      }
+    },
+    "firstRejectedEffect": {
+      "startedMs": 215952.463,
+      "settledMs": 229938.331,
+      "outcome": "rejected"
+    },
+    "firstRejectedMediation": {
+      "startedMs": 146480.514,
+      "settledMs": 229938.462,
+      "outcome": "refused"
+    },
+    "lastAcceptedHostCurrent": {
+      "startedMs": 216252.987,
+      "stages": [
+        {
+          "phase": "wait-for-samples",
+          "timing": {
+            "startedMs": 216253.025,
+            "settledMs": 217117.619,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "runtime-authority",
+          "timing": {
+            "startedMs": 217117.632,
+            "settledMs": 218037.402,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 218037.544,
+            "settledMs": 218353.957,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "wait-for-samples",
+          "timing": {
+            "startedMs": 218354.158,
+            "settledMs": 218671.449,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 218671.465,
+            "settledMs": 218984.526,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 218984.536,
+            "settledMs": 218984.543,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 218984.544,
+            "settledMs": 219140.172,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 219140.335,
+            "settledMs": 219293.259,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 23302
+        },
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 219293.295,
+            "settledMs": 219604.051,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 219604.063,
+            "settledMs": 219604.069,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 219604.07,
+            "settledMs": 219766.645,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "delivery-assertion",
+          "timing": {
+            "startedMs": 219766.759,
+            "settledMs": 220967.445,
+            "outcome": "accepted"
+          }
+        }
+      ],
+      "settledMs": 221775.521,
+      "outcome": "accepted"
+    },
+    "sample136": {
+      "ordinal": 136,
+      "phases": {
+        "process": {
+          "startedMs": 0.04662800004007295,
+          "settledMs": 1625.454469999997,
+          "outcome": "accepted"
+        },
+        "storage": {
+          "startedMs": 0.08863800001563504,
+          "settledMs": 1626.429197999998,
+          "outcome": "accepted"
+        },
+        "verify": {
+          "startedMs": 1626.4407700000447,
+          "settledMs": 1787.7017480000504,
+          "outcome": "accepted"
+        },
+        "confirm": {
+          "startedMs": 1787.70517500001,
+          "settledMs": 1787.7312840000377,
+          "outcome": "refused"
+        }
+      },
+      "refusal": {
+        "phase": "confirm",
+        "cause": "authority-refused",
+        "elapsedMs": 1787.832254000008
+      }
+    },
+    "sampleAuthority": {
+      "ordinal": 136,
+      "verify": {
+        "startedMs": 230134.455,
+        "settledMs": 230295.7,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 230295.719,
+        "settledMs": 230295.723,
+        "outcome": "refused"
+      }
+    },
+    "terminal": {
+      "atMs": 230350.308,
+      "outcome": "inspection-failed",
+      "latestSample": {
+        "ordinal": 136,
+        "verify": {
+          "startedMs": 230134.455,
+          "settledMs": 230295.7,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 230295.719,
+          "settledMs": 230295.723,
+          "outcome": "refused"
+        }
+      }
+    },
+    "sampleCounts": {
+      "started": 136,
+      "verified": 136,
+      "verifyRefused": 0,
+      "verifyRejected": 0,
+      "confirmed": 135,
+      "confirmRefused": 1,
+      "confirmRejected": 0
+    },
+    "lastAcceptedProductPreparation": {
+      "startedMs": 148889.287,
+      "settledMs": 199355.615,
+      "outcome": "accepted",
+      "reproduction": {
+        "phase": "reproduce",
+        "timing": {
+          "startedMs": 152595.297,
+          "settledMs": 190861.57,
+          "outcome": "accepted"
+        }
+      },
+      "readReproducedDelivery": {
+        "phase": "read-reproduced-delivery",
+        "timing": {
+          "startedMs": 191557.153,
+          "settledMs": 197768.498,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "preparedProductCurrent": {
+      "startedMs": 199517.571,
+      "stages": [
+        {
+          "phase": "machine-effect",
+          "timing": {
+            "startedMs": 199517.678,
+            "settledMs": 199517.686,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "budget",
+          "timing": {
+            "startedMs": 199517.692,
+            "settledMs": 199517.694,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "machine-authority",
+          "timing": {
+            "startedMs": 199517.696,
+            "settledMs": 199668.32,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 199668.477,
+            "settledMs": 199823.052,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 42773
+        }
+      ],
+      "settledMs": 199823.095,
+      "outcome": "accepted"
+    },
+    "firstFollowingEffectGuardRefusalMs": 230128.664
+  },
+  "chronology": [
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 221775.521,
+      "tuple": "host-current accepted"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 229938.299,
+      "tuple": "attempt-allowed ordered-host audit rejected"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 229938.462,
+      "tuple": "inference mediation refused"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 230128.664,
+      "tuple": "following machine effect guard refused"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 230295.7,
+      "tuple": "fresh async authority verify accepted"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 230295.723,
+      "tuple": "fresh sync confirmation refused"
+    },
+    {
+      "clock": "observeDesignRun relative monotonic ms",
+      "atMs": 230350.308,
+      "tuple": "Design inspection-failed terminal"
+    }
+  ],
+  "ordering": {
+    "auditRejectBeforeConfirmMilliseconds": 357.42399999999907,
+    "auditCallbackDurationMilliseconds": 13685.535999999993,
+    "asyncVerificationDurationMilliseconds": 161.24500000002445,
+    "resourceCeilingMilliseconds": 2000,
+    "aggregateCeilingMilliseconds": 5000,
+    "resourceAndAggregateExhausted": false
+  },
+  "causalAssessment": {
+    "label": "Inferred",
+    "callbackPath": "session-relay audit effect -> ordered-design-host.audit -> accepted host current -> selectedController.observe(initial attempt-allowed) -> url-run-ordered-attempt audit -> base audit.append(relay) -> enqueue/commitRelay/commit -> physical row write -> post-write authority/sync/readback/publication and final guard",
+    "confirmationCascade": "The initial controller observation reserves the request and sets initialBudgetPending. The matching physical row proves control reached lower input.audit. When that callback rejects, ordered host catch calls poison and controller.retire(refused); session stop invokes budget.uncertainAttempt(design), setting usage-unavailable. effectBudgetCurrent then refuses before claim/CPU/host checks. This source-constrained cascade explains the four-microsecond confirmation refusal; it is not a separately observed image/kernel refusal.",
+    "leadingLeaf": "Unknown: the base audit append has a 5000ms deadline and repeated fresh callbacks plus filesystem identity/sync/readback checks, but this run recorded no base append entry or internal poison predicate. A complete physical relay row narrows the failure to confirmation/return after the write without proving which guard or callback refused.",
+    "whyNotProvenTimeout": "The 13685.536ms wrapper includes accepted host current and controller.observe before lower append; no separate lower append start time exists. Comparing total wrapper time with the lower5000ms ceiling is insufficient.",
+    "identityEvidence": "Parent and kernel-peer observations through214920.992ms accepted. No later identity-specific refusal is retained. Physical inode/name state sampled after termination cannot prove its state at the failure instant.",
+    "budgetSnapshot": "No resumed terminal budget snapshot retained; budget cascade follows the observed matching write plus exact source ordering, not a recorded budget snapshot."
+  },
+  "distinctions": {
+    "notPriorCensusFailure": "Storage and process accepted at1626.429/1625.454ms within2000ms; fresh verify accepted at1787.702ms within5000ms.",
+    "notRunnerTimeout": "Case returned failure in312317ms under900000ms selected runner allowance. Log reports1failed6skipped/7 and318.19s suite.",
+    "notRunExpiry": "Original deadline 2026-11-24T21:04:40.258000+00:00; display ends19:09:47Z.",
+    "captureNotSend": "Resumed audit has three captured machine-peer inference-forward events and one attempt-allowed row; it has no send-attempt/send-outcome/response-admitted. This does not prove a provider send.",
+    "notExecutionClosure": "External state observation records recordPresentfalse and finalSitenull; recovery is not complete."
+  },
+  "minimalNextStep": {
+    "label": "Inferred",
+    "action": "Instrument the existing test-only createUrlSessionAudit wrapper for the base append callback, not only ordered writer append. Reuse AsyncLocalStorage phase observation around original audit.append and existing callback/FileHandle methods, preserving values/promises/arguments and call counts. Retain first failure beyond bounded cap.",
+    "retainMetadata": [
+      "closed eventkind/role/event enum, ordinal, monotonic append start/settle and original5000ms deadline",
+      "each original current callback start/settle boolean/rejection",
+      "original file operation start/settle outcome and pending operation at rejection; no paths/body/error text",
+      "bounded first failure plus active/latest phase even beyond retention cap",
+      "terminal resumed budget and host health only when already captured by runtime; do not call new authority for diagnostics",
+      "actual existing enclosing ordered store exclusive entry/callback and real lease.sampleCurrent/current return timings, so30s held effect exhaustion is distinguishable from audit5000ms exhaustion; no extra authority samples"
+    ],
+    "discriminates": [
+      "actual base append deadline exhaustion before/after physical write",
+      "fresh current callbackfalse/rejected vs timedout",
+      "filesystem operation rejection vs callback deadline/readback exhaustion"
+    ],
+    "preserve": [
+      "5000ms base audit bound",
+      "2000ms resource and5000ms aggregate sample bounds",
+      "fresh next-act currentness",
+      "all complete prefix/identity/fsync/readback and fail-closed poison guards",
+      "original run deadline and bounded product leases"
+    ],
+    "concreteFixNow": "None warranted until the lower append refusing predicate is measured. Do not change ceilings or suppress confirmation.",
+    "firstPoisonProposal": "If existing test wrappers cannot identify the private guard, use an opt-in first-party read-only observer keyed to the exact genuine audit object. Each enqueue/queued task/timer captures its own context and phase child ids; never use a shared mutable globalphase. Bounded first refusal survives cap and later concurrent settlements.",
+    "focusedTests": [
+      "nominal result/promise/argument/callcount invariance",
+      "postwrite auditdeadline versus heldleaseexpiry attribution",
+      "currentfalse and originalthrow metadata without retainederrorvalues",
+      "filesystemidentity/shortwrite and physicalcapture versus publishedprefix",
+      "queued operation deadline cannot overwrite the running predecessor context",
+      "concurrent segment phase ids retain firstrefusal",
+      "firstfailure beyond32operation/96phasecap stillretained",
+      "unregistered/copied audit objects cannot enable observation"
+    ]
+  },
+  "sourceReferences": [
+    {
+      "file": "packages/polaris-dossier/src/url-ordered-design-host.ts",
+      "lines": [
+        68,
+        129,
+        132,
+        133,
+        136
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-run-ordered-attempt.ts",
+      "lines": [
+        290,
+        295
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "lines": [
+        424,
+        426,
+        428,
+        433,
+        511,
+        516,
+        783,
+        813,
+        832,
+        845,
+        853,
+        932
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-ordered-design-session.ts",
+      "lines": [
+        158,
+        167,
+        390,
+        391,
+        392
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-session-budget.ts",
+      "lines": [
+        90,
+        92,
+        185
+      ]
+    },
+    {
+      "file": "packages/polaris-dossier/src/url-run-sessions.ts",
+      "lines": [
+        303,
+        311,
+        698
+      ]
+    }
+  ],
+  "limitations": [
+    "No source edits, tests, builds, extra runtime authority calls, restarts or pushes.",
+    "Exact base append first poison predicate remains Unknown.",
+    "Eligible replay of this subject is independent and was not inspected or disturbed."
+  ],
+  "rankedHypotheses": [
+    {
+      "rank": 1,
+      "label": "Inferred",
+      "hypothesis": "Enclosing30s ordered machine-store effect lease expires while the base audit append is confirming its physical write.",
+      "support": "Prepared product current settled199823.095ms and audit rejected229938.299ms, separation30115.204ms. Actual exclusive acquisition/start time is missing; this proximity is not causal proof.",
+      "discriminator": "Capture original exclusive entry/callback and real lease.current/sampleCurrent calls without adding calls. Compare actual checkDeadline monotonic origin to firstnull; reject hypothesis if lease remains current throughout lower append refusal."
+    },
+    {
+      "rank": 2,
+      "label": "Inferred",
+      "hypothesis": "Base audit5000ms wait/guard expires during post-write fresh currentness/fsync/readback.",
+      "discriminator": "Observe actual base append entry and originaldeadline plus phase timings. A rejection at its deadline with stillcurrent enclosing lease discriminates this. Reject if it refuses earlier on a different firstpredicate."
+    },
+    {
+      "rank": 3,
+      "label": "Inferred",
+      "hypothesis": "Filesystem identity/prefix or originalI/O rejection after physical write poisons audit.",
+      "discriminator": "First fixedenum identity/read/write/sync failure on exactoperation, with boundcurrentness stillaccepted; no body/path/errorvalue retention."
+    },
+    {
+      "rank": 4,
+      "label": "Inferred",
+      "hypothesis": "Another protected effect/currentness dependency refuses before its deadline.",
+      "discriminator": "A real current callback returnsfalse/rejects while both auditdeadline and enclosinglease remainopen; retain scoped firstreason. Fresh async parentverify alone does not test that held machine effect."
+    }
+  ]
+}

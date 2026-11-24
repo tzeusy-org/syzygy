@@ -1,0 +1,59 @@
+{
+  "subjectCommit": "cd8e607b8f1f93d498ebfcc865b80811a737c0ee",
+  "subjectTree": "5e31731b298bec18741d41c5786c5c1438729c08",
+  "sourceCommits": {
+    "timer": "d613542fbfb7d7d90ee9ba8b9ee98bf9359c4ba5",
+    "audit": "cd8e607b8f1f93d498ebfcc865b80811a737c0ee"
+  },
+  "sourceFiles": {
+    "packages/polaris-dossier/src/url-machine-peer.test.ts": "db4dd48317c56486328833b1dade35d31ef6cff291d88d3d644d3404119bf5f8",
+    "packages/polaris-dossier/src/url-run-composed.test.ts": "170d145f450d19881dc627c23754f44627fc1f5d46e9d1de3a640113073a7803"
+  },
+  "reviews": {
+    "timer": {
+      "verdict": "PASS",
+      "scope": "Source only"
+    },
+    "audit": {
+      "verdict": "PASS",
+      "scope": "Source only"
+    }
+  },
+  "verification": {
+    "focusedClone": {
+      "exit": 0,
+      "passed": 4,
+      "skipped": 29,
+      "population": 33,
+      "files": 2,
+      "resultsIndependentlyCounted": true,
+      "scope": "Three existing bounded-observer cases and one deterministic native parent-timeout case; composed recovery cases skipped."
+    },
+    "typecheck": {
+      "exit": 0,
+      "source": "primary worktree before commit; source hashes match subject; untracked evidence excluded",
+      "cleanClone": false
+    },
+    "currentMergedMain": "Later merge7fa15c9 includes additional main code; these scoped results remain bound to cd8.",
+    "merge7fa": {
+      "subjectCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+      "cleanClone": true,
+      "typecheckExit": 0,
+      "briefPassed": 46,
+      "briefPopulation": 46,
+      "briefFiles": 1,
+      "results": "brief-7fa-integration-results.json"
+    }
+  },
+  "limits": "Test-only metadata, arguments, promise/error identity and resource ceilings retain their behavior. No product runtime source changes. No native recovery/record/final-candidate acceptance claim. Any later source edit retires exact source review.",
+  "rawLogs": {
+    "focused.log.gz": {
+      "rawSha256": "70cbbdf874c634309abf2d80b9d83edebababe61338d1770c50628d83f2a4779",
+      "rawBytes": 88
+    },
+    "typecheck-worktree.log.gz": {
+      "rawSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "rawBytes": 37
+    }
+  }
+}

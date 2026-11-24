@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "5d967d2626456d97ebf41065259fbd82910bab1e",
+  "sourcePath": "scripts/check_spec_reconciliation.py",
+  "sourceSha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f",
+  "helperSha256": "e7c69868f6836b7f89766771d802b9e536fdc6dc03633a39f365eafbbb742fd3",
+  "harnessSha256": "2516279043d1f637ab5353ec749c39b7cdb7eddfb647c1e66127fb7ea4906c3a",
+  "caseCount": 16,
+  "passed": 16,
+  "cases": [
+    {
+      "id": "StringIO-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "StringIO-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "WriteError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "WriteError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "FlushError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "FlushError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "ClosedError-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "ClosedError-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "disabled-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 0
+    },
+    {
+      "id": "clock1-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "clock2-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "count-failure-return",
+      "originalOutcome": "returned",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "disabled-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 0
+    },
+    {
+      "id": "clock1-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 1
+    },
+    {
+      "id": "clock2-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 2
+    },
+    {
+      "id": "count-failure-raise",
+      "originalOutcome": "raised",
+      "functionCalls": 1,
+      "clockCalls": 1
+    }
+  ],
+  "mutation": {
+    "id": "unguarded-finally-output",
+    "outcome": "killed",
+    "predicate": "return identity despite failing stderr",
+    "observed": "('changed-exception', 'OSError')",
+    "old": "        try:\n            metadata = {\"phase\": phase,\n                        \"elapsedMs\": (time.monotonic_ns() - started) / 1_000_000,\n                        \"outcome\": outcome}\n            if witnesses is not None:\n                metadata[\"witnessesAdded\"] = len(witnesses) - before\n            print(\"SELFTEST_PROFILE \" + json.dumps(metadata, sort_keys=True),\n                  file=sys.stderr, flush=True)\n        except Exception:\n            pass  # A diagnostic failure must not replace the result or error.\n",
+    "new": "        metadata = {\"phase\": phase,\n                    \"elapsedMs\": (time.monotonic_ns() - started) / 1_000_000,\n                    \"outcome\": outcome}\n        if witnesses is not None:\n            metadata[\"witnessesAdded\"] = len(witnesses) - before\n        print(\"SELFTEST_PROFILE \" + json.dumps(metadata, sort_keys=True),\n              file=sys.stderr, flush=True)\n",
+    "mutantHelperSha256": "d1e47e84e620cc5b89119df5976c62a39eec80f32fe33649c96fe38bedbcd28e"
+  },
+  "executionBoundary": "Only the extracted helper AST executes, using fake environment, clock, streams and synthetic callables. No project module, fixture, canonical selftest or build is imported/executed."
+}

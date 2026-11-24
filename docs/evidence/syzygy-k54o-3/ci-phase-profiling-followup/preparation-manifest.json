@@ -1,0 +1,30 @@
+{
+  "actual-owned.diff": {
+    "sha256": "8d0eb172ce348c8e0577762e75efa10e7771f4e0fa3d92de50bb0d496357804a",
+    "bytes": 12607
+  },
+  "binding.json": {
+    "sha256": "402c68da013493c026a5d31a5eac212895cfec81910b62afd33b661be39a1b3f",
+    "bytes": 2334
+  },
+  "diff-check.txt": {
+    "sha256": "ba492fd97230e1989818ea49139bba1aabd484ba39b11a13d538bca2dcd9909f",
+    "bytes": 56
+  },
+  "inherited-isolated-helper-checks.json": {
+    "sha256": "ac8ce01bd4ed224fef5550798af6385c491d89f8548aa0bb31a8e7b7d6b5153a",
+    "bytes": 2657
+  },
+  "sources/.github/workflows/governance-docs.yml": {
+    "sha256": "5f6b95a12f2003a2b20f1fcffae00008b3331ce2729d0678832b829dd571f2b6",
+    "bytes": 34219
+  },
+  "sources/CONTRIBUTING.md": {
+    "sha256": "12252cd5ea432b24acaa29bfd45500b24dfaff09f755a464f63c847e65a93a14",
+    "bytes": 20130
+  },
+  "sources/scripts/check_spec_reconciliation.py": {
+    "sha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f",
+    "bytes": 603179
+  }
+}

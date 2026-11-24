@@ -1,0 +1,95 @@
+{
+  "subjectCommit": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "subjectTree": "03525a5911216977e088b947d1c54149e4a66da6",
+  "testedPrMerge": "2b70df707652831d024e2ce084a693ede8e4a577",
+  "nodeRun": 45466219510,
+  "governanceRun": 45466219373,
+  "source": "Frozen git blobs from published head, not the possibly edited worktree. Commit parent/tree metadata fetched from GitHub git/commits; retained in tested-merge-identity.json.",
+  "sources": [
+    {
+      "path": ".github/workflows/node-ci.yml",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "c9f1cfcd3ecd38bdc86c5b35f32d4ef5ae710125",
+      "sha256": "8bfaf1f607e8d25a26ca9be63861834e8c011e8beb8ae0397a3f5285e3f7808a",
+      "bytes": 13747
+    },
+    {
+      "path": ".github/workflows/governance-docs.yml",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "4969660d11aaacde28b1a47d6f58039d4ca0f590",
+      "sha256": "7ed51cd405f791cd86ffb0fef9fb3b266e4fcf089fae329ae123048c4801b1f8",
+      "bytes": 33977
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "829af1b20ba1e7b2aae6db1685e692a10718904f",
+      "sha256": "5095009d5ebdea2024efd70318f85c4753bf520e2a0d21c16c48adb6ca4bd2f8",
+      "bytes": 19792
+    },
+    {
+      "path": "scripts/run_integration_lane.mjs",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "b7b09de7809d8712b777b8736df010e99619d80d",
+      "sha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "bytes": 9791
+    },
+    {
+      "path": "scripts/check_spec_reconciliation.py",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "ea330eaf5e0065932202b157000fc6dc4a59bbe8",
+      "sha256": "bf1890564f7c6fb6d7e31bf628fdc12fde6081e80a4cd6a4f89606ac5e7b2bfb",
+      "bytes": 583822
+    },
+    {
+      "path": "vitest.tiers.ts",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "af7e31b6e7a8b399f6089e95f052f1041318483c",
+      "sha256": "8641a4e5c4d06253c47b71247e88b66448406701c29b50749edb6e6d676138c8",
+      "bytes": 15648
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.test.ts",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "a548b45c3b7500eb2bb2a61c956d8bc7c4ad94f0",
+      "sha256": "3f0af7fe67dce57fc3a1d9056868742575ade71b3702e3373b9c07f2b0a5711d",
+      "bytes": 33332
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "e558c8ae5f823c49b97d725f469337141065fefe",
+      "sha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+      "bytes": 165685
+    },
+    {
+      "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+      "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+      "gitBlob": "4ff6f052f06a0c5c0655a58f00312c6d84f1e85a",
+      "sha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "bytes": 38140
+    }
+  ],
+  "compressedRecords": [
+    {
+      "path": "snapshot-20261124T191945Z.json.gz",
+      "uncompressedSha256": "96c6c7870995581cf12536d7c9ea61d2cbc72398c6fa9e166994085d96e5769e",
+      "uncompressedBytes": 96476,
+      "gzipMtime": 0
+    },
+    {
+      "path": "final-hosted-summary.json.gz",
+      "uncompressedSha256": "e41abb9e5a5ddee6c4af4618fcb5b6609b9d4e19b464a69f21e68562d75a3e13",
+      "uncompressedBytes": 53602,
+      "gzipMtime": 0
+    }
+  ],
+  "provenanceLimitations": [
+    "Job/run/step timestamps are gh API metadata retained in the terminal snapshot. Fifteen jobs were observed in the complete returned job populations (10 node, 5 governance).",
+    "Unit and failure excerpt files contain selected original decoded job-log lines; timing projections and totals are derived. Full unit/native/governance logs are deliberately not retained. No complete raw-log digest or full structured unit result artifact is claimed.",
+    "Native projections omit product bodies, messages, paths and most stage entries; they support only named timing/refusal observations. The underlying causes remain Unknown.",
+    "Run-created time is the observed proxy for push/PR dispatch. Exact push time and separate per-job enqueue timestamps were unavailable. Start-from-run includes dependencies and queue.",
+    "Four actual success receipt ZIPs are retained with GitHub artifact SHA256 digests. Their SHA is standard PR merge GITHUB_SHA, with exact published-head parent and equal tree. Three missing success receipts preclude an exact seven-lane claim.",
+    "This record reports the completed runs on the published tree; it does not claim that later fixes pass or that CI satisfies either seven-minute clock."
+  ]
+}

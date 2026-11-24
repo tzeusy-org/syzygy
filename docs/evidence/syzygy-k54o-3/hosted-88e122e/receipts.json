@@ -1,0 +1,61 @@
+{
+  "subjectCommit": "2b70df707652831d024e2ce084a693ede8e4a577",
+  "publishedHead": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "testedTree": "03525a5911216977e088b947d1c54149e4a66da6",
+  "sameTreeAsPublishedHead": true,
+  "runId": 45466219510,
+  "source": "GitHub artifact metadata and individually downloaded ZIP bytes through gh api; digest verified before JSON parsing.",
+  "expectedLanes": [
+    "core-1",
+    "core-2",
+    "core-3",
+    "complete",
+    "delivery-stop",
+    "stop-resume",
+    "eligible-stop-resume"
+  ],
+  "verifiedReceiptCount": 4,
+  "exactMandatorySet": false,
+  "artifacts": [
+    {
+      "id": 14955542096,
+      "name": "integration-receipt-core-1",
+      "digest": "sha256:9ddb67a8c221940510b83040d7e7f6ab34d056a9f59b433abc99ec168c20f24a",
+      "archiveDigestVerified": true,
+      "receipt": {
+        "lane": "core-1",
+        "sha": "2b70df707652831d024e2ce084a693ede8e4a577"
+      }
+    },
+    {
+      "id": 14955038682,
+      "name": "integration-receipt-complete",
+      "digest": "sha256:45707d7e85acd9bc351657bb67f0250e67a1814910576010c328890641a97e2c",
+      "archiveDigestVerified": true,
+      "receipt": {
+        "lane": "complete",
+        "sha": "2b70df707652831d024e2ce084a693ede8e4a577"
+      }
+    },
+    {
+      "id": 14954754234,
+      "name": "integration-receipt-delivery-stop",
+      "digest": "sha256:9c0831f006bf594e695dd7262bea486409553b5d4f49535127f41fcae101bd09",
+      "archiveDigestVerified": true,
+      "receipt": {
+        "lane": "delivery-stop",
+        "sha": "2b70df707652831d024e2ce084a693ede8e4a577"
+      }
+    },
+    {
+      "id": 14953714259,
+      "name": "integration-receipt-core-2",
+      "digest": "sha256:6ff91a5aa08af8d95d8c3b6796934d9bc82d925776972baf64df516ba12c2f6a",
+      "archiveDigestVerified": true,
+      "receipt": {
+        "lane": "core-2",
+        "sha": "2b70df707652831d024e2ce084a693ede8e4a577"
+      }
+    }
+  ]
+}

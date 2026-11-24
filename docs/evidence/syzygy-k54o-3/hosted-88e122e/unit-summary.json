@@ -1,0 +1,29 @@
+{
+  "subjectCommit": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "runId": 45466219510,
+  "jobId": 138701716740,
+  "source": "Connected GitHub decoded job log",
+  "sourceLogCharacters": 2205945,
+  "reporterLines": [
+    "2026-11-24T19:06:41.4464934Z  Test Files  256 passed (256)",
+    "2026-11-24T19:06:41.4487433Z       Tests  6400 passed | 1 skipped (6401)",
+    "2026-11-24T19:06:41.4518227Z    Duration  95.78s (transform 5.18s, setup 2.63s, collect 27.30s, tests 118.33s, environment 33ms, prepare 12.19s)"
+  ],
+  "driverResult": {
+    "counts": {
+      "passed": 6400,
+      "failed": 0,
+      "skipped": 1,
+      "todo": 0
+    },
+    "expected": 256,
+    "collected": 256,
+    "executed": 256,
+    "missing": 0,
+    "extra": 0,
+    "unexecuted": 0,
+    "problems": [],
+    "cleanup": true,
+    "ok": true
+  }
+}

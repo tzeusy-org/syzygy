@@ -1,0 +1,39 @@
+{
+  "subject": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "governanceRun": 45466219373,
+  "reconciliationJob": 138701718383,
+  "source": "GitHub connector decoded job logs; allowlisted final selftest summaries",
+  "reconciliationSummary": [
+    "2026-11-24T19:19:04.1101498Z SELFTEST PASS: clean scratch copy and its signed- and adopted-addition variants pass; 549 of 549 mutants killed by their expected predicate; 108 of 108 controls held (commit 2b70df707652)"
+  ],
+  "governanceFixtureSummaries": [
+    "2026-11-24T19:04:13.8994397Z selftest PASS: 11 line fixtures and one committed Git fixture",
+    "2026-11-24T19:04:18.0593586Z 11 fixtures, 0 failing — a check that cannot fail is not a check",
+    "2026-11-24T19:04:18.1661764Z 21 fixtures, 0 failing — a check that cannot fail is not a check",
+    "2026-11-24T19:06:55.9290836Z 181 fixtures, 0 failing",
+    "2026-11-24T19:07:10.9775612Z 36 fixtures, 0 failing",
+    "2026-11-24T19:07:14.4002304Z 32 fixtures, 0 failing",
+    "2026-11-24T19:07:20.5433908Z 39 fixtures, 0 failing",
+    "2026-11-24T19:07:31.0089346Z 26 fixtures, 0 failing",
+    "2026-11-24T19:07:51.2219927Z 26 fixtures, 0 failing",
+    "2026-11-24T19:08:29.9954934Z 26 fixtures, 0 failing",
+    "2026-11-24T19:09:41.6106061Z 28 fixtures, 0 failing",
+    "2026-11-24T19:09:43.9894711Z 25 fixtures, 0 failing",
+    "2026-11-24T19:09:46.6440523Z 30 fixtures, 0 failing",
+    "2026-11-24T19:09:49.9758750Z 31 fixtures, 0 failing",
+    "2026-11-24T19:10:12.1806955Z 16 recording fixtures, 0 failing",
+    "2026-11-24T19:10:12.8308606Z 66 fixtures, 0 failing",
+    "2026-11-24T19:10:13.0813859Z 38 recording fixtures, 0 failing",
+    "2026-11-24T19:10:14.0844498Z 80 P-114 recorder fixtures, 0 failing",
+    "2026-11-24T19:10:31.5873992Z 23 fixtures, 0 failing",
+    "2026-11-24T19:10:33.1403887Z 33 fixtures, 0 failing",
+    "2026-11-24T19:10:36.8751734Z 40 fixtures, 0 failing",
+    "2026-11-24T19:10:37.0404196Z 26 fixtures, 0 failing",
+    "2026-11-24T19:10:54.6589303Z selftest PASS: 26 fixtures",
+    "2026-11-24T19:10:54.9070676Z 193 fixtures, 0 failing — a check that cannot fail is not a check",
+    "2026-11-24T19:11:02.1627324Z selftest PASS: expected refusals and positive controls held.",
+    "2026-11-24T19:11:02.5618454Z 329 fixtures, 0 failing — a check that cannot fail is not a check",
+    "2026-11-24T19:11:04.8297904Z 126 fixtures, 0 failing — a check that cannot fail is not a check",
+    "2026-11-24T19:11:06.6141639Z 38 fixtures, 0 failing — a check that cannot fail is not a check"
+  ]
+}

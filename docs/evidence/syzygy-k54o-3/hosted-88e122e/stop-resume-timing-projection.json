@@ -1,0 +1,363 @@
+{
+  "subject": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "nodeRun": 45466219510,
+  "job": 138703502633,
+  "source": "GitHub connected job log; parsed fixture diagnostic JSON; bounded timing projection only",
+  "inference": [
+    {
+      "ordinal": 1,
+      "mediate": {
+        "startedMs": 66823.088,
+        "settledMs": 78919.946,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {
+        "startedMs": 68001.164,
+        "settledMs": 68102.998,
+        "outcome": "accepted",
+        "lease": {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 68051.845,
+            "settledMs": 68102.963,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 65868
+        }
+      },
+      "relay": [
+        {
+          "phase": "request",
+          "timing": {
+            "startedMs": 71780.338,
+            "settledMs": 78661.005,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "controller-current",
+          "timing": {
+            "startedMs": 71780.905,
+            "settledMs": 73515.027,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "product-assertion",
+          "timing": {
+            "startedMs": 73515.141,
+            "settledMs": 74113.463,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "screening-worker",
+          "timing": {
+            "startedMs": 74114.303,
+            "settledMs": 76742.426,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "controller-current",
+          "timing": {
+            "startedMs": 76742.465,
+            "settledMs": 78017.254,
+            "outcome": "accepted"
+          }
+        },
+        {
+          "phase": "admission",
+          "timing": {
+            "startedMs": 78018.151,
+            "settledMs": 78660.958,
+            "outcome": "accepted"
+          }
+        }
+      ],
+      "controllerCurrent": {
+        "startedMs": 76742.475,
+        "settledMs": 78017.251,
+        "outcome": "accepted",
+        "refusedStages": []
+      }
+    },
+    {
+      "ordinal": 2,
+      "mediate": {
+        "startedMs": 78920.245,
+        "settledMs": 85151.733,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {},
+      "relay": [],
+      "controllerCurrent": null
+    },
+    {
+      "ordinal": 3,
+      "mediate": {
+        "startedMs": 85152.32,
+        "settledMs": 97408.124,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {
+        "startedMs": 86394.087,
+        "settledMs": 86522.243,
+        "outcome": "accepted",
+        "lease": {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 86454.77,
+            "settledMs": 86522.219,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 47449
+        }
+      },
+      "audit": {
+        "event": "attempt-allowed",
+        "timing": {
+          "startedMs": 91441.232,
+          "settledMs": 97189.377,
+          "outcome": "accepted"
+        }
+      },
+      "relay": [],
+      "controllerCurrent": null
+    },
+    {
+      "ordinal": 4,
+      "mediate": {
+        "startedMs": 99033.795,
+        "settledMs": 105703.104,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {},
+      "relay": [],
+      "controllerCurrent": null
+    },
+    {
+      "ordinal": 5,
+      "mediate": {
+        "startedMs": 105703.492,
+        "settledMs": 156497.604,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {
+        "startedMs": 134990.507,
+        "settledMs": 135174.734,
+        "outcome": "accepted",
+        "lease": {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 135080.067,
+            "settledMs": 135174.684,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 64176
+        }
+      },
+      "audit": {
+        "event": "send-attempt",
+        "timing": {
+          "startedMs": 144104.615,
+          "settledMs": 156196.18,
+          "outcome": "accepted"
+        }
+      },
+      "relay": [],
+      "controllerCurrent": null
+    },
+    {
+      "ordinal": 6,
+      "mediate": {
+        "startedMs": 156498.039,
+        "settledMs": 181172.833,
+        "outcome": "accepted"
+      },
+      "preparedProductCurrent": {
+        "startedMs": 157813.524,
+        "settledMs": 158009.447,
+        "outcome": "accepted",
+        "lease": {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 157906.379,
+            "settledMs": 158009.419,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 41342
+        }
+      },
+      "audit": {
+        "event": "send-outcome",
+        "timing": {
+          "startedMs": 168039.4,
+          "settledMs": 180821.993,
+          "outcome": "accepted"
+        }
+      },
+      "relay": [],
+      "controllerCurrent": null
+    },
+    {
+      "ordinal": 7,
+      "mediate": {
+        "startedMs": 184240.752,
+        "settledMs": 232337.27,
+        "outcome": "refused"
+      },
+      "preparedProductCurrent": {
+        "startedMs": 220072.156,
+        "settledMs": 220278.966,
+        "outcome": "accepted",
+        "lease": {
+          "phase": "product-lease",
+          "timing": {
+            "startedMs": 220177.531,
+            "settledMs": 220278.917,
+            "outcome": "accepted"
+          },
+          "lease": "open",
+          "leaseRemainingMs": 57911
+        }
+      },
+      "relay": [
+        {
+          "phase": "response",
+          "timing": {
+            "startedMs": 231835.58,
+            "settledMs": 232232.565,
+            "outcome": "refused"
+          }
+        },
+        {
+          "phase": "controller-current",
+          "timing": {
+            "startedMs": 231836.065,
+            "settledMs": 232232.508,
+            "outcome": "refused"
+          }
+        }
+      ],
+      "controllerCurrent": {
+        "startedMs": 231836.104,
+        "settledMs": 232232.496,
+        "outcome": "refused",
+        "refusedStages": [
+          {
+            "phase": "runtime-authority",
+            "timing": {
+              "startedMs": 231836.188,
+              "settledMs": 232232.356,
+              "outcome": "refused"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "firstSampleRefusal": {
+    "ordinal": 187,
+    "verify": {
+      "startedMs": 232340.326,
+      "settledMs": 232445.045,
+      "outcome": "accepted"
+    },
+    "confirmationInput": true,
+    "confirm": {
+      "startedMs": 232445.065,
+      "settledMs": 232445.07,
+      "outcome": "refused"
+    }
+  },
+  "lastConfirmed": {
+    "ordinal": 186,
+    "verify": {
+      "startedMs": 231099.355,
+      "settledMs": 231198.999,
+      "outcome": "accepted"
+    },
+    "confirmationInput": true,
+    "confirm": {
+      "startedMs": 231199.018,
+      "settledMs": 231289.474,
+      "outcome": "accepted"
+    }
+  },
+  "terminal": {
+    "atMs": 232883.988,
+    "outcome": "inspection-failed",
+    "latestSample": {
+      "ordinal": 187,
+      "verify": {
+        "startedMs": 232340.326,
+        "settledMs": 232445.045,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 232445.065,
+        "settledMs": 232445.07,
+        "outcome": "refused"
+      }
+    }
+  },
+  "resumeAuditSetup": {
+    "startedMs": 89690.526297,
+    "authority": {
+      "started": 11,
+      "accepted": 11,
+      "refused": 0,
+      "rejected": 0,
+      "totalMs": 411.2629410000227,
+      "longestMs": 58.7061640000029
+    },
+    "settledMs": 90121.819226,
+    "outcome": "accepted",
+    "declarations": 4,
+    "pendingCallbacks": 0,
+    "pendingFilesystemOperations": 0
+  },
+  "resumeBootstrap": {
+    "restore-plans": {
+      "startedMs": 62872.591394,
+      "settledMs": 66963.963898,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 66996.662308,
+      "settledMs": 67322.765962,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 67356.091602,
+      "settledMs": 69262.690483,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 69584.898521,
+      "settledMs": 89189.695523,
+      "outcome": "accepted"
+    },
+    "start-sessions": {
+      "startedMs": 89429.237305,
+      "settledMs": 95566.645657,
+      "outcome": "accepted"
+    },
+    "create-machine": {
+      "startedMs": 90123.990415,
+      "settledMs": 95340.610272,
+      "outcome": "accepted"
+    },
+    "open-store": {
+      "startedMs": 90287.358587,
+      "settledMs": 90661.105233,
+      "outcome": "accepted"
+    }
+  }
+}

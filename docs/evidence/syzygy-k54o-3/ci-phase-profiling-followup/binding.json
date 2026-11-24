@@ -1,0 +1,25 @@
+{
+  "subjectCommit": "5d967d2626456d97ebf41065259fbd82910bab1e",
+  "baseCommit": "7fa15c9e47b24c10a677e6fbfbc57f4c63cadd03",
+  "sourceFiles": {
+    ".github/workflows/governance-docs.yml": "5f6b95a12f2003a2b20f1fcffae00008b3331ce2729d0678832b829dd571f2b6",
+    "CONTRIBUTING.md": "12252cd5ea432b24acaa29bfd45500b24dfaff09f755a464f63c847e65a93a14",
+    "scripts/check_spec_reconciliation.py": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f"
+  },
+  "reviewVerdict": "PASS",
+  "reviewScope": "Source only. Prior REVISE retained; original-result masking diagnostic failure fixed.",
+  "verification": {
+    "pythonCompile": "PASS",
+    "diffCheck": "PASS",
+    "isolatedHelper": {
+      "cases": 16,
+      "passed": 16,
+      "mutation": "unguarded-finally-output killed",
+      "provenance": "Retained rerunnable AST-only harness reads exact committed source;16 cases and one exact-fragment mutant. No project imports.",
+      "harness": "isolated-helper-reproducer/check_profile_helper.py",
+      "results": "isolated-helper-reproducer/results.json"
+    }
+  },
+  "limits": "No selftest gate/assertion/family removed.140 workflow run commands, required aggregate,19 family calls preserved. Actual project selftest correctness, per-family costs, and seven-minute hosted acceptance remain Unknown.",
+  "hostedPredecessor": "../hosted-88e122e/README.md"
+}

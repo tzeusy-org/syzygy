@@ -1,0 +1,37 @@
+{
+  "subject": "packages/polaris-dossier/src/url-run-composed.test.ts",
+  "subjectSha256": "170d145f450d19881dc627c23754f44627fc1f5d46e9d1de3a640113073a7803",
+  "baseFileSha256": "581b2e379ac015b333e5edc8ef717d4a93e767d19f2bd6f386db8073b9997bec",
+  "head": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "capturedAt": "2026-11-24T19:22:10.780224+00:00",
+  "patchSha256": "76be294ffc0e408b3635a9190b978cd3cc2ca00e8920b61353f42a1f787993b9",
+  "scope": "Test-only observation; one owned file; no runtime changes or commits.",
+  "observed": [
+    "Original append start/end, kind, role, closed relay/control event, configured append limit, run time remaining.",
+    "Original audit current calls after setup, original scoped machine effect outcomes, per-append AsyncLocalStorage correlation.",
+    "Rolling last32 callbacks/appends, last4 audit instances, first refusal retained beyond rolling caps.",
+    "Actual resumed startUrlRunSessions onFailure callback reason retained."
+  ],
+  "preservation": [
+    "Original append event identity and original current/append promise/result/rejection values returned.",
+    "No added current, authority, filesystem or probe calls.",
+    "Original fixture sequence, assertions, stop gates, and production deadlines unchanged."
+  ],
+  "testChanges": "Extended existing forwarding observer case; simultaneous appends settle in reverse order, late failures survive cap, exact promise/rejection forwarding, call counts and body/path exclusion.",
+  "verification": {
+    "diffCheck": "passed",
+    "focusedTests": "held while eligible88e native replay live",
+    "typecheck": "not run; heavy check forbidden while native live"
+  },
+  "limitations": [
+    "Same-module checkUrlSessionCurrent lexical calls cannot be replaced by a Vitest export spy; omitted rather than claim coverage.",
+    "Does not directly expose private audit poison reason or machine store runLocked began timestamp.",
+    "Current accepted plus >=5s append rejection supports deadline inference, not direct observation of the private guard.",
+    "Scoped machine effect false does not alone distinguish its transport, clock, lease or peer constituent."
+  ],
+  "reviewRequests": [
+    "Check test-only forwarding semantics, caps, first-failure retention and concurrent per-append attribution.",
+    "Check spy composition with existing observeDesignRun machinery and unchanged actual callback count.",
+    "Run only bounded restoration observer test after parent releases the live native-run constraint."
+  ]
+}

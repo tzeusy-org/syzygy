@@ -1,0 +1,261 @@
+{
+  "subject": {
+    "commit": "88e122e108e66418196f24d471417bd19cf6dd96",
+    "tree": "03525a5911216977e088b947d1c54149e4a66da6"
+  },
+  "capturedAt": "2026-11-24T19:35:06.336810+00:00",
+  "status": "Both attempts failed; neither is acceptance evidence.",
+  "bindings": [
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/commit",
+      "subjectSha256": "a2be54ee65f56c28ab2191a8ba8cfee1e43d3cbe09494fe7be9cf90db809854b",
+      "retained": "stop-resume/commit",
+      "retainedSha256": "a2be54ee65f56c28ab2191a8ba8cfee1e43d3cbe09494fe7be9cf90db809854b",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/tree",
+      "subjectSha256": "81741b08d358e5a95bbb329934d6f8269ca7e641e55b9d2240e4a93f7a330565",
+      "retained": "stop-resume/tree",
+      "retainedSha256": "81741b08d358e5a95bbb329934d6f8269ca7e641e55b9d2240e4a93f7a330565",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/exit",
+      "subjectSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "retained": "stop-resume/exit",
+      "retainedSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/capture-index.json",
+      "subjectSha256": "da84712625deef9291bf0af0477024b5f5922cf2454e736282dbec3ccc86d067",
+      "retained": "stop-resume/capture-index.json",
+      "retainedSha256": "da84712625deef9291bf0af0477024b5f5922cf2454e736282dbec3ccc86d067",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/worker-summary.json",
+      "subjectSha256": "7d85f445428a26e05f97c9a0969f58fe3bd51bafcbcbd384cd8b2cb14c3fff08",
+      "retained": "stop-resume/worker-summary.json",
+      "retainedSha256": "7d85f445428a26e05f97c9a0969f58fe3bd51bafcbcbd384cd8b2cb14c3fff08",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/worker-samples.jsonl",
+      "subjectSha256": "9cea5060e8d02ee97231a729312d8db2f91ba458357e98e17dc02d0cd6751c3b",
+      "retained": "stop-resume/worker-samples.jsonl",
+      "retainedSha256": "9cea5060e8d02ee97231a729312d8db2f91ba458357e98e17dc02d0cd6751c3b",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/native-cut.json",
+      "subjectSha256": "c2d8c68c48ae9a87430b893109dec24c63d3ee0fee40a588b0cb810ce10d71f7",
+      "retained": "stop-resume/native-cut.json",
+      "retainedSha256": "c2d8c68c48ae9a87430b893109dec24c63d3ee0fee40a588b0cb810ce10d71f7",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/native-cut.json.failure.json",
+      "subjectSha256": "8c9b5084fda64ade5af2ebddfa93aa432d979c0b317af68118a7568a0dacd51d",
+      "retained": "stop-resume/native-cut.json.failure.json",
+      "retainedSha256": "8c9b5084fda64ade5af2ebddfa93aa432d979c0b317af68118a7568a0dacd51d",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/native-recovery.log",
+      "subjectSha256": "f3ea264afebbdafeacc00564d3118530309cf879baddb0b77243ac2bdf0367c2",
+      "retained": "stop-resume/native-recovery.log.gz",
+      "retainedSha256": "965195613e4681dda003923dfb305209af376ee2d33c45e13f45b079756aabdb",
+      "encoding": "gzip;mtime=0",
+      "subjectBytes": 179742
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-interrupted-88e122e/external-state-observations.jsonl",
+      "subjectSha256": "240db6cffd589430b62a563f545234a7e764cc7ac237b87dd303fcbd7fe9a1b2",
+      "retained": "stop-resume/external-state-observations.jsonl",
+      "retainedSha256": "240db6cffd589430b62a563f545234a7e764cc7ac237b87dd303fcbd7fe9a1b2",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-IGFHB4/runs/run-cf79e13ca27a7be82d19ffeece36a05e/run.json",
+      "subjectSha256": "f03230ccab848694ae4291f8610fccd0eba5a6c9ec69dc0f1150ef24d6cf266b",
+      "retained": "stop-resume/run.json",
+      "retainedSha256": "f03230ccab848694ae4291f8610fccd0eba5a6c9ec69dc0f1150ef24d6cf266b",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-IGFHB4/runs/run-cf79e13ca27a7be82d19ffeece36a05e/url-declaration.json",
+      "subjectSha256": "d3ee04b1e437602534385495496e3508f6ea789a6094c6a3b32b420d7d967811",
+      "retained": "stop-resume/url-declaration.json",
+      "retainedSha256": "d3ee04b1e437602534385495496e3508f6ea789a6094c6a3b32b420d7d967811",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-host-3290971-1795547070445/acquisitions/attempt-82kQYq/sessions-design.jsonl",
+      "subjectSha256": "f5729f7f2584c9ee877f03ff2a6d211b74e04a93956e8a254bfc1ab9ebd72b32",
+      "retained": "stop-resume/initial-sessions-design.jsonl.gz",
+      "retainedSha256": "a889c4ca0d8497c694582d29e5b6435060f6c7197d39f93424ab8d0b50fecb72",
+      "encoding": "gzip;mtime=0",
+      "subjectBytes": 7545
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-interrupted-diagnosis.json",
+      "subjectSha256": "9d1b63089a11404e802b3ffa3315d04c9659af85adc9c8b86476a6b08d4e449e",
+      "retained": "native88e-interrupted-diagnosis.json",
+      "retainedSha256": "9d1b63089a11404e802b3ffa3315d04c9659af85adc9c8b86476a6b08d4e449e",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/commit",
+      "subjectSha256": "a2be54ee65f56c28ab2191a8ba8cfee1e43d3cbe09494fe7be9cf90db809854b",
+      "retained": "eligible-stop-resume/commit",
+      "retainedSha256": "a2be54ee65f56c28ab2191a8ba8cfee1e43d3cbe09494fe7be9cf90db809854b",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/tree",
+      "subjectSha256": "81741b08d358e5a95bbb329934d6f8269ca7e641e55b9d2240e4a93f7a330565",
+      "retained": "eligible-stop-resume/tree",
+      "retainedSha256": "81741b08d358e5a95bbb329934d6f8269ca7e641e55b9d2240e4a93f7a330565",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/exit",
+      "subjectSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "retained": "eligible-stop-resume/exit",
+      "retainedSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/capture-index.json",
+      "subjectSha256": "8e407955d8294887fc81652d5fa1caf6042ce087daadb24fd6955000ff84b483",
+      "retained": "eligible-stop-resume/capture-index.json",
+      "retainedSha256": "8e407955d8294887fc81652d5fa1caf6042ce087daadb24fd6955000ff84b483",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/worker-summary.json",
+      "subjectSha256": "49212e17b54a4afbdef0ef4e04e643d472fb7b7a8da28d9ebb65522620820e43",
+      "retained": "eligible-stop-resume/worker-summary.json",
+      "retainedSha256": "49212e17b54a4afbdef0ef4e04e643d472fb7b7a8da28d9ebb65522620820e43",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/worker-samples.jsonl",
+      "subjectSha256": "5b33098af53d4685e63ef16962f10968774bf5db26690792691e99e6e3e78ceb",
+      "retained": "eligible-stop-resume/worker-samples.jsonl",
+      "retainedSha256": "5b33098af53d4685e63ef16962f10968774bf5db26690792691e99e6e3e78ceb",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/native-cut.json",
+      "subjectSha256": "85d96da2e53b2563fa2d45fdfc0a48a595fc85203f4b000dbd11d995f06919d0",
+      "retained": "eligible-stop-resume/native-cut.json",
+      "retainedSha256": "85d96da2e53b2563fa2d45fdfc0a48a595fc85203f4b000dbd11d995f06919d0",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/native-cut.json.failure.json",
+      "subjectSha256": "361d3f136106dc58d2dc7d2770920ec46ac2466515410b0e9a0ed36a3f18d537",
+      "retained": "eligible-stop-resume/native-cut.json.failure.json",
+      "retainedSha256": "361d3f136106dc58d2dc7d2770920ec46ac2466515410b0e9a0ed36a3f18d537",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/native-recovery.log",
+      "subjectSha256": "52feca4b16c5b4eeed4df7977166bf5793d17378f744497ca29b1aa10c628318",
+      "retained": "eligible-stop-resume/native-recovery.log.gz",
+      "retainedSha256": "bd3648af9b97196fc733a6d3e83f881b1dc5d07ba2c6a5b80d99c75a45bec193",
+      "encoding": "gzip;mtime=0",
+      "subjectBytes": 255127
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-n8drpH/runs/run-a460ce6ec4aafc9fac0ff8163f5f90b6/run.json",
+      "subjectSha256": "70b55a4ee3dd6ea2c6c5f9f7688e72a6de82258d61602a10be0c5082bc4171cd",
+      "retained": "eligible-stop-resume/run.json",
+      "retainedSha256": "70b55a4ee3dd6ea2c6c5f9f7688e72a6de82258d61602a10be0c5082bc4171cd",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-n8drpH/runs/run-a460ce6ec4aafc9fac0ff8163f5f90b6/url-declaration.json",
+      "subjectSha256": "df5510e081ef2114cfb9473a7397e9528ba31c8ca4bf49b08c3f37c393ca5b9b",
+      "retained": "eligible-stop-resume/url-declaration.json",
+      "retainedSha256": "df5510e081ef2114cfb9473a7397e9528ba31c8ca4bf49b08c3f37c393ca5b9b",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-host-3361482-1795547454136/c3ce26a7782db922749f631e70d23422157f73ae0ecaddf8d5d43f3f06ee6905.cccccccccccccccccccccccccccccccc.stopped.json",
+      "subjectSha256": "ad3aba7a50bb375c397ae3a3aaf20c594aeb90310740e49c9d13eb5fe42544ad",
+      "retained": "eligible-stop-resume/stopped-products.json",
+      "retainedSha256": "ad3aba7a50bb375c397ae3a3aaf20c594aeb90310740e49c9d13eb5fe42544ad",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-host-3361482-1795547454136/acquisitions/attempt-tnul95/sessions-design.jsonl",
+      "subjectSha256": "bfd60447f1540f5aa5affd07f5a54ae16a112b80f0328948590bd51537c8845a",
+      "retained": "eligible-stop-resume/initial-sessions-design.jsonl.gz",
+      "retainedSha256": "b7c665c75d32bc96127e3fbbc05bf93e26155d301b8d75e7805d03ae4cccd106",
+      "encoding": "gzip;mtime=0",
+      "subjectBytes": 195452
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-eligible-diagnosis.json",
+      "subjectSha256": "3ab7075667894d7fe7e09e1bdd6c6b9b4d8eca70be84499e27a5aa959958cd8d",
+      "retained": "native88e-eligible-diagnosis.json",
+      "retainedSha256": "3ab7075667894d7fe7e09e1bdd6c6b9b4d8eca70be84499e27a5aa959958cd8d",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-host-3290971-1795547070445/acquisitions/attempt-JwXgcu/sessions-design.jsonl",
+      "subjectSha256": "2c56dae3d48a1a444e8849855966bf71c0eec55f427c997a9409697e6488ca13",
+      "retained": "stop-resume/resumed-sessions-design.jsonl.gz",
+      "retainedSha256": "4ec8eeb5df567a487a06201c2264603b777405c3dd47aa3448f611b311c7287b",
+      "encoding": "gzip;mtime=0",
+      "subjectBytes": 12404
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/derive.py",
+      "subjectSha256": "469d6d5aa624a2226f2f9e0bbdfc03945d99483b63d630c45532e73c342df10c",
+      "retained": "static/derive.py",
+      "retainedSha256": "469d6d5aa624a2226f2f9e0bbdfc03945d99483b63d630c45532e73c342df10c",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/derivation-comparison.json",
+      "subjectSha256": "67b5f6fc96f5766ba9e0831252573fdc0a12055945508c445c1a71f7af03e9ce",
+      "retained": "static/derivation-comparison.json",
+      "retainedSha256": "67b5f6fc96f5766ba9e0831252573fdc0a12055945508c445c1a71f7af03e9ce",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/independent-check.mjs",
+      "subjectSha256": "9345efa9386a3b2a86bf29413aaa0d8f8620ad4fc15ad907dba2185d101758f0",
+      "retained": "static/independent-check.mjs",
+      "retainedSha256": "9345efa9386a3b2a86bf29413aaa0d8f8620ad4fc15ad907dba2185d101758f0",
+      "encoding": "identity"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-admission-fixes/native88e-static/independent-check.json",
+      "subjectSha256": "6c85815020fb292d9a436120f43353683796ea97a3558d062eae9df3b3f0234d",
+      "retained": "static/independent-check.json",
+      "retainedSha256": "6c85815020fb292d9a436120f43353683796ea97a3558d062eae9df3b3f0234d",
+      "encoding": "identity"
+    },
+    {
+      "retained": "eligible-stop-resume/stopped-boundary.json",
+      "retainedSha256": "ad3aba7a50bb375c397ae3a3aaf20c594aeb90310740e49c9d13eb5fe42544ad",
+      "encoding": "identity",
+      "scope": "Retained original harness observation; subject pinned by scenario commit/tree and content-addressed capture index."
+    },
+    {
+      "retained": "stop-resume/stopped-boundary.json",
+      "retainedSha256": "9a79e629dfb981bbf9802edcfbdf9258b35ae0cd7a8155c57914eedec159b47e",
+      "encoding": "identity",
+      "scope": "Retained original harness observation; subject pinned by scenario commit/tree and content-addressed capture index."
+    }
+  ],
+  "diagnosis": "Interrupted first observed refusal: attempt-allowed audit rejection precedes synchronous inspection confirmation refusal. Eligible first observed refusal: ledger-restore bootstrap rejection after all53 recorded original authority callbacks accepted.19-node static fresh-check metadata population matched by two methods; private eligible refusal predicate remains Unknown.",
+  "limits": "Original2h run expiry and runtime guards unchanged. Interrupted312317ms and eligible715155ms case failures are within the900s runner allowance; neither is classified as runner timeout.",
+  "reconciliation": "Scenario directories use stop-resume and eligible-stop-resume. Raw copies are hash-verified against original retained inputs. Static diagnostics remain distinct from original runtime observations."
+}

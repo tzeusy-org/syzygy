@@ -1,0 +1,20 @@
+{
+  "branchHead": {
+    "sha": "88e122e108e66418196f24d471417bd19cf6dd96",
+    "tree": "03525a5911216977e088b947d1c54149e4a66da6",
+    "parents": [
+      "289acc9a9ed917e3f97ad8a665483729d056b499",
+      "8829f3f48f3458ca37da384e644f2506e05d602f"
+    ]
+  },
+  "testedPrMerge": {
+    "sha": "2b70df707652831d024e2ce084a693ede8e4a577",
+    "tree": "03525a5911216977e088b947d1c54149e4a66da6",
+    "parents": [
+      "8829f3f48f3458ca37da384e644f2506e05d602f",
+      "88e122e108e66418196f24d471417bd19cf6dd96"
+    ]
+  },
+  "sameTree": true,
+  "source": "GitHub git/commits metadata; merge identity first observed in the downloaded core-1 success receipt."
+}

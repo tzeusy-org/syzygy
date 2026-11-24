@@ -1,0 +1,71 @@
+{
+  "format": "polaris-dossier-run/2",
+  "mode": "operator-agent",
+  "declared": {
+    "operator": "owned-composed",
+    "agentTool": "claude-code",
+    "agentToolVersion": "2.1.327",
+    "agentProvider": "anthropic",
+    "model": "claude-sonnet-4-6",
+    "deadline": "PT2H",
+    "maxRepairCycles": 3,
+    "maxQuestions": 1,
+    "audience": "owned readers",
+    "operatorIsOwner": false,
+    "agentTurnBudget": 100
+  },
+  "declaredBy": "operator",
+  "label": "Inferred",
+  "modelVersionProvider": "no provider-reported model version is available in the operator-agent mode",
+  "principal": {
+    "name": "owned-composed",
+    "declaredBy": "operator",
+    "credentialIdentity": "Unknown"
+  },
+  "subject": {
+    "repository": {
+      "url": "example.invalid/own/source",
+      "repositoryId": "own-source",
+      "role": "observed-source"
+    },
+    "clone": {
+      "path": "/home/orca/.tmp/url-composed-n8drpH/kestrel",
+      "declaredBy": "operator",
+      "label": "Inferred",
+      "use": "read"
+    },
+    "pinnedRevision": {
+      "commit": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+      "label": "explicit-full-commit",
+      "pinnedAt": "2026-11-24T19:10:59.220Z"
+    },
+    "screeningPolicy": {
+      "path": ".syzygy/governance/policies/POLARIS-DOSSIER-DECLARED-SOURCE-POLICY-v4.json",
+      "commit": "a23782d3bbe4d78204756ffd0b716ae2d0902445",
+      "policyId": "polaris-butlers-project-shape-secrets",
+      "policyVersion": "dossier-declared-source/4.0.0",
+      "sha256": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9"
+    },
+    "contentClasses": [
+      "code-content",
+      "project-documentation",
+      "governance-text"
+    ],
+    "visibility": {
+      "value": "private",
+      "source": "conservative-default",
+      "declaredBy": "owned-composed",
+      "label": "Inferred"
+    },
+    "governed": {
+      "kind": "unstated",
+      "because": [
+        "the project input does not state whether a kernel evidence drawer exists (D10 source admission does not require a drawer declaration)"
+      ]
+    },
+    "workItem": {
+      "identity": null,
+      "reason": "the operator-agent run makes no provider dispatch and no scheduler effect, so no scheduler work item, Proposal or materialization record exists for it; it is rendered as unattributed execution under RFC4-19, never dropped"
+    }
+  }
+}

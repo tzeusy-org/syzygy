@@ -1,0 +1,102 @@
+{
+  "method": "Independent Node canonical encoder and Git blob-header SHA-1; no receipt/authority calls",
+  "population": 19,
+  "results": [
+    {
+      "node": "node-1",
+      "checked": 3,
+      "match": true
+    },
+    {
+      "node": "node-2",
+      "checked": 3,
+      "match": true
+    },
+    {
+      "node": "node-3",
+      "checked": 3,
+      "match": true
+    },
+    {
+      "node": "node-10",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-12",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-18",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-19",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-20",
+      "checked": 3,
+      "match": true
+    },
+    {
+      "node": "node-27",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-29",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-32",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-33",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-39",
+      "checked": 3,
+      "match": true
+    },
+    {
+      "node": "node-45",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-46",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-47",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-48",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-64",
+      "checked": 5,
+      "match": true
+    },
+    {
+      "node": "node-65",
+      "checked": 5,
+      "match": true
+    }
+  ],
+  "allMatch": true
+}

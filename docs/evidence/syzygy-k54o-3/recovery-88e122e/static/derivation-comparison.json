@@ -1,0 +1,247 @@
+{
+  "subjectCommit": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "capturedAt": "2026-11-24T19:31:14.904694+00:00",
+  "staticOnly": true,
+  "nodePopulation": 72,
+  "derivationPopulation": {
+    "fixed": 3,
+    "composition": 43,
+    "source-span": 12,
+    "source-reply": 4,
+    "authenticated-provider-output": 1,
+    "report": 5,
+    "source-manifest-remainder": 1,
+    "renderer": 1,
+    "source-whole": 2
+  },
+  "freshCheckNodePopulation": 19,
+  "comparisons": [
+    {
+      "node": "node-1",
+      "kind": "fixed",
+      "checks": {
+        "declaredDigest": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-2",
+      "kind": "fixed",
+      "checks": {
+        "declaredDigest": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-3",
+      "kind": "fixed",
+      "checks": {
+        "declaredDigest": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-10",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-12",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-18",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-19",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-27",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-29",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-32",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-33",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-39",
+      "kind": "renderer",
+      "checks": {
+        "declaredDigest": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-45",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-46",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-47",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-48",
+      "kind": "source-span",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-64",
+      "kind": "source-whole",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-65",
+      "kind": "source-whole",
+      "checks": {
+        "objectId": true,
+        "digest": true,
+        "bytes": true,
+        "classes": true,
+        "originIds": true
+      }
+    },
+    {
+      "node": "node-20",
+      "kind": "source-manifest-remainder",
+      "checks": {
+        "digest": true,
+        "bytes": true,
+        "id": true
+      }
+    }
+  ],
+  "runControlRecomputed": {
+    "digest": true,
+    "bytes": true
+  },
+  "allChecksMatch": true,
+  "inputBindings": [
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/native-cut.json.failure.json",
+      "sha256": "361d3f136106dc58d2dc7d2770920ec46ac2466515410b0e9a0ed36a3f18d537"
+    },
+    {
+      "subject": "/home/orca/.tmp/f3-native-eligible-88e122e/native-cut.json",
+      "sha256": "85d96da2e53b2563fa2d45fdfc0a48a595fc85203f4b000dbd11d995f06919d0"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-host-3361482-1795547454136/c3ce26a7782db922749f631e70d23422157f73ae0ecaddf8d5d43f3f06ee6905.cccccccccccccccccccccccccccccccc.stopped.json",
+      "sha256": "ad3aba7a50bb375c397ae3a3aaf20c594aeb90310740e49c9d13eb5fe42544ad"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-n8drpH/runs/run-a460ce6ec4aafc9fac0ff8163f5f90b6/run.json",
+      "sha256": "70b55a4ee3dd6ea2c6c5f9f7688e72a6de82258d61602a10be0c5082bc4171cd"
+    },
+    {
+      "subject": "/home/orca/.tmp/url-composed-n8drpH/runs/run-a460ce6ec4aafc9fac0ff8163f5f90b6/url-declaration.json",
+      "sha256": "df5510e081ef2114cfb9473a7397e9528ba31c8ca4bf49b08c3f37c393ca5b9b"
+    }
+  ],
+  "note": "Static identity comparison issues no capability, calls no current/screening callback, and does not establish fresh authority or source-operation completion."
+}

@@ -1,0 +1,7 @@
+{
+  "maxNumberedVitestWorkers": 1,
+  "workerPids": [
+    3361482
+  ],
+  "method": "proc cwd+numbered Vitest process title sampled every500ms; internal threads not counted"
+}

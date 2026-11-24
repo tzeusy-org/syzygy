@@ -1,0 +1,14 @@
+{
+  "subject": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "nodeRun": 45466219510,
+  "job": 138703502633,
+  "source": "GitHub connector decoded job log; bounded allowlisted failure and denominator lines",
+  "decodedLogCharacters": 347692,
+  "lines": [
+    "2026-11-24T19:13:00.5159017Z \u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Tests 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m",
+    "2026-11-24T19:13:00.5161587Z \u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[45m integration \u001b[49m\u001b[39m packages/polaris-dossier/src/url-run-composed.test.ts\u001b[2m > \u001b[22mcomposed URL run with actual role processes\u001b[2m > \u001b[22mruns the genuine production pipeline to stop-resume",
+    "2026-11-24T19:13:00.6345322Z \u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m",
+    "2026-11-24T19:13:00.6346557Z \u001b[2m      Tests \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[33m6 skipped\u001b[39m\u001b[90m (7)\u001b[39m",
+    "2026-11-24T19:13:00.6348918Z \u001b[2m   Duration \u001b[22m 316.76s\u001b[2m (transform 2.35s, setup 10ms, collect 3.08s, tests 313.27s, environment 0ms, prepare 61ms)\u001b[22m"
+  ]
+}

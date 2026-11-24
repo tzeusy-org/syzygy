@@ -1,0 +1,30 @@
+{
+  "capturedAt": "2026-11-24T19:19:23.906539+00:00",
+  "baseCommit": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "file": "packages/polaris-dossier/src/url-machine-peer.test.ts",
+  "beforeSha256": "3f0af7fe67dce57fc3a1d9056868742575ade71b3702e3373b9c07f2b0a5711d",
+  "sha256": "db4dd48317c56486328833b1dade35d31ef6cff291d88d3d644d3404119bf5f8",
+  "patch": "/home/orca/.tmp/f3-native-admission-fixes/fresh-parent-timeout-test.patch",
+  "patchSha256": "38d049a0f1d8558af6c181788d585f0e1d436c4803241560682a657f3b76b49d",
+  "scope": "Only existing fresh-parent five-second test body changed; prefix/suffix outside it compared byte-for-byte. No runtime, fixture implementation, profile, selector test or test declaration change.",
+  "testDeclarationCounts": {
+    "plainBefore": 11,
+    "plainAfter": 11,
+    "parameterizedBefore": 6,
+    "parameterizedAfter": 6,
+    "netAdded": 0
+  },
+  "reason": "awaitParentCurrent installs its timer before Promise.resolve().then(current). Elapsed time measured from current therefore cannot have an exact lower bound equal to the timer delay. Observe the installed delay instead.",
+  "change": "Install passthrough setTimeout spy only from existing captureTiming hook immediately before real capture. current signals entry and stays pending. Require actual installed delay5000, clear its real handle, manually invoke its original callback, then await the same genuine fixture refusal and retain the exact listener-only helper expectation. finally dispatches/clears a still-pending timer, restores spy and awaits fixture settlement so existing afterEach cleanup can finish.",
+  "orderedScope": "The existing selector case separately retains literal30000 for a nominal matching ordered profile. This changed test keeps its original ordinary native fixture profile and does not claim an ordered native capture.",
+  "verification": {
+    "diffCheck": "passed",
+    "scopePrefixSuffixByteEquality": true,
+    "testDeclarationsUnchanged": true,
+    "typecheckRun": false,
+    "nativeTestsRun": false,
+    "heavyChecksRun": false,
+    "reason": "Parent eligible replay session15512 remains live; root will request fresh review and checks after it is terminal."
+  },
+  "committed": false
+}

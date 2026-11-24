@@ -1,0 +1,113 @@
+{
+  "subject": "88e122e108e66418196f24d471417bd19cf6dd96",
+  "nodeRun": 45466219510,
+  "job": 138703502744,
+  "source": "GitHub connected job log; parsed fixture diagnostic JSON; bounded timing projection only",
+  "failure": "expected [] to deeply equal [ { current: true, …(4) } ]",
+  "resumeBootstrap": {
+    "restore-plans": {
+      "startedMs": 212300.624031,
+      "settledMs": 227088.528313,
+      "outcome": "accepted"
+    },
+    "load-renderer": {
+      "startedMs": 227566.59672,
+      "settledMs": 227887.322515,
+      "outcome": "accepted"
+    },
+    "create-origins": {
+      "startedMs": 228378.70638,
+      "settledMs": 254348.827624,
+      "outcome": "accepted"
+    },
+    "restore-products": {
+      "startedMs": 259252.264065,
+      "settledMs": 334762.762475,
+      "outcome": "rejected"
+    }
+  },
+  "resumeProducts": {
+    "firstRefusal": {
+      "ordinal": 2,
+      "phase": "ledger-restore",
+      "atMs": 334762.679891,
+      "startedMs": 259740.932258,
+      "runRemainingMs": 6874829,
+      "previous": {
+        "ordinal": 3,
+        "phase": "history-transfer",
+        "outcome": "accepted",
+        "settledMs": 262779.927437
+      },
+      "reason": "threw"
+    },
+    "lastSettled": {
+      "ordinal": 1,
+      "phase": "restore",
+      "outcome": "rejected",
+      "settledMs": 334762.73304
+    },
+    "totals": {
+      "restore": {
+        "calls": 1,
+        "refused": 0,
+        "rejected": 1
+      },
+      "ledger-restore": {
+        "calls": 1,
+        "refused": 0,
+        "rejected": 1
+      },
+      "history-transfer": {
+        "calls": 1,
+        "refused": 0,
+        "rejected": 0
+      },
+      "history": {
+        "calls": 1,
+        "refused": 0,
+        "rejected": 0
+      },
+      "directory-read": {
+        "calls": 16,
+        "refused": 0,
+        "rejected": 0
+      },
+      "record-read": {
+        "calls": 28,
+        "refused": 0,
+        "rejected": 0
+      },
+      "artifact-read": {
+        "calls": 5,
+        "refused": 0,
+        "rejected": 0
+      },
+      "metadata-check": {
+        "calls": 33,
+        "refused": 0,
+        "rejected": 0
+      }
+    },
+    "omitted": 54
+  },
+  "resumeChecks": [
+    {
+      "phase": "verify",
+      "ok": true,
+      "nextDesignRound": 2
+    },
+    {
+      "phase": "claim",
+      "exactCut": true,
+      "current": true
+    },
+    {
+      "phase": "resumed-exit",
+      "exit": 1,
+      "failure": "Unknown",
+      "roles": []
+    }
+  ],
+  "resumeInferenceCount": 0
+}
