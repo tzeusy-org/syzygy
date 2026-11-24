@@ -383,7 +383,7 @@
       "evidencePath": "docs/evidence/syzygy-bpyt-74/test-inventory-lexical-tables-2026-11-24.json",
       "evidenceSha256": "9be82c51b99a122ae303b5b22b4a27ed4fb1a99e3352e9e9a3eb4d627941723e",
       "verdict": "REVISE",
-      "rawPath": "docs/evidence/syzygy-bpyt-74/BPYT74-LEXICAL-INVENTORY-R1-RAW.md",
+      "rawPath": "docs/reviews/syzygy-bpyt-74/BPYT74-LEXICAL-INVENTORY-R1-RAW.md",
       "rawSha256": "426c8ced3899ba12f605295eeb1f732e3b6199dc36e70aaca38cc7c0222a921b",
       "finding": "F1. A mutable literal binding was incorrectly reported as a certain unchanged input."
     },
