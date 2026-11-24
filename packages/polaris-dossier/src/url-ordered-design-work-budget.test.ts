@@ -29,6 +29,21 @@ const input = { shape, view: { envelopeBytes: 80, originalBytes: 50 }, enforceme
   deadline: 1000, now: 1, remainingRunCpuMicroseconds: 1000 };
 const admissionClocks = { now: () => 1, monotonicMilliseconds: () => 1 };
 
+describe('native mediation within the reserved broker span', () => {
+  it('reserves the broker once and refuses a mediation envelope outside that parent', () => {
+    const baseline = planOrderedDesignWork(input);
+    expect(baseline).not.toBeNull();
+    expect(planOrderedDesignWork({ ...input, nativeMediationMilliseconds: 30 })).toEqual(baseline);
+    for (const nativeMediationMilliseconds of [0, -1, 30.5, 31, Infinity, NaN])
+      expect(planOrderedDesignWork({ ...input, nativeMediationMilliseconds })).toBeNull();
+    const capacity = { ...input, deadline: 2000, enforcement: { ...enforcement, brokerMilliseconds: 85,
+      relayMilliseconds: 20 } };
+    const plan = planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 60 });
+    expect(plan).not.toBeNull();
+    expect(planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 60, deadline: plan!.expiresAt })).toBeNull();
+  });
+});
+
 function fixture(overrides: Partial<typeof input> = {}) {
   const plan = planOrderedDesignWork({ ...input, ...overrides });
   if (!plan) throw new Error('owned work plan refused');

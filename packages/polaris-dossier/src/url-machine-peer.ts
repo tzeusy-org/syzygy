@@ -25,7 +25,7 @@ export function urlMachinePeerCaptureMilliseconds(profile: NativeSessionProfile,
   context: Pick<UrlMachineClientContext, 'profileSha256' | 'runId' | 'role'>): number | null {
   if (!isNativeSessionProfile(profile) || profile.digest !== context.profileSha256
     || profile.input.binding.run !== context.runId || profile.input.binding.role !== context.role) return null;
-  const milliseconds = isOrderedDesignSessionProfile(profile) ? profile.transcript.nativeEffectMilliseconds
+  const milliseconds = isOrderedDesignSessionProfile(profile) ? profile.transcript.nativePreparationMilliseconds
     : URL_MACHINE_PEER_LIMITS.setupMilliseconds;
   return Number.isSafeInteger(milliseconds) && milliseconds > 0 && milliseconds <= 30_000 ? milliseconds : null;
 }
@@ -503,6 +503,9 @@ export async function mediateUrlMachinePeer<T>(peer: UrlMachinePeer, operation: 
           return now !== null && now < effectiveUntil;
         } catch { return false; }
       };
+      // All private preparation, including the fresh audit and reattestation,
+      // has settled. Only this trusted continuation can start the effect phase.
+      if (isOrderedDesignSessionProfile(options.profile) && lease.beginEffect?.() !== true) throw refused();
       if (!boundary()) throw refused();
       const value = await effect(boundary);
       if (!boundary()) throw refused();

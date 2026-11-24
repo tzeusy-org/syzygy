@@ -75,6 +75,9 @@ export type UrlMachineStoreRefusal = Readonly<{
   operationElapsedMs?: number;
   runRemainingMs?: number;
   timerDelayMs?: number;
+  operationPhase?: 'preparation' | 'effect';
+  phaseMilliseconds?: number;
+  phaseElapsedMs?: number;
 }>;
 
 export interface UrlMachineStoreOptions {
@@ -94,12 +97,16 @@ export interface UrlMachineStoreOptions {
 }
 interface UrlMachineStoreLease extends UrlMachineLifecycleLease {
   sampleCurrent(): number | null;
+  /** Trusted ordered mediation only. One transition after preparation, before
+   * the first actual effect; duplicate transitions invalidate this lease. */
+  beginEffect?: () => boolean;
 }
 type UrlMachineTerminalLease = Readonly<Pick<UrlMachineStoreLease, 'read' | 'sampleCurrent'>>;
 export interface UrlMachineStore extends UrlMachineLifecycleAdapter {
   /** Only a genuine profile matching this client's durable binding may select
    * a native effect envelope. Ordinary native effects have twenty seconds;
-   * ordered effects use their declared limit. Lifecycle I/O keeps five seconds. */
+   * ordered preparation/effect phases use their declared serial envelope.
+   * Lifecycle I/O keeps five seconds. Tighter caller/run deadlines still clip. */
   exclusive(clientId: string, deadline: number, run: (lease: UrlMachineStoreLease) => Promise<void>, effectProfile?: NativeSessionProfile): Promise<boolean>;
   /** Run only the trusted lifecycle publication protocol inside one held lock. */
   publish(input: UrlMachineLifecyclePublication, stillOpening?: () => boolean, resumedDesignPeer?: UrlMachinePeer): Promise<UrlMachineLifecycleResult>;
@@ -445,17 +452,21 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       state: () => Promise<StoreState>;
       stateSnapshot: () => ReturnType<typeof readStateSnapshot>;
       write: (file: string, bytes: Uint8Array, predecessor?: Uint8Array | null) => Promise<void>;
+      beginEffect?: () => boolean;
     }) => Promise<void>;
     type OperationBounds = {
       readonly operationMilliseconds?: number;
       readonly staging?: StagedBoundary | undefined;
       readonly ordinaryEffect?: boolean;
       readonly terminalRead?: boolean;
+      readonly orderedPhases?: { readonly preparation: number; readonly effect: number };
     };
     const runLocked = async (deadline: number, operation: StoreOperation, bounds: OperationBounds): Promise<boolean> => {
       const { operationMilliseconds = URL_MACHINE_STORE_LIMITS.operationMilliseconds, staging, ordinaryEffect = false,
-        terminalRead = false } = bounds;
+        terminalRead = false, orderedPhases } = bounds;
       const began = performance.now();
+      let effectBegan: number | undefined;
+      let effectTransitioned = false;
       let active = true, held = false, uncertain = false, contended = false;
       let refusalReported = false;
       const reportRefusal = (refusal: Omit<UrlMachineStoreRefusal, 'operationMilliseconds'>): void => {
@@ -477,10 +488,19 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         if (now >= deadline) {
           reportRefusal({ phase: 'check-deadline', reason: 'run-deadline', runRemainingMs: deadline - now }); throw refused();
         }
-        const operationElapsedMs = performance.now() - began;
+        const monotonic = performance.now(), operationElapsedMs = monotonic - began;
         if (operationElapsedMs >= operationMilliseconds) {
           reportRefusal({ phase: 'check-deadline', reason: 'operation-limit', operationElapsedMs,
             runRemainingMs: deadline - now }); throw refused();
+        }
+        if (orderedPhases !== undefined) {
+          const phaseMilliseconds = effectBegan === undefined ? orderedPhases.preparation : orderedPhases.effect;
+          const phaseElapsedMs = monotonic - (effectBegan ?? began);
+          if (phaseElapsedMs >= phaseMilliseconds) {
+            reportRefusal({ phase: 'check-deadline', reason: 'operation-limit', operationElapsedMs,
+              runRemainingMs: deadline - now, operationPhase: effectBegan === undefined ? 'preparation' : 'effect',
+              phaseMilliseconds, phaseElapsedMs }); throw refused();
+          }
         }
         return now;
       };
@@ -581,6 +601,39 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         }
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
+      let rejectTimeout: ((cause: Error) => void) | undefined;
+      const armTimer = (): void => {
+        if (rejectTimeout === undefined) return;
+        clearTimeout(timer);
+        const monotonic = performance.now(), operationElapsedMs = monotonic - began;
+        const runRemainingMs = deadline - clock();
+        const phase = orderedPhases === undefined ? undefined : {
+          operationPhase: effectBegan === undefined ? 'preparation' as const : 'effect' as const,
+          phaseMilliseconds: effectBegan === undefined ? orderedPhases.preparation : orderedPhases.effect,
+          phaseElapsedMs: monotonic - (effectBegan ?? began),
+        };
+        const timerDelayMs = Math.max(1, Math.min(operationMilliseconds - operationElapsedMs, runRemainingMs,
+          phase === undefined ? Infinity : phase.phaseMilliseconds - phase.phaseElapsedMs));
+        timer = setTimeout(() => {
+          uncertain = true; active = false;
+          reportRefusal({ phase: 'timer', reason: 'timer-fired', operationElapsedMs, runRemainingMs, timerDelayMs, ...phase });
+          rejectTimeout?.(refused());
+        }, timerDelayMs);
+      };
+      const beginEffect = orderedPhases === undefined ? undefined : (): boolean => {
+        if (effectTransitioned) { active = false; return false; }
+        effectTransitioned = true;
+        try {
+          // Sample the original preparation/run/total clocks and live authority
+          // before starting the effect. The outer began/deadline never move.
+          check();
+          const transitionAt = performance.now();
+          if (transitionAt - began >= orderedPhases.preparation) { checkDeadline(); throw refused(); }
+          effectBegan = transitionAt;
+          armTimer();
+          return true;
+        } catch { active = false; return false; }
+      };
       const work = budgets.run({ calls: 0, bytes: 0 }, async () => {
         // The first staged allocation check below already verifies currentness
         // and both clocks before opening either named root. A joined terminal
@@ -663,7 +716,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
           return io(() => readStateSnapshot(checkDeadline), entry);
         };
         const operating = operation({ check, checkWork, reverify, anchored: verifyAnchors,
-          state: async () => (await stateSnapshot()).state, stateSnapshot, write });
+          state: async () => (await stateSnapshot()).state, stateSnapshot, write,
+          ...(beginEffect === undefined ? {} : { beginEffect }) });
         shareTerminalEntry = false;
         await operating;
         check();
@@ -679,15 +733,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       void work.then(() => activeWork.delete(work), () => activeWork.delete(work));
       try {
         return await Promise.race([work, new Promise<never>((_, reject) => {
-          const operationElapsedMs = performance.now() - began;
-          const operationRemaining = operationMilliseconds - operationElapsedMs;
-          const runRemainingMs = deadline - clock();
-          const timerDelayMs = Math.max(1, Math.min(operationRemaining, runRemainingMs));
-          timer = setTimeout(() => {
-            uncertain = true; active = false;
-            reportRefusal({ phase: 'timer', reason: 'timer-fired', operationElapsedMs, runRemainingMs, timerDelayMs });
-            reject(refused());
-          }, timerDelayMs);
+          rejectTimeout = reject;
+          armTimer();
         })]);
       } catch { uncertain = true; return false; }
       finally {
@@ -795,11 +842,17 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       const ordinaryEffect = effectProfile !== undefined && !orderedEffect;
       const synchronousOrdinaryRead = ordinaryEffect && currentAsync === undefined && publication === undefined && !terminalRead;
       const operationMilliseconds = orderedEffect
-        ? effectProfile.transcript.nativeEffectMilliseconds : ordinaryEffect ? ORDINARY_NATIVE_EFFECT_MILLISECONDS
+        ? effectProfile.transcript.nativeMediationMilliseconds : ordinaryEffect ? ORDINARY_NATIVE_EFFECT_MILLISECONDS
           : terminalRead && currentAsync !== undefined ? ASYNC_TERMINAL_READ_MILLISECONDS
             : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
-      if (!positive(operationMilliseconds) || operationMilliseconds > 30_000) return false;
-      return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write }) => {
+      const orderedPhases = orderedEffect ? { preparation: effectProfile.transcript.nativePreparationMilliseconds,
+        effect: effectProfile.transcript.nativeEffectMilliseconds } : undefined;
+      if (orderedPhases !== undefined && (!positive(orderedPhases.preparation) || orderedPhases.preparation > 30_000
+        || !positive(orderedPhases.effect) || orderedPhases.effect > 30_000
+        || operationMilliseconds !== orderedPhases.preparation + orderedPhases.effect)) return false;
+      if (!positive(operationMilliseconds) || operationMilliseconds > (orderedPhases === undefined ? 30_000
+        : orderedPhases.preparation + orderedPhases.effect)) return false;
+      return withLock(deadline, async ({ check, checkWork, anchored, state, stateSnapshot, write, beginEffect }) => {
         if (effectProfile !== undefined) {
           const audit = (await state()).clients.find(client => client.clientId === clientId)?.audit.at(-1);
           if (!audit || audit.profileSha256 !== effectProfile.digest || audit.role !== effectProfile.input.binding.role
@@ -915,9 +968,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         };
         const sampleCurrent = (): number | null => { try { return check(); } catch { return null; } };
         await operation(Object.freeze({ now: () => live(), current: () => sampleCurrent() !== null,
-          sampleCurrent, read, preflightCanonical, advance }));
+          sampleCurrent, read, preflightCanonical, advance,
+          ...(beginEffect === undefined ? {} : { beginEffect }) }));
         if (phase !== 0 && phase !== 5) throw refused();
-      }, { operationMilliseconds, ordinaryEffect, staging: publication, terminalRead });
+      }, { operationMilliseconds, ordinaryEffect, staging: publication, terminalRead,
+        ...(orderedPhases === undefined ? {} : { orderedPhases }) });
     };
     const adapter = Object.freeze<UrlMachineStore>({ identitySha256: expectedIdentitySha256, protection: 'role-namespace-exclusion-required; privileged-store-rollback-Unknown' as const,
       allocateClient, allocateClients,

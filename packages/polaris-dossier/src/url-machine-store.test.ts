@@ -224,6 +224,8 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     try {
       let afterSixSeconds: boolean | undefined, atTwentySeconds: boolean | undefined, atThirtySeconds: boolean | undefined;
       const result = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+        if (kind === 'ordered') expect(lease.beginEffect?.()).toBe(true);
+        else expect(lease.beginEffect).toBeUndefined();
         offset = 6000; afterSixSeconds = lease.current();
         offset = 20_000; atTwentySeconds = lease.current();
         offset = 30_000; atThirtySeconds = lease.current();
@@ -233,11 +235,123 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       expect(atThirtySeconds).toBe(false);
       expect(result).toBe(false);
       expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
-        operationMilliseconds: kind === 'ordered' ? 30_000 : kind === 'ordinary' ? 20_000 : 5000,
+        operationMilliseconds: kind === 'ordered' ? 60_000 : kind === 'ordinary' ? 20_000 : 5000,
         operationElapsedMs: kind === 'unprofiled' ? 6000 : kind === 'ordinary' ? 20_000 : 30_000,
-        runRemainingMs: 60_000 }]);
+        runRemainingMs: 60_000,
+        ...(kind === 'ordered' ? { operationPhase: 'effect', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 } : {}) }]);
       expect(Object.isFrozen(refusals[0])).toBe(true);
     } finally { clock.mockRestore(); }
+  });
+
+  it.each([
+    { fault: 'none', preparation: 29_000, effect: 25_000, accepted: true },
+    { fault: 'preparation-limit', preparation: 30_000, effect: 0, accepted: false },
+    { fault: 'effect-limit', preparation: 29_000, effect: 30_000, accepted: false },
+    { fault: 'outer-limit', preparation: 29_999, effect: 30_001, accepted: false },
+    { fault: 'duplicate-transition', preparation: 29_000, effect: 0, accepted: false },
+    { fault: 'withdrawal-before-transition', preparation: 29_000, effect: 0, accepted: false },
+    { fault: 'withdrawal-during-effect', preparation: 29_000, effect: 1, accepted: false },
+    { fault: 'original-deadline', preparation: 29_000, effect: 1, accepted: false },
+  ] as const)('retains serial ordered phase caps and live release authority for $fault', async scenario => {
+    const refusals: UrlMachineStoreRefusal[] = [];
+    const profile = effectProfile(true), f = await fixture(120_000, value => { refusals.push(value); }), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    let elapsed = 0, entered = false, effectCurrent: boolean | undefined;
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    try {
+      const completed = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+        entered = true;
+        elapsed = scenario.preparation;
+        if (scenario.fault === 'withdrawal-before-transition') f.revoke();
+        const transitioned = lease.beginEffect?.();
+        expect(transitioned).toBe(scenario.fault !== 'preparation-limit' && scenario.fault !== 'withdrawal-before-transition');
+        if (!transitioned) return;
+        if (scenario.fault === 'duplicate-transition') expect(lease.beginEffect?.()).toBe(false);
+        if (scenario.fault === 'withdrawal-during-effect') f.revoke();
+        if (scenario.fault === 'original-deadline') f.tick(f.options.deadline);
+        elapsed += scenario.effect;
+        effectCurrent = lease.current();
+      }, profile);
+      expect(entered).toBe(true);
+      expect(completed).toBe(scenario.accepted);
+      if (scenario.fault !== 'preparation-limit' && scenario.fault !== 'withdrawal-before-transition')
+        expect(effectCurrent).toBe(scenario.accepted);
+      if (scenario.fault === 'none') expect(refusals).toEqual([]);
+      if (scenario.fault === 'preparation-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
+        operationMilliseconds: 60_000, operationElapsedMs: 30_000, runRemainingMs: 120_000,
+        operationPhase: 'preparation', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 }]);
+      if (scenario.fault === 'effect-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
+        operationMilliseconds: 60_000, operationElapsedMs: 59_000, runRemainingMs: 120_000,
+        operationPhase: 'effect', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 }]);
+      if (scenario.fault === 'outer-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
+        operationMilliseconds: 60_000, operationElapsedMs: 60_000, runRemainingMs: 120_000 }]);
+    } finally { clock.mockRestore(); }
+  });
+
+  it.each(['preparation', 'effect'] as const)('bounds a suspended ordered %s without renewing the outer timer', async phase => {
+    const refusals: UrlMachineStoreRefusal[] = [];
+    const profile = effectProfile(true), f = await fixture(120_000, value => { refusals.push(value); }), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    let entered!: () => void, release!: () => void, elapsed = 0;
+    const ready = new Promise<void>(resolve => { entered = resolve; });
+    const held = new Promise<void>(resolve => { release = resolve; });
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+    const timers = vi.spyOn(globalThis, 'setTimeout');
+    let pending: Promise<boolean> | undefined;
+    try {
+      pending = f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+        if (phase === 'effect') { elapsed = 29_000; expect(lease.beginEffect?.()).toBe(true); }
+        entered(); await held;
+        expect(lease.current()).toBe(false);
+      }, profile);
+      await ready;
+      const armed = timers.mock.calls.at(-1)!;
+      expect(armed[1]).toBe(30_000);
+      expect(typeof armed[0]).toBe('function');
+      elapsed = phase === 'effect' ? 59_000 : 30_000;
+      (armed[0] as () => void)();
+      expect(await pending).toBe(false);
+      expect(refusals).toEqual([{ phase: 'timer', reason: 'timer-fired', operationMilliseconds: 60_000,
+        operationElapsedMs: phase === 'effect' ? 29_000 : 0, runRemainingMs: 120_000, timerDelayMs: 30_000,
+        operationPhase: phase, phaseMilliseconds: 30_000, phaseElapsedMs: 0 }]);
+    } finally {
+      release(); await pending; await new Promise<void>(resolve => setImmediate(resolve));
+      timers.mockRestore(); clock.mockRestore();
+    }
+  });
+
+  it('refuses a reentrant ordered transition during its fresh authority check', async () => {
+    const profile = effectProfile(true), f = await fixture(), slot = await f.allocate(profile);
+    expect((await slot.publish()).ok).toBe(true);
+    let nested: (() => boolean) | undefined, nestedResult: boolean | undefined;
+    const reopened = await openUrlMachineStore({ ...f.options, current: () => {
+      if (nested !== undefined) { const transition = nested; nested = undefined; nestedResult = transition(); }
+      return true;
+    } }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    expect(await reopened.exclusive(slot.context.clientId, f.options.deadline, async lease => {
+      nested = lease.beginEffect;
+      expect(lease.beginEffect?.()).toBe(false);
+      expect(lease.current()).toBe(false);
+    }, profile)).toBe(false);
+    expect(nestedResult).toBe(false);
+  });
+
+  it('refuses a retained ordered-design-7 credential rather than upgrading it to profile8', async () => {
+    const profile = effectProfile(true);
+    const legacy = JSON.parse(profile.canonicalText.replaceAll('ordered-design-8', 'ordered-design-7')) as {
+      transcript: Record<string, unknown>;
+    };
+    delete legacy.transcript.nativePreparationMilliseconds;
+    delete legacy.transcript.nativeMediationMilliseconds;
+    const legacyDigest = sha256(encodeCanonicalJson(legacy, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
+    expect(legacyDigest).not.toBe(profile.digest);
+    const f = await fixture(), slot = await f.allocate({ ...profile, digest: legacyDigest });
+    expect((await slot.publish()).ok).toBe(true);
+    const entered = vi.fn();
+    expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); }, profile)).toBe(false);
+    expect(entered).not.toHaveBeenCalled();
   });
 
   it.each([true, false])('takes one fresh synchronous parent sample before the first private anchor read when current is %s', async allowed => {
@@ -328,6 +442,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const clock = vi.spyOn(performance, 'now').mockReturnValue(0);
     try {
       const completed = await f.store.exclusive(slot.context.clientId, NOW + 1000, async lease => {
+        if (ordered) expect(lease.beginEffect?.()).toBe(true);
         expect(lease.current()).toBe(true);
         f.tick(NOW + 1000);
         expect(lease.current()).toBe(false);

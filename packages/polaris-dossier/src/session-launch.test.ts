@@ -674,11 +674,12 @@ describe('prepared private CLI launch',()=>{
     const base = ordinary.value.profile, profile = ordered.value.profile;
     expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
       digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-7');
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-8');
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
     expect(profile).toMatchObject({ transcript: {
+      nativePreparationMilliseconds: 30_000, nativeEffectMilliseconds: 30_000, nativeMediationMilliseconds: 60_000,
       resultTurns: ['prepared', 'part', 'part', 'verdict-acknowledgment'],
       prepared: { event: 'design-round-prepared', messageIndex: 2, blockIndex: 0 },
       numbered: { selector: 'round-{round}/design-view-part-{ordinal}.json' },
@@ -688,6 +689,7 @@ describe('prepared private CLI launch',()=>{
     expect(isOrderedDesignSessionProfile(profile)).toBe(true);
     expect(isSessionProfile(profile)).toBe(false);
     expect(isOrderedDesignSessionProfile(structuredClone(profile))).toBe(false);
+    expect(isOrderedDesignSessionProfile({ ...profile, id: 'claude-2.1.327-sonnet46/ordered-design-7' })).toBe(false);
     for (const binding of [{ ...fixedProfileInput.binding, role: 'author' },
       { ...fixedProfileInput.binding, model: 'unsupported' }, { ...fixedProfileInput.binding, provider: 'unsupported' }]) {
       expect(createOrderedDesignSessionProfile({ ...fixedProfileInput, binding })).toMatchObject({ ok: false, code: 'unsupported-session-profile' });

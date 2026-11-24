@@ -185,7 +185,7 @@ export async function startUrlOrderedAttempt(input: UrlOrderedAttemptOptions) {
       },
     });
   };
-  const effectHorizon = () => Math.min(input.deadline, input.now() + profile.transcript.nativeEffectMilliseconds);
+  const effectHorizon = () => Math.min(input.deadline, input.now() + profile.transcript.nativeMediationMilliseconds);
   const productCoversEffect = (): boolean => {
     if (render === null) return false;
     const lease = urlDesignProductLeaseState(render.product);

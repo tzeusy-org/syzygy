@@ -1472,8 +1472,8 @@ async function observeDesignRun(run: string, traceInference = false) {
               const lease = designProduct.urlDesignProductLeaseState(reproduction.product);
               expect(lease).toHaveProperty('deadline');
               if ('deadline' in lease) {
-                expect(lease.deadline).toBeGreaterThanOrEqual(Math.min(input.deadline, began + 90_000));
-                expect(lease.deadline).toBeLessThanOrEqual(Math.min(input.deadline, issuedBy + 90_000));
+                expect(lease.deadline).toBeGreaterThanOrEqual(Math.min(input.deadline, began + 120_000));
+                expect(lease.deadline).toBeLessThanOrEqual(Math.min(input.deadline, issuedBy + 120_000));
               }
             }
             return reproduction;

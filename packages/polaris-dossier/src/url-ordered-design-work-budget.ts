@@ -97,6 +97,9 @@ export function planOrderedDesignWork(input: {
   readonly enforcement: OrderedDesignWorkEnforcement;
   readonly expectedRuntimeSha256: string;
   readonly expectedWorkerSha256: string;
+  /** The broker remains a tighter parent; its reserved span already includes
+   * this serial preparation/effect envelope, so do not count it twice. */
+  readonly nativeMediationMilliseconds?: number;
   readonly deadline: number;
   readonly now: number;
   readonly remainingRunCpuMicroseconds: number;
@@ -112,6 +115,8 @@ export function planOrderedDesignWork(input: {
       || !positive(deadline) || !nonnegative(now) || deadline <= now || !positive(remainingRunCpuMicroseconds)
       || !positive(enforcement.relayMilliseconds) || enforcement.relayMilliseconds > 300_000
       || !positive(enforcement.brokerMilliseconds) || enforcement.brokerMilliseconds > 85_000) return null;
+    if (input.nativeMediationMilliseconds !== undefined && (!positive(input.nativeMediationMilliseconds)
+      || input.nativeMediationMilliseconds > enforcement.brokerMilliseconds)) return null;
     const cpu = calculateOrderedDesignCpuRequirement(enforcement);
     if (cpu === null) return null;
     let wall = 4 * (enforcement.relayMilliseconds + enforcement.brokerMilliseconds), auditReadBytes = 0;

@@ -473,6 +473,7 @@ export function createOrderedDesignSession(options: Options) {
       if (transferBounds === null) throw refused();
       const reserved = reserveOrderedDesignWork({ shape: transferBounds, view: { envelopeBytes: plan.manifest.envelopeBytes, originalBytes },
         enforcement: work.enforcement, expectedRuntimeSha256: work.runtimeSha256,
+        nativeMediationMilliseconds: transcript.nativeMediationMilliseconds,
         expectedWorkerSha256: screening.kind === 'bounded-worker' ? screening.program.worker.sha256 : work.enforcement.workerSha256,
         deadline, now: Date.now() }, work.reserveRemainingCpuMicroseconds, { now: Date.now, monotonicMilliseconds: () => performance.now() });
       if (reserved === null) throw refused();

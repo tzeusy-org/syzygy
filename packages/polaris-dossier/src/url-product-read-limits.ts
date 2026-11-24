@@ -1,4 +1,9 @@
 export const URL_ORDERED_NATIVE_EFFECT_MILLISECONDS = 30_000;
+// Preparation retains the existing ordered capture allowance. The two serial
+// phases share one absolute envelope; neither can borrow the other's capacity.
+export const URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS = URL_ORDERED_NATIVE_EFFECT_MILLISECONDS;
+export const URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS = URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS
+  + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS;
 
 const productReadMilliseconds = {
   render: 60_000,
@@ -13,6 +18,6 @@ const productReadMilliseconds = {
  * native setup or effect under the same lease. */
 export const URL_PRODUCT_READ_MILLISECONDS = Object.freeze({
   ...productReadMilliseconds,
-  'ordered-design-startup': productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,
-  'ordered-design-replacement': productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS,
+  'ordered-design-startup': productReadMilliseconds.render + URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS,
+  'ordered-design-replacement': productReadMilliseconds.render + URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS,
 });

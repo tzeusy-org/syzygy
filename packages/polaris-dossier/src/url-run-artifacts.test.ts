@@ -1139,19 +1139,19 @@ describe('trusted URL artifact producer bridge', () => {
       const began = Date.now();
       const ordered = beginRunProductReads(f.run, f.bridge, operation, began + 120_000);
       const clipped = beginRunProductReads(f.run, f.bridge, operation, began + 70_000);
-      expect(ordered.deadline).toBe(began + 90_000);
+      expect(ordered.deadline).toBe(began + 120_000);
       expect(clipped.deadline).toBe(began + 70_000);
-      expect(() => f.bridge.beginRead({ operation, deadline: began + 90_001 })).toThrow();
+      expect(() => f.bridge.beginRead({ operation, deadline: began + 120_001 })).toThrow();
       expect(() => f.bridge.beginRead({ operation: 'render', deadline: began + 90_000 })).toThrow();
       expect(ordered.read('brief.json')).not.toBeNull();
       // A 53-second render followed by 8 seconds of setup exceeds the normal render lease.
       vi.setSystemTime(began + 61_000);
-      expect(ordered.revalidate().metadata).toMatchObject({ operation: 'render', deadline: began + 90_000 });
-      expect(ordered.deadline - Date.now()).toBe(29_000);
+      expect(ordered.revalidate().metadata).toMatchObject({ operation: 'render', deadline: began + 120_000 });
+      expect(ordered.deadline - Date.now()).toBe(59_000);
       vi.setSystemTime(began + 70_000);
       expect(clipped.leaseState()).toBe('expired');
-      expect(ordered.revalidate().metadata.deadline).toBe(began + 90_000);
-      vi.setSystemTime(began + 89_999);
+      expect(ordered.revalidate().metadata.deadline).toBe(began + 120_000);
+      vi.setSystemTime(began + 119_999);
       expect(ordered.leaseState()).toBe('open');
       vi.setSystemTime(ordered.deadline);
       expect(ordered.leaseState()).toBe('expired');
