@@ -2,11 +2,94 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
-import { observeWorkItems } from './work-items.js';
+import { observeTrajectoryWorkItems, observeWorkItems } from './work-items.js';
 
 function rowsResponse(rows: readonly Record<string, unknown>[]): string {
   return JSON.stringify(rows);
 }
+
+function workItemWitness(revision: string): Record<string, unknown> {
+  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null };
+}
+
+describe('same-revision dependency observation (POC-REQ-062)', () => {
+  const revisionA = '0123456789abcdefghijklmnopqrstuv';
+  const revisionB = '1123456789abcdefghijklmnopqrstuv';
+  const item = {
+    revision: revisionA, id: 'bu-open', status: 'open', issue_type: 'task', priority: 1,
+    created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null,
+  };
+  const witness = (revision: string) => ({
+    revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null,
+  });
+  const edge = {
+    revision: null, issue_id: 'bu-open', depends_on_issue_id: 'bu-open', type: 'blocks', has_external: 0, has_wisp: 0,
+  };
+
+  function observe(dependencyResponse: () => string, workItemRows = [item]) {
+    const runQuery = vi.fn((_repoRoot: string, sql: string) =>
+      sql.includes('FROM issues ') ? JSON.stringify(workItemRows) : dependencyResponse(),
+    );
+    const result = observeTrajectoryWorkItems({ repoRoot: '/fixture', beadPrefix: 'bu', capturedAt: '2026-08-31T00:00:00Z', runQuery });
+    return { ...result, calls: runQuery.mock.calls.map(([, sql]) => sql) };
+  }
+
+  it('observes a witnessed empty set in two named, revision-pinned statements', () => {
+    const result = observe(() => JSON.stringify([witness(revisionA)]));
+    expect(result.workItems.kind).toBe('observed');
+    expect(result.dependencies).toEqual({
+      kind: 'observed', byItem: new Map(),
+      counts: { total: 0, byType: { blocks: 0, 'parent-child': 0, 'discovered-from': 0, related: 0, 'relates-to': 0, tracks: 0 }, unlisted: 0, external: 0, wisp: 0, outOfPrefix: 0 },
+    });
+    expect(result.calls).toHaveLength(2);
+    expect(result.calls[0]).toContain("FROM issues AS OF 'HEAD'");
+    expect(result.calls[0]).toContain("UNION ALL SELECT dolt_hashof('HEAD'), NULL");
+    expect(result.calls[1]).toBe(
+      'SELECT issue_id, depends_on_issue_id, type, depends_on_external IS NOT NULL AS has_external, ' +
+      "depends_on_wisp_id IS NOT NULL AS has_wisp, NULL AS revision FROM dependencies AS OF '0123456789abcdefghijklmnopqrstuv' " +
+      "WHERE issue_id LIKE 'bu-%' UNION ALL SELECT NULL, NULL, NULL, NULL, NULL, dolt_hashof('0123456789abcdefghijklmnopqrstuv')",
+    );
+  });
+
+  it.each([
+    ['empty with missing witness', []],
+    ['nonempty with missing witness', [edge]],
+    ['empty at another revision', [witness(revisionB)]],
+    ['nonempty at another revision', [edge, witness(revisionB)]],
+    ['duplicate matching witness', [witness(revisionA), witness(revisionA)]],
+    ['matching revision placed on an edge', [{ ...edge, revision: revisionA }]],
+  ])('refuses %s while preserving the work-item fact', (_case, rows) => {
+    const result = observe(() => JSON.stringify(rows));
+    expect(result.calls).toHaveLength(2);
+    expect(result.workItems.kind).toBe('observed');
+    if (result.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(result.workItems.provenance.revision).toBe(revisionA);
+    expect(result.workItems.items.map(({ id, status }) => [id, status])).toEqual([['bu-open', 'open']]);
+    expect(result.dependencies).toEqual({ kind: 'unknown', reason: 'dependency-revision-unverified' });
+  });
+
+  it.each([
+    ['an unserved dependent', { ...edge, issue_id: 'bu-absent' }],
+    ['an unexpected field', { ...edge, unnamed_field: 'sample text' }],
+    ['an invalid presence flag', { ...edge, has_external: 2 }],
+  ])('refuses malformed edge metadata with %s instead of a partial count', (_case, badRow) => {
+    const result = observe(() => JSON.stringify([witness(revisionA), edge, badRow]));
+    expect(result.dependencies).toEqual({ kind: 'unknown', reason: 'dependency-result-malformed' });
+  });
+
+  it('keeps bad source output, transport failure and a missing work revision distinct', () => {
+    expect(observe(() => 'non JSON').dependencies).toEqual({ kind: 'unknown', reason: 'dependency-result-malformed' });
+    expect(observe(() => { throw new Error('fixture failure'); }).dependencies).toEqual({ kind: 'unknown', reason: 'dependency-read-failed' });
+    const absent = observe(() => '[]', []);
+    expect(absent.workItems).toEqual({ kind: 'unknown', reason: 'work-item observation returned no revision witness' });
+    expect(absent.dependencies).toEqual({ kind: 'unknown', reason: 'work-item-revision-unavailable' });
+    expect(absent.calls).toHaveLength(1);
+    const invalid = observe(() => '[]', [{ ...item, revision: 'invalid-fixture-revision' }]);
+    expect(invalid.workItems.kind).toBe('observed');
+    expect(invalid.dependencies).toEqual({ kind: 'unknown', reason: 'work-item-revision-unavailable' });
+    expect(invalid.calls).toHaveLength(1);
+  });
+});
 
 describe('work-items observer', () => {
   it('reads items via bd sql and stamps them with the Dolt revision read (POC-REQ-010)', () => {
@@ -133,11 +216,7 @@ describe('work-items observer', () => {
   });
 
   it('distinguishes an observed-empty result from Unknown', () => {
-    const runQuery = vi.fn((_repoRoot: string, sql: string) =>
-      sql.includes('WHERE id LIKE')
-        ? rowsResponse([])
-        : rowsResponse([{ revision: 'rev-empty' }]),
-    );
+    const runQuery = vi.fn(() => rowsResponse([workItemWitness('rev-empty')]));
     const result = observeWorkItems({
       repoRoot: '/repo',
       beadPrefix: 'bu',
@@ -148,6 +227,7 @@ describe('work-items observer', () => {
     if (result.kind !== 'observed') throw new Error('unreachable');
     expect(result.items).toEqual([]);
     expect(result.provenance.revision).toBe('rev-empty');
+    expect(runQuery).toHaveBeenCalledExactlyOnceWith('/repo', expect.stringContaining("FROM issues AS OF 'HEAD'"));
   });
 
   it('rejects a malformed configured prefix rather than shelling an unsafe query', () => {
@@ -182,7 +262,7 @@ describe('work-items observer', () => {
         capturedAt: '2026-08-30T02:00:00Z',
         runQuery: (_root, sql) => {
           calls.push(sql);
-          return sql.includes('WHERE id LIKE') ? rowsResponse(rows) : rowsResponse([{ revision: 'rev-empty' }]);
+          return rowsResponse(rows.length === 0 ? [workItemWitness('rev-empty')] : rows);
         },
       });
     }

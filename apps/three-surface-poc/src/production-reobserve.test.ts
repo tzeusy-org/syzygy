@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createReobserveState } from './reobserve-state.js';
 import { buildPocEvaluationEvidence, buildProductionPocModel, type PocRuntimeCapture } from './production-reobserve.js';
 import { renderPolarisPage } from './polaris.js';
-import { fixtureRepoWithGit } from './test-model-fixture.js';
+import { fixtureRepoWithGit, workItemRevisionWitness } from './test-model-fixture.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -50,8 +50,8 @@ function capture(
   };
 }
 
-function workItemQuery(_repoRoot: string, sql: string): string {
-  return sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-fixture-revision' }]);
+function workItemQuery(): string {
+  return JSON.stringify([workItemRevisionWitness('dolt-fixture-revision')]);
 }
 
 function build(repoRoot: string, stateDir: string, nextCapture: PocRuntimeCapture): PocModel {

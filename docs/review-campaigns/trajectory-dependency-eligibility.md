@@ -3,6 +3,7 @@
 ## Patterns
 
 - `T3JK19-TRAJECTORY-DEPENDENCY-DELTA-R1-RAW\.md`
+- `T3JK19-TRAJECTORY-DEPENDENCY-DELTA-DISPOSITION-RAW\.md`
 
 ## What was under review
 
@@ -11,3 +12,5 @@
 ## Last verdict of record, and where the findings landed
 
 [Observed] R1 returned `REVISE` (`T3JK19-TRAJECTORY-DEPENDENCY-DELTA-R1-RAW.md:3`). The semantic delta's two numbered dispositions require a source-resolved witness for the empty case and preserve known blockers when a distinct edge leaves whole eligibility undetermined.
+
+[Observed] The exact follow-up on the two dispositions returned `CONFIRM` at `409044a94c25059579e17598b243390f9cbea646` (`T3JK19-TRAJECTORY-DEPENDENCY-DELTA-DISPOSITION-RAW.md:3`).

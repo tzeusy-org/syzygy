@@ -7,7 +7,7 @@ import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REA
 
 import { renderTrajectoryPage, renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
-import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, workItemRevisionWitness } from './test-model-fixture.js';
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -41,6 +41,172 @@ function cardBody(html: string, id: string): string {
   }
   return match[1];
 }
+
+describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
+  const revision = '0123456789abcdefghijklmnopqrstuv';
+  const witness = { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null };
+  const instant = '2026-08-01T00:00:00Z';
+  const item = (id: string, status: string) => ({
+    ...fixtureWorkItemRow(id, status, instant, instant, status === 'closed' ? instant : null), id, revision,
+  });
+  const edge = (issue_id: string, depends_on_issue_id: string, type = 'blocks', has_external = 0, has_wisp = 0) =>
+    ({ issue_id, depends_on_issue_id, type, has_external, has_wisp, revision: null });
+  const knownBlocker = { id: 'bu-z-blocker', page: 1 };
+
+  it('reconciles all classifications, reasoned states and an independently established mixed cause across both channels', async () => {
+    const rows = [
+      item('bu-a-ready', 'open'), item('bu-b-blocked', 'open'), item('bu-c-tracker-blocked', 'blocked'),
+      item('bu-d-deferred', 'deferred'), item('bu-e-unlisted', 'open'), item('bu-f-foreign', 'open'),
+      item('bu-g-external', 'open'), item('bu-h-wisp', 'open'), item('bu-i-unobserved', 'open'),
+      item('bu-j-mixed', 'blocked'), item('bu-k-working', 'in_progress'), item('bu-l-pinned', 'pinned'),
+      item('bu-m-hooked', 'hooked'), item('bu-n-closed', 'closed'), item('bu-z-blocker', 'open'),
+    ];
+    const edges = [
+      witness, edge('bu-a-ready', 'bu-n-closed'), edge('bu-b-blocked', 'bu-z-blocker'), edge('bu-b-blocked', 'bu-z-blocker'),
+      edge('bu-e-unlisted', 'bu-z-blocker', 'unclassified-fixture-type'), edge('bu-f-foreign', 'elsewhere-fixture-target'),
+      edge('bu-g-external', 'bu-c-tracker-blocked', 'blocks', 1), edge('bu-h-wisp', 'bu-c-tracker-blocked', 'blocks', 0, 1),
+      edge('bu-i-unobserved', 'bu-unobserved-fixture-target'), edge('bu-j-mixed', 'bu-z-blocker'),
+      edge('bu-j-mixed', 'bu-c-tracker-blocked', 'blocks', 1), edge('bu-d-deferred', 'bu-z-blocker', 'parent-child'),
+      edge('bu-d-deferred', 'bu-z-blocker', 'discovered-from'), edge('bu-d-deferred', 'bu-z-blocker', 'related'),
+      edge('bu-d-deferred', 'bu-z-blocker', 'relates-to'), edge('bu-d-deferred', 'bu-z-blocker', 'tracks'),
+    ];
+    const runDependencyQuery = () => JSON.stringify(edges);
+    const repo = fixtureRepoWithGit(cleanups);
+    const model = buildFixtureModel(cleanups, { fixtureRepo: repo, workItemRows: rows, runDependencyQuery });
+    if (model.trajectory.kind !== 'observed') throw new Error('expected observed trajectory');
+    const expected = {
+      served: 14,
+      counts: { ready: 2, planned: 1, blocked: 2, 'eligibility-undetermined': 6, absent: 3 },
+      feed: { kind: 'observed', counts: {
+        total: 15, byType: { blocks: 9, 'parent-child': 1, 'discovered-from': 1, related: 1, 'relates-to': 1, tracks: 1 },
+        unlisted: 1, external: 2, wisp: 1, outOfPrefix: 1,
+      } },
+      items: {
+        'bu-a-ready': { state: 'ready', reasons: [] },
+        'bu-b-blocked': { state: 'blocked', reasons: [], block: { causes: ['dependency'], blockers: [knownBlocker] } },
+        'bu-c-tracker-blocked': { state: 'blocked', reasons: [], block: { causes: [], blockers: [] } },
+        'bu-d-deferred': { state: 'planned', reasons: ['tracker-deferred'] },
+        'bu-e-unlisted': { state: 'eligibility-undetermined', reasons: ['unlisted-edge-type'] },
+        'bu-f-foreign': { state: 'eligibility-undetermined', reasons: ['out-of-prefix-blocker'] },
+        'bu-g-external': { state: 'eligibility-undetermined', reasons: ['external-blocker'] },
+        'bu-h-wisp': { state: 'eligibility-undetermined', reasons: ['wisp-blocker'] },
+        'bu-i-unobserved': { state: 'eligibility-undetermined', reasons: ['unobserved-blocker'] },
+        'bu-j-mixed': { state: 'eligibility-undetermined', reasons: ['external-blocker'], block: { causes: ['dependency'], blockers: [knownBlocker] } },
+        'bu-z-blocker': { state: 'ready', reasons: [] },
+      },
+    };
+    const machineRoute = pocRoutes(() => model).find((route) => route.path === '/api/poc')!;
+    const response = await machineRoute.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    const machine = JSON.parse(response.body as string) as PocModel;
+    if (machine.trajectory.kind !== 'observed') throw new Error('expected observed machine trajectory');
+    expect(machine.trajectory.eligibility).toEqual(expected);
+
+    const html = renderTrajectoryPage(model);
+    for (const [id, expectation] of Object.entries(expected.items)) {
+      const card = cardBody(html, id);
+      expect(card).toContain(`data-trajectory-eligibility="${expectation.state}"`);
+      expect([...card.matchAll(/data-eligibility-reason="([^"]+)"/g)].map((match) => match[1])).toEqual(expectation.reasons);
+      expect([...card.matchAll(/data-blocker-id="([^"]+)"/g)].map((match) => match[1])).toEqual(
+        'block' in expectation ? expectation.block.blockers.map(({ id: blocker }) => blocker) : [],
+      );
+      expect([...card.matchAll(/data-blocked-cause="([^"]+)"/g)].map((match) => match[1])).toEqual(
+        'block' in expectation ? [expectation.block.causes[0] ?? 'unknown'] : [],
+      );
+    }
+    for (const id of ['bu-k-working', 'bu-l-pinned', 'bu-m-hooked', 'bu-n-closed']) {
+      expect(cardBody(html, id)).not.toContain('data-trajectory-eligibility');
+    }
+    expect(Object.fromEntries([...html.matchAll(/data-eligibility-count="([^"]+)">[^<]+ (\d+)<\/span>/g)]
+      .map(([, label, value]) => [label, Number(value)]))).toEqual({
+      'served non-closed': 14, ...expected.counts, rows: 15, ...expected.feed.counts.byType, unlisted: 1, external: 2, wisp: 1, 'out-of-prefix': 1,
+    });
+    for (const withheld of ['unclassified-fixture-type', 'elsewhere-fixture-target', 'bu-unobserved-fixture-target']) {
+      expect(html).not.toContain(withheld);
+      expect(response.body).not.toContain(withheld);
+    }
+
+    const nextRevision = '1123456789abcdefghijklmnopqrstuv';
+    const afterClose = buildFixtureModel(cleanups, {
+      fixtureRepo: repo,
+      workItemRows: rows.map((row) => ({ ...(row.id === 'bu-z-blocker' ? item('bu-z-blocker', 'closed') : row), revision: nextRevision })),
+      runDependencyQuery: () => JSON.stringify([{ ...witness, revision: nextRevision }, ...edges.slice(1)]),
+    });
+    if (afterClose.trajectory.kind !== 'observed') throw new Error('expected observed next snapshot');
+    expect(afterClose.trajectory.eligibility.items['bu-b-blocked']).toEqual({ state: 'ready', reasons: [] });
+    expect(cardBody(renderTrajectoryPage(afterClose), 'bu-b-blocked')).not.toContain('data-blocker-id');
+  });
+
+  it('retains the observed statuses when the dependency feed is unavailable', () => {
+    const statuses = ['open', 'blocked', 'deferred', 'in_progress', 'pinned', 'hooked', 'closed'];
+    const rows = statuses.map((status) => item(`bu-status-${status}`, status));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => '[]' });
+    if (model.trajectory.kind !== 'observed' || model.workItems.kind !== 'observed') throw new Error('expected observed work');
+    expect(model.workItems.items.map(({ status }) => status)).toEqual(statuses);
+    expect(model.trajectory.eligibility.feed).toEqual({ kind: 'unknown', reason: 'dependency-revision-unverified' });
+    expect(model.trajectory.eligibility.counts).toEqual({ ready: 0, planned: 0, blocked: 0, 'eligibility-undetermined': 6, absent: 0 });
+    const html = renderTrajectoryPage(model);
+    expect(html).toContain('data-dependency-feed="unknown">Dependency rows. Unknown.');
+    expect(html).not.toContain('data-eligibility-count="rows"');
+    for (const status of statuses.slice(0, -1)) {
+      const card = cardBody(html, `bu-status-${status}`);
+      expect(card).toContain(`data-parity-field="work-item-status">${status}<`);
+      expect(card).toContain('data-eligibility-reason="dependency-revision-unverified"');
+    }
+    expect(cardBody(html, 'bu-status-closed')).not.toContain('data-trajectory-eligibility');
+  });
+
+  it('follows every fixture blocker destination across pages, direct and tailnet, and measures the largest response', async () => {
+    const starts = ['bu-0000', 'bu-0001'];
+    const ends = ['bu-0399', 'bu-0639'];
+    const rows = Array.from({ length: 640 }, (_, i) => {
+      const id = `bu-${String(i).padStart(4, '0')}`;
+      return item(id, starts.includes(id) ? 'blocked' : 'open');
+    });
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows, runDependencyQuery: () => JSON.stringify([witness, edge(starts[0]!, ends[0]!), edge(starts[1]!, ends[1]!)]),
+    });
+    const routes = pocRoutes(() => model);
+    const sizes: number[] = [];
+    for (const prefix of ['', '/butlers-syzygy']) {
+      const route = routes.find((entry) => entry.path === `${prefix}/trajectory`)!;
+      const headers = { host: prefix === '' ? '127.0.0.1:7478' : 'tzeusy.parrot-hen.ts.net' };
+      const get = async (query: string) => {
+        const response = await route.handle({ request: { method: 'GET', path: route.path, query: new URLSearchParams(query), headers } });
+        expect(response.status).toBe(200);
+        return response.body as string;
+      };
+      for (const sourceQuery of ['', 'status=blocked&page=1', 'page=1']) {
+        const html = await get(sourceQuery);
+        for (const [index, id] of starts.entries()) {
+          const link = /data-blocker-id="([^"]+)" href="([^"]+)"/.exec(cardBody(html, id));
+          expect(link?.[1]).toBe(ends[index]);
+          const url = new URL(link![2]!, 'http://example.invalid');
+          expect(url.pathname).toBe(`${prefix}/trajectory`);
+          expect(url.search).toBe(`?page=${index + 2}`);
+          expect(url.hash).toBe(`#workitem-${ends[index]}`);
+          expect(await get(url.search.slice(1))).toContain(`id="${url.hash.slice(1)}"`);
+        }
+      }
+      const queries = ['', 'page=1', 'page=2', 'page=3'];
+      const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'];
+      for (const intent of ['', 'governing-intent=unknown&']) {
+        for (const status of statuses) {
+          for (let page = 1; page <= (status === 'open' ? 3 : 1); page++) {
+            queries.push(`status=${status}&${intent}page=${page}`);
+          }
+        }
+      }
+      queries.push('governing-intent=unknown&page=1', 'governing-intent=unknown&page=2', 'governing-intent=unknown&page=3');
+      for (const query of queries) {
+        sizes.push(Buffer.byteLength(await get(query), 'utf8'));
+      }
+    }
+    const largest = Math.max(...sizes);
+    process.stdout.write(`[T4 S1 dependency fixture page bytes] ${JSON.stringify({ largest, measured: sizes.length, sizes })}\n`);
+    expect(largest).toBeLessThan(2_097_152);
+  });
+});
 
 describe('Trajectory', () => {
   it('places every rendered item in the column its declared status mapping assigns (POC-REQ-040)', () => {
@@ -155,8 +321,7 @@ describe('Trajectory', () => {
       repositoryRevision: revision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@empty', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-empty' }]),
+      runWorkItemQuery: () => JSON.stringify([workItemRevisionWitness('dolt-empty')]),
     });
     expect(emptyObservedModel.trajectory.kind).toBe('observed');
     const emptyHtml = renderTrajectoryPage(emptyObservedModel);

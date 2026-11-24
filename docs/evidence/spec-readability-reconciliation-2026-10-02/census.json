@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 28,
-      "scenarios": 43,
+      "requirements": 29,
+      "scenarios": 50,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -459,6 +459,18 @@
           "name": "The accessibility floor holds on every surface",
           "scenarios": [
             "Keyboard-only reading"
+          ]
+        },
+        "POC-REQ-062": {
+          "name": "Trajectory derives eligibility from revision-bound dependencies",
+          "scenarios": [
+            "Complete revision with a known blocker and a ready item",
+            "Observed empty and unavailable dependencies",
+            "Missing work-item revision prevents dependency observation",
+            "A blocked card retains a known cause alongside an unsettled edge",
+            "Unsettled edge metadata is counted without disclosing input strings",
+            "Planned, blocked without cause, and statuses outside derived eligibility",
+            "Blocker reaches its card across pages"
           ]
         }
       }

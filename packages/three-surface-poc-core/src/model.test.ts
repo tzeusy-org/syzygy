@@ -570,7 +570,10 @@ describe('three-surface Butlers POC model', () => {
     const stale = buildPocModel({
       ...baseInput,
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) => (sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-rev-3' }])),
+      runWorkItemQuery: () => JSON.stringify([{
+        revision: 'dolt-rev-3', id: null, status: null, issue_type: null, priority: null,
+        created_at: null, updated_at: null, closed_at: null,
+      }]),
     });
     const staleEntities = byId(stale.entities);
     expect(staleEntities.get('work:whatsapp-single-event-normalization')?.epistemic.label).toBe(

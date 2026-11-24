@@ -243,9 +243,17 @@ counts, and the previous and next page. The machine answer takes no
 parameter: `trajectory.narrowing` declares the parameter set, page size and
 order, so a checker recomputes any page from `workItems.items`. When the
 work-item population is Unknown, a well-formed view renders the Unknown
-board. The largest page of the 640-item test fixture (250 fixture cards,
-none with a worker-change badge) measured about 427 KB, about 1.5 KB per
-card, under half the 2 MB human ceiling.
+board.
+
+**Trajectory eligibility.** Work-item status still sets the board column.
+Eligibility comes from the work-item observation and one dependency metadata
+read at that same Dolt commit (POC-REQ-062). The board and machine report
+ready, planned, blocked, undetermined and absent values across the served
+non-closed population, plus the edge population by recognized type and by
+withholding reason. A read without a verified source revision leaves edge
+totals Unknown. A blocked card shows its known cause and links to known
+blockers' cards in the all-items view, including on other pages. The fixed
+eligibility reason remains visible when a separate edge is unresolved.
 
 **Steps.**
 
