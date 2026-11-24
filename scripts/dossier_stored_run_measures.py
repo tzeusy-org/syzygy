@@ -62,8 +62,10 @@ GRADINGS = (
 # Two readers, one dossier: the kept pilot arm and the new arm that read the same stored run's original site.
 READER_REPEATS = (("D", "Y", "run 658f2f90, original stored site"), ("E", "Z", "run d9411d26, original stored site"))
 PILOT_FILES = ("key.json", "grading/grades.json", "grading2/grades.json", "grading3/grades.json",
-               "labels-first-grading.json", "labels-second-grading.json", "labels-third-grading.json")
-READER_FILES = ("grade/grades.json", "labels/labels.json")
+               "labels-first-grading.json", "labels-second-grading.json", "labels-third-grading.json",
+               "answers-D.json", "answers-E.json")
+# The answers are read for their digests alone: they pin the subject of the reader-repeat comparison (D with Y, E with Z).
+READER_FILES = ("grade/grades.json", "labels/labels.json", "answers-Y.json", "answers-Z.json")
 
 
 class InputError(Exception):

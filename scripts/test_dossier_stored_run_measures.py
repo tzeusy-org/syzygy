@@ -133,6 +133,8 @@ def pilot_tree(pilot, readers):
     write(pilot / "labels-third-grading.json", {"A": "E"})
     write(readers / "grade" / "grades.json", grades_file({"A": D4, "B": Y4, "C": E4, "D": Z4}))
     write(readers / "labels" / "labels.json", {"A": "D", "B": "Y", "C": "E", "D": "Z"})
+    for folder, arm in ((pilot, "D"), (pilot, "E"), (readers, "Y"), (readers, "Z")):
+        write(folder / f"answers-{arm}.json", {"answers": [{"id": 0, "answer": arm}]})
 
 
 class Fixture(unittest.TestCase):
@@ -160,9 +162,9 @@ class Fixture(unittest.TestCase):
         names = sorted(self.corpus["files"])
         self.assertNotIn(f"{RUN_A}/drafts/rev-0.json", names)
         self.assertFalse(any(".agents" in n or ".sessions" in n or "launch" in n or "next.json" in n for n in names))
-        self.assertEqual(len(names), 28)
+        self.assertEqual(len(names), 32)
         self.assertEqual(self.out["launchRecordsListed"], {"11111111": 1, "22222222": 0, "33333333": 0})
-        self.assertEqual(len(self.out["inputs"]), 28)
+        self.assertEqual(len(self.out["inputs"]), 32)
         self.assertTrue(all(len(i["sha256"]) == 64 for i in self.out["inputs"]))
 
     def test_cohort(self):

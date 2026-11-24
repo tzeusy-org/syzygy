@@ -10,6 +10,16 @@
   },
   "inputs": [
     {
+      "name": "pilot/answers-D.json",
+      "sha256": "0dc5e596718456e302be163dfeff44b6f46e420293a1825270a4ac86dfab2261",
+      "bytes": 12669
+    },
+    {
+      "name": "pilot/answers-E.json",
+      "sha256": "1e5502e9a8c443a331f73dc2892259269938cb107ed8f8d32f6db25fb179ce66",
+      "bytes": 17450
+    },
+    {
       "name": "pilot/grading/grades.json",
       "sha256": "6d4274c05890d300b462faa59f65c49f89907e00bd79ee64f19ec1b9c8a70133",
       "bytes": 3812
@@ -43,6 +53,16 @@
       "name": "pilot/labels-third-grading.json",
       "sha256": "2910b0a41ccbf6f0fab1e1f2fa9be69727fa3c97901fef33e8c8a846ae23cf62",
       "bytes": 60
+    },
+    {
+      "name": "readers/answers-Y.json",
+      "sha256": "a96856ddb61b20c258553aec3f932fadca4934d0127a14b70909dfa2678d8908",
+      "bytes": 9996
+    },
+    {
+      "name": "readers/answers-Z.json",
+      "sha256": "6f1e14b6a50c3366633f0c2ca413e36496d23bfcea2dc7ef8dd400ab76746a55",
+      "bytes": 16621
     },
     {
       "name": "readers/grade/grades.json",
@@ -460,7 +480,7 @@
       "bytes": 7281
     }
   ],
-  "inputsDigest": "746ac5a2a83e5679c5e93cc05ba4757a559fcc0b49ff4ad717be954ed500ee1e",
+  "inputsDigest": "ce922fc7e9844601c96633082a036d129031e98eb4d83f3d0bd7f307a6efb148",
   "launchRecordsListed": {
     "2ecdcab0": 3,
     "36df95fa": 3,
