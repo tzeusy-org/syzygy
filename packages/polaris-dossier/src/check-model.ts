@@ -48,6 +48,8 @@ export type CheckFindingKind =
   // Version 2.19 (schema v9): a node's unit that names no unit of its kind, and an edge rule `relation-witness` challenges.
   | 'unit-reference'
   | 'relation-challenged'
+  // Version 2.26 (schema v13): a worth-knowing mark off a section's own paragraph, on an uncited block or on a judgement.
+  | 'worth-knowing'
   // Version 2.10: the check record would be past the read bound, so its bounded form is written.
   | 'check-record-bound';
 

@@ -190,3 +190,38 @@ describe('reader advice: the counted standards', () => {
   it.each(['Builds for macOS', 'Running on tvOS and watchOS', 'Packages for openSUSE', 'The iOS client', 'gRPC transport'])(
     'leaves the product name in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
 });
+
+// Version 2.26 (syzygy-5dhm.41): the worth-knowing count advice, on a schema-v13 draft only. Literals from the specification.
+describe('reader advice: the worth-knowing count (version 2.26)', () => {
+  const V13 = 'polaris-dossier-local-draft-v13';
+  const block = (id: string, worthKnowing?: boolean) => ({ id, label: 'inferred', text: 'w', ...(worthKnowing === undefined ? {} : { worthKnowing }) });
+  const sec = (id: string, marks: number, plain = 1) => ({ id, title: id, paragraphs: [...Array.from({ length: marks }, (_, k) => block(`${id}-m${k}`, true)), ...Array.from({ length: plain }, (_, k) => block(`${id}-p${k}`, false))] });
+  const NONE = (name: string) => `${name} marks no block worth knowing: mark one to 3 cited facts a newcomer would not guess from the kind of project this is, or, where none meets that test, say why in its \`worthKnowingNone\``;
+  const doc = (sections: unknown[], poles?: unknown[], schemaVersion = V13) => ({ schemaVersion, sections, deepDives: [], diagrams: [], ...(poles === undefined ? {} : { poles, whySection: 'a' }) });
+
+  it('advises a Pole that marks none without a reason, and one that marks more than three, at the Pole', () => {
+    const advice = readerAdvice(doc([sec('a', 0), sec('b', 2), sec('c', 2), sec('d', 0), sec('e', 3)], [
+      { label: 'Why', sections: ['a'] }, { label: 'Core', sections: ['b', 'c'] }, { label: 'Quiet', sections: ['d'], worthKnowingNone: 'Nothing here.' }, { label: 'Edge', sections: ['e'] }]));
+    expect(advice.worthKnowing).toEqual([
+      { at: '$.poles[0]', marked: 0, detail: NONE('the Pole "Why"') },
+      { at: '$.poles[1]', marked: 4, detail: 'the Pole "Core" marks 4 blocks worth knowing, past 3: keep the ones a newcomer would least guess and drop the mark from the rest' },
+    ]);
+    expect(advice.advisories).toEqual(readerAdvice(doc([sec('a', 0), sec('b', 2), sec('c', 2), sec('d', 0), sec('e', 3)], undefined, 'polaris-dossier-local-draft-v10')).advisories);
+  });
+
+  it('counts a draft with no Poles as one, a mark only when true and only on a section\'s own paragraph, and a section once', () => {
+    const nested = { id: 'n', title: 'n', paragraphs: [{ ...block('n1'), children: [block('n1a', true)] }, { kind: 'callout', id: 'k', children: [block('k1', true)] }] };
+    // A draft with no Poles has nowhere to give a reason, so its advice names none.
+    expect(readerAdvice(doc([sec('a', 0), nested])).worthKnowing).toEqual([{ at: '$.sections', marked: 0, detail: 'the draft marks no block worth knowing: mark one to 3 cited facts a newcomer would not guess from the kind of project this is, where any meets that test; a draft with no Poles has no place to say why none does, so this advice stands until one is marked' }]);
+    expect(readerAdvice(doc([sec('a', 3)])).worthKnowing).toEqual([]);
+    expect(readerAdvice(doc([sec('a', 4)])).worthKnowing).toEqual([{ at: '$.sections', marked: 4, detail: 'the draft marks 4 blocks worth knowing, past 3: keep the ones a newcomer would least guess and drop the mark from the rest' }]);
+    expect(readerAdvice(doc([sec('a', 2), sec('b', 0)], [{ label: 'One', sections: ['a', 'b'] }, { label: 'Two', sections: ['a'] }])).worthKnowing)
+      .toEqual([{ at: '$.poles[1]', marked: 0, detail: NONE('the Pole "Two"') }]);
+  });
+
+  it('gives an earlier draft no worth-knowing member at all, so its advice keeps its bytes', () => {
+    for (const version of ['polaris-dossier-local-draft-v12', 'polaris-dossier-local-draft-v11', 'polaris-dossier-local-draft-v10', 'polaris-dossier-local-draft-v8', 'polaris-dossier-local-draft-v2']) {
+      expect(Object.keys(readerAdvice(doc([sec('a', 0)], undefined, version))), version).toEqual(['standards', 'note', 'advisories']);
+    }
+  });
+});

@@ -634,7 +634,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 539,
+      "scenarios": 546,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1229,7 +1229,14 @@
             "Derived relationship Syzygy cannot derive drawn Unknown",
             "Findings beside a schema finding not computed",
             "Shared element in a later containment and a witnessed relationship",
-            "Brief v18 states the system model"
+            "Brief v18 states the system model",
+            "A worth-knowing block leads its page",
+            "A marked block that does not render Inferred stays in its section",
+            "A Pole with none found",
+            "A misplaced, uncited or judged mark refused",
+            "Count advice without a quota",
+            "A pre-v13 draft keeps its bytes",
+            "Brief v19 and inventory brief v4 ask for the facts"
           ]
         },
         "REQ-polaris-generation-035": {
