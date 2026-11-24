@@ -1,0 +1,35 @@
+{
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "runId": 45460938284,
+  "jobId": 138682993057,
+  "conclusion": "success",
+  "files": 256,
+  "tally": {
+    "passed": 6400,
+    "failed": 0,
+    "skipped": 1,
+    "todo": 0
+  },
+  "independentReporterTotals": [
+    "2026-11-24T18:37:33.4215992Z  Test Files  256 passed (256)",
+    "2026-11-24T18:37:33.4231637Z       Tests  6400 passed | 1 skipped (6401)",
+    "2026-11-24T18:37:33.4243537Z    Duration  120.26s (transform 6.42s, setup 3.37s, collect 34.00s, tests 148.61s, environment 48ms, prepare 16.27s)"
+  ],
+  "denominator": {
+    "keys": [
+      "problems",
+      "expected",
+      "collected",
+      "executed",
+      "missing",
+      "extra",
+      "unexecuted",
+      "counts"
+    ],
+    "problems": [],
+    "expected": 256,
+    "cleanup": true,
+    "ok": true,
+    "errors": []
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "nodeRunId": 45460938284,
+  "governanceRunId": 45460938577,
+  "scope": "Retained exact hosted unit result and named failures only; no overall acceptance or recovery claim.",
+  "jobs": [
+    {
+      "jobId": 138682993057,
+      "jobName": "node (unit)",
+      "conclusion": "success",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138682993057",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:37:33.4215992Z  Test Files  256 passed (256)",
+        "2026-11-24T18:37:33.4231637Z       Tests  6400 passed | 1 skipped (6401)",
+        "2026-11-24T18:37:33.4243537Z    Duration  120.26s (transform 6.42s, setup 3.37s, collect 34.00s, tests 148.61s, environment 48ms, prepare 16.27s)"
+      ],
+      "sourceLogCharacters": 2219890
+    },
+    {
+      "jobId": 138685190350,
+      "jobName": "node (integration, core-2)",
+      "conclusion": "failure",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138685190350",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:40:25.8946347Z  FAIL   integration  apps/three-surface-poc/src/sync-child-process-guard.test.ts > suite child processes and the vitest worker RPC > runs only short local tools synchronously in a suite test file or any module it imports",
+        "2026-11-24T18:40:25.8972788Z +   \"packages/polaris-dossier/src/url-machine-peer.ts:208 '/usr/bin/prlimit'\",",
+        "2026-11-24T18:40:25.9102991Z  Test Files  1 failed | 45 passed (46)",
+        "2026-11-24T18:40:25.9104681Z       Tests  1 failed | 1823 passed | 3 skipped (1827)",
+        "2026-11-24T18:40:25.9108112Z    Duration  105.28s (transform 4.51s, setup 199ms, collect 20.81s, tests 176.05s, environment 7ms, prepare 2.55s)",
+        "+   \"packages/polaris-dossier/src/url-machine-peer.ts:208 '/usr/bin/prlimit'\","
+      ],
+      "sourceLogCharacters": 161033
+    },
+    {
+      "jobId": 138685190404,
+      "jobName": "node (integration, delivery-stop)",
+      "conclusion": "failure",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138685190404",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:38:41.8839877Z  FAIL   integration  packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes",
+        "2026-11-24T18:38:41.8857250Z Error: ENOENT: no such file or directory, mkdir '/home/runner/.tmp/url-composed-host-4156-1795545518993'",
+        "2026-11-24T18:38:41.8887808Z  Test Files  1 failed (1)",
+        "2026-11-24T18:38:41.8889971Z       Tests  7 skipped (7)",
+        "2026-11-24T18:38:41.8894014Z    Duration  3.41s (transform 2.32s, setup 10ms, collect 3.08s, tests 11ms, environment 0ms, prepare 60ms)"
+      ],
+      "sourceLogCharacters": 112354
+    },
+    {
+      "jobId": 138685190428,
+      "jobName": "node (integration, stop-resume)",
+      "conclusion": "failure",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138685190428",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:38:51.0487225Z  FAIL   integration  packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes",
+        "2026-11-24T18:38:51.0499492Z Error: ENOENT: no such file or directory, mkdir '/home/runner/.tmp/url-composed-host-4087-1795545529140'",
+        "2026-11-24T18:38:51.0519222Z  Test Files  1 failed (1)",
+        "2026-11-24T18:38:51.0521242Z       Tests  7 skipped (7)",
+        "2026-11-24T18:38:51.0524408Z    Duration  2.24s (transform 1.52s, setup 6ms, collect 2.03s, tests 9ms, environment 0ms, prepare 35ms)"
+      ],
+      "sourceLogCharacters": 110693
+    },
+    {
+      "jobId": 138685190446,
+      "jobName": "node (integration, complete)",
+      "conclusion": "failure",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138685190446",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:39:05.9712954Z  FAIL   integration  packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes",
+        "2026-11-24T18:39:05.9727460Z Error: ENOENT: no such file or directory, mkdir '/home/runner/.tmp/url-composed-host-4022-1795545543644'",
+        "2026-11-24T18:39:05.9748704Z  Test Files  1 failed (1)",
+        "2026-11-24T18:39:05.9750729Z       Tests  7 skipped (7)",
+        "2026-11-24T18:39:05.9754434Z    Duration  2.72s (transform 1.90s, setup 9ms, collect 2.49s, tests 8ms, environment 0ms, prepare 46ms)"
+      ],
+      "sourceLogCharacters": 110814
+    },
+    {
+      "jobId": 138685190465,
+      "jobName": "node (integration, eligible-stop-resume)",
+      "conclusion": "failure",
+      "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938284/job/138685190465",
+      "sourceEncoding": "UTF-8 decoded job log returned by connected GitHub fetch_workflow_job_logs",
+      "selectedLines": [
+        "2026-11-24T18:38:44.2427558Z  FAIL   integration  packages/polaris-dossier/src/url-run-composed.test.ts > composed URL run with actual role processes",
+        "2026-11-24T18:38:44.2445284Z Error: ENOENT: no such file or directory, mkdir '/home/runner/.tmp/url-composed-host-4158-1795545521398'",
+        "2026-11-24T18:38:44.2469891Z  Test Files  1 failed (1)",
+        "2026-11-24T18:38:44.2471458Z       Tests  7 skipped (7)",
+        "2026-11-24T18:38:44.2474717Z    Duration  3.53s (transform 2.39s, setup 13ms, collect 3.11s, tests 10ms, environment 0ms, prepare 82ms)"
+      ],
+      "sourceLogCharacters": 112321
+    }
+  ],
+  "governance": {
+    "jobId": 138682995177,
+    "sourceUrl": "https://github.com/tzeusy-org/syzygy/actions/runs/45460938577/job/138682995177",
+    "sourceLogCharacters": 559321,
+    "selectedLines": [
+      "2026-11-24T18:34:28.0797484Z         docs/reviews/F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW.md -> /home/orca/.tmp/f3-inspection-storage-diagnostic/ef014-eligible-diagnosis.json",
+      "2026-11-24T18:34:28.0798263Z         docs/reviews/F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW.md -> /home/orca/orca/projects/syzygy/.codex/skills/th-engineering/subskills/engineering-bar/SKILL.md",
+      "2026-11-24T18:43:03.4274855Z ERROR: review campaign partition failed",
+      "2026-11-24T18:43:03.4275791Z unmatched: docs/reviews/F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW.md"
+    ],
+    "timing": {
+      "startedAt": "2026-11-24T18:34:15Z",
+      "completedAt": "2026-11-24T18:43:05Z",
+      "elapsedSeconds": 530,
+      "budgetSeconds": 420,
+      "provenance": "Parent session reported these timestamps from the hosted job record. This retention session computed their difference but could not independently refetch job timestamps.",
+      "independentlyRefetched": false
+    }
+  },
+  "limitations": [
+    "Complete original job logs are not copied here; selected excerpts preserve the exact named failures and reporter totals.",
+    "The unit structured source is retained separately as unit-result.json.gz; unit pass does not establish integration or governance acceptance.",
+    "The four native jobs failed fixture-parent creation before their selected scenario bodies; these jobs provide no native scenario result.",
+    "The governance job duration is a parent-reported measurement, not an independently refetched timestamp observation.",
+    "Later source corrections and local focused checks do not establish hosted success for the corrected tree."
+  ]
+}

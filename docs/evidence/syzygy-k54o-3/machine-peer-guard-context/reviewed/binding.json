@@ -1,0 +1,77 @@
+{
+  "subjectCommit": "c1def9545540bc72c7d406d2bb08cfc25f9ae87f",
+  "subject": {
+    "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "beforeSha256": "a2cb347469b430bda99e3a2e0e8cc27835773050f6ec1ede7b1a1727b56d6b9e",
+    "afterSha256": "bf4350f3d795ffa2862b7aac8114e407eaeea919e5c3701bbe6ac99e5a402cc4",
+    "exactSingleConstantReplacement": true
+  },
+  "scope": "Only MACHINE_PEER_SOURCE changed; NATIVE_SITES, scanner implementation, mutations and assertions are byte-preserved.",
+  "authority": {
+    "adoption": "A-223",
+    "sourceCommit": "e1365897035fe5c8eeecfc0b8a25ccd9732fd599",
+    "why": "The adopted matching-profile capture envelope changes full source context, while the admitted synchronous native call and its hard resource bounds are unchanged.",
+    "row": "| A-223 | 2026-11-24 | `e1365897035fe5c8eeecfc0b8a25ccd9732fd599` | Under A-14, REQ-polaris-generation-048 and RFC3-16(d), peer capture selects 5,000 ms for ordinary profiles and 30,000 ms for a genuine nominal ordered Design profile matching the exact profile digest, run and role. Both transport and intrinsic aggregate capture use that selection. The original caller/run deadlines, independent five-second parent authority check and fresh kernel, process, image, scope and authorization proofs apply. | The genuine interrupted predecessor refused outer capture at 5,000.214 ms with capture still pending. The [bound evidence](../../../docs/evidence/syzygy-k54o-3/ordered-native-capture/binding.json) records independent `PASS`, 65 clean-clone cases, typecheck and seven detected controls with their limits. Selecting the ordered allowance for capture is a new agent decision; it grants no effect authority. [Unknown] Genuine ordered capture beyond five seconds and recovery completion. Identifier reconciliation 2026-11-24: this unlanded row was A-216; current main owns a distinct A-216. Frozen earlier bindings retain their review-time label. | `git revert e1365897035fe5c8eeecfc0b8a25ccd9732fd599` | — |"
+  },
+  "guardMeaning": "A call is admitted once only when its exact AST fingerprint and the comment-free printed full module fingerprint match. Unrelated source drift remains fail-closed.",
+  "fingerprints": [
+    {
+      "commit": "e1b7d513d0e49994955ada0f2d1f325485396bfc",
+      "rawSourceSha256": "91f1ced19debd20668152fa0ba12a7792743f0d246f07377b3d9427613f76678",
+      "printedSourceSha256": "17e2f123075882267c95a45005a0430745418d4c56538b000d8952b9339cd21f",
+      "calls": [
+        {
+          "line": 196,
+          "astSha256": "a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f",
+          "printedCall": "spawnSync('/usr/bin/prlimit', ['--cpu=1:1', '--', '/proc/self/fd/4', mode], { stdio: ['ignore', 'pipe', 'pipe', descriptor, image],\n    env: { LANG: 'C' }, timeout: 1000, killSignal: 'SIGKILL', maxBuffer: URL_MACHINE_PEER_LIMITS.chunkBytes + 512 })"
+        }
+      ]
+    },
+    {
+      "commit": "e1365897035fe5c8eeecfc0b8a25ccd9732fd599",
+      "rawSourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "printedSourceSha256": "b164581a02191c9e1f7f2c1099247da81f54188b54dc19ece89a58807e86bf3c",
+      "calls": [
+        {
+          "line": 208,
+          "astSha256": "a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f",
+          "printedCall": "spawnSync('/usr/bin/prlimit', ['--cpu=1:1', '--', '/proc/self/fd/4', mode], { stdio: ['ignore', 'pipe', 'pipe', descriptor, image],\n    env: { LANG: 'C' }, timeout: 1000, killSignal: 'SIGKILL', maxBuffer: URL_MACHINE_PEER_LIMITS.chunkBytes + 512 })"
+        }
+      ]
+    },
+    {
+      "commit": "HEAD",
+      "rawSourceSha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+      "printedSourceSha256": "b164581a02191c9e1f7f2c1099247da81f54188b54dc19ece89a58807e86bf3c",
+      "calls": [
+        {
+          "line": 208,
+          "astSha256": "a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f",
+          "printedCall": "spawnSync('/usr/bin/prlimit', ['--cpu=1:1', '--', '/proc/self/fd/4', mode], { stdio: ['ignore', 'pipe', 'pipe', descriptor, image],\n    env: { LANG: 'C' }, timeout: 1000, killSignal: 'SIGKILL', maxBuffer: URL_MACHINE_PEER_LIMITS.chunkBytes + 512 })"
+        }
+      ]
+    }
+  ],
+  "preservedBounds": {
+    "cpuLimit": "--cpu=1:1",
+    "heldImage": "/proc/self/fd/4",
+    "timeoutMilliseconds": 1000,
+    "killSignal": "SIGKILL",
+    "maximumOutputBytes": 66048,
+    "reservedCpuMicroseconds": 2000000,
+    "imageChecks": "digest, regular single-link file, no-follow open, executable owner/mode, held and named identity",
+    "parentAuthorityMilliseconds": 5000,
+    "orderedCaptureMaximumMilliseconds": 30000
+  },
+  "verification": {
+    "command": "node node_modules/vitest/vitest.mjs run --project integration apps/three-surface-poc/src/sync-child-process-guard.test.ts --reporter=json --outputFile=<external>/focused.json",
+    "exitCode": 0,
+    "tests": 11,
+    "passed": 11,
+    "failed": 0,
+    "pending": 0,
+    "reportSha256": "645400f731b633fbd68dfa6e05823768ea0057056ed166023c20e254e1084487",
+    "logSha256": "fb1018613c3cead5767c1cfc4c6849866a760b21a77cf8422e5a158e564ba209"
+  },
+  "limits": "No full suite, build, install, push, commit or adoption edit performed. This guard pass is not native recovery evidence."
+}

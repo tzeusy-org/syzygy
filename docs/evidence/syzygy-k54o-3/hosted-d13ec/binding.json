@@ -1,0 +1,100 @@
+{
+  "subjectCommit": "d13ec5475ba5625800d075cc760609f629987e33",
+  "unit": {
+    "runId": 45460938284,
+    "jobId": 138682993057,
+    "files": {
+      "passed": 256,
+      "total": 256
+    },
+    "tests": {
+      "passed": 6400,
+      "failed": 0,
+      "skipped": 1,
+      "total": 6401
+    },
+    "sourceAvailable": true,
+    "structuredSource": {
+      "path": "unit-result.json.gz",
+      "uncompressedSha256": "293fac4a24be13c5e4d4d21898982552c475352bfe4a63bf3d966c9926bf6f40",
+      "uncompressedBytes": 1015627,
+      "source": "Exact JSON payload of the hosted full-current-unit tmpdir-result line; gzip mtime is zero."
+    },
+    "denominator": {
+      "expected": 256,
+      "collected": 256,
+      "executed": 256,
+      "missing": 0,
+      "extra": 0,
+      "unexecuted": 0,
+      "problems": 0,
+      "cleanup": true,
+      "ok": true
+    }
+  },
+  "core2": {
+    "jobId": 138685190350,
+    "files": {
+      "failed": 1,
+      "passed": 45,
+      "total": 46
+    },
+    "tests": {
+      "failed": 1,
+      "passed": 1823,
+      "skipped": 3,
+      "total": 1827
+    },
+    "failure": "sync-child-process-guard rejected the unadmitted url-machine-peer.ts:208 prlimit call because its full-source context pin was stale; the native call AST itself was unchanged."
+  },
+  "nativeFixtureParentFailures": {
+    "jobs": [
+      138685190404,
+      138685190428,
+      138685190446,
+      138685190465
+    ],
+    "count": 4,
+    "failure": "ENOENT creating /home/runner/.tmp/url-composed-host-* in the composed beforeAll fixture; each job reported seven skipped tests.",
+    "scenarioResult": "Unknown; the selected native bodies did not execute in these jobs."
+  },
+  "governance": {
+    "runId": 45460938577,
+    "jobId": 138682995177,
+    "failure": "Review-campaign partition: unmatched docs/reviews/F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW.md",
+    "jobDurationSeconds": 530,
+    "displayDuration": "8m50s",
+    "timingProvenance": {
+      "startedAt": "2026-11-24T18:34:15Z",
+      "completedAt": "2026-11-24T18:43:05Z",
+      "elapsedSeconds": 530,
+      "budgetSeconds": 420,
+      "provenance": "Parent session reported these timestamps from the hosted job record. This retention session computed their difference but could not independently refetch job timestamps.",
+      "independentlyRefetched": false
+    }
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/syzygy-k54o-3/hosted-d13ec/job-excerpts.json",
+      "sha256": "752d9ffe6b7900ca79eb56c787adf0da91265cf7b73f38ebd12ca2f6baddbbfc",
+      "bytes": 7936
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/hosted-d13ec/unit-result.json.gz",
+      "sha256": "0de4ff8dd642e7b0b1f097ac6e090f71c345f7b492c8071ac00d0241492aaeac",
+      "bytes": 149263
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/hosted-d13ec/unit-summary.json",
+      "sha256": "b2b358dd9bcc09cff5446e5a038fb52c5dc4e7957af3a6241fe36328bd4ede7a",
+      "bytes": 861
+    }
+  ],
+  "limits": [
+    "Complete original job logs are not copied here; selected excerpts preserve the exact named failures and reporter totals.",
+    "The unit structured source is retained separately as unit-result.json.gz; unit pass does not establish integration or governance acceptance.",
+    "The four native jobs failed fixture-parent creation before their selected scenario bodies; these jobs provide no native scenario result.",
+    "The governance job duration is a parent-reported measurement, not an independently refetched timestamp observation.",
+    "Later source corrections and local focused checks do not establish hosted success for the corrected tree."
+  ]
+}

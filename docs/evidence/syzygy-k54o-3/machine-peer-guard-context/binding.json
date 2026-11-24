@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "90ba1af1337feb045903e4e6d29647da86a8b560",
+  "subject": {
+    "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "sha256": "bf4350f3d795ffa2862b7aac8114e407eaeea919e5c3701bbe6ac99e5a402cc4"
+  },
+  "productSource": {
+    "path": "packages/polaris-dossier/src/url-machine-peer.ts",
+    "sha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb",
+    "byteIdenticalToCommit": "e1365897035fe5c8eeecfc0b8a25ccd9732fd599",
+    "unchangedCallAstSha256": "a91baeff25ce94e5c56a9306b460dd766124f95c695fd8cc626019e67953e87f"
+  },
+  "authority": "A-223; exact context rebind for the already-adopted source, with call admission and scanner unchanged.",
+  "reviewedWorktreeBase": "c1def9545540bc72c7d406d2bb08cfc25f9ae87f",
+  "reviewedSourceSha256": "bf4350f3d795ffa2862b7aac8114e407eaeea919e5c3701bbe6ac99e5a402cc4",
+  "reviewVerdict": "PASS",
+  "reviewBindingNote": "reviewed/ preserves the external review artifacts verbatim. The raw review cites its sibling binding.json digest; this outer binding names the subsequent source commit containing those exact reviewed guard bytes.",
+  "artifacts": [
+    {
+      "path": "docs/evidence/syzygy-k54o-3/machine-peer-guard-context/reviewed/binding.json",
+      "sha256": "ad7f774f5499d0cb4dd91bae0b3c9434af909fcf98f895e0827780d218881983",
+      "bytes": 5342
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/machine-peer-guard-context/reviewed/focused.json",
+      "sha256": "645400f731b633fbd68dfa6e05823768ea0057056ed166023c20e254e1084487",
+      "bytes": 5143
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/machine-peer-guard-context/reviewed/focused.log",
+      "sha256": "fb1018613c3cead5767c1cfc4c6849866a760b21a77cf8422e5a158e564ba209",
+      "bytes": 101
+    },
+    {
+      "path": "docs/evidence/syzygy-k54o-3/machine-peer-guard-context/reviewed/review-RAW.md",
+      "sha256": "468df62274fb2b8c79e67602e5fec397a13fe82dee5be87a6c167e4fbbefa193",
+      "bytes": 1884
+    }
+  ],
+  "limits": "Focused guard verification and source review only; no native recovery or broad hosted acceptance claim."
+}
