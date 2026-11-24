@@ -91,6 +91,41 @@ describe('host-owned URL origin ledger', () => {
   it('checks fixed authority once and verifies the exact subject before returning its receipt', () => {
     const f = fixture(), current = vi.fn(() => true);
     const ledger = createUrlOriginLedger({ ...f.options, current });
+    // Constructor authority brackets all screened fixed roots, regardless of population.
+    expect(current).toHaveBeenCalledTimes(2);
+    expect(ledger.plannedOrigins()).toHaveLength(f.options.fixed.length);
+    let authorized = true;
+    const finalCurrent = vi.fn(() => authorized);
+    const lastFixed = Buffer.from(f.options.fixed.at(-1)!.bytes).toString('utf8');
+    let returned: ReturnType<typeof createUrlOriginLedger> | undefined;
+    expect(() => { returned = createUrlOriginLedger({ ...f.options, current: finalCurrent,
+      screen: { ...f.options.screen, screenBody: (text, file) => {
+        const result = f.options.screen.screenBody(text, file);
+        if (text === lastFixed) authorized = false;
+        return result;
+      } } }); }).toThrow('url-origin-refused');
+    expect(returned).toBeUndefined();
+    expect(finalCurrent).toHaveBeenCalledTimes(2);
+    const bodies = ['Own first bounded root.', 'Own second bounded root.', 'Own later bounded root.'];
+    const laterBytes = vi.fn(() => bytes(bodies[2]!)), screenedBodies: string[] = [];
+    const boundedFixed = f.options.fixed.map((root, index) => ({ ...root,
+      get bytes() { return index === 2 ? laterBytes() : bytes(bodies[index]!); } }));
+    expect(() => createUrlOriginLedger({ ...f.options, fixed: boundedFixed,
+      limits: { bytes: Buffer.byteLength(bodies[0]!) + Buffer.byteLength(bodies[1]!) - 1 },
+      screen: { ...f.options.screen, screenBody: (text, file) => {
+        if (bodies.includes(text)) screenedBodies.push(text);
+        return f.options.screen.screenBody(text, file);
+      } } })).toThrow('url-origin-refused');
+    expect(screenedBodies).toEqual([bodies[0]]);
+    expect(laterBytes).not.toHaveBeenCalled();
+    const extraBytes = vi.fn(() => bytes(bodies[1]!));
+    const growingFixed = [{ ...f.options.fixed[0]!, bytes: bytes(bodies[0]!) }];
+    expect(() => createUrlOriginLedger({ ...f.options, fixed: growingFixed, limits: { receipts: 1 },
+      screen: { ...f.options.screen, screenBody: (text, file) => {
+        if (text === bodies[0]) growingFixed.push({ ...f.options.fixed[1]!, get bytes() { return extraBytes(); } });
+        return f.options.screen.screenBody(text, file);
+      } } })).toThrow('url-origin-refused');
+    expect(extraBytes).not.toHaveBeenCalled();
     const subject = f.options.fixed[0]!;
     current.mockClear();
     const receipt = ledger.fixed(subject.id, subject.bytes);
@@ -192,11 +227,11 @@ describe('host-owned URL origin ledger', () => {
   it('bounds the full screened read including slow pre/post authority and honors a tighter caller limit', async () => {
     const f = fixture(), selected = { path: f.file, offset: 0, limit: 1 };
     for (const readMilliseconds of [undefined, 5000]) {
-      let elapsed = 0, charge = false, screened = false, postScreenChecks = 0;
+      let elapsed = 0, charge = false, screened = false, postScreenChecks = 0, authorityCalls = 0;
       const ledger = createUrlOriginLedger({ ...f.options,
         ...(readMilliseconds === undefined ? {} : { limits: { readMilliseconds } }),
         current: () => {
-          if (charge) { elapsed += 3000; if (screened) postScreenChecks++; }
+          if (charge) { elapsed += 3000; authorityCalls++; if (screened) postScreenChecks++; }
           return true;
         },
         screen: { ...f.options.screen, screenTargetBody: (text, file) => {
@@ -212,7 +247,15 @@ describe('host-owned URL origin ledger', () => {
         const pending = ledger.sourceSpan(selected);
         if (readMilliseconds === undefined) {
           const receipt = await pending, expected = bytes('Own source line one.\n');
+          // Entry, reader pre/post, post-read and final issuance remain fresh;
+          // private body/structure receipts add no separate blocking probes.
+          expect(authorityCalls).toBe(5);
           expect(ledger.origins(receipt, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
+          const firstPlan = ledger.plannedOrigins(), beforeDuplicate = authorityCalls;
+          const duplicate = await ledger.sourceSpan(selected);
+          expect(authorityCalls - beforeDuplicate).toBe(5);
+          expect(ledger.origins(duplicate, expected)).toMatchObject({ digest: sha256(expected), classes: ['code-content', 'code-structure'] });
+          expect(ledger.plannedOrigins()).toEqual(firstPlan);
         } else {
           await expect(pending).rejects.toThrow('url-origin-refused');
           expect(ledger.plannedOrigins()).toEqual(before);
@@ -225,20 +268,26 @@ describe('host-owned URL origin ledger', () => {
   it('checks current authority after private source screening and publishes no receipt on withdrawal or timeout', async () => {
     const f = fixture();
     const screen = f.options.screen, selected = { path: f.file, offset: 0, limit: 1 };
-    for (const gate of ['authority', 'deadline'] as const) {
-      let current = true, elapsed = 0, screened = false;
+    const structural = canonical({ commit: f.commit, path: f.file, objectId: f.blob, offset: 0, limit: 1 });
+    for (const gate of ['authority', 'deadline', 'issuance'] as const) {
+      let current = true, elapsed = 0, screened = false, structureScreened = false;
       const ledger = createUrlOriginLedger({ ...f.options, current: () => current,
         screen: { ...screen, screenTargetBody: (text, file) => {
           screened = true;
           if (gate === 'authority') current = false;
-          else elapsed = 10_000;
+          else if (gate === 'deadline') elapsed = 10_000;
           return screen.screenTargetBody(text, file);
+        }, screenBody: (text, file) => {
+          const result = screen.screenBody(text, file);
+          if (gate === 'issuance' && text === structural) { structureScreened = true; current = false; }
+          return result;
         } } });
       const clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
       const originPlan = ledger.plannedOrigins();
       try {
         await expect(ledger.sourceSpan(selected)).rejects.toThrow('url-origin-refused');
         expect(screened).toBe(true);
+        if (gate === 'issuance') expect(structureScreened).toBe(true);
         current = true;
         expect(ledger.plannedOrigins()).toEqual(originPlan);
       } finally { clock.mockRestore(); }
@@ -392,6 +441,33 @@ describe('host-owned URL origin ledger', () => {
     for (const limits of [{ itemBytes: 8 }, { bytes: 1 }, { receipts: 1 }]) {
       const ledger = createUrlOriginLedger({ ...f.options, fixed: [], limits });
       await expect(ledger.verifyWholeSourceBody(input)).rejects.toThrow('url-origin-refused');
+    }
+    for (const withdraw of [false, true]) {
+      let authorized = true, charge = false, elapsed = 0, calls = 0, finalScreened = false;
+      const structural = canonical({ commit: f.commit, path: f.file, objectId: f.blob, start: 0, end: input.bytes.length });
+      const ledger = createUrlOriginLedger({ ...f.options, current: () => {
+        if (charge) { elapsed += 2000; calls++; }
+        return authorized;
+      }, screen: { ...f.options.screen, screenBody: (text, file) => {
+        const result = f.options.screen.screenBody(text, file);
+        if (text === structural) { finalScreened = true; if (withdraw) authorized = false; }
+        return result;
+      } } });
+      const before = ledger.plannedOrigins(), clock = vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+      let issued: UrlWholeSourceBody | undefined;
+      try {
+        charge = true;
+        const pending = ledger.verifyWholeSourceBody(input).then(value => { issued = value; return value; });
+        if (withdraw) await expect(pending).rejects.toThrow('url-origin-refused');
+        else await expect(pending).resolves.toBeDefined();
+        // Entry, reader pre/post, post-read identity and final issuance fit
+        // the unchanged 10s operation bound with 2000ms authority cost.
+        expect(calls).toBe(5);
+        expect(finalScreened).toBe(true);
+        charge = false; authorized = true;
+        if (withdraw) { expect(issued).toBeUndefined(); expect(ledger.plannedOrigins()).toEqual(before); }
+        else expect(ledger.inspectWholeSourceBody(issued!)).toMatchObject({ digest: sha256(input.bytes), bytes: input.bytes.length });
+      } finally { clock.mockRestore(); }
     }
     const packed = fixture(); fs.mkdirSync(path.join(packed.clone, '.git/objects/pack')); fs.writeFileSync(path.join(packed.clone, '.git/objects/pack', 'own.idx'), 'Own unsupported packed profile');
     await expect(packed.ledger.verifyWholeSourceBody({ path: packed.file, objectId: packed.blob, bytes: bytes(packed.sourceText) })).rejects.toThrow('url-origin-refused');

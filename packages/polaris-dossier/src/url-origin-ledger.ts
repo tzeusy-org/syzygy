@@ -134,7 +134,13 @@ function create(given: UrlOriginLedgerOptions) {
   }
   function issue(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] },
     provenance?: { readonly parents: readonly UrlOriginReceipt[]; readonly derivation: UrlOriginDerivation }): UrlOriginReceipt {
-    live(); if (bytes.length > limits.itemBytes) fail(); if (++count > limits.receipts || (storedBytes += bytes.length) > limits.bytes) fail();
+    live(); return insertReceipt(bytes, classes, originIds, plan, provenance);
+  }
+  /** Private insertion only: callers must sample authority immediately before
+   * their synchronous insertions, with no intervening callback or await. */
+  function insertReceipt(bytes: Uint8Array, classes: readonly SessionContentClass[], originIds: readonly string[], plan?: { readonly id: string; readonly species: UrlPlannedOrigin['species'] },
+    provenance?: { readonly parents: readonly UrlOriginReceipt[]; readonly derivation: UrlOriginDerivation }): UrlOriginReceipt {
+    if (bytes.length > limits.itemBytes) fail(); if (++count > limits.receipts || (storedBytes += bytes.length) > limits.bytes) fail();
     const receipt = Object.freeze({}) as UrlOriginReceipt;
     const receiptId = plan?.id ?? `origin:item-${sha256(canonical([runId, count, sha256(bytes)])).slice(0, 32)}`;
     const value: Entry = deepFreeze({ receipt, id: receiptId, digest: sha256(bytes), bytes: bytes.length, classes: union([classes]), originIds: union([originIds]) });
@@ -165,12 +171,16 @@ function create(given: UrlOriginLedgerOptions) {
       derivation: reportKind === undefined ? { kind: 'composition' } : { kind: 'report', report: reportKind, role: role! } });
   }
   const fixedReceipts = new Map<string, UrlOriginReceipt>();
+  const checkedFixed: { readonly id: string; readonly kind: UrlRootOriginKind; readonly bytes: Uint8Array }[] = [];
+  let fixedBytes = 0;
   for (const fixed of given.fixed) {
+    if (checkedFixed.length >= limits.receipts) fail();
     if (!exact(fixed, ['id', 'kind', 'bytes']) || !id(fixed.id) || registry.has(fixed.id) || typeof fixed.kind !== 'string' || !Object.hasOwn(ROOTS, fixed.kind)) fail();
-    const bytes = snapshot(fixed.bytes as Uint8Array); safe(bytes); const kind = fixed.kind as UrlRootOriginKind;
+    // Bound retained staging before copying or screening the next body.
+    const bytes = snapshot(fixed.bytes as Uint8Array, Math.min(limits.itemBytes, limits.bytes - fixedBytes));
+    fixedBytes += bytes.length; safe(bytes); const kind = fixed.kind as UrlRootOriginKind;
     registry.set(fixed.id, { kind, digest: sha256(bytes), bytes: bytes.length });
-    // Root entries have no parents; their own id is returned by origins(), not a self-edge in plannedOrigins.
-    fixedReceipts.set(fixed.id, issue(bytes, [ROOTS[kind][1]], [], { id: fixed.id, species: ROOTS[kind][0] }, { parents: [], derivation: { kind: 'fixed', id: fixed.id } }));
+    checkedFixed.push({ id: fixed.id, kind, bytes });
   }
   async function planRendererScaffold(renderer: UrlLoadedRenderer): Promise<UrlOriginReceipt> {
     const species = 'authenticated-local-renderer-design-product-and-inert-view';
@@ -323,7 +333,7 @@ function create(given: UrlOriginLedgerOptions) {
       });
     } catch { return fail(); }
   }
-  function issueWholeSourceBody(file: string, body: Awaited<ReturnType<typeof verifiedSource>>, check: () => void): UrlWholeSourceBody {
+  function issueWholeSourceBody(file: string, body: Awaited<ReturnType<typeof verifiedSource>>, check: () => void, checkTime: () => void): UrlWholeSourceBody {
     const { objectId } = body;
     const digest = sha256(body.bytes), identity = canonical([file, objectId, digest]); check();
     // Reuse only after a fresh independent reread; an earlier capability cannot hide later object corruption.
@@ -332,14 +342,16 @@ function create(given: UrlOriginLedgerOptions) {
     const structuralBytes = Buffer.from(canonical({ commit: record.subject.pinnedRevision.commit, path: file, objectId, start: 0, end: body.bytes.length }));
     safe(structuralBytes); check();
     const structureId = `origin:whole-structure-${sha256(structuralBytes).slice(0, 32)}`;
-    issue(body.bytes, [body.contentClass], [], { id: bodyId, species: 'pinned-repository-body' }); check();
-    issue(structuralBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' }); check();
-    const receipt = issue(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId], undefined,
+    // The fresh check after structural screening is the final publication
+    // guard. Only private synchronous insertion and timer checks follow it.
+    insertReceipt(body.bytes, [body.contentClass], [], { id: bodyId, species: 'pinned-repository-body' }); checkTime();
+    insertReceipt(structuralBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' }); checkTime();
+    const receipt = insertReceipt(body.bytes, [body.contentClass, 'code-structure'], [bodyId, structureId], undefined,
       { parents: [], derivation: { kind: 'source-whole', path: file, objectId } });
     const metadata: UrlWholeSourceBodyMetadata = deepFreeze({ origin: receipt, runId, sourceBindingSha256: sourceBindingSha256(record.subject),
       path: file, objectId, pinnedCommit: record.subject.pinnedRevision.commit, policies: { baseSha256: screen.policySha256, originSha256: origin.sha256 },
-      range: { start: 0, end: body.bytes.length }, digest, bytes: body.bytes.length, classes: entry(receipt).classes });
-    check(); const capability = Object.freeze({}) as UrlWholeSourceBody;
+      range: { start: 0, end: body.bytes.length }, digest, bytes: body.bytes.length, classes: lookup(receipt).classes });
+    checkTime(); const capability = Object.freeze({}) as UrlWholeSourceBody;
     wholeBodies.set(capability, metadata); wholeIdentities.set(identity, capability); return capability;
   }
   async function verifyWholeSourceBody(input: { readonly path: string; readonly objectId: string; readonly bytes: Uint8Array }): Promise<UrlWholeSourceBody> {
@@ -350,7 +362,7 @@ function create(given: UrlOriginLedgerOptions) {
       return await sourceOperation(async (check, checkTime) => {
         const body = await verifiedSource(file, checkTime);
         if (body.objectId !== objectId || !Buffer.from(supplied).equals(body.bytes)) fail();
-        return issueWholeSourceBody(file, body, check);
+        return issueWholeSourceBody(file, body, check, checkTime);
       });
     } catch { return fail(); }
   }
@@ -373,11 +385,15 @@ function create(given: UrlOriginLedgerOptions) {
       const bodyId = `origin:body-${sha256(canonical([record.subject.pinnedRevision.commit, file, objectId, offset, limit])).slice(0, 32)}`;
       const structureBytes = Buffer.from(canonical({ commit: record.subject.pinnedRevision.commit, path: file, objectId, offset, limit })); safe(structureBytes);
       const structureId = `origin:structure-${sha256(structureBytes).slice(0, 32)}`;
-      if (!plans.some(plan => plan.id === bodyId)) {
-        issue(bytes, [contentClass], [], { id: bodyId, species: 'pinned-repository-body' });
-        issue(structureBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' });
+      const registerRoots = !plans.some(plan => plan.id === bodyId);
+      // Screening may withdraw authority. This final public issuance sample
+      // precedes every private insertion; nothing calls out or awaits below.
+      live();
+      if (registerRoots) {
+        insertReceipt(bytes, [contentClass], [], { id: bodyId, species: 'pinned-repository-body' });
+        insertReceipt(structureBytes, ['code-structure'], [], { id: structureId, species: 'structural-source-and-tool-metadata' });
       }
-      return { receipt: issue(bytes, [contentClass, 'code-structure'], [bodyId, structureId], undefined,
+      return { receipt: insertReceipt(bytes, [contentClass, 'code-structure'], [bodyId, structureId], undefined,
         { parents: [], derivation: { kind: 'source-span', path: file, objectId, offset, limit } }), reply: { ok: true, kind: 'source-span', path: file, text: Buffer.from(bytes).toString('utf8'), offset,
         nextOffset: offset + limit < lines.length ? offset + limit : null, contentClass, redacted: false, provenance: { commit: record.subject.pinnedRevision.commit, objectId } } };
     } catch { return fail(); }
@@ -595,6 +611,13 @@ function create(given: UrlOriginLedgerOptions) {
     });
   }
   live();
+  // All fixed subjects were screened before this final constructor sample.
+  // No receipt or plan escapes until the complete synchronous insertion ends.
+  for (const { id, kind, bytes } of checkedFixed) {
+    // Root entries have no parents; origins() returns their own id.
+    fixedReceipts.set(id, insertReceipt(bytes, [ROOTS[kind][1]], [], { id, species: ROOTS[kind][0] },
+      { parents: [], derivation: { kind: 'fixed', id } }));
+  }
   return Object.freeze({
     captureProvenance, restoreFrozenOrigins, sourceManifestRemainder,
     inspectProvenance: (receipts: readonly UrlOriginReceipt[]) => guarded(() => inspectProvenance(receipts)),
@@ -630,7 +653,7 @@ function create(given: UrlOriginLedgerOptions) {
         const file = input.path;
         return await sourceOperation(async (check, checkTime) => {
           const body = await verifiedSource(file, checkTime);
-          const capability = issueWholeSourceBody(file, body, check);
+          const capability = issueWholeSourceBody(file, body, check, checkTime);
           return inspectWholeSourceBody(capability).origin;
         });
       } catch { return fail(); }
