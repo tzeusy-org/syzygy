@@ -148,6 +148,17 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
   ];
   const url = (path: string): string => pathToFileURL(join(directory, path)).href;
   const urls = order.map(url);
+  const inspectPageTurn = `(() => {
+    const main = document.querySelector('main');
+    const nav = document.querySelector('nav.reading-order');
+    if (!nav) return null;
+    const { left, right, top } = nav.getBoundingClientRect();
+    const content = main.getBoundingClientRect();
+    return { name: nav.getAttribute('aria-label'), afterMain: main.nextElementSibling === nav,
+      insideDetails: nav.closest('details') !== null,
+      inReadingColumn: left >= content.left - 1 && right <= content.right + 1 && top >= content.bottom,
+      previous: nav.querySelector('a[rel="prev"]')?.href ?? null, next: nav.querySelector('a[rel="next"]')?.href ?? null };
+  })()`;
   const files = renderLocalDossier(navigationInput()).files;
   const htmlPaths = [...files.keys()].filter(path => path.endsWith('.html'));
   const sourcePages = htmlPaths.filter(path => path.startsWith('sources/') && path !== 'sources/index.html');
@@ -173,13 +184,10 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
           })
         `);
         expect(navs, path).toEqual(['Dossier', 'Dossier (mobile)'].map(name => ({ name, links: urls, current: [url(path)], marked: true })));
-        const footer = await page.evaluate(`(() => {
-          const main = document.querySelector('main');
-          const nav = main.lastElementChild;
-          return { name: nav.getAttribute('aria-label'), insideDetails: nav.closest('details') !== null,
-            previous: nav.querySelector('a[rel="prev"]')?.href ?? null, next: nav.querySelector('a[rel="next"]')?.href ?? null };
-        })()`);
-        expect(footer, path).toEqual({ name: 'Reading order', insideDetails: false, previous: urls[index - 1] ?? null, next: urls[index + 1] ?? null });
+        expect(await page.evaluate(inspectPageTurn), path).toEqual({
+          name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+          previous: urls[index - 1] ?? null, next: urls[index + 1] ?? null,
+        });
       }
       await page.navigate(url('index.html'));
       expect(await page.evaluate(`
@@ -200,6 +208,10 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
       await page.press('Enter');
       expect(await page.evaluate('document.querySelector(".mobile-contents").open')).toBe(true);
       expect(await page.evaluate('document.querySelector(".mobile-contents [aria-current=page]").href')).toBe(url('deep-dives/words-detail.html'));
+      expect(await page.evaluate(inspectPageTurn)).toEqual({
+        name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+        previous: url('poles/2.html'), next: url('poles/3.html'),
+      });
       await page.navigate(url(sourcePages[0]!));
       expect(await page.evaluate('document.querySelector(".reading-order, .contents [aria-current=page]") === null')).toBe(true);
     } finally {

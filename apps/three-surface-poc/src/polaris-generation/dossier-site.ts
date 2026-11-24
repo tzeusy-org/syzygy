@@ -218,13 +218,18 @@ interface DossierNavLink { readonly path: string; readonly title: string }
 
 const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-decoration:underline}'
   + '.contents .pole-dive-links{display:block}'
-  + '.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;margin-top:1.5rem}'
+  + '.reading-column{display:grid;grid-template-columns:minmax(0,1fr);min-width:0}@media(max-width:800px){.reading-column{display:block}}'
+  + '.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;width:min(1180px,calc(100% - 2rem));margin:1.5rem auto 0}'
   + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
+  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main>`;
+  // Wayfinding follows the reading text so the main-only converter retains its original input.
+  const turn = chrome?.pageTurn(path) ?? '';
+  const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
 ${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
-</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="${chrome === undefined ? 'Dossier' : 'Dossier (mobile)'}">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}${chrome?.pageTurn(path) ?? ''}</main></div></body></html>`;
+</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="${chrome === undefined ? 'Dossier' : 'Dossier (mobile)'}">${nav}</nav></details>${column}</div></body></html>`;
 }
 
 export interface DossierStop { readonly reason: string; readonly shown: string; readonly lastStage: string | null }
