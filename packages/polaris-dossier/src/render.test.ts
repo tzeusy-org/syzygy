@@ -2906,12 +2906,15 @@ describe('render: the worth-knowing callout (schema v13)', () => {
     paragraphs[0]!['worthKnowing'] = true;
     paragraphs.push(
       { id: 'p7', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [cite('c-p7', '.env', 1, 1)], quotations: [], children: [], worthKnowing: true },
-      { id: 'p8', label: 'inferred', basis: 'source', text: `zq-matched ${SECRET_PATH} paragraph.`, citations: [cite('c-p8', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: true });
+      { id: 'p8', label: 'inferred', basis: 'source', text: `zq-matched ${SECRET_PATH} paragraph.`, citations: [cite('c-p8', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: true },
+      // Supported and Inferred, but `worthKnowing: false` marks nothing.
+      { id: 'p9', label: 'inferred', basis: 'source', text: 'zq-unmarked paragraph.', citations: [cite('c-p9', 'src/kestrel.c', 1, 1)], quotations: [], children: [], worthKnowing: false });
     // Unreviewed, every block renders Unknown, so none is lifted and no callout renders.
     expect((await unreviewed(doc)).get('index.html')).not.toContain('class="worth-knowing-item"');
     const files = await rendered(doc, [
       { blockId: 'p7', verdict: 'withheld', spanIds: [], reason: 'Withheld.', quotations: [] },
-      { blockId: 'p8', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }]);
+      { blockId: 'p8', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] },
+      { blockId: 'p9', verdict: 'supported', spanIds: [], reason: 'The span says it.', quotations: [] }]);
     const index = files.get('index.html')!;
     const at = index.indexOf(OPEN);
     const section = index.indexOf('<section id="section-core-ideas"');
@@ -2919,13 +2922,14 @@ describe('render: the worth-knowing callout (schema v13)', () => {
     expect(index.indexOf('id="block-p2"')).toBeGreaterThan(at);
     expect(index.indexOf('id="block-p2"')).toBeLessThan(section);
     expect(index.slice(at, section).match(/class="worth-knowing-item"/gu)).toHaveLength(1);
-    for (const id of ['p1', 'p7', 'p8']) {
+    for (const id of ['p1', 'p7', 'p8', 'p9']) {
       expect(index.match(new RegExp(`data-claim-id="${id}"`, 'gu')), id).toHaveLength(1);
       expect(index.indexOf(`id="block-${id}"`), id).toBeGreaterThan(section);
     }
     expect(marked(index, 'p1')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
     expect(marked(index, 'p7')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
     expect(marked(index, 'p8')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'p9')).toEqual({ epistemic: 'inferred', reason: null });
   });
 
   it('renders a v13 draft without marks as the same v10 draft, page for page', async () => {
