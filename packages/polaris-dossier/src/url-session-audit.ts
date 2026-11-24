@@ -30,7 +30,9 @@ import type { UrlOrderedDesignHistoryExpected } from './url-ordered-design-audit
 import { hasReadOrderedDesignTerminal, isIssuedOrderedDesignTerminal, createOrderedDesignAuditWriter, type OrderedDesignAuditWriter, type OrderedDesignStoredRecord } from './url-ordered-design-writer.js';
 
 export const URL_SESSION_AUDIT_FORMAT = 'url-session-audit/2' as const;
-export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 5000 });
+// Full current-authority checks and durable writes share this finite window.
+// Ordered effects, caller limits and the original run still impose tighter deadlines.
+export const URL_SESSION_AUDIT_LIMITS = Object.freeze({ events: 4096, eventBytes: 65_536, bytes: 16_777_216, pending: 8, milliseconds: 30_000 });
 type Limits = { readonly [K in keyof typeof URL_SESSION_AUDIT_LIMITS]: number };
 export interface UrlSessionAuditScope {
   readonly binding: SessionBinding; readonly originPolicySha256: string; readonly profileSha256: string;

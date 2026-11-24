@@ -751,18 +751,22 @@ describe('protected URL session audit', () => {
     { cost: 440, ok: true, declarations: 4, checks: 11 },
     { cost: 460, ok: false, declarations: 3, checks: 11 },
   ])('keeps one setup cutoff through all declarations at $cost ms per check', async ({ cost, ok, declarations, checks }) => {
-    const f = fixture();
-    let elapsed = 0;
-    vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
-    const current = vi.fn(() => { elapsed += cost; return true; });
-    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
-    try {
-      const result = await createUrlSessionAudit({ ...f.options, current });
-      if (result.ok) writers.push(result);
-      expect(result.ok).toBe(ok);
-      expect(result.summary()).toMatchObject({ declarations, durableRecords: declarations, limits: { milliseconds: 5_000 } });
-      expect(current).toHaveBeenCalledTimes(checks);
-    } finally { vi.useRealTimers(); }
+    // Keep the shorter explicit caller limit and the full default independently bounded.
+    for (const budget of [{ limits: { milliseconds: 5_000 }, cost, expected: 5_000 },
+      { limits: undefined, cost: cost * 6, expected: 30_000 }]) {
+      const f = fixture();
+      let elapsed = 0;
+      vi.spyOn(performance, 'now').mockImplementation(() => elapsed);
+      const current = vi.fn(() => { elapsed += budget.cost; return true; });
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+      try {
+        const result = await createUrlSessionAudit({ ...f.options, current, limits: budget.limits });
+        if (result.ok) writers.push(result);
+        expect(result.ok).toBe(ok);
+        expect(result.summary()).toMatchObject({ declarations, durableRecords: declarations, limits: { milliseconds: budget.expected } });
+        expect(current).toHaveBeenCalledTimes(checks);
+      } finally { vi.useRealTimers(); }
+    }
   });
 
   it('refreshes authority before the first write after screening a later declaration', async () => {
