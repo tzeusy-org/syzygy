@@ -1634,7 +1634,11 @@ describe('bounded restoration observer (no native authority fixture)', () => {
 });
 
 describe('composed URL run with actual role processes', () => {
-  beforeAll(async () => { await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700); runtime = await buildComposedRuntime(); }, 60_000);
+  beforeAll(async () => {
+    await fs.mkdir(path.dirname(recoveryHost.root), { recursive: true });
+    await fs.mkdir(recoveryHost.root, { mode: 0o700 }); await fs.chmod(recoveryHost.root, 0o700);
+    runtime = await buildComposedRuntime();
+  }, 60_000);
   // The stop variant controls callback scheduling at one captured cut; it does
   // not claim that arbitrary practical stops have complete provider exchanges.
   // The hosted eligible replay was still restoring protected products after
