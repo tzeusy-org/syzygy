@@ -405,6 +405,104 @@ type RestoreProductEntry = ResumeStamp & {
 function observeProductRestoration(run: string, originalDeadline: number) {
   const scope = new AsyncLocalStorage<RestoreProductEntry>();
   const authorityScope = new AsyncLocalStorage<boolean>();
+  type FreshKind = 'fixed' | 'renderer' | 'source-span' | 'source-whole' | 'source-tree' | 'source-manifest-remainder';
+  type Derivation = { graphOrdinal: number; kind: FreshKind };
+  type DerivationStep = ResumeStamp & { waitOrdinal: number; derivation?: Derivation;
+    boundary: 'derivation' | 'final' | 'unexpected-wait' | 'graph-unavailable' };
+  type DerivationRun = { ordinal: number; descriptors?: Derivation[]; graphNodes?: number; waitCalls: number;
+    steps: DerivationStep[]; active?: DerivationStep; settlement?: { outcome: 'fulfilled' | 'rejected';
+      expectedWaitCalls?: number; waitCalls: number; unreachedWaitCalls?: number;
+      population: 'complete' | 'failure-cut' | 'missing-waits' | 'extra-waits' | 'graph-unavailable' } };
+  type SourceCallback = ResumeStamp & { ordinal: number; phase: 'check-time' | 'screen' };
+  type SourceRead = ResumeStamp & { ordinal: number; operation: 'open' | 'list-tree' | 'read-screened-blob';
+    ledger: number; step?: Pick<DerivationStep, 'waitOrdinal' | 'derivation' | 'boundary'>;
+    callbacks: SourceCallback[]; callbackCalls: number; listTreeObservation?: 'wrapped' | 'unavailable' };
+  const derivationScope = new AsyncLocalStorage<DerivationRun>();
+  const derivationRuns: DerivationRun[] = [], sourceReads: SourceRead[] = [];
+  const observedReaders = new WeakSet<ReturnType<ReturnType<typeof sourceReader.captureUrlOriginSourceReader>['open']>>();
+  let derivationCount = 0, sourceReadCount = 0;
+  let firstDerivationFailure: { ledger: number; step?: DerivationStep } | undefined;
+  const firstDerivationMismatch: Partial<Record<'unexpected-wait' | 'graph-unavailable', { ledger: number; waitOrdinal: number }>> = {};
+  let firstSettlementMismatch: { ledger: number; settlement: NonNullable<DerivationRun['settlement']> } | undefined;
+  let firstSourceFailure: { reason: 'operation-threw' | 'check-time-threw' | 'screen-threw'; read: SourceRead; callback?: SourceCallback } | undefined;
+  const tail = <T>(values: T[], value: T): void => { if (values.length >= 32) values.shift(); values.push(value); };
+  const freshKind = (kind: string): kind is FreshKind => ['fixed', 'renderer', 'source-span', 'source-whole', 'source-tree', 'source-manifest-remainder'].includes(kind);
+  const sourceRead = (operation: SourceRead['operation']): SourceRead | undefined => {
+    const context = derivationScope.getStore(); if (context === undefined) return;
+    const step = context.active;
+    const read: SourceRead = { ordinal: ++sourceReadCount, operation, ledger: context.ordinal, startedMs: performance.now(),
+      ...(step === undefined ? {} : { step: { waitOrdinal: step.waitOrdinal, derivation: step.derivation, boundary: step.boundary } }),
+      callbacks: [], callbackCalls: 0 };
+    tail(sourceReads, read); return read;
+  };
+  const observeSource = <T>(read: SourceRead, invoke: () => T): T => {
+    const settle = (outcome: ResumeObservation): void => {
+      Object.assign(read, { settledMs: performance.now(), outcome });
+      if (outcome === 'rejected') firstSourceFailure ??= { reason: 'operation-threw', read };
+    };
+    try {
+      const result = invoke();
+      if (result instanceof Promise) void result.then(() => settle('accepted'), () => settle('rejected'));
+      else settle('accepted');
+      return result;
+    } catch (error) { settle('rejected'); throw error; }
+  };
+  const sourceCallback = <T>(read: SourceRead, phase: SourceCallback['phase'], invoke: () => T): T => {
+    const callback: SourceCallback = { ordinal: ++read.callbackCalls, phase, startedMs: performance.now() };
+    tail(read.callbacks, callback);
+    const settle = (outcome: ResumeObservation): void => {
+      Object.assign(callback, { settledMs: performance.now(), outcome });
+      if (outcome === 'rejected') firstSourceFailure ??= { reason: phase === 'check-time' ? 'check-time-threw' : 'screen-threw', read, callback: { ...callback } };
+    };
+    try {
+      const result = invoke();
+      if (result instanceof Promise) void result.then(() => settle('accepted'), () => settle('rejected'));
+      else settle('accepted');
+      return result;
+    } catch (error) { settle('rejected'); throw error; }
+  };
+  const wrapSource = (captured: ReturnType<typeof sourceReader.captureUrlOriginSourceReader>): typeof captured => {
+    return Object.freeze({ ...captured,
+      open() {
+        const stamp = sourceRead('open');
+        if (stamp === undefined) return captured.open();
+        const reader = observeSource(stamp, () => captured.open());
+        if (!observedReaders.has(reader)) {
+          const descriptor = Object.getOwnPropertyDescriptor(reader, 'listTree');
+          // A future immutable/nominal reader remains unchanged and is disclosed as unobserved.
+          if (Object.getPrototypeOf(reader) === Object.prototype && descriptor?.configurable === true && descriptor.writable === true
+            && typeof descriptor.value === 'function') {
+            const listTree = reader.listTree;
+            vi.spyOn(reader, 'listTree').mockImplementation(function (this: typeof reader) {
+              const read = sourceRead('list-tree');
+              return read === undefined ? listTree.call(this) : observeSource(read, () => listTree.call(this));
+            });
+            observedReaders.add(reader);
+          }
+        }
+        stamp.listTreeObservation = observedReaders.has(reader) ? 'wrapped' : 'unavailable';
+        return reader;
+      },
+      readScreenedBlob<T>(file: string, checkTime: () => void,
+        screen: (blob: Parameters<Parameters<typeof captured.readScreenedBlob>[2]>[0]) => T): Promise<T> {
+        const read = sourceRead('read-screened-blob');
+        if (read === undefined) return captured.readScreenedBlob(file, checkTime, screen);
+        return observeSource(read, () => captured.readScreenedBlob(file,
+          () => sourceCallback(read, 'check-time', checkTime),
+          blob => sourceCallback(read, 'screen', () => screen(blob))));
+      },
+    });
+  };
+  const captureSource = sourceReader.captureUrlOriginSourceReader;
+  vi.spyOn(sourceReader, 'captureUrlOriginSourceReader').mockImplementation(input => wrapSource(captureSource(input)));
+  const captureDerivations = (graph: ReturnType<typeof recoveryProducts.takeUrlRecoveryProducts>['history']['provenance']): void => {
+    const context = derivationScope.getStore();
+    if (context !== undefined) {
+      context.graphNodes = graph.nodes.length;
+      context.descriptors = graph.nodes.flatMap((node, index) => freshKind(node.derivation.kind)
+        ? [{ graphOrdinal: index + 1, kind: node.derivation.kind }] : []);
+    }
+  };
   const entries: RestoreProductEntry[] = [];
   const totals: Partial<Record<RestoreProductPhase, { calls: number; refused: number; rejected: number }>> = {};
   let ordinal = 0, omitted = 0;
@@ -466,6 +564,7 @@ function observeProductRestoration(run: string, originalDeadline: number) {
   const take = recoveryProducts.takeUrlRecoveryProducts;
   vi.spyOn(recoveryProducts, 'takeUrlRecoveryProducts').mockImplementation((...args) => {
     const result = active('history-transfer', () => take(...args));
+    captureDerivations(result.history.provenance);
     return scope.getStore() === undefined ? result : Object.freeze({ ...result,
       revalidate: () => active('revalidate', result.revalidate) });
   });
@@ -480,9 +579,38 @@ function observeProductRestoration(run: string, originalDeadline: number) {
     active('metadata-check', () => unchanged(root, file, observed, guard(check))));
   return {
     run: <T>(invoke: () => T): T => measure('restore', invoke), authority,
+    source: wrapSource, provenance: captureDerivations,
     ledger: (ledger: ReturnType<typeof originLedger.createUrlOriginLedger>): typeof ledger => Object.freeze({ ...ledger,
       restoreFrozenOrigins: (...args: Parameters<typeof ledger.restoreFrozenOrigins>) => {
-        const result = active('ledger-restore', () => ledger.restoreFrozenOrigins(args[0], args[1], () => authority(args[2])));
+        const context: DerivationRun = { ordinal: ++derivationCount, waitCalls: 0, steps: [] };
+        if (derivationRuns.length >= 4) derivationRuns.shift();
+        derivationRuns.push(context);
+        const result = derivationScope.run(context, () => active('ledger-restore', () => ledger.restoreFrozenOrigins(args[0], args[1], () => {
+          const waitOrdinal = ++context.waitCalls, descriptors = context.descriptors;
+          const derivation = descriptors?.[waitOrdinal - 1];
+          const step: DerivationStep = { waitOrdinal, startedMs: performance.now(),
+            boundary: descriptors === undefined ? 'graph-unavailable' : derivation !== undefined ? 'derivation'
+              : waitOrdinal === descriptors.length + 1 ? 'final' : 'unexpected-wait',
+            ...(derivation === undefined ? {} : { derivation }) };
+          context.active = step; tail(context.steps, step);
+          if (step.boundary === 'unexpected-wait' || step.boundary === 'graph-unavailable')
+            firstDerivationMismatch[step.boundary] ??= { ledger: context.ordinal, waitOrdinal };
+          return observe(() => authority(args[2]), accepted => {
+            Object.assign(step, { settledMs: performance.now(), outcome: accepted ? 'accepted' : 'refused' });
+          }, () => { Object.assign(step, { settledMs: performance.now(), outcome: 'rejected' }); });
+        })));
+        const settleDerivations = (outcome: 'fulfilled' | 'rejected'): void => {
+          const expected = context.descriptors === undefined ? undefined : context.descriptors.length + 1;
+          const population = outcome === 'rejected' ? 'failure-cut' : expected === undefined ? 'graph-unavailable'
+            : context.waitCalls < expected ? 'missing-waits' : context.waitCalls > expected ? 'extra-waits' : 'complete';
+          context.settlement = { outcome, waitCalls: context.waitCalls, population,
+            ...(expected === undefined ? {} : { expectedWaitCalls: expected, unreachedWaitCalls: Math.max(0, expected - context.waitCalls) }) };
+          if (population === 'missing-waits' || population === 'extra-waits')
+            firstSettlementMismatch ??= { ledger: context.ordinal, settlement: { ...context.settlement } };
+          if (outcome === 'rejected') firstDerivationFailure ??= { ledger: context.ordinal,
+            ...(context.active === undefined ? {} : { step: structuredClone(context.active) }) };
+        };
+        void result.then(() => settleDerivations('fulfilled'), () => settleDerivations('rejected'));
         // This plain result is not a nominal capability. One continuation
         // decorates its methods; actual receipt identities and errors pass through.
         return result.then(recovered => Object.freeze({ ...recovered,
@@ -490,7 +618,11 @@ function observeProductRestoration(run: string, originalDeadline: number) {
       },
       validateReport: (...args: Parameters<typeof ledger.validateReport>) => active('report-validation', () => ledger.validateReport(...args)),
     }),
-    summary: () => ({ entries, omitted, totals, firstRefusal, lastSettled }),
+    summary: () => ({ entries, omitted, totals, firstRefusal, lastSettled,
+      derivations: { calls: derivationCount, runs: derivationRuns.map(({ ordinal, graphNodes, descriptors, waitCalls, steps, settlement }) =>
+        ({ ordinal, graphNodes, expectedWaitCalls: descriptors === undefined ? undefined : descriptors.length + 1, waitCalls, steps, settlement })),
+        firstFailure: firstDerivationFailure, firstMismatch: firstDerivationMismatch, firstSettlementMismatch },
+      sourceReads: { calls: sourceReadCount, entries: sourceReads, firstFailure: firstSourceFailure } }),
   };
 }
 type ResumeStoreStep = ResumeStamp & {
@@ -1659,6 +1791,101 @@ describe('bounded restoration observer (no native authority fixture)', () => {
     const rejected = Promise.reject(marker);
     expect(trace.run(() => rejected)).toBe(rejected);
     await expect(rejected).rejects.toBe(marker);
+    // Plain source-port stubs exercise forwarding and correlation, never provenance authority.
+    type Source = ReturnType<typeof sourceReader.captureUrlOriginSourceReader>;
+    type Blob = Parameters<Parameters<Source['readScreenedBlob']>[2]>[0];
+    type Graph = Parameters<typeof trace.provenance>[0];
+    const blob = Object.freeze({ path: 'OWN_PRIVATE_SOURCE_PATH', bytes: Uint8Array.of(7) }) as unknown as Blob;
+    const screened = Object.freeze({ body: 'OWN_PRIVATE_SCREEN_RESULT' });
+    let latestRead!: Promise<unknown>;
+    const read = vi.fn((file: string, checkTime: () => void, screen: (value: Blob) => unknown) => {
+      expect(file).toBe('OWN_PRIVATE_SOURCE_PATH');
+      return latestRead = Promise.resolve().then(() => { checkTime(); return screen(blob); });
+    });
+    const treeResult = Promise.resolve([]), listTree = vi.fn(() => treeResult);
+    const sourceReaderResult = { listTree() { return listTree(); } } as unknown as ReturnType<Source['open']>;
+    const open = vi.fn(() => sourceReaderResult);
+    const source = trace.source({ open, readScreenedBlob: read as Source['readScreenedBlob'] });
+    let clockCalls = 0;
+    const checkTime = vi.fn(() => { if (++clockCalls === 40) throw marker; });
+    const screen = vi.fn((value: Blob) => { expect(value).toBe(blob); return screened; });
+    const readWait = vi.fn(() => sample);
+    const graph = { nodes: [{ derivation: { kind: 'composition' } }, ...Array.from({ length: 40 }, () =>
+      ({ derivation: { kind: 'source-span', path: 'OWN_PRIVATE_DERIVATION_PATH' } }))] } as unknown as Graph;
+    const failingSource = trace.ledger({ restoreFrozenOrigins: async (_given: unknown, _subject: unknown, current: () => Promise<boolean>) => {
+      trace.provenance(graph);
+      for (let index = 0; index < 40; index++) {
+        expect(current()).toBe(sample); await sample;
+        const pending = source.readScreenedBlob('OWN_PRIVATE_SOURCE_PATH', checkTime, screen);
+        expect(pending).toBe(latestRead);
+        expect(await pending).toBe(screened);
+      }
+      return result;
+    } } as unknown as Ledger);
+    await expect(trace.run(() => failingSource.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
+      expected as Parameters<Ledger['restoreFrozenOrigins']>[1], readWait))).rejects.toBe(marker);
+    const sourceFailure = structuredClone(trace.summary().sourceReads.firstFailure);
+    expect(sourceFailure).toMatchObject({ reason: 'check-time-threw', read: { ordinal: 40, operation: 'read-screened-blob',
+      step: { waitOrdinal: 40, boundary: 'derivation', derivation: { graphOrdinal: 41, kind: 'source-span' } },
+      callbacks: [{ ordinal: 1, phase: 'check-time', outcome: 'rejected' }] } });
+    expect(trace.summary().derivations.firstFailure).toMatchObject({ step: { waitOrdinal: 40,
+      derivation: { graphOrdinal: 41, kind: 'source-span' } } });
+    expect(trace.summary().derivations.runs.at(-1)?.steps).toHaveLength(32);
+    expect(trace.summary().derivations.runs.at(-1)?.settlement).toMatchObject({ outcome: 'rejected', population: 'failure-cut',
+      expectedWaitCalls: 41, waitCalls: 40, unreachedWaitCalls: 1 });
+    const completedSource = trace.ledger({ restoreFrozenOrigins: async (_given: unknown, _subject: unknown, current: () => Promise<boolean>) => {
+      trace.provenance({ nodes: [{ derivation: { kind: 'fixed' } }] } as unknown as Graph);
+      expect(await current()).toBe(true);
+      for (let index = 0; index < 40; index++) expect(await source.readScreenedBlob('OWN_PRIVATE_SOURCE_PATH', checkTime, screen)).toBe(screened);
+      expect(await current()).toBe(true); // The graph's one final wait.
+      expect(await current()).toBe(true); // Unexpected extra calls are marked rather than assigned a node.
+      const reader = source.open();
+      expect(reader).toBe(sourceReaderResult);
+      expect(reader.listTree()).toBe(treeResult); await treeResult;
+      return result;
+    } } as unknown as Ledger);
+    await trace.run(() => completedSource.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
+      expected as Parameters<Ledger['restoreFrozenOrigins']>[1], readWait));
+    expect(trace.summary().sourceReads.firstFailure).toEqual(sourceFailure);
+    expect(trace.summary().sourceReads.entries).toHaveLength(32);
+    expect(trace.summary().sourceReads.entries.at(-1)).toMatchObject({ operation: 'list-tree', outcome: 'accepted',
+      step: { waitOrdinal: 3, boundary: 'unexpected-wait' } });
+    expect(trace.summary().derivations.runs.at(-1)).toMatchObject({ graphNodes: 1, expectedWaitCalls: 2, waitCalls: 3,
+      steps: [{ boundary: 'derivation' }, { boundary: 'final' }, { boundary: 'unexpected-wait' }] });
+    expect(trace.summary().derivations.firstMismatch['unexpected-wait']).toMatchObject({ waitOrdinal: 3 });
+    expect(trace.summary().derivations.runs.at(-1)?.settlement).toMatchObject({ outcome: 'fulfilled', population: 'extra-waits' });
+    screen.mockImplementationOnce(() => { throw marker; });
+    const rejectedScreen = trace.ledger({ restoreFrozenOrigins: async (_given: unknown, _subject: unknown, current: () => Promise<boolean>) => {
+      trace.provenance({ nodes: [{ derivation: { kind: 'source-whole' } }] } as unknown as Graph);
+      await current();
+      await source.readScreenedBlob('OWN_PRIVATE_SOURCE_PATH', checkTime, screen);
+      return result;
+    } } as unknown as Ledger);
+    await expect(trace.run(() => rejectedScreen.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
+      expected as Parameters<Ledger['restoreFrozenOrigins']>[1], readWait))).rejects.toBe(marker);
+    expect(trace.summary().sourceReads.entries.at(-1)).toMatchObject({ operation: 'read-screened-blob', outcome: 'rejected',
+      step: { derivation: { graphOrdinal: 1, kind: 'source-whole' } },
+      callbacks: [{ phase: 'check-time', outcome: 'accepted' }, { phase: 'screen', outcome: 'rejected' }] });
+    expect(trace.summary().sourceReads.firstFailure).toEqual(sourceFailure);
+    expect(checkTime).toHaveBeenCalledTimes(81); expect(screen).toHaveBeenCalledTimes(80);
+    expect(read).toHaveBeenCalledTimes(81); expect(readWait).toHaveBeenCalledTimes(44);
+    expect(open).toHaveBeenCalledOnce(); expect(listTree).toHaveBeenCalledOnce();
+    const firstPopulationMismatch = structuredClone(trace.summary().derivations.firstSettlementMismatch);
+    const missingWait = vi.fn(() => sample);
+    const missingSource = trace.ledger({ restoreFrozenOrigins: async (_given: unknown, _subject: unknown, current: () => Promise<boolean>) => {
+      trace.provenance({ nodes: [{ derivation: { kind: 'fixed' } }] } as unknown as Graph);
+      await current(); return result; // The required final callback is deliberately absent in this stub.
+    } } as unknown as Ledger);
+    for (let index = 0; index < 5; index++) await trace.run(() => missingSource.restoreFrozenOrigins(
+      capability as recoveryProducts.UrlVerifiedRecoveryProducts, expected as Parameters<Ledger['restoreFrozenOrigins']>[1], missingWait));
+    expect(missingWait).toHaveBeenCalledTimes(5);
+    expect(trace.summary().derivations.runs).toHaveLength(4);
+    expect(trace.summary().derivations.runs.at(-1)?.settlement).toMatchObject({ outcome: 'fulfilled', population: 'missing-waits',
+      expectedWaitCalls: 2, waitCalls: 1, unreachedWaitCalls: 1 });
+    expect(trace.summary().derivations.firstSettlementMismatch).toEqual(firstPopulationMismatch);
+    const sourceDiagnostic = JSON.stringify({ sourceReads: trace.summary().sourceReads, derivations: trace.summary().derivations });
+    for (const excluded of ['OWN_PRIVATE_SOURCE_PATH', 'OWN_PRIVATE_SCREEN_RESULT', 'OWN_PRIVATE_DERIVATION_PATH', 'OWN_NOT_DIAGNOSTIC'])
+      expect(sourceDiagnostic).not.toContain(excluded);
     const failing = trace.ledger({ restoreFrozenOrigins: () => rejected } as unknown as Ledger);
     await expect(trace.run(() => failing.restoreFrozenOrigins(capability as recoveryProducts.UrlVerifiedRecoveryProducts,
       expected as Parameters<Ledger['restoreFrozenOrigins']>[1], wait))).rejects.toBe(marker);
