@@ -1,0 +1,42 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "candidateSourceSha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+  "files": {
+    "README.md": {
+      "sha256": "9dd898318591df72a3ede03f293bee36b47578b913220202f37b087b6d59ba20",
+      "bytes": 2744
+    },
+    "binding.json": {
+      "sha256": "2a51748836f2f1865770a798ca5c403c301b3093fb013e98f5d61826024c3f02",
+      "bytes": 2702
+    },
+    "build_candidate.py": {
+      "sha256": "499faf7d24c03a0a835c5f9724da1c4792ed824c221b98c84efce74f18070e30",
+      "bytes": 7735
+    },
+    "candidate.patch": {
+      "sha256": "872595cb00b424025a1a7e8662ef947de4e4b102a2be02f4bc89b33d33aac12d",
+      "bytes": 14468
+    },
+    "check_isolated_dispatch.py": {
+      "sha256": "f0f11cfc64457d3e5a5bf304e9e8231e1d83c66794c44a01f5826041f5ea968c",
+      "bytes": 18470
+    },
+    "check_spec_reconciliation.py": {
+      "sha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+      "bytes": 605012
+    },
+    "check_static_candidate.py": {
+      "sha256": "bb0fc577e3592cfaecab3eaa11463a485995459096aaa76135e8d3eb4fba214f",
+      "bytes": 7655
+    },
+    "isolated-results.json": {
+      "sha256": "42bd55c3c9bc6826659a9461a9d6fabd7aebbfe1c91b03f672268524397220e9",
+      "bytes": 3933
+    },
+    "static-proof.json": {
+      "sha256": "14eea050be49ea28f2bdb0b20b061bfd76795f230dcb82d3a30f41e1677cb5fe",
+      "bytes": 850
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "sourcePath": "scripts/check_spec_reconciliation.py",
+  "baseSourceSha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f",
+  "candidateSourceSha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+  "patchSha256": "872595cb00b424025a1a7e8662ef947de4e4b102a2be02f4bc89b33d33aac12d",
+  "generatorSha256": "499faf7d24c03a0a835c5f9724da1c4792ed824c221b98c84efce74f18070e30",
+  "status": "External candidate only; timing success and real canonical witness equality remain Unknown. No primary apply/adoption.",
+  "staticProof": {
+    "file": "static-proof.json",
+    "sha256": "14eea050be49ea28f2bdb0b20b061bfd76795f230dcb82d3a30f41e1677cb5fe",
+    "entryFixtureTotal": 17,
+    "editionFamilyTotal": 19,
+    "realFixtureAssertionsBodyAstPreserved": true,
+    "fullModuleAstRestoration": true,
+    "workerPolicyUnchanged": true
+  },
+  "isolatedChecks": {
+    "file": "isolated-results.json",
+    "sha256": "42bd55c3c9bc6826659a9461a9d6fabd7aebbfe1c91b03f672268524397220e9",
+    "passed": 33,
+    "total": 33,
+    "boundary": "Only extracted helper/coordinator/guard AST executes. Fake family callbacks, filesystems, readers, devices and FIFO writer; two fork workers and one tiny synthetic thread. No project import, real fixture/tree/CLI child, canonical selftest, build or native run."
+  },
+  "measuredSubject": {
+    "commit": "f043a10aab6bf3baee0b1acd24c72b78d3654ded",
+    "job": 138731703168,
+    "selftestMs": 697094.187237,
+    "entryPhaseMs": 293918.844364,
+    "nineteenEditionPhaseSumMs": 112518.554302,
+    "note": "Failed run before independent one-LF ledger repair; not a repaired passing baseline."
+  },
+  "scope": "One future script change only. Full command, populations, CLI, assertions, existing skip conditions,8+3+1+5entry units and19edition families remain. Original final witness enumeration and derived totals remain unchanged.",
+  "verificationRequired": "Fresh source review then adoption/frozen clone canonical selftest must pass. Serial-versus-parallel ordered real witness/failure equality and hosted timing acceptance remain Unknown.",
+  "risks": [
+    "Existing process-pool abrupt-child-death liveness limit; ordinary exceptions propagate.",
+    "Fork before synthetic/real FIFO writer thread starts; no nested pool inside fixture handlers.",
+    "After-refusal external children retain30s timeout and1GiB limit each, which multiply with existing worker count.",
+    "Per-process scratch copies/caches increase memory/filesystem pressure; worker count was not increased."
+  ],
+  "footprint": {
+    "addedLines": 165,
+    "removedLines": 105,
+    "netCaseGrowth": 0
+  }
+}

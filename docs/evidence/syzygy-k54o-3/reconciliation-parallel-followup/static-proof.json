@@ -1,0 +1,19 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "baseSourceSha256": "b64c1338d9eec7770b626cb650e87082174326a1da623d0e7c05be40c6b0648f",
+  "candidateSourceSha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+  "verifierSha256": "bb0fc577e3592cfaecab3eaa11463a485995459096aaa76135e8d3eb4fba214f",
+  "entryFixtureCounts": {
+    "ENTRY_KIND_CASES": 8,
+    "ENTRY_CONTROLS": 3,
+    "AFTER_REFUSAL_CASES": 5
+  },
+  "entryFixtureTotal": 17,
+  "entryFixtureBodyAstPreservedExceptSkipBufferAndContinueToReturn": true,
+  "editionFamilyCount": 19,
+  "editionBodiesByteIdentical": true,
+  "fullModuleAstIdenticalAfterReversingDeclaredEdits": true,
+  "originalWorkerPolicyPreserved": true,
+  "fifoWriterAndCliLimitsGuardsCleanupClassesPreserved": true,
+  "boundary": "AST/git blob inspection only; no project execution."
+}

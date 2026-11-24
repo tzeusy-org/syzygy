@@ -1,0 +1,174 @@
+{
+  "baseCommit": "aac89d9fcf1a275974d12e7573173a1617bff455",
+  "candidateSourceSha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+  "harnessSha256": "f0f11cfc64457d3e5a5bf304e9e8231e1d83c66794c44a01f5826041f5ea968c",
+  "entryTasks": 17,
+  "editionTasks": 19,
+  "cases": [
+    {
+      "case": "workers1-entry",
+      "passed": true,
+      "tasks": 17,
+      "witnesses": 15,
+      "orderedSkipMessages": 2
+    },
+    {
+      "case": "workers1-entry-failure",
+      "passed": true
+    },
+    {
+      "case": "workers1-edition",
+      "passed": true,
+      "tasks": 19,
+      "witnesses": 19,
+      "orderedSkipMessages": 0
+    },
+    {
+      "case": "workers1-edition-failure",
+      "passed": true
+    },
+    {
+      "case": "fork-entry",
+      "passed": true,
+      "tasks": 17,
+      "witnesses": 15,
+      "orderedSkipMessages": 2
+    },
+    {
+      "case": "fork-entry-failure",
+      "passed": true
+    },
+    {
+      "case": "fork-edition",
+      "passed": true,
+      "tasks": 19,
+      "witnesses": 19,
+      "orderedSkipMessages": 0
+    },
+    {
+      "case": "fork-edition-failure",
+      "passed": true
+    },
+    {
+      "case": "no-fork-entry",
+      "passed": true,
+      "tasks": 17,
+      "witnesses": 15,
+      "orderedSkipMessages": 2
+    },
+    {
+      "case": "no-fork-entry-failure",
+      "passed": true
+    },
+    {
+      "case": "no-fork-edition",
+      "passed": true,
+      "tasks": 19,
+      "witnesses": 19,
+      "orderedSkipMessages": 0
+    },
+    {
+      "case": "no-fork-edition-failure",
+      "passed": true
+    },
+    {
+      "case": "original-default-worker",
+      "passed": true
+    },
+    {
+      "case": "missing-result-guard",
+      "passed": true
+    },
+    {
+      "case": "duplicate-result-guard",
+      "passed": true
+    },
+    {
+      "case": "reordered-result-guard",
+      "passed": true
+    },
+    {
+      "case": "out-of-range-result-guard",
+      "passed": true
+    },
+    {
+      "case": "boolean-alias-result-guard",
+      "passed": true
+    },
+    {
+      "case": "unknown-entry-kind",
+      "passed": true
+    },
+    {
+      "case": "real-block-device-skip",
+      "passed": true
+    },
+    {
+      "case": "real-ptmx-skip",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-expected-oserror",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-wrong-oserror-class",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-wrong-filename",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-unicode-error",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-unexpected-error",
+      "passed": true
+    },
+    {
+      "case": "real-library-guard-not-refused",
+      "passed": true
+    },
+    {
+      "case": "real-fifo-finally-False",
+      "passed": true
+    },
+    {
+      "case": "real-fifo-finally-True",
+      "passed": true
+    },
+    {
+      "case": "real-cli-root-finally-False",
+      "passed": true
+    },
+    {
+      "case": "real-cli-root-finally-True",
+      "passed": true
+    },
+    {
+      "case": "real-cli-no-write-detector",
+      "passed": true
+    },
+    {
+      "case": "guard-removal-mutation",
+      "passed": true
+    }
+  ],
+  "caseCount": 33,
+  "passed": 33,
+  "mutation": {
+    "id": "remove-population-guard",
+    "old": "if any(type(index) is not int for index in indices) or indices != list(range(count)):\n        raise RuntimeError('selftest task result population differs')",
+    "new": "",
+    "expectedCount": 3,
+    "indices": [
+      0,
+      1
+    ],
+    "outcome": "killed",
+    "predicate": "incomplete result population must refuse before merge"
+  },
+  "boundary": "Only extracted helper/coordinator/guard AST executes. Fake family callbacks, filesystems, readers, devices and FIFO writer; two fork workers and one tiny synthetic thread. No project import, real fixture/tree/CLI child, canonical selftest, build or native run."
+}

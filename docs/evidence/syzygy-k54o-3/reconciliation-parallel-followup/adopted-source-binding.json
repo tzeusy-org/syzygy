@@ -1,0 +1,18 @@
+{
+  "subjectCommit": "c049222af3cb197dac5c73136b9a3e9c12795089",
+  "sourcePath": "scripts/check_spec_reconciliation.py",
+  "sourceSha256": "c68cf76134cfdb53c1b7c736d7de909913e1f3d105c2b5a5ee02e1ed510066ed",
+  "scope": "Source review and isolated/static checks only; real canonical witness success/equality and hosted timing remain Unknown. Original candidate binding retains its pre-adoption status.",
+  "artifacts": {
+    "INDEPENDENT-REVIEW-RAW.md": "a591d9d33752ff001e09d4076ed071733a92cd3caaf242571b2ff04e6f3a751b",
+    "README.md": "9dd898318591df72a3ede03f293bee36b47578b913220202f37b087b6d59ba20",
+    "binding.json": "2a51748836f2f1865770a798ca5c403c301b3093fb013e98f5d61826024c3f02",
+    "build_candidate.py": "499faf7d24c03a0a835c5f9724da1c4792ed824c221b98c84efce74f18070e30",
+    "candidate.patch": "872595cb00b424025a1a7e8662ef947de4e4b102a2be02f4bc89b33d33aac12d",
+    "check_isolated_dispatch.py": "f0f11cfc64457d3e5a5bf304e9e8231e1d83c66794c44a01f5826041f5ea968c",
+    "check_static_candidate.py": "bb0fc577e3592cfaecab3eaa11463a485995459096aaa76135e8d3eb4fba214f",
+    "isolated-results.json": "42bd55c3c9bc6826659a9461a9d6fabd7aebbfe1c91b03f672268524397220e9",
+    "manifest.json": "75cf05e303b5083d222880f8886369bb995fff80411d68a8f470abd861d638d4",
+    "static-proof.json": "14eea050be49ea28f2bdb0b20b061bfd76795f230dcb82d3a30f41e1677cb5fe"
+  }
+}
