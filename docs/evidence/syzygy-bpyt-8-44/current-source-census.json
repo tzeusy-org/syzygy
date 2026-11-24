@@ -1,0 +1,133 @@
+{
+  "audited": "74e01e140a9a10322a00e9f1ea8dc015ac5598b3",
+  "typescript": "5.9.3",
+  "island": {
+    "originPopulation": 336,
+    "listed": [
+      "packages/polaris-generation-core/src/admitted-input.ts",
+      "packages/polaris-generation-core/src/discovery-provider.ts",
+      "packages/polaris-generation-core/src/discovery.ts",
+      "packages/polaris-generation-core/src/excerpt.ts",
+      "packages/polaris-generation-core/src/pipeline.ts",
+      "packages/polaris-generation-core/src/provider-draft.ts",
+      "packages/polaris-generation-core/src/rendered-design.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts",
+      "apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/generation-mutation.ts",
+      "apps/three-surface-poc/src/polaris-generation/pipeline-demo-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/pipeline-demo.ts",
+      "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "apps/three-surface-poc/src/polaris-generation/redis-shaped-fixture.ts",
+      "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts",
+      "apps/three-surface-poc/src/polaris-generation/repo-corpus-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+      "apps/three-surface-poc/src/polaris-generation/self-corpus-main.ts",
+      "apps/three-surface-poc/src/polaris-generation/self-corpus.ts"
+    ],
+    "permittedRemainder": [
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-consent/src/index.ts",
+      "packages/polaris-generation-consent/src/consent-ports.ts",
+      "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts"
+    ],
+    "reach": [
+      {
+        "entry": "apps/syzygy/src/main.ts",
+        "reachable": 221,
+        "unresolved": [],
+        "islandOrParked": []
+      },
+      {
+        "entry": "packages/polaris-dossier/src/broker-client.ts",
+        "reachable": 1,
+        "unresolved": [],
+        "islandOrParked": []
+      }
+    ]
+  },
+  "outcomes": {
+    "roots": [
+      "apps/syzygy/src",
+      "apps/three-surface-poc/src/polaris-generation",
+      "packages/polaris-dossier/src",
+      "packages/polaris-generation-consent/src",
+      "packages/polaris-generation-core/src"
+    ],
+    "candidateFiles": 324,
+    "productionFiles": 163,
+    "excludedTests": 161,
+    "reportUnions": [
+      {
+        "path": "packages/polaris-dossier/src/outcome.ts",
+        "line": 2
+      }
+    ]
+  },
+  "objectTestPaths": [],
+  "packageBoundary": {
+    "barrel": [
+      "runDossierCli",
+      "runPolarisCli"
+    ],
+    "subpaths": [
+      "./argv",
+      "./check",
+      "./cli",
+      "./clone-shape",
+      "./full-run.testkit",
+      "./gate-sources",
+      "./git-object-reader",
+      "./init",
+      "./inventory",
+      "./review",
+      "./screen",
+      "./state-directory"
+    ],
+    "documented": [
+      "./argv",
+      "./check",
+      "./cli",
+      "./clone-shape",
+      "./full-run.testkit",
+      "./gate-sources",
+      "./git-object-reader",
+      "./init",
+      "./inventory",
+      "./review",
+      "./screen",
+      "./state-directory"
+    ],
+    "splitFileLines": {
+      "packages/polaris-dossier/src/check.ts": 464,
+      "packages/polaris-dossier/src/check-derive.ts": 992,
+      "packages/polaris-dossier/src/check-model.ts": 282,
+      "packages/polaris-dossier/src/review.ts": 355,
+      "packages/polaris-dossier/src/review-model.ts": 118,
+      "packages/polaris-dossier/src/review-packet.ts": 265,
+      "packages/polaris-dossier/src/review-verdict.ts": 157,
+      "packages/polaris-dossier/src/inventory.ts": 407,
+      "packages/polaris-dossier/src/run-dir.ts": 96,
+      "packages/polaris-generation-core/src/dossier-evaluation.ts": 248,
+      "packages/polaris-generation-core/src/dossier-manifest.ts": 71,
+      "packages/polaris-generation-core/src/dossier-page-scan.ts": 161
+    }
+  },
+  "inputSha256": {
+    "docs/evidence/syzygy-bpyt-8-7/reconciliation-gen1.json": "a193990604f112ab457ed48632ceaf0f439c7ef85c973763e12143cbc186dea5",
+    "docs/evidence/syzygy-bpyt-8-40/importer-census.json": "5c86f958e42741d5d2e13cecc096798a995e106fcc33084e698f5363166556d0",
+    "docs/evidence/syzygy-bpyt-8-40/original-outcome-disposition.json": "945d00d7b7c5b3e2d8bcf1c684d1fc0538f224ee7b399e9454b674a2f2f442e3",
+    "docs/evidence/syzygy-bpyt-8-41/entity-decoder-differential-2026-11-04.json": "2f2d227dce0b096f918816e7b306d2106ccf6c4e378f1cde31cf663fd53fef66",
+    "docs/evidence/syzygy-bpyt-8-43/outcome-command-parity-2026-11-23.json": "daa8f1d9375df6d656b9a370a6b394cbde614b54f36437f16a098cd89edfaec7",
+    "docs/evidence/syzygy-bpyt-1-26/G1-RECONCILIATION.md": "892028de3afbc36eb2dd4b3dbcb3d14e647e404d62168a047d58e99f68e3a768",
+    "docs/evidence/syzygy-bpyt-1-27/quotation-domains-2026-11-05.json": "32688d692a15913c671049a029189276d328f6837270b54c2b15607fa82bede5",
+    "packages/polaris-generation-core/src/island-boundary.test.ts": "c6d48b86a9630b115189f17bfa43b4fe310077ee3e18d47ca6f8b4f3b7fd3e57",
+    "packages/polaris-dossier/src/polaris.ts": "26c7dce999f00b043549d8d5af3ce117aa7000ed609eed060f3b2a9edcc003a1"
+  }
+}

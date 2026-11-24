@@ -15,8 +15,8 @@ import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { OperatorReportedTestArtifactRecord } from './test-artifact-verification.js';
 import { walkthroughEvaluationIdentity } from './walkthrough-readiness.js';
-import { removeFixtureDirectory } from './test-cleanup.js';
-import { frozenCensus } from './test-frozen.js';
+import { removeFixtureDirectory } from './test-cleanup.testkit.js';
+import { frozenCensus } from './test-frozen.testkit.js';
 
 const cleanups: string[] = [];
 

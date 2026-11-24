@@ -1,0 +1,31 @@
+{
+  "bead": "syzygy-38u1",
+  "subject": {
+    "path": "docs/evidence/jytt-bead-title-exclusion-2026-10-21.json",
+    "sha256": "de25675d6b80aa7d45967301585d2dbc7ef859fa750596a0429808ff1f91bbf3"
+  },
+  "mainReconciliation": {
+    "path": "docs/evidence/jytt-bead-title-exclusion-rebase-2026-10-21.json",
+    "sha256": "a02a5293578cb5e2c8d40cb75419f93a04d4015dd99289f9502a0507a2c5380d"
+  },
+  "authority": {
+    "ownerAnswer": ".syzygy/governance/decisions/BEAD-TITLE-WITHHOLDING-RECORD-2026-10-20.md",
+    "sourceBead": "syzygy-jytt",
+    "sourceCommentId": "f08c6d66-6a44-51db-b536-b1b38d0c54c3",
+    "sourceCommentTextSha256": "10966803202ed141094c6d7062a2d03bbc2d9106e00a036d210cb8531c9a3bf3",
+    "laterTitleDecision": {
+      "path": "docs/pursuits/2026-11-21-trajectory-vision-pursuit.md",
+      "item": "pursuit-2026-11-21-trajectory-titles",
+      "answeredAt": "2026-11-21T12:21:41Z",
+      "choice": "C",
+      "scope": "Titles only under the declared screened policy",
+      "trackingBead": "syzygy-t3jk.5"
+    },
+    "currentDoctrine": "SEC-5"
+  },
+  "historicalDelivery": {
+    "pullRequest": 493,
+    "mainMergeCommit": "32c16625e3a14e6db995adff81379cf32baf49c3",
+    "mergedAt": "2026-10-21T15:56:14Z"
+  }
+}

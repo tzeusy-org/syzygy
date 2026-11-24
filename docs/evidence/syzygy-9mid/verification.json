@@ -1,0 +1,248 @@
+{
+  "requirement": "CAP1-REQ-061",
+  "contractClauses": [
+    "RFC3-3",
+    "RFC3-5"
+  ],
+  "subjectCommit": "f8938e40e0c5f568551f148a1dd6af7df733a3f3",
+  "predecessorCommit": "c8cede97c2706393c7c43d5d0aaeabe7911180b0",
+  "routeComparison": {
+    "archivedRunner": "docs/evidence/syzygy-bpyt-7-2/route-diff.mjs",
+    "archivedRunnerSha256": "50bfe5d1c4cc7d11dd5a1471a2add43a0774bfc1b59e54721e597e1fc08d2cdc",
+    "adapterChange": {
+      "old": "packages/cap1-system/dist/harness.js",
+      "new": "packages/cap1-system/src/harness.ts"
+    },
+    "adapterSha256": "1c5701d46650f666801a5dfc38076e8c4826bd54a9ad64445b8bc5fd00fd045e",
+    "normalization": "The archived runner masks fixture and state paths, ISO timestamps and loopback ports.",
+    "observedPopulation": [
+      "complete",
+      "empty-root",
+      "invalid-declaration",
+      "unparseable-declaration",
+      "widening-field-write-roots",
+      "widening-field-top-level",
+      "missing-consent",
+      "withdrawn-consent",
+      "altered-prose-consent-state",
+      "altered-prose-consent-extra-line",
+      "altered-prose-consent-scope",
+      "consent-wrong-project",
+      "entry-special-chars",
+      "entry-missing",
+      "entry-empty",
+      "two-repos-one-unconsented",
+      "no-governed-content"
+    ],
+    "fixtureCount": 17,
+    "responsesPerBuild": 272,
+    "predecessorNormalizedSha256": "87f8bf0f53649ab796bcdc3ffae5122b0e23f5a0f2fc74e5d53d376cbf185a93",
+    "candidateNormalizedSha256": "6eea0b222b28a1cf5552f8c1f97a01761ec1f0fd982ee16700871d3447fd07ba",
+    "unchangedFixtureCount": 15,
+    "changedResponses": {
+      "widening-field-write-roots": {
+        "anon GET /": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "51ca90113b26f1b493966cf0f03997471df71420c675cff7e963b398118d6d30",
+          "candidateBodySha256": "43ce26c30fe43d287e4bad896249733e56099bf3bf67b138d81baab7a55f0fe5"
+        },
+        "anon GET /entry": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "d5d263839f657065b504fa434d98545b1a7f095e1355bac2fd3eadb47ddfceb8",
+          "candidateBodySha256": "cf4547d22af30aa6ecf369326c9acadc04e8e7b12fb41d198f93a643d0ffb0fe"
+        },
+        "auth GET /": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "51ca90113b26f1b493966cf0f03997471df71420c675cff7e963b398118d6d30",
+          "candidateBodySha256": "43ce26c30fe43d287e4bad896249733e56099bf3bf67b138d81baab7a55f0fe5"
+        },
+        "auth GET /entry": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "d5d263839f657065b504fa434d98545b1a7f095e1355bac2fd3eadb47ddfceb8",
+          "candidateBodySha256": "cf4547d22af30aa6ecf369326c9acadc04e8e7b12fb41d198f93a643d0ffb0fe"
+        },
+        "auth GET /api/project": {
+          "status": 200,
+          "contentType": "application/json",
+          "predecessorBodySha256": "55e2dde46f49887a87bfc37bfc07044b350e70f6ad14247843ec2d8ff028368d",
+          "candidateBodySha256": "fbc93e78dc7979e07965f89c1125b339cc3d72ab4f24826c6d939893b3e2cc31"
+        },
+        "auth GET /api/project?extra=1": {
+          "status": 200,
+          "contentType": "application/json",
+          "predecessorBodySha256": "55e2dde46f49887a87bfc37bfc07044b350e70f6ad14247843ec2d8ff028368d",
+          "candidateBodySha256": "fbc93e78dc7979e07965f89c1125b339cc3d72ab4f24826c6d939893b3e2cc31"
+        }
+      },
+      "widening-field-top-level": {
+        "anon GET /": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "b7ce9bcb28485129b1aed3fc98741cf92ddcbacc0df10f60d15b81dbdb6f88ad",
+          "candidateBodySha256": "cef5476384a1db904388013aedf99472a27aeb18269b8f9f89007ac70cf44c29"
+        },
+        "auth GET /": {
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "predecessorBodySha256": "b7ce9bcb28485129b1aed3fc98741cf92ddcbacc0df10f60d15b81dbdb6f88ad",
+          "candidateBodySha256": "cef5476384a1db904388013aedf99472a27aeb18269b8f9f89007ac70cf44c29"
+        },
+        "auth GET /api/project": {
+          "status": 200,
+          "contentType": "application/json",
+          "predecessorBodySha256": "d5042cbf9a1f8ca6bb8bda75fad10bb8b3645b3ab8c2f607662853ef25cbde5c",
+          "candidateBodySha256": "b5d0208a1e05c6fdeda08ab31bfadfacdd11c25d9fc1feb6e5977206aaddc97a"
+        },
+        "auth GET /api/project?extra=1": {
+          "status": 200,
+          "contentType": "application/json",
+          "predecessorBodySha256": "d5042cbf9a1f8ca6bb8bda75fad10bb8b3645b3ab8c2f607662853ef25cbde5c",
+          "candidateBodySha256": "b5d0208a1e05c6fdeda08ab31bfadfacdd11c25d9fc1feb6e5977206aaddc97a"
+        }
+      }
+    },
+    "machineCases": {
+      "widening-field-write-roots": {
+        "predecessor": {
+          "kind": "project-evaluated",
+          "failures": []
+        },
+        "candidate": {
+          "kind": "declaration-invalid",
+          "failures": [
+            {
+              "kind": "write-boundary-contradiction",
+              "field": "declarations.write_roots",
+              "routedTo": "owner",
+              "detail": "This field cannot widen the governed write boundary. Route this contradiction to the owner."
+            }
+          ]
+        }
+      },
+      "widening-field-top-level": {
+        "predecessor": {
+          "kind": "declaration-invalid",
+          "failures": [
+            {
+              "kind": "unknown-field",
+              "field": "write_paths",
+              "detail": "field `write_paths` is not in the closed declaration field set"
+            }
+          ]
+        },
+        "candidate": {
+          "kind": "declaration-invalid",
+          "failures": [
+            {
+              "kind": "write-boundary-contradiction",
+              "field": "write_paths",
+              "routedTo": "owner",
+              "detail": "This field cannot widen the governed write boundary. Route this contradiction to the owner."
+            }
+          ]
+        }
+      }
+    },
+    "nestedEntryState": {
+      "predecessor": "present",
+      "candidate": "unreadable"
+    },
+    "secondMethod": "jq structural comparison confirmed both changed fixture names and exact equality of the other fixtures."
+  },
+  "assertionMutations": {
+    "subjectCommit": "f8938e40e0c5f568551f148a1dd6af7df733a3f3",
+    "sourcePath": "packages/cap1-core/src/declaration.ts",
+    "compiledPath": "packages/cap1-core/dist/declaration.js",
+    "compiledSha256": "0862e0ce61873aa76c9b1c78b2ca8732ba268d9bbedef5b266c698d4581a5baa",
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "--config",
+      "packages/cap1-system/vitest.config.ts",
+      "packages/cap1-system/src/write-boundary.system.test.ts"
+    ],
+    "controls": [
+      "before",
+      "after"
+    ],
+    "mutants": [
+      {
+        "id": "omit-root-contradiction",
+        "sourceOld": "if (WRITE_BOUNDARY_FIELDS.has(field)) {\n      failures.push(writeBoundaryContradiction(field));",
+        "sourceNew": "if (false) {\n      failures.push(writeBoundaryContradiction(field));",
+        "compiledOld": "if (WRITE_BOUNDARY_FIELDS.has(field)) {\n            failures.push(writeBoundaryContradiction(field));",
+        "compiledNew": "if (false) {\n            failures.push(writeBoundaryContradiction(field));",
+        "failed": 1,
+        "passed": 2,
+        "failedCases": [
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'at the declaration root' to the owner on both surfaces"
+        ],
+        "firstAssertion": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain '<li data-failure-kind=\"write-boundary\u2026'"
+      },
+      {
+        "id": "omit-nested-contradiction",
+        "sourceOld": "if (WRITE_BOUNDARY_FIELDS.has(field)) {\n        failures.push(writeBoundaryContradiction(`declarations.${field}`));",
+        "sourceNew": "if (false) {\n        failures.push(writeBoundaryContradiction(`declarations.${field}`));",
+        "compiledOld": "if (WRITE_BOUNDARY_FIELDS.has(field)) {\n                failures.push(writeBoundaryContradiction(`declarations.${field}`));",
+        "compiledNew": "if (false) {\n                failures.push(writeBoundaryContradiction(`declarations.${field}`));",
+        "failed": 1,
+        "passed": 2,
+        "failedCases": [
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'under declarations' to the owner on both surfaces"
+        ],
+        "firstAssertion": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain 'data-evaluation-kind=\"declaration-inv\u2026'"
+      },
+      {
+        "id": "omit-nested-field-qualification",
+        "sourceOld": "writeBoundaryContradiction(`declarations.${field}`)",
+        "sourceNew": "writeBoundaryContradiction(field)",
+        "compiledOld": "writeBoundaryContradiction(`declarations.${field}`)",
+        "compiledNew": "writeBoundaryContradiction(field)",
+        "failed": 1,
+        "passed": 2,
+        "failedCases": [
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'under declarations' to the owner on both surfaces"
+        ],
+        "firstAssertion": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain '<li data-failure-kind=\"write-boundary\u2026'"
+      },
+      {
+        "id": "drop-a-recognized-field",
+        "sourceOld": "  'write_paths',\n",
+        "sourceNew": "",
+        "compiledOld": "    'write_paths',\n",
+        "compiledNew": "",
+        "failed": 2,
+        "passed": 1,
+        "failedCases": [
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'at the declaration root' to the owner on both surfaces",
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'under declarations' to the owner on both surfaces"
+        ],
+        "firstAssertion": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' to contain '<li data-failure-kind=\"write-boundary\u2026'"
+      },
+      {
+        "id": "misroute-the-machine-finding",
+        "sourceOld": "field,\n    routedTo: 'owner',",
+        "sourceNew": "field,\n    routedTo: 'runner',",
+        "compiledOld": "field,\n        routedTo: 'owner',",
+        "compiledNew": "field,\n        routedTo: 'runner',",
+        "failed": 2,
+        "passed": 1,
+        "failedCases": [
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'at the declaration root' to the owner on both surfaces",
+          " FAIL  src/write-boundary.system.test.ts > RT6 \u2014 write boundary by harness-external filesystem observation > routes widening fields 'under declarations' to the owner on both surfaces"
+        ],
+        "firstAssertion": "AssertionError: expected { kind: 'declaration-invalid', \u2026(1) } to deeply equal { kind: 'declaration-invalid', \u2026(1) }"
+      }
+    ]
+  },
+  "review": {
+    "path": "docs/reviews/CAP1-9MID-R1-RAW.md",
+    "verdict": "CONFIRM",
+    "rawSha256": "6dbd8938e37660f9957f8e357f7f371a75cfb6fee9829745f830123d2f4d3773"
+  }
+}

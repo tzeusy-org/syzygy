@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { PILLAR_UNKNOWN_REASONS, type PillarDiscovery, type PocModel, type ProjectShape, type ProjectShapeClaim } from '@syzygy/three-surface-poc-core';
 
 import { renderPolarisPage } from './polaris.js';
-import { DEEP_DIVE_MARKERS } from './test-deep-dive-markers.js';
+import { DEEP_DIVE_MARKERS } from './test-deep-dive-markers.testkit.js';
 import { buildFixtureModel } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,

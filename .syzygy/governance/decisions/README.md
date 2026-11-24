@@ -50,6 +50,7 @@ These carry rulings the owner has actually made.
 
 | File | Holds |
 |---|---|
+| [`BEAD-TITLE-WITHHOLDING-RECORD-2026-10-20.md`](BEAD-TITLE-WITHHOLDING-RECORD-2026-10-20.md) | Historical October 20 choice A on work-item title withholding, its #493 delivery and the title-only November 21 supersession |
 | [`SURFACE-DECISION-RECORD.md`](SURFACE-DECISION-RECORD.md) | **SDR-1…37** — the standing body of prior owner rulings (SDR-34…37 record the 2026-08-16 P-31/P-36/P-37/P-40 rulings). The largest single source of settled ground |
 | [`OWNER-ANSWERS-2026-08-01.md`](OWNER-ANSWERS-2026-08-01.md) | The owner's answers to the 2026-08-01 question set |
 | [`DOCTRINE-AMENDMENT-D1-MAP-HISTORICAL.md`](DOCTRINE-AMENDMENT-D1-MAP-HISTORICAL.md) | Doctrine amendment **D1**, in force |

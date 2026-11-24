@@ -21,7 +21,7 @@ import { exactSourceIdentities, renderPolarisPage } from './polaris.js';
 import { POLARIS_SOURCE_PATH, POLARIS_SOURCE_TAILNET_PATH, renderPolarisSourcePage, resolveSourceRoute, sourceRouteHref, sourceRouteIdentities, sourceSlug } from './polaris-source.js';
 import { pocRoutes } from './routes.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { fetchWithHost } from './test-http-client.js';
+import { fetchWithHost } from './test-http-client.testkit.js';
 import { buildFixtureModel } from './test-model-fixture.js';
 import {
   ADMITTING_AUTHORITY,
