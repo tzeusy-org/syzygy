@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
-import { READING_QUOTE, READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
+import { READING_QUOTE, READING_SOURCE, navigationInput, readingInput } from './dossier-reading.testkit.js';
 import { DOSSIER_THEME_CSS, figureLegend, renderLocalDossier } from './dossier-site.js';
 
 // syzygy-pdja.1: the owner's review of the Redis dossier. Expected values are literals, never read from the renderer.
@@ -35,10 +35,24 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
     expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li data-hue="1"><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li data-hue="2"><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
     // Every page's navigation reaches each Pole page, and the contents send a section to its Pole's page.
-    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li data-hue="3"><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
+    for (const [path, html] of files) {
+      if (!path.endsWith('.html')) continue;
+      const current = path === 'poles/3.html' ? ' aria-current="page"' : '';
+      expect(html, path).toContain(`<li data-hue="3"><a href="${path.includes('/') ? '../' : ''}poles/3.html"${current}>The rest</a></li>`);
+    }
     expect(files.get('contents.html')!).toContain('<li><a href="poles/2.html#section-two">Two</a>');
     // A Pole page is a narrative page: it opens in the reading view with the legend.
     expect(files.get('poles/2.html')!.split('class="reading-legend"').length - 1).toBe(1);
+  });
+
+  it('keeps deep dives reachable on drafts without Poles', () => {
+    const { sources, local: { poles: _poles, ...local } } = navigationInput();
+    const files = renderLocalDossier({ sources, local }).files;
+    const html = files.get('deep-dives/why-detail.html')!;
+    expect(html).not.toContain('<ol class="pole-dive-links">');
+    expect(html).toContain('<li><a href="../deep-dives/why-detail.html" aria-current="page">Purpose detail</a></li>');
+    expect(html).toContain('<a rel="prev" href="../contents.html">Previous: Contents</a>');
+    expect(html).toContain('<a rel="next" href="../deep-dives/words-detail.html">Next: Words detail</a>');
   });
 
   it('colours a Pole page by its Pole, its diagrams included, and a diagram on the landing page by its own hue (syzygy-pdja.14)', () => {
