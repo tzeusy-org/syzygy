@@ -1,0 +1,179 @@
+{
+  "bead": "syzygy-5dhm.21",
+  "ranAt": "a88509fea40566bc6994db01405e43afc4a78dda",
+  "subjectSha256": {
+    "packages/polaris-dossier/src/brief.test.ts": "e52c3beca5be1e2dc7a5d3eca6344b456f7a8231af8903c8468f9e9c4c98bfde",
+    "packages/polaris-dossier/src/brief.ts": "d5dc9c1fc1c73937fa84d2864ea80928f1b31f0101dbb9e7f817dfc4059aff26",
+    "packages/polaris-dossier/src/question-file-hold-out.test.ts": "ff1a79b667f8279eafd34c3f45eb2d933aa3e80202ae6a247f23b6a299c396ba",
+    "packages/polaris-dossier/src/regression-hold-out.testkit.ts": "6feb9a1658aca877bac3fc0a6a4d76945ef214aae2abada02f78c9f04c36aa47",
+    "packages/polaris-dossier/src/run-record-question-file.test.ts": "d7f59bc43cd24dd90be600087b36995d7bef489279f44b50b8e9cc87abf99a0d",
+    "packages/polaris-dossier/src/run-record.ts": "8a097a7d5008d334f962a181a04f08fb12a67a646d5aff7176c22a33fcc76368",
+    "packages/polaris-generation-core/src/question-file.test.ts": "5ee1b344290c6f9cfa590126cf0251e021504f0ccd0752d108c22fcecea7260d",
+    "packages/polaris-generation-core/src/question-file.ts": "d9a2e3980066cb1a899c5f85660f6c63099272daed6b014784b6438635c2415f"
+  },
+  "baseline": {
+    "packages/polaris-dossier/src/run-record-question-file.test.ts": "Tests  3 passed (3)",
+    "packages/polaris-generation-core/src/question-file.test.ts": "Tests  8 passed (8)",
+    "packages/polaris-generation-core/src/question-file.test.ts packages/polaris-dossier/src/brief.test.ts": "Tests  49 passed (49)",
+    "packages/polaris-dossier/src/question-file-hold-out.test.ts": "Tests  5 passed (5)"
+  },
+  "killed": 14,
+  "total": 14,
+  "mutants": [
+    {
+      "mutant": "depth-floor-nine",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "export const DEPTH_LIST_MIN = 10;",
+      "new": "export const DEPTH_LIST_MIN = 9;",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 7 passed (8)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "depth-ceiling-twenty-one",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "export const DEPTH_LIST_MAX = 20;",
+      "new": "export const DEPTH_LIST_MAX = 21;",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 7 passed (8)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "tasks-four",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "export const READER_TASKS = 5;",
+      "new": "export const READER_TASKS = 4;",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts"
+      ],
+      "summary": "Tests  2 failed | 6 passed (8)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "bind-incomplete-subject",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "if ([entry.graded, entry.depth, entry.tasks].some((ref) => ref.state !== 'frozen'))",
+      "new": "if ([entry.graded].some((ref) => ref.state !== 'frozen'))",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 7 passed (8)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "accept-non-canonical",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "if (encodeQuestionFile(file) !== text) throw new QuestionFileError('not-canonical');",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 7 passed (8)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "brief-topic-text-changed",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "stated so a newcomer could repeat them?' },\n      { id: 'end-to-end-workflows', text:",
+      "new": "stated so a newcomer could repeat it?' },\n      { id: 'end-to-end-workflows', text:",
+      "tests": [
+        "packages/polaris-generation-core/src/question-file.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "summary": "Tests  4 failed | 45 passed (49)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "findings-never-report",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "return needles.filter(({ id }) => found.has(id)).map(({ id }) => `${role}:${packet}: ${id}`);",
+      "new": "return needles.filter(({ id }) => found.has(id) && false).map(({ id }) => `${role}:${packet}: ${id}`);",
+      "tests": [
+        "packages/polaris-dossier/src/question-file-hold-out.test.ts"
+      ],
+      "summary": "Tests  2 failed | 3 passed (5)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "no-json-unescape",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "const found = new Set([...heldOutQuestionsIn(text, needles), ...heldOutQuestionsIn(unescaped, needles)]);",
+      "new": "const found = new Set([...heldOutQuestionsIn(text, needles)]);",
+      "tests": [
+        "packages/polaris-dossier/src/question-file-hold-out.test.ts"
+      ],
+      "summary": "Tests  1 failed | 4 passed (5)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "finding-repeats-text",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "return needles.filter(({ id }) => found.has(id)).map(({ id }) => `${role}:${packet}: ${id}`);",
+      "new": "return needles.filter(({ id }) => found.has(id)).map(({ id, question }) => `${role}:${packet}: ${id} ${question}`);",
+      "tests": [
+        "packages/polaris-dossier/src/question-file-hold-out.test.ts"
+      ],
+      "summary": "Tests  2 failed | 3 passed (5)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "key-digest-unchecked",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "if (sha256(bytes) !== reference.sha256) throw",
+      "new": "if (sha256(bytes) === 'never') throw",
+      "tests": [
+        "packages/polaris-dossier/src/question-file-hold-out.test.ts"
+      ],
+      "summary": "Tests  1 failed | 4 passed (5)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "held-out-leaks-into-brief",
+      "path": "packages/polaris-dossier/src/brief.ts",
+      "old": "const topicLines = BRIEF_TOPICS.map((topic) => `- \\`${topic.id}\\`: ${topic.text}`);",
+      "new": "const topicLines = [...BRIEF_TOPICS.map((topic) => `- \\`${topic.id}\\`: ${topic.text}`), '- How is a database\\'s keyspace organised in memory: what containers hold keys and their expirations?'];",
+      "tests": [
+        "packages/polaris-dossier/src/question-file-hold-out.test.ts"
+      ],
+      "summary": "Tests  2 failed | 3 passed (5)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "record-omits-question-file",
+      "path": "packages/polaris-dossier/src/run-record.ts",
+      "old": "export function recordRunConfig(config: RunConfig, subject: RunSubject, questionFile: QuestionFileBinding | null = questionFileBinding()): RecordedRunConfig {",
+      "new": "export function recordRunConfig(config: RunConfig, subject: RunSubject, questionFile: QuestionFileBinding | null = null): RecordedRunConfig {",
+      "tests": [
+        "packages/polaris-dossier/src/run-record-question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 2 passed (3)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "record-binding-unvalidated",
+      "path": "packages/polaris-dossier/src/run-record.ts",
+      "old": "const questionFile = 'questionFile' in fields ? readQuestionFileBinding(fields['questionFile']) : null;",
+      "new": "const questionFile = 'questionFile' in fields ? (fields['questionFile'] as QuestionFileBinding) : null;",
+      "tests": [
+        "packages/polaris-dossier/src/run-record-question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 2 passed (3)",
+      "outcome": "killed"
+    },
+    {
+      "mutant": "record-refuses-earlier",
+      "path": "packages/polaris-dossier/src/run-record.ts",
+      "old": "if (keys.join(',') !== RECORD_KEYS.join(',') && keys.join(',') !== RECORD_KEYS_WITH_QUESTION_FILE.join(','))",
+      "new": "if (keys.join(',') !== RECORD_KEYS_WITH_QUESTION_FILE.join(','))",
+      "tests": [
+        "packages/polaris-dossier/src/run-record-question-file.test.ts"
+      ],
+      "summary": "Tests  1 failed | 2 passed (3)",
+      "outcome": "killed"
+    }
+  ]
+}

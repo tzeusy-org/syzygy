@@ -283,7 +283,12 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    session: `docs/evidence/pursuit-2026-11-21b/pilot/key.json` is a tracked
    file, so it sits in the checkout an operator session starts from. An
    authoring session works in the observed repository's clone or copy; an
-   operator does not hand it this checkout.
+   operator does not hand it this checkout. Every held-out list the question
+   file (`docs/polaris-generation/question-file-v1.json`, its held-out part)
+   marks frozen is checked the same way by
+   `packages/polaris-dossier/src/question-file-hold-out.test.ts`, over each
+   authoring, inventory, reviewer and scout packet this tree builds from
+   fixtures; a new held-out key is added there by reference, never by text.
 
 ## Public-clone validation is part of done
 

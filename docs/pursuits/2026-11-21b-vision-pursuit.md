@@ -772,6 +772,38 @@ called a win.
 - The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
   the traits from the shape packs' own selectors.
 
+## R1 slice 1: one question file, held out by reference (2026-11-25)
+
+Bead syzygy-5dhm.21. The reader questions are now written in one place,
+`packages/polaris-generation-core/src/question-file.ts`, whose bytes are held identical by a test
+to `docs/polaris-generation/question-file-v1.json`; spec version 2.27 (one MODIFIED
+REQ-polaris-generation-033) makes the run record name its digest.
+
+- [Observed] Its public part holds the brief's four topics, the provider profile's five reader
+  questions and the kit's seven evaluation questions, in their former words and order. The
+  brief and the profile read them from it; the brief's bytes and the provider golden are
+  unchanged. `TARGETS.md` and the kit `README.md` point at the file instead of listing the
+  seven.
+- [Observed] Its held-out part names key files by path, SHA-256 and count and holds none of
+  their text, so the file itself may sit in the binary and the authoring kit. Its one entry is
+  the Redis pilot: the graded list is the pilot's `key.json` (24 questions, 81 required facts,
+  digest `0dd37666…`), and the depth list and the five reader tasks are `not-written`. So the
+  pilot binds no comparison yet (`bindComparison` refuses with `held-out-part-incomplete`); a
+  session that has seen neither arm writes them before the calibration pass (syzygy-5dhm.83).
+  The pilot's files and `scripts/dossier_pilot_grading_input.py` are unchanged.
+- [Observed] `init` writes `questionFile` (`polaris-question-file/1`, version 1, digest
+  `b2d08554…`) into `run.json`; a record written before is read with its question file
+  Unknown. Results compare only at equal digest, as the corpus pass rule already says of keys.
+- [Observed] `packages/polaris-dossier/src/question-file-hold-out.test.ts` builds seven packets
+  over five roles from fixtures (the brief for author and editor, the inventory brief, the
+  fidelity criteria, the provider reader-questions file, the discovery questions and the file
+  itself) and finds none of the 105 held-out needles in any; a planted question or fact, plain
+  or JSON-escaped, is reported by role, packet and needle id, never by its text. Fourteen
+  rule-6 mutants were all killed
+  (`docs/evidence/syzygy-5dhm-21/question-file-mutation-2026-11-25.json`).
+- [Unknown] Live packets and lists not yet written are not checked mechanically; a paraphrase
+  passes the eight-word predicate, as for the regression key.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner
