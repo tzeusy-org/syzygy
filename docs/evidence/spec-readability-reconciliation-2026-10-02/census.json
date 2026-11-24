@@ -631,7 +631,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 538,
+      "scenarios": 539,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -701,7 +701,8 @@
             "Revision after confirmation",
             "Source trade-off omitted entirely",
             "Omitted material qualification",
-            "New evidence outside the current budget or authority"
+            "New evidence outside the current budget or authority",
+            "Edit or repair drops a prior block without account"
           ]
         },
         "REQ-polaris-generation-007": {
