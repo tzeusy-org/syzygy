@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `F3-ORDERED-AUTHORITY-JOIN-REVIEW-R1-RAW\.md`
+
 - `F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW\.md`
 
 - `F3-INSPECTION-AND-NATIVE-FIXTURE-FOLLOWUP-R1-RAW\.md`
@@ -289,3 +291,5 @@
 [Observed] The cold-history fixture batch review records `PASS` for `0b94e69f7` (F3-COLD-HISTORY-FIXTURE-BATCH-REVIEW-R1-RAW.md). One genuine eight-slot allocation per generation replaces eight single-slot transactions. All 29 existing cases, 37 complete assertion statements and 23 expect lines remain unchanged. The [binding](../evidence/syzygy-k54o-3/cold-history-fixture-batch/binding.json) records the 29-case focused pass and explicit source-state mapping. No runtime or timer changes. [Unknown] Full-gate acceptance and the historical timeout phase; source review and focused verification do not establish native recovery.
 
 [Observed] The exact committed `0b94e69f7` full unit/typecheck gate passes typecheck but fails: 6,306 passed, 59 failed and one skipped out of 6,366. The 255-file denominator is complete and cleanup succeeds. Across four files, 58 failures are five-second Vitest timeouts and one is a close-fixture transport object identity assertion after a preceding timed-out fixture. The [full result](../evidence/syzygy-k54o-3/cold-history-fixture-batch/official-check-0b94-private-summary.json) remains a failed gate. [Inferred] Unjoined fixture construction can continue after timeout and contaminate a subsequent spy; the exact callback in that failure remains Unknown. The sequential genuine recovery pair now runs at clean `ef014efe5`, whose implementation bytes equal `0b94e69f7`. [Unknown] Native recovery completion and final acceptance.
+
+[Observed] The eligible terminal snapshot review records `PASS` for `a9d50898d` ([retained raw](../evidence/syzygy-k54o-3/native-fixture-followup/eligible-terminal-snapshot-review-RAW.md)). A-224 selects a finite fifteen-minute runner allowance only for this case and records bounded existing phase metadata at finish. The [preceding D13 replay](../evidence/syzygy-k54o-3/recovery-d13ec/README.md) reached Stop and timed out at ten minutes. The independent fixture-parent reproduction is setup evidence, not native acceptance. [Unknown] Completed native recovery, final rendering comparison and exact-head hosted acceptance.
