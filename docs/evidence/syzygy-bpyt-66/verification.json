@@ -1,0 +1,133 @@
+{
+  "compiler_programs": {
+    "commit": "26447bfa76de26a7a4311b104b8bba9b3b3cfb65",
+    "tree": "ebad6f04ba71bfdacfdb71534aa28ab26ae78e0d",
+    "typescript": "Version 5.9.3",
+    "tracked_type_files": 747,
+    "in_root_include_globs": 698,
+    "outside_root_include_globs": 49,
+    "root_program_tracked_type_files": 699,
+    "checked_by_any_program": 699,
+    "program_membership": {
+      "apps/syzygy/tsconfig.json": 1,
+      "apps/three-surface-poc/tsconfig.json": 95,
+      "packages/cap1-core/tsconfig.json": 25,
+      "packages/cap1-daemon/tsconfig.json": 9,
+      "packages/http-host/tsconfig.json": 5,
+      "packages/polaris-dossier/tsconfig.json": 97,
+      "packages/polaris-generation-consent/tsconfig.json": 10,
+      "packages/polaris-generation-core/tsconfig.json": 30,
+      "packages/support/tsconfig.json": 5,
+      "packages/three-surface-poc-core/tsconfig.json": 46,
+      "tsconfig.json": 699
+    },
+    "inside_root_globs_missing_from_root_program": [],
+    "outside_root_globs_covered_by_some_program": [
+      "vitest.tiers.ts"
+    ],
+    "outside_root_globs_missing_from_every_program": [
+      "docs/evidence/argv-table-review-2026-10-25/tools/guard-probe-tail-2.ts",
+      "docs/evidence/argv-table-review-2026-10-25/tools/guard-probe-tail.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Head.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Before-Was.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Before.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Neg.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Head-Was.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Neg-Head.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Before.ts",
+      "docs/evidence/argv-table-review-2026-10-25/type-probe/Was-Head.ts",
+      "docs/evidence/consent-live-module-review-2026-10-24/tools/zz-r517-identity.test.ts",
+      "docs/evidence/crlf-mask-review-2026-10-28/r3/tools/candidate-pins.test.ts",
+      "docs/evidence/crlf-mask-review-2026-10-28/vet/tools/crlf-pin.test.ts",
+      "docs/evidence/decisions-sweep-review-2026-10-22/tools/zz-review-cost.test.ts",
+      "docs/evidence/fence-rules-review-2026-10-27/r1/tools/zz-rev533-consent.test.ts",
+      "docs/evidence/fence-rules-review-2026-10-27/r2/tools/zz-rev533-consent.test.ts",
+      "docs/evidence/fence-rules-review-2026-10-27/r2/tools/zz-rev533b-consent.test.ts",
+      "docs/evidence/fixture-pid-sweep-review-2026-10-24/r1/base-test.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r1/blobs/testkit-base.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r1/blobs/testkit-head.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r1/tools/zz-r541-unscoped.test.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-308a62f4.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-5f0d5547.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/test-d38d7a3c.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/testkit-308a62f4.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/testkit-5f0d5547.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/blobs/testkit-d38d7a3c.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/tools/testkit-with-f1-r2.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r2/tools/zz-r541b-n2.test.ts",
+      "docs/evidence/guard-pins-followup-2-review-2026-10-27/r3/tools/testkit-with-f1-r3.ts",
+      "docs/evidence/guard-pins-review-2026-10-27/tools/resolve_probe.mts",
+      "docs/evidence/host-pins-followup-review-2026-10-27/r1/tools/zz-rev542-breach-probe.test.ts",
+      "docs/evidence/host-pins-followup-review-2026-10-27/r1/tools/zz-rev542-write-probe.test.ts",
+      "docs/evidence/launch-form-ctime-review-2026-10-24/work/variant-target-ctime.test.ts",
+      "docs/evidence/observer-gate-review-2026-10-28/r1/tools/zz-rev556-probe.test.ts",
+      "docs/evidence/syzygy-5dhm-136/reader_edition_rerender.ts",
+      "docs/evidence/syzygy-bpyt-1-7/tools/runtime-probe.ts",
+      "docs/evidence/syzygy-bpyt-16/vet-v-crlf-mask-1/tools/crlf-pin.test.ts",
+      "docs/evidence/syzygy-bpyt-6-3/canonical-json-tap.ts",
+      "docs/evidence/syzygy-bpyt-7-2/recorder/zz-diff.setup-core.ts",
+      "docs/evidence/syzygy-bpyt-7-2/recorder/zz-diff.setup-testing.ts",
+      "docs/evidence/syzygy-bpyt-7-2/recorder/zz-diff.vitest.config.ts",
+      "docs/evidence/syzygy-bpyt-8-2/dossier-golden-harness.ts",
+      "docs/evidence/syzygy-bpyt-8-41/entity-decoder-probe.ts",
+      "packages/cap1-system/vitest.config.ts",
+      "vitest.config.ts",
+      "vitest.setup.ts",
+      "vitest.unit-guard.setup.ts"
+    ],
+    "methods": [
+      "Git tracked index membership (git ls-files -z) agreed exactly with the frozen HEAD tree (git ls-tree -r --name-only -z HEAD)",
+      "For each root or workspace tsconfig.json, tsc --listFilesOnly -p <config> and the public TypeScript program API getSourceFiles agreed on the exact intersection with tracked .ts, .tsx, .mts and .cts paths"
+    ]
+  },
+  "product_build_parity": {
+    "base": "1c36b12b6612ac5c3bb60ab337b5ad214647a6ea",
+    "commit": "26447bfa76de26a7a4311b104b8bba9b3b3cfb65",
+    "file_count": 1292,
+    "dist_artifact_sha256": "dadb697a6b9e986517b94549b15f71344304e708397dc7fac54858c45bff1394",
+    "kinds": {
+      ".js": 323,
+      ".map": 646,
+      ".ts": 323
+    },
+    "emitted_testkit_javascript": [
+      "packages/polaris-dossier/dist/full-run.testkit.js",
+      "packages/polaris-generation-consent/dist/recorder-fixtures.testkit.js"
+    ]
+  },
+  "counterfactuals": {
+    "commit": "26447bfa76de26a7a4311b104b8bba9b3b3cfb65",
+    "cases": [
+      {
+        "id": "app-glob",
+        "path": "apps/three-surface-poc/tsconfig.json",
+        "old": ",\n    \"src/**/*.testkit.ts\"",
+        "new": "",
+        "killed_assertions": [
+          "builds every workspace project with a tsconfig",
+          "emits no test and no test-support module"
+        ]
+      },
+      {
+        "id": "core-glob",
+        "path": "packages/three-surface-poc-core/tsconfig.json",
+        "old": ",\n    \"src/**/*.testkit.ts\"",
+        "new": "",
+        "killed_assertions": [
+          "builds every workspace project with a tsconfig",
+          "emits no test and no test-support module"
+        ]
+      },
+      {
+        "id": "entry-kit-import",
+        "path": "apps/three-surface-poc/src/main.ts",
+        "old": "import { main } from './poc-main.js';\n",
+        "new": "import { main } from './poc-main.js';\nimport './test-http-client.testkit.js';\n",
+        "killed_assertions": [
+          "emits no test and no test-support module",
+          "imports no test or test-support module from any module it builds"
+        ]
+      }
+    ]
+  }
+}

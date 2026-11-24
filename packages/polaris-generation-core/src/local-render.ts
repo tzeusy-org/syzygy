@@ -260,14 +260,20 @@ export type LocalManifestFacts =
   }
   | { readonly format: string; readonly state: 'unknown'; readonly why: string };
 
-/** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form; `evidence` is present
- * for a witnessed edge alone: Syzygy's words for the relation, the witnessing fact's kind, and the revision and digest of the record it is
- * a fact of. */
-export interface LocalEdgeRelation {
-  readonly relation: string;
-  readonly witness: { readonly state: 'witnessed' | 'challenged' | 'unknown'; readonly reason: string | null; readonly fact: string | null; readonly rule: string | null; readonly ruleVersion: number | null };
-  readonly evidence?: { readonly words: string; readonly factKind: string; readonly revision: string; readonly recordSha256: string };
-}
+/** One schema-v9 graph edge's relation and witness state at a render (version 2.19). `witness` is the machine form. A witnessed edge alone
+ * names its fact, rule and version and carries `evidence`: Syzygy's words for the relation, the witnessing fact's kind, and the revision and
+ * digest of the record it is a fact of; every other edge carries nulls there and no `evidence`. */
+export type LocalEdgeRelation =
+  | {
+    readonly relation: string;
+    readonly witness: { readonly state: 'witnessed'; readonly reason: null; readonly fact: string; readonly rule: string; readonly ruleVersion: number };
+    readonly evidence: { readonly words: string; readonly factKind: string; readonly revision: string; readonly recordSha256: string };
+  }
+  | {
+    readonly relation: string;
+    readonly witness: { readonly state: 'challenged' | 'unknown'; readonly reason: string | null; readonly fact: null; readonly rule: null; readonly ruleVersion: null };
+    readonly evidence?: undefined;
+  };
 
 export interface LocalRenderInput {
   /** The checked draft in the renderer's shape. `sourceIds` name only sources Syzygy read and screening admitted, and may be empty. No

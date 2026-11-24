@@ -15,7 +15,7 @@ const tier = (name: string, test: Record<string, unknown>) => ({
     name,
     ...test,
     // Once per run: removes the fixture directories of killed runs (syzygy-bpyt.4.10).
-    globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts', import.meta.url))],
+    globalSetup: [fileURLToPath(new URL('./apps/three-surface-poc/src/test-fixture-sweep.global-setup.testkit.ts', import.meta.url))],
   },
 });
 

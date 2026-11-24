@@ -33,7 +33,7 @@ import {
   type BodyReadAuthorityInputs,
 } from './body-read-authority.js';
 import { PWB_ADMISSION_FAILURE_MAPPING, observeProjectShape } from './project-shape-observer.js';
-import { frozenCensus } from './test-frozen.js';
+import { frozenCensus } from './test-frozen.testkit.js';
 
 // ---------------------------------------------------------------------
 // Literal fixtures.

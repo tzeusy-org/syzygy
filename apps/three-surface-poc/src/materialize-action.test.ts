@@ -22,7 +22,7 @@ import {
 } from './materialize-action.js';
 import { POC_MACHINE_PATH, pocRoutes } from './routes.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { fetchWithHost } from './test-http-client.js';
+import { fetchWithHost } from './test-http-client.testkit.js';
 import { buildFixtureModel, fixtureRepoWithGit } from './test-model-fixture.js';
 import { renderTrajectoryPage } from './trajectory.js';
 

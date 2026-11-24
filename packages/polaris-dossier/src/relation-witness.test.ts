@@ -72,6 +72,10 @@ describe('rule relation-witness version 1: the order it decides in', () => {
     }
   });
 
+  it('takes contains coverage from the three counts alone, so a directory name a detector would match is challenged where it is absent', () => {
+    expect(decideWitness(edge('contains', ROOT, tld('token=abcdefghijk')), inputs({ hidden: () => true }))).toEqual({ state: 'challenged', reason: null, factKind: 'contains', rule: 'top-level-unit', ruleVersion: 1 });
+  });
+
   it('decides an edge the draft does not assert unknown first, before any other case', () => {
     expect(decideWitness(edge('contains', ROOT, tld('src'), { asserted: false }), inputs())).toEqual({ state: 'unknown', reason: 'edge-not-inferred' });
     expect(decideWitness(edge('calls', undefined, undefined, { asserted: false }), inputs({ structure: { state: 'unknown' } }))).toEqual({ state: 'unknown', reason: 'edge-not-inferred' });

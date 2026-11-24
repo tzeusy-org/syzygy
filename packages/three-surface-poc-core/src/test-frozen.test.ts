@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { frozenCensus } from './test-frozen.js';
+import { frozenCensus } from './test-frozen.testkit.js';
 
 // A census that cannot see an unfrozen member passes the pins that stand on it (syzygy-bpyt.6.13).
 describe('frozenCensus', () => {

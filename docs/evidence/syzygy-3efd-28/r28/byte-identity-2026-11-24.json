@@ -1,0 +1,434 @@
+{
+ "format": "byte-identity-comparison/1",
+ "subject": {
+  "before": "3266b734f722c52c3c42067c26bc51a6434f5f1e",
+  "after": "0019fc4e6b33d4a524eae27f948d979193aac18c"
+ },
+ "dumps": {
+  "before": "3d684526b54ec732470f206eaabb38328f467c2ac5efaa18a1176b63cfa55627",
+  "after": "f7202eb9ec5deb386d70dfc54a156f1d7deabf62c73ca45efb5f5e2eb80d5ee0"
+ },
+ "method": "Each dump is written by the describe block in byte-identity-dump-block.ts.txt, appended for the run to packages/polaris-dossier/src/render.test.ts in a checkout of the named commit and removed after it (run with REL_DUMP=<file>). It checks and, where the check passes, renders a draft of each schema v2 to v9 in four variants (plain, carrying `subsections`, a sequence figure before v7, and a graph node carrying `unit` and a graph edge carrying `relation`) and hashes every file of the run directory but run.json. The record lists, per variant, the outcome and every file whose bytes differ, and, where findings differ, each differing pair. Population: the 32 synthetic variants the dumper builds, nothing else. It is not every stored fixture: every other stored draft is exercised only by the existing literal suites, whose expectations this change left unchanged except version literals, and the provider golden, which its own test compares byte for byte. Both dumps are kept beside the record. brief.json and brief.md name the run's temporary clone directory, which differs on every run, so they differ between any two dumps (checked for v2/plain by copying both briefs: the only differing line is the `- Clone:` line).",
+ "population": {
+  "variants": 32,
+  "files": 550
+ },
+ "variants": [
+  {
+   "variant": "polaris-dossier-local-draft-v2/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v2/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 32,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v3/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v4/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v5/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v6/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/sequence-early",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v7/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/plain",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/subsections",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/sequence-early",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v8/relation",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/plain",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/subsections",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/sequence-early",
+   "outcomeBefore": "findings",
+   "outcomeAfter": "findings",
+   "renderBefore": null,
+   "renderAfter": null,
+   "files": 9,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  },
+  {
+   "variant": "polaris-dossier-local-draft-v9/relation",
+   "outcomeBefore": "passed",
+   "outcomeAfter": "passed",
+   "renderBefore": "ok",
+   "renderAfter": "ok",
+   "files": 33,
+   "differingFiles": [
+    "brief.json",
+    "brief.md"
+   ],
+   "differingFindings": null
+  }
+ ]
+}

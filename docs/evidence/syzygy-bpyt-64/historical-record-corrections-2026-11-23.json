@@ -1,0 +1,47 @@
+{
+  "bead": "syzygy-bpyt.64",
+  "findings": [
+    "PR #548 independent round-3 N1",
+    "PR #548 independent round-3 N2"
+  ],
+  "subjectCommit": "5aa21815f32fe908403f0c548f0e03b4e66ddb7b",
+  "scriptSha256": "e2fee70a9720776591af239076525a4c6a25a173a0d98526d8083b46d612aa63",
+  "prior": {
+    "commit": "2df14d7d2580f453da5b61b5681097d1bfc902c3",
+    "path": "docs/evidence/syzygy-bpyt-6-3-iso/dc4-object-and-iso-helpers-2026-10-28.json",
+    "sha256": "56d1b3471b8879dabc9ed5d441fc0bea2ad404cb5bb041a783cb3facca0fbb93"
+  },
+  "correctedSha256": "c58c027e21bf00124b334eeb5b63e589e257c6a44a4057c011f62fa1559a5f5c",
+  "review": {
+    "path": "docs/reviews/R-GP-IMPL-OBJECT-ISO-HELPERS-3-RAW.md",
+    "sha256": "35e89acd6c0b974aad1e9ad950e56a93f64f877bb200f932e0475c1fac3a5750"
+  },
+  "observations": {
+    "path": "docs/evidence/object-iso-helpers-review-2026-10-28/r3/aaf-rerun.json",
+    "sha256": "fca65c0a771c498ed0b8dcbc0297586d18750e3650e9378f5979c6afa9a49269",
+    "additionalTrueRowFailures": [
+      "N-authority-artifact-fields-L102n0-E",
+      "N-authority-artifact-fields-L121n1-E",
+      "N-authority-artifact-fields-L132n2-E"
+    ]
+  },
+  "restoredGeneratedTests": [
+    "the parsers read a JSON container as an object only when it is one refuse a policy document that is true",
+    "the parsers read a JSON container as an object only when it is one refuse a registry document that is true",
+    "the parsers read a JSON container as an object only when it is one surface a first registry entry that is true as the malformed entries list",
+    "the parsers read a JSON container as an object only when it is one surface an entry subject that is true as the repository field",
+    "the parsers read a JSON container as an object only when it is one surface typed authority that is true as present, with no write surface"
+  ],
+  "edits": [
+    {
+      "field": "mutants.repairRows.reading",
+      "old": "The a-number row is the only test that fails a string-naming test at 4 of the 12 call sites it was run at (authority-artifact-fields.ts 102, 121, 132 and screen.ts 83).",
+      "new": "At the round-1 repair commit, before the true row was restored, the a-number row was the only test that failed a string-naming test at 4 of the 12 call sites it was run at (authority-artifact-fields.ts 102, 121, 132 and screen.ts 83); at the round-2 head the restored true row fails it too at the three authority-artifact-fields.ts sites, so the a-number row is alone only at screen.ts 83 [Observed by R-GP-IMPL-OBJECT-ISO-HELPERS-3]."
+    },
+    {
+      "field": "repair.round2Review.F1",
+      "old": "adds a test",
+      "new": "adds five generated tests"
+    }
+  ]
+}
