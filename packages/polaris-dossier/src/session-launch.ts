@@ -82,10 +82,25 @@ interface Prepared {
 }
 const preparations = new WeakMap<UrlSessionPreparation, Prepared>();
 
+const STORAGE_ERRNOS = ['ENOENT', 'ENOTDIR', 'ELOOP', 'EACCES', 'EPERM', 'EBADF', 'EIO', 'EMFILE', 'ENFILE', 'ERR_DIR_CLOSED'] as const;
+type StorageInspectionFailure = {
+  readonly operation: 'open-directory' | 'open-listing' | 'read-listing' | 'stat-entry' | 'close-listing' | 'close-directory' | 'census' | 'Unknown';
+  readonly cause: 'filesystem-rejected' | 'depth-limit' | 'entry-limit' | 'entry-type-or-links' | 'multiple-disappearances'
+    | 'disappearance-retries-exhausted' | 'close-failed' | 'Unknown';
+  readonly errno: typeof STORAGE_ERRNOS[number] | 'Unknown';
+};
+function storageErrno(error: unknown): StorageInspectionFailure['errno'] {
+  try {
+    const code: unknown = error !== null && typeof error === 'object' ? Object.getOwnPropertyDescriptor(error, 'code')?.value : undefined;
+    return STORAGE_ERRNOS.find(known => known === code) ?? 'Unknown';
+  } catch { return 'Unknown'; }
+}
+
 type InspectionPhase = 'storage' | 'process' | 'verify' | 'confirm' | 'current';
 type InspectionPhaseOutcome = 'accepted' | 'refused' | 'rejected';
 type InspectionRefusal = { readonly phase: InspectionPhase; readonly elapsedMs: number; readonly cause:
-  'bounded-timeout' | 'sample-deadline' | 'sample-inactive' | 'operation-rejected' | 'authority-refused' | 'resource-limit' };
+  'bounded-timeout' | 'sample-deadline' | 'sample-inactive' | 'operation-rejected' | 'authority-refused' | 'resource-limit';
+  readonly storageFailure?: StorageInspectionFailure };
 type InspectionSample = { ordinal: number; phases: Partial<Record<InspectionPhase, {
   startedMs: number; settledMs?: number; outcome?: InspectionPhaseOutcome;
 }>>; refusal?: InspectionRefusal };
@@ -107,6 +122,7 @@ function beginInspectionTrace(trace: InspectionTrace, began: number) {
   const sample: InspectionSample = { ordinal: ++trace.samples, phases: {} };
   trace.latest = sample;
   const causes = new Map<unknown, InspectionRefusal>();
+  let storageFailure: { error: unknown; detail: StorageInspectionFailure } | undefined;
   const elapsed = (): number => performance.now() - began;
   const reason = (phase: InspectionPhase, cause: InspectionRefusal['cause']): InspectionRefusal => ({ phase, cause, elapsedMs: elapsed() });
   const settle = (phase: InspectionPhase, outcome: InspectionPhaseOutcome): void => {
@@ -128,10 +144,12 @@ function beginInspectionTrace(trace: InspectionTrace, began: number) {
       if (cause !== undefined) causes.set(error, cause);
     },
     refuse: (phase: InspectionPhase, cause: InspectionRefusal['cause']): void => { fail(reason(phase, cause)); },
+    storageFailure: (error: unknown, detail: StorageInspectionFailure): void => { storageFailure = { error, detail }; },
     reject: (error: unknown, phase: InspectionPhase): void => {
       const cause = causes.get(error);
       if (cause === undefined) settle(phase, 'rejected');
-      fail(cause ?? reason(phase, 'operation-rejected'));
+      fail(cause ?? { ...reason(phase, 'operation-rejected'),
+        ...(phase === 'storage' && storageFailure !== undefined && storageFailure.error === error ? { storageFailure: storageFailure.detail } : {}) });
     },
   };
 }
@@ -325,22 +343,45 @@ const STORAGE_CENSUS_RESTARTS = 2;
 const STORAGE_MAX_DEPTH = 32;
 /** Descriptor-anchored, entry/depth/time bounded logical-file census. Symlink,
  * special and multiply linked entries fail closed; it is sampled, not a quota. */
-async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void): Promise<number> {
+async function storage(roots: readonly string[], limits: UrlLaunchLimits, check: () => void,
+  observeFailure?: (error: unknown, detail: StorageInspectionFailure) => void): Promise<number> {
   let bytes = 0, entries = 0;
   const entryDisappeared = Symbol();
   const closing: Promise<void>[] = [];
   let closeFailed = false;
+  // Opt-in observation retains only one candidate and one close failure. Errors
+  // are rethrown unchanged; only closed enums reach the bounded sample trace.
+  let failure: { error: unknown; detail: StorageInspectionFailure } | undefined;
+  let failedClose: StorageInspectionFailure | undefined;
+  const note = (error: unknown, operation: StorageInspectionFailure['operation'], cause: StorageInspectionFailure['cause'], original = error): unknown => {
+    if (observeFailure !== undefined) failure = { error, detail: { operation, cause, errno: storageErrno(original) } };
+    return error;
+  };
+  const reject = (operation: StorageInspectionFailure['operation'], cause: StorageInspectionFailure['cause'], original?: unknown): Error => {
+    const error = refused(); note(error, operation, cause, original); return error;
+  };
+  const closingFailed = (error: unknown, operation: 'close-directory' | 'close-listing'): void => {
+    closeFailed = true;
+    if (observeFailure !== undefined) failedClose ??= { operation, cause: 'close-failed', errno: storageErrno(error) };
+  };
+  const closeRefusal = (): Error => {
+    const error = refused();
+    if (observeFailure !== undefined) failure = { error, detail: failedClose ?? { operation: 'Unknown', cause: 'close-failed', errno: 'Unknown' } };
+    return error;
+  };
+  const observed = <T>(operation: StorageInspectionFailure['operation'], promise: Promise<T>): Promise<T> => observeFailure === undefined ? promise
+    : promise.catch(error => { note(error, operation, 'filesystem-rejected'); throw error; });
   const drainCloses = async (): Promise<void> => {
     await Promise.all(closing.splice(0));
-    if (closeFailed) throw refused();
+    if (closeFailed) throw closeRefusal();
   };
   const checkCensus = (): void => {
-    if (closeFailed) throw refused();
+    if (closeFailed) throw closeRefusal();
     check();
   };
   const walk = async (file: string, depth: number): Promise<void> => {
     checkCensus();
-    if (depth > STORAGE_MAX_DEPTH || ++entries > limits.entries) throw refused();
+    if (depth > STORAGE_MAX_DEPTH || ++entries > limits.entries) throw reject('census', depth > STORAGE_MAX_DEPTH ? 'depth-limit' : 'entry-limit');
     // At maximum depth the ancestors and the next anchor already use the
     // former descriptor bound. Drain a previous sibling before opening it.
     if (depth === STORAGE_MAX_DEPTH && closing.length !== 0) {
@@ -350,14 +391,14 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
     const handle = await open(file, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW).catch((error: NodeJS.ErrnoException) => {
       // An enumerated child can disappear between lstat and open. Roots
       // must remain available, and other open errors still stop inspection.
-      if (depth > 0 && error.code === 'ENOENT') throw entryDisappeared;
-      throw error;
+      if (depth > 0 && error.code === 'ENOENT') throw note(entryDisappeared, 'open-directory', 'filesystem-rejected', error);
+      note(error, 'open-directory', 'filesystem-rejected'); throw error;
     });
     const batch: { file: string; sample: Promise<Stats> }[] = [];
     let listingClose: Promise<void> | undefined;
     try {
       checkCensus();
-      const base = `/proc/self/fd/${handle.fd}`, iterator = await opendir(base);
+      const base = `/proc/self/fd/${handle.fd}`, iterator = await observed('open-listing', opendir(base));
       const inspect = async (): Promise<void> => {
         if (batch.length === 0) return;
         checkCensus();
@@ -369,22 +410,22 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
         for (const [index, sample] of samples.entries()) {
           checkCensus();
           try {
-            if (sample.status === 'rejected') throw disappeared(sample) ? entryDisappeared : sample.reason;
+            if (sample.status === 'rejected') throw note(disappeared(sample) ? entryDisappeared : sample.reason, 'stat-entry', 'filesystem-rejected', sample.reason);
             const stat = sample.value;
             if (stat.isDirectory()) await walk(children[index]!.file, depth + 1);
             else if (stat.isFile() && stat.nlink === 1) bytes += stat.size;
-            else throw refused();
+            else throw reject('stat-entry', 'entry-type-or-links');
           } catch (error) {
             if (error !== entryDisappeared) throw error;
             // A missing entry or nested directory can request a retry. Honor
             // any fatal result already settled for the rest of this batch.
             for (const later of samples.slice(index + 1)) {
               if (later.status === 'rejected') {
-                if (disappeared(later)) throw refused();
-                throw later.reason;
+                if (disappeared(later)) throw reject('stat-entry', 'multiple-disappearances', later.reason);
+                note(later.reason, 'stat-entry', 'filesystem-rejected'); throw later.reason;
               }
               const stat = later.value;
-              if (!stat.isDirectory() && (!stat.isFile() || stat.nlink !== 1)) throw refused();
+              if (!stat.isDirectory() && (!stat.isFile() || stat.nlink !== 1)) throw reject('stat-entry', 'entry-type-or-links');
             }
             throw error;
           }
@@ -393,7 +434,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
       };
       let reachedEnd = false, processingEntry = false, entryFailed = false;
       try {
-        for (let item = await iterator.read(); item !== null; item = await iterator.read()) {
+        for (let item = await observed('read-listing', iterator.read()); item !== null; item = await observed('read-listing', iterator.read())) {
           processingEntry = true;
           // Recurse in directory order. Dirent type only schedules reads.
           // The descriptor-relative lstat still decides the entry's type.
@@ -402,7 +443,7 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
             if (bytes > limits.storageBytes) return;
           }
           checkCensus();
-          if (++entries > limits.entries) throw refused();
+          if (++entries > limits.entries) throw reject('census', 'entry-limit');
           const child = path.join(base, item.name), sample = lstat(child);
           void sample.catch(() => {}); // The batch handles failures after settling.
           batch.push({ file: child, sample });
@@ -420,16 +461,16 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
         const close = iterator.close();
         // At EOF without a tail batch, the independent iterator and anchor
         // can close together. A tail stat can still require the held anchor.
-        if (reachedEnd && batch.length === 0) listingClose = close.catch(() => { closeFailed = true; });
+        if (reachedEnd && batch.length === 0) listingClose = close.catch(error => { closingFailed(error, 'close-listing'); });
         else if (entryFailed) await close.catch(() => {}); // Preserve the existing entry refusal.
-        else await close;
+        else await observed('close-listing', close);
       }
       if (batch.length !== 0) await inspect();
     } finally {
       if (batch.length !== 0) await Promise.allSettled(batch.map(child => child.sample));
       // Its enumeration and anchored reads have settled. Start closing now
       // and let one other directory use the time before joining both closes.
-      closing.push(handle.close().catch(() => { closeFailed = true; }));
+      closing.push(handle.close().catch(error => { closingFailed(error, 'close-directory'); }));
       if (listingClose !== undefined) await listingClose;
       if (closing.length === 2) await drainCloses();
     }
@@ -450,7 +491,13 @@ async function storage(roots: readonly string[], limits: UrlLaunchLimits, check:
   for (let restart = 0; ; restart++) {
     try { return await measure(); }
     catch (error) {
-      if (error !== entryDisappeared || restart === STORAGE_CENSUS_RESTARTS) throw error;
+      if (error !== entryDisappeared || restart === STORAGE_CENSUS_RESTARTS) {
+        if (observeFailure !== undefined) {
+          const detail = failure !== undefined && failure.error === error ? failure.detail : { operation: 'Unknown', cause: 'Unknown', errno: 'Unknown' } as const;
+          observeFailure(error, error === entryDisappeared ? { ...detail, cause: 'disappearance-retries-exhausted' } : detail);
+        }
+        throw error;
+      }
       // Use only a complete count. Every walk shares the original time and
       // entry budgets, including the attempts that observed a disappearance.
       bytes = 0;
@@ -631,7 +678,7 @@ export async function launchRestrictedUrlSession(input: {
       }, () => { observation?.settle('verify', 'rejected'); return false; });
       observation?.begin('storage');
       let storageBytes: number;
-      try { storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample); }
+      try { storageBytes = await storage([view.inputs.homeDirectory, view.inputs.workDirectory], limits, checkSample, observation?.storageFailure); }
       catch (error) { observation?.settle('storage', 'rejected'); throw error; }
       observation?.settle('storage', 'accepted');
       checkSample();

@@ -20,6 +20,8 @@ import * as transportPort from './session-machine-transport.js';
 // Unit scope: upstream installation/plan admission is substituted. The actual
 // provisioner, eight protected filesystem allocations and close/readback run.
 // The accept-order control substitutes the launch sample and peer ports.
+// The pure compiler issues genuine profiles, including ordered Design metadata;
+// this does not exercise native installation, support files or kernel admission.
 // No native helper or CLI is executed and no peer capability is issued.
 const admission = vi.hoisted(() => ({ runtimes: new WeakSet<object>(), plans: new WeakSet<object>() }));
 vi.mock('./url-runtime.js', async original => ({ ...await original<typeof import('./url-runtime.js')>(),
@@ -42,7 +44,14 @@ async function fixture(overrides: Partial<Pick<UrlRunMachineOptions, 'launch' | 
   } as unknown as UrlRuntime;
   admission.runtimes.add(runtime);
   const plans = URL_ROLES.map((role, ordinal) => {
-    const plan = { role, profile: { digest: id(10 + ordinal), input: { binding: { run: runId, role } } },
+    const compiled = (role === 'design' ? sessionProfile.createOrderedDesignSessionProfile : sessionProfile.createSessionProfile)({
+      binding: { run: runId, role, sourceBinding: id(20 + ordinal), policy: id(2), provider: 'anthropic', model: sessionProfile.DEFAULT_SESSION_MODEL },
+      sessionId: `00000000-0000-4000-8000-${String(ordinal + 1).padStart(12, '0')}`,
+      systemPrompt: 'Use the owned unit closure fixture.', initialPrompt: 'Own unit closure test.',
+      utcDate: '2026-11-22', kernelRelease: 'owned-unit-kernel',
+    });
+    if (!compiled.ok) throw new Error('unit closure profile unavailable');
+    const plan = { role, profile: compiled.value.profile,
       view: { supportDirectory: '/not-executed', protectedPaths: [] } } as unknown as UrlRolePlan;
     admission.plans.add(plan); return plan;
   });
@@ -69,7 +78,6 @@ describe('machine accept authorization ordering', () => {
     const activation = new Promise<boolean>(resolve => { activate = resolve; });
     const waitForDesignActivation = vi.fn(() => activation);
     const f = await fixture({ waitForDesignActivation });
-    vi.spyOn(sessionProfile, 'isOrderedDesignSessionProfile').mockReturnValue(true);
     const wait = vi.spyOn(peerPort, 'waitForUrlMachinePeerPublication').mockImplementation(async (_peer, activate, current) =>
       await activate(child) && current());
     const designPorts = createTransport.mock.calls.slice(-2).map(([ports]) => ports);

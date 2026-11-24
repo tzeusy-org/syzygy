@@ -1587,8 +1587,6 @@ describe('composed URL run with actual role processes', () => {
     }
     let releaseFinalResponses: (() => void) | undefined;
     if (cut) finalResponseDelivery.wait = new Promise<void>(resolve => { releaseFinalResponses = resolve; });
-    let inventoryEndTurnObserved: (() => void) | undefined;
-    const waitForInventoryEndTurn = eligibleStop ? new Promise<void>(resolve => { inventoryEndTurnObserved = resolve; }) : undefined;
     const ordinary = ['author', 'inventory', 'fidelity'] as const;
     const releaseProvider = new Map<(typeof ordinary)[number], () => void>();
     if (stoppingCut) finalResponseDelivery.afterEndTurn = role => {
@@ -1603,7 +1601,6 @@ describe('composed URL run with actual role processes', () => {
       }
       const next = ordinary[index + 1];
       if (next !== undefined) releaseProvider.get(next)?.();
-      if (role === 'inventory') inventoryEndTurnObserved?.();
     };
     const finalResponse = (role: (typeof ordinary)[number]): (() => Promise<ScriptCall>)[] => {
       if (!stoppingCut) return [];
@@ -1870,8 +1867,8 @@ describe('composed URL run with actual role processes', () => {
         // Let Inventory start after Fidelity's real wait result arrives.
         inv.allow();
         await waitForFidelityPacket;
-        // The prior readers' durable end-turns release the next packet read.
-        await waitForInventoryEndTurn;
+        // The checked, frozen packet is the read prerequisite. Ordinary
+        // end-turns remain ordered separately by finalResponse/afterEndTurn.
         return readFidelityPacket();
       }, () => {
         const artifact = resultTexts(fidelity.received).reverse().find(value => value.kind === 'artifact' && value.path === 'round-1/packet.json');

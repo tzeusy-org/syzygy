@@ -1238,6 +1238,7 @@ describe('prepared private CLI launch',()=>{
         expect(workOpens).toBe(1);
         if (disposition === 'failed-close') {
           expect(confirm).not.toHaveBeenCalled();
+          expect(inspection().firstRefusal?.refusal?.storageFailure).toEqual({ operation: 'close-directory', cause: 'close-failed', errno: 'Unknown' });
           expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
         } else {
           expect(confirm).toHaveBeenCalledExactlyOnceWith(true);
@@ -1313,6 +1314,7 @@ describe('prepared private CLI launch',()=>{
           } else {
             expect(workOpens).toBe(0);
             expect(confirm).not.toHaveBeenCalled();
+            expect(observation().firstRefusal?.refusal?.storageFailure).toEqual({ operation: 'close-listing', cause: 'close-failed', errno: 'Unknown' });
             expect(await child.finished).toMatchObject({ outcome: 'inspection-failed', sampledStorageBytes: null });
           }
         } finally { releaseListing(); releaseTool(); await child.stop(); }
@@ -1456,6 +1458,7 @@ describe('prepared private CLI launch',()=>{
         expect(await selection).toEqual(accepted
           ? { kind: 'selected', roles: ['fidelity'] } : { kind: 'inspection-refused' });
         expect(selectRoles).toHaveBeenCalledTimes(accepted ? 1 : 0);
+        expect(inspect().firstRefusal?.refusal?.storageFailure).toBeUndefined();
       } finally {
         releaseCensus();
         resolveVerification(true);
@@ -1466,13 +1469,14 @@ describe('prepared private CLI launch',()=>{
 
   it.each([
     { scenario: 'one missing entry', faults: [['ENOENT']], outcome: 'exited', walks: 2 },
-    { scenario: 'two missing entries in one batch', faults: [['ENOENT', 'ENOENT']], outcome: 'inspection-failed', walks: 1 },
+    { scenario: 'two missing entries in one batch', faults: [['ENOENT', 'ENOENT']], outcome: 'inspection-failed', walks: 1, failure: { operation: 'stat-entry', cause: 'multiple-disappearances', errno: 'ENOENT' } },
     { scenario: 'one missing entry on each of two walks', faults: [['ENOENT'], ['ENOENT']], outcome: 'exited', walks: 3 },
-    { scenario: 'a non-ENOENT fault after a missing entry in the retry', faults: [['ENOENT'], ['ENOENT', 'EACCES']], outcome: 'inspection-failed', walks: 2 },
-    { scenario: 'a sibling stat fault after a nested disappearance in the retry', faults: [['ENOENT'], ['EACCES']], outcome: 'inspection-failed', walks: 2, nestedFault: true },
-    { scenario: 'the shared entry allowance consumed on the retry', faults: [['ENOENT']], outcome: 'inspection-failed', walks: 2, entries: 8 },
+    { scenario: 'a non-ENOENT fault after a missing entry in the retry', faults: [['ENOENT'], ['ENOENT', 'EACCES']], outcome: 'inspection-failed', walks: 2, failure: { operation: 'stat-entry', cause: 'filesystem-rejected', errno: 'EACCES' } },
+    { scenario: 'an unlisted stat error code', faults: [['OWN_UNLISTED_ERROR']], outcome: 'inspection-failed', walks: 1, failure: { operation: 'stat-entry', cause: 'filesystem-rejected', errno: 'Unknown' } },
+    { scenario: 'a sibling stat fault after a nested disappearance in the retry', faults: [['ENOENT'], ['EACCES']], outcome: 'inspection-failed', walks: 2, nestedFault: true, failure: { operation: 'stat-entry', cause: 'filesystem-rejected', errno: 'EACCES' } },
+    { scenario: 'the shared entry allowance consumed on the retry', faults: [['ENOENT']], outcome: 'inspection-failed', walks: 2, entries: 8, failure: { operation: 'census', cause: 'entry-limit', errno: 'Unknown' } },
     { scenario: 'an oversized entry before a missing entry', faults: [['ENOENT']], outcome: 'storage-limit', walks: 1, oversizedBefore: true },
-  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries, oversizedBefore, nestedFault }) => {
+  ])('bounds storage census retries with $scenario', async ({ faults, outcome, walks, entries, oversizedBefore, nestedFault, failure }) => {
     const f = await launchFixture(entries === undefined ? {} : { entries });
     const names = new Set(Array.from({ length: 3 }, (_, index) => `own-census-entry-${index}`));
     const retained = 'own-retained-entry', nested = 'own-nested-vanishing-entry';
@@ -1555,6 +1559,7 @@ describe('prepared private CLI launch',()=>{
         else expect(inspection.firstRefusal?.refusal).toMatchObject({
           phase: 'storage', cause: outcome === 'storage-limit' ? 'resource-limit' : 'operation-rejected',
         });
+        expect(inspection.firstRefusal?.refusal?.storageFailure).toEqual(failure);
         if (completed) releaseTool();
         const result = await child.finished;
         expect(result, JSON.stringify({ result, artifactRootOpens })).toMatchObject({ outcome, exitCode: completed ? 0 : null,
@@ -1573,10 +1578,10 @@ describe('prepared private CLI launch',()=>{
   it.each([
     { missing: 'one child', directories: 1, outcome: 'exited', removed: 1, rootReads: 2 },
     { missing: 'two children', directories: 2, outcome: 'exited', removed: 2, rootReads: 3 },
-    { missing: 'three children', directories: 3, outcome: 'inspection-failed', removed: 3, rootReads: 3 },
-    { missing: 'root', directories: 0, outcome: 'inspection-failed', removed: 0, rootReads: 1 },
-    { missing: 'replaced child', directories: 1, outcome: 'inspection-failed', removed: 1, rootReads: 1 },
-  ])('distinguishes $missing vanishing at directory open', async ({ missing, directories, outcome, removed, rootReads }) => {
+    { missing: 'three children', directories: 3, outcome: 'inspection-failed', removed: 3, rootReads: 3, failure: { operation: 'open-directory', cause: 'disappearance-retries-exhausted', errno: 'ENOENT' } },
+    { missing: 'root', directories: 0, outcome: 'inspection-failed', removed: 0, rootReads: 1, failure: { operation: 'open-directory', cause: 'filesystem-rejected', errno: 'ENOENT' } },
+    { missing: 'replaced child', directories: 1, outcome: 'inspection-failed', removed: 1, rootReads: 1, failure: { operation: 'open-directory', cause: 'filesystem-rejected', errno: 'ENOTDIR' } },
+  ])('distinguishes $missing vanishing at directory open', async ({ missing, directories, outcome, removed, rootReads, failure }) => {
     const f = await launchFixture();
     const names = new Set(Array.from({ length: directories }, (_, index) => `own-vanishing-dir-${index}`));
     const preparation = await prepareRestrictedUrlSession(f.launch);
@@ -1634,6 +1639,7 @@ describe('prepared private CLI launch',()=>{
         const diagnostic = JSON.stringify({ rootOpens, childRemovals, sample: observation.firstRefusal ?? observation.latest });
         expect(current, diagnostic).toBe(completed);
         expect(observation.samples).toBe(1);
+        expect(observation.firstRefusal?.refusal?.storageFailure).toEqual(failure);
         expect(childRemovals).toBe(removed);
         expect(rootOpens, diagnostic).toBe(rootReads);
         if (completed) expect(retainedWalks.has(rootReads)).toBe(true);
