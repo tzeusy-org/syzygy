@@ -1541,7 +1541,7 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     { path: TRAJECTORY_HUMAN_PATH, host: '127.0.0.1:7478', prefix: '' },
     { path: TRAJECTORY_HUMAN_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
     { path: TRAJECTORY_TAILNET_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
-  ];
+  ] as const;
   const getChanged = (model: PocModel, { path, host }: (typeof mounts)[number], query: string) => {
     const route = pocRoutes(() => model).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
     return route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
