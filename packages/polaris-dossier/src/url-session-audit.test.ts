@@ -760,7 +760,7 @@ describe('protected URL session audit', () => {
       const current = vi.fn(() => { elapsed += budget.cost; return true; });
       vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
       try {
-        const result = await createUrlSessionAudit({ ...f.options, current, limits: budget.limits });
+        const result = await createUrlSessionAudit({ ...f.options, current, ...(budget.limits === undefined ? {} : { limits: budget.limits }) });
         if (result.ok) writers.push(result);
         expect(result.ok).toBe(ok);
         expect(result.summary()).toMatchObject({ declarations, durableRecords: declarations, limits: { milliseconds: budget.expected } });
