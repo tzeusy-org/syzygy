@@ -1,0 +1,84 @@
+{
+  "subjectCommit": "8a094f39397b40264886188bb88a9699182df7f9",
+  "baseCommit": "c5d4fc8ada61c24ebf5f8e5b3f3fa79f8f53788f",
+  "binaryDeltaSha256": "4866810c3783bdda2f66052f5d148aff5d20e0af41f2feca18f39c98fde1626f",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-SOURCE-CENSUS-AUTHORITY-REVIEW-RAW.md",
+    "sha256": "350da102bcab91ddf9df273235abb2a12128ed3f5ae95fd1a2c1259f9509efbf"
+  },
+  "profiledPredecessor": {
+    "subjectCommit": "ad1a0714ba9aa923c606a132924fde4b7cd19f9f",
+    "fixture": "eligible-stop-resume",
+    "failureEvidenceSha256": "6d8d210ccd81797fe54e1a736e2640041b1ffc521cc266df09d3938fcf1725bd",
+    "nestedCensus": {
+      "outcome": "rejected",
+      "authoritySamplesObserved": 3,
+      "authoritySampleMilliseconds": 4655.597339,
+      "sampleScope": "List instrumentation starts after the preceding explicit authority sample."
+    }
+  },
+  "focused": {
+    "fileCounts": {
+      "packages/polaris-dossier/src/url-run-origins.test.ts": 7,
+      "packages/polaris-dossier/src/url-source-reader.test.ts": 4,
+      "packages/polaris-dossier/src/url-origin-ledger.test.ts": 25,
+      "packages/polaris-dossier/src/url-run-artifacts.test.ts": 72
+    },
+    "passed": 108,
+    "selected": 108,
+    "typecheck": "passed",
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+    "focusedLogSha256": "89804226d25a83c1f0350f5ffe680948260f621bcd7ac65e1169fb0e4c08829b",
+    "controlCommit": "e779e67c385ced7468ca1239dabbe72c0dba2de8",
+    "controls": [
+      {
+        "name": "duplicate-binding",
+        "path": "packages/polaris-dossier/src/url-source-reader.ts",
+        "mutations": [
+          {
+            "old": "const { gitDir, revision, open } = captureSourceReader(input);\n  return open",
+            "new": "const { gitDir, revision, check, open } = captureSourceReader(input);\n  check();\n  return open"
+          }
+        ],
+        "test": "packages/polaris-dossier/src/url-run-origins.test.ts",
+        "selector": "completes the guarded tree walk",
+        "failed": 1,
+        "logSha256": "66af0a4422ae540b4cd31aaf68f2f0f4e91c71e3b8ff20ff34f772b3578bf456"
+      },
+      {
+        "name": "ignore-late-sample",
+        "path": "packages/polaris-dossier/src/url-run-origins.ts",
+        "mutations": [
+          {
+            "old": "current: () => { checkTime(); live(); checkTime(); return true; }",
+            "new": "current: () => { checkTime(); live(); return true; }"
+          },
+          {
+            "old": "    checkTime();\n    if (listed.length",
+            "new": "    if (listed.length"
+          }
+        ],
+        "test": "packages/polaris-dossier/src/url-run-origins.test.ts",
+        "selector": "completes the guarded tree walk",
+        "failed": 1,
+        "logSha256": "a0523011684ae7dbce67f9aa89a64f01d241708540c44eb9d09f1075d80f479d"
+      },
+      {
+        "name": "skip-post-read",
+        "path": "packages/polaris-dossier/src/url-source-reader.ts",
+        "mutations": [
+          {
+            "old": "      const result = await read();\n      check();\n      return result;",
+            "new": "      const result = await read();\n      return result;"
+          }
+        ],
+        "test": "packages/polaris-dossier/src/url-source-reader.test.ts",
+        "selector": "checks bound tree authority again",
+        "failed": 1,
+        "logSha256": "4982f85f7c34c8d2892a2d4a2d1183d4f88d1a9597a9d4714be65821ddf16e0c"
+      }
+    ]
+  },
+  "nativeSuccessorCompletion": "Unknown"
+}
