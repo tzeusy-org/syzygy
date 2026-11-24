@@ -1,0 +1,75 @@
+{
+  "id": 138548223603,
+  "name": "node (integration)",
+  "started_at": "2026-11-24T15:16:41Z",
+  "completed_at": "2026-11-24T15:38:23Z",
+  "conclusion": "failure",
+  "steps": [
+    {
+      "name": "Set up job",
+      "started_at": "2026-11-24T15:16:42Z",
+      "completed_at": "2026-11-24T15:16:42Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/checkout@v4",
+      "started_at": "2026-11-24T15:16:42Z",
+      "completed_at": "2026-11-24T15:16:49Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-node@v4",
+      "started_at": "2026-11-24T15:16:49Z",
+      "completed_at": "2026-11-24T15:16:54Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "install pinned native integration packages",
+      "started_at": "2026-11-24T15:16:54Z",
+      "completed_at": "2026-11-24T15:17:22Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "install (npm ci)",
+      "started_at": "2026-11-24T15:17:22Z",
+      "completed_at": "2026-11-24T15:17:23Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "install pinned Claude native fixture",
+      "started_at": "2026-11-24T15:17:23Z",
+      "completed_at": "2026-11-24T15:17:26Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "dossier native integration prerequisites",
+      "started_at": "2026-11-24T15:17:26Z",
+      "completed_at": "2026-11-24T15:17:27Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "integration tests (npm run test:integration)",
+      "started_at": "2026-11-24T15:17:27Z",
+      "completed_at": "2026-11-24T15:38:21Z",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Post Run actions/setup-node@v4",
+      "started_at": "2026-11-24T15:38:21Z",
+      "completed_at": "2026-11-24T15:38:21Z",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Post Run actions/checkout@v4",
+      "started_at": "2026-11-24T15:38:21Z",
+      "completed_at": "2026-11-24T15:38:21Z",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "started_at": "2026-11-24T15:38:21Z",
+      "completed_at": "2026-11-24T15:38:21Z",
+      "conclusion": "success"
+    }
+  ]
+}

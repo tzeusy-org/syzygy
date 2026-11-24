@@ -1,0 +1,57 @@
+{
+  "subjectCommit": "e26eaaa6a40f4d40dface964e010f5e2d694666f",
+  "capturedAt": "2026-11-24T18:26:56.185367+00:00",
+  "reviewVerdict": "PASS",
+  "sourceFiles": {
+    ".github/workflows/node-ci.yml": {
+      "sha256": "8bfaf1f607e8d25a26ca9be63861834e8c011e8beb8ae0397a3f5285e3f7808a",
+      "lines": 311
+    },
+    "scripts/run_integration_lane.mjs": {
+      "sha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "lines": 156
+    },
+    "CONTRIBUTING.md": {
+      "sha256": "5095009d5ebdea2024efd70318f85c4753bf520e2a0d21c16c48adb6ca4bd2f8",
+      "lines": 356
+    }
+  },
+  "artifacts": {
+    "ci-split-review-freeze.json": {
+      "sha256": "b009d9eb66b85a23c52498bf35676a181599ec1c3d567490fa8e2b0554749290",
+      "bytes": 964
+    },
+    "ci-split-review.patch": {
+      "sha256": "31b1fcae798a0e0af647de12ae784f077fd78a8b54e31f41e800bc9b4ced31ae",
+      "bytes": 15739
+    },
+    "ci-split-independent-review-RAW.md": {
+      "sha256": "2139c2cd2fd8ac6198e62d86f0dc4df702d8419e03d5e4c8704a007ac486af4b",
+      "bytes": 4280
+    },
+    "f0-hosted-integration-timing.json": {
+      "sha256": "a621d3998076e1a39e302bf51c3bb0a171c98cea2378ce3e2b0111043cc6ecf1",
+      "bytes": 2150
+    }
+  },
+  "verification": {
+    "nodeSyntax": true,
+    "scriptSelftestRejectedMutations": 14,
+    "gitDiffCheck": true,
+    "vitestDiscovery": {
+      "files": 140,
+      "composedCases": 7,
+      "coreSlices": [
+        46,
+        46,
+        47
+      ],
+      "lanes": 7
+    },
+    "testExecution": false,
+    "hostedTiming": "Unknown"
+  },
+  "priorMeasuredJobSeconds": 1302,
+  "scope": "Three deterministic core slices and four isolated native composed scenarios. Vitest actual discovery checks140files and7composedcases, exactset success receipts bind7mandatorylanes toGITHUB_SHA. Requirednode aggregate, canonical full localtier, existingnative prerequisites, all assertions/deadlines retained. No test-file growth.",
+  "acceptance": "Hosted exact-head execution and seven-minute timing remain Unknown."
+}

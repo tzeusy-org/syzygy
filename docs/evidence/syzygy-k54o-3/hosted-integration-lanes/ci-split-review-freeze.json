@@ -1,0 +1,36 @@
+{
+  "subjectCommit": "0f207ac34637db46ebe848be307931b5c559f90c",
+  "files": {
+    ".github/workflows/node-ci.yml": {
+      "sha256": "8bfaf1f607e8d25a26ca9be63861834e8c011e8beb8ae0397a3f5285e3f7808a",
+      "lines": 311
+    },
+    "scripts/run_integration_lane.mjs": {
+      "sha256": "abb7ead193281304676f96f5bb3909e589392de37a3617efe96508c8de514380",
+      "lines": 156
+    },
+    "CONTRIBUTING.md": {
+      "sha256": "5095009d5ebdea2024efd70318f85c4753bf520e2a0d21c16c48adb6ca4bd2f8",
+      "lines": 356
+    }
+  },
+  "verification": {
+    "nodeSyntax": true,
+    "scriptSelftestRejectedMutations": 14,
+    "gitDiffCheck": true,
+    "vitestDiscovery": {
+      "files": 140,
+      "composedCases": 7,
+      "coreSlices": [
+        46,
+        46,
+        47
+      ],
+      "lanes": 7
+    },
+    "testExecution": false,
+    "hostedTiming": "Unknown"
+  },
+  "testFileGrowth": 0,
+  "patchSha256": "31b1fcae798a0e0af647de12ae784f077fd78a8b54e31f41e800bc9b4ced31ae"
+}
