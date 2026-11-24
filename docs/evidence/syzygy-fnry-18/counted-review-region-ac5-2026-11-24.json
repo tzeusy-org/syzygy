@@ -28,7 +28,7 @@
       "failed": 0,
       "pending": 0,
       "reportSha256": "b57c245d04ec2e454c4a09490a4020321ceae9e524060e87ccd015e5c1626b94",
-      "source": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
       "viewport": [
         390,
         844
@@ -65,7 +65,7 @@
     "reportSha256": "c929490312e8d4edd5c243d2b072dfd81d295d54e3abec0e324471b4842ac837",
     "rule6": {
       "raw-review-digest": {
-        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
         "exactOld": "digits => digits.replace(/.{8}(?=.)/g, '$& ')",
         "exactNew": "digits => digits",
         "reportSHA256": "e40c5b2c51b0086ad840035a082be1a6c5c9267294b086e44ad3e05153c4713f",
@@ -77,7 +77,7 @@
         "sawExpectedFailure": "review.html: expected"
       },
       "repeated-digests": {
-        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
         "exactOld": "const text = showDigests || item.label === 'Unknown' ? item.text\n        : item.text.replace(/bound to packet [0-9a-f]{64}(?![0-9a-f])/gi, 'bound to the packet shown on the review page');",
         "exactNew": "const text = item.text;",
         "reportSHA256": "8f3aea4cd01a462f232d0d09fa4c882e9da93a813bbf1d4269f23258ff303146",
@@ -89,7 +89,7 @@
         "sawExpectedFailure": "index.html: expected"
       },
       "long-word-overflow": {
-        "source": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
+        "file": "apps/three-surface-poc/src/polaris-generation/dossier-render-local.ts",
         "exactOld": "<ul style=\"overflow-wrap:anywhere\">${lines}</ul>",
         "exactNew": "<ul>${lines}</ul>",
         "reportSHA256": "ee3e846050e954cba922a8fa2a022709d8bdc071d2c6bc35c1040d03a3d8d110",
