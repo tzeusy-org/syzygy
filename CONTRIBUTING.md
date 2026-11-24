@@ -227,11 +227,15 @@ The clock is the slowest job of a workflow, not the sum of its steps.
   the unit job. Splitting preserves test coverage and existing test deadlines;
   hosted job durations establish whether the split meets this budget.
   `governance-docs.yml` runs
-  the governance battery in one job and three slow selftests
+  the governance battery in one job and four slow selftests
   (`check_spec_reconciliation --selftest`,
   `prepare_three_surface_poc_governedby_reference_recording --selftest`,
-  `build_three_surface_poc_readability_successor --selftest`) in a job
-  each; the aggregate job
+  `build_three_surface_poc_readability_successor --selftest`, and
+  `build_polaris_dossier_local_agent_mode_v1_6 --selftest`) across three
+  parallel jobs; the last two share the readability job. Run `45466219373`
+  measured governance at 436 seconds, the v1.6 selftest at 67 seconds and
+  readability at 193 seconds. Moving that selftest preserves its command;
+  hosted durations must establish the resulting budget. The aggregate job
   `checks` is the required check. The first two selftests run their
   independent cases in forked workers and report in case order
   (`SELFTEST_WORKERS` overrides the worker count; `1` runs

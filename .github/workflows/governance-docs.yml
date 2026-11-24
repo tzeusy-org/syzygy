@@ -16,7 +16,8 @@
 # conflates. When a check is added there, add it here.
 #
 # The steps run in four parallel jobs: `governance` holds every check but the
-# three slow selftests, which have a job each. The aggregate `checks` job is
+# four slow selftests: reconciliation and P115 have a job each; readability
+# and dossier v1.6 share a job. The aggregate `checks` job is
 # the required check. Time-to-green target: 7 minutes (CONTRIBUTING.md,
 # "CI time budget").
 name: governance-docs
@@ -308,9 +309,6 @@ jobs:
       - name: build_polaris_dossier_local_agent_mode_v1_6 --check
         run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check
 
-      - name: build_polaris_dossier_local_agent_mode_v1_6 --selftest
-        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --selftest
-
       # Signed launch-consent v1.0: verify the applied subject and its status figure.
       - name: build_polaris_dossier_launch_consent --check
         run: python3 scripts/build_polaris_dossier_launch_consent.py --check
@@ -549,8 +547,10 @@ jobs:
       - name: test_dossier_pilot
         run: python3 scripts/test_dossier_pilot.py
 
-  # The slow selftests run beside the governance job, each on its own
-  # runner, so the wall clock is the longest job rather than the sum
+  # The slow selftests run beside the governance job in three jobs.
+  # Dossier v1.6 shares the readability job; run 45466219373 measured its
+  # selftest at 67s and the readability job at 193s (governance was 436s).
+  # The wall clock is the longest job rather than the sum
   # (syzygy-j5m0). Their steps are unchanged; CG-26 compares run lines, not
   # jobs. The reconciliation selftest grows with every spec version's cases:
   # it took 9 to 15 minutes on 2026-11-23 and was cancelled at 15, so its
@@ -571,6 +571,8 @@ jobs:
           python-version: '3.11'
 
       - name: check_spec_reconciliation --selftest
+        env:
+          SELFTEST_PROFILE: '1'
         run: python3 scripts/check_spec_reconciliation.py --selftest
 
   p115-selftest:
@@ -608,6 +610,9 @@ jobs:
 
       - name: build_three_surface_poc_readability_successor --selftest
         run: python3 scripts/build_three_surface_poc_readability_successor.py --selftest
+
+      - name: build_polaris_dossier_local_agent_mode_v1_6 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --selftest
 
   # The one required check. Branch protection and the merge queue require a
   # check named `checks`; this job reports it and passes only when every job

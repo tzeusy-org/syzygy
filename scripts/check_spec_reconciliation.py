@@ -217,6 +217,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 DECISIONS = ".syzygy/governance/decisions"
@@ -10428,6 +10429,36 @@ def adopted_mutants():
     )
 
 
+def _profile_selftest_call(phase, function, *args, witnesses=None):
+    """Opt-in best-effort metadata; preserve the call's result or exception."""
+    if os.environ.get("SELFTEST_PROFILE") != "1":
+        return function(*args)
+    try:
+        started = time.monotonic_ns()
+        before = len(witnesses) if witnesses is not None else None
+    except Exception:
+        started = None
+    if started is None:
+        return function(*args)
+    outcome = "raised"
+    try:
+        result = function(*args)
+        outcome = "returned"
+        return result
+    finally:
+        try:
+            metadata = {"phase": phase,
+                        "elapsedMs": (time.monotonic_ns() - started) / 1_000_000,
+                        "outcome": outcome}
+            if witnesses is not None:
+                metadata["witnessesAdded"] = len(witnesses) - before
+            print("SELFTEST_PROFILE " + json.dumps(metadata, sort_keys=True),
+                  file=sys.stderr, flush=True)
+        except Exception:
+            pass  # A diagnostic failure must not replace the result or error.
+
+
+
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -10436,9 +10467,9 @@ def selftest(witness_path=None):
     witnesses, failures = [], []
     with tempfile.TemporaryDirectory() as tmp:
         base = Path(tmp) / "base"
-        scratch(ROOT, base)
-        _propose_candidate(base)
-        clean = run(base)
+        _profile_selftest_call("prepare-base", scratch, ROOT, base)
+        _profile_selftest_call("propose-candidate", _propose_candidate, base)
+        clean = _profile_selftest_call("check-base", run, base)
         if clean.failed:
             print("\n".join(clean.lines))
             print("SELFTEST FAIL: the unmutated scratch copy does not pass")
@@ -10446,9 +10477,9 @@ def selftest(witness_path=None):
         # The signed-addition hook: a synthetic addition, signed and
         # regenerated, must pass, and each of its mutants must fail.
         added = Path(tmp) / "with-signed-addition"
-        shutil.copytree(base, added)
-        _install_addition(added)
-        with_addition = run(added)
+        _profile_selftest_call("copy-added", shutil.copytree, base, added)
+        _profile_selftest_call("install-added", _install_addition, added)
+        with_addition = _profile_selftest_call("check-added", run, added)
         if with_addition.failed:
             print("\n".join(with_addition.lines))
             print("SELFTEST FAIL: the scratch copy with a signed addition "
@@ -10457,7 +10488,7 @@ def selftest(witness_path=None):
         # An addition adopted by a dedicated record (the narrative profile's
         # route): declared in ADOPTED_ADDITIONS with the digest of its spec.
         adopted = Path(tmp) / "with-adopted-addition"
-        shutil.copytree(added, adopted)
+        _profile_selftest_call("copy-adopted", shutil.copytree, added, adopted)
         ADOPTED_ADDITIONS[ADOPTED] = (ADOPTED_RECORD, "<selftest>")
         binding_of = adopted_binding
         globals()["adopted_binding"] = lambda module: (
@@ -10466,7 +10497,7 @@ def selftest(witness_path=None):
         try:
             _install_addition(adopted, ADOPTED, ADOPTED_ID, ADOPTED_SPEC,
                               ADOPTED_RECORD)
-            with_adopted = run(adopted)
+            with_adopted = _profile_selftest_call("check-adopted", run, adopted)
             # The scratch copy a later selftest makes of such a tree must
             # carry the adoption record (the post-sitting tree's own selftest).
             if not {ADOPTED_RECORD, ADOPTED_REVIEW} <= set(inputs(adopted)):
@@ -10501,7 +10532,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     global _CASE_STATE
     _CASE_STATE = (tmp, cases)
     try:
-        results = _map_cases(len(cases))
+        results = _profile_selftest_call("prefix-mutants", _map_cases, len(cases))
     finally:
         _CASE_STATE = None
     for witness, failure in results:
@@ -10509,10 +10540,14 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
             witnesses.append(witness)
         if failure is not None:
             failures.append(failure)
-    _entry_kind_cases(tmp, base, witnesses, failures)
-    declared_source_historical_cases(tmp, base, clean, witnesses, failures)
-    declared_source_composition_cases(witnesses, failures)
-    url_source_cases(tmp, base, witnesses, failures)
+    _profile_selftest_call("_entry_kind_cases", _entry_kind_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("declared_source_historical_cases", declared_source_historical_cases,
+                           tmp, base, clean, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("declared_source_composition_cases", declared_source_composition_cases,
+                           witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("url_source_cases", url_source_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
     # These cases reconstruct historical REQ-034 floors, including versions
     # at which the v2.24 prerequisite for edit accounting cannot exist.
     figure_base = base
@@ -10526,14 +10561,22 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                  repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
                  infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
                  readers_cases, cont_cases, model_cases, worth_cases):
-        case(tmp, figure_base, witnesses, failures)
-    edit_account_cases(tmp, base, witnesses, failures)
-    poc_d10_cases(base, witnesses, failures)
-    reach_cases(tmp, base, witnesses, failures)
-    readmit_cases(tmp, base, witnesses, failures)
-    raw_read_cases(tmp, base, witnesses, failures)
-    treeread_cases(tmp, base, witnesses, failures)
-    verify_cases(tmp, base, witnesses, failures)
+        _profile_selftest_call(case.__name__, case, tmp, figure_base,
+                               witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("edit_account_cases", edit_account_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("poc_d10_cases", poc_d10_cases,
+                           base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("reach_cases", reach_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("readmit_cases", readmit_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("raw_read_cases", raw_read_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("treeread_cases", treeread_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
+    _profile_selftest_call("verify_cases", verify_cases,
+                           tmp, base, witnesses, failures, witnesses=witnesses)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -11134,7 +11177,7 @@ def main(argv):
         if args.selftest:
             # Its fixtures drive the library path, which must raise each
             # entry's own read error, so it never collects.
-            return selftest(args.witnesses)
+            return _profile_selftest_call("total", selftest, args.witnesses)
         _COLLECT_REFUSALS = True
         return _main(args)
     except SignoffEntriesRefused as exc:
