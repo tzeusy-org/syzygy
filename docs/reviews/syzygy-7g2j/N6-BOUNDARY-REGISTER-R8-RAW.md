@@ -1,0 +1,9 @@
+# CONFIRM
+
+Subject `73d199b13180473281ac9aae11d341577c9b6d7c`, tree `63521cf80a07fbcaf9b319aea4b7da8b7d4b53ce`. Exact R8 scoped confirmation for `syzygy-7g2j`.
+
+[Observed] Immediate reviewed predecessor is `8175398a4737955b98a40ac114477d680c072595`. The R8 delta contains exactly the builder and generated register. Manifest, scoped source, governing authority and product bytes match the predecessor. Independently recomputing the declaration subject from the exact six ordered source identities gives `30e9b5fef8fc2743be75895c81174f9fba8f4ed1ed3055eefd6f41812be32cad`. The scoped checker reports 98 entries and each of the 40 standalone cases passed.
+
+[Observed] R7 F1 reproduced on both separate inputs and is closed by R8. With altered A-213 decision bytes, its matching manifest repin and regenerated register bytes, the R7 case reaches 98 entries. A second independent case preserves the actual registry digest line in otherwise substituted observer-act bytes, applies the matching manifest repin and regenerates. R7 also reaches 98 there. Both same controlled cases refuse at the ordinary R8 checker with zero counted entries and the exact independently reviewed declaration and authority inputs mismatch. The positive regenerated-view control is run in memory using only the computed synthetic subject for the fixture. The ordinary checker retains its frozen subject. Independent proof SHA-256 `53503fb90587399aa6cdcf2158d6f27b1e7e2ae4a5303cb969c6014dae70464b`.
+
+[Observed] The existing 72 governed units and 26 exact declarations retain their scope, including only the two earlier literal callback-bound machine mounts for the briefing pathway. This review covers the frozen R8 product and guard. This proof retains R7 and leaves later adoption, packaging, authority and protected integration to their own exact review.

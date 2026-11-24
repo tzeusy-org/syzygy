@@ -1,0 +1,41 @@
+{
+  "projectionOnly": true,
+  "t8AuthoredPending": "26b73a95df68a398ba283841042778d0b6065e6d",
+  "r8ReviewedSource": "73d199b13180473281ac9aae11d341577c9b6d7c",
+  "prePinProjection": "0aeee1457bd0120b6ba8aebe3e214461675c6697",
+  "sourceProjectionTreeBothOrders": "06262ddb3d378e32b5e5ca347b298329b05e9350",
+  "changedRequirementPins": {
+    "POC-REQ-042": {
+      "old": "ec69372dfc8cee0d04e0a2f395d39b32b9924739048f7ac91f16f500a3f9a4a0",
+      "new": "abf7e6c7f70814fc777998420518905eacabceb40234f436212d22f7cd491307"
+    }
+  },
+  "specLineOnlyOrMoveChanges": {
+    "POC-REQ-050": {
+      "old": 1534,
+      "new": 1553
+    }
+  },
+  "unchangedWholeFilePins": 11,
+  "reviewedDeclarationAndAuthorityTuple": "30e9b5fef8fc2743be75895c81174f9fba8f4ed1ed3055eefd6f41812be32cad",
+  "tagPlannedUnissued": "three-surface-poc-grouped-default-amendment-v1.0",
+  "activationMustFollowActualAndTagReadback": true,
+  "candidate": "bb682ed2eb8ffe06dbeee2cf8f7a7b7b0806b23b",
+  "candidateTree": "8919bc47d48cb32c79244d92f2419dcfa4887156",
+  "positive": {
+    "count": 98,
+    "reason": null
+  },
+  "negativePriorRequirementPin": {
+    "file": "scripts/boundary-register-inputs.json",
+    "old": "abf7e6c7f70814fc777998420518905eacabceb40234f436212d22f7cd491307",
+    "new": "ec69372dfc8cee0d04e0a2f395d39b32b9924739048f7ac91f16f500a3f9a4a0",
+    "reason": "scoped sources changed; reconcile exact bytes: POC-REQ-042"
+  },
+  "negativeStaleRegister": {
+    "file": "docs/BOUNDARY-REGISTER.md",
+    "old": "1083802601cc6da952e677167104fbd5f9467a05a50bf1924dd57e12f2834c9c",
+    "new": "ac44087547c80aa5c8227ef297f89488420063aceabf1265754f367dc297c8b8",
+    "reason": "generated register is stale; regenerate and review"
+  }
+}
