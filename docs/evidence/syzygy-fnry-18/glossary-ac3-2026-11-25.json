@@ -3,11 +3,9 @@
   "criterion": "AC3",
   "subject": {
     "protectedBase": "bdfe771a61d4a40c060981ddc6624a8889ce5ef4",
-    "acceptedCommit": "74376b74b7e6219071e71d23bebcca04745df0d8",
-    "acceptedTree": "e7d6431a29179a524d2f593ef41db7287632c568",
     "rejectedCommit": "0860277fe115dbac6ad0afde8e4564453e2f3fb3",
     "rejectedTree": "5f26df67c3a6028bcf588172840fd9553cf6a1f8",
-    "fullIndexPatchSha256": "69e30000437f0c1e9dba77a461066b11d430a46249678c39625c4d3755982483",
+    "fullIndexPatchSha256": "c34df6d7575612287952fec76e7ab17d2539f9a2c6c96507707c626c7067040b",
     "files": [
       {
         "file": "apps/three-surface-poc/src/polaris-generation/dossier-finding.ts",
@@ -18,10 +16,18 @@
         "blobSha256": "125094f463185ea64d388f58d32c290623f2f13f9f696b06bc0287935b64a168"
       },
       {
+        "file": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+        "blobSha256": "a7df5a86e1f74a0bb7ef8377847051729022cca5ba861c8f962b579ad176a123"
+      },
+      {
         "file": "packages/polaris-dossier/src/render.test.ts",
         "blobSha256": "6aa01dd61cbcb042ec5039261017ad7e830ad34147f81faed898a8f5b3f3a7e3"
       }
-    ]
+    ],
+    "scopedReviewedCommit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+    "scopedReviewedTree": "e7d6431a29179a524d2f593ef41db7287632c568",
+    "acceptedCommit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+    "acceptedTree": "2b5a511dc0eec4e13c3ba2593ed63b76bf1e32e7"
   },
   "reviews": [
     {
@@ -37,6 +43,13 @@
       "commit": "74376b74b7e6219071e71d23bebcca04745df0d8",
       "file": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC3-R2-RAW.md",
       "sha256": "ae0766997cf466ffca67087c4a2fc64065f3741de0455bcd726c7a50df9e1035"
+    },
+    {
+      "round": 3,
+      "verdict": "CONFIRM",
+      "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+      "file": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC3-R3-RAW.md",
+      "sha256": "b158859d820b2a84fc97fbe7b2c321ee6e17d52a42c906a59c2f58b11876e522"
     }
   ],
   "positive": {
@@ -47,6 +60,11 @@
     "findingAndUnchangedProviderGolden": {
       "passed": 32,
       "logSha256": "0457f8e07bce716a97f41254fe3fe466cefa1ef3f163317860e87223a08fcbb7"
+    },
+    "pageSinkFindingAndUnchangedProviderGolden": {
+      "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+      "passed": 35,
+      "logSha256": "91bd7ff223181fbdd9b29585ab1530faa53aea2adf8dc7a7bdd8defd70da7cf5"
     }
   },
   "rule6": {
@@ -122,5 +140,23 @@
   "residual": [
     "AC4 brief guidance and version",
     "three inherited outside-region 390px layout failures"
-  ]
+  ],
+  "priorSuiteFailure": {
+    "commit": "74376b74b7e6219071e71d23bebcca04745df0d8",
+    "phase": "unit",
+    "namedAssertionFile": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+    "namedAssertionLine": 75,
+    "failed": 1,
+    "passed": 5593,
+    "inheritedSkipped": 1,
+    "logSha256": "8150da4c9074c3c0c9f1baa449d14b571ebd0367be3364f73ad7f84b34368b6a"
+  },
+  "canaryCompatibilityControl": {
+    "commit": "3434a7ed056593c3477fc068f4e97dd8c5e3f5b3",
+    "file": "apps/three-surface-poc/src/polaris-generation/page-sink.test.ts",
+    "old": "    expect(files.get('glossary.html')!).toContain(`<dt id=\"term-glossary/canary\"><dfn>${ENCODED}</dfn></dt>`);",
+    "new": "    expect(files.get('glossary.html')!).toContain(`<dt id=\"term-glossary/canary\">${ENCODED}</dt>`);",
+    "outcome": "independent legacy one-line expectation fails at escaped glossary canary",
+    "independentReviewSha256": "b158859d820b2a84fc97fbe7b2c321ee6e17d52a42c906a59c2f58b11876e522"
+  }
 }
