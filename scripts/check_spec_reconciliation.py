@@ -200,6 +200,8 @@ Usage:
   python3 scripts/check_spec_reconciliation.py --selftest [--witnesses FILE]
 """
 import argparse
+import functools
+import copy
 import multiprocessing
 import contextlib
 from datetime import date as iso_date
@@ -2914,17 +2916,53 @@ def package_patches(root, proposed):
     return out
 
 
+# Equal patch bytes, target path, body bytes and application mode yield equal
+# reverse results. Retain at most 64 MiB of result bytes per active process. An
+# uncached result still follows the same Git path after either limit is reached.
+_REVERSE_CACHE_ENTRIES = 128
+_REVERSE_CACHE_RESULT_BYTES = 512 * 1024
+_REVERSE_CACHE = None
+
+
+@contextlib.contextmanager
+def _reverse_cache_scope():
+    """Reuse an enclosing selftest cache or own a cache for one invocation."""
+    global _REVERSE_CACHE
+    if _REVERSE_CACHE is not None:
+        yield
+        return
+    _REVERSE_CACHE = {}
+    try:
+        yield
+    finally:
+        _REVERSE_CACHE = None
+
+
 def reverse_apply(root, patch_rel, target_rel, body, *, zero_context=False):
     """`body` with the patch reversed, or None when it does not reverse."""
+    patch = (root / patch_rel).read_bytes()
+    cache = _REVERSE_CACHE
+    if cache is None:
+        return _reverse_apply(patch, target_rel, body, zero_context=zero_context)
+    key = (sha(patch), Path(target_rel).as_posix(), sha(body), zero_context)
+    if key in cache:
+        return cache[key]
+    result = _reverse_apply(patch, target_rel, body, zero_context=zero_context)
+    if len(cache) < _REVERSE_CACHE_ENTRIES and (
+            result is None or len(result) <= _REVERSE_CACHE_RESULT_BYTES):
+        cache[key] = result
+    return result
+
+
+def _reverse_apply(patch, target_rel, body, *, zero_context=False):
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / target_rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(body)
         options = ["--unidiff-zero"] if zero_context else []
         done = subprocess.run(
-            ["git", "apply", "-R", "--whitespace=nowarn", *options,
-             str((root / patch_rel).resolve())],
-            cwd=tmp, capture_output=True)
+            ["git", "apply", "-R", "--whitespace=nowarn", *options, "-"],
+            input=patch, cwd=tmp, capture_output=True)
         return dest.read_bytes() if done.returncode == 0 else None
 
 
@@ -5590,10 +5628,39 @@ def reference_signed(root):
     return _SIGNED_MEMO[key]
 
 
+# Within one run() the tree is only read, so neither D10's state nor any
+# versioned binding can change between the predicates that ask. Each binding
+# re-derived every predecessor's binding (a call chain that grew with the square
+# of the version count) and each asked D10's recorder afresh (syzygy-v0b5). The
+# memo is keyed by function and resolved root, lives for one run() call only,
+# and is bypassed while `_FILES_OVERRIDE` puts other bytes in front of a read.
+_RUN_MEMO = None
+
+
+def _per_run(function):
+    """`function(root)`, answered once per root within one run()."""
+    @functools.wraps(function)
+    def memoized(*args, **kwargs):
+        if _RUN_MEMO is None or _FILES_OVERRIDE is not None or len(args) != 1 or kwargs:
+            return function(*args, **kwargs)
+        key = (function.__module__, function.__name__, str(Path(args[0]).resolve()))
+        if key not in _RUN_MEMO:
+            _RUN_MEMO[key] = function(args[0])
+        # A copy each time: a caller may extend the finding lists it is given.
+        return copy.deepcopy(_RUN_MEMO[key])
+    memoized.unmemoized = function
+    return memoized
+
+
+@_reverse_cache_scope()
 def run(root):
-    global _SIGNED_MEMO
+    global _SIGNED_MEMO, _RUN_MEMO
     report = Report()
     _SIGNED_MEMO = {}
+    _RUN_MEMO = {}
+    import d10_supersession
+    d10_state = d10_supersession.state
+    d10_supersession.state = _per_run(d10_state)
     try:
         check_outcomes(root, report)
         pop = check_census(root, report)
@@ -5603,7 +5670,24 @@ def run(root):
         check_unions(root, report)
     finally:
         _SIGNED_MEMO = None
+        _RUN_MEMO = None
+        d10_supersession.state = d10_state
     return report
+
+
+# Every versioned binding of a root, memoized per run() (`_per_run`) by the
+# call just before `main`'s guard: each
+# local function named `*_binding` whose one parameter is `root`, found rather
+# than listed, so a binding a later version adds is memoized without an edit
+# here. `adopted_binding` takes a module name and is left alone.
+def _memoize_bindings(namespace):
+    import inspect
+    for name, value in list(namespace.items()):
+        if (name.endswith("_binding") and inspect.isfunction(value)
+                and value.__module__ == namespace["__name__"]
+                and not hasattr(value, "unmemoized")
+                and list(inspect.signature(value).parameters) == ["root"]):
+            namespace[name] = _per_run(value)
 
 
 # --------------------------------------------------------------------------
@@ -9758,6 +9842,8 @@ def adopted_mutants():
     )
 
 
+# The case workers fork after the parent warms this invocation's cache.
+@_reverse_cache_scope()
 def selftest(witness_path=None):
     commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                             capture_output=True, text=True).stdout.strip()
@@ -10494,6 +10580,10 @@ def _main(args):
           f"{'FAIL' if report.failed else 'PASS'} — counts derived, not "
           "asserted")
     return 1 if report.failed else 0
+
+
+# After every definition, so a binding defined anywhere in the module is found.
+_memoize_bindings(globals())
 
 
 if __name__ == "__main__":
