@@ -210,7 +210,7 @@ interface PageChrome {
   readonly notice: string;
   readonly disclosure: (path: string) => string;
   readonly mainAttributes: string;
-  readonly region: string;
+  readonly region: (path: string) => string;
   readonly pageTurn: (path: string) => string;
 }
 
@@ -223,7 +223,7 @@ const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-d
   + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
-  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main>`;
+  const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region(path) ?? ''}</main>`;
   // Wayfinding follows the reading text so the main-only converter retains its original input.
   const turn = chrome?.pageTurn(path) ?? '';
   const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;

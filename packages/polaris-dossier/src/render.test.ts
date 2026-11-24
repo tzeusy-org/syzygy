@@ -1837,15 +1837,25 @@ describe('rendered-design review (S9b)', () => {
     const again = await renderRun(run, renderDeps());
     if (!again.ok) throw new Error(again.refusal.reason);
     expect(again.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
+    if (!again.report.fidelityReview.counts) throw new Error(again.report.fidelityReview.why);
+    const fidelityDigest = again.report.fidelityReview.packetSha256;
     const before = readSite(site), after = readSite(again.report.site);
     // The published pages equal the reviewed pages outside the region, and the region alone changed: it now states the review.
     expect(outside(after)).toEqual(outside(before));
     const changed = [...after.keys()].filter((file) => after.get(file) !== before.get(file)).sort();
     expect(changed).toEqual([...after.keys()].filter((file) => file.endsWith('.html') || file === 'machine.json').sort());
     const region = regionOf(after.get('glossary.html')!);
-    expect(region).toContain(`Rendered-design review: one counts, bound to packet ${digest}, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.`);
+    expect(region).toContain('Rendered-design review: one counts, bound to the packet shown on the review page, which Syzygy built at this render from these pages outside this region; its verdict, ready, is the review session&#39;s.');
     expect(region).toContain('data-label="Inferred"');
-    expect(JSON.parse(after.get('machine.json')!).reviewStatus[1]).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    const reviewRegion = regionOf(after.get('review.html')!);
+    const shownDigests = [...reviewRegion.matchAll(/(?:[0-9a-f]{8} ){7}[0-9a-f]{8}/g)].map(([hex]) => hex.replaceAll(' ', ''));
+    expect(shownDigests).toEqual([fidelityDigest, digest]);
+    expect(after.get('review.html')!).toContain(`its digest is ${fidelityDigest}, and the counted verdict names that digest.`);
+    const [fidelityStatus, designStatus] = JSON.parse(after.get('machine.json')!).reviewStatus;
+    expect(fidelityStatus).toMatchObject({ id: 'review-status/fidelity', label: 'Inferred' });
+    expect(fidelityStatus.text).toContain(`bound to packet ${fidelityDigest}`);
+    expect(designStatus).toMatchObject({ id: 'review-status/design', label: 'Inferred' });
+    expect(designStatus.text).toContain(`bound to packet ${digest}`);
     // A third render, the region unchanged, keeps it counted too.
     const third = await renderRun(run, renderDeps());
     expect(third.ok && third.report.designReview).toEqual({ counts: true, packetSha256: digest, label: 'Observed' });
