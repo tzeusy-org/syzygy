@@ -471,9 +471,11 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         verifyNamedRoots();
         checkDeadline();
       } : () => anchored(stagingClock);
-      const io = async <T>(start: () => Promise<T>): Promise<T> => {
-        if (currentAsync === undefined || staging !== undefined) checkWork();
-        else await checkAsync(currentAsync);
+      const io = async <T>(start: () => Promise<T>, entryAuthority: 'full' | 'terminal-state' = 'full'): Promise<T> => {
+        if (entryAuthority === 'full') {
+          if (currentAsync === undefined || staging !== undefined) checkWork();
+          else await checkAsync(currentAsync);
+        }
         // The staged publication guard already sampled this boundary.
         if (!stagedPublication) checkDeadline();
         charge();
@@ -609,11 +611,19 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             await io(census);
           }
         }
-        // Bracket the complete private state read, including its named roots,
-        // with I/O authority. The client read still starts after that check.
-        const stateSnapshot = () => io(() => readStateSnapshot(checkDeadline));
-        await operation({ check, checkWork, reverify, anchored: verifyAnchors,
+        // The first state read can share the joined post-census async check
+        // if it starts in this turn. Keep its async exit check before client
+        // and projection I/O. Later reads own both samples.
+        let shareTerminalEntry = joinedTerminalLock;
+        const stateSnapshot = () => {
+          const entry = shareTerminalEntry ? 'terminal-state' : 'full';
+          shareTerminalEntry = false;
+          return io(() => readStateSnapshot(checkDeadline), entry);
+        };
+        const operating = operation({ check, checkWork, reverify, anchored: verifyAnchors,
           state: async () => (await stateSnapshot()).state, stateSnapshot, write });
+        shareTerminalEntry = false;
+        await operating;
         check();
         if (allocation) {
           // The slot is durable. Keep lock cleanup and witness admission

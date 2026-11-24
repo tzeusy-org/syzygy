@@ -650,17 +650,17 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it.each(['async', 'both'] as const)('groups the terminal lock checks within five seconds under %s authority latency', async latency => {
+  it.each(['async', 'both'] as const)('checks the complete terminal read within five seconds under %s authority latency', async latency => {
     const f = await fixture(), slot = await f.allocate();
     let elapsed = 0, measuring = false, syncChecks = 0, asyncChecks = 0;
     const reopened = await openUrlMachineStore({ ...f.options, current: () => {
       if (measuring) {
         syncChecks++;
-        if (latency === 'both') elapsed += 365;
+        if (latency === 'both') elapsed += 400;
       }
       return f.options.current();
     }, currentAsync: async () => {
-      if (measuring) { asyncChecks++; elapsed += latency === 'both' ? 365 : 760; }
+      if (measuring) { asyncChecks++; elapsed += latency === 'both' ? 400 : 940; }
       return true;
     } }, f.store.identitySha256);
     if (reopened === null) throw new Error('fixture reopen refused');
@@ -678,10 +678,59 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       });
       expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, verify)).toBe(true);
       expect(verify).toHaveBeenCalledTimes(1);
-      expect(asyncChecks).toBe(6);
+      expect(asyncChecks).toBe(5);
       expect(syncChecks).toBe(7);
-      expect(elapsed).toBe(latency === 'both' ? 4_745 : 4_560);
+      expect(elapsed).toBe(latency === 'both' ? 4_800 : 4_700);
     } finally { clock.mockRestore(); }
+  });
+
+  it('withholds client and projection reads when async authority is withdrawn while reading terminal state', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    expect((await slot.publish()).ok).toBe(true);
+    let withdrew = false, refused = false;
+    const terminalNames = new Set([path.basename(slot.file), path.basename(slot.projection)]);
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (!withdrew) return true;
+      refused = true;
+      return false;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    filesystem.afterClose = file => { if (path.basename(file) === 'state.json') withdrew = true; };
+    const readTerminalFile = vi.fn();
+    filesystem.beforeOpen = file => { if (terminalNames.has(path.basename(file))) readTerminalFile(); };
+    const inspect = vi.fn();
+    expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, async lease => {
+      inspect(await lease.read());
+    })).toBe(false);
+    expect(withdrew).toBe(true);
+    expect(refused).toBe(true);
+    expect(f.options.current()).toBe(true);
+    expect(readTerminalFile).not.toHaveBeenCalled();
+    expect(inspect).not.toHaveBeenCalled();
+  });
+
+  it('resamples async authority before a delayed terminal state read', async () => {
+    const f = await fixture(), slot = await f.allocate();
+    let withdrew = false, refused = false;
+    const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => {
+      if (!withdrew) return true;
+      refused = true;
+      return false;
+    } }, f.store.identitySha256);
+    if (reopened === null) throw new Error('fixture reopen refused');
+    cleanup.push(() => reopened.close());
+    const readState = vi.fn();
+    filesystem.beforeOpen = file => { if (path.basename(file) === 'state.json') readState(); };
+    const inspect = vi.fn();
+    expect(await reopened.readTerminal(slot.context.clientId, f.options.deadline, async lease => {
+      await Promise.resolve();
+      withdrew = true;
+      inspect(await lease.read());
+    })).toBe(false);
+    expect(refused).toBe(true);
+    expect(readState).not.toHaveBeenCalled();
+    expect(inspect).not.toHaveBeenCalled();
   });
 
   it.each(['async', 'sync'] as const)('refuses terminal lock submission when %s authority is withdrawn', async authority => {
