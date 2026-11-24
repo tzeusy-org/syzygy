@@ -1,0 +1,82 @@
+{
+  "subject": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "observed": {
+    "focusedResult": {
+      "failed": 1,
+      "skipped": 36,
+      "totalFileCases": 37
+    },
+    "ownedRefusalCallsites": [
+      {
+        "event": "owned-audit-history-refusal-callsites",
+        "frames": [
+          {
+            "module": "url-session-audit-history.ts",
+            "line": 69,
+            "column": 32
+          },
+          {
+            "module": "url-session-audit-history.ts",
+            "line": 154,
+            "column": 142
+          },
+          {
+            "module": "url-session-audit-history.ts",
+            "line": 226,
+            "column": 12
+          }
+        ]
+      }
+    ],
+    "predicate": {
+      "file": "packages/polaris-dossier/src/url-session-audit-history.ts",
+      "line": 154,
+      "source": "!directoryStat.isDirectory() || directoryStat.uid !== BigInt(process.getuid?.() ?? -1) || (directoryStat.mode & 0o7777n) !== 0o700n"
+    },
+    "writerPredicate": {
+      "file": "packages/polaris-dossier/src/url-session-audit.ts",
+      "line": 541,
+      "difference": "writer checks (mode & 0o777n) against0o700n; reader includes special bits with0o7777n"
+    },
+    "temporaryParent": {
+      "path": "/home/orca/.tmp",
+      "modeOctal": "0o2755",
+      "uid": 996
+    },
+    "restoredExactly": true,
+    "restoredSourceSha256": "291fa3fbea6169e9e9e1e1ec0bccf5407831de3ad6d0340901a6d2fa6699758d",
+    "postRestoreStatus": ""
+  },
+  "inferred": {
+    "cause": "An inherited setgid bit on synthetic protected parent directories is accepted by writer but refused by reader; O_DIRECTORY guarantees directory acquisition and fixture creates owned files. Actual failed child mode tuple was not logged, so setgid branch remains Inferred rather than directly sampled.",
+    "delayedRead": "The same pre-read refusal can leave the delayed-read entered promise unresolved; this is consistent with the timeout but not independently instrumented."
+  },
+  "unknown": [
+    "Exact archive refusal predicate in the original full suite; archive passes serial repeat.",
+    "Exact stage of cold and peer timing failures; serial repeat changes which fixture cases hit Vitest5000ms."
+  ],
+  "minimumCorrectionRecommendation": "Normalize explicitly strict0700 synthetic protected parent fixture directories, or run verification in an explicitly non-setgid private task TMPDIR; preserve production reader predicate. Review writer/reader special-bit policy separately if production contract is amended. No budget change is supported.",
+  "artifacts": {
+    "audit-positive-catch-diagnostic.patch": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/audit-positive-catch-diagnostic.patch",
+      "sha256": "7384cf1bccd7faf41da1374fa7832d647930389c48e5d3c83da10bb94287f157"
+    },
+    "audit-positive-catch-diagnostic.log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/audit-positive-catch-diagnostic.log",
+      "sha256": "0dab15f99a701bb2a7590d036737a8cba2d4813ba51acb46e45dc085cb485f00"
+    },
+    "audit-positive-catch-diagnostic-result.json": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/audit-positive-catch-diagnostic-result.json",
+      "sha256": "bf6b0850ad5e6e953d72b25262eeaad3b69b87dd612494a317432001295da591"
+    },
+    "serial-unit120-result.json": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/serial-unit120-result.json",
+      "sha256": "5835441e0d874afef5239c20a7c3ba97d263344c8b0c85fbdd4e27a87a771ba1"
+    },
+    "serial-unit120.log": {
+      "path": "/home/orca/.tmp/f3-native-admission-fixes/serial-unit120.log",
+      "sha256": "2c79fdcb6c338b7a479fd9839889cb9475aa9582d2fd0d311035362c93d96a52"
+    }
+  },
+  "scope": "One temporary catch-only source diagnostic in verification clone, one existing positive case, original guards/budgets unchanged; restored in finally. No permanent source changes."
+}

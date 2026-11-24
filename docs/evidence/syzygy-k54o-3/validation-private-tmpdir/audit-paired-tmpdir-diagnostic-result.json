@@ -1,0 +1,90 @@
+{
+  "base": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "source": "packages/polaris-dossier/src/url-session-audit-history.ts",
+  "originalSha256": "291fa3fbea6169e9e9e1e1ec0bccf5407831de3ad6d0340901a6d2fa6699758d",
+  "diagnosticSha256": "9bc2f41696318626f777783f8fe625575ab663c9997085ebe5a3c43da091d789",
+  "replacements": [
+    {
+      "old": "    const directoryStat = await directory.stat({ bigint: true });",
+      "new": "    const directoryStat = await directory.stat({ bigint: true });\n    console.error(JSON.stringify({ event: 'owned-audit-directory-predicate', isDirectory: directoryStat.isDirectory(),\n      uidMatches: directoryStat.uid === BigInt(process.getuid?.() ?? -1), modeMask: Number(directoryStat.mode & 0o7777n),\n      setgid: (directoryStat.mode & 0o2000n) !== 0n }));"
+    },
+    {
+      "old": "  } catch { return null; }\n  finally {",
+      "new": "  } catch (error) {\n    const frames = error instanceof Error && typeof error.stack === 'string'\n      ? [...error.stack.matchAll(/(url-session-audit-history\\.[tj]s):(\\d+):(\\d+)/gu)].slice(0, 8)\n        .map(match => ({ module: match[1], line: Number(match[2]), column: Number(match[3]) })) : [];\n    console.error(JSON.stringify({ event: 'owned-audit-history-refusal-callsites', frames }));\n    return null;\n  }\n  finally {"
+    }
+  ],
+  "privateTmpdir": "/home/orca/.tmp/f3-audit-private-tmp.s5ao000l",
+  "privateTmpdirMode": "0o700",
+  "command": [
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--project",
+    "unit",
+    "--maxWorkers",
+    "1",
+    "--reporter",
+    "verbose",
+    "packages/polaris-dossier/src/url-session-audit-history.test.ts",
+    "--testNamePattern",
+    "verifies actual closed writer segments"
+  ],
+  "runs": [
+    {
+      "name": "inherited-setgid",
+      "TMPDIR": "/home/orca/.tmp",
+      "exit": 1,
+      "log": "/home/orca/.tmp/f3-native-admission-fixes/audit-paired-inherited-setgid.log",
+      "logSha256": "77ac03a0caf3d67ef20a1f384ac6fc0160a9bb9507aea7333f6aaa5b631736b9",
+      "events": [
+        {
+          "event": "owned-audit-directory-predicate",
+          "isDirectory": true,
+          "uidMatches": true,
+          "modeMask": 1472,
+          "setgid": true
+        },
+        {
+          "event": "owned-audit-history-refusal-callsites",
+          "frames": [
+            {
+              "module": "url-session-audit-history.ts",
+              "line": 69,
+              "column": 32
+            },
+            {
+              "module": "url-session-audit-history.ts",
+              "line": 157,
+              "column": 142
+            },
+            {
+              "module": "url-session-audit-history.ts",
+              "line": 229,
+              "column": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "private-0700",
+      "TMPDIR": "/home/orca/.tmp/f3-audit-private-tmp.s5ao000l",
+      "exit": 0,
+      "log": "/home/orca/.tmp/f3-native-admission-fixes/audit-paired-private-0700.log",
+      "logSha256": "8fba0af18ec093023c04f0a61e6211874e7ba732c4fb23448dace2905c171fd0",
+      "events": [
+        {
+          "event": "owned-audit-directory-predicate",
+          "isDirectory": true,
+          "uidMatches": true,
+          "modeMask": 448,
+          "setgid": false
+        }
+      ]
+    }
+  ],
+  "patchSha256": "713f7c4e2f168d01113c4baf37c91d31b0e34b2b271e3e8a699dbc4de3cc00ce",
+  "restoredSha256": "291fa3fbea6169e9e9e1e1ec0bccf5407831de3ad6d0340901a6d2fa6699758d",
+  "exactRestored": true,
+  "statusAfterRestore": ""
+}

@@ -1,0 +1,10 @@
+{
+  "baseMain": "9cb65e233671a6439d4860dbea42e85b78c035dd",
+  "candidateBeforeMerge": "d7d718c94",
+  "mainRows": 76,
+  "composedRows": 203,
+  "mainRowsPreservedExact": true,
+  "duplicateIds": [],
+  "collisionResolution": "Unlanded capture A-212 reassigned A-216; adopted corpus A-212 preserved.",
+  "cliResolution": "Preserve branch dynamic network imports/callsite sweep; require corpus.ts among enumerated sources. New corpus source enters existing per-file sweep automatically."
+}

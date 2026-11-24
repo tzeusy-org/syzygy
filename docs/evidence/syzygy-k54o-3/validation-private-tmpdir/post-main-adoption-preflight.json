@@ -1,0 +1,6 @@
+{
+  "head": "81e37cd2b",
+  "base": "9cb65e233671a6439d4860dbea42e85b78c035dd",
+  "outcome": "unavailable",
+  "reason": "candidate must be a full 40-character Git commit ID"
+}

@@ -1,0 +1,93 @@
+{
+  "format": "f3-local-validation-tmpdir-evidence/1",
+  "capturedAt": "2026-11-24T16:55:33.029242+00:00",
+  "subjectCommit": "4a5e601c5ab09d5234e6eba3e3f32ae5b03fb834",
+  "subjects": {
+    "packages/polaris-dossier/src/url-session-audit-history.ts": "291fa3fbea6169e9e9e1e1ec0bccf5407831de3ad6d0340901a6d2fa6699758d",
+    "packages/polaris-dossier/src/url-session-audit-history.test.ts": "6ac85b73d0766d627d7fc901b7e6c121e11c255165310fff7f6179502c1fb530"
+  },
+  "diagnosticScope": "Temporary bounded callsite/stat metadata only; original permission guard and budgets preserved. Exact original bytes restored. Existing single-positive case, not a new test.",
+  "pairedResult": {
+    "inheritedSetgid": {
+      "mode": "02700",
+      "isDirectory": true,
+      "uidMatches": true,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 36,
+      "population": 37
+    },
+    "privateTaskTmpdir": {
+      "mode": "0700",
+      "isDirectory": true,
+      "uidMatches": true,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 36,
+      "population": 37
+    },
+    "causalDifference": "Parent TMPDIR setgid inheritance; the actual guarded mode differs. No production or permanent fixture change."
+  },
+  "correction": "Run local checks with a new task-only TMPDIR explicitly mode0700 outside shared projects. Preserve the global .tmp directory and shared project ACLs.",
+  "notEstablished": [
+    "Original archive refusal predicate",
+    "Causes of shifting five-second fixture timeouts",
+    "Ordered native ready timeout phase",
+    "Native Stop/Resume and durable closure"
+  ],
+  "composedCandidate": {
+    "commit": "81e37cd2b4194c534f1290e6bad9d009dffde2c6",
+    "main": "9cb65e233671a6439d4860dbea42e85b78c035dd",
+    "mainRowsPreservedExact": 76,
+    "composedAdoptionRows": 203,
+    "collisionCorrection": "Only unlanded F3 capture A-212 reassigned A-216; main corpus A-212 preserved.",
+    "preflight": "Full40-character IDs report clear; prior abbreviated-ID invocation was unavailable and is retained separately.",
+    "officialCheck": "Running with original unmodified source under task0700 TMPDIR. No result claimed by this record."
+  },
+  "artifacts": {
+    "audit-positive-catch-diagnosis.json": {
+      "sha256": "52d058f3678700ed423296d3d8c9560ce6dcd0d0fb450e9d99780a4908ef4410",
+      "bytes": 3882
+    },
+    "audit-positive-catch-diagnostic.patch": {
+      "sha256": "7384cf1bccd7faf41da1374fa7832d647930389c48e5d3c83da10bb94287f157",
+      "bytes": 1175
+    },
+    "audit-positive-catch-diagnostic.log": {
+      "sha256": "0dab15f99a701bb2a7590d036737a8cba2d4813ba51acb46e45dc085cb485f00",
+      "bytes": 8333
+    },
+    "audit-positive-catch-diagnostic-result.json": {
+      "sha256": "bf6b0850ad5e6e953d72b25262eeaad3b69b87dd612494a317432001295da591",
+      "bytes": 1531
+    },
+    "audit-paired-tmpdir-diagnostic-result.json": {
+      "sha256": "614e2a948575e8ea49a8070c01103a31308b9afb771237f726867997f438e93d",
+      "bytes": 3519
+    },
+    "audit-paired-tmpdir-diagnostic.patch": {
+      "sha256": "713f7c4e2f168d01113c4baf37c91d31b0e34b2b271e3e8a699dbc4de3cc00ce",
+      "bytes": 2147
+    },
+    "audit-paired-inherited-setgid.log": {
+      "sha256": "77ac03a0caf3d67ef20a1f384ac6fc0160a9bb9507aea7333f6aaa5b631736b9",
+      "bytes": 8678
+    },
+    "audit-paired-private-0700.log": {
+      "sha256": "8fba0af18ec093023c04f0a61e6211874e7ba732c4fb23448dace2905c171fd0",
+      "bytes": 7034
+    },
+    "main-merge-9cb65.json": {
+      "sha256": "d4d6d3f9879eb3bfdd819db58040522de1f98241ee3c7b3514f2c742d6651400",
+      "bytes": 484
+    },
+    "post-main-adoption-preflight.json": {
+      "sha256": "c72626e69379b51c6ce3d2109a809b6c2aaea3725915d4e1b944529bdce5e717",
+      "bytes": 175
+    },
+    "post-main-adoption-preflight-full-sha.json": {
+      "sha256": "1839a12d6ba399ef74bfc601df753436d8dbfe12c0df322d581fc6891d971b62",
+      "bytes": 250
+    }
+  }
+}

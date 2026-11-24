@@ -1,0 +1,19 @@
+diff --git a/packages/polaris-dossier/src/url-session-audit-history.ts b/packages/polaris-dossier/src/url-session-audit-history.ts
+index 40143d92a..447cc90c2 100644
+--- a/packages/polaris-dossier/src/url-session-audit-history.ts
++++ b/packages/polaris-dossier/src/url-session-audit-history.ts
+@@ -224,7 +224,13 @@ export async function verifyUrlSessionAuditHistory(given: UrlSessionAuditHistory
+   };
+   try {
+     return await Promise.race([work(), new Promise<null>(resolve => { timer = setTimeout(() => { active = false; resolve(null); }, URL_SESSION_AUDIT_LIMITS.milliseconds); })]);
+-  } catch { return null; }
++  } catch (error) {
++    const frames = error instanceof Error && typeof error.stack === 'string'
++      ? [...error.stack.matchAll(/(url-session-audit-history\.[tj]s):(\d+):(\d+)/gu)].slice(0, 8)
++        .map(match => ({ module: match[1], line: Number(match[2]), column: Number(match[3]) })) : [];
++    console.error(JSON.stringify({ event: 'owned-audit-history-refusal-callsites', frames }));
++    return null;
++  }
+   finally {
+     active = false; clearTimeout(timer);
+     // A stalled kernel read may finish later. Late acquisitions close themselves;

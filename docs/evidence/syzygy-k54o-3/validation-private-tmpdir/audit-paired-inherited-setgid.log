@@ -1,0 +1,78 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/f3-ordered-capture-verify.W9kWbzGD/w
+
+stderr | packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority
+{"event":"owned-audit-directory-predicate","isDirectory":true,"uidMatches":true,"modeMask":1472,"setgid":true}
+
+stderr | packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority
+{"event":"owned-audit-history-refusal-callsites","frames":[{"module":"url-session-audit-history.ts","line":69,"column":32},{"module":"url-session-audit-history.ts","line":157,"column":142},{"module":"url-session-audit-history.ts","line":229,"column":12}]}
+
+ × |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority 597ms
+   → expected null to match object { runId: 'own-run', …(1) }
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > accepts a declared but unstarted design helper while still requiring proof for a started helper
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > joins a checked count estimate to its completed tool and separately verifies the Messages continuation
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-without-continuation
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-repeated
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-with-usage
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with count-wrong-origin
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses a captured tool exchange with different-consumed-receipt
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses dropped physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses truncated physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses appended physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses relinked physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses symlink physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses hardlink physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses public-mode physical bytes without repairing them
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent global-tip disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent role-tip disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent global-count disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent role-count disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent bytes disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent scope disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent pin disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses independent declaration disagreement
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses global-link even when supplied tips match the altered archive
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses global-sequence even when supplied tips match the altered archive
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses role-sequence even when supplied tips match the altered archive
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses record-hash even when supplied tips match the altered archive
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses noncanonical even when supplied tips match the altered archive
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with incomplete-send
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with uncertain-send
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unknown-cleanup
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with missing-usage
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with missing-terminal
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unfinished-tool
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses genuine closed writer history with unsupported-kind
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > refuses withdrawal during an actual held descriptor read
+ ↓ |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > bounds a delayed kernel read and cannot publish a late successful result
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-dossier/src/url-session-audit-history.test.ts > read-only protected audit history > verifies actual closed writer segments against independently retained global and role anchors, without issuing authority
+AssertionError: expected null to match object { runId: 'own-run', …(1) }
+
+- Expected: 
+{
+  "helperLaunchFiles": {},
+  "runId": "own-run",
+}
+
++ Received: 
+null
+
+ ❯ packages/polaris-dossier/src/url-session-audit-history.test.ts:115:52
+    113|     const f = await fixture(), before = ROLES.map(role => fs.readFileS…
+    114|     const verified = await verifyUrlSessionAuditHistory(f.options);
+    115|     expect(readVerifiedUrlAuditLaunches(verified)).toMatchObject({ run…
+       |                                                    ^
+    116|     expect(readVerifiedUrlAuditLaunches(JSON.parse(JSON.stringify(veri…
+    117|     expect(verified).toEqual({ kind: 'verified-local-audit-history', a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 36 skipped (37)
+   Start at  00:52:30
+   Duration  12.97s (transform 6.99s, setup 128ms, collect 10.08s, tests 600ms, environment 0ms, prepare 998ms)
+
