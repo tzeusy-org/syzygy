@@ -991,7 +991,11 @@ describe('render', () => {
     expect(appendix).toContain('Syzygy can see only the marking: whether an unmarked claim rests on the agent\'s building or running of the project is the agent\'s report.');
     // The appendix is the last page of the reading order, and every page's navigation reaches it.
     expect(JSON.parse(files.get('dossier.json')!).pages.at(-1)).toEqual({ path: 'appendix.html', depth: 1 });
-    for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
+    for (const [file, page] of html(files)) {
+      const up = file.includes('/') ? '../' : '';
+      const current = file === 'appendix.html' ? ' aria-current="page"' : '';
+      expect(page, file).toContain(`<li><a href="${up}appendix.html"${current}>Appendix</a></li></ol>`);
+    }
   });
 
   it('says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)', async () => {
@@ -1062,8 +1066,8 @@ describe('render', () => {
     const report = ['understanding.html', 'discovery.html', 'clarifications.html', 'executions.html', 'review.html', 'size-report.html', 'appendix.html'].filter(path => files.has(path));
     for (const path of ['understanding.html', 'discovery.html', 'size-report.html', 'appendix.html']) expect(report, path).toContain(path);
     for (const [file, page] of html(files)) {
-      const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
-      expect(navs.length, file).toBeGreaterThan(0);
+      const navs = [...page.matchAll(/<nav aria-label="Dossier(?: \(mobile\))?">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
+      expect(navs, file).toHaveLength(2);
       for (const nav of navs) {
         const fold = nav.indexOf('<details class="about-this-run"');
         expect(fold, file).toBeGreaterThan(0);
@@ -1081,7 +1085,7 @@ describe('render', () => {
         expect(folded.endsWith('</ol></details>'), file).toBe(true);
       }
     }
-    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!.split('</section>')[0]!;
     const heading = contents.indexOf('<h2 id="about-this-run">About this run</h2>');
     expect(heading).toBeGreaterThan(0);
     for (const path of report) {
@@ -1106,13 +1110,13 @@ describe('render', () => {
     expect(runPages.length).toBeGreaterThan(3);
     for (const [file, page] of html(files)) {
       const up = file.includes('/') ? '../' : '';
-      for (const nav of [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
+      for (const nav of [...page.matchAll(/<nav aria-label="Dossier(?: \(mobile\))?">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!)) {
         const folded = nav.slice(nav.indexOf('<details class="about-this-run"'));
         const linked = [...folded.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!.slice(up.length));
         expect(linked, file).toEqual(runPages);
       }
     }
-    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!.split('</section>')[0]!;
     const after = contents.slice(contents.indexOf('<h2 id="about-this-run">About this run</h2>'));
     expect([...after.matchAll(/href="([^"#]*)/gu)].map(match => match[1]!)).toEqual(runPages);
   });

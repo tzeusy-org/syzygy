@@ -1,0 +1,99 @@
+diff --git a/spec.md b/spec.md
+index 759fe6c..89b4b3d 100644
+--- a/spec.md
++++ b/spec.md
+@@ -223,0 +224,12 @@ Scope: v1-mandatory
++For an operator-agent invocation of `syzygy dossier check --lexical-imports` that checks a supported schema-v12 draft and emits the ordinary check report, Syzygy SHALL include the sibling `lexicalImports` assessment in that immediate report. This option requires the installed v12 check route. Without the option the check SHALL preserve the existing report bytes for the same inputs. An earlier draft presented with the option SHALL return the usage diagnostic `unknown option: --lexical-imports` with exit status 2 before deriving this assessment and SHALL leave its run files untouched. A pre-existing check refusal SHALL continue to refuse without this assessment. This rule SHALL preserve previously defined check results, writes, stored check and derived records, render output, authored relation decisions and provider output. The optional assessment alone SHALL alter neither findings nor pass/refusal decisions.
++
++The first cohort SHALL be TypeScript source paths ending in `.ts` already encountered in the same check's cited-file admission. For each known candidate, Syzygy SHALL require a pinned ordinary blob, the same admitted content class, strict UTF-8 and affirmative admission of the entire body. Matching path and object identity SHALL bind those bytes to the already listed pinned revision. A citation span alone does not satisfy that decision. A redacted body's `admitted` tag does not satisfy it. The assessment SHALL use the admitted bodies and safe pinned unit/tree metadata that the normal check already has. It SHALL add no object reads, source selection, resolvers, replay of project tools, configuration interpretation or execution. This first cohort SHALL leave Python explicitly unevaluated.
++
++The TypeScript lexical rule `typescript-static-relative-import` version `1` SHALL recognize a complete top-level static import declaration with one unescaped string operand beginning with `./` or `../`. It SHALL distinguish the declaration form `import type` from other static declarations and include a side-effect-only import. The rule SHALL resolve an explicit relative `.ts` file, or an extensionless path against exactly the candidate forms `<path>.ts` and `<path>/index.ts`. A final path segment containing a dot other than the supported `.ts` suffix is outside the rule. Path resolution SHALL start in the importing file's pinned directory and stay inside the pinned tree. String escapes in the module operand, absolute paths, nonrelative aliases, unsupported suffixes, re-exports, dynamic `import()`, `import =`, and `require()` fall outside the assessed grammar. Comments and quoted strings, including template text, contribute no match. The rule SHALL use complete TypeScript lexical boundaries and mark analysis incomplete wherever it cannot establish them. A previously closed and independently determined statement can survive an interruption. The rule labels source syntax and its resolved lexical destination, with no claim about compilation, reachability or runtime calls.
++
++For each recognized statement, Syzygy SHALL establish a unique closest enclosing source unit and one uniquely usable target address and enclosing target unit using the existing safe same-revision package-manifest identities. A usable target SHALL have a safe pinned `.ts` path and ordinary file mode `100644` or `100755`, with matching object identity and an affirmative current path and content-class decision. Use that existing metadata without a target-body read. A known directory or other nonregular object supplies no match. A missing positive scope or screening decision is unevaluable. A hidden, unclassified or refused alternative that could change either endpoint, or incomplete relevant metadata, SHALL yield Unknown even when one other usable address is visible. When the complete address set has no eligible target the statement SHALL yield Unknown. It SHALL disclose no hidden or refused identity. A recognized address can resolve to a same-unit match without an edge. Syzygy SHALL emit an Inferred ordered pair of source and target manifest identities only when both units are established and different. It SHALL group repeated successful statements under one ordered pair and retain each allowed location. Each location SHALL carry the screened path, one-based closed line range and syntactic import form. Raw operands, body text, withheld names, hidden identities and unapproved paths SHALL stay out of the report. If a candidate result or location cannot pass current output screening, Syzygy SHALL keep only a permitted aggregate or generic Unknown reason from that result.
++
++The assessment SHALL assign every distinct known cited candidate exactly one file outcome: `scanned` for eligible input with complete lexical analysis, `incomplete` for eligible analysis started without completing, or `unavailable` where the recognizer did not receive eligible input. A scanned file can contain a resolved statement and an Unknown destination. The report SHALL give `knownFiles`, `scannedFiles`, `incompleteFiles` and `unavailableFiles`, with the last three summing to the first. It SHALL independently give mutually exclusive recognized-statement counts for edge matches, same-unit matches and Unknown destinations and count identifiable outside-grammar forms separately. It SHALL give a total file denominator only from permitted complete metadata. Otherwise the denominator is `null` and any permitted refused or limited aggregate keeps its own scope. Coverage SHALL be `complete` only where the known cohort is complete and every identified form is accounted for without a remaining input, lexical, target or retention limitation. An identified outside-grammar form is a scope limitation and creates no recognized-statement outcome. When a limitation remains, coverage SHALL be `partial` if at least one eligible file was completely analyzed or at least one recognized or identifiable outside-grammar statement has a safely established closed lexical extent. Otherwise coverage SHALL be `unknown`. A closed lexical zero SHALL state its own assessed scope and requires `complete` coverage. Fixed refusal reasons SHALL disclose no withheld identity. The human report SHALL state TypeScript coverage and scoped file and outcome counts, the presence of omitted output or an Unknown denominator, and that Python was unevaluated. JSON SHALL additionally give the screened graph, bounded locations and their counts in `lexicalImports`.
++
++The assessment SHALL process legally identified eligible paths in ascending UTF-16 code-unit order, beginning at most 64 files and at most 2,097,152 input bytes. One file can consume at most 131,072 bytes. A file that would exceed either byte bound stays unavailable without a scanner call. At the first eligible file that would exceed the total byte or file bound, remaining eligible files stay unavailable. It SHALL retain a deterministic prefix of at most 256 allowed statement locations, in order of source path, start line, end line and source position, and at most 65,536 UTF-8 bytes for the complete compact JSON assessment. The counts distinguish known outcomes from omitted locations, and state that the retained graph is partial when a location is omitted. A retained edge SHALL have at least one retained location. Counts and fixed refusal reasons remain when no location fits. The byte bound includes all delimiters, counts and labels in the value. The graph's order SHALL be source unit, then target unit, with locations in the same source order. Whole-file and output budgets SHALL never cause additional reads.
++
+@@ -1430,0 +1443,81 @@ Scope: v1-mandatory
++#### Scenario: The explicit option produces an immediate v12 assessment
++
++- **WHEN** the installed operator-agent check processes equal copies of one supported v12 run with the same frozen inputs and clock, with and without `--lexical-imports`
++- **THEN** only the requested immediate report includes `lexicalImports` and the corresponding human summary
++- **AND** both check results, findings, record bytes, derived bytes and artifact writes are equal and the report without the option equals the predecessor byte-for-byte
++
++#### Scenario: Earlier and refused checks preserve their boundaries
++
++- **WHEN** the option is used with an earlier draft, or a v12 invocation reaches an existing check refusal
++- **THEN** the earlier draft receives `unknown option: --lexical-imports` and exits 2 without new run files, and the v12 refusal retains its prior result and writes
++- **AND** neither case enters the lexical assessment, even when a cited TypeScript blob would otherwise qualify
++
++#### Scenario: A selected TypeScript file links two units with exact locations
++
++- **WHEN** the complete pinned cohort contains one admitted TypeScript source at `a/src/entry.ts` in `a/package.json`, and two static declarations there at lines 2 and 4 resolve to `b/index.ts` in `b/package.json`, with the second declaration written as `import type`
++- **THEN** the literal assessment holds the one Inferred pair `a/package.json` → `b/package.json` with exactly the two locations `a/src/entry.ts` at line 2 and line 4, in that order, marking only the second declaration as `import type`
++- **AND** two edge matches contribute to one edge, the known file count is one scanned, and Python is unevaluated
++
++#### Scenario: Comment and string controls preserve their non-evidence
++
++- **WHEN** one supported literal static declaration is accompanied by equal-looking text in line and block comments, quoted strings and template text, or the supported declaration is moved wholly into each such context in a separate replay
++- **THEN** the positive emits exactly the genuine declaration location, and each moved case emits no match at that location
++- **AND** genuine dynamic imports and re-exports in paired cases are outside the assessed grammar and create no unit edge
++
++#### Scenario: Same-unit, side-effect and disallowed addresses are distinguished
++
++- **WHEN** a side-effect-only declaration points to a supported literal relative `.ts` file inside the importing unit, and separate declarations use a package alias or a string escape in the operand
++- **THEN** the first contributes one confirmed same-unit match without an edge, and the latter declarations contribute outside-grammar outcomes without implying a destination
++
++#### Scenario: Whole-body admission is an independent entry predicate
++
++- **WHEN** two otherwise equal cited `.ts` inputs carry the `admitted` tag and matching pinned object identity, and only the second carries a redaction marker
++- **THEN** the first invokes the recognizer and may match, the second invokes it zero times and contributes to unavailable, and no redacted identifier, fragment or path excluded by screening reaches either report
++- **AND** a span-only match, an invalid UTF-8 blob, a nonregular blob or a mismatched object independently yields no recognizer input
++
++#### Scenario: One scanned file can have both an edge and an Unknown target
++
++- **WHEN** a completely analyzed source contains two supported declarations, the first resolves uniquely and the second has a visible usable address plus one unevaluable alternative
++- **THEN** the file outcomes are one scanned, zero incomplete and zero unavailable, while statement outcomes are one edge match and one Unknown destination, with partial target coverage
++- **AND** the paired fixture removing only the unevaluable alternative resolves the second declaration and the concealed form discloses no hidden identity
++
++#### Scenario: Incomplete unit metadata cannot settle a visible address
++
++- **WHEN** a supported statement has one visible usable address and a closest visible enclosing unit, and in a paired case the pinned metadata cannot establish whether an unevaluable closer unit exists
++- **THEN** the complete case supplies the resolved pair, and the paired case reports an Unknown endpoint without adding an edge or emitting the unavailable identity
++
++#### Scenario: Target mode and path eligibility are independent endpoint predicates
++
++- **WHEN** a complete pinned fixture resolves one explicit relative `.ts` import to an approved `100644` target and separate replays vary only that target's mode to symlink or submodule, or only its path or content-class decision to refused or unavailable
++- **THEN** the positive yields the one literal pair and each changed case yields one Unknown target and no edge, with no target-body read or refused identity in either report
++- **AND** an extensionless paired case with a known nonregular `.ts` alternative and a fully eligible `/index.ts` target resolves only the latter, while changing only the alternative's eligibility to unevaluable leaves the result Unknown
++
++#### Scenario: Closed outside-grammar evidence qualifies an incomplete file
++
++- **WHEN** an eligible source's scan starts and leaves an incomplete file, and its only completely delimited form is one identifiable outside-grammar statement with no recognized statement
++- **THEN** file counts show one incomplete and the report gives partial coverage, one outside-grammar outcome and no unit edge or scoped zero
++- **AND** a paired case holding the file outcome and denominator fixed while removing that closed extent gives Unknown coverage and no asserted full-cohort zero
++
++#### Scenario: Counts distinguish malformed, unavailable and known-zero cases
++
++- **WHEN** one admitted body has an undecidable lexical boundary after scanning starts, one known candidate never obtains an eligible body, and a third eligible complete file has no recognized or outside-grammar form
++- **THEN** the file counts are exactly one incomplete, one unavailable and one scanned out of three known, and no scope-wide lexical zero is reported
++- **AND** a separate fixture containing only the complete zero file reports scoped zero with complete coverage, while a fixture with no safe eligible input and an unknown denominator reports Unknown coverage and a `null` total, without pretending the full cohort was empty
++
++#### Scenario: Input limits stop before passing bytes to the recognizer
++
++- **WHEN** one synthetically generated file is exactly 131,072 bytes, a separate one is 131,073 bytes, and paired workloads reach then exceed each of 64 files and 2,097,152 bytes without an earlier limit
++- **THEN** each bound is inclusive, the overbound body is unavailable without a recognizer call, and the first file refused at the maximum count or the total-byte bound stops subsequent eligible bodies
++- **AND** an instrumented reader port observes the same pinned reads with and without the option
++
++#### Scenario: Either reply bound omits only the deterministic location suffix
++
++- **WHEN** synthetic workloads separately exceed the 256-location and 65,536-byte bounds while keeping the same stable prefix and definite endpoint evidence
++- **THEN** the retained locations are that prefix, any retained edge cites at least one retained location, retained plus omitted equals the permitted known location count, and the assessment marks the retained graph partial
++- **AND** both encodings stay within their stated bounds, and the human report discloses the omission without listing hidden values
++
++#### Scenario: Authored relation and provider views keep their previous behavior
++
++- **WHEN** a matching lexical statement coexists with an authored `imports` arrow and a declared package dependency, and the earlier provider rendering fixture is replayed
++- **THEN** the authored arrow keeps its current witness disposition, the dependency contributes no lexical match by itself, and the provider golden, previously stored records and schema-v12 render bytes are identical
++

@@ -64,6 +64,12 @@ jobs:
       - name: check_governance
         run: python3 scripts/check_governance.py
 
+      - name: check_merge_conflict_markers
+        run: python3 scripts/check_merge_conflict_markers.py
+
+      - name: check_merge_conflict_markers --selftest
+        run: python3 scripts/check_merge_conflict_markers.py --selftest
+
       # Candidate contract package: clause continuity, citations, ceilings.
       - name: verify_final_prespec
         run: python3 .syzygy/governance/contracts/candidates/scripts/verify_final_prespec.py
@@ -461,6 +467,9 @@ jobs:
 
       - name: understanding adoption chain selftests
         run: python3 scripts/record_polaris_understanding_adoption.py --selftest
+
+      - name: count_polaris_effective_scenarios --selftest
+        run: python3 scripts/count_polaris_effective_scenarios.py --selftest
 
       - name: launch_gate_results --selftest        # historical Markdown records
         run: python3 scripts/launch_gate_results.py --selftest

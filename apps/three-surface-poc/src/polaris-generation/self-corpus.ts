@@ -94,15 +94,21 @@ function scriptedResponse(stage: ScriptedStage, encoded: string): unknown {
       sections: [{ id: 'account', title: 'A bounded account', paragraphs: [{ id: 'account-paragraph', text: excerpt(second.text ?? ''), sourceIds: [second.sourceId], children: [] }],
         disposition: { kind: 'produced', assetIds: ['account'] } }], diagrams: [], deepDives: [], unresolved: [] };
   }
-  if (stage === 'edit' || stage === 'repair') return inputs.draft;
+  const draft = inputs.draft as ProviderDraft;
+  const blocks = [draft.introduction, ...draft.sections.flatMap(section => section.paragraphs.flatMap(block => [block, ...block.children]))];
+  if (stage === 'edit' || stage === 'repair') {
+    const edit = { draft, changes: blocks.map(({ id }) => ({ blockId: id, action: 'kept', reason: 'The scripted draft stays unchanged.', newBlockIds: [] })) };
+    if (stage === 'edit') return edit;
+    const findings = inputs.findings as { id: string }[];
+    return { ...edit, findingDispositions: findings.map(({ id }) => ({ findingId: id, action: 'unrepairable', reason: 'The scripted fixture cannot repair a finding.' })) };
+  }
   if (Object.hasOwn(inputs, 'plan')) throw new Error('fidelity-plan-leak');
   const inventory = inputs.inventory as { entries: { id: string; sourceIds: string[] }[] };
-  const draft = inputs.draft as ProviderDraft;
   return { inventoryCoverage: inventory.entries.map((entry, i) => ({ entryId: entry.id,
     disposition: i < 2 ? 'represented' : 'justified-omission',
     blockIds: i < 2 ? [i === 0 ? 'intro' : 'account-paragraph'] : [],
     reason: i < 2 ? 'Scripted reference match only.' : 'Scripted omission; real quality unproven.' })),
-    blockSupport: [draft.introduction, ...draft.sections.flatMap(section => section.paragraphs.flatMap(block => [block, ...block.children]))].map(block => ({
+    blockSupport: blocks.map(block => ({
       blockId: block.id, verdict: 'supported', sourceIds: block.sourceIds, reason: 'Scripted reference match only.' })), findings: [] };
 }
 

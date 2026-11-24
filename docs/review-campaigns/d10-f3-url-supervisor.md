@@ -232,3 +232,5 @@
 [Observed] The initial Design publication activation review records `PASS` for `a1f86c155` (F3-INITIAL-DESIGN-PUBLICATION-ACTIVATION-REVIEW-RAW.md). A-183 gates publication on the exact launch before serialized store work. The focused two-client regression verifies retirement while activation is pending. The local delivery replay refused in the ordinary roles before Design. [Unknown] Native delivery Stop on the successor.
 
 [Observed] The staged allocation readback review records `PASS` for `d45584c52` (F3-STAGED-ALLOCATION-READBACK-AUTHORITY-REVIEW-RAW.md). A-184 retains the authority check after returning across the promise boundary and before lock removal. The 91 focused cases pass. Both added controls detect restoration of the duplicate or removal of the retained check. [Unknown] Hosted allocation completion.
+
+[Observed] The main merge preserves each of its 74 adoption rows byte for byte. The branch’s historical same-store setup row for `236df7ecd` is recorded as A-210 after main assigned A-64 to the system-model amendment. Earlier frozen reviews retain their original branch identifier and subject commit. The 195 combined rows have distinct identifiers.

@@ -1,0 +1,106 @@
+{
+  "baseline": "f9fbc5d3f5e2be8c2f330eae0778acd7522732c3",
+  "baselineTree": "8ec1c9b45b0ede5615e12e601e6afe276c71ece6",
+  "candidateTree": "cb541ee35b8646214341d29b73f0d80e53bd1213",
+  "preservedWorkingSnapshot": "3d3e4c8c52221914fd519ff30985fbef05f932ce",
+  "paths": [
+    "docs/evidence/syzygy-v0b5/cache-protection-controls-2026-11-24.json",
+    "docs/evidence/syzygy-v0b5/check-after-2026-11-24.txt",
+    "docs/evidence/syzygy-v0b5/check-before-2026-11-24.txt",
+    "docs/evidence/syzygy-v0b5/memo-mutation-2026-11-24-r1.json",
+    "docs/evidence/syzygy-v0b5/memo-mutation-2026-11-24-r2.json",
+    "docs/evidence/syzygy-v0b5/memo_mutation.py",
+    "docs/evidence/syzygy-v0b5/memo_rerun_harness.py",
+    "docs/evidence/syzygy-v0b5/reverse_cache_harness.py",
+    "docs/evidence/syzygy-v0b5/selftest-speedup-2026-11-24.json",
+    "docs/evidence/syzygy-v0b5/witness-after-2026-11-24.json",
+    "docs/evidence/syzygy-v0b5/witness-before-2026-11-24.json",
+    "docs/evidence/syzygy-v0b5/witness-diff-2026-11-24.txt",
+    "docs/review-campaigns/spec-reconciliation-memoization.md",
+    "docs/reviews/syzygy-v0b5/V0B5-MEMO-TECHNICAL-R1-RAW.md",
+    "scripts/check_spec_reconciliation.py"
+  ],
+  "stockScriptSha256": "919cfc8cbfa2324c2b7f7efa176da05633033d6cfda335bdee9a633c43d5c4b6",
+  "memoScriptSha256": "77b21eaa26458eda77ad0850c3537b3a6be1d46bc2ac8c2df3ecb03bfc4432f9",
+  "memoHarnessSha256": "82db20662157ca99d5d1b5e45e4bda6e96f58b7b49ab4fd875b8c0d5fe3e3150",
+  "selftestWorkers": 8,
+  "pythonHashSeed": 0,
+  "pythonVersion": "3.14.4",
+  "gitVersion": "git version 2.53.0",
+  "witnessOutcomes": {
+    "killed": 529,
+    "held": 104
+  },
+  "witnessCases": 633,
+  "startUtc": "2026-11-24T08:04:07Z",
+  "endUtc": "2026-11-24T08:22:29Z",
+  "identicalCheckOutput": true,
+  "identicalSelftestOutput": true,
+  "identicalWitness": true,
+  "stderrWarningLocationComparison": {
+    "check": {
+      "rawIdentical": true,
+      "normalizedIdentical": true,
+      "warningLocationsPerRun": 0
+    },
+    "selftest": {
+      "rawIdentical": false,
+      "normalizedIdentical": true,
+      "warningLocationsPerRun": 4
+    }
+  },
+  "witnessDiffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "measurements": {
+    "stock": {
+      "check": {
+        "wallSeconds": 7.62,
+        "userSeconds": 5.82,
+        "systemSeconds": 1.85,
+        "cpuSeconds": 7.67,
+        "parentMaxRssKiB": 79712,
+        "stdoutSha256": "f3f4ee6ea7781ea5fd754a0f7fdbc4adf7e47ec4d64cd4ad643e4f9f54f2a6c2",
+        "rawStderrSha256": "0215811cbd005a6c07968fb3ebbf4d9c7156457f963138abff911f6e53d5d247"
+      },
+      "selftest": {
+        "wallSeconds": 608.33,
+        "userSeconds": 983.29,
+        "systemSeconds": 452.71,
+        "cpuSeconds": 1436.0,
+        "parentMaxRssKiB": 105216,
+        "stdoutSha256": "a257fe2280388830c84714e70459ca6d293a105a05d57948d09fcde86a35f083",
+        "rawStderrSha256": "56a7bdbdfae829cbefb0c8a0db754ef878091888e9cef580f81bc1bb31fd1450"
+      },
+      "witnessSha256": "0382b44993c0337a6609dec393a1704b010d502338749d5ee9f96ac0bc96a1a0"
+    },
+    "memo": {
+      "check": {
+        "wallSeconds": 3.02,
+        "userSeconds": 1.9,
+        "systemSeconds": 1.17,
+        "cpuSeconds": 3.07,
+        "parentMaxRssKiB": 78040,
+        "stdoutSha256": "f3f4ee6ea7781ea5fd754a0f7fdbc4adf7e47ec4d64cd4ad643e4f9f54f2a6c2",
+        "rawStderrSha256": "0215811cbd005a6c07968fb3ebbf4d9c7156457f963138abff911f6e53d5d247"
+      },
+      "selftest": {
+        "wallSeconds": 482.11,
+        "userSeconds": 456.16,
+        "systemSeconds": 337.35,
+        "cpuSeconds": 793.51,
+        "parentMaxRssKiB": 107524,
+        "stdoutSha256": "a257fe2280388830c84714e70459ca6d293a105a05d57948d09fcde86a35f083",
+        "rawStderrSha256": "fe55d9878bbaf8b163ec85cd835995a9e8e32c0c9a1cadafd3bf891115e9f044"
+      },
+      "witnessSha256": "0382b44993c0337a6609dec393a1704b010d502338749d5ee9f96ac0bc96a1a0"
+    }
+  },
+  "artifacts": {
+    "check-stock-protected-f9fbc5d3.txt": "f3f4ee6ea7781ea5fd754a0f7fdbc4adf7e47ec4d64cd4ad643e4f9f54f2a6c2",
+    "witness-stock-protected-f9fbc5d3.json": "0382b44993c0337a6609dec393a1704b010d502338749d5ee9f96ac0bc96a1a0",
+    "selftest-stock-protected-f9fbc5d3.txt.gz": "ccd404fd64fb9b9de3a7c7255a51881a1c0aeb61e0935abcf8abf87e6b11d8ea",
+    "check-memo-protected-f9fbc5d3.txt": "f3f4ee6ea7781ea5fd754a0f7fdbc4adf7e47ec4d64cd4ad643e4f9f54f2a6c2",
+    "witness-memo-protected-f9fbc5d3.json": "0382b44993c0337a6609dec393a1704b010d502338749d5ee9f96ac0bc96a1a0",
+    "selftest-memo-protected-f9fbc5d3.txt.gz": "ccd404fd64fb9b9de3a7c7255a51881a1c0aeb61e0935abcf8abf87e6b11d8ea",
+    "witness-pair-protected-f9fbc5d3.diff": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createReobserveState } from './reobserve-state.js';
 import { buildPocEvaluationEvidence, buildProductionPocModel, type PocRuntimeCapture } from './production-reobserve.js';
 import { renderPolarisPage } from './polaris.js';
-import { fixtureRepoWithGit } from './test-model-fixture.js';
+import { fixtureRepoWithGit, fixtureWorkItemQuery, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -50,9 +50,7 @@ function capture(
   };
 }
 
-function workItemQuery(_repoRoot: string, sql: string): string {
-  return sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-fixture-revision' }]);
-}
+const workItemQuery = fixtureWorkItemQuery([]);
 
 function build(repoRoot: string, stateDir: string, nextCapture: PocRuntimeCapture): PocModel {
   return buildProductionPocModel({
@@ -151,7 +149,7 @@ describe('production-owned capture-to-model re-observation seam', () => {
     expect(twice.supersedes).toBe(once.evaluation);
     expect(JSON.stringify(initial)).toBe(frozen);
     expect(initial.evaluation.endsWith('|observed:2026-10-03T01:00:00Z')).toBe(true);
-    expect(once.clocks).toEqual({ butlersHead: fixture.revision, workingTreeDigest: 'working-tree-a', doltRevision: 'dolt-fixture-revision' });
+    expect(once.clocks).toEqual({ butlersHead: fixture.revision, workingTreeDigest: 'working-tree-a', doltRevision: FIXTURE_DOLT_REVISION });
     expect(once.moved).toEqual({ butlersHead: 'unchanged', workingTreeDigest: 'unchanged', doltRevision: 'unchanged' });
     expect(twice.moved).toEqual({ butlersHead: 'unchanged', workingTreeDigest: 'moved', doltRevision: 'unchanged' });
   }, PRODUCTION_BUILD_TIMEOUT_MS); // this test: up to 8.5 s in 5 full-suite runs at load1 38-71, over the 5 s default in 3 of them; up to 1.6 s in 5 alone runs at load1 22-24 (docs/evidence/syzygy-bpyt-4-31/full-runs.json, docs/evidence/syzygy-bpyt-4-31/repair-durations/production-reobserve.test.tests.json)

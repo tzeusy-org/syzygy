@@ -70,7 +70,9 @@ export async function runSyntheticProject(project: SyntheticProject, budget: Par
     unresolved: [],
   };
   const review = { inventoryCoverage: inventory.entries.map(entry => ({ entryId: entry.id, disposition: 'represented', blockIds: entry.disposition.assetIds, reason: 'represented' })), blockSupport: ['opening', 'mechanism-text', ...mechanismChildren.map(child => child.id), 'qualification-text', 'left', 'right', 'connection', 'depth-text'].map(blockId => ({ blockId, verdict: 'supported', sourceIds: [blockId === 'opening' ? 'purpose' : blockId === 'qualification-text' ? 'qualification' : 'mechanism'], reason: 'supported' })), findings: [] };
-  const responses = { inventory, plan, author: draft, edit: draft, fidelity: review, repair: draft };
+  const edit = { draft, changes: review.blockSupport.map(({ blockId }) => ({ blockId, action: 'kept',
+    reason: 'The scripted edit retains this block.', newBlockIds: [] })) };
+  const responses = { inventory, plan, author: draft, edit, fidelity: review, repair: { ...edit, findingDispositions: [] } };
   const admitted = new Set<number>();
   const records: unknown[] = [];
   const snapshotDigest = digestCanonicalJson(selected, { maxBytes: 100_000, maxNodes: 1000, maxDepth: 10 }).digest;

@@ -205,8 +205,10 @@ function harness(records: AdmissionRecord[]) {
     permissionIdentity: async () => 'unused', admit: async () => ({ kind: 'reserved', permit: { attemptId: `a${n++}`, maxUsageUnits: 10, maxOutputBytes: 1000 } }),
     permitted: async () => true, releaseUnsent: async () => undefined,
     responseSchema: () => ({ version: 'v1', schema: {} }),
-    generate: async input => { sent.push(input.stage); return { body: JSON.stringify({ stage: input.stage }), model: 'm', usageUnits: 1 }; },
-    validate: (stage, value) => { if ((value as { stage?: string }).stage !== stage) throw Error('schema'); return value; },
+    generate: async input => { sent.push(input.stage); const draft = { stage: input.stage };
+      return { body: JSON.stringify(input.stage === 'edit' ? { draft, changes: [] } : draft), model: 'm', usageUnits: 1 }; },
+    validate: (stage, value) => { const record = stage === 'edit' ? (value as { draft: unknown }).draft : value;
+      if ((record as { stage?: string }).stage !== stage) throw Error('schema'); return value; },
     record: async () => undefined, lateReceipt: async () => undefined, fidelity: () => ({ blocking: false, findings: [] }),
   };
   const { reserve: _reserve, ...rest } = r.options;

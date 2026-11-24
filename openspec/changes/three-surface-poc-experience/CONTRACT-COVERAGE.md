@@ -50,9 +50,9 @@ Every clause was judged exactly once and lands in exactly one part:
 | RFC5 | 27 | 1 | 15 | 11 |
 | RFC6 | 28 | 10 | 1 | 17 |
 | RFC7 | 41 | 12 | 4 | 25 |
-| RFC8 | 32 | 14 | 1 | 17 |
+| RFC8 | 32 | 16 | 1 | 15 |
 | RFC9 | 60 | 17 | 2 | 41 |
-| **Total** | **324** | **86** | **28** | **210** |
+| **Total** | **324** | **88** | **28** | **208** |
 
 The Part A clause set is exactly the `contracts[]` union in the
 generated `GOVERNING-DEPENDENCIES.md` (verified below).
@@ -138,6 +138,7 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC4-15 | Reads only the live/authoritative substrate, never a derived passive export, as a work-item source | covered — export-mutation oracle is exactly this authority-boundary check | POC-REQ-012 |
 | RFC4-15 | Degraded mode: substrate unreadable renders Unknown-with-reason, distinct from a genuinely empty result | covered — matches "export unavailable → last-good marked stale," applied as Unknown-vs-empty distinction | POC-REQ-013 |
 | RFC4-15 | Authority is work lifecycle state, never intent: the work-item title, which the POC withholds (SEC-5) and never reads into the model, is never a work item's governing intent | covered — Amendment row; the fixture-title counterexample observes it | POC-REQ-014 |
+| RFC4-15 | The scheduler feed supplies typed dependency edges at the work-item observation revision | covered — Amendment row (eligibility); the named metadata read establishes one source-returned revision witness, including the empty case | POC-REQ-062 |
 | RFC4-26 | Capability/entity↔code mappings are declared-only, inferred mappings excluded | covered — Orrery's declared-mappings-only design is exactly class (i) with class (ii) excluded, matching the scope's "no inferred mappings or edges" | POC-REQ-050, POC-REQ-052 |
 | RFC4-27 | Unmapped/absence claim requires an executed coverage record with reconciling counts, never silent absence | covered — "unmapped code a visible Unknown region with reconciling counts" is this clause's coverage-record duty applied to Orrery | POC-REQ-051 |
 | RFC5-16 | (a) Observation-capture ingest screening for Butlers repo structure | covered — POC-REQ-002's "never indexed contents" sentinel sweep structurally avoids most of the screening concern for code bodies, but doesn't test the secret-detection-policy mechanism itself | POC-REQ-002 (partial) |
@@ -243,10 +244,14 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-19 | Every aggregate over partially known measures discloses its coverage and never renders as a complete total | covered — Amendment row (elapsed time); lead time, age, arrivals and closures each state "n of m" items covered, and an uncovered item stays in the denominator. Was Unknown (five answers) | POC-REQ-045 |
 | RFC8-18 | Lead time renders as an independent measure with its declared source and evidence class, never combined into a composite | covered — Amendment row (elapsed time); the measures declare `tracker-recorded-instants` and `observed`, and no element combines two. Moved from Part B1 | POC-REQ-045 |
 | RFC8-18 | The rest of the V1 measure set (effort and complexity tier, active compute time, blocked time, tokens, API cost, attempts, review rounds, CI time, rework, touched components) renders, each with its source and evidence class | **Unknown** — Amendment row (elapsed time); none is read, and the cost answer states them Unknown | — |
+| RFC8-13 | Item eligibility is derived from exact snapshot work facts and the matching dependency feed, with honest absence and undetermined outcomes | covered — Amendment row (eligibility); both channels serve the same identity, disposition and full counts. Moved from Part B2 | POC-REQ-062 |
+| RFC8-13 | The rest of the normalized work-state, PR, VCS and liveness derivations | **Unknown** — Amendment row (eligibility); the metadata read carries no such inputs | — |
+| RFC8-17 | The blocked cause set includes the proven dependency cause and explicitly discloses cause Unknown when empty | covered — Amendment row (eligibility); the mixed edge fixture keeps the proven cause while overall eligibility is undetermined. Moved from Part B2 | POC-REQ-062 |
+| RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **171 consequence rows over 86 clauses — 123 covered,
-48 Unknown.**
+table"]`: **176 consequence rows over 88 clauses — 126 covered,
+50 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**
 The signed RFC1-26 row whose consequence reads "Relations outside the closed
@@ -512,9 +517,7 @@ are listed so the owner can review or contest each one directly.
 | RFC8-9 | SDR-18 Trajectory-vs-Polaris drafting-queue ownership boundary; POC's Polaris/Trajectory split has no drafting-queue concept |
 | RFC8-10 | Materialization-record one-way-door join (proposal identity, work-item-set, pinned revision); POC builds no materialization records — the relationship is left Unknown by design |
 | RFC8-11 | Divergence-rendering for substrate-side warrant-pointer edits; no warrant pointers exist in POC's Trajectory |
-| RFC8-13 | Per-value derivation logic (dispatch-eligibility queries, PR-lane facts, VCS merge facts, liveness); POC's kanban columns derive from Beads' own status field only |
 | RFC8-14 | Raw-status-visibility/`state-undetermined` resolution routed through the RFC3-16(a)-authorized governance-plane derivation mapping; POC's status mapping isn't a `.syzygy/governance/**` authorization-bearing artifact |
-| RFC8-17 | Closed blocked-cause taxonomy; POC's kanban has no `blocked`-cause rendering |
 | RFC8-20 | Execution-Record-sourced telemetry staging; POC has no Execution Records or telemetry |
 | RFC8-25 | Inherited-mutation sub-entry accounting and warrant-coverage test; no diff/mutation attribution in POC |
 | RFC8-26 | Compaction preservation set (what survives compaction); no compaction machinery in POC |
@@ -562,15 +565,15 @@ are listed so the owner can review or contest each one directly.
 | RFC9-51 | Illumination/highlight as non-truth-bearing interaction state; no highlighting feature established in POC scope |
 | RFC9-52 | The RFC-prose-to-OpenSpec authority boundary and coverage-matrix obligation; this non-binding sweep doesn't cite RFC9 as binding authority for the POC spec |
 
-Part B2 total `[Observed, computed]`: **210 clauses.** *(Corrected 2026-11-22, `syzygy-t3jk.17`: this line read 218 while the table held 210 rows over 210 clauses; the family table and the verifying line already said 210.)*
+Part B2 total `[Observed, computed]`: **208 clauses.**
 
 ## Verifying this table
 
 - Denominator: re-run the two counting methods named above; both must
-  return 324 for RFC1–9, and 86 + 28 + 210 = 324.
+  return 324 for RFC1–9, and 88 + 28 + 208 = 324.
 - Mapped set: `python3 scripts/build_three_surface_poc_spec_dependencies.py
   --check` — Part A's clause column must equal the generated
-  `contracts[]` union (86 identifiers).
+  `contracts[]` union (88 identifiers).
 - Totals: count rows and dispositions in this file's tables (e.g.
   Python over the `| RFC` rows); the printed totals must match the
   count — they were computed that way, not transcribed.

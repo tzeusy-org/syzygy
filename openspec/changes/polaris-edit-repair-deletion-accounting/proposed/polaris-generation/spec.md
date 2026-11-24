@@ -1,9 +1,6 @@
 # Polaris generation amendment for edit and repair accounting
 
-> **Candidate.** Proposed replacement for REQ-polaris-generation-006. The
-> current project-understanding amendment remains in force. An agent
-> adoption and versioned specification composition are required before
-> this proposed replacement can bind.
+Candidate version 2.25. One MODIFIED requirement, REQ-polaris-generation-006, whose complete text replaces the effective text after version 2.24. The agent adoption row and version tag govern when this version takes effect.
 
 ## MODIFIED Requirements
 
