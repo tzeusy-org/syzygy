@@ -8,7 +8,7 @@
 > here is overwritten and `--check` fails first. Identifiers only —
 > nothing here quotes or paraphrases any clause.
 >
-> Source: `spec.md` sha256 `cdbe5172f6abb123433e19043039ec3d748abf2a96d977749d1324d69ca5f0c1` — 29 requirement(s), 111 distinct authorities.
+> Source: `spec.md` sha256 `5c989f1ea0438bc80526d0519494e748f95cdff5a351d7e6b7714f7793df2e9f` — 29 requirement(s), 112 distinct authorities.
 
 ## doctrine (10)
 
@@ -135,13 +135,14 @@
 
 *(none declared)*
 
-## parent_requirements (9)
+## parent_requirements (10)
 
 | Authority | Cited by |
 |---|---|
 | `POC-REQ-010` | POC-REQ-062 |
 | `POC-REQ-012` | POC-REQ-062 |
 | `POC-REQ-013` | POC-REQ-062 |
+| `POC-REQ-014` | POC-REQ-042 |
 | `POC-REQ-020` | POC-REQ-062 |
 | `POC-REQ-040` | POC-REQ-062 |
 | `POC-REQ-041` | POC-REQ-045 |

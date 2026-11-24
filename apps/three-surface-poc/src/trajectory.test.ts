@@ -42,6 +42,12 @@ function cardBody(html: string, id: string): string {
   return match[1];
 }
 
+function trajectoryView(model: PocModel, query: string): string {
+  const html = renderTrajectoryRoute(model, '', undefined, new URLSearchParams(query));
+  if (typeof html !== 'string') throw new Error(`refused: ${query}`);
+  return html;
+}
+
 describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
   const revision = '0123456789abcdefghijklmnopqrstuv';
   const witness = { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null };
@@ -114,9 +120,10 @@ describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
         'block' in expectation ? [expectation.block.causes[0] ?? 'unknown'] : [],
       );
     }
-    for (const id of ['bu-k-working', 'bu-l-pinned', 'bu-m-hooked', 'bu-n-closed']) {
+    for (const id of ['bu-k-working', 'bu-l-pinned', 'bu-m-hooked']) {
       expect(cardBody(html, id)).not.toContain('data-trajectory-eligibility');
     }
+    expect(cardBody(trajectoryView(model, 'status=closed'), 'bu-n-closed')).not.toContain('data-trajectory-eligibility');
     expect(Object.fromEntries([...html.matchAll(/data-eligibility-count="([^"]+)">[^<]+ (\d+)<\/span>/g)]
       .map(([, label, value]) => [label, Number(value)]))).toEqual({
       'served non-closed': 14, ...expected.counts, rows: 15, ...expected.feed.counts.byType, unlisted: 1, external: 2, wisp: 1, 'out-of-prefix': 1,
@@ -153,7 +160,7 @@ describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
       expect(card).toContain(`data-parity-field="work-item-status">${status}<`);
       expect(card).toContain('data-eligibility-reason="dependency-revision-unverified"');
     }
-    expect(cardBody(html, 'bu-status-closed')).not.toContain('data-trajectory-eligibility');
+    expect(cardBody(trajectoryView(model, 'status=closed'), 'bu-status-closed')).not.toContain('data-trajectory-eligibility');
   });
 
   it('follows every fixture blocker destination across pages, direct and tailnet, and measures the largest response', async () => {
@@ -211,10 +218,10 @@ describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
 describe('Trajectory', () => {
   it('places every rendered item in the column its declared status mapping assigns (POC-REQ-040)', () => {
     const model = buildFixtureModel(cleanups);
-    const html = renderTrajectoryPage(model);
-    if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
+    const html = trajectoryView(model, 'selection=recent');
+    if (model.workItems.kind !== 'observed') throw new Error('unreachable');
 
-    for (const item of model.trajectory.rendered) {
+    for (const item of model.workItems.items) {
       const card = cardBody(html, item.id);
       const columnMatch = new RegExp(
         `<h2>${STATUS_TO_COLUMN[item.status]}[\\s\\S]*?</section>`,
@@ -222,11 +229,11 @@ describe('Trajectory', () => {
       // the card's own status text is the oracle-independent check: its
       // rendered status must equal the declared mapping's input status
       expect(card).toContain(`data-parity-field="work-item-status">${item.status}<`);
-      expect(html).toMatch(columnMatch);
+      expect(columnMatch.exec(html)?.[0]).toContain(`data-work-item-id="${item.id}"`);
     }
   });
 
-  it('serves the full machine population and reconciles the bounded board selection (POC-REQ-042)', async () => {
+  it('serves the full machine population and reconciles the default outline and capped recent work (POC-REQ-042)', async () => {
     const instant = '2026-08-01T00:00:00Z';
     const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked'];
     const rows = [
@@ -242,15 +249,19 @@ describe('Trajectory', () => {
     if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(served.workItems.items.map((item) => item.id)).toEqual(rows.map((row) => row.id));
     expect(served.workItems.items).toHaveLength(252);
-    expect(served.trajectory).toMatchObject({ totalCount: 252, renderedCount: 250, excludedCount: 2 });
+    expect(served.trajectory).toMatchObject({ totalCount: 252, renderedCount: 201, excludedCount: 51, grouping: { positions: 201 } });
     const cardIds = [...html.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]);
-    expect(cardIds).toHaveLength(250);
-    expect(cardIds.sort()).toEqual(served.trajectory.rendered.map((item) => item.id).sort());
-    expect(cardIds).not.toContain('bu-current-200');
-    expect(cardIds).not.toContain('bu-closed-050');
-    expect(served.trajectory.rendered.filter((item) => item.column === 'Closed')).toHaveLength(50);
-    expect(html).toContain('Rendering 250 of 252 observed work items (up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id)');
-    expect(html).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
+    const expected = rows.slice(0, 201).map((row) => row.id);
+    expect(cardIds).toEqual(expected);
+    expect(served.trajectory.rendered.map((item) => item.id)).toEqual(expected);
+    expect(html).toContain('Rendering 201 of 252 observed work items (page 1 of 1 of the 201 observed items with a status other than closed, grouped by parent: 201 positions');
+    expect(html).toContain('data-parity-field="trajectory-excluded-count">51</span> items are outside this selection');
+
+    const recent = trajectoryView(model, 'selection=recent');
+    const recentIds = [...recent.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]).sort();
+    expect(recentIds).toEqual([...rows.slice(0, 200), ...rows.slice(201, 251)].map((row) => row.id).sort());
+    expect(recent).toContain('Rendering 250 of 252 observed work items (up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id)');
+    expect(recent).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
   });
 
   // SEC-5 (owner answer 2026-10-20, syzygy-jytt): a card is named by its
@@ -264,7 +275,7 @@ describe('Trajectory', () => {
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     const ids = model.trajectory.rendered.map((item) => item.id);
-    expect(ids).toHaveLength(5);
+    expect(ids).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
     for (const id of ids) {
       const card = cardBody(html, id);
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
@@ -290,7 +301,7 @@ describe('Trajectory', () => {
 
   it('never renders closure/activity as verification satisfaction (POC-REQ-043)', () => {
     const model = buildFixtureModel(cleanups);
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'status=closed');
     const closedCard = cardBody(html, 'bu-closed-recent');
     expect(closedCard).toContain('data-parity-field="work-item-status">closed<');
     expect(closedCard).toContain('data-parity-field="work-item-verification"');
@@ -313,7 +324,7 @@ describe('Trajectory', () => {
     expect(unknownModel.trajectory.kind).toBe('unknown');
     const unknownHtml = renderTrajectoryPage(unknownModel);
     expect(unknownHtml).toContain('data-unknown-disclosure="region:work-items"');
-    expect(unknownHtml).not.toContain('class="board"');
+    expect(unknownHtml).not.toContain('class="outline"');
 
     const emptyObservedModel = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -325,15 +336,17 @@ describe('Trajectory', () => {
     });
     expect(emptyObservedModel.trajectory.kind).toBe('observed');
     const emptyHtml = renderTrajectoryPage(emptyObservedModel);
-    expect(emptyHtml).toContain('class="board"');
+    expect(emptyHtml).toContain('class="outline"');
+    expect(emptyHtml).toContain('No matching work items.');
     expect(emptyHtml).not.toContain('data-unknown-disclosure="region:work-items"');
     expect(emptyHtml).not.toBe(unknownHtml);
 
     // C3-4: the board's <section> columns are not listitems, so the
     // wrapper must not claim role="list" (invalid required-owned-elements
     // ARIA); role="group" keeps the accessible name valid.
-    expect(emptyHtml).toContain('class="board" role="group"');
-    expect(emptyHtml).not.toContain('role="list"');
+    const emptyStatusBoard = trajectoryView(emptyObservedModel, 'page=1');
+    expect(emptyStatusBoard).toContain('class="board" role="group"');
+    expect(emptyStatusBoard).not.toContain('role="list"');
   });
 
   it('renders the observed worker-change lifecycle state on the matching card, never as verified (AC3/AC4)', () => {
@@ -525,10 +538,12 @@ describe('Trajectory', () => {
     expect(reportedCard).not.toContain('Verification: Verified');
     expect(reportedCard).not.toContain('epistemic-observed" data-parity-field="worker-change-verification"');
 
-    // syzygy-t3jk.18 review finding 1: with 210 newer non-closed items the
-    // worker-change bead leaves the default selection; the view page that
+    // With 250 earlier identifiers the worker-change bead falls beyond the
+    // first outline page. A status-filtered page that
     // holds it renders its card, badge and disclosure route, on both paths.
-    const crowded = [...rows, ...Array.from({ length: 210 }, (_, i) => ({ ...rows[0]!, id: `bu-newer-${String(i).padStart(3, '0')}`, updated_at: '2026-08-31T00:00:00Z' }))];
+    const crowded = [...rows, ...Array.from({ length: 250 }, (_, i) => ({
+      ...rows[0]!, id: `bu-newer-${String(i).padStart(3, '0')}`, status: 'open', updated_at: '2026-08-31T00:00:00Z',
+    }))];
     const crowdedModel = buildPocModel({
       seeds: alternateSeeds, repoRoot, repositoryRevision: changedRevision, observerRevision: revision,
       evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf }, materializationRecord,
@@ -636,13 +651,13 @@ describe('Trajectory', () => {
     expect(noneHtml).not.toContain('Demonstrated item');
   });
 
-  it.each(['closed', 'open'] as const)('discloses a demonstrated %s item excluded by its population limit (N-1)', (status) => {
+  it.each(['closed', 'open'] as const)('discloses a demonstrated %s item excluded from the first outline page (N-1)', (status) => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const old = '2026-01-01T00:00:00Z';
     const newer = '2026-08-01T00:00:00Z';
     const rows = [
-      fixtureWorkItemRow('bu-excluded-demo', status, old, old, status === 'closed' ? old : null),
-      ...Array.from({ length: status === 'closed' ? 50 : 200 }, (_, i) =>
+      fixtureWorkItemRow('bu-z-excluded-demo', status, old, old, status === 'closed' ? old : null),
+      ...Array.from({ length: status === 'closed' ? 50 : 250 }, (_, i) =>
         fixtureWorkItemRow(`bu-newer-${String(i).padStart(3, '0')}`, status, newer, newer, status === 'closed' ? newer : null)),
     ];
     const model = buildPocModel({
@@ -652,7 +667,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@excluded', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: {
-        beadId: 'bu-excluded-demo',
+        beadId: 'bu-z-excluded-demo',
         externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization',
         targetRepoRoot: repoRoot,
         createdAt: old,
@@ -662,14 +677,14 @@ describe('Trajectory', () => {
       },
       runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
-    expect(model.materializedBeadId).toBe('bu-excluded-demo');
+    expect(model.materializedBeadId).toBe('bu-z-excluded-demo');
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
-    expect(model.trajectory.rendered.some((item) => item.id === 'bu-excluded-demo')).toBe(false);
+    expect(model.trajectory.rendered.some((item) => item.id === 'bu-z-excluded-demo')).toBe(false);
     const html = renderTrajectoryPage(model);
     expect(html).toContain(
-      'The demonstrated item <code>bu-excluded-demo</code> was materialized by this POC but falls outside the current board selection',
+      'The demonstrated item <code>bu-z-excluded-demo</code> was materialized by this POC but falls outside the current board selection',
     );
-    expect(html).not.toContain('data-work-item-id="bu-excluded-demo"');
+    expect(html).not.toContain('data-work-item-id="bu-z-excluded-demo"');
     expect(html).not.toContain('The demonstrated item is <a');
   });
 
@@ -770,7 +785,7 @@ describe('Trajectory', () => {
 // or a tracker claim as observed activity.
 //
 // Population (stated, and printed): the page h1 and lede; the text of every
-// h2 and every aria-label inside `.board`; every `.worker-change-label`; every
+// h2 and every aria-label inside the board or outline; every `.worker-change-label`; every
 // `.notice` in the Trajectory body; and, on the machine answer, every
 // `trajectory.rendered[].column` and every STATUS_TO_COLUMN value. The card's
 // own `work-item-status` text and `workerChange.state` are outside the
@@ -790,10 +805,10 @@ function closureWordingPopulation(html: string, served: PocModel): string[] {
   const lede = /<p class="lede"[^>]*>([\s\S]*?)<\/p>/.exec(html);
   if (lede?.[1] === undefined) throw new Error('page lede missing');
   texts.push(stripTags(lede[1]));
-  const boardStart = html.indexOf('<div class="board"');
-  if (boardStart < 0) throw new Error('board missing');
-  const board = html.slice(boardStart);
-  for (const m of board.matchAll(/<h2>([\s\S]*?)<\/h2>/g)) texts.push(stripTags(m[1]!));
+  const boardStart = html.search(/<(?:div class="board"|section class="outline")/);
+  if (boardStart < 0) throw new Error('board or outline missing');
+  const board = html.slice(boardStart, html.indexOf('</main>', boardStart));
+  for (const m of board.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)) texts.push(stripTags(m[1]!));
   for (const m of board.matchAll(/aria-label="([^"]*)"/g)) texts.push(m[1]!);
   for (const m of html.matchAll(/<span class="worker-change-label">([\s\S]*?)<\/span>/g)) texts.push(stripTags(m[1]!));
   for (const m of html.matchAll(/<p class="[^"]*\bnotice\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)) texts.push(stripTags(m[1]!));
@@ -833,42 +848,37 @@ describe('Trajectory closure wording (T1)', () => {
     expect(population.filter((text) => CLOSURE_AS_COMPLETION.test(text))).toEqual([]);
 
     // Rule 6: 'Done' restored on the page, and on the answer, each fails.
-    const mutatedPage = html.replace('<h2>Closed ', '<h2>Done ');
+    const mutatedPage = html.replace('Work items grouped by parent</h2>', 'Work items done</h2>');
     expect(mutatedPage).not.toBe(html);
     expect(closureWordingPopulation(mutatedPage, served).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const closedIndex = served.trajectory.rendered.findIndex((item) => item.column === 'Closed');
-    if (which === 'rows') expect(closedIndex).toBeGreaterThanOrEqual(0);
-    if (closedIndex >= 0) {
-      const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
-      mutatedAnswer.trajectory.rendered[closedIndex]!.column = 'Done';
-      expect(closureWordingPopulation(html, mutatedAnswer).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
-    }
+    const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
+    mutatedAnswer.trajectory.rendered[0]!.column = 'Done';
+    expect(closureWordingPopulation(html, mutatedAnswer).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
   });
 
   it('heads the closed and claimed columns Closed and Claimed, page and answer alike', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'selection=recent');
     const served = await servedAnswer(model);
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(html).toContain('<h2>Closed <span class="count">(50)</span></h2>');
     expect(html).toMatch(/<h2>Claimed <span class="count">\(\d+\)<\/span><\/h2>/);
-    expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'closed').map((item) => item.column))).toEqual(new Set(['Closed']));
+    expect(served.trajectory.rendered.filter((item) => item.status === 'closed')).toEqual([]);
     expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'in_progress').map((item) => item.column))).toEqual(new Set(['Claimed']));
   });
 
   it('states once, above the board, how many rendered items are closed and that their verification is Unknown', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
-    const html = renderTrajectoryPage(model);
-    const served = await servedAnswer(model);
-    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const closed = served.trajectory.rendered.filter((item) => item.status === 'closed');
-    const unverified = closed.filter((item) => item.verification === 'unknown').length;
-    expect(closed).toHaveLength(50);
+    const html = trajectoryView(model, 'status=closed');
+    const closed = [...html.matchAll(/data-parity-field="work-item-status">closed</g)];
+    const unverified = [...html.matchAll(/data-parity-field="work-item-verification"[^>]*>Verification: Unknown/g)];
+    expect(closed).toHaveLength(51);
+    expect(unverified).toHaveLength(closed.length);
     expect(html.match(/data-parity-field="trajectory-closure-notice"/g)).toHaveLength(1);
     expect(html.indexOf('trajectory-closure-notice')).toBeLessThan(html.indexOf('<div class="board"'));
     expect(html).toContain(`data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification`);
-    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item`);
+    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified.length}</span> of them, because no test or merge evidence is ingested for a work item`);
   });
 });
 
@@ -901,7 +911,7 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
-    expect(cards).toHaveLength(250);
+    expect(cards).toHaveLength(201);
     for (const [literal, count] of [...ROUTE_COUNTS, ...BASES.map((basis) => [basis, 1] as const)]) {
       expect(html.split(literal).length - 1, literal).toBe(count);
       expect(cards.filter((card) => card.includes(literal)), literal).toEqual([]);
@@ -920,12 +930,12 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     if (served.trajectory.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('unreachable');
-    expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 250, outside: 2 });
+    expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 201, outside: 51 });
     expect(served.workItems.items).toHaveLength(252);
     const notice = /<p class="verification-count notice" id="n-verification" data-parity-field="work-item-verification-count" data-unknown-disclosure="region:work-item-verification" data-unknown-reason="missing-evidence">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     expect(notice).toContain('data-parity-field="verification-unknown-count">252</span> of 252 observed work items');
-    expect(notice).toContain('data-parity-field="verification-unknown-inside">250</span> are in this selection');
-    expect(notice).toContain('data-parity-field="verification-unknown-outside">2</span> are outside it');
+    expect(notice).toContain('data-parity-field="verification-unknown-inside">201</span> are in this selection');
+    expect(notice).toContain('data-parity-field="verification-unknown-outside">51</span> are outside it');
     const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(words).toContain('Reason: missing-evidence. Route: Produce or capture evidence.');
     expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-verification')?.epistemic.closedReason).toBe('missing-evidence');
@@ -939,11 +949,11 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
       { ...fixtureWorkItemRow('bu-facts-closed', 'closed', instant(3), instant(4), instant(5)), priority: 3 },
     ];
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'page=1');
     const served = await servedAnswer(model);
-    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    expect(served.trajectory.rendered.map((item) => [item.id, item.priority])).toEqual([['bu-facts-closed', 3], ['bu-facts-open', 0]]);
-    for (const item of served.trajectory.rendered) {
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => [item.id, item.priority])).toEqual([['bu-facts-open', 0], ['bu-facts-closed', 3]]);
+    for (const item of served.workItems.items) {
       const card = cardBody(html, item.id);
       expect(card).toContain(`data-parity-field="work-item-priority">${item.priority}</span>`);
       expect(card).toContain(`<time data-parity-field="work-item-created" datetime="${item.createdAt}">${item.createdAt}</time>`);
@@ -973,14 +983,14 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect([...answersRegion(html).matchAll(/<dt>([^<]*)<\/dt>/g)].map((m) => m[1])).toEqual(QUESTIONS);
     expect(served.trajectory.answers.map((answer) => answer.id)).toEqual(['remains', 'running', 'changed', 'cost', 'intent']);
-    const order = ['class="answers"', 'data-parity-field="trajectory-scope"', 'data-parity-field="trajectory-closure-notice"', 'class="board"'].map((marker) => html.indexOf(marker));
+    const order = ['class="answers"', 'data-parity-field="trajectory-scope"', 'data-parity-field="trajectory-closure-notice"', 'class="outline"'].map((marker) => html.indexOf(marker));
     expect(order.every((position) => position >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     const main = html.slice(html.indexOf('<main'));
     expect(main.indexOf('class="answers"')).toBeLessThan(main.indexOf('class="notice') === -1 ? Infinity : main.indexOf('class="notice'));
   });
 
-  it('counts what remains over every served item: the statuses sum to the total and differ from the rendered columns', async () => {
+  it('counts what remains over every served item, including closed items outside the outline', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
@@ -991,8 +1001,8 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const counts = Object.fromEntries([...body.matchAll(/data-parity-field="answer-remains-([a-z_]+)">(\d+)</g)].map((m) => [m[1], Number(m[2])]));
     expect(counts).toEqual({ served: 252, open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 });
     expect(34 + 34 + 34 + 33 + 33 + 33 + 51).toBe(252);
-    // The board renders 250: its Closed column holds 50, the answer 51.
-    expect(/<h2>Closed <span class="count">\((\d+)\)<\/span>/.exec(html)?.[1]).toBe('50');
+    expect(html.match(/data-work-item-id=/g)).toHaveLength(201);
+    expect(html).not.toContain('data-parity-field="work-item-status">closed<');
   });
 
   it('states the running count as a tracker claim with its liveness the state-local activity-undetermined (RFC8-16)', async () => {
@@ -1339,13 +1349,15 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     const served = await servedAnswer(model);
     if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(served.trajectory.narrowing).toEqual({
-      parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], selection: ['recent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      defaultSelection: 'grouped-by-parent',
+      recentLimits: { nonClosedLimit: 200, recentClosedWindow: 50 },
       changedDefault: 'day',
       pageSize: 250,
       order: 'ascending item id',
       groupedOrder: 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
       groupedPageUnit: 'position',
-      view: null,
+      view: { status: null, governingIntent: null, group: 'parent', changed: null, page: 1, matching: 549, pageCount: 3 },
     });
     const pageSize = served.trajectory.narrowing.pageSize;
     for (const [query, filter, page] of [['status=open&page=1', (s: string) => s === 'open', 1], ['page=2', () => true, 2]] as const) {
@@ -1366,6 +1378,9 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
       ['page=0', 'page', 'not-a-positive-integer'],
       ['page=1.5', 'page', 'not-a-positive-integer'],
       ['page=4', 'page', 'page-past-end'],
+      ['selection=latest', 'selection', 'unknown-value'],
+      ['selection=recent&group=parent', 'selection', 'incompatible-parameter'],
+      ['selection=recent&page=2', 'page', 'page-past-end'],
     ];
     for (const [query, parameter, reason] of cases) {
       const response = await get(model, TRAJECTORY_HUMAN_PATH, query);
@@ -1374,8 +1389,14 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     }
     const plain = await get(model, TRAJECTORY_HUMAN_PATH, '');
     expect(plain.status).toBe(200);
-    expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Default selection</a></li>');
-    expect(scope(plain.body)!.rule).toBe('up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id');
+    expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Non-closed items grouped by parent');
+    expect(scope(plain.body)!.rule).toMatch(/^page 1 of 3 of the 549 observed items with a status other than closed, grouped by parent: 549 positions/);
+    expect(plain.body).toContain('rel="next" href="/trajectory?group=parent&amp;page=2"');
+    const recent = await get(model, TRAJECTORY_HUMAN_PATH, 'selection=recent&changed=week');
+    expect(recent.status).toBe(200);
+    expect(recent.body).toContain('href="/trajectory?selection=recent&amp;changed=week" aria-current="page">Recent work');
+    expect(recent.body).toContain('class="board"');
+    expect(recent.body).not.toContain('class="outline"');
   });
 
   it('links each view with its count, and the neighbours, on the direct and the tailnet path, outside any details element', async () => {
@@ -1386,10 +1407,10 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
       const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]!.replaceAll('&amp;', '&'));
       expect(hrefs).toEqual([
         `${prefix}/trajectory`,
+        `${prefix}/trajectory?selection=recent`,
         `${prefix}/trajectory?page=1`,
         ...STATUSES.map((status) => `${prefix}/trajectory?status=${status}&page=1`),
         `${prefix}/trajectory?governing-intent=unknown&page=1`,
-        `${prefix}/trajectory?group=parent&page=1`,
         `${prefix}/trajectory?page=2`,
       ]);
       expect([...nav.matchAll(/data-status="([a-z_]+)">(\d+)</g)].map((m) => `${m[1]}=${m[2]}`)).toEqual(['open=92', 'in_progress=92', 'blocked=92', 'deferred=91', 'pinned=91', 'hooked=91', 'closed=91']);
@@ -1411,6 +1432,50 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     process.stdout.write(`[T8 page bytes] ${JSON.stringify({ sizes, perCard: Math.round((sizes[0]! - sizes[2]!) / (250 - 140)) })}\n`);
     expect(Math.max(...sizes)).toBeLessThan(2_097_152 / 2);
     expect(empty).toBeGreaterThan(0);
+  });
+
+  it('measures the owner-scale default page and counts distinct items at both mounts', async () => {
+    // The retained owner-scale census measured 954 non-closed and 8,240
+    // closed items. This synthetic fixture reproduces those sizes.
+    const revision = FIXTURE_DOLT_REVISION;
+    const instant = '2026-08-01T00:00:00Z';
+    const openIds = Array.from({ length: 954 }, (_, index) => `bu-open-${String(index).padStart(4, '0')}`);
+    const closedIds = Array.from({ length: 8240 }, (_, index) => `bu-parent-${String(index).padStart(4, '0')}`);
+    const rows = [
+      ...openIds.map((id) => ({ ...fixtureWorkItemRow(id, 'open', instant, instant, null), revision })),
+      ...closedIds.map((id) => ({ ...fixtureWorkItemRow(id, 'closed', instant, instant, instant), revision })),
+    ];
+    const parentIds = closedIds.slice(0, 16);
+    const groups = parentIds.map((parent, group) => ({
+      parent,
+      children: openIds.filter((_, index) => index % 16 === group || (index % 5 === 0 && (index + 1) % 16 === group)),
+    }));
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows,
+      runDependencyQuery: () => JSON.stringify([
+        { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+        ...groups.flatMap(({ parent, children }) => children.map((id) => ({
+          revision: null, issue_id: id, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0,
+        }))),
+      ]),
+    });
+    const positions = groups.flatMap((group) => group.children);
+    expect(positions).toHaveLength(1145);
+    const sizes: { mount: string; page: number; bytes: number }[] = [];
+    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, DIRECT_HOST], [TRAJECTORY_TAILNET_PATH, TAILNET_HOST_NAME]] as const) {
+      for (let page = 1; page <= 5; page += 1) {
+        const response = await get(model, path, page === 1 ? '' : `group=parent&page=${page}`, host);
+        expect(response.status).toBe(200);
+        const expected = positions.slice((page - 1) * 250, page * 250);
+        const distinct = new Set(expected).size;
+        expect([...response.body.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1])).toEqual(expected);
+        expect(scope(response.body)).toMatchObject({ rendered: distinct, excluded: 9194 - distinct, total: 9194 });
+        const bytes = Buffer.byteLength(response.body, 'utf8');
+        expect(bytes).toBeLessThan(2_097_152);
+        sizes.push({ mount: path, page, bytes });
+      }
+    }
+    process.stdout.write(`[T8 grouped-default owner-scale fixture bytes] ${JSON.stringify(sizes)}\n`);
   });
 });
 
@@ -1509,19 +1574,27 @@ describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
       const [ra, rb] = [classes.indexOf(a), classes.indexOf(b)];
       return ra - rb || (a < b ? -1 : a > b ? 1 : 0);
     });
-    const html = grouped(page);
+    const html = renderTrajectoryPage(page);
+    const positions = [...expected.values()].flat();
+    expect(positions).toHaveLength(8);
+    expect(new Set(positions).size).toBe(7);
+    expect(machine.trajectory.grouping?.positions).toBe(positions.length);
+    expect(machine.trajectory.renderedCount).toBe(new Set(positions).size);
+    expect(machine.trajectory.renderedCount + machine.trajectory.excludedCount).toBe(machine.workItems.items.length);
+    expect(machine.trajectory.grouping?.groups.map((group) => [group.anchor, group.onPage])).toEqual(order.map((anchor) => [anchor, expected.get(anchor)]));
     expect(groupOrder(html)).toEqual(order);
     for (const [anchor, ids] of expected) {
       const region = new RegExp(`data-group="${anchor}">([\\s\\S]*?)</li>\\s*</ol>\\s*</li>`).exec(html)?.[1] ?? '';
       expect([...region.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]), anchor).toEqual(ids);
     }
+    expect(grouped(page, '', 'group=parent&page=1')).toEqual(html);
   });
 
   it('links the grouped view with its count from the navigation, on the direct and the tailnet path', () => {
     const page = model();
     for (const prefix of ['', '/butlers-syzygy']) {
       const html = renderTrajectoryPage(page, prefix);
-      expect(html).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1">Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">7</span></a>`);
+      expect(html).toContain(`href="${prefix}/trajectory" aria-current="page">Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">7</span></a>`);
       expect(grouped(page, prefix)).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1#group-p-bu-epic"`);
     }
   });
@@ -1623,7 +1696,7 @@ describe('Trajectory answers what changed between two named revisions (T6 S1, sy
     expect(answerBody(week, 'changed')).toContain(`data-revision="${WEEK_FROM}"`);
     expect(answerBody(week, 'changed')).toContain('<span data-parity-field="answer-changed-total">0</span> items changed state');
     expect(answerBody(week, 'changed')).toContain('No item changed state between these revisions: an observed zero.');
-    // The board is the default selection, not a view.
+    // A changed window by itself keeps the default outline.
     expect(week).toContain(renderTrajectoryPage(page).match(/<p class="scope-statement[\s\S]*?<\/p>/)![0]);
     const links = [...answerBody(renderTrajectoryPage(page), 'changed').matchAll(/<a data-change-window-link="([^"]+)" href="([^"]+)"/g)].map((match) => [match[1], match[2]]);
     expect(links).toEqual([['week', '/trajectory?changed=week#answers-heading'], ['since-last', '/trajectory?changed=since-last#answers-heading']]);

@@ -211,41 +211,49 @@ keeps its exact-table link as well.
   fetches every target in both forms, including the Orrery link created after
   its local script runs.
 
-**Trajectory selection.** The board renders up to 200 most recently updated
+**Trajectory selection.** With no parameters, Trajectory opens the first
+page of non-closed work items grouped by parent. Each page holds up to 250
+positions. One item can occupy several positions and counts once in the
+rendered item total. The machine response carries the complete observed
+population in `workItems.items` and the same first page in
+`trajectory.rendered` and `trajectory.grouping`.
+
+The **Recent work** link opens `?selection=recent`, a status board of up to 200 most recently updated
 non-closed items plus up to 50 most recently closed items. It ranks recorded
 timestamps as instants, puts missing, invalid or timezone-less times last,
 breaks timestamp ties by ascending item id, and orders cards by ascending id
 within each status column. Accepted times have a valid Gregorian date,
 `T`-separated hours/minutes/seconds, optional one-to-nine fractional digits,
 and an explicit `Z` or numeric `±HH:MM` offset. The page states the selection
-rule and its rendered, excluded and full
-observed counts. A demonstrated item outside either window gets an explicit
-callout rather than an extra card. The machine answer keeps every observed
-work item in `workItems.items`; `trajectory.rendered` is the bounded selection.
-The fixed populations prevent backlog growth from adding cards; response
-ceilings still apply to the encoded bodies, whose size also depends on each
-selected item's text. The size-only comparison and choice rationale are in
+rule and its rendered, excluded and full observed counts. A demonstrated
+item outside the displayed selection gets a callout. The response ceilings
+apply to each encoded page. The historical recency size comparison is in
 `docs/evidence/syzygy-blbu-trajectory-selection-2026-10-20.json`.
 
 **Trajectory views.** Every served item is reachable (`syzygy-t3jk.18`,
 POC-REQ-042). `GET /trajectory` (and its tailnet mount) takes a closed
-parameter set: `status` (one of the seven tracker statuses),
-`governing-intent=unknown` and `page` (a positive integer). Any parameter
-gives a view: the matching items in ascending id, 250 per page, its scope
+parameter set with `status` (one of the seven tracker statuses),
+`governing-intent=unknown`, `group=parent`, `selection=recent`, `changed`
+(day, week or since-last) and `page` (a positive integer). An ungrouped
+filter or all-items page renders matching items in ascending id, 250 per
+page. Its scope
 sentence naming the page, the page count and the matching count, with
-rendered plus excluded equal to the total. No parameter gives the default
-selection above. Another name, a repeated name, a value outside its set, a
+rendered plus excluded equal to the total. `changed` selects the answer
+window and keeps the selection. Recent work accepts `changed` and optional
+`page=1`. Another name, a repeated name, a value outside its set, an
+incompatible parameter combination, a
 page that is not a positive integer or a page past the last is refused with
 HTTP 400 and a JSON body naming the parameter, the reason and the allowed
-set. Every page carries real links to the default selection, every item by
+set. Every page carries real links to the default outline, recent work, every item by
 id, each status and the governing-intent Unknown with their whole-population
 counts, and the previous and next page. The machine answer takes no
-parameter: `trajectory.narrowing` declares the parameter set, page size and
-order, so a checker recomputes any page from `workItems.items`. When the
+parameter. `trajectory.narrowing` declares the selection, parameters,
+recency limits, page size and ordering so a checker can recompute any page
+from `workItems.items` and `trajectory.outline`. When the
 work-item population is Unknown, a well-formed view renders the Unknown
 board.
 
-**Grouped by parent.** `group=parent` (`syzygy-t3jk.20`, POC-REQ-042) groups
+**Grouped by parent.** The default and `group=parent` (POC-REQ-042) group
 the non-closed items, or the items of a `status` named, by the parents their
 `parent-child` rows give, read by the same dependency read as eligibility.
 An item sits under each served parent it has, so the 250-per-page count is of

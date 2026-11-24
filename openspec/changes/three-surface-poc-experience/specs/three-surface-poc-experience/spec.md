@@ -1029,30 +1029,38 @@ that selection, so an excluded-item population is never silently invisible.
 Every served item SHALL be reachable: the route SHALL accept a closed
 parameter set, `status` (one of the seven tracker statuses of POC-REQ-040),
 `governing-intent=unknown` (the items carrying POC-REQ-014's governing-intent
-Unknown), `group=parent` and `page` (a positive integer), and any of them SHALL give a view
+Unknown), `group=parent` and `page` (a positive integer). These parameters SHALL give a view
 of the matching items in ascending item id (with `group=parent`, in the
 grouped order below), one page of a declared fixed size, whose scope
-statement names the page, the page count and the matching count. No parameter SHALL give the default selection. The set also holds
+statement names the page, the page count and the matching count. When no
+parameter is supplied, the default SHALL be the first page of the
+non-closed work-item population grouped by parent. The machine answer
+SHALL give the same default selection. The set also holds
 `changed` (one of POC-REQ-044's change windows, `day`, `week` or
 `since-last`), which selects the window the changed answer shows and
 nothing else: alone it SHALL keep the default selection, and with another
-parameter it SHALL ride that view. Any other name, a
-repeated name, a value outside its set, a page that is not a positive
-integer, or a page past the last SHALL be refused with HTTP 400 naming the
+parameter it SHALL ride that view. `selection=recent` SHALL give a
+single status board with up to 200 most recently updated non-closed items
+and up to 50 most recently closed items. It SHALL put missing, invalid or
+timezone-less times last, break timestamp ties by ascending item id and
+order cards by ascending item id within each status column. It accepts
+`changed` and optional `page=1`. Any other name, a repeated name, a value
+outside its set, an incompatible selection parameter, a page that is not
+a positive integer, or a page past the last SHALL be refused with HTTP 400 naming the
 parameter, the reason and the allowed set, never ignored. When the
 work-item population is Unknown, a well-formed view SHALL render the
 Unknown board, since no served item gives a view or a last page. Every page SHALL
 link, by real anchors outside any collapsed element and reachable by
-keyboard, to the default selection, every item by id, each status, the
-governing-intent Unknown and the grouped view with their whole-population
-counts, and the current view's previous and next page. The machine answer
-SHALL take no parameter and SHALL declare the parameter set, the default
-change window, the page size,
+keyboard, to the default outline, recent work, every item by id, each
+status, the governing-intent Unknown with their whole-population counts,
+and the current view's previous and next page. The machine answer SHALL
+take no parameter and SHALL declare the parameter set, the default
+selection, the recency limits, the default change window, the page size,
 the order, and the grouped order and its page unit, `position`
 (`trajectory.narrowing`), so any page is recomputable from
 `workItems.items` and `trajectory.outline`.
 
-**Grouped by parent.** `group=parent` SHALL group the matching items by
+**Grouped by parent.** The default and `group=parent` SHALL group the matching items by
 parent, where the matching items are the non-closed served items unless
 `status` names a status, closed included. An item's parents are the
 `depends_on_issue_id` of its `parent-child` rows, read by POC-REQ-062's
@@ -1084,8 +1092,9 @@ and the cycle SHALL NOT be followed. Element ids of parent groups and of the
 four classes SHALL NOT collide, whatever an item's identifier. A closed parent with non-closed items, or the reverse, SHALL be
 shown as recorded: no group states completion, progress or a percentage of
 its parent (RFC8-15, RFC8-30). An item rendered twice on one page SHALL
-carry its fragment target once. The default selection is unchanged by this
-parameter; making the grouped view the default is a further amendment.
+carry its fragment target once. The rendered count SHALL count each item
+once on the page. The governing-intent checkbox in POC-REQ-014 SHALL
+narrow the visible cards of the default outline.
 
 - **Scope.** the rendered scope statement against the full observed item
   set; the route's parameters, refusals and view links; the grouped view and
@@ -1093,9 +1102,10 @@ parameter; making the grouped view the default is a further amendment.
 
 - **Case**: a checker loads Trajectory over a database whose total item
   count exceeds the rendered selection; then, over 640 items (three pages),
-  loads every page of the unnarrowed view, every status view and the
-  governing-intent view, a page recomputed from the machine answer, five
-  refused requests, and the view links on the direct and the tailnet path.
+  loads the query-free outline, every page of the unnarrowed view, every
+  status view, the governing-intent and recent-work views, a page
+  recomputed from the machine answer, refused requests, and the links on
+  the direct and the tailnet path.
 - **Observable**: the surface states the selection rule, the rendered
   count, and the excluded count; each view's cards and counts; each
   refusal's status and reason; the links and their keyboard reach.
@@ -1131,13 +1141,21 @@ parameter; making the grouped view the default is a further amendment.
 
 - **WHEN** a closed parent has two open items, one of them also sits under
   a second parent, two items are each other's parent, one item's parent is
-  in another tracker and the reader opens `group=parent`
+  in another tracker and the reader opens Trajectory without parameters
 - **THEN** the shared item appears under both parents with one fragment
   target, the closed parent is shown closed with its items' own statuses,
   the two-item cycle is stated once and not followed, the other tracker's
   parent is counted under "parent outside this tracker" and never named,
   and the groups' items equal the checker's own grouping of the machine
-  answer
+  answer. The explicit `group=parent&page=1` view gives the same groups
+  and counts.
+
+#### Scenario: Recent work remains reachable
+
+- **WHEN** the reader follows the recent-work link from the outline
+- **THEN** the recency rule selects the capped populations by their
+  recorded instants in the same evaluation, and the linked default
+  outline remains reachable by keyboard
 
 #### Scenario: Every item reachable by state and page
 
@@ -1154,7 +1172,7 @@ warrants:
   policies: []
   decisions: [POC-DIR-2026-08-30]
   topology: []
-  parent_requirements: [POC-REQ-062]
+  parent_requirements: [POC-REQ-014, POC-REQ-062]
 ```
 
 ### Requirement: POC-REQ-043 — Activity is never rendered as satisfaction

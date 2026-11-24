@@ -61,14 +61,21 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     expect(parseTrajectoryView(new URLSearchParams('status=blocked&governing-intent=unknown&page=2'))).toEqual({ status: 'blocked', governingIntent: 'unknown', group: null, changed: null, page: 2 });
     expect(parseTrajectoryView(new URLSearchParams('page=1'))).toEqual({ status: null, governingIntent: null, group: null, changed: null, page: 1 });
     expect(parseTrajectoryView(new URLSearchParams('status=open'))).toEqual({ status: 'open', governingIntent: null, group: null, changed: null, page: 1 });
+    expect(parseTrajectoryView(new URLSearchParams('changed=week'))).toEqual({ status: null, governingIntent: null, group: 'parent', changed: 'week', page: 1 });
+    expect(parseTrajectoryView(new URLSearchParams('selection=recent&changed=week'))).toEqual({ status: null, governingIntent: null, group: null, selection: 'recent', changed: 'week', page: 1 });
   });
 
   it('refuses a name, value or page outside the declared set, naming it and the allowed set', () => {
     const refusal = (query: string) => parseTrajectoryView(new URLSearchParams(query));
-    expect(refusal('type=bug')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'type', reason: 'unknown-parameter', allowed: ['status', 'governing-intent', 'group', 'changed', 'page'] });
-    expect(refusal('status=open&status=closed')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'repeated-parameter', allowed: ['status', 'governing-intent', 'group', 'changed', 'page'] });
+    expect(refusal('type=bug')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'type', reason: 'unknown-parameter', allowed: ['status', 'governing-intent', 'group', 'selection', 'changed', 'page'] });
+    expect(refusal('status=open&status=closed')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'repeated-parameter', allowed: ['status', 'governing-intent', 'group', 'selection', 'changed', 'page'] });
     expect(refusal('status=done')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'status', reason: 'unknown-value', allowed: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'] });
     expect(refusal('governing-intent=known')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'governing-intent', reason: 'unknown-value', allowed: ['unknown'] });
+    expect(refusal('selection=all')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'selection', reason: 'unknown-value', allowed: ['recent'] });
+    for (const query of ['status=open', 'governing-intent=unknown', 'group=parent']) {
+      expect(refusal(`selection=recent&${query}`)).toEqual({ refused: 'trajectory-view-parameter', parameter: 'selection', reason: 'incompatible-parameter', allowed: ['changed', 'page=1'] });
+    }
+    expect(view(fixture(), 'selection=recent&page=2')).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 1'] });
     for (const page of ['0', '-1', '1.5', '01', 'two', '', '1e3']) {
       expect(refusal(`page=${page}`), page).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] });
     }
@@ -117,7 +124,9 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     expect(projection.totalCount).toBe(640);
     expect(projection.selectionRule).toBe('page 1 of 1 of the 60 observed items with status closed and governing intent Unknown, 250 per page by ascending item id');
     expect(projection.narrowing).toEqual({
-      parameters: { status: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'], 'governing-intent': ['unknown'], group: ['parent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      parameters: { status: ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'], 'governing-intent': ['unknown'], group: ['parent'], selection: ['recent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      defaultSelection: 'grouped-by-parent',
+      recentLimits: { nonClosedLimit: 200, recentClosedWindow: 50 },
       changedDefault: 'day',
       pageSize: 250,
       order: 'ascending item id',
@@ -129,7 +138,7 @@ describe('Trajectory views: narrowing by state, with paging (POC-REQ-042)', () =
     if (defaultProjection.kind !== 'observed') throw new Error('unreachable');
     expect(projection.answers).toEqual(defaultProjection.answers);
     expect(projection.timeMeasures).toEqual(defaultProjection.timeMeasures);
-    expect(defaultProjection.narrowing.view).toBeNull();
+    expect(defaultProjection.narrowing.view).toEqual({ status: null, governingIntent: null, group: 'parent', changed: null, page: 1, matching: 549, pageCount: 3 });
     // A status with no item renders page 1 empty, never refused.
     const none = projectTrajectoryView(defaultProjection, { ...workItems, items: workItems.items.filter((item) => item.status !== 'pinned') }, { status: 'pinned', governingIntent: null, group: null, changed: null, page: 1 });
     if ('refused' in none || none.kind !== 'observed') throw new Error('unreachable');

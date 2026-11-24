@@ -49,7 +49,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     try {
       await page.navigate(pathToFileURL(file).href);
       const before = await page.evaluate<readonly string[]>(VISIBLE_CARDS);
-      expect(before).toEqual(['bu-open1', 'bu-progress1', 'bu-blocked1', 'bu-closed-old', 'bu-closed-recent']);
+      expect(before).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
       await page.evaluate(`(() => {
         const unmarked = document.querySelector('li.wi-card').cloneNode(true);
         unmarked.removeAttribute('data-governed-by');
@@ -66,8 +66,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
   });
 
   it('with items outside the selection, Space on the focused toggle keeps exactly the inside figure\'s cards', async () => {
-    // Two open items and 52 closed: the selection keeps the 50 most recently
-    // closed, so 52 render and 2 fall outside it.
+    // Two non-closed items render and 52 closed items fall outside the outline.
     const rows = [
       fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null),
       fixtureWorkItemRow('bu-open2', 'in_progress', '2026-08-03T00:00:00Z', '2026-08-04T00:00:00Z', null),
@@ -85,9 +84,9 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     try {
       await page.navigate(pathToFileURL(file).href);
       const before = await page.evaluate<readonly string[]>(VISIBLE_CARDS);
-      expect(before).toHaveLength(52);
+      expect(before).toEqual(['bu-open1', 'bu-open2']);
       const figures = await page.evaluate<readonly string[]>(`['governed-by-unknown-count', 'governed-by-unknown-inside', 'governed-by-unknown-outside'].map(field => document.querySelector('[data-parity-field="' + field + '"]').textContent)`);
-      expect(figures).toEqual(['54', '52', '2']);
+      expect(figures).toEqual(['54', '2', '52']);
       await page.evaluate(`document.getElementById('narrow-governing-intent-unknown').focus()`);
       await page.press('Space');
       expect(await page.evaluate<boolean>(`document.getElementById('narrow-governing-intent-unknown').checked`)).toBe(true);
@@ -112,7 +111,9 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
     const directory = tempDir('syzygy-trajectory-layout-');
     const file = join(directory, 'trajectory.html');
-    writeFileSync(file, renderTrajectoryPage(model));
+    const recent = renderTrajectoryRoute(model, '', undefined, new URLSearchParams('selection=recent'));
+    if (typeof recent !== 'string') throw new Error('refused');
+    writeFileSync(file, recent);
     const page = await browser.newPage();
     try {
       await page.setViewport(width, 1000);
@@ -152,9 +153,9 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       await page.navigate(pathToFileURL(file).href);
       const expected = await page.evaluate<readonly string[]>(`Array.from(document.querySelectorAll('nav.view-nav a')).map(a => a.getAttribute('href'))`);
       expect(expected).toEqual([
-        '/trajectory', '/trajectory?page=1',
+        '/trajectory', '/trajectory?selection=recent', '/trajectory?page=1',
         ...statuses.map((status) => `/trajectory?status=${status}&page=1`),
-        '/trajectory?governing-intent=unknown&page=1', '/trajectory?group=parent&page=1', '/trajectory?page=1', '/trajectory?page=3',
+        '/trajectory?governing-intent=unknown&page=1', '/trajectory?page=1', '/trajectory?page=3',
       ].map((href) => `${prefix}${href}`));
       const reached: string[] = [];
       for (let press = 0; press < 400 && reached.length < expected.length; press += 1) {

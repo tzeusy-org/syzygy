@@ -132,37 +132,37 @@ export interface ReconciliationChainInput {
   readonly workerChange: { readonly kind: 'observed'; readonly state: string } | { readonly kind: 'unknown' } | null;
 }
 
-interface TrajectoryProjectionObserved {
+interface TrajectoryPopulation {
   readonly kind: 'observed';
   readonly doltRevision: string;
-  readonly selectionRule: string;
-  readonly rendered: readonly TrajectoryLaneItem[];
-  readonly renderedCount: number;
-  readonly excludedCount: number;
   readonly totalCount: number;
-  /** POC-REQ-043 (syzygy-t3jk.15): verification is Unknown for every served
-   * item (no evidence source is ingested); `inside` are rendered, `outside`
-   * are served but outside the selection. Both channels read these. */
-  readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
-  /** POC-REQ-045 (syzygy-t3jk.17): elapsed-time measures over every served item. */
+  /** POC-REQ-045: elapsed-time measures over every served item. */
   readonly timeMeasures: TrajectoryTimeMeasures;
   /** POC-REQ-062: eligibility and dependency counts over every served item. */
   readonly eligibility: TrajectoryEligibility;
   /** POC-REQ-044: the five answers, in TRAJECTORY_ANSWER_ORDER. */
   readonly answers: readonly TrajectoryAnswer[];
-  /** POC-REQ-042 (syzygy-t3jk.20): every served item's served parents, the
-   * children whose parent is outside the tracker or not served, and the
-   * parent-child cycles, from the dependency rows at the work-item revision. */
+  /** POC-REQ-042: the parent outline from the work-item revision. */
   readonly outline: TrajectoryOutline;
-  /** Present only on a view with `group=parent`: this page's groups. */
+}
+
+interface TrajectoryProjectionObserved extends TrajectoryPopulation {
+  readonly selectionRule: string;
+  readonly rendered: readonly TrajectoryLaneItem[];
+  readonly renderedCount: number;
+  readonly excludedCount: number;
+  /** POC-REQ-043 (syzygy-t3jk.15): verification is Unknown for every served
+   * item (no evidence source is ingested); `inside` are rendered, `outside`
+   * are served but outside the selection. Both channels read these. */
+  readonly verificationUnknown: { readonly served: number; readonly inside: number; readonly outside: number };
+  /** Present for the default outline and explicit grouped views. */
   readonly grouping?: TrajectoryGrouping;
-  /** POC-REQ-042 (syzygy-t3jk.18): the declared narrowing and paging, and
-   * the view this projection renders (null: the default selection). */
+  /** POC-REQ-042: the declared selection controls and the rendered view. */
   readonly narrowing: TrajectoryNarrowing;
 }
 
 /** The closed query parameter set of GET /trajectory (POC-REQ-042). */
-export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'group', 'changed', 'page'] as const;
+export const TRAJECTORY_VIEW_PARAMETERS = ['status', 'governing-intent', 'group', 'selection', 'changed', 'page'] as const;
 export type TrajectoryViewParameter = (typeof TRAJECTORY_VIEW_PARAMETERS)[number];
 /** Items per page of a narrowed or paged view, in ascending item id. */
 export const TRAJECTORY_PAGE_SIZE = 250;
@@ -172,10 +172,14 @@ export interface TrajectoryViewRequest {
   readonly governingIntent: 'unknown' | null;
   /** syzygy-t3jk.20: group the matching items by parent. */
   readonly group: 'parent' | null;
+  /** Select the capped recency board. Pagination and grouping have their own views. */
+  readonly selection?: 'recent';
   /** syzygy-t3jk.21: the changed answer's window; null shows the default window. */
   readonly changed: ChangeWindow | null;
   readonly page: number;
 }
+
+const DEFAULT_VIEW = { status: null, governingIntent: null, group: 'parent', changed: null, page: 1 } as const satisfies TrajectoryViewRequest;
 
 /** syzygy-t3jk.20: the parent structure, read from parent-child rows. */
 export type TrajectoryOutline =
@@ -240,10 +244,13 @@ export interface TrajectoryNarrowing {
     readonly status: readonly WorkItemStatus[];
     readonly 'governing-intent': readonly ['unknown'];
     readonly group: readonly ['parent'];
+    readonly selection: readonly ['recent'];
     /** syzygy-t3jk.21: the window the changed answer shows; alone it keeps the default selection. */
     readonly changed: readonly ChangeWindow[];
     readonly page: 'positive integer';
   };
+  readonly defaultSelection: 'grouped-by-parent';
+  readonly recentLimits: RecentLimits;
   /** syzygy-t3jk.21: the window shown when `changed` is absent. */
   readonly changedDefault: 'day';
   readonly pageSize: number;
@@ -251,19 +258,21 @@ export interface TrajectoryNarrowing {
   /** syzygy-t3jk.20: with `group=parent`, the page counts positions in this order. */
   readonly groupedOrder: typeof GROUPED_ORDER;
   readonly groupedPageUnit: 'position';
-  readonly view: (TrajectoryViewRequest & { readonly matching: number; readonly pageCount: number }) | null;
+  readonly view: TrajectoryViewRequest & { readonly matching: number; readonly pageCount: number };
 }
 
 export interface TrajectoryViewRefusal {
   readonly refused: 'trajectory-view-parameter';
   readonly parameter: string;
-  readonly reason: 'unknown-parameter' | 'repeated-parameter' | 'unknown-value' | 'not-a-positive-integer' | 'page-past-end';
+  readonly reason: 'unknown-parameter' | 'repeated-parameter' | 'unknown-value' | 'not-a-positive-integer' | 'page-past-end' | 'incompatible-parameter';
   readonly allowed: readonly string[];
 }
 
-function narrowingDeclaration(view: TrajectoryNarrowing['view']): TrajectoryNarrowing {
+function narrowingDeclaration(recentLimits: RecentLimits, view: TrajectoryNarrowing['view']): TrajectoryNarrowing {
   return {
-    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], changed: [...CHANGE_WINDOWS], page: 'positive integer' },
+    parameters: { status: Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[], 'governing-intent': ['unknown'], group: ['parent'], selection: ['recent'], changed: [...CHANGE_WINDOWS], page: 'positive integer' },
+    defaultSelection: 'grouped-by-parent',
+    recentLimits,
     changedDefault: 'day',
     pageSize: TRAJECTORY_PAGE_SIZE,
     order: 'ascending item id',
@@ -303,6 +312,13 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
   if (group !== null && group !== 'parent') {
     return { refused: 'trajectory-view-parameter', parameter: 'group', reason: 'unknown-value', allowed: ['parent'] };
   }
+  const selection = query.get('selection');
+  if (selection !== null && selection !== 'recent') {
+    return { refused: 'trajectory-view-parameter', parameter: 'selection', reason: 'unknown-value', allowed: ['recent'] };
+  }
+  if (selection === 'recent' && (status !== null || intent !== null || group !== null)) {
+    return { refused: 'trajectory-view-parameter', parameter: 'selection', reason: 'incompatible-parameter', allowed: ['changed', 'page=1'] };
+  }
   const changed = query.get('changed');
   if (changed !== null && !(CHANGE_WINDOWS as readonly string[]).includes(changed)) {
     return { refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: [...CHANGE_WINDOWS] };
@@ -311,10 +327,12 @@ export function parseTrajectoryView(query: URLSearchParams): TrajectoryViewReque
   if (page !== null && !/^[1-9][0-9]*$/.test(page)) {
     return { refused: 'trajectory-view-parameter', parameter: 'page', reason: 'not-a-positive-integer', allowed: ['positive integer'] };
   }
+  const changedOnly = changed !== null && seen.size === 1;
   return {
     status: status as WorkItemStatus | null,
     governingIntent: intent === null ? null : 'unknown',
-    group: group === null ? null : 'parent',
+    group: group === 'parent' || changedOnly ? DEFAULT_VIEW.group : null,
+    ...(selection === null ? {} : { selection }),
     changed: changed as ChangeWindow | null,
     page: page === null ? 1 : Number(page),
   };
@@ -340,9 +358,22 @@ export function projectTrajectoryView(
   request: TrajectoryViewRequest,
 ): TrajectoryProjection | TrajectoryViewRefusal {
   if (base.kind === 'unknown' || workItems.kind === 'unknown') return base;
+  const { grouping: _grouping, narrowing, ...population } = base;
+  return projectObservedView({ ...population, totalCount: workItems.items.length }, workItems.items, request, narrowing.recentLimits);
+}
+
+function projectObservedView(
+  base: TrajectoryPopulation,
+  served: readonly WorkItemFact[],
+  request: TrajectoryViewRequest,
+  recentLimits: RecentLimits,
+): TrajectoryProjectionObserved | TrajectoryViewRefusal {
+  if (request.selection === 'recent') {
+    return request.page > 1 ? pastEnd(1) : recentView(base, served, request, recentLimits);
+  }
   // syzygy-t3jk.20: the grouped view holds the non-closed set unless a
   // status is asked for, closed included.
-  const matching = [...workItems.items]
+  const matching = served
     .filter((item) =>
       (request.status === null ? request.group === null || item.status !== 'closed' : item.status === request.status) &&
       (request.governingIntent === null || carriesGoverningIntentUnknown(item)))
@@ -351,8 +382,8 @@ export function projectTrajectoryView(
     request.status === null ? (request.group === null ? null : 'a status other than closed') : `status ${request.status}`,
     request.governingIntent === null ? null : 'governing intent Unknown',
   ].filter((part): part is string => part !== null);
-  const scope = narrowed.length === 0 ? `all ${workItems.items.length} observed items` : `the ${matching.length} observed items with ${narrowed.join(' and ')}`;
-  if (request.group === 'parent') return groupedView(base, workItems.items, matching, request, scope);
+  const scope = narrowed.length === 0 ? `all ${served.length} observed items` : `the ${matching.length} observed items with ${narrowed.join(' and ')}`;
+  if (request.group === 'parent') return groupedView(base, served, matching, request, scope, recentLimits);
 
   const pageCount = Math.max(1, Math.ceil(matching.length / TRAJECTORY_PAGE_SIZE));
   if (request.page > pageCount) return pastEnd(pageCount);
@@ -362,10 +393,9 @@ export function projectTrajectoryView(
     selectionRule: `page ${request.page} of ${pageCount} of ${scope}, ${TRAJECTORY_PAGE_SIZE} per page by ascending item id`,
     rendered,
     renderedCount: rendered.length,
-    excludedCount: workItems.items.length - rendered.length,
-    totalCount: workItems.items.length,
-    verificationUnknown: { served: workItems.items.length, inside: rendered.length, outside: workItems.items.length - rendered.length },
-    narrowing: narrowingDeclaration({ ...request, matching: matching.length, pageCount }),
+    excludedCount: served.length - rendered.length,
+    verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },
+    narrowing: narrowingDeclaration(recentLimits, { ...request, matching: matching.length, pageCount }),
   };
 }
 
@@ -393,12 +423,13 @@ export function groupAnchor(key: TrajectoryGroupKey): string {
  * where it continues. No group states a verdict about its parent.
  */
 function groupedView(
-  base: TrajectoryProjectionObserved,
+  base: TrajectoryPopulation,
   served: readonly WorkItemFact[],
   matching: readonly WorkItemFact[],
   request: TrajectoryViewRequest,
   scope: string,
-): TrajectoryProjection | TrajectoryViewRefusal {
+  recentLimits: RecentLimits,
+): TrajectoryProjectionObserved | TrajectoryViewRefusal {
   const outline = base.outline;
   const members = new Map<string, { key: TrajectoryGroupKey; ids: string[] }>();
   const join = (key: TrajectoryGroupKey, id: string): void => {
@@ -483,10 +514,9 @@ function groupedView(
     rendered,
     renderedCount: rendered.length,
     excludedCount: served.length - rendered.length,
-    totalCount: served.length,
     verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },
     grouping: { positions, groups: slices },
-    narrowing: narrowingDeclaration({ ...request, matching: matching.length, pageCount }),
+    narrowing: narrowingDeclaration(recentLimits, { ...request, matching: matching.length, pageCount }),
   };
 }
 
@@ -557,9 +587,12 @@ export interface TrajectoryProjectionUnknown {
 
 export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProjectionUnknown;
 
-interface ProjectTrajectoryOptions {
+interface RecentLimits {
   readonly nonClosedLimit: number;
   readonly recentClosedWindow: number;
+}
+
+interface ProjectTrajectoryOptions extends RecentLimits {
   /** Absent: nothing was materialized, so the chain has no member. */
   readonly reconciliationChain?: ReconciliationChainInput;
   readonly dependencies?: WorkItemDependencyObservation;
@@ -687,12 +720,37 @@ function laneItem(item: WorkItemFact): TrajectoryLaneItem {
   };
 }
 
-/**
- * Deterministic per observation (POC-REQ-041): every temporal value comes
- * from `item.createdAt/updatedAt/closedAt`, never a render-time clock.
- * Both populations are capped, ranked by their recorded update/closure
- * times and then id. Cards keep ascending id order within each column.
- */
+/** Recorded update and closure instants determine membership, then cards
+ * keep ascending id order within each column. */
+function recentView(
+  base: TrajectoryPopulation,
+  served: readonly WorkItemFact[],
+  request: TrajectoryViewRequest,
+  recentLimits: RecentLimits,
+): TrajectoryProjectionObserved {
+  const open = served
+    .filter((item) => item.status !== 'closed')
+    .sort((a, b) => newestFirst(a.updatedAt, b.updatedAt) || byId(a, b))
+    .slice(0, recentLimits.nonClosedLimit);
+  const closed = served
+    .filter((item) => item.status === 'closed')
+    .sort((a, b) => newestFirst(a.closedAt, b.closedAt) || byId(a, b))
+    .slice(0, recentLimits.recentClosedWindow);
+
+  const rendered = [...open, ...closed].sort(byId).map(laneItem);
+  return {
+    ...base,
+    selectionRule: `up to ${recentLimits.nonClosedLimit} most recently updated non-closed items, plus up to ${recentLimits.recentClosedWindow} most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id`,
+    rendered,
+    renderedCount: rendered.length,
+    excludedCount: served.length - rendered.length,
+    verificationUnknown: { served: served.length, inside: rendered.length, outside: served.length - rendered.length },
+    narrowing: narrowingDeclaration(recentLimits, { ...request, matching: rendered.length, pageCount: 1 }),
+  };
+}
+
+/** The same parent-grouped first page feeds the machine answer and the
+ * human route. Every temporal value comes from the captured observation. */
 export function projectTrajectory(
   workItems: WorkItemsResult,
   options: ProjectTrajectoryOptions,
@@ -706,36 +764,18 @@ export function projectTrajectory(
   }
 
   const sorted = [...workItems.items].sort(byId);
-  const open = sorted
-    .filter((item) => item.status !== 'closed')
-    .sort((a, b) => newestFirst(a.updatedAt, b.updatedAt) || byId(a, b))
-    .slice(0, options.nonClosedLimit);
-  const closed = sorted
-    .filter((item) => item.status === 'closed')
-    .sort((a, b) => newestFirst(a.closedAt, b.closedAt) || byId(a, b))
-    .slice(0, options.recentClosedWindow);
-
-  const renderedIds = new Set<string>([...open.map((item) => item.id), ...closed.map((item) => item.id)]);
-  const rendered = sorted.filter((item) => renderedIds.has(item.id)).map(laneItem);
-
-
-  return {
+  const dependencies = options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' };
+  const population: TrajectoryPopulation = {
     kind: 'observed',
     doltRevision: workItems.provenance.revision,
-    selectionRule: `up to ${options.nonClosedLimit} most recently updated non-closed items, plus up to ${options.recentClosedWindow} most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id`,
-    rendered,
-    renderedCount: rendered.length,
-    excludedCount: workItems.items.length - rendered.length,
-    totalCount: workItems.items.length,
-    verificationUnknown: {
-      served: workItems.items.length,
-      inside: rendered.filter((item) => item.verification === 'unknown').length,
-      outside: workItems.items.length - rendered.filter((item) => item.verification === 'unknown').length,
-    },
+    totalCount: sorted.length,
     timeMeasures: trajectoryTimeMeasures(workItems.items, workItems.capturedAt),
-    eligibility: projectEligibility(sorted, options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
+    eligibility: projectEligibility(sorted, dependencies),
     answers: observedAnswers(workItems, options.reconciliationChain, options.changes),
-    outline: projectOutline(options.dependencies ?? { kind: 'unknown', reason: 'work-item-revision-unavailable' }),
-    narrowing: narrowingDeclaration(null),
+    outline: projectOutline(dependencies),
   };
+  const { nonClosedLimit, recentClosedWindow } = options;
+  const view = projectObservedView(population, sorted, DEFAULT_VIEW, { nonClosedLimit, recentClosedWindow });
+  if ('refused' in view) throw new Error('The first Trajectory outline page must exist');
+  return view;
 }
