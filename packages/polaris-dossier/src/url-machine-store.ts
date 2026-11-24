@@ -676,8 +676,10 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         await write(`${base}/state.json`, bytes);
         validatedState = { sha256: sha256(bytes), value: next };
         if (!equal(await state(), next)) throw refused();
-        if (staging !== undefined) await reverify();
-        check();
+        if (staging === undefined) check();
+        else await reverify();
+        // Staged witnesses stay private until withLock checks authority and
+        // both clocks immediately before cleanup, then confirms its result.
         issued = entries.map(({ clientId, witnessSha256 }) => ({ clientId, witnessSha256 }));
       }, { staging });
       return finished ? issued : null;

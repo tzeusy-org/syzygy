@@ -475,6 +475,38 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(await readdir(root)).not.toContain('lock');
   });
 
+  it.each([true, false])('checks staged allocation authority once between readback and cleanup when current is %s', async allowed => {
+    const f = await fixture(), root = f.options.protectedRoot;
+    let measuring = false, asyncChecks = 0, syncChecks = 0, checksAtCleanup: number | undefined;
+    const reopened = await openUrlMachineStore({ ...f.options,
+      currentAsync: async () => { if (measuring) asyncChecks++; return true; },
+      current: () => {
+        if (!measuring || asyncChecks !== 5) return true;
+        syncChecks++;
+        return allowed;
+      },
+    }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    filesystem.beforeRmdir = file => { if (file.startsWith('/proc/self/fd/')) checksAtCleanup = syncChecks; };
+    measuring = true;
+    const result = await reopened.allocateClients(8, f.options.deadline);
+    if (allowed) {
+      expect(result).toHaveLength(8);
+      expect(checksAtCleanup).toBe(1);
+      expect(asyncChecks).toBe(6);
+    } else {
+      expect(result).toBeNull();
+      expect(checksAtCleanup).toBeUndefined();
+      expect(syncChecks).toBe(1);
+      expect(asyncChecks).toBe(5);
+    }
+    const state = JSON.parse(await readFile(path.join(root, 'state.json'), 'utf8'));
+    expect(state.clients).toHaveLength(8);
+    expect(state.clients.every((client: { anchor: { kind: string } }) => client.anchor.kind === 'never-issued')).toBe(true);
+    expect((await readdir(root)).includes('lock')).toBe(!allowed);
+  });
+
   it.each([true, false])('joins the staged allocation lock sync and census before currentness %s admits state reads', async allowed => {
     const f = await fixture(), root = f.options.protectedRoot, stateFile = path.join(root, 'state.json');
     const before = await readFile(stateFile);

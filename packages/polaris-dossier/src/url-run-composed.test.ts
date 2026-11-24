@@ -2126,7 +2126,8 @@ describe('composed URL run with actual role processes', () => {
         const finalChecks = resumeChecks.filter(check => isRecord(check)
           && ['cold-final-prepared', 'cold-final-factory', 'resumed-render', 'resumed-exit'].includes(String(check.phase)));
         console.error('owned native resume failure', JSON.stringify({ scenario, phase: eligiblePhase,
-          coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal }));
+          coldFinals: coldFinals.length, latestRecoveryChecks: finalChecks.slice(-6), firstReproductionRefusal,
+          bootstrap: resumeBootstrap, latestStoreSteps: resumeStoreSteps.slice(-2) }));
       }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
       const stopped = await controller.stop(); await loop.catch(() => {});
