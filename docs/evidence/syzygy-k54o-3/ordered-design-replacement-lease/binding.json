@@ -1,0 +1,110 @@
+{
+  "subjectCommit": "0ea9df08701372aef146fff8b293f2dd78add98e",
+  "baseCommit": "7aa29210f97f8ddb1d430921b5c3097c6a95b120",
+  "binaryDeltaSha256": "2763eb121fc2a3c7bdb3e9eeeefa698ee50ec6baa3164dda28b9876b1c2e1117",
+  "binaryFullIndexDeltaSha256": "2867851e7c7efab9ce681a11200192b1273ef6e7b91ce27814a3d31a87143ee1",
+  "sourceReview": {
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-ORDERED-DESIGN-REPLACEMENT-LEASE-REVIEW-RAW.md",
+    "sha256": "44ad89c53ac07c0a08db85f21d72a7d7ba57bbdfc18936de61003dc7e979c389"
+  },
+  "nativePredecessor": {
+    "subjectCommit": "0d26ac5eaec417eec02ce93388e35a36e2d33389",
+    "traceSha256": "3ecac8751a8cc2b13f5d1ffd02d5118848cda74f0e633626af8530a4d787ba64",
+    "scenario": "stop-resume",
+    "preparationMs": 50762.243,
+    "acceptedPreparationStages": [
+      {
+        "phase": "reproduce",
+        "timing": {
+          "startedMs": 117256.42,
+          "settledMs": 154412.253,
+          "outcome": "accepted"
+        }
+      },
+      {
+        "phase": "read-reproduced-delivery",
+        "timing": {
+          "startedMs": 155844.084,
+          "settledMs": 163307.783,
+          "outcome": "accepted"
+        }
+      }
+    ],
+    "liveLeaseRemainingMs": 11948,
+    "requiredEffectMs": 30000,
+    "attemptedEffectAdmitted": false
+  },
+  "focusedVerification": {
+    "subjectCommit": "0ea9df08701372aef146fff8b293f2dd78add98e",
+    "artifactCasesPassed": 73,
+    "renderCasesPassedInCombinedRun": 154,
+    "renderCaseTimedOutInCombinedRun": 1,
+    "combinedLogSha256": "2a49d7963227b8a1cbca37e438d36c8db5dad827d01d1f03278f45b71fc56fea",
+    "renderRetry": {
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "passed": 1,
+      "skipped": 154,
+      "logSha256": "6c5d4d15359006ad888686c1a678f5a408ee4171f623e83b530139158d872ffa"
+    },
+    "typecheckLogSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+  },
+  "negativeControls": [
+    {
+      "name": "replacement-missing-effect-time",
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "old": "productReadMilliseconds.render + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS",
+      "new": "productReadMilliseconds.render",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "selector": "reserves time for the native effect",
+      "detectedFailures": 1,
+      "logSha256": "99d6268bb95425fa382f4dcb85c638b5a6d396fd6db25426deec21727e925060"
+    },
+    {
+      "name": "ordinary-widened",
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "path": "packages/polaris-dossier/src/url-product-read-limits.ts",
+      "old": "render: 60_000",
+      "new": "render: 90_000",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "selector": "uses one fixed render deadline",
+      "detectedFailures": 1,
+      "logSha256": "8dfebe7574f315d50a973ba690be9703e75391cf12e30818413f70976e4c9fb9"
+    },
+    {
+      "name": "original-run-clip-removed",
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "path": "packages/polaris-dossier/src/url-operation-products.ts",
+      "old": "Math.min(deadline, Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation])",
+      "new": "Date.now() + URL_PRODUCT_READ_MILLISECONDS[operation]",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "selector": "reserves time for the native effect",
+      "detectedFailures": 1,
+      "logSha256": "e9b1548ff7db23011aac8debe60c6262155a05021a6d143b5ffcf0b929473b01"
+    },
+    {
+      "name": "replacement-evidence-changed",
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "const operation = input.operation === 'ordered-design-replacement' ? 'render' : input.operation;",
+      "new": "const operation = input.operation;",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "selector": "reserves time for the native effect",
+      "detectedFailures": 1,
+      "logSha256": "e53bb08c886d942b98465d04b8ae181a3a36de638c37faf0af266792600607d8"
+    },
+    {
+      "name": "replacement-backend-bound-raised",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-run-artifacts.ts",
+      "old": "input.deadline > now + URL_PRODUCT_READ_MILLISECONDS[input.operation]",
+      "new": "input.deadline > now + URL_PRODUCT_READ_MILLISECONDS[input.operation] + (input.operation === 'ordered-design-replacement' ? 1 : 0)",
+      "test": "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "selector": "reserves time for the native effect",
+      "detectedFailures": 1,
+      "logSha256": "0ed270bafd56cd068db5885d5adb198c21c366c40721f2836fa7128e3cf55062"
+    }
+  ],
+  "nativeSuccessorCompletion": "Unknown"
+}

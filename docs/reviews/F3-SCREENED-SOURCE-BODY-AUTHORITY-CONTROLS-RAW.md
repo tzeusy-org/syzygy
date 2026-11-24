@@ -1,0 +1,5 @@
+PASS
+
+[Observed] I verified test-only subject `753e2762d5ad173d73d90c09927e7eb6437f034f`, sole parent `81313b224692a75be82c0bfa1f2356372c8a4eb0`, and binary diff SHA-256 `433f049fd9f294b86b2ed239a07f498ae6a93d89d57daf140e0996b5c2db1122`. The new test invokes the genuine pinned blob reader on a real owned Git fixture with a neutral clock callback. Initial withdrawal produces the binding refusal with zero screen calls. The second read enters under live authority, reaches the synchronous callback with the expected fixture path, withdraws there, and refuses before returning a result.
+
+[Inferred] Deleting only the pre-I/O check still causes a first-read binding refusal at the exit check but executes the screen, failing the zero-call assertion. Deleting only the exit check preserves the first-read assertions and resolves the second read, failing its rejection assertion. Thus the two missing checks have distinct witnesses without downstream ledger guards to mask the fault. The test observes screen execution as the read witness rather than instrumenting filesystem submission. This was a static review. I did not run tests or mutants.

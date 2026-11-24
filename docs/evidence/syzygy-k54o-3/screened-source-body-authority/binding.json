@@ -1,0 +1,146 @@
+{
+  "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+  "baseCommit": "0ea9df08701372aef146fff8b293f2dd78add98e",
+  "binaryDeltaSha256": "0994b07fda129f6ca513f0756b4343a53f47f9cd33865668e4022d4dc37a3657",
+  "sourceReviews": [
+    {
+      "subjectCommit": "6ba18123bcbd133a4ada3df450fe21ad3fcf0d5e",
+      "verdict": "HOLD",
+      "path": "docs/reviews/F3-SCREENED-SOURCE-BODY-AUTHORITY-R1-RAW.md",
+      "sha256": "78435de8c0479581b8a7bde65df4673e49233e98a4c22e4182b7b072b6f923e8"
+    },
+    {
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "verdict": "PASS",
+      "path": "docs/reviews/F3-SCREENED-SOURCE-BODY-AUTHORITY-R2-RAW.md",
+      "sha256": "0e810ae2348558b78c388ae233def5745c5750fbf60bfe9553026e93c26cd520"
+    }
+  ],
+  "directControlsReview": {
+    "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+    "verdict": "PASS",
+    "path": "docs/reviews/F3-SCREENED-SOURCE-BODY-AUTHORITY-CONTROLS-RAW.md",
+    "sha256": "1fdba4036ef48a1b38a4ed290ab94fc92e19ea377be2e7bd78b3e07355fcc632",
+    "binaryDeltaSha256": "433f049fd9f294b86b2ed239a07f498ae6a93d89d57daf140e0996b5c2db1122"
+  },
+  "nativePredecessor": {
+    "subjectCommit": "0d26ac5eaec417eec02ce93388e35a36e2d33389",
+    "traceSha256": "a96a15ec165d88fed06a037717ad0cda1135b50e29c7262167d8320ab19707b4",
+    "scenario": "eligible-stop-resume",
+    "checks": [
+      {
+        "phase": "verify",
+        "ok": true,
+        "nextDesignRound": 2
+      },
+      {
+        "phase": "claim",
+        "exactCut": true,
+        "current": true
+      }
+    ],
+    "lastOriginSteps": [
+      {
+        "phase": "list-tree",
+        "startedMs": 704372.544991,
+        "authority": {
+          "calls": 3,
+          "refused": 0,
+          "totalMs": 5376.177969999961,
+          "longestMs": 1800.2392770000733
+        },
+        "operation": {
+          "startedMs": 704372.571401,
+          "settledMs": 707952.84814,
+          "outcome": "accepted"
+        },
+        "settledMs": 709753.643884,
+        "outcome": "accepted"
+      },
+      {
+        "phase": "representative",
+        "startedMs": 709753.659383,
+        "authority": {
+          "calls": 4,
+          "refused": 0,
+          "totalMs": 7098.342567000189,
+          "longestMs": 1913.04284800007
+        },
+        "operation": {
+          "startedMs": 709753.664002,
+          "settledMs": 716852.993415,
+          "outcome": "rejected"
+        },
+        "settledMs": 716853.046595,
+        "outcome": "rejected"
+      }
+    ]
+  },
+  "focusedVerification": {
+    "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+    "passed": 32,
+    "integrationLogSha256": "554e99e1d9eb61709efb503509cc31deb6ac56f578fba69aae2c2c43590dbc85",
+    "sourceTypecheck": {
+      "subjectCommit": "81313b224692a75be82c0bfa1f2356372c8a4eb0",
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  },
+  "negativeControls": [
+    {
+      "name": "guard-before-blob-removed",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-source-reader.ts",
+      "old": "const reader = openPinned(options);\n      check();\n      checkTime();\n      const blob",
+      "new": "const reader = openPinned(options);\n      checkTime();\n      const blob",
+      "test": "packages/polaris-dossier/src/url-source-reader.test.ts",
+      "selector": "checks authority before a private blob read",
+      "detectedFailures": 1,
+      "logSha256": "04a324d084052caea856414e40af03a178f4c2338ecc87cba786ccc3865e38a6"
+    },
+    {
+      "name": "guard-after-screen-removed",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-source-reader.ts",
+      "old": "const result = screen(blob);\n      check();\n      return result;",
+      "new": "const result = screen(blob);\n      return result;",
+      "test": "packages/polaris-dossier/src/url-source-reader.test.ts",
+      "selector": "checks authority before a private blob read",
+      "detectedFailures": 1,
+      "logSha256": "e321b042340f47df96dbeccd44ff41684e3b3366febbd42088a00a4e117bdc0d"
+    },
+    {
+      "name": "private-read-repeats-opening-authority",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-source-reader.ts",
+      "old": "const reader = openPinned(options);\n      check();\n      checkTime();\n      const blob",
+      "new": "const reader = openPinned(options);\n      check();\n      check();\n      checkTime();\n      const blob",
+      "test": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "selector": "finishes the first screened source span",
+      "detectedFailures": 1,
+      "logSha256": "8016a3f7fec4a13ea8e4851461b9028d0de5e6d61f9451d8ca033a3852fe354f"
+    },
+    {
+      "name": "replace-store-per-read",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "old": "const sourceReader = () => reader ??= captureUrlOriginSourceReader({ clone: record.subject.clone.path,",
+      "new": "const sourceReader = () => captureUrlOriginSourceReader({ clone: record.subject.clone.path,",
+      "test": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "selector": "refuses an exact blob from a replaced store",
+      "detectedFailures": 1,
+      "logSha256": "b620e8ba480bc5ace610c77b94f46078f660e813c217d644c869260c325388ed"
+    },
+    {
+      "name": "no-time-after-sealed-proof",
+      "subjectCommit": "753e2762d5ad173d73d90c09927e7eb6437f034f",
+      "path": "packages/polaris-dossier/src/url-origin-ledger.ts",
+      "old": "safe(bytes, file);\n      checkTime();\n      return { objectId: blob.id, bytes, raw, contentClass };\n    });\n    checkTime();",
+      "new": "safe(bytes, file);\n      return { objectId: blob.id, bytes, raw, contentClass };\n    });",
+      "test": "packages/polaris-dossier/src/url-origin-ledger.test.ts",
+      "selector": "checks current authority after private source screening",
+      "detectedFailures": 1,
+      "logSha256": "a917504b9598b94d78e53e1182d0503fc088b1bbb938167e200235e831df77fd"
+    }
+  ],
+  "nativeSuccessorCompletion": "Unknown"
+}
