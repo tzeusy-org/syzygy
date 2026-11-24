@@ -1,0 +1,1207 @@
+{
+  "scenario": "eligible-stop-resume",
+  "run": "/home/orca/.tmp/url-composed-PTOznJ/runs/run-e473e693b4aef8320aa3daf45bc9814d",
+  "root": "/home/orca/.tmp/url-composed-PTOznJ",
+  "hidden": "/home/orca/.tmp/url-composed-host-2579770-1795540598248/acquisitions/attempt-yUS8aQ",
+  "failure": "expected undefined to be defined",
+  "initialDelivery": {
+    "setup": {}
+  },
+  "inputTreeSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643",
+  "profileRegistrySha256": "ede2a77f4def1e32bbb1a744b0a62b850ef7df7ea7e2e64d62fb667435c4438a",
+  "stopped": {
+    "failure": "transport-unavailable",
+    "budget": {
+      "state": "open",
+      "reason": null,
+      "requestReservations": 15,
+      "heldDesignTurns": 0,
+      "completeUsageReports": 14,
+      "pendingRoles": [
+        "inventory"
+      ],
+      "reportedTokens": 98,
+      "usageLabel": "Inferred",
+      "usagePopulation": "normalized complete responses captured by checked host relays",
+      "uncapturedUsage": "Unknown",
+      "tokenEnforcement": "reported-response-boundary; in-flight usage Unknown"
+    },
+    "roles": [
+      {
+        "role": "author",
+        "pid": 2583669,
+        "startedAt": 1795540623564,
+        "finishedAt": 1795540886244,
+        "outcome": {
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0,
+          "stdout": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "sampledStorageBytes": 4110,
+          "peakProcesses": 5,
+          "aggregateEnforcement": "sampled-stop-only",
+          "betweenSamples": "Unknown"
+        }
+      },
+      {
+        "role": "inventory",
+        "pid": 2584528,
+        "startedAt": 1795540627881,
+        "finishedAt": 1795540886225,
+        "outcome": {
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0,
+          "stdout": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "sampledStorageBytes": 4603,
+          "peakProcesses": 5,
+          "aggregateEnforcement": "sampled-stop-only",
+          "betweenSamples": "Unknown"
+        }
+      },
+      {
+        "role": "fidelity",
+        "pid": 2585281,
+        "startedAt": 1795540632661,
+        "finishedAt": 1795540886246,
+        "outcome": {
+          "outcome": "inspection-failed",
+          "exitCode": null,
+          "signal": "SIGTERM",
+          "viewTermination": "view-exited",
+          "groupTermination": "confirmed",
+          "toolTermination": "settled",
+          "pendingInvocations": 0,
+          "stdout": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "sampledStorageBytes": 3358,
+          "peakProcesses": 5,
+          "aggregateEnforcement": "sampled-stop-only",
+          "betweenSamples": "Unknown"
+        }
+      },
+      {
+        "role": "design",
+        "pid": "Unknown",
+        "startedAt": "Unknown",
+        "finishedAt": "Unknown",
+        "outcome": "Unknown"
+      }
+    ],
+    "audit": {
+      "captured": {
+        "before-tool": 12,
+        "control": 1,
+        "design-delivery": 0,
+        "design-ordered": 0,
+        "design-verdict": 0,
+        "launch-attempt": 3,
+        "launch-history": 2,
+        "launch-terminal": 3,
+        "machine-peer": 139,
+        "ordered-design-verdict": 0,
+        "relay": 57,
+        "tool-receipt": 12,
+        "usage": 14
+      },
+      "capturedUsage": {
+        "cacheCreationInputTokens": 0,
+        "cacheReadInputTokens": 0,
+        "inputTokens": 42,
+        "outputTokens": 56
+      },
+      "closed": true,
+      "completeness": "Unknown",
+      "declarations": 4,
+      "durableBytes": 410866,
+      "durableRecords": 247,
+      "format": "url-session-audit/2",
+      "hostileSameUidIsolation": "Unknown",
+      "limits": {
+        "bytes": 16777216,
+        "eventBytes": 65536,
+        "events": 4096,
+        "milliseconds": 5000,
+        "pending": 8
+      },
+      "nativeSendCensus": "Unknown",
+      "pendingAppends": 0,
+      "pendingCallbacks": 0,
+      "pendingFilesystemOperations": 0,
+      "poisoned": false,
+      "providerReceipts": "Unknown",
+      "relayEvents": {
+        "attempt-allowed": 15,
+        "attempt-refused": 0,
+        "response-admitted": 14,
+        "response-refused": 0,
+        "send-attempt": 14,
+        "send-outcome": 14,
+        "transport-failed": 0
+      },
+      "roles": {
+        "author": {
+          "bytes": 202504,
+          "records": 118,
+          "tipSha256": "5353e1890a5e89ee1bcdb11e8325f765af80f07b888f3a71d1afa1981248a899",
+          "usage": {
+            "cacheCreationInputTokens": 0,
+            "cacheReadInputTokens": 0,
+            "inputTokens": 21,
+            "outputTokens": 28
+          },
+          "usageReports": 7
+        },
+        "design": {
+          "bytes": 1262,
+          "records": 1,
+          "tipSha256": "dd57f6cd9d19589e59bb9d8f61288a81f08751da3021643307a15c3177a46ed0",
+          "usage": {
+            "cacheCreationInputTokens": 0,
+            "cacheReadInputTokens": 0,
+            "inputTokens": 0,
+            "outputTokens": 0
+          },
+          "usageReports": 0
+        },
+        "fidelity": {
+          "bytes": 53217,
+          "records": 34,
+          "tipSha256": "bb5d1f1228a40c803b1ab9ab592141744e5debad9c034d54c2989bc8e67347a1",
+          "usage": {
+            "cacheCreationInputTokens": 0,
+            "cacheReadInputTokens": 0,
+            "inputTokens": 6,
+            "outputTokens": 8
+          },
+          "usageReports": 2
+        },
+        "inventory": {
+          "bytes": 153883,
+          "records": 94,
+          "tipSha256": "9de52a6f0b7a5919593f89a3152dc6f37b96060bce80053e2e841e837fc626e0",
+          "usage": {
+            "cacheCreationInputTokens": 0,
+            "cacheReadInputTokens": 0,
+            "inputTokens": 15,
+            "outputTokens": 20
+          },
+          "usageReports": 5
+        }
+      },
+      "tail": "durable-prefix",
+      "termination": "closed",
+      "tipSha256": "bb5d1f1228a40c803b1ab9ab592141744e5debad9c034d54c2989bc8e67347a1",
+      "usageReports": 14
+    },
+    "historicallySettledRoles": [],
+    "machine": {
+      "identitySha256": "12dc769e6bc56c17628d14db8e4133b85e93b9f5b97cf0ed4c4c07a377af7e8f",
+      "lifecycle": "retired"
+    },
+    "control": {
+      "pendingCallbacks": 0,
+      "termination": "settled"
+    },
+    "hosts": [
+      {
+        "role": "author",
+        "pendingInvocations": 0,
+        "termination": "settled"
+      },
+      {
+        "role": "inventory",
+        "pendingInvocations": 0,
+        "termination": "settled"
+      },
+      {
+        "role": "fidelity",
+        "pendingInvocations": 0,
+        "termination": "settled"
+      }
+    ],
+    "closedAuditHistory": {
+      "durableRecords": 247,
+      "durableBytes": 410866,
+      "tipSha256": "bb5d1f1228a40c803b1ab9ab592141744e5debad9c034d54c2989bc8e67347a1",
+      "roles": {
+        "author": {
+          "records": 118,
+          "bytes": 202504,
+          "tipSha256": "5353e1890a5e89ee1bcdb11e8325f765af80f07b888f3a71d1afa1981248a899"
+        },
+        "inventory": {
+          "records": 94,
+          "bytes": 153883,
+          "tipSha256": "9de52a6f0b7a5919593f89a3152dc6f37b96060bce80053e2e841e837fc626e0"
+        },
+        "fidelity": {
+          "records": 34,
+          "bytes": 53217,
+          "tipSha256": "bb5d1f1228a40c803b1ab9ab592141744e5debad9c034d54c2989bc8e67347a1"
+        },
+        "design": {
+          "records": 1,
+          "bytes": 1262,
+          "tipSha256": "dd57f6cd9d19589e59bb9d8f61288a81f08751da3021643307a15c3177a46ed0"
+        }
+      },
+      "declarations": {
+        "author": {
+          "scope": {
+            "binding": {
+              "model": "claude-sonnet-4-6",
+              "policy": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
+              "provider": "anthropic",
+              "role": "author",
+              "run": "run-e473e693b4aef8320aa3daf45bc9814d",
+              "sourceBinding": "79fad672a7971bfda5adf74d5cd08303b85a12b2f9677a0a543df3f188b12322"
+            },
+            "originPolicySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "profileSha256": "df225ca82dc40504a7a41e4afef7ae111bc855993ab88d1e2e76c4e9a6d7c63f"
+          },
+          "payload": {
+            "project": "project:syzygy",
+            "pin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "principal": "owned-composed",
+            "declaredClasses": [
+              "code-content",
+              "code-structure",
+              "derived-composites",
+              "evidence-content",
+              "governance-text",
+              "project-documentation",
+              "work-history"
+            ],
+            "profile": "claude-2.1.327-sonnet46/2",
+            "limits": {
+              "events": 4096,
+              "eventBytes": 65536,
+              "bytes": 16777216,
+              "pending": 8,
+              "milliseconds": 5000
+            },
+            "capture": "host-callbacks-only",
+            "providerReceipts": "Unknown",
+            "nativeSendCensus": "Unknown"
+          }
+        },
+        "inventory": {
+          "scope": {
+            "binding": {
+              "model": "claude-sonnet-4-6",
+              "policy": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
+              "provider": "anthropic",
+              "role": "inventory",
+              "run": "run-e473e693b4aef8320aa3daf45bc9814d",
+              "sourceBinding": "79fad672a7971bfda5adf74d5cd08303b85a12b2f9677a0a543df3f188b12322"
+            },
+            "originPolicySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "profileSha256": "afc86c4216809106eb56321a059811a718b82673fabf2cec437957e12f63270c"
+          },
+          "payload": {
+            "project": "project:syzygy",
+            "pin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "principal": "owned-composed",
+            "declaredClasses": [
+              "code-content",
+              "code-structure",
+              "derived-composites",
+              "evidence-content",
+              "governance-text",
+              "project-documentation",
+              "work-history"
+            ],
+            "profile": "claude-2.1.327-sonnet46/2",
+            "limits": {
+              "events": 4096,
+              "eventBytes": 65536,
+              "bytes": 16777216,
+              "pending": 8,
+              "milliseconds": 5000
+            },
+            "capture": "host-callbacks-only",
+            "providerReceipts": "Unknown",
+            "nativeSendCensus": "Unknown"
+          }
+        },
+        "fidelity": {
+          "scope": {
+            "binding": {
+              "model": "claude-sonnet-4-6",
+              "policy": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
+              "provider": "anthropic",
+              "role": "fidelity",
+              "run": "run-e473e693b4aef8320aa3daf45bc9814d",
+              "sourceBinding": "79fad672a7971bfda5adf74d5cd08303b85a12b2f9677a0a543df3f188b12322"
+            },
+            "originPolicySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "profileSha256": "47dc0032722c23c723fcbec51bb624f6160163608a0874941a3f4bd7982e44f8"
+          },
+          "payload": {
+            "project": "project:syzygy",
+            "pin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "principal": "owned-composed",
+            "declaredClasses": [
+              "code-content",
+              "code-structure",
+              "derived-composites",
+              "evidence-content",
+              "governance-text",
+              "project-documentation",
+              "work-history"
+            ],
+            "profile": "claude-2.1.327-sonnet46/2",
+            "limits": {
+              "events": 4096,
+              "eventBytes": 65536,
+              "bytes": 16777216,
+              "pending": 8,
+              "milliseconds": 5000
+            },
+            "capture": "host-callbacks-only",
+            "providerReceipts": "Unknown",
+            "nativeSendCensus": "Unknown"
+          }
+        },
+        "design": {
+          "scope": {
+            "binding": {
+              "model": "claude-sonnet-4-6",
+              "policy": "d3abcb31c98bfd303c2bf477cc461787cacf26811cb640d925da1de347246da9",
+              "provider": "anthropic",
+              "role": "design",
+              "run": "run-e473e693b4aef8320aa3daf45bc9814d",
+              "sourceBinding": "79fad672a7971bfda5adf74d5cd08303b85a12b2f9677a0a543df3f188b12322"
+            },
+            "originPolicySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "profileSha256": "be9b718f9caafb81bb32caa8dd610f707122cff29f00ac9d729da6c0806b284b"
+          },
+          "payload": {
+            "project": "project:syzygy",
+            "pin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "principal": "owned-composed",
+            "declaredClasses": [
+              "code-content",
+              "code-structure",
+              "derived-composites",
+              "evidence-content",
+              "governance-text",
+              "project-documentation",
+              "work-history"
+            ],
+            "profile": "claude-2.1.327-sonnet46/ordered-design-6",
+            "limits": {
+              "events": 4096,
+              "eventBytes": 65536,
+              "bytes": 16777216,
+              "pending": 8,
+              "milliseconds": 5000
+            },
+            "capture": "host-callbacks-only",
+            "providerReceipts": "Unknown",
+            "nativeSendCensus": "Unknown"
+          }
+        }
+      }
+    },
+    "closedMachineHistory": {
+      "kind": "closed-url-run-machine-history",
+      "authorization": "none",
+      "replay": "forbidden",
+      "identitySha256": "12dc769e6bc56c17628d14db8e4133b85e93b9f5b97cf0ed4c4c07a377af7e8f",
+      "binding": {
+        "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643",
+        "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06"
+      },
+      "observedAt": 1795540891700,
+      "clients": [
+        {
+          "context": {
+            "clientId": "92acfdcd83153eef08f4acab25d2feae504d0005704117c5e16fa81e306640de",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "author",
+            "kind": "mcp-shim",
+            "allowedScopes": [
+              "source_read",
+              "artifact_read",
+              "artifact_write",
+              "dossier_step"
+            ],
+            "profileSha256": "df225ca82dc40504a7a41e4afef7ae111bc855993ab88d1e2e76c4e9a6d7c63f",
+            "now": 1795540618831,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "92acfdcd83153eef08f4acab25d2feae504d0005704117c5e16fa81e306640de",
+                "issuanceId": "49c58e550a4c894cf5051d80468c67f53dac3672f32222a000cfff8e54aea84f",
+                "revision": 7,
+                "sha256": "12744be403a5e03337b16c4b010a5acd3e819a8ff64a2bd49a278d66019f10cc",
+                "generation": 6,
+                "lifecycleSha256": "518998a0e85f71a54f2bee704c55401e0b817e11693bafddc2a26d9a3af3b14c"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "a98b6d4ff1e59faa6edc6e5b9831ee1c75a0d569a35631f32bf5db5b79e90db4"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "01bbd1e45d19cbbfbaf9e0ad465d6b2f4541a3ebf946e654043ba06ad62b168b",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "author",
+            "kind": "inference-bridge",
+            "allowedScopes": [
+              "inference-forward"
+            ],
+            "profileSha256": "df225ca82dc40504a7a41e4afef7ae111bc855993ab88d1e2e76c4e9a6d7c63f",
+            "now": 1795540618882,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "01bbd1e45d19cbbfbaf9e0ad465d6b2f4541a3ebf946e654043ba06ad62b168b",
+                "issuanceId": "305c561b2a8bd4e0e42546a19d2414fdb0aa3c6d587fcdde8e53061f3750442d",
+                "revision": 8,
+                "sha256": "5db64b2931f02c7236d88b97efa2bef4bb0f2bfd5be2ac7d764dda4e8521d8ee",
+                "generation": 7,
+                "lifecycleSha256": "8dc9d5e696739f7fa8cb1b5a2b3e6cf5bd24d4ef3c94fb961148557fd2854c0f"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "f79e99f583cded789224c2c900ed0f991f9e1fc0d2c55990c9156f8c5546e421"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "926756a8ef2a8f7e567e86ae0982a1c60ee5ee7029dd7a8770e744b0c3b2c33f",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "inventory",
+            "kind": "mcp-shim",
+            "allowedScopes": [
+              "source_read",
+              "artifact_read",
+              "dossier_step"
+            ],
+            "profileSha256": "afc86c4216809106eb56321a059811a718b82673fabf2cec437957e12f63270c",
+            "now": 1795540618949,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "926756a8ef2a8f7e567e86ae0982a1c60ee5ee7029dd7a8770e744b0c3b2c33f",
+                "issuanceId": "fa2a8107a0d3787512bd8662aa40be7a3e5b8d79d9bd2ae16291fb7430453c1b",
+                "revision": 6,
+                "sha256": "7c1d8870b482263f30059d752091278f2853eedac640ed4600884dba5fbc465c",
+                "generation": 5,
+                "lifecycleSha256": "326aaaa370c6a37e5e98edffd0315b86aaada24440591acf220a64ba5fc497be"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "03d26e9b1600d38e4e562764881f40f40b96b91ab3dd6bd50bb5bd82da65581d"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "a4b3ed52dbebc13fe30b16c166a6b53dc2f5c6f530972a9fb7f8670a3922df4e",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "inventory",
+            "kind": "inference-bridge",
+            "allowedScopes": [
+              "inference-forward"
+            ],
+            "profileSha256": "afc86c4216809106eb56321a059811a718b82673fabf2cec437957e12f63270c",
+            "now": 1795540619018,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "a4b3ed52dbebc13fe30b16c166a6b53dc2f5c6f530972a9fb7f8670a3922df4e",
+                "issuanceId": "ab494dd65cac627a33b799dc955c5bfe7bc8d42b9ed894d00670a37a8ae54838",
+                "revision": 7,
+                "sha256": "86365fbc9f2944ef054602cb173f073b7d67611788774330290b8e23b8589e04",
+                "generation": 6,
+                "lifecycleSha256": "57239be7ea46d7d06f8533b072f260eb88de89f7eb48ad431ef7340a26cb694b"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "b4fc26f03651cbd0a8bda28c4842026b1449aff9ce3c195c628e39e64aa50e28"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "46467604e38cb0fd6221216ff67cbdfca3c65c5b9dfbd05382c1ed4d66cb06bd",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "fidelity",
+            "kind": "mcp-shim",
+            "allowedScopes": [
+              "artifact_read",
+              "dossier_step"
+            ],
+            "profileSha256": "47dc0032722c23c723fcbec51bb624f6160163608a0874941a3f4bd7982e44f8",
+            "now": 1795540619090,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "46467604e38cb0fd6221216ff67cbdfca3c65c5b9dfbd05382c1ed4d66cb06bd",
+                "issuanceId": "675aac8d4eda6facdeb17c1943f8e8c1fa0be30bd8923c2d0dd440a900d5a37d",
+                "revision": 2,
+                "sha256": "0818e24cde19c2a16c0300e63202f2a3a737c5e20534ce88d64f713de236e3e5",
+                "generation": 1,
+                "lifecycleSha256": "0c2104f6ad347bbd17df6a3e018d5422d9921e0e18fdad8d8e618bc2376508be"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "0910f332c2dc59fe14479d6d91b64501ba59f4ea53150bec398b08212efd6e67"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "78bf719d04f7fedd41921634d1af9ed9765f19345dea06311ecb2eeb82f16103",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "fidelity",
+            "kind": "inference-bridge",
+            "allowedScopes": [
+              "inference-forward"
+            ],
+            "profileSha256": "47dc0032722c23c723fcbec51bb624f6160163608a0874941a3f4bd7982e44f8",
+            "now": 1795540619165,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "revoked",
+            "head": {
+              "record": {
+                "clientId": "78bf719d04f7fedd41921634d1af9ed9765f19345dea06311ecb2eeb82f16103",
+                "issuanceId": "dfeebfebda7da3debbc9cd443131f59f06ed5a74f4904d4a8bd7fca78fa5ff03",
+                "revision": 3,
+                "sha256": "ae488eb98823a2d0b66e32dc99f779fd272e4f0bf20576a9b46aec93fb44e2bb",
+                "generation": 2,
+                "lifecycleSha256": "0d8e7291cf0f885e7e5c5304328254b665a92f69cea511f432a55ebb9c2626e0"
+              },
+              "binding": {
+                "parentBindingSha256": "335bb088790b8a7176967ae8e1d93de4a24cf0bb7d4ca3290a460cef98136f06",
+                "controllerSha256": "019616f995cb43acc30c558e6d132cace0e39fc754e983b18631acb2bed42643"
+              },
+              "auditSha256": "156c62c2599d5924f9adf7edecdf1664403fbe2aede93ac62d77739ffc5f9ed4"
+            }
+          }
+        },
+        {
+          "context": {
+            "clientId": "6c7485196ef466b6a777376da48a9f6efd113824d8446b947ad7ba9081ce7f54",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "design",
+            "kind": "mcp-shim",
+            "allowedScopes": [
+              "artifact_read",
+              "dossier_step"
+            ],
+            "profileSha256": "be9b718f9caafb81bb32caa8dd610f707122cff29f00ac9d729da6c0806b284b",
+            "now": 1795540619236,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "never-issued",
+            "clientId": "6c7485196ef466b6a777376da48a9f6efd113824d8446b947ad7ba9081ce7f54",
+            "witnessSha256": "1e57c34672abd4ea4c95a383339eff7e3ee080e75d404ccc9bd6c0c33be0cf5a"
+          }
+        },
+        {
+          "context": {
+            "clientId": "cf4349a11226399b09482ee39eff55ee5ea828db18e4a03514091822e2ca8f85",
+            "policySha256": "930efcc2cbdae55be92ce7929820e771f554502a9110e8ac5f8925132961e421",
+            "sourcePin": "c55cfc69e696280cab8b7db5df32c4f39b09851f",
+            "runId": "run-e473e693b4aef8320aa3daf45bc9814d",
+            "role": "design",
+            "kind": "inference-bridge",
+            "allowedScopes": [
+              "inference-forward"
+            ],
+            "profileSha256": "be9b718f9caafb81bb32caa8dd610f707122cff29f00ac9d729da6c0806b284b",
+            "now": 1795540619303,
+            "deadline": 1795547818096
+          },
+          "terminal": {
+            "kind": "never-issued",
+            "clientId": "cf4349a11226399b09482ee39eff55ee5ea828db18e4a03514091822e2ca8f85",
+            "witnessSha256": "e91cf76f89aeff669e86052102592824eb70f0b00fd604132c10e5e060c5c43a"
+          }
+        }
+      ]
+    }
+  },
+  "events": [
+    "told the inventory session: draft revision 0 is frozen",
+    "delivered the fidelity packet for draft revision 0 and inventory revision 0",
+    "run ended: checked session boundary unavailable"
+  ],
+  "failures": [
+    "transport-unavailable"
+  ],
+  "resumeChecks": [],
+  "resumeBootstrap": {},
+  "resumePreparations": {
+    "roles": [],
+    "omittedRoles": 0
+  },
+  "resumeOriginSteps": [],
+  "resumeStoreSteps": [],
+  "firstRuntimeFailure": {
+    "reason": "transport-unavailable",
+    "atMs": 290019.655448
+  },
+  "ordinarySend": {
+    "failures": {
+      "inventory": {
+        "atMs": 290019.902496,
+        "phase": "mediation",
+        "attempt": {
+          "ordinal": 6,
+          "route": "/v1/messages?beta=true",
+          "following": [
+            {
+              "role": "inventory",
+              "startedMs": 275479.800467,
+              "stages": [
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 275484.481351,
+                    "settledMs": 275492.94552,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 278294.789311,
+                    "settledMs": 278295.206772,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-audit",
+                  "timing": {
+                    "startedMs": 278815.225864,
+                    "settledMs": 278883.26532,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 278886.168518,
+                    "settledMs": 278886.65526,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "request",
+                  "timing": {
+                    "startedMs": 279397.699607,
+                    "settledMs": 279419.189432,
+                    "outcome": "accepted"
+                  }
+                }
+              ],
+              "store": {
+                "startedMs": 276003.231971,
+                "conflicts": 0,
+                "acquiredAt": 278268.05268,
+                "callbackAt": 278291.928274,
+                "settledMs": 279431.071864,
+                "outcome": "accepted"
+              },
+              "effect": {
+                "startedMs": 279395.110093,
+                "settledMs": 279419.211594,
+                "outcome": "accepted"
+              },
+              "settledMs": 279431.084007,
+              "outcome": "accepted"
+            },
+            {
+              "role": "inventory",
+              "startedMs": 279431.282433,
+              "stages": [
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 279433.934926,
+                    "settledMs": 279434.405276,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 283307.885739,
+                    "settledMs": 283308.305975,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-audit",
+                  "timing": {
+                    "startedMs": 283781.000518,
+                    "settledMs": 283842.899867,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 283846.980365,
+                    "settledMs": 283847.494188,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "headers",
+                  "timing": {
+                    "startedMs": 284472.576127,
+                    "settledMs": 284473.131579,
+                    "outcome": "accepted"
+                  }
+                }
+              ],
+              "store": {
+                "startedMs": 279903.433677,
+                "conflicts": 0,
+                "acquiredAt": 283287.363666,
+                "callbackAt": 283305.049959,
+                "settledMs": 284500.996347,
+                "outcome": "accepted"
+              },
+              "effect": {
+                "startedMs": 284469.780523,
+                "settledMs": 284473.161175,
+                "outcome": "accepted"
+              },
+              "settledMs": 284501.012016,
+              "outcome": "accepted"
+            },
+            {
+              "role": "inventory",
+              "startedMs": 284501.855824,
+              "stages": [
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 284503.613894,
+                    "settledMs": 284504.019281,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 288777.060853,
+                    "settledMs": 288777.628568,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-audit",
+                  "timing": {
+                    "startedMs": 289278.442591,
+                    "settledMs": 289311.309842,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "peer-current",
+                  "timing": {
+                    "startedMs": 289313.628012,
+                    "settledMs": 289314.005657,
+                    "outcome": "accepted"
+                  }
+                },
+                {
+                  "phase": "attempt-allowed",
+                  "timing": {
+                    "startedMs": 289794.078222,
+                    "settledMs": 289909.001693,
+                    "outcome": "accepted"
+                  }
+                }
+              ],
+              "store": {
+                "startedMs": 285085.47223,
+                "conflicts": 0,
+                "acquiredAt": 288728.364206,
+                "callbackAt": 288772.348129,
+                "settledMs": 289935.724929,
+                "outcome": "accepted"
+              },
+              "effect": {
+                "startedMs": 289792.047296,
+                "settledMs": 289909.013115,
+                "outcome": "accepted"
+              },
+              "settledMs": 289935.738725,
+              "outcome": "accepted"
+            },
+            {
+              "role": "inventory",
+              "startedMs": 289942.845623,
+              "stages": [],
+              "settledMs": 290019.7727,
+              "outcome": "refused"
+            },
+            {
+              "role": "inventory",
+              "startedMs": 290020.009068,
+              "stages": [],
+              "settledMs": 290020.536096,
+              "outcome": "refused"
+            }
+          ],
+          "stages": [
+            {
+              "phase": "current",
+              "timing": {
+                "startedMs": 289935.755747,
+                "settledMs": 289942.782965,
+                "outcome": "accepted"
+              }
+            }
+          ]
+        },
+        "step": {
+          "role": "inventory",
+          "startedMs": 289942.845623,
+          "stages": [],
+          "settledMs": 290019.7727,
+          "outcome": "refused"
+        }
+      }
+    },
+    "recent": {
+      "author": {
+        "role": "author",
+        "startedMs": 123646.546906,
+        "stages": [
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 123647.667739,
+              "settledMs": 123648.066083,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 125465.861715,
+              "settledMs": 125466.54021,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-audit",
+            "timing": {
+              "startedMs": 125688.89755,
+              "settledMs": 126089.967692,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 126094.923546,
+              "settledMs": 126100.43328,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "send-attempt",
+            "timing": {
+              "startedMs": 126578.988807,
+              "settledMs": 129321.00242,
+              "outcome": "accepted"
+            }
+          }
+        ],
+        "store": {
+          "startedMs": 123846.673869,
+          "conflicts": 0,
+          "acquiredAt": 125222.215569,
+          "callbackAt": 125462.56402,
+          "settledMs": 129470.624711,
+          "outcome": "accepted"
+        },
+        "effect": {
+          "startedMs": 126576.810962,
+          "settledMs": 129321.01303,
+          "outcome": "accepted"
+        },
+        "settledMs": 129470.634039,
+        "outcome": "accepted"
+      },
+      "inventory": {
+        "role": "inventory",
+        "startedMs": 290020.009068,
+        "stages": [],
+        "settledMs": 290020.536096,
+        "outcome": "refused"
+      },
+      "fidelity": {
+        "role": "fidelity",
+        "startedMs": 151597.858174,
+        "stages": [
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 151601.480604,
+              "settledMs": 151602.192061,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 152187.948153,
+              "settledMs": 152188.444784,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-audit",
+            "timing": {
+              "startedMs": 152459.952781,
+              "settledMs": 152594.216989,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "peer-current",
+            "timing": {
+              "startedMs": 152596.547262,
+              "settledMs": 152596.942079,
+              "outcome": "accepted"
+            }
+          },
+          {
+            "phase": "send-attempt",
+            "timing": {
+              "startedMs": 152874.331935,
+              "settledMs": 153047.949406,
+              "outcome": "accepted"
+            }
+          }
+        ],
+        "store": {
+          "startedMs": 151858.96816,
+          "conflicts": 0,
+          "acquiredAt": 151859.922267,
+          "callbackAt": 152185.405829,
+          "settledMs": 153137.072981,
+          "outcome": "accepted"
+        },
+        "effect": {
+          "startedMs": 152873.251209,
+          "settledMs": 153047.956169,
+          "outcome": "accepted"
+        },
+        "settledMs": 153137.082679,
+        "outcome": "accepted"
+      }
+    },
+    "unassociatedLockRefusals": {}
+  },
+  "eligibleRelayInterruptions": [
+    {
+      "role": "author",
+      "event": "socket-error",
+      "atMs": 290018.454344,
+      "connectionMs": 177876.215617,
+      "responseMs": 177293.98939800003
+    },
+    {
+      "role": "inventory",
+      "event": "socket-error",
+      "atMs": 290029.583098,
+      "connectionMs": 18612.66659899999,
+      "responseMs": 16613.782484999974
+    },
+    {
+      "role": "fidelity",
+      "event": "response-closed",
+      "atMs": 290136.956271,
+      "connectionMs": 151940.65280399998,
+      "responseMs": 151280.37947699998
+    }
+  ],
+  "initialDesignAudit": {
+    "status": "read",
+    "count": 1,
+    "kinds": [
+      "declaration"
+    ]
+  },
+  "initialRoleInspections": {
+    "author": {
+      "samples": 822,
+      "firstRefusal": {
+        "ordinal": 822,
+        "phases": {
+          "process": {
+            "startedMs": 0.011832999996840954,
+            "settledMs": 22.30186299997149,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.019667999993544072,
+            "settledMs": 24.42207899998175,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 24.42503400001442,
+            "settledMs": 24.428149999992456,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 24.43194699997548
+        }
+      }
+    },
+    "inventory": {
+      "samples": 817,
+      "firstRefusal": {
+        "ordinal": 817,
+        "phases": {
+          "process": {
+            "startedMs": 0.00721400004113093,
+            "settledMs": 22.580491000029724,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.01802400004817173,
+            "settledMs": 24.548818000010215,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 24.550922000024002,
+            "settledMs": 24.552295000001322,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 24.554669000033755
+        }
+      }
+    },
+    "fidelity": {
+      "samples": 782,
+      "firstRefusal": {
+        "ordinal": 782,
+        "phases": {
+          "process": {
+            "startedMs": 0.030506999988574535,
+            "settledMs": 22.265894999960437,
+            "outcome": "accepted"
+          },
+          "storage": {
+            "startedMs": 0.05767899996135384,
+            "settledMs": 24.13110699999379,
+            "outcome": "accepted"
+          },
+          "current": {
+            "startedMs": 24.1390019999817,
+            "settledMs": 24.146996999974363,
+            "outcome": "refused"
+          }
+        },
+        "refusal": {
+          "phase": "current",
+          "cause": "authority-refused",
+          "elapsedMs": 24.29136999999173
+        }
+      }
+    }
+  },
+  "initialOrderedAudit": {},
+  "initialInference": {
+    "inferenceCount": 0,
+    "inferenceSteps": [],
+    "relayCurrent": [],
+    "hostCurrent": [],
+    "firstDesignPublication": {}
+  }
+}

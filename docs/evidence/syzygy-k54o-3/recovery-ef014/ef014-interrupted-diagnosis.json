@@ -1,0 +1,206 @@
+{
+  "sourceCommit": "ef014efe505dafbf16475a55851c85fcaafab49d",
+  "sourceSha256": {
+    "session-launch.ts": "14117f0c9c75b583ac5fb103aeb6bfdb7aced16ade490bac7c583742eb8c5c46",
+    "url-run-sessions.ts": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+    "url-run-ordered-attempt.ts": "4298a15b5c346dea6f2763410307e945b21fe917336114f45a027ad70d3e87ad",
+    "url-stopped-run.ts": "9b117b18fd012a6f667aaa79020d935111e91b0c349529855338c04d7bdd0c85",
+    "url-recovery.ts": "583784f1dbf7cf26a453be89a1f8a2b934ba3a01fd922e508a349c99e8b01842",
+    "policy-snapshot.ts": "f14904311c318ef19bd008cfacd6f4d78c248ab79fbe84ce239f8d0901cc80fc",
+    "session-machine-transport.ts": "d86bdab9723b16772205ab2f74fc938c9d8494cd1ef16ebc8f9af538ab58cbc4",
+    "url-run-composed.test.ts": "17ebca69f8a151bf3078f25a4daf0e7d74a69b9771b1870047b778663012cddf"
+  },
+  "evidence": {
+    "failureManifest": "/home/orca/.tmp/f3-native-ef014-stop-resume.qRHBWVjK/stop-resume.json.failure.json",
+    "manifestSha256": "eaa995c432d4579e5538a5776e5e3ddcbda3fdf93589898a4e475cabf4c0b65d",
+    "vitestLogSha256": "e10b6ff8d6248f06f3bac7ea751f5a7196c75ba2c16a49dd030000bc0852b48e",
+    "resumedDesignAudit": "/home/orca/.tmp/url-composed-host-2517387-1795540251891/acquisitions/attempt-RzWgEg/sessions-design.jsonl",
+    "resumedDesignAuditSha256": "13313de62ca66ec9d475d8f21ae2bc140b08be020e61e36e5f3d6c3e670a5409",
+    "auditKindPopulation": [
+      "declaration",
+      "launch-attempt",
+      "launch-history",
+      "design-delivery",
+      "launch-terminal"
+    ],
+    "terminal": {
+      "outcome": "inspection-failed",
+      "exitCode": null,
+      "signal": "SIGTERM",
+      "viewTermination": "view-exited",
+      "groupTermination": "confirmed",
+      "toolTermination": "settled",
+      "pendingInvocations": 0,
+      "sampledStorageBytes": 2192,
+      "peakProcesses": 5
+    }
+  },
+  "clockScope": "resumeDiagnostic stamps use one relative origin; bootstrap absolute performance stamps were not directly compared.",
+  "firstFailure": {
+    "label": "Observed",
+    "jsonPath": "$.resumeDiagnostic.launcherInspection.firstRefusal.refusal",
+    "sample": 88,
+    "inspectionMilliseconds": 2000,
+    "phases": {
+      "process": {
+        "startedMs": 0.06320000003324822,
+        "settledMs": 76.18561500002397,
+        "outcome": "accepted"
+      },
+      "verify": {
+        "startedMs": 3.0116430000052787,
+        "settledMs": 1867.6641830000444,
+        "outcome": "accepted"
+      },
+      "storage": {
+        "startedMs": 3.019839000015054,
+        "settledMs": 146.03211500000907,
+        "outcome": "accepted"
+      },
+      "confirm": {
+        "startedMs": 1867.6705250000232,
+        "settledMs": 2051.2871840000153,
+        "outcome": "accepted"
+      }
+    },
+    "refusal": {
+      "phase": "confirm",
+      "cause": "sample-deadline",
+      "elapsedMs": 2051.542237000016
+    },
+    "sourcePredicate": "session-launch.ts645: performance.now()-sampleBegan >= limits.inspectionMilliseconds; invoked at713 after synchronous authority.confirm accepted.",
+    "corroborationPath": "$.resumeDiagnostic.roleInspections.design.firstRefusal",
+    "sampleAbsoluteRelativeTrace": {
+      "ordinal": 88,
+      "verify": {
+        "startedMs": 186936.437,
+        "settledMs": 188800.974,
+        "outcome": "accepted"
+      },
+      "confirmationInput": true,
+      "confirm": {
+        "startedMs": 188801.011,
+        "settledMs": 188984.588,
+        "outcome": "accepted"
+      }
+    },
+    "distinction": "A sample-deadline failure after accepted confirmation; no evidence of authority withdrawal, storage failure, process failure or180s connection timeout."
+  },
+  "precedingAccepted": {
+    "connection": {
+      "ordinal": 1,
+      "stages": {
+        "open": {
+          "startedMs": 90394.291,
+          "settledMs": 122825.337,
+          "outcome": "accepted"
+        },
+        "accept": {
+          "startedMs": 90394.418,
+          "settledMs": 94656.18,
+          "outcome": "accepted"
+        },
+        "capture": {
+          "startedMs": 90394.726,
+          "settledMs": 94656.138,
+          "outcome": "accepted"
+        },
+        "authorize": {
+          "startedMs": 94656.341,
+          "settledMs": 122825.093,
+          "outcome": "accepted"
+        }
+      },
+      "boundMs": 180000,
+      "kind": "inference-bridge"
+    },
+    "firstDesignPublication": {
+      "match": {
+        "startedMs": 111792.523,
+        "settledMs": 111942.318,
+        "outcome": "accepted"
+      },
+      "transaction": {
+        "startedMs": 111942.453,
+        "settledMs": 122712.277,
+        "outcome": "accepted"
+      }
+    },
+    "productReproduction": {
+      "startedMs": 142154.801,
+      "settledMs": 188019.514,
+      "outcome": "accepted"
+    },
+    "productReproductionElapsedMilliseconds": 45864.71299999999
+  },
+  "downstream": {
+    "productPreparation": {
+      "startedMs": 138151.107,
+      "settledMs": 189444.861,
+      "outcome": "refused"
+    },
+    "runtimeAuthority": {
+      "startedMs": 188019.531,
+      "settledMs": 189444.687,
+      "outcome": "refused"
+    },
+    "runtimeAuthorityPath": "$.resumeDiagnostic.inference.inferenceSteps[0].productPreparation.stages[48]",
+    "mediate": {
+      "startedMs": 135887.66,
+      "settledMs": 189444.894,
+      "outcome": "refused"
+    },
+    "secondMediation": {
+      "startedMs": 189448.528,
+      "settledMs": 189450.501,
+      "outcome": "refused"
+    },
+    "terminal": {
+      "atMs": 190293.986,
+      "outcome": "inspection-failed",
+      "latestSample": {
+        "ordinal": 88,
+        "verify": {
+          "startedMs": 186936.437,
+          "settledMs": 188800.974,
+          "outcome": "accepted"
+        },
+        "confirmationInput": true,
+        "confirm": {
+          "startedMs": 188801.011,
+          "settledMs": 188984.588,
+          "outcome": "accepted"
+        }
+      }
+    },
+    "interpretation": "Inferred causal chain: sample deadline stops Design, host becomes unhealthy, runtime authority refuses after successful reproduction; inference preparation never enters its effect."
+  },
+  "transportLifetime": {
+    "openStartedMs": 90394.291,
+    "firstMediationRefusedMs": 189444.894,
+    "elapsedMilliseconds": 99050.603,
+    "boundMilliseconds": 180000,
+    "remainingAtRefusalMilliseconds": 80949.397
+  },
+  "effectPopulation": {
+    "inferences": 2,
+    "inferencesWithEffect": 0,
+    "relayStageCounts": [
+      0,
+      0
+    ],
+    "brokerInvocations": 0,
+    "orderedAuditKeys": []
+  },
+  "sourceAssessment": {
+    "Observed": "Resumed confirmation runs effectCurrent\u2192isClaimedStoppedUrlRun\u2192claim.current, including fresh policy/consumed-boundary/run-record checks.",
+    "Inferred": "The authority composition dominated sample88: verify about1864.537ms plus synchronous confirm about183.577ms, while storage settled146.032ms.",
+    "Unknown": [
+      "Nested policy/Git versus marker/boundary/run-record contribution to confirmation cost",
+      "Why this sample verifier took1.864s",
+      "Whether same condition recurs on running eligible replay"
+    ],
+    "recommendation": "Preserve2s sampler and180s transport. No guard-removal or timing increase justified. Any product correction must reduce authority work while retaining fresh pre/post checks; profile the existing claim/policy/run-record subphases before choosing a specific optimization. The fail-closed sample refusal itself is behaving as specified."
+  },
+  "actions": "Read-only diagnosis and bounded metadata extraction; no source edits/tests; eligible mutable evidence not inspected."
+}
