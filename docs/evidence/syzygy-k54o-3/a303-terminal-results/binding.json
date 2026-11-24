@@ -1,0 +1,7 @@
+{
+  "subject": "a303bc56e86f65e252aa13663827d46bdcc104f2",
+  "archiveSha256": "35e606a683b8f014ce804cccbac7e8d1370e81394f613ceb116e7c0cdc0639c8",
+  "archiveBytes": 4336137,
+  "members": 12,
+  "scope": "Terminal hosted workflows: node failure in both recovery lanes; other node tiers passed; governance correctness passed; reconciliation631s exceeds420s. Diagnostics bound to originals; private predicates remain Unknown where unobserved."
+}

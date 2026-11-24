@@ -1,0 +1,43 @@
+{
+  "subject": "a65dd117fd5eb356a2ffe13b918c99b1dc62cad3",
+  "sourceSha256": "dd3de76e5c99bfb4ebfbd5c75f0842d332e2badfd10223841f370c00e87e1791",
+  "commands": [
+    [
+      "focused",
+      [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--project",
+        "integration",
+        "--maxWorkers",
+        "1",
+        "packages/polaris-dossier/src/url-run-composed.test.ts",
+        "-t",
+        "observes|forwards"
+      ]
+    ],
+    [
+      "typecheck",
+      [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    ]
+  ],
+  "results": [
+    {
+      "label": "focused",
+      "exit": 0,
+      "seconds": 4.228317975997925,
+      "logSha256": "d49dfed339cdabba26875e3a860d7b9de1a9fe709c59f6abdf9738a4aecf59f1"
+    },
+    {
+      "label": "typecheck",
+      "exit": 0,
+      "seconds": 20.522375345230103,
+      "logSha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    }
+  ]
+}

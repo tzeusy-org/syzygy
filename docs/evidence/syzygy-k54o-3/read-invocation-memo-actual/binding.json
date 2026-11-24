@@ -1,0 +1,10 @@
+{
+  "subject": "2c6ff308aaa5d34d2b590ef06bd43ec87fb40948",
+  "tree": "26a2fc12a93543121a6f231097551312ac099fbc",
+  "sourceSha256": "65ab0c346b962ebe62bac592271181161d877aaaba5fe13e9e09f38c55f6ef51",
+  "archiveSha256": "ee51cead51cc841642e15b88196ca96d093df37ea3b805fbe104e1da2515d8b4",
+  "archiveBytes": 390863,
+  "members": 26,
+  "manifestSha256": "5f21c8c614c7b2a7888228678ac3da03125fc3a0c216a48ef1103a09c22d644d",
+  "scope": "Actual unchanged canonical selftest PASS 566/566 mutants,113/113 controls in304.2525486946106 seconds; ordered printed population matches hosted predecessor; structured path/old/new witness parity Unknown because --witnesses omitted; hosted timing acceptance pending."
+}

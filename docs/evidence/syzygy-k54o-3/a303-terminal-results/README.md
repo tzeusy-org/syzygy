@@ -1,0 +1,3 @@
+[Observed] Frozen terminal evidence for published predecessor a303bc56e86f65e252aa13663827d46bdcc104f2. Node CI failed interrupted and eligible Stop/Resume; its unit, core-1, core-2, core-3, complete, delivery-stop and e2e jobs passed. Governance correctness passed. Reconciliation took 631 seconds for its job and exceeded the 420-second limit.
+
+The inert archive retains both full workflow log ZIPs and terminal metadata, both raw recovery failures, the reconciliation profile and source-bound diagnoses. Its internal manifest binds every original member by SHA-256 and byte count. These results prove no recovery completion or merge readiness. [Unknown] Unobserved private predicates remain unresolved; later fixes need their own execution evidence.
