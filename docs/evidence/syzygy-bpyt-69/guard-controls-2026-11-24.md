@@ -14,7 +14,7 @@
 
 [Observed] The [guarded trace](../syzygy-bpyt-49/npmrc-trace-lane-probe-guarded.json) identifies the current [npm alias probe](../syzygy-bpyt-8-39/npm_alias_probe.py) at SHA-256 `d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812`. The [earlier trace](../syzygy-bpyt-39/npmrc-trace-lane-probe-after.json) identifies the pre-guard probe at SHA-256 `677b0fe2a670d02c2e279144d58a1cb33a2e829538e08b73555850ca6a56d0c6`. Both traces reference the same retained alias result record.
 
-The first [independent replay review](R-BPYT69-N3N5-OUTCOME-R1-RAW.md) found that a locally edited archive could affect the N4 replay while its report named the requested commit. N4 now runs in a disposable local checkout at the exact requested revision. Its reported tree binds the archive inputs. A deliberate change to the caller's reported test total from 5,385 to 5,386 made the prior command exit 1. The repaired command exits 0 with the exact pinned result and preserves the caller's edited bytes.
+The first [independent replay review](../../reviews/R-BPYT69-N3N5-OUTCOME-R1-RAW.md) found that a locally edited archive could affect the N4 replay while its report named the requested commit. N4 now runs in a disposable local checkout at the exact requested revision. Its reported tree binds the archive inputs. A deliberate change to the caller's reported test total from 5,385 to 5,386 made the prior command exit 1. The repaired command exits 0 with the exact pinned result and preserves the caller's edited bytes.
 
 Run the optional replay from the repository root. It verifies the pinned source bytes before running the scratch controls.
 

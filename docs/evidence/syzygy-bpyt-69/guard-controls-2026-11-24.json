@@ -357,7 +357,7 @@
     "repairedExit": 0
   },
   "firstIndependentReview": {
-    "path": "docs/evidence/syzygy-bpyt-69/R-BPYT69-N3N5-OUTCOME-R1-RAW.md",
+    "path": "docs/reviews/R-BPYT69-N3N5-OUTCOME-R1-RAW.md",
     "sha256": "b31ae4f7443eccd9c4680276c592a63cbc7f9f2ef4149e454303462e7cfa10e1",
     "reviewedCommit": "36046b83a0ab8aeaa2a5761bf1888453d8c96e8c",
     "verdict": "REVISE"
