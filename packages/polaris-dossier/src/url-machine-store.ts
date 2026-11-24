@@ -43,6 +43,7 @@ type AllocatedClient = { readonly clientId: string; readonly witnessSha256: stri
 export const URL_MACHINE_STORE_LIMITS = Object.freeze({ bytes: 8_388_608, nodes: 524_288, depth: 32,
   clients: 256, identities: 16_896, events: 4096, ioOperations: 512, operationBytes: 268_435_456, aggregateBytes: 50_331_648, operationMilliseconds: 5000, lockMilliseconds: 1000 });
 const RESUMED_DESIGN_PUBLICATION_MILLISECONDS = 10_000;
+const STAGED_BATCH_ALLOCATION_MILLISECONDS = 10_000;
 const JSON_LIMITS = { maxBytes: URL_MACHINE_STORE_LIMITS.bytes, maxNodes: URL_MACHINE_STORE_LIMITS.nodes, maxDepth: URL_MACHINE_STORE_LIMITS.depth };
 const canonical = (value: unknown): string => encodeCanonicalJson(value, JSON_LIMITS);
 const equal = (left: unknown, right: unknown): boolean => canonical(left) === canonical(right);
@@ -656,6 +657,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
       // Full async checks bracket the protected state and durable write.
       // Every new slot remains never-issued, even if a late check withholds the witnesses.
       const staging: StagedBoundary | undefined = currentAsync === undefined ? undefined : { allocation: true, current: undefined };
+      const operationMilliseconds = staging !== undefined && count > 1
+        ? STAGED_BATCH_ALLOCATION_MILLISECONDS : URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       let issued: readonly AllocatedClient[] | null = null;
       const finished = await withLock(deadline, async ({ check, reverify, state, write }) => {
         const current = await state();
@@ -681,7 +684,7 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
         // Staged witnesses stay private until withLock checks authority and
         // both clocks immediately before cleanup, then confirms its result.
         issued = entries.map(({ clientId, witnessSha256 }) => ({ clientId, witnessSha256 }));
-      }, { staging });
+      }, { staging, operationMilliseconds });
       return finished ? issued : null;
     };
     const allocateClient = async (deadline: number): Promise<AllocatedClient | null> =>

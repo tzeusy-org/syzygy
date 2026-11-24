@@ -451,6 +451,41 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect((await readdir(f.options.protectedRoot)).sort()).toEqual(names);
   });
 
+  it.each([
+    { asynchronous: true, count: 8, elapsed: 6000, expiry: 'none', accepted: true },
+    { asynchronous: false, count: 8, elapsed: 6000, expiry: 'none', accepted: false },
+    { asynchronous: true, count: 1, elapsed: 6000, expiry: 'none', accepted: false },
+    { asynchronous: true, count: 8, elapsed: 10_001, expiry: 'none', accepted: false },
+    { asynchronous: true, count: 8, elapsed: 6000, expiry: 'caller', accepted: false },
+    { asynchronous: true, count: 8, elapsed: 6000, expiry: 'run', accepted: false },
+  ] as const)('bounds allocation with async $asynchronous, count $count, elapsed $elapsed and expiry $expiry', async scenario => {
+    const f = await fixture();
+    const reopened = await openUrlMachineStore({ ...f.options,
+      ...(scenario.asynchronous ? { currentAsync: async () => true } : {}),
+    }, f.store.identitySha256);
+    if (!reopened) throw new Error('owned store reopen refused');
+    cleanup.push(() => reopened.close());
+    let elapsed = 0;
+    const now = performance.now.bind(performance);
+    const clock = vi.spyOn(performance, 'now').mockImplementation(() => now() + elapsed);
+    filesystem.afterSync = file => {
+      if (!path.basename(file).startsWith('state.json.new-')) return;
+      elapsed = scenario.elapsed;
+      if (scenario.expiry === 'caller') f.tick(NOW + 6000);
+      if (scenario.expiry === 'run') f.tick(f.options.deadline);
+    };
+    try {
+      const deadline = scenario.expiry === 'caller' ? NOW + 5000 : f.options.deadline;
+      const result = await reopened.allocateClients(scenario.count, deadline);
+      expect(elapsed).toBe(scenario.elapsed);
+      if (scenario.accepted) expect(result).toHaveLength(8);
+      else expect(result).toBeNull();
+      const state = JSON.parse(await readFile(path.join(f.options.protectedRoot, 'state.json'), 'utf8'));
+      expect(state.clients).toHaveLength(scenario.accepted ? 8 : 0);
+      expect((await readdir(f.options.protectedRoot)).includes('lock')).toBe(!scenario.accepted);
+    } finally { clock.mockRestore(); }
+  });
+
   it.each([true, false])('staged allocation samples opening authority once before reading either root when current is %s', async allowed => {
     const f = await fixture(), root = f.options.protectedRoot;
     let measuring = false, checks = 0, checksAtOpen: number | undefined;
@@ -638,7 +673,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(await readdir(root)).toEqual([]);
   });
 
-  it('refuses a staged retry when contention clears after its original cutoff', async () => {
+  it.each([1, 8])('refuses a staged %i-slot retry when contention clears after its original cutoff', async slots => {
     const f = await fixture(), lock = path.join(f.options.protectedRoot, 'lock');
     const stateFile = path.join(f.options.protectedRoot, 'state.json'), before = await readFile(stateFile);
     let count = 0, measuring = false, elapsed = 0;
@@ -652,7 +687,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     const clock = vi.spyOn(performance, 'now').mockImplementation(() => realNow() + elapsed);
     try {
       measuring = true;
-      expect(await reopened!.allocateClient(f.options.deadline)).toBeNull();
+      expect(await reopened!.allocateClients(slots, f.options.deadline)).toBeNull();
       expect(count).toBe(2);
       expect(await readFile(stateFile)).toEqual(before);
       expect(await readdir(f.options.protectedRoot)).not.toContain('lock');
@@ -676,7 +711,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it('returns at the clipped allocation deadline while its late cleanup still owns the descriptor', async () => {
+  it.each([1, 8])('returns %i-slot allocation at the clipped deadline while its late cleanup still owns the descriptor', async count => {
     const f = await fixture();
     const reopened = await openUrlMachineStore({ ...f.options, currentAsync: async () => true }, f.store.identitySha256);
     expect(reopened).not.toBeNull(); cleanup.push(() => reopened!.close());
@@ -693,7 +728,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       if (file !== f.options.protectedRoot) return;
       closed = true; descriptorClosed();
     };
-    const allocation = reopened!.allocateClient(NOW + 1_000);
+    const allocation = reopened!.allocateClients(count, NOW + 1_000);
     let watchdog: ReturnType<typeof setTimeout> | undefined;
     try {
       expect(await Promise.race([entering.then(() => 'cleanup'), allocation.then(() => 'returned')])).toBe('cleanup');

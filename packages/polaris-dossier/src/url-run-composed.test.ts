@@ -1648,7 +1648,7 @@ describe('composed URL run with actual role processes', () => {
       designBegins: beginOrdered.mock.calls.length, designBeginsAfterResume: resumedBegins.mock.calls.length });
     eligiblePhase = 'start';
     eligibleRelayTrace.active = eligibleStop;
-    const ordinarySend = scenario === 'stop-resume' ? observeInitialOrdinarySend() : undefined;
+    const ordinarySend = stoppingCut ? observeInitialOrdinarySend() : undefined;
     if (ordinarySend !== undefined) onTestFinished(() => { ordinarySend.stop(); });
     const controller = await start(f, failures, reason => {
       firstRuntimeFailure ??= { reason, atMs: performance.now() };
@@ -2120,6 +2120,15 @@ describe('composed URL run with actual role processes', () => {
       await writeEvidence({ recordSha256: sha256(recordBytes), state, events, roles: controller.summary().roles,
         requests: { author: author.count(), inventory: inv.count(), fidelity: fidelity.count(), design: design.count() } });
     } catch (error) {
+      if (ordinarySend !== undefined && failures.length > 0) {
+        const trace = ordinarySend.summary();
+        console.error('owned ordinary transport failure', JSON.stringify({ scenario,
+          failures: Object.fromEntries(Object.entries(trace.failures).map(([role, failure]) => [role, {
+            phase: failure.phase, ordinal: failure.attempt.ordinal, store: failure.step?.store,
+            effect: failure.step?.effect, boundaryRefusedAt: failure.step?.boundaryRefusedAt,
+          }])), unassociatedLockRefusals: trace.unassociatedLockRefusals,
+        }));
+      }
       if (resumeAfterStop) {
         // Keep the decisive recovery outcomes independently visible when the
         // long event and receipt diagnostic exceeds the hosted log line limit.
