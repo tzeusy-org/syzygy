@@ -234,7 +234,7 @@ authority and no model yet called on the current path.
     not yet landed.
     *(2026-11-24: the predecessor figure "514 scenarios" is superseded by that
     amendment; all 39 identities remain.)*
-    [System model amendment 2.24](openspec/changes/dossier-system-model) is agent-adopted in A-63.
+    [System model amendment 2.24](openspec/changes/dossier-system-model) is agent-adopted in A-64.
     It replaces REQ-polaris-generation-034 again (193 to 207 scenarios: draft schema v12 with one `model` of typed
     elements with parents and cited or derived relationships, graph and containment figures as one-level views over
     it, the model and view findings, a pure migration from schema v10 and v11, brief v18); its code is not yet landed.
