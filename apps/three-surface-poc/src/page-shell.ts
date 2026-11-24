@@ -2,7 +2,14 @@ import { DESIGN_TOKENS_CSS, legendHtml, skipLinkHtml } from './design-tokens.js'
 import type { PocSurface, Reevaluation, ResourceHeadroom } from '@syzygy/three-surface-poc-core';
 import { doltClockText, observatoryLimbText, projectLimbText } from './reevaluation-copy.js';
 import { resourceHeadroomLine } from './resource-headroom-line.js';
+import type { ServedResponseLimit } from './served-response-recorder.js';
 import { withMountPrefix } from './tailnet.js';
+
+const RESPONSE_LIMIT_LABELS: Readonly<Record<ServedResponseLimit, string>> = {
+  maxHumanResponseBytes: 'human',
+  maxMachineResponseBytes: 'machine',
+  maxBriefingResponseBytes: 'briefing',
+};
 
 type SurfaceRouteId = 'home' | 'polaris' | 'trajectory' | 'orrery';
 
@@ -33,7 +40,7 @@ export interface HumanOperabilityStatus {
   readonly credentialProvision: 'minted' | 'reused' | null;
   readonly inputBreaches: number | null;
   readonly servedBreaches: number | null;
-  readonly latestBreach: { readonly limit: 'maxHumanResponseBytes' | 'maxMachineResponseBytes'; readonly sequence: number; readonly declared: number; readonly observed: number } | null;
+  readonly latestBreach: { readonly limit: ServedResponseLimit; readonly sequence: number; readonly declared: number; readonly observed: number } | null;
   /** The latest named re-evaluation (syzygy-u05.2); absent renders Unknown. */
   readonly reevaluation?: Reevaluation | null;
   /** The model's resource-ledger headroom block (syzygy-u05.3); absent renders Unknown. */
@@ -51,7 +58,7 @@ function humanStatusLine(status: HumanOperabilityStatus | undefined, escapeHtml:
   const served = status?.servedBreaches === undefined || status.servedBreaches === null ? 'Unknown (no recorder)' : String(status.servedBreaches);
   const latest = status?.latestBreach === null || status?.latestBreach === undefined
     ? ''
-    : `; ${status.latestBreach.limit === 'maxHumanResponseBytes' ? 'human' : 'machine'} #${status.latestBreach.sequence} ${status.latestBreach.observed}/${status.latestBreach.declared} B`;
+    : `; ${RESPONSE_LIMIT_LABELS[status.latestBreach.limit]} #${status.latestBreach.sequence} ${status.latestBreach.observed}/${status.latestBreach.declared} B`;
   return `<p class="operability-status" data-human-status data-eval="${escapeHtml(status?.evaluationDigest?.slice(0, 12) ?? 'unknown')}" data-breaches="${status?.servedBreaches ?? 'unknown'}" data-copy-role="epistemic-disclosure" data-claim-role="epistemic-claim" data-presentation-artifact data-non-citable>Eval ${escapeHtml(evaluation)}; project ${escapeHtml(project)}; observer ${escapeHtml(observer)}; credential ${escapeHtml(credential)}; breaches input ${escapeHtml(input)}, served ${escapeHtml(served)}${latest}</p>
   <p class="operability-limbs" data-human-limbs data-copy-role="epistemic-disclosure" data-claim-role="epistemic-claim" data-presentation-artifact data-non-citable>Observed-project limb: ${escapeHtml(projectLimbText(status?.reevaluation ?? null))}; observatory limb: ${escapeHtml(observatoryLimbText(status?.reevaluation ?? null))}; Dolt clock: ${escapeHtml(doltClockText(status?.reevaluation ?? null))}</p>
   ${resourceHeadroomLine(status?.resourceHeadroom, escapeHtml)}`;

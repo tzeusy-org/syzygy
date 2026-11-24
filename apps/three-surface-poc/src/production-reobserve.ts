@@ -22,6 +22,7 @@ export interface PocRuntimeCapture {
   readonly workingTreeDigest: string;
   readonly evidence: PocEvaluationEvidence;
   readonly authority?: BodyReadAuthorityEvaluation;
+  readonly briefingResponseLimit?: number;
 }
 
 interface ProductionModelBuildOptions {

@@ -6,12 +6,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createDaemon, type Route, type RunningDaemon } from '@syzygy/http-host';
 import { tempDir } from '@syzygy/test-kit';
-import { BUTLERS_POC_SEEDS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';
+import { BUTLERS_POC_SEEDS, PWB_RESOURCE_LIMITS, buildPocModel, buildResponseIdentity, type PocModel } from '@syzygy/three-surface-poc-core';
 
+import { assertBriefingDerivesFromMachine } from './briefing-response-oracle.testkit.js';
 import { POC_MACHINE_PATH, POLARIS_PRESENTATION_PATH, pocRoutes, renderPocPage } from './routes.js';
+import { ServedResponseRecorder } from './served-response-recorder.js';
 import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
-import { ADMITTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
+import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 import { buildFixtureModel } from './test-model-fixture.js';
+import { walkthroughJudgmentFixture } from './test-walkthrough-judgment-fixture.js';
 
 const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
@@ -247,7 +250,7 @@ function independentResponseKey(body: Record<string, unknown>): string {
   return `sha256:${createHash('sha256').update(independentCanonicalJson(body)).digest('hex')}`;
 }
 
-async function startPoc(model: PocModel): Promise<{
+async function startPoc(model: PocModel, routes: readonly Route[] = pocRoutes(() => model)): Promise<{
   readonly daemon: RunningDaemon;
   readonly token: string;
   readonly stateDir: string;
@@ -255,7 +258,7 @@ async function startPoc(model: PocModel): Promise<{
   const stateDir = join(tempDir('syzygy-poc-route-state-'), 'state');
   const start = await createDaemon({
     stateDir,
-    routes: pocRoutes(() => model),
+    routes,
     port: 0,
   });
   if (!start.started) {
@@ -268,6 +271,185 @@ async function startPoc(model: PocModel): Promise<{
     stateDir,
   };
 }
+
+const BRIEFING_CLAIM = 'claim:item:baseline-spec:switchboard-identity';
+const BRIEFING_QUERY = new URLSearchParams({ for: BRIEFING_CLAIM });
+const BRIEFING_BYTES = 20_480;
+
+function briefingFixture(): PocModel {
+  return buildFixtureModel(cleanups, {
+    evaluationAsOf: ADMITTING_AUTHORITY.evaluationInstant,
+    projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
+    walkthroughJudgment: walkthroughJudgmentFixture('lawful-state-2'),
+  });
+}
+
+function wireRequest(url: string, headers: Record<string, string> = {}): Promise<{ status: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const request = httpRequest(url, { headers }, (response) => {
+      const chunks: Buffer[] = [];
+      response.on('data', (chunk: Buffer) => chunks.push(chunk));
+      response.on('error', reject);
+      response.on('end', () => resolve({ status: response.statusCode ?? 0, body: Buffer.concat(chunks).toString('utf8') }));
+    });
+    request.on('error', reject);
+    request.end();
+  });
+}
+
+describe('authenticated single-claim briefing', () => {
+  it('derives every value from the complete answer at the same evaluation in each mount', async () => {
+    const initial = briefingFixture();
+    let current = initial;
+    let cap: number | undefined = BRIEFING_BYTES;
+    let captures = 0;
+    const routes = pocRoutes(() => { captures += 1; return current; }, undefined, undefined, undefined, undefined, undefined, () => cap);
+    const { daemon, token, stateDir } = await startPoc(initial, routes);
+    const base = `http://${daemon.host}:${daemon.port}`;
+    const snapshot = () => stateDirectorySnapshot(stateDir).map(({ bytes, ...entry }) => ({
+      ...entry, digest: bytes === undefined ? undefined : createHash('sha256').update(bytes).digest('hex'),
+    }));
+    const state = snapshot();
+    const briefingBodies: string[] = [];
+    let priorMachine = '';
+    for (const form of [
+      { prefix: '', host: '127.0.0.1' },
+      { prefix: '', host: 'tzeusy.parrot-hen.ts.net' },
+      { prefix: '/butlers-syzygy', host: '127.0.0.1' },
+    ]) {
+      const requestPath = `${base}${form.prefix}/api/poc`;
+      const briefing = `${requestPath}/briefing?${BRIEFING_QUERY}`;
+      const before = captures;
+      expect((await wireRequest(briefing, { host: form.host })).status).toBe(401);
+      expect((await wireRequest(briefing, { host: form.host, authorization: 'Bearer wrong-fixture-credential' })).status).toBe(401);
+      expect(captures).toBe(before);
+      const headers = { host: form.host, authorization: `Bearer ${token}` };
+      const selected = await wireRequest(briefing, headers);
+      expect(captures).toBe(before + 1);
+      const complete = await wireRequest(requestPath, headers);
+      expect([selected.status, complete.status]).toEqual([200, 200]);
+      assertBriefingDerivesFromMachine(complete.body, selected.body, BRIEFING_CLAIM);
+      briefingBodies.push(selected.body);
+      priorMachine = complete.body;
+      const machine = JSON.parse(complete.body) as PocModel;
+      expect(machine.projectShape).toEqual(JSON.parse(JSON.stringify(initial.projectShape)));
+      expect(machine.links?.filter(link => link.path.endsWith('/api/poc/briefing'))).toHaveLength(2);
+      expect(machine.links).toHaveLength(17);
+      expect(machine.links?.filter(link => link.self)).toHaveLength(1);
+    }
+    expect(new Set(briefingBodies).size).toBe(1);
+
+    const headers = { authorization: `Bearer ${token}` };
+    const url = `${base}/api/poc/briefing`;
+    for (const query of ['', '?for=', '?for=x&for=y', '?for=x&extra=y']) {
+      const invalid = await wireRequest(url + query, headers);
+      expect([invalid.status, JSON.parse(invalid.body)]).toEqual([400, { served: 'nothing', failure: 'briefing-selector-invalid' }]);
+    }
+    const absent = await wireRequest(`${url}?for=does-not-exist-fixture`, headers);
+    expect([absent.status, JSON.parse(absent.body)]).toEqual([404, { served: 'nothing', failure: 'briefing-claim-unavailable' }]);
+    cap = undefined;
+    const unavailable = await wireRequest(`${url}?${BRIEFING_QUERY}`, headers);
+    expect([unavailable.status, JSON.parse(unavailable.body)]).toEqual([503, { served: 'nothing', failure: 'briefing-ceiling-unavailable' }]);
+    expect((await wireRequest(`${base}/api/poc`, headers)).status).toBe(200);
+
+    if (initial.projectShape.kind !== 'observed') throw new Error('fixture must observe shape');
+    const { projectShape } = initial;
+    const asOf = '2026-09-05T00:00:00Z';
+    const evaluationId = 'evaluation:briefing-next-fixture';
+    const evaluation = { ...initial.evaluation, asOf, snapshot: 'briefing-next' };
+    const authority = { ...projectShape.authority, evaluationInstant: asOf, evaluationId };
+    cap = BRIEFING_BYTES;
+    current = { ...initial, evaluation, projectShape: { ...projectShape, authority } };
+    expect((await wireRequest(`${url}?${BRIEFING_QUERY}`, headers)).status).toBe(503);
+    current = {
+      ...current,
+      projectShape: {
+        ...projectShape,
+        authority,
+        items: projectShape.items.map(item => ({
+          ...item, claim: { ...item.claim, evaluationId },
+          ...(item.claim.claimId === BRIEFING_CLAIM ? { statement: 'Only the new evaluation carries this fixture statement.' } : {}),
+        })),
+      },
+    };
+    const next = await wireRequest(`${url}?${BRIEFING_QUERY}`, headers);
+    const nextMachine = await wireRequest(`${base}/api/poc`, headers);
+    expect([next.status, nextMachine.status]).toEqual([200, 200]);
+    assertBriefingDerivesFromMachine(nextMachine.body, next.body, BRIEFING_CLAIM);
+    expect(() => assertBriefingDerivesFromMachine(priorMachine, next.body, BRIEFING_CLAIM)).toThrow();
+    const stale = JSON.parse(next.body);
+    stale.item = JSON.parse(briefingBodies[0]!).item;
+    expect(() => assertBriefingDerivesFromMachine(nextMachine.body, JSON.stringify(stale), BRIEFING_CLAIM)).toThrow();
+    expect(snapshot()).toEqual(state);
+  });
+
+  it('serves 20,480 final UTF-8 bytes and records a typed breach at 20,481', async () => {
+    const initial = briefingFixture();
+    if (initial.projectShape.kind !== 'observed') throw new Error('fixture must observe shape');
+    const { projectShape } = initial;
+    const withStatement = (statement: string): PocModel => ({
+      ...initial,
+      projectShape: {
+        ...projectShape,
+        items: projectShape.items.map(item => item.claim.claimId === BRIEFING_CLAIM ? { ...item, statement } : item),
+      },
+    });
+    const marker = '\u00e9';
+    let model = withStatement(marker);
+    const limits = { ...PWB_RESOURCE_LIMITS };
+    const recorder = new ServedResponseRecorder();
+    const routes = pocRoutes(() => model, limits, undefined, recorder, undefined, undefined, () => BRIEFING_BYTES);
+    const { daemon, token } = await startPoc(initial, routes);
+    const base = `http://${daemon.host}:${daemon.port}`;
+    const headers = { authorization: `Bearer ${token}` };
+    const url = `${base}/api/poc/briefing?${BRIEFING_QUERY}`;
+    const seed = await wireRequest(url, headers);
+    expect(seed.status).toBe(200);
+    const statement = marker + 'x'.repeat(BRIEFING_BYTES - Buffer.byteLength(seed.body, 'utf8'));
+    model = withStatement(statement);
+    const exact = await wireRequest(url, headers);
+    expect(exact.status).toBe(200);
+    expect(Buffer.byteLength(exact.body, 'utf8')).toBe(20_480);
+    expect(exact.body.length).toBeLessThan(20_480);
+    const complete = await wireRequest(`${base}/api/poc`, headers);
+    expect(complete.status).toBe(200);
+    assertBriefingDerivesFromMachine(complete.body, exact.body, BRIEFING_CLAIM);
+
+    model = withStatement(statement + 'x');
+    const lines: string[] = [];
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation((chunk) => { lines.push(String(chunk)); return true; });
+    try {
+      const excess = await wireRequest(url, headers);
+      const { counts } = projectShape;
+      const population = { kind: 'counted', sources: counts.sources, items: counts.items, facts: counts.facts, exclusions: counts.exclusions };
+      expect([excess.status, JSON.parse(excess.body)]).toEqual([503, {
+        served: 'nothing', failure: 'response-limit-breached', evaluation: JSON.parse(JSON.stringify(model.evaluation)),
+        limit: 'maxBriefingResponseBytes', declared: 20_480, observed: 20_481, population, readiness: false,
+      }]);
+      expect(lines).toHaveLength(1);
+      expect(JSON.parse(lines[0]!)).toMatchObject({
+        reason: 'response-limit-breached', route: '/api/poc/briefing', limit: 'maxBriefingResponseBytes',
+        declared: 20_480, observed: 20_481, population, sequence: 1,
+      });
+      expect(recorder.snapshot(model.evaluation).count).toBe(1);
+    } finally {
+      stderr.mockRestore();
+    }
+    const answer = await wireRequest(`${base}/api/poc`, headers);
+    expect(answer.status).toBe(200);
+    const after = JSON.parse(answer.body) as PocModel;
+    expect(after.walkthroughJudgment).toEqual((JSON.parse(complete.body) as PocModel).walkthroughJudgment);
+    expect(after.walkthroughReadiness).toMatchObject({ kind: 'evaluated', readiness: {
+      ready: false, findings: expect.arrayContaining([{ arm: 'resource-breach', detail: 'PWB-REQ-006 breaches: input 0; served 1' }]),
+    } });
+
+    // The credentialed briefing may not serve a subset when the corresponding ordinary answer cannot fit.
+    limits.maxMachineResponseBytes = 1;
+    const absentReference = await wireRequest(url, headers);
+    expect([absentReference.status, JSON.parse(absentReference.body)]).toEqual([503, { served: 'nothing', failure: 'briefing-machine-answer-unavailable' }]);
+    expect(recorder.snapshot(model.evaluation).count).toBe(1);
+  });
+});
 
 describe('three-surface POC routes', () => {
   it('projects all 15 registered route tuples into both machine answers, with one request-form self', async () => {
