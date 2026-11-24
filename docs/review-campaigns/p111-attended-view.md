@@ -4,7 +4,11 @@
 
 - `syzygy-zwja-attended/ZWJA-ATTENDED-VIEW-DESIGN-BAR-.*-RAW\.md`
 
-## Subject and disposition
+## What was under review
+
+[Observed] This review examines the bounded attended-view design for syzygy-zwja criterion 3 against the protected REQ-048 and retained P-111 candidate.
+
+## Last verdict of record, and where the findings landed
 
 [Observed] The independent criterion-3 design walkthrough returned `REVISE` at protected `b4abfcf5c7c1d4a62d1f4341220f89439bafc627`, archived verbatim at `syzygy-zwja-attended/ZWJA-ATTENDED-VIEW-DESIGN-BAR-R1-RAW.md:1`. It found that the written view does not bind same-run detachment and reattachment well enough to distinguish a live attempt from gated resume, and that a wait or question cue lacks a safe text and keyboard path. Its transcript pairs are illustrative, with no tool activity.
 
