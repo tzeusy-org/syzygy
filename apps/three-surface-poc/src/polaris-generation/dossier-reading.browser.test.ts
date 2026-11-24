@@ -222,3 +222,51 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
     await rm(directory, { recursive: true, force: true });
   }
 }, 60_000);
+
+it.skipIf(executable === undefined)('fits every dossier page with both counted review digests at 390 by 844', async () => {
+  if (!executable) throw Error('Browser required');
+  const { sources, local } = navigationInput();
+  const fidelityDigest = '0123456789abcdef'.repeat(4);
+  const designDigest = 'fedcba9876543210'.repeat(4);
+  const reviewStatus = [
+    { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render.`, label: 'Observed' },
+    { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Observed' },
+  ] as const;
+  const { files } = renderLocalDossier({ sources, local: { ...local, reviewStatus } });
+  const pages = [...files].filter(([path]) => path.endsWith('.html'));
+  expect(pages).toHaveLength(18);
+  const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, html] of pages) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), html);
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      const overflows: Array<{ path: string; scrollWidth: number }> = [];
+      for (const [path] of pages) {
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
+          width: innerWidth,
+          height: innerHeight,
+          scrollWidth: document.documentElement.scrollWidth,
+          statuses: [...document.querySelectorAll('[data-review-status-region]')].map(region => region.innerText),
+        })`);
+        expect([layout.width, layout.height], path).toEqual([390, 844]);
+        expect(layout.statuses, path).toHaveLength(1);
+        expect(layout.statuses[0], path).toContain(fidelityDigest);
+        expect(layout.statuses[0], path).toContain(designDigest);
+        if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
+      }
+      expect(overflows).toEqual([]);
+    } finally {
+      await page.close();
+    }
+  } finally {
+    if (browser !== undefined) await browser.close();
+    await rm(directory, { recursive: true, force: true });
+  }
+});
