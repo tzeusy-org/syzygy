@@ -204,12 +204,36 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
   });
 
   it('keeps fresh parent authority independently bounded at five seconds', async () => {
-    const first = nativeObservations.calls().length;
-    let began = NaN;
-    const f = await fixture('live', undefined, { current: () => { began = performance.now(); return new Promise<boolean>(() => {}); } });
-    expect(f.peer).toBeNull(); expect(performance.now() - began).toBeGreaterThanOrEqual(5000);
-    expect(nativeObservations.calls().slice(first).map(call => (call[1] as readonly string[]).at(-1)))
-      .toEqual(['listener', 'listener']);
+    const first = nativeObservations.calls().length, schedule = globalThis.setTimeout;
+    let parentTimeout: { delay: number | undefined; handle: ReturnType<typeof setTimeout>; dispatch: () => void } | undefined;
+    let restoreTimer: (() => void) | undefined, enteredCurrent!: () => void;
+    const currentEntered = new Promise<void>(resolve => { enteredCurrent = resolve; });
+    const capture = fixture('live', undefined, undefined, () => {
+      // Install immediately before capture: the first timer precedes current's microtask.
+      const timer = vi.spyOn(globalThis, 'setTimeout').mockImplementation((callback, delay, ...args) => {
+        const handle = schedule(callback, delay, ...args);
+        parentTimeout ??= { delay, handle, dispatch: () => callback(...args) };
+        return handle;
+      });
+      restoreTimer = () => timer.mockRestore();
+      return { current: () => { enteredCurrent(); return new Promise<boolean>(() => {}); } };
+    });
+    try {
+      expect(await Promise.race([currentEntered.then(() => true), capture.then(() => false)])).toBe(true);
+      expect(parentTimeout?.delay).toBe(5000);
+      clearTimeout(parentTimeout!.handle);
+      parentTimeout!.dispatch();
+      parentTimeout = undefined;
+      const f = await capture;
+      expect(f.peer).toBeNull();
+      expect(nativeObservations.calls().slice(first).map(call => (call[1] as readonly string[]).at(-1)))
+        .toEqual(['listener', 'listener']);
+    } finally {
+      parentTimeout?.dispatch();
+      clearTimeout(parentTimeout?.handle);
+      restoreTimer?.();
+      await capture.catch(() => {});
+    }
   });
 
   it.each(['activate', 'refuse', 'withdraw-parent', 'close-peer'] as const)(
