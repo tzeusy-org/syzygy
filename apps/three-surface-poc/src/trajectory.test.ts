@@ -325,7 +325,7 @@ describe('Trajectory', () => {
     const unknownHtml = renderTrajectoryPage(unknownModel);
     expect(unknownHtml).toContain('data-unknown-disclosure="region:work-items"');
     expect(unknownHtml).not.toContain('class="outline"');
-    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, '127.0.0.1'], [TRAJECTORY_TAILNET_PATH, 'tzeusy.parrot-hen.ts.net']] as const) {
+    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, '127.0.0.1:7478'], [TRAJECTORY_TAILNET_PATH, 'tzeusy.parrot-hen.ts.net']] as const) {
       const route = pocRoutes(() => unknownModel).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
       for (const query of ['selection=recent&page=1', 'page=2']) {
         const response = await route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
