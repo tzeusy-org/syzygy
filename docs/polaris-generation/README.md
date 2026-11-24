@@ -211,9 +211,9 @@ domains.
   or a manually repaired output embedded in application code.
 - Synthetic examples exercise the handoff; they do not establish this result.
 
-**Reader test.** For each project, freeze questions about purpose,
-beneficiary, central thesis, important capabilities, one architectural
-choice, a limit and an uncertainty.
+**Reader test.** For each project, freeze the seven evaluation questions of
+the [question file](question-file-v1.json) (`evaluationQuestions`, the one
+place reader questions are written).
 
 - Have a fresh reader answer from the rendered page and record attempted
   paths.

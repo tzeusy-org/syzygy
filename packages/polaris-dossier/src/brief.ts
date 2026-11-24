@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { DOSSIER_REQUESTED_ASSETS } from '@syzygy/polaris-generation-core/live';
+import { DOSSIER_REQUESTED_ASSETS, QUESTION_FILE } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
@@ -78,13 +78,9 @@ export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s t
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
- * trade-offs. The provider pipeline's profile keeps its own five questions (`DOSSIER_READER_QUESTIONS`). */
-export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string }[] = [
-  { id: 'why-the-project-exists', text: 'Why does this project exist: what problem does it solve, for whom, and what advantages over the alternatives do its maintainers themselves state? Write it as an argument; a quotation, where you use one, supports the argument and is never the argument itself. A repository that states no reason for existing gets an `unknown` block here, never an invented reason.' },
-  { id: 'core-ideas', text: 'What are this project\'s core ideas, stated so a newcomer could repeat them?' },
-  { id: 'end-to-end-workflows', text: 'How does a user get from start to finish on the most important end-to-end workflows?' },
-  { id: 'mechanisms-and-trade-offs', text: 'What mechanisms underneath make those workflows work, where does each live, and what trade-offs, limits and costs does the design accept for them?' },
-];
+ * trade-offs. Written once, in the question file's public part (`question-file.ts` in polaris-generation-core, syzygy-5dhm.21), beside
+ * the provider profile's five questions (`DOSSIER_READER_QUESTIONS`). */
+export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string }[] = QUESTION_FILE.public.briefTopics;
 
 /** The voice rules (dossier spec v1.5): brief guidance, open to the rendered-design review and to no mechanical check. */
 export const VOICE_RULES = [

@@ -151,9 +151,9 @@ stays inside the ceilings.
 
 **Six moves were added** (R23 to R28, described under "Ranked moves"), and both reviewers'
 faults were applied. The most serious: the dossier's author would have read the same question
-file the benchmark grades on, while the plain session met those questions cold. The graded
-questions, depth list and reader tasks are now held out of every authoring session, and check
-asserts their absence.
+file the benchmark grades on, while the plain session met those questions cold. R1 therefore requires separately frozen graded questions, depth facts and reader tasks
+outside the authoring views. The question-file slice checks synthetic role texts and mount
+boundaries. The published Redis pilot remains available as historical regression evidence.
 
 **The first measurements were taken**, over the six stored Redis runs, with no new run and
 nothing sent anywhere. The record with predicates, denominators and the digest of every file
@@ -771,6 +771,36 @@ called a win.
   synthetic fixture alone, and the owned repositories fill the owned stratum.
 - The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
   the traits from the shape packs' own selectors.
+
+## R1 slice 1: one question file, held out by reference (2026-11-25)
+
+Bead syzygy-5dhm.21. The reader questions are now written in one place,
+`packages/polaris-generation-core/src/question-file.ts`, whose bytes are held identical by a test
+to `docs/polaris-generation/question-file-v1.json`; spec version 2.27 (one MODIFIED
+REQ-polaris-generation-033) makes the run record name its digest.
+
+- [Observed] Its public part holds the brief's four topics, the provider profile's five reader
+  questions and the kit's seven evaluation questions, in their former words and order. The
+  brief and the profile read them from it; the brief's bytes and the provider golden are
+  unchanged. `TARGETS.md` and the kit `README.md` point at the file instead of listing the
+  seven.
+- [Observed] Its held-out part carries evaluator key identifiers, SHA-256 digests and
+  counts. The published Redis pilot travels with the checkout and remains the historical
+  regression. All three Redis comparison lists are `not-written`. The independent evaluator
+  must supply new blind graded questions, depth facts and tasks before `bindComparison`
+  can succeed.
+- [Observed] `init` writes `questionFile` (`polaris-question-file/1`, version 1, digest
+  `b3898375…`) into `run.json`; a record written before is read with its question file
+  Unknown. Results compare only at equal digest, as the corpus pass rule already says of keys.
+- [Observed] `packages/polaris-dossier/src/question-file-hold-out.test.ts` builds seven packets
+  over five roles from fixtures (the brief for author and editor, the inventory brief, the
+  fidelity criteria, the provider reader-questions file, the discovery questions and the file
+  itself) against 19 needles from three artificial keys. The synthetic mount control uses
+  the four supervised roles and a key placed first outside, then inside the checkout. A
+  planted question or fact is reported by role, packet and needle identifier.
+- [Unknown] Actual blind keys, live packet coverage and session reads need separate evidence.
+  The lexical predicate detects matching word sequences and leaves paraphrases outside its
+  scope.
 
 ## Known ledger and deviations
 

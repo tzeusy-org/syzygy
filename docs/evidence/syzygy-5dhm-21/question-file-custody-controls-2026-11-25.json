@@ -1,0 +1,81 @@
+{
+  "subject": "0a6a28ddbb440e853204fc84988d117d6eff02db",
+  "tree": "4e8207cded072b6d71e397b3a07292b34e07860f",
+  "baseline": {
+    "passed": 19,
+    "outputSha256": "4705d5c70c14e745362fc2c5678db03efb57cb24f824954015bc9ab3d57835b4"
+  },
+  "dependencyOutputSha256": "92600cb7c6c5c3b139290d96149bab8cb0f0c5a782687f4bf229ab9955f8ca88",
+  "controls": [
+    {
+      "name": "checkout-path",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "!HANDLE.test(value.key)",
+      "new": "(!HANDLE.test(value.key) && !value.key.startsWith('docs/'))",
+      "assertion": "refuses a malformed file by its first fault",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "0c096cdb4b03167067157b4ead0e0acaca140c29a17af09b9c8d2ff80595d61d"
+    },
+    {
+      "name": "published-key-treated-as-private",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "graded: { state: 'not-written', reason: 'A new blind graded list is required. The published Redis pilot is a historical regression.' }",
+      "new": "graded: { state: 'frozen', key: 'public-regression', sha256: 'a'.repeat(64), count: 24, requiredFacts: 81 }",
+      "assertion": "never requests a key for the shipped comparison entry",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "5878bdc34cbee84d9ebc8e8bce32cea46e492ea0ea1dd2e535e05d15afb2f840"
+    },
+    {
+      "name": "unchecked-key-digest",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "sha256(bytes) !== reference.sha256",
+      "new": "reference.sha256.length !== 64",
+      "assertion": "refuses missing, stale or miscounted evaluator keys",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "f43470008c739c2dc2881cdb8c5bf1635f7187d383da6810214f1da187be80c5"
+    },
+    {
+      "name": "unchecked-graded-count",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "count !== reference.count || ",
+      "new": "",
+      "assertion": "refuses missing, stale or miscounted evaluator keys",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "00c0b21ca06de5b959664249f35bc4da8ac26a7d533d78e88cf3dae9f4d81d9c"
+    },
+    {
+      "name": "evaluator-parent-mounted",
+      "path": "packages/polaris-dossier/src/session-view.ts",
+      "old": "const common = [inputs.checkout, inputs.shimDir, ...inputs.toolPaths];",
+      "new": "const common = [path.dirname(inputs.checkout), inputs.checkout, inputs.shimDir, ...inputs.toolPaths];",
+      "assertion": "keeps a sibling evaluator key out of each supervised view",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "a7a436b59e62d8e4f1c4810fa026097376ddbd7b3f9c615c6d82c0a5e49287c8"
+    },
+    {
+      "name": "incomplete-comparison-allowed",
+      "path": "packages/polaris-generation-core/src/question-file.ts",
+      "old": "some((ref) => ref.state !== 'frozen')",
+      "new": "every((ref) => ref.state !== 'frozen')",
+      "assertion": "binds a comparison only to a known subject",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "e3d816303890631f0f79de0444a743efd9ec581bdc5fecbab47e19b4ab5cac75"
+    },
+    {
+      "name": "findings-dropped",
+      "path": "packages/polaris-dossier/src/regression-hold-out.testkit.ts",
+      "old": "return needles.filter(({ id }) => found.has(id)).map",
+      "new": "return needles.filter(() => false).map",
+      "assertion": "reports a packet with a held-out question or fact planted in it",
+      "result": "killed",
+      "exit": 1,
+      "outputSha256": "e928531899cd1deff661fed218f10e1622eaeb821b8380ef4a541bef9824e4a5"
+    }
+  ]
+}

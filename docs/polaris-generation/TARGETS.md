@@ -82,10 +82,10 @@ revisions.
 Per target, frozen before generating (per the kit's
 [Prove portability](README.md#prove-portability)):
 
-1. **Reader test.** A fresh reader answers seven frozen questions — purpose,
-   beneficiary, central thesis, important capabilities, one architectural
-   choice, a limit, an uncertainty — from the generated page alone, recording
-   attempted paths. A second fresh reader answers the same questions from the
+1. **Reader test.** A fresh reader answers the seven frozen evaluation
+   questions of the [question file](question-file-v1.json) (its public part,
+   `evaluationQuestions`; the one place reader questions are written) from
+   the generated page alone, recording attempted paths. A second fresh reader answers the same questions from the
    reference site. Accuracy and comprehension are scored separately from
    visual polish.
 2. **Fidelity.** Every factual claim resolves to an admitted source span;

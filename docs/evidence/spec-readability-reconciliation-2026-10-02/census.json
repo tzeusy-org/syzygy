@@ -635,7 +635,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 546,
+      "scenarios": 548,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1018,7 +1018,9 @@
             "Verify gives each claim one of six outcomes",
             "Verify never reads or names a withheld path",
             "Verify's quotation check is check's",
-            "Verify writes nothing into a run"
+            "Verify writes nothing into a run",
+            "The run record names the question file",
+            "Synthetic hold-out checks cover selected packets and supervised mounts"
           ]
         },
         "REQ-polaris-generation-034": {
