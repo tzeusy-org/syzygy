@@ -1,5 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { QUESTION_FILE, type QuestionFile } from '@syzygy/polaris-generation-core/live';
+import { sha256 } from '@syzygy/support';
 
 /** The hold-out check of the comprehension regression (syzygy-5dhm.134, R29 slice 2): the regression key's questions are never shown to
  * an authoring session, so no text an authoring session is given may carry one. Test support only: nothing in the product imports it.
@@ -54,5 +56,72 @@ export function readKeyFacts(root: string): KeyQuestion[] {
       if (typeof fact !== 'string') throw new Error(`the regression key's ${id} has a required fact that is not a string`);
       return { id: `${id}#${index + 1}`, question: fact };
     });
+  });
+}
+
+/** Every held-out text the question file binds (syzygy-5dhm.21): for each subject, each frozen list's key file, read from this
+ * checkout and refused unless its bytes hash to the reference's digest and hold the reference's count. A graded key holds the pilot
+ * key's `questions` (each question text and its required facts, as above); a depth key holds `depth` (`{ id, fact }` rows) and a task key
+ * holds `tasks` (`{ id, task }` rows). Each text is returned as a needle `<subject>/<list>/<id>`, searched for by the same predicate. A
+ * list not yet written adds no needle, and the result says how many lists were read, so a test can state its denominator. */
+export function readHeldOutNeedles(root: string, file: QuestionFile = QUESTION_FILE): { readonly needles: KeyQuestion[]; readonly listsRead: number } {
+  const needles: KeyQuestion[] = [];
+  let listsRead = 0;
+  for (const entry of file.heldOut.entries) {
+    for (const list of ['graded', 'depth', 'tasks'] as const) {
+      const reference = entry[list];
+      if (reference.state !== 'frozen') continue;
+      const bytes = fs.readFileSync(path.join(root, reference.key));
+      if (sha256(bytes) !== reference.sha256) throw new Error(`held-out ${entry.id}/${list}: the key's bytes do not hash to the question file's digest`);
+      const key = JSON.parse(bytes.toString('utf8')) as Record<string, unknown>;
+      const rows = (name: string, text: string): { id: string; text: string }[] => {
+        const value = key[name];
+        if (!Array.isArray(value)) throw new Error(`held-out ${entry.id}/${list}: the key holds no ${name} list`);
+        return value.map((row: unknown) => {
+          const record = row as Record<string, unknown>;
+          if (typeof record?.['id'] !== 'string' || typeof record[text] !== 'string') throw new Error(`held-out ${entry.id}/${list}: a row lacks a string id or ${text}`);
+          return { id: record['id'], text: record[text] as string };
+        });
+      };
+      const before = needles.length;
+      if (list === 'graded') {
+        for (const question of rows('questions', 'question')) needles.push({ id: `${entry.id}/graded/${question.id}`, question: question.text });
+        for (const fact of readKeyFactsOf(key)) needles.push({ id: `${entry.id}/graded/${fact.id}`, question: fact.question });
+        const count = rows('questions', 'question').length;
+        if (count !== reference.count || needles.length - before - count !== entry.graded.requiredFacts) throw new Error(`held-out ${entry.id}/graded: the key's counts differ from the question file's`);
+      } else {
+        const found = list === 'depth' ? rows('depth', 'fact') : rows('tasks', 'task');
+        for (const row of found) needles.push({ id: `${entry.id}/${list}/${row.id}`, question: row.text });
+        if (found.length !== reference.count) throw new Error(`held-out ${entry.id}/${list}: the key's count differs from the question file's`);
+      }
+      listsRead += 1;
+    }
+  }
+  return { needles, listsRead };
+}
+
+function readKeyFactsOf(key: Record<string, unknown>): KeyQuestion[] {
+  const questions = key['questions'];
+  if (!Array.isArray(questions)) throw new Error('a graded key holds no questions list');
+  return questions.flatMap((question: { readonly id?: unknown; readonly required_facts?: unknown }) => {
+    if (typeof question.id !== 'string' || !Array.isArray(question.required_facts)) throw new Error('a graded key question lacks an id or required facts');
+    return question.required_facts.map((fact: unknown, index) => {
+      if (typeof fact !== 'string') throw new Error('a required fact is not a string');
+      return { id: `${question.id}#${index + 1}`, question: fact };
+    });
+  });
+}
+
+/** One packet an authoring-side session is given: its role, its name and its text. */
+export interface RolePacket { readonly role: 'author' | 'inventory' | 'editor' | 'scout' | 'reviewer'; readonly packet: string; readonly text: string }
+
+/** The held-out needles each packet carries, as `<role>:<packet>: <needle id>` lines, never the text: a finding names where and which,
+ * and repeats nothing held out. A packet's text is also searched with JSON string escaping undone, so a needle serialized into JSON with
+ * an escaped character (a quote, a newline) is still found. */
+export function heldOutFindings(packets: readonly RolePacket[], needles: readonly KeyQuestion[]): string[] {
+  return packets.flatMap(({ role, packet, text }) => {
+    const unescaped = text.replace(/\\u([0-9a-fA-F]{4})/gu, (_match, hex: string) => String.fromCharCode(Number.parseInt(hex, 16))).replace(/\\(["\\/bfnrt])/gu, ' ');
+    const found = new Set([...heldOutQuestionsIn(text, needles), ...heldOutQuestionsIn(unescaped, needles)]);
+    return needles.filter(({ id }) => found.has(id)).map(({ id }) => `${role}:${packet}: ${id}`);
   });
 }
