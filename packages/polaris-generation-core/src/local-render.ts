@@ -297,7 +297,7 @@ export interface LocalRenderInput {
   readonly withheldElements?: ReadonlyMap<string, WithheldNote>;
   readonly counts?: LocalCounts;
   /** The cited lines behind each citation mark, by claim id, then source id: shown on the mark's hover and focus (v1.5). */
-  readonly citationLines?: ReadonlyMap<string, ReadonlyMap<string, string>>;
+  readonly citationLines?: ReadonlyMap<string, ReadonlyMap<string, readonly { readonly start: number; readonly end: number }[]>>;
   /** The operator-declared agent tool and model, named in the one sentence every page carries (v1.5). */
   readonly authoring?: { readonly tool: string; readonly model: string };
   /** The agent's own reasons for selecting each path, by repository path, as its discovery record reports them: self-reported and

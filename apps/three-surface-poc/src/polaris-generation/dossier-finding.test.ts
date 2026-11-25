@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generationAnchorId, type LocalRenderInput } from '@syzygy/polaris-generation-core';
+import { gitBlobObjectId, generationAnchorId, type LocalRenderInput } from '@syzygy/polaris-generation-core';
 import { buildNameIndex, identifiersIn, indexLinkCount, renderNameIndex, type IndexedBlock, type NameIndexInput } from './dossier-finding.js';
 import { READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
@@ -24,7 +24,7 @@ function routed(): ReturnType<typeof readingInput> {
     { id: 'persist', task: 'Change how data is persisted', steps: [step('s3', { kind: 'deep-dive', id: 'gone' })] },
   ];
   const citationLines = new Map(input.local.citationLines);
-  citationLines.set('s1', new Map([[id, 'lines 1\u20131']]));
+  citationLines.set('s1', new Map([[id, [{ start: 1, end: 1 }]]]));
   return { ...input, local: { ...input.local, blocks, taskRoutes, citationLines } };
 }
 const region = (html: string, id: string): string => {
@@ -165,13 +165,13 @@ describe('the find-by-task page', () => {
 
   it('draws each route as cited steps: the label, the numbered source, the file and lines, and the part of the dossier that explains it', () => {
     const files = renderLocalDossier(routed()).files;
-    const cite = (lines: string) => `<span class="sources"><a class="cite" href="${SOURCE_PAGE}#exact-text" data-source-id="src-0123456789abcdef01234567" aria-label="Source 1: docs/reading.md${lines}">[1]<span class="cite-pop" aria-hidden="true">docs/reading.md${lines}</span></a></span>`;
+    const cite = (lines: string) => `<span class="sources"><a class="cite" href="${SOURCE_PAGE}#${lines === '' ? 'exact-text' : 'L1'}" data-source-id="src-0123456789abcdef01234567" aria-label="Source 1: docs/reading.md${lines}">[1]<span class="cite-pop" aria-hidden="true">docs/reading.md${lines}</span></a></span>`;
     expect(region(files.get('find-by-task.html')!, 'find-by-task')).toBe('<section id="find-by-task" data-topics="" data-task-route-count="2"><h1>Find by task</h1>'
       + '<p class="route-note">2 tasks a reader may bring to this project, each answered by a short route. Every step is the authoring agent\'s claim, labelled and checked like any block of this dossier: it cites the file and lines to read or change at the pinned revision. Names are listed on <a href="name-index.html">the index</a>.</p>'
       + '<nav class="route-list" aria-label="Tasks"><ol><li><a href="#route-add-command">Add a command</a></li><li><a href="#route-persist">Change how data is persisted</a></li></ol></nav>'
       + '<section id="route-add-command" class="task-route" data-task-route="add-command"><h2>Add a command</h2><ol class="steps route-steps">'
       + '<li data-claim-id="s1" data-epistemic="inferred" id="block-s1">Register it in <code>commandTable</code>, beside the <a class="term" href="glossary.html#term-glossary/replica" aria-label="replica, glossary entry">replica<span class="term-pop" data-glossary-entry="glossary/replica" data-epistemic="inferred">A server that copies another. <span class="marking inferred">[Inferred]</span></span></a>. <span class="marking inferred">[Inferred]</span> '
-      + `${cite(', lines 1\u20131')}<span class="route-where">Read or change: <a href="${SOURCE_PAGE}#exact-text"><code>docs/reading.md</code></a>, lines 1\u20131</span><span class="route-see">In this dossier: <a href="index.html#section-two">Two</a></span></li>`
+      + `${cite(', line 1')}<span class="route-where">Read or change: <a href="${SOURCE_PAGE}#L1"><code>docs/reading.md</code></a>, line 1</span><span class="route-see">In this dossier: <a href="index.html#section-two">Two</a></span></li>`
       + `<li data-claim-id="s2" data-epistemic="inferred" id="block-s2">Then read docs/reading.md again. <span class="marking inferred">[Inferred]</span> ${cite('')}<span class="route-where">Read or change: <a href="${SOURCE_PAGE}#exact-text"><code>docs/reading.md</code></a></span></li></ol></section>`
       + '<section id="route-persist" class="task-route" data-task-route="persist"><h2>Change how data is persisted</h2><ol class="steps route-steps">'
       // A step naming a deep dive the draft does not hold shows no link (check refuses such a draft before any render).
@@ -256,26 +256,36 @@ describe('the finding pages: withheld, folded and several-piece cases', () => {
 
   it('names a file once for a step that cites two pieces of it, linked at the first piece, with each piece\'s lines', () => {
     const input = routed();
-    // The fixture's one file admitted as two pieces: bytes 0 to 15 under the fixture's source id, and the rest under a second.
-    const body = 'The event loop reads each replica.\n';
-    const base = { ...READING_SOURCE, objectId: READING_SOURCE.objectId! };
-    const piece = (sourceId: string, index: number, start: number, end: number) => ({ ...READING_SOURCE, sourceId, body: body.slice(start, end), segment: { index, count: 2, start, end, blobBytes: 35 },
-      spans: [{ anchorId: generationAnchorId(base, start, end), start: 0, end: end - start, text: body.slice(start, end) }] });
-    const first = piece(READING_SOURCE.sourceId, 0, 0, 15), second = piece('src-89abcdef0123456789abcdef', 1, 15, 35);
+    // The two source pieces split CRLF, and the second begins with the remainder of the same original line.
+    const body = 'Café first line\r\nsecond\rthird\nfourth\rfifth\nsixth\n';
+    const base = { ...READING_SOURCE, objectId: gitBlobObjectId(body) };
+    const bytes = Buffer.from(body);
+    const boundary = bytes.indexOf('\n');
+    const piece = (sourceId: string, index: number, start: number, end: number) => {
+      const text = bytes.subarray(start, end).toString('utf8');
+      return { ...base, sourceId, body: text, segment: { index, count: 2, start, end, blobBytes: bytes.length },
+        spans: [{ anchorId: generationAnchorId(base, start, end), start: 0, end: end - start, text }] };
+    };
+    const first = piece(READING_SOURCE.sourceId, 0, 0, boundary), second = piece('src-89abcdef0123456789abcdef', 1, boundary, bytes.length);
     const taskRoutes = [{ id: 'both', task: 'Read both pieces', steps: [{ paragraph: { id: 's3', text: 'x', sourceIds: [READING_SOURCE.sourceId, second.sourceId] } }] }];
     const citationLines = new Map(input.local.citationLines);
-    citationLines.set('s3', new Map([[READING_SOURCE.sourceId, 'lines 1\u20131'], [second.sourceId, 'lines 4\u20136']]));
+    citationLines.set('s3', new Map([[READING_SOURCE.sourceId, [{ start: 1, end: 1 }]], [second.sourceId, [{ start: 4, end: 6 }]]]));
     const sourceAnchors = new Map([...input.local.sourceAnchors, [second.sourceId, input.local.sourceAnchors.get(READING_SOURCE.sourceId)!]]);
     const files = renderLocalDossier({ sources: [first, second], local: { ...input.local, taskRoutes, citationLines, sourceAnchors } }).files;
     const page = region(files.get('find-by-task.html')!, 'find-by-task');
     expect(page.split('class="route-where"').length - 1).toBe(1);
     const where = page.slice(page.indexOf('<span class="route-where">'), page.indexOf('</span>', page.indexOf('<span class="route-where">')));
-    expect(where.replace(/href="[^"]*"/u, 'href=""')).toBe('<span class="route-where">Read or change: <a href=""><code>docs/reading.md</code></a>, lines 1\u20131, lines 4\u20136');
+    expect(where.replace(/href="[^"]*"/u, 'href=""')).toBe('<span class="route-where">Read or change: <a href=""><code>docs/reading.md</code></a>, line 1, lines 4\u20136');
     // The file's link is the first cited piece's page, the page the step's first citation mark opens.
     const marks = [...page.matchAll(/<a class="cite" href="([^"]*)" data-source-id="([^"]*)"/gu)].map(match => [match[2], match[1]]);
     expect(marks.map(mark => mark[0])).toEqual(['src-0123456789abcdef01234567', 'src-89abcdef0123456789abcdef']);
     expect(marks[0]![1]).not.toBe(marks[1]![1]);
     expect(where).toContain(`<a href="${marks[0]![1]}">`);
+    expect(marks.map(mark => mark[1]!.split('#')[1])).toEqual(['L1', 'L4']);
+    const numbered = (href: string): string[] =>
+      [...files.get(href.split('#')[0]!)!.matchAll(/<span class="source-line(?: cited-span)?" id="L(\d+)"/gu)].map(row => row[1]!);
+    expect(numbered(marks[0]![1]!)).toEqual(['1']);
+    expect(numbered(marks[1]![1]!)).toEqual(['1', '2', '3', '4', '5', '6']);
   });
 
   it('reaches a block folded twice, and a repeating list folded inside a collapsible section, through the outermost folded element', () => {

@@ -2,7 +2,7 @@ import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
 
 import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
-  generationSpanRange, validateGenerationSources,
+  generationSourceIdentity, generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftFigure, type DraftFigureElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
   type LocalBlock, type LocalDerivedFact, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestFacts, type LocalManifestFileEntry, type LocalManifestRecognizerEntry, type LocalEdgeRelation, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
@@ -12,6 +12,12 @@ import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_R
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
+import { citationLabel, drawSourceLines, rangesOnSource, sourceByteRange, sourceLines, type CitationRange, type SourceHighlight } from './dossier-source-lines.js';
+
+const SOURCE_LINES_CSS = 'html{scroll-behavior:auto}.source-line{position:relative;display:block;min-block-size:1lh;padding-inline-start:7ch;overflow-wrap:anywhere;scroll-margin-block-start:1rem}'
+  + '.source-line::before{position:absolute;inset-inline-start:.35ch;width:6ch;text-align:end;content:attr(data-line);color:var(--muted);user-select:none}'
+  + '.source-continuation{display:none}.source-continuation a{display:block;width:fit-content}'
+  + '.source-continuation-target{position:absolute;inset-block-start:0;scroll-margin-block-start:1rem}';
 
 /**
  * Multi-page static dossier (gap #8), from the view of a run: a provider pipeline's final output (`dossier-render.ts` builds
@@ -342,6 +348,57 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const sectionHref = (from: string, id: string): string => href(from, sectionPage(id), `section-${id}`);
   const quotable = input.sources.filter(source => !source.exclusion.excluded && source.classificationBasis === 'body' && source.spans.length > 0);
   const sourcePaths = new Map(quotable.map(source => [source.sourceId, sourceRoute(source)]));
+  const numberedSources = local === undefined ? undefined : sourceLines(quotable);
+  const sourcePieces = new Map<string, GenerationSource[]>();
+  const fileIdentity = (source: GenerationSource): string => generationSourceIdentity({ ...source, objectId: source.objectId! });
+  if (numberedSources !== undefined) for (const source of quotable) {
+    if (source.segment === undefined) continue;
+    const identity = fileIdentity(source);
+    const pieces = sourcePieces.get(identity) ?? [];
+    pieces.push(source);
+    sourcePieces.set(identity, pieces);
+  }
+  for (const pieces of sourcePieces.values()) pieces.sort((a, b) => a.segment!.index - b.segment!.index);
+  const citedLines = new Map<string, Map<string, SourceHighlight>>();
+  type LineTarget = { readonly sourceId: string; readonly fragment: string };
+  const continuedCitations = new Map<string, Map<string, Map<string, LineTarget>>>();
+  const registerRanges = (target: LineTarget, line: number, ranges: readonly CitationRange[]): void => {
+    const cited = citedLines.get(target.sourceId) ?? new Map<string, SourceHighlight>();
+    const prior = cited.get(target.fragment);
+    const related = prior?.ranges ?? [];
+    // Several marks can share one original line target. Independent continuations retain their original target identity.
+    for (const range of ranges) if (!related.some(other => other.start === range.start && other.end === range.end)) related.push(range);
+    cited.set(target.fragment, { line: Math.min(line, prior?.line ?? line), ranges: related });
+    citedLines.set(target.sourceId, cited);
+  };
+  const lineFragment = (id: string, ranges: readonly CitationRange[] | undefined): string => {
+    if (ranges === undefined || ranges.length === 0) return 'exact-text';
+    const fragment = ranges[0]!.start;
+    const spans = numberedSources?.get(id);
+    if (spans === undefined || ![...spans.values()].some(rows => rows.some(row => row.number === fragment))) return 'exact-text';
+    const first = { sourceId: id, fragment: `L${fragment}` };
+    registerRanges(first, fragment, ranges);
+    const source = sources.get(id)!;
+    if (source.segment !== undefined) {
+      // Different original targets may continue at the same row. Distinct empty targets retain each route's highlight there.
+      const continuation = `continued-${id}-${first.fragment}`;
+      let previous = first;
+      for (const piece of sourcePieces.get(fileIdentity(source)) ?? []) {
+        if (piece.segment!.index <= source.segment.index) continue;
+        const continued = rangesOnSource(numberedSources?.get(piece.sourceId), ranges);
+        if (continued.length === 0) continue;
+        const next = { sourceId: piece.sourceId, fragment: continuation };
+        registerRanges(next, continued[0]!.start, continued);
+        const from = continuedCitations.get(previous.sourceId) ?? new Map<string, Map<string, LineTarget>>();
+        const links = from.get(previous.fragment) ?? new Map<string, LineTarget>();
+        links.set(next.sourceId, next);
+        from.set(previous.fragment, links);
+        continuedCitations.set(previous.sourceId, from);
+        previous = next;
+      }
+    }
+    return first.fragment;
+  };
 
   // --- shared fragments, each bound to the page it is rendered on
   const label = (blockId: string): EpistemicMarking => support.get(blockId) === 'supported' && !quoteFlags.has(blockId) ? 'inferred' : 'unknown';
@@ -394,9 +451,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     noteCitation(from, id);
     const cited = citedRedaction(id);
     // The mark shows its file and cited lines on hover and on keyboard focus (v1.5), out of the reading text until then.
-    const lines = claimId === undefined ? undefined : local.citationLines?.get(claimId)?.get(id);
+    const ranges = claimId === undefined ? undefined : local.citationLines?.get(claimId)?.get(id);
+    const lines = citationLabel(ranges);
     const where = `${source.path}${lines === undefined ? '' : `, ${lines}`}${cited.words}`;
-    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(`${sourceLabel(from, id)}${lines === undefined ? '' : `, ${lines}`}${cited.words}`)}">[${citeNumber(from, id)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
+    return `<a class="cite" href="${escape(href(from, target, lineFragment(id, ranges)))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(`${sourceLabel(from, id)}${lines === undefined ? '' : `, ${lines}`}${cited.words}`)}">[${citeNumber(from, id)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
   }).join(' ')}</span>`;
   // Every claim a page carries, in the order it is built; `add` files them under that page for the machine view.
   const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
@@ -466,7 +524,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const label = `${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
     // Like any citation mark, it shows its file and the quoted bytes on hover and on keyboard focus (v1.5).
     const where = `${sources.get(part.sourceId)!.path}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
-    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
+    const range = part.anchor.fragment === null ? undefined : sourceByteRange(numberedSources?.get(part.sourceId), part.start, part.end);
+    return `<a class="anchor-link cite" href="${escape(href(from, target, lineFragment(part.sourceId, range === undefined ? undefined : [range])))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
   };
   // The generated index (the index-and-task-routes change) links a name to every block that names it, so each operator-agent block is a fragment target and
   // is filed here as it is drawn, with the text it shows. A block drawn inside a folded element is reached through that element: a
@@ -797,9 +856,19 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     : MAP_PATHS.has(path) ? `${MAP_READING_LEGEND}${main}`
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
-  const add = (path: string, depth: number, pageTitle: string, main: string, mapCss = ''): void => {
+  const deferredSourceLeaves = new Map<string, () => string>();
+  const add = (path: string, depth: number, pageTitle: string, main: string | (() => { markup: string; styles: string }), mapCss = ''): void => {
     pageTitles.set(path, pageTitle);
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome, figurePages.has(path), mapCss, subsectionPages.has(path)));
+    const draw = (markup: string, styles: string): string =>
+      page(`${pageTitle} — ${title}`, path, nav(path), legended(path, markup), chrome, figurePages.has(path), styles, subsectionPages.has(path));
+    if (typeof main === 'string') files.set(path, draw(main, mapCss));
+    else {
+      files.set(path, '');
+      deferredSourceLeaves.set(path, () => {
+        const { markup, styles } = main();
+        return draw(markup, styles);
+      });
+    }
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
@@ -915,12 +984,13 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       // One file once, however many source pieces of it the step cites: linked at the first piece cited, with each piece's lines.
       const cited = [...new Set(sourceIds)].flatMap(id => {
         const source = sources.get(id), target = sourcePaths.get(id);
-        return source === undefined || target === undefined ? [] : [{ path: source.path, target, lines: local.citationLines?.get(stepId)?.get(id) }];
+        return source === undefined || target === undefined ? [] : [{ id, path: source.path, target, ranges: local.citationLines?.get(stepId)?.get(id) }];
       });
       const files = [...new Set(cited.map(piece => piece.path))].map(path => {
         const pieces = cited.filter(piece => piece.path === path);
-        const lines = pieces.flatMap(piece => piece.lines === undefined ? [] : [piece.lines]);
-        return `<a href="${escape(href(at, pieces[0]!.target, 'exact-text'))}"><code>${escape(path)}</code></a>${lines.length === 0 ? '' : `, ${escape(lines.join(', '))}`}`;
+        const lines = pieces.flatMap(piece => citationLabel(piece.ranges) ?? []);
+        const first = pieces.find(piece => piece.ranges !== undefined) ?? pieces[0]!;
+        return `<a href="${escape(href(at, first.target, lineFragment(first.id, first.ranges)))}"><code>${escape(path)}</code></a>${lines.length === 0 ? '' : `, ${escape(lines.join(', '))}`}`;
       });
       return files.length === 0 ? '' : `<span class="route-where">Read or change: ${files.join('; ')}</span>`;
     };
@@ -1048,22 +1118,45 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (local !== undefined && anchor === undefined) throw new DossierRenderError('unquotable-source');
     const identity = anchor === undefined ? ` · <code>${escape(span.anchorId)}</code></p>` : `</p><details class="source-identity"><summary>Source identity</summary><p>${escape(source.sourceId)}</p>${anchorDetails(anchor, escape)}</details>`;
     const read = anchor === undefined ? '' : `<p class="read-note">${marking('observed')} Syzygy read the original Git blob at the pinned revision at this render and recomputed its object identifier before screening.</p>`;
-    let exact = '';
-    if (source.redaction === undefined) exact = `<blockquote class="exact-source" data-quote-source="${escape(source.sourceId)}" data-quote-start="${start}" data-quote-end="${end}">${escape(span.text).replace(/\r/gu, '&#13;')}</blockquote>`;
-    else {
-      // Only surviving original spans are quotation evidence. Projection gaps are the screen's marker lines, never quotable bytes.
-      const bytes = Buffer.from(source.body!);
-      let at = 0;
-      for (const kept of source.spans) {
-        if (kept.start > at) exact += `<pre class="redaction-note">${escape(bytes.subarray(at, kept.start).toString('utf8')).replace(/\r/gu, '&#13;')}</pre>`;
-        const [from, to] = generationSpanRange(source, kept);
-        exact += `<blockquote class="exact-source" data-quote-source="${escape(source.sourceId)}" data-quote-start="${from}" data-quote-end="${to}">${escape(kept.text).replace(/\r/gu, '&#13;')}</blockquote>`;
-        at = kept.end;
+    const sourceLeaf = (): { markup: string; styles: string } => {
+      const rules: string[] = [];
+      const quote = (text: string, from: number, to: number): string => {
+        const rows = numberedSources?.get(source.sourceId)?.get(from);
+        const numbered = rows === undefined ? undefined : drawSourceLines(rows, citedLines.get(source.sourceId), escape);
+        if (numbered !== undefined) for (const rule of numbered.styles) rules.push(rule);
+        const content = numbered?.markup ?? escape(text).replace(/\r/gu, '&#13;');
+        return `<blockquote class="exact-source" data-quote-source="${escape(source.sourceId)}" data-quote-start="${from}" data-quote-end="${to}">${content}</blockquote>`;
+      };
+      let exact = '';
+      if (source.redaction === undefined) exact = quote(span.text, start, end);
+      else {
+        // Only surviving original spans are quotation evidence. Projection gaps are the screen's marker lines, never quotable bytes.
+        const bytes = Buffer.from(source.body!);
+        let at = 0;
+        for (const kept of source.spans) {
+          if (kept.start > at) exact += `<pre class="redaction-note">${escape(bytes.subarray(at, kept.start).toString('utf8')).replace(/\r/gu, '&#13;')}</pre>`;
+          const [from, to] = generationSpanRange(source, kept);
+          exact += quote(kept.text, from, to);
+          at = kept.end;
+        }
+        if (at < bytes.length) exact += `<pre class="redaction-note">${escape(bytes.subarray(at).toString('utf8')).replace(/\r/gu, '&#13;')}</pre>`;
       }
-      if (at < bytes.length) exact += `<pre class="redaction-note">${escape(bytes.subarray(at).toString('utf8')).replace(/\r/gu, '&#13;')}</pre>`;
-    }
-    const extent = source.redaction === undefined ? `bytes ${start}–${end} of the file` : `redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file; surviving spans use original Git byte coordinates`;
-    add(path, 2, source.path, `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${read}</section>`);
+      const extent = source.redaction === undefined ? `bytes ${start}–${end} of the file` : `redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file; surviving spans use original Git byte coordinates`;
+      const continuations: string[] = [];
+      const continuationRules: string[] = [];
+      for (const [target, destinations] of continuedCitations.get(source.sourceId) ?? []) {
+        const links = [...destinations.values()].map(next => {
+          const label = citationLabel(citedLines.get(next.sourceId)?.get(next.fragment)?.ranges)!;
+          return `<a href="${escape(href(path, sourcePaths.get(next.sourceId)!, next.fragment))}">Continue this citation: ${escape(label)}</a>`;
+        }).join('');
+        continuations.push(`<div class="source-continuation" data-citation-target="${escape(target)}">${links}</div>`);
+        continuationRules.push(`#exact-text:has([id="${target}"]:target)>.source-continuation[data-citation-target="${target}"]{display:block}`);
+      }
+      const markup = `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${continuations.join('')}${read}</section>`;
+      const styles = local === undefined ? '' : SOURCE_LINES_CSS + ` .source-line:target,.source-line:has(>.source-continuation-target:target)${rules.length === 0 ? '' : `,${rules.join(',')}`}{background:var(--accent-tint);box-shadow:inset 2px 0 var(--accent)}${continuationRules.join('')}`;
+      return { markup, styles };
+    };
+    add(path, 2, source.path, local === undefined ? sourceLeaf().markup : sourceLeaf);
   }
 
   // --- the computed map pages (version 2.9), after the sources and before the run's own pages: each its own style rules, which no other page
@@ -1106,6 +1199,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const ids = claimsByPage.map(entry => entry.id);
     if (new Set(ids).size !== ids.length) throw new DossierRenderError('duplicate-claim');
   }
+
+  // Late run pages can cite sources too. Keep source leaves in their original manifest order and draw their highlights after those references.
+  for (const [path, draw] of deferredSourceLeaves) files.set(path, draw());
 
   // The index is drawn last of the reading pages, since it lists every block, but it is read third: directly after find-by-task, as it
   // is listed in every page's navigation and on the contents page (the reader's edition, syzygy-5dhm.136).
