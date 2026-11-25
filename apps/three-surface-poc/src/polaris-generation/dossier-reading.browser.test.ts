@@ -237,12 +237,19 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   ] as const;
   const longPath = `src/${'selectedSourceSegment'.repeat(4)}.ts`;
   const revision = '73c810edba'.repeat(4);
-  const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [{
-    id: 'discovery-read', heading: 'Read by this render', note: `Read at revision ${revision}.`, empty: 'None.', items: [{
+  const reportedPaths = ['selected', 'excluded', 'unresolved', 'deferred'] as const;
+  const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [
+    { id: 'discovery-inspected', heading: 'Inspected, as the agent reports', note: 'Self-reported.', empty: 'None.', items: [{
+      id: 'discovery/inspected', marking: 'inferred', unknownReason: null, title: null, text: 'One path inspected.', details: [longPath], sourceIds: [],
+    }] },
+    ...reportedPaths.map(part => ({ id: `discovery-${part}`, heading: `${part}, as the agent reports`, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `discovery/${part}/1`, marking: 'inferred' as const, unknownReason: null, title: longPath, text: 'Fixture path.', details: [], sourceIds: [],
+    }] })),
+    { id: 'discovery-read', heading: 'Read by this render', note: `Read at revision ${revision}.`, empty: 'None.', items: [{
       id: 'discovery/read/1', marking: 'observed', unknownReason: null, title: longPath, text: 'Admitted by screening.',
       details: [`object sha1:${revision}`, `revision ${revision}`], sourceIds: [],
-    }],
-  }] } as const;
+    }] },
+  ] } as const;
   const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [{
     id: 'review-fidelity', heading: 'Fidelity review', note: 'Rebuilt at this render.', empty: 'None.', items: [{
       id: 'review/fidelity/binding', marking: 'observed', unknownReason: null, title: 'Packet binding',
@@ -251,10 +258,15 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   }] } as const;
   const disclosure = [...local.disclosure, { id: 'run/screened-path', text: `Screened source ${longPath}`, label: 'Inferred' }] as const;
   const layoutFixture = { ...local, disclosure, reviewStatus, pages: [...local.pages, discoveryPage, reviewPage] };
-  const settledText = new Map<string, readonly [selector: string, text: string]>([
-    ['appendix.html', ['#appendix-disclosure > ul > li', longPath]],
-    ['discovery.html', ['#discovery-read > ul.local-items > li', longPath]],
-    ['review.html', ['#review-fidelity > ul.local-items > li', fidelityDigest]],
+  const settledText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
+    ['appendix.html', [['#appendix-disclosure > ul > li', longPath]]],
+    ['discovery.html', [
+      ['#discovery-inspected ul.item-details > li', longPath],
+      ...reportedPaths.map(part => [`#discovery-${part} > ul.local-items > li`, longPath] as const),
+      ['#discovery-read > ul.local-items > li', longPath],
+      ['#discovery-read .group-note', revision],
+    ]],
+    ['review.html', [['#review-fidelity > ul.local-items > li', fidelityDigest]]],
   ] as const);
   const { files } = renderLocalDossier({ sources, local: layoutFixture });
   const pages = [...files].filter(([path]) => path.endsWith('.html'));
@@ -298,9 +310,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
           expect(status, path).not.toContain(designGroups);
         }
         if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
-        const selected = settledText.get(path);
-        if (selected !== undefined) {
-          const [selector, text] = selected;
+        for (const [selector, text] of settledText.get(path) ?? []) {
           const textFits = await page.evaluate<boolean>(`(() => {
             const text = ${JSON.stringify(text)};
             const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
@@ -310,7 +320,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
             const rects = [...range.getClientRects()];
             return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
           })()`);
-          if (!textFits) longTextOverflows.push(path);
+          if (!textFits) longTextOverflows.push(`${path} ${selector}`);
         }
       }
       expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });

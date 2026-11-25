@@ -224,7 +224,7 @@ const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-d
 
 const LOCAL_REFLOW_CSS = new Map([
   ['appendix.html', '#appendix-disclosure{overflow-wrap:anywhere}'],
-  ['discovery.html', '#discovery-read{overflow-wrap:anywhere}'],
+  ['discovery.html', '#page-discovery{overflow-wrap:anywhere}'],
   ['review.html', '#review-fidelity{overflow-wrap:anywhere}'],
 ]);
 
