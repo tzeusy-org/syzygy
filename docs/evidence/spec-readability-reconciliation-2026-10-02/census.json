@@ -635,7 +635,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 555,
+      "scenarios": 558,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1020,7 +1020,10 @@
             "Verify's quotation check is check's",
             "Verify writes nothing into a run",
             "The run record names the question file",
-            "Synthetic hold-out checks cover selected packets and supervised mounts"
+            "Synthetic hold-out checks cover selected packets and supervised mounts",
+            "Scripted answers round-trip with their frozen comparison run",
+            "The scripted grader receives only the blind fact projection",
+            "The scripted benchmark refuses invalid custody or a changed binding"
           ]
         },
         "REQ-polaris-generation-034": {
