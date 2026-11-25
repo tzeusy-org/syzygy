@@ -22,7 +22,8 @@ import * as runSessions from './url-run-sessions.js';
 import * as sessionControl from './session-control.js';
 import type { UrlRunSessions } from './url-run-sessions.js';
 import { sessionRelayTestPort, type SessionRelayPorts } from './session-relay.js';
-import type { UrlRuntime } from './url-runtime.js';
+import { urlPolicyGitProgram, type UrlRuntime } from './url-runtime.js';
+import { createNativePolicyGitScope } from './policy-git-native.js';
 import * as sessionAudit from './url-session-audit.js';
 import * as designProduct from './url-design-product.js';
 import { orderedDesignPlanInputForDelivery, planOrderedDesignBytes, type OrderedDesignPlan } from './url-design-delivery.js';
@@ -3009,9 +3010,12 @@ describe('composed URL run with actual role processes', () => {
         return result;
       },
     } : f.artifacts;
+    const policyProgram = urlPolicyGitProgram(runtime);
+    if (policyProgram === null) throw new Error('owned composed policy runtime missing');
+    const policyGit = createNativePolicyGitScope(policyProgram); cleanup.push(() => policyGit.close());
     const loop = runUrlSupervisorLoop(stateRoot, f.ports, state, { event: message => events.push(message), draw: lines => draws.push([...lines]) }, {
       prepared: { record: f.record, roles: f.plans, effectiveDeclaration: f.effectiveDeclaration, screen: f.screen, renderer: f.renderer, origins: f.origins,
-        current: f.current, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
+        current: f.current, policyGit, openReader: f.openReader, directories: f.directories, auditDirectory: f.hidden, sourceStore: 'owned-loose' },
       artifacts: observedArtifacts, runtime: observedRuntime, stop,
     });
     // Settle ordinary end-turns in durable audit order while the supervisor

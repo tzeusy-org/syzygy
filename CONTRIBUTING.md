@@ -111,6 +111,7 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
 
 | Command | What it runs | Needs |
 |---|---|---|
+| `npm run build` | clean product builds and the URL runtime's verified native support | Linux x64, Node 24.6.0, `/usr/bin/cc`, and the running Node installation's C headers (`include/node`) |
 | `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |
 | `npm run check` | `npm run typecheck`, then `npm test` | node, python3 with pidfd support, Linux `/proc` |
 | `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | Linux x64 and the native dossier integration prerequisites below |

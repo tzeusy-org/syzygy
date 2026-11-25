@@ -1,3 +1,4 @@
+import type { PolicyGitScope } from './policy-git.js';
 import { createServer } from 'node:net';
 import { setImmediate as yieldToPoll } from 'node:timers/promises';
 import path from 'node:path';
@@ -91,6 +92,8 @@ export interface UrlRunSessionsOptions {
   readonly current: () => boolean | Promise<boolean>; readonly now: () => number; readonly deadline: number;
   /** Host operator request. It closes effects while preserving cleanup audit writes. */
   readonly stopRequested?: () => boolean;
+  /** The same root-created policy scope spans initial probes and this pool. */
+  readonly policyGit?: PolicyGitScope;
   /** Bound by the supervisor to the exact run and its declared provider. */
   readonly authorHandoff?: { readonly current: () => boolean; readonly record: (state: 'unknown' | 'reached') => boolean };
   readonly credential: SessionCredential;
@@ -246,10 +249,10 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
   const budget = createUrlSessionBudget({ deadline: options.deadline, now: options.now,
     turnBudget: record.declared.agentTurnBudget, tokenBudget: record.declared.agentTokenBudget,
     ...(resume === undefined ? {} : { resume: resume.verified.resumeBudget }) });
-  const cpu = ordered ? createUrlRunCpuBudget(Math.max(1, (options.deadline - options.now()) * 1000), () => {
-    const usage = process.cpuUsage(); return usage.user + usage.system;
-  }) : null;
-  const withinCpuBudget = (): boolean => cpu?.current() !== false;
+  const cpu = ordered ? createUrlRunCpuBudget(Math.max(1, (options.deadline - options.now()) * 1000),
+    options.policyGit === undefined ? () => { const usage = process.cpuUsage(); return usage.user + usage.system; }
+      : () => options.policyGit!.cpuClock(), options.policyGit?.initialSpent() ?? 0) : null;
+  const withinCpuBudget = (): boolean => options.policyGit?.healthy() !== false && cpu?.current() !== false;
   let protectedReadBytes = 0;
   const observeProtectedRead = (bytes: number): void => {
     protectedReadBytes += bytes;
@@ -305,6 +308,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     try { if (options.stopRequested?.() === true) return false; }
     catch { fail('control-unavailable'); return false; }
     if (!withinCpuBudget()) { fail('cpu-budget'); return false; }
+    // CPU accounting may join outstanding Git without dispatching JS timers.
+    // Re-read protected Stop and the original run budget after that wait.
+    try { if (options.stopRequested?.() === true) return false; }
+    catch { fail('control-unavailable'); return false; }
+    if (!effectBudgetCurrent()) return false;
     if ([...hostHealth.values()].some(healthy => !healthy())) { fail('transport-unavailable'); return false; }
     return true;
   };
@@ -460,6 +468,7 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
     if (orderedAttempt !== null && !(await orderedAttempt.close())) failure ??= 'cleanup-unconfirmed';
     options.credential.close(); probe.close();
     const auditResult = await audit.close();
+    if (options.policyGit !== undefined && !(await options.policyGit.drain())) failure ??= 'cleanup-unconfirmed';
     if (!withinCpuBudget()) failure ??= 'cpu-budget';
     return deepFreeze({ ...summary(), control: control.close(), hosts: hostResults, audit: auditResult, closedAuditHistory: audit.closedHistory(),
       ...(closedMachineHistory === null ? {} : { closedMachineHistory }) });
@@ -479,7 +488,11 @@ async function start(options: UrlRunSessionsOptions, ports: typeof native): Prom
         ...(resume === undefined ? {} : { resume: { history: resume.verified.machine,
           identitySha256: resume.verified.machine.identitySha256, current: () => isClaimedStoppedUrlRun(resume.verified, resume.claim),
           currentAsync: () => isClaimedStoppedUrlRunAsync(resume.verified, resume.claim) } }),
-        chargeNativeCpuMicroseconds: capacity => cpu!.charge('machine', capacity) });
+        chargeNativeCpuMicroseconds: capacity => {
+          // Charge even when the following admission check refuses the helper.
+          cpu!.charge('machine', capacity);
+          if (!effectCurrent()) throw new Error('url-run-sessions-unavailable');
+        } });
     }
     await new Promise<void>((resolve, reject) => { probe.once('error', reject); probe.listen(0, '127.0.0.1', resolve); });
     const address = probe.address(); if (address === null || typeof address === 'string') throw new Error();

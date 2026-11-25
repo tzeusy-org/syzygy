@@ -106,6 +106,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/launch-write-consent.test.ts',
   'packages/polaris-dossier/src/launch.test.ts',
   'packages/polaris-dossier/src/launched.test.ts',
+  'packages/polaris-dossier/src/policy-git-native.test.ts',
   'packages/polaris-dossier/src/relation-types.test.ts',
   'packages/polaris-dossier/src/render.test.ts',
   'packages/polaris-dossier/src/review.test.ts',

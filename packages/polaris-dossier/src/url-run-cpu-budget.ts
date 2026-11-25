@@ -3,16 +3,21 @@ export interface UrlOrderedCpuReservation {
   readonly remainingCpuMicroseconds: number;
 }
 
-/** Shared supervisor CPU capacity. Native children consume their enforced full
- * capacity before spawn; this is not a measurement of those children's usage.
- * The separately kernel-limited role CLIs are outside this population. */
-export function createUrlRunCpuBudget(limit: number, hostCpu: () => number) {
-  if (!Number.isSafeInteger(limit) || limit <= 0) throw new Error('url-run-cpu-budget-unavailable');
-  let previous = hostCpu(), spent = 0, stopped = false;
+/** Shared supervisor CPU capacity. The clock can include measured policy-child
+ * CPU; other native jobs charge their enforced full capacity before spawn.
+ * The separately kernel-limited role CLIs are outside this population.
+ * initialSpent carries known work completed before this clock's baseline;
+ * subsequent clock deltas must include only newly completed work. */
+export function createUrlRunCpuBudget(limit: number, cpuClock: () => number, initialSpent = 0) {
+  if (!Number.isSafeInteger(limit) || limit <= 0
+    || !Number.isSafeInteger(initialSpent) || initialSpent < 0 || initialSpent > limit) {
+    throw new Error('url-run-cpu-budget-unavailable');
+  }
+  let previous = cpuClock(), spent = initialSpent, stopped = false;
   let active: { remaining: number; released: boolean } | null = null;
   const sample = (): boolean => {
     try {
-      const next = hostCpu(), delta = next - previous;
+      const next = cpuClock(), delta = next - previous;
       if (!Number.isSafeInteger(next) || !Number.isSafeInteger(delta) || delta < 0) stopped = true;
       else {
         previous = next; spent += delta;

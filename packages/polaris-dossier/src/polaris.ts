@@ -1,6 +1,8 @@
 import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
+import { createNativePolicyGitScope } from './policy-git-native.js';
+import type { PolicyGitScope } from './policy-git.js';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -43,7 +45,7 @@ import { acquireUrlSourceInMemory, type UrlMemoryContext } from './url-memory-ac
 import { createSourceAcquisitionAudit } from './source-acquisition-audit.js';
 import { committedUrlPoliciesCurrent, committedUrlPoliciesCurrentAsync, readCommittedPolicy, readCommittedUrlOriginPolicy, samePolicy } from './policy-snapshot.js';
 import { readUrlParentAdoption, URL_PARENT_TAG, type UrlParentAdoption } from './url-parent-adoption.js';
-import { loadUrlDossierRenderer, readUrlRuntime, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
+import { loadUrlDossierRenderer, readUrlRuntime, urlPolicyGitProgram, type UrlLoadedRenderer, type UrlRuntime } from './url-runtime.js';
 import { verifySupportedUrlCli, URL_CLI_PROGRAM } from './session-launch.js';
 import { URL_HOST_ROOT, registerUrlRunMode, urlRunModeAuthority } from './url-mode-registry.js';
 import { createUrlRunDeclaration, URL_PROFILE_ID, URL_ROLES, URL_RUN_MODE, urlSourceTransportIdentity } from './url-run-record.js';
@@ -357,6 +359,7 @@ interface UrlContinuation {
 interface PreparedUrlRun {
   readonly record: RecordedRunConfig; readonly screen: DossierScreen; readonly runtime: UrlRuntime;
   readonly renderer: UrlLoadedRenderer;
+  readonly policyGit: PolicyGitScope;
   readonly roles: readonly UrlRolePlan[]; readonly origins: Awaited<ReturnType<typeof createUrlRunOrigins>>;
   readonly current: () => boolean; readonly sessionCurrent: () => Promise<boolean>; readonly canaries: readonly string[];
   readonly directories: Readonly<Record<ViewRole, string>>; readonly auditDirectory: string;
@@ -374,7 +377,7 @@ const preparedUrlRuns = new Map<string, PreparedUrlRun>();
 type UrlArtifacts = ReturnType<typeof createUrlRunArtifacts>;
 interface CheckedSupervisor {
   readonly prepared: Pick<PreparedUrlRun, 'record' | 'effectiveDeclaration' | 'screen' | 'renderer' | 'origins'
-    | 'current' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore' | 'roles' | 'continuation'>;
+    | 'current' | 'policyGit' | 'openReader' | 'directories' | 'auditDirectory' | 'sourceStore' | 'roles' | 'continuation'>;
   readonly artifacts: UrlArtifacts; readonly runtime: UrlRunSessions; readonly stop: UrlSupervisorStop;
 }
 async function prepareSupervisorArtifacts(run: string, prepared: PreparedUrlRun, ports: CliPorts): Promise<UrlArtifacts> {
@@ -445,7 +448,7 @@ async function startPreparedSupervisor(state: SupervisorState, prepared: Prepare
       plans: prepared.roles, runtime: prepared.runtime, declaredClasses: prepared.effectiveDeclaration.declaration.plannedClasses,
       originPolicySha256: prepared.originPolicySha256, auditParent: prepared.auditDirectory, auditName: 'sessions',
       principal: prepared.record.declared.operator, sessionDirectories: prepared.directories, canaries: prepared.canaries,
-      current: prepared.sessionCurrent, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
+      current: prepared.sessionCurrent, policyGit: prepared.policyGit, now: ports.now ?? Date.now, deadline: state.briefIssuedAt + state.deadlineSeconds * 1000,
       stopRequested: () => stop.status() === 'requested',
       authorHandoff: { current: disclosureCurrent, record: handoff => recordRawReadHandoff(state.run, provider, handoff) },
       ...(prepared.continuation === undefined ? {} : { resume: { verified: prepared.continuation.verified, claim: prepared.continuation.claim } }),
@@ -571,10 +574,11 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
     if (verified.reason !== undefined) throw new UrlRecoveryRefusal(verified.reason);
     throw new Error(`url-recovery-${verified.code}`);
   }
-  if (readRawReadDisclosure(previous.run, verified.record.declared.agentProvider) === null) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
-  const claim = await claimStoppedUrlRun(verified);
-  if (claim === null) throw new Error('url-recovery-ownership');
+  let claim: UrlRecoveryClaim | null = null;
   try {
+    if (readRawReadDisclosure(previous.run, verified.record.declared.agentProvider) === null) throw new Error(RAW_READ_DISCLOSURE_REFUSAL);
+    claim = await claimStoppedUrlRun(verified);
+    if (claim === null) throw new Error('url-recovery-ownership');
     const checked = verified.checkedContext, run = previous.run;
     const current = claim.current;
     const sessionCurrent = claim.currentAsync;
@@ -602,7 +606,7 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
       || sha256(sidecarBytes) !== previous.declarationSha256 || !current()) throw new Error('url-recovery-declaration');
     const auditDirectory = fs.mkdtempSync(path.join(URL_HOST_ROOT, 'acquisitions', 'attempt-'));
     const preparedBase: PreparedUrlRun = { record: verified.record, screen: checked.screen, runtime: checked.runtime,
-      renderer, roles, origins, current, sessionCurrent, directories, canaries, auditDirectory,
+      renderer, roles, origins, current, sessionCurrent, policyGit: checked.policyGit, directories, canaries, auditDirectory,
       originPolicySha256: checked.origin.binding.sha256, basePolicyBytes: Uint8Array.from(checked.policy.bytes),
       machine: { governanceRoot: path.join(cliGateSources(ports).recordsRoot, '.syzygy'),
         protectedRoot: path.join(machineAttempt, 'machine-lifecycle'), parent: checked.adoption },
@@ -631,7 +635,11 @@ async function prepareStoppedSupervisor(previous: SupervisorState, ports: CliPor
     delete state.stopped;
     delete state.finalSite;
     return { state, prepared, artifacts, claim };
-  } catch (error) { claim.release(); throw error; }
+  } catch (error) {
+    try { await verified.checkedContext.policyGit.close(); }
+    finally { claim?.release(); }
+    throw error;
+  }
 }
 
 
@@ -647,11 +655,12 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   };
   let recoveryClaim: UrlRecoveryClaim | null = null;
   let stop: UrlSupervisorStop | undefined;
+  let ownedPolicyGit: PolicyGitScope | undefined;
   try {
     let state: SupervisorState, prepared: PreparedUrlRun, artifacts: UrlArtifacts;
     if (previous !== null) {
       const restored = await prepareStoppedSupervisor(previous, ports);
-      state = restored.state; prepared = restored.prepared; artifacts = restored.artifacts; recoveryClaim = restored.claim;
+      state = restored.state; prepared = restored.prepared; ownedPolicyGit = prepared.policyGit; artifacts = restored.artifacts; recoveryClaim = restored.claim;
     } else {
       if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
       const set = await setUp(options, ports, screen);
@@ -659,7 +668,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
       state = set;
       const initial = preparedUrlRuns.get(state.run);
       if (initial === undefined) return fail('This supervisor has no genuine checked URL preparation; no inference role was launched.');
-      preparedUrlRuns.delete(state.run); prepared = initial;
+      preparedUrlRuns.delete(state.run); prepared = initial; ownedPolicyGit = prepared.policyGit;
       artifacts = await prepareSupervisorArtifacts(state.run, prepared, ports);
     }
     saveState(options.stateRoot, state);
@@ -674,7 +683,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   } finally {
     try { stop?.close(); }
     catch { /* The failed control provides no cleanup evidence. */ }
-    finally { recoveryClaim?.release(); }
+    finally { await ownedPolicyGit?.close(); recoveryClaim?.release(); }
   }
 }
 
@@ -732,218 +741,230 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const sources = cliGateSources(ports), policyRoot = sources.recordsRoot;
   const policy = readCommittedPolicy(policyRoot), origin = readCommittedUrlOriginPolicy(policyRoot);
   if (!policy.ok || !origin.ok || !samePolicy(policy.binding, prepared.report.screeningPolicy)) return 'Both committed URL screening policies must be installed and unchanged before acquisition.';
-  const initialAdoption = readUrlParentAdoption(policyRoot, origin.binding.sha256);
-  if (initialAdoption === null || !committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, initialAdoption))
-    return 'The exact installed URL dossier adoption cannot be verified against the observed default branch; no source was acquired.';
-  let adoption = initialAdoption;
-  const refreshAdoption = (previous: UrlParentAdoption): UrlParentAdoption | null => {
-    if (adoption !== previous) return adoption;
-    const updated = readUrlParentAdoption(policyRoot, origin.binding.sha256, previous);
-    if (updated !== null) adoption = updated;
-    return updated;
-  };
+  // The initial committed-policy reads above are the existing bootstrap
+  // boundary. From the first parent probe onward, every policy/refresh Git
+  // child belongs to the same meter later handed to this run's CPU pool.
   const runtime = await readUrlRuntime(CHECKOUT);
   if (!runtime.ok) return 'The checked URL runtime is unavailable or stale; run npm run build from the trusted Syzygy checkout.';
-  const renderer = await loadUrlDossierRenderer(runtime.runtime);
-  if (renderer === null) return 'The checked URL renderer could not be bound to the installed runtime.';
-  const identity = urlSourceTransportIdentity(url);
-  if (!identity.ok) return 'The URL has no supported source-transport identity.';
-  if (identity.destination.scheme === 'ssh' && options.ssh === undefined) return 'An SSH URL requires explicit known-hosts and one explicit identity; ambient SSH configuration is not used.';
-  if (identity.destination.scheme !== 'ssh' && options.ssh !== undefined) return 'SSH authentication options require an SSH URL.';
-  const repository = options.identity === undefined ? prepared.report.repository.repositoryId : normaliseIdentityOption(options.identity)?.slice('repository:'.length);
-  if (repository === null || repository === undefined) return 'The repository identity is unavailable.';
-  const currentPolicies = (): boolean => {
-    const previous = adoption;
-    if (committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, previous)) return true;
-    const updated = refreshAdoption(previous);
-    return updated !== null && committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, updated);
-  };
-  const currentPoliciesAsync = async (): Promise<boolean> => {
-    const previous = adoption;
-    if (await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, previous)) return true;
-    const updated = refreshAdoption(previous);
-    return updated !== null && await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, updated);
-  };
-  const current = (context: UrlMemoryContext): boolean => currentPolicies()
-    && context.sourceProvider === identity.providerId && context.locatorSha256 === sha256(url)
-    && context.selectorSha256 === (options.revision === undefined ? null : sha256(options.revision))
-    && context.policySha256 === policy.binding.sha256 && context.originPolicySha256 === origin.binding.sha256;
-  screen.event('prepared repository metadata'); screen.draw(['Receiving and screening the selected source in bounded working memory…']);
-  const scratchRoot = path.join(URL_HOST_ROOT, 'acquisitions');
-  fs.mkdirSync(scratchRoot, { recursive: true, mode: 0o700 });
-  const scratchStat = fs.lstatSync(scratchRoot);
-  if (fs.realpathSync(scratchRoot) !== scratchRoot || !scratchStat.isDirectory() || scratchStat.uid !== process.getuid?.()
-    || (scratchStat.mode & 0o077) !== 0) return 'The protected acquisition root must be a canonical owned private directory.';
-  const attemptDirectory = fs.mkdtempSync(path.join(scratchRoot, 'attempt-'));
-  const attemptFile = path.join(attemptDirectory, 'attempt.json');
-  const acknowledgments: { stage: string; acknowledgedAt: string }[] = [];
-  const declaredLimits = { transport: { ...GIT_MEMORY_LIMITS, packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes }, worker: GIT_MEMORY_WORKER_LIMITS };
-  const acquisitionPolicy = { bytes: policy.bytes, sha256: policy.binding.sha256, originBytes: origin.bytes, originSha256: origin.binding.sha256,
-    visibility: options.visibility ?? 'private' as const, repository: `repository:${repository}` };
-  const audit = await createSourceAcquisitionAudit({ parent: attemptDirectory, name: 'source.jsonl', locator: url,
-    ...(options.revision === undefined ? {} : { selector: options.revision }), policy: acquisitionPolicy,
-    program: { nodeSha256: runtime.runtime.worker.nodeSha256, bundleSha256: runtime.runtime.worker.bundleSha256 }, current: currentPolicies });
-  if (!audit.ok) return 'The protected acquisition audit could not be prepared; no source was acquired.';
-  const acquisition = await acquireUrlSourceInMemory({ locator: url, scratchParent: attemptDirectory, program: runtime.runtime.worker,
-    policy: acquisitionPolicy, limits: { packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes },
-    ...(options.revision === undefined ? {} : { selector: options.revision }),
-    ...(options.clone === undefined ? {} : { suppliedClone: options.clone }), ...(options.ssh === undefined ? {} : { ssh: options.ssh }),
-    host: { current, audit: async event => {
-      await audit.audit(event); acknowledgments.push({ stage: `${event.stage}:${event.direction}:${event.state}`, acknowledgedAt: isoOf(Date.now()) });
-      screen.event(`${event.stage}: ${event.state}`);
-    } } });
-  const auditSummary = await audit.close();
-  fs.writeFileSync(attemptFile, `${JSON.stringify({ format: 'polaris-dossier-url-attempt/2', label: 'Inferred', declaredLimits,
-    screeningPolicy: policy.binding, originPolicy: origin.binding, sourceProvider: identity.providerId, audit: auditSummary,
-    governingAdoption: { row: adoption.rowId, tag: URL_PARENT_TAG, landedCommit: adoption.landedCommit,
-      firstObservedDefaultCommit: initialAdoption.defaultCommit, lastObservedDefaultCommit: adoption.defaultCommit },
-    outcome: acquisition.ok ? 'acquired' : acquisition.code, history: acquisition.history,
-    cleanup: acquisition.ok ? 'not-needed' : acquisition.cleanup }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
-  if (!acquisition.ok) return `Source acquisition refused (${acquisition.code}); protected attempt: ${attemptFile}.`;
-  if (auditSummary.poisoned || auditSummary.tail !== 'complete') return 'The source audit did not close completely; acquisition cannot establish run readiness.';
-  const acquired = { clone: acquisition.clone, workspace: acquisition.workspace, operations: acquisition.history,
-    source: { normalizedLocator: acquisition.normalizedLocator, selector: options.revision ?? null,
-      revision: acquisition.selection, provenance: 'independently checked native Git-v2 metadata; immutable selected commit' } };
-  const clone = acquired.clone;
-  const chosen = acquired.source.revision;
-  screen.event(`selected full commit ${chosen.identifier}; ${chosen.mode}`);
-  const config = {
-    operator: options.operator, agentTool: 'claude-code', agentToolVersion: version, agentProvider: 'anthropic', model: options.model,
-    deadline: options.deadline, agentTokenBudget: options.tokenBudget, agentTurnBudget: options.turnBudget, maxRepairCycles: options.repairCycles,
-    maxQuestions: options.questions, audience: options.audience, operatorIsOwner: true,
-  };
-  const store: UrlSourceStore = acquisition.supplied ? 'supplied' : 'owned-loose';
-  let bindingCurrent = currentPolicies;
-  let openReader: ReturnType<typeof bindUrlSourceReader>;
-  try { openReader = bindUrlSourceReader({ clone, revision: chosen.identifier, store, current: () => bindingCurrent() }); }
-  catch { return 'The selected URL clone could not be bound to its pinned object reader.'; }
-  const runPorts: CliPorts = { ...ports, openReader };
-  screen.event('init'); screen.draw(['Initialising the run…']);
-  const init = await initRun({ clone, url, revision: chosen.identifier, configText: JSON.stringify(config), stateRoot: options.stateRoot,
-    ...(options.visibility === undefined ? {} : { visibility: options.visibility }), ...(options.identity === undefined ? {} : { identity: options.identity }) },
-  { sources, now: ports.now ?? Date.now, openReader });
-  if (!init.ok) return `init: ${init.refusal.reason}`;
-  const { run, runId } = init.report;
-  if (!path.isAbsolute(run) || path.resolve(run) !== run || path.dirname(run) !== options.stateRoot || path.basename(run) !== runId)
-    return 'The initialized run has an invalid host directory identity.';
-  const baseText = init.initializedRecordText, baseSha256 = sha256(baseText);
-  const initialized = readRunRecord(baseText);
-  const opened = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
-  if (!initialized.ok || !opened.ok || opened.effective.kind !== 'operator' || opened.core.subject.pinnedRevision.commit !== chosen.identifier
-    || opened.core.subject.clone.path !== clone || sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) !== baseSha256)
-    return 'The new compatible run record could not be independently bound.';
-  const record = initialized.record;
-  const placement = placementSubjectOf(record.subject);
-  const runScreen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
-  if (!runScreen.ok || runScreen.screen.policySha256 !== placement.policySha256)
-    return 'The pinned URL subject could not be screened under its bound policy.';
-  let checkBoundRun: (() => boolean) | undefined, originalDeadline: number | undefined;
-  const deadlineCurrent = (): boolean => originalDeadline === undefined || (ports.now ?? Date.now)() < originalDeadline;
-  const recordCurrent = (): boolean => checkBoundRun?.()
-    ?? sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) === baseSha256;
-  const currentRun = (): boolean => {
-    try { return deadlineCurrent() && currentPolicies() && recordCurrent() && deadlineCurrent(); }
-    catch { return false; }
-  };
-  const sessionCurrent = async (): Promise<boolean> => {
-    try {
-      return deadlineCurrent() && await currentPoliciesAsync()
-        && deadlineCurrent() && recordCurrent() && deadlineCurrent();
-    } catch { return false; }
-  };
-  bindingCurrent = currentRun;
-  const directories = { author: run, inventory: sessionDirectory(run, 1), fidelity: reviewSessionDirectory(run, 'fidelity', 1),
-    design: reviewSessionDirectory(run, 'design', 1) };
-  const canaryDirectory = path.join(attemptDirectory, 'canaries'); fs.mkdirSync(canaryDirectory, { mode: 0o700 });
-  const canaries = ['source', 'authentication', 'audit'].map(name => path.join(canaryDirectory, name));
-  for (const file of canaries) fs.writeFileSync(file, 'OWN SYNTHETIC NAMESPACE CANARY\n', { mode: 0o600, flag: 'wx' });
-  const viewParent = path.join(os.homedir(), '.local/state/syzygy-url-views'); fs.mkdirSync(viewParent, { recursive: true, mode: 0o700 });
-  screen.event('checking four restricted role boundaries'); screen.draw(['Checking separate role views and the supported fixed CLI profile…']);
-  const rolePlans = await prepareUrlRolePlans({ run, record, screen: runScreen.screen, sessionDirectories: directories,
-    cliExecutable: executable, runtime: runtime.runtime, parent: viewParent,
-    protectedPaths: [URL_HOST_ROOT, CHECKOUT, run, sessionsRoot(run), clone, path.join(os.homedir(), '.claude'),
-      ...(options.ssh === undefined ? [] : [options.ssh.knownHostsPath, options.ssh.authentication.path,
-        ...(options.ssh.authentication.kind === 'agent-socket' ? [options.ssh.authentication.publicIdentityPath] : [])])],
-    canaries, current: currentRun, audit: () => { throw new Error('planning cannot launch a role'); }, now: Date.now() });
-  if (!rolePlans.ok) return `Restricted role preparation refused at ${rolePlans.stage}; cleanup ${rolePlans.cleanup}. No role was launched.`;
-  let origins: Awaited<ReturnType<typeof createUrlRunOrigins>>;
-  try { origins = await createUrlRunOrigins({ runId, record, screen: runScreen.screen, basePolicyBytes: policy.bytes,
-    originPolicy: { binding: origin.binding, bytes: origin.bytes }, current: currentRun, roles: rolePlans.roles, sourceStore: store, renderer }); }
-  catch { return 'Exact initial role/source provenance could not be established; no brief or role was issued.'; }
-  const operationDigest = (field: keyof typeof acquisition.metadata[number]): string => sha256(boundedCanonical({
-    kind: acquisition.metadata.length === 0 ? 'pure-selection-preexisting-clone' : 'captured-native-operation-identities',
-    field, identities: acquisition.metadata.map(item => item[field]), selected: chosen.identifier }));
-  const sourceTransport = { originalLocator: url, destination: identity.destination, providerId: identity.providerId,
-    acquisitionId: acquisition.context.acquisition, metadataClasses: ['code-structure'] as const,
-    selectionOrigin: 'validated-destination-before-acquisition' as const,
-    commandSha256: operationDigest('commandSha256'), protocolSha256: operationDigest('protocolSha256'),
-    configurationSha256: operationDigest('configSha256'), executableSha256: operationDigest('executableSha256'),
-    environmentSha256: operationDigest('environmentSha256') };
-  const declaration = createUrlRunDeclaration(baseText, { runId, originPolicy: origin.binding,
-    inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: URL_CLI_PROGRAM.version, model: DEFAULT_SESSION_MODEL,
-      modelSelection: options.modelSource, profile: { id: URL_PROFILE_ID, sha256: runtime.runtime.profileRegistrySha256 } },
-    sourceTransport, roles: rolePlans.roles.map(plan => plan.declaration), plannedOrigins: origins.plannedOrigins,
-    protectedAudit: `url-audit:${runId}` }, { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding,
-      expectedSourceTransport: sourceTransport, expectedProfileSha256: runtime.runtime.profileRegistrySha256 });
-  if (!declaration.ok || !metadataAdmitted(declaration.declaration, runScreen.screen) || !currentRun())
-    return 'The complete effective URL declaration failed its binding or metadata checks; no brief or role was issued.';
-  const context = { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding, expectedSourceTransport: sourceTransport,
-    expectedProfileSha256: runtime.runtime.profileRegistrySha256, expectedSidecarSha256: declaration.sha256 };
-  if (!registerUrlRunMode({ root: URL_HOST_ROOT, run, context })) return 'The exclusive protected URL mode binding could not be installed; preserve the run and start a new one.';
-  fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), declaration.text, { mode: 0o600, flag: 'wx' });
-  // Use the same unscoped secret predicate as package URL mode. currentRun
-  // separately confirms its exact committed base policy before every sample.
-  const metadataScreen = buildDossierScreen(policy.bytes, true, null, 'private');
-  const checkedRun = metadataScreen.ok ? bindCurrentEffectiveUrlRun(run, urlRunModeAuthority(URL_HOST_ROOT,
-    value => metadataScreen.screen.screenSecrets(value) === undefined), { baseSha256, sidecarSha256: declaration.sha256 }) : null;
-  if (checkedRun === null) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
-  checkBoundRun = checkedRun;
-  if (!currentRun()) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
-  fs.writeFileSync(path.join(run, 'url-acquisition.json'), `${JSON.stringify({
-    format: 'polaris-dossier-url-acquisition/1', runId, recordedAt: isoOf(Date.now()), label: 'Inferred',
-    sourceBindingSha256: sourceBindingSha256(record.subject), screeningPolicy: prepared.report.screeningPolicy,
-    provider: config.agentProvider, agentTool: config.agentTool, agentToolVersion: config.agentToolVersion,
-    source: { locator: acquired.source.normalizedLocator, selector: acquired.source.selector, revision: acquired.source.revision, provenance: acquired.source.provenance },
-    operations: acquired.operations, declaredLimits, acknowledgments, attemptFile, ownedWorkspace: acquired.workspace,
-    suppliedClone: options.clone !== undefined,
-    disclosures: ['Remote metadata and stored selection history are Inferred. The full commit is immutable for this run.',
-      'Acquisition is not provider transmission, identity proof or public visibility proof.',
-      'Aggregate scratch limits are sampled; between samples is Unknown.'],
-  }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
-  writeLaunchedMarker(run, runId, Date.now());
-  for (const dir of [RUN_LAYOUT.drafts, RUN_LAYOUT.inventory, RUN_LAYOUT.reviews, RUN_LAYOUT.checks]) fs.mkdirSync(path.join(run, dir), { recursive: true, mode: 0o700 });
-  screen.event(`run ${runId}; brief`); screen.draw(['Issuing the brief…']);
-  const brief = await step(['--json', 'brief', run], runPorts);
-  if (brief.exit !== 0) return `brief: ${brief.doc ? String(brief.doc['reason']) : brief.stderr.trim()}`;
-  const briefIssuedAt = typeof brief.doc?.['issuedAt'] === 'string' ? Date.parse(brief.doc['issuedAt']) : Number.NaN;
-  const deadlineEndsAt = typeof brief.doc?.['deadlineEndsAt'] === 'string' ? Date.parse(brief.doc['deadlineEndsAt']) : Number.NaN;
-  if (!Number.isSafeInteger(briefIssuedAt) || !Number.isSafeInteger(deadlineEndsAt)
-    || deadlineEndsAt !== briefIssuedAt + record.declared.deadline.seconds * 1000)
-    return 'The brief producer returned an inconsistent original deadline; no role was launched.';
-  originalDeadline = deadlineEndsAt;
-  const all = await startSessions(run, {}, { sources, now: ports.now ?? Date.now, openReader,
-    ...(ports.loadScreen === undefined ? {} : { loadScreen: ports.loadScreen }),
-    ...(ports.waitModeSigned === undefined ? {} : { waitModeSigned: ports.waitModeSigned }) }, rolePlans.roles);
-  if (!all.ok) return `session-prompt all: ${all.refusal.reason}`;
-  if (brief.doc === null) return 'The brief producer returned no supported bounded result.';
-  preparedUrlRuns.set(run, { record, screen: runScreen.screen, runtime: runtime.runtime, renderer, roles: rolePlans.roles, origins,
-    current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
-    basePolicyBytes: Uint8Array.from(policy.bytes),
-    machine: { governanceRoot: path.join(policyRoot, '.syzygy'), protectedRoot: path.join(attemptDirectory, 'machine-lifecycle'), parent: adoption },
-    openReader, sourceStore: store, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
-      declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
-    }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
-  // The compatible supervisor record carries identities only. Role prompts
-  // remain in their issued artifacts, never copied into an Execution Record.
-  const sessions: SessionPlan[] = rolePlans.roles.map(plan => ({ role: plan.role, session: 1, directory: directories[plan.role],
-    prompt: '', promptSha256: plan.declaration.inputPacketSha256, allowedTools: null }));
-  const seconds = isoSeconds(options.deadline);
-  if (seconds === null) return `--deadline ${options.deadline} is not a positive ISO 8601 duration`;
-  return {
-    format: 'polaris-supervisor/2', mode: URL_RUN_MODE, declarationSha256: declaration.sha256, run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: false,
-    briefIssuedAt, deadlineSeconds: seconds, sessions, fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
-    stopGeneration: randomBytes(16).toString('hex'),
-  };
+  const policyProgram = urlPolicyGitProgram(runtime.runtime);
+  if (policyProgram === null) return 'The checked URL policy Git runtime is unavailable.';
+  let policyGit: PolicyGitScope;
+  try { policyGit = createNativePolicyGitScope(policyProgram); }
+  catch { return 'The checked URL policy Git runtime is unavailable.'; }
+  let retainedPolicyGit = false;
+  try {
+    const initialAdoption = readUrlParentAdoption(policyRoot, origin.binding.sha256, undefined, policyGit);
+    if (initialAdoption === null || !committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, initialAdoption, policyGit))
+      return 'The exact installed URL dossier adoption cannot be verified against the observed default branch; no source was acquired.';
+    let adoption = initialAdoption;
+    const refreshAdoption = (previous: UrlParentAdoption): UrlParentAdoption | null => {
+      if (adoption !== previous) return adoption;
+      const updated = readUrlParentAdoption(policyRoot, origin.binding.sha256, previous, policyGit);
+      if (updated !== null) adoption = updated;
+      return updated;
+    };
+    const renderer = await loadUrlDossierRenderer(runtime.runtime);
+    if (renderer === null) return 'The checked URL renderer could not be bound to the installed runtime.';
+    const identity = urlSourceTransportIdentity(url);
+    if (!identity.ok) return 'The URL has no supported source-transport identity.';
+    if (identity.destination.scheme === 'ssh' && options.ssh === undefined) return 'An SSH URL requires explicit known-hosts and one explicit identity; ambient SSH configuration is not used.';
+    if (identity.destination.scheme !== 'ssh' && options.ssh !== undefined) return 'SSH authentication options require an SSH URL.';
+    const repository = options.identity === undefined ? prepared.report.repository.repositoryId : normaliseIdentityOption(options.identity)?.slice('repository:'.length);
+    if (repository === null || repository === undefined) return 'The repository identity is unavailable.';
+    const currentPolicies = (): boolean => {
+      const previous = adoption;
+      if (committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, previous, policyGit)) return true;
+      const updated = refreshAdoption(previous);
+      return updated !== null && committedUrlPoliciesCurrent(policyRoot, policy.binding, origin.binding, updated, policyGit);
+    };
+    const currentPoliciesAsync = async (): Promise<boolean> => {
+      const previous = adoption;
+      if (await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, previous, policyGit)) return true;
+      const updated = refreshAdoption(previous);
+      return updated !== null && await committedUrlPoliciesCurrentAsync(policyRoot, policy.binding, origin.binding, updated, policyGit);
+    };
+    const current = (context: UrlMemoryContext): boolean => currentPolicies()
+      && context.sourceProvider === identity.providerId && context.locatorSha256 === sha256(url)
+      && context.selectorSha256 === (options.revision === undefined ? null : sha256(options.revision))
+      && context.policySha256 === policy.binding.sha256 && context.originPolicySha256 === origin.binding.sha256;
+    screen.event('prepared repository metadata'); screen.draw(['Receiving and screening the selected source in bounded working memory…']);
+    const scratchRoot = path.join(URL_HOST_ROOT, 'acquisitions');
+    fs.mkdirSync(scratchRoot, { recursive: true, mode: 0o700 });
+    const scratchStat = fs.lstatSync(scratchRoot);
+    if (fs.realpathSync(scratchRoot) !== scratchRoot || !scratchStat.isDirectory() || scratchStat.uid !== process.getuid?.()
+      || (scratchStat.mode & 0o077) !== 0) return 'The protected acquisition root must be a canonical owned private directory.';
+    const attemptDirectory = fs.mkdtempSync(path.join(scratchRoot, 'attempt-'));
+    const attemptFile = path.join(attemptDirectory, 'attempt.json');
+    const acknowledgments: { stage: string; acknowledgedAt: string }[] = [];
+    const declaredLimits = { transport: { ...GIT_MEMORY_LIMITS, packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes }, worker: GIT_MEMORY_WORKER_LIMITS };
+    const acquisitionPolicy = { bytes: policy.bytes, sha256: policy.binding.sha256, originBytes: origin.bytes, originSha256: origin.binding.sha256,
+      visibility: options.visibility ?? 'private' as const, repository: `repository:${repository}` };
+    const audit = await createSourceAcquisitionAudit({ parent: attemptDirectory, name: 'source.jsonl', locator: url,
+      ...(options.revision === undefined ? {} : { selector: options.revision }), policy: acquisitionPolicy,
+      program: { nodeSha256: runtime.runtime.worker.nodeSha256, bundleSha256: runtime.runtime.worker.bundleSha256 }, current: currentPolicies });
+    if (!audit.ok) return 'The protected acquisition audit could not be prepared; no source was acquired.';
+    const acquisition = await acquireUrlSourceInMemory({ locator: url, scratchParent: attemptDirectory, program: runtime.runtime.worker,
+      policy: acquisitionPolicy, limits: { packBytes: GIT_MEMORY_PACK_LIMITS.maxPackBytes },
+      ...(options.revision === undefined ? {} : { selector: options.revision }),
+      ...(options.clone === undefined ? {} : { suppliedClone: options.clone }), ...(options.ssh === undefined ? {} : { ssh: options.ssh }),
+      host: { current, audit: async event => {
+        await audit.audit(event); acknowledgments.push({ stage: `${event.stage}:${event.direction}:${event.state}`, acknowledgedAt: isoOf(Date.now()) });
+        screen.event(`${event.stage}: ${event.state}`);
+      } } });
+    const auditSummary = await audit.close();
+    fs.writeFileSync(attemptFile, `${JSON.stringify({ format: 'polaris-dossier-url-attempt/2', label: 'Inferred', declaredLimits,
+      screeningPolicy: policy.binding, originPolicy: origin.binding, sourceProvider: identity.providerId, audit: auditSummary,
+      governingAdoption: { row: adoption.rowId, tag: URL_PARENT_TAG, landedCommit: adoption.landedCommit,
+        firstObservedDefaultCommit: initialAdoption.defaultCommit, lastObservedDefaultCommit: adoption.defaultCommit },
+      outcome: acquisition.ok ? 'acquired' : acquisition.code, history: acquisition.history,
+      cleanup: acquisition.ok ? 'not-needed' : acquisition.cleanup }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    if (!acquisition.ok) return `Source acquisition refused (${acquisition.code}); protected attempt: ${attemptFile}.`;
+    if (auditSummary.poisoned || auditSummary.tail !== 'complete') return 'The source audit did not close completely; acquisition cannot establish run readiness.';
+    const acquired = { clone: acquisition.clone, workspace: acquisition.workspace, operations: acquisition.history,
+      source: { normalizedLocator: acquisition.normalizedLocator, selector: options.revision ?? null,
+        revision: acquisition.selection, provenance: 'independently checked native Git-v2 metadata; immutable selected commit' } };
+    const clone = acquired.clone;
+    const chosen = acquired.source.revision;
+    screen.event(`selected full commit ${chosen.identifier}; ${chosen.mode}`);
+    const config = {
+      operator: options.operator, agentTool: 'claude-code', agentToolVersion: version, agentProvider: 'anthropic', model: options.model,
+      deadline: options.deadline, agentTokenBudget: options.tokenBudget, agentTurnBudget: options.turnBudget, maxRepairCycles: options.repairCycles,
+      maxQuestions: options.questions, audience: options.audience, operatorIsOwner: true,
+    };
+    const store: UrlSourceStore = acquisition.supplied ? 'supplied' : 'owned-loose';
+    let bindingCurrent = currentPolicies;
+    let openReader: ReturnType<typeof bindUrlSourceReader>;
+    try { openReader = bindUrlSourceReader({ clone, revision: chosen.identifier, store, current: () => bindingCurrent() }); }
+    catch { return 'The selected URL clone could not be bound to its pinned object reader.'; }
+    const runPorts: CliPorts = { ...ports, openReader };
+    screen.event('init'); screen.draw(['Initialising the run…']);
+    const init = await initRun({ clone, url, revision: chosen.identifier, configText: JSON.stringify(config), stateRoot: options.stateRoot,
+      ...(options.visibility === undefined ? {} : { visibility: options.visibility }), ...(options.identity === undefined ? {} : { identity: options.identity }) },
+    { sources, now: ports.now ?? Date.now, openReader });
+    if (!init.ok) return `init: ${init.refusal.reason}`;
+    const { run, runId } = init.report;
+    if (!path.isAbsolute(run) || path.resolve(run) !== run || path.dirname(run) !== options.stateRoot || path.basename(run) !== runId)
+      return 'The initialized run has an invalid host directory identity.';
+    const baseText = init.initializedRecordText, baseSha256 = sha256(baseText);
+    const initialized = readRunRecord(baseText);
+    const opened = readEffectiveRunRecord(run, sources.effectiveRunDeclaration);
+    if (!initialized.ok || !opened.ok || opened.effective.kind !== 'operator' || opened.core.subject.pinnedRevision.commit !== chosen.identifier
+      || opened.core.subject.clone.path !== clone || sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) !== baseSha256)
+      return 'The new compatible run record could not be independently bound.';
+    const record = initialized.record;
+    const placement = placementSubjectOf(record.subject);
+    const runScreen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
+    if (!runScreen.ok || runScreen.screen.policySha256 !== placement.policySha256)
+      return 'The pinned URL subject could not be screened under its bound policy.';
+    let checkBoundRun: (() => boolean) | undefined, originalDeadline: number | undefined;
+    const deadlineCurrent = (): boolean => originalDeadline === undefined || (ports.now ?? Date.now)() < originalDeadline;
+    const recordCurrent = (): boolean => checkBoundRun?.()
+      ?? sha256(boundedHostText(path.join(run, 'run.json'), 65_536)) === baseSha256;
+    const currentRun = (): boolean => {
+      try { return deadlineCurrent() && currentPolicies() && recordCurrent() && deadlineCurrent(); }
+      catch { return false; }
+    };
+    const sessionCurrent = async (): Promise<boolean> => {
+      try {
+        return deadlineCurrent() && await currentPoliciesAsync()
+          && deadlineCurrent() && recordCurrent() && deadlineCurrent();
+      } catch { return false; }
+    };
+    bindingCurrent = currentRun;
+    const directories = { author: run, inventory: sessionDirectory(run, 1), fidelity: reviewSessionDirectory(run, 'fidelity', 1),
+      design: reviewSessionDirectory(run, 'design', 1) };
+    const canaryDirectory = path.join(attemptDirectory, 'canaries'); fs.mkdirSync(canaryDirectory, { mode: 0o700 });
+    const canaries = ['source', 'authentication', 'audit'].map(name => path.join(canaryDirectory, name));
+    for (const file of canaries) fs.writeFileSync(file, 'OWN SYNTHETIC NAMESPACE CANARY\n', { mode: 0o600, flag: 'wx' });
+    const viewParent = path.join(os.homedir(), '.local/state/syzygy-url-views'); fs.mkdirSync(viewParent, { recursive: true, mode: 0o700 });
+    screen.event('checking four restricted role boundaries'); screen.draw(['Checking separate role views and the supported fixed CLI profile…']);
+    const rolePlans = await prepareUrlRolePlans({ run, record, screen: runScreen.screen, sessionDirectories: directories,
+      cliExecutable: executable, runtime: runtime.runtime, parent: viewParent,
+      protectedPaths: [URL_HOST_ROOT, CHECKOUT, run, sessionsRoot(run), clone, path.join(os.homedir(), '.claude'),
+        ...(options.ssh === undefined ? [] : [options.ssh.knownHostsPath, options.ssh.authentication.path,
+          ...(options.ssh.authentication.kind === 'agent-socket' ? [options.ssh.authentication.publicIdentityPath] : [])])],
+      canaries, current: currentRun, audit: () => { throw new Error('planning cannot launch a role'); }, now: Date.now() });
+    if (!rolePlans.ok) return `Restricted role preparation refused at ${rolePlans.stage}; cleanup ${rolePlans.cleanup}. No role was launched.`;
+    let origins: Awaited<ReturnType<typeof createUrlRunOrigins>>;
+    try { origins = await createUrlRunOrigins({ runId, record, screen: runScreen.screen, basePolicyBytes: policy.bytes,
+      originPolicy: { binding: origin.binding, bytes: origin.bytes }, current: currentRun, roles: rolePlans.roles, sourceStore: store, renderer }); }
+    catch { return 'Exact initial role/source provenance could not be established; no brief or role was issued.'; }
+    const operationDigest = (field: keyof typeof acquisition.metadata[number]): string => sha256(boundedCanonical({
+      kind: acquisition.metadata.length === 0 ? 'pure-selection-preexisting-clone' : 'captured-native-operation-identities',
+      field, identities: acquisition.metadata.map(item => item[field]), selected: chosen.identifier }));
+    const sourceTransport = { originalLocator: url, destination: identity.destination, providerId: identity.providerId,
+      acquisitionId: acquisition.context.acquisition, metadataClasses: ['code-structure'] as const,
+      selectionOrigin: 'validated-destination-before-acquisition' as const,
+      commandSha256: operationDigest('commandSha256'), protocolSha256: operationDigest('protocolSha256'),
+      configurationSha256: operationDigest('configSha256'), executableSha256: operationDigest('executableSha256'),
+      environmentSha256: operationDigest('environmentSha256') };
+    const declaration = createUrlRunDeclaration(baseText, { runId, originPolicy: origin.binding,
+      inference: { provider: 'anthropic', tool: 'claude-code', toolVersion: URL_CLI_PROGRAM.version, model: DEFAULT_SESSION_MODEL,
+        modelSelection: options.modelSource, profile: { id: URL_PROFILE_ID, sha256: runtime.runtime.profileRegistrySha256 } },
+      sourceTransport, roles: rolePlans.roles.map(plan => plan.declaration), plannedOrigins: origins.plannedOrigins,
+      protectedAudit: `url-audit:${runId}` }, { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding,
+        expectedSourceTransport: sourceTransport, expectedProfileSha256: runtime.runtime.profileRegistrySha256 });
+    if (!declaration.ok || !metadataAdmitted(declaration.declaration, runScreen.screen) || !currentRun())
+      return 'The complete effective URL declaration failed its binding or metadata checks; no brief or role was issued.';
+    const context = { runId, expectedBasePolicy: policy.binding, expectedOriginPolicy: origin.binding, expectedSourceTransport: sourceTransport,
+      expectedProfileSha256: runtime.runtime.profileRegistrySha256, expectedSidecarSha256: declaration.sha256 };
+    if (!registerUrlRunMode({ root: URL_HOST_ROOT, run, context })) return 'The exclusive protected URL mode binding could not be installed; preserve the run and start a new one.';
+    fs.writeFileSync(path.join(run, URL_RUN_SIDECAR), declaration.text, { mode: 0o600, flag: 'wx' });
+    // Use the same unscoped secret predicate as package URL mode. currentRun
+    // separately confirms its exact committed base policy before every sample.
+    const metadataScreen = buildDossierScreen(policy.bytes, true, null, 'private');
+    const checkedRun = metadataScreen.ok ? bindCurrentEffectiveUrlRun(run, urlRunModeAuthority(URL_HOST_ROOT,
+      value => metadataScreen.screen.screenSecrets(value) === undefined), { baseSha256, sidecarSha256: declaration.sha256 }) : null;
+    if (checkedRun === null) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
+    checkBoundRun = checkedRun;
+    if (!currentRun()) return 'The installed URL declaration could not be independently reverified; no brief or role was issued.';
+    fs.writeFileSync(path.join(run, 'url-acquisition.json'), `${JSON.stringify({
+      format: 'polaris-dossier-url-acquisition/1', runId, recordedAt: isoOf(Date.now()), label: 'Inferred',
+      sourceBindingSha256: sourceBindingSha256(record.subject), screeningPolicy: prepared.report.screeningPolicy,
+      provider: config.agentProvider, agentTool: config.agentTool, agentToolVersion: config.agentToolVersion,
+      source: { locator: acquired.source.normalizedLocator, selector: acquired.source.selector, revision: acquired.source.revision, provenance: acquired.source.provenance },
+      operations: acquired.operations, declaredLimits, acknowledgments, attemptFile, ownedWorkspace: acquired.workspace,
+      suppliedClone: options.clone !== undefined,
+      disclosures: ['Remote metadata and stored selection history are Inferred. The full commit is immutable for this run.',
+        'Acquisition is not provider transmission, identity proof or public visibility proof.',
+        'Aggregate scratch limits are sampled; between samples is Unknown.'],
+    }, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    writeLaunchedMarker(run, runId, Date.now());
+    for (const dir of [RUN_LAYOUT.drafts, RUN_LAYOUT.inventory, RUN_LAYOUT.reviews, RUN_LAYOUT.checks]) fs.mkdirSync(path.join(run, dir), { recursive: true, mode: 0o700 });
+    screen.event(`run ${runId}; brief`); screen.draw(['Issuing the brief…']);
+    const brief = await step(['--json', 'brief', run], runPorts);
+    if (brief.exit !== 0) return `brief: ${brief.doc ? String(brief.doc['reason']) : brief.stderr.trim()}`;
+    const briefIssuedAt = typeof brief.doc?.['issuedAt'] === 'string' ? Date.parse(brief.doc['issuedAt']) : Number.NaN;
+    const deadlineEndsAt = typeof brief.doc?.['deadlineEndsAt'] === 'string' ? Date.parse(brief.doc['deadlineEndsAt']) : Number.NaN;
+    if (!Number.isSafeInteger(briefIssuedAt) || !Number.isSafeInteger(deadlineEndsAt)
+      || deadlineEndsAt !== briefIssuedAt + record.declared.deadline.seconds * 1000)
+      return 'The brief producer returned an inconsistent original deadline; no role was launched.';
+    originalDeadline = deadlineEndsAt;
+    const all = await startSessions(run, {}, { sources, now: ports.now ?? Date.now, openReader,
+      ...(ports.loadScreen === undefined ? {} : { loadScreen: ports.loadScreen }),
+      ...(ports.waitModeSigned === undefined ? {} : { waitModeSigned: ports.waitModeSigned }) }, rolePlans.roles);
+    if (!all.ok) return `session-prompt all: ${all.refusal.reason}`;
+    if (brief.doc === null) return 'The brief producer returned no supported bounded result.';
+    preparedUrlRuns.set(run, { record, screen: runScreen.screen, runtime: runtime.runtime, renderer, policyGit, roles: rolePlans.roles, origins,
+      current: currentRun, sessionCurrent, directories, canaries, auditDirectory: attemptDirectory, originPolicySha256: origin.binding.sha256,
+      basePolicyBytes: Uint8Array.from(policy.bytes),
+      machine: { governanceRoot: path.join(policyRoot, '.syzygy'), protectedRoot: path.join(attemptDirectory, 'machine-lifecycle'), parent: adoption },
+      openReader, sourceStore: store, initializedCoreBytes: Buffer.from(baseText), effectiveDeclaration: {
+        declaration: declaration.declaration, bytes: Buffer.from(declaration.text), context,
+      }, initial: { brief: brief.doc as unknown as BriefReport, sessions: all.report } });
+    // The compatible supervisor record carries identities only. Role prompts
+    // remain in their issued artifacts, never copied into an Execution Record.
+    retainedPolicyGit = true;
+    const sessions: SessionPlan[] = rolePlans.roles.map(plan => ({ role: plan.role, session: 1, directory: directories[plan.role],
+      prompt: '', promptSha256: plan.declaration.inputPacketSha256, allowedTools: null }));
+    const seconds = isoSeconds(options.deadline);
+    if (seconds === null) return `--deadline ${options.deadline} is not a positive ISO 8601 duration`;
+    return {
+      format: 'polaris-supervisor/2', mode: URL_RUN_MODE, declarationSha256: declaration.sha256, run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: false,
+      briefIssuedAt, deadlineSeconds: seconds, sessions, fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
+      stopGeneration: randomBytes(16).toString('hex'),
+    };
+  } finally { if (!retainedPolicyGit) await policyGit.close(); }
 }
 
 /** Said to the author before its first check: each draft revision after the first is a repair cycle, refused or not. */
@@ -1227,7 +1248,21 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   const run = state.run;
   const runPorts = { ...ports, openReader: context.prepared.openReader,
     renderer: context.prepared.renderer.renderer, urlRenderer: context.prepared.renderer };
-  const { record, effectiveDeclaration, screen: runScreen, renderer, origins, current } = context.prepared;
+  const { record, effectiveDeclaration, screen: runScreen, renderer, origins } = context.prepared;
+  const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
+  let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
+  const authorityCurrent = (): boolean => {
+    const authorized = context.prepared.current();
+    // Retire policy-child CPU even on refusal. This may join outstanding Git;
+    // re-read the original deadline after it without launching another probe.
+    const budgetCurrent = context.runtime.withinCpuBudget();
+    return authorized && budgetCurrent && (ports.now ?? Date.now)() < deadline;
+  };
+  const current = (): boolean => {
+    if (!authorityCurrent()) return false;
+    try { return (finalStop ?? context.stop.status()) === 'ready'; }
+    catch { return false; }
+  };
   const scaffold = origins.rendererScaffold;
   const productOptions = (products: RunProductReads, rendererScaffold: NonNullable<typeof scaffold>) => ({
     run, record, declaration: effectiveDeclaration.declaration, screen: runScreen, renderer,
@@ -1238,7 +1273,6 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
   const renderDeps = { ...runPorts, sources: cliGateSources(runPorts),
     now: runPorts.now ?? Date.now, probe: createCredentialProbe(credentialListFromEnv({})) };
   const binding = { run, runId: state.runId, pinnedRevision: record.subject.pinnedRevision.commit };
-  const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
   type FinalRender = { readonly path: string; readonly record: NonNullable<SupervisorState['finalSite']>; readonly output: UrlDesignProductMetadata['output'] };
   let final: FinalRender | null = null;
 
@@ -1546,10 +1580,17 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
   }
   const stopped = await context.runtime.stop();
-  let finalStop: ReturnType<UrlSupervisorStop['close']> | null = null;
   try { finalStop = context.stop.close(); }
   catch { phase = 'stop control unavailable'; }
-  const cleaned = cleanupConfirmed(stopped, finalStop === 'requested', context.prepared.continuation);
+  let policyGitSettled = false;
+  try {
+    // A different earlier failure may occupy summary.failure. Check this
+    // genuine process-local child population independently before calling any
+    // cleanup complete or retaining a recoverable stopped boundary.
+    policyGitSettled = context.prepared.policyGit.healthy()
+      && Number.isSafeInteger(context.prepared.policyGit.initialSpent());
+  } catch { /* Missing, active or unknown child usage supplies no cleanup proof. */ }
+  const cleaned = policyGitSettled && cleanupConfirmed(stopped, finalStop === 'requested', context.prepared.continuation);
   if (cleaned) state.stopped ??= isoOf(Date.now());
   if (finalStop === 'requested') {
     const retained = cleaned && state.stopGeneration !== undefined && state.declarationSha256 !== undefined
@@ -1558,7 +1599,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
           coreSha256: effectiveDeclaration.declaration.baseRunSha256, declarationSha256: state.declarationSha256,
           sourcePin: record.subject.pinnedRevision.commit, deadline },
         settled: stopped, plans: context.prepared.roles,
-        ...(context.prepared.continuation === undefined ? {} : { predecessor: context.prepared.continuation.verified.boundary }), now: ports.now ?? Date.now, current, capture: context.artifacts.captureFrozenHistory });
+        ...(context.prepared.continuation === undefined ? {} : { predecessor: context.prepared.continuation.verified.boundary }), now: ports.now ?? Date.now, current: authorityCurrent, capture: context.artifacts.captureFrozenHistory });
     phase = retained ? 'operator stop requested, checked history retained' : 'operator stop requested, recovery history unavailable';
   }
   if (final !== null && finalStop === 'ready') {

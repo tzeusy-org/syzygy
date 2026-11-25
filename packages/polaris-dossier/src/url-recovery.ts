@@ -1,3 +1,5 @@
+import { createNativePolicyGitScope } from './policy-git-native.js';
+import type { PolicyGitScope } from './policy-git.js';
 import * as fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -19,7 +21,7 @@ import { RUN_LAYOUT } from './state-directory.js';
 import { URL_HELPER_LAUNCH_FILES } from './url-launch-history.js';
 import { verifyUrlFrozenProductHistory } from './url-frozen-product-history.js';
 import { snapshotProductFile } from './url-product-reads.js';
-import { readUrlRuntime } from './url-runtime.js';
+import { readUrlRuntime, urlPolicyGitProgram } from './url-runtime.js';
 import { verifyUrlSessionAuditHistory } from './url-session-audit-history.js';
 import { bindUrlSourceReader } from './url-source-reader.js';
 import { acquireUrlRecoveryClaim, readUrlStoppedBoundaryChain, type UrlRecoveryClaim } from './url-stopped-run.js';
@@ -69,6 +71,8 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
   const stillStopped = (): boolean => now() < deadline && absent(run, RUN_LAYOUT.record) && absent(run, RUN_LAYOUT.executionChoice);
   const refuse = (code: 'state' | 'policy' | 'disclosure' | 'runtime' | 'checkpoint' | 'source' | 'machine-history' | 'session-history' | 'budget',
     reason?: string) => ({ ok: false as const, code, ...(reason === undefined ? {} : { reason }) });
+  let policyGit: PolicyGitScope | undefined;
+  let retainedPolicyGit = false;
   try {
     if (state.stopGeneration === undefined || state.declarationSha256 === undefined || state.stopped === undefined || state.done !== undefined
       || sources.effectiveRunDeclaration === undefined) return refuse('state');
@@ -87,9 +91,15 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
       restartExplanation('the committed policy identity, version or bytes differ from this run binding', declaration.basePolicy.path));
     if (!origin.ok || !samePolicy(origin.binding, declaration.originPolicy)) return refuse('policy',
       restartExplanation('the committed URL overlay identity, version or bytes differ from this run binding', declaration.originPolicy.path));
-    const adoption = readUrlParentAdoption(root, origin.binding.sha256);
+    const runtime = await readUrlRuntime(input.checkout);
+    if (!runtime.ok) return refuse('runtime');
+    const policyProgram = urlPolicyGitProgram(runtime.runtime);
+    if (policyProgram === null) return refuse('runtime');
+    policyGit = createNativePolicyGitScope(policyProgram);
+    const policyExecutor = policyGit;
+    const adoption = readUrlParentAdoption(root, origin.binding.sha256, undefined, policyExecutor);
     if (adoption === null) return refuse('policy', 'The exact installed A-14 URL dossier adoption cannot be verified against the observed default branch.');
-    const policyCurrent = (): Promise<boolean> => committedUrlPoliciesCurrentAsync(root, policy.binding, origin.binding, adoption);
+    const policyCurrent = (): Promise<boolean> => committedUrlPoliciesCurrentAsync(root, policy.binding, origin.binding, adoption, policyExecutor);
     const policyChanged = () => refuse('policy', restartExplanation(
       `the checked policy pair with ${origin.binding.path} (${origin.binding.policyVersion}) cannot be re-established`, policy.binding.path));
     if (!await policyCurrent()) return policyChanged();
@@ -113,7 +123,6 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     const placement = placementSubjectOf(record.subject);
     const screen = buildDossierScreen(policy.bytes, true, placement, placement.visibility);
     if (!screen.ok) return refuse('policy', restartExplanation(screen.why, declaration.basePolicy.path));
-    const runtime = await readUrlRuntime(input.checkout);
     let executable: string;
     try { executable = fs.realpathSync(path.join(os.homedir(), '.local/share/claude/versions', URL_CLI_PROGRAM.version)); }
     catch { return refuse('runtime'); }
@@ -188,17 +197,19 @@ export async function verifyStoppedUrlRun(state: SupervisorState, input: {
     const verified = Object.freeze({ ok: true as const, machine, record, audit, boundary: sealed, history,
       verifiedAudits: Object.freeze(verifiedAudits), historicallySettledRoles: Object.freeze([...historicallySettledRoles]),
       resumeBudget, products, cumulativeQuestionCount, nextDesignRound, checkedContext: Object.freeze({ runtime: runtime.runtime, executable,
-        screen: screen.screen, policy, origin, adoption, openReader, authority, current, policyCurrent,
+        screen: screen.screen, policy, origin, adoption, policyGit: policyExecutor, openReader, authority, current, policyCurrent,
         effective: read.effective, sourceStore: sealed.record.sourceStore, deadline }) });
     verifiedRuns.set(verified, async () => {
       if (!await policyCurrent() || !current() || !historyCurrent()) return null;
       const claim = acquireUrlRecoveryClaim({ root: URL_HOST_ROOT, expected, sha256: sealed.sha256, now,
-        current, policy: { current: () => committedUrlPoliciesCurrent(root, policy.binding, origin.binding, adoption),
+        current, policy: { current: () => committedUrlPoliciesCurrent(root, policy.binding, origin.binding, adoption, policyExecutor),
           currentAsync: policyCurrent } });
       if (!claim) return null;
       if (!await policyCurrent() || !claim.consume() || !claim.current()) { claim.release(); return null; }
       return claim;
     });
+    retainedPolicyGit = true;
     return verified;
   } catch { return refuse('checkpoint'); }
+  finally { if (!retainedPolicyGit) await policyGit?.close(); }
 }

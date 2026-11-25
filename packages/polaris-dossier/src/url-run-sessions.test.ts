@@ -13,6 +13,7 @@ import type { ViewRole } from './session-view.js';
 import { URL_ROLES } from './url-run-record.js';
 import { prepareHistoricalUrlRolePlansTestPort, type UrlRolePlanningOptions } from './url-role-plan.js';
 import { inspectCommittedUrlLaunchHistory } from './url-session-audit.js';
+import { createPolicyGitScope } from './policy-git.js';
 import { startUrlRunSessions, urlRunSessionsTestPort, type UrlRunSessionsOptions } from './url-run-sessions.js';
 const cleanup: string[] = [];
 afterAll(async () => { for (const root of cleanup) await rm(root, { recursive: true, force: true }); });
@@ -142,6 +143,30 @@ describe('one root lifecycle for four restricted URL roles', () => {
       expect(stopped.audit).toMatchObject({ poisoned: false, termination: 'closed', captured: { 'launch-terminal': 4 } });
       expect(stopped.roles.every(role => role.outcome !== 'Unknown' && role.outcome.groupTermination === 'confirmed')).toBe(true);
     } finally { await runtime.stop(); }
+  });
+  it.each(['deadline', 'protected Stop'] as const)('rechecks %s after the synchronous CPU-budget boundary before any independent policy check', async crossing => {
+    const f = await runtimeFixture();
+    let now = Date.now(), requested = false, armed = false, policies = 0, queries = 0;
+    const noGit = (): never => { throw new Error('own lifecycle control admits no Git'); };
+    const scope = createPolicyGitScope({ runSync: noGit, runAsync: noGit, close() {} });
+    // This non-ordered lifecycle fixture owns no CPU pool. Advance time/Stop
+    // at its real synchronous policy-scope health boundary, without timers.
+    const policyGit = { ...scope, healthy: () => {
+      queries++;
+      if (armed) { armed = false; if (crossing === 'deadline') now = f.options.deadline; else requested = true; }
+      return scope.healthy();
+    } };
+    const runtime = await f.start({ ...f.options, now: () => now, stopRequested: () => requested, policyGit,
+      current: () => { policies++; return true; } });
+    try {
+      const before = policies, previousQueries = queries;
+      armed = true;
+      expect(await runtime.current()).toBe(false);
+      expect(queries).toBeGreaterThan(previousQueries);
+      expect(policies).toBe(before);
+      expect(await runtime.publish('inventory', { event: 'draft-ready', revision: 0 })).toBe(false);
+      if (crossing === 'deadline') expect(runtime.summary().budget.reason).toBe('deadline');
+    } finally { await runtime.stop(); await scope.close(); }
   });
   it('reports the disclosure restart refusal when the Author launch marker cannot be written', async () => {
     const f = await runtimeFixture(), handoffs: string[] = [];

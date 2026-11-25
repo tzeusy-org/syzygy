@@ -192,6 +192,12 @@ export function reserveOrderedDesignWork(
   const reservation = reserveRemaining(required);
   if (reservation === null || !nonnegative(reservation.cpuMicroseconds)
     || !positive(reservation.remainingCpuMicroseconds) || reservation.remainingCpuMicroseconds < required) return null;
+  // Reserving samples CPU and can join outstanding metadata Git. Keep the
+  // original first-tool baseline, but do not admit an already expired plan.
+  const afterWall = clocks.now(), afterMono = clocks.monotonicMilliseconds();
+  if (!nonnegative(afterWall) || !Number.isFinite(afterMono) || afterMono < monotonicMilliseconds
+    || afterWall < wallMilliseconds || afterWall >= plan.expiresAt
+    || afterMono - monotonicMilliseconds >= plan.expiresAt - plan.startsAt) return null;
   const start = Object.freeze({ wallMilliseconds, monotonicMilliseconds, cpuMicroseconds: reservation.cpuMicroseconds });
   admissionStarts.set(start, { plan, consumed: false });
   return Object.freeze({ plan, start });
@@ -223,7 +229,9 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
   const turns = { request: new Set<number>(), response: new Set<number>(), tool: new Set<number>() };
   let state: 'open' | 'stopped' | 'complete' = 'open', active: Ticket | null = null;
   let reason: Failure | null = null;
-  let wall = clocks.now(), monotonic = clocks.monotonicMilliseconds(), cpu = clocks.cpuMicroseconds();
+  // A CPU sample can synchronously join native work. Deadline observations
+  // must follow that join; an admission start, when supplied, stays unchanged.
+  let cpu = clocks.cpuMicroseconds(), wall = clocks.now(), monotonic = clocks.monotonicMilliseconds();
   const cpuStart = start?.cpuMicroseconds ?? cpu, monotonicStart = start?.monotonicMilliseconds ?? monotonic;
   if (!nonnegative(wall) || !Number.isFinite(monotonic) || monotonic < 0 || !nonnegative(cpu) || wall < plan.startsAt || wall >= plan.expiresAt)
     throw new Error('ordered-design-work-budget-refused');
@@ -246,7 +254,7 @@ export function createOrderedDesignWorkBudget(plan: OrderedDesignWorkPlan, clock
   const current = (): boolean => {
     if (state === 'complete') return false;
     try {
-      const nextWall = clocks.now(), nextMono = clocks.monotonicMilliseconds(), nextCpu = clocks.cpuMicroseconds();
+      const nextCpu = clocks.cpuMicroseconds(), nextWall = clocks.now(), nextMono = clocks.monotonicMilliseconds();
       if (!nonnegative(nextWall) || !Number.isFinite(nextMono) || !nonnegative(nextCpu)
         || nextWall < wall || nextMono < monotonic || nextCpu < cpu) return stop('clock');
       wall = nextWall; monotonic = nextMono; cpu = nextCpu;

@@ -10,6 +10,7 @@ import type { GitMemoryWorkerProgram } from './git-memory-worker.js';
 import type { KernelPeerProgram } from './session-peer.js';
 import type { UrlSessionViewInputs } from './session-url-view.js';
 import type { OrderedScreenProgram } from './url-ordered-design-screen.js';
+import type { PolicyGitProgram } from './policy-git-native.js';
 
 const BOUNDS = { maxBytes: 2_097_152, maxNodes: 32_768, maxDepth: 8 };
 const INPUT_READS = 8;
@@ -18,7 +19,12 @@ const ORDINARY_MCP = 'support/session-mcp.js';
 const DESIGN_MCP = 'design-support/session-mcp.js';
 const ORDERED_SCREEN = 'host/ordered-screen.mjs';
 const MACHINE_PEER = 'host/machine-peer';
-const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP, ORDERED_SCREEN, MACHINE_PEER];
+const POLICY_ADDON = 'host/policy-git.node';
+const POLICY_SUPERVISOR = 'host/policy-git-supervisor';
+const OUTPUTS = ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', ORDINARY_MCP, 'host/session-peer', DESIGN_MCP, ORDERED_SCREEN, MACHINE_PEER,
+  POLICY_ADDON, POLICY_SUPERVISOR];
+const POLICY_NATIVE_SOURCES = ['packages/polaris-dossier/src/policy-git.c',
+  'packages/polaris-dossier/src/policy-git-supervisor.c', 'packages/polaris-dossier/src/policy-git-protocol.h'];
 const RENDERER_ENTRY = 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts';
 const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controller', 'session-egress-policy', 'session-response',
   'session-tools', 'session-host', 'session-machine-transport', 'session-relay', 'session-broker', 'session-url-view', 'session-credential',
@@ -29,7 +35,8 @@ const PROFILE_SOURCES = ['session-profile', 'session-launch', 'session-controlle
   'url-ordered-design-screen', 'url-ordered-design-screen-worker', 'url-ordered-design-screen-protocol',
   'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
-  'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption', 'url-runtime', 'polaris']
+  'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption',
+  'policy-snapshot', 'policy-git', 'policy-git-native', 'url-runtime', 'polaris']
   .map(name => `packages/polaris-dossier/src/${name}.ts`);
 const exact = (value: Record<string, unknown>, keys: readonly string[]): boolean => Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
 const hex = (value: unknown): value is string => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
@@ -39,6 +46,40 @@ const relative = (value: unknown): value is string => typeof value === 'string' 
 type FileIdentity = { readonly path: string; readonly bytes: number; readonly sha256: string };
 const identity = (value: unknown): value is FileIdentity => isRecord(value) && exact(value, ['path', 'bytes', 'sha256'])
   && relative(value.path) && Number.isSafeInteger(value.bytes) && Number(value.bytes) > 0 && hex(value.sha256);
+const absolute = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 4096
+  && path.isAbsolute(value) && path.resolve(value) === value && !/[\u0000-\u001f\u007f]/u.test(value);
+const externalIdentity = (value: unknown): value is FileIdentity => isRecord(value) && exact(value, ['path', 'bytes', 'sha256'])
+  && absolute(value.path) && Number.isSafeInteger(value.bytes) && Number(value.bytes) > 0 && hex(value.sha256);
+interface NativeBuild {
+  readonly compiler: FileIdentity;
+  readonly git: FileIdentity;
+  readonly headers: readonly FileIdentity[];
+}
+function nativeBuild(value: unknown): value is NativeBuild {
+  if (!isRecord(value) || !exact(value, ['format', 'platform', 'arch', 'napi', 'compiler', 'git', 'headers', 'units'])
+    || value.format !== 'polaris-policy-git-build/1' || value.platform !== 'linux' || value.arch !== 'x64' || value.napi !== 8
+    || process.platform !== value.platform || process.arch !== value.arch || Number(process.versions.napi) < 8
+    || !externalIdentity(value.compiler) || !externalIdentity(value.git) || value.git.bytes > 134_217_728
+    || !Array.isArray(value.headers) || value.headers.length < 3 || value.headers.length > 4096
+    || !value.headers.every(externalIdentity) || !Array.isArray(value.units) || value.units.length !== 2) return false;
+  const headers = value.headers;
+  const names = headers.map(record => record.path);
+  if (new Set(names).size !== names.length || JSON.stringify(names) !== JSON.stringify([...names].sort())
+    || !['node_api.h', 'js_native_api.h', 'js_native_api_types.h'].every(name => names.some(file => path.basename(file) === name))) return false;
+  const expected = [[POLICY_ADDON, POLICY_NATIVE_SOURCES[0]], [POLICY_SUPERVISOR, POLICY_NATIVE_SOURCES[1]]] as const;
+  const validUnits = value.units.every((unit, index) => isRecord(unit)
+    && exact(unit, ['output', 'source', 'preprocessed', 'headers', 'preprocess', 'compile'])
+    && unit.output === expected[index]![0] && unit.source === expected[index]![1]
+    && isRecord(unit.preprocessed) && exact(unit.preprocessed, ['bytes', 'sha256'])
+    && Number.isSafeInteger(unit.preprocessed.bytes) && Number(unit.preprocessed.bytes) > 0 && hex(unit.preprocessed.sha256)
+    && Array.isArray(unit.headers) && unit.headers.length > 0 && unit.headers.length <= headers.length
+    && unit.headers.every(file => typeof file === 'string' && names.includes(file))
+    && new Set(unit.headers).size === unit.headers.length
+    && JSON.stringify(unit.headers) === JSON.stringify([...unit.headers].sort())
+    && [unit.preprocess, unit.compile].every(args => Array.isArray(args) && args.length > 0 && args.length <= 64
+      && args.every(arg => typeof arg === 'string' && arg.length <= 4096 && !/[\u0000-\u001f\u007f]/u.test(arg))));
+  return validUnits && JSON.stringify([...new Set(value.units.flatMap(unit => unit.headers))].sort()) === JSON.stringify(names);
+}
 function sameRuntimeFile(before: Stats, after: Stats): boolean {
   return after.isFile() && after.dev === before.dev && after.ino === before.ino
     && after.nlink === before.nlink && after.mode === before.mode && after.size === before.size
@@ -111,7 +152,14 @@ export interface UrlRuntime {
 }
 
 const installed = new WeakMap<UrlRuntime, { readonly root: string; readonly rendererBytes: Uint8Array; readonly rendererSha256: string;
-  readonly orderedScreenProgram: OrderedScreenProgram; readonly machineReaderProgram: KernelPeerProgram }>();
+  readonly orderedScreenProgram: OrderedScreenProgram; readonly machineReaderProgram: KernelPeerProgram;
+  readonly policyGitProgram: PolicyGitProgram }>();
+
+/** A serialized runtime cannot select host policy execution images. The native
+ * adapter holds and verifies these admitted files again before execution. */
+export function urlPolicyGitProgram(runtime: UrlRuntime): PolicyGitProgram | null {
+  return installed.get(runtime)?.policyGitProgram ?? null;
+}
 
 /** Select only the screening images verified with this genuine runtime. The
  * runner reopens, holds and rehashes both images at invocation; the caller also
@@ -147,13 +195,13 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
     const bytes = await read(manifestPath, BOUNDS.maxBytes, root);
     const manifestSha256 = sha256(bytes);
     const manifest: unknown = parseBoundedJson(new TextDecoder('utf-8', { fatal: true }).decode(bytes), BOUNDS);
-    if (!isRecord(manifest) || !exact(manifest, ['format', 'node', 'inputTreeSha256', 'inputs', 'files']) || manifest.format !== 'polaris-url-runtime/1'
+    if (!isRecord(manifest) || !exact(manifest, ['format', 'node', 'inputTreeSha256', 'inputs', 'files', 'nativeBuild']) || manifest.format !== 'polaris-url-runtime/2'
       || !isRecord(manifest.node) || !exact(manifest.node, ['version', 'sha256', 'bytes']) || manifest.node.version !== 'v24.6.0'
       || process.version !== manifest.node.version || !hex(manifest.node.sha256) || !Number.isSafeInteger(manifest.node.bytes)
       || Number(manifest.node.bytes) < 1 || Number(manifest.node.bytes) > 134_217_728 || !hex(manifest.inputTreeSha256)
       || !Array.isArray(manifest.inputs) || manifest.inputs.length < 3 || manifest.inputs.length > 4096
       || !manifest.inputs.every(identity) || !Array.isArray(manifest.files) || manifest.files.length !== OUTPUTS.length
-      || !manifest.files.every(identity)) throw new Error();
+      || !manifest.files.every(identity) || !nativeBuild(manifest.nativeBuild)) throw new Error();
     const inputs = manifest.inputs, files = manifest.files;
     if (sha256(JSON.stringify(inputs)) !== manifest.inputTreeSha256 || new Set(inputs.map(item => item.path)).size !== inputs.length
       || JSON.stringify(inputs.map(item => item.path)) !== JSON.stringify(inputs.map(item => item.path).sort())
@@ -162,16 +210,21 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       || !['packages/polaris-dossier/src/git-memory-worker.ts', 'packages/polaris-dossier/src/session-bridge.ts',
         'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c',
         'packages/polaris-dossier/src/url-machine-peer.c', RENDERER_ENTRY, 'scripts/build_dossier_runtime.mjs',
-        'scripts/compile_dossier_session_support.mjs', 'scripts/compile_dossier_ordered_screen.mjs',
+        'scripts/compile_dossier_session_support.mjs', 'scripts/compile_dossier_ordered_screen.mjs', 'scripts/compile_dossier_policy_git.mjs',
+        ...POLICY_NATIVE_SOURCES,
         'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json', ...PROFILE_SOURCES]
         .every(file => inputs.some(input => input.path === file))) throw new Error();
     let totalBytes = 0;
     for (const input of inputs) {
       if (!/^(?:packages|apps|node_modules|scripts)\//u.test(input.path) && !['package-lock.json', 'package.json'].includes(input.path)
-        || (!/\.(?:[cm]?[jt]sx?|json)$/u.test(input.path) && !['packages/polaris-dossier/src/session-peer.c', 'packages/polaris-dossier/src/url-machine-peer.c'].includes(input.path)) || input.bytes > 16_777_216) throw new Error();
+        || (!/\.(?:[cm]?[jt]sx?|json)$/u.test(input.path) && !['packages/polaris-dossier/src/session-peer.c', 'packages/polaris-dossier/src/url-machine-peer.c', ...POLICY_NATIVE_SOURCES].includes(input.path)) || input.bytes > 16_777_216) throw new Error();
       totalBytes += input.bytes; if (totalBytes > 67_108_864) throw new Error();
     }
     const node = await realpath(process.execPath);
+    const git = await realpath('/usr/bin/git');
+    if (manifest.nativeBuild.git.path !== git) throw new Error();
+    const gitCheck = await readNodeDigest(git, manifest.nativeBuild.git.bytes);
+    if (gitCheck.digest !== manifest.nativeBuild.git.sha256) throw new Error();
     const [inputCheck, nodeCheck] = await Promise.allSettled([verifyInputs(root, inputs), readNodeDigest(node, Number(manifest.node.bytes))]);
     if (inputCheck.status !== 'fulfilled' || nodeCheck.status !== 'fulfilled' || nodeCheck.value.digest !== manifest.node.sha256) throw new Error();
     let rendererBytes: Uint8Array | undefined;
@@ -182,7 +235,8 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
       if (file.path === 'renderer.mjs') rendererBytes = Uint8Array.from(value);
     }
     if (sha256(await read(manifestPath, bytes.length, root)) !== manifestSha256
-      || await realpath(process.execPath) !== node || !sameRuntimeFile(nodeCheck.value.stats, await lstat(node))) throw new Error();
+      || await realpath(process.execPath) !== node || !sameRuntimeFile(nodeCheck.value.stats, await lstat(node))
+      || await realpath('/usr/bin/git') !== git || !sameRuntimeFile(gitCheck.stats, await lstat(git))) throw new Error();
     const runtime: UrlRuntime = deepFreeze({ worker: { bundle: path.join(directory, 'worker.mjs'), bundleSha256: files[0]!.sha256,
       node, nodeSha256: manifest.node.sha256 }, peerProgram: { executable: path.join(directory, 'host/session-peer'), sha256: files[4]!.sha256 },
       supportDirectory: path.join(directory, 'support'),
@@ -192,6 +246,9 @@ export async function readUrlRuntime(root: string): Promise<{ readonly ok: true;
         productReadMilliseconds: URL_PRODUCT_READ_MILLISECONDS, inputs })) });
     if (rendererBytes === undefined) throw new Error();
     installed.set(runtime, { root, rendererBytes, rendererSha256: files[1]!.sha256,
+      policyGitProgram: deepFreeze({ addon: { file: path.join(directory, POLICY_ADDON), sha256: files[8]!.sha256 },
+        supervisor: { file: path.join(directory, POLICY_SUPERVISOR), sha256: files[9]!.sha256 },
+        git: { file: git, sha256: manifest.nativeBuild.git.sha256 } }),
       machineReaderProgram: deepFreeze({ executable: path.join(directory, MACHINE_PEER), sha256: files[7]!.sha256 }),
       orderedScreenProgram: deepFreeze({ node: { path: node, bytes: Number(manifest.node.bytes), sha256: manifest.node.sha256 },
         worker: { path: path.join(directory, ORDERED_SCREEN), bytes: files[6]!.bytes, sha256: files[6]!.sha256 } }) });

@@ -1,3 +1,4 @@
+import type { PolicyGitExecutor } from './policy-git.js';
 import { execFileSync } from 'node:child_process';
 import { sha256, decodeUtf8 } from '@syzygy/support';
 
@@ -171,7 +172,7 @@ function installedClausesMatch(reviewed: string, read: (file: string) => string)
 /** Consult only the trusted observing checkout's last observed default-branch
  * ref. This reads local Git objects and runs no fetch or user Git hooks. */
 export function readUrlParentAdoption(
-  root: string, originPolicySha256: string, previous?: UrlParentAdoption,
+  root: string, originPolicySha256: string, previous?: UrlParentAdoption, executor?: PolicyGitExecutor,
 ): UrlParentAdoption | null {
   try {
     if (originPolicySha256 !== REVIEWED_SUBJECTS[2][1]) return null;
@@ -181,9 +182,11 @@ export function readUrlParentAdoption(
     const runGit = (args: readonly string[], batch?: { readonly input: string; readonly maxBuffer: number }): Buffer => {
       const remaining = Math.floor(deadline - performance.now());
       if (remaining <= 0) throw new Error('URL parent probe deadline');
-      const result = execFileSync('git', ['--no-replace-objects', '-C', root, ...args], {
-        env, maxBuffer: MAX_SUBJECT_BYTES, timeout: remaining, ...batch, stdio: [batch === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'],
-      });
+      const arguments_ = ['--no-replace-objects', '-C', root, ...args];
+      const options = { env, maxBuffer: MAX_SUBJECT_BYTES, timeout: remaining, ...batch };
+      const result = executor === undefined
+        ? execFileSync('git', arguments_, { ...options, stdio: [batch === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] })
+        : executor.runSync(arguments_, options);
       if (performance.now() >= deadline) throw new Error('URL parent probe deadline');
       return result;
     };

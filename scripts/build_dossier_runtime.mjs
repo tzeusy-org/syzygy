@@ -10,6 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compileDossierSessionSupport } from './compile_dossier_session_support.mjs';
 import { compileDossierOrderedScreen, ORDERED_SCREEN_SOURCES } from './compile_dossier_ordered_screen.mjs';
+import { compileDossierPolicyGit, POLICY_GIT_SOURCES } from './compile_dossier_policy_git.mjs';
 
 const root = await realpath(fileURLToPath(new URL('..', import.meta.url)));
 const relative = name => name.length > 0 && !path.isAbsolute(name) && !name.includes('\\')
@@ -24,7 +25,8 @@ const profileSources = ['session-profile', 'session-launch', 'session-controller
   'url-design-product', 'url-design-delivery', 'url-ordered-design-request', 'url-ordered-design-audit', 'url-ordered-design-writer',
   'url-machine-instance', 'url-machine-lifecycle', 'url-machine-archive', 'url-machine-store', 'url-machine-peer', 'url-machine-peer-history', 'url-machine-cold-history', 'url-ordered-design-bounds', 'url-ordered-design-session', 'url-ordered-design-work-budget', 'url-rendered-site-screen', 'url-rendered-source-proof', 'url-stored-render', 'url-dossier-result', 'url-ordered-render-value',
   'reverify', 'brief', 'inventory', 'review', 'review-packet', 'session-handover', 'session-statement', 'waiting-sessions', 'render', 'check',
-  'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption', 'url-runtime', 'polaris']
+  'check-model', 'review-model', 'credential-probe', 'cli', 'url-run-record', 'url-mode-registry', 'url-parent-adoption',
+  'policy-snapshot', 'policy-git', 'policy-git-native', 'url-runtime', 'polaris']
   .map(name => `packages/polaris-dossier/src/${name}.ts`);
 const captured = new Map();
 const capture = (name, bytes) => {
@@ -83,6 +85,8 @@ for (const [peerSource, output] of peerSources) {
     outputs.set(output, native);
   } finally { await rm(scratch, { recursive: true, force: true }); }
 }
+const policyGit = await compileDossierPolicyGit(root, capture);
+for (const [name, bytes] of policyGit.outputs) outputs.set(name, bytes);
 // Consume the trusted root's entire compiler graph as well as the worker's.
 // Reading a hand-picked source list after compilation cannot establish which
 // dependencies a control/origin/launcher implementation actually consumed.
@@ -98,7 +102,8 @@ const orderedScreen = await compileDossierOrderedScreen(root, [capturePlugin]);
 outputs.set('host/ordered-screen.mjs', orderedScreen.outputFiles[0].contents);
 const inputs = new Set([...Object.keys(result.metafile.inputs), ...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs),
   ...Object.keys(orderedScreen.metafile.inputs), ...ORDERED_SCREEN_SOURCES, ...profileSources,
-  worker, ...peerSources.map(([source]) => source), 'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
+  worker, ...peerSources.map(([source]) => source), ...POLICY_GIT_SOURCES,
+  'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_policy_git.mjs', 'scripts/compile_dossier_session_support.mjs', 'package-lock.json']);
 for (const name of [...Object.keys(host.metafile.inputs), ...Object.keys(design.metafile.inputs), ...Object.keys(orderedScreen.metafile.inputs)])
   if (!captured.has(name)) throw new Error('uncaptured host/renderer/screen compiler input');
 // Resolution metadata belongs to the captured graph even though esbuild does
@@ -136,15 +141,15 @@ for (const directory of ['support', 'design-support', 'host']) await mkdir(path.
 const files = [];
 // Keep the manifest order closed and independent of compilation order.
 for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer',
-  'design-support/session-mcp.js', 'host/ordered-screen.mjs', 'host/machine-peer']) {
+  'design-support/session-mcp.js', 'host/ordered-screen.mjs', 'host/machine-peer', 'host/policy-git.node', 'host/policy-git-supervisor']) {
   const bytes = outputs.get(name);
   if (bytes === undefined) throw new Error('missing runtime output');
-  await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: name === 'host/session-peer' || name === 'host/machine-peer' ? 0o755 : 0o644 });
+  await writeFile(path.join(destination, name), bytes, { flag: 'wx', mode: ['host/session-peer', 'host/machine-peer', 'host/policy-git-supervisor'].includes(name) ? 0o755 : 0o644 });
   files.push({ path: name, bytes: bytes.length, sha256: hash(bytes) });
 }
 for (const record of records) if (hash(await readFile(path.join(root, record.path))) !== record.sha256) throw new Error('build input changed before manifest');
 const node = await realpath(process.execPath), nodeBytes = await readFile(node);
-const manifest = { format: 'polaris-url-runtime/1', node: { version: process.version, sha256: hash(nodeBytes), bytes: nodeBytes.length },
-  inputTreeSha256: hash(JSON.stringify(records)), inputs: records, files };
+const manifest = { format: 'polaris-url-runtime/2', node: { version: process.version, sha256: hash(nodeBytes), bytes: nodeBytes.length },
+  inputTreeSha256: hash(JSON.stringify(records)), inputs: records, files, nativeBuild: policyGit.nativeBuild };
 await writeFile(path.join(destination, 'manifest.json'), JSON.stringify(manifest) + '\n', { flag: 'wx', mode: 0o644 });
 process.stdout.write(`Prepared URL runtime: ${records.length} checked inputs, ${files.length} executable support files.\n`);

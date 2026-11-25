@@ -1,3 +1,4 @@
+import type { PolicyGitExecutor } from './policy-git.js';
 import { execFile, execFileSync } from 'node:child_process';
 import { closeSync, constants, fstatSync, lstatSync, openSync, readSync, type Stats } from 'node:fs';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
@@ -140,25 +141,28 @@ function committedPolicy(root: string, policyPath: string): PolicySnapshot {
 
 /** Check both documents by one commit identity, bracketed by live HEAD
  * samples. The admitted commit lets the common case use one Git process. */
-export function committedUrlPoliciesCurrent(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): boolean {
+export function committedUrlPoliciesCurrent(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption, executor?: PolicyGitExecutor): boolean {
   try {
     const probe = currentPolicyProbe(root, base, origin, parent);
-    const refsCurrent = (): boolean => parent === undefined || probe.refsCurrent(execFileSync('git', probe.refArgs,
-      { ...probe.options, stdio: ['ignore', 'pipe', 'pipe'] }));
+    const runGit = (args: readonly string[], input?: string): Buffer => executor === undefined
+      ? execFileSync('git', args, { ...probe.options, ...(input === undefined ? {} : { input }),
+        stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] })
+      : executor.runSync(args, { ...probe.options, ...(input === undefined ? {} : { input }) });
+    const refsCurrent = (): boolean => parent === undefined || probe.refsCurrent(runGit(probe.refArgs));
     if (!refsCurrent()) return false;
-    const read = (commit: string): boolean | string => probe.check(commit, execFileSync('git', probe.args,
-      { ...probe.options, input: probe.input(commit), stdio: ['pipe', 'pipe', 'pipe'] }));
+    const read = (commit: string): boolean | string => probe.check(commit, runGit(probe.args, probe.input(commit)));
     const initial = read(base.commit);
     return (typeof initial === 'string' ? read(initial) === true : initial) && refsCurrent() && probe.workingFilesCurrent();
   } catch { return false; }
 }
 
 /** Session and audit callbacks can wait for Git while role resource samples run. */
-export async function committedUrlPoliciesCurrentAsync(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption): Promise<boolean> {
+export async function committedUrlPoliciesCurrentAsync(root: string, base: PolicyBinding, origin: PolicyBinding, parent?: UrlParentAdoption, executor?: PolicyGitExecutor): Promise<boolean> {
   try {
     const probe = currentPolicyProbe(root, base, origin, parent);
-    const runGit = (args: readonly string[], input?: string): Promise<Buffer> =>
-      new Promise((resolve, reject) => {
+    const runGit = (args: readonly string[], input?: string): Promise<Buffer> => executor !== undefined
+      ? executor.runAsync(args, { ...probe.options, ...(input === undefined ? {} : { input }) })
+      : new Promise((resolve, reject) => {
         const child = execFile('git', args, { ...probe.options, encoding: 'buffer' }, (error, stdout) => {
           if (error) reject(error);
           else resolve(stdout);

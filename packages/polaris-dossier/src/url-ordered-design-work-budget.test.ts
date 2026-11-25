@@ -164,6 +164,47 @@ describe('ordered design live work reservation', () => {
     expect(budget.begin('tool', 0)).toBeNull();
     expect(budget.snapshot()).toMatchObject({ reason: 'operation-wall-limit', wallMilliseconds: 10 });
   });
+  it('samples constructor expiry after a CPU join and preserves the reserved first-tool start', () => {
+    const plan = planOrderedDesignWork(input)!;
+    let now = 1, mono = 1;
+    expect(() => createOrderedDesignWorkBudget(plan, { now: () => now, monotonicMilliseconds: () => mono,
+      cpuMicroseconds: () => { now = plan.expiresAt; mono = plan.expiresAt; return 7; } })).toThrow('ordered-design-work-budget-refused');
+    now = 1; mono = 1;
+    const reserved = reserveOrderedDesignWork(input, () => ({ cpuMicroseconds: 0, remainingCpuMicroseconds: 370 }),
+      { now: () => now, monotonicMilliseconds: () => mono })!;
+    expect(() => createOrderedDesignWorkBudget(reserved.plan, { now: () => now, monotonicMilliseconds: () => mono,
+      cpuMicroseconds: () => { now = 11; mono = 11; return 7; } }, reserved.start)).toThrow('ordered-design-work-budget-refused');
+  });
+  it.each(['wall', 'monotonic'] as const)('refuses expiry crossed inside the CPU sample using fresh %s time and retains its charge', axis => {
+    const plan = planOrderedDesignWork(input)!;
+    let now = 1, mono = 1, joining = false, cpu = 0;
+    const budget = createOrderedDesignWorkBudget(plan, { now: () => now, monotonicMilliseconds: () => mono,
+      cpuMicroseconds: () => {
+        if (joining) { cpu = 7; if (axis === 'wall') now = plan.expiresAt; else mono = plan.expiresAt; }
+        return cpu;
+      } });
+    joining = true;
+    expect(budget.current()).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ reason: 'expired', cpuMicroseconds: 7 });
+  });
+  it('refuses operation expiry crossed inside CPU accounting before completing its ticket', () => {
+    const plan = planOrderedDesignWork(input)!;
+    let now = 1, mono = 1, joining = false;
+    const budget = createOrderedDesignWorkBudget(plan, { now: () => now, monotonicMilliseconds: () => mono,
+      cpuMicroseconds: () => { if (joining) { now = 11; mono = 11; } return joining ? 7 : 0; } });
+    const ticket = budget.begin('tool', 0)!;
+    joining = true;
+    expect(budget.finish(ticket)).toBe(false);
+    expect(budget.snapshot()).toMatchObject({ reason: 'operation-wall-limit', wallMilliseconds: 10, cpuMicroseconds: 7 });
+  });
+  it('keeps reservation spending while refusing a plan that expires during the one-time CPU reservation', () => {
+    let now = 1, mono = 1, calls = 0;
+    expect(reserveOrderedDesignWork(input, () => {
+      calls++; now = 571; mono = 571;
+      return { cpuMicroseconds: 7, remainingCpuMicroseconds: 370 };
+    }, { now: () => now, monotonicMilliseconds: () => mono })).toBeNull();
+    expect(calls).toBe(1);
+  });
   it('holds the whole path, complete histories and both detector branches before the first operation', () => {
     const { plan } = fixture();
     // Four 50ms broker/relay waits and 37 operation envelopes of 10ms.

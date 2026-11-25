@@ -17,7 +17,7 @@ import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRA
 import { openSessionMachineConnection, prepareSessionMachineTransport, sessionMachineEffectContext, type SessionMachineTransport } from './session-machine-transport.js';
 import { prepareHistoricalUrlRolePlansTestPort } from './url-role-plan.js';
 import { createUrlRunMachine, isUrlRunMachineClosedHistory, readUrlRunMachineClosedHistory, type UrlRunMachineOptions } from './url-run-machine.js';
-import { readUrlRuntime, type UrlRuntime } from './url-runtime.js';
+import { readUrlRuntime, urlPolicyGitProgram, type UrlRuntime } from './url-runtime.js';
 import { URL_ORIGIN_POLICY_PATH } from './url-run-record.js';
 import type { UrlMachineClientRecord } from './url-machine-instance.js';
 
@@ -44,9 +44,12 @@ beforeAll(async () => {
   names.push('packages/polaris-dossier/src/git-memory-worker.ts', 'packages/polaris-dossier/src/session-bridge.ts',
     'packages/polaris-dossier/src/session-mcp.ts', 'packages/polaris-dossier/src/session-peer.c',
     'packages/polaris-dossier/src/url-machine-peer.c', 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts',
+    'packages/polaris-dossier/src/policy-git.c', 'packages/polaris-dossier/src/policy-git-supervisor.c',
+    'packages/polaris-dossier/src/policy-git-protocol.h',
     'scripts/build_dossier_runtime.mjs', 'scripts/compile_dossier_session_support.mjs', 'scripts/compile_dossier_ordered_screen.mjs',
+    'scripts/compile_dossier_policy_git.mjs',
     'package-lock.json', 'package.json', 'packages/polaris-dossier/package.json');
-  const inputs = [];
+  const inputs: { path: string; bytes: number; sha256: string }[] = [];
   for (const name of [...new Set(names)].sort()) {
     const bytes = await fs.readFile(path.join(sourceRoot, name)), target = path.join(installedRoot, name);
     await fs.mkdir(path.dirname(target), { recursive: true }); await fs.writeFile(target, bytes);
@@ -69,17 +72,74 @@ beforeAll(async () => {
       { env: { PATH: '/usr/bin:/bin', LANG: 'C' }, timeout: 10_000, killSignal: 'SIGKILL', maxBuffer: 65_536 });
     outputs.set(target, await fs.readFile(executable));
   }
+  const { compileDossierPolicyGit } = await import(new URL('scripts/compile_dossier_policy_git.mjs', new URL('../../../', import.meta.url)).href) as {
+    compileDossierPolicyGit: (root: string, capture: (name: string, bytes: Buffer) => void) => Promise<{
+      outputs: ReadonlyMap<string, Buffer>; nativeBuild: unknown;
+    }>;
+  };
+  const policyGit = await compileDossierPolicyGit(sourceRoot, (name, bytes) => {
+    if (inputs.find(input => input.path === name)?.sha256 !== sha256(bytes)) throw new Error('owned native source drifted');
+  });
+  for (const [name, bytes] of policyGit.outputs) outputs.set(name, bytes);
   const files = [];
   for (const name of ['worker.mjs', 'renderer.mjs', 'support/session-bridge.js', 'support/session-mcp.js', 'host/session-peer',
-    'design-support/session-mcp.js', 'host/ordered-screen.mjs', 'host/machine-peer']) {
-    const bytes = outputs.get(name)!; await fs.writeFile(path.join(directory, name), bytes, { mode: 0o600 });
+    'design-support/session-mcp.js', 'host/ordered-screen.mjs', 'host/machine-peer', 'host/policy-git.node', 'host/policy-git-supervisor']) {
+    const bytes = outputs.get(name)!; await fs.writeFile(path.join(directory, name), bytes,
+      { mode: name === 'host/policy-git-supervisor' ? 0o700 : 0o600 });
     files.push({ path: name, bytes: bytes.length, sha256: sha256(bytes) });
   }
   const node = await fs.readFile(await fs.realpath(process.execPath));
-  await fs.writeFile(path.join(directory, 'manifest.json'), JSON.stringify({ format: 'polaris-url-runtime/1',
-    node: { version: process.version, bytes: node.length, sha256: sha256(node) }, inputs, inputTreeSha256: sha256(JSON.stringify(inputs)), files }));
+  await fs.writeFile(path.join(directory, 'manifest.json'), JSON.stringify({ format: 'polaris-url-runtime/2',
+    node: { version: process.version, bytes: node.length, sha256: sha256(node) }, inputs, inputTreeSha256: sha256(JSON.stringify(inputs)), files,
+    nativeBuild: policyGit.nativeBuild }));
   const loaded = await readUrlRuntime(installedRoot); expect(loaded.ok).toBe(true); if (!loaded.ok) throw new Error('owned runtime refused'); runtime = loaded.runtime;
 }, 30_000);
+
+it('selects policy Git only from an admitted runtime and rejects native manifest drift', async () => {
+  const program = urlPolicyGitProgram(runtime);
+  expect(program?.addon.file).toBe(path.join(installedRoot, 'packages/polaris-dossier/dist/runtime/host/policy-git.node'));
+  expect(program?.supervisor.file).toBe(path.join(installedRoot, 'packages/polaris-dossier/dist/runtime/host/policy-git-supervisor'));
+  expect(program?.git.file).toBe(await fs.realpath('/usr/bin/git'));
+  expect(urlPolicyGitProgram({ ...runtime })).toBeNull();
+  const manifestPath = path.join(installedRoot, 'packages/polaris-dossier/dist/runtime/manifest.json');
+  const original = await fs.readFile(manifestPath);
+  type MutableManifest = { format: string; files: unknown[]; nativeBuild?: {
+    napi: number; git: { path: string; sha256: string }; units: { output: string }[]; headers: unknown[];
+  } };
+  const mutations = [
+    (manifest: MutableManifest) => { manifest.format = 'polaris-url-runtime/1'; },
+    (manifest: MutableManifest) => { delete manifest.nativeBuild; },
+    (manifest: MutableManifest) => { manifest.nativeBuild!.napi = 9; },
+    (manifest: MutableManifest) => { manifest.nativeBuild!.git.path = '/bin/sh'; },
+    (manifest: MutableManifest) => { manifest.nativeBuild!.git.sha256 = manifest.nativeBuild!.git.sha256.replace(/^./u, value => value === '0' ? '1' : '0'); },
+    (manifest: MutableManifest) => { manifest.nativeBuild!.units[0]!.output = 'host/unadmitted.node'; },
+    (manifest: MutableManifest) => { manifest.files.pop(); },
+    (manifest: MutableManifest) => { manifest.nativeBuild!.headers.pop(); },
+  ];
+  try {
+    for (const mutate of mutations) {
+      const manifest = JSON.parse(original.toString('utf8')) as MutableManifest;
+      mutate(manifest);
+      await fs.writeFile(manifestPath, JSON.stringify(manifest));
+      expect(await readUrlRuntime(installedRoot)).toEqual({ ok: false, code: 'url-runtime-unavailable' });
+    }
+  } finally { await fs.writeFile(manifestPath, original); }
+  expect((await readUrlRuntime(installedRoot)).ok).toBe(true);
+});
+
+it('refuses changed admitted native images and protocol sources before selecting policy execution', async () => {
+  for (const relative of ['packages/polaris-dossier/dist/runtime/host/policy-git.node',
+    'packages/polaris-dossier/dist/runtime/host/policy-git-supervisor', 'packages/polaris-dossier/src/policy-git-protocol.h']) {
+    const file = path.join(installedRoot, relative), original = await fs.readFile(file);
+    try {
+      const changed = Buffer.from(original);
+      changed[0] = changed[0]! ^ 1;
+      await fs.writeFile(file, changed);
+      expect(await readUrlRuntime(installedRoot)).toEqual({ ok: false, code: 'url-runtime-unavailable' });
+    } finally { await fs.writeFile(file, original); }
+  }
+  expect((await readUrlRuntime(installedRoot)).ok).toBe(true);
+});
 
 async function fixture(sampleGate?: {
   readonly sampling: Promise<void>;

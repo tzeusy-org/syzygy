@@ -2,6 +2,49 @@ import { describe, expect, it } from 'vitest';
 import { createUrlRunCpuBudget } from './url-run-cpu-budget.js';
 
 describe('shared URL supervisor CPU capacity', () => {
+  it('carries completed child CPU once and samples only future host and child work', () => {
+    let host = 100, child = 200;
+    const pool = createUrlRunCpuBudget(1000, () => host + child, child);
+    const held = pool.holdOrdered(800)!;
+    expect(pool.cpuMicroseconds()).toBe(200);
+    expect(held.remainingCpuMicroseconds()).toBe(800);
+    host += 5;
+    child += 7;
+    expect(pool.cpuMicroseconds()).toBe(212);
+    expect(held.remainingCpuMicroseconds()).toBe(788);
+    expect(pool.current()).toBe(true);
+    expect(pool.cpuMicroseconds()).toBe(212);
+    held.release();
+    pool.charge('machine', 788);
+    expect(pool.cpuMicroseconds()).toBe(1000);
+    expect(() => pool.charge('machine', 1)).toThrow('url-run-cpu-budget-unavailable');
+  });
+  it('protects completed pre-pool work from competing charges while an ordered hold is active', () => {
+    const pool = createUrlRunCpuBudget(1000, () => 300, 200);
+    expect(pool.holdOrdered(800)).not.toBeNull();
+    expect(() => pool.charge('inventory', 1)).toThrow('url-run-cpu-budget-unavailable');
+    expect(pool.current()).toBe(false);
+    expect(pool.cpuMicroseconds()).toBe(200);
+  });
+  it('keeps the default baseline and accepts zero and exactly spent capacity', () => {
+    const legacy = createUrlRunCpuBudget(1000, () => 100);
+    const zero = createUrlRunCpuBudget(1000, () => 100, 0);
+    expect(legacy.cpuMicroseconds()).toBe(0);
+    expect(zero.cpuMicroseconds()).toBe(0);
+    const full = createUrlRunCpuBudget(1000, () => 100, 1000);
+    expect(full.current()).toBe(true);
+    expect(full.cpuMicroseconds()).toBe(1000);
+    expect(full.holdOrdered(1)).toBeNull();
+    expect(() => full.charge('author', 1)).toThrow('url-run-cpu-budget-unavailable');
+  });
+  it('rejects unknown, invalid or over-limit pre-pool usage before reading the clock', () => {
+    for (const initialSpent of [-1, 0.5, NaN, Infinity, 1001, Number.MAX_SAFE_INTEGER + 1]) {
+      let reads = 0;
+      expect(() => createUrlRunCpuBudget(1000, () => { reads++; return 100; }, initialSpent))
+        .toThrow('url-run-cpu-budget-unavailable');
+      expect(reads).toBe(0);
+    }
+  });
   it('holds the whole design allowance against competing native work and accounts actual host CPU', () => {
     let host = 100;
     const pool = createUrlRunCpuBudget(1000, () => host);

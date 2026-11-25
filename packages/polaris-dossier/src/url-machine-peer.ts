@@ -287,9 +287,11 @@ function closeState(state: PeerState): void {
   for (const entry of state.processes) try { fs.closeSync(entry.fd); } catch { /* Refused from now on. */ }
 }
 function check(state: PeerState): number {
-  const { options } = state, now = options.now();
-  if (state.closed || state.finished || (options.effectCurrent !== undefined && options.effectCurrent() !== true)
-    || !isUrlSessionProcess(options.launch) || !isNativeSessionProfile(options.profile)
+  const { options } = state;
+  if (state.closed || state.finished || (options.effectCurrent !== undefined && options.effectCurrent() !== true)) throw refused();
+  // The effect guard can join policy Git; client expiry uses a fresh sample.
+  const now = options.now();
+  if (!isUrlSessionProcess(options.launch) || !isNativeSessionProfile(options.profile)
     || !Number.isSafeInteger(now) || now < state.lastNow || now >= options.context.deadline
     || !listenerCurrent(options) || options.socket.destroyed || !options.socket.isPaused() || options.socket.readableLength !== 0) throw refused();
   state.lastNow = now;
@@ -394,9 +396,9 @@ export async function captureUrlMachinePeer(options: UrlMachinePeerOptions): Pro
     const readImageCurrent = selected.readImageCurrent ?? selected.effectCurrent;
     const executable = await pinnedExecutable(selected.installed.executable, selected.installed.sha256,
       context.kind === 'role-cli' ? URL_CLI_PROGRAM.bytes : 134_217_728, () => {
+        if (readImageCurrent !== undefined && readImageCurrent() !== true) throw refused();
         const now = selected.now();
-        if ((readImageCurrent !== undefined && readImageCurrent() !== true)
-          || !isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
+        if (!isUrlSessionProcess(selected.launch) || !Number.isSafeInteger(now) || now < pinNow || now >= context.deadline
           || performance.now() - began >= captureMilliseconds) throw refused();
         pinNow = now;
       });

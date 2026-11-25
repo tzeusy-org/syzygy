@@ -61,7 +61,7 @@ beforeAll(async () => {
 
 async function fixture(scenario: 'live' | 'inherited' | 'mixed' | 'exit' = 'live',
   chargeNativeCpuMicroseconds?: (capacity: number) => void, captureGuards?: Partial<Pick<UrlMachinePeerOptions, 'current' | 'effectCurrent' | 'readImageCurrent'>>,
-  captureTiming?: (options: UrlMachinePeerOptions) => Partial<Pick<UrlMachinePeerOptions, 'now' | 'current' | 'readImageCurrent'>>) {
+  captureTiming?: (options: UrlMachinePeerOptions) => Partial<Pick<UrlMachinePeerOptions, 'now' | 'current' | 'readImageCurrent' | 'effectCurrent' | 'audit'>>) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mp-'));
   cleanup.push(() => fs.rm(root, { recursive: true, force: true }));
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await fs.mkdir(path.join(root, name), { mode: 0o700 });
@@ -194,13 +194,32 @@ describe('live URL machine peer binding', { timeout: 60_000 }, () => {
     } finally { clock.mockRestore(); }
   });
 
-  it('clips real capture to its original run expiry during the image read', async () => {
+  it('clips real capture immediately when its image guard crosses the original run expiry', async () => {
+    let imageChecks = 0;
     const f = await fixture('live', undefined, undefined, options => {
       let expired = false;
       return { now: () => expired ? options.context.deadline : options.context.now,
-        readImageCurrent: () => { expired = true; return true; } };
+        readImageCurrent: () => { imageChecks++; expired = true; return true; } };
     });
     expect(f.peer).toBeNull();
+    expect(imageChecks).toBe(1); // No read or second guard can use a pre-join sample.
+  });
+
+  it('uses the post-effect-guard timestamp in actual peer mediation audit', async () => {
+    let armed = false, wall = 0;
+    const audits: { at: number; observed: number }[] = [];
+    const f = await fixture('live', undefined, undefined, options => {
+      wall = options.context.now;
+      return { now: () => wall, effectCurrent: () => { if (armed) wall++; return true; },
+        audit: event => { audits.push({ at: event.at, observed: wall }); } };
+    });
+    expect(f.peer).not.toBeNull(); if (!f.peer) return;
+    expect((await f.publish(f.record(f.peer))).ok).toBe(true);
+    armed = true;
+    expect(await mediateUrlMachinePeer(f.peer, 'artifact_read', () => 'owned')).toEqual({ ok: true, value: 'owned' });
+    expect(audits).toHaveLength(1);
+    expect(audits[0]!.at).toBe(audits[0]!.observed);
+    expect(audits[0]!.at).toBeGreaterThan(f.options.context.now);
   });
 
   it('keeps fresh parent authority independently bounded at five seconds', async () => {
