@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "ae1b2c3eaee62d189732055798d1dc7d70f63278",
+  "candidateManifestSha256": "2d41aa70242d9716269947d30fbc63d8323a518ac4dc095d2e61bb45f967e187",
+  "r1Verdict": "REVISE",
+  "r1RawSha256": "17b9779ee3dec39f6fa6643eef01b2e51bc1ae86ec307aa75ab8b1d2e0dbb153",
+  "r2Verdict": "PASS",
+  "r2RawSha256": "414d80cec837c3ecda7bc0a3517a2cf7ab6de3de86477425d465f74e775fdde9",
+  "payloadFiles": 37,
+  "payloadManifestSha256": "7429b9f5107a0679c919bb043a216d7116926d4daf65f3dd1acd7e378d87198b",
+  "archiveSha256": "ad1f946a573b049fedeb4768eed38bdad1970155b5e7729e79f626603b21f9cc",
+  "owningCheck": {
+    "subject": "ae1b2c3eaee62d189732055798d1dc7d70f63278",
+    "command": [
+      "python3",
+      "scripts/check_governance.py"
+    ],
+    "startedAt": "2026-11-25T00:15:48.849812+00:00",
+    "elapsedSeconds": 6.943392771005165,
+    "exit": 0,
+    "logSha256": "73aa6381efd5bd1b0013a2717860ecbd0ac715883e5f4ad882dd72a6cbe698a9"
+  },
+  "canonicalChecks": 138,
+  "orientationCommands": 1,
+  "staticChecks": 9,
+  "staticRejectedMutants": 13,
+  "staticAggregateRefusalCells": 30,
+  "canonicalCaseGrowth": 0,
+  "hosted420SecondAcceptance": "Unknown"
+}
