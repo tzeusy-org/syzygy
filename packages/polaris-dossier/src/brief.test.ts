@@ -83,6 +83,8 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
 const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectReader => ({ listTree: async () => paths.map((p) => ({ path: p, mode: '100644' })) }) as unknown as PinnedObjectReader;
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
+const TERMINOLOGY_ID_PARAGRAPH = 'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\'s `statement`. For example, use an unused `io` as the ID for "I/O" and write "I/O" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.';
+
 describe('brief: issued', () => {
   it.each(['missing', 'malformed', 'wrong run', 'wrong provider'] as const)('refuses a %s disclosure before writing handoff files', async fault => {
     const run = runDirectory();
@@ -135,7 +137,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v19', schemaVersion: 'polaris-dossier-local-draft-v13',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v20', schemaVersion: 'polaris-dossier-local-draft-v13',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     expect(JSON.parse(read(run, 'raw-read-disclosure.json'))).toEqual({
@@ -169,7 +171,7 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v19', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v20', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v13', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
@@ -180,6 +182,19 @@ describe('brief: issued', () => {
       label: 'Inferred',
     });
     for (const name of ['brief.md', 'draft.schema.json', 'brief.json']) expect(fs.statSync(path.join(run, name)).mode & 0o777).toBe(0o600);
+  });
+
+  it('teaches the author one terminology item per term using its reader spelling', async () => {
+    const run = runDirectory();
+    const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
+    expect(result.ok).toBe(true);
+    const brief = read(run, 'brief.md');
+    expect(brief).toContain('## The understanding record\n\n');
+    const understanding = brief.split('## The understanding record\n\n')[1]!.split('\n\n## Voice')[0]!;
+    expect(understanding.split('\n\n')).toEqual([
+      expect.stringContaining('Before the argument, write `understanding`'),
+      TERMINOLOGY_ID_PARAGRAPH,
+    ]);
   });
 
   it('asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)', async () => {
@@ -397,7 +412,7 @@ describe('brief: shape packs (version 2.4)', () => {
     const schemaSha = sha(read(run, 'draft.schema.json'));
     const lines = golden.split('\n');
     const swap = (from: string, to: string): void => { const at = lines.indexOf(from); expect(at).toBeGreaterThan(-1); lines[at] = to; };
-    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v19`');
+    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v20`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
       `- Draft schema: \`polaris-dossier-local-draft-v13\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
     swap('SEC-2 and SEC-5 bind your own reads and sends: use only content classified and screened under the bound screening policy for this run, preserve its exclusions and private metadata protections, and send content only to the declared provider for this run. Never send secrets or unclassifiable content. A provider declaration grants no screening exception. Your read account and tool transmissions are self-reported, never observed compliance.', D11_BRIEF_RULE);
@@ -413,6 +428,9 @@ describe('brief: shape packs (version 2.4)', () => {
     lines.splice(understanding, 0, '## Task routes', '', TASK_ROUTES_PARAGRAPH, '');
     // Brief v19 (version 2.26) added the worth-knowing paragraph immediately after the Poles paragraph.
     lines.splice(lines.indexOf('## Task routes'), 0, WORTH_KNOWING_PARAGRAPH, '');
+    const understandingParagraph = lines.indexOf('## The understanding record') + 2;
+    expect(lines[understandingParagraph]).toContain('Before the argument, write `understanding`');
+    lines.splice(understandingParagraph + 2, 0, TERMINOLOGY_ID_PARAGRAPH, '');
     expect(brief).toBe(lines.join('\n'));
     expect(schemaSha).not.toBe('36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc');
     expect(record['readerStandards']).toEqual({ version: 'polaris-reader-standards-v1', sha256: V1_SHA });
