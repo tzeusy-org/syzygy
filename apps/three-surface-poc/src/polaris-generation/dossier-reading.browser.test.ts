@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
-import { lineCitationInput, navigationInput, readingInput } from './dossier-reading.testkit.js';
+import { lineCitationInput, navigationInput, readingInput, splitLineCitationInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -479,6 +479,51 @@ it.skipIf(executable === undefined)('follows a ranged source citation and highli
       })()`;
       await expect.poll(() => page.evaluate(inspect)).toEqual({ scripts: 0, target: 'L1200', text: '# synthetic option 1200: local documentation',
         rowCount: 2100, scrolled: true, onScreen: true, fits: true, label: '"1200"', continuations: true, unrelated: true, details: 0 });
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);
+
+it.skipIf(executable === undefined)('continues a citation onto its next source piece using a native keyboard link', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'continued-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(splitLineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      const citation = 'document.querySelector(\'[data-claim-id="introduction"] a.cite\')';
+      await page.evaluate(`${citation}.focus()`);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('location.hash')).toBe('#L999');
+      const firstPage = await page.evaluate<string>("location.href.split('#')[0]");
+      const painted = `(() => {
+        const target = document.querySelector('.source-line:target');
+        if (!target) return [];
+        const background = getComputedStyle(target).backgroundColor;
+        return [...document.querySelectorAll('.source-line')].filter(line => getComputedStyle(line).backgroundColor === background).map(line => line.id);
+      })()`;
+      await expect.poll(() => page.evaluate(painted)).toEqual(['L999', 'L1000']);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const continuation = 'document.querySelector(".source-continuation a")';
+      expect(await page.evaluate(`${continuation}.hash`)).toBe('#L1001');
+      expect(await page.accessibleNames(`[${continuation}]`)).toEqual(['Continue this citation: lines 1001–1002']);
+      await page.press('Tab');
+      expect(await page.evaluate(`document.activeElement === ${continuation}`)).toBe(true);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('location.hash')).toBe('#L1001');
+      expect(await page.evaluate("location.href.split('#')[0]")).not.toBe(firstPage);
+      await expect.poll(() => page.evaluate(painted)).toEqual(['L1001', 'L1002']);
+      expect(await page.evaluate('document.querySelectorAll(".source-continuation a").length')).toBe(0);
+      await page.navigate(`${firstPage}#L4`);
+      expect(await page.evaluate('getComputedStyle(document.querySelector(".source-continuation")).display')).toBe('none');
     } finally { await page.close(); }
   } finally {
     try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }

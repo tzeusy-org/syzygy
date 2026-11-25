@@ -190,24 +190,35 @@ export function navigationInput(): ReturnType<typeof readingInput> {
   } };
 }
 
+function lineCitationFixture(body: string, introduction: readonly { start: number; end: number }[], forms: readonly { start: number; end: number }[]) {
+  const input = readingInput();
+  const { repositoryId, revision, evaluationId } = READING_SOURCE;
+  const pieces = generationSourcesForBody({ repositoryId, revision, evaluationId, sourceId: 'src-9876543210fedcba98765432',
+    objectId: gitBlobObjectId(body), path: 'docs/settings.conf', body });
+  const first = pieces[0]!;
+  const sourceAnchors = new Map(input.local.sourceAnchors);
+  for (const piece of pieces) sourceAnchors.set(piece.sourceId, anchor(piece));
+  const citationLines = new Map(input.local.citationLines);
+  citationLines.set('introduction', new Map([[first.sourceId, introduction]]));
+  citationLines.set('forms', new Map([[first.sourceId, forms]]));
+  const draft = { ...input.local.draft,
+    introduction: { ...input.local.draft.introduction, sourceIds: [first.sourceId] },
+    sections: input.local.draft.sections.map(entry => ({ ...entry, paragraphs: entry.paragraphs.map(p => p.id === 'forms' ? { ...p, sourceIds: [first.sourceId] } : p) })),
+  };
+  return { local: { ...input.local, draft, sourceAnchors, citationLines }, sources: [...input.sources, ...pieces] };
+}
+
 /** Long plain text with distinguishable LF, CRLF, and bare CR line ends. Every line is synthetic. */
 export function lineCitationInput() {
-  const input = readingInput();
   const body = Array.from({ length: 2100 }, (_, index) => {
     const ending = index % 3 === 0 ? '\r\n' : index % 3 === 1 ? '\r' : '\n';
     return `# synthetic option ${index + 1}: local documentation${ending}`;
   }).join('');
-  const { repositoryId, revision, evaluationId } = READING_SOURCE;
-  const source = generationSourcesForBody({ repositoryId, revision, evaluationId, sourceId: 'src-9876543210fedcba98765432',
-    objectId: gitBlobObjectId(body), path: 'docs/settings.conf', body })[0]!;
-  const sourceAnchors = new Map(input.local.sourceAnchors);
-  sourceAnchors.set(source.sourceId, anchor(source));
-  const citationLines = new Map(input.local.citationLines);
-  citationLines.set('introduction', new Map([[source.sourceId, [{ start: 1200, end: 1202 }, { start: 1207, end: 1208 }]]]));
-  citationLines.set('forms', new Map([[source.sourceId, [{ start: 1204, end: 1205 }]]]));
-  const draft = { ...input.local.draft,
-    introduction: { ...input.local.draft.introduction, sourceIds: [source.sourceId] },
-    sections: input.local.draft.sections.map(entry => ({ ...entry, paragraphs: entry.paragraphs.map(p => p.id === 'forms' ? { ...p, sourceIds: [source.sourceId] } : p) })),
-  };
-  return { local: { ...input.local, draft, sourceAnchors, citationLines }, sources: [...input.sources, source] };
+  return lineCitationFixture(body, [{ start: 1200, end: 1202 }, { start: 1207, end: 1208 }], [{ start: 1204, end: 1205 }]);
+}
+
+/** 100 UTF-8 bytes per line, so the production source-piece boundary lies exactly after line 1000. */
+export function splitLineCitationInput() {
+  const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
+  return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 4, end: 5 }]);
 }

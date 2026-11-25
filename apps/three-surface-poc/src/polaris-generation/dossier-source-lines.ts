@@ -74,6 +74,16 @@ function numberRun(run: readonly SourceSpan[], result: Map<string, Map<number, S
   }
 }
 
+export function rangesOnSource(
+  spans: ReadonlyMap<number, readonly SourceLine[]> | undefined, ranges: readonly CitationRange[],
+): readonly CitationRange[] {
+  if (spans === undefined) return [];
+  return ranges.flatMap(range => [...spans.values()].flatMap(rows => {
+    const start = Math.max(range.start, rows[0]!.number), end = Math.min(range.end, rows.at(-1)!.number);
+    return start > end ? [] : [{ start, end }];
+  }));
+}
+
 export function sourceByteRange(spans: ReadonlyMap<number, readonly SourceLine[]> | undefined, start: number, end: number): CitationRange | undefined {
   const rows = [...(spans?.values() ?? [])].find(lines => lines.length > 0 && start >= lines[0]!.start
     && end <= lines.at(-1)!.start + Buffer.byteLength(lines.at(-1)!.text));
