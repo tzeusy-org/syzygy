@@ -1473,8 +1473,8 @@ async function observeDesignRun(run: string, traceInference = false) {
               const lease = designProduct.urlDesignProductLeaseState(reproduction.product);
               expect(lease).toHaveProperty('deadline');
               if ('deadline' in lease) {
-                expect(lease.deadline).toBeGreaterThanOrEqual(Math.min(input.deadline, began + 120_000));
-                expect(lease.deadline).toBeLessThanOrEqual(Math.min(input.deadline, issuedBy + 120_000));
+                expect(lease.deadline).toBeGreaterThanOrEqual(Math.min(input.deadline, began + 145_000));
+                expect(lease.deadline).toBeLessThanOrEqual(Math.min(input.deadline, issuedBy + 145_000));
               }
             }
             return reproduction;
@@ -2417,22 +2417,53 @@ describe('composed URL run with actual role processes', () => {
       vi.spyOn(sessionControl, 'createUrlSessionControl').mockImplementation(options => createControl(controlTrace.wrap(options)));
     }
     let eligibleProgress: () => Record<string, unknown> = () => ({});
-    if (eligibleStop) {
-      // Emit one snapshot before Vitest can abort the test while an awaited production phase is pending.
+    if (resumeAfterStop) {
+      const marker = eligibleStop ? 'owned eligible stop' : 'owned interrupted stop';
+      const nativeSnapshot = (stage: 'pending' | 'finished', trace: ReturnType<NonNullable<typeof resumeDiagnostic>> | undefined,
+        audit: ReturnType<NonNullable<typeof auditTrace>['summary']> | undefined): void => {
+        const inference = trace?.inference;
+        const step = (value: NonNullable<typeof inference>['inferenceSteps'][number] | undefined) => value === undefined ? undefined
+          : { ordinal: value.ordinal, mediate: value.mediate, effect: value.effect, audit: value.audit,
+            firstEffectGuardRefusalMs: value.firstEffectGuardRefusalMs, screening: value.screening };
+        const append = (value: NonNullable<typeof trace>['orderedAudit']['latestAppend']) => value === undefined ? undefined
+          : { kind: value.kind, timing: value.timing };
+        // A separate compact line keeps the first refusal and screen outcomes
+        // visible even when the existing detailed snapshot hits a log-line cap.
+        console.error(`${marker} native ${stage}`, JSON.stringify({ scenario, phase: eligiblePhase,
+          source: resumeDiagnostic === undefined ? initialDiagnostic === undefined ? 'unobserved' : 'initial' : 'resumed',
+          resumeStoreRefusals, firstRuntimeFailure, auditFirstRefusal: audit?.firstRefusal,
+          samples: trace?.samples, latestSample: trace?.latestSample, lastConfirmed: trace?.lastConfirmed,
+          firstSampleRefusal: trace?.firstSampleRefusal, terminal: trace?.terminal,
+          launcherInspection: trace?.launcherInspection, roleInspections: trace?.roleInspections,
+          inference: inference === undefined ? undefined : { count: inference.inferenceCount,
+            firstRefused: step(inference.firstRefusedInference), steps: inference.inferenceSteps.slice(-12).map(step) },
+          orderedAudit: trace === undefined ? undefined : { prepared: append(trace.orderedAudit.preparedAppend),
+            latest: append(trace.orderedAudit.latestAppend), firstRefused: append(trace.orderedAudit.firstRefusedAppend) },
+          broker: trace?.broker, mcpIngress: trace?.mcpIngress }));
+      };
+      // Emit once before either interrupted scenario can reach its unchanged runner timeout.
       const diagnostic = setTimeout(() => {
-        const inference = initialDiagnostic?.().inference;
-        console.error('owned eligible stop pending', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRefusedCurrent: inference?.firstRefusedCurrent,
-          latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
-          firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary(), eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
-          firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
+        try {
+          const trace = (resumeDiagnostic ?? initialDiagnostic)?.(), inference = trace?.inference;
+          const audit = auditTrace?.summary();
+          nativeSnapshot('pending', trace, audit);
+          console.error(`${marker} pending`, JSON.stringify({ scenario, phase: eligiblePhase, ...eligibleProgress(),
+            resumeChecks: resumeChecks.length, resumeBootstrap, resumePreparations, resumeOriginSteps, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), resumeStoreSteps, resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRefusedCurrent: inference?.firstRefusedCurrent,
+            latestRelayCurrent: inference?.relayCurrent.at(-1), hostActivation: inference?.hostActivation,
+            firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: audit, eligibleRelayInterruptions: [...eligibleRelayTrace.interruptions.values()],
+            firstRefusedHostCurrent: inference?.firstRefusedHostCurrent, latestHostCurrent: inference?.hostCurrent.at(-1) }));
+        } catch { /* Metadata observation cannot change the test or product outcome. */ }
       }, 340_000).unref();
       onTestFinished(() => {
         clearTimeout(diagnostic);
         // Existing in-memory metadata only: no extra authority checks or IO.
-        console.error('owned eligible stop finished', JSON.stringify({ phase: eligiblePhase, ...eligibleProgress(),
-          resumeBootstrap, coldFinal: coldFinal?.summary(), latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
-          resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: auditTrace?.summary() }));
+        try {
+          const trace = (resumeDiagnostic ?? initialDiagnostic)?.(), audit = auditTrace?.summary();
+          nativeSnapshot('finished', trace, audit);
+          console.error(`${marker} finished`, JSON.stringify({ scenario, phase: eligiblePhase, ...eligibleProgress(),
+            resumeBootstrap, coldFinal: coldFinal?.summary(), latestRecoveryChecks: resumeChecks.slice(-6), latestStoreSteps: resumeStoreSteps.slice(-6),
+            resumeAuditEnteredMs, resumeAuditSetup, resumeStoreRefusals, firstRuntimeFailure, controlTrace: controlTrace?.summary(), auditTrace: audit }));
+        } catch { /* Metadata observation cannot change the test or product outcome. */ }
       });
     }
     let releaseFinalResponses: (() => void) | undefined;
