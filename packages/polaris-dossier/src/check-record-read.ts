@@ -41,12 +41,19 @@ export function readFileAsSized(file: string): Buffer {
   return readRegularFile(file, (size) => size);
 }
 
-function readRegularFile(file: string, boundOf: (size: number) => number): Buffer {
+/** A private evaluator file cannot be a symlink, share an inode, or grant group/other access. */
+export function readPrivateBoundedFile(file: string, maxBytes: number): Buffer {
+  return readRegularFile(file, () => maxBytes, true);
+}
+
+function readRegularFile(file: string, boundOf: (size: number) => number, privateFile = false): Buffer {
   // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open.
-  const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY);
+  const flags = fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY;
+  const fd = fs.openSync(file, privateFile ? flags | fs.constants.O_NOFOLLOW : flags);
   try {
     const stats = fs.fstatSync(fd);
     if (!stats.isFile()) throw new NotARegularFileError();
+    if (privateFile && (stats.nlink !== 1 || (stats.mode & 0o077) !== 0)) throw new Error('file is not private');
     const maxBytes = boundOf(stats.size);
     if (stats.size > maxBytes) throw new PastBoundError(maxBytes);
     const limit = maxBytes + 1;
