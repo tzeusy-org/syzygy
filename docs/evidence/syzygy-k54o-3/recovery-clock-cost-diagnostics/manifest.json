@@ -1,0 +1,402 @@
+{
+  "subject": "e514a52c2043193ab67a0be1f8f7849aea563994",
+  "subjectTree": "606ff7315b457268a32c974c1bc27585808c8945",
+  "candidateSha256": "6494b2e37a28e99bd6fe529e4050b66e6a54ae29b83a92ebf81b475d48fc86bc",
+  "archive": {
+    "path": "retained.tar.gz",
+    "bytes": 1084763,
+    "sha256": "66a6b25110d98af62e31c4b68135ab2413031a6ac46bcc66d8f8403e34eb69bf"
+  },
+  "entries": [
+    {
+      "path": "b5c7-design-success-denominator/MANIFEST.json",
+      "bytes": 2071,
+      "sha256": "0f1f429bcc305354a4f58a61753ac1d7767b7d182ffe75f6481cc966db82747f"
+    },
+    {
+      "path": "b5c7-design-success-denominator/REPORT.md",
+      "bytes": 6982,
+      "sha256": "c8d6b94ba74e0d6af22ee621c91ae6ecfbef0955da4cdb4689c0b7388d00f7f5"
+    },
+    {
+      "path": "b5c7-design-success-denominator/binding.json",
+      "bytes": 7639,
+      "sha256": "60d712848ef8ae7e127130af2622858e07ce8659ad76838969c295f1f2c51d17"
+    },
+    {
+      "path": "b5c7-design-success-denominator/project.py",
+      "bytes": 7092,
+      "sha256": "3953b06e043b46189cc9d7acd291dac4d8005cf27c9e67e77740be2ba3e0ce60"
+    },
+    {
+      "path": "b5c7-design-success-denominator/session-profile.ts.txt",
+      "bytes": 22684,
+      "sha256": "66ecf377c56ee93870b7782e31f5349b9cd56b4f71bd5f1c80d971113dc65363"
+    },
+    {
+      "path": "b5c7-design-success-denominator/session-relay.ts.txt",
+      "bytes": 33174,
+      "sha256": "ff30fec5bcb9a483c14c40ed782e996bb4e2b42c9c1bf4fe8cfad1212e51dc1e"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-machine-peer.ts.txt",
+      "bytes": 38414,
+      "sha256": "e484b8649debcfb170f456fd69172d651635bc380b79a19191fd469ecedc410c"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-machine-store.ts.txt",
+      "bytes": 65951,
+      "sha256": "070d866ee94b361d6e6bd13df25b4b44f4d1bd818b7e55d1f98f9daed7ed996b"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-ordered-design-audit.ts.txt",
+      "bytes": 21957,
+      "sha256": "153a351410f568534c2466e734e0acc0ada71820ad7d3b5198977123581f860d"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-ordered-design-bounds.ts.txt",
+      "bytes": 13474,
+      "sha256": "74d10cb7a132d83e4f1432bb8508b1316c16ec86274f0b39db65e404cc6239dd"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-ordered-design-host.ts.txt",
+      "bytes": 11594,
+      "sha256": "32df5239315d089d88db2eaeb6bc38ae94eca343452cc6126280903f2e6ba64f"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-ordered-design-session.ts.txt",
+      "bytes": 37426,
+      "sha256": "65906032d8b0192c615fd68526bea5b6bfd8b76e604d75ee750f8503f8b0528d"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-ordered-design-writer.ts.txt",
+      "bytes": 7539,
+      "sha256": "3df08b429b44d2a7d4a9c04863f074608032727d1c954fd68599767645369add"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-run-composed.test.ts.txt",
+      "bytes": 226871,
+      "sha256": "c25947c69601f457fffbb800061bf26015faf6f40668bbfc9ac2154029f0af22"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-run-ordered-attempt.ts.txt",
+      "bytes": 22382,
+      "sha256": "d4f08b0f81ffd24cb04950196d0c9a28d5c105e6f424b158e454cf6d9db53062"
+    },
+    {
+      "path": "b5c7-design-success-denominator/url-session-audit.ts.txt",
+      "bytes": 109315,
+      "sha256": "f6359eb4d2d694196f7836d88619b04e94ed5ae2bbab3f2c8659c3689fe71f47"
+    },
+    {
+      "path": "check-b5c7-canonical/check.log",
+      "bytes": 2142175,
+      "sha256": "195130a3d61bd169b97e59fe1a1bb9410fa56512049b463ee31989804210f7d0"
+    },
+    {
+      "path": "check-b5c7-canonical/result.json",
+      "bytes": 129,
+      "sha256": "35318cd01390f15cec395f9585ef9e0d73801fa4e6786ca27690a53a4cf9723e"
+    },
+    {
+      "path": "check-b5c7-canonical/subject.json",
+      "bytes": 314,
+      "sha256": "d4795182e794b8bb49f3a730498632ba757bcaa2ab67750c72cece3e8b1de834"
+    },
+    {
+      "path": "check-b5c7-private/check.log",
+      "bytes": 2129311,
+      "sha256": "7a90f5040a22b8c6014c1beb21725f759e6e52f23b5ada6340a12008bfae8b1c"
+    },
+    {
+      "path": "check-b5c7-private/result.json",
+      "bytes": 130,
+      "sha256": "8374e6c63deb3c054ac028055c7e48e9a0cfa1dca6fa631390a3b9d2bea03db1"
+    },
+    {
+      "path": "check-b5c7-private/subject.json",
+      "bytes": 318,
+      "sha256": "ca7e367690b42a9216ed050f5a062e1046a582f254f9a716d816373c6548914f"
+    },
+    {
+      "path": "check-b5c7/check.log",
+      "bytes": 619,
+      "sha256": "39e52f069258815a9f14c719c1bb91e9634efded14cbca3b8c201addb461afc1"
+    },
+    {
+      "path": "check-b5c7/pid",
+      "bytes": 7,
+      "sha256": "b64fc6039075b7a84a257cb1480374ea17f95e797d6ce4ccb8b6b9dd925f2d0d"
+    },
+    {
+      "path": "check-b5c7/result.json",
+      "bytes": 113,
+      "sha256": "33805f9a019048a307c5b78e2ce809e95ecdcc1e80ca68edd83b2a2faf9e0f00"
+    },
+    {
+      "path": "check-b5c7/subject.json",
+      "bytes": 357,
+      "sha256": "a96509e205972df74b2cbdfc8a7ce8ff50fa013d00c96f93b81d1ee627adb304"
+    },
+    {
+      "path": "clock-cost-e514-verification/governance.log",
+      "bytes": 192058,
+      "sha256": "04ae7bcb17f3acfad840e27235da8b61edc269e296815ef27d36e2211a482aea"
+    },
+    {
+      "path": "clock-cost-e514-verification/observer-contracts.log",
+      "bytes": 125,
+      "sha256": "3b2fa69a5beae63e612d19f2da49691585c9c7178ec91387d8cb87b5ab52c333"
+    },
+    {
+      "path": "clock-cost-e514-verification/observer-contracts.vitest.json",
+      "bytes": 3224,
+      "sha256": "e3884ae5e0936cf370613dc53c3853d2ac20dfd39ed831c681466aadf130a310"
+    },
+    {
+      "path": "clock-cost-e514-verification/results.json",
+      "bytes": 987,
+      "sha256": "94032573fc54c38fbc373e459273d37fc8bed6fd34880f99bd5b0c08f0e2b57c"
+    },
+    {
+      "path": "clock-cost-e514-verification/runtime-bindings.json",
+      "bytes": 346,
+      "sha256": "58fb8899b74e896f60a5dd6aa1ef90a9c30950849e86bbae164cf0d73f6483dd"
+    },
+    {
+      "path": "clock-cost-e514-verification/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "native-clock-cost-b5c7-R1-INDEPENDENT-RAW.md",
+      "bytes": 4597,
+      "sha256": "d6bec1c9b476b595d83c788641a7c17e4b12061a20c1f3c32e97224b0229bd66"
+    },
+    {
+      "path": "native-clock-cost-b5c7-R2-INDEPENDENT-RAW.md",
+      "bytes": 5106,
+      "sha256": "b89e8c739da63c4511b1813099fb9e6b574246f27c2d74f9c9772c9e58eeb73f"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1-PREPARATION-RAW.md",
+      "bytes": 2445,
+      "sha256": "2be8f08bae67edece02eac752d0797b5110688019b61e86944250808f5f2b535"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/README.md",
+      "bytes": 3037,
+      "sha256": "3fd7f851b856b64b401188abaf4819411b39d78285a5a15d18258532451af898"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/binding.json",
+      "bytes": 1702,
+      "sha256": "d7f4ab03a75522e9d627f141f2edf45d8ad6027488a3fc409c4cd24f40273aa1"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/check-wrappers.mjs",
+      "bytes": 2864,
+      "sha256": "0ddb43508b599e0da1e72c84a771dcf5f068ba8e91fba5ae6d81e34fc27d6b7d"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/diagnostic.patch",
+      "bytes": 7880,
+      "sha256": "0109ab86ea8752950094f4aaa408330bfa9ad072abe384e3dd9d5e92f2e24554"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/edits.json",
+      "bytes": 5464,
+      "sha256": "676001fce62faf7b6432f7de6b4fe7687c78cf6b9d5fbfea0b6d64744904323e"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/manifest.json",
+      "bytes": 1908,
+      "sha256": "bbec16b52b6616eb78fd6aacfa130ddbd37e833e92f1e244384c3f3ce5823c36"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/original.test.ts",
+      "bytes": 226871,
+      "sha256": "c25947c69601f457fffbb800061bf26015faf6f40668bbfc9ac2154029f0af22"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/prove-source.mjs",
+      "bytes": 5770,
+      "sha256": "7815ddf6e6b69ba4b10f0e1bf0bf0a45dafbc51dc7b734cb93e1c053f1892ac7"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/source-census.json",
+      "bytes": 16231,
+      "sha256": "4333bc290241f69f21f66b62be1ec961a21fb36363dfbd48f0147ea77d9434a7"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/source-proof.json",
+      "bytes": 52276,
+      "sha256": "4b0b098c385cc1fd3dbddb5b383d1b0eb1487530cbb6c4cdf7bdb2d0517c9e9c"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/url-design-product.ts",
+      "bytes": 25253,
+      "sha256": "2e5b5f3c67b42d5e262827bd4c70e02f272b58548a9d426b7f1da83fb9391e79"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/url-machine-instance.ts",
+      "bytes": 13520,
+      "sha256": "d681f9d3220f8d3c466456ba6d9b35526866b5a78c7127ce05873603e8f0b271"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R1/url-run-composed.test.ts",
+      "bytes": 230158,
+      "sha256": "e8cbfdc7bcbb0c704487204a383d9ea8d2490c6122109b33ae2749587cfe76e9"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-PREPARATION-RAW.md",
+      "bytes": 2584,
+      "sha256": "005509705a85160c2de5fcabad5fdfba1704474dcf5aa37bc43e88990718c963"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/extracted-projections.js",
+      "bytes": 2182,
+      "sha256": "031df22568600c9b6d59a2705f7de9f306cb721a130a684fee86b10ce39eec7b"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/extracted-projections.ts",
+      "bytes": 2417,
+      "sha256": "5c2543c8db3008c264992972ccd9f9a8b45f1de9866c52833f358306b13c54a1"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/first-current-instead-of-latest.ts",
+      "bytes": 2419,
+      "sha256": "d718a85f68a18edf320383c5bc0c9d04918959f658a0b59c11d02ecd6239aae6"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/first-lease-instead-of-latest.ts",
+      "bytes": 2416,
+      "sha256": "2d57b2ac2f872165e9f3e91db778a5c1a96fd1419d920e065cbb26802b4aeba8"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/omit-current-omissions.ts",
+      "bytes": 2341,
+      "sha256": "06baba9715aed84fe83b9c5125b7b5b70222542ac1a8364ccd98cda2ce9da600"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/omit-duration-clamp.ts",
+      "bytes": 2406,
+      "sha256": "ceaf0527e116d4d4988fcba1dad15f5f2f7696662fbb6b3386402cbc76d8df68"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/omit-pending-count.ts",
+      "bytes": 2363,
+      "sha256": "95260d53418ea1aeb233dc085e54becd6c612feca7e8e8561790da615bbd1145"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/omit-stage-cap.ts",
+      "bytes": 2407,
+      "sha256": "66b0aa020102ff231b25626aa1eada8828fce928a945f5348d83f275a22c3ac4"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/replace-sum-with-last.ts",
+      "bytes": 2416,
+      "sha256": "2b32ffb83e957bcab5c8697bd00b5a684c0803daa9621abba79b6e8884a5bd3b"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2-operator-results/results.json",
+      "bytes": 3216,
+      "sha256": "6ac3ea5922d0b49c1ca4a3c1ce0b9d12b51a395b39a1a4531508a969214d1ded"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/README.md",
+      "bytes": 3235,
+      "sha256": "1c6d55d22b7a3a525051e847e288f27e319c2f1cb2f3ca1ef3dee5fff68b712c"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/binding.json",
+      "bytes": 2765,
+      "sha256": "4680a9c8a87a3031204ea8efc167c29e3bca68618b8b49a7927a3133229b6793"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/check-wrappers.mjs",
+      "bytes": 2864,
+      "sha256": "0ddb43508b599e0da1e72c84a771dcf5f068ba8e91fba5ae6d81e34fc27d6b7d"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/diagnostic.patch",
+      "bytes": 8863,
+      "sha256": "bf7569d57fe3788bc3d22305eee989748fa75f63915a6032ea9d45d4bd1070c8"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/edits.json",
+      "bytes": 7009,
+      "sha256": "1a9ea3b6aed532a0e7efb969049127593014266542140c4934814bd792c94594"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/manifest.json",
+      "bytes": 2579,
+      "sha256": "ae1975ec517bbfbe5677492c7d03a1b327a57c1e6f5055da66f27ef9977bcc59"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/original.test.ts",
+      "bytes": 226871,
+      "sha256": "c25947c69601f457fffbb800061bf26015faf6f40668bbfc9ac2154029f0af22"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/prove-source.mjs",
+      "bytes": 6651,
+      "sha256": "17e1baac5000312964874ae7f2ee0e0663b97691850d0464143d1f4b44d2117b"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/source-census.json",
+      "bytes": 16231,
+      "sha256": "4333bc290241f69f21f66b62be1ec961a21fb36363dfbd48f0147ea77d9434a7"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/source-proof.json",
+      "bytes": 72195,
+      "sha256": "b38fd3e62d76f0cb014671a5f15baeef1a992fcadbd7445516e801c4da9f415a"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/url-design-product.ts",
+      "bytes": 25253,
+      "sha256": "2e5b5f3c67b42d5e262827bd4c70e02f272b58548a9d426b7f1da83fb9391e79"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/url-machine-instance.ts",
+      "bytes": 13520,
+      "sha256": "d681f9d3220f8d3c466456ba6d9b35526866b5a78c7127ce05873603e8f0b271"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/url-ordered-design-audit.ts",
+      "bytes": 21957,
+      "sha256": "153a351410f568534c2466e734e0acc0ada71820ad7d3b5198977123581f860d"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/url-ordered-design-writer.ts",
+      "bytes": 7539,
+      "sha256": "3df08b429b44d2a7d4a9c04863f074608032727d1c954fd68599767645369add"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/url-run-composed.test.ts",
+      "bytes": 230846,
+      "sha256": "6494b2e37a28e99bd6fe529e4050b66e6a54ae29b83a92ebf81b475d48fc86bc"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/validate-projections.mjs",
+      "bytes": 10112,
+      "sha256": "6a77bbb71a9f4466dd8bedc1726b131fa65a3241ec53428c15582afed9a8a579"
+    },
+    {
+      "path": "native-clock-cost-diagnostic-b5c7-R2/verify-wire-bound.py",
+      "bytes": 955,
+      "sha256": "58c1822cb11816c25e9079a64e71faab5e0c51686b8c4e8b398cae0d64025662"
+    },
+    {
+      "path": "run-check-b5c7-canonical.py",
+      "bytes": 1674,
+      "sha256": "8f5ccd0b4ea672bad913a3e34bfe9efb03704b2b03699dbc3c6e418c59bda563"
+    },
+    {
+      "path": "verify-clock-cost-e514.py",
+      "bytes": 1585,
+      "sha256": "ee9747a924d92d30123bcabd2b6dddbb44006af922be2cee01b0fa242d09c4c1"
+    }
+  ]
+}
