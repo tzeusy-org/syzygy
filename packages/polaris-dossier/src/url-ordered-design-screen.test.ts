@@ -8,7 +8,7 @@ import { sha256 } from '@syzygy/support';
 import { encodeCanonicalJson } from '@syzygy/polaris-generation-core/live';
 import { createOrderedDesignSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
-import { runOrderedDesignScreen, type OrderedScreenProgram } from './url-ordered-design-screen.js';
+import { runOrderedDesignScreen, type OrderedScreenProgram, type OrderedScreenProgress } from './url-ordered-design-screen.js';
 import { ORDERED_SCREEN_LIMITS, type OrderedScreenInput } from './url-ordered-design-screen-protocol.js';
 import { V8 } from './screening-v8.testkit.js';
 
@@ -70,7 +70,18 @@ function run(input: OrderedScreenInput, overrides: Partial<Parameters<typeof run
 describe('preemptible ordered design screen', () => {
   it('reissues the exact profile and plan and returns request identities and response observations over a private pipe', async () => {
     const f = fixture();
-    const request = await run(f.request);
+    const progress = vi.fn((_value: Readonly<OrderedScreenProgress>) => { throw new Error('owned observer failure'); });
+    const request = await run(f.request, { observeProgress: progress });
+    expect(progress).toHaveBeenCalledTimes(1);
+    const finalProgress = progress.mock.calls[0]![0];
+    expect(Object.isFrozen(finalProgress)).toBe(true);
+    expect(Object.keys(finalProgress).sort()).toEqual(['childClosed', 'childSpawned', 'content', 'execution', 'pollCount',
+      'pollMaximumMs', 'pollTotalMs', 'stage', 'startedMonotonicMs', 'stopReason']);
+    for (const value of [finalProgress.startedMonotonicMs, finalProgress.pollCount, finalProgress.pollTotalMs, finalProgress.pollMaximumMs]) {
+      expect(Number.isFinite(value)).toBe(true); expect(value).toBeGreaterThanOrEqual(0);
+    }
+    expect(progress.mock.calls[0]![0]).toMatchObject({ stage: 'output', childSpawned: true, childClosed: true,
+      execution: 'accepted', content: 'accepted', stopReason: 'none' });
     expect(request.ok).toBe(true);
     if (!request.ok) return;
     expect(request.observation.outcome).toMatchObject({ operation: 'request', result: { ok: true } });
@@ -97,7 +108,10 @@ describe('preemptible ordered design screen', () => {
 
   it('keeps private no-path secret screening and refuses changed policy, profile, manifest, image and currentness', async () => {
     const f = fixture(), marker = `${['to', 'ken'].join('')} = "${'z'.repeat(12)}"`;
-    const refused = await run(f.response(marker));
+    const contentProgress = vi.fn((_value: Readonly<OrderedScreenProgress>) => { throw new Error('owned observer failure'); });
+    const refused = await run(f.response(marker), { observeProgress: contentProgress });
+    expect(contentProgress).toHaveBeenCalledTimes(1);
+    expect(contentProgress.mock.calls[0]![0]).toMatchObject({ execution: 'accepted', content: 'refused', stopReason: 'none' });
     expect(refused.ok).toBe(true);
     if (refused.ok) expect(refused.observation.outcome).toEqual({ operation: 'response', result: { ok: false, reason: 'provider-response-refused' } });
     expect(JSON.stringify(refused).includes(marker)).toBe(false);
@@ -107,7 +121,11 @@ describe('preemptible ordered design screen', () => {
     expect(html.ok && html.observation.outcome.result.ok).toBe(true);
     for (const input of [{ ...f.response(), policySha256: '0'.repeat(64) }, { ...f.response(), profileSha256: '0'.repeat(64) },
       { ...f.request, manifestSha256: '0'.repeat(64) }]) expect((await run(input)).ok).toBe(false);
-    expect((await run(f.response(), { current: () => false })).ok).toBe(false);
+    const executionProgress = vi.fn((_value: Readonly<OrderedScreenProgress>) => { throw new Error('owned observer failure'); });
+    expect((await run(f.response(), { current: () => false, observeProgress: executionProgress })).ok).toBe(false);
+    expect(executionProgress).toHaveBeenCalledTimes(1);
+    expect(executionProgress.mock.calls[0]![0]).toMatchObject({ stage: 'input', childSpawned: false, childClosed: false,
+      execution: 'refused', content: 'Unknown', pollCount: 0, pollTotalMs: 0, pollMaximumMs: 0, stopReason: 'execution-refused' });
     expect((await run(f.response(), { deadlineEpochMilliseconds: Date.now() - 1 })).ok).toBe(false);
     expect((await run(f.response(), { program: { ...program, worker: { ...program.worker, sha256: '0'.repeat(64) } } })).ok).toBe(false);
     expect((await run(f.response(), { program: { ...program, node: { ...program.node, sha256: '0'.repeat(64) } } })).ok).toBe(false);
@@ -236,14 +254,21 @@ describe('preemptible ordered design screen', () => {
     await writeFile(worker, 'setTimeout(()=>{},10000);', { mode: 0o600 });
     const selectedWorker = await selected(worker);
     let current = true;
-    const charged = vi.fn();
-    const pending = run(fixture().response(), { program: { ...program, worker: selectedWorker }, current: () => current,
+    const charged = vi.fn(), progress = vi.fn((_value: Readonly<OrderedScreenProgress>) => { throw new Error('owned observer failure'); });
+    const pending = run(fixture().response(), { program: { ...program, worker: selectedWorker }, current: () => current, observeProgress: progress,
       chargeCpuMicroseconds: value => { charged(value); setTimeout(() => { current = false; }, 50); } });
     const result = await pending;
     expect(result.ok).toBe(false);
     expect(charged).toHaveBeenCalledExactlyOnceWith(18_000_000);
     expect(result.charge.cpuMicroseconds).toBe(18_000_000);
     expect(result.charge.wallMilliseconds).toBeLessThan(3000);
+    expect(progress).toHaveBeenCalledTimes(1);
+    const finalProgress = progress.mock.calls[0]![0];
+    expect(finalProgress).toMatchObject({ stage: 'child', childSpawned: true, childClosed: true, execution: 'refused',
+      content: 'Unknown', stopReason: 'authority' });
+    expect(finalProgress.pollCount).toBeGreaterThan(0);
+    expect(finalProgress.pollTotalMs).toBeGreaterThanOrEqual(finalProgress.pollMaximumMs);
+    expect(finalProgress.pollMaximumMs).toBeGreaterThanOrEqual(0);
   }, 30_000);
 
   it('has no inherited canary, host-home access, child spawning or provider network route', async () => {

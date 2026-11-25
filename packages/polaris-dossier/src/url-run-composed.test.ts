@@ -1334,6 +1334,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     productPreparation?: CurrentTrace;
     preparedProductCurrent?: CurrentTrace;
     controllerCurrent?: CurrentTrace;
+    screening?: orderedScreen.OrderedScreenProgress & { observedMs: number };
     firstEffectGuardRefusalMs?: number;
     boundaries: Array<{ phase: InferenceBoundary; timing: ResumeStamp }>;
     relay: Array<{ phase: RelayPhase; timing: ResumeStamp }>;
@@ -1514,9 +1515,14 @@ async function observeDesignRun(run: string, traceInference = false) {
     vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
       inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
     const screen = orderedScreen.runOrderedDesignScreen;
-    vi.spyOn(orderedScreen, 'runOrderedDesignScreen').mockImplementation(input => decisionScope.getStore() === true
-      ? relayPhase('screening-worker', () => screen(input), result => result.ok && result.observation.outcome.result.ok)
-      : screen(input));
+    vi.spyOn(orderedScreen, 'runOrderedDesignScreen').mockImplementation(input => {
+      if (decisionScope.getStore() !== true) return screen(input);
+      const step = inferenceScope.getStore(), observer = input.observeProgress;
+      return relayPhase('screening-worker', () => screen({ ...input, observeProgress: progress => {
+        if (step !== undefined) step.screening = { ...progress, observedMs: clock() };
+        try { observer?.(progress); } catch { /* The retained metadata never changes a decision. */ }
+      } }), result => result.ok && result.observation.outcome.result.ok);
+    });
   }
 
   const firstBrokerInvocation = new AsyncLocalStorage<true>();

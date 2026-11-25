@@ -26,6 +26,20 @@ export type OrderedScreenRun = {
 } & ({ readonly ok: true; readonly observation: OrderedScreenObservation }
   | { readonly ok: false; readonly reason: 'ordered-screen-refused' });
 
+/** Trusted metadata only. No input/output body, path or diagnostic bytes. */
+export interface OrderedScreenProgress {
+  readonly stage: 'input' | 'worker-image' | 'node-image' | 'child' | 'output';
+  readonly startedMonotonicMs: number;
+  readonly childSpawned: boolean;
+  readonly childClosed: boolean;
+  readonly pollCount: number;
+  readonly pollTotalMs: number;
+  readonly pollMaximumMs: number;
+  readonly stopReason: 'none' | 'authority' | 'wall-limit' | 'process-error' | 'pipe-error' | 'stderr' | 'output-limit' | 'process-exit' | 'execution-refused';
+  readonly execution: 'accepted' | 'refused';
+  readonly content: 'Unknown' | 'accepted' | 'refused';
+}
+
 const same = (a: fs.BigIntStats, b: fs.BigIntStats): boolean =>
   ['dev', 'ino', 'mode', 'nlink', 'size', 'mtimeNs', 'ctimeNs'].every(key => a[key as keyof fs.BigIntStats] === b[key as keyof fs.BigIntStats]);
 interface Held { readonly handle: FileHandle; readonly fd: number; readonly file: OrderedScreenProgramFile; readonly stat: fs.BigIntStats }
@@ -64,6 +78,20 @@ function unchanged(held: Held): boolean {
   return same(held.stat, fs.fstatSync(held.fd, { bigint: true })) && same(held.stat, fs.lstatSync(held.file.path, { bigint: true }));
 }
 
+/** Internal first-party poller. Give descriptor callbacks a full cadence after
+ * each synchronous authority check; an overdue interval supplies no such gap. */
+export function startOrderedDesignScreenCurrentPolling(current: () => void, stop: () => void): () => void {
+  let closed = false, timer: ReturnType<typeof setTimeout> | undefined;
+  const poll = (): void => {
+    if (closed) return;
+    try { current(); }
+    catch { closed = true; stop(); return; }
+    if (!closed) timer = setTimeout(poll, 20);
+  };
+  timer = setTimeout(poll, 20);
+  return () => { closed = true; clearTimeout(timer); };
+}
+
 /** Invoke only after the caller reserves the selected whole-operation envelope.
  * No provider/network namespace, host home, inherited credentials or writable
  * storage is present. Exact held images are mounted into a fresh sandbox.
@@ -80,8 +108,19 @@ export async function runOrderedDesignScreen(options: {
   readonly imageReadCurrent?: () => boolean;
   /** Charge before spawn so an asynchronous refusal cannot lose child capacity. */
   readonly chargeCpuMicroseconds?: (value: number) => void;
+  /** One final first-party observation after cleanup. Exceptions never replace the decision. */
+  readonly observeProgress?: (progress: Readonly<OrderedScreenProgress>) => void;
 }): Promise<OrderedScreenRun> {
   const started = performance.now(), limits = options.limits ?? ORDERED_SCREEN_LIMITS;
+  let stage: OrderedScreenProgress['stage'] = 'input', execution: OrderedScreenProgress['execution'] = 'refused';
+  let stopReason: OrderedScreenProgress['stopReason'] = 'none';
+  let content: OrderedScreenProgress['content'] = 'Unknown', childSpawned = false, childClosed = false;
+  let pollCount = 0, pollTotalMs = 0, pollMaximumMs = 0;
+  const observeProgress = (): void => {
+    try { options.observeProgress?.(Object.freeze({ stage, startedMonotonicMs: started, childSpawned, childClosed,
+      pollCount, pollTotalMs, pollMaximumMs, stopReason, execution, content })); }
+    catch { /* Observation grants no authority and cannot replace the result. */ }
+  };
   const held: Held[] = [];
   let enforcedWallMilliseconds = 0;
   // Refusal before starting consumes no child capacity. Once launched, charge
@@ -100,7 +139,9 @@ export async function runOrderedDesignScreen(options: {
     const current = (): void => { if (!options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
     const readCurrent = options.imageReadCurrent ?? options.current;
     const imageReadCurrent = (): void => { if (!readCurrent() || Date.now() >= options.deadlineEpochMilliseconds) refuse(); };
+    stage = 'worker-image';
     const worker = await hold(options.program.worker, false, current, imageReadCurrent); held.push(worker);
+    stage = 'node-image';
     const node = await hold(options.program.node, true, current, imageReadCurrent); held.push(node);
     current();
     if (!held.every(unchanged)) refuse();
@@ -122,41 +163,57 @@ export async function runOrderedDesignScreen(options: {
     if (!held.every(unchanged)) refuse();
     enforcedWallMilliseconds = Math.min(limits.wallMilliseconds, options.deadlineEpochMilliseconds - Date.now());
     if (enforcedWallMilliseconds <= 0) refuse();
+    stage = 'child';
     const result = await new Promise<{ failed: boolean; status: number | null; signal: NodeJS.Signals | null; stdout: Buffer }>(resolve => {
       // The outer child owns a new session/group. Keep the worker in that
       // group so a wall timeout kills both supervisor and worker, even idle.
       const child = spawn('/usr/bin/prlimit', argv, { detached: true, stdio: ['pipe', 'pipe', 'pipe', worker.fd, node.fd],
         env: { LANG: 'C', LC_ALL: 'C', UV_THREADPOOL_SIZE: '1' } });
+      child.once('spawn', () => { childSpawned = true; });
       let failed = false, closed = false, outputBytes = 0;
       const output: Buffer[] = [];
-      const stop = (): void => {
+      const stop = (reason: OrderedScreenProgress['stopReason']): void => {
         if (closed) return;
+        if (stopReason === 'none') stopReason = reason;
         failed = true;
         try { if (child.pid !== undefined) process.kill(-child.pid, 'SIGKILL'); } catch { child.kill('SIGKILL'); }
       };
-      const timer = setTimeout(stop, enforcedWallMilliseconds);
+      const timer = setTimeout(() => stop('wall-limit'), enforcedWallMilliseconds);
       // Revocation and shared budget exhaustion must stop a running child too.
-      const poll = setInterval(() => { try { current(); } catch { stop(); } }, 20);
-      child.once('error', stop);
-      child.stdin!.once('error', stop);
-      child.stdout!.once('error', stop);
-      child.stderr!.once('error', stop);
+      const closePoll = startOrderedDesignScreenCurrentPolling(options.observeProgress === undefined ? current : () => {
+        const began = performance.now();
+        pollCount++;
+        try { current(); }
+        finally {
+          const elapsed = performance.now() - began;
+          pollTotalMs += elapsed; pollMaximumMs = Math.max(pollMaximumMs, elapsed);
+        }
+      }, () => stop('authority'));
+      child.once('error', () => stop('process-error'));
+      child.stdin!.once('error', () => stop('pipe-error'));
+      child.stdout!.once('error', () => stop('pipe-error'));
+      child.stderr!.once('error', () => stop('pipe-error'));
       child.stdout!.on('data', (chunk: Buffer) => {
         outputBytes += chunk.length;
-        if (failed || outputBytes > ORDERED_SCREEN_OUTPUT_LIMITS.maxBytes) { stop(); return; }
+        if (failed || outputBytes > ORDERED_SCREEN_OUTPUT_LIMITS.maxBytes) { stop('output-limit'); return; }
         output.push(chunk);
       });
       // No diagnostic bytes leave this private pipe or need to be retained.
-      child.stderr!.on('data', stop);
+      child.stderr!.on('data', () => stop('stderr'));
       child.once('close', (status, signal) => {
         closed = true;
-        clearTimeout(timer); clearInterval(poll);
+        clearTimeout(timer); closePoll();
+        childClosed = true;
         resolve({ failed, status, signal, stdout: failed ? Buffer.alloc(0) : Buffer.concat(output, outputBytes) });
       });
       child.stdin!.end(input);
     });
-    if (result.failed || result.status !== 0 || result.signal !== null
-      || !held.every(unchanged) || !options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse();
+    if (result.failed || result.status !== 0 || result.signal !== null) {
+      if (stopReason === 'none') stopReason = 'process-exit';
+      refuse();
+    }
+    if (!held.every(unchanged) || !options.current() || Date.now() >= options.deadlineEpochMilliseconds) refuse();
+    stage = 'output';
     const output = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(result.stdout);
     const observation: unknown = parseBoundedJson(output, ORDERED_SCREEN_OUTPUT_LIMITS);
     if (encodeCanonicalJson(observation, ORDERED_SCREEN_OUTPUT_LIMITS) !== output || !isRecord(observation)
@@ -166,7 +223,16 @@ export async function runOrderedDesignScreen(options: {
       || !Number.isSafeInteger(observation.selfCpuMicrosecondsBeforeOutput)
       || Number(observation.selfCpuMicrosecondsBeforeOutput) < 0
       || Object.values(observation.counts).some(value => !Number.isSafeInteger(value) || Number(value) < 0)) refuse();
+    execution = 'accepted';
+    if (isRecord(observation.outcome.result)) content = observation.outcome.result.ok === true ? 'accepted'
+      : observation.outcome.result.ok === false ? 'refused' : 'Unknown';
     return { ...finish(), ok: true, observation: observation as unknown as OrderedScreenObservation };
-  } catch { return { ...finish(), ok: false, reason: 'ordered-screen-refused' }; }
-  finally { for (const entry of held) try { await entry.handle.close(); } catch { /* No result survives a failed scan. */ } }
+  } catch {
+    if (stopReason === 'none') stopReason = 'execution-refused';
+    return { ...finish(), ok: false, reason: 'ordered-screen-refused' };
+  }
+  finally {
+    for (const entry of held) try { await entry.handle.close(); } catch { /* No result survives a failed scan. */ }
+    observeProgress();
+  }
 }

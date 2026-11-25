@@ -105,7 +105,7 @@ type InspectionPhaseOutcome = 'accepted' | 'refused' | 'rejected';
 type InspectionRefusal = { readonly phase: InspectionPhase; readonly elapsedMs: number; readonly cause:
   'bounded-timeout' | 'sample-deadline' | 'sample-inactive' | 'operation-rejected' | 'authority-refused' | 'resource-limit';
   readonly storageFailure?: StorageInspectionFailure };
-type InspectionSample = { ordinal: number; phases: Partial<Record<InspectionPhase, {
+type InspectionSample = { ordinal: number; startedMonotonicMs: number; phases: Partial<Record<InspectionPhase, {
   startedMs: number; settledMs?: number; outcome?: InspectionPhaseOutcome;
 }>>; refusal?: InspectionRefusal };
 type InspectionTrace = { cadenceMs: number; inspectionMs: number; samples: number;
@@ -123,7 +123,7 @@ export function observeUrlSessionInspectionForTest(preparation: UrlSessionPrepar
 }
 
 function beginInspectionTrace(trace: InspectionTrace, began: number) {
-  const sample: InspectionSample = { ordinal: ++trace.samples, phases: {} };
+  const sample: InspectionSample = { ordinal: ++trace.samples, startedMonotonicMs: began, phases: {} };
   trace.latest = sample;
   const causes = new Map<unknown, InspectionRefusal>();
   let storageFailure: { error: unknown; detail: StorageInspectionFailure } | undefined;
