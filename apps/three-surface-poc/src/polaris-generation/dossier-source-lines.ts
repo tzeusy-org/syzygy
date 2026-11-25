@@ -19,6 +19,11 @@ export interface CitationRange {
   readonly end: number;
 }
 
+export interface SourceHighlight {
+  readonly line: number;
+  readonly ranges: CitationRange[];
+}
+
 export function citationLabel(ranges: readonly CitationRange[] | undefined): string | undefined {
   return ranges?.map(range => range.start === range.end ? `line ${range.start}` : `lines ${range.start}\u2013${range.end}`).join(', ');
 }
@@ -102,12 +107,18 @@ function sourceLineAt(rows: readonly SourceLine[], byte: number): number {
 }
 
 export function drawSourceLines(
-  rows: readonly SourceLine[], cited: ReadonlyMap<number, readonly CitationRange[]> | undefined, escape: (text: string) => string,
+  rows: readonly SourceLine[], cited: ReadonlyMap<string, SourceHighlight> | undefined, escape: (text: string) => string,
 ): { readonly markup: string; readonly styles: readonly string[] } {
   const styles: string[] = [];
   const first = rows[0]!, last = rows.at(-1)!.number;
   const coverage = new Int32Array(rows.length + 1);
-  for (const [target, ranges] of cited ?? []) {
+  const continuations = new Map<number, string[]>();
+  for (const [target, { line, ranges }] of cited ?? []) {
+    if (target !== `L${line}` && line >= first.number && line <= last) {
+      const at = continuations.get(line) ?? [];
+      at.push(target);
+      continuations.set(line, at);
+    }
     for (const range of ranges) {
       const start = Math.max(range.start, first.number);
       const end = Math.min(range.end, last);
@@ -115,13 +126,15 @@ export function drawSourceLines(
       const from = start - first.number, through = end - first.number + 1;
       coverage[from]!++;
       coverage[through]!--;
-      styles.push(`#exact-text:has(#L${target}:target) [data-quote-start="${first.start}"]>.cited-span:nth-child(n+${from + 1}):nth-child(-n+${through})`);
+      styles.push(`#exact-text:has([id="${target}"]:target) [data-quote-start="${first.start}"]>.cited-span:nth-child(n+${from + 1}):nth-child(-n+${through})`);
     }
   }
   let citedCount = 0;
   const markup = rows.map((row, index) => {
     citedCount += coverage[index]!;
-    return `<span class="source-line${citedCount > 0 ? ' cited-span' : ''}" id="L${row.number}" data-line="${row.number}">${escape(row.text).replace(/\r/gu, '&#13;')}</span>`;
+    const targets = (continuations.get(row.number) ?? [])
+      .map(id => `<span class="source-continuation-target" id="${escape(id)}" aria-hidden="true"></span>`).join('');
+    return `<span class="source-line${citedCount > 0 ? ' cited-span' : ''}" id="L${row.number}" data-line="${row.number}">${targets}${escape(row.text).replace(/\r/gu, '&#13;')}</span>`;
   }).join('');
   return { markup, styles };
 }

@@ -12,11 +12,12 @@ import { FINDING_CSS, FIND_BY_TASK_PAGE, NAME_INDEX_PAGE, NO_TASK_ROUTES, TASK_R
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
-import { citationLabel, drawSourceLines, rangesOnSource, sourceByteRange, sourceLines, type CitationRange } from './dossier-source-lines.js';
+import { citationLabel, drawSourceLines, rangesOnSource, sourceByteRange, sourceLines, type CitationRange, type SourceHighlight } from './dossier-source-lines.js';
 
 const SOURCE_LINES_CSS = 'html{scroll-behavior:auto}.source-line{position:relative;display:block;min-block-size:1lh;padding-inline-start:7ch;overflow-wrap:anywhere;scroll-margin-block-start:1rem}'
   + '.source-line::before{position:absolute;inset-inline-start:.35ch;width:6ch;text-align:end;content:attr(data-line);color:var(--muted);user-select:none}'
-  + '.source-continuation{display:none}.source-continuation a{display:block;width:fit-content}';
+  + '.source-continuation{display:none}.source-continuation a{display:block;width:fit-content}'
+  + '.source-continuation-target{position:absolute;inset-block-start:0;scroll-margin-block-start:1rem}';
 
 /**
  * Multi-page static dossier (gap #8), from the view of a run: a provider pipeline's final output (`dossier-render.ts` builds
@@ -358,42 +359,45 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     sourcePieces.set(identity, pieces);
   }
   for (const pieces of sourcePieces.values()) pieces.sort((a, b) => a.segment!.index - b.segment!.index);
-  const citedLines = new Map<string, Map<number, CitationRange[]>>();
-  type LineTarget = { readonly sourceId: string; readonly line: number };
-  const continuedCitations = new Map<string, Map<number, Map<string, LineTarget>>>();
-  const registerRanges = (id: string, line: number, ranges: readonly CitationRange[]): void => {
-    const cited = citedLines.get(id) ?? new Map<number, CitationRange[]>();
-    const related = cited.get(line) ?? [];
-    // Several marks can share one fragment, so that target shows the union of their ranges on this source leaf.
+  const citedLines = new Map<string, Map<string, SourceHighlight>>();
+  type LineTarget = { readonly sourceId: string; readonly fragment: string };
+  const continuedCitations = new Map<string, Map<string, Map<string, LineTarget>>>();
+  const registerRanges = (target: LineTarget, line: number, ranges: readonly CitationRange[]): void => {
+    const cited = citedLines.get(target.sourceId) ?? new Map<string, SourceHighlight>();
+    const prior = cited.get(target.fragment);
+    const related = prior?.ranges ?? [];
+    // Several marks can share one original line target. Independent continuations retain their original target identity.
     for (const range of ranges) if (!related.some(other => other.start === range.start && other.end === range.end)) related.push(range);
-    cited.set(line, related);
-    citedLines.set(id, cited);
+    cited.set(target.fragment, { line: Math.min(line, prior?.line ?? line), ranges: related });
+    citedLines.set(target.sourceId, cited);
   };
   const lineFragment = (id: string, ranges: readonly CitationRange[] | undefined): string => {
     if (ranges === undefined || ranges.length === 0) return 'exact-text';
     const fragment = ranges[0]!.start;
     const spans = numberedSources?.get(id);
     if (spans === undefined || ![...spans.values()].some(rows => rows.some(row => row.number === fragment))) return 'exact-text';
-    registerRanges(id, fragment, ranges);
+    const first = { sourceId: id, fragment: `L${fragment}` };
+    registerRanges(first, fragment, ranges);
     const source = sources.get(id)!;
     if (source.segment !== undefined) {
-      // A route still starts on its original source leaf. Follow-on links carry the reader through further admitted pieces.
-      let previous = { sourceId: id, line: fragment };
+      // Different original targets may continue at the same row. Distinct empty targets retain each route's highlight there.
+      const continuation = `continued-${id}-${first.fragment}`;
+      let previous = first;
       for (const piece of sourcePieces.get(fileIdentity(source)) ?? []) {
         if (piece.segment!.index <= source.segment.index) continue;
         const continued = rangesOnSource(numberedSources?.get(piece.sourceId), ranges);
         if (continued.length === 0) continue;
-        const next = { sourceId: piece.sourceId, line: continued[0]!.start };
-        registerRanges(next.sourceId, next.line, continued);
-        const from = continuedCitations.get(previous.sourceId) ?? new Map<number, Map<string, LineTarget>>();
-        const links = from.get(previous.line) ?? new Map<string, LineTarget>();
-        links.set(`${next.sourceId}#L${next.line}`, next);
-        from.set(previous.line, links);
+        const next = { sourceId: piece.sourceId, fragment: continuation };
+        registerRanges(next, continued[0]!.start, continued);
+        const from = continuedCitations.get(previous.sourceId) ?? new Map<string, Map<string, LineTarget>>();
+        const links = from.get(previous.fragment) ?? new Map<string, LineTarget>();
+        links.set(next.sourceId, next);
+        from.set(previous.fragment, links);
         continuedCitations.set(previous.sourceId, from);
         previous = next;
       }
     }
-    return `L${fragment}`;
+    return first.fragment;
   };
 
   // --- shared fragments, each bound to the page it is rendered on
@@ -1140,16 +1144,16 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       const extent = source.redaction === undefined ? `bytes ${start}–${end} of the file` : `redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file; surviving spans use original Git byte coordinates`;
       const continuations: string[] = [];
       const continuationRules: string[] = [];
-      for (const [line, targets] of continuedCitations.get(source.sourceId) ?? []) {
-        const links = [...targets.values()].map(next => {
-          const label = citationLabel(citedLines.get(next.sourceId)?.get(next.line))!;
-          return `<a href="${escape(href(path, sourcePaths.get(next.sourceId)!, `L${next.line}`))}">Continue this citation: ${escape(label)}</a>`;
+      for (const [target, destinations] of continuedCitations.get(source.sourceId) ?? []) {
+        const links = [...destinations.values()].map(next => {
+          const label = citationLabel(citedLines.get(next.sourceId)?.get(next.fragment)?.ranges)!;
+          return `<a href="${escape(href(path, sourcePaths.get(next.sourceId)!, next.fragment))}">Continue this citation: ${escape(label)}</a>`;
         }).join('');
-        continuations.push(`<div class="source-continuation" data-citation-line="${line}">${links}</div>`);
-        continuationRules.push(`#exact-text:has(#L${line}:target)>.source-continuation[data-citation-line="${line}"]{display:block}`);
+        continuations.push(`<div class="source-continuation" data-citation-target="${escape(target)}">${links}</div>`);
+        continuationRules.push(`#exact-text:has([id="${target}"]:target)>.source-continuation[data-citation-target="${target}"]{display:block}`);
       }
       const markup = `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${continuations.join('')}${read}</section>`;
-      const styles = local === undefined ? '' : SOURCE_LINES_CSS + ` .source-line:target${rules.length === 0 ? '' : `,${rules.join(',')}`}{background:var(--accent-tint);box-shadow:inset 2px 0 var(--accent)}${continuationRules.join('')}`;
+      const styles = local === undefined ? '' : SOURCE_LINES_CSS + ` .source-line:target,.source-line:has(>.source-continuation-target:target)${rules.length === 0 ? '' : `,${rules.join(',')}`}{background:var(--accent-tint);box-shadow:inset 2px 0 var(--accent)}${continuationRules.join('')}`;
       return { markup, styles };
     };
     add(path, 2, source.path, local === undefined ? sourceLeaf().markup : sourceLeaf);

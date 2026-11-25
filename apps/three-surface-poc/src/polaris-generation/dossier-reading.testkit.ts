@@ -220,5 +220,5 @@ export function lineCitationInput() {
 /** 100 UTF-8 bytes per line, so the production source-piece boundary lies exactly after line 1000. */
 export function splitLineCitationInput() {
   const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
-  return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 4, end: 5 }]);
+  return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 998, end: 1004 }]);
 }

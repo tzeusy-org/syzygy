@@ -498,32 +498,43 @@ it.skipIf(executable === undefined)('continues a citation onto its next source p
     const page = await browser.newPage();
     try {
       await page.setViewport(390, 844);
-      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
-      const citation = 'document.querySelector(\'[data-claim-id="introduction"] a.cite\')';
-      await page.evaluate(`${citation}.focus()`);
-      await page.press('Enter');
-      await expect.poll(() => page.evaluate('location.hash')).toBe('#L999');
-      const firstPage = await page.evaluate<string>("location.href.split('#')[0]");
+      const index = pathToFileURL(join(directory, 'index.html')).href;
       const painted = `(() => {
-        const target = document.querySelector('.source-line:target');
+        const target = document.querySelector('.source-line:target, .source-line:has(>.source-continuation-target:target)');
         if (!target) return [];
         const background = getComputedStyle(target).backgroundColor;
         return [...document.querySelectorAll('.source-line')].filter(line => getComputedStyle(line).backgroundColor === background).map(line => line.id);
       })()`;
-      await expect.poll(() => page.evaluate(painted)).toEqual(['L999', 'L1000']);
-      expect(await page.evaluate('document.scripts.length')).toBe(0);
-      const continuation = 'document.querySelector(".source-continuation a")';
-      expect(await page.evaluate(`${continuation}.hash`)).toBe('#L1001');
-      expect(await page.accessibleNames(`[${continuation}]`)).toEqual(['Continue this citation: lines 1001–1002']);
-      await page.press('Tab');
-      expect(await page.evaluate(`document.activeElement === ${continuation}`)).toBe(true);
-      await page.press('Enter');
-      await expect.poll(() => page.evaluate('location.hash')).toBe('#L1001');
-      expect(await page.evaluate("location.href.split('#')[0]")).not.toBe(firstPage);
-      await expect.poll(() => page.evaluate(painted)).toEqual(['L1001', 'L1002']);
-      expect(await page.evaluate('document.querySelectorAll(".source-continuation a").length')).toBe(0);
+      const selected = '[...document.querySelectorAll(".source-continuation a")].find(a => a.getClientRects().length > 0)';
+      const destinations = new Set<string>();
+      let firstPage = '';
+      for (const [selector, start, firstLines, nextLines, label] of [
+        ['[data-claim-id="introduction"] a.cite', '#L999', ['L999', 'L1000'], ['L1001', 'L1002'], 'Continue this citation: lines 1001–1002'],
+        ['[data-claim-id="forms"] a.cite', '#L998', ['L998', 'L999', 'L1000'], ['L1001', 'L1002', 'L1003', 'L1004'], 'Continue this citation: lines 1001–1004'],
+      ] as const) {
+        await page.navigate(index);
+        await page.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(start);
+        firstPage = await page.evaluate<string>("location.href.split('#')[0]");
+        await expect.poll(() => page.evaluate(painted)).toEqual(firstLines);
+        expect(await page.evaluate('document.scripts.length')).toBe(0);
+        const destination = await page.evaluate<string>(`${selected}.hash`);
+        expect(destination).toMatch(/^#continued-/u);
+        destinations.add(destination);
+        expect(await page.accessibleNames(`[${selected}]`)).toEqual([label]);
+        await page.press('Tab');
+        expect(await page.evaluate(`document.activeElement === ${selected}`)).toBe(true);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(destination);
+        expect(await page.evaluate("location.href.split('#')[0]")).not.toBe(firstPage);
+        expect(await page.evaluate("document.querySelector(':target').closest('.source-line').id")).toBe('L1001');
+        await expect.poll(() => page.evaluate(painted)).toEqual(nextLines);
+        expect(await page.evaluate('document.querySelectorAll(".source-continuation a").length')).toBe(0);
+      }
+      expect(destinations.size).toBe(2);
       await page.navigate(`${firstPage}#L4`);
-      expect(await page.evaluate('getComputedStyle(document.querySelector(".source-continuation")).display')).toBe('none');
+      expect(await page.evaluate(`${selected} === undefined`)).toBe(true);
     } finally { await page.close(); }
   } finally {
     try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
