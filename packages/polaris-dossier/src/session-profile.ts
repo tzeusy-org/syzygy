@@ -8,7 +8,7 @@ import { URL_ORDERED_NATIVE_EFFECT_MILLISECONDS, URL_ORDERED_NATIVE_PREPARATION_
 
 /** Deliberately versioned offline-supported profile. There is no model fallback. */
 export const SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/2' as const;
-export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-8' as const;
+export const ORDERED_DESIGN_SESSION_PROFILE_ID = 'claude-2.1.327-sonnet46/ordered-design-9' as const;
 export const DEFAULT_SESSION_MODEL = 'claude-sonnet-4-6' as const;
 /** Independently pinned installed CLI shared by the profile and launcher. */
 export const URL_CLI_PROGRAM = Object.freeze({ version: '2.1.327', bytes: 372_904_464,

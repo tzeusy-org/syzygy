@@ -17,7 +17,7 @@ import { initialRawReadDisclosure, recordRawReadHandoff } from './raw-read-discl
 import { buildDossierScreen } from './screen.js';
 import { loadSessionCredential } from './session-credential.js';
 import { screenOrderedDesignRequest, SESSION_CONTENT_CLASSES, SESSION_POLICY_LIMITS } from './session-egress-policy.js';
-import { sessionBrokerTestPort } from './session-broker.js';
+import { SESSION_BROKER_LIMITS, sessionBrokerTestPort } from './session-broker.js';
 import { sessionHostTestPort, type SessionHost, type SessionHostOptions } from './session-host.js';
 import { createOrderedDesignSessionProfile, createSessionProfile, DEFAULT_SESSION_MODEL, isOrderedDesignSessionProfile, isSessionProfile,
   matchesOrderedDesignContinuationResponse, matchesOrderedDesignResultMessage, matchesOrderedDesignTerminalResponse, projectSessionProfileMetadata, SESSION_PROFILE_BETA,
@@ -674,12 +674,15 @@ describe('prepared private CLI launch',()=>{
     const base = ordinary.value.profile, profile = ordered.value.profile;
     expect(base).toMatchObject({ id: 'claude-2.1.327-sonnet46/2', bytes: 9299,
       digest: 'a1f5166c9d049c418c8e1fe7dce6bbdf7ee72aaf830e16dcb3cf39dc175a8d11' });
-    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-8');
+    expect(profile.id).toBe('claude-2.1.327-sonnet46/ordered-design-9');
+    expect(profile.transcript.nativeMediationMilliseconds).toBe(SESSION_BROKER_LIMITS.milliseconds);
+    expect(profile.transcript.nativePreparationMilliseconds + profile.transcript.nativeEffectMilliseconds)
+      .toBe(profile.transcript.nativeMediationMilliseconds);
     expect(profile.baseline).toEqual(base.baseline);
     expect(profile.baselineOrigin.originIds[0]).toBe(profile.id);
     expect(profile.initialScaffoldingOrigin.originIds[0]).toBe(profile.id);
     expect(profile).toMatchObject({ transcript: {
-      nativePreparationMilliseconds: 30_000, nativeEffectMilliseconds: 30_000, nativeMediationMilliseconds: 60_000,
+      nativePreparationMilliseconds: 30_000, nativeEffectMilliseconds: 55_000, nativeMediationMilliseconds: 85_000,
       resultTurns: ['prepared', 'part', 'part', 'verdict-acknowledgment'],
       prepared: { event: 'design-round-prepared', messageIndex: 2, blockIndex: 0 },
       numbered: { selector: 'round-{round}/design-view-part-{ordinal}.json' },
@@ -689,7 +692,7 @@ describe('prepared private CLI launch',()=>{
     expect(isOrderedDesignSessionProfile(profile)).toBe(true);
     expect(isSessionProfile(profile)).toBe(false);
     expect(isOrderedDesignSessionProfile(structuredClone(profile))).toBe(false);
-    expect(isOrderedDesignSessionProfile({ ...profile, id: 'claude-2.1.327-sonnet46/ordered-design-7' })).toBe(false);
+    expect(isOrderedDesignSessionProfile({ ...profile, id: 'claude-2.1.327-sonnet46/ordered-design-8' })).toBe(false);
     for (const binding of [{ ...fixedProfileInput.binding, role: 'author' },
       { ...fixedProfileInput.binding, model: 'unsupported' }, { ...fixedProfileInput.binding, provider: 'unsupported' }]) {
       expect(createOrderedDesignSessionProfile({ ...fixedProfileInput, binding })).toMatchObject({ ok: false, code: 'unsupported-session-profile' });

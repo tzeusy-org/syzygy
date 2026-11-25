@@ -38,9 +38,11 @@ describe('native mediation within the reserved broker span', () => {
       expect(planOrderedDesignWork({ ...input, nativeMediationMilliseconds })).toBeNull();
     const capacity = { ...input, deadline: 2000, enforcement: { ...enforcement, brokerMilliseconds: 85,
       relayMilliseconds: 20 } };
-    const plan = planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 60 });
+    const plan = planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 85 });
     expect(plan).not.toBeNull();
-    expect(planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 60, deadline: plan!.expiresAt })).toBeNull();
+    expect(plan).toEqual(planOrderedDesignWork(capacity));
+    expect(planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 86 })).toBeNull();
+    expect(planOrderedDesignWork({ ...capacity, nativeMediationMilliseconds: 85, deadline: plan!.expiresAt })).toBeNull();
   });
 });
 

@@ -222,32 +222,34 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     let offset = 0;
     const clock = vi.spyOn(performance, 'now').mockImplementation(() => offset);
     try {
-      let afterSixSeconds: boolean | undefined, atTwentySeconds: boolean | undefined, atThirtySeconds: boolean | undefined;
+      let afterSixSeconds: boolean | undefined, atTwentySeconds: boolean | undefined, atThirtySeconds: boolean | undefined, atFiftyFiveSeconds: boolean | undefined;
       const result = await f.store.exclusive(slot.context.clientId, f.options.deadline, async lease => {
         if (kind === 'ordered') expect(lease.beginEffect?.()).toBe(true);
         else expect(lease.beginEffect).toBeUndefined();
         offset = 6000; afterSixSeconds = lease.current();
         offset = 20_000; atTwentySeconds = lease.current();
         offset = 30_000; atThirtySeconds = lease.current();
+        offset = 55_000; atFiftyFiveSeconds = lease.current();
       }, kind === 'unprofiled' ? undefined : profile);
       expect(afterSixSeconds).toBe(kind !== 'unprofiled');
       expect(atTwentySeconds).toBe(kind === 'ordered');
-      expect(atThirtySeconds).toBe(false);
+      expect(atThirtySeconds).toBe(kind === 'ordered');
+      expect(atFiftyFiveSeconds).toBe(false);
       expect(result).toBe(false);
       expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
-        operationMilliseconds: kind === 'ordered' ? 60_000 : kind === 'ordinary' ? 20_000 : 5000,
-        operationElapsedMs: kind === 'unprofiled' ? 6000 : kind === 'ordinary' ? 20_000 : 30_000,
+        operationMilliseconds: kind === 'ordered' ? 85_000 : kind === 'ordinary' ? 20_000 : 5000,
+        operationElapsedMs: kind === 'unprofiled' ? 6000 : kind === 'ordinary' ? 20_000 : 55_000,
         runRemainingMs: 60_000,
-        ...(kind === 'ordered' ? { operationPhase: 'effect', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 } : {}) }]);
+        ...(kind === 'ordered' ? { operationPhase: 'effect', phaseMilliseconds: 55_000, phaseElapsedMs: 55_000 } : {}) }]);
       expect(Object.isFrozen(refusals[0])).toBe(true);
     } finally { clock.mockRestore(); }
   });
 
   it.each([
-    { fault: 'none', preparation: 29_000, effect: 25_000, accepted: true },
+    { fault: 'none', preparation: 29_000, effect: 45_000, accepted: true },
     { fault: 'preparation-limit', preparation: 30_000, effect: 0, accepted: false },
-    { fault: 'effect-limit', preparation: 29_000, effect: 30_000, accepted: false },
-    { fault: 'outer-limit', preparation: 29_999, effect: 30_001, accepted: false },
+    { fault: 'effect-limit', preparation: 29_000, effect: 55_001, accepted: false },
+    { fault: 'outer-limit', preparation: 29_999, effect: 55_001, accepted: false },
     { fault: 'duplicate-transition', preparation: 29_000, effect: 0, accepted: false },
     { fault: 'withdrawal-before-transition', preparation: 29_000, effect: 0, accepted: false },
     { fault: 'withdrawal-during-effect', preparation: 29_000, effect: 1, accepted: false },
@@ -278,13 +280,13 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
         expect(effectCurrent).toBe(scenario.accepted);
       if (scenario.fault === 'none') expect(refusals).toEqual([]);
       if (scenario.fault === 'preparation-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
-        operationMilliseconds: 60_000, operationElapsedMs: 30_000, runRemainingMs: 120_000,
+        operationMilliseconds: 85_000, operationElapsedMs: 30_000, runRemainingMs: 120_000,
         operationPhase: 'preparation', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 }]);
       if (scenario.fault === 'effect-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
-        operationMilliseconds: 60_000, operationElapsedMs: 59_000, runRemainingMs: 120_000,
-        operationPhase: 'effect', phaseMilliseconds: 30_000, phaseElapsedMs: 30_000 }]);
+        operationMilliseconds: 85_000, operationElapsedMs: 84_001, runRemainingMs: 120_000,
+        operationPhase: 'effect', phaseMilliseconds: 55_000, phaseElapsedMs: 55_001 }]);
       if (scenario.fault === 'outer-limit') expect(refusals).toEqual([{ phase: 'check-deadline', reason: 'operation-limit',
-        operationMilliseconds: 60_000, operationElapsedMs: 60_000, runRemainingMs: 120_000 }]);
+        operationMilliseconds: 85_000, operationElapsedMs: 85_000, runRemainingMs: 120_000 }]);
     } finally { clock.mockRestore(); }
   });
 
@@ -306,14 +308,14 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
       }, profile);
       await ready;
       const armed = timers.mock.calls.at(-1)!;
-      expect(armed[1]).toBe(30_000);
+      expect(armed[1]).toBe(phase === 'effect' ? 55_000 : 30_000);
       expect(typeof armed[0]).toBe('function');
-      elapsed = phase === 'effect' ? 59_000 : 30_000;
+      elapsed = phase === 'effect' ? 84_000 : 30_000;
       (armed[0] as () => void)();
       expect(await pending).toBe(false);
-      expect(refusals).toEqual([{ phase: 'timer', reason: 'timer-fired', operationMilliseconds: 60_000,
-        operationElapsedMs: phase === 'effect' ? 29_000 : 0, runRemainingMs: 120_000, timerDelayMs: 30_000,
-        operationPhase: phase, phaseMilliseconds: 30_000, phaseElapsedMs: 0 }]);
+      expect(refusals).toEqual([{ phase: 'timer', reason: 'timer-fired', operationMilliseconds: 85_000,
+        operationElapsedMs: phase === 'effect' ? 29_000 : 0, runRemainingMs: 120_000, timerDelayMs: phase === 'effect' ? 55_000 : 30_000,
+        operationPhase: phase, phaseMilliseconds: phase === 'effect' ? 55_000 : 30_000, phaseElapsedMs: 0 }]);
     } finally {
       release(); await pending; await new Promise<void>(resolve => setImmediate(resolve));
       timers.mockRestore(); clock.mockRestore();
@@ -338,20 +340,25 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect(nestedResult).toBe(false);
   });
 
-  it('refuses a retained ordered-design-7 credential rather than upgrading it to profile8', async () => {
+  it('refuses retained ordered-design-7/8 credentials rather than upgrading them to profile9', async () => {
     const profile = effectProfile(true);
-    const legacy = JSON.parse(profile.canonicalText.replaceAll('ordered-design-8', 'ordered-design-7')) as {
-      transcript: Record<string, unknown>;
-    };
-    delete legacy.transcript.nativePreparationMilliseconds;
-    delete legacy.transcript.nativeMediationMilliseconds;
-    const legacyDigest = sha256(encodeCanonicalJson(legacy, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
-    expect(legacyDigest).not.toBe(profile.digest);
-    const f = await fixture(), slot = await f.allocate({ ...profile, digest: legacyDigest });
-    expect((await slot.publish()).ok).toBe(true);
-    const entered = vi.fn();
-    expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); }, profile)).toBe(false);
-    expect(entered).not.toHaveBeenCalled();
+    for (const version of [7, 8]) {
+      const legacy = JSON.parse(profile.canonicalText.replaceAll('ordered-design-9', `ordered-design-${version}`)) as {
+        transcript: Record<string, unknown>;
+      };
+      legacy.transcript.nativeEffectMilliseconds = 30_000;
+      if (version === 7) {
+        delete legacy.transcript.nativePreparationMilliseconds;
+        delete legacy.transcript.nativeMediationMilliseconds;
+      } else legacy.transcript.nativeMediationMilliseconds = 60_000;
+      const legacyDigest = sha256(encodeCanonicalJson(legacy, { maxBytes: 2_097_152, maxNodes: 65_536, maxDepth: 32 }));
+      expect(legacyDigest).not.toBe(profile.digest);
+      const f = await fixture(), slot = await f.allocate({ ...profile, digest: legacyDigest });
+      expect((await slot.publish()).ok).toBe(true);
+      const entered = vi.fn();
+      expect(await f.store.exclusive(slot.context.clientId, f.options.deadline, async () => { entered(); }, profile)).toBe(false);
+      expect(entered).not.toHaveBeenCalled();
+    }
   });
 
   it.each([true, false])('takes one fresh synchronous parent sample before the first private anchor read when current is %s', async allowed => {
@@ -417,7 +424,7 @@ describe('protected URL machine lifecycle files', { timeout: 30_000 }, () => {
     expect((await slot.publish()).ok).toBe(true);
     for (const candidate of [
       { ...profile },
-      { ...profile, transcript: { ...('transcript' in profile ? profile.transcript : {}), nativeEffectMilliseconds: 30_001 } },
+      { ...profile, transcript: { ...('transcript' in profile ? profile.transcript : {}), nativeEffectMilliseconds: 55_001 } },
       effectProfile(ordered),
     ]) {
       let entered = false;

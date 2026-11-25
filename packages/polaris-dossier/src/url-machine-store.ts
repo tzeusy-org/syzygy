@@ -11,6 +11,7 @@ import { encodeUrlMachineArchive, isUrlMachineArchivePointer, readUrlMachineArch
 import type { UrlMachineLifecycleAdapter, UrlMachineLifecycleLease, UrlMachineLifecycleSnapshot, UrlMachineLifecycleStep } from './url-machine-lifecycle.js';
 import { readUrlMachineClient, URL_MACHINE_CLIENT_LIMITS, type UrlMachineClientContext } from './url-machine-instance.js';
 import type { UrlMachinePeer } from './url-machine-peer.js';
+import { URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS, URL_ORDERED_NATIVE_EFFECT_MILLISECONDS } from './url-product-read-limits.js';
 
 type Expected = Parameters<UrlMachineLifecycleLease['advance']>[0];
 type AuditStep = Extract<UrlMachineLifecycleStep, { kind: 'audit' }>;
@@ -847,8 +848,8 @@ async function openStore(options: UrlMachineStoreOptions, expectedIdentitySha256
             : publication?.operationMilliseconds ?? URL_MACHINE_STORE_LIMITS.operationMilliseconds;
       const orderedPhases = orderedEffect ? { preparation: effectProfile.transcript.nativePreparationMilliseconds,
         effect: effectProfile.transcript.nativeEffectMilliseconds } : undefined;
-      if (orderedPhases !== undefined && (!positive(orderedPhases.preparation) || orderedPhases.preparation > 30_000
-        || !positive(orderedPhases.effect) || orderedPhases.effect > 30_000
+      if (orderedPhases !== undefined && (!positive(orderedPhases.preparation) || orderedPhases.preparation > URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS
+        || !positive(orderedPhases.effect) || orderedPhases.effect > URL_ORDERED_NATIVE_EFFECT_MILLISECONDS
         || operationMilliseconds !== orderedPhases.preparation + orderedPhases.effect)) return false;
       if (!positive(operationMilliseconds) || operationMilliseconds > (orderedPhases === undefined ? 30_000
         : orderedPhases.preparation + orderedPhases.effect)) return false;

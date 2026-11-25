@@ -1,9 +1,10 @@
-export const URL_ORDERED_NATIVE_EFFECT_MILLISECONDS = 30_000;
-// Preparation retains the existing ordered capture allowance. The two serial
-// phases share one absolute envelope; neither can borrow the other's capacity.
-export const URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS = URL_ORDERED_NATIVE_EFFECT_MILLISECONDS;
-export const URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS = URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS
-  + URL_ORDERED_NATIVE_EFFECT_MILLISECONDS;
+// Allocate the existing 85-second broker envelope between serial preparation
+// and effect. The broker, caller and original run may refuse earlier; this is
+// finite capacity, not a completion or worst-case scheduling guarantee.
+export const URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS = 30_000;
+export const URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS = 85_000;
+export const URL_ORDERED_NATIVE_EFFECT_MILLISECONDS = URL_ORDERED_NATIVE_MEDIATION_MILLISECONDS
+  - URL_ORDERED_NATIVE_PREPARATION_MILLISECONDS;
 
 const productReadMilliseconds = {
   render: 60_000,
