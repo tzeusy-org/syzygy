@@ -450,14 +450,54 @@ export async function verifyClaims(extracted: ExtractedText, inputs: DeriveInput
 
 const describeRange = (range: LineRange): string => (range.start === range.end ? `line ${range.start}` : `lines ${range.start}-${range.end}`);
 
+/** What the closing section says in place of a path whose name screening withholds. */
+export const WITHHELD_BY_NAME = '(a path screening withholds by name)';
+export const uncheckedWords = (count: number): string => `${count} quotation(s) not checked: the claim names no file`;
+
+/** One reference as the results name it: the path as written and, where it differs, the blob it resolves to; null where screening
+ * withholds the path by name, so no rendering of the results can name it. */
+export interface ReferenceResult {
+  readonly named: { readonly written: string; readonly resolved?: string } | null;
+  /** The lines checked, as words: `whole file`, `line N`, `lines N-M`, comma-separated. */
+  readonly where: string;
+  readonly state: ReferenceState;
+}
+export interface ClaimResult {
+  readonly index: number;
+  readonly startLine: number;
+  readonly outcome: ClaimOutcome;
+  readonly references: readonly ReferenceResult[];
+  readonly quotations: readonly QuotationState[];
+  readonly uncheckedQuotations: number;
+}
+
+/** The results of each claim that names a file or quotes, in text order: what the annotated copy's closing section and the HTML page
+ * (`verify-text-page.ts`) both list, so neither can name what the other withholds. */
+export function claimResults(verified: VerifiedText): ClaimResult[] {
+  return verified.claims.filter((claim) => claim.references.length > 0 || claim.uncheckedQuotations > 0).map((claim) => ({
+    index: claim.index, startLine: claim.startLine, outcome: claim.outcome,
+    references: claim.references.map((reference) => ({
+      named: reference.written === null ? null
+        : reference.path !== null && reference.path !== reference.written ? { written: reference.written, resolved: reference.path } : { written: reference.written },
+      where: reference.ranges.length === 0 ? 'whole file' : [...reference.ranges.map(describeRange), ...(reference.wholeFile === true ? ['whole file'] : [])].join(', '),
+      state: reference.state,
+    })),
+    quotations: claim.quotations, uncheckedQuotations: claim.uncheckedQuotations,
+  }));
+}
+
+/** The text's lines without their terminators, and each line's terminator, as the annotated copy and the page split it. */
+export function splitLines(markdown: string): { readonly lines: readonly string[]; readonly ends: readonly string[] } {
+  const parts = markdown.split(/(\r\n|\r|\n)/u);
+  return { lines: parts.filter((_, i) => i % 2 === 0), ends: parts.filter((_, i) => i % 2 === 1) };
+}
+
 /** The text with a marker `[verify C<n>: <outcome>]` at the end of every claim's last line (inside a table row's last cell), and a closing
  * section with the tally and, for each claim that names a file or quotes, what each reference and quotation came to. A withheld path
  * whose name screening withholds is never named in the section. */
 export function annotateText(markdown: string, verified: VerifiedText, heading: { readonly pinned: string; readonly file: string }): string {
   // Each line keeps its own terminator (LF, CRLF or CR), so the copy differs from the text only by the markers and the section.
-  const parts = markdown.split(/(\r\n|\r|\n)/u);
-  const lines = parts.filter((_, i) => i % 2 === 0);
-  const ends = parts.filter((_, i) => i % 2 === 1);
+  const { lines, ends } = splitLines(markdown);
   const eol = ends[0] ?? '\n';
   const lastOf = new Map(verified.claims.map((claim) => [claim.endLine, claim]));
   const out = lines.map((text, i) => {
@@ -475,17 +515,15 @@ export function annotateText(markdown: string, verified: VerifiedText, heading: 
     ...CLAIM_OUTCOMES.map((outcome) => `| ${outcome} | ${verified.tally[outcome]} |`),
     `| total | ${verified.claims.length} |`, '',
   ];
-  for (const claim of verified.claims) {
-    if (claim.references.length === 0 && claim.uncheckedQuotations === 0) continue;
-    section.push(`- C${claim.index} (line ${claim.startLine}): ${claim.outcome}`);
-    for (const reference of claim.references) {
-      const where = reference.ranges.length === 0 ? 'whole file' : [...reference.ranges.map(describeRange), ...(reference.wholeFile === true ? ['whole file'] : [])].join(', ');
-      const named = reference.written === null ? '(a path screening withholds by name)'
-        : reference.path !== null && reference.path !== reference.written ? `\`${reference.written}\` (\`${reference.path}\`)` : `\`${reference.written}\``;
-      section.push(`  - reference ${named}, ${where}: ${reference.state}`);
+  for (const result of claimResults(verified)) {
+    section.push(`- C${result.index} (line ${result.startLine}): ${result.outcome}`);
+    for (const reference of result.references) {
+      const named = reference.named === null ? WITHHELD_BY_NAME
+        : reference.named.resolved !== undefined ? `\`${reference.named.written}\` (\`${reference.named.resolved}\`)` : `\`${reference.named.written}\``;
+      section.push(`  - reference ${named}, ${reference.where}: ${reference.state}`);
     }
-    claim.quotations.forEach((state, q) => section.push(`  - quotation ${q + 1}: ${state}`));
-    if (claim.uncheckedQuotations > 0) section.push(`  - ${claim.uncheckedQuotations} quotation(s) not checked: the claim names no file`);
+    result.quotations.forEach((state, q) => section.push(`  - quotation ${q + 1}: ${state}`));
+    if (result.uncheckedQuotations > 0) section.push(`  - ${uncheckedWords(result.uncheckedQuotations)}`);
   }
   const body = out.map((text, i) => text + (ends[i] ?? '')).join('').replace(/(\r\n|\r|\n)*$/u, '');
   return `${body}${eol}${section.join(eol)}${eol}`;
