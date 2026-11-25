@@ -1,0 +1,7 @@
+This archive freezes the outside evidence for source commit0116bb34204d552a9ee9f9e4905cea6dee29ab3e (private authenticated image references). It contains the original design/reviews, immutable R1/R2 source packets, owning runs and reused R1 typecheck, two rule6 controls, fresh build, completed boundary benchmark, and completed0e14 profile assessment with full numeric metadata gzip.
+
+History is preserved: R1 had duplicate coverage,18 passing cases and an operator expecting17; R2 removed only that duplicate and passed17/17. Both rule6 mutants hit their intended assertions; the operator then exited1 because its epilogue caught SystemExit(0), after restoration/cleanup. The original failed operator/receipt and addendum are included.
+
+Original relative paths are preserved; executable/source member names receive .inert, and every member mode is0644. No archived code was executed. The external file-index.json maps original paths to archive members and records SHA256/size, full population, exclusions and independent verification. It is a sidecar, not an archive member.
+
+The eight raw V8 profiles are NOT archived. Their exact existing outside paths/hashes are in the index; continued retention there is Unknown. The profile-run raw log/receipt are also referenced outside. The complete derived signed numeric metadata is archived. Runtime, memory, genuine recovery, merged/final acceptance remain Unknown. A256/adoption and any later merge or recovery are root's subsequent work, not evidence supplied by this archive.

@@ -1,0 +1,733 @@
+{
+  "acceptance": "Runtime,memory,genuine recovery,merged/final acceptance Unknown. No later source/adoption/recovery evidence claimed.",
+  "archive": {
+    "bytes": 6550172,
+    "file": "proof-0116.tar.gz",
+    "format": "sorted USTAR; canonical last representable prefix split;uid0,gid0,mtime0,mode0644;gzip9,mtime0,empty filename",
+    "sha256": "d866d7cbd77f2adf9ea5634e684849134428947282b5f7c950898094d2195033"
+  },
+  "archiveMemberCount": 87,
+  "archivedPayloadBytes": 8680847,
+  "externalEvidenceNotArchived": [
+    {
+      "archived": false,
+      "bytes": 5922336,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164350.3699295.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "17668f426d9b31c5571448acc88148062c6146e1c822302fc882d4d84613f5f2"
+    },
+    {
+      "archived": false,
+      "bytes": 31819577,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699447.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "a3e770ff1f4531dd9f9415fd04bbf3fa7b12ea4c7996440beeebbb08b265c444"
+    },
+    {
+      "archived": false,
+      "bytes": 5148310,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699448.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "e40b77c39af3e49e2b63229605b23b180ad5cbb8c73d3762a480652ef14bfc3a"
+    },
+    {
+      "archived": false,
+      "bytes": 5150463,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699454.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "8a2d8c37047c5d50483680629590922a56e033730c3b1e55c4e974c1513d2628"
+    },
+    {
+      "archived": false,
+      "bytes": 5147740,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699455.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "a9abc15ceade557ae0d051aeb87228bb30e32d75dd00c5b58a1afd6a207d156e"
+    },
+    {
+      "archived": false,
+      "bytes": 5150246,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699461.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "1bcb23ec3e2f2f73dde2be640626bdbedbd6c4590b6f8d3a5e3e9cbac4f4b41a"
+    },
+    {
+      "archived": false,
+      "bytes": 5147650,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.164351.3699473.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "e3034ef239d47b3839c59eb48bfca79419f3b3ac53ca0d77ed860665a4e05545"
+    },
+    {
+      "archived": false,
+      "bytes": 62174,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/CPU.20261125.165358.3812052.0.001.cpuprofile",
+      "retention": "Existing outside run folder only; future retention/durability Unknown.",
+      "sha256": "ad150b54f441eb37424a6840d3605234143a279f89659dc748a6e230527ea065"
+    },
+    {
+      "archived": false,
+      "bytes": 1629,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/result.json",
+      "retention": "Referenced outside run folder only; not archived.",
+      "sha256": "8553df9da69ef2144702e530808182283bd2ef38bf330f39d16a36bf3337e73b"
+    },
+    {
+      "archived": false,
+      "bytes": 426988,
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0e14-execution-1/recovery.log",
+      "retention": "Referenced outside run folder only; not archived.",
+      "sha256": "aa32c55043f8fa84f03b795a137b7ec5127f3a7f5651f3e8c7bb9cece8b26083"
+    }
+  ],
+  "generatedMembers": [
+    {
+      "archiveMember": "ARCHIVE-README.md",
+      "bytes": 1527,
+      "externalFile": "README.md",
+      "sha256": "cc0d547f6d57467ed91588ddc69ff453b9c3ac7e144be889a61fba8ce9dfb5cf"
+    }
+  ],
+  "includedRoots": [
+    "native-image-byte-reference-design-0e14.md",
+    "native-image-byte-reference-design-0e14-ASSESSMENT-RAW.md",
+    "native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+    "native-image-byte-reference-9de7-R1-FRESH-REVIEW-RAW.md",
+    "native-image-byte-reference-9de7-R2-FRESH-REVIEW-RAW.md",
+    "native-image-byte-reference-source-9de7-R1",
+    "native-image-byte-reference-source-9de7-R2",
+    "native-image-byte-reference-owning-9de7-execution-1",
+    "native-image-byte-reference-owning-9de7-execution-2",
+    "native-image-byte-reference-rule6-operator-R1",
+    "native-image-byte-reference-rule6-0116-execution-1",
+    "native-byte-reference-build-0116",
+    "native-image-byte-reference-benchmark",
+    "native-production-recovery-profile-0e14-assessment-1"
+  ],
+  "sourceBytes": 8679320,
+  "sourceCommit": "0116bb34204d552a9ee9f9e4905cea6dee29ab3e",
+  "sourceEvidenceRoot": "/home/orca/.tmp/f3-native-admission-fixes",
+  "sourceFileCount": 86,
+  "sourceFiles": [
+    {
+      "archiveMember": "native-byte-reference-build-0116/execution-1/build.log",
+      "bytes": 349,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-byte-reference-build-0116/execution-1/build.log",
+      "sha256": "220854806f6aff6889a62b12a7095b35937c39fbf84d4713fedf7582a9ad4391"
+    },
+    {
+      "archiveMember": "native-byte-reference-build-0116/execution-1/result.json",
+      "bytes": 90600,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-byte-reference-build-0116/execution-1/result.json",
+      "sha256": "d390cb60a8c1f2d10996e49dbce57993d5652a6ed91df4edee52a1f26206d591"
+    },
+    {
+      "archiveMember": "native-byte-reference-build-0116/execution-1/runtime-manifest.json",
+      "bytes": 107947,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-byte-reference-build-0116/execution-1/runtime-manifest.json",
+      "sha256": "3e4b1fa3a6d89f399c7c7205bbfc329f9138ce8ee15664e529be43526f618e75"
+    },
+    {
+      "archiveMember": "native-byte-reference-build-0116/execution-1/subject.json",
+      "bytes": 195145,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-byte-reference-build-0116/execution-1/subject.json",
+      "sha256": "f03ff007e1f12bd2b3bb1ed1a10e41fca5794ba2b66f07f79ae7d760c4a564aa"
+    },
+    {
+      "archiveMember": "native-byte-reference-build-0116/run-build.py.inert",
+      "bytes": 7483,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-byte-reference-build-0116/run-build.py",
+      "sha256": "e899e1e44a3b044e0fcbdae5d274e04d303802a6d3b72e40025bbf4ab3be5dc4"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-9de7-R1-FRESH-REVIEW-RAW.md",
+      "bytes": 8324,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-9de7-R1-FRESH-REVIEW-RAW.md",
+      "sha256": "454648c552d8c3bff6eb5653477df4fa3b2087353d15bbe6b135f3f1a2cb3cac"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-9de7-R2-FRESH-REVIEW-RAW.md",
+      "bytes": 9494,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-9de7-R2-FRESH-REVIEW-RAW.md",
+      "sha256": "b70e351c74f7b93fb29bbeffb1c3bca362b9cc6bf26deef6305c8c5cb2a1f706"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/ASSESSMENT-RAW.md",
+      "bytes": 6695,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/ASSESSMENT-RAW.md",
+      "sha256": "b58f224a92c90ab15cf49a74e7d7a66ead039b1e232f87619e07c8feba53ef21"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/README.md",
+      "bytes": 4438,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/README.md",
+      "sha256": "a22b535a75b1935f65ba636728d054738a374f23de704c1767afd7621bee6dcb"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/RESULTS-MANIFEST.json",
+      "bytes": 3428,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/RESULTS-MANIFEST.json",
+      "sha256": "18a0b7d41c80d6040c0c08b96c97d886eca358cdbd53d798873c148b6349cf37"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/baseline-native-module.js.txt",
+      "bytes": 10700,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/baseline-native-module.js.txt",
+      "sha256": "3f90681fb9ff3aa966b86863dd2f59f240be1979b7e38112559ff55650a1f0f4"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/baseline-native-source.ts.txt",
+      "bytes": 10131,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/baseline-native-source.ts.txt",
+      "sha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/baseline-runtime-manifest.json",
+      "bytes": 107947,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/baseline-runtime-manifest.json",
+      "sha256": "3ab73f0690c360c0b7a62078c31cd27607ef4f3a0fe3e9d69a1e9b68f397154b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/candidate-native-module.js.txt",
+      "bytes": 12298,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/candidate-native-module.js.txt",
+      "sha256": "0f7b0b171e84727f182a8da857800c067a057113e8782a38d7934cac15b39867"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/candidate-native-source.ts.txt",
+      "bytes": 11584,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/candidate-native-source.ts.txt",
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/candidate-runtime-manifest.json",
+      "bytes": 107947,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/candidate-runtime-manifest.json",
+      "sha256": "3e4b1fa3a6d89f399c7c7205bbfc329f9138ce8ee15664e529be43526f618e75"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/independent-verification.json",
+      "bytes": 28489,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/independent-verification.json",
+      "sha256": "68d1551d86927d82e09df44a27e2c2f8ceb72ff8938845b372caa4c1c13adab9"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/measurement.json",
+      "bytes": 44037,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/measurement.json",
+      "sha256": "a371630aa5d0b20d930fc7bc7ae1408020480e16db2f244afabbde8eeaa265c1"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/pairs.log",
+      "bytes": 323142,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/pairs.log",
+      "sha256": "7a87f091a00fb89e04d9a57c2d827b4fb98f493a1149191efe6bf5125fa507ca"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/result.json",
+      "bytes": 1725,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/result.json",
+      "sha256": "3719d0d63c8aec46b2b1515f848446a6d2865e7e190a7d6b7272ed8dcffd9b0e"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/run-config.json",
+      "bytes": 2895,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/run-config.json",
+      "sha256": "90cec377a958cd048e07126f85fb6ba911d14ef79ac1f25d12cbe73391d3b1bb"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/execution-1/subject.json",
+      "bytes": 8468,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/execution-1/subject.json",
+      "sha256": "dcef2a0d80494d9716f62b04d0035365294bcd802f13f0370add8679cb1eb6b5"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/manifest.json",
+      "bytes": 939,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/manifest.json",
+      "sha256": "2d6d62b025918fc9bb47786b47242920d03f19c68d7c753d59b3838fc8b91d28"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/measure.mjs.inert",
+      "bytes": 16776,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-benchmark/measure.mjs",
+      "sha256": "215fa5874fb1fa0ad27fb46c385f9ba14416fee97eca0198e6a3559d0d9f7c08"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/plan.json",
+      "bytes": 1531,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-benchmark/plan.json",
+      "sha256": "52f6de2fbd9993e1573cc9f60dbdc545dee205041a973fa283df33634917f80b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-benchmark/run-benchmark.py.inert",
+      "bytes": 6127,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-benchmark/run-benchmark.py",
+      "sha256": "389c9e5341e9d13f77f7c49860212341dbe2fce07fec656970e4e0f2209de09c"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-design-0e14-ASSESSMENT-RAW.md",
+      "bytes": 3587,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-design-0e14-ASSESSMENT-RAW.md",
+      "sha256": "68fb12b46a7da6286c203b9e81e27cde7bffb9844f90fb22eda3a48900a50e91"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "bytes": 5574,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "sha256": "ea8a714246317e54180b69be818fddcc1600793f45684162762790f2aef3162b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-design-0e14.md",
+      "bytes": 5165,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-design-0e14.md",
+      "sha256": "71baa7a61261dd9d937d91416e45108b3cc27dba103d39b90d9920156a15b281"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/owning.json",
+      "bytes": 7378,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/owning.json",
+      "sha256": "70024b62fe4d686b3148f7e608ff68b45edeff1324628be412757d6d736a6755"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/owning.log",
+      "bytes": 129,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/owning.log",
+      "sha256": "f1ba02920d35b3c4397941d092c56d7aa957120b9eaac42563cc50b9eb11b5a3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/results.json",
+      "bytes": 6945,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/results.json",
+      "sha256": "ed670eabac522b10e823e860dd691eaf3b6daf2dcd1c55b0acc7bc9224abe162"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/run-typecheck.py.inert",
+      "bytes": 4025,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/run-typecheck.py",
+      "sha256": "cdac8f73ced321d8bd77341cbedf6cfae2b0c83d554daa4149e6d1000709486c"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/run.py.inert",
+      "bytes": 5269,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/run.py",
+      "sha256": "8ef8c525350709b3026c092933b48823fae0715381d5af3b25db471f7476e061"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/typecheck-results.json",
+      "bytes": 1467,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/typecheck-results.json",
+      "sha256": "eccb91d6fcb1773662f76054e7a36562164618fbd6d2652ef56f9e97a4a523d8"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-1/typecheck.log",
+      "bytes": 0,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-1/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-2/owning.json",
+      "bytes": 7007,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-2/owning.json",
+      "sha256": "74e10b69acd0a82b49a7f2567f053435e1ac9f4bf84e57ce746ebd778aaa6dc2"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-2/owning.log",
+      "bytes": 129,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-2/owning.log",
+      "sha256": "e2a658142f12ed615bd98a961123f5c0feec35b2965cfaab9c7fca89d8a14e24"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-2/results.json",
+      "bytes": 6778,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-2/results.json",
+      "sha256": "ed2160685d4c116b734583b5ca0b053966d44352a652fabeb1764d1b319f8562"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-2/run.py.inert",
+      "bytes": 5238,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-2/run.py",
+      "sha256": "e1670bddd7f1f897e28ca545be62fefa1799893490d9800a307fa28a48b36c85"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-owning-9de7-execution-2/verification.json",
+      "bytes": 2960,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-owning-9de7-execution-2/verification.json",
+      "sha256": "0c9894d0f53b7dedbf24261b51d492f76d9629ea13e3dfa67c4083f916f871e5"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/OPERATOR-EPILOGUE-RAW.md",
+      "bytes": 562,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/OPERATOR-EPILOGUE-RAW.md",
+      "sha256": "94a4a0f698495a08b30d33b8ac66c002841b926b2bd643abd425d577dce5bb57"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/independent-final-verification.json",
+      "bytes": 2739,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/independent-final-verification.json",
+      "sha256": "1c1be74a373b536fa6ccbb3a3e9e8a07780f05feb59c3a2d044536a7fb17c829"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/source-mutant.ts.inert",
+      "bytes": 11535,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/source-mutant.ts",
+      "sha256": "196a7098e4780aeccd313a6be12de782fe833286dbe671455042ba68ee63c9fd"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/vitest.json",
+      "bytes": 7790,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/vitest.json",
+      "sha256": "4cb1f9c44b02b43c954f68eb24fe2fbd195f1883cca8ef46bbd1989aeef78ba3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/vitest.log",
+      "bytes": 157,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/omit-reference-byte-equality/vitest.log",
+      "sha256": "c2710f7f53c49cce386809030ecafea6cf1d33a3ce1eadc0f7b8e6131ddcf5b7"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/results.json",
+      "bytes": 11403,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/results.json",
+      "sha256": "b1a78f42a5ea4132c989eab0e0c933eea90c40d3cb8190d789baa2ff2dfda447"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/source-mutant.ts.inert",
+      "bytes": 11618,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/source-mutant.ts",
+      "sha256": "f7b2318aea18c168b3c42ddcd7314f8eaa3ddc26391dd2fb47b1ad2a5b289f84"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/vitest.json",
+      "bytes": 7247,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/vitest.json",
+      "sha256": "7ce03b453817175ec53a6e4897f9783cf22c9fb7898dd5e62702e24615749dab"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/vitest.log",
+      "bytes": 149,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/skip-initial-git-sha/vitest.log",
+      "sha256": "9f45f35436debb76b844048d16822298727f664e9d093626866e69ab720d1610"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-0116-execution-1/source-original.ts.inert",
+      "bytes": 11584,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-rule6-0116-execution-1/source-original.ts",
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-operator-R1/README.md",
+      "bytes": 2782,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-operator-R1/README.md",
+      "sha256": "868d33e17d27279c4ed2d9e8c0b588588dcbcb9744601cc4ee5b83945acfcb9e"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-operator-R1/manifest.json",
+      "bytes": 3431,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-operator-R1/manifest.json",
+      "sha256": "b4981d60cf18bbb0edd79413d65a37c122ca665bd48ef17cfeac7206588cf010"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-operator-R1/mutants.json",
+      "bytes": 1797,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-rule6-operator-R1/mutants.json",
+      "sha256": "ff0d42a703dc1393cd9958b197ec1bc61166caa3f2b401a5a5e8403c69a16e24"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-rule6-operator-R1/runner.py.inert",
+      "bytes": 12853,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-rule6-operator-R1/runner.py",
+      "sha256": "ad07c28ad92fbe9de2049676f0ba145248ab748887d9dfae72a95d3ba41fb80d"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/baseline/packages/polaris-dossier/src/policy-git-native.test.ts.inert",
+      "bytes": 25338,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/baseline/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "sha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/baseline/packages/polaris-dossier/src/policy-git-native.ts.inert",
+      "bytes": 10131,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/baseline/packages/polaris-dossier/src/policy-git-native.ts",
+      "sha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/candidate.patch",
+      "bytes": 16048,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/candidate.patch",
+      "sha256": "53e23aaaa10c99367594a5f554d96d9e9a2de9f64418f50f32caaf228c3328fa"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/candidate/packages/polaris-dossier/src/policy-git-native.test.ts.inert",
+      "bytes": 31139,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "sha256": "16afa039bb5de2e0a49b7d0cbe3772b628a4aefc774676323f4ea5eca9b4bb19"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/candidate/packages/polaris-dossier/src/policy-git-native.ts.inert",
+      "bytes": 11584,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/context/packages/polaris-dossier/src/policy-git.ts.inert",
+      "bytes": 6757,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/context/packages/polaris-dossier/src/policy-git.ts",
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/context/packages/polaris-dossier/src/url-runtime.ts.inert",
+      "bytes": 22164,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/context/packages/polaris-dossier/src/url-runtime.ts",
+      "sha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/manifest.json",
+      "bytes": 2511,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/manifest.json",
+      "sha256": "954f20d53d5ffb1e49c7ad2dba284bc858665a826e49d58b5edde8af8e9b4bae"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "bytes": 5574,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "sha256": "ea8a714246317e54180b69be818fddcc1600793f45684162762790f2aef3162b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R1/native-image-byte-reference-design-0e14.md",
+      "bytes": 5165,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R1/native-image-byte-reference-design-0e14.md",
+      "sha256": "71baa7a61261dd9d937d91416e45108b3cc27dba103d39b90d9920156a15b281"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/README.md",
+      "bytes": 1693,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/README.md",
+      "sha256": "2dbe5601d45612e44549cb7f786d20c13deac148dc6e46b7dd305847d6ce2e2b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/baseline/packages/polaris-dossier/src/policy-git-native.test.ts.inert",
+      "bytes": 25338,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/baseline/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "sha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/baseline/packages/polaris-dossier/src/policy-git-native.ts.inert",
+      "bytes": 10131,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/baseline/packages/polaris-dossier/src/policy-git-native.ts",
+      "sha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/candidate.patch",
+      "bytes": 15266,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/candidate.patch",
+      "sha256": "ff5d21a1e8866ad3799364f89b2e98c4fba058fa6d62c2e1976f621aad61eb24"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/candidate/packages/polaris-dossier/src/policy-git-native.test.ts.inert",
+      "bytes": 30367,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "sha256": "e5ca44eabfb5d0ba4520f4296814d30b2a570aee589a7c5beeaceb9c4e000462"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/candidate/packages/polaris-dossier/src/policy-git-native.ts.inert",
+      "bytes": 11584,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/context/packages/polaris-dossier/src/policy-git.ts.inert",
+      "bytes": 6757,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/context/packages/polaris-dossier/src/policy-git.ts",
+      "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/context/packages/polaris-dossier/src/url-runtime.ts.inert",
+      "bytes": 22164,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/context/packages/polaris-dossier/src/url-runtime.ts",
+      "sha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/manifest.json",
+      "bytes": 3337,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/manifest.json",
+      "sha256": "0ea325abf69bea3e51c8225f8db9d943034b0bafe1287cd0c458e86785a45fb0"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-9de7-R1-FRESH-REVIEW-RAW.md",
+      "bytes": 8324,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-9de7-R1-FRESH-REVIEW-RAW.md",
+      "sha256": "454648c552d8c3bff6eb5653477df4fa3b2087353d15bbe6b135f3f1a2cb3cac"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "bytes": 5574,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-design-0e14-FRESH-REVIEW-RAW.md",
+      "sha256": "ea8a714246317e54180b69be818fddcc1600793f45684162762790f2aef3162b"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-design-0e14.md",
+      "bytes": 5165,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/native-image-byte-reference-design-0e14.md",
+      "sha256": "71baa7a61261dd9d937d91416e45108b3cc27dba103d39b90d9920156a15b281"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/test-census.json",
+      "bytes": 3122,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/test-census.json",
+      "sha256": "3318940696d796b93d67c47aba8852ebdf93d61d1350c2dd7c5019c348c925d0"
+    },
+    {
+      "archiveMember": "native-image-byte-reference-source-9de7-R2/test-census.mjs.inert",
+      "bytes": 726,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-image-byte-reference-source-9de7-R2/test-census.mjs",
+      "sha256": "238b7001b2852beb7f82ea4ab810b959de2d9f78783e9fed55f07832dba91546"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/ASSESSMENT-RAW.md",
+      "bytes": 8176,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/ASSESSMENT-RAW.md",
+      "sha256": "5d7878bf704377a56a0737511728934e1775f2c584f3e2fdbe469741c663c4d9"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/analyze_profiles.py.inert",
+      "bytes": 11103,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/analyze_profiles.py",
+      "sha256": "9ccb28196f3cbd0bb48c76dfbd42a80404f63a2b2d01e74b034998e4f7093ed4"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/finalize_metadata.py.inert",
+      "bytes": 11883,
+      "inertSuffixAdded": true,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/finalize_metadata.py",
+      "sha256": "9b857b6e5eadab9b23527a6747e48c4ae0e68de53b2a50ec80e06a86a9a0146c"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/manifest.json",
+      "bytes": 1024,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/manifest.json",
+      "sha256": "2fed91a71e30c24c0ff5fef38bfa2ad66b42de24f377d04b5b181872e5dbdaba"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/profile-analysis-metadata.json.gz",
+      "bytes": 6278168,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/profile-analysis-metadata.json.gz",
+      "sha256": "3f7abecce1e5bc56459dcf066d5244ccfa3cf9cf1adb1a15ec059cce4e6e7608"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/source-binding.json",
+      "bytes": 6814,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/source-binding.json",
+      "sha256": "b9da72f640106383e0897895a1cddf3891d19ace3e1687a4a8bf77e3eef23586"
+    },
+    {
+      "archiveMember": "native-production-recovery-profile-0e14-assessment-1/summary.json",
+      "bytes": 800256,
+      "inertSuffixAdded": false,
+      "originalRelativePath": "native-production-recovery-profile-0e14-assessment-1/summary.json",
+      "sha256": "d9aa0197382a55bf0df8bb00cf2991df6445a70d49a46b782ab7c0c44a4ecd3d"
+    }
+  ],
+  "verification": {
+    "extraMembers": 0,
+    "gnuExtractAndExternalSHA256sumVerifiedMembers": 87,
+    "independentArchiveBuild": {
+      "compressedBytesIdentical": true,
+      "compression": "same deterministic Python gzip codec applied separately; independently implemented tar creation",
+      "first": "Python tarfile USTAR with explicit GNU-compatible last-prefix split",
+      "second": "GNU tar USTAR",
+      "secondArchiveSha256": "d866d7cbd77f2adf9ea5634e684849134428947282b5f7c950898094d2195033",
+      "uncompressedBytesIdentical": true,
+      "uncompressedSha256": "83db878b4139c227bfe616e801025a15ebfc4e9be528408c18e8ac208b0b1da8"
+    },
+    "preFreezeAttempt": "First independent builders differed only in valid long-path USTAR prefix split; no archive was frozen. Python split selection corrected to GNU canonical choice before the successful independent comparison.",
+    "privatePackagingScratchRemoved": true,
+    "pythonTarContentVerifiedMembers": 87,
+    "sourceBytesStableThroughFreeze": true,
+    "sourceSHA256sumMatchesPython": true
+  }
+}
