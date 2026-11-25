@@ -786,16 +786,18 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   }))];
   // The cited lines behind each citation mark, by claim and source piece: a mark shows its file and lines on hover and focus (v1.5). These
   // are the draft's ranges, checked against the blob at this render; a withheld item's are never shown, since it cites no admitted piece.
-  const citationLines = new Map<string, Map<string, string>>();
+  const citationLines = new Map<string, Map<string, { start: number; end: number }[]>>();
   const cites = (claimId: string, value: Readonly<Record<string, unknown>>): string[] => {
-    const lines = new Map<string, string[]>();
+    const lines = new Map<string, { start: number; end: number }[]>();
     for (const citation of list(value['citations']).filter(isRecord)) {
       const [sourceId] = citedSources({ citations: [citation] });
       const startLine = citation['startLine'], endLine = citation['endLine'];
       if (sourceId === undefined || typeof startLine !== 'number' || typeof endLine !== 'number') continue;
-      lines.set(sourceId, [...(lines.get(sourceId) ?? []), startLine === endLine ? `line ${startLine}` : `lines ${startLine}\u2013${endLine}`]);
+      const ranges = lines.get(sourceId) ?? [];
+      if (!ranges.some(range => range.start === startLine && range.end === endLine)) ranges.push({ start: startLine, end: endLine });
+      lines.set(sourceId, ranges);
     }
-    if (lines.size > 0) citationLines.set(claimId, new Map([...lines].map(([sourceId, ranges]) => [sourceId, [...new Set(ranges)].join(', ')])));
+    if (lines.size > 0) citationLines.set(claimId, lines);
     return citedSources(value);
   };
   const anchorOf = (source: GenerationSource, start: number, end: number): EvidenceAnchor => ({

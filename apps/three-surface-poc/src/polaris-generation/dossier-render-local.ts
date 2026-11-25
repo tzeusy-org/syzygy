@@ -1,3 +1,4 @@
+import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
 import { REVIEW_STATUS_REGION, REVIEW_STATUS_REGION_OPEN, type EvidenceAnchor, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
 
 /**
@@ -11,7 +12,11 @@ export const LOCAL_MACHINE_VIEW = 'machine.json';
 
 export { REVIEW_STATUS_REGION };
 
-export const LOCAL_CSS = '.run-disclosure{border-block:1px solid var(--line);padding:.5rem 1rem;font-size:.9rem}.run-disclosure ul{margin:.5rem 0}.review-status{border-top:1px solid var(--line);margin-top:2rem;font-size:.9rem}.verified-quote{font-style:normal}.anchor-link,.evidence-anchor{font:.8rem/1.5 var(--font-mono);overflow-wrap:anywhere}.evidence-anchor dt{font-weight:600}.non-normative{color:var(--muted)}.quote-withheld,.unknown-reason,.executions,.group-note,.read-note{color:var(--muted);font-size:.9rem}';
+export const LOCAL_CSS = `.run-disclosure{border-block:${tokens.line.hairline} solid var(--line);padding:${tokens.spacing.small} ${tokens.spacing.standard};font-size:${tokens.type.bodySmall}}`
+  + `.run-disclosure ul{margin:${tokens.spacing.small} ${tokens.spacing.none}}.review-status{border-top:${tokens.line.hairline} solid var(--line);margin-top:${tokens.spacing.large};`
+  + `font-size:${tokens.type.bodySmall}}.verified-quote{font-style:normal}.anchor-link,.evidence-anchor{font:${tokens.type.sourceHint}/${tokens.type.bodyLeading} var(--font-mono);`
+  + `overflow-wrap:anywhere}.evidence-anchor dt{font-weight:${tokens.type.strongWeight}}.non-normative{color:var(--muted)}`
+  + `.quote-withheld,.unknown-reason,.executions,.group-note,.read-note{color:var(--muted);font-size:${tokens.type.bodySmall}}`;
 
 type Escape = (value: string) => string;
 

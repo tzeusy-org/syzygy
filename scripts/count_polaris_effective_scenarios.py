@@ -732,6 +732,16 @@ def scripted_grade_amendment(root: Path) -> str | None:
     return text
 
 
+def step_measures_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.step_measures_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("dossier close measures adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def covhold_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -778,6 +788,7 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.VERIFY_SPEC, verify_amendment(root)),
                         (adoption.QFILE_SPEC, qfile_amendment(root)),
                         (adoption.SCRIPTED_GRADE_SPEC, scripted_grade_amendment(root)),
+                        (adoption.STEP_MEASURES_SPEC, step_measures_amendment(root)),
                         (adoption.COVHOLD_SPEC, covhold_amendment(root)),
                         (adoption.RELTYPE_SPEC, reltype_amendment(root)),
                         (adoption.HERO_SPEC, hero_amendment(root)),
@@ -843,6 +854,7 @@ def composition_inputs(root: Path) -> list[Path]:
     reltype_amendment(root)
     qfile_amendment(root)
     scripted_grade_amendment(root)
+    step_measures_amendment(root)
     hero_amendment(root)
     readers_amendment(root)
     cont_amendment(root)
@@ -857,7 +869,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.REPAIRS_SUBJECTS, *adoption.MAPS_SUBJECTS, *adoption.BOUNDS_SUBJECTS, *adoption.CORR_SUBJECTS,
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
-        *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
+        *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
         *adoption.TERM_BRIEF_SUBJECTS,
     }
     files = discover_composition_files(root)

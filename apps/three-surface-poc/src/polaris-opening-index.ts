@@ -118,7 +118,8 @@ export function substituteOpeningIndex(html: string, mountPrefix: string): strin
     if (row.target.kind === 'first-exact-source') return rowHtml(row, exactId);
     return rowHtml(row, page.includes(` id="${row.target.id}"`) ? row.target.id : undefined);
   });
-  const index = `<nav class="opening-index" data-polaris-opening-index aria-label="Opening index"><ol>${rows.join('')}</ol></nav>${OPENING_INDEX_SCRIPT}`;
+  const label = escapeAttr(copyText('index.landmark'));
+  const index = `<nav class="opening-index" data-polaris-opening-index aria-label="${label}"${SCOPE}><ol>${rows.join('')}</ol></nav>${OPENING_INDEX_SCRIPT}`;
   return page.replace(OPENING_INDEX_PLACEHOLDER, index);
 }
 

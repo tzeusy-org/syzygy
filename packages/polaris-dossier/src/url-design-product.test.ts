@@ -59,7 +59,7 @@ function fixture(lifetimeMilliseconds = 5000, observeInspectionRefusal?: DesignP
     withheldTitle: 'Own withheld', draftLayer: { state: 'editorial-draft', inferenceProvenance: { modelIdentity: 'own', modelVersion: null, declaredBy: 'operator', label: 'Inferred' } },
     blocks: new Map([['intro', { marking: 'inferred', unknownReason: null, basis: 'Own fixture.', executions: [], segments: [{ kind: 'prose', text: 'Own introduction.' }] }]]),
     glossary: [], disclosure: [], sourceAnchors, pages: [], reviewStatus: [{ id: 'own-status', label: 'Unknown', text: 'Own pending review.' }],
-    citationLines: new Map([['intro', new Map([['own', 'line 1']])]]),
+    citationLines: new Map([['intro', new Map([['own', [{ start: 1, end: 1 }]]])]]),
   };
   const sourceText = 'Own source.\n', objectId = createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${Buffer.byteLength(sourceText)}\0`), Buffer.from(sourceText)])).digest('hex');
   const sources = generationSourcesForBody({ sourceId: 'src-0123456789abcdef01234567', repositoryId: 'own', revision: pin,
@@ -636,7 +636,7 @@ describe('active URL design product capability', () => {
   });
   it.each([
     ['full output', (f: Awaited<ReturnType<typeof validatedFixture>>) => f.files.set('index.html', f.files.get('index.html')! + 'changed')],
-    ['nested Map', (f: Awaited<ReturnType<typeof validatedFixture>>) => (f.input.input.local.citationLines!.get('intro')! as Map<string, string>).set('own', 'line 2')],
+    ['nested Map', (f: Awaited<ReturnType<typeof validatedFixture>>) => (f.input.input.local.citationLines!.get('intro')! as Map<string, { start: number; end: number }[]>).set('own', [{ start: 2, end: 2 }])],
     ['origin policy', (f: Awaited<ReturnType<typeof validatedFixture>>) => { (f.options.declaration.originPolicy as { sha256: string }).sha256 = '3'.repeat(64); }],
     ['screen policy', (f: Awaited<ReturnType<typeof validatedFixture>>) => { (f.options.screen as { policySha256: string }).policySha256 = '3'.repeat(64); }],
     ['profile', (f: Awaited<ReturnType<typeof validatedFixture>>) => { (f.options.declaration.inference.profile as { sha256: string }).sha256 = '3'.repeat(64); }],
@@ -678,7 +678,7 @@ describe('active URL design product capability', () => {
     expect(await validateUrlDesignProduct(late.input, late.options)).toBeNull();
     const changed = fixture();
     gates.currentRenderer.mockImplementationOnce(async () => {
-      (changed.input.input.local.citationLines!.get('intro')! as Map<string, string>).set('own', 'changed during await');
+      (changed.input.input.local.citationLines!.get('intro')! as Map<string, { start: number; end: number }[]>).set('own', [{ start: 2, end: 2 }]);
       return true;
     });
     expect(await validateUrlDesignProduct(changed.input, changed.options)).toBeNull();
@@ -696,8 +696,8 @@ describe('independent design capability lifetime and exact inputs', () => {
     expect([...map]).not.toEqual(before);
   }
   it('rejects a nested input Map whose iteration order changed after mint', async () => {
-    const f = fixture(), lines = f.input.input.local.citationLines!.get('intro')! as Map<string,string>;
-    lines.set('second','line 2');
+    const f = fixture(), lines = f.input.input.local.citationLines!.get('intro')! as Map<string, { start: number; end: number }[]>;
+    lines.set('second', [{ start: 2, end: 2 }]);
     const capability = await validateUrlDesignProduct(f.input, f.options);
     expect(capability).not.toBeNull();
     expect(await inspectUrlDesignProduct(capability!, binding)).not.toBeNull();
@@ -714,8 +714,8 @@ describe('independent design capability lifetime and exact inputs', () => {
     expect(await readInertUrlDesignProduct(f.capability, binding)).toBeNull();
   });
   it('rejects a nested input Map reordered while renderer currentness is awaited', async () => {
-    const f = fixture(), lines = f.input.input.local.citationLines!.get('intro')! as Map<string,string>;
-    lines.set('second','line 2');
+    const f = fixture(), lines = f.input.input.local.citationLines!.get('intro')! as Map<string, { start: number; end: number }[]>;
+    lines.set('second', [{ start: 2, end: 2 }]);
     gates.currentRenderer.mockImplementationOnce(async () => { reorder(lines); return true; });
     expect(await validateUrlDesignProduct(f.input,f.options)).toBeNull();
   });
@@ -851,17 +851,17 @@ describe('second independent design capability boundary controls', () => {
 
   it('refuses nested Map reordering during a pending read and retires that capability across order restoration', async () => {
     const f = fixture();
-    const lines = f.input.input.local.citationLines!.get('intro')! as Map<string, string>;
-    lines.set('second', 'line 2');
+    const lines = f.input.input.local.citationLines!.get('intro')! as Map<string, { start: number; end: number }[]>;
+    lines.set('second', [{ start: 2, end: 2 }]);
     const capability = await validateUrlDesignProduct(f.input, f.options);
     expect(capability).not.toBeNull();
     let release: ((value: boolean) => void) | undefined;
     gates.currentRenderer.mockImplementationOnce(() => new Promise<boolean>(resolve => { release = resolve; }));
     const pending = readUrlDesignProduct(capability!, binding);
     expect(release).toBeDefined();
-    const original = [...lines];
+    const original = [...lines], own = lines.get('own')!;
     lines.delete('own');
-    lines.set('own', 'line 1');
+    lines.set('own', own);
     expect([...lines]).toEqual([...original].reverse());
     release!(true);
     expect(await pending).toBeNull();

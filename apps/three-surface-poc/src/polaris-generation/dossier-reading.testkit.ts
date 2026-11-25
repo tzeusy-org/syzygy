@@ -1,6 +1,6 @@
 // Test support: only the dossier reading tests import this.
 import { generationAnchorId, gitBlobObjectId, type EvidenceAnchor, type GenerationSource, type LocalRenderInput } from '@syzygy/polaris-generation-core';
-import type { LocalDerivedStructure, LocalManifestFact, LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
+import { generationSourcesForBody, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
 
 const REVISION = 'c'.repeat(40);
 const anchor = (source: GenerationSource): EvidenceAnchor => ({ targetClass: 'evidence-artifact-identifier-with-integrity-digest',
@@ -55,7 +55,7 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
     sources: [source],
     local: {
       // The lines the introduction cites, as the render adapter records them: its citation mark shows them on focus and hover.
-      citationLines: new Map([['introduction', new Map([[source.sourceId, 'lines 1\u20133']])]]),
+      citationLines: new Map([['introduction', new Map([[source.sourceId, [{ start: 1, end: 3 }]]])]]),
       draft: {
         title: 'Reading dossier', introduction: { id: 'introduction', text: 'intro', sourceIds: [source.sourceId] },
         sections: [
@@ -188,4 +188,37 @@ export function navigationInput(): ReturnType<typeof readingInput> {
       { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
     ] },
   } };
+}
+
+function lineCitationFixture(body: string, introduction: readonly { start: number; end: number }[], forms: readonly { start: number; end: number }[]) {
+  const input = readingInput();
+  const { repositoryId, revision, evaluationId } = READING_SOURCE;
+  const pieces = generationSourcesForBody({ repositoryId, revision, evaluationId, sourceId: 'src-9876543210fedcba98765432',
+    objectId: gitBlobObjectId(body), path: 'docs/settings.conf', body });
+  const first = pieces[0]!;
+  const sourceAnchors = new Map(input.local.sourceAnchors);
+  for (const piece of pieces) sourceAnchors.set(piece.sourceId, anchor(piece));
+  const citationLines = new Map(input.local.citationLines);
+  citationLines.set('introduction', new Map([[first.sourceId, introduction]]));
+  citationLines.set('forms', new Map([[first.sourceId, forms]]));
+  const draft = { ...input.local.draft,
+    introduction: { ...input.local.draft.introduction, sourceIds: [first.sourceId] },
+    sections: input.local.draft.sections.map(entry => ({ ...entry, paragraphs: entry.paragraphs.map(p => p.id === 'forms' ? { ...p, sourceIds: [first.sourceId] } : p) })),
+  };
+  return { local: { ...input.local, draft, sourceAnchors, citationLines }, sources: [...input.sources, ...pieces] };
+}
+
+/** Long plain text with distinguishable LF, CRLF, and bare CR line ends. Every line is synthetic. */
+export function lineCitationInput() {
+  const body = Array.from({ length: 2100 }, (_, index) => {
+    const ending = index % 3 === 0 ? '\r\n' : index % 3 === 1 ? '\r' : '\n';
+    return `# synthetic option ${index + 1}: local documentation${ending}`;
+  }).join('');
+  return lineCitationFixture(body, [{ start: 1200, end: 1202 }, { start: 1207, end: 1208 }], [{ start: 1204, end: 1205 }]);
+}
+
+/** 100 UTF-8 bytes per line, so the production source-piece boundary lies exactly after line 1000. */
+export function splitLineCitationInput() {
+  const body = Array.from({ length: 1200 }, (_, index) => `# synthetic setting ${index + 1}`.padEnd(99, ' ') + '\n').join('');
+  return lineCitationFixture(body, [{ start: 999, end: 1002 }], [{ start: 998, end: 1004 }]);
 }

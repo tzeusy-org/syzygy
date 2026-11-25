@@ -1,3 +1,4 @@
+import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
 /**
  * The two finding pages of an operator-agent dossier (REQ-polaris-generation-034, the index-and-task-routes change): the generated index and the
  * find-by-task page. Both are built at render from what the site already draws, with no model call and no script.
@@ -210,6 +211,10 @@ export function renderNameIndex(entries: readonly IndexEntry[], link: (target: I
 export const NO_TASK_ROUTES = 'This run\'s draft declares no task routes, so this page has none. Syzygy writes no route of its own: a route is the authoring agent\'s claim, checked like any other.';
 export const TASK_ROUTES_WITHHELD = 'The draft layer is Unknown, so the agent\'s task routes are not shown.';
 
-export const FINDING_CSS = '.name-index{list-style:none;padding:0;margin:0}.name-index>li{padding:.3rem 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.index-name{font-weight:600;margin-right:.5rem}.index-home,.index-blocks,.index-unnamed,.index-many{font-size:.9rem}.index-unnamed,.index-many{color:var(--muted)}'
-  + '.index-kinds ul,.route-list ol{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;padding:0;list-style:none}.route-list ol{display:block}.route-list li{padding:.15rem 0}'
-  + '.task-route{margin-top:2rem}.route-where,.route-see{display:block;font-size:.88rem;color:var(--muted);margin-top:.2rem}.route-where code{overflow-wrap:anywhere}';
+export const FINDING_CSS = `.name-index{list-style:none;padding:${tokens.spacing.none};margin:${tokens.spacing.none}}.name-index>li{padding:${tokens.spacing.markInset} ${tokens.spacing.none};`
+  + `border-bottom:${tokens.line.hairline} solid var(--line);overflow-wrap:anywhere}.index-name{font-weight:${tokens.type.strongWeight};margin-right:${tokens.spacing.small}}`
+  + `.index-home,.index-blocks,.index-unnamed,.index-many{font-size:${tokens.type.bodySmall}}.index-unnamed,.index-many{color:var(--muted)}`
+  + `.index-kinds ul,.route-list ol{display:flex;flex-wrap:wrap;gap:${tokens.spacing.tight} ${tokens.spacing.panelGap};padding:${tokens.spacing.none};list-style:none}.route-list ol{display:block}`
+  + `.route-list li{padding:${tokens.spacing.stepInset} ${tokens.spacing.none}}`
+  + `.task-route{margin-top:${tokens.spacing.large}}.route-where,.route-see{display:block;font-size:${tokens.type.compact};color:var(--muted);margin-top:${tokens.spacing.hintInset}}`
+  + `.route-where code{overflow-wrap:anywhere}`;

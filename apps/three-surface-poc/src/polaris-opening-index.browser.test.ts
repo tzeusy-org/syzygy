@@ -441,6 +441,36 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
     expect(report.line).toBe('4 / 11 words');
   });
 
+  it('exposes the opening landmark and generated counts with their copy role after load', async () => {
+    const tab = await browser.newPage();
+    try {
+      const cases = [
+        { name: 'populated-copy', body: TIE_BODY, offsets: ['after 0 words', 'after 4 words', 'after 4 words'], line: '4 / 11 words' },
+        { name: 'fallback-copy', body: NONE_BODY, offsets: [], line: '6 words' },
+      ];
+      const scopeCopy = (text: string) => ({ text, role: 'scope-instruction' });
+      for (const { name, body, offsets, line } of cases) {
+        const report = await measure(tab, write(name, syntheticPage(body)), WIDE, false);
+        expect(report.violations, name).toEqual([]);
+        const copy = await tab.evaluate(`(() => {
+          const entry = (element, text) => ({ text, role: element.getAttribute('data-copy-role') });
+          const collect = (selector, value) => Array.from(document.querySelectorAll(selector), element => entry(element, value(element)));
+          return {
+            landmark: collect('nav[data-polaris-opening-index]', element => element.getAttribute('aria-label')),
+            offsets: collect('[data-opening-offset]', element => element.textContent),
+            lines: collect('[data-polaris-reach-line]', element => element.textContent),
+          };
+        })()`);
+        expect(copy, name).toEqual({
+          landmark: [scopeCopy('Opening index')],
+          offsets: offsets.map(scopeCopy),
+          lines: [scopeCopy(line)],
+        });
+        expect(await tab.accessibleNames('Array.from(document.querySelectorAll("nav[data-polaris-opening-index]"))'), name).toEqual(['Opening index']);
+      }
+    } finally { await tab.close(); }
+  });
+
   it('with no indexed target rendered, the line follows the index and gives only the total (synthetic body, hand-counted)', async () => {
     const report = await run('none', syntheticPage(NONE_BODY), WIDE, false);
     expect(report.violations).toEqual([]);

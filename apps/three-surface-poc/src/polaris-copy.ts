@@ -72,6 +72,7 @@ export const POLARIS_COPY = [
   // v1.0, P-98): one row name per PWB-REQ-021 answer identity, spelled
   // exactly as the requirement's table spells it. Offsets and the stopping
   // line are counted in the page after load, so they are templated, not rows.
+  { id: 'index.landmark', role: 'scope-instruction', kind: 'label', text: 'Opening index' },
   { id: 'index.why', role: 'action-label', kind: 'label', text: 'purpose' },
   { id: 'index.promises', role: 'action-label', kind: 'label', text: 'promises' },
   { id: 'index.refusals-and-rule', role: 'action-label', kind: 'label', text: 'non-goals' },

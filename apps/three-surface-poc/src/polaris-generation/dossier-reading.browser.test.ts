@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from '../cdp-browser.js';
-import { navigationInput, readingInput } from './dossier-reading.testkit.js';
+import { lineCitationInput, navigationInput, readingInput, splitLineCitationInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -257,7 +257,7 @@ function reflowFixture() {
   blocks.set(inlineCitation.id, { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [],
     segments: [{ kind: 'prose', text: inlineCitation.text }] });
   const citationLines = new Map(local.citationLines);
-  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, 'line 1']]));
+  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, [{ start: 1, end: 1 }]]]));
   const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
     : { ...section, paragraphs: [...section.paragraphs, inlineCitation, quotedCode] }) };
   const sourceAnchors = new Map(local.sourceAnchors);
@@ -410,7 +410,7 @@ it.skipIf(executable === undefined)('shows complete citation hints on keyboard f
     await page.evaluate('document.querySelector("#block-local-reflow-inline").style.textAlign = "right"');
     const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
     expect(exactPage).toBeDefined();
-    const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
+    const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#L1`;
     const citations = [
       { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
       { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
@@ -479,3 +479,101 @@ it.skipIf(executable === undefined)('shows complete citation hints on keyboard f
     }
   });
 });
+
+it.skipIf(executable === undefined)('follows a ranged source citation and highlights only its line span with scripts removed', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'line-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(lineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const link = 'document.querySelector(\'[data-claim-id="introduction"] a.cite\')';
+      expect(await page.evaluate(`${link}.hash`)).toBe('#L1200');
+      await page.evaluate(`${link}.focus()`);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('location.hash')).toBe('#L1200');
+      const inspect = `(() => {
+        const target = document.querySelector('.source-line:target');
+        const row = number => document.getElementById('L' + number);
+        if (!target) return null;
+        const background = el => getComputedStyle(el).backgroundColor;
+        return { scripts: document.scripts.length, target: target.id, text: target.textContent.trim(),
+          rowCount: document.querySelectorAll('.source-line').length, scrolled: window.scrollY > 844,
+          onScreen: target.getBoundingClientRect().top >= 0 && target.getBoundingClientRect().bottom <= innerHeight,
+          fits: document.documentElement.scrollWidth <= innerWidth,
+          label: getComputedStyle(target, '::before').content,
+          continuations: [1201, 1202, 1207, 1208].every(n => row(n).classList.contains('cited-span') && background(row(n)) === background(target)),
+          unrelated: [1199, 1203, 1204, 1205].every(n => background(row(n)) !== background(target)),
+          details: document.querySelectorAll('details .source-line').length };
+      })()`;
+      await expect.poll(() => page.evaluate(inspect)).toEqual({ scripts: 0, target: 'L1200', text: '# synthetic option 1200: local documentation',
+        rowCount: 2100, scrolled: true, onScreen: true, fits: true, label: '"1200"', continuations: true, unrelated: true, details: 0 });
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);
+
+it.skipIf(executable === undefined)('continues a citation onto its next source piece using a native keyboard link', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'continued-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(splitLineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      const index = pathToFileURL(join(directory, 'index.html')).href;
+      const painted = `(() => {
+        const target = document.querySelector('.source-line:target, .source-line:has(>.source-continuation-target:target)');
+        if (!target) return [];
+        const background = getComputedStyle(target).backgroundColor;
+        return [...document.querySelectorAll('.source-line')].filter(line => getComputedStyle(line).backgroundColor === background).map(line => line.id);
+      })()`;
+      const selected = '[...document.querySelectorAll(".source-continuation a")].find(a => a.getClientRects().length > 0)';
+      const destinations = new Set<string>();
+      let firstPage = '';
+      for (const [selector, start, firstLines, nextLines, label] of [
+        ['[data-claim-id="introduction"] a.cite', '#L999', ['L999', 'L1000'], ['L1001', 'L1002'], 'Continue this citation: lines 1001–1002'],
+        ['[data-claim-id="forms"] a.cite', '#L998', ['L998', 'L999', 'L1000'], ['L1001', 'L1002', 'L1003', 'L1004'], 'Continue this citation: lines 1001–1004'],
+      ] as const) {
+        await page.navigate(index);
+        await page.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(start);
+        firstPage = await page.evaluate<string>("location.href.split('#')[0]");
+        await expect.poll(() => page.evaluate(painted)).toEqual(firstLines);
+        expect(await page.evaluate('document.scripts.length')).toBe(0);
+        const destination = await page.evaluate<string>(`${selected}.hash`);
+        expect(destination).toMatch(/^#continued-/u);
+        destinations.add(destination);
+        expect(await page.accessibleNames(`[${selected}]`)).toEqual([label]);
+        await page.press('Tab');
+        expect(await page.evaluate(`document.activeElement === ${selected}`)).toBe(true);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(destination);
+        expect(await page.evaluate("location.href.split('#')[0]")).not.toBe(firstPage);
+        expect(await page.evaluate("document.querySelector(':target').closest('.source-line').id")).toBe('L1001');
+        await expect.poll(() => page.evaluate(painted)).toEqual(nextLines);
+        expect(await page.evaluate('document.querySelectorAll(".source-continuation a").length')).toBe(0);
+      }
+      expect(destinations.size).toBe(2);
+      await page.navigate(`${firstPage}#L4`);
+      expect(await page.evaluate(`${selected} === undefined`)).toBe(true);
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);

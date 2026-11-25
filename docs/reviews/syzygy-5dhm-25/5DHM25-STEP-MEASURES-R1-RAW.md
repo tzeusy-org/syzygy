@@ -1,0 +1,15 @@
+# Independent review of retained dossier step measures R1
+
+**Verdict REVISE**
+
+[Observed] Scope is `syzygy-5dhm.25`, exact leaf `d41250048efd4448e25da51f972152183ceb4369`, tree `c669d8719202d55bed0e21bf93ba7b4d7628d3fa`, and actual parent `1c50743aa561e1e82dd7f327cfb36b7999e15c7c`. Candidate REQ-polaris-generation-033 SHA-256 `aebe89dc91cf4dbd52cf9f328a3d3a35ad6e1165a87cf084a42d7aa65ea91875` composes the A-307 v2.30 predecessor SHA-256 `de530007005b65c3f7400d42dabfa2caf50e8b2cc6b00fe2044a31d61ce3ab49`. The independent comparison verified the full 21 predecessor scenario bodies against the successor’s 25, one unchanged event-response form, and byte-identical warrants. The four additions are specific to close timing and counts. The comparison receipt `r1-semantic-parity.json` SHA-256 is `b1fad88f25b5d8433ffcfa31f429a90c557a39a817fb39ac974b9cad26480fe6`.
+
+## Blocking finding F1
+
+[Observed] `packages/polaris-dossier/src/close.ts:150–160` adds a timing object to the execution record and publishes the enlarged formatted record without checking the established reader bound. `packages/polaris-dossier/src/status.ts:77–84` reads the record at the 16,777,216-byte ceiling and reports usage as unavailable when the file exceeds it. REQ-polaris-generation-033 retains this reader limit, and the proposed timing paragraph promises preservation of the existing operator usage declaration.
+
+[Observed] An independent Vitest integration fixture exercised normal synthetic close twice with the same bounded synthetic step-log row and a declared 41 tokens. The exact parent writer produced a 16,777,157-byte record and stock `runStatus` read 41 tokens. The R1 writer reported successful close and produced a 16,778,459-byte record. The same reader returned `not recorded; the Execution Record cannot be read`. The new field is sufficient to turn a previously readable record into an unreadable success, so AC1’s delivered record and incumbent usage preservation fail at the boundary.
+
+[Observed] Output `byte-ceiling-counterexample-final.log` SHA-256 `aad4696902ef2ed1e75ff61b739ce7eaf0db67d7aeb2be2a1187109d892ff1d6` records the two arms and a deliberately failing literal bound assertion. The synthetic fixture is `packages/polaris-dossier/src/close.test.ts` in the isolated independent worktree, SHA-256 `75caab43950d0458ab9c6379c7ece35842d8ecfe918ace97104109c513a60051`. The copied exact parent close runtime SHA-256 is `5c20e6a5df76cd67cf2e174961bdd578970ac90e60624de76c12dd5fb8ac832c`. Retained review directory `/home/orca/.tmp/syzygy-four-lanes.xTvnrE/root-timing-r1.KQFNnI`.
+
+[Inferred] A successor should keep successful close records within the existing reader envelope, preserve the previously supportable legacy values and the typed declarations under pressure, and show a bounded refusal before an unreadable record is created when a valid representation cannot fit. The failure boundary needs its own literal fixture and scenario or equivalent oracle. The independent check covered this private bounded package and the predecessor composition. Full acceptance, adoption, and hosted checks remain pending.

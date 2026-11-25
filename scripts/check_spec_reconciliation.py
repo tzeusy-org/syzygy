@@ -810,6 +810,17 @@ SCRIPTED_GRADE_SUBJECTS = {
     SCRIPTED_GRADE_SPEC: "de530007005b65c3f7400d42dabfa2caf50e8b2cc6b00fe2044a31d61ce3ab49",
 }
 SCRIPTED_GRADE_BOUND_PARTS = len(SCRIPTED_GRADE_SUBJECTS)
+STEP_MEASURES_CHANGE = "dossier-step-measures"
+STEP_MEASURES_HOME = f"{CHANGES}/{STEP_MEASURES_CHANGE}"
+STEP_MEASURES_SPEC = f"{STEP_MEASURES_HOME}/proposed/polaris-generation/spec.md"
+STEP_MEASURES_UNION = f"{STEP_MEASURES_HOME}/GOVERNING-DEPENDENCIES.json"
+STEP_MEASURES_TAG = "polaris-dossier-step-measures-v2.31"
+STEP_MEASURES_STATUS_PREFIX = f"[Dossier close measures amendment 2.31]({STEP_MEASURES_HOME})"
+STEP_MEASURES_REPLACES = (POLARIS_ID + "033",)
+STEP_MEASURES_SUBJECTS = {
+    STEP_MEASURES_SPEC: "f7ff5706c26b937d991e24183d5dcb29091fefe580b066ccbfc32540fde7ea05",
+}
+STEP_MEASURES_BOUND_PARTS = len(STEP_MEASURES_SUBJECTS)
 # The v2.28 coverage-hold amendment (syzygy-5dhm.29): one MODIFIED
 # REQ-polaris-generation-035 (the fidelity review waits until every listed
 # inventory entry has an outcome) after its v2.18 run-tree read-bounds text,
@@ -3084,20 +3095,28 @@ def qfile_binding(root):
     return (None if records or subjects else read_text(root, QFILE_SPEC), records, subjects)
 
 
-def is_scripted_grade_row(line):
+def _is_reviewed_version_row(line, version_tag, subjects):
     """Recognize a version claim or a snapshot at the row's own commit."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
-    tag = f"`{SCRIPTED_GRADE_TAG}`"
-    if SCRIPTED_GRADE_TAG is not None and len(cells) == 7 and cells[6] == tag:
+    tag = f"`{version_tag}`"
+    if version_tag is not None and len(cells) == 7 and cells[6] == tag:
         return True
-    if SCRIPTED_GRADE_TAG is not None and len(cells) != 7 and tag in cells:
+    if version_tag is not None and len(cells) != 7 and tag in cells:
         return True
     if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
         return False
     snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/"
-    return all(f"]({snapshot}{path})" in cells[3] for path in SCRIPTED_GRADE_SUBJECTS)
+    return all(f"]({snapshot}{path})" in cells[3] for path in subjects)
+
+
+def is_scripted_grade_row(line):
+    return _is_reviewed_version_row(line, SCRIPTED_GRADE_TAG, SCRIPTED_GRADE_SUBJECTS)
+
+
+def is_step_measures_row(line):
+    return _is_reviewed_version_row(line, STEP_MEASURES_TAG, STEP_MEASURES_SUBJECTS)
 
 
 def scripted_grade_rows(root):
@@ -3113,38 +3132,71 @@ def scripted_grade_disposition(root, rows):
     return None
 
 
-def scripted_grade_binding(root):
-    """Apply the reviewed scripted benchmark overlay after the effective question-file requirement."""
-    rows = scripted_grade_rows(root)
-    if not rows or scripted_grade_disposition(root, rows):
+def step_measures_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_step_measures_row(line)]
+
+
+def step_measures_disposition(root, rows):
+    if STEP_MEASURES_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), STEP_MEASURES_TAG,
+                                    STEP_MEASURES_SUBJECTS, plain_revert=True)
+    return None
+
+
+def _reviewed_version_binding(root, rows, disposition, *, version_tag, subjects_map, spec,
+                              predecessor, predecessor_label, version, label):
+    """Check the unique adoption row and exact reviewed specification bytes."""
+    if not rows or disposition(root, rows):
         return None, [], []
-    if SCRIPTED_GRADE_TAG is None:
-        return None, ["scripted benchmark grading: its version tag is unassigned"], []
+    if version_tag is None:
+        return None, [f"{label}: its version tag is unassigned"], []
     records, subjects = [], []
-    if qfile_binding(root)[0] is None:
-        records.append("scripted benchmark grading: prior v2.27 question-file adoption is unavailable")
+    if predecessor(root)[0] is None:
+        records.append(f"{label}: prior {predecessor_label} adoption is unavailable")
     if len(rows) != 1 or len(rows[0]) != 7:
-        records.append("scripted benchmark grading: expected one seven-column agent adoption row")
+        records.append(f"{label}: expected one seven-column agent adoption row")
     else:
         identity, date, commit, changed, reason, revert, tag = rows[0]
         landed = re.fullmatch(r"`([0-9a-f]{40})`", commit)
         if (not re.fullmatch(r"A-[1-9][0-9]*", identity)
                 or not valid_adoption_date(date)
-                or not landed or tag != f"`{SCRIPTED_GRADE_TAG}`" or not reason):
-            records.append("scripted benchmark grading: malformed adoption identity, date, commit, reason or tag")
+                or not landed or tag != f"`{version_tag}`" or not reason):
+            records.append(f"{label}: malformed adoption identity, date, commit, reason or tag")
         if landed:
             oid = landed.group(1)
             if revert.split("`")[1:2] not in ([f"git revert {oid}"], [f"git revert -m 1 {oid}"]):
-                records.append("scripted benchmark grading: revert does not name the landed commit")
-            for rel in SCRIPTED_GRADE_SUBJECTS:
+                records.append(f"{label}: revert does not name the landed commit")
+            for rel in subjects_map:
                 snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{rel}"
                 if f"]({snapshot})" not in changed:
-                    records.append(f"scripted benchmark grading: adoption row does not name `{rel}`")
-    for rel, digest in SCRIPTED_GRADE_SUBJECTS.items():
+                    records.append(f"{label}: adoption row does not name `{rel}`")
+    for rel, digest in subjects_map.items():
         body = read_bytes(root, rel)
         if body is None or sha(body) != digest:
-            subjects.append(f"scripted benchmark grading: `{rel}` differs from the reviewed v2.30 subject")
-    return (None if records or subjects else read_text(root, SCRIPTED_GRADE_SPEC), records, subjects)
+            subjects.append(f"{label}: `{rel}` differs from the reviewed {version} subject")
+    return (None if records or subjects else read_text(root, spec), records, subjects)
+
+
+def scripted_grade_binding(root):
+    """Apply the reviewed scripted benchmark overlay after the effective question-file requirement."""
+    return _reviewed_version_binding(
+        root, scripted_grade_rows(root), scripted_grade_disposition,
+        version_tag=SCRIPTED_GRADE_TAG, subjects_map=SCRIPTED_GRADE_SUBJECTS, spec=SCRIPTED_GRADE_SPEC,
+        predecessor=qfile_binding, predecessor_label="v2.27 question-file", version="v2.30",
+        label="scripted benchmark grading",
+    )
+
+
+def step_measures_binding(root):
+    """Apply close measures only over the effective scripted benchmark REQ-033."""
+    return _reviewed_version_binding(
+        root, step_measures_rows(root), step_measures_disposition,
+        version_tag=STEP_MEASURES_TAG, subjects_map=STEP_MEASURES_SUBJECTS, spec=STEP_MEASURES_SPEC,
+        predecessor=scripted_grade_binding, predecessor_label="v2.30 scripted benchmark", version="v2.31",
+        label="dossier close measures",
+    )
 
 
 def is_covhold_row(line):
@@ -3970,6 +4022,15 @@ def check_outcomes(root, report):
         subjects_seen += SCRIPTED_GRADE_BOUND_PARTS
     r1 += scripted_grade_records
     r2 += scripted_grade_subjects
+    step_measures_retired_by = step_measures_disposition(root, step_measures_rows(root))
+    step_measures_amendment, step_measures_records, step_measures_subjects = step_measures_binding(root)
+    if step_measures_retired_by:
+        records += 2
+    elif step_measures_amendment is not None or step_measures_records or step_measures_subjects:
+        records += 1
+        subjects_seen += STEP_MEASURES_BOUND_PARTS
+    r1 += step_measures_records
+    r2 += step_measures_subjects
     covhold_retired_by = covhold_disposition(root, covhold_rows(root))
     covhold_amendment, covhold_records, covhold_subjects = covhold_binding(root)
     if covhold_retired_by:
@@ -4043,6 +4104,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.27 inactive by {qfile_retired_by}"
     if scripted_grade_retired_by:
         retirement += f"; v2.30 inactive by {scripted_grade_retired_by}"
+    if step_measures_retired_by:
+        retirement += f"; v2.31 inactive by {step_measures_retired_by}"
     if readmit_retired_by:
         retirement += f"; v2.13 inactive by {readmit_retired_by}"
     report.add("R1", "terminal outcome for every child", records, r1,
@@ -4951,6 +5014,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, scripted_grade_amendment, SCRIPTED_GRADE_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        step_measures_amendment, step_measures_records, step_measures_subjects = step_measures_binding(root)
+        findings += step_measures_records + step_measures_subjects
+        if step_measures_amendment is not None:
+            if scripted_grade_amendment is None:
+                findings.append("POLARIS: dossier close measures require effective scripted benchmark v2.30")
+            else:
+                a, extra_a = compose_figure_by_id(a, step_measures_amendment, STEP_MEASURES_REPLACES)
+                b, extra_b = compose_figure_by_name(b, step_measures_amendment, STEP_MEASURES_REPLACES)
+                pa += extra_a
+                pb += extra_b
         covhold_amendment, covhold_records, covhold_subjects = covhold_binding(root)
         findings += covhold_records + covhold_subjects
         if covhold_amendment is not None:
@@ -5349,6 +5422,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS scripted benchmark grading: cannot count predecessor and successor for 033")
         else:
             n_scen += current[ident] - prior[ident]
+    step_measures_amendment, _records, _subjects = step_measures_binding(root)
+    if step_measures_amendment is not None:
+        # Only 033 moves, after scripted benchmark grading v2.30.
+        ident = STEP_MEASURES_REPLACES[0]
+        prior = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(scripted_grade_amendment or "")
+                 if len(b["ids"]) == 1}
+        current = {b["ids"][0]: len(b["scenarios"]) for b in _polaris_blocks_manual(step_measures_amendment)
+                   if len(b["ids"]) == 1}
+        if set(current) != {ident} or ident not in prior:
+            findings.append("POLARIS dossier close measures: cannot count predecessor and successor for 033")
+        else:
+            n_scen += current[ident] - prior[ident]
     covhold_amendment, _records, _subjects = covhold_binding(root)
     if covhold_amendment is not None:
         # Only 035 moves, after the run-tree read bounds v2.18.
@@ -5609,6 +5694,9 @@ def check_generated(root, pop, report):
     scripted_grade_amendment, _records, _subjects = scripted_grade_binding(root)
     if scripted_grade_amendment is not None:
         files += tracked(root, SCRIPTED_GRADE_HOME)
+    step_measures_amendment, _records, _subjects = step_measures_binding(root)
+    if step_measures_amendment is not None:
+        files += tracked(root, STEP_MEASURES_HOME)
     covhold_amendment, _records, _subjects = covhold_binding(root)
     if covhold_amendment is not None:
         files += tracked(root, COVHOLD_HOME)
@@ -5679,6 +5767,7 @@ def check_generated(root, pop, report):
                         (verify_amendment, VERIFY_UNION),
                         (qfile_amendment, QFILE_UNION),
                         (scripted_grade_amendment, SCRIPTED_GRADE_UNION),
+                        (step_measures_amendment, STEP_MEASURES_UNION),
                         (covhold_amendment, COVHOLD_UNION),
                         (term_brief_amendment, TERM_BRIEF_UNION)):
         if delta is None:
@@ -6130,6 +6219,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls scripted benchmark grading v2.30 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(SCRIPTED_GRADE_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls scripted benchmark grading v2.30 adopted while it is not in force")
+    step_measures_amendment, _records, _subjects = step_measures_binding(root)
+    step_measures_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(STEP_MEASURES_STATUS_PREFIX)]
+    if step_measures_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and STEP_MEASURES_TAG in line
+                   for line in rows.get(STEP_MEASURES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route dossier close measures v2.31 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = step_measures_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or step_measures_fields != [f"{STEP_MEASURES_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route dossier close measures v2.31 and its adoption {identity}")
+    elif STEP_MEASURES_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in step_measures_fields):
+            findings.append(f"`{STATUS}` calls dossier close measures v2.31 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(STEP_MEASURES_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls dossier close measures v2.31 adopted while it is not in force")
     covhold_amendment, _records, _subjects = covhold_binding(root)
     covhold_fields = [line.strip() for line in visible_route_lines(status)
                      if line.strip().startswith(COVHOLD_STATUS_PREFIX)]
@@ -6575,6 +6682,7 @@ def inputs(root):
     paths |= {VERIFY_UNION, *VERIFY_SUBJECTS}
     paths |= {QFILE_UNION, *QFILE_SUBJECTS}
     paths |= {SCRIPTED_GRADE_UNION, *SCRIPTED_GRADE_SUBJECTS}
+    paths |= {STEP_MEASURES_UNION, *STEP_MEASURES_SUBJECTS}
     paths |= {COVHOLD_UNION, *COVHOLD_SUBJECTS}
     paths |= {TERM_BRIEF_UNION, *TERM_BRIEF_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
@@ -6965,6 +7073,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     had_covhold = any(is_covhold_row(line) for line in original.splitlines())
     had_scripted_grade = any(is_scripted_grade_row(line) for line in original.splitlines())
     had_term_brief = any(is_term_brief_row(line) for line in original.splitlines())
+    step_rows = step_measures_rows(tree)
+    step_retired = step_measures_disposition(tree, step_rows)
+    step_records = 2 if step_retired else int(bool(step_rows))
+    step_subjects = STEP_MEASURES_BOUND_PARTS if step_rows and not step_retired else 0
     edit_rows = edit_account_rows(tree)
     edit_retired = edit_account_disposition(tree, edit_rows)
     edit_records = 2 if edit_retired else int(bool(edit_rows))
@@ -6977,7 +7089,7 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
@@ -6993,8 +7105,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -7152,7 +7264,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10133,7 +10245,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10253,7 +10365,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -10325,7 +10437,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -10410,7 +10522,7 @@ def verify_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line))
+                      if not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10540,7 +10652,7 @@ def qfile_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qfile_row(line) and not is_scripted_grade_row(line))
+                      if not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10671,7 +10783,7 @@ def scripted_grade_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_scripted_grade_row(line))
+                      if not is_scripted_grade_row(line) and not is_step_measures_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -10743,6 +10855,100 @@ def scripted_grade_cases(tmp, base, witnesses, failures):
     ledger.write_text(pending + row + veto)
     retired, found = census(tree)
     held = (scripted_grade_disposition(tree, scripted_grade_rows(tree)) == "A-1000"
+            and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 033", found, held, baseline=True)
+
+
+def step_measures_cases(tmp, base, witnesses, failures):
+    """Guard the REQ033 succession, checked close spec and operative retirement."""
+    original = read_text(base, STEP_MEASURES_SPEC)
+    if original is None or STEP_MEASURES_TAG is None or scripted_grade_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"step-measures-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-step-measures"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_step_measures_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    requirement = STEP_MEASURES_REPLACES[0]
+    held = (step_measures_binding(tree) == (None, [], []) and not before_findings
+            and len(prior[requirement]["scenarios"]) == 21)
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "prior 033 has 21 scenarios",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{STEP_MEASURES_SPEC}"
+    row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{STEP_MEASURES_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-25 | `{later}` | "
+    citations = (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{STEP_MEASURES_TAG}` | `git revert {later}` | — |\n"),
+    )
+    for state, prefix, expected in (("pending", pending, None), ("adopted", pending + row, original)):
+        for name, citation in citations:
+            ledger.write_text(prefix + citation)
+            text, r1, r2 = step_measures_binding(tree)
+            record(f"{state}-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+                   "an unrelated row does not claim this adoption", r1 + r2,
+                   text == expected and not r1 and not r2, baseline=True)
+
+    ledger.write_text(pending + row)
+    after, after_findings = census(tree)
+    effective = after["POLARIS"]
+    held = (step_measures_binding(tree) == (original, [], []) and not after_findings
+            and len(effective[requirement]["scenarios"]) == 25
+            and set(prior) == set(effective)
+            and all(prior[other] == body for other, body in effective.items() if other != requirement))
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 033 moves from 21 to 25 scenarios",
+           after_findings, held, baseline=True)
+
+    for name, old, new, detail in (
+        ("duplicate-row", row, row + row, "seven-column"),
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", STEP_MEASURES_TAG, STEP_MEASURES_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = step_measures_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    predecessor = next(line for line in pending.splitlines(keepends=True) if is_scripted_grade_row(line))
+    ledger.write_text(pending.replace(predecessor, "", 1) + row)
+    text, r1, r2 = step_measures_binding(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, predecessor, "", "R1 requires effective v2.30", r1 + r2,
+           text is None and not r2 and any("prior v2.30" in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / STEP_MEASURES_SPEC
+    changed = "the first byte beyond the bound for the capacity-limited record gives a successful close"
+    current_capacity = "the first byte beyond the bound for the capacity-limited record gives a typed write refusal"
+    assert original.count(current_capacity) == 1
+    spec.write_text(original.replace(current_capacity, changed, 1))
+    text, r1, r2 = step_measures_binding(tree)
+    record("modified-close-capacity", STEP_MEASURES_SPEC, current_capacity, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and not r1 and len(r2) == 1 and STEP_MEASURES_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (step_measures_disposition(tree, step_measures_rows(tree)) == "A-1000"
             and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 033", found, held, baseline=True)
 
@@ -11078,7 +11284,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -11704,6 +11910,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                           "outcome": "killed" if caught else "SURVIVED"})
         if not caught:
             failures.append(f"{name}: expected {expect}")
+    step_measures_cases(tmp, base, witnesses, failures)
     doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
            "mutants": witnesses}
     if witness_path:
