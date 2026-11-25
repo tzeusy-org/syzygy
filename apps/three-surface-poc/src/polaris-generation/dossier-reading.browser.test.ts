@@ -235,12 +235,31 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render. ${longStatusWord}`, label: 'Inferred' },
     { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Inferred' },
   ] as const;
-  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [] };
-  const layoutFixture = { ...local, reviewStatus, pages: [...local.pages, reviewPage] };
+  const longPath = `src/${'selectedSourceSegment'.repeat(4)}.ts`;
+  const revision = '73c810edba'.repeat(4);
+  const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [{
+    id: 'discovery-read', heading: 'Read by this render', note: `Read at revision ${revision}.`, empty: 'None.', items: [{
+      id: 'discovery/read/1', marking: 'observed', unknownReason: null, title: longPath, text: 'Admitted by screening.',
+      details: [`object sha1:${revision}`, `revision ${revision}`], sourceIds: [],
+    }],
+  }] } as const;
+  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [{
+    id: 'review-fidelity', heading: 'Fidelity review', note: 'Rebuilt at this render.', empty: 'None.', items: [{
+      id: 'review/fidelity/binding', marking: 'observed', unknownReason: null, title: 'Packet binding',
+      text: `The rebuilt packet digest is ${fidelityDigest}, and the verdict names it.`, details: [], sourceIds: [],
+    }],
+  }] } as const;
+  const disclosure = [...local.disclosure, { id: 'run/screened-path', text: `Screened source ${longPath}`, label: 'Inferred' }] as const;
+  const layoutFixture = { ...local, disclosure, reviewStatus, pages: [...local.pages, discoveryPage, reviewPage] };
+  const settledText = new Map<string, readonly [selector: string, text: string]>([
+    ['appendix.html', ['#appendix-disclosure > ul > li', longPath]],
+    ['discovery.html', ['#discovery-read > ul.local-items > li', longPath]],
+    ['review.html', ['#review-fidelity > ul.local-items > li', fidelityDigest]],
+  ] as const);
   const { files } = renderLocalDossier({ sources, local: layoutFixture });
   const pages = [...files].filter(([path]) => path.endsWith('.html'));
-  expect(pages).toHaveLength(19);
-  expect(files.has('review.html')).toBe(true);
+  expect(pages).toHaveLength(20);
+  expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...settledText.keys()]));
   expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
   const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
   let browser: Browser | undefined;
@@ -254,6 +273,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     try {
       await page.setViewport(390, 844);
       const overflows: Array<{ path: string; scrollWidth: number }> = [];
+      const longTextOverflows: string[] = [];
       for (const [path] of pages) {
         await page.navigate(pathToFileURL(join(directory, path)).href);
         const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
@@ -278,8 +298,27 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
           expect(status, path).not.toContain(designGroups);
         }
         if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
+        const selected = settledText.get(path);
+        if (selected !== undefined) {
+          const [selector, text] = selected;
+          const textFits = await page.evaluate<boolean>(`(() => {
+            const text = ${JSON.stringify(text)};
+            const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
+            if (node === undefined) return false;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rects = [...range.getClientRects()];
+            return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
+          })()`);
+          if (!textFits) longTextOverflows.push(path);
+        }
       }
-      expect(overflows).toEqual([]);
+      expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
+      await page.setViewport(1440, 844);
+      for (const [path] of settledText) {
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
+      }
     } finally {
       await page.close();
     }
