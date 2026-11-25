@@ -364,7 +364,7 @@ const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ reado
 };
 
 describe('brief: shape packs (version 2.4)', () => {
-  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section, worth-knowing paragraph and terminology instructions', async () => {
+  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section and worth-knowing paragraph', async () => {
     const { run, brief, record } = await briefOf(['src/server.c', 'README.md']);
     const golden: string = JSON.parse(fs.readFileSync(BRIEF_V10_GOLDEN, 'utf8')).brief;
     const schemaSha = sha(read(run, 'draft.schema.json'));
