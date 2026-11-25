@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { briefIssuedAt } from './check.js';
-import { USAGE_NOT_RECORDED } from './close.js';
+import { CLOSE_RECORD_JSON_LIMITS, CLOSE_RECORD_MAX_BYTES, USAGE_NOT_RECORDED } from './close.js';
 import type { Outcome } from './outcome.js';
 import type { RunConfigRefusal } from './run-config.js';
 import { readRunRecord, type RecordedRunConfig } from './run-record.js';
@@ -78,7 +78,7 @@ const KNOWN_ENTRIES: ReadonlySet<string> = new Set(Object.values(RUN_LAYOUT));
 export function closedUsage(file: string): string {
   let usage: unknown;
   try {
-    const record = parseBoundedJson(readBoundedText(file, RUN_TREE_BOUNDS.closeRecord), { maxBytes: 16 * 1024 * 1024, maxNodes: 1_000_000, maxDepth: 16 }) as { agentUsage?: unknown };
+    const record = parseBoundedJson(readBoundedText(file, CLOSE_RECORD_MAX_BYTES), CLOSE_RECORD_JSON_LIMITS) as { agentUsage?: unknown };
     usage = record.agentUsage;
   } catch {
     return `${NOT_RECORDED}; the Execution Record cannot be read`;

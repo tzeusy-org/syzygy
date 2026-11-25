@@ -16,6 +16,7 @@ import type { ReverifyRefusal } from './reverify.js';
 import { screenLoaderOf, placementSubjectOf } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './run-tree-read.js';
+import { CAPACITY_UNKNOWN, STEP_LINES_MAX, stepMeasures, type StepLogSnapshot } from './step-measures.js';
 
 /** `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` (REQ-polaris-generation-033, 018; design "Command surface",
  * `close`; syzygy-qkea.11).
@@ -28,7 +29,7 @@ import { RUN_TREE_BOUNDS, isMissingEntry, readBoundedText, readCause } from './r
  * The agent sessions' tokens and turns are invisible to Syzygy, so the record carries only the figure the operator declares, labelled
  * Inferred and attributed to the operator, and never as Observed or as a provider receipt; with none declared it says the usage was not
  * recorded and that Syzygy cannot observe it. Everything else the record carries from the run directory (the configuration, the brief's
- * execution rule, the agent's reported commands, the step instants, the breach log) is a stored record within the agent sessions' write
+ * execution rule, the agent's reported commands, the step instants and the step measures derived from the same read, the breach log) is a stored record within the agent sessions' write
  * reach, and Inferred. The record copies no file body: no brief, prompt or transcript body enters it, only each stored file's digest.
  * Syzygy made no provider call for the run, issued no credential for it and wrote none to the state directory. */
 
@@ -38,7 +39,9 @@ export const NO_PROVIDER_CALL = 'Syzygy made no provider call for this run, reso
 export const NO_CREDENTIAL_ISSUED = 'Syzygy issued no credential for this run and wrote none to the state directory.';
 const WITHHELD_TEXT = '[withheld: a secret detector matches this text]';
 const MAX_STORED_FILES = 20_000;
-const STEP_LINES_MAX = 10_000;
+/** The status reader's bounds on `record.json` (REQ-polaris-generation-033): close writes no record that reader cannot parse. */
+export const CLOSE_RECORD_MAX_BYTES = RUN_TREE_BOUNDS.closeRecord;
+export const CLOSE_RECORD_JSON_LIMITS = { maxBytes: CLOSE_RECORD_MAX_BYTES, maxNodes: 1_000_000, maxDepth: 16 } as const;
 
 export interface CloseRequest {
   /** The operator's declared token usage, as typed; a positive integer or absent. */
@@ -49,13 +52,15 @@ export interface CloseRequest {
 
 export interface CloseDeps extends ReviewDeps {
   readonly probe: CredentialProbe;
+  /** A test seam, run after the one bounded step-log read and before the stored-file inventory. */
+  readonly afterStepLogRead?: () => void;
 }
 
 export type AgentUsage =
   | { readonly state: 'declared'; readonly tokens: number | null; readonly turns: number | null; readonly declaredBy: 'operator'; readonly label: 'Inferred'; readonly basis: string }
   | { readonly state: 'not-recorded'; readonly text: typeof USAGE_NOT_RECORDED; readonly label: 'Unknown' };
 
-export type CloseStage = 'usage' | 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'closed-already' | 'screen' | 'write';
+export type CloseStage = 'usage' | 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'closed-already' | 'screen' | 'capacity' | 'write';
 
 export interface CloseRefusal {
   readonly command: 'close';
@@ -126,6 +131,9 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
   const secret = (value: string): boolean => screenLoad.screen.screenBody(value) === 'secret-detector-match';
 
   const brief = readBriefRecord(run);
+  // One bounded read gives both the steps view and the step measures; the inventory below may see a later file (version 2.31).
+  const stepLog = readStepLog(run);
+  deps.afterStepLogRead?.();
   const stored = storedFiles(run);
   const record = {
     format: EXECUTION_RECORD_FORMAT,
@@ -145,7 +153,8 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     executionRule: isRecord(brief) && isRecord(brief['executionRule']) ? { ...brief['executionRule'], label: 'Inferred' } : { why: `${RUN_LAYOUT.briefRecord} names no execution rule`, label: 'Unknown' },
     reportedCommands: reportedCommands(run, subject.clone.path, secret),
     agentUsage: usage,
-    steps: stepInstants(run),
+    steps: stepInstantsOf(stepLog),
+    stepMeasures: stepMeasures(stepLog, now),
     credential: { atClose: credential, breaches: breachLog(run), ...(credential.required ? { disclosure: CREDENTIAL_CHECK_DISCLOSURE } : {}) },
     declaredProvider: { provider: declared.agentProvider, contentClasses: subject.contentClasses, label: 'Inferred', actualTransmission: 'Unknown' },
     noProviderCall: NO_PROVIDER_CALL,
@@ -153,8 +162,12 @@ export async function closeRun(runDir: string, request: CloseRequest, deps: Clos
     stored: { label: 'Inferred', basis: 'the digest of each file in the run directory as Syzygy read it at close; no body is copied, so no brief, prompt or transcript body enters this record', ...stored },
     disclosures: credential.required ? [...DISCLOSURES, CREDENTIAL_CHECK_DISCLOSURE] : DISCLOSURES,
   };
+  const encoded = encodeExecutionRecord(record);
+  if (encoded === null) {
+    return refuse('capacity', `the Execution Record cannot stay within ${CLOSE_RECORD_MAX_BYTES} UTF-8 bytes and the status reader's JSON bounds, even with the step measures Unknown for record capacity and compact JSON`);
+  }
   try {
-    fs.writeFileSync(recordFile, `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(recordFile, encoded, { mode: 0o600, flag: 'wx' });
   } catch (cause) {
     return refuse('write', `the Execution Record could not be written (${errno(cause)})`);
   }
@@ -207,11 +220,34 @@ function reportedCommands(run: string, clone: string, secret: (value: string) =>
   };
 }
 
+/** The record's encoding: the familiar formatted form, else compact JSON with the same members, else either form with the step measures
+ * Unknown for record capacity; null when even that record exceeds the inclusive byte ceiling or the status reader's JSON bounds. */
+export function encodeExecutionRecord(record: Readonly<Record<string, unknown>> & { readonly stepMeasures: unknown }): string | null {
+  const fits = (text: string): boolean => {
+    if (Buffer.byteLength(text, 'utf8') > CLOSE_RECORD_MAX_BYTES) return false;
+    try { parseBoundedJson(text, CLOSE_RECORD_JSON_LIMITS); return true; } catch { return false; }
+  };
+  for (const candidate of [record, { ...record, stepMeasures: CAPACITY_UNKNOWN }]) {
+    for (const text of [`${JSON.stringify(candidate, null, 2)}\n`, `${JSON.stringify(candidate)}\n`]) if (fits(text)) return text;
+  }
+  return null;
+}
+
+/** The run's step log, read once by the reader rule: absent, unreadable, or its nonempty lines in physical order. */
+export function readStepLog(run: string): StepLogSnapshot {
+  const read = readLog(run, RUN_LAYOUT.steps);
+  if (!read.ok) return { state: 'unreadable', why: read.why };
+  return read.absent ? { state: 'absent' } : { state: 'read', lines: read.lines };
+}
+
 /** The instants of Syzygy's own steps, from the step log: stored, so Inferred. Only the step, instant and outcome are carried. */
 export function stepInstants(run: string): Readonly<Record<string, unknown>> {
-  const read = readLog(run, RUN_LAYOUT.steps);
-  if (!read.ok) return { label: 'Unknown', basis: 'the run\'s step log, which the agent sessions can write', entries: [], unreadable: 0, why: read.why };
-  const { lines } = read;
+  return stepInstantsOf(readStepLog(run));
+}
+
+function stepInstantsOf(snapshot: StepLogSnapshot): Readonly<Record<string, unknown>> {
+  if (snapshot.state === 'unreadable') return { label: 'Unknown', basis: 'the run\'s step log, which the agent sessions can write', entries: [], unreadable: 0, why: snapshot.why };
+  const lines = snapshot.state === 'absent' ? [] : snapshot.lines;
   const entries: { step: string; at: string; outcome: string | null }[] = [];
   let unreadable = 0;
   for (const line of lines.slice(0, STEP_LINES_MAX)) {
@@ -226,12 +262,12 @@ export function stepInstants(run: string): Readonly<Record<string, unknown>> {
 /** The lines of the step log or the breach log, read by the reader rule under 16,777,216 bytes (REQ-polaris-generation-033 version
  * 2.18). A log absent from the run directory is an empty log; one that stands at its path but cannot be read (not a regular file, past its
  * bound, or any other failed open or read) is Unknown, never empty: no evidence is not zero (VIS-2). */
-function readLog(run: string, name: string): { readonly ok: true; readonly lines: string[] } | { readonly ok: false; readonly why: string } {
+function readLog(run: string, name: string): { readonly ok: true; readonly lines: string[]; readonly absent: boolean } | { readonly ok: false; readonly why: string } {
   const file = path.join(run, name);
   try {
-    return { ok: true, lines: readBoundedText(file, RUN_TREE_BOUNDS.log).split('\n').filter((line) => line !== '') };
+    return { ok: true, absent: false, lines: readBoundedText(file, RUN_TREE_BOUNDS.log).split('\n').filter((line) => line !== '') };
   } catch (cause) {
-    if (isMissingEntry(file, cause)) return { ok: true, lines: [] };
+    if (isMissingEntry(file, cause)) return { ok: true, absent: true, lines: [] };
     return { ok: false, why: `${name} cannot be read (${readCause(cause, RUN_TREE_BOUNDS.log)})` };
   }
 }
