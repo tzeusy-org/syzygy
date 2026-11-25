@@ -17,8 +17,10 @@ beforeEach(() => new Promise<void>((resolve) => setImmediate(resolve)));
 // A helper also imported outside Vitest cannot call `afterAll` itself, and
 // `process.on('exit')` never fires in a Vitest worker, so a helper registers
 // here: everything registered runs once the file's tests have finished.
-const afterTestFile: (() => void)[] = [];
-Object.assign(globalThis, { syzygyAfterTestFile: (teardown: () => void) => { afterTestFile.push(teardown); } });
-afterAll(() => {
-  for (const teardown of afterTestFile.splice(0).reverse()) teardown();
+type FileTeardown = () => void | Promise<void>;
+const afterTestFile: FileTeardown[] = [];
+Object.assign(globalThis, { syzygyAfterTestFile: (teardown: FileTeardown) => { afterTestFile.push(teardown); } });
+afterAll(async () => {
+  // Drain the live stack: an awaited teardown may register another callback.
+  while (afterTestFile.length > 0) await afterTestFile.pop()!();
 });
