@@ -1,0 +1,1073 @@
+{
+  "subject": "syzygy-5dhm.135: the per-kind floor (REQ-polaris-generation-034 version 2.32) replayed over every stored Redis run's latest passed draft",
+  "commit": "b301c88db124d7f17f6e8d7199362a492a7d7162",
+  "caution": "No stored draft declares questionKinds, so these declarations are a keyword proxy for an author's, and what follows shows what the floor reports over proxy tags, not that declarations reproduce the pilot's per-kind shares; any comparison with the pilot is Inferred.",
+  "changeMissingInEveryMajorDirectory": {
+    "run-2ecdcab0c77e228f6ad9d3e0acfa1414": true,
+    "run-36df95faf04a4c98eabbb32a18a4e833": true,
+    "run-4465d22f5ce1829ca49059a5b8451bb0": true,
+    "run-658f2f90470f73eea1dc1d90209c5ef7": true,
+    "run-d9411d26ca55ebe0250e2e9b94dc0e32": true,
+    "run-ffe579c77dc21d9f6dd87ca6e2bc9301": true
+  },
+  "harness": "docs/evidence/syzygy-5dhm-135/question_kind_replay.ts via question_kind_replay_all.sh",
+  "label": "Inferred",
+  "basis": "the declarations are the harness keyword rule, not an author's; the units are derived from each run's pinned tree",
+  "leftOut": {
+    "runs": 1,
+    "why": "not a Redis run, so not comparable with the pilot"
+  },
+  "pilot": {
+    "basis": "docs/pursuits/2026-11-21b-vision-pursuit.md, the pilot section: by question kind (third grader) the five graded dossiers scored 0.00 to 0.50 on where to change something and 0.29 to 0.57 on how the parts fit; the newest, 658f2f90, scored 0.04 on the first"
+  },
+  "summary": [
+    {
+      "run": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+      "draftRevision": 2,
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "taggedBlocks": 83,
+      "inferredBlocks": 202,
+      "missing": {
+        ".": [
+          "change"
+        ],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    },
+    {
+      "run": "run-36df95faf04a4c98eabbb32a18a4e833",
+      "draftRevision": 3,
+      "schemaVersion": "polaris-dossier-local-draft-v2",
+      "taggedBlocks": 63,
+      "inferredBlocks": 93,
+      "missing": {
+        ".": [],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "purpose",
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    },
+    {
+      "run": "run-4465d22f5ce1829ca49059a5b8451bb0",
+      "draftRevision": 3,
+      "schemaVersion": "polaris-dossier-local-draft-v2",
+      "taggedBlocks": 50,
+      "inferredBlocks": 78,
+      "missing": {
+        ".": [],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    },
+    {
+      "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "draftRevision": 4,
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "taggedBlocks": 40,
+      "inferredBlocks": 110,
+      "missing": {
+        ".": [
+          "change"
+        ],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "purpose",
+          "structure",
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    },
+    {
+      "run": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+      "draftRevision": 4,
+      "schemaVersion": "polaris-dossier-local-draft-v3",
+      "taggedBlocks": 111,
+      "inferredBlocks": 305,
+      "missing": {
+        ".": [],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "purpose",
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    },
+    {
+      "run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "draftRevision": 6,
+      "schemaVersion": "polaris-dossier-local-draft-v4",
+      "taggedBlocks": 61,
+      "inferredBlocks": 136,
+      "missing": {
+        ".": [],
+        "deps": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "src": [
+          "purpose",
+          "structure",
+          "change"
+        ],
+        "tests": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-2ecdcab0c77e228f6ad9d3e0acfa1414's latest passed draft",
+      "run": "run-2ecdcab0c77e228f6ad9d3e0acfa1414",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 2,
+        "schemaVersion": "polaris-dossier-local-draft-v4",
+        "sha256": "9f8390d30e72f8c47e4ef3592d8b2fec31e379d4ca9339037bf134d925225abb"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 202,
+        "taggedBlocks": 83,
+        "blocksPerKind": {
+          "purpose": 7,
+          "structure": 16,
+          "mechanism": 32,
+          "rationale": 23,
+          "change": 0,
+          "limits": 18
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 7,
+              "structure": 16,
+              "mechanism": 32,
+              "rationale": 23,
+              "change": 0,
+              "limits": 18
+            },
+            "missing": [
+              "change"
+            ]
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 1,
+              "structure": 2,
+              "mechanism": 19,
+              "rationale": 3,
+              "change": 0,
+              "limits": 4
+            },
+            "missing": [
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 83,
+          "counted": 83,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    },
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-36df95faf04a4c98eabbb32a18a4e833's latest passed draft",
+      "run": "run-36df95faf04a4c98eabbb32a18a4e833",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 3,
+        "schemaVersion": "polaris-dossier-local-draft-v2",
+        "sha256": "47dd2b54d9eda4098255b3b8e0b47265c9fa71515133c5376ae8a4e5ad2024e3"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 93,
+        "taggedBlocks": 63,
+        "blocksPerKind": {
+          "purpose": 2,
+          "structure": 13,
+          "mechanism": 30,
+          "rationale": 13,
+          "change": 1,
+          "limits": 17
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 2,
+              "structure": 13,
+              "mechanism": 30,
+              "rationale": 13,
+              "change": 1,
+              "limits": 17
+            },
+            "missing": []
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 0,
+              "structure": 4,
+              "mechanism": 28,
+              "rationale": 5,
+              "change": 0,
+              "limits": 6
+            },
+            "missing": [
+              "purpose",
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 63,
+          "counted": 63,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    },
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-4465d22f5ce1829ca49059a5b8451bb0's latest passed draft",
+      "run": "run-4465d22f5ce1829ca49059a5b8451bb0",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 3,
+        "schemaVersion": "polaris-dossier-local-draft-v2",
+        "sha256": "ae9524fd705b12b18b37bf3e2978e013238e0cb2689a495c197fd602b967ebd4"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 78,
+        "taggedBlocks": 50,
+        "blocksPerKind": {
+          "purpose": 4,
+          "structure": 10,
+          "mechanism": 25,
+          "rationale": 12,
+          "change": 1,
+          "limits": 13
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 4,
+              "structure": 10,
+              "mechanism": 25,
+              "rationale": 12,
+              "change": 1,
+              "limits": 13
+            },
+            "missing": []
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 1,
+              "structure": 1,
+              "mechanism": 24,
+              "rationale": 6,
+              "change": 0,
+              "limits": 7
+            },
+            "missing": [
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 50,
+          "counted": 50,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    },
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-658f2f90470f73eea1dc1d90209c5ef7's latest passed draft",
+      "run": "run-658f2f90470f73eea1dc1d90209c5ef7",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 4,
+        "schemaVersion": "polaris-dossier-local-draft-v4",
+        "sha256": "927b9e84408d04fe922bd1d83add7553314f4202a91008f4dab347d47aad7d77"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 110,
+        "taggedBlocks": 40,
+        "blocksPerKind": {
+          "purpose": 1,
+          "structure": 7,
+          "mechanism": 21,
+          "rationale": 12,
+          "change": 0,
+          "limits": 8
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 1,
+              "structure": 7,
+              "mechanism": 21,
+              "rationale": 12,
+              "change": 0,
+              "limits": 8
+            },
+            "missing": [
+              "change"
+            ]
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 9,
+              "rationale": 4,
+              "change": 0,
+              "limits": 1
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 40,
+          "counted": 40,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    },
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-d9411d26ca55ebe0250e2e9b94dc0e32's latest passed draft",
+      "run": "run-d9411d26ca55ebe0250e2e9b94dc0e32",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 4,
+        "schemaVersion": "polaris-dossier-local-draft-v3",
+        "sha256": "01ebbfd1abef9ea1d18e25dfd49c02c0be4c7b022635c1618e051e4f84d5a84c"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 305,
+        "taggedBlocks": 111,
+        "blocksPerKind": {
+          "purpose": 2,
+          "structure": 23,
+          "mechanism": 47,
+          "rationale": 22,
+          "change": 1,
+          "limits": 41
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 2,
+              "structure": 23,
+              "mechanism": 47,
+              "rationale": 22,
+              "change": 1,
+              "limits": 41
+            },
+            "missing": []
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 0,
+              "structure": 5,
+              "mechanism": 36,
+              "rationale": 8,
+              "change": 0,
+              "limits": 16
+            },
+            "missing": [
+              "purpose",
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 111,
+          "counted": 111,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    },
+    {
+      "subject": "syzygy-5dhm.135: the per-kind floor replayed over run-ffe579c77dc21d9f6dd87ca6e2bc9301's latest passed draft",
+      "run": "run-ffe579c77dc21d9f6dd87ca6e2bc9301",
+      "repositoryId": "redis-redis",
+      "pinnedRevision": "498ecd0d6d007db11ddb3aea9428552598a78622",
+      "draft": {
+        "revision": 6,
+        "schemaVersion": "polaris-dossier-local-draft-v4",
+        "sha256": "ae7c654cd41997b48fe4e00546ae591a919341f242f90503660f07d6c30b4890"
+      },
+      "declarations": {
+        "label": "Inferred",
+        "basis": "keyword rule version 1 of this harness over each Inferred claim block's own text, in place of the author's declaration no stored draft carries",
+        "rules": {
+          "purpose": "\\b(?:purpose|is for|used for|designed (?:to|for)|lets (?:you|users|clients)|aims? to|goal)\\b",
+          "structure": "\\b(?:module|modules|directory|directories|component|components|layer|layers|consists of|composed of|split into|is part of|lives in|defined in|organi[sz]ed)\\b",
+          "mechanism": "\\b(?:calls|invokes|loop|event loop|dispatch(?:es)?|reads|writes|returns|executes|handles|processes|parses|stores|forks|sends|receives)\\b",
+          "rationale": "\\b(?:because|so that|in order to|trade-?offs?|chose|chosen|instead of|rather than|the reason|to avoid|motivat\\w*)\\b",
+          "change": "\\b(?:to add|to change|to modify|to extend|add a new|adding a new|edit|register (?:a|the|your)|where to change|hook into|implement a new)\\b",
+          "limits": "\\b(?:limits?|limited|cannot|can't|does not|doesn't|not supported|unsupported|fails?|failure|maximum|at most|no more than|refuses?)\\b"
+        },
+        "inferredBlocks": 136,
+        "taggedBlocks": 61,
+        "blocksPerKind": {
+          "purpose": 4,
+          "structure": 15,
+          "mechanism": 30,
+          "rationale": 17,
+          "change": 1,
+          "limits": 14
+        }
+      },
+      "tree": {
+        "files": 1861,
+        "secretPathsLeftOut": 0,
+        "unitsNotListed": 0
+      },
+      "advice": {
+        "state": "compared",
+        "rule": {
+          "id": "question-kind-floor",
+          "version": 1
+        },
+        "majorUnits": {
+          "rule": {
+            "id": "major-unit",
+            "version": 1
+          },
+          "share": "1/20",
+          "limit": 8,
+          "unitsNotListed": 0
+        },
+        "kinds": [
+          "purpose",
+          "structure",
+          "mechanism",
+          "rationale",
+          "change",
+          "limits"
+        ],
+        "units": [
+          {
+            "unit": ".",
+            "files": 1861,
+            "answered": {
+              "purpose": 4,
+              "structure": 15,
+              "mechanism": 30,
+              "rationale": 17,
+              "change": 1,
+              "limits": 14
+            },
+            "missing": []
+          },
+          {
+            "unit": "deps",
+            "files": 712,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          },
+          {
+            "unit": "src",
+            "files": 687,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 20,
+              "rationale": 7,
+              "change": 0,
+              "limits": 5
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "change"
+            ]
+          },
+          {
+            "unit": "tests",
+            "files": 300,
+            "answered": {
+              "purpose": 0,
+              "structure": 0,
+              "mechanism": 0,
+              "rationale": 0,
+              "change": 0,
+              "limits": 0
+            },
+            "missing": [
+              "purpose",
+              "structure",
+              "mechanism",
+              "rationale",
+              "change",
+              "limits"
+            ]
+          }
+        ],
+        "declarations": {
+          "rows": 61,
+          "counted": 61,
+          "unmatched": [],
+          "duplicated": [],
+          "unnamed": 0
+        },
+        "label": "Inferred",
+        "basis": "the authoring session's own declarations in the draft's `questionKinds`, counted by check; the units are derived from the pinned tree's listing",
+        "note": "Advice: it sets no outcome and is not stored in the check record. For each major unit (the whole repository, and each top-level directory holding at least 1 in 20 of the pinned tree's listed files, at most 8, largest first), `missing` lists the kinds of newcomer question (purpose: what it is for; structure: how the parts fit; mechanism: how it works; rationale: why it is built this way; change: where to change something; limits: what it does not do and how it fails) that no block of this draft answers for that unit, by the draft's own `questionKinds`. A block counts when it is a claim block labelled Inferred, other than an understanding item, that `questionKinds` names by its `id`; it answers its kinds for the whole repository and for each major directory a path it cites is inside. A missing kind is a gap a reader will ask about: write a block that answers it, or leave it where the unit truly has nothing to say. Declare only what a block answers, never to fill a list: the kinds are your own report, labelled Inferred, and check judges none of them."
+      }
+    }
+  ]
+}

@@ -4,6 +4,8 @@
 
 [Observed] A-306, REQ-polaris-generation-034 v2.29 at `ec0fc11fe8e83bb04b9ff169c3e321267c2baf91`, `openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md`, SHA-256 `64944deafb9ae449323a0b0308929bd0d5fa071f8f4e048a06c4157bfa5aa60c`, 215 scenario headings.
 
+[Observed] v2.29 is the last change to REQ-034 on `origin/main` at `dba7a40f622084889db826a57bafeed0af22147a`: the later versions there, v2.30 (scripted benchmark grading) and v2.31 (step measures, A-310), each replace REQ-polaris-generation-033 alone (`SCRIPTED_GRADE_REPLACES`, `STEP_MEASURES_REPLACES` in `scripts/check_spec_reconciliation.py`), and no tag `polaris-dossier-*-v2.32` exists on the remote.
+
 ## Amended in place
 
 - The title and the banner paragraph name version 2.32, its predecessor and its tag.

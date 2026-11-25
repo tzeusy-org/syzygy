@@ -2355,6 +2355,13 @@ describe('check: question-kind advice per major unit (version 2.32)', () => {
     expect(result.questionKindAdvice).toMatchObject({ state: 'unknown' });
   });
 
+  it('names on the report no declared identifier the bound policy\'s detectors match, and counts it', async () => {
+    const TOKEN = `${['gh', 'p_'].join('')}${'k'.repeat(36)}`;
+    const { result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = [...ROWS, { blockId: TOKEN, kinds: ['change'] }, { blockId: 'plain-ghost', kinds: ['change'] }]; }));
+    expect(result.questionKindAdvice).toMatchObject({ declarations: { rows: 5, counted: 3, unmatched: ['plain-ghost'], duplicated: [], unnamed: 1 } });
+    expect(JSON.stringify(result.questionKindAdvice)).not.toContain(TOKEN);
+  });
+
   it('reports a malformed row in a v13 draft as a schema finding', async () => {
     const { result } = await checked(drafted('polaris-dossier-local-draft-v13', (d) => { d.questionKinds = [{ blockId: 'p1', kinds: ['change', 'change'] }, { blockId: 'p2', kinds: ['why'] }]; }));
     expect(result.findings.map(({ kind, at }) => `${kind} ${at}`)).toEqual(['schema $.questionKinds[0].kinds', 'schema $.questionKinds[1].kinds[0]']);

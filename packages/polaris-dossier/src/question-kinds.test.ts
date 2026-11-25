@@ -113,6 +113,15 @@ describe('question kinds: the advice per major unit', () => {
     expect(advice).toMatchObject({ state: 'unknown', why: 'the question-kind advice could not be computed (RangeError)' });
   });
 
+  it('counts a row with an empty identifier as no row, and a block whose id repeats once', () => {
+    const advice = questionKindAdvice(draftOf([block('a', ['src/a.c']), block('a', ['docs/a.md'])], [
+      { blockId: 'a', kinds: ['change'] }, { blockId: '', kinds: ['purpose'] }]), FACTS, NONE);
+    expect(advice).toMatchObject({ declarations: { rows: 1, counted: 1, unmatched: [], duplicated: [], unnamed: 0 } });
+    expect(unitOf(advice, '.')?.answered.change).toBe(1);
+    expect(unitOf(advice, 'src')?.answered.change).toBe(1);
+    expect(unitOf(advice, 'docs')?.answered.change).toBe(0);
+  });
+
   it('is Unknown, never six missing kinds, where nothing is declared, the schema has no member or the tree was not listed', () => {
     const none = questionKindAdvice(draftOf([block('a', ['src/a.c'])]), FACTS, NONE);
     expect(none).toMatchObject({ state: 'unknown', why: 'the draft declares no question kind in `questionKinds`, so which kinds its blocks answer is not known' });

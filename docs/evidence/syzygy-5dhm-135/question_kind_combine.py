@@ -20,6 +20,8 @@ for r in kept:
 record = {
     'subject': 'syzygy-5dhm.135: the per-kind floor (REQ-polaris-generation-034 version 2.32) replayed over every stored Redis run\'s latest passed draft',
     'commit': commit,
+    'caution': 'No stored draft declares questionKinds, so these declarations are a keyword proxy for an author\'s, and what follows shows what the floor reports over proxy tags, not that declarations reproduce the pilot\'s per-kind shares; any comparison with the pilot is Inferred.',
+    'changeMissingInEveryMajorDirectory': None,
     'harness': 'docs/evidence/syzygy-5dhm-135/question_kind_replay.ts via question_kind_replay_all.sh',
     'label': 'Inferred',
     'basis': 'the declarations are the harness keyword rule, not an author\'s; the units are derived from each run\'s pinned tree',
@@ -32,5 +34,6 @@ record = {
     'summary': summary,
     'runs': kept,
 }
+record['changeMissingInEveryMajorDirectory'] = {r['run']: all('change' in missing for unit, missing in r['missing'].items() if unit != '.') for r in summary}
 out.write_text(json.dumps(record, indent=2) + '\n')
 print(json.dumps({'kept': len(kept), 'leftOut': len(records) - len(kept)}))
