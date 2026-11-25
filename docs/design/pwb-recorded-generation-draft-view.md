@@ -90,7 +90,7 @@
 
 ## Evaluation ceiling and registry changes
 
-[Observed] Effective PWB-REQ-006 lines 841–849 and 886–893 read as follows. These are the only companion PWB-REQ-006 spans a later adoption would modify. PWB-REQ-021 lines 2402–2409 require readiness false after a PWB-REQ-006 resource breach. Its exact words need no change. The three bound evaluation responses each retain their existing ceiling and readiness effect.
+[Observed] Effective PWB-REQ-006 lines 841–849 and 886–893 read as follows. These are the only existing companion PWB-REQ-006 spans a later adoption would modify. The independent editorial scenario below is the sole addition to the scenario population. PWB-REQ-021 lines 2402–2409 require readiness false after a PWB-REQ-006 resource breach. Its exact words need no change. The three bound evaluation responses each retain their existing ceiling and readiness effect.
 
 ```text
 - **Ceilings and breaches.** Final encoded human HTML and machine JSON SHALL
@@ -113,7 +113,7 @@
   byte ceilings and cold-open readiness is false
 ```
 
-[Inferred] Replace those two spans, at their separate existing positions, with the following. Readiness exclusion applies only to the new recorded-generation route. It leaves the existing source, input, parse-work, human, full machine and briefing cases in force.
+[Inferred] Replace those two spans at their separate positions and insert the independent editorial scenario immediately after the existing resource-breach scenario. Readiness exclusion applies only to the new recorded-generation route. It leaves the existing source, input, parse-work, human, full machine and briefing cases in force.
 
 ```text
 - **Ceilings and breaches.** Final encoded human HTML and machine JSON that
@@ -141,8 +141,15 @@
   population as Unknown without emitting a partial success-shaped answer
 - **AND** human and machine responses stay within their own declared encoded-
   byte ceilings and cold-open readiness is false
-- **AND** a breach of the recorded generation draft member's separate ceiling
-  leaves that evaluation's readiness and state unchanged
+
+#### Scenario: Recorded editorial overflow leaves a ready evaluation unchanged
+
+- **WHEN** a complete project-shape evaluation is ready and only the recorded
+  generation draft member's independently declared ceiling is exceeded by its
+  final encoded response
+- **THEN** that member returns only its bounded editorial refusal under
+  PWB-REQ-020 without any draft bytes or evaluation response event
+- **AND** the same evaluation's state and readiness remain byte-identical
 ```
 
 [Observed] The current registry's `entries[0].resourceLimitSemantics.breachResult` is:
@@ -151,7 +158,7 @@
 source and input breaches retain the complete population and make dependent facts Unknown; final-output breaches emit only a bounded typed failure carrying evaluation identity, limit identity, declared value, observed value and population counts; no truncated or success-shaped model is emitted; PWB-REQ-021 readiness is false
 ```
 
-[Inferred] Preserve that exact evaluation meaning by inserting “of an evaluation response” after “final-output breaches” in that property and appending this sentence: “A recorded generation draft response breach is governed by PWB-REQ-020 and does not count as a project-shape evaluation breach.” Add `entries[0].resourceLimits.maxGenerationDraftResponseBytes` with value 65536 and the same key under `resourceLimitSemantics` describing final encoded UTF-8 JSON and the separate bounded editorial refusal. Current declared human, machine and briefing values stay 2,097,152, 16,777,216 and 20,480. Each records an evaluation response breach and can make readiness false at the same evaluation.
+[Inferred] Preserve that exact evaluation meaning by inserting “of an evaluation response” after “final-output breaches” in that property and appending this sentence: “A recorded generation draft response breach is governed by PWB-REQ-020 and does not count as a project-shape evaluation breach.” Add `entries[0].resourceLimits.maxGenerationDraftResponseBytes` with value 65536 and the same key under `resourceLimitSemantics` describing final encoded UTF-8 JSON and the separate bounded editorial refusal. In `entries[0].resourceLimitSemantics.maxMachineResponseBytes`, replace the exact “the final encoded HTTP body for each authenticated Polaris machine JSON response” with “the final encoded HTTP body for the authenticated full Polaris project-shape machine answer at one evaluation”. Keep the separate briefing descriptor verbatim. Current declared human, machine and briefing values stay 2,097,152, 16,777,216 and 20,480. Each records an evaluation response breach and can make readiness false at the same evaluation.
 
 [Observed] Current reconciliation R6 reports Unknown for the registry and screening policy cross-pins against the effective PWB spec. A later delivery has to establish the effective contract and policy binding without detector or classification changes before even a well-formed stored draft becomes eligible. The candidate grants no route permission and authenticates no stored run.
 
@@ -176,7 +183,7 @@ source and input breaches retain the complete population and make dependent fact
 | Replace only the selected draft bytes, its run ID, pinned revision, terminal result binding or bound screen identity. Keep the same completed early edit receipt while changing the selected run to stopped. | Each change independently refuses before projection. Neither a completed stage, another valid run record nor current worktree state can fill in the required binding. |
 | Replace a selected paragraph's source reference with one from a different run, two competing admitted references, or one closed withheld reference. Change a separate selected paragraph's retained quotation finding. Insert an artificial secret-policy match in an otherwise admitted string. | Each change independently refuses and the response emits only the closed reason. Retained reasons or identifiers cannot become part of an error echo. |
 | Independently mutate one allowed mount's credential or observing-project identity, then attempt the same subject in every mounted form wired for the new member. | Invalid or wrong-project admission refuses before state access. Credentialed forms use the one verified record. No form adds a human-open route. |
-| Construct one complete final UTF-8 JSON body exactly 65,536 bytes and another exactly 65,537 by using literal multi-byte text. Then change only the registered cap or substitute the existing machine ceiling. | The exact-limit body serves. The first over-limit case serves no draft bytes. Missing or wrong-cap identity leaves the member unservable. |
+| Construct one complete final UTF-8 JSON body exactly 65,536 bytes and another exactly 65,537 by using literal multi-byte text. Then change only the registered cap or substitute the existing machine ceiling. | The exact-limit body serves. The first over-limit case serves no draft bytes. Missing or wrong-cap identity leaves the member unservable. The dedicated ceiling applies only to the editorial member. The full machine answer uses its inherited ceiling while the briefing declaration stays byte-identical. |
 | Hold a complete observed evaluation that is ready. Breach each existing human, full-machine and derived briefing ceiling separately. Restore the fixture and breach only the editorial cap for one recorded generation run. | The three evaluation breaches separately return the original evaluation envelope and flip that same evaluation's readiness to false. The editorial 503 has only its own format, served and reason, emits no evaluation response event and leaves the complete evaluation state and readiness byte-identical. A helper that counts the editorial breach in the shared recorder fails the latter control. |
 | Change one of the existing compared human/machine position facts; then repeat with only a screened draft text field changed. | An independent literal parity oracle still detects the former and reports the same denominators for the latter. An independent call census finds no writes, source reads or provider calls for the successful new read. |
 
