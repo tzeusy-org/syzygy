@@ -101,7 +101,7 @@ export function workItemTitlesWithheldBasis(titles: WorkItemTitlesScreened): str
   const parts = TITLE_WITHHELD_REASONS.filter((reason) => titles.withheldByReason[reason] > 0)
     .map((reason) => `${titles.withheldByReason[reason]} ${reason}`);
   return `${titles.withheld} of ${titles.admitted + titles.withheld} work-item titles are withheld under the ${titles.policyId} policy ${titles.policyVersion} (${parts.join(', ')}): ` +
-    'a title that matches a secret detector, carries active content or cannot be screened is never served, and its item is named by its identifier.';
+    'a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier.';
 }
 
 /** The disclosure of the withheld titles; null when every title was admitted. */

@@ -1302,8 +1302,8 @@ equal values (`trajectory.answers`). Today:
   through the same read-only runner as the work items, by two statements
   naming only commit hash and date (`dolt_log`), commit hash and parent
   index (`dolt_commit_ancestors`), and item id, status and diff type
-  (`dolt_diff` over `issues`). SEC-5 excludes titles, messages, committers
-  and other free text. For an observed window the answer SHALL
+  (`dolt_diff` over `issues`). The history read selects no title, message,
+  committer or other free text. For an observed window the answer SHALL
   state both revisions with their recorded instants and count each changed
   item, ascending id, as exactly one of: added (a row the window start did
   not hold), closed (a status other than `closed` became `closed`),
@@ -2027,15 +2027,19 @@ secret policy and the active-content scan every observed body passes.
 
 - **Admission.** A title is admitted only when it is text of 1 to 500 UTF-16
   code units with no C0 or C1 control character and no lone surrogate, no
-  detector matches it, and the scan finds nothing. An admitted title is
-  served as the item's `title.text` and rendered escaped on the item's card,
-  wherever the card renders.
+  detector matches it, and the scan finds nothing. The scan keeps its
+  Markdown code-context rule: markup inside a backtick code span is inert to
+  it, so such a title is admitted. An admitted title is served as the
+  item's `title.text` and rendered escaped, in a bidirectionally isolated
+  element, on the item's card, wherever the card renders.
 - **Withholding.** Any other title is withheld, fail-closed (RFC5-16). The
   item serves the RFC5-17 hash-not-body record instead: the reason
   (`secret-matched`, `active-content` or `unclassifiable`), the redaction
   class (`excluded-artifact` for the first two, `unclassifiable-excluded` for
   the third) and the SHA-256 digest of the title's UTF-8 bytes, or null when
-  the tracker held no text. The withheld text appears in neither channel.
+  the tracker held no text. The record's location is the item it sits on and
+  its policy version is the observation's, so the four RFC5-17 parts are
+  served together. The withheld text appears in neither channel.
 - **One statement.** The observation states the policy identity and version
   once, with the admitted count, the withheld count and the withheld count
   per reason. While any title is withheld the board states the withheld
@@ -2052,24 +2056,29 @@ secret policy and the active-content scan every observed body passes.
   notice; the machine answer.
 - **Case (fixture, counterexamples and sweep).** An independent checker
   supplies, at one revision, items whose titles are: clean text with
-  characters HTML escapes; a match for each detector; each active-content
-  form the scan names; and every unscreenable input (absent, not text, empty,
-  over 500 code units, a line break, a control character, a lone surrogate).
+  characters HTML escapes; a match for each of the four detectors; an HTML
+  tag, a comment, a script element, an SVG element with a handler, an unsafe
+  URL scheme, an entity inside a link destination and an unclosed code fence;
+  and every unscreenable input (absent, not text, empty, over 500 code
+  units, a line break, a control character, a lone high and a lone low
+  surrogate).
   Each withheld title carries a distinctive marker. The checker sweeps both
   channels' bytes for every marker, every card's title, and the board's
   notice.
 - **Observable**: the admitted titles on the cards and in the machine
   answer; the withheld records; the observation's counts; the notice; the
-  statement text.
+  statement's selected columns.
 - **Oracle**: literal expected values typed by the checker: the selected
-  columns are exactly the eight of POC-REQ-010's statement and `title`; each
+  columns are exactly POC-REQ-010's revision witness and seven item columns
+  and `title`; each
   admitted title equals its fixture text and renders escaped; each withheld
   record equals its literal reason, class and digest; the counts equal the
   fixture's; no marker occurs in either channel; with every title admitted
   no title Unknown subject exists.
-- **Oracle independence**: the fixture titles, markers and digests are the
-  checker's own; the detector strings are read from the policy file, never
-  from the module under test.
+- **Oracle independence**: the fixture titles, markers, digests and
+  expected records are literals the checker types; a separate check compares
+  the module's policy identity, bound, detector ids and redaction classes
+  with the declaration file.
 - **Falsifier**: a withheld title's text, or any marker, in either channel; a
   title admitted that a detector matches or the scan flags; an admitted title
   rendered unescaped; a withheld title without its reason, class or digest;

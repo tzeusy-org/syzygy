@@ -219,7 +219,7 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     expect(titled?.governedBy).toEqual(items(answer).find((item) => item.id === 'bu-open2')?.governedBy);
     expect(JSON.stringify(answer).split('POC-REQ-010').length - 1).toBe(1);
     const card = cards(html).find((entry) => entry.id === TITLED_ITEM);
-    expect(card?.body).toContain('<span class="wi-name" data-parity-field="work-item-title">Implement POC-REQ-010</span>');
+    expect(card?.body).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Implement POC-REQ-010</bdi>');
     expect(html.split('POC-REQ-010').length - 1).toBe(1);
   });
 

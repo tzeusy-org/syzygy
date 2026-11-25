@@ -404,7 +404,8 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
  * is the item's own text, escaped; a withheld one is a mark naming its
  * reason and referring to the one withheld-title disclosure. */
 function itemTitle(model: PocModel, title: WorkItemTitle): string {
-  if (isTitleAdmitted(title)) return `<span class="wi-name" data-parity-field="work-item-title">${escapeHtml(title.text)}</span>`;
+  // <bdi>: a title's own bidirectional controls cannot reorder the card.
+  if (isTitleAdmitted(title)) return `<bdi class="wi-name" data-parity-field="work-item-title">${escapeHtml(title.text)}</bdi>`;
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
   return cardMark('work-item-title', WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, `Title: withheld (${title.withheld})`);
 }
@@ -500,7 +501,7 @@ const TRAJECTORY_STYLE = `
   .demo-badge { color: var(--cyan); font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; }
   .demo-callout { max-width: 78ch; }
   .governing-intent-count, .titles-notice { max-width: 78ch; }
-  .wi-name { font-size: .82rem; overflow-wrap: anywhere; }
+  .wi-name { display: block; font-size: .82rem; overflow-wrap: anywhere; unicode-bidi: isolate; }
   .narrow-label { font-family: var(--font-mono); font-size: .78rem; margin-left: .3rem; }
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]),

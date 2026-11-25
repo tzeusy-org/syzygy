@@ -10,23 +10,37 @@
     "policyId": "polaris-butlers-project-shape-secrets",
     "policyVersion": "1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv",
     "path": ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
-    "detectors": ["private-key-material", "known-token-formats", "credential-assignment", "credential-bearing-url"],
+    "detectors": [
+      "private-key-material",
+      "known-token-formats",
+      "credential-assignment",
+      "credential-bearing-url"
+    ],
     "use": "every detector, unchanged, over the whole title"
   },
-  "activeContent": "the observed-body active-content scan, unchanged; any finding withholds the title",
+  "activeContent": "the observed-body active-content scan, unchanged, with its Markdown code-context rule (markup inside a backtick code span is inert to it); any finding withholds the title",
   "classificationOrder": [
     "withhold as unclassifiable a value that is not text, is empty, exceeds maxLength UTF-16 code units, or holds a C0 or C1 control character or a lone surrogate",
     "run every detector; any match withholds the title as secret-matched",
     "run the active-content scan; any finding withholds the title as active-content",
     "withhold as unclassifiable a title whose screening fails",
-    "admit the title's text, served as is and rendered escaped"
+    "admit the title's text, served as is and rendered escaped in a bidirectionally isolated element"
   ],
   "maxLength": 500,
   "withheldRecord": {
-    "fields": ["withheld", "redactionClass", "digest"],
-    "redactionClasses": { "secret-matched": "excluded-artifact", "active-content": "excluded-artifact", "unclassifiable": "unclassifiable-excluded" },
-    "digest": "SHA-256 of the title's UTF-8 bytes, or null when the tracker held no text",
-    "retainBody": false
+    "fields": [
+      "withheld",
+      "redactionClass",
+      "digest"
+    ],
+    "redactionClasses": {
+      "secret-matched": "excluded-artifact",
+      "active-content": "excluded-artifact",
+      "unclassifiable": "unclassifiable-excluded"
+    },
+    "digest": "SHA-256 of the title's UTF-8 bytes (a lone surrogate is encoded as U+FFFD, as Node's UTF-8 encoder does), or null when the tracker held no text",
+    "retainBody": false,
+    "digestRisk": "The digest is unsalted, as RFC5-17's content digest is: anyone who can read the machine answer and guesses a short, low-entropy secret title can confirm the guess offline."
   },
   "boundaries": [
     "No title is sent to a model provider.",

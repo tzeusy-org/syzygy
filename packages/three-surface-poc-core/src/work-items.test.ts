@@ -301,7 +301,7 @@ describe('work-items observer', () => {
 
     it('admits a clean title verbatim, up to 500 code units', () => {
       const exact = 'x'.repeat(500);
-      const observed = titled(['Wire the Trajectory outline to <parent> ids & counts'.replace('<parent>', 'parent'), exact]);
+      const observed = titled(['Wire the Trajectory outline to parent ids & counts', exact]);
       expect(observed.items.map((item) => item.title)).toEqual([
         { text: 'Wire the Trajectory outline to parent ids & counts' },
         { text: exact },
@@ -323,15 +323,23 @@ describe('work-items observer', () => {
     });
 
     it('withholds a title carrying active content', () => {
-      const observed = titled(['Fix <script>alert(1)</script> qz8a', 'Render <details> qz8b', 'See [x](javascript:alert(1)) qz8c', '<!-- note --> qz8d']);
-      expect(shapes(observed)).toEqual(Array.from({ length: 4 }, () => ['active-content', 'excluded-artifact']));
-      for (const marker of ['qz8a', 'qz8b', 'qz8c', 'qz8d']) expect(JSON.stringify(observed)).not.toContain(marker);
+      const observed = titled([
+        'Fix <script>alert(1)</script> qz8a',
+        'Render <details> qz8b',
+        'See [x](javascript:alert(1)) qz8c',
+        '<!-- note --> qz8d',
+        '<svg onload=x> qz8e',
+        'See [x](&#106;avascript:x) qz8f',
+        '```js unclosed fence qz8g',
+      ]);
+      expect(shapes(observed)).toEqual(Array.from({ length: 7 }, () => ['active-content', 'excluded-artifact']));
+      for (const marker of ['qz8a', 'qz8b', 'qz8c', 'qz8d', 'qz8e', 'qz8f', 'qz8g']) expect(JSON.stringify(observed)).not.toContain(marker);
     });
 
     it('withholds a title it cannot screen: absent, not text, empty, over 500, multi-line, a control or a lone surrogate', () => {
-      const observed = titled([null, 42, '', 'y'.repeat(501), 'two\nlines qz9a', 'tab\there qz9b', 'bell\u0007 qz9c', 'lone \uD800 qz9d', 'c1\u0085 qz9e']);
-      expect(shapes(observed)).toEqual(Array.from({ length: 9 }, () => ['unclassifiable', 'unclassifiable-excluded']));
-      for (const marker of ['qz9a', 'qz9b', 'qz9c', 'qz9d', 'qz9e', 'yyyy']) expect(JSON.stringify(observed)).not.toContain(marker);
+      const observed = titled([null, 42, '', 'y'.repeat(501), 'two\nlines qz9a', 'tab\there qz9b', 'bell\u0007 qz9c', 'lone \uD800 qz9d', 'c1\u0085 qz9e', 'low \uDC00 qz9f', 'swapped \uDC00\uD800 qz9g']);
+      expect(shapes(observed)).toEqual(Array.from({ length: 11 }, () => ['unclassifiable', 'unclassifiable-excluded']));
+      for (const marker of ['qz9a', 'qz9b', 'qz9c', 'qz9d', 'qz9e', 'qz9f', 'qz9g', 'yyyy']) expect(JSON.stringify(observed)).not.toContain(marker);
     });
 
     it('states the policy once on the observation, with admitted and withheld counts by reason', () => {
@@ -359,7 +367,7 @@ describe('work-items observer', () => {
       expect(workItemTitlesDisclosure(observed.titles)).toEqual({
         label: 'Unknown',
         closedReason: 'excluded-content',
-        reason: '2 of 3 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 unclassifiable): a title that matches a secret detector, carries active content or cannot be screened is never served, and its item is named by its identifier.',
+        reason: '2 of 3 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 unclassifiable): a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier.',
         resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
       });
       expect(workItemTitlesDisclosure(titled(['Clean one']).titles)).toBeNull();

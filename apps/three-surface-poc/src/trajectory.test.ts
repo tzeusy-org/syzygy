@@ -277,7 +277,7 @@ describe('Trajectory', () => {
     for (const id of ids) {
       const card = cardBody(html, id);
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
-      expect(card).toContain(`<span class="wi-name" data-parity-field="work-item-title">fixture item ${id}</span>`);
+      expect(card).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">fixture item ${id}</bdi>`);
       expect(card.split('data-parity-field="work-item-title"').length - 1, id).toBe(1);
     }
     const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
@@ -313,7 +313,7 @@ describe('Trajectory', () => {
       expect(html).not.toContain(text);
       expect(body).not.toContain(text);
     }
-    expect(cardBody(html, 'bu-a1')).toContain('<span class="wi-name" data-parity-field="work-item-title">Tom &amp; Jerry say &quot;hi&quot; it&#39;s fine</span>');
+    expect(cardBody(html, 'bu-a1')).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Tom &amp; Jerry say &quot;hi&quot; it&#39;s fine</bdi>');
     const mark = (reason: string) => `<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (${reason}) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>`;
     expect(cardBody(html, 'bu-a2')).toContain(mark('secret-matched'));
     expect(cardBody(html, 'bu-a3')).toContain(mark('active-content'));
@@ -322,7 +322,7 @@ describe('Trajectory', () => {
     expect(html.split(route).length - 1).toBe(1);
     const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
-      'Titles: shown for 1 of 4 observed work items, screened by the title policy work-item-title 1.0.0; Unknown for 3. 3 of 4 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 active-content, 1 unclassifiable): a title that matches a secret detector, carries active content or cannot be screened is never served, and its item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.',
+      'Titles: shown for 1 of 4 observed work items, screened by the title policy work-item-title 1.0.0; Unknown for 3. 3 of 4 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 active-content, 1 unclassifiable): a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.',
     );
     if (served.workItems.kind !== 'observed') throw new Error('unreachable');
     expect(served.workItems.items.map((item) => item.title)).toEqual([
@@ -336,12 +336,13 @@ describe('Trajectory', () => {
 
   // POC-REQ-063: the largest title page. A full page of cards whose titles
   // are the longest admitted (500 code units) and escape to the most bytes
-  // (`"` → `&quot;`, `&` → `&amp;`) stays under 60% of the human ceiling
-  // (1,128,267 of 2,097,152 bytes when written, 54%); a typical title adds
+  // (each `"` becomes `&quot;`) stays under 60% of the human ceiling
+  // (1,190,306 of 2,097,152 bytes when written, 57%; 500 `"` escape to 3,000
+  // bytes, the most any admitted title can); a typical title adds
   // a fraction of that.
   it('keeps a full page of longest, most-escaped titles under 60% of the human response ceiling (POC-REQ-063)', () => {
     const at = '2026-08-01T00:00:00Z';
-    const title = '"&'.repeat(250);
+    const title = '"'.repeat(500);
     const rows = Array.from({ length: 260 }, (_, i) => ({ ...fixtureWorkItemRow(`bu-long-${String(i).padStart(3, '0')}`, 'open', at, at, null), title }));
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
     if (model.workItems.kind !== 'observed') throw new Error('unreachable');
@@ -349,7 +350,7 @@ describe('Trajectory', () => {
     const html = renderTrajectoryPage(model);
     const bytes = Buffer.byteLength(html, 'utf8');
     console.info(`POC-REQ-063 largest title page: ${bytes} bytes of ${PWB_RESOURCE_LIMITS.maxHumanResponseBytes}`);
-    expect(html.split('&quot;&amp;'.repeat(250)).length - 1).toBe(250);
+    expect(html.split('&quot;'.repeat(500)).length - 1).toBe(250);
     expect(bytes).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.6);
   });
 
