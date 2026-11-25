@@ -1,0 +1,236 @@
+{
+  "subject": "b5c7bb12e9c1420566dfbf1b74dce0f3563cb3f8",
+  "subjectTree": "b6b45a9ae08ade0a18db13bb755682809cc2e24a",
+  "archive": {
+    "path": "retained.tar.gz",
+    "bytes": 1008586,
+    "sha256": "c9b20ddaf983c8a5f0929c0a78103f357a69077033e20a9fad1adde05c80fe45"
+  },
+  "entries": [
+    {
+      "path": "comparison/MANIFEST.json",
+      "bytes": 3484,
+      "sha256": "aeae57ba05f430e67ba8872f0ae8047c5bc8cc25e6a3ce9f22ba7df20897d573"
+    },
+    {
+      "path": "comparison/REPORT.md",
+      "bytes": 6480,
+      "sha256": "e1815a26866251be4719eb59423db02daf1b3375ba23c8347086e4fb9c51b161"
+    },
+    {
+      "path": "comparison/b5c7-check-all.log.gz",
+      "bytes": 42403,
+      "sha256": "300a3e8d39500f280649b276c6054864e240b611610451379fcc2605e9a8d934"
+    },
+    {
+      "path": "comparison/b5c7-raw-snapshots.json",
+      "bytes": 587602,
+      "sha256": "f862d76c5e233f17f95d58d5a92366862afd416647fcf571bcd0c9dd97738d06"
+    },
+    {
+      "path": "comparison/b5c7-result.json",
+      "bytes": 1111,
+      "sha256": "c669ac63c206fff6ad425971e65a230080f64e9746504666b6f6f5cb9b237506"
+    },
+    {
+      "path": "comparison/b5c7-session-relay.ts.txt",
+      "bytes": 33174,
+      "sha256": "ff30fec5bcb9a483c14c40ed782e996bb4e2b42c9c1bf4fe8cfad1212e51dc1e"
+    },
+    {
+      "path": "comparison/b5c7-subject.json",
+      "bytes": 694,
+      "sha256": "a59f6648e18bbc1bd55cb29c0e4fb0db0b01390f0da1489e5277f59ce1bdfd29"
+    },
+    {
+      "path": "comparison/b5c7-url-machine-store.ts.txt",
+      "bytes": 65951,
+      "sha256": "070d866ee94b361d6e6bd13df25b4b44f4d1bd818b7e55d1f98f9daed7ed996b"
+    },
+    {
+      "path": "comparison/b5c7-url-ordered-design-host.ts.txt",
+      "bytes": 11594,
+      "sha256": "32df5239315d089d88db2eaeb6bc38ae94eca343452cc6126280903f2e6ba64f"
+    },
+    {
+      "path": "comparison/b5c7-url-ordered-design-session.ts.txt",
+      "bytes": 37426,
+      "sha256": "65906032d8b0192c615fd68526bea5b6bfd8b76e604d75ee750f8503f8b0528d"
+    },
+    {
+      "path": "comparison/b5c7-url-run-composed.test.ts.txt",
+      "bytes": 226871,
+      "sha256": "c25947c69601f457fffbb800061bf26015faf6f40668bbfc9ac2154029f0af22"
+    },
+    {
+      "path": "comparison/b5c7-url-run-ordered-attempt.ts.txt",
+      "bytes": 22382,
+      "sha256": "d4f08b0f81ffd24cb04950196d0c9a28d5c105e6f424b158e454cf6d9db53062"
+    },
+    {
+      "path": "comparison/b5c7-url-session-audit.ts.txt",
+      "bytes": 109315,
+      "sha256": "f6359eb4d2d694196f7836d88619b04e94ed5ae2bbab3f2c8659c3689fe71f47"
+    },
+    {
+      "path": "comparison/f571-check-all.log.gz",
+      "bytes": 41566,
+      "sha256": "9333892810f8d7ae4096af7e13e4cf4a61407264e65ea2c4c855facb32b97cab"
+    },
+    {
+      "path": "comparison/f571-raw-snapshots.json",
+      "bytes": 582503,
+      "sha256": "55ee65bfd3d1f8821c7c467c8754d55cf772e48484a6d161f6d0820bc637c641"
+    },
+    {
+      "path": "comparison/f571-result.json",
+      "bytes": 1084,
+      "sha256": "f74fbba595be42a42a32c0e50291c44be695c2a9c4f533c13afebf3bc40bbecd"
+    },
+    {
+      "path": "comparison/f571-session-relay.ts.txt",
+      "bytes": 33174,
+      "sha256": "ff30fec5bcb9a483c14c40ed782e996bb4e2b42c9c1bf4fe8cfad1212e51dc1e"
+    },
+    {
+      "path": "comparison/f571-subject.json",
+      "bytes": 668,
+      "sha256": "15de93b7ac1087da2d5416207ac966e59882fc6bf67054b5a1791f48afb5506e"
+    },
+    {
+      "path": "comparison/f571-url-machine-store.ts.txt",
+      "bytes": 65951,
+      "sha256": "070d866ee94b361d6e6bd13df25b4b44f4d1bd818b7e55d1f98f9daed7ed996b"
+    },
+    {
+      "path": "comparison/f571-url-ordered-design-host.ts.txt",
+      "bytes": 11594,
+      "sha256": "32df5239315d089d88db2eaeb6bc38ae94eca343452cc6126280903f2e6ba64f"
+    },
+    {
+      "path": "comparison/f571-url-ordered-design-session.ts.txt",
+      "bytes": 37426,
+      "sha256": "65906032d8b0192c615fd68526bea5b6bfd8b76e604d75ee750f8503f8b0528d"
+    },
+    {
+      "path": "comparison/f571-url-run-composed.test.ts.txt",
+      "bytes": 225787,
+      "sha256": "de02e282fc2100f67af5d4222dc33d9d066eb562c7dbab6e81601507c3975855"
+    },
+    {
+      "path": "comparison/f571-url-run-ordered-attempt.ts.txt",
+      "bytes": 22382,
+      "sha256": "d4f08b0f81ffd24cb04950196d0c9a28d5c105e6f424b158e454cf6d9db53062"
+    },
+    {
+      "path": "comparison/f571-url-session-audit.ts.txt",
+      "bytes": 109315,
+      "sha256": "f6359eb4d2d694196f7836d88619b04e94ed5ae2bbab3f2c8659c3689fe71f47"
+    },
+    {
+      "path": "comparison/metrics.json",
+      "bytes": 69097,
+      "sha256": "489c44fa6c2c3787bbd048ddc3c3af4e701c46531dd8000a911e7c6a712ca5ad"
+    },
+    {
+      "path": "comparison/project.py",
+      "bytes": 8884,
+      "sha256": "7edfcc21c148f46915f6b7fdee3423fb2910179fd843a56752932ac62b00e770"
+    },
+    {
+      "path": "static-controls/README.md",
+      "bytes": 1658,
+      "sha256": "91bd6c95b206ca91c818d6aa48ee03893328eabe6e451ebbeaabe6ab76f50204"
+    },
+    {
+      "path": "static-controls/binding.json",
+      "bytes": 945,
+      "sha256": "6a124a123a6b1f10adb646c202912eb664b0b27033fc6ff6d7554a4e7817d0e7"
+    },
+    {
+      "path": "static-controls/check-wrappers.mjs",
+      "bytes": 2864,
+      "sha256": "0ddb43508b599e0da1e72c84a771dcf5f068ba8e91fba5ae6d81e34fc27d6b7d"
+    },
+    {
+      "path": "static-controls/helper-source.ts",
+      "bytes": 155,
+      "sha256": "78e15ae3dd1824746582b327ffe78d2508009a696d87addc1a612e3dde10fe9b"
+    },
+    {
+      "path": "static-controls/manifest.json",
+      "bytes": 1140,
+      "sha256": "6c367148e1fb619e5847df71335c7d9dd4d2c7f34fac0fe3f885f53b8248ecc8"
+    },
+    {
+      "path": "static-controls/run-static-controls.mjs",
+      "bytes": 2841,
+      "sha256": "3f05d9eabfabd071e1e4d8f3e7d0452afa37048deb7e2e8e0e1db3d83c1d27b3"
+    },
+    {
+      "path": "static-controls/source-census.json",
+      "bytes": 16231,
+      "sha256": "4333bc290241f69f21f66b62be1ec961a21fb36363dfbd48f0147ea77d9434a7"
+    },
+    {
+      "path": "static-controls/url-run-composed.test.ts",
+      "bytes": 226871,
+      "sha256": "c25947c69601f457fffbb800061bf26015faf6f40668bbfc9ac2154029f0af22"
+    },
+    {
+      "path": "static-execution/designDeliveryHistory.test.ts",
+      "bytes": 226818,
+      "sha256": "e7ed6ed54c49b0b81ecd0f2a4d068c55a10591708fa85b789591b6836795d232"
+    },
+    {
+      "path": "static-execution/designEffectHistory.test.ts",
+      "bytes": 226820,
+      "sha256": "1c8b377e7e5aae3dcd6933bc93b7612fe5f39eaae52e43200104ebce9a440deb"
+    },
+    {
+      "path": "static-execution/designExpiryHistory.test.ts",
+      "bytes": 226820,
+      "sha256": "07d3f65f53abcd228b773d82a095403feac03192eddeed021083bb3b40f448fa"
+    },
+    {
+      "path": "static-execution/designLeaseOpenHistory.test.ts",
+      "bytes": 226817,
+      "sha256": "b5013b2a30113b5678c606d4d81e6d74a3d1a09da85239b83bda0b2bebd9e252"
+    },
+    {
+      "path": "static-execution/designLeaseStateHistory.test.ts",
+      "bytes": 226816,
+      "sha256": "89e52e37245246fe53b379d7fc720ccc78be965d0d5bdc164e39117bb5c045ff"
+    },
+    {
+      "path": "static-execution/designReceiptHistory.test.ts",
+      "bytes": 226819,
+      "sha256": "6bba6bfd13284497702986bc132b0099d933ae421e8aa729eb153f2c1cce3a38"
+    },
+    {
+      "path": "static-execution/restoredFileHistory.test.ts",
+      "bytes": 226820,
+      "sha256": "2c8090388ab0ffd37c6eede82dba68e8087cb1e9ccba4145dc95578548347dac"
+    },
+    {
+      "path": "static-execution/restoredMetadataHistory.test.ts",
+      "bytes": 226816,
+      "sha256": "d92edd3c9a0539d81ee5e4d93d54b07c2fb0bbe79df7088f3821d8e24ffa9ad8"
+    },
+    {
+      "path": "static-execution/restoredNamesHistory.test.ts",
+      "bytes": 226819,
+      "sha256": "f824bfd9bb47e2616b6b5819fc6dc97653a0c1a5d2de80730d8b0eea37f9bb17"
+    },
+    {
+      "path": "static-execution/results.json",
+      "bytes": 44900,
+      "sha256": "b1a85c416771afdd29c6b2fdb5d5a2a93012db4a7d3b80af71a6aec516350ea0"
+    },
+    {
+      "path": "static-execution/runtimeEffectHistory.test.ts",
+      "bytes": 226819,
+      "sha256": "80698e8074ecc6bbbc251efbafe2203ea3e6d9748d6d035094723b480ed70344"
+    }
+  ]
+}
