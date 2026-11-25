@@ -31,6 +31,11 @@
       "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R6-RAW.md",
       "sha256": "6255adb9e4d44deb0947a8cb42ad8db4b24ea6ce0f466870a12aa693d0804b13",
       "verdict": "CONFIRM"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R7-RAW.md",
+      "sha256": "7a9e7338921e0484b707d370491d43d12138819951b20857e298c28e17dd89b4",
+      "verdict": "REVISE"
     }
   ],
   "normativeDelta": {
