@@ -31,6 +31,19 @@ let preparation: { host: PolicyGitProgram; git: PolicyGitProgram; witness: strin
 const open = (): PolicyGitScope => { const scope = createNativePolicyGitScope(program); scopes.push(scope); return scope; };
 const options = (mode: string, input?: Buffer) => ({ env: { ...environment, POLICY_FIXTURE_MODE: mode }, maxBuffer: 1024,
   timeout: 1000, ...(input === undefined ? {} : { input }) });
+const ownGitImage = (footerBytes = 32) => {
+  const root = tempDir('policy-image-'); fs.chmodSync(root, 0o700);
+  const file = path.join(root, 'git');
+  // ELF ignores the inert footer. Its last byte can change without making
+  // this own executable invalid or changing the admitted image's length.
+  const bytes = Buffer.concat([fs.readFileSync(program.git.file), Buffer.alloc(footerBytes, 0x71)]);
+  fs.writeFileSync(file, bytes, { mode: 0o700 });
+  return { root, file, bytes, sha256: sha256(bytes) };
+};
+const replaceImage = (file: string, bytes: Buffer): void => {
+  const replacement = `${file}.replacement`;
+  fs.writeFileSync(replacement, bytes, { mode: 0o700 }); fs.renameSync(replacement, file);
+};
 afterEach(async () => { imageClosures.observe = undefined; imageClosures.failAfterClose = undefined; for (const scope of scopes.splice(0)) await scope.close(); });
 beforeAll(async () => {
   const root = tempDir('policy-native-');
@@ -97,6 +110,9 @@ describe('native policy Git ownership and transport', () => {
     let completed = false;
     const first = scope.runAsync(arguments_, options('nested-cpu')).then(output => { completed = true; return output; });
     const second = scope.runAsync(arguments_, options('nested-cpu'));
+    const image = ownGitImage(), independent = createNativePolicyGitScope({ ...program, git: image }); scopes.push(independent);
+    expect(independent.runSync(arguments_, options('echo', Buffer.from('independent image')))).toEqual(Buffer.from('independent image'));
+    expect(independent.childCpuMicroseconds()).toBeGreaterThan(0);
     expect(completed).toBe(false);
     scope.cpuClock();
     expect(completed).toBe(false); // native completion, not JS callback progress
@@ -257,6 +273,59 @@ describe('native policy Git ownership and transport', () => {
     await expect(pending).rejects.toThrow('policy-git-usage-unavailable');
     expect(bad.healthy()).toBe(false);
     expect(() => createNativePolicyGitScope({ ...program, addon: { ...program.addon, sha256: '0'.repeat(64) } })).toThrow('policy-git-image-digest');
+    const wrongGit = createNativePolicyGitScope({ ...program, git: { ...program.git, sha256: '0'.repeat(64) } }); scopes.push(wrongGit);
+    expect(() => wrongGit.runSync(arguments_, options('echo'))).toThrow('policy-git-image-digest');
+    expect(wrongGit.healthy()).toBe(false);
+    for (const changed of ['mode', 'symlink'] as const) {
+      const image = ownGitImage(), scope = createNativePolicyGitScope({ ...program, git: image }); scopes.push(scope);
+      expect(scope.runSync(arguments_, options('echo'))).toEqual(Buffer.alloc(0));
+      if (changed === 'mode') fs.chmodSync(image.file, 0o720);
+      else { fs.renameSync(image.file, `${image.file}.actual`); fs.symlinkSync(`${image.file}.actual`, image.file); }
+      expect(() => scope.runSync(arguments_, options('echo'))).toThrow(`policy-git-image-${changed === 'mode' ? 'mode' : 'identity'}`);
+      expect(scope.healthy()).toBe(false);
+    }
+  });
+  it('rereads private authenticated bytes after same-byte replacement and refuses later multi-chunk image drift', () => {
+    const image = ownGitImage(1_048_593), caller = { ...program, git: { file: image.file, sha256: image.sha256 } };
+    const scope = createNativePolicyGitScope(caller); scopes.push(scope);
+    const witness = path.join(image.root, 'started');
+    const request = { ...options('echo', Buffer.from('fresh image')), env: { ...options('echo').env, POLICY_FIXTURE_STARTED: witness } };
+    expect(scope.runSync(arguments_, request)).toEqual(Buffer.from('fresh image'));
+    const initial = fs.lstatSync(image.file, { bigint: true });
+    replaceImage(image.file, image.bytes);
+    expect(fs.lstatSync(image.file, { bigint: true }).ino).not.toBe(initial.ino);
+    expect(scope.runSync(arguments_, request)).toEqual(Buffer.from('fresh image'));
+    // Retargeting a caller-owned record cannot retarget the private reference.
+    caller.git.file = path.join(image.root, 'absent'); caller.git.sha256 = '0'.repeat(64);
+    expect(scope.runSync(arguments_, request)).toEqual(Buffer.from('fresh image'));
+    fs.unlinkSync(witness);
+    const changed = Buffer.from(image.bytes); changed[changed.length - 1] = 0x72;
+    expect(changed.length - 1).toBeGreaterThan(1_048_576);
+    fs.writeFileSync(image.file, changed);
+    expect(execFileSync(image.file, [], { env: { ...environment, POLICY_FIXTURE_MODE: 'echo' },
+      input: 'still executable', timeout: 1000, maxBuffer: 1024 })).toEqual(Buffer.from('still executable'));
+    // The next hold acquires fresh stats for the changed, still-safe inode;
+    // only a fresh complete content comparison can reject this final byte.
+    expect(() => scope.runSync(arguments_, request)).toThrow('policy-git-image-digest');
+    expect(fs.existsSync(witness)).toBe(false);
+    expect(scope.healthy()).toBe(false);
+    fs.writeFileSync(image.file, image.bytes);
+    expect(() => scope.runSync(arguments_, request)).toThrow('policy-git-unavailable');
+  });
+  it('refuses pending-image footer drift through Promise completion and synchronous settlement without reopening poison', async () => {
+    for (const settle of ['completion', 'clock'] as const) {
+      const image = ownGitImage(), scope = createNativePolicyGitScope({ ...program, git: image }); scopes.push(scope);
+      expect(scope.runSync(arguments_, options('echo', Buffer.from('capture')))).toEqual(Buffer.from('capture'));
+      const pending = scope.runAsync(arguments_, options('nested-cpu'));
+      const changed = Buffer.from(image.bytes); changed[changed.length - 1] = 0x72;
+      // Replace the own pending image instead of writing a running ELF inode.
+      replaceImage(image.file, changed);
+      if (settle === 'clock') expect(() => scope.cpuClock()).toThrow('policy-git-image-drift');
+      await expect(pending).rejects.toThrow('policy-git-image-drift');
+      expect(scope.healthy()).toBe(false);
+      replaceImage(image.file, image.bytes);
+      expect(() => scope.runSync(arguments_, options('echo'))).toThrow('policy-git-unavailable');
+    }
   });
 });
 

@@ -10,6 +10,7 @@ export interface PolicyGitProgram {
 }
 interface NativeJob { readonly request: Buffer; readonly supervisorFd: number; readonly gitFd: number }
 interface Native { runSync(job: NativeJob): PolicyGitReceipt; runAsync(job: NativeJob): Omit<PendingPolicyGit, 'close'> }
+interface ImageReference { readonly file: string; readonly sha256: string; bytes: Buffer | undefined }
 // A /proc fd name may be reused after close; dlopen caches such names.
 // Reuse only this exact already-loaded code digest, never reload another
 // image through a recycled descriptor pathname in the same process.
@@ -17,7 +18,7 @@ let loaded: { readonly sha256: string; readonly native: Native } | undefined;
 const same = (left: BigIntStats, right: BigIntStats): boolean => right.isFile()
   && left.dev === right.dev && left.ino === right.ino && left.mode === right.mode && left.nlink === right.nlink
   && left.size === right.size && left.mtimeNs === right.mtimeNs && left.ctimeNs === right.ctimeNs;
-function hold(program: { readonly file: string; readonly sha256: string }): { fd: number; current(): boolean; close(): void } {
+function hold(program: ImageReference): { fd: number; current(): boolean; close(): void } {
   if (!path.isAbsolute(program.file) || path.resolve(program.file) !== program.file || realpathSync(program.file) !== program.file
     || !/^[a-f0-9]{64}$/u.test(program.sha256)) throw new Error('policy-git-image-identity');
   const fd = openSync(program.file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
@@ -30,16 +31,32 @@ function hold(program: { readonly file: string; readonly sha256: string }): { fd
       if (closed) return false;
       try {
         if (!same(initial, fstatSync(fd, { bigint: true })) || !same(initial, lstatSync(program.file, { bigint: true }))) return false;
-        const hash = createHash('sha256'), chunk = Buffer.alloc(1_048_576);
+        const expected = program.bytes, length = Number(initial.size);
+        if (!Number.isSafeInteger(length) || length < 0) return false;
+        const captured = expected === undefined ? Buffer.alloc(length) : undefined;
+        const hash = captured === undefined ? undefined : createHash('sha256'), chunk = Buffer.alloc(1_048_576);
         let offset = 0;
         for (;;) {
           const size = readSync(fd, chunk, 0, chunk.length, offset);
           if (!size) break;
-          hash.update(chunk.subarray(0, size)); offset += size;
-          if (!Number.isSafeInteger(offset) || BigInt(offset) > initial.size) return false;
+          const end = offset + size;
+          if (!Number.isSafeInteger(end) || BigInt(end) > initial.size) return false;
+          const bytes = chunk.subarray(0, size);
+          if (expected !== undefined) {
+            if (end > expected.length || !bytes.equals(expected.subarray(offset, end))) return false;
+          } else {
+            bytes.copy(captured!, offset);
+            hash!.update(captured!.subarray(offset, end));
+          }
+          offset = end;
         }
-        return BigInt(offset) === initial.size && hash.digest('hex') === program.sha256
-          && same(initial, fstatSync(fd, { bigint: true })) && same(initial, lstatSync(program.file, { bigint: true }));
+        if (BigInt(offset) !== initial.size || expected !== undefined && offset !== expected.length
+          || hash !== undefined && hash.digest('hex') !== program.sha256
+          || !same(initial, fstatSync(fd, { bigint: true })) || !same(initial, lstatSync(program.file, { bigint: true }))) return false;
+        // Publish only the exact copied bytes authenticated by this read's
+        // digest and identity brackets. Later checks still reread every byte.
+        if (captured !== undefined) program.bytes = captured;
+        return true;
       } catch { return false; }
     };
     if (!current()) throw new Error('policy-git-image-digest');
@@ -106,49 +123,53 @@ function request(args: readonly string[], options: PolicyGitOptions, async: bool
   return Buffer.concat(pieces);
 }
 
-/** Held files are rehashed before every use and checked after completion.
+/** Held files are fully reread before every use and after completion, compared
+ * with private image bytes authenticated once by their required SHA256.
  * dlopen loads the first-party addon through its verified descriptor; neither
  * a mutable script path nor any observed code enters this boundary. */
 export function createNativePolicyGitScope(program: PolicyGitProgram): PolicyGitScope {
   if (process.platform !== 'linux' || process.arch !== 'x64' || process.version !== 'v24.6.0') throw new Error('policy-git-platform');
-  const addon = hold(program.addon);
+  const reference = (image: PolicyGitProgram['addon']): ImageReference => ({ file: image.file, sha256: image.sha256, bytes: undefined });
+  const images = { addon: reference(program.addon), supervisor: reference(program.supervisor), git: reference(program.git) };
+  const addon = hold(images.addon);
   let native: Native;
   try {
     if (loaded !== undefined) {
-      if (loaded.sha256 !== program.addon.sha256) throw new Error('policy-git-addon-changed');
+      if (loaded.sha256 !== images.addon.sha256) throw new Error('policy-git-addon-changed');
       native = loaded.native;
     } else {
       const module = { exports: {} };
       process.dlopen(module, `/proc/self/fd/${addon.fd}`);
       native = module.exports as Native;
       if (typeof native.runSync !== 'function' || typeof native.runAsync !== 'function') throw new Error('policy-git-addon');
-      loaded = { sha256: program.addon.sha256, native };
+      loaded = { sha256: images.addon.sha256, native };
     }
     if (!addon.current()) throw new Error('policy-git-addon');
   } finally { addon.close(); }
   let closed = false;
   const openJob = (args: readonly string[], options: PolicyGitOptions, async: boolean) => {
     if (closed) throw new Error('policy-git-closed');
-    const images: ReturnType<typeof hold>[] = [];
+    const held: ReturnType<typeof hold>[] = [];
     try {
-      const code = hold(program.addon); images.push(code);
-      const supervisor = hold(program.supervisor); images.push(supervisor);
-      const git = hold(program.git); images.push(git);
+      const code = hold(images.addon); held.push(code);
+      const supervisor = hold(images.supervisor); held.push(supervisor);
+      const git = hold(images.git); held.push(git);
       return { native: { request: request(args, options, async), supervisorFd: supervisor.fd, gitFd: git.fd },
-        current: () => images.every(image => image.current()), close: () => {
+        current: () => held.every(image => image.current()), close: () => {
           let failure: unknown;
-          for (const image of images) try { image.close(); } catch (error) { failure ??= error; }
+          for (const image of held) try { image.close(); } catch (error) { failure ??= error; }
           if (failure !== undefined) throw failure;
         } };
     } catch (error) {
       const cleanup: unknown[] = [];
-      for (const image of images) try { image.close(); } catch (failure) { cleanup.push(failure); }
+      for (const image of held) try { image.close(); } catch (failure) { cleanup.push(failure); }
       if (cleanup.length > 0) throw new AggregateError([error, ...cleanup], 'policy-git-job-construction');
       throw error;
     }
   };
   // Descriptors belong to each completed call, so an unused cold-verifier
-  // result retains no native handles. The meter alone survives into its pool.
+  // result retains no native handles. Private image bytes (including the cold
+  // scope's addon reference) and the meter survive until close or collection.
   return createPolicyGitScope({
     runSync(args, options) {
       const job = openJob(args, options, false);
@@ -166,6 +187,6 @@ export function createNativePolicyGitScope(program: PolicyGitProgram): PolicyGit
         };
       } catch (error) { job.close(); throw error; }
     },
-    close() { closed = true; },
+    close() { closed = true; for (const image of Object.values(images)) image.bytes = undefined; },
   });
 }
