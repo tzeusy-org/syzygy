@@ -11363,7 +11363,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
         status = tree / STATUS
         prior_status = status.read_text()
         status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
-                                       if not line.strip().startswith(TERM_BRIEF_STATUS_PREFIX))
+                                       if not line.strip().startswith((TERM_BRIEF_STATUS_PREFIX, QKIND_STATUS_PREFIX)))
         pending_total = sum(len(item["scenarios"]) for item in before.values())
         adopted_total = sum(len(item["scenarios"]) for item in after.values())
         pending_status, slots = STATUS_FIGURE.subn(
@@ -11375,15 +11375,22 @@ def term_brief_cases(tmp, base, witnesses, failures):
         adopted_status = adopted_status_without_route + status_route
         index = tree / OPENSPEC_README
         prior_index = index.read_text()
-        index_row = next(line for line in prior_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
+        # The v2.32 question-kind floor stands on this brief, so while the brief is pending its routes say candidate too.
+        qkind_row = next((line for line in prior_index.splitlines() if line.startswith(f"| [`{QKIND_CHANGE}`]")), None)
+        base_index = prior_index
+        if qkind_row is not None:
+            qkind_cells = qkind_row.split(" | ")
+            qkind_cells[2] = "**Candidate.** Specification version and adoption pending"
+            base_index = prior_index.replace(qkind_row, " | ".join(qkind_cells), 1)
+        index_row = next(line for line in base_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
         cells = index_row.split(" | ")
         assert len(cells) == 4
         cells[2] = "**Candidate.** Specification version and adoption pending"
         pending_row = " | ".join(cells)
-        pending_index = prior_index.replace(index_row, pending_row, 1)
+        pending_index = base_index.replace(index_row, pending_row, 1)
         cells[2] = f"Agent adoption in [{Path(AGENT_ADOPTIONS).name}](../{AGENT_ADOPTIONS}) and tag `{tag}`"
         adopted_row = " | ".join(cells)
-        adopted_index = prior_index.replace(index_row, adopted_row, 1)
+        adopted_index = base_index.replace(index_row, adopted_row, 1)
         status.write_text(adopted_status)
         index.write_text(adopted_index)
         report = Report()
