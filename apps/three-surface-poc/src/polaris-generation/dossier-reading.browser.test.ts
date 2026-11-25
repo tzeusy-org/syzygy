@@ -2,6 +2,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
 import { navigationInput, readingInput } from './dossier-reading.testkit.js';
@@ -235,25 +236,102 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render. ${longStatusWord}`, label: 'Inferred' },
     { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Inferred' },
   ] as const;
-  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [] };
-  const layoutFixture = { ...local, reviewStatus, pages: [...local.pages, reviewPage] };
-  const { files } = renderLocalDossier({ sources, local: layoutFixture });
+  const longPath = `src/${'selectedSourceSegment'.repeat(4)}.ts`;
+  const codePath = `src/${'quotedSourceSegment'.repeat(4)}.c`;
+  const revision = '73c810edba'.repeat(4);
+  const sampleSource = sources[0]!;
+  const { body: _body, ...sourceIdentity } = sampleSource;
+  const pathOnlySource = { ...sourceIdentity, sourceId: 'long-path-census', path: longPath, classificationBasis: 'path-only', spans: [] } as const;
+  const quotedIdentity = { ...sampleSource, sourceId: 'long-quoted-source', path: codePath, objectId: sampleSource.objectId! };
+  const sampleSpan = sampleSource.spans[0]!;
+  const { start, end, text } = sampleSpan;
+  const quotedSource = { ...quotedIdentity, spans: [{ start, end, text, anchorId: generationAnchorId(quotedIdentity, start, end) }] };
+  const sourceAnchor = { ...local.sourceAnchors.get(sampleSource.sourceId)!, pathLabel: codePath };
+  const quotedCode: (typeof local.draft.sections)[number]['paragraphs'][number] = {
+    id: 'local-reflow-code', text: '', sourceIds: [quotedSource.sourceId], children: [],
+    element: { kind: 'code', language: 'C', path: codePath, startLine: 1, endLine: 1,
+      parts: [{ kind: 'quotation', sourceId: quotedSource.sourceId, start, end, text, anchor: { ...sourceAnchor, fragment: { start, end } } }] },
+  };
+  const inlineCitation = { id: 'local-reflow-inline', text: 'Readers can compare the complete screened file here.',
+    sourceIds: [quotedSource.sourceId], children: [] };
+  const blocks = new Map(local.blocks);
+  blocks.set(inlineCitation.id, { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [],
+    segments: [{ kind: 'prose', text: inlineCitation.text }] });
+  const citationLines = new Map(local.citationLines);
+  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, 'line 1']]));
+  const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
+    : { ...section, paragraphs: [...section.paragraphs, inlineCitation, quotedCode] }) };
+  const sourceAnchors = new Map(local.sourceAnchors);
+  sourceAnchors.set(quotedSource.sourceId, sourceAnchor);
+  const reportedGroup = (id: string, heading: string, title: string, details: readonly string[]) => ({
+    id, heading, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `${id}/path`, marking: 'inferred' as const, unknownReason: null, title, text: 'The fixture names one source path.', details, sourceIds: [],
+    }],
+  });
+  const reportedPaths = ['selected', 'excluded', 'unresolved', 'deferred'] as const;
+  const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [
+    { id: 'discovery-inspected', heading: 'Inspected, as the agent reports', note: 'Self-reported.', empty: 'None.', items: [{
+      id: 'discovery/inspected', marking: 'inferred', unknownReason: null, title: null, text: 'One path inspected.', details: [longPath], sourceIds: [],
+    }] },
+    ...reportedPaths.map(part => ({ id: `discovery-${part}`, heading: `${part}, as the agent reports`, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `discovery/${part}/1`, marking: 'inferred' as const, unknownReason: null, title: longPath, text: 'Fixture path.', details: [], sourceIds: [],
+    }] })),
+    { id: 'discovery-read', heading: 'Read by this render', note: `Read at revision ${revision}.`, empty: 'None.', items: [{
+      id: 'discovery/read/1', marking: 'observed', unknownReason: null, title: longPath, text: 'Admitted by screening.',
+      details: [`object sha1:${revision}`, `revision ${revision}`], sourceIds: [],
+    }] },
+  ] } as const;
+  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [{
+    id: 'review-fidelity', heading: 'Fidelity review', note: 'Rebuilt at this render.', empty: 'None.', items: [{
+      id: 'review/fidelity/binding', marking: 'observed', unknownReason: null, title: 'Packet binding',
+      text: `The rebuilt packet digest is ${fidelityDigest}, and the verdict names it.`, details: [], sourceIds: [],
+    }],
+  }] } as const;
+  const disclosure = [...local.disclosure, { id: 'run/screened-path', text: `Screened source ${longPath}`, label: 'Inferred' }] as const;
+  const executionsPage = { path: 'executions.html', title: 'Executions', intro: 'Reported commands.', groups: [
+    reportedGroup('executions-reported', 'Reported commands', `cat ${longPath}`, [`Working directory: ${longPath}`]),
+  ] };
+  const clarificationsPage = { path: 'clarifications.html', title: 'Clarifications', intro: 'Operator questions and answers.', groups: [
+    reportedGroup('clarifications-asked', 'Questions and answers', `Is ${longPath} in scope?`, [`Consequence: ${longPath}`]),
+  ] };
+  const existingPages = local.pages.map(page => page.path !== 'understanding.html' ? page : { ...page, groups: [...page.groups,
+    reportedGroup('understanding-purpose', 'Purpose', 'Source scope', [`Scope: ${longPath}`]),
+  ] });
+  const layoutFixture = { ...local, draft, blocks, citationLines, sourceAnchors, disclosure, reviewStatus,
+    pages: [...existingPages, discoveryPage, reviewPage, executionsPage, clarificationsPage] };
+  const longText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
+    ['appendix.html', [['#appendix-disclosure > ul > li', longPath]]],
+    ['clarifications.html', [['#clarifications-asked strong', longPath], ['#clarifications-asked ul.item-details > li', longPath]]],
+    ['discovery.html', [
+      ['#discovery-inspected ul.item-details > li', longPath],
+      ...reportedPaths.map(part => [`#discovery-${part} > ul.local-items > li`, longPath] as const),
+      ['#discovery-read > ul.local-items > li', longPath],
+      ['#discovery-read .group-note', revision],
+    ]],
+    ['executions.html', [['#executions-reported strong', longPath], ['#executions-reported ul.item-details > li', longPath]]],
+    ['index.html', [['#element-local-reflow-code .code-path', codePath]]],
+    ['review.html', [['#review-fidelity > ul.local-items > li', fidelityDigest]]],
+    ['sources/index.html', [['#sources > ul > li', longPath], ['#sources > ul > li > a', codePath]]],
+    ['understanding.html', [['#understanding-purpose ul.item-details > li', longPath]]],
+  ] as const);
+  const { files } = renderLocalDossier({ sources: [...sources, pathOnlySource, quotedSource], local: layoutFixture });
   const pages = [...files].filter(([path]) => path.endsWith('.html'));
-  expect(pages).toHaveLength(19);
-  expect(files.has('review.html')).toBe(true);
+  expect(pages).toHaveLength(23);
+  expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...longText.keys()]));
   expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
   const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
   let browser: Browser | undefined;
   try {
     for (const [path, html] of pages) {
       await mkdir(dirname(join(directory, path)), { recursive: true });
-      await writeFile(join(directory, path), html);
+      await writeFile(join(directory, path), html.replace(/<script\b[^>]*>.*?<\/script>/gisu, ''));
     }
     browser = await launchBrowser(executable);
     const page = await browser.newPage();
     try {
       await page.setViewport(390, 844);
       const overflows: Array<{ path: string; scrollWidth: number }> = [];
+      const longTextOverflows: string[] = [];
       for (const [path] of pages) {
         await page.navigate(pathToFileURL(join(directory, path)).href);
         const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
@@ -278,8 +356,84 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
           expect(status, path).not.toContain(designGroups);
         }
         if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
+        for (const [selector, text] of longText.get(path) ?? []) {
+          const textFits = await page.evaluate<boolean>(`(() => {
+            const text = ${JSON.stringify(text)};
+            const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
+            if (node === undefined) return false;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rects = [...range.getClientRects()];
+            return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
+          })()`);
+          if (!textFits) longTextOverflows.push(`${path} ${selector}`);
+        }
       }
-      expect(overflows).toEqual([]);
+      expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
+      await page.setViewport(1440, 844);
+      for (const [path] of pages) {
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
+      }
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
+      expect(exactPage).toBeDefined();
+      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
+      const citations = [
+        { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
+        { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
+      ];
+      for (const { selector, suffix, leftRange } of citations) {
+        const citation = `document.querySelector(${JSON.stringify(selector)})`;
+        expect(await page.accessibleNames(`[${citation}]`)).toEqual([`Source 2: ${codePath}, ${suffix}`]);
+        expect(await page.evaluate(`${citation}.href`)).toBe(exactHref);
+        const inspect = `(() => {
+          const link = ${citation};
+          const popup = link.querySelector('.cite-pop');
+          const box = popup.getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(popup);
+          const text = [...range.getClientRects()];
+          return { hidden: getComputedStyle(popup).display === 'none', focus: link.matches(':focus-visible'), hovered: link.matches(':hover'),
+            contents: popup.textContent, fitsPage: document.documentElement.scrollWidth <= innerWidth,
+            contained: box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight
+              && text.length > 0 && text.every(rect => rect.left >= box.left && rect.right <= box.right
+                && rect.top >= box.top && rect.bottom <= box.bottom) };
+        })()`;
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        await page.evaluate(`(() => {
+          const link = ${citation};
+          const stops = [...document.querySelectorAll('a[href], summary, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
+          stops[stops.indexOf(link) - 1].focus();
+        })()`);
+        for (let step = 0; step < 4; step++) {
+          await page.press('Tab');
+          if (await page.evaluate(`document.activeElement === ${citation}`)) break;
+        }
+        expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({
+          hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+        });
+        await page.evaluate(`${citation}.blur()`);
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
+          const link = ${citation};
+          link.scrollIntoView({ block: 'center', behavior: 'instant' });
+          const box = link.getBoundingClientRect();
+          const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
+          return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
+        })()`);
+        expect(target.hits, `${selector} pointer hit`).toBe(true);
+        expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
+        expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
+        await page.mouseMove(target.x, target.y);
+        await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
+          hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+        });
+        await page.mouseMove(0, 0);
+        await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
+      }
     } finally {
       await page.close();
     }

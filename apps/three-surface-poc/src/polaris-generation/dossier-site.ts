@@ -155,7 +155,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'td.empty-cell,th.empty-cell{color:var(--muted);font-style:italic}'
   + 'figure.code-excerpt pre{margin:.5rem 0;overflow-x:auto;background:var(--d-surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem 1rem}'
   + 'figure.code-excerpt pre code{display:block;background:none;border:0;padding:0;font:.85rem/1.5 var(--font-mono);white-space:pre}'
-  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted)}'
+  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted);overflow-wrap:anywhere}'
   + '.code-anchor{margin:0;font-size:.9em}'
   // A modern system stack and no font download (syzygy-pdja.1, owner review of the Redis dossier). The shared stylesheet reads body text from
   // `--font-serif`, so that token carries the sans stack here. Only code, source text and diagram text keep the code face.
@@ -190,6 +190,8 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   // The pop repeats the mark's accessible name, so it is out of layout until shown: a hidden but laid-out pop widens a narrow page.
   + 'a.cite{position:relative}.cite-pop{display:none;position:absolute;left:0;top:1.6em;z-index:6;white-space:nowrap;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;font:400 .8rem/1.4 var(--font-mono);color:var(--ink);vertical-align:baseline}'
   + 'a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}'
+  // On a narrow viewport the hint uses the viewport edges, so a citation at either end of a line can reveal its full path.
+  + '@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}'
   // Colour (syzygy-pdja.14): six hues, light and dark, each a line colour and a tint. A Pole, a diagram outside a Pole page and a card
   // each take one in turn; text stays ink on a tint, so every text contrast is the page's own. No hue carries a claim.
   + ':root{--h1:#8fb0f0;--h1t:#262d3d;--h2:#5cc6b8;--h2t:#1f302e;--h3:#b9a2f0;--h3t:#2d2740;--h4:#f08aa9;--h4t:#3a2630;--h5:#a6d16f;--h5t:#29321f;--h6:#e5937a;--h6t:#3a2c26;--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}'
@@ -222,13 +224,23 @@ const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-d
   + '.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;width:min(1180px,calc(100% - 2rem));margin:1.5rem auto 0}'
   + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
 
+const LOCAL_REFLOW_CSS = new Map([
+  ['appendix.html', '#appendix-disclosure{overflow-wrap:anywhere}'],
+  ['clarifications.html', '#page-clarifications{overflow-wrap:anywhere}'],
+  ['discovery.html', '#page-discovery{overflow-wrap:anywhere}'],
+  ['executions.html', '#page-executions{overflow-wrap:anywhere}'],
+  ['review.html', '#review-fidelity{overflow-wrap:anywhere}'],
+  ['sources/index.html', '#sources{overflow-wrap:anywhere}'],
+  ['understanding.html', '#page-understanding{overflow-wrap:anywhere}'],
+]);
+
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {
   const content = `<main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region(path) ?? ''}</main>`;
   // Wayfinding follows the reading text so the main-only converter retains its original input.
   const turn = chrome?.pageTurn(path) ?? '';
   const column = turn === '' ? content : `<div class="reading-column">${content}${turn}</div>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}${READING_NAV_CSS}${LOCAL_REFLOW_CSS.get(path) ?? ''}${path === FIND_BY_TASK_PAGE || path === NAME_INDEX_PAGE ? FINDING_CSS : ''}`}${figureKinds ? FIGURE_KINDS_CSS : ''}${subsections ? SUBSECTION_CSS : ''}${mapCss}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="${chrome === undefined ? 'Dossier' : 'Dossier (mobile)'}">${nav}</nav></details>${column}</div></body></html>`;
 }
 
