@@ -1,0 +1,133 @@
+{
+  "sourceCommit": "0a2077c32bb60e91b9b3f734a2866596c261dab8",
+  "verifiedSubject": "00f9c6f821baf83eac0dada118afdccc0e524088",
+  "baselineSubject": "a7bef3f82605e104830c72c671ba4266d581705d",
+  "verdict": "PASS scoped source, controls and full witness parity",
+  "archive": "payload.tar.gz",
+  "archiveBytes": 258708,
+  "archiveSha256": "6c757fdec0333bee3c3bb0e30abf12a3b817d2a5a9c0b43edc6aa3f2d699daef",
+  "READMEsha256": "0ffa8cbabade6fe91fe9886dc96fe12f106df8f3975c8a767cc864f4f194778e",
+  "members": [
+    {
+      "path": "README.md",
+      "bytes": 1315,
+      "sha256": "0ffa8cbabade6fe91fe9886dc96fe12f106df8f3975c8a767cc864f4f194778e"
+    },
+    {
+      "path": "baseline/result.json",
+      "bytes": 388,
+      "sha256": "e4c76ee15f7437b30820e7854958269b6db831d7157d0703fc3bd41fd799d5ee"
+    },
+    {
+      "path": "baseline/selftest.log",
+      "bytes": 199267,
+      "sha256": "25623754ecddca2bb188f5351efb5e04b3a88f72c0a5a804c0fe8db0b7f4c3e4"
+    },
+    {
+      "path": "baseline/subject.json",
+      "bytes": 588,
+      "sha256": "100ef74ba16b97c76f7f75acb51d5b38afd9012709c6b2ca781747edbc6f6b7a"
+    },
+    {
+      "path": "baseline/witnesses.json",
+      "bytes": 749732,
+      "sha256": "4c3fe17b2ac78aa0302bfdb51cf3533d568e2e1ac06eb60e1c46e96031f1b04b"
+    },
+    {
+      "path": "candidate/result.json",
+      "bytes": 502,
+      "sha256": "18daf14576dbb3e3217aa7fbc95179b7e10e72c968e428bf024e6866fc5a6ed5"
+    },
+    {
+      "path": "candidate/selftest.log",
+      "bytes": 199261,
+      "sha256": "426e46adb592755606a8ca1d0ae28f2a890be18e099aa8f8764701649b75a73e"
+    },
+    {
+      "path": "candidate/subject.json",
+      "bytes": 675,
+      "sha256": "dc5c8681068b6e167b418189cb99cf0719451e238fb03001d32a1675fc62a047"
+    },
+    {
+      "path": "candidate/witnesses.json",
+      "bytes": 749732,
+      "sha256": "12c4239b6c34381531483c17342f1578cb203fb6257bea63e5b99bc43bdfd52c"
+    },
+    {
+      "path": "dispatch/README.md",
+      "bytes": 1970,
+      "sha256": "1eb40e94397b8f9dcfd7f23ac394655f0c6980ea470a9c1a3c4127bf14016b22"
+    },
+    {
+      "path": "dispatch/binding.json",
+      "bytes": 1898,
+      "sha256": "196c19bf633a20c75cc10a289cc532b54aa9b9dd2c599746b37e3ad1a296195f"
+    },
+    {
+      "path": "dispatch/dispatch_controls.py.code.txt",
+      "bytes": 13807,
+      "sha256": "aae3f079226cdcc85fa029276ef3c4ed03e443ee182971a4659becdafe2646d6"
+    },
+    {
+      "path": "dispatch/manifest.json",
+      "bytes": 1772,
+      "sha256": "7e27bd13f5702dc32149fe7221ab8d139f7d1c2511311cf9945c58c4954c76e0"
+    },
+    {
+      "path": "dispatch/mutations.json",
+      "bytes": 2917,
+      "sha256": "19aa8ccd1bb1a1890c80781ae17973727adebf4f3da2549c2318805509d13823"
+    },
+    {
+      "path": "dispatch/results.json",
+      "bytes": 6251,
+      "sha256": "e3233c8cd344693b5ac15eac7f7ddab3a1643d2131b2c790e5c53473c4245401"
+    },
+    {
+      "path": "dispatch/static-proof.json",
+      "bytes": 814,
+      "sha256": "b6e16fbca3ef8b2553703103a9ddf5abd799ab3c155b476f78ad6e62166df818"
+    },
+    {
+      "path": "operator/verify-full-reconciliation.py.code.txt",
+      "bytes": 3033,
+      "sha256": "b5849ee2a2d8167d700665b75883e864df6faa0decec83063b98b77ee3cf7955"
+    },
+    {
+      "path": "profile/reconciliation-profile.json",
+      "bytes": 7476,
+      "sha256": "ddc340e6ab2078d156f1dcc1badd15b57788d5a53fdddd8ebd420cd967cb8126"
+    },
+    {
+      "path": "review/FRESH-REVIEW-RAW.md",
+      "bytes": 8657,
+      "sha256": "e0cef4ff1da55d208080e89cc3d08aa15a270399d368a7afb0b269e0ddc3d3c8"
+    },
+    {
+      "path": "source/README.md",
+      "bytes": 973,
+      "sha256": "b64dabc10d0ba993ef54292cb4060688fb66af59e26e6915db0a2b03bf86115e"
+    },
+    {
+      "path": "source/candidate.patch",
+      "bytes": 4636,
+      "sha256": "261485e12082fb9d1a48b37969f7af9be44d978619698b24b40ee28a3222a761"
+    },
+    {
+      "path": "source/manifest.json",
+      "bytes": 992,
+      "sha256": "b3b7284c5dba7e8dd435377b80c40cf30dcde7a83c6d1a304e856ea05defcb36"
+    },
+    {
+      "path": "source/scheduling-model.json",
+      "bytes": 1640,
+      "sha256": "17544f7a5884c7ef8fcd3ae9b5924348ab266fdf55ff8f5e74cf6d8086845c1f"
+    },
+    {
+      "path": "source/source-proof.json",
+      "bytes": 370,
+      "sha256": "71f64b14196ca8903f57e3c1572e5f64420525ac0ce20dc34c38e82ebfb7b570"
+    }
+  ],
+  "codePolicy": "Code retained only as inert patch or .txt; never execute retained evidence. Original source is reconstructed using named commit and path, then verified against source SHA."
+}

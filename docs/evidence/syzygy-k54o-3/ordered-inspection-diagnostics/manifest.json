@@ -1,0 +1,57 @@
+{
+  "sourceCommit": "00f9c6f821baf83eac0dada118afdccc0e524088",
+  "verifiedSubject": "00f9c6f821baf83eac0dada118afdccc0e524088",
+  "verdict": "PASS scoped source review, typecheck and two native cases",
+  "archive": "payload.tar.gz",
+  "archiveBytes": 17886,
+  "archiveSha256": "9976f8a940687159796b8a0bd64c2a9b20a8e5bcd72a775988d2332c9defb0f2",
+  "READMEsha256": "837c1797cf10fe2d11cb93dbf29e8112c14e240679864e77d88d1a5e867317f5",
+  "members": [
+    {
+      "path": "README.md",
+      "bytes": 1281,
+      "sha256": "837c1797cf10fe2d11cb93dbf29e8112c14e240679864e77d88d1a5e867317f5"
+    },
+    {
+      "path": "execution/ordered-stage.log",
+      "bytes": 665,
+      "sha256": "f815c3957b416d3bd917177dda010dd44943a508bcf5eb428db01ce6dd635a95"
+    },
+    {
+      "path": "execution/results.json",
+      "bytes": 672,
+      "sha256": "3f8e645c48a2c3730b0d7c6a6c9cc823b72f6654269d4ece6c9c47b96f06b072"
+    },
+    {
+      "path": "execution/subject.json",
+      "bytes": 1259,
+      "sha256": "7e7de27f5f3091baa231ca275dbaed1242b8d3359c950f7b2d3ff20d9aafc7ce"
+    },
+    {
+      "path": "execution/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "review/FRESH-REVIEW-RAW.md",
+      "bytes": 7438,
+      "sha256": "b38cac6c4be2bc5de0ec864ca1c53cded12bc516a2422f786fa78bf920bf1c39"
+    },
+    {
+      "path": "source/bindings.json",
+      "bytes": 542,
+      "sha256": "6eb11870dac3793e086757256b9cccd7d86ddba652b4a19a51600991417cd905"
+    },
+    {
+      "path": "source/candidate.patch",
+      "bytes": 3071,
+      "sha256": "ddac2eab7253bd89e395a183aac6d4513a07d0980cabf4001a879f0d54d6344f"
+    },
+    {
+      "path": "source/url-ordered-design-host.test.ts.code.txt",
+      "bytes": 42972,
+      "sha256": "a35e3b80bcff869dda934700026a8901d7e68abb88e6a9c9b80795ef9971faec"
+    }
+  ],
+  "codePolicy": "Code retained only as inert patch or .txt; never execute retained evidence. Original source is reconstructed using named commit and path, then verified against source SHA."
+}

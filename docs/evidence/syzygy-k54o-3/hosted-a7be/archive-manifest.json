@@ -1,0 +1,175 @@
+{
+  "subject_head": "a7bef3f82605e104830c72c671ba4266d581705d",
+  "tested_merge": "865f4059b0892f9197f33bea1cef5c3d1af07659",
+  "entries": [
+    {
+      "source_path": "README.md",
+      "archive_path": "README.md",
+      "bytes": 1624,
+      "sha256": "ac566aa3911aaa91cfbe5fdcb643e386a4355cf04a3f63ceef7ffe1c406c26f1"
+    },
+    {
+      "source_path": "RECOVERY-COMPARISON.md",
+      "archive_path": "RECOVERY-COMPARISON.md",
+      "bytes": 2403,
+      "sha256": "1655b8b951858c5ad39f3cb716d424d11fc7f65f2ad9a7892d8d9f137f2197be"
+    },
+    {
+      "source_path": "terminal-report.json",
+      "archive_path": "terminal-report.json",
+      "bytes": 94876,
+      "sha256": "af8b9363c8555f6592e02166e94093544996132b94e40ee8dd8a300384a303b0"
+    },
+    {
+      "source_path": "snapshot-initial.json",
+      "archive_path": "snapshot-initial.json",
+      "bytes": 52330,
+      "sha256": "3210b24aca83d74ff312eaf0e2588bb55dc1044077f7a1b0df80ff3b8c2923c7"
+    },
+    {
+      "source_path": "poll-latest.json",
+      "archive_path": "poll-latest.json",
+      "bytes": 89374,
+      "sha256": "4020c59c3b3ae1f1524e1083a11a6c692339bf028ece85bca1de811a2fabc79d"
+    },
+    {
+      "source_path": "provisional-merge.json",
+      "archive_path": "provisional-merge.json",
+      "bytes": 332,
+      "sha256": "d7f8cbede5750882e500c142a94108c57019739a0d6d970e31a02c62e85282ce"
+    },
+    {
+      "source_path": "artifacts-latest.json",
+      "archive_path": "artifacts-latest.json",
+      "bytes": 2907,
+      "sha256": "7f8a8b8a1747378dcd4b55782d5b3c447b551ad02b97af358a77a520f5eb667d"
+    },
+    {
+      "source_path": "receipts-report.json",
+      "archive_path": "receipts-report.json",
+      "bytes": 834,
+      "sha256": "a70aceebf8afd111ba73e3df0aa16f2e3aacc2dbd4aaee95f3de38ba48124146"
+    },
+    {
+      "source_path": "core-3.log.gz",
+      "archive_path": "core-3.log.gz",
+      "bytes": 30847,
+      "sha256": "3009c37f794088676a752938b2376cc991479c1aa6bac19cf35e96da5c0cb4fc"
+    },
+    {
+      "source_path": "core-3-failure-excerpt.txt",
+      "archive_path": "core-3-failure-excerpt.txt",
+      "bytes": 8967,
+      "sha256": "60c84f6fd5037ceee3baeefd99d43faab911276a3c3d3ca7049baea26bb96049"
+    },
+    {
+      "source_path": "core-3-log-binding.json",
+      "archive_path": "core-3-log-binding.json",
+      "bytes": 344,
+      "sha256": "262eea4aa4a338d8d4620742561d9914c9c454f2bb4c5da107d6c265f66fa492"
+    },
+    {
+      "source_path": "stop-resume.log.gz",
+      "archive_path": "stop-resume.log.gz",
+      "bytes": 87063,
+      "sha256": "0f8fa346bd372fa84945ce6f3a563beb84efbc87e5ba5b53b1e1105d0416c58f"
+    },
+    {
+      "source_path": "stop-resume-failure-excerpt.txt",
+      "archive_path": "stop-resume-failure-excerpt.txt",
+      "bytes": 3670,
+      "sha256": "bed813785aa6bd2cdfb4435061d4c6a4f3ae1868b1e52864ba6584f089987b5e"
+    },
+    {
+      "source_path": "stop-resume-log-binding.json",
+      "archive_path": "stop-resume-log-binding.json",
+      "bytes": 344,
+      "sha256": "782979e6659ede3f3af41378f9e2dbd91abfb3bfdb2002dbbbd3b86403d6d88f"
+    },
+    {
+      "source_path": "reconciliation.log.gz",
+      "archive_path": "reconciliation.log.gz",
+      "bytes": 31760,
+      "sha256": "1a95210c449897a2d1e4a4fcc7561aff701a2421b273ae02a347b4c1030e0cb7"
+    },
+    {
+      "source_path": "reconciliation-log-binding.json",
+      "archive_path": "reconciliation-log-binding.json",
+      "bytes": 1932,
+      "sha256": "3bbfb14281ac489e3a37162d80ca20aa879a708f3d82f3f003e2c5e7a8219e8a"
+    },
+    {
+      "source_path": "reconciliation-profile.json",
+      "archive_path": "reconciliation-profile.json",
+      "bytes": 7476,
+      "sha256": "ddc340e6ab2078d156f1dcc1badd15b57788d5a53fdddd8ebd420cd967cb8126"
+    },
+    {
+      "source_path": "recovery-comparison.json",
+      "archive_path": "recovery-comparison.json",
+      "bytes": 102171,
+      "sha256": "4b5c7b53b8d64ef70d9666d21b40038f341117b96622570353613f30f036594d"
+    },
+    {
+      "source_path": "predecessor-86-stop-resume.log.gz",
+      "archive_path": "predecessor-86-stop-resume.log.gz",
+      "bytes": 84700,
+      "sha256": "3b9d09b2eaac2442611d1def2b0602881ef260d151a57cd7556aad92831c4544"
+    },
+    {
+      "source_path": "observer-six-wrappers.patch.txt",
+      "archive_path": "observer-six-wrappers.patch.txt",
+      "bytes": 6651,
+      "sha256": "d078bf45f993b2662f1958f211185bb1cb2253cea02e809de4e305564a0553f6"
+    },
+    {
+      "source_path": "compare-recovery.py",
+      "archive_path": "compare-recovery.py.txt",
+      "bytes": 5129,
+      "sha256": "a238ac9363c10f044efcacf21d215efee63757d7f4b1864491cc4ac25c54d442"
+    },
+    {
+      "source_path": "poll.py",
+      "archive_path": "poll.py.txt",
+      "bytes": 1886,
+      "sha256": "3d2b85ad0b0e807c8b13c22772f800288846f1ce121a46c1a88077f38debc74f"
+    },
+    {
+      "source_path": "retain-receipts.py",
+      "archive_path": "retain-receipts.py.txt",
+      "bytes": 2212,
+      "sha256": "eb2a7162c2d7d58cf509ff39da782c661010612bb5537d0c1200891ca2f5310e"
+    },
+    {
+      "source_path": "receipts/complete.json",
+      "archive_path": "receipts/complete.json",
+      "bytes": 69,
+      "sha256": "998d3e6c4c7d14f68334465461cb0540024f284ffbf90c6edc4f01b8016c8835"
+    },
+    {
+      "source_path": "receipts/core-1.json",
+      "archive_path": "receipts/core-1.json",
+      "bytes": 67,
+      "sha256": "3c99025ff5237fa34010e74810aa92815875e372ea81a1bc5be3bdcee7410bae"
+    },
+    {
+      "source_path": "receipts/core-2.json",
+      "archive_path": "receipts/core-2.json",
+      "bytes": 67,
+      "sha256": "92cbe7f3e0ba5fea9518a8291efabe7702b8c904768ac7b7a6049b5656d0ee45"
+    },
+    {
+      "source_path": "receipts/delivery-stop.json",
+      "archive_path": "receipts/delivery-stop.json",
+      "bytes": 74,
+      "sha256": "eca930381e18309d84c4ea87c16816d6ff595ffc130be9f0c110493232610204"
+    },
+    {
+      "source_path": "receipts/eligible-stop-resume.json",
+      "archive_path": "receipts/eligible-stop-resume.json",
+      "bytes": 81,
+      "sha256": "6e206cd161ca1da1ea9ac166d7b6f3719396b0a6d3b52d984fa3dbfa85febb7c"
+    }
+  ],
+  "code_policy": "All Python sources inert .txt; never run code from retained evidence."
+}

@@ -1,0 +1,90 @@
+{
+  "subject": "2e03ed353c5274b53b2dbca0b8ab6094800e76d1",
+  "parents": [
+    "00f9c6f821baf83eac0dada118afdccc0e524088",
+    "278265bce97d1903e8b89ccc6062ac6e3763c17f"
+  ],
+  "changedPaths": 15,
+  "incomingExactPaths": 13,
+  "preservedPriorRows": 242,
+  "resultRows": 243,
+  "incomingRow": "A-308",
+  "sourceScope": "existing effectiveRun URL-supervised disclosure/metadata plus incoming mobile CSS; A303 dfn unchanged",
+  "validation": "fresh source reviews and git diff --check; final full-suite/browser/static render acceptance pending",
+  "archiveBytes": 13765,
+  "archiveSha256": "32e5a8a85a2d2342d2a26e29236f09d48fb8b4e859192f8b95b5c406d17c0b45",
+  "READMEsha256": "213349933d1608a31a41f7336a5d980a2d3dcb6d88c5f437a3a7425a818f6213",
+  "members": [
+    {
+      "path": "R1/README.md",
+      "bytes": 832,
+      "sha256": "811a06bc8331cc038505a1394833d24591baafed7391fb5bfdc1ecd6f40de637"
+    },
+    {
+      "path": "R1/branch-before.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a"
+    },
+    {
+      "path": "R1/incoming-scoped.patch",
+      "bytes": 9405,
+      "sha256": "b80059e5d91fa5effe11a020d9bcf93dcb72a989c4c25ef76bfa806665599e39"
+    },
+    {
+      "path": "R1/manifest.json",
+      "bytes": 3530,
+      "sha256": "cde98a7b0e5a9f12125c309eacffc97413ed0d28176c55423607915e38098702"
+    },
+    {
+      "path": "R1/resolved-scoped.patch",
+      "bytes": 9340,
+      "sha256": "e81cbf207a30853b7d15026acb831315d4bef35fbfc51e00d4d06fd73b4d6efc"
+    },
+    {
+      "path": "R2/README.md",
+      "bytes": 974,
+      "sha256": "cb5ce0cd07bc51f8208ed293f6d365d5eadfdba2564e3e191d3a05853bceb75f"
+    },
+    {
+      "path": "R2/branch-before.patch",
+      "bytes": 4824,
+      "sha256": "2db979b7cd43b62ea8f419e3c48f8e524a6fa49554d8fe29ea14c3a2dbfe321a"
+    },
+    {
+      "path": "R2/incoming-scoped.patch",
+      "bytes": 9405,
+      "sha256": "b80059e5d91fa5effe11a020d9bcf93dcb72a989c4c25ef76bfa806665599e39"
+    },
+    {
+      "path": "R2/manifest.json",
+      "bytes": 3838,
+      "sha256": "e8ebc7dd17a5a66be7e9a9ddf1c6434c2113cd6da80ec1d45b18be1c27080bd1"
+    },
+    {
+      "path": "R2/resolved-scoped.patch",
+      "bytes": 9340,
+      "sha256": "e81cbf207a30853b7d15026acb831315d4bef35fbfc51e00d4d06fd73b4d6efc"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1245,
+      "sha256": "213349933d1608a31a41f7336a5d980a2d3dcb6d88c5f437a3a7425a818f6213"
+    },
+    {
+      "path": "composition-proof.json",
+      "bytes": 543,
+      "sha256": "234950ce863ed4d833db44b1ce94eb580369e156961e471b8def31396d96fac1"
+    },
+    {
+      "path": "review/R1-FRESH-REVIEW-RAW.md",
+      "bytes": 8148,
+      "sha256": "506bd532059267bee2793f987266c9e4ba14390c9a330bf793e2cdd88d9bfdd3"
+    },
+    {
+      "path": "review/R2-FRESH-REVIEW-RAW.md",
+      "bytes": 4865,
+      "sha256": "3487fbc79ce797a961fe963e634431ed2fc2aa1c6a4d2c21637d6995c34abc7f"
+    }
+  ],
+  "codePolicy": "Only source-scoped inert patches; reconstruct exact source using named git commits and paths; no full parent patches"
+}
