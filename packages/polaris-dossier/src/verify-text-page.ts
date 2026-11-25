@@ -1,4 +1,4 @@
-import { CLAIM_OUTCOMES, VERIFY_TEXT_DISCLOSURES, WITHHELD_BY_NAME, claimResults, splitLines, uncheckedWords, type VerifiedText } from './verify-text.js';
+import { CLAIM_OUTCOMES, VERIFY_TEXT_GRADER_DISCLOSURES, WITHHELD_BY_NAME, claimResults, splitLines, uncheckedWords, type VerifiedText } from './verify-text.js';
 
 /** The checked text as one HTML page in a neutral shell (syzygy-5dhm.24, move R2 slice 2): the shell R1's graders see, the same for
  * every arm, so a grader cannot tell a dossier's text from a plain session's by its frame.
@@ -6,9 +6,11 @@ import { CLAIM_OUTCOMES, VERIFY_TEXT_DISCLOSURES, WITHHELD_BY_NAME, claimResults
  * Neutral means: no Syzygy or Polaris name, navigation, theme or link to another page; no file name (a name like `plain.md` would tell
  * the arm); every arm's text drawn the same way, as its own Markdown source, line for line, never parsed into richer markup. Each claim's
  * lines sit in one element carrying its number and outcome, with a visible mark at its last line (the annotated copy's marker, in the
- * page's own words), and the page closes with the tally, the item counts, each claim's results and the checker's disclosures. Its
- * results are `claimResults`, the list the annotated copy's closing section is written from, so a path screening withholds by name is
- * named by neither.
+ * page's own words), and the page closes with the tally, the item counts, each claim's results and the checker's disclosures in the
+ * words a grader may read (`VERIFY_TEXT_GRADER_DISCLOSURES`, which name neither the dossier nor its lead-in). Its results are
+ * `claimResults`, the list the annotated copy's closing section is written from, so a path screening withholds by name is named by
+ * neither. The escape below is local: the app's inert helpers (apps/three-surface-poc) cannot be imported by this package (a package does
+ * not depend on an app; `apps/syzygy` injects the app's renderer); the page is held to the same core page-sink checks as the app's pages.
  *
  * Inert: every byte of the text and of each result is written as text, each of `& < > " '` as a character reference; the page carries
  * no script, no event handler and no external load, under the closed policy the dossier pages carry (`pageSinkCspFinding` in
@@ -71,9 +73,9 @@ export function renderVerifiedTextPage(markdown: string, verified: VerifiedText,
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
     + `${CSP_META}<title>Checked text</title><style>${CSS}</style></head><body><main>`
     + `<h1>Checked text</h1><p class="pinned">Checked against the pinned revision <code>${escape(heading.pinned)}</code>.</p>`
-    + `<pre class="text" aria-label="The text, each claim marked with its outcome">${body}</pre>`
+    + `<section role="region" aria-labelledby="text-heading"><h2 id="text-heading">The text, each claim marked with its outcome</h2><pre class="text">${body}</pre></section>`
     + `<h2>Tally</h2>${tally}<p>Claims that cannot be checked at all, because they name no file: ${verified.tally.unanchored}.</p>${references}${quotations}`
     + `<h2>Results by claim</h2>${results.length === 0 ? '<p>No claim names a file or quotes.</p>' : `<ul>${results.join('')}</ul>`}`
-    + `<h2>What this measures</h2><ul>${VERIFY_TEXT_DISCLOSURES.map((line) => `<li>${escape(line)}</li>`).join('')}</ul>`
+    + `<h2>What this measures</h2><ul>${VERIFY_TEXT_GRADER_DISCLOSURES.map((line) => `<li>${escape(line)}</li>`).join('')}</ul>`
     + '</main></body></html>\n';
 }

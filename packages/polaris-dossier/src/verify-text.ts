@@ -35,13 +35,22 @@ const BARE_EXTENSIONS: ReadonlySet<string> = new Set([
   'sql', 'proto', 'lock', 'in',
 ]);
 
+const QUOTATION_FORM = 'A quotation holds at least one letter or digit and may wrap across lines of its claim; a straight-quoted span inside a curly-quoted one is part of it. Backslash escapes are not interpreted.';
+
 export const VERIFY_TEXT_DISCLOSURES: readonly string[] = [
   'The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true: a reference that resolves says only that the file and lines exist at the pinned revision.',
   'A claim is a paragraph, a list item or a table row outside fenced code; a reference is a repository path, optionally with lines (path:N, path:N-M, path#LN-LM, "path, lines N-M"); a quotation is a double-quoted span (straight or curly) outside code spans.',
   'A quotation is checked only against the files its own claim names; a quotation in a claim that names no file is counted unanchored, never searched for.',
   'A path the screen withholds is reported withheld and never read; a quotation resting on withheld lines of a redacted file is withheld too, and so is a quotation found in no resolving file of a claim that also names a withheld path.',
   `Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, or a slashed name with neither an extension nor lines. A bare name without a slash is one only with lines, as a dotfile in code marks, or with one of these extensions: ${[...BARE_EXTENSIONS].join(', ')}; with ${[...WEAK_EXTENSIONS].join(', ')} (\`Node.js\` in prose) only in code marks or with lines. A path written both with lines and alone is checked for both. Lines below 1 or past ${Number.MAX_SAFE_INTEGER} name nothing.`,
-  'A quotation holds at least one letter or digit and may wrap across lines of its claim; a straight-quoted span inside a curly-quoted one is part of it. Backslash escapes are not interpreted. A quotation that itself contains the dossier lead-in ("The project states:") cannot be checked and counts as not found.',
+  `${QUOTATION_FORM} A quotation that itself contains the dossier lead-in ("The project states:") cannot be checked and counts as not found.`,
+];
+
+/** The same disclosures in the words the neutral page shows a blind grader (verify-text-page.ts): the lead-in rule is stated without
+ * naming the dossier or the lead-in's words, which would tell a grader which arm a text whose body carries them came from. */
+export const VERIFY_TEXT_GRADER_DISCLOSURES: readonly string[] = [
+  ...VERIFY_TEXT_DISCLOSURES.slice(0, -1),
+  `${QUOTATION_FORM} A quotation that itself contains a fixed lead-in phrase the checker reserves cannot be checked and counts as not found.`,
 ];
 
 /** A line range, 1-based and inclusive, as written. */

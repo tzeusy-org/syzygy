@@ -23,8 +23,10 @@ const VERIFIED: VerifiedText = {
     { index: 3, startLine: 5, endLine: 5, outcome: 'withheld', references: [{ written: null, path: null, ranges: [{ start: 1, end: 1 }], state: 'withheld' }], quotations: [], uncheckedQuotations: 0 },
     { index: 4, startLine: 7, endLine: 7, outcome: 'unanchored', references: [], quotations: [], uncheckedQuotations: 1 },
   ],
-  tally: { ...ZERO, 'quotation-verified': 1, 'reference-unverified': 1, withheld: 1, unanchored: 1 },
-  items: { references: { resolves: 2, missing: 0, 'lines-missing': 0, withheld: 1 }, quotations: { verified: 1, 'not-found': 0, withheld: 0, 'no-file': 0, unanchored: 1 } },
+  // Every count distinct (and none equal to the four claims), so a figure read from the wrong field fails. The page reads these
+  // counts as given; it never recounts the claims.
+  tally: { 'quotation-verified': 11, 'reference-unverified': 12, 'path-missing': 13, 'quotation-not-found': 14, unanchored: 15, withheld: 16 },
+  items: { references: { resolves: 21, missing: 22, 'lines-missing': 23, withheld: 24 }, quotations: { verified: 31, 'not-found': 32, withheld: 33, 'no-file': 34, unanchored: 35 } },
   skipped: { headingLines: 0, fencedLines: 0, tableHeaderLines: 0, tableSeparatorLines: 0 },
 };
 
@@ -32,31 +34,35 @@ describe('the checked text as an HTML page', () => {
   const html = renderVerifiedTextPage(MARKDOWN, VERIFIED, { pinned: PINNED });
 
   it('marks each claim in place, escaped, with its number and outcome', () => {
-    const text = html.slice(html.indexOf('<pre'), html.indexOf('</pre>') + 6);
-    expect(text).toBe('<pre class="text" aria-label="The text, each claim marked with its outcome">'
+    const text = html.slice(html.indexOf('<section'), html.indexOf('</section>') + 10);
+    expect(text).toBe('<section role="region" aria-labelledby="text-heading"><h2 id="text-heading">The text, each claim marked with its outcome</h2><pre class="text">'
       + '<span class="claim" id="claim-1" data-claim="1" data-outcome="quotation-verified">Intro &quot;keeps &lt;every&gt; key&quot; (`src/a.c:1-2`).\nstill intro. <span class="mark">[C1: quotation-verified]</span></span>\n'
       + '\n'
       + '<span class="claim" id="claim-2" data-claim="2" data-outcome="reference-unverified">- Lives in `lib/a.h` &amp; more. <span class="mark">[C2: reference-unverified]</span></span>\n'
       + '<span class="claim" id="claim-3" data-claim="3" data-outcome="withheld">- Secret at docs/x.txt:1. <span class="mark">[C3: withheld]</span></span>\n'
       + '\n'
       + '<span class="claim" id="claim-4" data-claim="4" data-outcome="unanchored">No file here, &quot;just words&quot;. <span class="mark">[C4: unanchored]</span></span>\n'
-      + '</pre>');
+      + '</pre></section>');
   });
 
   it('closes with the tally, the unanchored count, and the item counts', () => {
-    expect(html).toContain('<tr><th scope="row">quotation-verified</th><td class="n">1</td></tr><tr><th scope="row">reference-unverified</th><td class="n">1</td></tr>'
-      + '<tr><th scope="row">path-missing</th><td class="n">0</td></tr><tr><th scope="row">quotation-not-found</th><td class="n">0</td></tr>'
-      + '<tr><th scope="row">unanchored</th><td class="n">1</td></tr><tr><th scope="row">withheld</th><td class="n">1</td></tr>'
+    expect(html).toContain('<tr><th scope="row">quotation-verified</th><td class="n">11</td></tr><tr><th scope="row">reference-unverified</th><td class="n">12</td></tr>'
+      + '<tr><th scope="row">path-missing</th><td class="n">13</td></tr><tr><th scope="row">quotation-not-found</th><td class="n">14</td></tr>'
+      + '<tr><th scope="row">unanchored</th><td class="n">15</td></tr><tr><th scope="row">withheld</th><td class="n">16</td></tr>'
       + '<tr><th scope="row">total</th><td class="n">4</td></tr>');
-    expect(html).toContain('<p>Claims that cannot be checked at all, because they name no file: 1.</p>');
-    expect(html).toContain('<tr><th scope="row">resolves</th><td class="n">2</td></tr>');
-    expect(html).toContain('<tr><th scope="row">no-file</th><td class="n">0</td></tr><tr><th scope="row">unanchored</th><td class="n">1</td></tr>');
+    expect(html).toContain('<p>Claims that cannot be checked at all, because they name no file: 15.</p>');
+    expect(html).toContain('<tr><th scope="row">resolves</th><td class="n">21</td></tr><tr><th scope="row">missing</th><td class="n">22</td></tr>'
+      + '<tr><th scope="row">lines-missing</th><td class="n">23</td></tr><tr><th scope="row">withheld</th><td class="n">24</td></tr>');
+    expect(html).toContain('<tr><th scope="row">verified</th><td class="n">31</td></tr><tr><th scope="row">not-found</th><td class="n">32</td></tr>'
+      + '<tr><th scope="row">withheld</th><td class="n">33</td></tr><tr><th scope="row">no-file</th><td class="n">34</td></tr><tr><th scope="row">unanchored</th><td class="n">35</td></tr>');
   });
 
   it('states what the checker measures, never whether an unquoted claim is true', () => {
     const section = html.slice(html.indexOf('<h2>What this measures</h2>'));
     expect(section.startsWith('<h2>What this measures</h2><ul><li>The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true')).toBe(true);
     expect(section.split('<li>').length - 1).toBe(6);
+    // The lead-in rule in words that name neither the dossier nor the lead-in phrase.
+    expect(section).toContain('A quotation that itself contains a fixed lead-in phrase the checker reserves cannot be checked and counts as not found.</li></ul>');
   });
 
   it('lists each claim\'s results, linking to the claim, and names no path screening withholds by name', () => {
@@ -71,7 +77,7 @@ describe('the checked text as an HTML page', () => {
   it('is a neutral shell: the pinned revision, no file name, no product name, no navigation', () => {
     expect(html).toContain(`<title>Checked text</title>`);
     expect(html).toContain(`<p class="pinned">Checked against the pinned revision <code>${PINNED}</code>.</p>`);
-    expect(html).not.toMatch(/syzygy|polaris/iu);
+    expect(html).not.toMatch(/syzygy|polaris|dossier|the project states/iu);
     expect(html).not.toMatch(/<nav|<header|<footer/iu);
     // Every link is a fragment within the page.
     expect([...html.matchAll(/href="([^"]*)"/gu)].map((m) => m[1])).toEqual(['#claim-1', '#claim-2', '#claim-3', '#claim-4']);
@@ -119,5 +125,53 @@ describe('the page over a checked text', () => {
     expect([...page.matchAll(/data-claim="(\d+)" data-outcome="([a-z-]+)"/gu)].map((m) => `${m[1]}:${m[2]}`)).toEqual(['1:quotation-verified', '2:path-missing', '3:unanchored']);
     expect([...annotated.matchAll(/\[verify C(\d+): ([a-z-]+)\]/gu)].map((m) => `${m[1]}:${m[2]}`)).toEqual(['1:quotation-verified', '2:path-missing', '3:unanchored']);
     expect(annotateText(markdown, verified, { pinned: PINNED, file: 'answer.md' })).toBe(annotated);
+  });
+});
+
+// The frame is the same for every arm: everything but the text, the counts and the results by claim, pinned as a literal.
+const frameOf = (html: string): string => html
+  .replace(/<style>[\s\S]*?<\/style>/u, '<style>STYLE</style>')
+  .replace(/<pre class="text">[\s\S]*?<\/pre>/u, '<pre class="text">TEXT</pre>')
+  .replace(/<td class="n">\d+<\/td>/gu, '<td class="n">N</td>')
+  .replace(/name no file: \d+\./u, 'name no file: N.')
+  .replace(/(<h2>Results by claim<\/h2>)[\s\S]*?(<h2>What this measures<\/h2>)/u, '$1RESULTS$2');
+const COUNT_ROWS = (names: readonly string[]): string => names.map((name) => `<tr><th scope="row">${name}</th><td class="n">N</td></tr>`).join('');
+const FRAME = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+  + '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">'
+  + '<title>Checked text</title><style>STYLE</style></head><body><main>'
+  + `<h1>Checked text</h1><p class="pinned">Checked against the pinned revision <code>${PINNED}</code>.</p>`
+  + '<section role="region" aria-labelledby="text-heading"><h2 id="text-heading">The text, each claim marked with its outcome</h2><pre class="text">TEXT</pre></section>'
+  + '<h2>Tally</h2><table><caption class="note">Claims by outcome</caption><thead><tr><th scope="col">Outcome</th><th scope="col">Count</th></tr></thead><tbody>'
+  + COUNT_ROWS(['quotation-verified', 'reference-unverified', 'path-missing', 'quotation-not-found', 'unanchored', 'withheld', 'total']) + '</tbody></table>'
+  + '<p>Claims that cannot be checked at all, because they name no file: N.</p>'
+  + '<table><caption class="note">References by state</caption><thead><tr><th scope="col">State</th><th scope="col">Count</th></tr></thead><tbody>'
+  + COUNT_ROWS(['resolves', 'missing', 'lines-missing', 'withheld']) + '</tbody></table>'
+  + '<table><caption class="note">Quotations by state</caption><thead><tr><th scope="col">State</th><th scope="col">Count</th></tr></thead><tbody>'
+  + COUNT_ROWS(['verified', 'not-found', 'withheld', 'no-file', 'unanchored']) + '</tbody></table>'
+  + '<h2>Results by claim</h2>RESULTS<h2>What this measures</h2><ul>'
+  + '<li>The checker measures whether a claim can be checked and whether its quotation is real, not whether an unquoted claim is true: a reference that resolves says only that the file and lines exist at the pinned revision.</li>'
+  + '<li>A claim is a paragraph, a list item or a table row outside fenced code; a reference is a repository path, optionally with lines (path:N, path:N-M, path#LN-LM, &quot;path, lines N-M&quot;); a quotation is a double-quoted span (straight or curly) outside code spans.</li>'
+  + '<li>A quotation is checked only against the files its own claim names; a quotation in a claim that names no file is counted unanchored, never searched for.</li>'
+  + '<li>A path the screen withholds is reported withheld and never read; a quotation resting on withheld lines of a redacted file is withheld too, and so is a quotation found in no resolving file of a claim that also names a withheld path.</li>'
+  + '<li>Not a reference: an absolute path, a URL, a host, a glob, a name that is only an extension, or a slashed name with neither an extension nor lines. A bare name without a slash is one only with lines, as a dotfile in code marks, or with one of these extensions: '
+  + 'c, h, cc, cpp, cxx, hpp, hh, md, markdown, txt, rst, conf, cfg, ini, json, yaml, yml, toml, xml, py, tcl, js, mjs, cjs, ts, tsx, jsx, rs, go, sh, bash, lua, rb, java, kt, mk, cmake, html, css, sql, proto, lock, in; '
+  + 'with js, ts, in (`Node.js` in prose) only in code marks or with lines. A path written both with lines and alone is checked for both. Lines below 1 or past 9007199254740991 name nothing.</li>'
+  + '<li>A quotation holds at least one letter or digit and may wrap across lines of its claim; a straight-quoted span inside a curly-quoted one is part of it. Backslash escapes are not interpreted. A quotation that itself contains a fixed lead-in phrase the checker reserves cannot be checked and counts as not found.</li>'
+  + '</ul></main></body></html>\n';
+
+describe('the frame is the same for every arm', () => {
+  it('draws a plain answer and a dossier text in byte-identical frames, and pins that frame', async () => {
+    const plain = 'Kestrel keeps keys in memory (`src/kestrel.c`).\n\nIt is fast.\n';
+    const dossier = '# page index.html\n\nThe project states: "Kestrel keeps every key in memory." (`src/kestrel.c:1`)\n\n- See `src/gone.c:3`.\n';
+    const pages = await Promise.all([plain, dossier].map(async (markdown) => {
+      const { verified } = await verifyText(markdown, { pinned: PINNED, screen: SCREEN, reader }, 'answer.md');
+      return renderVerifiedTextPage(markdown, verified, { pinned: PINNED });
+    }));
+    expect(pages[0]).not.toBe(pages[1]);
+    expect(frameOf(pages[0]!)).toBe(frameOf(pages[1]!));
+    expect(frameOf(pages[0]!)).toBe(FRAME);
+    // The stylesheet loads nothing and generates no text a grader could read.
+    const style = /<style>([\s\S]*?)<\/style>/u.exec(pages[0]!)![1]!;
+    expect(style).not.toMatch(/url\(|@import|content\s*:/iu);
   });
 });
