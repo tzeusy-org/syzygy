@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
-import { navigationInput, readingInput } from './dossier-reading.testkit.js';
+import { lineCitationInput, navigationInput, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -258,7 +258,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   blocks.set(inlineCitation.id, { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [],
     segments: [{ kind: 'prose', text: inlineCitation.text }] });
   const citationLines = new Map(local.citationLines);
-  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, 'line 1']]));
+  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, [{ start: 1, end: 1 }]]]));
   const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
     : { ...section, paragraphs: [...section.paragraphs, inlineCitation, quotedCode] }) };
   const sourceAnchors = new Map(local.sourceAnchors);
@@ -380,7 +380,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
       expect(await page.evaluate('document.scripts.length')).toBe(0);
       const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
       expect(exactPage).toBeDefined();
-      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
+      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#L1`;
       const citations = [
         { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
         { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
@@ -442,3 +442,45 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+it.skipIf(executable === undefined)('follows a ranged source citation and highlights only its line span with scripts removed', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'line-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(lineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const link = 'document.querySelector(\'[data-claim-id="introduction"] a.cite\')';
+      expect(await page.evaluate(`${link}.hash`)).toBe('#L1200');
+      await page.evaluate(`${link}.focus()`);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('location.hash')).toBe('#L1200');
+      const inspect = `(() => {
+        const target = document.querySelector('.source-line:target');
+        const row = number => document.getElementById('L' + number);
+        if (!target) return null;
+        const background = el => getComputedStyle(el).backgroundColor;
+        return { scripts: document.scripts.length, target: target.id, text: target.textContent.trim(),
+          rowCount: document.querySelectorAll('.source-line').length, scrolled: window.scrollY > 844,
+          onScreen: target.getBoundingClientRect().top >= 0 && target.getBoundingClientRect().bottom <= innerHeight,
+          fits: document.documentElement.scrollWidth <= innerWidth,
+          label: getComputedStyle(target, '::before').content,
+          continuations: [1201, 1202, 1207, 1208].every(n => row(n).classList.contains('cited-span') && background(row(n)) === background(target)),
+          unrelated: [1199, 1203, 1204, 1205].every(n => background(row(n)) !== background(target)),
+          details: document.querySelectorAll('details .source-line').length };
+      })()`;
+      await expect.poll(() => page.evaluate(inspect)).toEqual({ scripts: 0, target: 'L1200', text: '# synthetic option 1200: local documentation',
+        rowCount: 2100, scrolled: true, onScreen: true, fits: true, label: '"1200"', continuations: true, unrelated: true, details: 0 });
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);

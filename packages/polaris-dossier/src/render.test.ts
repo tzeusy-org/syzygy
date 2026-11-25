@@ -351,6 +351,56 @@ describe('render', () => {
     expect(report.scanFindings).toEqual([]);
   });
 
+  it('lands every ranged reading citation on its first kept line and keeps the unranged fallback', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const anchors = new Map([
+      [`${objectIds['src/kestrel.c']}:3-37`, 1],
+      [`${objectIds['src/kestrel.c']}:${byteOffset(KESTREL, 'Each command')}-${byteOffset(KESTREL, 'starts.') + 'starts.'.length}`, 2],
+      [`${objectIds['docs/notes.txt']}:13-48`, 2],
+    ]);
+    let ranged = 0, unranged = 0, quoted = 0;
+    const numberedPages: string[] = [];
+    for (const [page, bytes] of html(files)) {
+      if (/<span class="source-line[^"]*" id="L\d+"/u.test(bytes)) numberedPages.push(page);
+      for (const match of bytes.matchAll(/<a class="(?:anchor-link )?cite" href="([^"]+)"[^>]*>/gu)) {
+        const [route, fragment] = match[1]!.split('#');
+        const source = files.get(path.posix.join(path.posix.dirname(page), route!));
+        expect(source, `${page}: ${match[1]}`).toBeDefined();
+        const anchor = /data-anchor-identifier="([^"]+)"[^>]*data-anchor-fragment="([^"]+)"/u.exec(match[0]);
+        const label = /aria-label="[^"]+?, lines? (\d+)/u.exec(match[0]);
+        if (anchor !== null) {
+          const origin = anchors.get(`${anchor[1]}:${anchor[2]}`);
+          expect(origin, match[0]).toBeDefined();
+          expect(fragment).toBe(`L${origin}`);
+          quoted++;
+        } else if (label !== null) {
+          expect(fragment).toBe(`L${label[1]}`);
+          ranged++;
+        } else {
+          expect(fragment).toBe('exact-text');
+          unranged++;
+        }
+        expect(source).toContain(`id="${fragment}"`);
+      }
+      let detailsDepth = 0;
+      const lines: number[] = [];
+      for (const tag of bytes.matchAll(/<details\b[^>]*>|<\/details>|<[^>]+ id="L(\d+)"[^>]*>/gu)) {
+        if (tag[0].startsWith('<details')) detailsDepth++;
+        else if (tag[0] === '</details>') detailsDepth--;
+        else {
+          expect(detailsDepth, `${page} ${tag[0]}`).toBe(0);
+          lines.push(Number(tag[1]));
+        }
+      }
+      if (numberedPages.at(-1) === page) expect(lines, page).toEqual(bytes.includes('src/kestrel.c</h1>') ? [1, 2, 3, 4, 5] : [1, 2]);
+      else expect(lines, page).toEqual([]);
+    }
+    expect({ ranged, unranged, quoted, sourcePages: numberedPages.length }).toEqual({ ranged: 15, unranged: 2, quoted: 3, sourcePages: 2 });
+  });
+
   it('labels blocks by the agent\'s label, the counted review and screening, and keeps the pages and machine view in parity per tuple', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
@@ -864,6 +914,8 @@ describe('render', () => {
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
+    expect([...sourcePage.matchAll(/id="L(\d+)"/gu)].map(match => Number(match[1]))).toEqual([1, 2, 3, 5]);
+    expect([...readSite(result.report.site).values()].join('')).not.toMatch(/href="[^"]+#L4"/u);
     // syzygy-pdja.1: RFC5-17's count stays on the claim, on the citation itself, and the sentence never repeats in the reading text.
     const site = readSite(result.report.site);
     const reading = site.get('index.html')!.slice(site.get('index.html')!.indexOf('<main'));
@@ -2696,7 +2748,7 @@ describe('render: task routes and the generated index', () => {
     expect(page.match(/<section id="route-route-\d" class="task-route"/gu)).toHaveLength(8);
     const kestrel = [...files.keys()].find((file) => file.startsWith('sources/') && files.get(file)!.includes('int main(void)'))!;
     expect(page).toContain('<section id="route-route-1" class="task-route" data-task-route="route-1"><h2>Add a command 1</h2><ol class="steps route-steps"><li data-claim-id="r1s1" data-epistemic="inferred" id="block-r1s1">Start in <code>main</code>, in src/kestrel.c. <span class="marking inferred">[Inferred]</span> ');
-    expect(page).toContain(`<span class="route-where">Read or change: <a href="${kestrel}#exact-text"><code>src/kestrel.c</code></a>, line 4</span><span class="route-see">In this dossier: <a href="index.html#section-core-ideas">Core ideas</a></span></li>`);
+    expect(page).toContain(`<span class="route-where">Read or change: <a href="${kestrel}#L4"><code>src/kestrel.c</code></a>, line 4</span><span class="route-see">In this dossier: <a href="index.html#section-core-ideas">Core ideas</a></span></li>`);
     // A quotation in a step is the located span, drawn as any quotation is.
     expect(page).toContain('data-claim-id="r1s2"');
     expect(page).toContain('<code>docs/notes.txt</code></a>, line 2</span>');

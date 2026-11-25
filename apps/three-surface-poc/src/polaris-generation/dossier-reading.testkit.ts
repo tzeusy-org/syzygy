@@ -1,6 +1,6 @@
 // Test support: only the dossier reading tests import this.
 import { generationAnchorId, gitBlobObjectId, type EvidenceAnchor, type GenerationSource, type LocalRenderInput } from '@syzygy/polaris-generation-core';
-import type { LocalDerivedStructure, LocalManifestFact, LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
+import { generationSourcesForBody, type LocalDerivedStructure, type LocalManifestFact, type LocalManifestRecognizerEntry } from '@syzygy/polaris-generation-core/live';
 
 const REVISION = 'c'.repeat(40);
 const anchor = (source: GenerationSource): EvidenceAnchor => ({ targetClass: 'evidence-artifact-identifier-with-integrity-digest',
@@ -55,7 +55,7 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
     sources: [source],
     local: {
       // The lines the introduction cites, as the render adapter records them: its citation mark shows them on focus and hover.
-      citationLines: new Map([['introduction', new Map([[source.sourceId, 'lines 1\u20133']])]]),
+      citationLines: new Map([['introduction', new Map([[source.sourceId, [{ start: 1, end: 3 }]]])]]),
       draft: {
         title: 'Reading dossier', introduction: { id: 'introduction', text: 'intro', sourceIds: [source.sourceId] },
         sections: [
@@ -188,4 +188,26 @@ export function navigationInput(): ReturnType<typeof readingInput> {
       { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
     ] },
   } };
+}
+
+/** Long plain text with distinguishable LF, CRLF, and bare CR line ends. Every line is synthetic. */
+export function lineCitationInput() {
+  const input = readingInput();
+  const body = Array.from({ length: 2100 }, (_, index) => {
+    const ending = index % 3 === 0 ? '\r\n' : index % 3 === 1 ? '\r' : '\n';
+    return `# synthetic option ${index + 1}: local documentation${ending}`;
+  }).join('');
+  const { repositoryId, revision, evaluationId } = READING_SOURCE;
+  const source = generationSourcesForBody({ repositoryId, revision, evaluationId, sourceId: 'src-9876543210fedcba98765432',
+    objectId: gitBlobObjectId(body), path: 'docs/settings.conf', body })[0]!;
+  const sourceAnchors = new Map(input.local.sourceAnchors);
+  sourceAnchors.set(source.sourceId, anchor(source));
+  const citationLines = new Map(input.local.citationLines);
+  citationLines.set('introduction', new Map([[source.sourceId, [{ start: 1200, end: 1202 }, { start: 1207, end: 1208 }]]]));
+  citationLines.set('forms', new Map([[source.sourceId, [{ start: 1204, end: 1205 }]]]));
+  const draft = { ...input.local.draft,
+    introduction: { ...input.local.draft.introduction, sourceIds: [source.sourceId] },
+    sections: input.local.draft.sections.map(entry => ({ ...entry, paragraphs: entry.paragraphs.map(p => p.id === 'forms' ? { ...p, sourceIds: [source.sourceId] } : p) })),
+  };
+  return { local: { ...input.local, draft, sourceAnchors, citationLines }, sources: [...input.sources, source] };
 }
