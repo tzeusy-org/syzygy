@@ -1,0 +1,1258 @@
+{
+  "format": "main86-composition-retention-v1",
+  "subject": "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+  "subjectTree": "8b4d2e44ca4d901c9a910af60f88d3077a56e018",
+  "subjects": {
+    "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e": {
+      "commit": "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+      "tree": "8b4d2e44ca4d901c9a910af60f88d3077a56e018"
+    },
+    "64944deab26ddeec74c4d300bfd9aeb21e4703e5": {
+      "commit": "64944deab26ddeec74c4d300bfd9aeb21e4703e5",
+      "tree": "508be5c49052c7fc72f521985c164f597c3fc768"
+    },
+    "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381": {
+      "commit": "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+      "tree": "030a0acd1ce1802cff98d9472766f8fc9f2e9cc3"
+    },
+    "bb064295c160c7365d916eaf8a8cfd274914f516": {
+      "commit": "bb064295c160c7365d916eaf8a8cfd274914f516",
+      "tree": "9dbbe53c2e897b15ce5a32a6a9b5c8c2156d36fe"
+    },
+    "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e": {
+      "commit": "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+      "tree": "75da7ed72cf9ed3db67a4848214a3e22387c28ec"
+    },
+    "e514a52c2043193ab67a0be1f8f7849aea563994": {
+      "commit": "e514a52c2043193ab67a0be1f8f7849aea563994",
+      "tree": "606ff7315b457268a32c974c1bc27585808c8945"
+    }
+  },
+  "archive": {
+    "path": "payload.tar.gz",
+    "bytes": 1277168,
+    "sha256": "af7d298d69396e361cf1154050d2b1db26fb9ce17bb46a32516cf23aadf29af3"
+  },
+  "entries": [
+    {
+      "path": "PAYLOAD-MANIFEST.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "e514a52c2043193ab67a0be1f8f7849aea563994"
+      ],
+      "scope": "in-archive payload hash/subject index",
+      "sha256": "f935379657a539093c61a0c55ce4eda23f80f7ab8356edfc23c0621559a86abd",
+      "bytes": 50745
+    },
+    {
+      "path": "README.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "e514a52c2043193ab67a0be1f8f7849aea563994"
+      ],
+      "scope": "generated source-bound packaging description/index; not new product execution",
+      "sha256": "b90dace58097dafdb7bb21e65f3166cbd621b0ee40e56db0aa95481e58e3ee63",
+      "bytes": 5070
+    },
+    {
+      "path": "SOURCE-INVENTORY.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "e514a52c2043193ab67a0be1f8f7849aea563994"
+      ],
+      "scope": "generated source-bound packaging description/index; not new product execution",
+      "sha256": "529ee5c8c5a13defae3d24a7a1f54fa8531d6dd348ab94a96afcf6accca4e8fc",
+      "bytes": 89716
+    },
+    {
+      "path": "artifacts/check-86e10-private/check.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "unfiltered npm run check exact-subject result/log",
+      "sha256": "36816ff4dd61a9c55ac5943480a4365378f043387e9b29025862f457f8c9c01d",
+      "bytes": 2132908
+    },
+    {
+      "path": "artifacts/check-86e10-private/result.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "unfiltered npm run check exact-subject result/log",
+      "sha256": "bc2c4e7fe44f97213f6a4993c75f05f6d9f59b705e3288fb6800b65c7013b45e",
+      "bytes": 130
+    },
+    {
+      "path": "artifacts/check-86e10-private/subject.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "unfiltered npm run check exact-subject result/log",
+      "sha256": "173aaa145ecfc9c9410ddf0a90cdd0813b6ee3288146bac4a272e6c1249b5230",
+      "bytes": 318
+    },
+    {
+      "path": "artifacts/fresh-bb06-composition-review/bb064-composition-fresh-RAW.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "verbatim fresh source-only independent review",
+      "sha256": "6a74c64a138763716b0f0ef3b33c73dcdaddbff65d6a9dfeed76b4ca0984bbb1",
+      "bytes": 6022
+    },
+    {
+      "path": "artifacts/fresh-bb06-composition-review/native-clock-cost-diagnostic-R2-fresh-RAW.md",
+      "subjects": [
+        "e514a52c2043193ab67a0be1f8f7849aea563994",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "verbatim fresh source-only independent review",
+      "sha256": "0c1c110164dfc763a5915204e611ab8dac7b3b35aa91766a00da7407025ee410",
+      "bytes": 6075
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/GOVERNING-SOURCE-EXCERPTS-RAW.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "dc855aed006c96114df4c6083e6773a7cae855083ac3a23d06a2cf467dc8b18e",
+      "bytes": 12147
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/README.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "e9f0821462160ddaa69fceeb73e9c574552d18dff5c18b95dc878e61410df82c",
+      "bytes": 5055
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/binding.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "5c283ddc132de76e94dff516487b447566aedf178bb9d7e5d2f9485d67bb5bff",
+      "bytes": 1560
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/candidate-commit.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "455b0c247b8669e9fd01526d1e0e9d8ff75ebaebb97e6102029694244242afa1",
+      "bytes": 104
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/candidate-vs-ours.patch",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "82985f4650891f5b514df50dfd432e627f660c219c20ce948e73b5f3edee1dc5",
+      "bytes": 604235
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/diff-check.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/initial-merge-log.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "6e05dd8fbfebcee15df84a1a767b65dc2ee361b7355d942760212f0280281556",
+      "bytes": 1913
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/initial-unmerged-stages.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "24dadf743a2dd6dc7d3904db4be2e2de8b7a39d2db4259c75849c9b9a07c676f",
+      "bytes": 555
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/manifest.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "8b69fdabe5563dffd1a194ba9c58fbd3fd8ae67b56913176cb941d59a43d4dbd",
+      "bytes": 6418
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/resolve_candidate.py.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "1809b8eaf87caab78e81455532d382dababc525ec6e5cb35c27d92011c58d133",
+      "bytes": 1903
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/static-source-proof.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "f6f914e1659960432a47248e846ba4b2f8f374b2af57d42a37a56f2ec41cc743",
+      "bytes": 12238
+    },
+    {
+      "path": "artifacts/main-bb064-merge-candidate/static_source_proof.py.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e"
+      ],
+      "scope": "reviewed exact pinned-main composition proof metadata",
+      "sha256": "7de7f687c4e7a7b39606f1438d0a7b15b13cf4d3620882d7f21c0d074746a383",
+      "bytes": 7126
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/REPORT.md",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "b2af4cb75cb36b5a9bc337d8d8cbb00278e2d8833483f450c3affcee672a6887",
+      "bytes": 7234
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/SOURCE-EXCERPTS-RAW.md",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "48c23dcb29d0e3eae999779eb72abe0f7c7cf239b9968c863d4ee5d748d61c4b",
+      "bytes": 19422
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/a9fe-to-bb064.name-status",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "dd0dad5b21134940606effbc71bff216e035e398a3a2d488099e9baf54de0204",
+      "bytes": 1451
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/a9fe-to-bb064.patch",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "d051e80334d9413d762d6f59ed9d6755ba5452f674d19ba4f44ae041e61a2493",
+      "bytes": 604390
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/adoption-selected-rows-RAW.md",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "62019b201fc28f080ba3ef8a3d0b2bc418b2359321e0302711920996545f6495",
+      "bytes": 5794
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/binding.json",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "095f35247818900ca2182cd10dc2b5fbd117490d91ab0d2a5ae73e0d52a7b09d",
+      "bytes": 36104
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/check_spec_reconciliation.py.diff",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "4b87f1973eecaffc21fd6688cbe1469f329b0f8e5a6af53c05f60f1ae6b2ab04",
+      "bytes": 28705
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/commits.log",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "bcc45b1b40dd3e1fe989618588cd15ca8a116b407d9f3ff9dd882c8b2c40f9fe",
+      "bytes": 2315
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/count_polaris_effective_scenarios.py.diff",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "89327d65bf17c7adea9ba8c921f4d8af6b84e658fe7826d5005f7ddb0eae18b2",
+      "bytes": 2060
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/fetch.log",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "10e5f9026108137296b63a749cd9b80ea55c4bf9f50b18d447194abdca870adb",
+      "bytes": 122
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/manifest.json",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "60d044ac95e939524df25d820a1424573eb28b1550188835cb0e8b20c35ea528",
+      "bytes": 2839
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/retain_audit.py.txt",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "8a4c47c56ffde6b3089b23eec7e9d913b5d18e76c34639fe9ead54f8b3cddc90",
+      "bytes": 7017
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/retain_render_reuse.py.txt",
+      "subjects": [
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381"
+      ],
+      "scope": "read-only pinned new-main source reuse audit",
+      "sha256": "16aff1b087aba4fa603a2205a4ece7dc0ffa37abf6f48a483f7954481f2f5d22",
+      "bytes": 2622
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/source/packages/polaris-dossier/src/brief.test.ts.txt",
+      "subjects": [
+        "bb064295c160c7365d916eaf8a8cfd274914f516"
+      ],
+      "scope": "inert exact committed source retained by reuse audit",
+      "sha256": "f2aa799ef7cfc2af151b8de42eb26abbfbbe7f94e169c7ad4f924bb1deca9ced",
+      "bytes": 60556
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/source/packages/polaris-dossier/src/brief.ts.txt",
+      "subjects": [
+        "bb064295c160c7365d916eaf8a8cfd274914f516"
+      ],
+      "scope": "inert exact committed source retained by reuse audit",
+      "sha256": "8ca9668fdc96e1a0c5dc6a85f0254f12ee06758ae72425b0365df3b513c32a7d",
+      "bytes": 51143
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/source/scripts/check_spec_reconciliation.py.txt",
+      "subjects": [
+        "bb064295c160c7365d916eaf8a8cfd274914f516"
+      ],
+      "scope": "inert exact committed source retained by reuse audit",
+      "sha256": "0fcb07660cbdf607d42049d7bb3a03f94a14c761441665538068d05fd2c3a96a",
+      "bytes": 648689
+    },
+    {
+      "path": "artifacts/main-bb064-reuse-audit/source/scripts/count_polaris_effective_scenarios.py.txt",
+      "subjects": [
+        "bb064295c160c7365d916eaf8a8cfd274914f516"
+      ],
+      "scope": "inert exact committed source retained by reuse audit",
+      "sha256": "38e9875a762600601481c0d58daa553ca7ef465e8d2a8c182417b64d0cb51624",
+      "bytes": 64417
+    },
+    {
+      "path": "artifacts/main86-owning-verification/brief-integration.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "e5470fe50ecee5ba02557936aa7a675ff8a28fa99aa724c1e8ce074114b98919",
+      "bytes": 110
+    },
+    {
+      "path": "artifacts/main86-owning-verification/brief.vitest.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "6383d41559bc96cc6aad4da36d7e04fe5e5e501691635cd87dd0ff49f31fd363",
+      "bytes": 17314
+    },
+    {
+      "path": "artifacts/main86-owning-verification/governance.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "dc2a628893f008100b384715f67e4d55ece27d56297b1d45481ab14da1d443a3",
+      "bytes": 192058
+    },
+    {
+      "path": "artifacts/main86-owning-verification/reconciliation-denominator-audit.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "09198fe82d1d39d52daac89d265277abc3f7cc736fd91a320c2ae61cc54f7a6f",
+      "bytes": 444
+    },
+    {
+      "path": "artifacts/main86-owning-verification/reconciliation-selftest.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "524ed83e801c48ab64b6c97c06ade965cf25c9e297e00ff1555215b7d00bc94f",
+      "bytes": 188961
+    },
+    {
+      "path": "artifacts/main86-owning-verification/reconciliation-witnesses.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "95f9b1af1321b0a7b2c006dcfe820f401e7fb6c25a040901cd4ba5d2f8d535cd",
+      "bytes": 735554
+    },
+    {
+      "path": "artifacts/main86-owning-verification/results.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "44f4f184aaf36468648f5bfc382ffebd6ef804e1238ac7674627da7a03e6d995",
+      "bytes": 1255
+    },
+    {
+      "path": "artifacts/main86-owning-verification/subject.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "530a9bc22bbede4e5ace38dbb3658f1d1c25b93c603404893b4b4797f13b1aca",
+      "bytes": 1114
+    },
+    {
+      "path": "artifacts/main86-owning-verification/trusted-build.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "build, brief integration, normal governance and full reconciliation selftest; not full check:all",
+      "sha256": "5edb04bee2aef64aa549c795ae9e625deea4ff16370e274807e411adc8b6d137",
+      "bytes": 348
+    },
+    {
+      "path": "artifacts/main86-runtime-receipt-projection.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "whitelisted newMainMerge.runtime root receipt; no full ACTIVE copy or full-gate claim",
+      "sha256": "2a9b77a2a69e95e8814f1e84edc0b5a7089f795801f1f50226323c246911e241",
+      "bytes": 772
+    },
+    {
+      "path": "artifacts/native-64944deab-CLOCK-DIAGNOSIS-RAW.md",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "verbatim independent terminal native diagnosis",
+      "sha256": "0124f052ac1eb2eaf36dd104de7e493421f2f5be44695524f3678e2d6f42e718",
+      "bytes": 9493
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/capture-index.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "terminal genuine stop-resume failure receipt",
+      "sha256": "4b20bc9b8ea48f02cb1a4159cf3332ea43d336364c556340e6769101ff0fac41",
+      "bytes": 370
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/check-all.log.gz",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "cd2ad649c201b2bab0323ff122627a55c95c5da1c13f7561825fca10a9206ce1",
+      "bytes": 46393
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/compact-finished.log",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "b9204e7180395aef8a6f9b66031ec9befdad33054916744bb216b4628de34ce5",
+      "bytes": 16736
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/compact-pending.log",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "6c928e5576dac1cc2eee32a8ee4ee0be6ddb4110aa371a3109a0cb8e387ebbcc",
+      "bytes": 13618
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/derived.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "829df2116f277c492075de725387a7d27dc6844931c21cea50b4bbf6d364ecb4",
+      "bytes": 18890
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/manifest.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "bf37c3ae561f0a78072d658fe559d67fab359b12f793d13094d32d4f175a3c76",
+      "bytes": 2257
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/independent-clock-diagnosis/native-cut.json.gz",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "independent terminal-clock diagnosis; raw complete log/native-cut retained as deterministic gzip",
+      "sha256": "11e2d1232ee6c6c78f40185614f29d4857f899223c7344e47364041061fdac30",
+      "bytes": 41058
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/result.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "terminal genuine stop-resume failure receipt",
+      "sha256": "1c7ba94759b60ea482c4a2b024f658e8e6cbb87b51fb68260275aae21e2b73cf",
+      "bytes": 1111
+    },
+    {
+      "path": "artifacts/native-64944deab-stop-resume/subject.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "terminal genuine stop-resume failure receipt",
+      "sha256": "74b91f436c2c418f35dc74ffd1ae0b7f22c1c4298407d40072c721a564ea339c",
+      "bytes": 694
+    },
+    {
+      "path": "artifacts/policy-carrier-86-480/carrier-witness.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "232512bdd5076e3e91918af4a6e16143a74b1a9ae1d3b3b28f10b46b58c376dd",
+      "bytes": 11196
+    },
+    {
+      "path": "artifacts/policy-carrier-86-480/operator-summary.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "032ccce7bdfa4dd5910b110cd8aeeb979c800fbf1cf2dbb8a8412def88bd6461",
+      "bytes": 1846
+    },
+    {
+      "path": "artifacts/policy-carrier-86-480/operator.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "ec331375dd0fdce72c218ab8510b0c69d643a87ba2433aeb8d17d0fdb80de3cf",
+      "bytes": 99
+    },
+    {
+      "path": "artifacts/policy-carrier-86-480/vitest.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "ed7505a3fbda22f60c08737d44c82fec4ac256342bfa91086f1c375ae15037f6",
+      "bytes": 971
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/carrier-witness.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "a18e4dc8b9ef270f50dcab054cfa07d71086faa9e4c716d4944a5f8263985d4a",
+      "bytes": 11210
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/fixed-policy-git-driver.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "6860958c4651b86ea32d2c0887b5f20786ed25045079b2379cf041796961d52d",
+      "bytes": 21328
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/negative-git/git.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "inert exact owned negative-control git shim",
+      "sha256": "18140c901be617afdf50f62f44d048933238cd788a3cf705780e522d7bbdcd46",
+      "bytes": 148
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/operator-summary.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "8de922c0a17decfedea134e081cdc9385a21836097b9a6b37605b982faadcce0",
+      "bytes": 1867
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/operator.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "d2133b7a176f61c8a503e374d354e47c85917ef7da3ba4a71a98f0e6f980caa5",
+      "bytes": 99
+    },
+    {
+      "path": "artifacts/policy-carrier-86-low/vitest.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "outside C-carrier component measurement and byte/status/cap controls; no production equivalence/adoption",
+      "sha256": "2f2e34f39f1ed93966c024d4623977b13a2f6f22198419f468c3b7c713d31fbf",
+      "bytes": 963
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1-PREPARATION-R2-RAW.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "derived comparison or verbatim frozen source-preparation record; not an adoption",
+      "sha256": "457357447604382777a232f34d63811619639d5c665a9fa23ec12c466fe27c97",
+      "bytes": 2670
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1-PREPARATION-RAW.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "derived comparison or verbatim frozen source-preparation record; not an adoption",
+      "sha256": "e8e7c4d09d4d722dd78d945f30d0e19ada804369f15991761052d32b1e3b2f84",
+      "bytes": 2627
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/PRODUCTION-CONSTRAINTS.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "f8ece078696f9bfb741231e6970e25412527c427bc331902ae5540289b4d2799",
+      "bytes": 1443
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/README.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "c8ac49a6dcfc215649627ab5a38812edfd50dfb8623085a975a3e8fa302f1801",
+      "bytes": 3279
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/binding.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "da46088f69ae968fe51c300166675d054a5788718e7612ee5f82cd3bb06cfd5c",
+      "bytes": 3154
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/carrier-witness.test.ts.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "86283fe04456972b66c545656da487f9c7aab4f793551fe811a8cca2024f2a14",
+      "bytes": 14254
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/driver-static-proof.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "44cabd0222636cb53e2c580450c3d84b8d92fd44b571b1a8b8e913dd26bd46c3",
+      "bytes": 3402
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/fixed-policy-git-driver.c.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "03a193005566f2976c8129f44728560d2fda812131aaf8a43c57def0e3d8338a",
+      "bytes": 7511
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/fixture-extraction.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "f77385325f254c8226514b53e349ab2c20dc02d2e0440f699f088a3d65098ea1",
+      "bytes": 2010
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/manifest.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "077e8d9b17f2b37e0ac17bda7bfa1c088ceba0298f8597ce9a914b5385bacded",
+      "bytes": 2426
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/policy-snapshot.ts.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "f14904311c318ef19bd008cfacd6f4d78c248ab79fbe84ce239f8d0901cc80fc",
+      "bytes": 15439
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/prepare-witness.mjs.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "fd9105597d8b4e9723282f911527d745a53d390f21faaee095f60f5fac8cdcd5",
+      "bytes": 2431
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/run-experiment.py.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "eb0be91d911afb9e956c0b619f84b31a277d38101955e4dfbde1049800a5b075",
+      "bytes": 4381
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/url-parent-adoption.git.test.ts.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "6d92d01c203a4c3bf412d73cc8ee2eb2049c56042435ef656cdcef0c6dcc51a4",
+      "bytes": 12840
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/url-parent-adoption.ts.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "a4acf2546059a252ea0a6d3ba35914904bf22c789bc729874dcbd1cbc2d6b49c",
+      "bytes": 16212
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/vitest.outside.config.mjs.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "b0f0ef559db7bd00dcd1dc6c5731ea125e1d8427a8ba6a58de268bfb223e5a7c",
+      "bytes": 591
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/witness-body.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "a7c64b7d30c188aa62e488f58b82ce03dbbe391c893a949b2599a07fa499ac86",
+      "bytes": 9867
+    },
+    {
+      "path": "artifacts/policy-carrier-c-experiment-86-R1/witness-header.txt",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "3284f3ca9a15b6e976b75784775396649a2e74842a73b9da812f84bfc664d3f6",
+      "bytes": 1250
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-480/operator-summary.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "d83b9d734cde7d90e050864690955ed7c0330f2e772d4c6b8b66be2278b781d7",
+      "bytes": 1208
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-480/operator.log",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "8c3b3901aa2a6afa57fb942dfa56d6277ad7376049b3e05d6c72cd2debabf6ab",
+      "bytes": 108
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-480/vitest.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "0793ab4599c5da0e71c8862e39e89da53595dd5d223f124892f5b206f6584322",
+      "bytes": 975
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-480/witness.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "8cf5ac8e1b7be94d0f2cf22daf7c37f579c324200105a0efac1a8110a21df247",
+      "bytes": 8266
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-low/operator-summary.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "7d40f33d1753491efd1eff02f60dc27b49bf233c9c45532d9f1223c877dc0664",
+      "bytes": 1206
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-low/operator.log",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "30b2d00e7522e53b0197635496853b8de8ae479cc4b59a70a750d43323c1ceff",
+      "bytes": 108
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-low/vitest.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "71884211046aed2f3793c76c13c0476f097971286f4bc07e6bc4fd5aba3092ec",
+      "bytes": 973
+    },
+    {
+      "path": "artifacts/policy-current-witness-649-low/witness.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "actual current-policy component measurements; environment remains memory-only",
+      "sha256": "d50e11a3bc8545c0cebdacd1363b5ea51119fb253db80d126a6ab8265faf1c69",
+      "bytes": 8237
+    },
+    {
+      "path": "artifacts/policy-current-witness-comparison.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "derived comparison or verbatim frozen source-preparation record; not an adoption",
+      "sha256": "caf7f5264859f5a687fc451d9649828d2fc8a5b26708daf63001f159d8b902f2",
+      "bytes": 760
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2-PREPARATION-RAW.md",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "derived comparison or verbatim frozen source-preparation record; not an adoption",
+      "sha256": "68eb4ed5750150e9715c24de5b20a1aadbe39f4f5a95f6d928cebc769790086f",
+      "bytes": 1067
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/ASSESSMENT.md",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "4810aed62f5928e2c862a4c7678f398fcdd3f4a5d907ac4ff57aa68537c07545",
+      "bytes": 3983
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/BENCHMARK-PLAN.md",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "cdf74aadda06f39f29ad3d5779cf831080226bf01ad81f1910e770da0d9d2617",
+      "bytes": 2611
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/README.md",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "9cde1640d854c0e8ff49ace4ec0fdd12d319a1d68d087b099c739f60686f85aa",
+      "bytes": 868
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/binding.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "114c26257586bd43ddb6bae249bcc3ae44e9c4259b35dd444dfb21ce4c65db96",
+      "bytes": 4381
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/bounded-evidence.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "036480c5c48fd50e8ac83e173ae35940719dc05670d67f70f4542b566a53f1ba",
+      "bytes": 9272
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/command-contract.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "df1d20778027bf334e886c4e90e3f99dac1573cc2ef254985ceca299ccaf53d5",
+      "bytes": 2822
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/exact-source-fragments.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "0bfb5dd93bae45c3c5302c6090469ddb433ace9977c0c002aad664c37c888586",
+      "bytes": 6680
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/fixture-extraction.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "c380988f4601e5290b450dc2488ae01175405db8ca743943c9b78a3d41dbfc8f",
+      "bytes": 2010
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/manifest.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "209d5d66e56805018af0da27dc0bd1ea0a905bcfff83c1d1f6e4d7acfd18bf09",
+      "bytes": 3831
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/permission-launcher.patch",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "b2410598b6bc7c9618395911bf4d1e8f905c20dd8efec61002fbf157c347cb21",
+      "bytes": 710
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/permission-source-proof.json",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "a50db1ab402ba314902b42ebac1f49469feb9c92c1d13433922e3bcdd865b6a1",
+      "bytes": 668
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/policy-process-witness.test.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "444eb5a3aa2f939655bd43b221529b8822032469ede0db65bad1170975c26669",
+      "bytes": 8663
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/prepare-witness.mjs.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "df066504de8a942fe9626098d63856233db110ac058f5f9d651e0fdce50d6231",
+      "bytes": 2438
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/run-witness.py.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "19e1ed5d3e50445505a20ee9e35d46ecd7ce645569ae96e9fdf90ea043f0349f",
+      "bytes": 3209
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/url-design-product.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "2e5b5f3c67b42d5e262827bd4c70e02f272b58548a9d426b7f1da83fb9391e79",
+      "bytes": 25253
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/url-recovery.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "583784f1dbf7cf26a453be89a1f8a2b934ba3a01fd922e508a349c99e8b01842",
+      "bytes": 15413
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/url-run-composed.test.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "6494b2e37a28e99bd6fe529e4050b66e6a54ae29b83a92ebf81b475d48fc86bc",
+      "bytes": 230846
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/url-session-audit.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "f6359eb4d2d694196f7836d88619b04e94ed5ae2bbab3f2c8659c3689fe71f47",
+      "bytes": 109315
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/url-stopped-run.ts.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "9b117b18fd012a6f667aaa79020d935111e91b0c349529855338c04d7bdd0c85",
+      "bytes": 23939
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/vitest.outside.config.mjs.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "e22f0b16185f33db0e5587b69ca12cc718eef7ac534d740fc9785e0cfb3bd09f",
+      "bytes": 606
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/witness-body.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "dbeea41bc812b424d253c7dc0470ef1971fea949fa85e3892bc1658870afa80d",
+      "bytes": 4391
+    },
+    {
+      "path": "artifacts/policy-spawn-option-assessment-64944deab-R2/witness-header.txt",
+      "subjects": [
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5"
+      ],
+      "scope": "frozen inert component experiment/attribution source and source-binding metadata",
+      "sha256": "628a3216c771e3b0b716ae0bdffaad69244e91b086175f6e07542e9579da02b6",
+      "bytes": 1135
+    },
+    {
+      "path": "artifacts/publication-86e10de/metadata-receipt.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "exact published head, normal fast-forward push and draft PR metadata snapshot; no hosted pass",
+      "sha256": "af3fc1f046207ad713b5f9fe47071cd6d6283f73ffaf7b7a5d7da6d240d6ffee",
+      "bytes": 331
+    },
+    {
+      "path": "artifacts/publication-86e10de/pr-body.md",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "exact published head, normal fast-forward push and draft PR metadata snapshot; no hosted pass",
+      "sha256": "32049483dd2eeb5d36906ec051d024beb4456a4d5d663383d145275343ca6231",
+      "bytes": 6260
+    },
+    {
+      "path": "artifacts/publication-86e10de/publication.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "exact published head, normal fast-forward push and draft PR metadata snapshot; no hosted pass",
+      "sha256": "9e3aa270c0721e9a19ce074906ab24947deac5e5ddf42347b8baf1562d574c28",
+      "bytes": 294
+    },
+    {
+      "path": "artifacts/publication-86e10de/push.log",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "exact published head, normal fast-forward push and draft PR metadata snapshot; no hosted pass",
+      "sha256": "9558a63f20257dafc09205d6641ea0037a1249b8e8ece32efac3c8b8fa2afaeb",
+      "bytes": 105
+    },
+    {
+      "path": "selection-summary.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "64944deab26ddeec74c4d300bfd9aeb21e4703e5",
+        "68ed9ee912f2302df1754ff5cfdeed6ac2d9e381",
+        "bb064295c160c7365d916eaf8a8cfd274914f516",
+        "a9fe89c0d20dab58de29483d1a3c7a717b79fb6e",
+        "e514a52c2043193ab67a0be1f8f7849aea563994"
+      ],
+      "scope": "generated source-bound packaging description/index; not new product execution",
+      "sha256": "69c01440ba7fea4b0d2e529cec908686e1adda59924d2093b0f8d4d09ef1ed53",
+      "bytes": 9539
+    }
+  ],
+  "logicalSourcePopulation": 127,
+  "storedArtifactPopulation": 118,
+  "archiveEntryPopulation": 122,
+  "determinism": {
+    "twoStreamsByteIdentical": true,
+    "gzipMtime": 0,
+    "gzipFilename": "",
+    "tarFormat": "USTAR",
+    "allMembersRegularMode": 420,
+    "uid": 0,
+    "gid": 0,
+    "mtime": 0,
+    "allMembersReReadAndHashed": true
+  },
+  "limits": [
+    "No full npm run check:all, final render/capture, genuine native PASS, full canonical status battery or hosted420-second acceptance established here.",
+    "Carrier component mechanism is not production equivalence or an adoption; exact stdout/stderr/status/signal success controls are component-scoped.",
+    "Cap/timeout failure signal parity explicitly not claimed; the C carrier uses a conservative combined cap and different abort signal.",
+    "No environment values were copied or collected by packaging; experiment private environment stays memory-only.",
+    "Historical frozen preparation files say unexecuted at preparation; separate retained operator outputs record later component execution.",
+    "Prior packet manifests are historical full-packet receipts; this compact selection omits explicitly recorded directories/whole-branch reverse diff and makes no complete original-packet closure claim."
+  ]
+}
