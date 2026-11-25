@@ -1,0 +1,15 @@
+# Reconciliation trailing-family parallelism
+
+[Observed] Source `12d52359459231612a4370ca18e35883f1795f8e`, tree `9c6223483d45d960dcdc7481e2939e39a21325a4`, reuses the existing fork executor for ten formerly serial families. It preserves their bodies, worker policy, strict result population guard, cleanup, canonical witness order, the earlier 19-family pool and all predicates. Fresh independent source review is PASS. No canonical test declaration was added or removed.
+
+[Observed] The exact committed source's full canonical selftest exits 0 in 220.785350733s on a clean clone. All 736 ordered full witness objects equal baseline `86e10de5…`: 611 mutants killed and 125 controls held. A separate packaging parse confirms 736 unique identities and the exact identity/outcome multiset against all 736 printed log rows. The complete old/new witness JSON and log are retained.
+
+[Observed/component] Eleven extracted-dispatch controls pass across serial, unsupported-fork fallback and fork2 modes, including canonical arguments/order, five bad-index populations and original worker-error/state restoration. Four sole-fragment mutants produce their exact intended diagnostics. Every old/new fragment, original source SHA and mutant SHA is retained. Raw mutant rows inherit historical `executed:false` from their prepared descriptors; actual PASS/killed outcomes and diagnostics are retained verbatim, with that stale preparation flag explicitly disclosed rather than rewritten. This harness executes no checker or real fixture and adds no canonical test.
+
+[Observed] The predecessor hosted tested merge is `06dccc27400901d546a4267150f49509dadf00e9` for PR head `86e10de5…`. Its reconciliation job took 458s; the selftest step took 446s, including a measured 63.779934441s serial tail. The complete decoded plugin log is preserved as exact gzip bytes, with profile/job timing receipts. This is decoded-log provenance, not a claim to original HTTP transport bytes.
+
+[Unknown] Hosted timing and the 420-second criterion for the new source. Local PASS is no hosted speed guarantee or claim of full `check:all`, final rendering or native recovery acceptance.
+
+[Observed] Agent adoption A-245 is recorded in [AGENT-ADOPTIONS.md](../../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md). Source revert: `git revert 12d52359459231612a4370ca18e35883f1795f8e`.
+
+All archived code is inert `.txt`, with regular 0644 tar members; do not execute source from evidence. No checkout/dependency/tmp/C/heap payload is included. Complete source/control preparation records preserve their historical unexecuted status; separate actual receipts describe later execution. The external manifest binds every member to exact subjects, sizes and SHA256. SOURCE-INVENTORY records exact aliases for deduplicated bytes. Tar entries are sorted with uid/gid/mtime zero and empty owner names; gzip uses mtime0 and no filename. Two compressed builds are byte-identical and every member is re-read/hash-verified. Packaging runs no checker, test, build or benchmark.

@@ -1,0 +1,404 @@
+{
+  "format": "reconciliation-tail-parallelism-retention-v1",
+  "subject": "12d52359459231612a4370ca18e35883f1795f8e",
+  "subjectTree": "9c6223483d45d960dcdc7481e2939e39a21325a4",
+  "sourceSha256": "9bf7e2736d0acf0534ae88a99d925f775df7b7b8b4078d47d3dc85ca9aeef104",
+  "subjects": {
+    "12d52359459231612a4370ca18e35883f1795f8e": {
+      "commit": "12d52359459231612a4370ca18e35883f1795f8e",
+      "tree": "9c6223483d45d960dcdc7481e2939e39a21325a4",
+      "treeStatus": "Observed local immutable Git object"
+    },
+    "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e": {
+      "commit": "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+      "tree": "8b4d2e44ca4d901c9a910af60f88d3077a56e018",
+      "treeStatus": "Observed local immutable Git object"
+    },
+    "7903e21a26c2f6488563c73fe45b30e84ef4cc14": {
+      "commit": "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+      "tree": "d02c7a7a12ed591415e5d3c6ff012f3d3f724998",
+      "treeStatus": "Observed local immutable Git object"
+    },
+    "06dccc27400901d546a4267150f49509dadf00e9": {
+      "commit": "06dccc27400901d546a4267150f49509dadf00e9",
+      "tree": "09ed46fa94eceba69bd247f0bb37f5cc5eae63c8",
+      "treeStatus": "Observed local immutable Git object"
+    }
+  },
+  "archive": {
+    "path": "payload.tar.gz",
+    "bytes": 482958,
+    "sha256": "b4b952cb286bb040dfd67b1ca074354d9367b26cda68e1e4b1397bd865dab456"
+  },
+  "entries": [
+    {
+      "path": "PAYLOAD-MANIFEST.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "06dccc27400901d546a4267150f49509dadf00e9"
+      ],
+      "scope": "in-archive digest/subject index",
+      "sha256": "5be914fffd5ec840807a7bf024f26a23160a8ba62fed20da7a387267a1490c4a",
+      "bytes": 15211
+    },
+    {
+      "path": "README.md",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "06dccc27400901d546a4267150f49509dadf00e9"
+      ],
+      "scope": "generated source-bound packaging description/index; not new execution",
+      "sha256": "0ee0f3b77fb2b32f099a6602893469f327d0d0e4a97fe12e850c82710fed5203",
+      "bytes": 2958
+    },
+    {
+      "path": "SOURCE-INVENTORY.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "06dccc27400901d546a4267150f49509dadf00e9"
+      ],
+      "scope": "generated source-bound packaging description/index; not new execution",
+      "sha256": "bd14ad91040a2dc0f0b2b071fa0dff0881f44b636f5ceff46b589427f87046c1",
+      "bytes": 15299
+    },
+    {
+      "path": "artifacts/hosted-86e10de/job-138948168851-steps.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "dedfb4a5c5e10df705a676be744c9c8ce4b30d1caf596b110a818b4701577e7a",
+      "bytes": 1805
+    },
+    {
+      "path": "artifacts/hosted-86e10de/reconciliation-decoded.log.gz",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "14f4fd3a275d042bf24691770660b71c5dc0eab618164a11fb1503e8ab90a806",
+      "bytes": 31347
+    },
+    {
+      "path": "artifacts/hosted-86e10de/reconciliation-profile.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "445dc960bc333ef645b7c2c8fd44e221f8c92b8f77e60c4f88da83e0e4ee6f8c",
+      "bytes": 8354
+    },
+    {
+      "path": "artifacts/hosted-86e10de/run-45537669485-jobs.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "dc07cc932243c8f66de64a04920b0a39e3f58b375f245d3a407811350d020c82",
+      "bytes": 2167
+    },
+    {
+      "path": "artifacts/hosted-86e10de/run-45537669485.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "cc3254c91746f987effe0fb6305fd541ef3e55fd6c327ea253f4d9b1155ed538",
+      "bytes": 413
+    },
+    {
+      "path": "artifacts/hosted-86e10de/run-45537669541-jobs.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "d960fa8ab1aa7a05adc8206360789740b738bbdc97c5e635dfb6c85660269caa",
+      "bytes": 3574
+    },
+    {
+      "path": "artifacts/hosted-86e10de/run-45537669541.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "b3333fd2751139b54835f4f266ebba73bd30e3d95c6257805f9fedf9e7d6fe36",
+      "bytes": 405
+    },
+    {
+      "path": "artifacts/hosted-86e10de/timing-summary.json",
+      "subjects": [
+        "06dccc27400901d546a4267150f49509dadf00e9",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "predecessor hosted decoded-log/profile/timing provenance; not new12d hosted acceptance",
+      "sha256": "dd9b72cd4478694de402039ecc2537bd3498f56b553ac84d22455cb8b5bb020b",
+      "bytes": 452
+    },
+    {
+      "path": "artifacts/main86-owning-verification/reconciliation-denominator-audit.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "independent baseline witness/log census",
+      "sha256": "09198fe82d1d39d52daac89d265277abc3f7cc736fd91a320c2ae61cc54f7a6f",
+      "bytes": 444
+    },
+    {
+      "path": "artifacts/main86-owning-verification/reconciliation-witnesses.json",
+      "subjects": [
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "complete ordered structured witness baseline",
+      "sha256": "95f9b1af1321b0a7b2c006dcfe820f401e7fb6c25a040901cd4ba5d2f8d535cd",
+      "bytes": 735554
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/README.md",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "920e1551fa97fc01f5c96c3493efc29914f74e83b300fd520ebf1bd0fffeb7b4",
+      "bytes": 2898
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/binding.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "71de575c808e3f92e7daf5bd6b881c56669abef04d2a7d6d44c29ed75daa8009",
+      "bytes": 902
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/dispatch_controls.py.txt",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "9dd0d4de3ae978eec275270cb3c42096bfc35621a04a7debd849c413bf7b2372",
+      "bytes": 12371
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/manifest.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "40f7e5e765da615a30b7a09f0c6b22f477d7a2aceb0acc36df97254312ef62ca",
+      "bytes": 1270
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/mutations.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "05c2ebdfdd974aea4170eeabd293df7e63c1e1746363ed86a083c4eff7a2f5c3",
+      "bytes": 2231
+    },
+    {
+      "path": "artifacts/reconciliation-tail-dispatch-controls-12d-R1/static-proof.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "frozen extracted synthetic-control source/plan; preparation unexecuted labels historical",
+      "sha256": "9179f67e0299eb8c8319a8aa6d70db427e81eaf5909620e1d3af32a65df7ba35",
+      "bytes": 1119
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1-SOURCE-REVIEW-RAW.md",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14"
+      ],
+      "scope": "verbatim fresh independent source-only PASS review",
+      "sha256": "e71b1c076ebc334fb03987c16ac8c134c24557a930805879f00708b151073efd",
+      "bytes": 6616
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/DESIGN.md",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "48e4f26e2a5120f8d2925a05df277a2384f53d4f1c7e17291586b44d952d5e55",
+      "bytes": 4789
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/VERIFY-PLAN.md",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "1d45a204b6dc269797af71901dfb0afce67b64757295d7eb3b3e12a01ed6fba4",
+      "bytes": 2734
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/binding.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "a9a62b84c456936e21a37aca293f7eac87937eb7363486df499555d94f63b04d",
+      "bytes": 968
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/check_spec_reconciliation.py.txt",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "9bf7e2736d0acf0534ae88a99d925f775df7b7b8b4078d47d3dc85ca9aeef104",
+      "bytes": 653202
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/manifest.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "1289ebca4010c7fe00d339bdbafead479c6120d05bff23823d002675bacda954",
+      "bytes": 1632
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/original.py.txt",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "f9e80105e3864912290c2d6e97502d49162b4e6426ffbd85e4e3391b0ae349ed",
+      "bytes": 653696
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/profile-source.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "1021c757c5d17b451417fa30268208959ebde155579fe3d9065593a3c320a4a9",
+      "bytes": 9117
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/source.patch",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "2c82ce1aa90b10fed86396ce9d3be5f1816a50703a29cee1a1ff1a6e72cc4b50",
+      "bytes": 3215
+    },
+    {
+      "path": "artifacts/reconciliation-tail-parallel-86-R1/static-source-proof.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e"
+      ],
+      "scope": "frozen reviewed source candidate and source-only proofs",
+      "sha256": "52e7cb899f6e7a0771b5bafe846ee286186c1a0a5f9d0cb6a694f8da3225b8ec",
+      "bytes": 1798
+    },
+    {
+      "path": "artifacts/tail-12d5235-verification/dispatch-controls.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "actual exact-subject execution receipt/log/complete witnesses; no execution checkout",
+      "sha256": "d413f017cd17f60b214051c267efdf57015f3e9fcdc422425ba7ccada2a32566",
+      "bytes": 5435
+    },
+    {
+      "path": "artifacts/tail-12d5235-verification/result.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "actual exact-subject execution receipt/log/complete witnesses; no execution checkout",
+      "sha256": "5e2a93cacc0fa3314938767440a24da9c812a3f64906294ff3ac2f9e5ac36f51",
+      "bytes": 437
+    },
+    {
+      "path": "artifacts/tail-12d5235-verification/selftest.log",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "actual exact-subject execution receipt/log/complete witnesses; no execution checkout",
+      "sha256": "4dd29deb37580152ef9783573b0f872f1e186cc18ad299bb25ccfe7244b26d4b",
+      "bytes": 195990
+    },
+    {
+      "path": "artifacts/tail-12d5235-verification/subject.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "actual exact-subject execution receipt/log/complete witnesses; no execution checkout",
+      "sha256": "0fc8f1a5e1fd5f96489b634d749e2f5fd809b059f465be6fa8b0a0951b37377c",
+      "bytes": 608
+    },
+    {
+      "path": "artifacts/tail-12d5235-verification/witnesses.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e"
+      ],
+      "scope": "actual exact-subject execution receipt/log/complete witnesses; no execution checkout",
+      "sha256": "474c408bc4fcb453a5d9e4917d75f18c943b37e0ce76ab5bfbef3b3e9144db8d",
+      "bytes": 735554
+    },
+    {
+      "path": "execution-summary.json",
+      "subjects": [
+        "12d52359459231612a4370ca18e35883f1795f8e",
+        "86e10de5bd7a1907ec697c15e8b68c8c316ccf5e",
+        "7903e21a26c2f6488563c73fe45b30e84ef4cc14",
+        "06dccc27400901d546a4267150f49509dadf00e9"
+      ],
+      "scope": "generated source-bound packaging description/index; not new execution",
+      "sha256": "2dda8d4fa95c68a4500bf4b11fca807a87d1c98c0f7deb74df54e5ce84f93329",
+      "bytes": 2203
+    }
+  ],
+  "logicalSourcePopulation": 32,
+  "storedSourceArtifacts": 31,
+  "archiveEntryPopulation": 35,
+  "determinism": {
+    "twoCompressedBuildsByteIdentical": true,
+    "gzipMtime": 0,
+    "gzipFilename": "",
+    "format": "USTAR",
+    "regularMemberMode": 420,
+    "uid": 0,
+    "gid": 0,
+    "mtime": 0,
+    "everyMemberVerified": true
+  },
+  "acceptance": "Local exact-subject canonical/dispatch scopes only; no new hosted420/fullcheckall/finalrender/native acceptance."
+}
