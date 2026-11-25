@@ -709,14 +709,17 @@ function observeProductRestoration(run: string, originalDeadline: number) {
       revalidate: () => active('revalidate', result.revalidate) });
   });
   const snapshot = productFiles.snapshotProductFile;
-  vi.spyOn(productFiles, 'snapshotProductFile').mockImplementation((root, file, maximum, check) =>
-    active(root === run ? 'record-read' : 'artifact-read', () => snapshot(root, file, maximum, guard(check))));
+  const restoredFileHistory = vi.spyOn(productFiles, 'snapshotProductFile');
+  restoredFileHistory.mockImplementation((root, file, maximum, check) =>
+    withoutObserverHistory(restoredFileHistory, () => active(root === run ? 'record-read' : 'artifact-read', () => snapshot(root, file, maximum, guard(check)))));
   const names = productFiles.snapshotProductNames;
-  vi.spyOn(productFiles, 'snapshotProductNames').mockImplementation((root, directory, maximum, check) =>
-    active('directory-read', () => names(root, directory, maximum, guard(check))));
+  const restoredNamesHistory = vi.spyOn(productFiles, 'snapshotProductNames');
+  restoredNamesHistory.mockImplementation((root, directory, maximum, check) =>
+    withoutObserverHistory(restoredNamesHistory, () => active('directory-read', () => names(root, directory, maximum, guard(check)))));
   const unchanged = productFiles.assertProductFileUnchanged;
-  vi.spyOn(productFiles, 'assertProductFileUnchanged').mockImplementation((root, file, observed, check) =>
-    active('metadata-check', () => unchanged(root, file, observed, guard(check))));
+  const restoredMetadataHistory = vi.spyOn(productFiles, 'assertProductFileUnchanged');
+  restoredMetadataHistory.mockImplementation((root, file, observed, check) =>
+    withoutObserverHistory(restoredMetadataHistory, () => active('metadata-check', () => unchanged(root, file, observed, guard(check)))));
   return {
     run: <T>(invoke: () => T): T => measure('restore', invoke), authority,
     source: wrapSource, provenance: captureDerivations,
@@ -1490,27 +1493,33 @@ async function observeDesignRun(run: string, traceInference = false) {
       });
     });
     const effectCurrent = machineTransport.sessionMachineEffectCurrent;
-    vi.spyOn(machineTransport, 'sessionMachineEffectCurrent').mockImplementation(() =>
-      currentPhase('machine-effect', effectCurrent, value => value !== false));
+    const designEffectHistory = vi.spyOn(machineTransport, 'sessionMachineEffectCurrent');
+    designEffectHistory.mockImplementation(() =>
+      withoutObserverHistory(designEffectHistory, () => currentPhase('machine-effect', effectCurrent, value => value !== false)));
     const leaseState = designProduct.urlDesignProductLeaseState;
-    vi.spyOn(designProduct, 'urlDesignProductLeaseState').mockImplementation(product =>
-      currentPhase('product-lease', () => leaseState(product), (value, stage) => {
+    const designLeaseStateHistory = vi.spyOn(designProduct, 'urlDesignProductLeaseState');
+    designLeaseStateHistory.mockImplementation(product =>
+      withoutObserverHistory(designLeaseStateHistory, () => currentPhase('product-lease', () => leaseState(product), (value, stage) => {
         stage.lease = value.state;
         if ('deadline' in value) stage.leaseRemainingMs = value.deadline - Date.now();
         return value.state === 'open';
-      }));
+      })));
     const leaseOpen = designProduct.isUrlDesignProductLeaseOpen;
-    vi.spyOn(designProduct, 'isUrlDesignProductLeaseOpen').mockImplementation(product =>
-      currentPhase('product-assertion', () => leaseOpen(product), value => value === true));
+    const designLeaseOpenHistory = vi.spyOn(designProduct, 'isUrlDesignProductLeaseOpen');
+    designLeaseOpenHistory.mockImplementation(product =>
+      withoutObserverHistory(designLeaseOpenHistory, () => currentPhase('product-assertion', () => leaseOpen(product), value => value === true)));
     const assertDelivery = sessionAudit.assertUrlDesignDeliveryViewCurrent;
-    vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryViewCurrent').mockImplementation(delivery =>
-      currentPhase('delivery-assertion', () => assertDelivery(delivery), () => true));
+    const designDeliveryHistory = vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryViewCurrent');
+    designDeliveryHistory.mockImplementation(delivery =>
+      withoutObserverHistory(designDeliveryHistory, () => currentPhase('delivery-assertion', () => assertDelivery(delivery), () => true)));
     const checkedExpiry = designProduct.isCheckedUrlDesignProductExpiry;
-    vi.spyOn(designProduct, 'isCheckedUrlDesignProductExpiry').mockImplementation((...args) =>
-      currentPhase('checked-expiry', () => checkedExpiry(...args), value => value === true));
+    const designExpiryHistory = vi.spyOn(designProduct, 'isCheckedUrlDesignProductExpiry');
+    designExpiryHistory.mockImplementation((...args) =>
+      withoutObserverHistory(designExpiryHistory, () => currentPhase('checked-expiry', () => checkedExpiry(...args), value => value === true)));
     const assertReceipt = sessionAudit.assertUrlDesignDeliveryReceiptCurrent;
-    vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryReceiptCurrent').mockImplementation((...args) =>
-      currentPhase('receipt-preflight', () => assertReceipt(...args), () => true));
+    const designReceiptHistory = vi.spyOn(sessionAudit, 'assertUrlDesignDeliveryReceiptCurrent');
+    designReceiptHistory.mockImplementation((...args) =>
+      withoutObserverHistory(designReceiptHistory, () => currentPhase('receipt-preflight', () => assertReceipt(...args), () => true)));
     const kernelPeer = sessionPeer.captureKernelUnixPeerAsync;
     vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
       inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
@@ -2410,7 +2419,8 @@ describe('composed URL run with actual role processes', () => {
     const auditTrace = stoppingCut ? observeBaseAuditCallbacks() : undefined;
     if (auditTrace !== undefined) {
       const effectCurrent = machineTransport.sessionMachineEffectCurrent;
-      vi.spyOn(machineTransport, 'sessionMachineEffectCurrent').mockImplementation(() => auditTrace.effect(effectCurrent));
+      const runtimeEffectHistory = vi.spyOn(machineTransport, 'sessionMachineEffectCurrent');
+      runtimeEffectHistory.mockImplementation(() => withoutObserverHistory(runtimeEffectHistory, () => auditTrace.effect(effectCurrent)));
     }
     if (controlTrace !== undefined) {
       const createControl = sessionControl.createUrlSessionControl;
