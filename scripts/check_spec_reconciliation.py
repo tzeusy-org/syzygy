@@ -10743,10 +10743,17 @@ def term_brief_cases(tmp, base, witnesses, failures):
 
         status = tree / STATUS
         prior_status = status.read_text()
-        pending_status = "".join(line for line in prior_status.splitlines(keepends=True)
-                                 if not line.strip().startswith(TERM_BRIEF_STATUS_PREFIX))
+        status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
+                                       if not line.strip().startswith(TERM_BRIEF_STATUS_PREFIX))
+        pending_total = sum(len(item["scenarios"]) for item in before.values())
+        adopted_total = sum(len(item["scenarios"]) for item in after.values())
+        pending_status, slots = STATUS_FIGURE.subn(
+            f"{len(before)} requirements and {pending_total} scenarios in the effective composition", status_without_route)
+        adopted_status_without_route, adopted_slots = STATUS_FIGURE.subn(
+            f"{len(after)} requirements and {adopted_total} scenarios in the effective composition", status_without_route)
+        assert slots == adopted_slots == 1
         status_route = f"\n{TERM_BRIEF_STATUS_PREFIX} is agent-adopted in A-999.\n"
-        adopted_status = pending_status + status_route
+        adopted_status = adopted_status_without_route + status_route
         index = tree / OPENSPEC_README
         prior_index = index.read_text()
         index_row = next(line for line in prior_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
@@ -10767,7 +10774,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
                "both adopted routes are accepted", findings, not findings, True)
 
         for name, route, base_text, mutant_text, old, new, diagnostic in (
-            ("missing-status-route", status, adopted_status, pending_status, status_route, "",
+            ("missing-status-route", status, adopted_status, adopted_status_without_route, status_route, "",
              f"`{STATUS}` does not route terminology brief and its adoption A-999"),
             ("missing-index-route", index, adopted_index, pending_index, adopted_row, pending_row,
              f"`{OPENSPEC_README}` does not route terminology brief to `{AGENT_ADOPTIONS}` and its version tag"),
@@ -10783,7 +10790,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
         status.write_text(pending_status)
         index.write_text(pending_index)
         for path, pending_route, adopted_route, old, new in (
-            (STATUS, pending_status, adopted_status, "", status_route),
+            (STATUS, pending_status, pending_status + status_route, "", status_route),
             (OPENSPEC_README, pending_index, adopted_index, pending_row, adopted_row),
         ):
             route = tree / path
