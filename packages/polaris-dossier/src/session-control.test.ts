@@ -71,6 +71,42 @@ describe('typed URL session control', () => {
     expect(f.audits).toHaveLength(4);
     expect(encode(f.audits)).not.toContain('question');
     expect(Object.isFrozen((await f.invoke(undefined, 'inventory')).reply)).toBe(true);
+
+    const g = fixture(), message = '\u754c'.repeat(4000);
+    const first = { event: 'coverage-held' as const, draftRevision: 3, inventoryRevision: 4, message };
+    const second = { ...first, draftRevision: 5 };
+    expect(await g.control.publish('author', first)).toBe(true);
+    expect(await g.control.publish('author', first)).toBe(true);
+    expect(await g.control.publish('author', { event: 'draft-ready', revision: 6 })).toBe(true);
+    expect(await g.control.publish('author', second)).toBe(true);
+    expect(await g.control.publish('author', { event: 'inventory-repair', revision: 7 })).toBe(true);
+    expect((await g.invoke()).reply).toEqual({ ok: true, kind: 'session-control', state: 'events', events: [
+      { ...first, sequence: 1 }, { event: 'draft-ready', revision: 6, sequence: 2 },
+    ] });
+    expect((await g.invoke()).reply).toEqual({ ok: true, kind: 'session-control', state: 'events', events: [
+      { ...second, sequence: 3 }, { event: 'inventory-repair', revision: 7, sequence: 4 },
+    ] });
+    expect((await g.invoke()).reply).toMatchObject({ state: 'pending', events: [] });
+    expect(g.audits).toHaveLength(4);
+    expect(encode(g.audits)).not.toContain(message);
+    for (const role of ['inventory', 'fidelity', 'design'] as const) {
+      const denied = fixture();
+      expect(await denied.control.publish(role, first)).toBe(false);
+      expect(denied.audits).toEqual([]);
+    }
+    for (const patch of [{ message: '' }, { message: 'x'.repeat(4001) }, { message: '\ud800' },
+      { message: '\u0000' }, { message: 'SYNTHETIC_SECRET' }, { message: '<script>unsafe</script>' },
+      { draftRevision: -1 }, { inventoryRevision: 1_000_000 }, { extra: true }]) {
+      const denied = fixture();
+      expect(await denied.control.publish('author', { ...first, ...patch } as never)).toBe(false);
+      expect(denied.audits).toEqual([]);
+    }
+    const h = fixture();
+    expect(await h.control.publish('author', first)).toBe(true);
+    for (let revision = 0; revision < 15; revision++) expect(await h.control.publish('author', { event: 'draft-ready', revision })).toBe(true);
+    expect(await h.control.publish('author', second)).toBe(true);
+    expect(((await h.invoke()).reply.events as unknown[])).toHaveLength(16);
+    expect((await h.invoke()).reply.events).toEqual([{ ...second, sequence: 17 }]);
   });
 
   it('wakes the design waiter only after the scoped round notice is audited', async () => {
@@ -199,7 +235,7 @@ describe('typed URL session control', () => {
 
   it('does not release events before a deferred audit and invalidates them if closed during audit', async () => {
     const held = deferred<void>(), f = fixture({ audit: () => held.promise });
-    const published = f.control.publish('author', { event: 'draft-ready', revision: 1 }); await flush();
+    const published = f.control.publish('author', { event: 'coverage-held', draftRevision: 1, inventoryRevision: 2, message: 'Repair inventory coverage.' }); await flush();
     expect((await f.invoke()).reply).toMatchObject({ state: 'pending', events: [] });
     expect(f.control.close()).toEqual({ pendingCallbacks: 1, termination: 'Unknown' }); held.resolve(); expect(await published).toBe(false);
     expect(f.control.close()).toEqual({ pendingCallbacks: 0, termination: 'settled' });

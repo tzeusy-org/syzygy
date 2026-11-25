@@ -25,6 +25,7 @@ type DesignRoundPrepared = { readonly event: 'design-round-prepared'; readonly r
 export type UrlSessionControlEvent = { readonly event: 'draft-ready'; readonly revision: number }
   | { readonly event: 'review-blocked'; readonly review: 'fidelity' | 'design'; readonly revision: number }
   | { readonly event: 'inventory-repair'; readonly revision: number }
+  | { readonly event: 'coverage-held'; readonly draftRevision: number; readonly inventoryRevision: number; readonly message: string }
   | { readonly event: 'run-terminal'; readonly outcome: 'completed' | 'refused' | 'stopped' | 'Unknown' }
   | DesignRoundPrepared;
 export function isDesignRoundPrepared(value: unknown, numbered = false): boolean {
@@ -204,7 +205,21 @@ export function createUrlSessionControl(options: UrlSessionControlOptions) {
         else await new Promise<void>(resolve => setTimeout(resolve, limits.pollMilliseconds));
         await verify();
       }
-      return deliver({ ok: true, kind: 'session-control', state: queue.length ? 'events' : 'pending', events: queue.splice(0, 16) });
+      // One bounded coverage notice plus at most fifteen fixed-shape metadata
+      // events fits the existing byte/node envelope. Keep the complete prefix:
+      // a second notice and every following event remain queued in order.
+      let count = 0, coverage = false;
+      for (const event of queue.slice(0, 16)) {
+        if (isRecord(event) && event.event === 'coverage-held') {
+          if (coverage) break;
+          coverage = true;
+        }
+        count++;
+      }
+      const result = deliver({ ok: true, kind: 'session-control', state: count ? 'events' : 'pending', events: queue.slice(0, count) });
+      check();
+      queue.splice(0, count);
+      return result;
     }
     if (operation !== 'clarify' || role !== 'author' || typeof stdin !== 'string') throw refusal();
     const input: unknown = parseBoundedJson(stdin, BOUNDS); safe(input); const provenance = origin(suppliedSnapshot, stdin);
@@ -248,6 +263,8 @@ export function createUrlSessionControl(options: UrlSessionControlOptions) {
         const valid = exact(event, ['event', 'revision']) && ['draft-ready', 'inventory-repair'].includes(event.event as string) && revision(event.revision)
           || exact(event, ['event', 'review', 'revision']) && event.event === 'review-blocked' && ['fidelity', 'design'].includes(event.review as string) && revision(event.revision)
           || exact(event, ['event', 'outcome']) && event.event === 'run-terminal' && ['completed', 'refused', 'stopped', 'Unknown'].includes(event.outcome as string)
+          || role === 'author' && exact(event, ['event', 'draftRevision', 'inventoryRevision', 'message']) && event.event === 'coverage-held'
+            && revision(event.draftRevision) && revision(event.inventoryRevision) && text(event.message, BOUNDS.maxBytes) && event.message.length <= 4000
           || role === 'design' && isDesignRoundPrepared(event);
         if (!ROLES.includes(role) || !valid) throw refusal(); await verify();
         const encoded = canonical(event), id = sha256(canonical([role, event])); if (published.has(id)) return true;

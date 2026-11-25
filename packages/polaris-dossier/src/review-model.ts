@@ -5,6 +5,7 @@ import { sha256 } from '@syzygy/support';
 import { type GateSources } from './gate-sources.js';
 import { GitObjectReadRefusal, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { sessionsRoot } from './inventory.js';
+import type { CoverageHold } from './coverage-hold.js';
 import type { Outcome } from './outcome.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { CLASS_NOT_CONSENTED } from './class-gate.js';
@@ -69,6 +70,9 @@ export type PacketBuild =
     /** The raw text of every admitted blob a span reads, by path, for verifying the verdict's quotations; for a body retained as
      * `redacted-span`, its retained text, every withheld line emptied. */
     readonly blobs: ReadonlyMap<string, string>;
+    /** Why the packet may not be issued yet: inventory entries with no outcome in the draft (`coverage-hold.ts`, version 2.28). Absent
+     * when it may. It never changes the packet's bytes; `review-check` and the review of record ignore it. */
+    readonly coverageHold?: CoverageHold;
   }
   | { readonly ok: false; readonly stage: 'draft' | 'inventory' | 'screen' | 'object-read'; readonly reason: string; readonly objectRead?: ReturnType<GitObjectReadRefusal['toJSON']> };
 

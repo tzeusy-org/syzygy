@@ -31,7 +31,7 @@ describe('bounded URL supervisor metadata', () => {
     expect(readUrlSupervisorState(f.root, f.runId)).toEqual(f.state);
     const at = new Date(f.state.briefIssuedAt + 1000).toISOString();
     const update = changed(f.state, { fidelityDeliveredFor: [0, 1, 1], fidelityDeliveredPairs: ['0/0', '1/0', '1/1'],
-      designDeliveredFor: [0], notified: ['inventory-draft-0', 'fidelity-1', 'design-0'], siteFor: { 0: -1, 1: 0 },
+      designDeliveredFor: [0], notified: ['inventory-draft-0', 'fidelity-1', 'design-0', 'coverage-held-0/999999', 'coverage-held-999999/0'], siteFor: { 0: -1, 1: 0 },
       pendingRepair: { draftAbove: 1, inventoryAbove: 0 }, launches: [{ role: 'author', pid: 123, at, argvSha256: 'd'.repeat(64), viewSha256: 'e'.repeat(64) }], stopped: at });
     writeUrlSupervisorState(f.root, update);
     expect(readUrlSupervisorState(f.root, f.runId)).toEqual(update); expect(fs.statSync(f.file).ino).not.toBe(first.ino);
@@ -64,6 +64,8 @@ describe('bounded URL supervisor metadata', () => {
       { sessions: f.state.sessions.map(s => ({ ...s, prompt: 'Own raw role prompt' })) },
       { sessions: f.state.sessions.map(s => ({ ...s, directory: f.run })) },
       { sessions: f.state.sessions.map(s => ({ ...s, allowedTools: ['Bash'] })) }, { notified: ['Own arbitrary body'] },
+      ...['coverage-held-0', 'coverage-held-0/0/0', 'coverage-held--1/0', 'coverage-held-0/1000000',
+        'coverage-held-1000000/0', 'coverage-held-01/0', 'coverage-held-0/01', 'coverage-held-0/0\n'].map(key => ({ notified: [key] })),
       { launches: [{ role: 'author', pid: null, at: 'now', argvSha256: 'd'.repeat(64), viewSha256: 'e'.repeat(64) }] },
       { pendingRepair: {} }, { pendingRepair: { draftAbove: 0, body: 'Own text' } }, { siteFor: { '01': 0 } },
     ];

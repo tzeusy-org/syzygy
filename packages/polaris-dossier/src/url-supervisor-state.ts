@@ -63,7 +63,7 @@ function schema(value: unknown, root: string, runId: string): value is Superviso
   })) return false;
   if (!list(value.fidelityDeliveredFor) || !value.fidelityDeliveredFor.every(revision)
     || !list(value.designDeliveredFor) || !value.designDeliveredFor.every(revision)
-    || !list(value.notified) || !value.notified.every(item => text(item) && /^(?:inventory-draft|fidelity|design)-(?:0|[1-9][0-9]{0,5})$/u.test(item))) return false;
+    || !list(value.notified) || !value.notified.every(item => text(item) && /^(?:(?:inventory-draft|fidelity|design)-(?:0|[1-9][0-9]{0,5})|coverage-held-(?:0|[1-9][0-9]{0,5})\/(?:0|[1-9][0-9]{0,5}))$/u.test(item))) return false;
   if (!fields(value.siteFor, [], Object.keys(value.siteFor as object)) || Object.keys(value.siteFor).length > URL_SUPERVISOR_STATE_LIMITS.population
     || !Object.entries(value.siteFor).every(([key, site]) => text(key) && REVISION.test(key) && (site === -1 || revision(site)))) return false;
   if (Object.hasOwn(value, 'fidelityDeliveredPairs') && (!list(value.fidelityDeliveredPairs)

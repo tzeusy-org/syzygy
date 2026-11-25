@@ -13,6 +13,7 @@ import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './
 import { briefStandardsOf, buildDesignPacket, standardsInput, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { unitOf } from './relation-witness.js';
+import { fidelityCoverageHold } from './coverage-hold.js';
 import { placementSubjectOf, screenLoaderOf, secretPathOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
@@ -247,11 +248,13 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     if (key === UNIT_FIELD && withheldUnits.has(this)) return undefined;
     return key === 'path' && withheldCitations.has(this) ? null : value;
   }, 2)}\n`;
+  const hold = fidelityCoverageHold({ run, draftRevision: draftRev.revision, draft: draftDoc, inventoryRevision: counted.revision, inventory: inventoryDoc }, spans, isSecretPath);
   return {
     ok: true, bytes, sha256: sha256(bytes), spans,
     draft: { revision: draftRev.revision, sha256: sha256(draftRev.bytes), doc: draftDoc, sessionId: declaredSessionId(draftDoc) },
     inventory: { revision: counted.revision, sha256: counted.sha256, doc: inventoryDoc, sessionId: counted.sessionId.value, session: counted.session },
     blobs,
+    ...(hold === undefined ? {} : { coverageHold: hold }),
   };
 }
 

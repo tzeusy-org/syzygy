@@ -9,6 +9,7 @@ import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
 import { cliGateSources, DOSSIER_USAGE, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
 import { closeRun } from './close.js';
+import { CoverageHoldNotices } from './coverage-hold.js';
 import { INVENTORY_CHECKS, inventoryOfRecord, launchRecordName } from './inventory.js';
 import { writeLaunchedMarker } from './launched.js';
 import { reviewCheck, reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
@@ -1328,6 +1329,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
     } finally { reads.close(); }
   }
   let phase = 'drafting';
+  const coverage = new CoverageHoldNotices(state.notified, run, 'native-control');
   const maxRepairCycles = context.prepared.record.declared.maxRepairCycles;
   let nextDesignRound = context.prepared.continuation?.verified.nextDesignRound ?? 1;
   const announcedDesignSites = new Set<number>(context.prepared.continuation === undefined ? []
@@ -1378,20 +1380,38 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       state.notified.push(`inventory-draft-${passedDraft}`); saveState(stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
-    if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
-      const pair = `${passedDraft!}/${inventoryRevision!}`;
-      let r: Awaited<ReturnType<typeof step>>;
+    let heldPair = false;
+    if (passedDraft !== null && inventoryRevision !== null
+      && fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
+      let advanced: Awaited<ReturnType<CoverageHoldNotices['advance']>>;
       try {
-        const products = beginRunProductReads(run, context.artifacts, 'review-packet', deadline, context.runtime.waitForProductSamples);
-        try { r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], { ...runPorts, productReads: products }); }
-        finally { products.close(); }
+        advanced = await coverage.advance({ draftRevision: passedDraft, inventoryRevision }, async () => {
+          const products = beginRunProductReads(run, context.artifacts, 'review-packet', deadline, context.runtime.waitForProductSamples);
+          try { return await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], { ...runPorts, productReads: products }); }
+          finally { products.close(); }
+        }, async (message, pair) => await context.runtime.publish('author', { event: 'coverage-held', ...pair, message }) ? 'sent' : 'failed');
       } catch (cause) { if (!(cause instanceof UrlProductReadRefusal)) throw cause; phase = 'fidelity delivery products unavailable'; break; }
-      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit !== 0 || r.doc === null || !(await context.runtime.current())) { phase = 'fidelity packet delivery refused'; break; }
-      try { await context.artifacts.registerPacket({ kind: 'fidelity', round: r.doc['round'] as number, packetSha256: r.doc['packetSha256'] as string },
-        context.runtime.waitForProductSamples); }
-      catch { phase = 'fidelity packet producer binding refused'; break; }
-      (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(stateRoot, state);
+      if (advanced.kind === 'coverage') {
+        heldPair = advanced.currentHeld;
+        if (advanced.observed) screen.event(`fidelity waits: draft revision ${advanced.pair.draftRevision} leaves inventory revision ${advanced.pair.inventoryRevision} entries without an outcome`);
+        if (advanced.notice === 'sent') {
+          saveState(stateRoot, state);
+          screen.event(`queued an authenticated author coverage notice for draft revision ${advanced.pair.draftRevision} and inventory revision ${advanced.pair.inventoryRevision}`);
+        } else if (advanced.notice !== 'unchanged') { phase = 'typed coverage notice delivery refused'; break; }
+      } else {
+        const r = advanced.step;
+        screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft} and inventory revision ${inventoryRevision}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
+        if (r.exit !== 0 || r.doc === null || !(await context.runtime.current())) { phase = 'fidelity packet delivery refused'; break; }
+        try { await context.artifacts.registerPacket({ kind: 'fidelity', round: r.doc['round'] as number, packetSha256: r.doc['packetSha256'] as string },
+          context.runtime.waitForProductSamples); }
+        catch { phase = 'fidelity packet producer binding refused'; break; }
+        const pair = `${passedDraft}/${inventoryRevision}`;
+        (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft); delete state.pendingRepair; saveState(stateRoot, state);
+      }
+      if (heldPair && repairsSpent) {
+        phase = `blocked: draft revision ${passedDraft} leaves inventory entries without an outcome, so the fidelity review waits, and all ${maxRepairCycles} repair cycles of the draft are spent${cycleBreakdown(run)}`;
+        break;
+      }
     }
     const sides = fidelityState === 'blocking' ? repairSides(fidelity!.verdict!) : null;
     const spentSide = sides !== null && draft !== null && inventoryRevision !== null ? fidelityRepairSpent(sides, draft.n, inventoryRevision, maxRepairCycles) : null;
@@ -1510,7 +1530,7 @@ async function runUrlStages(stateRoot: string, ports: CliPorts, state: Superviso
       break;
     }
     const repairing = state.pendingRepair === undefined ? null : [state.pendingRepair.draftAbove !== undefined ? 'author' : null, state.pendingRepair.inventoryAbove !== undefined ? 'inventory' : null].filter((x) => x !== null).join(' and ');
-    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : inventoryRevision === null ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
+    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : inventoryRevision === null ? 'waiting for the inventory' : heldPair ? 'fidelity review waiting for inventory coverage' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
       : designState === 'none' ? 'rendered-design review' : 'author repairing after design review';
     const left = Math.max(0, deadline - Date.now());
     screen.draw([
