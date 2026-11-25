@@ -1,0 +1,9 @@
+# CONFIRM
+
+[Observed] Focused continuation disposition for `c1a9940dd27ba25b39be2df28d4fddc16987df8b`, tree `ee2e53069a91de9f6c1bbd28c0e1e1a096da31f8`, direct parent `dd76367404335b0f5f9deaf54e41370de3ab8d63`. Independently detached exact subject, four changed paths, clean patch and checkout. Review scope was R1 F1 and R2 F2 under original `syzygy-fnry.20`, adopted REQ-034 source and scriptless presentation clauses, RFC7-10, SEC-5, and CC-REV-2.
+
+[Observed] R2 F2's 1,200-line synthetic input again used the actual production split and local renderer. Initial links retained `#L998` for 998–1002 and `#L999` for 999–1004. Each continuation now has its own fragment and label, 1001–1002 and 1001–1004. Each fragment occurs exactly once as an empty aria-hidden child of the original numbered L1001 row in the second leaf and selects only its expected rows. The independent test passed 1/1 after resolving hrefs relative to their actual source route. Proof digests for fixture and output are `10247522d9ebf39e63c418c19bf045d85f05288666292aca12ac7887dbd3f3fa` and `31177580467f7073f8c9de5fcb7bad585d40f3b6bec53bead2260b48163ebfa8`.
+
+[Observed] Real Chromium passed 2/2 selected tests at 390×844 with scripts removed. Native Enter, Tab, Enter preserves both origin-specific labels and the two independently painted intervals. The destination remains the first retained row, and an unrelated fragment shows no continuation. The provider golden passed 1/1. Browser and golden output digests are `339f0d011408d12aa387786acded68403b19d7b4f55a2e48edb6497b6f64bef8` and `bcf322f80232e0bccee740fdce133ae716a6a3b26e2bfd09e4b6e7b0094d6e7e`.
+
+[Observed] The author reported the wider exact focused run at 67/68. Its line-ID census counts CSS attribute selectors as HTML IDs. This result confirms exact continuation behavior only. The aggregate requires its structural test correction and an exact successor replay before package acceptance.
