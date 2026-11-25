@@ -845,12 +845,29 @@ every arm. `scripts/dossier_verify_text.mjs --html <file>` writes it. No spec ch
   `claimResults`, which also writes the annotated copy's closing section, so a path screening
   withholds by name appears in neither. The annotated copy's bytes are unchanged.
 - [Observed] Neutral means: no Syzygy or Polaris name, no navigation, no file name and no link
-  out of the page. The page has no script, no handler and no remote load, under the dossier
+  out of the page. The disclosures appear in grader wording, which names neither the dossier nor
+  its lead-in phrase. A test renders two texts and pins their common frame as a literal. The page has no script, no handler and no remote load, under the dossier
   pages' closed policy; `pageSinkCspFinding` and `pageSinkScriptFinding` accept it.
+- [Observed] The bead asked to reuse the app's inert helpers. This package cannot import the app,
+  so the page has its own five-character escape and is held to the same core page-sink checks.
 - [Observed] Before: the plain synthesis's result existed only as an annotated Markdown copy.
-  After: the same run draws a 55,696-byte page with 101 claim elements for 101 claims. Its
-  outcomes equal slice 1's recorded tally (`docs/evidence/syzygy-5dhm-24/verify-text-page-pilot-2026-11-25.json`).
-  Rule 6: 29 of 29 mutants killed (`docs/evidence/syzygy-5dhm-24/verify-text-page-mutants-2026-11-25.json`).
+  After: the same run draws a 55,763-byte page with 101 claim elements for 101 claims. Its
+  outcomes equal slice 1's recorded tally, and the annotated copy's digest did not change across
+  the repairs (`docs/evidence/syzygy-5dhm-24/verify-text-page-pilot-2026-11-25.json`).
+  Rule 6: 29 of 29 mutants killed at first, then 38 of 38 after the repairs, including the
+  review's two survivors (`docs/evidence/syzygy-5dhm-24/`).
+- [Observed] One fresh-context review (`docs/reviews/syzygy-5dhm-24/R-GRADER-SHELL-1-RAW.md`)
+  returned `CONFIRM WITH EXCEPTIONS` with six non-blocking findings. Five were repaired in
+  `8d3e55be`, and the sixth (F5) is disclosed:
+  - F1: the page's disclosures named the dossier and its lead-in phrase. They are now in
+    grader wording, and the test forbids both words.
+  - F2: fixture counts were equal. They are now distinct.
+  - F3: neutrality was pinned only by exclusion. The frame is now pinned as a literal, identical
+    across two texts.
+  - F4: the script's `--html` guards had no test. Four child-process tests now cover them.
+  - F5: the page uses a local escape, disclosed in the bullet above.
+  - F6: an `aria-label` sat on `<pre>`. The text is now a labelled region under a visible
+    heading.
 - [Unknown] Whether graders read the marks as intended. No grader has seen the page yet;
   R1's protocol slices decide that. The dossier arm's text was not drawn here, because no
   dossier text is retained in the repository.

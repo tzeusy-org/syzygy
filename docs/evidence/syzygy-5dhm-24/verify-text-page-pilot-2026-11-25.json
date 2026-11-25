@@ -1,8 +1,8 @@
 {
   "record": "the plain synthesis of the 2026-11-21 pilot drawn as the neutral-shell page (syzygy-5dhm.24)",
   "label": "Observed",
-  "measuredAt": "2026-11-25",
-  "syzygyCommit": "f2f967f0c0f7639e7098fbc1bd1067d65936d61b",
+  "measuredAt": "2026-11-26",
+  "syzygyCommit": "8d3e55bef400bbf47394c99499c3d3e8f3c50d96",
   "command": "node scripts/dossier_verify_text.mjs --clone <pilot bare clone> --text docs/evidence/pursuit-2026-11-21b/pilot/plain-synthesis.txt --out <scratch file> --html <scratch file>",
   "subject": {
     "basis": "docs/evidence/pursuit-2026-11-21b/pilot/plain-synthesis.txt",
@@ -35,8 +35,8 @@
     "sha256": "194868226eda292d4dfaeda573c5d03c01bee2007bb7a33cafb94de8731fff9c"
   },
   "page": {
-    "bytes": 55696,
-    "sha256": "848c133fd55499defc7e3202a55204a10977f2992dc3cbd1069d823860ad8b8c",
+    "bytes": 55763,
+    "sha256": "79d110170f944fc9ff379adefb35dedd75dc67307a91178c7523b15a4407b460",
     "claimElementsByOutcome": {
       "reference-unverified": 57,
       "unanchored": 33,
@@ -48,7 +48,16 @@
     "claimElements": 101,
     "pageSinkCspFinding": null,
     "pageSinkScriptFinding": null,
-    "namesSyzygyOrPolaris": false
+    "namesSyzygyOrPolaris": false,
+    "namesDossierOrLeadIn": false
   },
-  "reading": "The page carries one claim element per claim, 101 of 101, and its outcomes equal the checker tally and the tally recorded for slice 1 after its review corrections (docs/evidence/syzygy-5dhm-23/verify-text-pilot-2026-11-22.json, arms.plain.tally). The page passes the page-sink policy and script checks. Neither the page nor the annotated copy is retained: both carry the text, and the text is retained already."
+  "reading": "The page carries one claim element per claim, 101 of 101, and its outcomes equal the checker tally and the tally recorded for slice 1 after its review corrections (docs/evidence/syzygy-5dhm-23/verify-text-pilot-2026-11-22.json, arms.plain.tally). The page passes the page-sink policy and script checks. Neither the page nor the annotated copy is retained: both carry the text, and the text is retained already.",
+  "firstMeasurement": {
+    "syzygyCommit": "f2f967f0c0f7639e7098fbc1bd1067d65936d61b",
+    "measuredAt": "2026-11-25",
+    "pageBytes": 55696,
+    "pageSha256": "848c133fd55499defc7e3202a55204a10977f2992dc3cbd1069d823860ad8b8c",
+    "annotatedCopySha256": "194868226eda292d4dfaeda573c5d03c01bee2007bb7a33cafb94de8731fff9c",
+    "why": "re-measured after the R-GRADER-SHELL-1 repairs changed the page (grader disclosures, text region); the first page named the dossier lead-in in its disclosures"
+  }
 }
