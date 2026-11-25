@@ -1,0 +1,63 @@
+--- a/spec.md
++++ b/spec.md
+@@ -516,0 +517,6 @@
++For the existing URL-supervised command, the attended view SHALL identify the run and attempt and show the observed step, original deadline, limit status and next permissible action in its first state cue. Status, reason and action SHALL remain available as plain text. Only current evidence from the trusted supervisor for that run and attempt may establish a live or terminal state. The view SHALL preserve the established bounded state read and show Unknown with a safe reason and recovery help when the relevant observation is missing, stale, inconsistent or bound to another run or attempt. A saved record, an attached view or a completed input check alone SHALL NOT establish live progress, offline completion or cleanup.
++
++A verified detach from the live attempt SHALL show the observed start of one detached interval, the original deadline for that attempt and the existing attach action. A verified return to the same live attempt SHALL show the corresponding observed end once. Repeated attachment SHALL retain that interval without launching a child, repeating a stop, replaying input or advancing a step. An unavailable or unverified endpoint remains Unknown. A stopped, expired or unverified attempt SHALL NOT appear live on return. Show stopping while cleanup is unverified and state the outstanding check. The view MAY show the existing resume action only when cleanup and stopped eligibility are verified under the existing resume rules. Inspecting retained state does not itself resume work, prove cleanup or alter the deadline, pin, provider, policies, permissions or frozen subjects.
++
++The first wait cue SHALL distinguish an ordinary system wait, an eligible question awaiting operator action and an unavailable observation. For an eligible question, it SHALL name the Author pane and keep the wait visible without color. Where an interactive view and keyboard binding are available, it SHALL identify the action through the configured view or its keyboard-reachable help. With no such view or binding, plain text SHALL retain the eligible operator question and its Author role, say why keyboard focus is unavailable and give the available bounded recovery help. It SHALL NOT show an unavailable path or assert a focus or input effect. The view SHALL expose only admitted progress metadata and the permitted author-question cue. Focus and view attachment SHALL NOT deliver input to a role. An answer still requires the existing checked typed clarification route; arbitrary terminal input and helper role input remain refused. No source, role transcript or authentication bytes are authorized for display by the attended view.
++
+@@ -678,0 +685,43 @@
++#### Scenario: One detached interval for the same live attempt
++
++- **GIVEN** an observed live attempt with a current independent limit observation of `Within limits`, its original deadline, and one verified detach and reattach with ordered endpoint times bound to that attempt
++- **WHEN** the operator detaches and reattaches and then requests attach again
++- **THEN** the first detach cue includes the observed start, original deadline, current limit status `Within limits` and attach action, the reattached cue includes the same attempt and one interval, and re-reading it creates no new interval or child
++- **AND** a missing, substituted or other-attempt deadline cannot satisfy the same-attempt cue
++- **AND** removing only the limit status or replacing its cue with `Limit reached` fails the first-state witness even if the same pending attempt, other cue fields and no-effect counts agree
++
++#### Scenario: Unverified view state stays Unknown
++
++- **GIVEN** separate controls with missing or stale observation, a foreign run or attempt, an absent interval endpoint and a mismatched endpoint order
++- **WHEN** the operator opens the view
++- **THEN** the unverified state or endpoint remains Unknown with its reason and safe help, with no claim of progress, cleanup or completion and no input or child effect
++- **AND** a view or stored snapshot alone cannot supply the missing observation
++
++#### Scenario: Stop and resume are distinct from inspecting a view
++
++- **GIVEN** a stop was requested and the retained supervisor view remains accessible
++- **WHEN** the operator inspects it while cleanup is unverified, then after the stop is verified, and separately after its original deadline expires
++- **THEN** the first case states the outstanding check and gives no usable resume action, the eligible stopped case offers the existing checked resume action, and the expired case gives the bounded refusal
++- **AND** none of these view reads starts another attempt, repeats a stop, or changes the deadline, pin or inputs
++
++#### Scenario: The author question has a discoverable keyboard path
++
++- **GIVEN** a current eligible author question and a view configuration with a known keyboard path
++- **WHEN** the operator reads the first wait cue or uses the reachable keyboard help without a pointer or color
++- **THEN** the cue names the Author pane and identifies how to focus it with that configuration, and only the existing checked typed route can submit its answer
++- **AND** a vague or pointer-only hint fails the keyboard witness, and a helper input request or arbitrary terminal text supplies no role input
++
++#### Scenario: Ordinary and unverified waits remain distinct in plain text
++
++- **GIVEN** a fixture with an ordinary wait and another with no current wait evidence, each without an interactive view
++- **WHEN** the supervisor emits its first wait cue
++- **THEN** plain text names the pending system stage with no action required in the first case and Unknown with a reason and safe help in the second
++- **AND** neither emits an author input action nor claims a focus transition or displays source, role transcript or authentication bytes
++
++#### Scenario: An eligible Author question survives the unavailable view
++
++- **GIVEN** a current eligible author question for the same attempt and either no interactive view or no reachable keyboard binding in the view
++- **WHEN** the first wait cue is read as plain text
++- **THEN** it identifies operator action and the Author role, gives the reason focus is unavailable and the applicable existing recovery help, and offers no unavailable focus path
++- **AND** the cue neither claims a focus transition nor sends input, and any answer continues to require the existing checked typed route
++
+@@ -681,3 +730,3 @@
+-- **Case:** Production CLI supervisor plus independently observed isolated synthetic CLI/provider/relay fixtures: four roles, fixed tools, alternate routes/sockets/descriptors, configuration/MCP/scaffold/wrapper drift, every ingest and composed send, audit failure, supported/unsupported streaming, no-thinking refusal, hangs, stop/resume and uncertain sends. Actual provider activation is separate evidence. Since version 2.18, a FIFO, a symbolic link to a device, a directory and a file past 16,777,216 bytes at the supervisor's state path.
+-- **Observable:** Role input bytes/digests, process trees and role views, real step sequence, refusal/cleanup, compatible core and bounded provenance records, reader disclosure and close state. For version 2.18, the outcome of resume, attach and stop and the bytes read from the state path.
+-- **Oracle:** Independent expected step/role/packet population and operating-system process observations; a separate real public-URL run proves actual activation, never substituted by injected ports. For version 2.18, the refusal words fixed from the stated bound before the command runs.
++- **Case:** Production CLI supervisor plus independently observed isolated synthetic CLI/provider/relay fixtures: four roles, fixed tools, alternate routes/sockets/descriptors, configuration/MCP/scaffold/wrapper drift, every ingest and composed send, audit failure, supported/unsupported streaming, no-thinking refusal, hangs, stop/resume and uncertain sends. Actual provider activation is separate evidence. Since version 2.18, a FIFO, a symbolic link to a device, a directory and a file past 16,777,216 bytes at the supervisor's state path. The attended-view fixtures separately vary current observation, interval endpoints, same-attempt deadline, current limit status, capability after verified cleanup, question eligibility, the declared keyboard affordance and an eligible question with absent view or binding. Use isolated synthetic supervisor and view records with literal expected cues and effects.
++- **Observable:** Role input bytes/digests, process trees and role views, real step sequence, refusal/cleanup, compatible core and bounded provenance records, reader disclosure and close state. For version 2.18, the outcome of resume, attach and stop and the bytes read from the state path. For the attended view, observe the first plain-text cue, run and attempt, one associated interval, deadline, current step and limit status, available action, the actual child/stop/answer effects and the safe refusal when applicable.
++- **Oracle:** Independent expected step/role/packet population and operating-system process observations; a separate real public-URL run proves actual activation, never substituted by injected ports. For version 2.18, the refusal words fixed from the stated bound before the command runs. For those fixtures, derive expected cue facts, interval, current limit status and actions from independent literal records and compare separately observed launch, stop and answer effects. Compare keyboard accessibility to the actual declared available bindings in the tested view and separately observe no focus or input effect in the unavailable-view controls.
+@@ -685 +734 @@
+-- **Falsifier:** Record gate, provider substitution or bypass, unprotected provenance/audit, input-only screening, tool-id-only receipt, unsupported/unscreened response delivery, guessed scaffold/configuration, role overlap, altered packet denominator, execution permission, false capture/completeness/receipt/history label, continued work after refusal, blind replay, false cleanup/close or changed pin on resume; or, since version 2.18, the supervisor blocks on its state path, reads more than 16,777,217 bytes from it, or takes a state file that is not a regular file or is past its bound for one it read, or starts a named run afresh over a state path that holds something it cannot read.
++- **Falsifier:** Record gate, provider substitution or bypass, unprotected provenance/audit, input-only screening, tool-id-only receipt, unsupported/unscreened response delivery, guessed scaffold/configuration, role overlap, altered packet denominator, execution permission, false capture/completeness/receipt/history label, continued work after refusal, blind replay, false cleanup/close or changed pin on resume; or, since version 2.18, the supervisor blocks on its state path, reads more than 16,777,217 bytes from it, or takes a state file that is not a regular file or is past its bound for one it read, or starts a named run afresh over a state path that holds something it cannot read. An attended cue that reports missing or stale live state as observed, invents an endpoint, duplicates an interval or starts a child during attach, changes or hides the original deadline or current limit status, offers resume before verified cleanup, supplies a vague or pointer-only path to the author question, hides the eligible question when no usable view exists, offers an unavailable focus path, exposes unauthorized metadata or sends untyped role input also fails.
