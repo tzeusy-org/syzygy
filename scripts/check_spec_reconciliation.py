@@ -11639,8 +11639,6 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                            tmp, base, clean, witnesses, failures, witnesses=witnesses)
     _profile_selftest_call("declared_source_composition_cases", declared_source_composition_cases,
                            witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("url_source_cases", url_source_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
     # These cases reconstruct historical REQ-034 floors where the prerequisites
     # for edit accounting and the terminology brief cannot exist.
     figure_base = base
@@ -11651,28 +11649,26 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
                                   if not is_edit_account_row(line) and not is_term_brief_row(line)))
-    families = (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
-                 repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
-                 infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
-                 readers_cases, cont_cases, model_cases, worth_cases)
+    historical_families = (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+                           repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
+                           infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
+                           readers_cases, cont_cases, model_cases, worth_cases)
+    tail_families = (edit_account_cases, poc_d10_cases, reach_cases, readmit_cases,
+                     raw_read_cases, treeread_cases, verify_cases, qfile_cases,
+                     scripted_grade_cases, covhold_cases, term_brief_cases)
+    # Each task owns its fixture tree; preserve the historical fixture base.
+    families = (((url_source_cases, base),)
+                + tuple((family, figure_base) for family in historical_families)
+                + tuple((family, base) for family in tail_families))
     global _EDITION_STATE
-    _EDITION_STATE = (tmp, figure_base, families)
+    _EDITION_STATE = (tmp, families)
     try:
         results = _map_cases(len(families), _run_edition)
     finally:
         _EDITION_STATE = None
-    _join_case_results(results, len(families), witnesses, failures)
-    tail_families = (edit_account_cases, poc_d10_cases, reach_cases, readmit_cases,
-                     raw_read_cases, treeread_cases, verify_cases, qfile_cases,
-                     scripted_grade_cases, covhold_cases, term_brief_cases)
-    _EDITION_STATE = (tmp, base, tail_families)
-    try:
-        results = _map_cases(len(tail_families), _run_tail_edition)
-    finally:
-        _EDITION_STATE = None
     # Preserve canonical witness order; the original join rejects bad indices.
     results.sort(key=lambda result: result[0] if type(result[0]) is int else -1)
-    _join_case_results(results, len(tail_families), witnesses, failures)
+    _join_case_results(results, len(families), witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -11773,22 +11769,19 @@ def _run_entry(index):
 
 
 def _run_edition(index):
-    tmp, figure_base, families = _EDITION_STATE
-    family = families[index]
+    tmp, families = _EDITION_STATE
+    index = _EDITION_WORK_ORDER[index]
+    family, fixture_base = families[index]
     witnesses, failures = [], []
-    arguments = (figure_base,) if family is poc_d10_cases else (tmp, figure_base)
+    arguments = (fixture_base,) if family is poc_d10_cases else (tmp, fixture_base)
     _profile_selftest_call(family.__name__, family, *arguments,
                            witnesses, failures, witnesses=witnesses)
     return index, witnesses, failures, []
 
 
-# Keep the measured predecessor order; append the unmeasured new family last.
-# Returned indices remain canonical.
-_TAIL_WORK_ORDER = (10, 0, 1, 7, 9, 6, 3, 2, 5, 4, 8)
-
-
-def _run_tail_edition(index):
-    return _run_edition(_TAIL_WORK_ORDER[index])
+# Fixed longest-first order from the retained a7be hosted family timings.
+# Return the original canonical index; timings are not an acceptance guarantee.
+_EDITION_WORK_ORDER = (30, 0, 20, 26, 29, 27, 16, 15, 19, 18, 14, 12, 23, 13, 21, 17, 22, 11, 10, 9, 8, 7, 28, 6, 5, 4, 25, 3, 2, 1, 24)
 
 
 def _join_case_results(results, count, witnesses, failures):
