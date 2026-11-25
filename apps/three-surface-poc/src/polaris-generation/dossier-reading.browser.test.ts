@@ -252,8 +252,15 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     element: { kind: 'code', language: 'C', path: codePath, startLine: 1, endLine: 1,
       parts: [{ kind: 'quotation', sourceId: quotedSource.sourceId, start, end, text, anchor: { ...sourceAnchor, fragment: { start, end } } }] },
   };
+  const inlineCitation = { id: 'local-reflow-inline', text: 'Readers can compare the complete screened file here.',
+    sourceIds: [quotedSource.sourceId], children: [] };
+  const blocks = new Map(local.blocks);
+  blocks.set(inlineCitation.id, { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [],
+    segments: [{ kind: 'prose', text: inlineCitation.text }] });
+  const citationLines = new Map(local.citationLines);
+  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, 'line 1']]));
   const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
-    : { ...section, paragraphs: [...section.paragraphs, quotedCode] }) };
+    : { ...section, paragraphs: [...section.paragraphs, inlineCitation, quotedCode] }) };
   const sourceAnchors = new Map(local.sourceAnchors);
   sourceAnchors.set(quotedSource.sourceId, sourceAnchor);
   const reportedGroup = (id: string, heading: string, title: string, details: readonly string[]) => ({
@@ -290,7 +297,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   const existingPages = local.pages.map(page => page.path !== 'understanding.html' ? page : { ...page, groups: [...page.groups,
     reportedGroup('understanding-purpose', 'Purpose', 'Source scope', [`Scope: ${longPath}`]),
   ] });
-  const layoutFixture = { ...local, draft, sourceAnchors, disclosure, reviewStatus,
+  const layoutFixture = { ...local, draft, blocks, citationLines, sourceAnchors, disclosure, reviewStatus,
     pages: [...existingPages, discoveryPage, reviewPage, executionsPage, clarificationsPage] };
   const longText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
     ['appendix.html', [['#appendix-disclosure > ul > li', longPath]]],
@@ -317,7 +324,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   try {
     for (const [path, html] of pages) {
       await mkdir(dirname(join(directory, path)), { recursive: true });
-      await writeFile(join(directory, path), html);
+      await writeFile(join(directory, path), html.replace(/<script\b[^>]*>.*?<\/script>/gisu, ''));
     }
     browser = await launchBrowser(executable);
     const page = await browser.newPage();
@@ -367,6 +374,65 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
       for (const [path] of pages) {
         await page.navigate(pathToFileURL(join(directory, path)).href);
         expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
+      }
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
+      expect(exactPage).toBeDefined();
+      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
+      const citations = [
+        { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
+        { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
+      ];
+      for (const { selector, suffix, leftRange } of citations) {
+        const citation = `document.querySelector(${JSON.stringify(selector)})`;
+        expect(await page.accessibleNames(`[${citation}]`)).toEqual([`Source 2: ${codePath}, ${suffix}`]);
+        expect(await page.evaluate(`${citation}.href`)).toBe(exactHref);
+        const inspect = `(() => {
+          const link = ${citation};
+          const popup = link.querySelector('.cite-pop');
+          const box = popup.getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(popup);
+          const text = [...range.getClientRects()];
+          return { hidden: getComputedStyle(popup).display === 'none', focus: link.matches(':focus-visible'), hovered: link.matches(':hover'),
+            contents: popup.textContent, fitsPage: document.documentElement.scrollWidth <= innerWidth,
+            contained: box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight
+              && text.length > 0 && text.every(rect => rect.left >= box.left && rect.right <= box.right
+                && rect.top >= box.top && rect.bottom <= box.bottom) };
+        })()`;
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        await page.evaluate(`(() => {
+          const link = ${citation};
+          const stops = [...document.querySelectorAll('a[href], summary, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
+          stops[stops.indexOf(link) - 1].focus();
+        })()`);
+        for (let step = 0; step < 4; step++) {
+          await page.press('Tab');
+          if (await page.evaluate(`document.activeElement === ${citation}`)) break;
+        }
+        expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({
+          hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+        });
+        await page.evaluate(`${citation}.blur()`);
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
+          const link = ${citation};
+          link.scrollIntoView({ block: 'center', behavior: 'instant' });
+          const box = link.getBoundingClientRect();
+          const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
+          return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
+        })()`);
+        expect(target.hits, `${selector} pointer hit`).toBe(true);
+        expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
+        expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
+        await page.mouseMove(target.x, target.y);
+        await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
+          hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+        });
+        await page.mouseMove(0, 0);
+        await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
       }
     } finally {
       await page.close();

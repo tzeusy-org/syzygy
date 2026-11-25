@@ -190,6 +190,8 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   // The pop repeats the mark's accessible name, so it is out of layout until shown: a hidden but laid-out pop widens a narrow page.
   + 'a.cite{position:relative}.cite-pop{display:none;position:absolute;left:0;top:1.6em;z-index:6;white-space:nowrap;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;font:400 .8rem/1.4 var(--font-mono);color:var(--ink);vertical-align:baseline}'
   + 'a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}'
+  // On a narrow viewport the hint uses the viewport edges, so a citation at either end of a line can reveal its full path.
+  + '@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}'
   // Colour (syzygy-pdja.14): six hues, light and dark, each a line colour and a tint. A Pole, a diagram outside a Pole page and a card
   // each take one in turn; text stays ink on a tint, so every text contrast is the page's own. No hue carries a claim.
   + ':root{--h1:#8fb0f0;--h1t:#262d3d;--h2:#5cc6b8;--h2t:#1f302e;--h3:#b9a2f0;--h3t:#2d2740;--h4:#f08aa9;--h4t:#3a2630;--h5:#a6d16f;--h5t:#29321f;--h6:#e5937a;--h6t:#3a2c26;--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}'
