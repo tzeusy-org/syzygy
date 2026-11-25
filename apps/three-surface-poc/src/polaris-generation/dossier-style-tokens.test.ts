@@ -10,13 +10,30 @@ const QUERY_CLAUSE = /\(([^)]*)\)/gu;
 const DIMENSION_PREFIX = /^\s*(?:min-|max-)?(?:width|height)\s*[:<>]=?\s*/iu;
 const CSS_VARIABLE = /var\(--[a-z0-9-]+\)/giu;
 const QUOTED = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/gu;
-const COLOR_PROPERTY = /(?:^|-)color$|^(?:background|border(?:-[a-z-]+)?|outline|column-rule|text-decoration|text-emphasis|fill|stroke|box-shadow|text-shadow|--[a-z0-9-]+)$/u;
-const COLOR_KEYWORDS = new Set([
-  'auto', 'none', 'transparent', 'currentcolor', 'inherit', 'initial', 'unset', 'revert', 'revert-layer',
-  'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge', 'inset', 'outset', 'hidden',
-  'underline', 'overline', 'line-through', 'blink', 'wavy', 'color-mix', 'in', 'srgb', 'collapse', 'separate',
-]);
+// The opaque <named-color> keywords from CSS Color 4 §6.1, excluding contextual
+// colors and the separate transparent keyword. This also finds gradient stops.
+// https://www.w3.org/TR/css-color-4/#named-colors
+const NAMED_COLORS = new Set(`
+  aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood
+  cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray
+  darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen
+  darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue
+  firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew
+  hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan
+  lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray
+  lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid
+  mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream
+  mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise
+  palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown
+  salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan
+  teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen
+`.trim().split(/\s+/u));
 const SLOT = /__slot_(\d+)__/gu;
+
+function withoutComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\/|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/gu,
+    part => part.startsWith('/*') ? ' ' : part);
+}
 
 function looksLikeStylesheet(text: string): boolean {
   const beginning = text.trimStart().replace(/^(?:__slot_\d+__\s*)+/u, '');
@@ -40,9 +57,14 @@ function joinedString(node: ts.Node): node is ts.BinaryExpression {
   return ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken;
 }
 
-function joinedArray(node: ts.Node): { elements: readonly ts.Expression[]; separator: string } | undefined {
-  if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression) || node.expression.name.text !== 'join') return;
-  const array = node.expression.expression;
+function stringParts(node: ts.Node): { elements: readonly ts.Expression[]; separator: string } | undefined {
+  if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)) return;
+  const { expression: receiver, name } = node.expression;
+  if (name.text === 'concat' && (ts.isStringLiteralLike(receiver) || ts.isTemplateExpression(receiver))) {
+    return { elements: [receiver, ...node.arguments], separator: '' };
+  }
+  if (name.text !== 'join') return;
+  const array = receiver;
   if (!ts.isArrayLiteralExpression(array) || node.arguments.length > 1) return;
   const argument = node.arguments[0];
   if (argument !== undefined && !ts.isStringLiteralLike(argument)) return;
@@ -53,7 +75,7 @@ function sourceText(node: ts.Expression, expressions: ts.Expression[]): string {
   if (ts.isStringLiteralLike(node)) return node.text;
   if (ts.isParenthesizedExpression(node)) return sourceText(node.expression, expressions);
   if (joinedString(node)) return sourceText(node.left, expressions) + sourceText(node.right, expressions);
-  const array = joinedArray(node);
+  const array = stringParts(node);
   if (array !== undefined) return array.elements.map(element => sourceText(element, expressions)).join(array.separator);
   if (ts.isTemplateExpression(node)) {
     let text = node.head.text;
@@ -66,6 +88,41 @@ function sourceText(node: ts.Expression, expressions: ts.Expression[]): string {
   const slot = `__slot_${expressions.length}__`;
   expressions.push(node);
   return slot;
+}
+
+function knownStylesheet(node: ts.Expression, isToken: (value: ts.Expression) => boolean): boolean {
+  if (ts.isStringLiteralLike(node)) return true;
+  if (ts.isTemplateExpression(node)) return node.templateSpans.every(span => isToken(span.expression) || computedFigureWidth(span.expression, isToken));
+  if (ts.isParenthesizedExpression(node)) return knownStylesheet(node.expression, isToken);
+  if (joinedString(node)) return knownStylesheet(node.left, isToken) && knownStylesheet(node.right, isToken);
+  const composed = stringParts(node);
+  if (composed !== undefined) return composed.elements.every(part => knownStylesheet(part, isToken));
+
+  if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)
+      || node.expression.name.text !== 'join' || node.arguments.length !== 1
+      || !ts.isStringLiteralLike(node.arguments[0]!) || node.arguments[0]!.text !== '') return false;
+  const map = node.expression.expression;
+  if (!ts.isCallExpression(map) || !ts.isPropertyAccessExpression(map.expression)
+      || map.expression.name.text !== 'map' || map.arguments.length !== 1) return false;
+  const widths = map.expression.expression;
+  const callback = map.arguments[0]!;
+  return ts.isPropertyAccessExpression(widths) && widths.name.text === 'figureFormWidths' && isToken(widths)
+    && ts.isArrowFunction(callback) && ts.isTemplateExpression(callback.body) && knownStylesheet(callback.body, isToken);
+}
+
+function selectedStylesheet(node: ts.VariableDeclaration, isToken: (value: ts.Expression) => boolean): boolean {
+  if (!ts.isIdentifier(node.name) || node.initializer === undefined) return true;
+  const name = node.name.text;
+  const value = node.initializer;
+  if (name === 'LOCAL_REFLOW_CSS') {
+    // The literal per-page table contributes only its stylesheet column.
+    if (!ts.isNewExpression(value) || !ts.isIdentifier(value.expression) || value.expression.text !== 'Map'
+        || value.arguments?.length !== 1 || !ts.isArrayLiteralExpression(value.arguments[0]!)) return false;
+    return value.arguments[0]!.elements.every(row => ts.isArrayLiteralExpression(row) && row.elements.length === 2
+      && ts.isStringLiteralLike(row.elements[0]!) && knownStylesheet(row.elements[1]!, isToken));
+  }
+  if (name === 'mapWidthQuery') return ts.isArrowFunction(value) && ts.isTemplateExpression(value.body) && knownStylesheet(value.body, isToken);
+  return !name.endsWith('_CSS') || knownStylesheet(value, isToken);
 }
 
 function computedFigureWidth(expression: ts.Expression, isToken: (value: ts.Expression) => boolean): boolean {
@@ -120,14 +177,15 @@ function rawStyles(source: string): readonly string[] {
       }).replace(CSS_VARIABLE, ' ').replace(QUOTED, ' ').toLowerCase();
     };
 
-    for (const css of stylesIn(text)) {
+    for (const fragment of stylesIn(withoutComments(text))) {
+      const css = withoutComments(fragment);
       for (const match of css.matchAll(DECLARATION)) {
         const property = match[1]!.toLowerCase();
         const value = match[2]!;
         const residual = authorValue(value, property);
-        const words = residual.match(/[a-z][a-z-]*/gu) ?? [];
+        const words = residual.match(/[a-z_-][a-z0-9_-]*/gu) ?? [];
         const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\(/iu.test(residual)
-          || (COLOR_PROPERTY.test(property) && words.some(word => !COLOR_KEYWORDS.has(word)));
+          || words.some(word => NAMED_COLORS.has(word));
         if (rawColor || RAW_NUMBER.test(residual) || residual.includes('unbound-expression')) problems.push(`${property}: ${value}`);
       }
       for (const rule of css.matchAll(CONDITIONAL)) {
@@ -141,7 +199,10 @@ function rawStyles(source: string): readonly string[] {
   }
 
   function visit(node: ts.Node): void {
-    if (ts.isTemplateExpression(node) || ts.isStringLiteralLike(node) || joinedString(node) || (ts.isExpression(node) && joinedArray(node) !== undefined)) {
+    if (ts.isVariableDeclaration(node) && !selectedStylesheet(node, isToken)) {
+      problems.push(`unsupported stylesheet assembly: ${node.name.getText(file)}`);
+    }
+    if (ts.isTemplateExpression(node) || ts.isStringLiteralLike(node) || joinedString(node) || (ts.isExpression(node) && stringParts(node) !== undefined)) {
       const expressions: ts.Expression[] = [];
       scan(sourceText(node, expressions), expressions);
       for (const expression of expressions) visit(expression);
@@ -170,6 +231,10 @@ describe('dossier stylesheet authoring', () => {
     ['named palette value', 'const css = ".source-line{background:rebeccapurple}"', 'background: rebeccapurple'],
     ['named accent color', 'const css = ".field{accent-color:rebeccapurple}"', 'accent-color: rebeccapurple'],
     ['named caret color', 'const css = ".field{caret-color:red}"', 'caret-color: red'],
+    ['gradient stop color', 'const css = ".field{background-image:linear-gradient(red,blue)}"', 'background-image: linear-gradient(red,blue)'],
+    ['spacing after a CSS comment', 'const css = ".field{/* inset override */padding:17px}"', 'padding: 17px'],
+    ['concat-assembled spacing', "const css = '.field'.concat('{', 'padding:17px', '}')", 'padding: 17px'],
+    ['unrecognized stylesheet builder', 'const SOURCE_LINES_CSS = buildCss("padding", "17px")', 'unsupported stylesheet assembly: SOURCE_LINES_CSS'],
     ['array-assembled spacing', "const css = ['.field', '{', 'padding:17px', '}'].join('')", 'padding: 17px'],
     ['type size', 'const css = ".reading-order{font-size:17px}"', 'font-size: 17px'],
     ['nested rule spacing', 'const css = "@media(max-width:\${breakpoint}){.reading-order{margin:.3rem}}"', 'margin: .3rem'],
@@ -206,6 +271,7 @@ describe('dossier stylesheet authoring', () => {
       "import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';",
       'const mapWidthQuery = (width: number) => `@container (width < ${width}px){.figure[data-id="card-12"]:nth-child(5n+2){gap:${tokens.spacing.small};color:var(--h2)}}`;',
       'const svg = `<rect width="246" height="73">`;',
+      'const css = `.field{background:no-repeat;background-image:none;content:"/* green */"}`;',
     ].join('\n');
     expect(rawStyles(source)).toEqual([]);
   });
