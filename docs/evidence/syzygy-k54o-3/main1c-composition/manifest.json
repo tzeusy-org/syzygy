@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "cb0be2a72fabf8a7a4f97668d2c3eb5fb3b57cb7",
+  "parents": [
+    "f3547152cd478650549e405c4f382ca514bf5244",
+    "1c50743aa561e1e82dd7f327cfb36b7999e15c7c"
+  ],
+  "archiveSha256": "0c54763b1fc036a0eddcaec50ad7d320ef844b363d3d37c5f7e874179deafd1d",
+  "archiveBytes": 17640,
+  "READMEsha256": "afd6e5f5f227ac13acbad8dc7faa79c2a56fcb342fafe6d38200e1703e795a4f",
+  "members": [
+    {
+      "path": "README.md",
+      "bytes": 1124,
+      "sha256": "afd6e5f5f227ac13acbad8dc7faa79c2a56fcb342fafe6d38200e1703e795a4f"
+    },
+    {
+      "path": "owning/benchmark.json",
+      "bytes": 3118,
+      "sha256": "a04c0b5ada774b2ae8ef52d0d74f40f6665ad00f20ef43b7d0ae36f4229bffa0"
+    },
+    {
+      "path": "owning/benchmark.log",
+      "bytes": 110,
+      "sha256": "28c72a9a5a5a83c2fcb24433cc1ddc9687f9677dea329817c4f6e73829f95735"
+    },
+    {
+      "path": "owning/cli.json",
+      "bytes": 72733,
+      "sha256": "b23cd1515f9f6c10b59120d4a414db1a935441157a5f8b471e481612926587c9"
+    },
+    {
+      "path": "owning/cli.log",
+      "bytes": 104,
+      "sha256": "aeaa6010e45792e5b40f903a8b8f19cd052e8cc54a8cc0c088d4acbfd0e333fc"
+    },
+    {
+      "path": "owning/results.json",
+      "bytes": 843,
+      "sha256": "77f5530db23b1b485ae28f2ec5cda4bcf3f0befd5d74d4fa0f447d7d1dde6831"
+    },
+    {
+      "path": "owning/subject.json",
+      "bytes": 1189,
+      "sha256": "e42c50534a46e22505ad14263db22f96287cec5821d3e98ee82ed0c9211eedb1"
+    },
+    {
+      "path": "owning/tiers.log",
+      "bytes": 381,
+      "sha256": "9c46de4be1e8cce3465d2fff22bf042707e517a09972f7ce0ca7c89c39d80e25"
+    },
+    {
+      "path": "owning/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "review/FRESH-REVIEW-RAW.md",
+      "bytes": 3973,
+      "sha256": "290042d6f1cb879f6155cf598148b246e9812a7bd383b702468dd2f5adc79919"
+    },
+    {
+      "path": "source/README.md",
+      "bytes": 682,
+      "sha256": "c474e89f2e14ad75b5ee685d95b23e56ea602bd925a8483e05c86960f766b3da"
+    },
+    {
+      "path": "source/manifest.json",
+      "bytes": 2184,
+      "sha256": "6c5bbf22ea327b5ae02c6c95977d836215eb7ace6918a81b5e7c60791551b017"
+    },
+    {
+      "path": "source/packages/polaris-dossier/src/cli.test.ts.code.txt",
+      "bytes": 9418,
+      "sha256": "71d06af4ab301ccccbce44d0e56c6c20b38538f1232d3cc13fa5d2cc46533ed1"
+    },
+    {
+      "path": "source/resolved-test-lists.patch",
+      "bytes": 1633,
+      "sha256": "4fbc0c32975f10de788b73208a4ffc3ff8588947c12ba56f2094a2f303e85540"
+    },
+    {
+      "path": "source/vitest.tiers.ts.code.txt",
+      "bytes": 15770,
+      "sha256": "4636fa1b92d12424beb8e5f696d268f94d6595632de76ab8ba91bf7796df4f55"
+    }
+  ]
+}

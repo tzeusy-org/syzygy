@@ -1,0 +1,5 @@
+[Observed] A-252 source mergecb0be2a72fabf8a7a4f97668d2c3eb5fb3b57cb7 integrates main1c50743aa561e1e82dd7f327cfb36b7999e15c7c after that new main change blocked PR839 CI. Of nine incoming paths, seven match main exactly. Two test-list conflicts preserve the F3 dynamic network-import/connection-site sweep and all prior tier assignments, adding only the three incoming benchmark source names and one integration test entry. No app renderer bytes change.
+
+[Observed] Fresh source review PASS is retained verbatim. Clean exact-source verification passes typecheck, tier check (436 files:262unit/142integration/29e2e/3live;425root+11system),209CLI tests and seven benchmark tests. Source hashes, parent commits, scoped patch and complete owning JSON/logs are retained. No fixture or assertion was dropped to resolve the conflict.
+
+[Unknown] Final unfiltered full-suite/live-battery, native recovery, final static render and hosted functional/420s timing acceptance. This source integration is ordinary agent adoption and creates no owner gate. Revert git revert -m 1 cb0be2a72fabf8a7a4f97668d2c3eb5fb3b57cb7; evidence remains.
