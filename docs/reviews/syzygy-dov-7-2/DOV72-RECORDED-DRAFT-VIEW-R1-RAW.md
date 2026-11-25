@@ -1,0 +1,21 @@
+# REVISE
+
+Independent CC-REV-2 review of `f431c6e1b2cee84a1a99f4cb6e1e9c9443bdda45`, tree `bef969fb52c79105c846df6c71a5e52460caeedf`, on protected `a9fe89c0d20dab58de29483d1a3c7a717b79fb6e` for `syzygy-dov.7.2`. The sole changed path is `docs/design/pwb-recorded-generation-draft-view.md`, SHA-256 `8cab1aaef04c6d158d18f635bfcc798bf7fb55cc3aa850426c150738bc132739`.
+
+## F1. Keep the adopted refusal and readiness obligations
+
+[Observed] Proposed lines 65–76 prescribe exactly two members for the over-ceiling refusal. The edge control at line 97 checks boundary service and the absence of draft bytes. A 503 with only `served: "nothing"` and `reason: "response-limit-breached"` while readiness remains true passes that control. The effective PWB-REQ-006 final-output boundary requires a bounded typed failure carrying evaluation identity, limit identity, declared and observed values and population counts. PWB-REQ-021 requires readiness false on a PWB-REQ-006 breach. The exact installed adapter registry repeats both commitments. An independently constructed multi-byte synthetic body exercises 65,536 and 65,537 final UTF-8 bytes. The two-field refusal is insufficient at the second boundary.
+
+[Inferred] Write the overflow contract and matched oracle to retain the required closed safe envelope and false readiness. Establish which already recorded safe identities and counts can bind that envelope. Keep the current absent-proof gate if the necessary binding is unavailable. Any proposed exception or different readiness impact needs an explicit reviewed normative change covering the affected requirements and registry. The failure must carry no editorial or source text, and arbitrary run metadata remains outside the closed envelope.
+
+## F2. Define eligibility for section dispositions
+
+[Observed] Proposed lines 38–42 copy every recorded section title and paragraph. The independent oracle at line 93 never varies section disposition. The exact protected draft schema requires paragraphs even in structurally valid `unresolved` and `omitted` sections. I ran the actual `validateDraftRecord` and `validateStage` author and edit validators against one optional section and changed only its disposition from `produced` to `unresolved` and then `omitted`. All three validators accepted all three records and preserved the same sourced paragraph. The existing preview’s body branch is explicitly limited to `produced` sections (`apps/three-surface-poc/src/polaris-generation/draft-preview.ts:102–108`). The proposed enumeration would include the other two paragraph bodies as ordinary editorial text even though all source references and the successful stage stay identical.
+
+[Inferred] Specify which section dispositions may supply title and body rows, or refuse the projection for an ineligible record. Preserve the existing disposition boundary unless the semantic change explicitly seeks to expand it. Give the independent oracle a positive produced case and same-record unresolved and omitted controls, with deliberate heading behavior. This concerns the proposed route eligibility and does not assert a currently served disclosure.
+
+## Preserved scope
+
+[Observed] The predecessor quote occurs exactly once in the pinned specification and its digest matches. Both changed-path methods identify the same single added document. The exact route spelling sweep over 926 tracked application, package and script paths identifies only a historical act recording citation. Signed implementation direction lines 367–379 and the machine-view act reserve record fields, the source relationship and dedicated ceiling before the route can proceed. The candidate retains the machine credential, same-observing-project boundary, source/anchor non-recovery, no new output channel or provider call, and the distinct recorded-artifact and screening proof gaps. It adds no runtime or registry bytes and exercises no real run. Adoption, implementation and owner-class choices remain separately gated.
+
+[Observed] Independent replay SHA-256 `0c3c104ae8d0cd0b7af2c0e4b3b71d6e850671b85491758f86aadc3d6740a28f`. Exact synthetic validator control SHA-256 `989e18bf7272d50f444ed5561562fcf7ddcc6434de4f81ec0a127ca270e58d17` and result SHA-256 `564209281e382f02aa1573bb480f10b94b9c755e89c3906a30058b080d54c3ee`.
