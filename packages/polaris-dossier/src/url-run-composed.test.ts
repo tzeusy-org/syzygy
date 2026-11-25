@@ -220,8 +220,12 @@ function scripted(role: string, calls: readonly (ScriptCall | (() => ScriptCall 
 
 let runtime: UrlRuntime;
 const cleanup: (() => Promise<unknown>)[] = [];
+let nativeCleanupTiming: { afterEachStartedMs?: number; failureStopStartedMs?: number } | undefined;
 afterAll(async () => { if (process.env['SYZYGY_COMPOSED_RETAIN'] === undefined) await fs.rm(recoveryHost.root, { recursive: true, force: true }); });
 afterEach(async () => {
+  const cleanupTiming = nativeCleanupTiming;
+  nativeCleanupTiming = undefined;
+  if (cleanupTiming !== undefined) cleanupTiming.afterEachStartedMs ??= performance.now();
   for (const close of cleanup.splice(0).reverse()) await close();
   provider.clear();
   relayRoles.length = 0;
@@ -1801,7 +1805,8 @@ async function observeDesignRun(run: string, traceInference = false) {
     }, () => {});
   }, { timing: designSetup, clock });
 
-  return () => ({ connectionCount, transportCounts, connections, refusals, inspectedLaunches, samples,
+  return () => ({ began, connectionCount, transportCounts: { ...transportCounts },
+    connections: connections.map(snapshotConnection), refusals, inspectedLaunches, samples,
     latestSample: snapshotSample(latestSample), lastConfirmed, firstSampleRefusal, terminal, designSetup, designDelivery,
     launcherInspection: finishedInspection?.(),
     roleInspections: roleInspections(),
@@ -2415,6 +2420,9 @@ describe('composed URL run with actual role processes', () => {
     let resumeAuditSetup: ResumeAuditSetup | undefined;
     let eligiblePhase = 'fixture';
     let firstRuntimeFailure: { reason: string; atMs: number } | undefined;
+    const cleanupTiming: NonNullable<typeof nativeCleanupTiming> = {};
+    if (resumeAfterStop) nativeCleanupTiming = cleanupTiming;
+    let onTestFinishedEnteredMs: number | undefined;
     const controlTrace = stoppingCut ? observeControlCallbacks() : undefined;
     const auditTrace = stoppingCut ? observeBaseAuditCallbacks() : undefined;
     if (auditTrace !== undefined) {
@@ -2431,22 +2439,70 @@ describe('composed URL run with actual role processes', () => {
       const marker = eligibleStop ? 'owned eligible stop' : 'owned interrupted stop';
       const nativeSnapshot = (stage: 'pending' | 'finished', trace: ReturnType<NonNullable<typeof resumeDiagnostic>> | undefined,
         audit: ReturnType<NonNullable<typeof auditTrace>['summary']> | undefined): void => {
+        const observedMs = performance.now();
         const inference = trace?.inference;
+        type Step = NonNullable<typeof inference>['inferenceSteps'][number];
+        type Append = NonNullable<typeof trace>['orderedAudit']['latestAppend'];
+        type Phase = Step['boundaries'][number] | Step['relay'][number]
+          | NonNullable<Step['productPreparation']>['stages'][number] | NonNullable<Append>['stages'][number];
+        const stages = (entries: readonly Phase[], maximum: number) => {
+          const retained = entries.slice(0, maximum);
+          const phases = new Map<Phase['phase'], { count: number; pending: number;
+            refused: number; rejected: number; ms: number; maxMs: number }>();
+          for (const { phase, timing } of retained) {
+            let summary = phases.get(phase);
+            if (summary === undefined) {
+              summary = { count: 0, pending: 0, refused: 0, rejected: 0, ms: 0, maxMs: 0 };
+              phases.set(phase, summary);
+            }
+            summary.count++;
+            if (timing.settledMs === undefined) summary.pending++;
+            if (timing.outcome === 'refused') summary.refused++;
+            if (timing.outcome === 'rejected') summary.rejected++;
+            if (timing.settledMs !== undefined) {
+              const elapsed = Math.max(0, timing.settledMs - timing.startedMs);
+              summary.ms += elapsed;
+              summary.maxMs = Math.max(summary.maxMs, elapsed);
+            }
+          }
+          return { count: entries.length, retained: retained.length, omitted: entries.length - retained.length,
+            phases: Object.fromEntries(phases) };
+        };
+        const current = (value: Step['productPreparation']) => {
+          if (value === undefined) return undefined;
+          const latestLease = value.stages.slice(0, 64).filter(stage => stage.lease !== undefined).at(-1);
+          return { startedMs: value.startedMs, settledMs: value.settledMs, outcome: value.outcome,
+            lease: latestLease?.lease, leaseRemainingMs: latestLease?.leaseRemainingMs, stages: stages(value.stages, 64) };
+        };
+        const cost = (value: Step) => ({ ordinal: value.ordinal, inclusiveDurationsMayOverlap: true,
+          productPreparation: current(value.productPreparation), preparedProductCurrent: current(value.preparedProductCurrent),
+          controllerCurrent: current(value.controllerCurrent), boundaries: stages(value.boundaries, 12), relay: stages(value.relay, 12) });
         const step = (value: NonNullable<typeof inference>['inferenceSteps'][number] | undefined) => value === undefined ? undefined
           : { ordinal: value.ordinal, mediate: value.mediate, effect: value.effect, audit: value.audit,
             firstEffectGuardRefusalMs: value.firstEffectGuardRefusalMs, screening: value.screening };
-        const append = (value: NonNullable<typeof trace>['orderedAudit']['latestAppend']) => value === undefined ? undefined
-          : { kind: value.kind, timing: value.timing };
+        const append = (value: Append) => value === undefined ? undefined
+          : { kind: value.kind, timing: { ...value.timing }, inclusiveDurationsMayOverlap: true,
+            stages: stages(value.stages, 96),
+            attemptCurrent: value.attemptCurrent === undefined ? undefined : {
+              calls: value.attemptCurrent.calls, retained: value.attemptCurrent.entries.length,
+              omitted: Math.max(0, value.attemptCurrent.calls - value.attemptCurrent.entries.length),
+              projected: Math.min(1, value.attemptCurrent.entries.length),
+              projectionOmitted: Math.max(0, value.attemptCurrent.entries.length - 1),
+              latest: value.attemptCurrent.entries.slice(-1).map(current),
+            } };
         // A separate compact line keeps the first refusal and screen outcomes
         // visible even when the existing detailed snapshot hits a log-line cap.
-        console.error(`${marker} native ${stage}`, JSON.stringify({ scenario, phase: eligiblePhase,
+        console.error(`${marker} native ${stage}`, JSON.stringify({ scenario, phase: eligiblePhase, observedMs, observerBeganMs: trace?.began,
+          onTestFinishedEnteredMs, cleanupTiming: { ...cleanupTiming },
+          connectionCount: trace?.connectionCount, transportCounts: trace?.transportCounts, connections: trace?.connections,
           source: resumeDiagnostic === undefined ? initialDiagnostic === undefined ? 'unobserved' : 'initial' : 'resumed',
           resumeStoreRefusals, firstRuntimeFailure, auditFirstRefusal: audit?.firstRefusal,
           samples: trace?.samples, latestSample: trace?.latestSample, lastConfirmed: trace?.lastConfirmed,
           firstSampleRefusal: trace?.firstSampleRefusal, terminal: trace?.terminal,
           launcherInspection: trace?.launcherInspection, roleInspections: trace?.roleInspections,
           inference: inference === undefined ? undefined : { count: inference.inferenceCount,
-            firstRefused: step(inference.firstRefusedInference), steps: inference.inferenceSteps.slice(-12).map(step) },
+            firstRefused: step(inference.firstRefusedInference), steps: inference.inferenceSteps.slice(-12).map(step),
+            latestCosts: inference.inferenceSteps.slice(-2).map(cost) },
           orderedAudit: trace === undefined ? undefined : { prepared: append(trace.orderedAudit.preparedAppend),
             latest: append(trace.orderedAudit.latestAppend), firstRefused: append(trace.orderedAudit.firstRefusedAppend) },
           broker: trace?.broker, mcpIngress: trace?.mcpIngress }));
@@ -2465,6 +2521,7 @@ describe('composed URL run with actual role processes', () => {
         } catch { /* Metadata observation cannot change the test or product outcome. */ }
       }, 340_000).unref();
       onTestFinished(() => {
+        onTestFinishedEnteredMs = performance.now();
         clearTimeout(diagnostic);
         // Existing in-memory metadata only: no extra authority checks or IO.
         try {
@@ -3350,6 +3407,7 @@ describe('composed URL run with actual role processes', () => {
           bootstrap: resumeBootstrap, resumePreparations, resumeProducts: resumeProducts?.summary(), coldFinal: coldFinal?.summary(), latestStoreSteps: resumeStoreSteps.slice(-2) }));
       }
       eligiblePhase = `${eligiblePhase}-failure-cleanup`;
+      cleanupTiming.failureStopStartedMs ??= performance.now();
       const stopped = await controller.stop(); await loop.catch(() => {});
       const initialDesignAudit = eligibleStop && resumeChecks.length === 0
         ? await readDesignAuditKinds(path.join(f.hidden, 'sessions-design.jsonl')) : undefined;
