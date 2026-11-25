@@ -110,40 +110,125 @@ function knownStylesheet(node: ts.Expression, isToken: (value: ts.Expression) =>
     && ts.isArrowFunction(callback) && ts.isTemplateExpression(callback.body) && knownStylesheet(callback.body, isToken);
 }
 
-function joinsSelectors(node: ts.Expression, name: string, separator: string): boolean {
+function joinedSelectors(node: ts.Expression, name: string, separator: string): ts.Identifier | undefined {
   if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)
       || node.expression.name.text !== 'join' || !ts.isIdentifier(node.expression.expression)
-      || node.expression.expression.text !== name || node.arguments.length !== 1) return false;
+      || node.expression.expression.text !== name || node.arguments.length !== 1) return;
   const argument = node.arguments[0]!;
-  return ts.isStringLiteralLike(argument) && argument.text === separator;
+  if (ts.isStringLiteralLike(argument) && argument.text === separator) return node.expression.expression;
 }
 
-function optionalRangeSelectors(node: ts.Expression): boolean {
-  if (!ts.isConditionalExpression(node) || !ts.isStringLiteralLike(node.whenTrue) || node.whenTrue.text !== '') return false;
+function optionalRangeSelectors(node: ts.Expression): ts.Identifier | undefined {
+  if (!ts.isConditionalExpression(node) || !ts.isStringLiteralLike(node.whenTrue) || node.whenTrue.text !== '') return;
   const template = node.whenFalse;
-  if (!ts.isTemplateExpression(template) || template.head.text !== ',' || template.templateSpans.length !== 1) return false;
+  if (!ts.isTemplateExpression(template) || template.head.text !== ',' || template.templateSpans.length !== 1) return;
   const span = template.templateSpans[0]!;
-  return span.literal.text === '' && joinsSelectors(span.expression, 'rules', ',');
+  if (span.literal.text === '') return joinedSelectors(span.expression, 'rules', ',');
 }
 
-function knownSourceLeafStyles(node: ts.Expression, isToken: (value: ts.Expression) => boolean): boolean {
+// Each selector carrier starts empty. Its only writes are the existing
+// citation-position producers, which cannot supply arbitrary declaration text.
+const sourceRules = [
+  'rules.length === 0',
+  "rules.join(',')",
+  'if (numbered !== undefined)\n    for (const rule of numbered.styles)\n        rules.push(rule);',
+];
+const sourceContinuations = [
+  "continuationRules.join('')",
+  'continuationRules.push(`#exact-text:has([id="${target}"]:target)>.source-continuation[data-citation-target="${target}"]{display:block}`)',
+];
+const sourceLineRules = [
+  'return { markup, styles };',
+  'styles.push(`#exact-text:has([id="${target}"]:target) [data-quote-start="${first.start}"]>.cited-span:nth-child(n+${from + 1}):nth-child(-n+${through})`)',
+];
+const printSyntax = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed });
+
+function syntax(node: ts.Node): string {
+  return printSyntax.printNode(ts.EmitHint.Unspecified, node, node.getSourceFile());
+}
+
+function sourceRangeFeed(iterator: ts.Expression, checker: ts.TypeChecker): boolean {
+  if (!ts.isPropertyAccessExpression(iterator) || !ts.isIdentifier(iterator.expression)) return false;
+  const range = checker.getSymbolAtLocation(iterator.expression)?.valueDeclaration;
+  if (range === undefined || !ts.isVariableDeclaration(range) || range.initializer === undefined
+      || !ts.isConditionalExpression(range.initializer) || !ts.isCallExpression(range.initializer.whenFalse)
+      || !ts.isIdentifier(range.initializer.whenFalse.expression)) return false;
+  const renderer = checker.getSymbolAtLocation(range.initializer.whenFalse.expression)?.declarations?.[0];
+  if (renderer === undefined || !ts.isImportSpecifier(renderer)) return false;
+  const imported = renderer.parent.parent.parent;
+  return (renderer.propertyName ?? renderer.name).text === 'drawSourceLines'
+    && ts.isImportDeclaration(imported) && ts.isStringLiteral(imported.moduleSpecifier)
+    && imported.moduleSpecifier.text === './dossier-source-lines.js'
+    && syntax(range) === 'numbered = rows === undefined ? undefined : drawSourceLines(rows, citedLines.get(source.sourceId), escape)';
+}
+
+function knownSelectorArray(
+  identifier: ts.Identifier, checker: ts.TypeChecker, expectedUses: readonly string[],
+): boolean {
+  const symbol = checker.getSymbolAtLocation(identifier);
+  const declaration = symbol?.valueDeclaration;
+  if (declaration === undefined || !ts.isVariableDeclaration(declaration)
+      || (declaration.parent.flags & ts.NodeFlags.Const) === 0
+      || declaration.initializer === undefined || !ts.isArrayLiteralExpression(declaration.initializer)
+      || declaration.initializer.elements.length !== 0) return false;
+
+  const name = declaration.name;
+  const observedUses: string[] = [];
+  function visit(node: ts.Node): void {
+    if (ts.isIdentifier(node) && node !== name) {
+      const parent = node.parent;
+      const binding = ts.isShorthandPropertyAssignment(parent)
+        ? checker.getShorthandAssignmentValueSymbol(parent) : checker.getSymbolAtLocation(node);
+      if (binding === symbol) {
+        let context = parent;
+        if (ts.isPropertyAccessExpression(parent) || ts.isShorthandPropertyAssignment(parent)) context = parent.parent;
+        if (ts.isObjectLiteralExpression(context) && ts.isReturnStatement(context.parent)) context = context.parent;
+        if (node.text === 'rules' && ts.isCallExpression(context) && ts.isPropertyAccessExpression(context.expression)
+            && context.expression.name.text === 'push' && ts.isExpressionStatement(context.parent)
+            && ts.isForOfStatement(context.parent.parent) && ts.isIfStatement(context.parent.parent.parent)) {
+          if (!sourceRangeFeed(context.parent.parent.expression, checker)) {
+            observedUses.push('unrecognized citation range carrier');
+          }
+          context = context.parent.parent.parent;
+        }
+        observedUses.push(syntax(context));
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(declaration.getSourceFile());
+  return observedUses.length === expectedUses.length && expectedUses.every(use => observedUses.includes(use));
+}
+
+function knownSourceLeafStyles(
+  node: ts.Expression, isToken: (value: ts.Expression) => boolean, checker: ts.TypeChecker,
+): boolean {
   if (!ts.isConditionalExpression(node) || !ts.isStringLiteralLike(node.whenTrue) || node.whenTrue.text !== '') return false;
   const stylesheet = node.whenFalse;
   if (!joinedString(stylesheet) || !ts.isIdentifier(stylesheet.left) || stylesheet.left.text !== 'SOURCE_LINES_CSS'
       || !ts.isTemplateExpression(stylesheet.right)) return false;
   // The range selectors and continuation rules carry the source leaf's
   // existing line identities through the otherwise static stylesheet.
-  return stylesheet.right.templateSpans.every(({ expression }) => isToken(expression)
-    || optionalRangeSelectors(expression) || joinsSelectors(expression, 'continuationRules', ''));
+  return stylesheet.right.templateSpans.every(({ expression }) => {
+    if (isToken(expression)) return true;
+    const rules = optionalRangeSelectors(expression);
+    if (rules !== undefined) return knownSelectorArray(rules, checker, sourceRules);
+    const continuations = joinedSelectors(expression, 'continuationRules', '');
+    return continuations !== undefined && knownSelectorArray(continuations, checker, sourceContinuations);
+  });
 }
 
 function selectedStylesheet(
-  node: ts.VariableDeclaration, isToken: (value: ts.Expression) => boolean, filename: string,
+  node: ts.VariableDeclaration, isToken: (value: ts.Expression) => boolean, checker: ts.TypeChecker,
 ): boolean {
   if (!ts.isIdentifier(node.name) || node.initializer === undefined) return true;
   const name = node.name.text;
   const value = node.initializer;
-  if (filename === 'dossier-site.ts' && name === 'styles') return knownSourceLeafStyles(value, isToken);
+  if (name === 'styles') {
+    const filename = node.getSourceFile().fileName;
+    if (filename === 'dossier-site.ts') return knownSourceLeafStyles(value, isToken, checker);
+    if (filename === 'dossier-source-lines.ts') return knownSelectorArray(node.name, checker, sourceLineRules);
+  }
   if (name === 'LOCAL_REFLOW_CSS') {
     // The literal per-page table contributes only its stylesheet column.
     if (!ts.isNewExpression(value) || !ts.isIdentifier(value.expression) || value.expression.text !== 'Map'
@@ -168,7 +253,7 @@ function computedFigureWidth(expression: ts.Expression, isToken: (value: ts.Expr
   return ts.isPropertyAccessExpression(widths) && widths.name.text === 'figureFormWidths' && isToken(widths);
 }
 
-function tokenBinding(file: ts.SourceFile): (expression: ts.Expression) => boolean {
+function tokenBinding(file: ts.SourceFile, checker: ts.TypeChecker): (expression: ts.Expression) => boolean {
   const importName = file.statements.flatMap(statement => {
     if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)
         || statement.moduleSpecifier.text !== './dossier-style-tokens.js' || statement.importClause?.isTypeOnly) return [];
@@ -177,12 +262,6 @@ function tokenBinding(file: ts.SourceFile): (expression: ts.Expression) => boole
   }).find(element => !element.isTypeOnly && (element.propertyName ?? element.name).text === 'DOSSIER_STYLE');
   if (importName === undefined) return () => false;
 
-  // Only bind the source under inspection. No library or dependency needs to
-  // be loaded to distinguish the exact import from a shadowing parameter.
-  const options = { noLib: true, noResolve: true, types: [] };
-  const host = ts.createCompilerHost(options);
-  host.getSourceFile = filename => filename === file.fileName ? file : undefined;
-  const checker = ts.createProgram([file.fileName], options, host).getTypeChecker();
   const binding = checker.getSymbolAtLocation(importName.name);
   return expression => {
     if (binding === undefined || !ts.isPropertyAccessExpression(expression)) return false;
@@ -194,7 +273,13 @@ function tokenBinding(file: ts.SourceFile): (expression: ts.Expression) => boole
 
 function rawStyles(source: string, filename = 'dossier-site.ts'): readonly string[] {
   const file = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true);
-  const isToken = tokenBinding(file);
+  // Resolve lexical bindings inside this one inspected file. The guard never
+  // loads dependencies or the source of imported modules.
+  const options = { noLib: true, noResolve: true, types: [] };
+  const host = ts.createCompilerHost(options);
+  host.getSourceFile = requested => requested === filename ? file : undefined;
+  const checker = ts.createProgram([filename], options, host).getTypeChecker();
+  const isToken = tokenBinding(file, checker);
   const problems: string[] = [];
   function scan(text: string, expressions: readonly ts.Expression[] = []): void {
     const authorValue = (value: string, context: string): string => {
@@ -229,7 +314,7 @@ function rawStyles(source: string, filename = 'dossier-site.ts'): readonly strin
   }
 
   function visit(node: ts.Node): void {
-    if (ts.isVariableDeclaration(node) && !selectedStylesheet(node, isToken, filename)) {
+    if (ts.isVariableDeclaration(node) && !selectedStylesheet(node, isToken, checker)) {
       problems.push(`unsupported stylesheet assembly: ${node.name.getText(file)}`);
     }
     if (ts.isTemplateExpression(node) || ts.isStringLiteralLike(node) || joinedString(node) || (ts.isExpression(node) && stringParts(node) !== undefined)) {
