@@ -1,0 +1,189 @@
+{
+  "sourceCommit": "969cf2079e53cfdc95a954cb6654fbcc106ac69c",
+  "candidateBindingsSha256": "82bd8bbede08ea49baaf158659c60eaf31b72f8f8308f8cd58fb2cfe0fcd822a",
+  "reviewVerdict": "PASS",
+  "rawReviewSha256": "5f749c90f29b67d70119741a1325beed94903d6e2f6082748b78541002cf134e",
+  "focused": {
+    "baseCommit": "4123648586b2ed6ea5783f2f9781c30f3d38c36f",
+    "candidateBindingSha256": "82bd8bbede08ea49baaf158659c60eaf31b72f8f8308f8cd58fb2cfe0fcd822a",
+    "scope": "frozen five-file overlay in clean-base clone; no native/fullgate claim",
+    "tmpdir": "/home/orca/.tmp/p-r6_rpdcl",
+    "commands": [
+      {
+        "name": "typecheck",
+        "command": [
+          "npm",
+          "run",
+          "typecheck",
+          "--",
+          "--pretty",
+          "false"
+        ],
+        "exit": 0,
+        "elapsedSeconds": 22.44073892297456,
+        "logSha256": "c60442528cbded773cc0eed9660ceb12e8d32164711bf04fab32e3235727b16d"
+      },
+      {
+        "name": "poll-unit",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-dossier/src/url-ordered-design-screen-poll.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-screen-poll-focused-R1/poll-unit.json"
+        ],
+        "exit": 0,
+        "elapsedSeconds": 1.4769766190438531,
+        "logSha256": "7894138f5b45ccef575a2d48c39f96f40ca7342f34bb585856cdf5b47be82f11",
+        "population": {
+          "numTotalTests": 4,
+          "numPassedTests": 4,
+          "numFailedTests": 0,
+          "numPendingTests": 0,
+          "numTotalTestSuites": 2,
+          "numPassedTestSuites": 2
+        }
+      },
+      {
+        "name": "screen-integration",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--project",
+          "integration",
+          "packages/polaris-dossier/src/url-ordered-design-screen.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-screen-poll-focused-R1/screen-integration.json"
+        ],
+        "exit": 0,
+        "elapsedSeconds": 9.786460398987401,
+        "logSha256": "28cae05036c4ec9e9f6afab2887be88a5309faaa7ad7b52d1535c9e07148808c",
+        "population": {
+          "numTotalTests": 11,
+          "numPassedTests": 11,
+          "numFailedTests": 0,
+          "numPendingTests": 0,
+          "numTotalTestSuites": 2,
+          "numPassedTestSuites": 2
+        }
+      },
+      {
+        "name": "inspection-integration",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--project",
+          "integration",
+          "packages/polaris-dossier/src/session-launch.test.ts",
+          "--testNamePattern=keeps the 200ms cadence|keeps ordered inspection authority and resource deadlines distinct|joins independent inspection authority with the live census",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/f3-native-admission-fixes/ordered-screen-poll-focused-R1/inspection-integration.json"
+        ],
+        "exit": 0,
+        "elapsedSeconds": 67.13275545398938,
+        "logSha256": "493f1210c97cbf996fd9f79fd9bb007096543aa15c2238c2e71440d620674d5a",
+        "population": {
+          "numTotalTests": 58,
+          "numPassedTests": 13,
+          "numFailedTests": 0,
+          "numPendingTests": 45,
+          "numTotalTestSuites": 2,
+          "numPassedTestSuites": 2
+        }
+      }
+    ]
+  },
+  "mutationCases": [
+    {
+      "id": "breathing-gap-too-short",
+      "predicate": "A nineteen-millisecond gap must fail the stated twenty-millisecond cadence while retaining no pending timer during a running check.",
+      "fullName": "ordered screen authority polling leaves twenty milliseconds after a slow full check and lets pending census work settle",
+      "exit": 1,
+      "elapsedSeconds": 1.1666566189960577,
+      "population": {
+        "numTotalTests": 4,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 3
+      }
+    },
+    {
+      "id": "original-interval",
+      "predicate": "Structural no-outstanding-poll assertion may reject before gap; do not claim native causality.",
+      "fullName": "ordered screen authority polling leaves twenty milliseconds after a slow full check and lets pending census work settle",
+      "exit": 1,
+      "elapsedSeconds": 1.06652682996355,
+      "population": {
+        "numTotalTests": 4,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 3
+      }
+    },
+    {
+      "id": "close-no-cancel",
+      "predicate": "Cancellation prevents callbacks after close.",
+      "fullName": "ordered screen authority polling cleans up a child closing before-check without a later authority callback",
+      "exit": 1,
+      "elapsedSeconds": 1.0663307610084303,
+      "population": {
+        "numTotalTests": 4,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 3
+      }
+    },
+    {
+      "id": "reschedule-after-withdrawal",
+      "predicate": "No polling after a refused full check.",
+      "fullName": "ordered screen authority polling stops on a thrown fresh authority check without scheduling another poll",
+      "exit": 1,
+      "elapsedSeconds": 1.0665157610201277,
+      "population": {
+        "numTotalTests": 4,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 3
+      }
+    },
+    {
+      "id": "observer-errors-escape",
+      "predicate": "Observer exception must not replace the original successful result.",
+      "fullName": "preemptible ordered design screen reissues the exact profile and plan and returns request identities and response observations over a private pipe",
+      "exit": 1,
+      "elapsedSeconds": 3.62199849402532,
+      "population": {
+        "numTotalTests": 11,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 10
+      }
+    },
+    {
+      "id": "content-collapsed",
+      "predicate": "Execution and content refusal are independent diagnostic facts.",
+      "fullName": "preemptible ordered design screen keeps private no-path secret screening and refuses changed policy, profile, manifest, image and currentness",
+      "exit": 1,
+      "elapsedSeconds": 1.9692140169790946,
+      "population": {
+        "numTotalTests": 11,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 10
+      }
+    }
+  ],
+  "payloadFiles": 64,
+  "payloadManifestSha256": "80bfa29b73557f612f7da171907d842e9f9781c6ce3975130eb491c4077dfd2e",
+  "archiveSha256": "f70ec3437b91de8d82e847933e7d815ff03adaa4e2f5531fe873c80c9f1f3436",
+  "testsDelta": "+4 ~3 -0",
+  "nativeRecovery": "Unknown; original genuine rerun follows adoption"
+}

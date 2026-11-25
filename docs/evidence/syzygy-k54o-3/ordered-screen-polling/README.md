@@ -1,0 +1,13 @@
+# Ordered screening authority polling
+
+[Observed] The bound source replaces the overdue interval with a poll scheduled20ms after each full synchronous authority check. It retains the original guards, independent child wall timer, CPU/memory/output bounds, sandbox and final release checks. The resource census remains2000ms. A trusted optional observer emits one frozen metadata snapshot after cleanup; the existing composed trace distinguishes runner execution from content refusal. Launcher samples retain their already captured monotonic start. This is an agent adoption under D10; no secret predicate or owner-class authority changes.
+
+[Observed] Fresh independent source review returned PASS. On a clean-base clone with the exact reviewed five-file overlay, typecheck passes; all4 hermetic polling cases and all11 screen integration cases pass;13 selected launcher-inspection cases pass with45 excluded. Those source/test bytes match the adopted source commit. This is focused verification, not an exact-commit full battery result. Tests: +4 ~3 -0.
+
+[Observed] Six intentional source mutants fail in their one selected case, with exact fragments and denominators retained. The19ms gap mutant reaches starts20/239 and fails the required gap boundary. The predecessor interval fails through the unexpected-refusal path; source points to the structural pending-timer assertion before the later gap assertions. That predecessor outcome alone is not gap-specific or native evidence. Other mutants detect callbacks after close, rescheduling after withdrawal, escaping observer exceptions and collapsed execution/content metadata. Candidate bytes were restored and verified after mutations.
+
+[Observed] The retained original f9 interrupted run failed after374.710s, after nine accepted resumed mediations. Its positively identified low-level refusal is census sample358 at2203.984ms under2000ms. The old screen wrapper did not retain spawn/poll or execution/content separation. Exact first-cause ordering remains Unknown.
+
+[Inferred] Full authority checks costing roughly182–196ms may make a20ms interval compete with pending census work. The scheduling repair is a falsifiable mitigation, not established attribution. [Unknown] Genuine interrupted recovery, final eligible recovery, full canonical verification, exact final rendering and hosted420-second acceptance.
+
+The archive retains baseline/intermediate/final bytes, separate patches, governing excerpts, verbatim diagnosis and fresh review, original failing run, focused JSON/logs, six mutants and both harnesses. Binding.json names the source and every payload digest is in the archived manifest.
