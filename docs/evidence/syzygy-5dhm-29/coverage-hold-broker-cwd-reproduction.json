@@ -1,0 +1,15 @@
+{
+  "supervisorCwd": "/home/orca/.tmp/l4covr2.JpZGUO/repo",
+  "clientCwd": "/home/orca/.tmp/l4covr2.JpZGUO/invented-run",
+  "actual": {
+    "code": 1,
+    "stdout": "",
+    "stderr": "syzygy (launched run): this session may run check only on its run, /home/orca/.tmp/l4covr2.JpZGUO/invented-run\n"
+  },
+  "control": {
+    "code": 0,
+    "stdout": "synthetic runner accepted target\n",
+    "stderr": ""
+  },
+  "handlerCalls": 1
+}

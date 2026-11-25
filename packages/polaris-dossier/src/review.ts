@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
+import { coverageRefusal, type CoverageRevisionPair } from './coverage-hold.js';
 import { isoOf } from './iso-of.js';
 import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
 import { declaredSessionId } from './check.js';
@@ -44,7 +45,7 @@ export { validateVerdict } from './review-verdict.js';
  * of record by building the packet from the pages it has just rendered, so a render that changes anything outside the region retires the
  * review while one that changes only the region keeps it counted. */
 
-type ReviewPacketRefusal = { readonly command: 'review-packet'; readonly outcome: 'refused'; readonly stage: string; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[]; readonly disclosures: readonly string[] };
+type ReviewPacketRefusal = { readonly command: 'review-packet'; readonly outcome: 'refused'; readonly stage: string; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[]; readonly coverage?: CoverageRevisionPair; readonly disclosures: readonly string[] };
 /** One outcome per packet kind: two `ok: true` variants, as before Outcome; one variant with a union report is wider (syzygy-bpyt.8.32). */
 export type ReviewPacketResult =
   | Outcome<{ readonly command: 'review-packet'; readonly outcome: 'built'; readonly run: string; readonly kind: 'fidelity'; readonly packetSha256: string; readonly directory: string; readonly draftRevision: number; readonly inventoryRevision: number; readonly spans: { readonly admitted: number; readonly excluded: number }; readonly label: 'Observed'; readonly disclosures: readonly string[] }, ReviewPacketRefusal>
@@ -74,6 +75,12 @@ export async function reviewPacket(runDir: string, request: { readonly kind: str
   }
   const built = await buildFidelityPacket(opened, deps);
   if (!built.ok) return refuse(built.stage, built.reason, undefined, opened.run);
+  // The review waits until every listed inventory entry has an outcome (version 2.28): nothing is written.
+  if (built.coverageHold !== undefined) {
+    const fields = coverageRefusal(built.coverageHold);
+    logStep(opened.run, 'review-packet', now, { outcome: 'refused', stage: fields.stage, reason: fields.reason });
+    return { ok: false, refusal: { command: 'review-packet', outcome: 'refused', ...fields, disclosures } };
+  }
   let directory: string;
   try { directory = writePacket(opened.run, 'fidelity', built); } catch (cause) { return refuse('write', `the packet could not be written (${errno(cause)})`, undefined, opened.run); }
   logStep(opened.run, 'review-packet', now, { outcome: 'built', kind: 'fidelity', packetSha256: built.sha256 });

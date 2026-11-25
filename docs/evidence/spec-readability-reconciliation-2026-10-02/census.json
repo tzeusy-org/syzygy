@@ -635,7 +635,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 548,
+      "scenarios": 554,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1284,7 +1284,13 @@
             "Supervised packet delivery uses only admitted MCP tools",
             "Review files read under their bounds",
             "Frozen verdict past its bound",
-            "Delivered packet read under its recorded size"
+            "Delivered packet read under its recorded size",
+            "Fidelity review waits for an entry without an outcome",
+            "The review proceeds once every entry has an outcome",
+            "Earlier drafts and withheld entries do not hold the review",
+            "The supervisor tells the author once",
+            "A failed author notice leaves the packet held",
+            "The bounded supervisor notice preserves the repair"
           ]
         },
         "REQ-polaris-generation-036": {
