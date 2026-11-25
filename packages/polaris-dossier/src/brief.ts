@@ -41,7 +41,8 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
+/** v20 (syzygy-fnry.18 AC4): brief v19 with terminology ID instructions in the understanding record.
+ * v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
  * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed. v17 and v18 are the numbers adopted version
  * 2.23 and the open version 2.24 give their briefs; neither is implemented here.
  * v16 (REQ-polaris-generation-034 version 2.20): brief v15 with schema v10 and the hero paragraph after relation types.
@@ -50,7 +51,7 @@ import { issuedBriefStatement } from './launch-statements.js';
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v19';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v20';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
 
 /** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.26). It carries no project
@@ -205,6 +206,8 @@ export function renderBrief(input: BriefInput): string {
     '## The understanding record',
     '',
     `Before the argument, write \`understanding\`: the subject's ${UNDERSTANDING_ITEMS.map((item) => `\`${item}\``).join(', ')}. Each holds at least one item. An item is \`inferred\`, with its statement, its scope and at least one citation, or \`unknown\`, with a reason from the list below and the citations you considered, if any; an item you cannot establish is an \`unknown\` entry, never left out. Syzygy checks each item as it checks a claim block and renders the record as your self-reported understanding, labelled Inferred; that you formed it before drafting the argument is your report.`,
+    '',
+    'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\'s `statement`. For example, use an unused `io` as the ID for "I/O" and write "I/O" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.',
     '',
     '## Voice',
     '',
