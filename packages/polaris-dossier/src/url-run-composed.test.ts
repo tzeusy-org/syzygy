@@ -923,7 +923,8 @@ function observeInitialOrdinarySend() {
   syncBuiltinESMExports();
 
   const capture = machinePeer.captureUrlMachinePeer;
-  const captureSpy = vi.spyOn(machinePeer, 'captureUrlMachinePeer').mockImplementation(options => {
+  const captureSpy = vi.spyOn(machinePeer, 'captureUrlMachinePeer');
+  captureSpy.mockImplementation(options => withoutObserverHistory(captureSpy, () => {
     const { role, kind } = options.context;
     if (role === 'design' || kind !== 'inference-bridge') return capture(options);
     let wrappedStore = stores.get(options.store);
@@ -947,9 +948,10 @@ function observeInitialOrdinarySend() {
       current: () => observeStage(role, 'peer-current', options.current, value => value === true),
       audit: event => observeStage(role, 'peer-audit', () => options.audit(event), () => true) }),
     peer => { if (peer !== null) peers.set(peer, role); }, () => {});
-  });
+  }));
   const mediate = machinePeer.mediateUrlMachinePeer;
-  const mediateSpy = vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect, preflight) => {
+  const mediateSpy = vi.spyOn(machinePeer, 'mediateUrlMachinePeer');
+  mediateSpy.mockImplementation((peer, operation, effect, preflight) => withoutObserverHistory(mediateSpy, () => {
     const role = peers.get(peer);
     if (role === undefined || operation !== 'inference-forward') return mediate(peer, operation, effect, preflight);
     const step: OrdinaryMediation = { role, startedMs: performance.now(), stages: [] };
@@ -973,7 +975,7 @@ function observeInitialOrdinarySend() {
       if (!requests.has(step) && store?.acquiredAt === undefined && store?.lastConflictAt !== undefined
         && !unassociatedLockRefusals.has(role)) unassociatedLockRefusals.set(role, step);
     });
-  });
+  }));
   for (const role of ['author', 'inventory', 'fidelity']) {
     let ordinal = 0;
     ordinaryRelayProbes.set(role, {
@@ -1528,14 +1530,15 @@ async function observeDesignRun(run: string, traceInference = false) {
     vi.spyOn(sessionPeer, 'captureKernelUnixPeerAsync').mockImplementation((...args) =>
       inferencePhase('kernel-peer', () => kernelPeer(...args), result => result !== null));
     const screen = orderedScreen.runOrderedDesignScreen;
-    vi.spyOn(orderedScreen, 'runOrderedDesignScreen').mockImplementation(input => {
+    const orderedScreenHistory = vi.spyOn(orderedScreen, 'runOrderedDesignScreen');
+  orderedScreenHistory.mockImplementation(input => withoutObserverHistory(orderedScreenHistory, () => {
       if (decisionScope.getStore() !== true) return screen(input);
       const step = inferenceScope.getStore(), observer = input.observeProgress;
       return relayPhase('screening-worker', () => screen({ ...input, observeProgress: progress => {
         if (step !== undefined) step.screening = { ...progress, observedMs: clock() };
         try { observer?.(progress); } catch { /* The retained metadata never changes a decision. */ }
       } }), result => result.ok && result.observation.outcome.result.ok);
-    });
+    }));
   }
 
   const firstBrokerInvocation = new AsyncLocalStorage<true>();
@@ -1631,7 +1634,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   });
 
   const mediatePeer = machinePeer.mediateUrlMachinePeer;
-  vi.spyOn(machinePeer, 'mediateUrlMachinePeer').mockImplementation((peer, operation, effect, preflight) => {
+  const designMediateHistory = vi.spyOn(machinePeer, 'mediateUrlMachinePeer');
+  designMediateHistory.mockImplementation((peer, operation, effect, preflight) => withoutObserverHistory(designMediateHistory, () => {
     if (traceInference && operation === 'inference-forward' && peerLinks.get(peer)?.kind === 'inference-bridge') {
       const step: InferenceStep = { ordinal: ++inferenceCount, mediate: { startedMs: clock() }, boundaries: [], relay: [] };
       if (inferenceSteps.length >= 12) inferenceSteps.splice(4, 1);
@@ -1657,7 +1661,7 @@ async function observeDesignRun(run: string, traceInference = false) {
     if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect, preflight);
     return brokerPhase('mediate-peer', () => mediatePeer(peer, operation, current =>
       brokerPhase('host-action', () => effect(current), () => true), preflight), result => result.ok);
-  });
+  }));
 
   const boundTransfer = orderedBounds.boundOrderedDesignTransfer;
   vi.spyOn(orderedBounds, 'boundOrderedDesignTransfer').mockImplementation(input =>
@@ -1719,7 +1723,8 @@ async function observeDesignRun(run: string, traceInference = false) {
   const mcpReads = { started: 0, data: 0, end: 0, pending: 0, refused: 0, rejected: 0 };
   let mcpReadStartedMs: number | undefined, mcpReadDataMs: number | undefined;
   let mcpReadEndMs: number | undefined, mcpReadRefusedMs: number | undefined;
-  vi.spyOn(machinePeer, 'captureUrlMachinePeer').mockImplementation(options => {
+  const designCaptureHistory = vi.spyOn(machinePeer, 'captureUrlMachinePeer');
+  designCaptureHistory.mockImplementation(options => withoutObserverHistory(designCaptureHistory, () => {
     if (options.context.role !== 'design') return capture(options);
     const connection = link(options.socket);
     connection.kind = options.context.kind;
@@ -1737,9 +1742,10 @@ async function observeDesignRun(run: string, traceInference = false) {
       if (value !== null && connection.kind === 'mcp-shim') firstMcpPeer ??= value;
       return value !== null;
     });
-  });
+  }));
   const readPeer = machinePeer.readUrlMachinePeer;
-  vi.spyOn(machinePeer, 'readUrlMachinePeer').mockImplementation(peer => {
+  const peerReadHistory = vi.spyOn(machinePeer, 'readUrlMachinePeer');
+  peerReadHistory.mockImplementation(peer => withoutObserverHistory(peerReadHistory, () => {
     if (peer !== firstMcpPeer) return readPeer(peer);
     mcpReads.started++;
     mcpReadStartedMs ??= clock();
@@ -1749,7 +1755,7 @@ async function observeDesignRun(run: string, traceInference = false) {
       else if (chunk.kind === 'data') mcpReadDataMs ??= clock();
       else if (chunk.kind === 'end') mcpReadEndMs ??= clock();
     }, () => { mcpReads.rejected++; mcpReadRefusedMs ??= clock(); });
-  });
+  }));
 
   const roleInspections = await observeRoleLaunches((prepare, input, remember) => {
     const authority = input.inspectionAuthority;
