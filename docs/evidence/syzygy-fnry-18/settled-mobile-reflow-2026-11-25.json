@@ -1,0 +1,555 @@
+{
+  "format": "syzygy-dossier-settled-mobile-reflow/1",
+  "scope": "syzygy-fnry.18 original operator-agent mobile and counted-review criteria, on synthetic dossiers at 390 by 844",
+  "source": {
+    "predecessor": "bb064295c160c7365d916eaf8a8cfd274914f516",
+    "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+    "tree": "a6a4450ffcc7b19508586a11aeb1c12aa4485440",
+    "changedBlobs": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": {
+        "predecessor": "b804bbd60902be8654ccd78c196c919854a80992",
+        "candidate": "b5e07623c01dd781545d2b37e0b9bf4534c12a8b"
+      },
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts": {
+        "predecessor": "6646da9f340e348f5c8691ca669dacfa2cef6ca1",
+        "candidate": "c8f43ed85123c84155776b2357cb4285c5075af4"
+      }
+    }
+  },
+  "appFixture": {
+    "htmlPages": 23,
+    "viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        1440,
+        844
+      ]
+    ],
+    "focusedCase": "fits every dossier page at 390 by 844 and shows both counted packet digests on Review",
+    "command": "npx vitest run --project e2e apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+    "browserTestsPassed": 3,
+    "browserReportSha256": "510af9be5306c930c4179312ff6d62328741f06e8e2b7d8025345c11d6ed085a",
+    "providerGoldenTestsPassed": 1,
+    "providerGoldenSha256": "e84bd34478451909c833534a1cc301eab4d97a3df79f6b6052eea95974574800",
+    "expandedFixtureAgainstR2": {
+      "subject": "6786845aa8d72023fff4ee67562b43529f7361c1",
+      "logSha256": "ada6babef404b71edc8f5242811700ab3c4765770ffe93806f9feef7234eee42",
+      "observedWidthByOverflowPage": {
+        "index.html": 940,
+        "sources/index.html": 906,
+        "understanding.html": 946,
+        "executions.html": 1016,
+        "clarifications.html": 1011
+      },
+      "longTextRectanglesOutsideViewport": 8
+    }
+  },
+  "rule6": {
+    "mutationPath": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+    "cleanBetweenControls": true,
+    "procedure": "In a detached checkout of the exact subject, run the named browser case with the installed Chromium binary through SYZYGY_POC_BROWSER. Substitute each literal old fragment with its new fragment, holding the fixture fixed. Restore before the next control and repeat the positive.",
+    "controls": [
+      {
+        "page": "appendix.html",
+        "old": "  ['appendix.html', '#appendix-disclosure{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 840,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#appendix-disclosure > ul > li"
+        ],
+        "logSha256": "57480f89ea9d9db591001b964267715a41ae484195603cf3bbbdc54ab728eca6"
+      },
+      {
+        "page": "clarifications.html",
+        "old": "  ['clarifications.html', '#page-clarifications{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 1011,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#clarifications-asked strong",
+          "#clarifications-asked ul.item-details > li"
+        ],
+        "logSha256": "518817fa1e9bc1b38b55b69d390bf97135384d54c988abf5711edbc6211cf64e"
+      },
+      {
+        "page": "discovery.html",
+        "old": "  ['discovery.html', '#page-discovery{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 1016,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#discovery-inspected ul.item-details > li",
+          "#discovery-selected > ul.local-items > li",
+          "#discovery-excluded > ul.local-items > li",
+          "#discovery-unresolved > ul.local-items > li",
+          "#discovery-deferred > ul.local-items > li",
+          "#discovery-read > ul.local-items > li"
+        ],
+        "logSha256": "fbc2341d7eb16e052d1448dc17a61f0bd208b749cced528bc35bec85c234f3a8"
+      },
+      {
+        "page": "executions.html",
+        "old": "  ['executions.html', '#page-executions{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 1016,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#executions-reported strong",
+          "#executions-reported ul.item-details > li"
+        ],
+        "logSha256": "fc99eb15dde52a843ec8016c0261176ff9d43c71031e2fcf757e209c0efad72f"
+      },
+      {
+        "page": "review.html",
+        "old": "  ['review.html', '#review-fidelity{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 710,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#review-fidelity > ul.local-items > li"
+        ],
+        "logSha256": "419d08f226bd7fcdc5283c24ab5ab5a05ab6baaf96366237adf88e3f50bbe864"
+      },
+      {
+        "page": "sources/index.html",
+        "old": "  ['sources/index.html', '#sources{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 906,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#sources > ul > li",
+          "#sources > ul > li > a"
+        ],
+        "logSha256": "45ac744bc4e19f2ed7a213bf2fc5fdc152a0ba3a75eea6ae4af0d982dadf05c1"
+      },
+      {
+        "page": "understanding.html",
+        "old": "  ['understanding.html', '#page-understanding{overflow-wrap:anywhere}'],\n",
+        "new": "",
+        "exit": 1,
+        "scrollWidth": 946,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#understanding-purpose ul.item-details > li"
+        ],
+        "logSha256": "8703f3eb0b59afe04751ad14dc88aee40d1b0bdb54ddf70d2cc452dc92a310b0"
+      },
+      {
+        "page": "index.html",
+        "old": ".code-path{font:400 .85em var(--font-mono);color:var(--muted);overflow-wrap:anywhere}",
+        "new": ".code-path{font:400 .85em var(--font-mono);color:var(--muted)}",
+        "exit": 1,
+        "scrollWidth": 940,
+        "viewportWidth": 390,
+        "longTextOutsideViewport": [
+          "#element-local-reflow-code .code-path"
+        ],
+        "logSha256": "8fa4b13eeb6eb95b4c70d5903bcda668c4b701c75acf3430c9dc52178a51fb7c"
+      }
+    ],
+    "restoredPositiveSha256": "1380d19d5e0b125f4faad90bb8b7f3c8f5ef446e6c9d49472734c67f43e07c64"
+  },
+  "citationInteraction": {
+    "sourcePredecessor": "8d1e38c6991459bb4711aeec9ac1845f77f65ac7",
+    "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+    "viewport": [
+      390,
+      844
+    ],
+    "interactions": [
+      "Tab",
+      "mouse hover"
+    ],
+    "targetCount": 2,
+    "usesDossierScripts": false,
+    "previousRichRender": {
+      "passiveWidth": 375,
+      "focusedWidth": 1081,
+      "popupRight": 1081,
+      "logSha256": "128a8892156c5e548e263c584d58056b6569582f16d48081591f13c8c8a24139"
+    },
+    "currentFixture": {
+      "fullTextAndPopupContained": true,
+      "currentLinkAndAccessibleNameEqual": true,
+      "inlineLeftInRightmostThird": true,
+      "codeLeftInLeftThird": true,
+      "afterBlurAndMouseOutHidden": true
+    },
+    "candidateLogSha256": "510af9be5306c930c4179312ff6d62328741f06e8e2b7d8025345c11d6ed085a",
+    "controls": [
+      {
+        "label": "omit-mobile-hint",
+        "interaction": "keyboard",
+        "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+        "mutationPath": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "  + '@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}'\n",
+        "new": "",
+        "killed": true,
+        "assertion": "inline citation viewport and full text containment",
+        "logSha256": "dec9e992201ccedaeddcb9ab84ef3327985caabbfb1c217d3cccbf27d0036ee0"
+      },
+      {
+        "label": "disable-hint-wrapping",
+        "interaction": "keyboard",
+        "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+        "mutationPath": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}",
+        "new": "@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:nowrap;overflow-wrap:normal;pointer-events:none}}",
+        "killed": true,
+        "assertion": "inline citation viewport and full text containment",
+        "logSha256": "f8e90ab81c5e3285312da99eb9340798fe15505d5151758fb5b8f085a26852c7"
+      },
+      {
+        "label": "anchor-position-to-inline",
+        "interaction": "keyboard",
+        "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+        "mutationPath": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}",
+        "new": "@media(max-width:800px){.cite-pop{position:absolute;left:0;right:auto;top:1.6em;bottom:auto;width:calc(100vw - 2rem);white-space:normal;overflow-wrap:anywhere;pointer-events:none}}",
+        "killed": true,
+        "assertion": "inline citation viewport and full text containment",
+        "logSha256": "1a80fb825c0bbdb2f6bbacb269e1f51c45f7037fc5b436b7a4cbcac145a71b68"
+      },
+      {
+        "label": "omit-mobile-hint-hover",
+        "interaction": "hover",
+        "subject": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+        "mutationPath": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "  + '@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}'\n",
+        "new": "",
+        "killed": true,
+        "assertion": "inline citation viewport and full text containment",
+        "logSha256": "5c6fa1292e89b92bc078994d030cb9ff536eccac026644d581eae39f8c84ffb2",
+        "interactionIsolation": {
+          "path": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+          "old": "        expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({\n          hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,\n        });\n",
+          "new": ""
+        }
+      }
+    ],
+    "restoredPositiveSha256": "03564f5350beee45663963b01afcee99155eeef1e9565d7f6410db51195af96c"
+  },
+  "ordinaryRenderRun": {
+    "integrationFixture": "packages/polaris-dossier/src/render.test.ts",
+    "captureCase": "keeps a counted design review through a render that changes only the review-status region",
+    "procedure": "With prepared and designReviewed, capture the rendered site after the fixture reads the second fidelity digest. Replay the complete HTML population in Chromium at both viewports and check the long text rectangles on Appendix, Discovery and Review. The before and after geometry sweeps use independently prepared synthetic runs, while the packet control holds run identity fixed.",
+    "before": {
+      "sourceCommit": "bb064295c160c7365d916eaf8a8cfd274914f516",
+      "tree": "9dbbe53c2e897b15ce5a32a6a9b5c8c2156d36fe",
+      "htmlCount": 19,
+      "allOneRegionAndNoContiguous64": true,
+      "overflows": {
+        "appendix.html": 659,
+        "discovery.html": 553,
+        "review.html": 720
+      },
+      "browserOutputSha256": "576004d132027a2e9306fa87843e75f554f78d789d2769ce4a1feaee8957e256",
+      "browserLogSha256": "95613bcc7fcb2f832ff8e7792c70cbc69204474957bbec7c51e1029c0a73c9e4",
+      "renderLogSha256": "e73dba339ef2b29bfd395c100199c9d45271a0f27840a36e9c473b27378bd079",
+      "htmlSha256": {
+        "appendix.html": "27c9e86a32077e8c83bc018bc0cc14c304513f0c8b3e5681c26b67de27e05442",
+        "clarifications.html": "f0b4ff2e7b1796f67a51f09c11da8d2acc825f38d0cdf8b514c56120dbedb5ee",
+        "contents.html": "ec1441c84c3bb3a31e2b0b033c1d3d291c4cde737eb08ff512f3858ef92c0093",
+        "discovery.html": "dfd1b6d21978276929a8cfa7ba3bcadb96a67d8475ae862879613fa742a53e95",
+        "executions.html": "aae9b1b20657e51a847c9bb0d8438c9dbbeba2dd8a37570897f71aa68e9dd9c1",
+        "find-by-task.html": "25366a26f0687386c25cd9d5ec88afcb3bf8fddc005ee9bed05fe608d8d7ebf3",
+        "glossary.html": "f743b4272f4888a41f65c5d25eef4eb394a030142a76646297fade540af0d4a9",
+        "index.html": "0633cb23235d3ec0fa7e6151f5666af914cbffa77a59cbea75476da861f35502",
+        "maps/ci.html": "f2da1747af29d8c1503da35404cd4915620a828f67c9640dd8265b7c36a60eb6",
+        "maps/directories.html": "48d7488a4575328e44a47c9daa8a526a1cf4d5da2fdc1f5eef23f1e917f74cbe",
+        "maps/infrastructure.html": "849755c77ffa77d1226b20e3c160de436d7a5f85bb681b3774c08fc395bd1b87",
+        "maps/units.html": "dc355fe72259fcedeb261a74e005a13203806e7e8249f82618d70e2d8f4e9ac8",
+        "name-index.html": "f6bc01737ac6f68d16cf0a5ad830f999291ebb1722141be691fcceaecd3b8c36",
+        "review.html": "56d69e248619f716f79d0d1d3878c14fff52f7448efa164062d5fac0195b0974",
+        "size-report.html": "7c8e82521599862308be7e23675d3d5f091fa579666eda561d507580b637067a",
+        "sources/3239fdb4fd7294274ba7cd8f.html": "f83d47064f836cd7f97d83fbd9c661d23c2d170cfec1d5a6bf275eb8b931f3a1",
+        "sources/b42220af55ad614d4f9d1486.html": "87c467df8ef602c1f274b4ee149a1bf69a4274ea22966397fd83612560d5b641",
+        "sources/index.html": "a4a0db722b4b82b0d195bdabd2b491c8508e8969c6aefa07e22ec2336ed2bce1",
+        "understanding.html": "ad6dc4934d2a9911336c01c62bc15541935e5a93cb8586e641bc91be9e116dfb"
+      },
+      "viewports": [
+        {
+          "width": 390,
+          "height": 844,
+          "pageCount": 19,
+          "maxScrollWidth": 720,
+          "namedRegionLongText": {
+            "appendix.html": {
+              "checked": 14,
+              "outsideViewport": 2
+            },
+            "discovery.html": {
+              "checked": 7,
+              "outsideViewport": 6
+            },
+            "review.html": {
+              "checked": 8,
+              "outsideViewport": 1
+            }
+          }
+        },
+        {
+          "width": 1440,
+          "height": 844,
+          "pageCount": 19,
+          "maxScrollWidth": 1425,
+          "namedRegionLongText": {
+            "appendix.html": {
+              "checked": 14,
+              "outsideViewport": 0
+            },
+            "discovery.html": {
+              "checked": 7,
+              "outsideViewport": 0
+            },
+            "review.html": {
+              "checked": 8,
+              "outsideViewport": 0
+            }
+          }
+        }
+      ]
+    },
+    "after": {
+      "sourceCommit": "21ec5f262189af7118ea0db20b7a7f6055b45c52",
+      "tree": "a6a4450ffcc7b19508586a11aeb1c12aa4485440",
+      "htmlCount": 19,
+      "allOneRegionAndNoContiguous64": true,
+      "overflows": {},
+      "browserOutputSha256": "da9e972bc3adcb2536c23cdad80e946867d452f85a2e48830cc48fd67df542c2",
+      "browserLogSha256": "200ef4b11ef498ffc6f6a736d1fc1c586d3bce105103c8c140bd53b9e98001cb",
+      "renderLogSha256": "631e5568740c039e8f28f5e822bd1b6469b2f6f7b40e54d69ea5efae347da390",
+      "htmlSha256": {
+        "appendix.html": "dc59869a00f2896e71497e23c10f5fdbd8e86b567a85a663b5abce09a80d7d3c",
+        "clarifications.html": "94b7ecafbeceaa6f01a210276876475e275f2c09a561b7a7c8cefe6b4f6442b9",
+        "contents.html": "c7a1e60cdc2a577147ab435e0aaa3d427808425e3a486ef2f6c1822e0596b698",
+        "discovery.html": "5775bc2be06a4593a750160dfbab436918d9127646d1181048044319ded2b49a",
+        "executions.html": "6de9d7998e61cb72ebe4d6e14d1422321c692b0846b15b233afd00bdf729f7d5",
+        "find-by-task.html": "9439518e36a41b1c57229069a357b930a08f875904b45df00d11a667a268d150",
+        "glossary.html": "ef1d6d7ea74b477c5921f4fbfe7befbc2a46ad5fd6298631d5e666a7978c0760",
+        "index.html": "577d72d3820478d2de079e4e594e88efee204c4ba0e0738d0fc50a876683dff0",
+        "maps/ci.html": "1a29df1410862b444db0da3e88bb245200895562dc8d8380850903bf9ca8fe45",
+        "maps/directories.html": "f813ed34031cbbfad8286a88ffabb2278b80058721724370ecee6c342a0dfcca",
+        "maps/infrastructure.html": "81cede42354e5bb227304058c63d475579b214930209a59ade4d2410dcc6fdc9",
+        "maps/units.html": "65ca443985efd3dcfc853d43cd15858378a08db0dc7b0491489227847c599cb4",
+        "name-index.html": "ea5c790256e1f63709f19c67cffd1a4a85d5318d4cc829fe890f5afaaa7c48ad",
+        "review.html": "eec9e5c47397c0d947948ef421599901cc08814d85c8d0cc4c647d80f1123d11",
+        "size-report.html": "c64f9a1015a789f541995aa38d125cee97fd7193378f9af8ff0c28fd7d5e7aab",
+        "sources/3239fdb4fd7294274ba7cd8f.html": "537548a51d694e7d7627c6962d2aa9085aa2c55d03445ab09462328be64e4d71",
+        "sources/b42220af55ad614d4f9d1486.html": "306c0ef892f90d680a3b4578dd78c0f91a286d965cf0c009e0c1d8969ba5eaca",
+        "sources/index.html": "3d0759f3b7326706906a8970ad7cc80128ecc0456dee379052ce93581dbcf3b2",
+        "understanding.html": "1fcd86afc41c627b501775832f1bdd0cf6522f3a60661f0146794ad69f74bb8e"
+      },
+      "viewports": [
+        {
+          "width": 390,
+          "height": 844,
+          "pageCount": 19,
+          "maxScrollWidth": 375,
+          "namedRegionLongText": {
+            "appendix.html": {
+              "checked": 14,
+              "outsideViewport": 0
+            },
+            "discovery.html": {
+              "checked": 7,
+              "outsideViewport": 0
+            },
+            "review.html": {
+              "checked": 8,
+              "outsideViewport": 0
+            }
+          }
+        },
+        {
+          "width": 1440,
+          "height": 844,
+          "pageCount": 19,
+          "maxScrollWidth": 1425,
+          "namedRegionLongText": {
+            "appendix.html": {
+              "checked": 14,
+              "outsideViewport": 0
+            },
+            "discovery.html": {
+              "checked": 7,
+              "outsideViewport": 0
+            },
+            "review.html": {
+              "checked": 8,
+              "outsideViewport": 0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "ordinaryRichCodeRun": {
+    "passiveSuccessor": "8d1e38c6991459bb4711aeec9ac1845f77f65ac7",
+    "integrationFixture": "packages/polaris-dossier/src/render.test.ts",
+    "captureCase": "renders a code excerpt from Syzygy",
+    "procedure": "Use the existing synthetic Git fixture with its admitted C file renamed to src/ followed by seven screenedFileName repetitions and .c. Capture each complete site, then compare viewport width and the visible exact long path text geometry. The caption is on the landing page and source identity stays on its existing source page.",
+    "viewport": [
+      390,
+      844
+    ],
+    "before": {
+      "htmlPages": 20,
+      "reportSha256": "d600d0573ead3c2f695b171ca02493c3910f4d83017b9739f37381ca4f079f2a",
+      "renderReportSha256": "e067cab1ca959c7c220d82948f1ea73bcedbfacf153b5e6f2c1e7f0cb3f456f3",
+      "overflows": {
+        "index.html": 1323,
+        "sources/index.html": 1153
+      },
+      "visibleLongPathRectsOutsideViewport": {
+        "index.html": [
+          {
+            "tag": "SPAN",
+            "cls": "code-path",
+            "right": 1323
+          }
+        ],
+        "sources/index.html": [
+          {
+            "tag": "A",
+            "cls": "",
+            "right": 1153
+          }
+        ]
+      },
+      "caption": {
+        "file": "index.html",
+        "width": 390,
+        "scroll": 1323,
+        "exact": [
+          "SPAN:code-path"
+        ],
+        "wide": [
+          {
+            "tag": "SPAN",
+            "cls": "code-path",
+            "right": 1323
+          }
+        ]
+      }
+    },
+    "after": {
+      "htmlPages": 20,
+      "reportSha256": "48e04bec0bdd2351185df52b6e8ddfe0f5d84e33cc60919c35ec24e2e51cd1f6",
+      "renderReportSha256": "865e64f5b8989ef504fbff18167d78e1fb4be3210d450a838c383e77f7d321ad",
+      "overflows": {},
+      "visibleLongPathRectsOutsideViewport": {},
+      "caption": {
+        "file": "index.html",
+        "width": 390,
+        "scroll": 375,
+        "exact": [
+          "SPAN:code-path"
+        ],
+        "wide": []
+      }
+    }
+  },
+  "sameRunPacketControl": {
+    "procedure": "Load the exact pre-reflow renderer alongside current. Establish a counted review once on the same synthetic run using the former. Re-render using current and compare fidelity, design and machine carriers. On every non-size HTML file remove only the exact CSS additions and compare the remaining HTML outside the status region byte-for-byte.",
+    "sameFidelity": true,
+    "previousDesignCounts": true,
+    "currentDesignCounts": false,
+    "currentDesignReason": "design verdict 0 no longer validates against the packet built from these pages (stale-packet); a change to the pages outside the review-status region retires it",
+    "sameMachineOutsideDesignStatus": true,
+    "changedOutsideRegion": [
+      "appendix.html",
+      "clarifications.html",
+      "contents.html",
+      "discovery.html",
+      "executions.html",
+      "find-by-task.html",
+      "glossary.html",
+      "index.html",
+      "maps/ci.html",
+      "maps/directories.html",
+      "maps/infrastructure.html",
+      "maps/units.html",
+      "name-index.html",
+      "review.html",
+      "size-report.html",
+      "size-report.json",
+      "sources/3239fdb4fd7294274ba7cd8f.html",
+      "sources/b42220af55ad614d4f9d1486.html",
+      "sources/index.html",
+      "understanding.html"
+    ],
+    "unchangedNonSizeHtmlAfterRemovingExactStyles": 18,
+    "unchangedHtmlPaths": [
+      "appendix.html",
+      "clarifications.html",
+      "contents.html",
+      "discovery.html",
+      "executions.html",
+      "find-by-task.html",
+      "glossary.html",
+      "index.html",
+      "maps/ci.html",
+      "maps/directories.html",
+      "maps/infrastructure.html",
+      "maps/units.html",
+      "name-index.html",
+      "review.html",
+      "size-report.html",
+      "sources/3239fdb4fd7294274ba7cd8f.html",
+      "sources/b42220af55ad614d4f9d1486.html",
+      "sources/index.html",
+      "understanding.html"
+    ],
+    "logSha256": "79c04fe066b88019ca12ee9f058b79120e0d5649603935e93eeb16191ad98d02"
+  },
+  "reviewRounds": [
+    {
+      "round": 1,
+      "verdict": "REVISE",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R1-RAW.md",
+      "sha256": "de4d0347195e41821247a48c6d09bcdbbfecb78d4b6fb9f484beaf2bd652eb66"
+    },
+    {
+      "round": 2,
+      "verdict": "CONFIRM",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R2-RAW.md",
+      "sha256": "517a08c693bca323fe2ed19d8a041f3378765cd92e3a4b905d98f44e20117350"
+    },
+    {
+      "round": 3,
+      "verdict": "REVISE",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R3-RAW.md",
+      "sha256": "9b1c3940cfd8d228a034dd7ec570f562a6c0cc4cbf882f1a903f2334e08fb7c7"
+    },
+    {
+      "round": 4,
+      "verdict": "CONFIRM",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R4-RAW.md",
+      "sha256": "9ba130cd10c8845983a9793583ee8fe1f36ce94935bde8158f4ef346fd556a46"
+    },
+    {
+      "round": 5,
+      "verdict": "REVISE",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R5-RAW.md",
+      "sha256": "eb7f198f3a19bfca956a997dcec81de377a111261eac2e574c69ba99a1c93017"
+    },
+    {
+      "round": 6,
+      "verdict": "CONFIRM",
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-SETTLED-REFLOW-R6-RAW.md",
+      "sha256": "1bd8f0774999a6c64334ea9ecf7233f8df426e5082b528a6aa5cc1b2afd40d49"
+    }
+  ]
+}
