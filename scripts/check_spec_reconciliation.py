@@ -3142,12 +3142,18 @@ def covhold_binding(root):
 
 
 def is_term_brief_row(line):
+    """Recognize a version claim or a snapshot at the row's own commit."""
     if not line.startswith("|"):
         return False
     cells = [cell.strip() for cell in line.split("|")[1:-1]]
-    if TERM_BRIEF_TAG is not None and f"`{TERM_BRIEF_TAG}`" in cells:
-        return True
-    return len(cells) >= 4 and f"/{TERM_BRIEF_SPEC})" in cells[3]
+    if TERM_BRIEF_TAG is not None:
+        tag = f"`{TERM_BRIEF_TAG}`"
+        if (len(cells) == 7 and cells[6] == tag) or (len(cells) != 7 and tag in cells):
+            return True
+    if len(cells) < 4 or not re.fullmatch(r"`[0-9a-f]{40}`", cells[2]):
+        return False
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{cells[2][1:-1]}/{TERM_BRIEF_SPEC}"
+    return f"]({snapshot})" in cells[3]
 
 
 def term_brief_rows(root):
@@ -10664,6 +10670,13 @@ def term_brief_cases(tmp, base, witnesses, failures):
     link = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{TERM_BRIEF_SPEC}"
     row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({link}) "
            f"| Selftest | `git revert {oid}` | `{tag}` |\n")
+    later = "f" * 40
+    citation = (f"| A-1001 | 2026-11-25 | `{later}` | [prior spec]({link}) "
+                f"| `{tag}` | `git revert {later}` | — |\n")
+    ledger.write_text(pending + citation)
+    effective, records, subjects = term_brief_binding(tree)
+    record("pending-citation", AGENT_ADOPTIONS, "", citation, "prior snapshot citation stays pending",
+           records + subjects, effective is None and not records and not subjects, True)
     ledger.write_text(pending + row)
     if TERM_BRIEF_TAG is None:
         effective, records, subjects = term_brief_binding(tree)
@@ -10681,9 +10694,15 @@ def term_brief_cases(tmp, base, witnesses, failures):
                and after[ident]["name"] == before[ident]["name"]
                and len(after[ident]["scenarios"]) == 215
                and all(value == after[key] for key, value in before.items() if key != ident), True)
+        ledger.write_text(pending + row + citation)
+        effective, records, subjects = term_brief_binding(tree)
+        record("adopted-citation", AGENT_ADOPTIONS, "", citation,
+               "prior snapshot citation and tag outside its column do not add an adoption",
+               records + subjects, effective == original and not records and not subjects, True)
 
         row_controls = (
             ("duplicate", row, row + row, "expected one seven-column"),
+            ("malformed-tagged", "| Selftest | ", "| ", "expected one seven-column"),
             ("wrong-tag", f"`{tag}`", "`other`", "malformed adoption"),
             ("wrong-revert", f"git revert {oid}", "git revert other", "revert does not name"),
             ("wrong-link", f"/blob/{oid}/", "/blob/other/", "does not name"),
