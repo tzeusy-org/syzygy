@@ -1,0 +1,31 @@
+{
+  "subject": "0e14c3439fb59cf5405e3306c6d8de671a49206d",
+  "files": [
+    {
+      "path": "proposed-adoptions.md",
+      "bytes": 3058,
+      "sha256": "83063f29d0d0cfbe747076580ff3c060ffa8fd069d2949ac296fdc277581729d"
+    },
+    {
+      "path": "review-source-bindings.json",
+      "bytes": 77408,
+      "sha256": "2e8680ccd7c8d652c4367662c9762d81fcddfdd89c5e3c331fc49c2242fd3886"
+    },
+    {
+      "path": "source-and-scoped-proof/README.md",
+      "bytes": 3436,
+      "sha256": "e85be53ccae9ccda5fe1743bcb78f8948375277446fce5e011cf66597bc5b558"
+    },
+    {
+      "path": "source-and-scoped-proof/manifest.json",
+      "bytes": 256168,
+      "sha256": "b132d42bbfe41ad661929820cbc937b26141acb3dd94ca877544026d89524d13"
+    },
+    {
+      "path": "source-and-scoped-proof/payload.tar.gz",
+      "bytes": 1211633,
+      "sha256": "8fa2a555d35a7c73b66f7951018c3d0ccbf91ea1c801a5074df845accae9c736"
+    }
+  ],
+  "scope": "fresh source/evidence-report review, no new execution or full acceptance"
+}

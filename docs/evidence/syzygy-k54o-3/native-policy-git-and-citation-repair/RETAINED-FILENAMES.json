@@ -1,0 +1,11 @@
+{
+  "reason": "Frozen prepared rows retain ledger-relative link bytes; inert filename prevents treating them as a live evidence-page link graph. Original digest remains unchanged.",
+  "aliases": [
+    {
+      "original": "proposed-adoptions.md",
+      "retained": "proposed-adoptions.md.txt",
+      "bytes": 3058,
+      "sha256": "83063f29d0d0cfbe747076580ff3c060ffa8fd069d2949ac296fdc277581729d"
+    }
+  ]
+}

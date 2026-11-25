@@ -1,0 +1,1084 @@
+{
+  "schema": "syzygy.final-review-source-bindings/1",
+  "capturedAt": "2026-11-25T08:39:57.792126+00:00",
+  "epistemicLabel": "Observed",
+  "scope": "Source-byte binding of five retained final source-review verdicts to the final commit and clean worktree. Manifest integrity covers every listed payload; final source coverage counts only review scopes, never baseline/context/governing entries.",
+  "limits": [
+    "No build, test, browser, native subject execution, mutation, provider call or product-repository edit performed.",
+    "Source PASS verdicts are retained reviewer judgments, not runtime results, full recovery acceptance, performance suitability, final adoption or publication/merge readiness.",
+    "Supplemental runtime evidence cited by raw reviews is not admitted as runtime acceptance by this binding report.",
+    "CONTRIBUTING.md is an explicitly unreviewed documentation remainder."
+  ],
+  "repo": "/home/orca/.tmp/f3-native-admission-fixes/policy-native-production-2279/w",
+  "subjectCommit": "0e14c3439fb59cf5405e3306c6d8de671a49206d",
+  "baseCommit": "2279ffc2211ec987f313ff6aa005259c6dbeb817",
+  "browserCandidateCommit": "e6cb0f81ea5ae5e9e4f71bad08f8026d014ad046",
+  "cleanWorktreeBeforeAndAfter": true,
+  "reviews": [
+    {
+      "packet": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1",
+      "rawReview": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-2279-R1-FRESH-REVIEW-RAW.md",
+        "bytes": 5708,
+        "sha256": "61ba51488ab9281c022b8e815b4ba75be9c7fe8f314e353d7ec0ffa1394ed46d"
+      },
+      "verdictLine": "Verdict: PASS",
+      "verdictLineNumber": 3,
+      "manifest": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/manifest.json",
+        "bytes": 861,
+        "sha256": "e8eb35422d30ccd6f51648a157be6954a5201c73ca2c3b978e1077551ca6a61a"
+      },
+      "rawReviewManifestBinding": {
+        "line": 13,
+        "text": "- Manifest SHA-256: `e8eb35422d30ccd6f51648a157be6954a5201c73ca2c3b978e1077551ca6a61a`."
+      },
+      "manifestPayloadPopulation": 2,
+      "manifestPayloadsVerified": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.ts.txt",
+          "bytes": 3626,
+          "sha256": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.test.ts.txt",
+          "bytes": 6187,
+          "sha256": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b"
+        }
+      ],
+      "reviewScopeCount": 2,
+      "reviewScopeBindings": [
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-cpu-budget.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.ts.txt",
+          "bytes": 3626,
+          "reviewedSha256": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+          "commitBlobSha256": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+          "worktreeSha256": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+          "independentWorktreeSha256sum": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-cpu-budget.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.test.ts.txt",
+          "bytes": 6187,
+          "reviewedSha256": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+          "commitBlobSha256": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+          "worktreeSha256": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+          "independentWorktreeSha256sum": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+          "exactBytesEqual": true
+        }
+      ],
+      "supplementalSourceBindings": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/source.patch",
+          "bytes": 4818,
+          "sha256": "a66420f81946e7bd591c1cfca17e230510c463ba8e9e46896c1fdb5813b6c6da",
+          "exactBaseToFinalPathDiff": true
+        }
+      ]
+    },
+    {
+      "packet": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1",
+      "rawReview": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1-FRESH-REVIEW-RAW.md",
+        "bytes": 6361,
+        "sha256": "d652122f24a62eec0fcbed7d0fc3e827642dfb943a39993726fbf128da85c35a"
+      },
+      "verdictLine": "PASS",
+      "verdictLineNumber": 1,
+      "manifest": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/manifest.json",
+        "bytes": 1119,
+        "sha256": "3cfa89b81dcbb167d6c935f9620b2f9460f3938dcd3d3e04d0eb426f63938043"
+      },
+      "rawReviewManifestBinding": {
+        "line": 5,
+        "text": "[Observed] Review binding: packet manifest SHA256 3cfa89b81dcbb167d6c935f9620b2f9460f3938dcd3d3e04d0eb426f63938043; original test SHA256 21ec293e01f65e6d3e74cc65c8ee8b7469035329eb4eb8149ce1cc6f2746ba42; candidate test SHA256 5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b; candidate patch SHA256 0bde090cc0783dcf655f9974624b50a30021fb2e431ca249f09d521d4c1eb4d0. Independently recomputed every manifest-listed byte length/hash and compared candidate.patch against a full original/candidate unified diff: matched. Controlled ink receipt browser.log SHA256 73cffc46a28475f27f22b2a0b3bc37e5bd764b45b6f255dc32493f85e1c49173 matched and was read."
+      },
+      "manifestPayloadPopulation": 7,
+      "manifestPayloadsVerified": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/README.md",
+          "bytes": 4481,
+          "sha256": "de5bc5d589588d6bb492dcb7655d92d06f0a303a2a1a3b2217f1e333cda73fc6"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/binding.json",
+          "bytes": 1093,
+          "sha256": "50cb618fb27821daf3bbb30003edc458b4f6804f70c9129309c55c32a348a216"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/candidate.patch",
+          "bytes": 16999,
+          "sha256": "0bde090cc0783dcf655f9974624b50a30021fb2e431ca249f09d521d4c1eb4d0"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/dossier-reading.browser.test.ts",
+          "bytes": 33905,
+          "sha256": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/moving-source-fragments.json",
+          "bytes": 36234,
+          "sha256": "b17c6e05195b28fccaf71c27cd70224ca8087cc252d87e0efb3afa2bae956b5b"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/source-proof.json",
+          "bytes": 1841,
+          "sha256": "f3b00ab81993309a80969e18a0dd040435ed4e2ac95d245e0cd008ee0930bb44"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/verify-source.mjs",
+          "bytes": 4329,
+          "sha256": "18519d885a9b8c970a95d917e989a8a9abd76e09ee6d2e66885f45e19950cf8e"
+        }
+      ],
+      "reviewScopeCount": 1,
+      "reviewScopeBindings": [
+        {
+          "repoPath": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/dossier-reading.browser.test.ts",
+          "bytes": 33905,
+          "reviewedSha256": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b",
+          "commitBlobSha256": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b",
+          "worktreeSha256": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b",
+          "independentWorktreeSha256sum": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b",
+          "exactBytesEqual": true
+        }
+      ],
+      "supplementalSourceBindings": [
+        {
+          "baseSourceSha256": "21ec293e01f65e6d3e74cc65c8ee8b7469035329eb4eb8149ce1cc6f2746ba42",
+          "candidateCommit": "e6cb0f81ea5ae5e9e4f71bad08f8026d014ad046",
+          "candidateCommitBytesMatch": true,
+          "fullUnifiedDiffMatches": true,
+          "sha256sumsEntriesVerified": 8
+        }
+      ]
+    },
+    {
+      "packet": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2",
+      "rawReview": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-2279-R2-FRESH-REVIEW-RAW.md",
+        "bytes": 5295,
+        "sha256": "2daf5a88e0e99db3a49026d2d7f07f192f7904e196c3e07a60e14aff35872057"
+      },
+      "verdictLine": "PASS",
+      "verdictLineNumber": 1,
+      "manifest": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/manifest.json",
+        "bytes": 3064,
+        "sha256": "8b1ff364e5298f6d336209208076881902c7c337a2a31665395052c49882d0b9"
+      },
+      "rawReviewManifestBinding": {
+        "line": 5,
+        "text": "[Observed] Subject base: 2279ffc2211ec987f313ff6aa005259c6dbeb817. Manifest: /home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/manifest.json, SHA256 8b1ff364e5298f6d336209208076881902c7c337a2a31665395052c49882d0b9. Its 13/13 file identities matched, first with Python hashlib and independently with sha256sum. Candidate files were reviewed against their supplied baselines; compile_dossier_policy_git.mjs is new. Native context was read for API compatibility only."
+      },
+      "manifestPayloadPopulation": 13,
+      "manifestPayloadsVerified": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/build_dossier_runtime.mjs",
+          "bytes": 12495,
+          "sha256": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/scripts/build_dossier_runtime.mjs",
+          "bytes": 12022,
+          "sha256": "b3ce22917a82f107687f98c9f73ecf6fc5e96fa5eb7032184d114bb7ceac4093",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/compile_dossier_policy_git.mjs",
+          "bytes": 6489,
+          "sha256": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-runtime.ts",
+          "bytes": 22164,
+          "sha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/packages/polaris-dossier/src/url-runtime.ts",
+          "bytes": 17611,
+          "sha256": "9faf6710e6f0fe71e72446d6cafbb8068df6de859ba2a138b29f65d490e4d64f",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-run-machine.test.ts",
+          "bytes": 27350,
+          "sha256": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/packages/polaris-dossier/src/url-run-machine.test.ts",
+          "bytes": 23434,
+          "sha256": "c12a7de84145125c8f715bf17d8e2d44c2d1af89faf55a6c12e45b76d7506788",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git.ts",
+          "bytes": 4480,
+          "sha256": "207d431e0fa4ca0a8381f85f3f321c0a7712e44c52d25203cb74a2c5c2f6530e",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+          "bytes": 9286,
+          "sha256": "c7886d21f75416fe9548b52590e8e6fa495503f57f874788533ff953d7c5e8ba",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git-protocol.h",
+          "bytes": 1213,
+          "sha256": "dedc33fd55738a9306cd666591d62c49af0a18cac579a064165b644ffb64fd31",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/compile_dossier_session_support.mjs",
+          "bytes": 5732,
+          "sha256": "e54040733e7b176fce862a9fe95cfe7fbd61ec89d91bf4cb4a6512d944b0fa61",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/clean_build.mjs",
+          "bytes": 4894,
+          "sha256": "b4c4d5b2b9dc32c54f04ba7563eb3ebe28ef88f9fde7a6bd090fc94c9f5fc9db",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/package.json",
+          "bytes": 2972,
+          "sha256": "a488accfc761c552d3340be06516cbeb52c56978b50b62fafdef00dfe234333e",
+          "scope": "context"
+        }
+      ],
+      "reviewScopeCount": 4,
+      "reviewScopeBindings": [
+        {
+          "repoPath": "scripts/build_dossier_runtime.mjs",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/build_dossier_runtime.mjs",
+          "bytes": 12495,
+          "reviewedSha256": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "commitBlobSha256": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "worktreeSha256": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "independentWorktreeSha256sum": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "scripts/compile_dossier_policy_git.mjs",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/compile_dossier_policy_git.mjs",
+          "bytes": 6489,
+          "reviewedSha256": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "commitBlobSha256": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "worktreeSha256": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "independentWorktreeSha256sum": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-runtime.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-runtime.ts",
+          "bytes": 22164,
+          "reviewedSha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "commitBlobSha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "worktreeSha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "independentWorktreeSha256sum": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-machine.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-run-machine.test.ts",
+          "bytes": 27350,
+          "reviewedSha256": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "commitBlobSha256": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "worktreeSha256": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "independentWorktreeSha256sum": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "exactBytesEqual": true
+        }
+      ],
+      "supplementalSourceBindings": []
+    },
+    {
+      "packet": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3",
+      "rawReview": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-settlement-2279-R3-FRESH-REVIEW-RAW.md",
+        "bytes": 7943,
+        "sha256": "29a881f98e1baf9dfaceeaf570115eec5fb7daa3ac7e9733b4f3a66a6535886f"
+      },
+      "verdictLine": "PASS",
+      "verdictLineNumber": 1,
+      "manifest": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/manifest.json",
+        "bytes": 2738,
+        "sha256": "83a669892ac2e99749a342d2b691c4652bcfb1577a30a07abacdcae5870265b7"
+      },
+      "rawReviewManifestBinding": {
+        "line": 5,
+        "text": "[Observed] Subject: frozen manifest `/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/manifest.json`, SHA256 `83a669892ac2e99749a342d2b691c4652bcfb1577a30a07abacdcae5870265b7`; subjectBase `2279ffc2211ec987f313ff6aa005259c6dbeb817`. I recomputed the manifest digest and each of its 11 member digests; each matched. The population is nine candidate transport/meter/test/fixture files plus the two governing doctrine files. Anchors below are relative to the frozen `candidate/packages/polaris-dossier/src/` directory."
+      },
+      "manifestPayloadPopulation": 11,
+      "manifestPayloadsVerified": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+          "bytes": 4429,
+          "sha256": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+          "bytes": 1301,
+          "sha256": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+          "bytes": 25338,
+          "sha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+          "bytes": 10131,
+          "sha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-protocol.h",
+          "bytes": 1236,
+          "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-supervisor.c",
+          "bytes": 13042,
+          "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.c",
+          "bytes": 17441,
+          "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.test.ts",
+          "bytes": 5245,
+          "sha256": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.ts",
+          "bytes": 6757,
+          "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/governing/.syzygy/governance/doctrine/security.md",
+          "bytes": 11435,
+          "sha256": "0f2ae0adbcf6d884253d5ccdb92f76b739a6e0a838a62dcb00a27e58a5955861",
+          "scope": "governing"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/governing/.syzygy/governance/doctrine/vision.md",
+          "bytes": 20380,
+          "sha256": "733ae1c7e1bcc11649cd0304f29346a6a5a557e23fb69c0f52f8c4c62e287583",
+          "scope": "governing"
+        }
+      ],
+      "reviewScopeCount": 9,
+      "reviewScopeBindings": [
+        {
+          "repoPath": "packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+          "bytes": 4429,
+          "reviewedSha256": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "commitBlobSha256": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "worktreeSha256": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "independentWorktreeSha256sum": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+          "bytes": 1301,
+          "reviewedSha256": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "commitBlobSha256": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "worktreeSha256": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "independentWorktreeSha256sum": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git-native.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+          "bytes": 25338,
+          "reviewedSha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "commitBlobSha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "worktreeSha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "independentWorktreeSha256sum": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git-native.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+          "bytes": 10131,
+          "reviewedSha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "commitBlobSha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "worktreeSha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "independentWorktreeSha256sum": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git-protocol.h",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-protocol.h",
+          "bytes": 1236,
+          "reviewedSha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "commitBlobSha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "worktreeSha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "independentWorktreeSha256sum": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git-supervisor.c",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-supervisor.c",
+          "bytes": 13042,
+          "reviewedSha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "commitBlobSha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "worktreeSha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "independentWorktreeSha256sum": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git.c",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.c",
+          "bytes": 17441,
+          "reviewedSha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "commitBlobSha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "worktreeSha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "independentWorktreeSha256sum": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.test.ts",
+          "bytes": 5245,
+          "reviewedSha256": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "commitBlobSha256": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "worktreeSha256": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "independentWorktreeSha256sum": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-git.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.ts",
+          "bytes": 6757,
+          "reviewedSha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "commitBlobSha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "worktreeSha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "independentWorktreeSha256sum": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "exactBytesEqual": true
+        }
+      ],
+      "supplementalSourceBindings": []
+    },
+    {
+      "packet": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3",
+      "rawReview": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-2279-R3-FRESH-REVIEW-RAW.md",
+        "bytes": 5879,
+        "sha256": "5a2a845183dc559ca071dd7b023a09a80bca301593acf137e7f17b26a84ec252"
+      },
+      "verdictLine": "PASS",
+      "verdictLineNumber": 1,
+      "manifest": {
+        "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/manifest.json",
+        "bytes": 9055,
+        "sha256": "2b21e0d121eb22fe70efa80d36f68f0fd1b836a0468f2b0de5fa19ab1e27f792"
+      },
+      "rawReviewManifestBinding": {
+        "line": 3,
+        "text": "[Observed] Fresh source-only caller-integration review of baseline 2279ffc2211ec987f313ff6aa005259c6dbeb817 and the frozen R3 candidate. Manifest: /home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/manifest.json; SHA256 2b21e0d121eb22fe70efa80d36f68f0fd1b836a0468f2b0de5fa19ab1e27f792. Verified the complete 42-file manifest population with Python hashlib and independently with sha256sum: 42 matching entries by each method. Population: 13 review files, 12 baseline files, 15 context files, 2 governing files."
+      },
+      "manifestPayloadPopulation": 42,
+      "manifestPayloadsVerified": [
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+          "bytes": 4429,
+          "sha256": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+          "bytes": 1301,
+          "sha256": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts",
+          "bytes": 3661,
+          "sha256": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris.ts",
+          "bytes": 125580,
+          "sha256": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/polaris.ts",
+          "bytes": 122746,
+          "sha256": "bae47f3063d27b8680a54ee1cfcae59550e3ed5e692fc0dbef31a269f4e3601f",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+          "bytes": 25338,
+          "sha256": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+          "bytes": 10131,
+          "sha256": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-protocol.h",
+          "bytes": 1236,
+          "sha256": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-supervisor.c",
+          "bytes": 13042,
+          "sha256": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.c",
+          "bytes": 17441,
+          "sha256": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.test.ts",
+          "bytes": 5245,
+          "sha256": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.ts",
+          "bytes": 6757,
+          "sha256": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-snapshot.ts",
+          "bytes": 15887,
+          "sha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/policy-snapshot.ts",
+          "bytes": 15439,
+          "sha256": "f14904311c318ef19bd008cfacd6f4d78c248ab79fbe84ce239f8d0901cc80fc",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts",
+          "bytes": 35541,
+          "sha256": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-machine-peer.test.ts",
+          "bytes": 34489,
+          "sha256": "db4dd48317c56486328833b1dade35d31ef6cff291d88d3d644d3404119bf5f8",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.ts",
+          "bytes": 38532,
+          "sha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-machine-peer.ts",
+          "bytes": 38414,
+          "sha256": "e484b8649debcfb170f456fd69172d651635bc380b79a19191fd469ecedc410c",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+          "bytes": 29628,
+          "sha256": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+          "bytes": 27017,
+          "sha256": "5e14cb9ff06909d3549186d52642e4f6ad7edb562046101ad03c7f31c18cd1bc",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+          "bytes": 21938,
+          "sha256": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+          "bytes": 21298,
+          "sha256": "6904332379f22a294a73f5ae34a0555a2a05bcd50a3f163a0821f9a4773bf0b5",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-parent-adoption.ts",
+          "bytes": 16441,
+          "sha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-parent-adoption.ts",
+          "bytes": 16212,
+          "sha256": "a4acf2546059a252ea0a6d3ba35914904bf22c789bc729874dcbd1cbc2d6b49c",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-recovery.ts",
+          "bytes": 16082,
+          "sha256": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-recovery.ts",
+          "bytes": 15413,
+          "sha256": "583784f1dbf7cf26a453be89a1f8a2b934ba3a01fd922e508a349c99e8b01842",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-composed.test.ts",
+          "bytes": 234075,
+          "sha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-composed.test.ts",
+          "bytes": 233724,
+          "sha256": "27a592f814fb685ec8c45159147f9517356291afbbdd17d1926129fe55009653",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-cpu-budget.test.ts",
+          "bytes": 6187,
+          "sha256": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-cpu-budget.ts",
+          "bytes": 3626,
+          "sha256": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-machine.test.ts",
+          "bytes": 27350,
+          "sha256": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.test.ts",
+          "bytes": 28957,
+          "sha256": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-sessions.test.ts",
+          "bytes": 27399,
+          "sha256": "18238c8f92a72ddfa4ffc0dd04b657ceb62dea6b8cbaaeff4d1ab463dfff0d39",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.ts",
+          "bytes": 54728,
+          "sha256": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-sessions.ts",
+          "bytes": 53776,
+          "sha256": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-runtime.ts",
+          "bytes": 22164,
+          "sha256": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/scripts/build_dossier_runtime.mjs",
+          "bytes": 12495,
+          "sha256": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/scripts/compile_dossier_policy_git.mjs",
+          "bytes": 6489,
+          "sha256": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+          "scope": "context"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/vitest.tiers.ts",
+          "bytes": 15830,
+          "sha256": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+          "scope": "review"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/vitest.tiers.ts",
+          "bytes": 15770,
+          "sha256": "4636fa1b92d12424beb8e5f696d268f94d6595632de76ab8ba91bf7796df4f55",
+          "scope": "baseline"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/governing/.syzygy/governance/doctrine/security.md",
+          "bytes": 11435,
+          "sha256": "0f2ae0adbcf6d884253d5ccdb92f76b739a6e0a838a62dcb00a27e58a5955861",
+          "scope": "governing"
+        },
+        {
+          "path": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/governing/.syzygy/governance/doctrine/vision.md",
+          "bytes": 20380,
+          "sha256": "733ae1c7e1bcc11649cd0304f29346a6a5a557e23fb69c0f52f8c4c62e287583",
+          "scope": "governing"
+        }
+      ],
+      "reviewScopeCount": 13,
+      "reviewScopeBindings": [
+        {
+          "repoPath": "packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts",
+          "bytes": 3661,
+          "reviewedSha256": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+          "commitBlobSha256": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+          "worktreeSha256": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+          "independentWorktreeSha256sum": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/polaris.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris.ts",
+          "bytes": 125580,
+          "reviewedSha256": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+          "commitBlobSha256": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+          "worktreeSha256": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+          "independentWorktreeSha256sum": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/policy-snapshot.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-snapshot.ts",
+          "bytes": 15887,
+          "reviewedSha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+          "commitBlobSha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+          "worktreeSha256": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+          "independentWorktreeSha256sum": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-machine-peer.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts",
+          "bytes": 35541,
+          "reviewedSha256": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+          "commitBlobSha256": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+          "worktreeSha256": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+          "independentWorktreeSha256sum": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-machine-peer.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.ts",
+          "bytes": 38532,
+          "reviewedSha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+          "commitBlobSha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+          "worktreeSha256": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+          "independentWorktreeSha256sum": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+          "bytes": 29628,
+          "reviewedSha256": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+          "commitBlobSha256": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+          "worktreeSha256": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+          "independentWorktreeSha256sum": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+          "bytes": 21938,
+          "reviewedSha256": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+          "commitBlobSha256": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+          "worktreeSha256": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+          "independentWorktreeSha256sum": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-parent-adoption.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-parent-adoption.ts",
+          "bytes": 16441,
+          "reviewedSha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+          "commitBlobSha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+          "worktreeSha256": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+          "independentWorktreeSha256sum": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-recovery.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-recovery.ts",
+          "bytes": 16082,
+          "reviewedSha256": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+          "commitBlobSha256": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+          "worktreeSha256": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+          "independentWorktreeSha256sum": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-composed.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-composed.test.ts",
+          "bytes": 234075,
+          "reviewedSha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+          "commitBlobSha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+          "worktreeSha256": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+          "independentWorktreeSha256sum": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-sessions.test.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.test.ts",
+          "bytes": 28957,
+          "reviewedSha256": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+          "commitBlobSha256": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+          "worktreeSha256": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+          "independentWorktreeSha256sum": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "packages/polaris-dossier/src/url-run-sessions.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.ts",
+          "bytes": 54728,
+          "reviewedSha256": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+          "commitBlobSha256": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+          "worktreeSha256": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+          "independentWorktreeSha256sum": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+          "exactBytesEqual": true
+        },
+        {
+          "repoPath": "vitest.tiers.ts",
+          "frozenSource": "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/vitest.tiers.ts",
+          "bytes": 15830,
+          "reviewedSha256": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+          "commitBlobSha256": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+          "worktreeSha256": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+          "independentWorktreeSha256sum": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+          "exactBytesEqual": true
+        }
+      ],
+      "supplementalSourceBindings": []
+    }
+  ],
+  "coverage": {
+    "reviewPackets": 5,
+    "manifestPayloadEntriesVerified": 75,
+    "baselinePayloadsAlsoMatchedBaseCommit": 15,
+    "reviewScopeBindings": 29,
+    "uniqueReviewedCodePaths": 29,
+    "changedPaths": 30,
+    "changedPathsFromNameOnly": [
+      "CONTRIBUTING.md",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+      "packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+      "packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts",
+      "packages/polaris-dossier/src/polaris.ts",
+      "packages/polaris-dossier/src/policy-git-native.test.ts",
+      "packages/polaris-dossier/src/policy-git-native.ts",
+      "packages/polaris-dossier/src/policy-git-protocol.h",
+      "packages/polaris-dossier/src/policy-git-supervisor.c",
+      "packages/polaris-dossier/src/policy-git.c",
+      "packages/polaris-dossier/src/policy-git.test.ts",
+      "packages/polaris-dossier/src/policy-git.ts",
+      "packages/polaris-dossier/src/policy-snapshot.ts",
+      "packages/polaris-dossier/src/url-machine-peer.test.ts",
+      "packages/polaris-dossier/src/url-machine-peer.ts",
+      "packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+      "packages/polaris-dossier/src/url-parent-adoption.ts",
+      "packages/polaris-dossier/src/url-recovery.ts",
+      "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "packages/polaris-dossier/src/url-run-cpu-budget.test.ts",
+      "packages/polaris-dossier/src/url-run-cpu-budget.ts",
+      "packages/polaris-dossier/src/url-run-machine.test.ts",
+      "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "packages/polaris-dossier/src/url-run-sessions.ts",
+      "packages/polaris-dossier/src/url-runtime.ts",
+      "scripts/build_dossier_runtime.mjs",
+      "scripts/compile_dossier_policy_git.mjs",
+      "vitest.tiers.ts"
+    ],
+    "changedPathsFromIndependentRawDiff": [
+      "CONTRIBUTING.md",
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+      "packages/polaris-dossier/src/fixtures/policy-git-fixture.c",
+      "packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c",
+      "packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts",
+      "packages/polaris-dossier/src/polaris.ts",
+      "packages/polaris-dossier/src/policy-git-native.test.ts",
+      "packages/polaris-dossier/src/policy-git-native.ts",
+      "packages/polaris-dossier/src/policy-git-protocol.h",
+      "packages/polaris-dossier/src/policy-git-supervisor.c",
+      "packages/polaris-dossier/src/policy-git.c",
+      "packages/polaris-dossier/src/policy-git.test.ts",
+      "packages/polaris-dossier/src/policy-git.ts",
+      "packages/polaris-dossier/src/policy-snapshot.ts",
+      "packages/polaris-dossier/src/url-machine-peer.test.ts",
+      "packages/polaris-dossier/src/url-machine-peer.ts",
+      "packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "packages/polaris-dossier/src/url-ordered-design-work-budget.ts",
+      "packages/polaris-dossier/src/url-parent-adoption.ts",
+      "packages/polaris-dossier/src/url-recovery.ts",
+      "packages/polaris-dossier/src/url-run-composed.test.ts",
+      "packages/polaris-dossier/src/url-run-cpu-budget.test.ts",
+      "packages/polaris-dossier/src/url-run-cpu-budget.ts",
+      "packages/polaris-dossier/src/url-run-machine.test.ts",
+      "packages/polaris-dossier/src/url-run-sessions.test.ts",
+      "packages/polaris-dossier/src/url-run-sessions.ts",
+      "packages/polaris-dossier/src/url-runtime.ts",
+      "scripts/build_dossier_runtime.mjs",
+      "scripts/compile_dossier_policy_git.mjs",
+      "vitest.tiers.ts"
+    ],
+    "reviewedPathsOutsideDiff": [],
+    "unreviewedChangedPaths": [
+      "CONTRIBUTING.md"
+    ],
+    "remainder": {
+      "path": "CONTRIBUTING.md",
+      "sha256": "a1e7691c03ab37a9ed95102990b3d19e21562ee3b9d609c72c7b61fd03cc5ad6",
+      "addedLines": [
+        "+| `npm run build` | clean product builds and the URL runtime's verified native support | Linux x64, Node 24.6.0, `/usr/bin/cc`, and the running Node installation's C headers (`include/node`) |"
+      ],
+      "removedLines": [],
+      "diff": "diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md\nindex f9dbbb4c4..7ce67994d 100644\n--- a/CONTRIBUTING.md\n+++ b/CONTRIBUTING.md\n@@ -111,6 +111,7 @@ See [repository scripts](scripts/README.md) for the Python governance tools.\n \n | Command | What it runs | Needs |\n |---|---|---|\n+| `npm run build` | clean product builds and the URL runtime's verified native support | Linux x64, Node 24.6.0, `/usr/bin/cc`, and the running Node installation's C headers (`include/node`) |\n | `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |\n | `npm run check` | `npm run typecheck`, then `npm test` | node, python3 with pidfd support, Linux `/proc` |\n | `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | Linux x64 and the native dossier integration prerequisites below |\n"
+    }
+  },
+  "preservation": {
+    "frozenPacketAndRawFilesChecked": 87,
+    "beforeEqualsAfter": true,
+    "frozenArtifactSha256": {
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/README.md": "de5bc5d589588d6bb492dcb7655d92d06f0a303a2a1a3b2217f1e333cda73fc6",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/SHA256SUMS": "3b1587122f71101ceffd354a07f447f025eab9a590747e623d3b601a0923261f",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/binding.json": "50cb618fb27821daf3bbb30003edc458b4f6804f70c9129309c55c32a348a216",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/candidate.patch": "0bde090cc0783dcf655f9974624b50a30021fb2e431ca249f09d521d4c1eb4d0",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/dossier-reading.browser.test.ts": "5ac31304a7b5a6d3ebb2b8c92d27a94e5357d13321ef4388fdafaa8b9664cd6b",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/manifest.json": "3cfa89b81dcbb167d6c935f9620b2f9460f3938dcd3d3e04d0eb426f63938043",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/moving-source-fragments.json": "b17c6e05195b28fccaf71c27cd70224ca8087cc252d87e0efb3afa2bae956b5b",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/source-proof.json": "f3b00ab81993309a80969e18a0dd040435ed4e2ac95d245e0cd008ee0930bb44",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1/verify-source.mjs": "18519d885a9b8c970a95d917e989a8a9abd76e09ee6d2e66885f45e19950cf8e",
+      "/home/orca/.tmp/f3-native-admission-fixes/browser-citation-ink-repair-2279-R1-FRESH-REVIEW-RAW.md": "d652122f24a62eec0fcbed7d0fc3e827642dfb943a39993726fbf128da85c35a",
+      "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-2279-R1-FRESH-REVIEW-RAW.md": "61ba51488ab9281c022b8e815b4ba75be9c7fe8f314e353d7ec0ffa1394ed46d",
+      "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/manifest.json": "e8eb35422d30ccd6f51648a157be6954a5201c73ca2c3b978e1077551ca6a61a",
+      "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/source.patch": "a66420f81946e7bd591c1cfca17e230510c463ba8e9e46896c1fdb5813b6c6da",
+      "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.test.ts.txt": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+      "/home/orca/.tmp/f3-native-admission-fixes/cpu-initial-spent-source-2279-R1/url-run-cpu-budget.ts.txt": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-2279-R3-FRESH-REVIEW-RAW.md": "5a2a845183dc559ca071dd7b023a09a80bca301593acf137e7f17b26a84ec252",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/polaris.ts": "bae47f3063d27b8680a54ee1cfcae59550e3ed5e692fc0dbef31a269f4e3601f",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/policy-snapshot.ts": "f14904311c318ef19bd008cfacd6f4d78c248ab79fbe84ce239f8d0901cc80fc",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-machine-peer.test.ts": "db4dd48317c56486328833b1dade35d31ef6cff291d88d3d644d3404119bf5f8",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-machine-peer.ts": "e484b8649debcfb170f456fd69172d651635bc380b79a19191fd469ecedc410c",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts": "5e14cb9ff06909d3549186d52642e4f6ad7edb562046101ad03c7f31c18cd1bc",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-ordered-design-work-budget.ts": "6904332379f22a294a73f5ae34a0555a2a05bcd50a3f163a0821f9a4773bf0b5",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-parent-adoption.ts": "a4acf2546059a252ea0a6d3ba35914904bf22c789bc729874dcbd1cbc2d6b49c",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-recovery.ts": "583784f1dbf7cf26a453be89a1f8a2b934ba3a01fd922e508a349c99e8b01842",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-composed.test.ts": "27a592f814fb685ec8c45159147f9517356291afbbdd17d1926129fe55009653",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-sessions.test.ts": "18238c8f92a72ddfa4ffc0dd04b657ceb62dea6b8cbaaeff4d1ab463dfff0d39",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/packages/polaris-dossier/src/url-run-sessions.ts": "62da56de10b0f930e34334748c8c26097118b5c03a62c9da9093886a96534ff3",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/baseline/vitest.tiers.ts": "4636fa1b92d12424beb8e5f696d268f94d6595632de76ab8ba91bf7796df4f55",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-fixture.c": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris-recovery-lifecycle.test.ts": "88502ad2f27b245bb71b522c099e69c1fc9b28a3e039871e8faa1bcf4b688c82",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/polaris.ts": "8a26c1cab1785cb0e71768cb0fe40b452c5cfe6bbcfb3a66f780f6f78a01110d",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.test.ts": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.ts": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-protocol.h": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-supervisor.c": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.c": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.test.ts": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.ts": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/policy-snapshot.ts": "d70ac5f8487edb1a13758ed321714db19c1247de040971d148981f752e9279ef",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.test.ts": "599b15e9ec04e1ffed3ca63cf69f6e645064a3d43c9201e3265832a553f9da3e",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-machine-peer.ts": "9cc616fa96ca062b9a0a012c1a4df6f7f0659a770946d490f996934696644804",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts": "4807162d6b0ffcddf764eb824695509b311740e3c90745916b90c17e8a3e98ee",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.ts": "831f35a6b50b7a4abb787458e7bfa266292fcdacc5848bd731e91ccb62a79fe8",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-parent-adoption.ts": "65fa616855825a68b23a741ea0dd10ce9eed122d8ae21064d3ac1b61e41ce7df",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-recovery.ts": "db7847340c91e4f06ab952ae1799527c38fe03c3ac46800a887dcd850b931763",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-composed.test.ts": "bf6c2da5785db51ef61cbbd6fc58ac592fd03fd8031336bb69e5f83a4d1e1e82",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-cpu-budget.test.ts": "a1b6c76ed247beca51ce64e28f232cfea230f1d8625dc78a3c00dd6d4c45152b",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-cpu-budget.ts": "d524f77253ae294cf833030b3b9eea5d4bf0c713fe56b6f881425a42f4ae14b0",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-machine.test.ts": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.test.ts": "cb596669b7047fba07ae72715a4b0e0104714f64bf7f5b9bc63b1722493106a6",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-run-sessions.ts": "1116c471ca2de89b4daaf7e4f1dc7e40d79f4afc82cf4d02195796a7126700e8",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/packages/polaris-dossier/src/url-runtime.ts": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/scripts/build_dossier_runtime.mjs": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/scripts/compile_dossier_policy_git.mjs": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/candidate/vitest.tiers.ts": "c29e055d54c76bcd9125a5ff6b501c6d0bb35a45ef16a8108a78af2235389aa8",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/governing/.syzygy/governance/doctrine/security.md": "0f2ae0adbcf6d884253d5ccdb92f76b739a6e0a838a62dcb00a27e58a5955861",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/governing/.syzygy/governance/doctrine/vision.md": "733ae1c7e1bcc11649cd0304f29346a6a5a557e23fb69c0f52f8c4c62e287583",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-caller-integration-review-2279-R3/manifest.json": "2b21e0d121eb22fe70efa80d36f68f0fd1b836a0468f2b0de5fa19ab1e27f792",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-2279-R2-FRESH-REVIEW-RAW.md": "2daf5a88e0e99db3a49026d2d7f07f192f7904e196c3e07a60e14aff35872057",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/packages/polaris-dossier/src/url-run-machine.test.ts": "c12a7de84145125c8f715bf17d8e2d44c2d1af89faf55a6c12e45b76d7506788",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/packages/polaris-dossier/src/url-runtime.ts": "9faf6710e6f0fe71e72446d6cafbb8068df6de859ba2a138b29f65d490e4d64f",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/baseline/scripts/build_dossier_runtime.mjs": "b3ce22917a82f107687f98c9f73ecf6fc5e96fa5eb7032184d114bb7ceac4093",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/package.json": "a488accfc761c552d3340be06516cbeb52c56978b50b62fafdef00dfe234333e",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git-native.ts": "c7886d21f75416fe9548b52590e8e6fa495503f57f874788533ff953d7c5e8ba",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git-protocol.h": "dedc33fd55738a9306cd666591d62c49af0a18cac579a064165b644ffb64fd31",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/policy-git.ts": "207d431e0fa4ca0a8381f85f3f321c0a7712e44c52d25203cb74a2c5c2f6530e",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-run-machine.test.ts": "ae4b5e2beb47159eea10c1f25927e32a70db6f79024968b9b86f935f12bbffe2",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/packages/polaris-dossier/src/url-runtime.ts": "acce552507617a8e1ac834b00e4707f417df106a06d6dcc0bf661d9e71da2081",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/build_dossier_runtime.mjs": "f27f980251b66a90c0a7d1cf763f28efed9f93522733ed770b1ad7c61c42574d",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/clean_build.mjs": "b4c4d5b2b9dc32c54f04ba7563eb3ebe28ef88f9fde7a6bd090fc94c9f5fc9db",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/compile_dossier_policy_git.mjs": "e1673e7db95a50a75f7f694c73e05f5c7d6c13cb34b7e5ee5ed7c17b5a200eb6",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/candidate/scripts/compile_dossier_session_support.mjs": "e54040733e7b176fce862a9fe95cfe7fbd61ec89d91bf4cb4a6512d944b0fa61",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-runtime-build-review-2279-R2/manifest.json": "8b1ff364e5298f6d336209208076881902c7c337a2a31665395052c49882d0b9",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-fixture.c": "b7fdb45925b78819977ba4b7b05011f38f3db946ee5d78b451a10fdb47c6de40",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/fixtures/policy-git-setup-delay.c": "1c77eb997aa5bb1c9cf7a4f2b7a1c166557544db23f34d2544d1eea9516fc349",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.test.ts": "5a1040b5cd2a91276b7546118e20a2387a41325e7282eb3a39961423f04775e3",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-native.ts": "ee448be9b7bce3acfcc7407cbc27414cb56323e9d4b076b4865751af3c2a206f",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-protocol.h": "7581b1b969c752427e08360ea34b4439c3d393a053a0fda18727ce019d337c95",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git-supervisor.c": "2fcb4ee49c0d33b81effbfb5e1ed8c00173278c8e73d7ee8d5ce8eb2c8863d6c",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.c": "ba4f7e3a1da1926fb5b853b51863f92ecbbdd50a8780db4e4a245e6eb9703eb9",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.test.ts": "be2889c3dfda96759fc5a917a2cf7d468c049dfda8716a6ee4acb99b69cdca7a",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/candidate/packages/polaris-dossier/src/policy-git.ts": "f3e8afef1efe49cd04953d7c4f37f7ebb11f518462342f5734273264231da2f3",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/governing/.syzygy/governance/doctrine/security.md": "0f2ae0adbcf6d884253d5ccdb92f76b739a6e0a838a62dcb00a27e58a5955861",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/governing/.syzygy/governance/doctrine/vision.md": "733ae1c7e1bcc11649cd0304f29346a6a5a557e23fb69c0f52f8c4c62e287583",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-review-2279-R3/manifest.json": "83a669892ac2e99749a342d2b691c4652bcfb1577a30a07abacdcae5870265b7",
+      "/home/orca/.tmp/f3-native-admission-fixes/native-transport-settlement-2279-R3-FRESH-REVIEW-RAW.md": "29a881f98e1baf9dfaceeaf570115eec5fb7daa3ac7e9733b4f3a66a6535886f"
+    }
+  },
+  "methods": [
+    "Python hashlib SHA-256 of frozen payloads, manifests, raw reviews and git show final commit blobs.",
+    "Independent sha256sum of every manifest payload, manifest, raw review and each final worktree review-scope source file.",
+    "Exact byte equality between each reviewed frozen source, git show subjectCommit:path and worktree source.",
+    "Complete git diff --name-only -z census cross-checked against git diff --raw --no-renames -z path census.",
+    "Review verdict text preserved verbatim and each raw review bound to the exact recomputed manifest SHA-256."
+  ],
+  "generator": {
+    "path": "/home/orca/.tmp/f3-native-admission-fixes/publication-native-0e14/build-review-source-bindings.py",
+    "sha256": "ba87ababc45279d24a862bd83d34e430c6b2e2ab83ef383da73dd56ee6b2001f"
+  }
+}
