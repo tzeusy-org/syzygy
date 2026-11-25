@@ -192,7 +192,7 @@ Scope: v1-mandatory
 
 #### Scenario: The scripted benchmark refuses invalid custody or a changed binding
 
-- **WHEN** the key or stored answer changes after its evaluator receipt, a frozen list is missing, the grader key counts disagree, the output overlaps an author view, a link or special file is substituted a key, answer or grade file crosses its stated byte ceiling or answer or key content cannot pass screening
+- **WHEN** the key or stored answer changes after its evaluator receipt, a frozen list is missing, the grader key counts disagree, the output overlaps an author view, a link or special file is substituted, a key, answer or grade file crosses its stated byte ceiling or answer or key content cannot pass screening
 - **THEN** the dependent step refuses or reports Unknown with a closed reason, without publishing a grade, overwriting a previous answer or grade, or reproducing withheld text
 - **AND** an unchecked change to an author-facing packet, operator run file or rendered provider byte falsifies this case
 
