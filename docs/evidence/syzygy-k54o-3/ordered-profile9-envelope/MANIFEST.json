@@ -1,0 +1,377 @@
+{
+  "subject": "7d5d9e45c935b0945a85e1d5e7806076b7fcebe8",
+  "sourceBase": "d8e1bf97b94989d767d47a0c1abc76ab9db48749",
+  "executionScope": "Clean exact d8e clone plus bound guard/profile9 overlays. Scoped tests, mutants and build; not full canonical/native acceptance.",
+  "files": [
+    {
+      "path": "candidate/DESIGN.md",
+      "bytes": 10363,
+      "sha256": "5507fecfc836f8c7a4738b25774634601757afe7f7f86bf8de00a7b8d03f6f3c"
+    },
+    {
+      "path": "candidate/MANIFEST.json",
+      "bytes": 4323,
+      "sha256": "372be4d3578555ce654d6721204362704243bc45a4b8e4ec7647037ecf3ee3d9"
+    },
+    {
+      "path": "candidate/binding.json",
+      "bytes": 2128,
+      "sha256": "bbdcfcac4b816dde8d6b270747b43164e139755ac46bf02fd3cd06975c406024"
+    },
+    {
+      "path": "candidate/candidate.patch",
+      "bytes": 18930,
+      "sha256": "1ba33573fc986daf6e25ae0d28d203b25eda9637ad3cf3db0ead10112fe9e84a"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/session-launch.test.ts",
+      "bytes": 120146,
+      "sha256": "19a4d66b8b7c086b5f8a610b7375789d781937570b023a0e0215f6b1992d33b9"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/session-profile.ts",
+      "bytes": 22684,
+      "sha256": "66ecf377c56ee93870b7782e31f5349b9cd56b4f71bd5f1c80d971113dc65363"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/url-machine-store.test.ts",
+      "bytes": 102339,
+      "sha256": "09b1a2588a09ea1d8939dab291896a51c7a716a27cd3ea4297eb51b604736506"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/url-machine-store.ts",
+      "bytes": 65951,
+      "sha256": "070d866ee94b361d6e6bd13df25b4b44f4d1bd818b7e55d1f98f9daed7ed996b"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "bytes": 27017,
+      "sha256": "5e14cb9ff06909d3549186d52642e4f6ad7edb562046101ad03c7f31c18cd1bc"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/url-product-read-limits.ts",
+      "bytes": 1173,
+      "sha256": "96f3091b61902d6461b7815c9c2c51d8cfa88e16f86509e1f8932399ae5eaa5e"
+    },
+    {
+      "path": "candidate/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150171,
+      "sha256": "456e51f36a18dee0b590fd8c40a5eacfcc165ca05d78796052e180edd3a7c8f6"
+    },
+    {
+      "path": "candidate/independent-declaration-census.json",
+      "bytes": 465,
+      "sha256": "21c98759d505dbf64f79a8e42574a5c7545ac81cf982e7865e132fed3fa78d88"
+    },
+    {
+      "path": "candidate/inspect-source.mjs",
+      "bytes": 4155,
+      "sha256": "9074660ab9c52926083d7c35436bba776074df4c72d890e5ef220902580b47d8"
+    },
+    {
+      "path": "candidate/mutation-plan.json",
+      "bytes": 3715,
+      "sha256": "494803b8427057e5d03e322324900c7af0130e339712d827bc99d457ff005e12"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/session-launch.test.ts",
+      "bytes": 119854,
+      "sha256": "c01f69603a9433ad08cd3dcd517e8f54a413e31c5d691f5d990894bcc91f2a4e"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/session-profile.ts",
+      "bytes": 22684,
+      "sha256": "c40ad6030bdc4f91d7b0b25649a211c6966ec6557a4f62f91d751d8e324966b2"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/url-machine-store.test.ts",
+      "bytes": 101849,
+      "sha256": "88061fd7d526a5fc6a261579720651ec6e7d44c1e6a08309d18da42506463976"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/url-machine-store.ts",
+      "bytes": 65750,
+      "sha256": "28e2074c28a21d21e9deef4c30d56a00b8ae9734777505ebdd028286e6044f40"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/url-ordered-design-work-budget.test.ts",
+      "bytes": 26862,
+      "sha256": "5fdb34e9089460de256ba9bbb1edfdc87060bf97cd8a737e8d7d394312729253"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/url-product-read-limits.ts",
+      "bytes": 1130,
+      "sha256": "bc653a3a8913b8e0c2843105b00d2a8a3ad6e48c665acd07a49eec682239d112"
+    },
+    {
+      "path": "candidate/original/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150171,
+      "sha256": "4a25a7ff5717fdaa0e241e2db41bd9d564ca08e4ccfbeeafdfda247d09a42f0a"
+    },
+    {
+      "path": "candidate/static-source-inspection.json",
+      "bytes": 1696,
+      "sha256": "c2e52003c02902419f299d1b4d7b6ae001ffaccb2d6e6828b3a5c7af605aede8"
+    },
+    {
+      "path": "candidate/unchanged-dependencies.json",
+      "bytes": 4910,
+      "sha256": "c5db98f75726fbfd9d7141a5a58fdc46ecec76687ac8f4a0ef073217792b54ce"
+    },
+    {
+      "path": "d8-interrupted-effect-diagnosis-RAW.md",
+      "bytes": 17474,
+      "sha256": "def9c798401addd645a1cdf8bd4727631076a45be1b5fd91ed81eb3b188917a5"
+    },
+    {
+      "path": "d8-interrupted-effect-diagnosis-bindings.json",
+      "bytes": 5715,
+      "sha256": "a06326820a99d1cab7cd1ba249c9818a90611d5179eff560bc4dfdc41340e0f4"
+    },
+    {
+      "path": "d8-interrupted-effect-diagnosis-metrics.json",
+      "bytes": 14685,
+      "sha256": "045e66f6d90dabc400566ce7f406f4c8b0a4a66a944075735ec6e2c4b9a4543a"
+    },
+    {
+      "path": "d8-whole-effect-budget-audit-RAW.md",
+      "bytes": 24936,
+      "sha256": "fe472420628787e8bd53d6499edc9ae1592c5db7015fe1096a59f48f68c46721"
+    },
+    {
+      "path": "d8-whole-effect-budget-audit-bindings.json",
+      "bytes": 4253,
+      "sha256": "b89111eda86725cb5ed2c1d65931cf41a973b625401fde72d1a93e247efb1a42"
+    },
+    {
+      "path": "execution/guard-profile9-execution/build-result.json",
+      "bytes": 107,
+      "sha256": "b2fb673c19ed156046d2bf85107851c2a4dfc8627de24f2551be8a5272841de3"
+    },
+    {
+      "path": "execution/guard-profile9-execution/build.log",
+      "bytes": 348,
+      "sha256": "a9e1ce43cc024eacc386dcf4844b4d2409deadec71d119ed95a8bf52a742443d"
+    },
+    {
+      "path": "execution/guard-profile9-execution/guard-old-pin-mutant.json",
+      "bytes": 6094,
+      "sha256": "7eeb2ee3b72b4e657d70adfb302db7310bcce6227bc59cf09527b1f5f0449cd5"
+    },
+    {
+      "path": "execution/guard-profile9-execution/guard-old-pin-mutant.log",
+      "bytes": 116,
+      "sha256": "76cef3b73ca7442f85fd5b6a841050b72171dc813da8f1034607ec60cc4aa8a9"
+    },
+    {
+      "path": "execution/guard-profile9-execution/guard-positive.json",
+      "bytes": 5123,
+      "sha256": "d65a1ae546bc356ae425289298a2c39d9a840a37433da5f059b94d23946f4c1c"
+    },
+    {
+      "path": "execution/guard-profile9-execution/guard-positive.log",
+      "bytes": 110,
+      "sha256": "a1b023c309456f102cf91ab1b4d445fa61ef4ab66fb068191eeed5ec44a58d17"
+    },
+    {
+      "path": "execution/guard-profile9-execution/profile-integration.json",
+      "bytes": 104528,
+      "sha256": "b710c9f7686d6486ed08e20cd32b7ab9598353eb76284641dda75713ddd2d01a"
+    },
+    {
+      "path": "execution/guard-profile9-execution/profile-integration.log",
+      "bytes": 115,
+      "sha256": "155e033e5afd9d6e8250147ca86550488c819a7240f81f26659a87dfe24a2eaa"
+    },
+    {
+      "path": "execution/guard-profile9-execution/profile-unit.json",
+      "bytes": 6184,
+      "sha256": "fe50ce6dd87874b2354608221444347313490d672319559214f14a53b0cb82cf"
+    },
+    {
+      "path": "execution/guard-profile9-execution/profile-unit.log",
+      "bytes": 108,
+      "sha256": "46b242d0008303fd8ddf49a0119f109d458d9553180834587c306d7d76ee6bf7"
+    },
+    {
+      "path": "execution/guard-profile9-execution/results.json",
+      "bytes": 4373,
+      "sha256": "a75f654042492042ab7bd60548f085fd293bcb650a05538c8d4a95dd14129ee3"
+    },
+    {
+      "path": "execution/guard-profile9-execution/runtime-pins.json",
+      "bytes": 78572,
+      "sha256": "90905d8ce1abfab18e81535dc907e1c8ec63d0a92279677598053b3e07a2e336"
+    },
+    {
+      "path": "execution/guard-profile9-execution/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/native-transition.json",
+      "bytes": 45181,
+      "sha256": "7d89b94313e673031ed5fb351c05ab61d18e6f0e610e474d2747f23f3f299a7f"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/native-transition.log",
+      "bytes": 114,
+      "sha256": "91e42671b9ebf4ce3b9be0342d647d85c2bb4b434361d44838d2eeb97bdbe67e"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/phase-timer.json",
+      "bytes": 45505,
+      "sha256": "8e8ce97c596fb8341dedc5c577bcd873006fc8a8dcbc8372c6bbb030ea57d59a"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/phase-timer.log",
+      "bytes": 108,
+      "sha256": "ee52cf352b598c4b81b4f84251af18b1d26a35551fa1dc51330d13c2f05073b5"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/planner-parent.json",
+      "bytes": 7048,
+      "sha256": "901e769423ff5891d0e7e3c9b06cb64994c288b10bc82a6e2fd6f4188f6ae348"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/planner-parent.log",
+      "bytes": 111,
+      "sha256": "e612be96bf799a061b780467c64ca7988c30fd9fd2fede9129f1157caa34eb34"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/prep-decoupling.json",
+      "bytes": 19916,
+      "sha256": "fc442359eb6c1233509af9a5129a9d2acbbb96e4ee8813227139c849846a2f27"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/prep-decoupling.log",
+      "bytes": 112,
+      "sha256": "b4b24c0fb9e4733930448ef3089144eb29a3e08eec9d1cd94a5187a4d16ab6d5"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/product-clipping.json",
+      "bytes": 28168,
+      "sha256": "d63b55c5d68ee63723eb338679bd5d5e7a6156cb2f18f0f3d7ccca61dabe75c2"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/product-clipping.log",
+      "bytes": 113,
+      "sha256": "fd9ac8571650a8f4863df74497ad85ac51ed0eaf14c26db4d0ec6cb8a2590191"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/profile-binding.json",
+      "bytes": 45177,
+      "sha256": "0dd868026d27a6cecb2e00813edb4b625a878bc94395b522aa075e3638e2549e"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/profile-binding.log",
+      "bytes": 112,
+      "sha256": "e6553f36c1bf21ad95ae386922b50510899d21cf6cbf0a788fa0a2a5a0f9abb1"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/results.json",
+      "bytes": 12692,
+      "sha256": "52696bab117cf6e33dac429effc36f7fb1b2230d9a975cec682450a039df021c"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/store-effect-phase.json",
+      "bytes": 45169,
+      "sha256": "ab38143468e3d21b50457c8616515f45a0a4d90f2a058936b13c1114d8739718"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/store-effect-phase.log",
+      "bytes": 115,
+      "sha256": "6bb5e5f170b870463dd47fd62f720571acadad5f021821508dc2558bfcedf84d"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/store-total.json",
+      "bytes": 45233,
+      "sha256": "4f3f402c51f4702cde2ff704b38ea09221a2c2f2747d86dffcab359eb9780c3f"
+    },
+    {
+      "path": "execution/profile9-mutant-execution/store-total.log",
+      "bytes": 108,
+      "sha256": "269533eb188c93c376edba0c339f0ed75aa2956b2efac202b05583ec0216da1a"
+    },
+    {
+      "path": "ordered-profile9-envelope-review-RAW.md",
+      "bytes": 9680,
+      "sha256": "2badc0dec58642cbd3abb322e16b3418c7547982efe17cb14edd1807852c25d0"
+    },
+    {
+      "path": "predecessor-hosted/MANIFEST.json",
+      "bytes": 5140,
+      "sha256": "373475e0ea9e831146c20a008dabbd727adc23fde0a4f76a76f0234b7b54c104"
+    },
+    {
+      "path": "predecessor-hosted/README.md",
+      "bytes": 4388,
+      "sha256": "20114ee3c6ec8fd9ca1f2d9f013866a0f0005f1bef796600e62d9e532c8f8f6f"
+    },
+    {
+      "path": "predecessor-hosted/evidence.tar.gz",
+      "bytes": 281125,
+      "sha256": "758dd7fcd800bdcb31dd5c6cb7bf40a0159cd8ba092072e0c87a57bbc28b3d77"
+    },
+    {
+      "path": "predecessor-hosted/selected-report.json",
+      "bytes": 109348,
+      "sha256": "46037342f81a0f95eae5d67a2c3943800991127b67a867e77c44f602ee2a8766"
+    },
+    {
+      "path": "predecessor-native-failure/capture-index.json",
+      "bytes": 776,
+      "sha256": "8e30716d5191be72c044d6ba4c0c6c9f023a13e90379a96ae0da7a720e4164ec"
+    },
+    {
+      "path": "predecessor-native-failure/check-all.log",
+      "bytes": 556768,
+      "sha256": "f921f06e5e28ff816056ff304fab9142c6da34ecfec8d2428a2ae3458717d387"
+    },
+    {
+      "path": "predecessor-native-failure/native-cut.json",
+      "bytes": 137092,
+      "sha256": "5579522f11821b9f6ad5082b804978e4005e9974bea778209821440137dbb380"
+    },
+    {
+      "path": "predecessor-native-failure/native-cut.json.failure.json",
+      "bytes": 492137,
+      "sha256": "6fa225e05a41fce78a4edfdcd565aca6a6ce67acb44bab94b732f44ec07a21cd"
+    },
+    {
+      "path": "predecessor-native-failure/result.json",
+      "bytes": 1085,
+      "sha256": "a56a44527924e8d4a8be17aa8ba45b72ce3d23f573a1bb4ee5fcff4edc351ac0"
+    },
+    {
+      "path": "predecessor-native-failure/retained/native-cut-5579522f11821b9f6ad5082b804978e4005e9974bea778209821440137dbb380.json",
+      "bytes": 137092,
+      "sha256": "5579522f11821b9f6ad5082b804978e4005e9974bea778209821440137dbb380"
+    },
+    {
+      "path": "predecessor-native-failure/retained/native-cut.json.failure-6fa225e05a41fce78a4edfdcd565aca6a6ce67acb44bab94b732f44ec07a21cd.json",
+      "bytes": 492137,
+      "sha256": "6fa225e05a41fce78a4edfdcd565aca6a6ce67acb44bab94b732f44ec07a21cd"
+    },
+    {
+      "path": "predecessor-native-failure/subject.json",
+      "bytes": 668,
+      "sha256": "f4f4c12fa05f71b865ef436497fed583a286f315ec859e4f628cfa564d52c287"
+    },
+    {
+      "path": "predecessor-native-failure/tmpdir.json",
+      "bytes": 77,
+      "sha256": "d5bfe85d2cd590f8c0ab5da591d50e5644149420c84491f2e2ea57cbaec3d55c"
+    },
+    {
+      "path": "verify-guard-profile9.py",
+      "bytes": 3837,
+      "sha256": "42a48e5c742715b1596413aa535961cabf22d3c927a47d7808e5f18fe66b46df"
+    },
+    {
+      "path": "verify-profile9-mutants.py",
+      "bytes": 3875,
+      "sha256": "8e572d7b077b06973a2f3127ac19aaedc4f4e2f615b35d64c7e14d127a15baf5"
+    }
+  ]
+}
