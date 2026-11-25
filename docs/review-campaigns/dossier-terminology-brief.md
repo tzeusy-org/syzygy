@@ -4,7 +4,7 @@
 
 - `syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R[123]-RAW\.md`
 - `syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R[456]-RAW\.md`
-- `syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R7-RAW\.md`
+- `syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R[78]-RAW\.md`
 
 ## What was under review
 
@@ -17,3 +17,5 @@
 [Observed] The reconciliation review recorded `REVISE` (`syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R4-RAW.md:1`) for citation classification and overlapping route assertions. It then recorded `CONFIRM` on the row recognition (`syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R5-RAW.md:1`) and the independent route controls (`syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R6-RAW.md:1`). The [historical evidence](../evidence/syzygy-fnry-18/glossary-brief-ac4-2026-11-25.json) binds each frozen subject and preserves the measured limits.
 
 [Observed] Round 7 recorded `REVISE` (`syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R7-RAW.md:1`) on the first versioned package. The version preamble failed the existing adoption collision check. The replacement adopts the recognized version and requirement markers without changing the requirement body.
+
+[Observed] Round 8 recorded `CONFIRM` (`syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R8-RAW.md:1`) on that exact version-marker repair. Its subsequent whole suite found that 19 older reconciliation fixtures removed the v2.26 predecessor while retaining the now-adopted v2.29 dependent row. The source update removes that dependent row only in those fixture populations. The operative checker and the independent current-version predecessor-refusal test retain their existing behavior.
