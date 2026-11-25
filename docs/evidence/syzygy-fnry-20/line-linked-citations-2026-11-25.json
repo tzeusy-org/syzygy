@@ -110,7 +110,7 @@
     }
   },
   "browser": {
-    "source": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+    "testFile": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
     "project": "e2e",
     "actualChromium": true,
     "scriptFreeCases": [
