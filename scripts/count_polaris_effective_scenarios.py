@@ -742,6 +742,16 @@ def step_measures_amendment(root: Path) -> str | None:
     return text
 
 
+def qkind_amendment(root: Path) -> str | None:
+    """Verified text, a pending or retired amendment, or a counting refusal."""
+    import check_spec_reconciliation as adoption
+
+    text, records, subjects = adoption.qkind_binding(root)
+    if records or subjects:
+        raise ScenarioCountError("question-kind floor adoption findings:\n" + "\n".join(records + subjects))
+    return text
+
+
 def covhold_amendment(root: Path) -> str | None:
     """Verified text, a pending or retired amendment, or a counting refusal."""
     import check_spec_reconciliation as adoption
@@ -797,7 +807,8 @@ def build_composition(root: Path) -> CompositionResult:
                         (adoption.MODEL_SPEC, model_amendment(root)),
                         (adoption.EDIT_ACCOUNT_SPEC, edit_account_amendment(root)),
                         (adoption.WORTH_SPEC, worth_amendment(root)),
-                        (adoption.TERM_BRIEF_SPEC, term_brief_amendment(root))):
+                        (adoption.TERM_BRIEF_SPEC, term_brief_amendment(root)),
+                        (adoption.QKIND_SPEC, qkind_amendment(root))):
         if text is not None:
             sources.append((label, text))
 
@@ -862,6 +873,7 @@ def composition_inputs(root: Path) -> list[Path]:
     edit_account_amendment(root)
     worth_amendment(root)
     term_brief_amendment(root)
+    qkind_amendment(root)
     paths = adoption.declared_source_inputs(root) | {
         adoption.URL_SOURCE_REPLACEMENTS, *adoption.URL_SOURCE_SUBJECTS,
         *adoption.URL_SOURCE_RFC_PATHS, *adoption.FIGURE_SUBJECTS, *adoption.DERIVED_SUBJECTS,
@@ -870,7 +882,7 @@ def composition_inputs(root: Path) -> list[Path]:
         *adoption.COVERAGE_SUBJECTS, *adoption.INFRA_SUBJECTS, *adoption.FINDPAGES_SUBJECTS, *adoption.SUBSEC_SUBJECTS, *adoption.RELTYPE_SUBJECTS, *adoption.HERO_SUBJECTS, *adoption.READERS_SUBJECTS, *adoption.CONT_SUBJECTS, *adoption.MODEL_SUBJECTS, *adoption.WORTH_SUBJECTS,
         *adoption.REACH_SUBJECTS, *adoption.READMIT_SUBJECTS, *adoption.RAW_READ_SUBJECTS, *adoption.TREEREAD_SUBJECTS,
         *adoption.VERIFY_SUBJECTS, *adoption.QFILE_SUBJECTS, *adoption.SCRIPTED_GRADE_SUBJECTS, *adoption.STEP_MEASURES_SUBJECTS, *adoption.COVHOLD_SUBJECTS, *adoption.EDIT_ACCOUNT_SUBJECTS,
-        *adoption.TERM_BRIEF_SUBJECTS,
+        *adoption.TERM_BRIEF_SUBJECTS, *adoption.QKIND_SUBJECTS,
     }
     files = discover_composition_files(root)
     files += [root / rel for rel in sorted(paths) if (root / rel).is_file()]
