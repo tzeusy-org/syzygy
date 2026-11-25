@@ -914,7 +914,7 @@ describe('render', () => {
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
-    expect([...sourcePage.matchAll(/id="L(\d+)"/gu)].map(match => Number(match[1]))).toEqual([1, 2, 3, 5]);
+    expect([...sourcePage.matchAll(/<span class="source-line(?: cited-span)?" id="L(\d+)"/gu)].map(match => Number(match[1]))).toEqual([1, 2, 3, 5]);
     expect([...readSite(result.report.site).values()].join('')).not.toMatch(/href="[^"]+#L4"/u);
     // syzygy-pdja.1: RFC5-17's count stays on the claim, on the citation itself, and the sentence never repeats in the reading text.
     const site = readSite(result.report.site);

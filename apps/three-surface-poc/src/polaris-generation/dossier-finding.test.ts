@@ -283,7 +283,7 @@ describe('the finding pages: withheld, folded and several-piece cases', () => {
     expect(where).toContain(`<a href="${marks[0]![1]}">`);
     expect(marks.map(mark => mark[1]!.split('#')[1])).toEqual(['L1', 'L4']);
     const numbered = (href: string): string[] =>
-      [...files.get(href.split('#')[0]!)!.matchAll(/id="L(\d+)"/gu)].map(row => row[1]!);
+      [...files.get(href.split('#')[0]!)!.matchAll(/<span class="source-line(?: cited-span)?" id="L(\d+)"/gu)].map(row => row[1]!);
     expect(numbered(marks[0]![1]!)).toEqual(['1']);
     expect(numbered(marks[1]![1]!)).toEqual(['1', '2', '3', '4', '5', '6']);
   });
