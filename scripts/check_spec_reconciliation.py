@@ -10743,23 +10743,60 @@ def term_brief_cases(tmp, base, witnesses, failures):
 
         status = tree / STATUS
         prior_status = status.read_text()
-        written_route = f"{TERM_BRIEF_STATUS_PREFIX} is agent-adopted in A-999."
-        status.write_text("\n".join(line for line in prior_status.split("\n")
-                                    if not line.strip().startswith(TERM_BRIEF_STATUS_PREFIX)))
+        pending_status = "".join(line for line in prior_status.splitlines(keepends=True)
+                                 if not line.strip().startswith(TERM_BRIEF_STATUS_PREFIX))
+        status_route = f"\n{TERM_BRIEF_STATUS_PREFIX} is agent-adopted in A-999.\n"
+        adopted_status = pending_status + status_route
+        index = tree / OPENSPEC_README
+        prior_index = index.read_text()
+        index_row = next(line for line in prior_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
+        cells = index_row.split(" | ")
+        assert len(cells) == 4
+        cells[2] = "**Candidate.** Specification version and adoption pending"
+        pending_row = " | ".join(cells)
+        pending_index = prior_index.replace(index_row, pending_row, 1)
+        cells[2] = f"Agent adoption in [{Path(AGENT_ADOPTIONS).name}](../{AGENT_ADOPTIONS}) and tag `{tag}`"
+        adopted_row = " | ".join(cells)
+        adopted_index = prior_index.replace(index_row, adopted_row, 1)
+        status.write_text(adopted_status)
+        index.write_text(adopted_index)
         report = Report()
         check_routes(tree, after_pop, report)
         findings = report.findings.get("R5", [])
-        record("missing-status-route", STATUS, written_route, "", "R5 requires the exact adopted route",
-               findings, any("does not route terminology brief" in item for item in findings))
+        record("adopted-routes", STATUS + " and " + OPENSPEC_README, pending_row, status_route + adopted_row,
+               "both adopted routes are accepted", findings, not findings, True)
+
+        for name, route, base_text, mutant_text, old, new, diagnostic in (
+            ("missing-status-route", status, adopted_status, pending_status, status_route, "",
+             f"`{STATUS}` does not route terminology brief and its adoption A-999"),
+            ("missing-index-route", index, adopted_index, pending_index, adopted_row, pending_row,
+             f"`{OPENSPEC_README}` does not route terminology brief to `{AGENT_ADOPTIONS}` and its version tag"),
+        ):
+            route.write_text(mutant_text)
+            report = Report()
+            check_routes(tree, after_pop, report)
+            route.write_text(base_text)
+            findings = report.findings.get("R5", [])
+            record(name, str(route.relative_to(tree)), old, new, diagnostic, findings, findings == [diagnostic])
 
         ledger.write_text(pending)
-        status.write_text(status.read_text() + "\n" + written_route + "\n")
-        report = Report()
-        check_routes(tree, before_pop, report)
+        status.write_text(pending_status)
+        index.write_text(pending_index)
+        for path, pending_route, adopted_route, old, new in (
+            (STATUS, pending_status, adopted_status, "", status_route),
+            (OPENSPEC_README, pending_index, adopted_index, pending_row, adopted_row),
+        ):
+            route = tree / path
+            route.write_text(adopted_route)
+            report = Report()
+            check_routes(tree, before_pop, report)
+            route.write_text(pending_route)
+            findings = report.findings.get("R5", [])
+            diagnostic = f"`{path}` calls terminology brief adopted while it is not in force"
+            record("premature-" + path.replace("/", "-"), path, old, new, diagnostic,
+                   findings, findings == [diagnostic])
         status.write_text(prior_status)
-        findings = report.findings.get("R5", [])
-        record("premature-route", AGENT_ADOPTIONS, row, "", "R5 refuses adopted status without the row",
-               findings, any("terminology brief adopted while" in item for item in findings))
+        index.write_text(prior_index)
 
         veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
         ledger.write_text(pending + row + veto)
