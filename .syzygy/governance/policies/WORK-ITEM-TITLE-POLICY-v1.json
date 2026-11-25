@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "policyId": "work-item-title",
+  "policyVersion": "1.0.0",
+  "contentClass": "work-item-title",
+  "governingRequirement": "POC-REQ-063 (openspec/changes/three-surface-poc-experience)",
+  "warrant": "Owner answer to pursuit-2026-11-21-trajectory-titles, choice C, 2026-11-21T12:21:41Z (docs/pursuits/2026-11-21-trajectory-vision-pursuit.md, Owner gates this run); adopted by an AGENT-ADOPTIONS.md row (syzygy-t3jk.23).",
+  "source": "The title column of the observed tracker's issues table, read with the work-item statement and pinned to its revision.",
+  "detectorPolicy": {
+    "policyId": "polaris-butlers-project-shape-secrets",
+    "policyVersion": "1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv",
+    "path": ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
+    "detectors": ["private-key-material", "known-token-formats", "credential-assignment", "credential-bearing-url"],
+    "use": "every detector, unchanged, over the whole title"
+  },
+  "activeContent": "the observed-body active-content scan, unchanged; any finding withholds the title",
+  "classificationOrder": [
+    "withhold as unclassifiable a value that is not text, is empty, exceeds maxLength UTF-16 code units, or holds a C0 or C1 control character or a lone surrogate",
+    "run every detector; any match withholds the title as secret-matched",
+    "run the active-content scan; any finding withholds the title as active-content",
+    "withhold as unclassifiable a title whose screening fails",
+    "admit the title's text, served as is and rendered escaped"
+  ],
+  "maxLength": 500,
+  "withheldRecord": {
+    "fields": ["withheld", "redactionClass", "digest"],
+    "redactionClasses": { "secret-matched": "excluded-artifact", "active-content": "excluded-artifact", "unclassifiable": "unclassifiable-excluded" },
+    "digest": "SHA-256 of the title's UTF-8 bytes, or null when the tracker held no text",
+    "retainBody": false
+  },
+  "boundaries": [
+    "No title is sent to a model provider.",
+    "No other free-text field of a work item is admitted by this policy.",
+    "No detector or scan is loosened by this policy."
+  ]
+}

@@ -664,8 +664,8 @@ warranted, green or complete state.
 #### Scenario: A title names a requirement
 
 - **WHEN** the tracker holds an item whose title reads "Implement
-  POC-REQ-010" (the POC withholds titles, SEC-5, so the title is never read
-  into the model)
+  POC-REQ-010" (served as its title under POC-REQ-063, never parsed for
+  an identifier)
 - **THEN** that item's `governedBy` is the same Unknown, and nothing served
   for it names POC-REQ-010 as its governing intent
 
@@ -1936,11 +1936,11 @@ warrants:
 
 Group: Trajectory. Form: **state projection/query**.
 
-**Required behavior.** The POC SHALL observe the work items' dependency metadata at the exact Dolt revision of its work-item observation and use that same evaluation to derive Trajectory eligibility. The work-item statement SHALL read from the same committed revision it identifies, including when the selected work-item set is empty. It retains the seven existing observation columns. With no valid observed work-item revision, the POC SHALL skip the dependency statement. One read-only statement SHALL bind `dependencies AS OF` to the captured revision and restrict the dependent `issue_id` to the observed bead prefix. Its dependency data columns SHALL be `issue_id`, `depends_on_issue_id`, `type`, and only null-presence booleans for `depends_on_external` and `depends_on_wisp_id`.
+**Required behavior.** The POC SHALL observe the work items' dependency metadata at the exact Dolt revision of its work-item observation and use that same evaluation to derive Trajectory eligibility. The work-item statement SHALL read from the same committed revision it identifies, including when the selected work-item set is empty. It retains the observation columns of POC-REQ-010's statement, the seven non-free-text columns and, since POC-REQ-063, `title`. With no valid observed work-item revision, the POC SHALL skip the dependency statement. One read-only statement SHALL bind `dependencies AS OF` to the captured revision and restrict the dependent `issue_id` to the observed bead prefix. Its dependency data columns SHALL be `issue_id`, `depends_on_issue_id`, `type`, and only null-presence booleans for `depends_on_external` and `depends_on_wisp_id`.
 
 The dependency statement SHALL return exactly one distinguishable revision witness from Dolt resolving the same immutable revision as the table read, including when there are no dependency rows. The reader SHALL verify the witness before accepting the data. A request value echoed by the caller, a missing, extra or invalid witness, a mismatched revision, an unreadable response or an unexpected result shape makes the dependency observation unavailable. A valid witness with no edge rows makes the dependency set observed empty. The work-item observation and its substrate statuses retain their own epistemic states and their one served provenance record under POC-REQ-010.
 
-The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact; `parent-child` rows derive only the parent facts POC-REQ-042's grouped view reads, under the same identifier rules. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, titles, descriptions, notes, metadata values and external-reference text never enter either channel.
+The dependent is `issue_id` and the target is `depends_on_issue_id`. The closed recognized edge types are `blocks`, `parent-child`, `discovered-from`, `related`, `relates-to` and `tracks`. Count their rows by type. Only `blocks` derives an eligibility fact; `parent-child` rows derive only the parent facts POC-REQ-042's grouped view reads, under the same identifier rules. Count unlisted types in a separate total using a fixed diagnostic reason. Withhold their raw type values. Count external, wisp and out-of-prefix targets without rendering source values. A target may appear as a blocker identifier only when it passes the existing observed prefix check and exactly matches a served work item at that revision. The output shall disclose no additional tracker strings. Unreadable query output, new columns, descriptions, notes, metadata values and external-reference text never enter either channel, and no title enters through the dependency feed (a title enters only under POC-REQ-063).
 
 For an observed dependency feed, a known blocker is the served target of a `blocks` edge whose observed tracker status is other than `closed`, where the row has neither the external nor the wisp flag. Deduplicate blocker identifiers. An unlisted edge type, external or wisp blocker, out-of-prefix blocker, or absent blocker status makes the applicable item's eligibility undetermined. Use a fixed reason for each applicable failure class and stable reason ordering if several apply. Count these rows even where their targets or raw types are withheld. A row with an unidentifiable dependent or a malformed input that prevents reliable row accounting makes the feed unavailable. No malformed record can create an observed-empty or ready result.
 
@@ -2011,4 +2011,94 @@ warrants:
   decisions: []
   topology: []
   parent_requirements: [POC-REQ-010, POC-REQ-012, POC-REQ-013, POC-REQ-020, POC-REQ-040, POC-REQ-042]
+```
+
+### Requirement: POC-REQ-063 — Work-item titles render under the declared, screened title policy
+
+Group: Work-item observation. Form: **state projection/query**.
+
+**Required behavior.** The POC SHALL read each observed work item's title
+only through the work-item statement of POC-REQ-010, pinned to the revision
+it identifies, and SHALL screen every title under the declared work-item-title
+policy (`.syzygy/governance/policies/WORK-ITEM-TITLE-POLICY-v1.json`,
+policy `work-item-title` 1.0.0) before the title enters the model. The policy
+runs, over the whole title and unchanged, every detector of the project-shape
+secret policy and the active-content scan every observed body passes.
+
+- **Admission.** A title is admitted only when it is text of 1 to 500 UTF-16
+  code units with no C0 or C1 control character and no lone surrogate, no
+  detector matches it, and the scan finds nothing. An admitted title is
+  served as the item's `title.text` and rendered escaped on the item's card,
+  wherever the card renders.
+- **Withholding.** Any other title is withheld, fail-closed (RFC5-16). The
+  item serves the RFC5-17 hash-not-body record instead: the reason
+  (`secret-matched`, `active-content` or `unclassifiable`), the redaction
+  class (`excluded-artifact` for the first two, `unclassifiable-excluded` for
+  the third) and the SHA-256 digest of the title's UTF-8 bytes, or null when
+  the tracker held no text. The withheld text appears in neither channel.
+- **One statement.** The observation states the policy identity and version
+  once, with the admitted count, the withheld count and the withheld count
+  per reason. While any title is withheld the board states the withheld
+  count once as an Unknown with primary reason `excluded-content` and its
+  RFC2-24 route, and each card with a withheld title carries a mark naming its
+  reason that refers to that one disclosure. When every title is admitted no
+  title Unknown exists and the board states the policy and the admitted count.
+- **Boundaries.** No title is sent to a model provider. No other free-text
+  column of a work item is read. No detector or scan is loosened. A title is
+  never parsed for an identifier: POC-REQ-014's governing intent is unchanged.
+
+- **Scope.** The work-item statement's selected columns; every served item's
+  `title`; the observation's `titles`; every Trajectory card; the titles
+  notice; the machine answer.
+- **Case (fixture, counterexamples and sweep).** An independent checker
+  supplies, at one revision, items whose titles are: clean text with
+  characters HTML escapes; a match for each detector; each active-content
+  form the scan names; and every unscreenable input (absent, not text, empty,
+  over 500 code units, a line break, a control character, a lone surrogate).
+  Each withheld title carries a distinctive marker. The checker sweeps both
+  channels' bytes for every marker, every card's title, and the board's
+  notice.
+- **Observable**: the admitted titles on the cards and in the machine
+  answer; the withheld records; the observation's counts; the notice; the
+  statement text.
+- **Oracle**: literal expected values typed by the checker: the selected
+  columns are exactly the eight of POC-REQ-010's statement and `title`; each
+  admitted title equals its fixture text and renders escaped; each withheld
+  record equals its literal reason, class and digest; the counts equal the
+  fixture's; no marker occurs in either channel; with every title admitted
+  no title Unknown subject exists.
+- **Oracle independence**: the fixture titles, markers and digests are the
+  checker's own; the detector strings are read from the policy file, never
+  from the module under test.
+- **Falsifier**: a withheld title's text, or any marker, in either channel; a
+  title admitted that a detector matches or the scan flags; an admitted title
+  rendered unescaped; a withheld title without its reason, class or digest;
+  counts that disagree with the served items; a second free-text column in
+  the statement; or a title Unknown while every title is admitted.
+
+#### Scenario: Clean titles are shown
+
+- **WHEN** every observed item's title is clean text
+- **THEN** each card shows its title, escaped, the machine answer serves the
+  same text for each item, and the board states the policy and that every
+  title is shown, with no title Unknown
+
+#### Scenario: A title that fails screening is withheld
+
+- **WHEN** one title matches a secret detector, one carries a script element
+  and one is absent
+- **THEN** none of their text is served on either channel; each item serves
+  its reason, redaction class and digest (null for the absent one); each card
+  marks its reason; and the board states 3 withheld once, with
+  `excluded-content` and its route
+
+```yaml
+warrants:
+  primary: SEC-5
+  doctrine: [VIS-2, VIS-3, SEC-5]
+  contracts: [RFC2-24, RFC5-16]
+  policies: []
+  decisions: []
+  topology: []
+  parent_requirements: [POC-REQ-010, POC-REQ-014, POC-REQ-020]
 ```

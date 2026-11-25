@@ -2,14 +2,16 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
-import { observeTrajectoryWorkItems, observeWorkItems } from './work-items.js';
+import { isRecord } from '@syzygy/support';
+
+import { observeTrajectoryWorkItems, observeWorkItems, workItemTitlesDisclosure } from './work-items.js';
 
 function rowsResponse(rows: readonly Record<string, unknown>[]): string {
   return JSON.stringify(rows);
 }
 
 function workItemWitness(revision: string): Record<string, unknown> {
-  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null };
+  return { revision, id: null, status: null, issue_type: null, priority: null, created_at: null, updated_at: null, closed_at: null, title: null };
 }
 
 const ITEM_REVISION = 'adpe9hi1llmdh05mr8aja5kagtu36eli';
@@ -259,14 +261,7 @@ describe('work-items observer', () => {
     expect(runQuery).not.toHaveBeenCalled();
   });
 
-  describe('SEC-5: work-item titles are withheld, never read (owner answer 2026-10-20, syzygy-jytt)', () => {
-    // Literals, typed here: RFC2-24's `excluded-content` route, and the
-    // columns the observation may read.
-    const WITHHELD = {
-      label: 'Unknown',
-      closedReason: 'excluded-content',
-      resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
-    };
+  describe('POC-REQ-063: work-item titles under the declared, screened title policy (syzygy-t3jk.23)', () => {
     const ITEM_ROW = {
       revision: ITEM_REVISION, id: 'bu-t1', status: 'open', issue_type: 'task', priority: 2,
       created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T01:00:00Z', closed_at: null,
@@ -284,29 +279,106 @@ describe('work-items observer', () => {
       });
     }
 
-    it('selects exactly the eight non-free-text columns, and never the title', () => {
+    /** The withheld part of each title, or the admitted text. */
+    function shapes(observed: { readonly items: readonly { readonly title: unknown }[] }) {
+      return observed.items.map(({ title }) => (isRecord(title) && 'withheld' in title ? [title.withheld, title.redactionClass] : title));
+    }
+
+    function titled(titles: readonly unknown[]) {
+      const observed = observe(titles.map((title, i) => ({ ...ITEM_ROW, id: `bu-t${String(i).padStart(2, '0')}`, title })));
+      if (observed.kind !== 'observed') throw new Error(`fixture unobserved: ${observed.reason}`);
+      return observed;
+    }
+
+    it('selects the eight earlier columns and title, and no other free-text column', () => {
       const calls: string[] = [];
       observe([ITEM_ROW], calls);
       const columns = /^SELECT (.*) FROM issues /.exec(calls[0] ?? '')?.[1]?.split(', ');
-      expect(columns).toEqual(["dolt_hashof('HEAD') AS revision", 'id', 'status', 'issue_type', 'priority', 'created_at', 'updated_at', 'closed_at']);
-      expect(calls[0]).not.toMatch(/\btitle\b/i);
+      expect(columns).toEqual(["dolt_hashof('HEAD') AS revision", 'id', 'status', 'issue_type', 'priority', 'created_at', 'updated_at', 'closed_at', 'title']);
+      expect(calls[0]).not.toMatch(/\b(?:description|notes|design|acceptance_criteria|metadata|created_by|assignee|external_ref|close_reason)\b/i);
+      expect(calls[0]).toContain('UNION ALL SELECT dolt_hashof(\'HEAD\'), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL ORDER BY id');
     });
 
-    it('admits a row with no title, and copies no title from a row that carries one', () => {
-      const untitled = observe([ITEM_ROW]);
-      expect(untitled.kind).toBe('observed');
-      const titled = observe([{ ...ITEM_ROW, title: 'Unclassified free text qz7k' }]);
-      if (titled.kind !== 'observed') throw new Error('unreachable');
-      expect(Object.keys(titled.items[0] ?? {}).sort()).toEqual(['closedAt', 'createdAt', 'governedBy', 'id', 'issueType', 'priority', 'status', 'updatedAt']);
-      expect(JSON.stringify(titled)).not.toContain('qz7k');
+    it('admits a clean title verbatim, up to 500 code units', () => {
+      const exact = 'x'.repeat(500);
+      const observed = titled(['Wire the Trajectory outline to <parent> ids & counts'.replace('<parent>', 'parent'), exact]);
+      expect(observed.items.map((item) => item.title)).toEqual([
+        { text: 'Wire the Trajectory outline to parent ids & counts' },
+        { text: exact },
+      ]);
     });
 
-    it('states the withheld title once on the observation, as excluded-content with its route', () => {
-      const observed = observe([ITEM_ROW]);
+    it('withholds a title any secret detector matches, naming only the reason', () => {
+      const secrets = [
+        'Rotate -----BEGIN PRIVATE KEY----- qz7a',
+        'Leaked AKIAABCDEFGHIJKLMNOP qz7b',
+        'Set password: hunter2hunter2 qz7c',
+        'Mirror https://user:pass@example.org/ qz7d',
+        // A secret and active content: the detector's reason wins.
+        '<b>token=abcdefgh12345</b> qz7e',
+      ];
+      const observed = titled(secrets);
+      expect(shapes(observed)).toEqual(Array.from({ length: 5 }, () => ['secret-matched', 'excluded-artifact']));
+      for (const marker of ['qz7a', 'qz7b', 'qz7c', 'qz7d', 'qz7e', 'hunter2', 'AKIA']) expect(JSON.stringify(observed)).not.toContain(marker);
+    });
+
+    it('withholds a title carrying active content', () => {
+      const observed = titled(['Fix <script>alert(1)</script> qz8a', 'Render <details> qz8b', 'See [x](javascript:alert(1)) qz8c', '<!-- note --> qz8d']);
+      expect(shapes(observed)).toEqual(Array.from({ length: 4 }, () => ['active-content', 'excluded-artifact']));
+      for (const marker of ['qz8a', 'qz8b', 'qz8c', 'qz8d']) expect(JSON.stringify(observed)).not.toContain(marker);
+    });
+
+    it('withholds a title it cannot screen: absent, not text, empty, over 500, multi-line, a control or a lone surrogate', () => {
+      const observed = titled([null, 42, '', 'y'.repeat(501), 'two\nlines qz9a', 'tab\there qz9b', 'bell\u0007 qz9c', 'lone \uD800 qz9d', 'c1\u0085 qz9e']);
+      expect(shapes(observed)).toEqual(Array.from({ length: 9 }, () => ['unclassifiable', 'unclassifiable-excluded']));
+      for (const marker of ['qz9a', 'qz9b', 'qz9c', 'qz9d', 'qz9e', 'yyyy']) expect(JSON.stringify(observed)).not.toContain(marker);
+    });
+
+    it('states the policy once on the observation, with admitted and withheld counts by reason', () => {
+      const observed = titled(['Clean one', 'Clean two', 'password=abcdefghij', '<i>x</i>', null]);
+      expect(observed.titles).toEqual({
+        policyId: 'work-item-title',
+        policyVersion: '1.0.0',
+        admitted: 2,
+        withheld: 3,
+        withheldByReason: { 'secret-matched': 1, 'active-content': 1, unclassifiable: 1 },
+      });
       const empty = observe([]);
-      if (observed.kind !== 'observed' || empty.kind !== 'observed') throw new Error('unreachable');
-      expect(observed.titles).toEqual(WITHHELD);
-      expect(empty.titles).toEqual(WITHHELD);
+      if (empty.kind !== 'observed') throw new Error('unreachable');
+      expect(empty.titles).toEqual({
+        policyId: 'work-item-title',
+        policyVersion: '1.0.0',
+        admitted: 0,
+        withheld: 0,
+        withheldByReason: { 'secret-matched': 0, 'active-content': 0, unclassifiable: 0 },
+      });
+    });
+
+    it('discloses withheld titles as one excluded-content Unknown with its counts, and none when all are admitted', () => {
+      const observed = titled(['Clean one', 'password=abcdefghij', null]);
+      expect(workItemTitlesDisclosure(observed.titles)).toEqual({
+        label: 'Unknown',
+        closedReason: 'excluded-content',
+        reason: '2 of 3 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 unclassifiable): a title that matches a secret detector, carries active content or cannot be screened is never served, and its item is named by its identifier.',
+        resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
+      });
+      expect(workItemTitlesDisclosure(titled(['Clean one']).titles)).toBeNull();
+      // RFC5-17 hash-not-body: the digest of the withheld text, and none for an absent title.
+      expect(observed.items.map((item) => item.title)).toEqual([
+        { text: 'Clean one' },
+        { withheld: 'secret-matched', redactionClass: 'excluded-artifact', digest: '3b6e0670f74222bd25c7157f3e9aaa89c3685e7ad4e5d00ff72b79b72794a9de' },
+        { withheld: 'unclassifiable', redactionClass: 'unclassifiable-excluded', digest: null },
+      ]);
+    });
+
+    it('refuses a revision witness that carries a title', () => {
+      const observed = observeWorkItems({
+        repoRoot: '/repo',
+        beadPrefix: 'bu',
+        capturedAt: '2026-08-30T02:00:00Z',
+        runQuery: () => rowsResponse([{ ...workItemWitness(ITEM_REVISION), title: 'smuggled' }, ITEM_ROW]),
+      });
+      expect(observed).toEqual({ kind: 'unknown', reason: 'work-item observation returned a malformed revision witness' });
     });
   });
 
