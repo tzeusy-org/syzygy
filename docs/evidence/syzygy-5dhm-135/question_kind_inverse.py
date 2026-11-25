@@ -4,7 +4,7 @@
 Usage: question_kind_inverse.py <worktree>. Imports the builder's literals, removes each addition (each found exactly once) from the 2.32
 file, restores the title and banner, and compares with the 2.29 file; then compares the ordered scenario bodies of 2.29 with the first
 215 of 2.32. It shares the builder's literals, so it checks the builder's arithmetic, not its intent: an independent line diff of the two
-files is the review's check (R-QUESTION-KIND-FLOOR-1-RAW.md).
+files is the review's check (docs/reviews/syzygy-5dhm-135/R-QUESTION-KIND-FLOOR-1-RAW.md).
 """
 import importlib.util
 import pathlib

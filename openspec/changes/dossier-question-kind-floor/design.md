@@ -22,7 +22,7 @@
 
 ## Review (R-QUESTION-KIND-FLOOR-1)
 
-[Observed] One fresh-context review, `docs/evidence/syzygy-5dhm-135/R-QUESTION-KIND-FLOOR-1-RAW.md`, recorded `CONFIRM WITH EXCEPTIONS` over commit `cc9b6094` and spec sha256 `2c6936eaf293c1ad636b6c54cf092fb3ce9f4bba1fafa5ed382dfa8b9ea151ab`, with no blocking finding, six advisory (F1 to F6) and one nit (F7). Each was repaired; none was overruled, and no confirmation round was run (D10: one review gates nothing), so the adopted spec digest differs from the reviewed one and no review has read the repaired bytes.
+[Observed] One fresh-context review, `docs/reviews/syzygy-5dhm-135/R-QUESTION-KIND-FLOOR-1-RAW.md`, recorded `CONFIRM WITH EXCEPTIONS` over commit `cc9b6094` and spec sha256 `2c6936eaf293c1ad636b6c54cf092fb3ce9f4bba1fafa5ed382dfa8b9ea151ab`, with no blocking finding, six advisory (F1 to F6) and one nit (F7). Each was repaired; none was overruled, and no confirmation round was run (D10: one review gates nothing), so the adopted spec digest differs from the reviewed one and no review has read the repaired bytes.
 
 - F1: the replay record is retained (`question-kind-replay-2026-11-25.json`), its first members saying the declarations are a keyword proxy and the comparison with the pilot Inferred.
 - F2: an identifier a secret detector matches is left out of `unmatched` and `duplicated` and counted in `declarations.unnamed`; the advice paragraph says so.
