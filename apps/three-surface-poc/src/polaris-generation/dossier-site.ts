@@ -144,7 +144,7 @@ export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${t
   + `a.cite{font:${tokens.type.strongWeight} ${tokens.type.citation} var(--font-mono);text-decoration:none;vertical-align:super;line-height:${tokens.type.zeroLeading};`
   + `padding:${tokens.spacing.none} ${tokens.spacing.markerInset}}a.cite:hover{text-decoration:underline}`
   + `.pipeline-notice,.run-disclosure,.review-status{background:var(--d-info-tint);`
-  + `border:${tokens.line.hairline} solid color-mix(in srgb,var(--proposed) ${tokens.mix.informationBorder},transparent);border-radius:${tokens.radius.panel};`
+  + `border:${tokens.line.hairline} solid color-mix(in srgb,var(--proposed) ${tokens.mix.informationBorder},${tokens.color.clear});border-radius:${tokens.radius.panel};`
   + `padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
   + `.unresolved-asset,.quote-withheld,.unknown-reason,[data-epistemic="unknown"]{background:var(--d-warn-tint);border-radius:${tokens.radius.callout}}`
   + `.unresolved-asset,[data-epistemic="unknown"]{display:block;border-left:${tokens.line.section} solid var(--unknown);padding:${tokens.spacing.mediumSmall} ${tokens.spacing.cardGap};`
@@ -177,7 +177,7 @@ export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${t
   + `ol.steps>li::before{content:counter(step);position:absolute;left:${tokens.spacing.stepMarkerOffset};top:${tokens.spacing.none};width:${tokens.length.stepMarker};`
   + `height:${tokens.length.stepMarker};border-radius:${tokens.radius.circle};background:var(--panel-raised);border:${tokens.line.hairline} solid var(--cyan);color:var(--ink);`
   + `font:${tokens.type.strongWeight} ${tokens.type.helper}/${tokens.type.markerLeading} var(--font-mono);text-align:center}`
-  + 'ol.steps>li:last-child{border-left-color:transparent}'
+  + `ol.steps>li:last-child{border-left-color:${tokens.color.clear}}`
   + `dl.definitions{display:grid;grid-template-columns:minmax(${tokens.length.definitionColumn},max-content) ${tokens.length.fraction};gap:${tokens.spacing.small} ${tokens.spacing.panelGap};`
   + `margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}dl.definitions dt{font-weight:${tokens.type.strongWeight}}dl.definitions dd{margin:${tokens.spacing.none}}`
   + `@media (max-width:${tokens.length.definitionBreakpoint}){dl.definitions{grid-template-columns:${tokens.length.fraction}}`

@@ -4,6 +4,7 @@
  * every dossier override and responsive threshold byte for byte.
  */
 export const DOSSIER_STYLE = {
+  color: { clear: 'transparent' },
   dark: {
     canvas: '#262624',
     panel: '#30302e',

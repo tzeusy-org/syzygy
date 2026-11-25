@@ -10,8 +10,8 @@ const QUERY_CLAUSE = /\(([^)]*)\)/gu;
 const DIMENSION_PREFIX = /^\s*(?:min-|max-)?(?:width|height)\s*[:<>]=?\s*/iu;
 const CSS_VARIABLE = /var\(--[a-z0-9-]+\)/giu;
 const QUOTED = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/gu;
-// The opaque <named-color> keywords from CSS Color 4 §6.1, excluding contextual
-// colors and the separate transparent keyword. This also finds gradient stops.
+// The opaque <named-color> keywords from CSS Color 4 §6.1. Transparent is a
+// separate fixed color in §6.3. Contextual colors follow their existing CSS roles.
 // https://www.w3.org/TR/css-color-4/#named-colors
 const NAMED_COLORS = new Set(`
   aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood
@@ -110,10 +110,40 @@ function knownStylesheet(node: ts.Expression, isToken: (value: ts.Expression) =>
     && ts.isArrowFunction(callback) && ts.isTemplateExpression(callback.body) && knownStylesheet(callback.body, isToken);
 }
 
-function selectedStylesheet(node: ts.VariableDeclaration, isToken: (value: ts.Expression) => boolean): boolean {
+function joinsSelectors(node: ts.Expression, name: string, separator: string): boolean {
+  if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)
+      || node.expression.name.text !== 'join' || !ts.isIdentifier(node.expression.expression)
+      || node.expression.expression.text !== name || node.arguments.length !== 1) return false;
+  const argument = node.arguments[0]!;
+  return ts.isStringLiteralLike(argument) && argument.text === separator;
+}
+
+function optionalRangeSelectors(node: ts.Expression): boolean {
+  if (!ts.isConditionalExpression(node) || !ts.isStringLiteralLike(node.whenTrue) || node.whenTrue.text !== '') return false;
+  const template = node.whenFalse;
+  if (!ts.isTemplateExpression(template) || template.head.text !== ',' || template.templateSpans.length !== 1) return false;
+  const span = template.templateSpans[0]!;
+  return span.literal.text === '' && joinsSelectors(span.expression, 'rules', ',');
+}
+
+function knownSourceLeafStyles(node: ts.Expression, isToken: (value: ts.Expression) => boolean): boolean {
+  if (!ts.isConditionalExpression(node) || !ts.isStringLiteralLike(node.whenTrue) || node.whenTrue.text !== '') return false;
+  const stylesheet = node.whenFalse;
+  if (!joinedString(stylesheet) || !ts.isIdentifier(stylesheet.left) || stylesheet.left.text !== 'SOURCE_LINES_CSS'
+      || !ts.isTemplateExpression(stylesheet.right)) return false;
+  // The range selectors and continuation rules carry the source leaf's
+  // existing line identities through the otherwise static stylesheet.
+  return stylesheet.right.templateSpans.every(({ expression }) => isToken(expression)
+    || optionalRangeSelectors(expression) || joinsSelectors(expression, 'continuationRules', ''));
+}
+
+function selectedStylesheet(
+  node: ts.VariableDeclaration, isToken: (value: ts.Expression) => boolean, filename: string,
+): boolean {
   if (!ts.isIdentifier(node.name) || node.initializer === undefined) return true;
   const name = node.name.text;
   const value = node.initializer;
+  if (filename === 'dossier-site.ts' && name === 'styles') return knownSourceLeafStyles(value, isToken);
   if (name === 'LOCAL_REFLOW_CSS') {
     // The literal per-page table contributes only its stylesheet column.
     if (!ts.isNewExpression(value) || !ts.isIdentifier(value.expression) || value.expression.text !== 'Map'
@@ -162,8 +192,8 @@ function tokenBinding(file: ts.SourceFile): (expression: ts.Expression) => boole
   };
 }
 
-function rawStyles(source: string): readonly string[] {
-  const file = ts.createSourceFile('dossier-style.ts', source, ts.ScriptTarget.Latest, true);
+function rawStyles(source: string, filename = 'dossier-site.ts'): readonly string[] {
+  const file = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true);
   const isToken = tokenBinding(file);
   const problems: string[] = [];
   function scan(text: string, expressions: readonly ts.Expression[] = []): void {
@@ -185,7 +215,7 @@ function rawStyles(source: string): readonly string[] {
         const residual = authorValue(value, property);
         const words = residual.match(/[a-z_-][a-z0-9_-]*/gu) ?? [];
         const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color)\(/iu.test(residual)
-          || words.some(word => NAMED_COLORS.has(word));
+          || words.some(word => word === 'transparent' || NAMED_COLORS.has(word));
         if (rawColor || RAW_NUMBER.test(residual) || residual.includes('unbound-expression')) problems.push(`${property}: ${value}`);
       }
       for (const rule of css.matchAll(CONDITIONAL)) {
@@ -199,7 +229,7 @@ function rawStyles(source: string): readonly string[] {
   }
 
   function visit(node: ts.Node): void {
-    if (ts.isVariableDeclaration(node) && !selectedStylesheet(node, isToken)) {
+    if (ts.isVariableDeclaration(node) && !selectedStylesheet(node, isToken, filename)) {
       problems.push(`unsupported stylesheet assembly: ${node.name.getText(file)}`);
     }
     if (ts.isTemplateExpression(node) || ts.isStringLiteralLike(node) || joinedString(node) || (ts.isExpression(node) && stringParts(node) !== undefined)) {
@@ -220,7 +250,7 @@ describe('dossier stylesheet authoring', () => {
     // consumers. Every dossier sibling, including new suppliers, is checked.
     const issues = readdirSync(HERE).filter(file =>
       /^dossier-(?!style-tokens\.ts$).+\.ts$/u.test(file) && !/\.(?:test|testkit)\.ts$/u.test(file))
-      .flatMap(file => rawStyles(readFileSync(new URL(file, HERE), 'utf8')).map(issue => `${file}: ${issue}`));
+      .flatMap(file => rawStyles(readFileSync(new URL(file, HERE), 'utf8'), file).map(issue => `${file}: ${issue}`));
     expect(issues).toEqual([]);
   });
 
@@ -232,9 +262,12 @@ describe('dossier stylesheet authoring', () => {
     ['named accent color', 'const css = ".field{accent-color:rebeccapurple}"', 'accent-color: rebeccapurple'],
     ['named caret color', 'const css = ".field{caret-color:red}"', 'caret-color: red'],
     ['gradient stop color', 'const css = ".field{background-image:linear-gradient(red,blue)}"', 'background-image: linear-gradient(red,blue)'],
+    ['transparent border color', 'const css = ".field{border-left-color:transparent}"', 'border-left-color: transparent'],
+    ['transparent mixing color', 'const css = ".field{color:color-mix(in srgb,var(--hint),transparent)}"', 'color: color-mix(in srgb,var(--hint),transparent)'],
     ['spacing after a CSS comment', 'const css = ".field{/* inset override */padding:17px}"', 'padding: 17px'],
     ['concat-assembled spacing', "const css = '.field'.concat('{', 'padding:17px', '}')", 'padding: 17px'],
     ['unrecognized stylesheet builder', 'const SOURCE_LINES_CSS = buildCss("padding", "17px")', 'unsupported stylesheet assembly: SOURCE_LINES_CSS'],
+    ['unrecognized source leaf builder', 'const styles = local === undefined ? "" : SOURCE_LINES_CSS + buildCss("padding", "17px") + `.leaf{display:block}`', 'unsupported stylesheet assembly: styles'],
     ['array-assembled spacing', "const css = ['.field', '{', 'padding:17px', '}'].join('')", 'padding: 17px'],
     ['type size', 'const css = ".reading-order{font-size:17px}"', 'font-size: 17px'],
     ['nested rule spacing', 'const css = "@media(max-width:\${breakpoint}){.reading-order{margin:.3rem}}"', 'margin: .3rem'],
