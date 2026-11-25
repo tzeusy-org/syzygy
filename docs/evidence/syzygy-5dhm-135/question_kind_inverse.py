@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""syzygy-5dhm.135: check that version 2.32's text inverts to version 2.29's and keeps every predecessor scenario byte for byte.
+"""syzygy-5dhm.135: check that version 2.32's text, less the builder's own additions, is version 2.29's.
 
-Usage: question_kind_inverse.py <worktree>. Imports the builder's literals, removes each addition from the 2.32 file, restores the
-title and banner, and compares with the 2.29 file; then compares the ordered scenario bodies of 2.29 with the first 215 of 2.32.
+Usage: question_kind_inverse.py <worktree>. Imports the builder's literals, removes each addition (each found exactly once) from the 2.32
+file, restores the title and banner, and compares with the 2.29 file; then compares the ordered scenario bodies of 2.29 with the first
+215 of 2.32. It shares the builder's literals, so it checks the builder's arithmetic, not its intent: an independent line diff of the two
+files is the review's check (R-QUESTION-KIND-FLOOR-1-RAW.md).
 """
 import importlib.util
 import pathlib
@@ -20,6 +22,7 @@ inv = new.replace(b.NEW_TITLE, b.OLD_TITLE, 1).replace(b.NEW_BANNER, b.OLD_BANNE
 for paragraph in b.PARAGRAPHS:
     assert inv.count('\n\n' + paragraph) == 1
     inv = inv.replace('\n\n' + paragraph, '', 1)
+assert inv.count(b.SCENARIOS) == 1
 inv = inv.replace(b.SCENARIOS, '', 1)
 for add in (b.OBSERVABLE_ADD, b.ORACLE_ADD, b.FALSIFIER_ADD):
     assert inv.count(add) == 1

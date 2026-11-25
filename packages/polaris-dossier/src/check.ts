@@ -385,7 +385,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     : undefined;
   // The kinds of newcomer question no block answers per major unit (syzygy-5dhm.135), from the draft's own declarations and the units of
   // the tree this check listed.
-  const kinds = plan.command === 'check' && parseFault === null ? questionKindAdvice(doc, treeFacts) : undefined;
+  const kinds = plan.command === 'check' && parseFault === null ? questionKindAdvice(doc, treeFacts, secretPathOf(screen)) : undefined;
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...written, ...reportFit, ...leftOut, ...(mechanismAdvice === undefined ? {} : { mechanismAdvice }), disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
     ...(structureRecord === undefined ? {} : { structureRecord }),

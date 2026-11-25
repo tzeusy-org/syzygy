@@ -856,7 +856,7 @@ QKIND_TAG = "polaris-dossier-question-kind-floor-v2.32"
 QKIND_STATUS_PREFIX = f"[Question-kind floor amendment 2.32]({QKIND_HOME})"
 QKIND_REPLACES = (POLARIS_ID + "034",)
 QKIND_SUBJECTS = {
-    QKIND_SPEC: "2c6936eaf293c1ad636b6c54cf092fb3ce9f4bba1fafa5ed382dfa8b9ea151ab",
+    QKIND_SPEC: "4439371414c716ba52493066bfe9908029c8378e06594454cf8e343939590b32",
 }
 QKIND_BOUND_PARTS = len(QKIND_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"

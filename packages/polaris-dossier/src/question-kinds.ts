@@ -50,8 +50,9 @@ export type QuestionKindAdvice =
     readonly units: readonly QuestionKindUnit[];
     /** The draft's declarations: `rows`, the rows that name a block and at least one kind; `counted`, the distinct blocks they name that
      * are counted; `unmatched`, identifiers naming no claim block labelled Inferred, in first-mention order; `duplicated`, identifiers more
-     * than one row names, in order of second mention (their kinds are joined). */
-    readonly declarations: { readonly rows: number; readonly counted: number; readonly unmatched: readonly string[]; readonly duplicated: readonly string[] };
+     * than one row names, in order of second mention (their kinds are joined); `unnamed`, how many distinct identifiers either list leaves
+     * out because a secret detector matches them. */
+    readonly declarations: { readonly rows: number; readonly counted: number; readonly unmatched: readonly string[]; readonly duplicated: readonly string[]; readonly unnamed: number };
     readonly label: 'Inferred';
     readonly basis: string;
     readonly note: string;
@@ -76,8 +77,18 @@ export function majorUnits(facts: TreeFacts): readonly { readonly unit: string; 
   return [{ unit: WHOLE_REPOSITORY, files: listed }, ...directories];
 }
 
-/** The advice for one parsed draft. Pure; `facts` is undefined where this check could not list the pinned tree. */
-export function questionKindAdvice(draft: unknown, facts: TreeFacts | undefined): QuestionKindAdvice {
+/** The advice for one parsed draft. Pure; `facts` is undefined where this check could not list the pinned tree. `isSecret` is the bound
+ * screening policy's detector predicate: a draft-written identifier it matches is counted in `declarations.unnamed` and never listed.
+ * It never throws: any failure to compute is the Unknown form, so the advice can refuse or fail no check. */
+export function questionKindAdvice(draft: unknown, facts: TreeFacts | undefined, isSecret: (value: string) => boolean): QuestionKindAdvice {
+  try {
+    return compute(draft, facts, isSecret);
+  } catch (cause) {
+    return unknown(`the question-kind advice could not be computed (${cause instanceof Error ? cause.name : 'unknown-error'})`);
+  }
+}
+
+function compute(draft: unknown, facts: TreeFacts | undefined, isSecret: (value: string) => boolean): QuestionKindAdvice {
   const doc: Readonly<Record<string, unknown>> = isRecord(draft) ? draft : {};
   if (!hasWorthKnowingForm(doc['schemaVersion'])) return unknown(`this draft's schema has no \`${QUESTION_KINDS_FIELD}\`; it is a member of draft schema polaris-dossier-local-draft-v13`);
   if (facts === undefined) return unknown('the pinned tree could not be listed, so its major units are not known');
@@ -130,7 +141,12 @@ export function questionKindAdvice(draft: unknown, facts: TreeFacts | undefined)
       const answered = Object.fromEntries(QUESTION_KINDS.map((kind) => [kind, tally.get(kind) ?? 0])) as Record<QuestionKind, number>;
       return { unit, files, answered, missing: QUESTION_KINDS.filter((kind) => answered[kind] === 0) };
     }),
-    declarations: { rows, counted: counted.size, unmatched: [...declared.keys()].filter((blockId) => !counted.has(blockId)), duplicated },
+    declarations: (() => {
+      const unmatched = [...declared.keys()].filter((blockId) => !counted.has(blockId));
+      const named = (ids: readonly string[]): string[] => ids.filter((blockId) => !isSecret(blockId));
+      const unnamed = new Set([...unmatched, ...duplicated].filter((blockId) => isSecret(blockId))).size;
+      return { rows, counted: counted.size, unmatched: named(unmatched), duplicated: named(duplicated), unnamed };
+    })(),
     label: 'Inferred', basis: BASIS, note: NOTE,
   };
 }

@@ -55,7 +55,7 @@ async function main(): Promise<void> {
     const kinds = Object.entries(KIND_RULES).filter(([, rule]) => rule.test(said)).map(([kind]) => kind);
     if (kinds.length > 0) rows.push({ blockId: block.value['id'], kinds });
   }
-  const advice = questionKindAdvice({ ...doc, schemaVersion: 'polaris-dossier-local-draft-v13', questionKinds: rows }, facts);
+  const advice = questionKindAdvice({ ...doc, schemaVersion: 'polaris-dossier-local-draft-v13', questionKinds: rows }, facts, secretPathOf(load.screen));
   const record = {
     subject: `syzygy-5dhm.135: the per-kind floor replayed over ${path.basename(runDir)}'s latest passed draft`,
     run: path.basename(runDir),
