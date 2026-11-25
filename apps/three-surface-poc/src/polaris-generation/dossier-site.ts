@@ -155,7 +155,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'td.empty-cell,th.empty-cell{color:var(--muted);font-style:italic}'
   + 'figure.code-excerpt pre{margin:.5rem 0;overflow-x:auto;background:var(--d-surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem 1rem}'
   + 'figure.code-excerpt pre code{display:block;background:none;border:0;padding:0;font:.85rem/1.5 var(--font-mono);white-space:pre}'
-  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted)}'
+  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted);overflow-wrap:anywhere}'
   + '.code-anchor{margin:0;font-size:.9em}'
   // A modern system stack and no font download (syzygy-pdja.1, owner review of the Redis dossier). The shared stylesheet reads body text from
   // `--font-serif`, so that token carries the sans stack here. Only code, source text and diagram text keep the code face.
@@ -224,8 +224,12 @@ const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-d
 
 const LOCAL_REFLOW_CSS = new Map([
   ['appendix.html', '#appendix-disclosure{overflow-wrap:anywhere}'],
+  ['clarifications.html', '#page-clarifications{overflow-wrap:anywhere}'],
   ['discovery.html', '#page-discovery{overflow-wrap:anywhere}'],
+  ['executions.html', '#page-executions{overflow-wrap:anywhere}'],
   ['review.html', '#review-fidelity{overflow-wrap:anywhere}'],
+  ['sources/index.html', '#sources{overflow-wrap:anywhere}'],
+  ['understanding.html', '#page-understanding{overflow-wrap:anywhere}'],
 ]);
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome, figureKinds = false, mapCss = '', subsections = false): string {

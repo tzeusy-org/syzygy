@@ -2,6 +2,7 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
 import { navigationInput, readingInput } from './dossier-reading.testkit.js';
@@ -236,7 +237,30 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Inferred' },
   ] as const;
   const longPath = `src/${'selectedSourceSegment'.repeat(4)}.ts`;
+  const codePath = `src/${'quotedSourceSegment'.repeat(4)}.c`;
   const revision = '73c810edba'.repeat(4);
+  const sampleSource = sources[0]!;
+  const { body: _body, ...sourceIdentity } = sampleSource;
+  const pathOnlySource = { ...sourceIdentity, sourceId: 'long-path-census', path: longPath, classificationBasis: 'path-only', spans: [] } as const;
+  const quotedIdentity = { ...sampleSource, sourceId: 'long-quoted-source', path: codePath, objectId: sampleSource.objectId! };
+  const sampleSpan = sampleSource.spans[0]!;
+  const { start, end, text } = sampleSpan;
+  const quotedSource = { ...quotedIdentity, spans: [{ start, end, text, anchorId: generationAnchorId(quotedIdentity, start, end) }] };
+  const sourceAnchor = { ...local.sourceAnchors.get(sampleSource.sourceId)!, pathLabel: codePath };
+  const quotedCode: (typeof local.draft.sections)[number]['paragraphs'][number] = {
+    id: 'local-reflow-code', text: '', sourceIds: [quotedSource.sourceId], children: [],
+    element: { kind: 'code', language: 'C', path: codePath, startLine: 1, endLine: 1,
+      parts: [{ kind: 'quotation', sourceId: quotedSource.sourceId, start, end, text, anchor: { ...sourceAnchor, fragment: { start, end } } }] },
+  };
+  const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
+    : { ...section, paragraphs: [...section.paragraphs, quotedCode] }) };
+  const sourceAnchors = new Map(local.sourceAnchors);
+  sourceAnchors.set(quotedSource.sourceId, sourceAnchor);
+  const reportedGroup = (id: string, heading: string, title: string, details: readonly string[]) => ({
+    id, heading, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `${id}/path`, marking: 'inferred' as const, unknownReason: null, title, text: 'The fixture names one source path.', details, sourceIds: [],
+    }],
+  });
   const reportedPaths = ['selected', 'excluded', 'unresolved', 'deferred'] as const;
   const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [
     { id: 'discovery-inspected', heading: 'Inspected, as the agent reports', note: 'Self-reported.', empty: 'None.', items: [{
@@ -257,21 +281,36 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     }],
   }] } as const;
   const disclosure = [...local.disclosure, { id: 'run/screened-path', text: `Screened source ${longPath}`, label: 'Inferred' }] as const;
-  const layoutFixture = { ...local, disclosure, reviewStatus, pages: [...local.pages, discoveryPage, reviewPage] };
-  const settledText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
+  const executionsPage = { path: 'executions.html', title: 'Executions', intro: 'Reported commands.', groups: [
+    reportedGroup('executions-reported', 'Reported commands', `cat ${longPath}`, [`Working directory: ${longPath}`]),
+  ] };
+  const clarificationsPage = { path: 'clarifications.html', title: 'Clarifications', intro: 'Operator questions and answers.', groups: [
+    reportedGroup('clarifications-asked', 'Questions and answers', `Is ${longPath} in scope?`, [`Consequence: ${longPath}`]),
+  ] };
+  const existingPages = local.pages.map(page => page.path !== 'understanding.html' ? page : { ...page, groups: [...page.groups,
+    reportedGroup('understanding-purpose', 'Purpose', 'Source scope', [`Scope: ${longPath}`]),
+  ] });
+  const layoutFixture = { ...local, draft, sourceAnchors, disclosure, reviewStatus,
+    pages: [...existingPages, discoveryPage, reviewPage, executionsPage, clarificationsPage] };
+  const longText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
     ['appendix.html', [['#appendix-disclosure > ul > li', longPath]]],
+    ['clarifications.html', [['#clarifications-asked strong', longPath], ['#clarifications-asked ul.item-details > li', longPath]]],
     ['discovery.html', [
       ['#discovery-inspected ul.item-details > li', longPath],
       ...reportedPaths.map(part => [`#discovery-${part} > ul.local-items > li`, longPath] as const),
       ['#discovery-read > ul.local-items > li', longPath],
       ['#discovery-read .group-note', revision],
     ]],
+    ['executions.html', [['#executions-reported strong', longPath], ['#executions-reported ul.item-details > li', longPath]]],
+    ['index.html', [['#element-local-reflow-code .code-path', codePath]]],
     ['review.html', [['#review-fidelity > ul.local-items > li', fidelityDigest]]],
+    ['sources/index.html', [['#sources > ul > li', longPath], ['#sources > ul > li > a', codePath]]],
+    ['understanding.html', [['#understanding-purpose ul.item-details > li', longPath]]],
   ] as const);
-  const { files } = renderLocalDossier({ sources, local: layoutFixture });
+  const { files } = renderLocalDossier({ sources: [...sources, pathOnlySource, quotedSource], local: layoutFixture });
   const pages = [...files].filter(([path]) => path.endsWith('.html'));
-  expect(pages).toHaveLength(20);
-  expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...settledText.keys()]));
+  expect(pages).toHaveLength(23);
+  expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...longText.keys()]));
   expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
   const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
   let browser: Browser | undefined;
@@ -310,7 +349,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
           expect(status, path).not.toContain(designGroups);
         }
         if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
-        for (const [selector, text] of settledText.get(path) ?? []) {
+        for (const [selector, text] of longText.get(path) ?? []) {
           const textFits = await page.evaluate<boolean>(`(() => {
             const text = ${JSON.stringify(text)};
             const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
@@ -325,7 +364,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
       }
       expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
       await page.setViewport(1440, 844);
-      for (const [path] of settledText) {
+      for (const [path] of pages) {
         await page.navigate(pathToFileURL(join(directory, path)).href);
         expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
       }
