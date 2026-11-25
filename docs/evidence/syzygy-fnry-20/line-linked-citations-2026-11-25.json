@@ -1,0 +1,296 @@
+{
+  "format": "syzygy-dossier-line-linked-citations/1",
+  "scope": "Original syzygy-fnry.20 and recorded P13 option A in the 2026-11-09 pursuit. Operator-agent source presentation over already admitted synthetic sources.",
+  "source": {
+    "actualPredecessor": "1c50743aa561e1e82dd7f327cfb36b7999e15c7c",
+    "comparisonRenderer": "278265bce97d1903e8b89ccc6062ac6e3763c17f",
+    "reviewedSource": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+    "subject": "5297f4962329436aebb8ebbab98af2adff919189",
+    "tree": "464a42c8a372800961c26405c4f71d4a7c45060b",
+    "changedBlobs": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts": {
+        "before": "23f2530f7359b1ed7890664724d4604ff7a9e474",
+        "after": "c7bb4e2f0c786445eb8241faa3ced4e6c793d3b4"
+      },
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts": {
+        "before": "c8f43ed85123c84155776b2357cb4285c5075af4",
+        "after": "a2ddd189b7d5e1c6020b77b8cf2a8acad498048f"
+      },
+      "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts": {
+        "before": "05f1caf05ef8dc6637af3d9f3204ebade57085d4",
+        "after": "36e65d1c3d3b4bdb3254a7604a6406e72310146a"
+      },
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": {
+        "before": "b5e07623c01dd781545d2b37e0b9bf4534c12a8b",
+        "after": "ed7f107505a5609c3a491e8ac0c4cd6ef5e45c6c"
+      },
+      "apps/three-surface-poc/src/polaris-generation/dossier-source-lines.ts": {
+        "before": null,
+        "after": "0c779b1c4e475ebe4deb91709f2cb4683389e2e0"
+      },
+      "apps/three-surface-poc/src/polaris-generation/synthetic-shapes.testkit.ts": {
+        "before": "7101f02aeed694e26f8d04a2d841007d419f3e42",
+        "after": "1600551a0ac47478c33ba8296a58ad41744578e9"
+      },
+      "packages/polaris-dossier/src/render.test.ts": {
+        "before": "cd0fdc21aecd9a985a40665d8c678b1ee3dfcb94",
+        "after": "2dd1a3ede81213a928fbe82b68f8c4a6b29d5ff3"
+      },
+      "packages/polaris-dossier/src/render.ts": {
+        "before": "53770c8e2a2c9ef61a9ab7ff433c02ca7b16d65f",
+        "after": "248b5f7c8fb6e596b4ce29dc22efa36341df02a1"
+      },
+      "packages/polaris-generation-core/src/local-render.ts": {
+        "before": "df3600a12e215c77578724323e21c85ce8a51e43",
+        "after": "3371bd37573915cdda33da3ac3d5f48f687e15db"
+      }
+    }
+  },
+  "fixtures": {
+    "ordinary": "Run the installed render integration quotation case in a detached exact source checkout. Capture its synthetic renderer input. Pass the same input to both renderer modules, with the old consumer receiving the literal same range labels as display text. Compare every marked href target, literal byte-anchor attribute, exact source-block text, machine.json and dossier.json. Count source line spans as DOM elements and check every numeric line ID is outside details.",
+    "long": "Render the literal synthetic lineCitationInput from the dossier reading test kit through the same two renderer paths. The 2,100-line, 94,093-byte available source measures representative uncompressed leaf growth. The denominator includes the whole fixture source and both available leaves.",
+    "redacted": "The ordinary render integration case keeps original logical lines 1, 2, 3 and 5, omits L4 and emits no link to L4. The mixed newline two-piece task-route test checks split CRLF, bare CR and LF."
+  },
+  "byteDifferential": {
+    "short-same-input": {
+      "pages": 19,
+      "totalCitations": 20,
+      "ranged": 18,
+      "unranged": 2,
+      "lineIds": 7,
+      "anchorsIdentical": 3,
+      "machineSha256": "f74100aa16309abd9075b76339693480682adc814af5644bbd9f1f9d875384b2",
+      "manifestSha256": "c9e152e74c9f85bdb7dd3bdf8500a50cfa7e2d413536d9475f04ffadea70372f",
+      "sourceLeaves": {
+        "sources/b42220af55ad614d4f9d1486.html": {
+          "sourceBytes": 192,
+          "beforeHtmlBytes": 29889,
+          "afterHtmlBytes": 31165,
+          "beforeSha256": "4c98e607b47ac49db05f141b3907ec90344f63c1d6b9937653314a23a2520320",
+          "afterSha256": "fce858d54d866860e9d019e8697a82132cc63e37cf7a43a6430c8e23af4b91ba",
+          "lineIds": 5
+        },
+        "sources/3239fdb4fd7294274ba7cd8f.html": {
+          "sourceBytes": 49,
+          "beforeHtmlBytes": 29745,
+          "afterHtmlBytes": 30612,
+          "beforeSha256": "5e70d206e762510a076940a05e3319ad0cf3f238ed4d3a5d16a0588152446973",
+          "afterSha256": "489c131b283bfc799e5e2e0f767f8fb22322801414eebe11e6f672b6b413927a",
+          "lineIds": 2
+        }
+      }
+    },
+    "long": {
+      "pages": 11,
+      "totalCitations": 38,
+      "ranged": 2,
+      "unranged": 36,
+      "lineIds": 2101,
+      "anchorsIdentical": 1,
+      "machineSha256": "a614590673aff3f6383df1e4e51390e7d1842509b2d30deea173b85046c145e0",
+      "manifestSha256": "1e08d0d210958ed5b8429334549c1de8674dd389f43eaa42fa05290c69f8cbc2",
+      "sourceLeaves": {
+        "sources/003b83c88938ed20393ede23.html": {
+          "sourceBytes": 94093,
+          "beforeHtmlBytes": 127969,
+          "afterHtmlBytes": 254905,
+          "beforeSha256": "ee97f1f9decce8b781d3af8aa38fbc254bbed691543b598c4c9c99df07fc06bd",
+          "afterSha256": "723c82b6b8041a8db8f5db3ff7858c14238a5a23de1e26557df2d176eda6468e",
+          "lineIds": 2100
+        },
+        "sources/6e042a3d943e7663eb4d591e.html": {
+          "sourceBytes": 35,
+          "beforeHtmlBytes": 28296,
+          "afterHtmlBytes": 28997,
+          "beforeSha256": "e1b1190ee0b93042321506be61f550fee71c4b90205c544ea7c624fb74d8c581",
+          "afterSha256": "91ffffcfab332c9a7099930c5429c033a6171a5ddfebf4f059f3ea3ad8d04cec",
+          "lineIds": 1
+        }
+      }
+    }
+  },
+  "browser": {
+    "source": "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+    "project": "e2e",
+    "actualChromium": true,
+    "scriptFreeCases": [
+      "follows a ranged source citation and highlights only its line span with scripts removed",
+      "continues a citation onto its next source piece using a native keyboard link"
+    ],
+    "viewport": [
+      390,
+      844
+    ],
+    "covered": [
+      "numeric fragment and actual native scroll",
+      "only active boundaries on a long source",
+      "two different original first lines across two admitted source pages",
+      "independent continuation intervals and names",
+      "unrelated target hides continuation",
+      "provider golden runs through the original provider path"
+    ]
+  },
+  "receiptDigests": {
+    "differential": "de200904029da31ab50d60b55b30ff4aa02845f0714d0e0a2a67b63f72e0e73b",
+    "ordinaryLog": "ee39f43ac653f5c55ebd36c150d5055258cedf56461f05b57c348accfbbf64e1",
+    "largeLog": "0b0e1a66088f541c0bb6e5c1c11e3c381529b3cfe5f2a54043d5fdac60c54f75",
+    "failedWideR3Log": "04907a0624c01e310bb4ffd09d41ef164d1622c05290efd032fe1fea9a669e34",
+    "originalFindingsR1R2": [
+      "1644f086b7d7b4fe215c73de52387945a613f5a2ef2247126d49e68782e4ef76",
+      "5005af9944d11d80141953b04935c2b160b23f8870d4bf49c54e692250eb4d05"
+    ]
+  },
+  "rule6": {
+    "subject": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+    "rule": 6,
+    "controls": [
+      {
+        "id": "off-by-one-id",
+        "commit": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-source-lines.ts",
+        "old": "id=\"L${row.number}\"",
+        "new": "id=\"L${row.number + 1}\"",
+        "check": [
+          "./node_modules/.bin/vitest",
+          "run",
+          "--project",
+          "integration",
+          "packages/polaris-dossier/src/render.test.ts",
+          "-t",
+          "lands every ranged reading citation",
+          "--reporter=verbose"
+        ],
+        "result": "killed",
+        "runs": [
+          {
+            "label": "baseline",
+            "exit": 0,
+            "sha256": "73f72e928e46aeb2a950fef65788d13f390a99e02f45352e3d3eb85788920905"
+          },
+          {
+            "label": "mutant",
+            "exit": 1,
+            "sha256": "b01fed678cd36b9d76da248c44eeecba6cd61b60ab33291826d254a47e217193"
+          }
+        ]
+      },
+      {
+        "id": "fixed-href",
+        "commit": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "return first.fragment;",
+        "new": "return 'exact-text';",
+        "check": [
+          "./node_modules/.bin/vitest",
+          "run",
+          "--project",
+          "integration",
+          "packages/polaris-dossier/src/render.test.ts",
+          "-t",
+          "lands every ranged reading citation",
+          "--reporter=verbose"
+        ],
+        "result": "killed",
+        "runs": [
+          {
+            "label": "baseline",
+            "exit": 0,
+            "sha256": "83cac29e075372ebadb3480b03a953cd95ff4bcff63b24624deb0d0d35b78cc0"
+          },
+          {
+            "label": "mutant",
+            "exit": 1,
+            "sha256": "d0ecd8a52204c329df3ceed41fa9bf22ccb54c722d6272ce1a9b32cc6a3e0b34"
+          }
+        ]
+      },
+      {
+        "id": "lf-only-source-lines",
+        "commit": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-source-lines.ts",
+        "old": "const lines = bodyLines(run.map(span => span.text).join(''));",
+        "new": "const lines = run.map(span => span.text).join('').match(/[^\\n]*\\n|[^\\n]+$/gu) ?? [];",
+        "check": [
+          "./node_modules/.bin/vitest",
+          "run",
+          "--project",
+          "unit",
+          "apps/three-surface-poc/src/polaris-generation/dossier-finding.test.ts",
+          "-t",
+          "names a file once for a step that cites two pieces",
+          "--reporter=verbose"
+        ],
+        "result": "killed",
+        "runs": [
+          {
+            "label": "baseline",
+            "exit": 0,
+            "sha256": "a1cab237dc121c1e81767947ada67f894a9e7250985fc682d7a940f49542febe"
+          },
+          {
+            "label": "mutant",
+            "exit": 1,
+            "sha256": "b4e108ac7e4e32037665c20cfbca8e3b3e9aafb332f695654cf927af3f80d824"
+          }
+        ]
+      },
+      {
+        "id": "coalesced-continuation",
+        "commit": "a03efc9bfb07741ed4138065c4d65aa61ac08a37",
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "old": "const continuation = `continued-${id}-${first.fragment}`;",
+        "new": "const continuation = `continued-${id}`;",
+        "check": [
+          "./node_modules/.bin/vitest",
+          "run",
+          "--project",
+          "e2e",
+          "apps/three-surface-poc/src/polaris-generation/dossier-reading.browser.test.ts",
+          "-t",
+          "continues a citation onto its next source piece",
+          "--reporter=verbose"
+        ],
+        "result": "killed",
+        "runs": [
+          {
+            "label": "baseline",
+            "exit": 0,
+            "sha256": "f4fbe4bce4329824c755b87a40086689961395e15fe0b9c7e922c5938351d228"
+          },
+          {
+            "label": "mutant",
+            "exit": 1,
+            "sha256": "17c89981e60b394ee85a0771e2e83ec7d491dae5e48487e27208d5c14887c512"
+          }
+        ]
+      }
+    ]
+  },
+  "reviewRounds": [
+    {
+      "round": 1,
+      "verdict": "REVISE",
+      "path": "docs/reviews/syzygy-fnry-20/FNRY20-LINE-CITATIONS-R1-RAW.md",
+      "sha256": "1644f086b7d7b4fe215c73de52387945a613f5a2ef2247126d49e68782e4ef76"
+    },
+    {
+      "round": 2,
+      "verdict": "REVISE",
+      "path": "docs/reviews/syzygy-fnry-20/FNRY20-LINE-CITATIONS-R2-RAW.md",
+      "sha256": "5005af9944d11d80141953b04935c2b160b23f8870d4bf49c54e692250eb4d05"
+    },
+    {
+      "round": 3,
+      "verdict": "CONFIRM",
+      "path": "docs/reviews/syzygy-fnry-20/FNRY20-LINE-CITATIONS-R3-RAW.md",
+      "sha256": "ea53e6ea0e2d536c8ee1e56c2f8fb443c3a4d1960665dbb3edb89a9f4cec8e17"
+    },
+    {
+      "round": 4,
+      "verdict": "CONFIRM",
+      "path": "docs/reviews/syzygy-fnry-20/FNRY20-LINE-CITATIONS-R4-RAW.md",
+      "sha256": "52b8fa2df5696c16db39d280d9843a0c068a6b09e83e35ee48e7429c0e1e33aa"
+    }
+  ],
+  "existingTargetMultiplicity": "Different citations sharing the same original first-line fragment can highlight their union at that one physical line ID. Their accessible link names retain their own ranges. Distinct original targets keep separate continuation intervals."
+}
