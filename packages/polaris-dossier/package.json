@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "scripted-benchmark-fixture": "cd ../.. && node scripts/clean_build.mjs packages/polaris-dossier && node packages/polaris-dossier/dist/scripted-benchmark-fixture.js"
+  },
   "exports": {
     ".": {
       "source": "./src/index.ts",

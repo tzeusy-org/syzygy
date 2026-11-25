@@ -115,6 +115,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-dossier/src/screen-scope-v6.test.ts',
   'packages/polaris-dossier/src/screen-scope-v8.test.ts',
   'packages/polaris-dossier/src/screen.test.ts',
+  'packages/polaris-dossier/src/scripted-benchmark.test.ts',
   'packages/polaris-dossier/src/session-bridge.test.ts',
   'packages/polaris-dossier/src/session-broker.test.ts',
   'packages/polaris-dossier/src/session-credential.test.ts',
