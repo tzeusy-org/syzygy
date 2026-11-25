@@ -360,27 +360,53 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
       { method: 'GET', path: '/polaris', credentialClass: 'human-open', handle: () => ({
         status: 200, contentType: 'text/html', body: '<h1>Fixture</h1><a href="#fixture">Fixture link</a>' + footer(),
       }) },
+      { method: 'GET', path: '/polaris/source', credentialClass: 'human-open', handle: () => ({
+        status: 200, contentType: 'text/html', body: '<h1>Exact fixture source</h1>' + footer(),
+      }) },
     ]);
     const tab = await browser.newPage();
+    const entryUrl = baseUrl + '/polaris';
+    const unrelated = new Error('fixture accessibility failure unrelated to navigation');
+    const answer = { evaluation: EVALUATION, projectShape: { kind: 'observed', sources: [{ identity: SOURCE_A, path: 'docs/a.md' }] } };
     try {
-      const reloading: BrowserPage = {
-        navigate: tab.navigate.bind(tab),
-        evaluate: tab.evaluate.bind(tab),
-        accessibleNames: async (expression) => {
-          const names = await tab.accessibleNames(expression);
-          expect(names).toEqual(['Fixture link']);
-          await tab.navigate(baseUrl + '/polaris');
-          return names;
-        },
-        setViewport: tab.setViewport.bind(tab),
-        press: tab.press.bind(tab),
-        mouseMove: tab.mouseMove.bind(tab),
-        axTree: tab.axTree.bind(tab),
-        close: tab.close.bind(tab),
-      };
-      const answer = { evaluation: EVALUATION, projectShape: EMPTY_MACHINE_SHAPE };
-      const report = await sweepPolarisNamesAndHeadings(reloading, baseUrl, answer, '/polaris', '/polaris/source', async (url) => (await fetch(url)).status);
-      expect(report).toMatchObject({ pagesListed: 1, pagesSwept: 0, unboundPages: [{ page: 'entry', reason: 'document-replaced' }] });
+      for (const phase of ['before-ax', 'after-ax', 'no-replacement'] as const) {
+        let targetUrl: string;
+        let axError: unknown;
+        const controlled: BrowserPage = {
+          navigate: async (url) => { targetUrl = url; await tab.navigate(url); },
+          evaluate: tab.evaluate.bind(tab),
+          accessibleNames: async (expression) => {
+            if (targetUrl !== entryUrl) return tab.accessibleNames(expression);
+            if (phase === 'no-replacement') throw unrelated;
+            if (phase === 'before-ax') await tab.navigate(entryUrl);
+            try {
+              const names = await tab.accessibleNames(expression);
+              expect(names).toEqual(['Fixture link']);
+              await tab.navigate(entryUrl);
+              return names;
+            } catch (error) {
+              axError = error;
+              throw error;
+            }
+          },
+          setViewport: tab.setViewport.bind(tab),
+          press: tab.press.bind(tab),
+          mouseMove: tab.mouseMove.bind(tab),
+          axTree: tab.axTree.bind(tab),
+          close: tab.close.bind(tab),
+        };
+        const sweep = sweepPolarisNamesAndHeadings(controlled, baseUrl, answer, '/polaris', '/polaris/source', async (url) => (await fetch(url)).status);
+        if (phase === 'no-replacement') {
+          await expect(sweep).rejects.toBe(unrelated);
+          continue;
+        }
+        const report = await sweep;
+        if (phase === 'before-ax') expect(String(axError)).toContain('no element array');
+        else expect(axError).toBeUndefined();
+        expect(report).toMatchObject({ pagesListed: 2, pagesSwept: 1, unboundPages: [{ page: 'entry', reason: 'document-replaced' }] });
+        expect(report.pages.map(({ page }) => page)).toEqual([SOURCE_A]);
+        expect(report.violations.map(({ kind, where }) => [kind, where])).toEqual([['page-evaluation-unbound', 'entry'], ['page-not-swept', 'entry']]);
+      }
     } finally { await tab.close(); }
   });
 

@@ -425,13 +425,24 @@ export async function sweepPolarisNamesAndHeadings(page: BrowserPage, baseUrl: s
       unbound(listed, started);
       continue;
     }
-    const measured = await measureLoadedPage(page, url);
-    const finished = evaluationFailure(await page.evaluate<BrowserEvaluation>(`(${READ_EVALUATION})(false)`), url, evaluation);
+    // A replacement can discard the held elements before AX reads them.
+    // Recheck the document even when measurement failed.
+    const measured = await measureLoadedPage(page, url).then(
+      (populations) => ({ kind: 'measured' as const, populations }),
+      (error: unknown) => ({ kind: 'failed' as const, error }),
+    );
+    let finished: EvaluationFailure | undefined;
+    try {
+      finished = evaluationFailure(await page.evaluate<BrowserEvaluation>(`(${READ_EVALUATION})(false)`), url, evaluation);
+    } catch (error) {
+      throw measured.kind === 'failed' ? measured.error : error;
+    }
     if (finished !== undefined) {
       unbound(listed, finished);
       continue;
     }
-    const report = namesAndHeadings(measured, url, listed.page, sourcePaths);
+    if (measured.kind === 'failed') throw measured.error;
+    const report = namesAndHeadings(measured.populations, url, listed.page, sourcePaths);
     reports.push(report);
     for (const violation of report.violations) {
       violations.push({ ...violation, where: `${listed.page}: ${violation.where}` });
