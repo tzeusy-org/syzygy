@@ -81,7 +81,7 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
 const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectReader => ({ listTree: async () => paths.map((p) => ({ path: p, mode: '100644' })) }) as unknown as PinnedObjectReader;
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
-const TERMINOLOGY_ID_PARAGRAPH = 'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". Omit comma-separated lists and the `u-` prefix.';
+const TERMINOLOGY_ID_PARAGRAPH = 'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". If that spelling cannot form a valid ID, choose a valid ID and keep the exact term in the item\'s `statement`. For example, use `io` as the ID for "I/O" and write "I/O" in the statement. Omit comma-separated lists and the `u-` prefix.';
 
 describe('brief: issued', () => {
   it.each(['repository', 'clone', 'visibility'] as const)('refuses a changed %s declaration after the brief binds its source', async field => {
