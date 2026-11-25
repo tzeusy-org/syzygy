@@ -1,0 +1,72 @@
+{
+  "subject": "6dcfa2e73c08e8de14271b5807373037786a77f5",
+  "sourceBase": "d8e1bf97b94989d767d47a0c1abc76ab9db48749",
+  "scope": "Guard-only focused overlay, before profile9 application; no full-gate or native acceptance claim.",
+  "files": [
+    {
+      "path": "MACHINE-PEER-GUARD-REVIEW-RAW.md",
+      "bytes": 8527,
+      "sha256": "b8591e52a19168aaf6791bda08e311b693826fbac84eb8c424fdfaddadfdea5a"
+    },
+    {
+      "path": "candidate/binding.json",
+      "bytes": 1881,
+      "sha256": "8b07435802623a631f87a60f2a157d15b3ec991483cfeb51cad67f4acb898ff2"
+    },
+    {
+      "path": "candidate/candidate-guard.ts",
+      "bytes": 36655,
+      "sha256": "dd49203268bb2282a6d0bb749547bc7989847ca6e79943a180921519854b7baa"
+    },
+    {
+      "path": "candidate/current-peer.ts",
+      "bytes": 38414,
+      "sha256": "e484b8649debcfb170f456fd69172d651635bc380b79a19191fd469ecedc410c"
+    },
+    {
+      "path": "candidate/old-peer.ts",
+      "bytes": 38140,
+      "sha256": "2a1f0067d10f2fdef2ec96716166bd7e9785bb4667aafa580aa90f7fadd56cfb"
+    },
+    {
+      "path": "candidate/original-guard.ts",
+      "bytes": 36655,
+      "sha256": "bf4350f3d795ffa2862b7aac8114e407eaeea919e5c3701bbe6ac99e5a402cc4"
+    },
+    {
+      "path": "candidate/peer-context.diff",
+      "bytes": 1639,
+      "sha256": "fd936ccabae5f729a46a14577c99a31c084f8b47084c8843c81ff0e59a80e850"
+    },
+    {
+      "path": "candidate/prepare.mjs",
+      "bytes": 3433,
+      "sha256": "466efe80879561d764183e99bf576848efcce9db4f4d919daa2584fe0af1e3f3"
+    },
+    {
+      "path": "execution/guard-old-pin-mutant.json",
+      "bytes": 6094,
+      "sha256": "7eeb2ee3b72b4e657d70adfb302db7310bcce6227bc59cf09527b1f5f0449cd5"
+    },
+    {
+      "path": "execution/guard-old-pin-mutant.log",
+      "bytes": 116,
+      "sha256": "76cef3b73ca7442f85fd5b6a841050b72171dc813da8f1034607ec60cc4aa8a9"
+    },
+    {
+      "path": "execution/guard-positive.json",
+      "bytes": 5123,
+      "sha256": "d65a1ae546bc356ae425289298a2c39d9a840a37433da5f059b94d23946f4c1c"
+    },
+    {
+      "path": "execution/guard-positive.log",
+      "bytes": 110,
+      "sha256": "a1b023c309456f102cf91ab1b4d445fa61ef4ab66fb068191eeed5ec44a58d17"
+    },
+    {
+      "path": "verify-guard-profile9.py",
+      "bytes": 3837,
+      "sha256": "42a48e5c742715b1596413aa535961cabf22d3c927a47d7808e5f18fe66b46df"
+    }
+  ]
+}
