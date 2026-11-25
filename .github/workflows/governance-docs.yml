@@ -15,9 +15,9 @@
 # "the battery is clean" are the same claim rather than two claims a reader
 # conflates. When a check is added there, add it here.
 #
-# The steps run in four parallel jobs: `governance` holds every check but the
-# four slow selftests: reconciliation and P115 have a job each; readability
-# and dossier v1.6 share a job. The aggregate `checks` job is
+# The steps run in five parallel jobs: two governance groups hold every check
+# but the four slow selftests: reconciliation and P115 have a job each;
+# readability and dossier v1.6 share a job. The aggregate `checks` job is
 # the required check. Time-to-green target: 7 minutes (CONTRIBUTING.md,
 # "CI time budget").
 name: governance-docs
@@ -43,7 +43,7 @@ permissions:
   contents: read
 
 jobs:
-  # Every check but the three parallel selftests, in step order.
+  # The first governance group, in the original step order.
   governance:
     name: checks (governance)
     runs-on: ubuntu-latest
@@ -225,6 +225,24 @@ jobs:
 
       - name: record_versioned_signoff --selftest
         run: python3 scripts/record_versioned_signoff.py --selftest
+
+      # This literal canonical orientation command is not a predicate (CG-26).
+      - name: doctrine tag orientation
+        run: git tag --list 'doctrine-*'
+
+  # Continue in a fresh full-history checkout; the commands are read-only.
+  governance-continuation:
+    name: checks (governance continuation)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: prepare_three_surface_poc_governedby_reference_recording --check
         run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check
@@ -621,18 +639,20 @@ jobs:
   # `checks`.
   checks:
     runs-on: ubuntu-latest
-    needs: [governance, reconciliation-selftest, p115-selftest, readability-selftest]
+    needs: [governance, governance-continuation, reconciliation-selftest, p115-selftest, readability-selftest]
     if: ${{ always() }}
     steps:
       - name: every job passed
         env:
           GOVERNANCE: ${{ needs.governance.result }}
+          GOVERNANCE_CONTINUATION: ${{ needs.governance-continuation.result }}
           RECONCILIATION: ${{ needs.reconciliation-selftest.result }}
           P115: ${{ needs.p115-selftest.result }}
           READABILITY: ${{ needs.readability-selftest.result }}
         run: |
-          echo "governance=${GOVERNANCE} reconciliation=${RECONCILIATION} p115=${P115} readability=${READABILITY}"
+          echo "governance=${GOVERNANCE} governance-continuation=${GOVERNANCE_CONTINUATION} reconciliation=${RECONCILIATION} p115=${P115} readability=${READABILITY}"
           test "${GOVERNANCE}" = success
+          test "${GOVERNANCE_CONTINUATION}" = success
           test "${RECONCILIATION}" = success
           test "${P115}" = success
           test "${READABILITY}" = success

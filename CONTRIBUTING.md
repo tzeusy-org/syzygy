@@ -227,7 +227,7 @@ The clock is the slowest job of a workflow, not the sum of its steps.
   the unit job. Splitting preserves test coverage and existing test deadlines;
   hosted job durations establish whether the split meets this budget.
   `governance-docs.yml` runs
-  the governance battery in one job and four slow selftests
+  the governance battery in two jobs and four slow selftests
   (`check_spec_reconciliation --selftest`,
   `prepare_three_surface_poc_governedby_reference_recording --selftest`,
   `build_three_surface_poc_readability_successor --selftest`, and
