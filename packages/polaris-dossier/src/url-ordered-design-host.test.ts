@@ -23,7 +23,7 @@ import { createUrlSessionBudget } from './url-session-budget.js';
 import type { OrderedScreenProgram } from './url-ordered-design-screen.js';
 import * as screenRunner from './url-ordered-design-screen.js';
 import { sessionRelayTestPort, type SessionAuditEvent } from './session-relay.js';
-import { launchRestrictedUrlSession, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionProcess } from './session-launch.js';
+import { launchRestrictedUrlSession, observeUrlSessionInspectionForTest, prepareRestrictedUrlSession, URL_CLI_PROGRAM, type UrlSessionProcess } from './session-launch.js';
 import * as peerCapture from './session-peer.js';
 import { initializeUrlMachineStore } from './url-machine-store.js';
 import { publishUrlMachineLifecycle } from './url-machine-lifecycle.js';
@@ -492,6 +492,8 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
     expected: { nodeSha256, supportSha256: { 'session-bridge.js': sha256(bridge), 'session-mcp.js': sha256(mcp) } },
     current: () => current, audit: () => {}, canaries: [canary], hostLoopbackPort: (loopback.address() as AddressInfo).port,
     limits: { milliseconds: 120_000 } });
+  const inspect = observeUrlSessionInspectionForTest(preparation);
+  if (inspect === null) throw new Error('owned launch inspection observer unavailable');
   const host = await orderedDesignHostTestPort(relay)({ controller: f.activation, activationDeadline: Date.now() + 30_000,
     profile: f.profile, brokerSocket: path.join(root, 'broker/b.sock'), relaySocket: path.join(root, 'relay/r.sock'), brokerMachine, relayMachine,
     subject: { binding: f.profile.input.binding, project: 'project:syzygy', pin: 'a'.repeat(40), principal: 'owned-operator' }, current: () => current,
@@ -521,11 +523,12 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
   eventLoop.disable();
   const recordKinds = await Promise.all(f.stored.map(async file => (JSON.parse(await readFile(file, 'utf8')) as { kind: string }).kind));
   return { f, outcome, forwards, observed, terminal, requests, recordKinds, captures, machineAudits, screenTimes, stages, reads, peerChecks,
-    responseProofRenewals, maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
+    responseProofRenewals, inspection: inspect(), maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
 }
 
 function exchangeDiagnostic(result: Awaited<ReturnType<typeof nativeExchange>>): string {
-  return JSON.stringify({ outcome: result.outcome.outcome, forwards: result.forwards, captures: result.captures,
+  return JSON.stringify({ outcome: result.outcome.outcome, launchOutcome: result.outcome, inspection: result.inspection,
+    forwards: result.forwards, captures: result.captures,
     machineAudits: result.machineAudits, observed: result.observed.map(row => row.event), recordKinds: result.recordKinds,
     screenTimes: result.screenTimes, stages: result.stages, reads: result.reads, peerChecks: result.peerChecks,
     maximumEventLoopMilliseconds: result.maximumEventLoopMilliseconds, workerCapacityCpuMicroseconds: result.f.workerCpu(),
