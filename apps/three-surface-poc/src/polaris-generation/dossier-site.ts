@@ -1,4 +1,5 @@
 import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
+import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
 
 import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, figureToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
@@ -14,10 +15,12 @@ import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as
 import { assertInertSvg } from './svg-inert.js';
 import { citationLabel, drawSourceLines, rangesOnSource, sourceByteRange, sourceLines, type CitationRange, type SourceHighlight } from './dossier-source-lines.js';
 
-const SOURCE_LINES_CSS = 'html{scroll-behavior:auto}.source-line{position:relative;display:block;min-block-size:1lh;padding-inline-start:7ch;overflow-wrap:anywhere;scroll-margin-block-start:1rem}'
-  + '.source-line::before{position:absolute;inset-inline-start:.35ch;width:6ch;text-align:end;content:attr(data-line);color:var(--muted);user-select:none}'
+const SOURCE_LINES_CSS = `html{scroll-behavior:auto}.source-line{position:relative;display:block;min-block-size:${tokens.length.singleRow};padding-inline-start:${tokens.length.sourceLineGutter};overflow-wrap:anywhere;`
+  + `scroll-margin-block-start:${tokens.spacing.standard}}`
+  + `.source-line::before{position:absolute;inset-inline-start:${tokens.length.sourceLineLabelInset};width:${tokens.length.sourceLineNumber};text-align:end;content:attr(data-line);`
+  + `color:var(--muted);user-select:none}`
   + '.source-continuation{display:none}.source-continuation a{display:block;width:fit-content}'
-  + '.source-continuation-target{position:absolute;inset-block-start:0;scroll-margin-block-start:1rem}';
+  + `.source-continuation-target{position:absolute;inset-block-start:${tokens.spacing.none};scroll-margin-block-start:${tokens.spacing.standard}}`;
 
 /**
  * Multi-page static dossier (gap #8), from the view of a run: a provider pipeline's final output (`dossier-render.ts` builds
@@ -115,103 +118,167 @@ function href(from: string, to: string, fragment?: string): string {
  * exact-source text never pass through here. */
 export const prose = (text: string): string => escape(text).replace(/`([^`\n]+)`/gu, '<code>$1</code>');
 
-const DOSSIER_CSS = '.dossier-nav{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}.glossary dt{font-weight:600;margin-top:1rem}.glossary dd{margin:0 0 .5rem}.deep-links{font:.9rem var(--font-mono)}.source-path{font:400 1.4rem/1.4 var(--font-mono);overflow-wrap:anywhere;letter-spacing:0;max-width:none;width:auto}.source-anchor{font:.8rem/1.5 var(--font-mono);color:var(--muted);overflow-wrap:anywhere}';
+const DOSSIER_CSS = `.dossier-nav{display:flex;flex-wrap:wrap;gap:${tokens.spacing.small} ${tokens.spacing.section}}.glossary dt{font-weight:${tokens.type.strongWeight};margin-top:${tokens.spacing.standard}}`
+  + `.glossary dd{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.small}}.deep-links{font:${tokens.type.bodySmall} var(--font-mono)}`
+  + `.source-path{font:${tokens.type.normalWeight} ${tokens.type.sourcePath}/${tokens.type.compactLeading} var(--font-mono);overflow-wrap:anywhere;letter-spacing:${tokens.type.normalTracking};`
+  + `max-width:none;width:auto}.source-anchor{font:${tokens.type.sourceHint}/${tokens.type.bodyLeading} var(--font-mono);color:var(--muted);overflow-wrap:anywhere}`;
 
 /** The dossier's own theme, after the shared tokens so it wins on dossier pages only (syzygy-mea.10.1): the warm soft dark palette of the
  * th-projects questionnaire page by default on operator-agent runs only (the provider mode's bytes are pinned), its light palette under `prefers-color-scheme: light`, and tinted callout panels. Every
  * callout keeps its text label ([Inferred], [Unknown], …), so no meaning rests on colour alone. Every text colour is at least 4.5:1 on every
  * page and callout background in both variants, and the focus ring has its own colour, never a claim colour (S11-F2). */
-export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-raised:#2a2a28;--ink:#f0eee6;--muted:#a6a39a;--line:#3d3c39;'
-  + '--cyan:#e5937a;--observed:#6cc28f;--amber:#e0a64a;--unknown:#e0a64a;--proposed:#8fb0f0;--focus:#d0a8ff;'
-  + '--d-accent-tint:#3a2c26;--d-ok-tint:#263229;--d-warn-tint:#352d22;--d-info-tint:#262d3d;--d-surface-2:#2a2a28;'
-  + '--font-serif:"Iowan Old Style","Charter","Palatino Linotype","Book Antiqua",Georgia,serif;color-scheme:dark}'
-  + '@media (prefers-color-scheme:light){:root{--void:#faf9f5;--panel:#ffffff;--panel-raised:#f3f1ea;--ink:#1f1e1d;--muted:#6b6a65;--line:#e6e3da;'
-  + '--cyan:#ad4f2c;--observed:#276b43;--amber:#8f5300;--unknown:#8f5300;--proposed:#3a64b8;--focus:#7a3fc8;'
-  + '--d-accent-tint:#fbf3ee;--d-ok-tint:#eef6f0;--d-warn-tint:#fbf3e4;--d-info-tint:#eef2fb;--d-surface-2:#f3f1ea;color-scheme:light}}'
+export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${tokens.dark.panel};--panel-raised:${tokens.dark.raisedPanel};--ink:${tokens.dark.ink};--muted:${tokens.dark.quietInk};--line:${tokens.dark.line};`
+  + `--cyan:${tokens.dark.accent};--observed:${tokens.dark.observed};--amber:${tokens.dark.caution};--unknown:${tokens.dark.unknown};--proposed:${tokens.dark.proposed};--focus:${tokens.dark.focus};`
+  + `--d-accent-tint:${tokens.dark.accentWash};--d-ok-tint:${tokens.dark.observedWash};--d-warn-tint:${tokens.dark.cautionWash};--d-info-tint:${tokens.dark.informationWash};--d-surface-2:${tokens.dark.insetPanel};`
+  + `--font-serif:${tokens.family.alternateProse};color-scheme:dark}`
+  + `@media (prefers-color-scheme:light){:root{--void:${tokens.light.canvas};--panel:${tokens.light.panel};--panel-raised:${tokens.light.raisedPanel};--ink:${tokens.light.ink};`
+  + `--muted:${tokens.light.quietInk};--line:${tokens.light.line};`
+  + `--cyan:${tokens.light.accent};--observed:${tokens.light.observed};--amber:${tokens.light.caution};--unknown:${tokens.light.unknown};--proposed:${tokens.light.proposed};--focus:${tokens.light.focus};`
+  + `--d-accent-tint:${tokens.light.accentWash};--d-ok-tint:${tokens.light.observedWash};--d-warn-tint:${tokens.light.cautionWash};--d-info-tint:${tokens.light.informationWash};`
+  + `--d-surface-2:${tokens.light.insetPanel};color-scheme:light}}`
   + 'body{background:var(--void);color:var(--ink)}'
-  + 'main h1,main h2,main h3{letter-spacing:-.01em}main h2{border-bottom:1px solid var(--line);padding-bottom:.35rem;margin-top:2.5rem}'
-  + 'code{font:.88em/1.4 var(--font-mono);background:var(--d-surface-2);border:1px solid var(--line);border-radius:6px;padding:.05em .35em}'
-  + 'a.cite{font:600 .78em var(--font-mono);text-decoration:none;vertical-align:super;line-height:0;padding:0 .1em}a.cite:hover{text-decoration:underline}'
-  + '.pipeline-notice,.run-disclosure,.review-status{background:var(--d-info-tint);border:1px solid color-mix(in srgb,var(--proposed) 35%,transparent);border-radius:12px;padding:.75rem 1rem}'
-  + '.unresolved-asset,.quote-withheld,.unknown-reason,[data-epistemic="unknown"]{background:var(--d-warn-tint);border-radius:8px}'
-  + '.unresolved-asset,[data-epistemic="unknown"]{display:block;border-left:4px solid var(--unknown);padding:.6rem .9rem;margin:1rem 0}'
-  + '.quote-withheld,.unknown-reason{padding:0 .3em}'
-  + '.deep-dive,.note,.group-note{background:var(--d-accent-tint);border-left:4px solid var(--cyan);border-radius:8px;padding:.75rem 1rem}'
-  + 'figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;margin:1.5rem 0}figcaption{font-weight:600}'
-  + 'q.verified-quote{background:var(--d-ok-tint);border-radius:4px;padding:0 .2em}'
-  + 'blockquote.exact-source{background:var(--d-surface-2);border-left:4px solid var(--observed);border-radius:8px;padding:.75rem 1rem}'
-  + 'table{border-collapse:collapse;margin:1rem 0;background:var(--panel)}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}'
+  + `main h1,main h2,main h3{letter-spacing:${tokens.type.headingTracking}}main h2{border-bottom:${tokens.line.hairline} solid var(--line);padding-bottom:${tokens.spacing.labelGap};`
+  + `margin-top:${tokens.spacing.headingSeparation}}`
+  + `code{font:${tokens.type.inlineCode}/${tokens.type.compactLeading} var(--font-mono);background:var(--d-surface-2);border:${tokens.line.hairline} solid var(--line);`
+  + `border-radius:${tokens.radius.hint};padding:${tokens.spacing.fineInline} ${tokens.spacing.codeInset}}`
+  + `a.cite{font:${tokens.type.strongWeight} ${tokens.type.citation} var(--font-mono);text-decoration:none;vertical-align:super;line-height:${tokens.type.zeroLeading};`
+  + `padding:${tokens.spacing.none} ${tokens.spacing.markerInset}}a.cite:hover{text-decoration:underline}`
+  + `.pipeline-notice,.run-disclosure,.review-status{background:var(--d-info-tint);`
+  + `border:${tokens.line.hairline} solid color-mix(in srgb,var(--proposed) ${tokens.mix.informationBorder},${tokens.color.clear});border-radius:${tokens.radius.panel};`
+  + `padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
+  + `.unresolved-asset,.quote-withheld,.unknown-reason,[data-epistemic="unknown"]{background:var(--d-warn-tint);border-radius:${tokens.radius.callout}}`
+  + `.unresolved-asset,[data-epistemic="unknown"]{display:block;border-left:${tokens.line.section} solid var(--unknown);padding:${tokens.spacing.mediumSmall} ${tokens.spacing.cardGap};`
+  + `margin:${tokens.spacing.standard} ${tokens.spacing.none}}`
+  + `.quote-withheld,.unknown-reason{padding:${tokens.spacing.none} ${tokens.spacing.tagInset}}`
+  + `.deep-dive,.note,.group-note{background:var(--d-accent-tint);border-left:${tokens.line.section} solid var(--cyan);border-radius:${tokens.radius.callout};`
+  + `padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
+  + `figure{background:var(--panel);border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.panel};padding:${tokens.spacing.standard};`
+  + `margin:${tokens.spacing.section} ${tokens.spacing.none}}figcaption{font-weight:${tokens.type.strongWeight}}`
+  + `q.verified-quote{background:var(--d-ok-tint);border-radius:${tokens.radius.quote};padding:${tokens.spacing.none} ${tokens.spacing.quoteInset}}`
+  + `blockquote.exact-source{background:var(--d-surface-2);border-left:${tokens.line.section} solid var(--observed);border-radius:${tokens.radius.callout};`
+  + `padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
+  + `table{border-collapse:collapse;margin:${tokens.spacing.standard} ${tokens.spacing.none};background:var(--panel)}th,td{border:${tokens.line.hairline} solid var(--line);`
+  + `padding:${tokens.spacing.compact} ${tokens.spacing.mediumSmall};text-align:left;vertical-align:top}th{background:var(--panel-raised)}`
   // v1.3 rich elements (syzygy-mea.10.5). Each tone names itself in visible text, so colour is never the only signal.
-  + '.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
-  + '.table-scroll{overflow-x:auto;margin:1.25rem 0}.table-scroll table{margin:0;min-width:60%}caption{caption-side:top;text-align:left;font-weight:600;padding:0 0 .4rem}'
+  + `.visually-hidden{position:absolute;width:${tokens.length.visuallyHidden};height:${tokens.length.visuallyHidden};overflow:hidden;`
+  + `clip:rect(${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.none});white-space:nowrap}`
+  + `.table-scroll{overflow-x:auto;margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}.table-scroll table{margin:${tokens.spacing.none};min-width:${tokens.length.tableMeasureFloor}}`
+  + `caption{caption-side:top;text-align:left;font-weight:${tokens.type.strongWeight};padding:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact}}`
   + 'tbody tr:nth-child(even) td{background:var(--d-surface-2)}'
-  + '.callout{border:1px solid var(--line);border-left:4px solid var(--c);background:var(--t);border-radius:10px;padding:.75rem 1rem;margin:1.25rem 0}'
+  + `.callout{border:${tokens.line.hairline} solid var(--line);border-left:${tokens.line.section} solid var(--c);background:var(--t);border-radius:${tokens.radius.card};`
+  + `padding:${tokens.spacing.medium} ${tokens.spacing.standard};margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}`
   + '.callout-note{--c:var(--proposed);--t:var(--d-info-tint)}.callout-tip{--c:var(--observed);--t:var(--d-ok-tint)}'
   + '.callout-caution{--c:var(--amber);--t:var(--d-warn-tint)}.callout-important{--c:var(--cyan);--t:var(--d-accent-tint)}'
-  + '.callout-title{margin:0 0 .4rem;font-weight:600}.callout-tone{color:var(--c);text-transform:uppercase;letter-spacing:.06em;font-size:.78em;margin-right:.35em}'
-  + 'ol.steps{counter-reset:step;list-style:none;padding:0;margin:1.25rem 0}ol.steps>li{counter-increment:step;position:relative;padding:.1rem 0 .9rem 2.6rem;border-left:2px solid var(--line);margin-left:.9rem}'
-  + 'ol.steps>li::before{content:counter(step);position:absolute;left:-.95rem;top:0;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--panel-raised);border:1px solid var(--cyan);color:var(--ink);font:600 .85rem/1.8rem var(--font-mono);text-align:center}'
-  + 'ol.steps>li:last-child{border-left-color:transparent}'
-  + 'dl.definitions{display:grid;grid-template-columns:minmax(8rem,max-content) 1fr;gap:.5rem 1.25rem;margin:1.25rem 0}dl.definitions dt{font-weight:600}dl.definitions dd{margin:0}'
-  + '@media (max-width:40rem){dl.definitions{grid-template-columns:1fr}dl.definitions dd{margin:0 0 .5rem}}'
-  + 'ul.cards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.9rem;margin:1.25rem 0}'
-  + 'li.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem}.card-label{margin:0 0 .35rem;font-weight:600;color:var(--cyan)}'
-  + 'details.details{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:1.25rem 0;background:var(--panel)}details.details>summary{cursor:pointer;font-weight:600}'
-  + 'details.details>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.details-unknown{color:var(--unknown);font-weight:600}'
+  + `.callout-title{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact};font-weight:${tokens.type.strongWeight}}.callout-tone{color:var(--c);text-transform:uppercase;`
+  + `letter-spacing:${tokens.type.labelTracking};font-size:${tokens.type.citation};margin-right:${tokens.spacing.codeInset}}`
+  + `ol.steps{counter-reset:step;list-style:none;padding:${tokens.spacing.none};margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}ol.steps>li{counter-increment:step;position:relative;`
+  + `padding:${tokens.spacing.hairline} ${tokens.spacing.none} ${tokens.spacing.cardGap} ${tokens.spacing.numberedStepInset};border-left:${tokens.line.focus} solid var(--line);`
+  + `margin-left:${tokens.spacing.cardGap}}`
+  + `ol.steps>li::before{content:counter(step);position:absolute;left:${tokens.spacing.stepMarkerOffset};top:${tokens.spacing.none};width:${tokens.length.stepMarker};`
+  + `height:${tokens.length.stepMarker};border-radius:${tokens.radius.circle};background:var(--panel-raised);border:${tokens.line.hairline} solid var(--cyan);color:var(--ink);`
+  + `font:${tokens.type.strongWeight} ${tokens.type.helper}/${tokens.type.markerLeading} var(--font-mono);text-align:center}`
+  + `ol.steps>li:last-child{border-left-color:${tokens.color.clear}}`
+  + `dl.definitions{display:grid;grid-template-columns:minmax(${tokens.length.definitionColumn},max-content) ${tokens.length.fraction};gap:${tokens.spacing.small} ${tokens.spacing.panelGap};`
+  + `margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}dl.definitions dt{font-weight:${tokens.type.strongWeight}}dl.definitions dd{margin:${tokens.spacing.none}}`
+  + `@media (max-width:${tokens.length.definitionBreakpoint}){dl.definitions{grid-template-columns:${tokens.length.fraction}}`
+  + `dl.definitions dd{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.small}}}`
+  + `ul.cards{list-style:none;padding:${tokens.spacing.none};display:grid;grid-template-columns:repeat(auto-fit,minmax(${tokens.length.cardColumn},${tokens.length.fraction}));`
+  + `gap:${tokens.spacing.cardGap};margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}`
+  + `li.card{background:var(--panel);border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.panel};padding:${tokens.spacing.cardInset} ${tokens.spacing.standard}}`
+  + `.card-label{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.labelGap};font-weight:${tokens.type.strongWeight};color:var(--cyan)}`
+  + `details.details{border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.card};padding:${tokens.spacing.small} ${tokens.spacing.standard};`
+  + `margin:${tokens.spacing.panelGap} ${tokens.spacing.none};background:var(--panel)}details.details>summary{cursor:pointer;font-weight:${tokens.type.strongWeight}}`
+  + `details.details>summary:focus-visible{outline:${tokens.line.focus} solid var(--focus);outline-offset:${tokens.line.focus}}.details-unknown{color:var(--unknown);font-weight:${tokens.type.strongWeight}}`
   + 'td.empty-cell,th.empty-cell{color:var(--muted);font-style:italic}'
-  + 'figure.code-excerpt pre{margin:.5rem 0;overflow-x:auto;background:var(--d-surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem 1rem}'
-  + 'figure.code-excerpt pre code{display:block;background:none;border:0;padding:0;font:.85rem/1.5 var(--font-mono);white-space:pre}'
-  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted);overflow-wrap:anywhere}'
-  + '.code-anchor{margin:0;font-size:.9em}'
+  + `figure.code-excerpt pre{margin:${tokens.spacing.small} ${tokens.spacing.none};overflow-x:auto;background:var(--d-surface-2);border:${tokens.line.hairline} solid var(--line);`
+  + `border-radius:${tokens.radius.callout};padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
+  + `figure.code-excerpt pre code{display:block;background:none;border:${tokens.line.none};padding:${tokens.spacing.none};font:${tokens.type.helper}/${tokens.type.bodyLeading} var(--font-mono);white-space:pre}`
+  + `figure.code-excerpt figcaption{display:flex;gap:${tokens.spacing.mediumSmall};flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;`
+  + `letter-spacing:${tokens.type.labelTracking};font-size:${tokens.type.citation}}.code-path{font:${tokens.type.normalWeight} ${tokens.type.subtleCode} var(--font-mono);color:var(--muted);`
+  + `overflow-wrap:anywhere}`
+  + `.code-anchor{margin:${tokens.spacing.none};font-size:${tokens.type.small}}`
   // A modern system stack and no font download (syzygy-pdja.1, owner review of the Redis dossier). The shared stylesheet reads body text from
   // `--font-serif`, so that token carries the sans stack here. Only code, source text and diagram text keep the code face.
-  + ':root{--font-serif:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}'
+  + `:root{--font-serif:${tokens.family.prose};--font-mono:${tokens.family.code}}`
   + '.contents,.contents a,.contents .eyebrow,.pipeline-notice,.eyebrow,.asset-references,.sources,.diagram-legend,.marking,.deep-links,a.cite,.anchor-link,.source-anchor{font-family:var(--font-serif)}'
   // The navigation folds with no script; the reading column takes the room it leaves.
-  + '.cited-on,.selected-why{display:block;font-size:.88rem;color:var(--muted)}'
-  + '.about-this-run{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.about-this-run>summary{cursor:pointer;color:var(--muted);font-weight:600}.about-this-run>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
-  + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
+  + `.cited-on,.selected-why{display:block;font-size:${tokens.type.compact};color:var(--muted)}`
+  + `.about-this-run{margin-top:${tokens.spacing.standard};border-top:${tokens.line.hairline} solid var(--line);padding-top:${tokens.spacing.small}}.about-this-run>summary{cursor:pointer;`
+  + `color:var(--muted);font-weight:${tokens.type.strongWeight}}.about-this-run>summary:focus-visible{outline:${tokens.line.focus} solid var(--focus);outline-offset:${tokens.line.focus}}`
+  + `.nav-panel>summary{cursor:pointer;font-weight:${tokens.type.strongWeight};color:var(--muted)}`
+  + `.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(${tokens.length.none},${tokens.length.fraction})}`
+  + `.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:${tokens.line.focusInside}}`
   // A three-column diagram (1048 px) may shrink to fit its column (text no smaller than 10.7px); any wider one keeps its size and scrolls.
   // Since syzygy-3efd.66 the readable layout stacks every diagram of two or more layers, so no operator-agent figure is 1048 px wide and
   // the rule matches none of them. A provider-mode graph is laid out on the default spacing, 320 px a layer (248, 568, 888, 1208 px ...),
   // so it is never 1048 px wide either, nor is a sequence or swimlane (40 px and 184 px a participant or lane): today the rule matches
   // no figure. It stays because REQ-polaris-generation-034 (2.2) states it. The element under the pointer stands out.
-  + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}.diagram-scroll path.edge-leader{stroke-width:1;fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}'
+  + `.diagram-scroll svg[width="1048"]{max-width:max(${tokens.length.full},${tokens.length.legacyDiagramLimit})}.diagram-scroll g.node:hover rect{stroke-width:${tokens.line.svgEmphasis}}`
+  + `.diagram-scroll g.edge:hover path{stroke-width:${tokens.line.svgEmphasis}}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:${tokens.line.svgLabel}}`
+  + `.diagram-scroll path.edge-leader{stroke-width:${tokens.line.svgHairline};fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);`
+  + `stroke-width:${tokens.line.svgEmphasis};pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}`
   // A marker standing where withheld lines were, on a source page: present, and out of the reading.
-  + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'
+  + `pre.redaction-note{margin:${tokens.spacing.tight} ${tokens.spacing.none};padding:${tokens.spacing.hairline} ${tokens.spacing.medium};border-left:${tokens.line.section} solid var(--line);`
+  + `color:var(--muted);font:${tokens.type.sourceHint}/${tokens.type.bodyLeading} var(--font-mono);white-space:pre-wrap}`
   // A glossary term's entry on hover or keyboard focus; on touch the link opens the glossary.
   // The entry opens from its block's left edge, so it stays on the page wherever the term falls in a line.
   // An entry opens at once and closes a moment after the pointer leaves, so a pointer crossing plain text from a term far along the line
   // reaches it. A hit area that spanned the line instead would cover the citations and other terms on it. It closes by visibility: Chrome 120
   // takes a discrete display transition's element out of hit testing while it still paints, so the pointer would arrive at nothing.
-  + 'main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:block;visibility:hidden;position:absolute;left:0;z-index:5;width:min(22rem,100%);background:var(--panel-raised);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;font-size:.9rem;font-weight:400;line-height:1.5;transition:visibility 0s .35s}.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}'
-  + '.redaction-mark{margin-left:.1em;color:var(--muted)}.redaction-legend{margin-top:2rem;color:var(--muted);font-size:.85rem}'
-  + '.source-identity{margin:.75rem 0}.source-identity>summary{cursor:pointer;color:var(--muted)}'
+  + `main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:${tokens.spacing.quoteInset}}.term-pop{display:block;`
+  + `visibility:hidden;position:absolute;left:${tokens.spacing.none};z-index:${tokens.layer.definition};width:min(${tokens.length.termPopupMeasure},${tokens.length.full});`
+  + `background:var(--panel-raised);border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.callout};padding:${tokens.spacing.small} ${tokens.spacing.medium};`
+  + `font-size:${tokens.type.bodySmall};font-weight:${tokens.type.normalWeight};line-height:${tokens.type.bodyLeading};transition:visibility ${tokens.timing.immediate} ${tokens.timing.popupExit}}`
+  + `.term-pop::before{content:"";position:absolute;left:${tokens.spacing.none};right:${tokens.spacing.none};top:${tokens.spacing.termBridgeOffset};height:${tokens.length.termBridge}}`
+  + `a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:${tokens.timing.immediate}}`
+  + `.redaction-mark{margin-left:${tokens.spacing.markerInset};color:var(--muted)}.redaction-legend{margin-top:${tokens.spacing.large};color:var(--muted);font-size:${tokens.type.helper}}`
+  + `.source-identity{margin:${tokens.spacing.medium} ${tokens.spacing.none}}.source-identity>summary{cursor:pointer;color:var(--muted)}`
   // Dossier spec v1.5: the reading view's marks, the evidence view (opened by a fragment link with scripts off; the clipped text is in the
   // DOM all along), a citation mark's file and lines on hover and focus, the one sentence and the legend.
   + 'main:has(#evidence-view:target) .visually-hidden.ev{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal}'
-  + 'main:has(#evidence-view:target) .evidence-note{display:block;font:.8rem/1.5 var(--font-mono);color:var(--muted);margin-top:.25rem}'
-  + '.judgement-mark,.framing-mark{font:600 .72em var(--font-serif);letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;padding:0 .3em;margin-left:.25em;color:var(--muted);vertical-align:.1em}'
-  + '.not-established{font-weight:600;color:var(--unknown)}.unknown-words{color:var(--muted);font-size:.9rem}'
+  + `main:has(#evidence-view:target) .evidence-note{display:block;font:${tokens.type.sourceHint}/${tokens.type.bodyLeading} var(--font-mono);color:var(--muted);margin-top:${tokens.spacing.tight}}`
+  + `.judgement-mark,.framing-mark{font:${tokens.type.strongWeight} ${tokens.type.tag} var(--font-serif);letter-spacing:${tokens.type.tagTracking};text-transform:uppercase;`
+  + `border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.quote};padding:${tokens.spacing.none} ${tokens.spacing.tagInset};margin-left:${tokens.spacing.labelInset};`
+  + `color:var(--muted);vertical-align:${tokens.type.highMarkerAlign}}`
+  + `.not-established{font-weight:${tokens.type.strongWeight};color:var(--unknown)}.unknown-words{color:var(--muted);font-size:${tokens.type.bodySmall}}`
   // The pop repeats the mark's accessible name, so it is out of layout until shown: a hidden but laid-out pop widens a narrow page.
-  + 'a.cite{position:relative}.cite-pop{display:none;position:absolute;left:0;top:1.6em;z-index:6;white-space:nowrap;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;font:400 .8rem/1.4 var(--font-mono);color:var(--ink);vertical-align:baseline}'
+  + `a.cite{position:relative}.cite-pop{display:none;position:absolute;left:${tokens.spacing.none};top:${tokens.type.citationPopupOffset};z-index:${tokens.layer.citation};white-space:nowrap;`
+  + `background:var(--panel-raised);border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.hint};padding:${tokens.spacing.hintInset} ${tokens.spacing.small};`
+  + `font:${tokens.type.normalWeight} ${tokens.type.sourceHint}/${tokens.type.compactLeading} var(--font-mono);color:var(--ink);vertical-align:baseline}`
   + 'a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}'
   // On a narrow viewport the hint uses the viewport edges, so a citation at either end of a line can reveal its full path.
-  + '@media(max-width:800px){.cite-pop{position:fixed;inset:auto 1rem 1rem;white-space:normal;overflow-wrap:anywhere;pointer-events:none}}'
+  + `@media(max-width:${tokens.length.mobile}){.cite-pop{position:fixed;inset:auto ${tokens.spacing.standard} ${tokens.spacing.standard};white-space:normal;overflow-wrap:anywhere;pointer-events:none}}`
   // Colour (syzygy-pdja.14): six hues, light and dark, each a line colour and a tint. A Pole, a diagram outside a Pole page and a card
   // each take one in turn; text stays ink on a tint, so every text contrast is the page's own. No hue carries a claim.
-  + ':root{--h1:#8fb0f0;--h1t:#262d3d;--h2:#5cc6b8;--h2t:#1f302e;--h3:#b9a2f0;--h3t:#2d2740;--h4:#f08aa9;--h4t:#3a2630;--h5:#a6d16f;--h5t:#29321f;--h6:#e5937a;--h6t:#3a2c26;--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}'
-  + '@media (prefers-color-scheme:light){:root{--h1:#3a64b8;--h1t:#eef2fb;--h2:#0f766e;--h2t:#e7f4f2;--h3:#6d4bc3;--h3t:#f2eefb;--h4:#b4235a;--h4t:#fbeef3;--h5:#4d7c0f;--h5t:#f0f6e6;--h6:#ad4f2c;--h6t:#fbf3ee;}}'
+  + `:root{--h1:${tokens.dark.firstPole};--h1t:${tokens.dark.firstPoleWash};--h2:${tokens.dark.secondPole};--h2t:${tokens.dark.secondPoleWash};--h3:${tokens.dark.thirdPole};`
+  + `--h3t:${tokens.dark.thirdPoleWash};--h4:${tokens.dark.fourthPole};--h4t:${tokens.dark.fourthPoleWash};--h5:${tokens.dark.fifthPole};--h5t:${tokens.dark.fifthPoleWash};`
+  + `--h6:${tokens.dark.sixthPole};--h6t:${tokens.dark.sixthPoleWash};--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}`
+  + `@media (prefers-color-scheme:light){:root{--h1:${tokens.light.firstPole};--h1t:${tokens.light.firstPoleWash};--h2:${tokens.light.secondPole};--h2t:${tokens.light.secondPoleWash};`
+  + `--h3:${tokens.light.thirdPole};--h3t:${tokens.light.thirdPoleWash};--h4:${tokens.light.fourthPole};--h4t:${tokens.light.fourthPoleWash};--h5:${tokens.light.fifthPole};`
+  + `--h5t:${tokens.light.fifthPoleWash};--h6:${tokens.light.sixthPole};--h6t:${tokens.light.sixthPoleWash};}}`
   + '[data-hue="1"],ul.cards>li.card:nth-child(6n+1){--accent:var(--h1);--accent-tint:var(--h1t)}[data-hue="2"],ul.cards>li.card:nth-child(6n+2){--accent:var(--h2);--accent-tint:var(--h2t)}[data-hue="3"],ul.cards>li.card:nth-child(6n+3){--accent:var(--h3);--accent-tint:var(--h3t)}[data-hue="4"],ul.cards>li.card:nth-child(6n+4){--accent:var(--h4);--accent-tint:var(--h4t)}[data-hue="5"],ul.cards>li.card:nth-child(6n+5){--accent:var(--h5);--accent-tint:var(--h5t)}[data-hue="6"],ul.cards>li.card:nth-child(6n+0){--accent:var(--h6);--accent-tint:var(--h6t)}'
   // An arrowhead is filled, never stroked: a stroke would draw it up to 1.6 px past `arrowheadOf`'s triangle, which leader ends keep clear
   // of (syzygy-pdja.16).
-  + 'figure:has(.diagram-scroll){border-top:4px solid var(--accent)}.diagram-scroll svg rect{fill:var(--accent-tint);stroke:var(--accent)}.diagram-scroll svg path{stroke:var(--muted)}.diagram-scroll svg marker path{fill:var(--muted);stroke:none}.diagram-scroll svg rect.edge-label{fill:var(--panel);stroke:none}.diagram-scroll path.edge-echo{stroke:var(--accent)}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--accent)}'
-  + 'section[data-hue]>h1{border-bottom:4px solid var(--accent);padding-bottom:.4rem}section[data-hue] h2{border-bottom-color:color-mix(in srgb,var(--accent) 45%,var(--line))}'
-  + '.pole-map>ol{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem}.pole-map>ol>li{background:var(--accent-tint);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:12px;padding:.85rem 1rem}.pole-map>ol>li>a{font-weight:600;font-size:1.05rem}.pole-map>ol>li>ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.92rem}'
-  + '.contents li[data-hue]>a::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.45em;vertical-align:.05em}'
+  + `figure:has(.diagram-scroll){border-top:${tokens.line.section} solid var(--accent)}.diagram-scroll svg rect{fill:var(--accent-tint);stroke:var(--accent)}`
+  + `.diagram-scroll svg path{stroke:var(--muted)}.diagram-scroll svg marker path{fill:var(--muted);stroke:none}.diagram-scroll svg rect.edge-label{fill:var(--panel);stroke:none}`
+  + `.diagram-scroll path.edge-echo{stroke:var(--accent)}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--accent)}`
+  + `section[data-hue]>h1{border-bottom:${tokens.line.section} solid var(--accent);padding-bottom:${tokens.spacing.compact}}`
+  + `section[data-hue] h2{border-bottom-color:color-mix(in srgb,var(--accent) ${tokens.mix.sectionBorder},var(--line))}`
+  + `.pole-map>ol{list-style:none;padding:${tokens.spacing.none};display:grid;grid-template-columns:repeat(auto-fit,minmax(${tokens.length.poleColumn},${tokens.length.fraction}));`
+  + `gap:${tokens.spacing.cardGap}}.pole-map>ol>li{background:var(--accent-tint);border:${tokens.line.hairline} solid var(--line);border-top:${tokens.line.section} solid var(--accent);`
+  + `border-radius:${tokens.radius.panel};padding:${tokens.spacing.cardInset} ${tokens.spacing.standard}}.pole-map>ol>li>a{font-weight:${tokens.type.strongWeight};`
+  + `font-size:${tokens.type.poleHeading}}.pole-map>ol>li>ul{margin:${tokens.spacing.compact} ${tokens.spacing.none} ${tokens.spacing.none};padding-left:${tokens.spacing.listInset};`
+  + `font-size:${tokens.type.poleMap}}`
+  + `.contents li[data-hue]>a::before{content:"";display:inline-block;width:${tokens.length.poleMarker};height:${tokens.length.poleMarker};border-radius:${tokens.radius.circle};`
+  + `background:var(--accent);margin-right:${tokens.spacing.markerGap};vertical-align:${tokens.type.middleMarkerAlign}}`
   + '.pole-map,.about-this-run>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
-  + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
-  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}.diagram-tally{margin:.25rem 0 0;font:.8rem var(--font-mono);color:var(--muted)}';
+  + `li.card{background:var(--accent-tint);border-top:${tokens.line.emphasis} solid var(--accent)}th{background:color-mix(in srgb,var(--accent) ${tokens.mix.tableHeading},var(--panel))}`
+  + `ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}`
+  + `.run-sentence{margin:${tokens.spacing.small} ${tokens.spacing.none};font-size:${tokens.type.bodySmall};color:var(--muted)}.reading-legend{border:${tokens.line.hairline} solid var(--line);`
+  + `border-radius:${tokens.radius.card};padding:${tokens.spacing.small} ${tokens.spacing.standard};margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.section};`
+  + `font-size:${tokens.type.helper};color:var(--muted)}.reading-legend ul{margin:${tokens.spacing.tight} ${tokens.spacing.none};padding-left:${tokens.spacing.legendInset}}`
+  + `.view-switch{margin:${tokens.spacing.none}}.legend-sample{font:${tokens.type.strongWeight} ${tokens.type.small} var(--font-mono)}`
+  + `.diagram-tally{margin:${tokens.spacing.tight} ${tokens.spacing.none} ${tokens.spacing.none};font:${tokens.type.sourceHint} var(--font-mono);color:var(--muted)}`;
 
 /** The surrounding operator-agent notice, wayfinding, and review status. */
 interface PageChrome {
@@ -224,11 +291,13 @@ interface PageChrome {
 
 interface DossierNavLink { readonly path: string; readonly title: string }
 
-const READING_NAV_CSS = '.contents a[aria-current="page"]{font-weight:700;text-decoration:underline}'
+const READING_NAV_CSS = `.contents a[aria-current="page"]{font-weight:${tokens.type.currentWeight};text-decoration:underline}`
   + '.contents .pole-dive-links{display:block}'
-  + '.reading-column{display:grid;grid-template-columns:minmax(0,1fr);min-width:0}@media(max-width:800px){.reading-column{display:block}}'
-  + '.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;width:min(1180px,calc(100% - 2rem));margin:1.5rem auto 0}'
-  + '.reading-order a{min-height:2.75rem;padding:.5rem 0;overflow-wrap:anywhere}';
+  + `.reading-column{display:grid;grid-template-columns:minmax(${tokens.length.none},${tokens.length.fraction});min-width:${tokens.length.none}}`
+  + `@media(max-width:${tokens.length.mobile}){.reading-column{display:block}}`
+  + `.reading-order{display:flex;flex-wrap:wrap;justify-content:space-between;gap:${tokens.spacing.small} ${tokens.spacing.section};`
+  + `width:min(${tokens.length.readingOrderMeasure},calc(${tokens.length.full} - ${tokens.length.navigationInset}));margin:${tokens.spacing.section} auto ${tokens.spacing.none}}`
+  + `.reading-order a{min-height:${tokens.length.pageTurnTarget};padding:${tokens.spacing.small} ${tokens.spacing.none};overflow-wrap:anywhere}`;
 
 const LOCAL_REFLOW_CSS = new Map([
   ['appendix.html', '#appendix-disclosure{overflow-wrap:anywhere}'],
@@ -1153,7 +1222,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         continuationRules.push(`#exact-text:has([id="${target}"]:target)>.source-continuation[data-citation-target="${target}"]{display:block}`);
       }
       const markup = `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${continuations.join('')}${read}</section>`;
-      const styles = local === undefined ? '' : SOURCE_LINES_CSS + ` .source-line:target,.source-line:has(>.source-continuation-target:target)${rules.length === 0 ? '' : `,${rules.join(',')}`}{background:var(--accent-tint);box-shadow:inset 2px 0 var(--accent)}${continuationRules.join('')}`;
+      const styles = local === undefined ? '' : SOURCE_LINES_CSS + ` .source-line:target,.source-line:has(>.source-continuation-target:target)${rules.length === 0 ? '' : `,${rules.join(',')}`}{background:var(--accent-tint);box-shadow:inset ${tokens.line.sourceLineMarker} ${tokens.spacing.none} var(--accent)}${continuationRules.join('')}`;
       return { markup, styles };
     };
     add(path, 2, source.path, local === undefined ? sourceLeaf().markup : sourceLeaf);
@@ -1349,16 +1418,23 @@ const figureElements = (d: DraftDiagram): readonly DraftFigureElement[] => d.fig
  * its bytes. The `figure-forms` box is a size container; it displays its drawing while it is at least the drawing's laid-out width W wide
  * and its phone form, a numbered list, while it is narrower, with no script. The list's text is the 13 px figure text, wrapped within the
  * box; each item's left border is solid, dashed or dotted by its mark, as the legend's line styles are. */
-export const FIGURE_KINDS_CSS = '.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
-  + '.figure-stepper>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}'
-  + '.stepper-head{display:block;font-weight:600}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}.figure-drawing path.step-order{stroke:var(--muted);stroke-width:1;stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}'
-  + '.legend-line.order{border-top:1px solid var(--muted)}'
-  + [408, 592, 776, 960].map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
+export const FIGURE_KINDS_CSS = `.figure-forms{container-type:inline-size}.figure-stepper{display:none;margin:${tokens.spacing.small} ${tokens.spacing.none};padding-left:${tokens.spacing.large};`
+  + `font:${tokens.type.figureStepper}/${tokens.type.bodyLeading} var(--font-mono);overflow-wrap:anywhere}`
+  + `.figure-stepper>li{border-left:${tokens.line.emphasis} solid var(--accent);padding:${tokens.spacing.stepInset} ${tokens.spacing.none} ${tokens.spacing.stepInset} ${tokens.spacing.mediumSmall};`
+  + `margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact}}.figure-stepper>li.inferred{border-left-style:dashed}.figure-stepper>li.unknown{border-left-style:dotted}`
+  + `.stepper-head{display:block;font-weight:${tokens.type.strongWeight}}.figure-drawing rect.lane-band{fill:none;stroke:var(--line);stroke-dasharray:none}`
+  + `.figure-drawing path.step-order{stroke:var(--muted);stroke-width:${tokens.line.svgHairline};stroke-dasharray:none}.figure-drawing marker.order-head path{fill:var(--muted)}`
+  + `.legend-line.order{border-top:${tokens.line.hairline} solid var(--muted)}`
+  + tokens.figureFormWidths.map(w => `@container (width < ${w}px){.figure-forms[data-figure-width="${w}"]>.figure-drawing{display:none}.figure-forms[data-figure-width="${w}"]>.figure-stepper{display:block}}`).join('');
 
 /** The subsection and on-page contents-list rules (version 2.16), carried only by a page that renders a subsection. Never sticky: sticky
  * styling stays scoped to the site navigation. */
-export const SUBSECTION_CSS = '.subsection{margin:1.5rem 0 0}.subsection>h3{margin:0 0 .5rem;font-size:1.1rem}.subsection-answer{font-weight:600;margin:0 0 .75rem}'
-  + '.page-contents{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.9rem}.page-contents-title{margin:0 0 .25rem;font-weight:600}.page-contents ol{margin:.25rem 0;padding-left:1.2rem}';
+export const SUBSECTION_CSS = `.subsection{margin:${tokens.spacing.section} ${tokens.spacing.none} ${tokens.spacing.none}}.subsection>h3{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.small};`
+  + `font-size:${tokens.type.subsectionHeading}}.subsection-answer{font-weight:${tokens.type.strongWeight};margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.medium}}`
+  + `.page-contents{border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.card};padding:${tokens.spacing.small} ${tokens.spacing.standard};`
+  + `margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.section};font-size:${tokens.type.bodySmall}}`
+  + `.page-contents-title{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.tight};font-weight:${tokens.type.strongWeight}}`
+  + `.page-contents ol{margin:${tokens.spacing.tight} ${tokens.spacing.none};padding-left:${tokens.spacing.legendInset}}`;
 
 /** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
  * control is a fragment link and a CSS rule, so it works with scripts off. */
@@ -1467,9 +1543,11 @@ const MAP_CHUNK = 12;
 const MAP_MAX_JOBS = 24;
 
 /** The two forms' style rules, which only a map page carries; a page adds one container query for each W its figures take. */
-export const MAP_FORMS_CSS = '.map-forms{container-type:inline-size}.map-list{display:none;margin:.5rem 0;padding-left:2rem;font:13px/1.5 var(--font-mono);overflow-wrap:anywhere}'
-  + '.map-list>li{border-left:3px solid var(--accent);padding:.15rem 0 .15rem .6rem;margin:0 0 .4rem}.map-list>li.inferred{border-left-style:dashed}.map-list>li.unknown{border-left-style:dotted}'
-  + '.map-head{font-weight:600}.map-coverage{font-size:.92rem}';
+export const MAP_FORMS_CSS = `.map-forms{container-type:inline-size}.map-list{display:none;margin:${tokens.spacing.small} ${tokens.spacing.none};padding-left:${tokens.spacing.large};`
+  + `font:${tokens.type.figureStepper}/${tokens.type.bodyLeading} var(--font-mono);overflow-wrap:anywhere}`
+  + `.map-list>li{border-left:${tokens.line.emphasis} solid var(--accent);padding:${tokens.spacing.stepInset} ${tokens.spacing.none} ${tokens.spacing.stepInset} ${tokens.spacing.mediumSmall};`
+  + `margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact}}.map-list>li.inferred{border-left-style:dashed}.map-list>li.unknown{border-left-style:dotted}`
+  + `.map-head{font-weight:${tokens.type.strongWeight}}.map-coverage{font-size:${tokens.type.poleMap}}`;
 export const mapWidthQuery = (width: number): string => `@container (width < ${width}px){.map-forms[data-figure-width="${width}"]>.map-drawing{display:none}.map-forms[data-figure-width="${width}"]>.map-list{display:block}}`;
 
 type MapMarking = 'observed' | 'inferred' | 'unknown';
