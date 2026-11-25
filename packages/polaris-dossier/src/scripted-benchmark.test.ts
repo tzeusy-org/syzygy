@@ -207,7 +207,7 @@ describe('the scripted benchmark evaluator', () => {
     await expect(start(makeFixture({ tasks: { state: 'not-written', reason: 'not frozen' } })).storeAnswers(signal())).rejects.toThrow('binding-invalid');
     const missing = makeFixture();
     fs.unlinkSync(missing.input.inputs.depth);
-    expect(() => start(missing)).toThrow('custody-invalid');
+    await expect(start(missing).storeAnswers(signal())).rejects.toThrow('artifact-invalid');
     const changed = makeFixture();
     fs.appendFileSync(changed.input.inputs.tasks, ' ');
     await expect(start(changed).storeAnswers(signal())).rejects.toThrow('binding-invalid');

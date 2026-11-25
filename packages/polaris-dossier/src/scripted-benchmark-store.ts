@@ -136,8 +136,8 @@ function makeStore(input: StoreInputs): BenchmarkStore {
   const privateInputs = new Map(fixtureInputs.map(name => {
     const path = input.inputs[name];
     const directory = privateDirectory(dirname(path));
-    const physical = identify(path);
-    if (physical === null || physical.real !== path) throw new BenchmarkRefusal('custody-invalid');
+    const physical = identify(path, true);
+    if (physical !== null && physical.real !== path) throw new BenchmarkRefusal('custody-invalid');
     return [name, { directory, path }];
   }));
   const readPaths = [...privateInputs.values()].map(({ path }) => path);

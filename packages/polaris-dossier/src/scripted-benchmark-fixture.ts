@@ -9,7 +9,7 @@ import { screenLoaderOf } from './screen.js';
 import { BenchmarkRefusal, prepareBenchmarkStore } from './scripted-benchmark-store.js';
 import { fixtureBytes, scriptedBenchmark, type FixtureKey } from './scripted-benchmark.js';
 import { viewFor, type ViewRole } from './session-view.js';
-import { createRunDirectory } from './state-directory.js';
+import { createRunDirectory, stateRootViolation } from './state-directory.js';
 
 const fixtureRoles: readonly ViewRole[] = ['author', 'inventory', 'fidelity', 'design'];
 const repository = 'example.invalid/syzygy/scripted-fixture';
@@ -17,12 +17,6 @@ const commit = 'a'.repeat(40);
 
 function makeDirectory(path: string): string {
   fs.mkdirSync(path, { mode: 0o700 });
-  return path;
-}
-
-function makePrivateInput(privateRoot: string, name: string, bytes: Buffer): string {
-  const path = join(privateRoot, name);
-  fs.writeFileSync(path, bytes, { mode: 0o600, flag: 'wx' });
   return path;
 }
 
@@ -37,6 +31,10 @@ async function runFixture(syzygyCheckout: string, signal: AbortSignal) {
   if (!screen.ok) throw new BenchmarkRefusal('screening-refused');
 
   const root = fs.realpathSync(fs.mkdtempSync(join(tmpdir(), 'syzygy-scripted-fixture-')));
+  if (stateRootViolation(root, checkout) !== null) {
+    fs.rmdirSync(root);
+    throw new BenchmarkRefusal('custody-invalid');
+  }
   const stateRoot = makeDirectory(join(root, 'state'));
   const privateRoot = makeDirectory(join(root, 'private'));
   const sourceCheckout = makeDirectory(join(root, 'source'));
@@ -64,10 +62,10 @@ async function runFixture(syzygyCheckout: string, signal: AbortSignal) {
     ...QUESTION_FILE, heldOut: { rule: QUESTION_FILE.heldOut.rule, entries: [entry] },
   }));
   const questionFileSha256 = sha256(questionBytes);
-  const keyPath = makePrivateInput(privateRoot, 'key.json', keyBytes);
-  const questionFile = makePrivateInput(privateRoot, 'questions.json', questionBytes);
-  const depthPath = makePrivateInput(privateRoot, 'depth.json', fixtureBytes(depth));
-  const tasksPath = makePrivateInput(privateRoot, 'tasks.json', fixtureBytes(tasks));
+  const inputs = {
+    questionFile: join(privateRoot, 'questions.json'), key: join(privateRoot, 'key.json'),
+    depth: join(privateRoot, 'depth.json'), tasks: join(privateRoot, 'tasks.json'),
+  };
 
   const runRecord = fixtureBytes({
     format: 'polaris-scripted-benchmark-fixture-run/1', repository, commit,
@@ -88,8 +86,13 @@ async function runFixture(syzygyCheckout: string, signal: AbortSignal) {
   });
   const store = prepareBenchmarkStore({
     stateRoot, runId: run.runId, runRecordSha256: sha256(runRecord), sourceCheckout, syzygyCheckout: checkout, views,
-    inputs: { questionFile, key: keyPath, depth: depthPath, tasks: tasksPath },
+    inputs,
   });
+  // Check the actual planned mounts before placing any held-out bytes on disk.
+  fs.writeFileSync(inputs.questionFile, questionBytes, { mode: 0o600, flag: 'wx' });
+  fs.writeFileSync(inputs.key, keyBytes, { mode: 0o600, flag: 'wx' });
+  fs.writeFileSync(inputs.depth, fixtureBytes(depth), { mode: 0o600, flag: 'wx' });
+  fs.writeFileSync(inputs.tasks, fixtureBytes(tasks), { mode: 0o600, flag: 'wx' });
   const answered = (text: string): ReaderAnswer => ({ kind: 'answered', text, citations: [], attemptedPaths: [] });
   const benchmark = scriptedBenchmark({
     store, screen: screen.screen,
