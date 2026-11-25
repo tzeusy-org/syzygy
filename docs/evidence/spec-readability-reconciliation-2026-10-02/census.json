@@ -635,7 +635,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 558,
+      "scenarios": 562,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1023,7 +1023,11 @@
             "Synthetic hold-out checks cover selected packets and supervised mounts",
             "Scripted answers round-trip with their frozen comparison run",
             "The scripted grader receives only the blind fact projection",
-            "The scripted benchmark refuses invalid custody or a changed binding"
+            "The scripted benchmark refuses invalid custody or a changed binding",
+            "A close record carries bounded step-derived measures",
+            "Both close projections use the same bounded snapshot",
+            "Missing or refused observations remain Unknown",
+            "Review rounds pair only within the observed kind and order"
           ]
         },
         "REQ-polaris-generation-034": {
