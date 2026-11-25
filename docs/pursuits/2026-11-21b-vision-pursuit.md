@@ -831,6 +831,30 @@ reviewer, and so the URL supervisor.
 - [Unknown] Review rounds per run under the hold. Slice 4 (syzygy-5dhm.86) measures them before
   and after. No run has been made under this change.
 
+## R2 slice 2: the checked text as a page (2026-11-25)
+
+Bead syzygy-5dhm.24. `renderVerifiedTextPage` (`packages/polaris-dossier/src/verify-text-page.ts`)
+draws a checked text as one HTML page in a neutral shell, the frame R1's graders will see for
+every arm. `scripts/dossier_verify_text.mjs --html <file>` writes it. No spec change: the
+`verify` command is unchanged, and slice 1's delta names the page as out of its scope.
+
+- [Observed] The page shows the text as its own Markdown source, line for line and escaped. Each
+  claim's lines sit in one element with its number and outcome, with a mark at the claim's last
+  line. Below the text come the tally, the count of claims that cannot be checked, the item
+  counts, the results by claim and the checker's disclosures. The results come from
+  `claimResults`, which also writes the annotated copy's closing section, so a path screening
+  withholds by name appears in neither. The annotated copy's bytes are unchanged.
+- [Observed] Neutral means: no Syzygy or Polaris name, no navigation, no file name and no link
+  out of the page. The page has no script, no handler and no remote load, under the dossier
+  pages' closed policy; `pageSinkCspFinding` and `pageSinkScriptFinding` accept it.
+- [Observed] Before: the plain synthesis's result existed only as an annotated Markdown copy.
+  After: the same run draws a 55,696-byte page with 101 claim elements for 101 claims. Its
+  outcomes equal slice 1's recorded tally (`docs/evidence/syzygy-5dhm-24/verify-text-page-pilot-2026-11-25.json`).
+  Rule 6: 29 of 29 mutants killed (`docs/evidence/syzygy-5dhm-24/verify-text-page-mutants-2026-11-25.json`).
+- [Unknown] Whether graders read the marks as intended. No grader has seen the page yet;
+  R1's protocol slices decide that. The dossier arm's text was not drawn here, because no
+  dossier text is retained in the repository.
+
 ## Known ledger and deviations
 
 - **No release gate.** The pursuit skill asks that filed work wait behind a gate the owner
