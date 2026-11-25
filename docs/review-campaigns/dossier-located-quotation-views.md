@@ -10,8 +10,8 @@
 
 ## Last verdict of record, and where the findings landed
 
-[Observed] R1 returned `REVISE` on `c910d05f62779f8e75c38b8c2801898427955a13`. It found an inventory presentation gap, incomplete keyboard coverage for Find by task, an ambiguous name-index input and a conflation of two reading measures. [R1 raw review](../reviews/syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R1-RAW.md)
+[Observed] R1 returned `REVISE` on `c910d05f62779f8e75c38b8c2801898427955a13`. It found an inventory presentation gap, incomplete keyboard coverage for Find by task, an ambiguous name-index input and a conflation of two reading measures. Exact verdict `syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R1-RAW.md:1`. [R1 raw review](../reviews/syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R1-RAW.md)
 
-[Observed] R2 returned `CONFIRM` on `c6063d326849d319ee575b3688b7ff0c9b082ebe`. The revised candidate binds the existing reader surfaces, private inventory, keyboard and accessibility-tree behavior, and the rendered word count separately from the check ledger. A synthetic replay exercised the effect of the source-derived reading text on existing index matching and separated word count, transport bytes and source-fidelity population. [R2 raw review](../reviews/syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R2-RAW.md)
+[Observed] R2 returned `CONFIRM` on `c6063d326849d319ee575b3688b7ff0c9b082ebe`. The revised candidate binds the existing reader surfaces, private inventory, keyboard and accessibility-tree behavior, and the rendered word count separately from the check ledger. A synthetic replay exercised the effect of the source-derived reading text on existing index matching and separated word count, transport bytes and source-fidelity population. Exact verdict `syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R2-RAW.md:1`. [R2 raw review](../reviews/syzygy-fnry-13/FNRY13-LOCATED-QUOTATION-VIEWS-R2-RAW.md)
 
 [Unknown] The original bead still needs an effective specification successor, runtime delivery and the recorded mutation and historical 24-quotation results. This review settled the candidate design.
