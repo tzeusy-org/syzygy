@@ -1542,6 +1542,20 @@ async function observeDesignRun(run: string, traceInference = false) {
   }
 
   const firstBrokerInvocation = new AsyncLocalStorage<true>();
+  type WorkSnapshot = ReturnType<ReturnType<typeof orderedSession.createOrderedDesignSession>['workSnapshot']>;
+  type BrokerInvocationTrace = {
+    ordinal: number; timing: ResumeStamp; stages: Partial<Record<ResumeBrokerStage, ResumeStamp>>;
+    operation?: Parameters<typeof machinePeer.mediateUrlMachinePeer>[1];
+    workAtEntry?: WorkSnapshot; workAtSettlement?: WorkSnapshot; workAtFault?: WorkSnapshot;
+    firstRefusedStage?: ResumeBrokerStage; workAtFirstRefusedStage?: WorkSnapshot;
+  };
+  const brokerInvocation = new AsyncLocalStorage<BrokerInvocationTrace>();
+  let latestBrokerInvocation: BrokerInvocationTrace | undefined, firstRefusedBrokerInvocation: BrokerInvocationTrace | undefined;
+  let readWorkSnapshot: (() => WorkSnapshot) | undefined;
+  const workSnapshot = (): WorkSnapshot | undefined => {
+    // The genuine controller's existing snapshot is metadata-only and samples no clocks.
+    try { return readWorkSnapshot?.(); } catch { return undefined; }
+  };
   const orderedBrokers = new WeakSet<machineTransport.SessionMachineTransport>();
   const brokerStages: Partial<Record<ResumeBrokerStage, ResumeStamp>> = {};
   let firstMcpPeer: machinePeer.UrlMachinePeer | undefined;
@@ -1549,10 +1563,20 @@ async function observeDesignRun(run: string, traceInference = false) {
   let workPlanRefusal: ReturnType<typeof projectWorkPlanRefusal> | undefined;
 
   function brokerPhase<T>(stage: ResumeBrokerStage, call: () => T, accepted: (value: Awaited<T>) => boolean): T {
-    if (firstBrokerInvocation.getStore() !== true || brokerStages[stage] !== undefined) return call();
+    const latest = brokerInvocation.getStore();
+    const first = firstBrokerInvocation.getStore() === true && brokerStages[stage] === undefined;
+    if (!first && latest === undefined) return call();
     const stamp: ResumeStamp = { startedMs: clock() };
-    brokerStages[stage] = stamp;
-    const settle = (outcome: ResumeObservation) => { Object.assign(stamp, { settledMs: clock(), outcome }); };
+    if (first) brokerStages[stage] = stamp;
+    // One slot per fixed stage, overwritten within the latest invocation.
+    if (latest !== undefined) latest.stages[stage] = stamp;
+    const settle = (outcome: ResumeObservation) => {
+      Object.assign(stamp, { settledMs: clock(), outcome });
+      if (latest !== undefined && outcome !== 'accepted' && latest.firstRefusedStage === undefined) {
+        latest.firstRefusedStage = stage;
+        latest.workAtFirstRefusedStage = workSnapshot();
+      }
+    };
     const completed = (value: Awaited<T>) => settle(accepted(value) ? 'accepted' : 'refused');
     try {
       const original = call();
@@ -1566,15 +1590,25 @@ async function observeDesignRun(run: string, traceInference = false) {
   vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, onFault, limits, machine, startupCurrent) => {
     if (machine === undefined || !orderedBrokers.has(machine)) return startBroker(socket, invoke, onFault, limits, machine, startupCurrent);
     return startBroker(socket, (value, release, context) => {
-      brokerInvocations++;
-      if (context === null || context.peer !== firstMcpPeer || ++firstPeerInvocations !== 1) return invoke(value, release, context);
-      // Keep the original context, peer and effect guard identities.
-      return firstBrokerInvocation.run(true, () => brokerPhase('invoke', () => invoke(value,
+      const trace: BrokerInvocationTrace = { ordinal: ++brokerInvocations, timing: { startedMs: clock() },
+        stages: {}, workAtEntry: workSnapshot() };
+      latestBrokerInvocation = trace;
+      const observed = () => brokerInvocation.run(trace, () => timed(trace.timing, () => brokerPhase('invoke', () => invoke(value,
         (reply, revalidate, finalToolBudgetCheck) => brokerPhase('release', () => release(reply,
           revalidate === undefined ? undefined : () => brokerPhase('release-check', revalidate, () => true),
           finalToolBudgetCheck === undefined ? undefined : () => brokerPhase('release-final-budget', finalToolBudgetCheck, () => true)),
-        () => true), context), () => true));
-    }, () => { brokerFaultMs ??= clock(); onFault(); }, limits, machine, startupCurrent);
+        () => true), context), () => true), () => true, outcome => {
+        trace.workAtSettlement = workSnapshot();
+        if (outcome !== 'accepted') firstRefusedBrokerInvocation ??= trace;
+      }));
+      if (context === null || context.peer !== firstMcpPeer || ++firstPeerInvocations !== 1) return observed();
+      // Keep the original context, peer, effect guards and first-invocation trace.
+      return firstBrokerInvocation.run(true, observed);
+    }, () => {
+      brokerFaultMs ??= clock();
+      if (latestBrokerInvocation !== undefined) latestBrokerInvocation.workAtFault ??= workSnapshot();
+      onFault();
+    }, limits, machine, startupCurrent);
   });
 
   const startHost = orderedHost.startOrderedDesignHost;
@@ -1593,22 +1627,26 @@ async function observeDesignRun(run: string, traceInference = false) {
     });
   });
   const createOrderedSession = orderedSession.createOrderedDesignSession;
-  vi.spyOn(orderedSession, 'createOrderedDesignSession').mockImplementation(input => createOrderedSession({
-    ...input,
-    current: () => {
-      if (decisionScope.getStore() !== true) return brokerPhase(brokerStages['tool-before-plan-current'] === undefined
-        ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true);
-      return relayPhase('controller-current', () => {
-        const step = inferenceScope.getStore();
-        if (step === undefined) return input.current();
-        const trace = step.controllerCurrent = { startedMs: clock(), stages: [] };
-        return timed(trace, () => currentScope.run(trace, input.current), value => value === true);
-      }, value => value === true);
-    },
-    assertCurrent: () => decisionScope.getStore() === true ? relayPhase('product-assertion', input.assertCurrent, () => true)
-      : brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
-        ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
-  }));
+  vi.spyOn(orderedSession, 'createOrderedDesignSession').mockImplementation(input => {
+    const controller = createOrderedSession({
+      ...input,
+      current: () => {
+        if (decisionScope.getStore() !== true) return brokerPhase(brokerStages['tool-before-plan-current'] === undefined
+          ? 'tool-before-plan-current' : 'tool-before-release-current', input.current, value => value === true);
+        return relayPhase('controller-current', () => {
+          const step = inferenceScope.getStore();
+          if (step === undefined) return input.current();
+          const trace = step.controllerCurrent = { startedMs: clock(), stages: [] };
+          return timed(trace, () => currentScope.run(trace, input.current), value => value === true);
+        }, value => value === true);
+      },
+      assertCurrent: () => decisionScope.getStore() === true ? relayPhase('product-assertion', input.assertCurrent, () => true)
+        : brokerPhase(brokerStages['tool-before-audit-guard'] === undefined
+          ? 'tool-before-audit-guard' : 'tool-release-guard', input.assertCurrent, () => true),
+    });
+    readWorkSnapshot = controller.workSnapshot;
+    return controller;
+  });
   const createOrderedWriter = orderedWriter.createOrderedDesignAuditWriter;
   vi.spyOn(orderedWriter, 'createOrderedDesignAuditWriter').mockImplementation((context, store, observeRead) => {
     const append = store.append, current = store.current;
@@ -1658,7 +1696,9 @@ async function observeDesignRun(run: string, traceInference = false) {
         return result.ok;
       });
     }
-    if (firstBrokerInvocation.getStore() !== true) return mediatePeer(peer, operation, effect, preflight);
+    const invocation = brokerInvocation.getStore();
+    if (invocation !== undefined) invocation.operation = operation;
+    if (firstBrokerInvocation.getStore() !== true && invocation === undefined) return mediatePeer(peer, operation, effect, preflight);
     return brokerPhase('mediate-peer', () => mediatePeer(peer, operation, current =>
       brokerPhase('host-action', () => effect(current), () => true), preflight), result => result.ok);
   }));
@@ -1820,7 +1860,8 @@ async function observeDesignRun(run: string, traceInference = false) {
     ...(traceInference ? { inference: { inferenceCount, inferenceSteps, firstRefusedInference, relayCurrent, firstRefusedCurrent,
       hostActivation, hostCurrent, firstRefusedHostCurrent, firstDesignPublication } } : {}),
     orderedAudit: { preparedAppend, latestAppend, firstRefusedAppend },
-    broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal },
+    broker: { invocations: brokerInvocations, firstPeerInvocations, faultMs: brokerFaultMs, stages: brokerStages, workPlanRefusal,
+      latestInvocation: latestBrokerInvocation, firstRefusedInvocation: firstRefusedBrokerInvocation },
     mcpIngress: { counts: mcpReads, startedMs: mcpReadStartedMs, firstDataMs: mcpReadDataMs,
       endMs: mcpReadEndMs, firstRefusalMs: mcpReadRefusedMs } });
 }
