@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
-import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
+import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } from '../cdp-browser.js';
 import { navigationInput, readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
@@ -224,8 +224,7 @@ it.skipIf(executable === undefined)('keeps every dossier reading page oriented a
   }
 }, 60_000);
 
-it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and shows both counted packet digests on Review', async () => {
-  if (!executable) throw Error('Browser required');
+function reflowFixture() {
   const { sources, local } = navigationInput();
   const fidelityDigest = '0123456789abcdef'.repeat(4);
   const designDigest = 'fedcba9876543210'.repeat(4);
@@ -319,6 +318,13 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
   expect(pages).toHaveLength(23);
   expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...longText.keys()]));
   expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
+  return { pages, longText, fidelityGroups, designGroups, longStatusWord, codePath, start, end };
+}
+
+async function withReflowFixture(check: (page: BrowserPage, directory: string, fixture: ReturnType<typeof reflowFixture>) => Promise<void>): Promise<void> {
+  if (!executable) throw Error('Browser required');
+  const fixture = reflowFixture();
+  const { pages } = fixture;
   const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
   let browser: Browser | undefined;
   try {
@@ -329,111 +335,7 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     browser = await launchBrowser(executable);
     const page = await browser.newPage();
     try {
-      await page.setViewport(390, 844);
-      const overflows: Array<{ path: string; scrollWidth: number }> = [];
-      const longTextOverflows: string[] = [];
-      for (const [path] of pages) {
-        await page.navigate(pathToFileURL(join(directory, path)).href);
-        const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
-          width: innerWidth,
-          height: innerHeight,
-          scrollWidth: document.documentElement.scrollWidth,
-          statuses: [...document.querySelectorAll('[data-review-status-region]')].map(region => region.innerText),
-        })`);
-        expect([layout.width, layout.height], path).toEqual([390, 844]);
-        expect(layout.statuses, path).toHaveLength(1);
-        const status = layout.statuses[0]!;
-        expect(status, path).not.toMatch(/[0-9a-f]{64}/i);
-        expect(status, path).toContain('Fidelity review: one counts');
-        expect(status, path).toContain('Rendered-design review: one counts');
-        expect(status, path).toContain(longStatusWord);
-        if (path === 'review.html') {
-          expect(status, path).toContain(fidelityGroups);
-          expect(status, path).toContain(designGroups);
-        } else {
-          expect(status, path).toContain('bound to the packet shown on the review page');
-          expect(status, path).not.toContain(fidelityGroups);
-          expect(status, path).not.toContain(designGroups);
-        }
-        if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
-        for (const [selector, text] of longText.get(path) ?? []) {
-          const textFits = await page.evaluate<boolean>(`(() => {
-            const text = ${JSON.stringify(text)};
-            const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
-            if (node === undefined) return false;
-            const range = document.createRange();
-            range.selectNodeContents(node);
-            const rects = [...range.getClientRects()];
-            return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
-          })()`);
-          if (!textFits) longTextOverflows.push(`${path} ${selector}`);
-        }
-      }
-      expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
-      await page.setViewport(1440, 844);
-      for (const [path] of pages) {
-        await page.navigate(pathToFileURL(join(directory, path)).href);
-        expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
-      }
-      await page.setViewport(390, 844);
-      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
-      expect(await page.evaluate('document.scripts.length')).toBe(0);
-      const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
-      expect(exactPage).toBeDefined();
-      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
-      const citations = [
-        { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
-        { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
-      ];
-      for (const { selector, suffix, leftRange } of citations) {
-        const citation = `document.querySelector(${JSON.stringify(selector)})`;
-        expect(await page.accessibleNames(`[${citation}]`)).toEqual([`Source 2: ${codePath}, ${suffix}`]);
-        expect(await page.evaluate(`${citation}.href`)).toBe(exactHref);
-        const inspect = `(() => {
-          const link = ${citation};
-          const popup = link.querySelector('.cite-pop');
-          const box = popup.getBoundingClientRect();
-          const range = document.createRange();
-          range.selectNodeContents(popup);
-          const text = [...range.getClientRects()];
-          return { hidden: getComputedStyle(popup).display === 'none', focus: link.matches(':focus-visible'), hovered: link.matches(':hover'),
-            contents: popup.textContent, fitsPage: document.documentElement.scrollWidth <= innerWidth,
-            contained: box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight
-              && text.length > 0 && text.every(rect => rect.left >= box.left && rect.right <= box.right
-                && rect.top >= box.top && rect.bottom <= box.bottom) };
-        })()`;
-        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
-        await page.evaluate(`(() => {
-          const link = ${citation};
-          const stops = [...document.querySelectorAll('a[href], summary, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
-          stops[stops.indexOf(link) - 1].focus();
-        })()`);
-        for (let step = 0; step < 4; step++) {
-          await page.press('Tab');
-          if (await page.evaluate(`document.activeElement === ${citation}`)) break;
-        }
-        expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({
-          hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
-        });
-        await page.evaluate(`${citation}.blur()`);
-        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
-        const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
-          const link = ${citation};
-          link.scrollIntoView({ block: 'center', behavior: 'instant' });
-          const box = link.getBoundingClientRect();
-          const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
-          return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
-        })()`);
-        expect(target.hits, `${selector} pointer hit`).toBe(true);
-        expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
-        expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
-        await page.mouseMove(target.x, target.y);
-        await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
-          hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
-        });
-        await page.mouseMove(0, 0);
-        await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
-      }
+      await check(page, directory, fixture);
     } finally {
       await page.close();
     }
@@ -441,4 +343,139 @@ it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and s
     if (browser !== undefined) await browser.close();
     await rm(directory, { recursive: true, force: true });
   }
+}
+
+it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and shows both counted packet digests on Review', async () => {
+  await withReflowFixture(async (page, directory, { pages, longText, fidelityGroups, designGroups, longStatusWord }) => {
+    await page.setViewport(390, 844);
+    const overflows: Array<{ path: string; scrollWidth: number }> = [];
+    const longTextOverflows: string[] = [];
+    for (const [path] of pages) {
+      await page.navigate(pathToFileURL(join(directory, path)).href);
+      const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
+        width: innerWidth,
+        height: innerHeight,
+        scrollWidth: document.documentElement.scrollWidth,
+        statuses: [...document.querySelectorAll('[data-review-status-region]')].map(region => region.innerText),
+      })`);
+      expect([layout.width, layout.height], path).toEqual([390, 844]);
+      expect(layout.statuses, path).toHaveLength(1);
+      const status = layout.statuses[0]!;
+      expect(status, path).not.toMatch(/[0-9a-f]{64}/i);
+      expect(status, path).toContain('Fidelity review: one counts');
+      expect(status, path).toContain('Rendered-design review: one counts');
+      expect(status, path).toContain(longStatusWord);
+      if (path === 'review.html') {
+        expect(status, path).toContain(fidelityGroups);
+        expect(status, path).toContain(designGroups);
+      } else {
+        expect(status, path).toContain('bound to the packet shown on the review page');
+        expect(status, path).not.toContain(fidelityGroups);
+        expect(status, path).not.toContain(designGroups);
+      }
+      if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
+      for (const [selector, text] of longText.get(path) ?? []) {
+        const textFits = await page.evaluate<boolean>(`(() => {
+          const text = ${JSON.stringify(text)};
+          const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
+          if (node === undefined) return false;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const rects = [...range.getClientRects()];
+          return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
+        })()`);
+        if (!textFits) longTextOverflows.push(`${path} ${selector}`);
+      }
+    }
+    expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
+  });
+});
+
+it.skipIf(executable === undefined)('fits every dossier page at 1440 by 844', async () => {
+  await withReflowFixture(async (page, directory, { pages }) => {
+    await page.setViewport(1440, 844);
+    for (const [path] of pages) {
+      await page.navigate(pathToFileURL(join(directory, path)).href);
+      expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
+    }
+  });
+});
+
+it.skipIf(executable === undefined)('shows complete citation hints on keyboard focus and pointer hover at both page edges', async () => {
+  await withReflowFixture(async (page, directory, { pages, codePath, start, end }) => {
+    await page.setViewport(390, 844);
+    await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+    expect(await page.evaluate('document.scripts.length')).toBe(0);
+    // Make the edge fixture independent of platform font metrics and prose wrapping.
+    await page.evaluate('document.querySelector("#block-local-reflow-inline").style.textAlign = "right"');
+    const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
+    expect(exactPage).toBeDefined();
+    const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#exact-text`;
+    const citations = [
+      { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
+      { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
+    ];
+    for (const { selector, suffix, leftRange } of citations) {
+      const citation = `document.querySelector(${JSON.stringify(selector)})`;
+      expect(await page.accessibleNames(`[${citation}]`)).toEqual([`Source 2: ${codePath}, ${suffix}`]);
+      expect(await page.evaluate(`${citation}.href`)).toBe(exactHref);
+      const inspect = `(() => {
+        const link = ${citation};
+        const popup = link.querySelector('.cite-pop');
+        const box = popup.getBoundingClientRect();
+        const range = document.createRange();
+        range.selectNodeContents(popup);
+        const text = [...range.getClientRects()];
+        return { hidden: getComputedStyle(popup).display === 'none', focus: link.matches(':focus-visible'), hovered: link.matches(':hover'),
+          contents: popup.textContent, fitsPage: document.documentElement.scrollWidth <= innerWidth,
+          contained: box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight
+            && text.length > 0 && text.every(rect => rect.left >= box.left && rect.right <= box.right
+              && rect.top >= box.top && rect.bottom <= box.bottom) };
+      })()`;
+      expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+      await page.evaluate(`(() => {
+        const link = ${citation};
+        const stops = [...document.querySelectorAll('a[href], summary, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
+        stops[stops.indexOf(link) - 1].focus();
+      })()`);
+      for (let step = 0; step < 4; step++) {
+        await page.press('Tab');
+        if (await page.evaluate(`document.activeElement === ${citation}`)) break;
+      }
+      expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({
+        hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+      });
+      await page.evaluate(`${citation}.blur()`);
+      expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+      const target = await page.evaluate<{ x: number; y: number; left: number; hits: boolean }>(`(() => {
+        const link = ${citation};
+        // The citation's line-height:0 box has no height; measure its text ink, never the hidden popup.
+        const ink = () => {
+          const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+          for (let text = walker.nextNode(); text !== null; text = walker.nextNode()) {
+            if (text.parentElement?.closest('.cite-pop') || text.textContent.trim() === '') continue;
+            const range = document.createRange();
+            range.selectNodeContents(text);
+            const fragment = [...range.getClientRects()].find(rect => rect.width > 0 && rect.height > 0);
+            if (fragment !== undefined) return fragment;
+          }
+          throw Error('Citation has no text ink');
+        };
+        const before = ink();
+        window.scrollBy({ top: (before.top + before.bottom) / 2 - innerHeight / 2, behavior: 'instant' });
+        const box = ink();
+        const x = Math.round((box.left + box.right) / 2), y = Math.round((box.top + box.bottom) / 2);
+        return { x, y, left: box.left, hits: link.contains(document.elementFromPoint(x, y)) };
+      })()`);
+      expect(target.hits, `${selector} pointer hit`).toBe(true);
+      expect(target.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
+      expect(target.left, selector).toBeLessThanOrEqual(leftRange[1]);
+      await page.mouseMove(target.x, target.y);
+      await expect.poll(() => page.evaluate(inspect), { message: `${selector} hover` }).toMatchObject({
+        hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+      });
+      await page.mouseMove(0, 0);
+      await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true });
+    }
+  });
 });
