@@ -1,0 +1,112 @@
+{
+  "sourceCommit": "9acab4c48f06e59f562ff0f80928b264bbe6045d",
+  "predecessor": "ff65169e95dcfa7b14cf53494e8464202b29b914",
+  "scope": "Reviewed test-only diagnostics, exact owning checks and prior hosted failure; genuine new recovery still running",
+  "files": [
+    {
+      "path": "hosted/HOSTED-FAILURE-ASSESSMENT.txt",
+      "bytes": 5255,
+      "sha256": "184c36c1a7f6ac38693121ed7681b169aa5cccb0a06807b13f7ca35a20560a6c"
+    },
+    {
+      "path": "hosted/hosted-diagnostic-selection.json",
+      "bytes": 3256,
+      "sha256": "3e0fe12f713b5faedd49242dd95cb10d1039fb9a51fe11bdafbc5625e1625526"
+    },
+    {
+      "path": "hosted/hosted-ff651-stop-resume-diagnostic.json",
+      "bytes": 591768,
+      "sha256": "e8b3e2e038d6bf37c130ae640daa87c40f27975ae9802d457218f5b37b7f8092"
+    },
+    {
+      "path": "hosted/hosted-ff651-stop-resume.log",
+      "bytes": 1223756,
+      "sha256": "5582bdba026251d0701900ca904c03c80d284e8d68b2f18b64fd3f1ea693f973"
+    },
+    {
+      "path": "hosted/hosted-ff651-terminal-jobs.json",
+      "bytes": 102284,
+      "sha256": "1392d56df0ceda180282385d50226ebe18245e8b4f3981721ca84ae4e26fcb64"
+    },
+    {
+      "path": "hosted/receipts/complete.json",
+      "bytes": 69,
+      "sha256": "2d2ccf735f9108cc895426716489fa5f1e76a6657df3b94888ecc62b8a6ef054"
+    },
+    {
+      "path": "hosted/receipts/core-1.json",
+      "bytes": 67,
+      "sha256": "8ae6b3071a620edd35ca01e04caeb5329c85a6653281e3d9a7d3650f232282fd"
+    },
+    {
+      "path": "hosted/receipts/core-2.json",
+      "bytes": 67,
+      "sha256": "e614a425fa6dc4bef07238dd3aeeafce152d05ebec9c6a7a4902f0453f8240c5"
+    },
+    {
+      "path": "hosted/receipts/core-3.json",
+      "bytes": 67,
+      "sha256": "aa97da129443f49fc4feeaa473f51eecfdf77123ba6f05e3cf620ecdb807ef64"
+    },
+    {
+      "path": "hosted/receipts/delivery-stop.json",
+      "bytes": 74,
+      "sha256": "f9fe681bdc571bbbe8387ea7cb66ae9bd132e2bad307c4b3a139f7304a4deb83"
+    },
+    {
+      "path": "hosted/receipts/eligible-stop-resume.json",
+      "bytes": 81,
+      "sha256": "2739a55b331953af271f06b2b3bdc0e350cb996008c84d3c26b547bc423e7ea1"
+    },
+    {
+      "path": "owning/build.log",
+      "bytes": 348,
+      "sha256": "5edb04bee2aef64aa549c795ae9e625deea4ff16370e274807e411adc8b6d137"
+    },
+    {
+      "path": "owning/observer.json",
+      "bytes": 3224,
+      "sha256": "c98d34cefbb40db34bdaae860c56031eec1b69579b963512d69e5d5b9a195457"
+    },
+    {
+      "path": "owning/observer.log",
+      "bytes": 124,
+      "sha256": "50bb4c6597f666434b7a64fa249336660a3595e0b315b2280275921aa2b3a750"
+    },
+    {
+      "path": "owning/results.json",
+      "bytes": 570,
+      "sha256": "19295cb9618e9b90a8846afcc5a96224479589a03792bf7fc5d0a8eeb7bb662c"
+    },
+    {
+      "path": "owning/subject.json",
+      "bytes": 803,
+      "sha256": "eeedb12ffa9fd71c085db2004f5740cc338b465a746a8abca3b926bd71e0060c"
+    },
+    {
+      "path": "owning/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "path": "review/FRESH-REVIEW-RAW.md",
+      "bytes": 8970,
+      "sha256": "2c0a082500304f6b1cc9081710f312c3361251953df2acf3e07d8aa778dcc1e6"
+    },
+    {
+      "path": "source/bindings.json",
+      "bytes": 7060,
+      "sha256": "d43346aa3d236b3ea6390a7acbe102ce483b0e80ad46249b3ebe2f6914c7fc28"
+    },
+    {
+      "path": "source/diagnostic.patch",
+      "bytes": 9199,
+      "sha256": "097a185ef67e5f39e26a14b55ab5570faa42733b31029d198713a0afc22e94fb"
+    },
+    {
+      "path": "source/preparation.txt",
+      "bytes": 3742,
+      "sha256": "7760946aaa7d59f6dd57129d1e5f26986ab6a620974c33dd833a52359db30d63"
+    }
+  ]
+}
