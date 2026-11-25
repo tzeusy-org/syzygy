@@ -11436,26 +11436,17 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     finally:
         _EDITION_STATE = None
     _join_case_results(results, len(families), witnesses, failures)
-    _profile_selftest_call("edit_account_cases", edit_account_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("poc_d10_cases", poc_d10_cases,
-                           base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("reach_cases", reach_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("readmit_cases", readmit_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("raw_read_cases", raw_read_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("treeread_cases", treeread_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("verify_cases", verify_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("qfile_cases", qfile_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("covhold_cases", covhold_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("term_brief_cases", term_brief_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
+    tail_families = (edit_account_cases, poc_d10_cases, reach_cases, readmit_cases,
+                     raw_read_cases, treeread_cases, verify_cases, qfile_cases,
+                     covhold_cases, term_brief_cases)
+    _EDITION_STATE = (tmp, base, tail_families)
+    try:
+        results = _map_cases(len(tail_families), _run_tail_edition)
+    finally:
+        _EDITION_STATE = None
+    # Preserve canonical witness order; the original join rejects bad indices.
+    results.sort(key=lambda result: result[0] if type(result[0]) is int else -1)
+    _join_case_results(results, len(tail_families), witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -11559,9 +11550,18 @@ def _run_edition(index):
     tmp, figure_base, families = _EDITION_STATE
     family = families[index]
     witnesses, failures = [], []
-    _profile_selftest_call(family.__name__, family, tmp, figure_base,
+    arguments = (figure_base,) if family is poc_d10_cases else (tmp, figure_base)
+    _profile_selftest_call(family.__name__, family, *arguments,
                            witnesses, failures, witnesses=witnesses)
     return index, witnesses, failures, []
+
+
+# Fixed measured longest-first order; returned indices remain canonical.
+_TAIL_WORK_ORDER = (9, 0, 1, 7, 8, 6, 3, 2, 5, 4)
+
+
+def _run_tail_edition(index):
+    return _run_edition(_TAIL_WORK_ORDER[index])
 
 
 def _join_case_results(results, count, witnesses, failures):
