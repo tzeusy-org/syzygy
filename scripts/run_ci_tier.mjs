@@ -2,8 +2,10 @@
 //   node scripts/run_ci_tier.mjs <integration|e2e> <selection.json>
 // The selection comes from scripts/select_ci_tests.mjs; every named file must be a file of that tier in the current tree.
 // It mirrors the full scripts: integration runs the tmpdir guard's selftest first; e2e runs the browser preflight file
-// first when it is chosen, then the rest, then the system tests, which always run (they spawn the compiled daemon, a
-// graph Vitest's root config does not see). A tier with nothing chosen prints so and passes.
+// first whenever any browser test is chosen (so a browser that cannot start fails once, with its own diagnosis), then
+// the rest, then the system tests, which always run (they spawn the compiled daemon, a graph Vitest's root config does
+// not see). A tier with nothing chosen prints so and passes. A chosen file Vitest cannot find fails the run: Vitest exits
+// non-zero when a filter matches no test file.
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -37,7 +39,7 @@ if (tier === 'integration') {
   run(process.execPath, [join(ROOT, 'scripts/check_unit_tmpdir.mjs'), '--selftest']);
   if (chosen.length > 0) vitest(chosen);
 } else {
-  if (chosen.includes(BROWSER_PREFLIGHT)) vitest([BROWSER_PREFLIGHT]);
+  if (chosen.some((path) => path.endsWith('.browser.test.ts'))) vitest([BROWSER_PREFLIGHT]);
   const rest = chosen.filter((path) => path !== BROWSER_PREFLIGHT);
   if (rest.length > 0) vitest(rest);
   run('npm', ['run', 'test:system']);

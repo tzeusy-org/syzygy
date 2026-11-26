@@ -3,7 +3,8 @@
 // read this: the tree that lands is always tested whole.
 //
 // Two ways a change reaches a test:
-//   - by import: every test whose module graph holds a changed workspace module (`apps/*`, `packages/*`);
+//   - by import: every test whose module graph holds a changed module (`apps/*`, `packages/*`, or a script or root
+//     module a test imports);
 //   - by reading: tests read documents, fixtures, scripts and sibling sources from disk, which no import graph sees. A
 //     "reader" module selects every test that imports it (itself included):
 //       - for a path outside the workspaces, every module that locates the real repository (`ROOTED` below: a relative
@@ -11,9 +12,17 @@
 //         literal. A bare `'..'` join is not counted: 178 of 739 modules carry one, and counting it selected 308 of 366
 //         test files for a Trajectory change (measured 2026-11-27 on PR #1007's diff);
 //       - for a path inside a workspace, every module naming its basename, and for a file that is not a module also its
-//         directory's name, as a path literal (opened and closed by a quote, backtick or slash).
+//         directory's name, as a path literal (opened and closed by a quote, backtick or slash); and every test file
+//         that is a "walker" (`WALKS`: it lists a directory) in the same workspace, or anywhere when it also locates
+//         the repository. Guards that scan sources (`support-purity.test.ts` walks its own `src`,
+//         `sync-child-process-guard.test.ts` walks the repository) are walkers, so a new module is checked by them.
+//         Only test files count: a product module that lists a directory reads the input its caller hands it, and
+//         counting those selected every dossier browser test for a Trajectory change (measured on PR #1007's diff).
+//       - a renamed path is looked up by its old name as well as its new one.
 //     The rule over-selects on purpose. A reader it cannot see (a path assembled from parts that never name a token, a
-//     tree walk from a root handed in by a caller it does not import) is the residual the full merge-group run covers.
+//     directory read from a root handed in by a caller it does not import, a walk that names no listing call) is the
+//     residual: no unit test fails when a new test escapes the rule, and the full merge-group run is what catches it,
+//     in the queue, never on main.
 // A change the graph cannot bound runs every tier in full: manifests, the lockfile, test and type configuration, the
 // workflow, this selector and its runners, and a deleted or renamed workspace module.
 
@@ -56,6 +65,12 @@ const MODULE = /\.(ts|mts|cts|tsx|js|mjs|cjs)$/u;
 /** A module that finds the real repository from where it sits, or from the process; see the head comment. */
 export const ROOTED = /new URL\(\s*['"`](\.\.\/?)+['"`]|process\.cwd\(\)|['"`]rev-parse['"`]|--show-toplevel/u;
 
+/** A module that lists a directory, and so may read a file no one names to it; see the head comment. */
+export const WALKS = /\b(readdir|opendir|glob)(Sync)?\(|['"`]ls-files['"`]/u;
+
+/** The workspace a path lies in (`apps/x`, `packages/y`), or undefined. */
+const workspaceOf = (path: string): string | undefined => WORKSPACE.exec(path)?.[0].slice(0, -1);
+
 /** The names a reader would use to reach `path`: see the head comment. */
 export function readerTokens(path: string): string[] {
   const parts = path.split('/');
@@ -86,12 +101,16 @@ export function planSelection(changed: readonly ChangedPath[], modules: Readonly
     const removed = change.status.startsWith('D') || change.status.startsWith('R');
     const removedPath = change.status.startsWith('R') ? change.previous ?? change.path : change.path;
     if (removed && WORKSPACE.test(removedPath)) reasons.push(`workspace module removed or renamed: ${removedPath}`);
-    if (WORKSPACE.test(change.path) && MODULE.test(change.path)) code.add(change.path); // a removed one has already made the run full
-    const tokens = readerTokens(change.path);
-    const rooted = !WORKSPACE.test(change.path);
-    const readers = [...modules]
-      .filter(([module, text]) => module !== change.path && ((rooted && ROOTED.test(text)) || tokens.some((token) => namesPath(text, token))))
-      .map(([module]) => module).sort();
+    if (MODULE.test(change.path) && !change.status.startsWith('D')) code.add(change.path); // a removed workspace one has already made the run full
+    const names = change.previous === undefined ? [change.path] : [change.previous, change.path];
+    const tokens = [...new Set(names.flatMap(readerTokens))];
+    const workspace = workspaceOf(change.path);
+    const reads = (module: string, text: string): boolean => {
+      if (tokens.some((token) => namesPath(text, token))) return true;
+      if (workspace === undefined) return ROOTED.test(text);
+      return module.endsWith('.test.ts') && WALKS.test(text) && (workspaceOf(module) === workspace || ROOTED.test(text));
+    };
+    const readers = [...modules].filter(([module, text]) => module !== change.path && reads(module, text)).map(([module]) => module).sort();
     documents.push({ path: change.path, tokens, readers });
   }
   if (reasons.length > 0) return { mode: 'full', reasons: [...new Set(reasons)], code: [], documents: [], related: [] };

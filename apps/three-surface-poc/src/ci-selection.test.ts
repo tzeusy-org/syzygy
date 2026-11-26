@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FULL_RUN_TRIGGERS, ROOTED, namesPath, parseNameStatus, planSelection, readerTokens, type ChangedPath } from '../../../ci-selection.js';
+import { FULL_RUN_TRIGGERS, ROOTED, WALKS, namesPath, parseNameStatus, planSelection, readerTokens, type ChangedPath } from '../../../ci-selection.js';
 
 // syzygy-qu5j: which tests a pull request runs. The module graph itself is Vitest's; these pin the plan handed to it.
 const M = (status: string, path: string, previous?: string): ChangedPath => (previous === undefined ? { status, path } : { status, path, previous });
@@ -64,6 +64,25 @@ describe('the pull-request selection plan', () => {
     expect(planSelection([M('A', 'apps/a/src/new.ts')], MODULES).mode).toBe('selected');
   });
 
+  it('makes every guard that walks the changed module\'s workspace, or walks from the repository root, a reader', () => {
+    const modules = new Map<string, string>([
+      ['packages/s/src/purity.test.ts', "readdirSync(new URL('./', import.meta.url), { recursive: true });"],
+      ['packages/t/src/other-walker.test.ts', "readdirSync(new URL('./', import.meta.url));"],
+      ['apps/a/src/repo-guard.test.ts', "const ROOT = new URL('../../../', import.meta.url); execFileSync('git', ['ls-files']);"],
+      ['apps/a/src/rooted-reader.test.ts', "readFileSync(new URL('../../../PROJECT-STATUS.md', import.meta.url));"],
+    ]);
+    const plan = planSelection([M('A', 'packages/s/src/clock.ts')], modules);
+    expect(plan.documents[0]!.readers).toEqual(['apps/a/src/repo-guard.test.ts', 'packages/s/src/purity.test.ts']);
+    expect(plan.code).toEqual(['packages/s/src/clock.ts']);
+  });
+
+  it('hands a changed script module to the graph, and looks a renamed document up by both names', () => {
+    expect(planSelection([M('M', 'scripts/derive.mjs')], MODULES).code).toEqual(['scripts/derive.mjs']);
+    expect(planSelection([M('M', 'scripts/check.py')], MODULES).code).toEqual([]);
+    const renamed = planSelection([M('R090', 'docs/NEW-NAME.md', '.syzygy/governance/decisions/AGENT-ADOPTIONS.md')], new Map([...MODULES].filter(([path]) => path === 'apps/a/src/adoptions.test.ts')));
+    expect(renamed.documents[0]).toMatchObject({ tokens: ['AGENT-ADOPTIONS.md', 'NEW-NAME.md'], readers: ['apps/a/src/adoptions.test.ts'] });
+  });
+
   it('selects nothing for an empty diff', () => {
     expect(planSelection([], MODULES)).toEqual({ mode: 'selected', reasons: [], code: [], documents: [], related: [] });
   });
@@ -90,6 +109,11 @@ describe('its parts', () => {
       expect(ROOTED.test(text), text).toBe(true);
     }
     for (const text of ["join(HERE, '..')", "new URL('./x.ts', import.meta.url)", 'cwd'] as const) expect(ROOTED.test(text), text).toBe(false);
+  });
+
+  it('recognises a module that lists a directory', () => {
+    for (const text of ['readdirSync(dir)', 'await readdir(dir)', 'opendirSync(dir)', 'globSync(pattern)', "['ls-files', '-z']"]) expect(WALKS.test(text), text).toBe(true);
+    for (const text of ['readFileSync(path)', 'const readdirs = 1;', 'ls-files in prose']) expect(WALKS.test(text), text).toBe(false);
   });
 
   it('reads git name-status rows, renames with both paths', () => {
