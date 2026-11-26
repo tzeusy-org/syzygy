@@ -95,7 +95,7 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    39 requirements and 579 scenarios in the effective composition with it and with the signed-off
+    39 requirements and 597 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
@@ -283,6 +283,11 @@ authority and no model yet called on the current path.
     worth-knowing mark and requires a figure plan; check advises, gating nothing, on figures that carry too little, repeat another
     or mix levels; brief v22 asks for the plan. No review has read the 2.33 rebuild.
     *(2026-11-26: the predecessor figure of 567 scenarios is superseded.)*
+    [Derived-base views amendment 2.34](openspec/changes/dossier-derived-base-views) is agent-adopted in A-267.
+    It replaces REQ-polaris-generation-034 from version 2.33 (232 to 250 scenarios): schema v15 lets a graph or containment
+    view start from the directory or unit map read-only, every derived element in Syzygy's words with a computed chip
+    counting what it leaves out; figure advice reads no base view; brief v23. No review has read the 2.34 rebuild.
+    *(2026-11-27: the predecessor figure of 579 scenarios is superseded.)*
     *(2026-11-18: the predecessor figure "329 scenarios" is superseded by that
     overlay; all38 identities remain, and046 is now Declared local-source admission.)*
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
