@@ -3,11 +3,11 @@ import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { BUTLERS_POC_SEEDS, buildPocModel, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
+import { BUTLERS_POC_SEEDS, buildPocModel, PWB_RESOURCE_LIMITS, STATUS_TO_COLUMN, UNMARKED_RECORD_REASON, workerChangeVerificationId, type PocModel, type TestArtifactRecord } from '@syzygy/three-surface-poc-core';
 
 import { renderTrajectoryPage, renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
 import { pocRoutes } from './routes.js';
-import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, fixtureWorkItemQuery, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -42,13 +42,186 @@ function cardBody(html: string, id: string): string {
   return match[1];
 }
 
+function trajectoryView(model: PocModel, query: string): string {
+  const html = renderTrajectoryRoute(model, '', undefined, new URLSearchParams(query));
+  if (typeof html !== 'string') throw new Error(`refused: ${query}`);
+  return html;
+}
+
+describe('Trajectory dependency eligibility (POC-REQ-062)', () => {
+  const revision = '0123456789abcdefghijklmnopqrstuv';
+  const witness = { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null };
+  const instant = '2026-08-01T00:00:00Z';
+  const item = (id: string, status: string) => ({
+    ...fixtureWorkItemRow(id, status, instant, instant, status === 'closed' ? instant : null), id, revision,
+  });
+  const edge = (issue_id: string, depends_on_issue_id: string, type = 'blocks', has_external = 0, has_wisp = 0) =>
+    ({ issue_id, depends_on_issue_id, type, has_external, has_wisp, revision: null });
+  const knownBlocker = { id: 'bu-z-blocker', page: 1 };
+
+  it('reconciles all classifications, reasoned states and an independently established mixed cause across both channels', async () => {
+    const rows = [
+      item('bu-a-ready', 'open'), item('bu-b-blocked', 'open'), item('bu-c-tracker-blocked', 'blocked'),
+      item('bu-d-deferred', 'deferred'), item('bu-e-unlisted', 'open'), item('bu-f-foreign', 'open'),
+      item('bu-g-external', 'open'), item('bu-h-wisp', 'open'), item('bu-i-unobserved', 'open'),
+      item('bu-j-mixed', 'blocked'), item('bu-k-working', 'in_progress'), item('bu-l-pinned', 'pinned'),
+      item('bu-m-hooked', 'hooked'), item('bu-n-closed', 'closed'), item('bu-z-blocker', 'open'),
+    ];
+    const edges = [
+      witness, edge('bu-a-ready', 'bu-n-closed'), edge('bu-b-blocked', 'bu-z-blocker'), edge('bu-b-blocked', 'bu-z-blocker'),
+      edge('bu-e-unlisted', 'bu-z-blocker', 'unclassified-fixture-type'), edge('bu-f-foreign', 'elsewhere-fixture-target'),
+      edge('bu-g-external', 'bu-c-tracker-blocked', 'blocks', 1), edge('bu-h-wisp', 'bu-c-tracker-blocked', 'blocks', 0, 1),
+      edge('bu-i-unobserved', 'bu-unobserved-fixture-target'), edge('bu-j-mixed', 'bu-z-blocker'),
+      edge('bu-j-mixed', 'bu-c-tracker-blocked', 'blocks', 1), edge('bu-d-deferred', 'bu-z-blocker', 'parent-child'),
+      edge('bu-d-deferred', 'bu-z-blocker', 'discovered-from'), edge('bu-d-deferred', 'bu-z-blocker', 'related'),
+      edge('bu-d-deferred', 'bu-z-blocker', 'relates-to'), edge('bu-d-deferred', 'bu-z-blocker', 'tracks'),
+    ];
+    const runDependencyQuery = () => JSON.stringify(edges);
+    const repo = fixtureRepoWithGit(cleanups);
+    const model = buildFixtureModel(cleanups, { fixtureRepo: repo, workItemRows: rows, runDependencyQuery });
+    if (model.trajectory.kind !== 'observed') throw new Error('expected observed trajectory');
+    const expected = {
+      served: 14,
+      counts: { ready: 2, planned: 1, blocked: 2, 'eligibility-undetermined': 6, absent: 3 },
+      feed: { kind: 'observed', counts: {
+        total: 15, byType: { blocks: 9, 'parent-child': 1, 'discovered-from': 1, related: 1, 'relates-to': 1, tracks: 1 },
+        unlisted: 1, external: 2, wisp: 1, outOfPrefix: 1,
+      } },
+      items: {
+        'bu-a-ready': { state: 'ready', reasons: [] },
+        'bu-b-blocked': { state: 'blocked', reasons: [], block: { causes: ['dependency'], blockers: [knownBlocker] } },
+        'bu-c-tracker-blocked': { state: 'blocked', reasons: [], block: { causes: [], blockers: [] } },
+        'bu-d-deferred': { state: 'planned', reasons: ['tracker-deferred'] },
+        'bu-e-unlisted': { state: 'eligibility-undetermined', reasons: ['unlisted-edge-type'] },
+        'bu-f-foreign': { state: 'eligibility-undetermined', reasons: ['out-of-prefix-blocker'] },
+        'bu-g-external': { state: 'eligibility-undetermined', reasons: ['external-blocker'] },
+        'bu-h-wisp': { state: 'eligibility-undetermined', reasons: ['wisp-blocker'] },
+        'bu-i-unobserved': { state: 'eligibility-undetermined', reasons: ['unobserved-blocker'] },
+        'bu-j-mixed': { state: 'eligibility-undetermined', reasons: ['external-blocker'], block: { causes: ['dependency'], blockers: [knownBlocker] } },
+        'bu-z-blocker': { state: 'ready', reasons: [] },
+      },
+    };
+    const machineRoute = pocRoutes(() => model).find((route) => route.path === '/api/poc')!;
+    const response = await machineRoute.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    const machine = JSON.parse(response.body as string) as PocModel;
+    if (machine.trajectory.kind !== 'observed') throw new Error('expected observed machine trajectory');
+    expect(machine.trajectory.eligibility).toEqual(expected);
+
+    const html = renderTrajectoryPage(model);
+    for (const [id, expectation] of Object.entries(expected.items)) {
+      const card = cardBody(html, id);
+      expect(card).toContain(`data-trajectory-eligibility="${expectation.state}"`);
+      expect([...card.matchAll(/data-eligibility-reason="([^"]+)"/g)].map((match) => match[1])).toEqual(expectation.reasons);
+      expect([...card.matchAll(/data-blocker-id="([^"]+)"/g)].map((match) => match[1])).toEqual(
+        'block' in expectation ? expectation.block.blockers.map(({ id: blocker }) => blocker) : [],
+      );
+      expect([...card.matchAll(/data-blocked-cause="([^"]+)"/g)].map((match) => match[1])).toEqual(
+        'block' in expectation ? [expectation.block.causes[0] ?? 'unknown'] : [],
+      );
+    }
+    for (const id of ['bu-k-working', 'bu-l-pinned', 'bu-m-hooked']) {
+      expect(cardBody(html, id)).not.toContain('data-trajectory-eligibility');
+    }
+    expect(cardBody(trajectoryView(model, 'status=closed'), 'bu-n-closed')).not.toContain('data-trajectory-eligibility');
+    expect(Object.fromEntries([...html.matchAll(/data-eligibility-count="([^"]+)">[^<]+ (\d+)<\/span>/g)]
+      .map(([, label, value]) => [label, Number(value)]))).toEqual({
+      'served non-closed': 14, ...expected.counts, rows: 15, ...expected.feed.counts.byType, unlisted: 1, external: 2, wisp: 1, 'out-of-prefix': 1,
+    });
+    for (const withheld of ['unclassified-fixture-type', 'elsewhere-fixture-target', 'bu-unobserved-fixture-target']) {
+      expect(html).not.toContain(withheld);
+      expect(response.body).not.toContain(withheld);
+    }
+
+    const nextRevision = '1123456789abcdefghijklmnopqrstuv';
+    const afterClose = buildFixtureModel(cleanups, {
+      fixtureRepo: repo,
+      workItemRows: rows.map((row) => ({ ...(row.id === 'bu-z-blocker' ? item('bu-z-blocker', 'closed') : row), revision: nextRevision })),
+      runDependencyQuery: () => JSON.stringify([{ ...witness, revision: nextRevision }, ...edges.slice(1)]),
+    });
+    if (afterClose.trajectory.kind !== 'observed') throw new Error('expected observed next snapshot');
+    expect(afterClose.trajectory.eligibility.items['bu-b-blocked']).toEqual({ state: 'ready', reasons: [] });
+    expect(cardBody(renderTrajectoryPage(afterClose), 'bu-b-blocked')).not.toContain('data-blocker-id');
+  });
+
+  it('retains the observed statuses when the dependency feed is unavailable', () => {
+    const statuses = ['open', 'blocked', 'deferred', 'in_progress', 'pinned', 'hooked', 'closed'];
+    const rows = statuses.map((status) => item(`bu-status-${status}`, status));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => '[]' });
+    if (model.trajectory.kind !== 'observed' || model.workItems.kind !== 'observed') throw new Error('expected observed work');
+    expect(model.workItems.items.map(({ status }) => status)).toEqual(statuses);
+    expect(model.trajectory.eligibility.feed).toEqual({ kind: 'unknown', reason: 'dependency-revision-unverified' });
+    expect(model.trajectory.eligibility.counts).toEqual({ ready: 0, planned: 0, blocked: 0, 'eligibility-undetermined': 6, absent: 0 });
+    const html = renderTrajectoryPage(model);
+    expect(html).toContain('data-dependency-feed="unknown">Dependency rows. Unknown.');
+    expect(html).not.toContain('data-eligibility-count="rows"');
+    for (const status of statuses.slice(0, -1)) {
+      const card = cardBody(html, `bu-status-${status}`);
+      expect(card).toContain(`data-parity-field="work-item-status">${status}<`);
+      expect(card).toContain('data-eligibility-reason="dependency-revision-unverified"');
+    }
+    expect(cardBody(trajectoryView(model, 'status=closed'), 'bu-status-closed')).not.toContain('data-trajectory-eligibility');
+  });
+
+  it('follows every fixture blocker destination across pages, direct and tailnet, and measures the largest response', async () => {
+    const starts = ['bu-0000', 'bu-0001'];
+    const ends = ['bu-0399', 'bu-0639'];
+    const rows = Array.from({ length: 640 }, (_, i) => {
+      const id = `bu-${String(i).padStart(4, '0')}`;
+      return item(id, starts.includes(id) ? 'blocked' : 'open');
+    });
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows, runDependencyQuery: () => JSON.stringify([witness, edge(starts[0]!, ends[0]!), edge(starts[1]!, ends[1]!)]),
+    });
+    const routes = pocRoutes(() => model);
+    const sizes: number[] = [];
+    for (const prefix of ['', '/butlers-syzygy']) {
+      const route = routes.find((entry) => entry.path === `${prefix}/trajectory`)!;
+      const headers = { host: prefix === '' ? '127.0.0.1:7478' : 'tzeusy.parrot-hen.ts.net' };
+      const get = async (query: string) => {
+        const response = await route.handle({ request: { method: 'GET', path: route.path, query: new URLSearchParams(query), headers } });
+        expect(response.status).toBe(200);
+        return response.body as string;
+      };
+      for (const sourceQuery of ['', 'status=blocked&page=1', 'page=1']) {
+        const html = await get(sourceQuery);
+        for (const [index, id] of starts.entries()) {
+          const link = /data-blocker-id="([^"]+)" href="([^"]+)"/.exec(cardBody(html, id));
+          expect(link?.[1]).toBe(ends[index]);
+          const url = new URL(link![2]!, 'http://example.invalid');
+          expect(url.pathname).toBe(`${prefix}/trajectory`);
+          expect(url.search).toBe(`?page=${index + 2}`);
+          expect(url.hash).toBe(`#workitem-${ends[index]}`);
+          expect(await get(url.search.slice(1))).toContain(`id="${url.hash.slice(1)}"`);
+        }
+      }
+      const queries = ['', 'page=1', 'page=2', 'page=3'];
+      const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked', 'closed'];
+      for (const intent of ['', 'governing-intent=unknown&']) {
+        for (const status of statuses) {
+          for (let page = 1; page <= (status === 'open' ? 3 : 1); page++) {
+            queries.push(`status=${status}&${intent}page=${page}`);
+          }
+        }
+      }
+      queries.push('governing-intent=unknown&page=1', 'governing-intent=unknown&page=2', 'governing-intent=unknown&page=3');
+      for (const query of queries) {
+        sizes.push(Buffer.byteLength(await get(query), 'utf8'));
+      }
+    }
+    const largest = Math.max(...sizes);
+    process.stdout.write(`[T4 S1 dependency fixture page bytes] ${JSON.stringify({ largest, measured: sizes.length, sizes })}\n`);
+    expect(largest).toBeLessThan(2_097_152);
+  });
+});
+
 describe('Trajectory', () => {
   it('places every rendered item in the column its declared status mapping assigns (POC-REQ-040)', () => {
     const model = buildFixtureModel(cleanups);
-    const html = renderTrajectoryPage(model);
-    if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
+    const html = trajectoryView(model, 'selection=recent');
+    if (model.workItems.kind !== 'observed') throw new Error('unreachable');
 
-    for (const item of model.trajectory.rendered) {
+    for (const item of model.workItems.items) {
       const card = cardBody(html, item.id);
       const columnMatch = new RegExp(
         `<h2>${STATUS_TO_COLUMN[item.status]}[\\s\\S]*?</section>`,
@@ -56,11 +229,11 @@ describe('Trajectory', () => {
       // the card's own status text is the oracle-independent check: its
       // rendered status must equal the declared mapping's input status
       expect(card).toContain(`data-parity-field="work-item-status">${item.status}<`);
-      expect(html).toMatch(columnMatch);
+      expect(columnMatch.exec(html)?.[0]).toContain(`data-work-item-id="${item.id}"`);
     }
   });
 
-  it('serves the full machine population and reconciles the bounded board selection (POC-REQ-042)', async () => {
+  it('serves the full machine population and reconciles the default outline and capped recent work (POC-REQ-042)', async () => {
     const instant = '2026-08-01T00:00:00Z';
     const statuses = ['open', 'in_progress', 'blocked', 'deferred', 'pinned', 'hooked'];
     const rows = [
@@ -76,55 +249,114 @@ describe('Trajectory', () => {
     if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(served.workItems.items.map((item) => item.id)).toEqual(rows.map((row) => row.id));
     expect(served.workItems.items).toHaveLength(252);
-    expect(served.trajectory).toMatchObject({ totalCount: 252, renderedCount: 250, excludedCount: 2 });
+    expect(served.trajectory).toMatchObject({ totalCount: 252, renderedCount: 201, excludedCount: 51, grouping: { positions: 201 } });
     const cardIds = [...html.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]);
-    expect(cardIds).toHaveLength(250);
-    expect(cardIds.sort()).toEqual(served.trajectory.rendered.map((item) => item.id).sort());
-    expect(cardIds).not.toContain('bu-current-200');
-    expect(cardIds).not.toContain('bu-closed-050');
-    expect(served.trajectory.rendered.filter((item) => item.column === 'Closed')).toHaveLength(50);
-    expect(html).toContain('Rendering 250 of 252 observed work items (up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id)');
-    expect(html).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
+    const expected = rows.slice(0, 201).map((row) => row.id);
+    expect(cardIds).toEqual(expected);
+    expect(served.trajectory.rendered.map((item) => item.id)).toEqual(expected);
+    expect(html).toContain('Rendering 201 of 252 observed work items (page 1 of 1 of the 201 observed items with a status other than closed, grouped by parent: 201 positions');
+    expect(html).toContain('data-parity-field="trajectory-excluded-count">51</span> items are outside this selection');
+
+    const recent = trajectoryView(model, 'selection=recent');
+    const recentIds = [...recent.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]).sort();
+    expect(recentIds).toEqual([...rows.slice(0, 200), ...rows.slice(201, 251)].map((row) => row.id).sort());
+    expect(recent).toContain('Rendering 250 of 252 observed work items (up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id)');
+    expect(recent).toContain('data-parity-field="trajectory-excluded-count">2</span> items are outside this selection');
   });
 
-  // SEC-5 (owner answer 2026-10-20, syzygy-jytt): a card is named by its
-  // identifier and says its title is withheld; the board says why, once,
-  // and the machine twin carries the same reason and route. Literals typed
-  // here; the fixture rows carry titles (`fixture item <id>`) to prove none
-  // is served.
-  it('names every card by its identifier and discloses its withheld title (SEC-5)', () => {
+  // POC-REQ-063 (syzygy-t3jk.23): a card shows its title when the title
+  // policy admits it, escaped; a withheld title is a mark naming its reason
+  // that refers to the board's one disclosure, and the board states the
+  // policy and counts once. Literals typed here.
+  it('shows each admitted title on its card and states the title policy once (POC-REQ-063)', async () => {
     const model = buildFixtureModel(cleanups);
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     const ids = model.trajectory.rendered.map((item) => item.id);
-    expect(ids).toHaveLength(5);
+    expect(ids).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
     for (const id of ids) {
       const card = cardBody(html, id);
       expect(card).toContain(`<a class="wi-title" href="#workitem-${id}" data-parity-field="work-item-id">${id}</a>`);
-      const marks = card.split('data-parity-field="work-item-title"').length - 1;
-      expect(marks, id).toBe(1);
-      // syzygy-t3jk.15: the card's mark refers to the board's one disclosure
-      // and carries no route of its own.
-      expect(card).toContain('<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (SEC-5) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>');
-      expect(card).not.toContain(route);
+      expect(card).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">fixture item ${id}</bdi>`);
+      expect(card.split('data-parity-field="work-item-title"').length - 1, id).toBe(1);
     }
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 5 of 5 observed work items, each screened by the title policy work-item-title 1.0.0 (its secret detectors and its scan for markup and scripts).',
+    );
+    expect(html).not.toContain('data-unknown-disclosure="region:work-item-titles"');
+    expect(model.unknownSubjects.some((subject) => subject.id === 'region:work-item-titles')).toBe(false);
+    const served = await servedAnswer(model);
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => [item.id, item.title]).sort(([a], [b]) => String(a).localeCompare(String(b)))).toEqual([
+      ['bu-blocked1', { text: 'fixture item bu-blocked1' }],
+      ['bu-closed-old', { text: 'fixture item bu-closed-old' }],
+      ['bu-closed-recent', { text: 'fixture item bu-closed-recent' }],
+      ['bu-open1', { text: 'fixture item bu-open1' }],
+      ['bu-progress1', { text: 'fixture item bu-progress1' }],
+    ]);
+  });
+
+  it('withholds a screened-out title on both channels, escapes an admitted one, and routes the withheld count once (POC-REQ-063)', async () => {
+    const at = '2026-08-01T00:00:00Z';
+    const rows = [
+      { ...fixtureWorkItemRow('bu-a1', 'open', at, at, null), title: 'Tom & Jerry say "hi" it\'s fine' },
+      { ...fixtureWorkItemRow('bu-a2', 'open', at, at, null), title: 'Set password: qz5hunter2qz5' },
+      { ...fixtureWorkItemRow('bu-a3', 'open', at, at, null), title: 'Fix <script>qz6x</script>' },
+      { ...fixtureWorkItemRow('bu-a4', 'open', at, at, null), title: null },
+    ];
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    const html = renderTrajectoryPage(model);
+    const served = await servedAnswer(model);
+    const body = JSON.stringify(served);
+    for (const text of ['qz5hunter2qz5', 'qz6x', 'password:']) {
+      expect(html).not.toContain(text);
+      expect(body).not.toContain(text);
+    }
+    expect(cardBody(html, 'bu-a1')).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Tom &amp; Jerry say &quot;hi&quot; it&#39;s fine</bdi>');
+    const mark = (reason: string) => `<span class="epistemic epistemic-unknown" data-parity-field="work-item-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld (${reason}) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a></span>`;
+    expect(cardBody(html, 'bu-a2')).toContain(mark('secret-matched'));
+    expect(cardBody(html, 'bu-a3')).toContain(mark('active-content'));
+    expect(cardBody(html, 'bu-a4')).toContain(mark('unclassifiable'));
+    const route = 'Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.';
     expect(html.split(route).length - 1).toBe(1);
-    const notice = /<p class="titles-withheld notice" id="n-titles" data-parity-field="work-item-titles-withheld" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
-    const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    expect(words).toBe('Titles: Unknown for 5 of 5 observed work items (every one). Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.');
-    expect(html).not.toContain('fixture item');
-    expect(model.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic).toEqual({
-      label: 'Unknown',
-      reason: 'Work-item titles are withheld under SEC-5: a title is free text, the only declared secret-classification policy covers declared-project-shape-text and none covers work-item titles, so the observation never reads them. Each item is named by its identifier.',
-      closedReason: 'excluded-content',
-      resolutionRoutes: [{ reason: 'excluded-content', route: 'Policy change by the owner, or accept the exclusion', actor: 'owner', verb: 'decide', target: 'policy' }],
-    });
+    const notice = /<p class="titles-notice notice" id="n-titles" data-parity-field="work-item-titles" data-unknown-disclosure="region:work-item-titles" data-unknown-reason="excluded-content">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
+    expect(notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()).toBe(
+      'Titles: shown for 1 of 4 observed work items, screened by the title policy work-item-title 1.0.0; Unknown for 3. 3 of 4 work-item titles are withheld under the work-item-title policy 1.0.0 (1 secret-matched, 1 active-content, 1 unclassifiable): a title that matches a secret detector, carries active content the scan finds or cannot be screened is never served, and its item is named by its identifier. Reason: excluded-content. Route: Policy change by the owner, or accept the exclusion.',
+    );
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => item.title)).toEqual([
+      { text: 'Tom & Jerry say "hi" it\'s fine' },
+      { withheld: 'secret-matched', redactionClass: 'excluded-artifact', digest: '1576ee2d4319dfec7a0f0e4f70e853b614c98adaf66a809bf982be892603ba7a' },
+      { withheld: 'active-content', redactionClass: 'excluded-artifact', digest: 'a5e1254256353bed59d20ae465f60420abef8288e26896c2f2141c665e53109a' },
+      { withheld: 'unclassifiable', redactionClass: 'unclassifiable-excluded', digest: null },
+    ]);
+    expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-titles')?.epistemic.closedReason).toBe('excluded-content');
+  });
+
+  // POC-REQ-063: the largest title page. A full page of cards whose titles
+  // are the longest admitted (500 code units) and escape to the most bytes
+  // (each `"` becomes `&quot;`) stays under 60% of the human ceiling
+  // (1,190,306 of 2,097,152 bytes when written, 57%; 500 `"` escape to 3,000
+  // bytes, the most any admitted title can); a typical title adds
+  // a fraction of that.
+  it('keeps a full page of longest, most-escaped titles under 60% of the human response ceiling (POC-REQ-063)', () => {
+    const at = '2026-08-01T00:00:00Z';
+    const title = '"'.repeat(500);
+    const rows = Array.from({ length: 260 }, (_, i) => ({ ...fixtureWorkItemRow(`bu-long-${String(i).padStart(3, '0')}`, 'open', at, at, null), title }));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
+    if (model.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(model.workItems.titles.admitted).toBe(260);
+    const html = renderTrajectoryPage(model);
+    const bytes = Buffer.byteLength(html, 'utf8');
+    console.info(`POC-REQ-063 largest title page: ${bytes} bytes of ${PWB_RESOURCE_LIMITS.maxHumanResponseBytes}`);
+    expect(html.split('&quot;'.repeat(500)).length - 1).toBe(250);
+    expect(bytes).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.6);
   });
 
   it('never renders closure/activity as verification satisfaction (POC-REQ-043)', () => {
     const model = buildFixtureModel(cleanups);
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'status=closed');
     const closedCard = cardBody(html, 'bu-closed-recent');
     expect(closedCard).toContain('data-parity-field="work-item-status">closed<');
     expect(closedCard).toContain('data-parity-field="work-item-verification"');
@@ -132,7 +364,7 @@ describe('Trajectory', () => {
     expect(closedCard).not.toMatch(/verified|satisfied/i);
   });
 
-  it('renders the Unknown state distinctly from an empty-but-observed board (POC-REQ-013 rendering)', () => {
+  it('renders the Unknown state distinctly from observed empty and refuses intrinsically invalid Recent pages', async () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const unknownModel = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -147,7 +379,18 @@ describe('Trajectory', () => {
     expect(unknownModel.trajectory.kind).toBe('unknown');
     const unknownHtml = renderTrajectoryPage(unknownModel);
     expect(unknownHtml).toContain('data-unknown-disclosure="region:work-items"');
-    expect(unknownHtml).not.toContain('class="board"');
+    expect(unknownHtml).not.toContain('class="outline"');
+    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, '127.0.0.1:7478'], [TRAJECTORY_TAILNET_PATH, 'tzeusy.parrot-hen.ts.net']] as const) {
+      const route = pocRoutes(() => unknownModel).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
+      for (const query of ['selection=recent&page=1', 'page=2']) {
+        const response = await route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
+        expect(response.status, query).toBe(200);
+        expect(response.body, query).toContain('data-unknown-disclosure="region:work-items"');
+      }
+      const refused = await route.handle({ request: { method: 'GET', path, query: new URLSearchParams('selection=recent&page=2'), headers: { host } } });
+      expect(refused.status).toBe(400);
+      expect(JSON.parse(refused.body)).toEqual({ refused: 'trajectory-view-parameter', parameter: 'page', reason: 'page-past-end', allowed: ['1 to 1'] });
+    }
 
     const emptyObservedModel = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
@@ -155,20 +398,21 @@ describe('Trajectory', () => {
       repositoryRevision: revision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@empty', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify([]) : JSON.stringify([{ revision: 'dolt-empty' }]),
+      runWorkItemQuery: fixtureWorkItemQuery([]),
     });
     expect(emptyObservedModel.trajectory.kind).toBe('observed');
     const emptyHtml = renderTrajectoryPage(emptyObservedModel);
-    expect(emptyHtml).toContain('class="board"');
+    expect(emptyHtml).toContain('class="outline"');
+    expect(emptyHtml).toContain('No matching work items.');
     expect(emptyHtml).not.toContain('data-unknown-disclosure="region:work-items"');
     expect(emptyHtml).not.toBe(unknownHtml);
 
     // C3-4: the board's <section> columns are not listitems, so the
     // wrapper must not claim role="list" (invalid required-owned-elements
     // ARIA); role="group" keeps the accessible name valid.
-    expect(emptyHtml).toContain('class="board" role="group"');
-    expect(emptyHtml).not.toContain('role="list"');
+    const emptyStatusBoard = trajectoryView(emptyObservedModel, 'page=1');
+    expect(emptyStatusBoard).toContain('class="board" role="group"');
+    expect(emptyStatusBoard).not.toContain('role="list"');
   });
 
   it('renders the observed worker-change lifecycle state on the matching card, never as verified (AC3/AC4)', () => {
@@ -190,7 +434,7 @@ describe('Trajectory', () => {
     } as const;
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-worker-change-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -209,8 +453,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     expect(model.workerChange.kind).toBe('observed');
     if (model.workerChange.kind !== 'observed') throw new Error('unreachable');
@@ -225,8 +468,7 @@ describe('Trajectory', () => {
       repositoryRevision: changedRevision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const intentOf = (m: PocModel) => m.trajectory.answers.find((answer) => answer.id === 'intent');
     expect(intentOf(model)).toMatchObject({ unknownProvenance: { count: 1, served: 1 }, reconciliationChain: { members: 1, materialized: 1 } });
@@ -282,7 +524,7 @@ describe('Trajectory', () => {
     } as const;
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-verified-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -317,8 +559,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf },
       materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
       testArtifactRecord,
     });
     // Round-2 note 2: a passing, binding record with no provenance (the
@@ -363,14 +604,16 @@ describe('Trajectory', () => {
     expect(reportedCard).not.toContain('Verification: Verified');
     expect(reportedCard).not.toContain('epistemic-observed" data-parity-field="worker-change-verification"');
 
-    // syzygy-t3jk.18 review finding 1: with 210 newer non-closed items the
-    // worker-change bead leaves the default selection; the view page that
+    // With 250 earlier identifiers the worker-change bead falls beyond the
+    // first outline page. A status-filtered page that
     // holds it renders its card, badge and disclosure route, on both paths.
-    const crowded = [...rows, ...Array.from({ length: 210 }, (_, i) => ({ ...rows[0]!, id: `bu-newer-${String(i).padStart(3, '0')}`, updated_at: '2026-08-31T00:00:00Z' }))];
+    const crowded = [...rows, ...Array.from({ length: 250 }, (_, i) => ({
+      ...rows[0]!, id: `bu-newer-${String(i).padStart(3, '0')}`, status: 'open', updated_at: '2026-08-31T00:00:00Z',
+    }))];
     const crowdedModel = buildPocModel({
       seeds: alternateSeeds, repoRoot, repositoryRevision: changedRevision, observerRevision: revision,
       evaluation: { snapshot: 'butlers@verified', asOf: evaluationAsOf }, materializationRecord,
-      runWorkItemQuery: (_repoRoot, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(crowded) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(crowded),
       testArtifactRecord: reported,
     });
     if (crowdedModel.trajectory.kind !== 'observed') throw new Error('unreachable');
@@ -397,7 +640,7 @@ describe('Trajectory', () => {
 
     const rows = [
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-demo-1',
         title: 'Materialized work item',
         status: 'in_progress',
@@ -408,7 +651,7 @@ describe('Trajectory', () => {
         closed_at: null,
       },
       {
-        revision: 'dolt-rev-2',
+        revision: FIXTURE_DOLT_REVISION,
         id: 'bu-unrelated-1',
         title: 'Unrelated backlog item',
         status: 'open',
@@ -434,8 +677,7 @@ describe('Trajectory', () => {
         attribution: 'test-actor',
         origin: 'created',
       },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const html = renderTrajectoryPage(model);
 
@@ -468,21 +710,20 @@ describe('Trajectory', () => {
       repositoryRevision: changedRevision,
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@demo-none', asOf: '2026-08-30T12:00:00Z' },
-      runWorkItemQuery: (_repoRoot, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     const noneHtml = renderTrajectoryPage(noneModel);
     expect(noneHtml).not.toContain('class="demo-callout');
     expect(noneHtml).not.toContain('Demonstrated item');
   });
 
-  it.each(['closed', 'open'] as const)('discloses a demonstrated %s item excluded by its population limit (N-1)', (status) => {
+  it.each(['closed', 'open'] as const)('discloses a demonstrated %s item excluded from the first outline page (N-1)', (status) => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const old = '2026-01-01T00:00:00Z';
     const newer = '2026-08-01T00:00:00Z';
     const rows = [
-      fixtureWorkItemRow('bu-excluded-demo', status, old, old, status === 'closed' ? old : null),
-      ...Array.from({ length: status === 'closed' ? 50 : 200 }, (_, i) =>
+      fixtureWorkItemRow('bu-z-excluded-demo', status, old, old, status === 'closed' ? old : null),
+      ...Array.from({ length: status === 'closed' ? 50 : 250 }, (_, i) =>
         fixtureWorkItemRow(`bu-newer-${String(i).padStart(3, '0')}`, status, newer, newer, status === 'closed' ? newer : null)),
     ];
     const model = buildPocModel({
@@ -492,7 +733,7 @@ describe('Trajectory', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@excluded', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: {
-        beadId: 'bu-excluded-demo',
+        beadId: 'bu-z-excluded-demo',
         externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization',
         targetRepoRoot: repoRoot,
         createdAt: old,
@@ -500,16 +741,16 @@ describe('Trajectory', () => {
         attribution: 'test-actor',
         origin: 'created',
       },
-      runWorkItemQuery: () => JSON.stringify(rows),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
-    expect(model.materializedBeadId).toBe('bu-excluded-demo');
+    expect(model.materializedBeadId).toBe('bu-z-excluded-demo');
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
-    expect(model.trajectory.rendered.some((item) => item.id === 'bu-excluded-demo')).toBe(false);
+    expect(model.trajectory.rendered.some((item) => item.id === 'bu-z-excluded-demo')).toBe(false);
     const html = renderTrajectoryPage(model);
     expect(html).toContain(
-      'The demonstrated item <code>bu-excluded-demo</code> was materialized by this POC but falls outside the current board selection',
+      'The demonstrated item <code>bu-z-excluded-demo</code> was materialized by this POC but falls outside the current board selection',
     );
-    expect(html).not.toContain('data-work-item-id="bu-excluded-demo"');
+    expect(html).not.toContain('data-work-item-id="bu-z-excluded-demo"');
     expect(html).not.toContain('The demonstrated item is <a');
   });
 
@@ -570,9 +811,8 @@ describe('Trajectory', () => {
         throw new Error('refused');
       },
       junk: () => 'not json',
-      empty: (_root, sql) => (sql.includes('WHERE id LIKE') ? '[]' : JSON.stringify([{ revision: 'dolt-empty' }])),
-      rows: (_root, sql) =>
-        sql.includes('WHERE id LIKE') ? JSON.stringify([fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null)]) : JSON.stringify([{ revision: 'dolt-rows' }]),
+      empty: fixtureWorkItemQuery([]),
+      rows: fixtureWorkItemQuery([fixtureWorkItemRow('bu-open1', 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null)]),
     };
     const seedSets = { butlers: BUTLERS_POC_SEEDS, badPrefix: { ...BUTLERS_POC_SEEDS, beadPrefix: 'Bad Prefix!' } };
     const kinds = new Set<string>();
@@ -611,7 +851,7 @@ describe('Trajectory', () => {
 // or a tracker claim as observed activity.
 //
 // Population (stated, and printed): the page h1 and lede; the text of every
-// h2 and every aria-label inside `.board`; every `.worker-change-label`; every
+// h2 and every aria-label inside the board or outline; every `.worker-change-label`; every
 // `.notice` in the Trajectory body; and, on the machine answer, every
 // `trajectory.rendered[].column` and every STATUS_TO_COLUMN value. The card's
 // own `work-item-status` text and `workerChange.state` are outside the
@@ -631,10 +871,10 @@ function closureWordingPopulation(html: string, served: PocModel): string[] {
   const lede = /<p class="lede"[^>]*>([\s\S]*?)<\/p>/.exec(html);
   if (lede?.[1] === undefined) throw new Error('page lede missing');
   texts.push(stripTags(lede[1]));
-  const boardStart = html.indexOf('<div class="board"');
-  if (boardStart < 0) throw new Error('board missing');
-  const board = html.slice(boardStart);
-  for (const m of board.matchAll(/<h2>([\s\S]*?)<\/h2>/g)) texts.push(stripTags(m[1]!));
+  const boardStart = html.search(/<(?:div class="board"|section class="outline")/);
+  if (boardStart < 0) throw new Error('board or outline missing');
+  const board = html.slice(boardStart, html.indexOf('</main>', boardStart));
+  for (const m of board.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)) texts.push(stripTags(m[1]!));
   for (const m of board.matchAll(/aria-label="([^"]*)"/g)) texts.push(m[1]!);
   for (const m of html.matchAll(/<span class="worker-change-label">([\s\S]*?)<\/span>/g)) texts.push(stripTags(m[1]!));
   for (const m of html.matchAll(/<p class="[^"]*\bnotice\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)) texts.push(stripTags(m[1]!));
@@ -674,42 +914,37 @@ describe('Trajectory closure wording (T1)', () => {
     expect(population.filter((text) => CLOSURE_AS_COMPLETION.test(text))).toEqual([]);
 
     // Rule 6: 'Done' restored on the page, and on the answer, each fails.
-    const mutatedPage = html.replace('<h2>Closed ', '<h2>Done ');
+    const mutatedPage = html.replace('Work items grouped by parent</h2>', 'Work items done</h2>');
     expect(mutatedPage).not.toBe(html);
     expect(closureWordingPopulation(mutatedPage, served).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const closedIndex = served.trajectory.rendered.findIndex((item) => item.column === 'Closed');
-    if (which === 'rows') expect(closedIndex).toBeGreaterThanOrEqual(0);
-    if (closedIndex >= 0) {
-      const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
-      mutatedAnswer.trajectory.rendered[closedIndex]!.column = 'Done';
-      expect(closureWordingPopulation(html, mutatedAnswer).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
-    }
+    const mutatedAnswer = structuredClone(served) as PocModel & { trajectory: { rendered: { column: string }[] } };
+    mutatedAnswer.trajectory.rendered[0]!.column = 'Done';
+    expect(closureWordingPopulation(html, mutatedAnswer).some((text) => CLOSURE_AS_COMPLETION.test(text))).toBe(true);
   });
 
   it('heads the closed and claimed columns Closed and Claimed, page and answer alike', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'selection=recent');
     const served = await servedAnswer(model);
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(html).toContain('<h2>Closed <span class="count">(50)</span></h2>');
     expect(html).toMatch(/<h2>Claimed <span class="count">\(\d+\)<\/span><\/h2>/);
-    expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'closed').map((item) => item.column))).toEqual(new Set(['Closed']));
+    expect(served.trajectory.rendered.filter((item) => item.status === 'closed')).toEqual([]);
     expect(new Set(served.trajectory.rendered.filter((item) => item.status === 'in_progress').map((item) => item.column))).toEqual(new Set(['Claimed']));
   });
 
   it('states once, above the board, how many rendered items are closed and that their verification is Unknown', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
-    const html = renderTrajectoryPage(model);
-    const served = await servedAnswer(model);
-    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    const closed = served.trajectory.rendered.filter((item) => item.status === 'closed');
-    const unverified = closed.filter((item) => item.verification === 'unknown').length;
-    expect(closed).toHaveLength(50);
+    const html = trajectoryView(model, 'status=closed');
+    const closed = [...html.matchAll(/data-parity-field="work-item-status">closed</g)];
+    const unverified = [...html.matchAll(/data-parity-field="work-item-verification"[^>]*>Verification: Unknown/g)];
+    expect(closed).toHaveLength(51);
+    expect(unverified).toHaveLength(closed.length);
     expect(html.match(/data-parity-field="trajectory-closure-notice"/g)).toHaveLength(1);
     expect(html.indexOf('trajectory-closure-notice')).toBeLessThan(html.indexOf('<div class="board"'));
     expect(html).toContain(`data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification`);
-    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item`);
+    expect(html).toContain(`data-parity-field="trajectory-closed-unverified-count">${unverified.length}</span> of them, because no test evidence is ingested for a work item, and a commit that names an item shows where it landed, not that it works`);
   });
 });
 
@@ -728,21 +963,24 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   const ROUTE_COUNTS: readonly (readonly [string, number])[] = [
     ['Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.', 1],
     ['Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.', 4],
-    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 1],
+    // Verification, and the unnamed closed items' landing (POC-REQ-065).
+    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 2],
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
-    'Work-item titles are withheld under SEC-5',
+    '7 of 252 work-item titles are withheld under the work-item-title policy 1.0.0 (7 unclassifiable)',
     'Activity is not verification: no test evidence has been ingested for any work item.',
     'No governing intent was captured for any work item: the observation reads no link from an item to the intent that warrants it, and none is taken from its title.',
   ];
 
   it('states each route and basis sentence once on the 252-row board, never on a card', () => {
-    const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
+    // Every 40th row's title is absent, so the withheld-title disclosure renders (POC-REQ-063).
+    const rows = closureRows().map((row, i) => (i % 40 === 0 ? { ...row, title: null } : row));
+    const model = buildFixtureModel(cleanups, { workItemRows: rows });
     const html = renderTrajectoryPage(model);
     if (model.trajectory.kind !== 'observed') throw new Error('unreachable');
     const cards = [...html.matchAll(/<li class="wi-card[^"]*"[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]!);
-    expect(cards).toHaveLength(250);
+    expect(cards).toHaveLength(201);
     for (const [literal, count] of [...ROUTE_COUNTS, ...BASES.map((basis) => [basis, 1] as const)]) {
       expect(html.split(literal).length - 1, literal).toBe(count);
       expect(cards.filter((card) => card.includes(literal)), literal).toEqual([]);
@@ -761,12 +999,12 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     if (served.trajectory.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('unreachable');
-    expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 250, outside: 2 });
+    expect(served.trajectory.verificationUnknown).toEqual({ served: 252, inside: 201, outside: 51 });
     expect(served.workItems.items).toHaveLength(252);
     const notice = /<p class="verification-count notice" id="n-verification" data-parity-field="work-item-verification-count" data-unknown-disclosure="region:work-item-verification" data-unknown-reason="missing-evidence">([\s\S]*?)<\/p>/.exec(html)?.[1] ?? '';
     expect(notice).toContain('data-parity-field="verification-unknown-count">252</span> of 252 observed work items');
-    expect(notice).toContain('data-parity-field="verification-unknown-inside">250</span> are in this selection');
-    expect(notice).toContain('data-parity-field="verification-unknown-outside">2</span> are outside it');
+    expect(notice).toContain('data-parity-field="verification-unknown-inside">201</span> are in this selection');
+    expect(notice).toContain('data-parity-field="verification-unknown-outside">51</span> are outside it');
     const words = notice.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
     expect(words).toContain('Reason: missing-evidence. Route: Produce or capture evidence.');
     expect(served.unknownSubjects.find((subject) => subject.id === 'region:work-item-verification')?.epistemic.closedReason).toBe('missing-evidence');
@@ -780,11 +1018,11 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
       { ...fixtureWorkItemRow('bu-facts-closed', 'closed', instant(3), instant(4), instant(5)), priority: 3 },
     ];
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
-    const html = renderTrajectoryPage(model);
+    const html = trajectoryView(model, 'page=1');
     const served = await servedAnswer(model);
-    if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
-    expect(served.trajectory.rendered.map((item) => [item.id, item.priority])).toEqual([['bu-facts-closed', 3], ['bu-facts-open', 0]]);
-    for (const item of served.trajectory.rendered) {
+    if (served.workItems.kind !== 'observed') throw new Error('unreachable');
+    expect(served.workItems.items.map((item) => [item.id, item.priority])).toEqual([['bu-facts-open', 0], ['bu-facts-closed', 3]]);
+    for (const item of served.workItems.items) {
       const card = cardBody(html, item.id);
       expect(card).toContain(`data-parity-field="work-item-priority">${item.priority}</span>`);
       expect(card).toContain(`<time data-parity-field="work-item-created" datetime="${item.createdAt}">${item.createdAt}</time>`);
@@ -814,26 +1052,30 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     if (served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect([...answersRegion(html).matchAll(/<dt>([^<]*)<\/dt>/g)].map((m) => m[1])).toEqual(QUESTIONS);
     expect(served.trajectory.answers.map((answer) => answer.id)).toEqual(['remains', 'running', 'changed', 'cost', 'intent']);
-    const order = ['class="answers"', 'data-parity-field="trajectory-scope"', 'data-parity-field="trajectory-closure-notice"', 'class="board"'].map((marker) => html.indexOf(marker));
+    const order = ['class="answers"', 'data-parity-field="trajectory-scope"', 'data-parity-field="trajectory-closure-notice"', 'class="outline"'].map((marker) => html.indexOf(marker));
     expect(order.every((position) => position >= 0)).toBe(true);
     expect([...order].sort((a, b) => a - b)).toEqual(order);
     const main = html.slice(html.indexOf('<main'));
     expect(main.indexOf('class="answers"')).toBeLessThan(main.indexOf('class="notice') === -1 ? Infinity : main.indexOf('class="notice'));
   });
 
-  it('counts what remains over every served item: the statuses sum to the total and differ from the rendered columns', async () => {
+  it('counts what remains over every served item, including closed items outside the outline', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     const remains = served.trajectory.answers[0]!;
     // 201 current items cycle over six statuses (34, 34, 34, 33, 33, 33) and 51 are closed.
-    expect(remains).toEqual({ id: 'remains', state: 'observed', served: 252, byStatus: { open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 } });
+    expect(remains).toEqual({
+      id: 'remains', state: 'observed', served: 252, byStatus: { open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 },
+      // The fixture repository's one commit names no item (POC-REQ-065).
+      closedLanding: { state: 'observed', closed: 51, mergedByConvention: 0, noNamingCommitRead: 51, basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 1, historyTruncated: false },
+    });
     const body = answerBody(html, 'remains');
     const counts = Object.fromEntries([...body.matchAll(/data-parity-field="answer-remains-([a-z_]+)">(\d+)</g)].map((m) => [m[1], Number(m[2])]));
     expect(counts).toEqual({ served: 252, open: 34, in_progress: 34, blocked: 34, deferred: 33, pinned: 33, hooked: 33, closed: 51 });
     expect(34 + 34 + 34 + 33 + 33 + 33 + 51).toBe(252);
-    // The board renders 250: its Closed column holds 50, the answer 51.
-    expect(/<h2>Closed <span class="count">\((\d+)\)<\/span>/.exec(html)?.[1]).toBe('50');
+    expect(html.match(/data-work-item-id=/g)).toHaveLength(201);
+    expect(html).not.toContain('data-parity-field="work-item-status">closed<');
   });
 
   it('states the running count as a tracker claim with its liveness the state-local activity-undetermined (RFC8-16)', async () => {
@@ -851,7 +1093,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     expect(body).toContain('data-parity-field="answer-running-served">252<');
   });
 
-  it('renders what changed and what it cost as Unknown with a closed reason and a route', async () => {
+  it('renders what changed (history unread) and what it cost as Unknown with a closed reason and a route', async () => {
     const model = buildFixtureModel(cleanups, { workItemRows: closureRows() });
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
@@ -859,9 +1101,16 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
       const body = answerBody(html, id);
       expect(body).toContain(`data-unknown-disclosure="${subject}" data-unknown-reason="source-uncaptured-or-unreachable"`);
       expect(body.replace(/<[^>]+>/g, '')).toContain('Reason: source-uncaptured-or-unreachable. Route: Repair the observer/source; new snapshot.');
-      expect(served.trajectory.answers.find((answer) => answer.id === id)).toEqual({ id, state: 'unknown', disclosure: subject });
       expect(served.unknownSubjects.some((entry) => entry.id === subject)).toBe(true);
     }
+    expect(served.trajectory.answers.find((answer) => answer.id === 'cost')).toEqual({ id: 'cost', state: 'unknown', disclosure: 'region:trajectory-cost' });
+    // syzygy-t3jk.21: the fixture's history read fails, so each window is Unknown with its reason.
+    expect(served.trajectory.answers.find((answer) => answer.id === 'changed')).toEqual({ id: 'changed', state: 'observed', windows: [
+      { window: 'day', kind: 'unknown', reason: 'history-read-failed', disclosure: 'region:trajectory-changed' },
+      { window: 'week', kind: 'unknown', reason: 'history-read-failed', disclosure: 'region:trajectory-changed' },
+      { window: 'since-last', kind: 'unknown', reason: 'no-previous-evaluation-recorded', disclosure: 'region:trajectory-changed' },
+    ] });
+    expect(answerBody(html, 'changed')).toContain('Last day: Unknown, because the tracker history read failed (<code data-parity-field="answer-changed-reason">history-read-failed</code>); never a zero.');
     expect(answerBody(html, 'cost')).toContain('never zero');
   });
 
@@ -913,13 +1162,13 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     const disclosed = [...answersRegion(html).matchAll(/data-unknown-disclosure="([^"]*)"/g)].map((m) => m[1]);
-    expect(disclosed).toEqual(['region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
+    expect(disclosed).toEqual(['region:trajectory-landing-unnamed', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
     for (const id of disclosed) expect(served.unknownSubjects.some((subject) => subject.id === id), id).toBe(true);
   });
 
   it('renders the chain count Unknown, with reason and route, when the materialized item\'s worker change is unobserved', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
-    const rows = [{ revision: 'dolt-rev-2', id: 'bu-unobserved-1', title: 'Materialized work item', status: 'open', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
+    const rows = [{ revision: FIXTURE_DOLT_REVISION, id: 'bu-unobserved-1', title: 'Materialized work item', status: 'open', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
     const model = buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
       repoRoot,
@@ -927,7 +1176,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@chain-unknown', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: { beadId: 'bu-unobserved-1', externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization', targetRepoRoot: repoRoot, createdAt: '2026-08-30T00:00:00Z', doltRevisionAtCreation: 'dolt-rev-1', attribution: 'test-actor' },
-      runWorkItemQuery: (_repoRoot, sql) => (sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }])),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     });
     expect(model.workerChange.kind).toBe('unknown');
     expect(model.trajectory.answers.find((answer) => answer.id === 'intent')).toMatchObject({ reconciliationChain: { members: { state: 'unknown', disclosure: 'region:trajectory-chain-membership' } } });
@@ -1173,10 +1422,15 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     const served = await servedAnswer(model);
     if (served.workItems.kind !== 'observed' || served.trajectory.kind !== 'observed') throw new Error('unreachable');
     expect(served.trajectory.narrowing).toEqual({
-      parameters: { status: STATUSES, 'governing-intent': ['unknown'], page: 'positive integer' },
+      parameters: { status: STATUSES, 'governing-intent': ['unknown'], group: ['parent'], selection: ['recent'], changed: ['day', 'week', 'since-last'], page: 'positive integer' },
+      defaultSelection: 'grouped-by-parent',
+      recentLimits: { nonClosedLimit: 200, recentClosedWindow: 50 },
+      changedDefault: 'day',
       pageSize: 250,
       order: 'ascending item id',
-      view: null,
+      groupedOrder: 'parent groups by ascending parent id, then parent-outside-tracker, parent-unobserved, no-parent and parent-unknown; items by ascending id within a group',
+      groupedPageUnit: 'position',
+      view: { status: null, governingIntent: null, group: 'parent', changed: null, page: 1, matching: 549, pageCount: 3 },
     });
     const pageSize = served.trajectory.narrowing.pageSize;
     for (const [query, filter, page] of [['status=open&page=1', (s: string) => s === 'open', 1], ['page=2', () => true, 2]] as const) {
@@ -1197,6 +1451,9 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
       ['page=0', 'page', 'not-a-positive-integer'],
       ['page=1.5', 'page', 'not-a-positive-integer'],
       ['page=4', 'page', 'page-past-end'],
+      ['selection=latest', 'selection', 'unknown-value'],
+      ['selection=recent&group=parent', 'selection', 'incompatible-parameter'],
+      ['selection=recent&page=2', 'page', 'page-past-end'],
     ];
     for (const [query, parameter, reason] of cases) {
       const response = await get(model, TRAJECTORY_HUMAN_PATH, query);
@@ -1205,8 +1462,16 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     }
     const plain = await get(model, TRAJECTORY_HUMAN_PATH, '');
     expect(plain.status).toBe(200);
-    expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Default selection</a></li>');
-    expect(scope(plain.body)!.rule).toBe('up to 200 most recently updated non-closed items, plus up to 50 most recently closed items; missing, invalid or timezone-less times last, timestamp ties and card order by ascending item id');
+    expect(plain.body).toMatch(/class="lede"[^>]*>[^<]*selected work items grouped by parent/);
+    expect(plain.body).toContain('<li><a href="/trajectory" aria-current="page">Non-closed items grouped by parent');
+    expect(scope(plain.body)!.rule).toMatch(/^page 1 of 3 of the 549 observed items with a status other than closed, grouped by parent: 549 positions/);
+    expect(plain.body).toContain('rel="next" href="/trajectory?group=parent&amp;page=2"');
+    const recent = await get(model, TRAJECTORY_HUMAN_PATH, 'selection=recent&changed=week');
+    expect(recent.status).toBe(200);
+    expect(recent.body).toMatch(/class="lede"[^>]*>[^<]*selected work items in tracker status columns/);
+    expect(recent.body).toContain('href="/trajectory?selection=recent&amp;changed=week" aria-current="page">Recent work');
+    expect(recent.body).toContain('class="board"');
+    expect(recent.body).not.toContain('class="outline"');
   });
 
   it('links each view with its count, and the neighbours, on the direct and the tailnet path, outside any details element', async () => {
@@ -1217,6 +1482,7 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
       const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]!.replaceAll('&amp;', '&'));
       expect(hrefs).toEqual([
         `${prefix}/trajectory`,
+        `${prefix}/trajectory?selection=recent`,
         `${prefix}/trajectory?page=1`,
         ...STATUSES.map((status) => `${prefix}/trajectory?status=${status}&page=1`),
         `${prefix}/trajectory?governing-intent=unknown&page=1`,
@@ -1241,5 +1507,724 @@ describe('Trajectory views: every served item reachable, by state and page (T8, 
     process.stdout.write(`[T8 page bytes] ${JSON.stringify({ sizes, perCard: Math.round((sizes[0]! - sizes[2]!) / (250 - 140)) })}\n`);
     expect(Math.max(...sizes)).toBeLessThan(2_097_152 / 2);
     expect(empty).toBeGreaterThan(0);
+  });
+
+  it('measures the owner-scale default page and counts distinct items at both mounts', async () => {
+    // The retained owner-scale census measured 954 non-closed and 8,240
+    // closed items. This synthetic fixture reproduces those sizes.
+    const revision = FIXTURE_DOLT_REVISION;
+    const instant = '2026-08-01T00:00:00Z';
+    const openIds = Array.from({ length: 954 }, (_, index) => `bu-open-${String(index).padStart(4, '0')}`);
+    const closedIds = Array.from({ length: 8240 }, (_, index) => `bu-parent-${String(index).padStart(4, '0')}`);
+    const rows = [
+      ...openIds.map((id) => ({ ...fixtureWorkItemRow(id, 'open', instant, instant, null), revision })),
+      ...closedIds.map((id) => ({ ...fixtureWorkItemRow(id, 'closed', instant, instant, instant), revision })),
+    ];
+    const parentIds = closedIds.slice(0, 16);
+    const groups = parentIds.map((parent, group) => ({
+      parent,
+      children: openIds.filter((_, index) => index % 16 === group || (index % 5 === 0 && (index + 1) % 16 === group)),
+    }));
+    const model = buildFixtureModel(cleanups, {
+      workItemRows: rows,
+      runDependencyQuery: () => JSON.stringify([
+        { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+        ...groups.flatMap(({ parent, children }) => children.map((id) => ({
+          revision: null, issue_id: id, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0,
+        }))),
+      ]),
+    });
+    const positions = groups.flatMap((group) => group.children);
+    expect(positions).toHaveLength(1145);
+    const sizes: { mount: string; page: number; bytes: number }[] = [];
+    for (const [path, host] of [[TRAJECTORY_HUMAN_PATH, DIRECT_HOST], [TRAJECTORY_TAILNET_PATH, TAILNET_HOST_NAME]] as const) {
+      for (let page = 1; page <= 5; page += 1) {
+        const response = await get(model, path, page === 1 ? '' : `group=parent&page=${page}`, host);
+        expect(response.status).toBe(200);
+        const expected = positions.slice((page - 1) * 250, page * 250);
+        const distinct = new Set(expected).size;
+        expect([...response.body.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1])).toEqual(expected);
+        expect(scope(response.body)).toMatchObject({ rendered: distinct, excluded: 9194 - distinct, total: 9194 });
+        const bytes = Buffer.byteLength(response.body, 'utf8');
+        expect(bytes).toBeLessThan(2_097_152);
+        sizes.push({ mount: path, page, bytes });
+      }
+    }
+    process.stdout.write(`[T8 grouped-default owner-scale fixture bytes] ${JSON.stringify(sizes)}\n`);
+  });
+});
+
+describe('Trajectory grouped by parent (T4 S2, syzygy-t3jk.20)', () => {
+  const revision = '0123456789abcdefghijklmnopqrstuv';
+  const witness = { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null };
+  const instant = '2026-08-01T00:00:00Z';
+  const item = (id: string, status: string) => ({
+    ...fixtureWorkItemRow(id, status, instant, instant, status === 'closed' ? instant : null), id, revision,
+  });
+  const parentEdge = (child: string, parent: string) =>
+    ({ issue_id: child, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0, revision: null });
+  // bu-epic (closed) > bu-mid > bu-leaf; bu-twin under bu-epic and bu-mid; bu-cy1 and bu-cy2 are
+  // each other's parent; bu-far's parent is in another tracker; bu-alone has none.
+  const rows = [
+    item('bu-epic', 'closed'), item('bu-mid', 'open'), item('bu-leaf', 'open'), item('bu-twin', 'blocked'),
+    item('bu-alone', 'open'), item('bu-far', 'open'), item('bu-cy1', 'open'), item('bu-cy2', 'open'),
+  ];
+  const edges = [
+    witness, parentEdge('bu-mid', 'bu-epic'), parentEdge('bu-leaf', 'bu-mid'), parentEdge('bu-twin', 'bu-epic'),
+    parentEdge('bu-twin', 'bu-mid'), parentEdge('bu-far', 'elsewhere-fixture-parent'),
+    parentEdge('bu-cy1', 'bu-cy2'), parentEdge('bu-cy2', 'bu-cy1'),
+  ];
+  const model = () => buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => JSON.stringify(edges) });
+
+  function grouped(page: PocModel, prefix = '', query = 'group=parent'): string {
+    const html = renderTrajectoryRoute(page, prefix, undefined, new URLSearchParams(query));
+    if (typeof html !== 'string') throw new Error('refused');
+    return html;
+  }
+  const groupOrder = (html: string) => [...html.matchAll(/data-group="([^"]+)"/g)].map((match) => match[1]);
+
+  it('renders one region per group, in order, each card once per parent and anchored once', () => {
+    const html = grouped(model());
+    expect(groupOrder(html)).toEqual(['group-p-bu-cy1', 'group-p-bu-cy2', 'group-p-bu-epic', 'group-p-bu-mid', 'group-parent-outside-tracker', 'group-no-parent']);
+    expect(html.match(/data-work-item-id="bu-twin"/g)).toHaveLength(2);
+    expect(html.match(/id="workitem-bu-twin"/g)).toHaveLength(1);
+    expect(html).toContain('<span data-parity-field="trajectory-outline-positions">8</span>');
+    expect(html).not.toContain('elsewhere-fixture-parent');
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it('renders the same bytes for two renders of one observation', () => {
+    const page = model();
+    expect(grouped(page)).toBe(grouped(page));
+    expect(grouped(JSON.parse(JSON.stringify(page)) as PocModel)).toBe(grouped(page));
+  });
+
+  it('names each parent with its recorded status, what it sits under, and never a verdict about it', () => {
+    const html = grouped(model());
+    expect(html).toContain('Parent <span class="wi-ref" data-title-of="bu-epic"><a data-group-parent="bu-epic" href="/trajectory?page=1#workitem-bu-epic">bu-epic</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-epic</bdi></span>, tracker status <code data-group-parent-status>closed</code>');
+    expect(html).toContain('The parent is closed in the tracker and its items keep their own statuses');
+    expect(html).toContain('The parent sits under <span class="wi-ref" data-title-of="bu-epic"><a data-group-under="bu-epic" href="/trajectory?group=parent&amp;page=1#group-p-bu-epic">bu-epic</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-epic</bdi></span>.');
+    const outline = /<section class="outline"[\s\S]*?<\/section>/.exec(html)?.[0] ?? '';
+    // The population: every group region's own text (heading, counts and notes), outside its cards.
+    const regions = [...outline.matchAll(/<li class="outline-group"[\s\S]*?<ol class="wi-list">/g)].map((match) => match[0]);
+    expect(regions).toHaveLength(6);
+    for (const region of regions) expect(region).not.toMatch(/\b(done|complete|completed|finished|resolved|satisfied|verified|progress)\b|%/i);
+  });
+
+  it('states a parent-child cycle once, in its first member\'s group, and points to it from the other', () => {
+    const html = grouped(model());
+    expect(html.match(/data-group-cycle="/g)).toHaveLength(1);
+    expect(html).toContain('<span data-group-cycle="bu-cy1 bu-cy2">Parent-child cycle among <span class="wi-ref" data-title-of="bu-cy1"><code>bu-cy1</code> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy1</bdi></span>, <span class="wi-ref" data-title-of="bu-cy2"><code>bu-cy2</code> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy2</bdi></span>: stated here once and not followed further.</span>');
+    expect(html).toContain('<span data-group-cycle-ref="bu-cy1">The parent is in a parent-child cycle, stated under <span class="wi-ref" data-title-of="bu-cy1"><a href="/trajectory?group=parent&amp;page=1#group-p-bu-cy1">bu-cy1</a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-cy1</bdi></span>.</span>');
+  });
+
+  it('marks a group split across pages, with its counts, on the page', () => {
+    const many = [item('bu-p', 'open'), ...Array.from({ length: 260 }, (_, i) => item(`bu-c${String(i).padStart(3, '0')}`, 'open'))];
+    const manyEdges = [witness, ...many.slice(1).map((row) => parentEdge(row.id as string, 'bu-p'))];
+    const page = buildFixtureModel(cleanups, { workItemRows: many, runDependencyQuery: () => JSON.stringify(manyEdges) });
+    const first = grouped(page, '', 'group=parent&page=1');
+    const second = grouped(page, '', 'group=parent&page=2');
+    expect(first).toContain('<span data-group-total>260</span> items in this group, <span data-group-on-page>250</span> on this page. Continues on <a data-group-continues="next" href="/trajectory?group=parent&amp;page=2#group-p-bu-p">page 2</a>.');
+    expect(second).toContain('<span data-group-total>260</span> items in this group, <span data-group-on-page>10</span> on this page. Continued from <a data-group-continues="prev" href="/trajectory?group=parent&amp;page=1#group-p-bu-p">page 1</a>.');
+  });
+
+  it('reproduces the grouping from the served machine answer by the test\'s own formula', async () => {
+    const page = model();
+    const machine = await servedAnswer(page);
+    if (machine.trajectory.kind !== 'observed' || machine.trajectory.outline.kind !== 'observed' || machine.workItems.kind !== 'observed') throw new Error('unreachable');
+    const outline = machine.trajectory.outline;
+    const expected = new Map<string, string[]>();
+    for (const served of [...machine.workItems.items].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+      if (served.status === 'closed') continue;
+      const keys = [
+        ...(outline.parents[served.id] ?? []).map((id) => `group-p-${id}`),
+        ...(outline.outsideTracker.includes(served.id) ? ['group-parent-outside-tracker'] : []),
+        ...(outline.unobserved.includes(served.id) ? ['group-parent-unobserved'] : []),
+      ];
+      for (const key of keys.length === 0 ? ['group-no-parent'] : keys) expected.set(key, [...(expected.get(key) ?? []), served.id]);
+    }
+    const classes = ['group-parent-outside-tracker', 'group-parent-unobserved', 'group-no-parent'];
+    const order = [...expected.keys()].sort((a, b) => {
+      const [ra, rb] = [classes.indexOf(a), classes.indexOf(b)];
+      return ra - rb || (a < b ? -1 : a > b ? 1 : 0);
+    });
+    const html = renderTrajectoryPage(page);
+    const positions = [...expected.values()].flat();
+    expect(positions).toHaveLength(8);
+    expect(new Set(positions).size).toBe(7);
+    expect(machine.trajectory.grouping?.positions).toBe(positions.length);
+    expect(machine.trajectory.renderedCount).toBe(new Set(positions).size);
+    expect(machine.trajectory.renderedCount + machine.trajectory.excludedCount).toBe(machine.workItems.items.length);
+    expect(machine.trajectory.grouping?.groups.map((group) => [group.anchor, group.onPage])).toEqual(order.map((anchor) => [anchor, expected.get(anchor)]));
+    expect(groupOrder(html)).toEqual(order);
+    for (const [anchor, ids] of expected) {
+      const region = new RegExp(`data-group="${anchor}">([\\s\\S]*?)</li>\\s*</ol>\\s*</li>`).exec(html)?.[1] ?? '';
+      expect([...region.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]), anchor).toEqual(ids);
+    }
+    expect(grouped(page, '', 'group=parent&page=1')).toEqual(html);
+  });
+
+  it('links the grouped view with its count from the navigation, on the direct and the tailnet path', () => {
+    const page = model();
+    for (const prefix of ['', '/butlers-syzygy']) {
+      const html = renderTrajectoryPage(page, prefix);
+      expect(html).toContain(`href="${prefix}/trajectory" aria-current="page">Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">7</span></a>`);
+      expect(grouped(page, prefix)).toContain(`href="${prefix}/trajectory?group=parent&amp;page=1#group-p-bu-epic"`);
+    }
+  });
+
+  it('puts every item under one Unknown group with its reason when the rows are unread', () => {
+    const unread = buildFixtureModel(cleanups, { workItemRows: rows, runDependencyQuery: () => { throw new Error('down'); } });
+    const html = grouped(unread);
+    expect(groupOrder(html)).toEqual(['group-parent-unknown']);
+    expect(html).toContain('<span data-group-reason="dependency-read-failed">The dependency rows were not read. The dependency read failed.</span>');
+  });
+});
+
+describe('Trajectory answers what changed between two named revisions (T6 S1, syzygy-t3jk.21)', () => {
+  const DAY_FROM = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  const WEEK_FROM = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+  const mounts = [
+    { path: TRAJECTORY_HUMAN_PATH, host: '127.0.0.1:7478', prefix: '' },
+    { path: TRAJECTORY_HUMAN_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
+    { path: TRAJECTORY_TAILNET_PATH, host: 'tzeusy.parrot-hen.ts.net', prefix: '/butlers-syzygy' },
+  ] as const;
+  const getChanged = (model: PocModel, { path, host }: (typeof mounts)[number], query: string) => {
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === path && candidate.method === 'GET')!;
+    return route.handle({ request: { method: 'GET', path, query: new URLSearchParams(query), headers: { host } } });
+  };
+  const diffRow = (w: string, diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
+    ({ w, diff_type, from_id, to_id, from_status, to_status, n: null });
+  const tally = (w: string, diff_type: string, n: number) => ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n });
+  const outside = (w: string, n: number) => [tally(w, 'outside-prefix', n), tally(w, 'merges', 0), tally(w, 'inverted', 0)];
+  function history(dayRows: readonly Record<string, unknown>[], weekRows: readonly Record<string, unknown>[] = outside('week', 0)) {
+    return (sql: string): string => sql.includes('dolt_diff(')
+      ? JSON.stringify([...dayRows, ...weekRows])
+      : JSON.stringify([{
+        revision: FIXTURE_DOLT_REVISION, revision_at: '2026-08-30T11:58:00.000Z',
+        day_from: DAY_FROM, day_at: '2026-08-29T10:00:00.000Z', week_from: WEEK_FROM, week_at: '2026-08-23T10:00:00.000Z',
+      }]);
+  }
+  const DAY = [
+    diffRow('day', 'modified', 'bu-closed-recent', 'bu-closed-recent', 'open', 'closed'),
+    diffRow('day', 'added', null, 'bu-open1', null, 'open'),
+    diffRow('day', 'removed', 'bu-gone', null, 'blocked', null),
+    diffRow('day', 'modified', 'bu-progress1', 'bu-progress1', 'in_progress', 'in_progress'),
+    ...outside('day', 2),
+  ];
+  const model = () => buildFixtureModel(cleanups, { runHistoryQuery: history(DAY) });
+  const route = (page: PocModel, query: string, prefix = ''): string => {
+    const html = renderTrajectoryRoute(page, prefix, undefined, new URLSearchParams(query));
+    if (typeof html !== 'string') throw new Error(`refused: ${JSON.stringify(html)}`);
+    return html;
+  };
+
+  it('states the day window by default: both revisions, counts per kind, and each changed item', () => {
+    const body = answerBody(renderTrajectoryPage(model()), 'changed');
+    expect(body).toContain(`revision <code data-parity-field="answer-changed-from" data-revision="${DAY_FROM}">aaaaaaaa</code> (<time datetime="2026-08-29T10:00:00.000Z">2026-08-29T10:00:00.000Z</time>)`);
+    expect(body).toContain(`the observed revision <code data-parity-field="answer-changed-to" data-revision="${FIXTURE_DOLT_REVISION}">12345678</code>`);
+    expect(body).toContain('<span data-parity-field="answer-changed-total">3</span> items changed state (<span data-parity-field="answer-changed-added">1</span> added, <span data-parity-field="answer-changed-closed">1</span> closed, <span data-parity-field="answer-changed-reopened">0</span> reopened, <span data-parity-field="answer-changed-re-stated">0</span> re-stated, <span data-parity-field="answer-changed-removed">1</span> removed).');
+    expect(body).toContain('<span data-parity-field="answer-changed-updated-only">1</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">2</span> changed rows are outside');
+    expect([...body.matchAll(/data-change-id="([^"]+)"/g)].map((match) => match[1])).toEqual(['bu-closed-recent', 'bu-gone', 'bu-open1']);
+    // A served item links to its card; a removed one is named, never linked.
+    expect(body).toContain('<li data-change-kind="closed" data-change-id="bu-closed-recent"><span class="wi-ref" data-title-of="bu-closed-recent"><a href="/trajectory?page=1#workitem-bu-closed-recent"><code>bu-closed-recent</code></a> <bdi class="wi-ref-name" data-parity-field="work-item-ref-title">fixture item bu-closed-recent</bdi></span> closed (<code>open</code> → <code>closed</code>)</li>');
+    expect(body).toContain('<li data-change-kind="removed" data-change-id="bu-gone"><code>bu-gone</code> removed (<code>blocked</code> → —)</li>');
+    expect(body).not.toMatch(/\b(velocity|per day|progress|done|productivity)\b|%/i);
+  });
+
+  it('matches the served machine answer count for count and item for item', async () => {
+    const page = model();
+    const served = await servedAnswer(page);
+    const changed = served.trajectory.answers.find((answer) => answer.id === 'changed');
+    if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
+    const day = changed.windows[0];
+    const body = answerBody(renderTrajectoryPage(page), 'changed');
+    const field = (name: string) => /data-parity-field="([^"]+)"[^>]*>([^<]*)</g;
+    const values = new Map([...body.matchAll(field(''))].map((match) => [match[1], match[2]]));
+    expect(Number(values.get('answer-changed-total'))).toBe(day.facts.length);
+    for (const kind of ['added', 'closed', 'reopened', 're-stated', 'removed'] as const) expect(Number(values.get(`answer-changed-${kind}`)), kind).toBe(day.counts[kind]);
+    expect(Number(values.get('answer-changed-updated-only'))).toBe(day.updatedWithoutStatusChange);
+    expect(Number(values.get('answer-changed-outside-prefix'))).toBe(day.outsidePrefix);
+    // R-T6S1-CHANGES-1 F3: both revisions and instants, and every window's link figure.
+    for (const [field, point] of [['answer-changed-from', day.from], ['answer-changed-to', day.to]] as const) {
+      expect(body).toContain(`data-parity-field="${field}" data-revision="${point.revision}">${point.revision.slice(0, 8)}</code> (<time datetime="${point.at}">`);
+    }
+    const figures = new Map([...body.matchAll(/data-parity-field="answer-changed-([a-z-]+)-count">([^<]*(?:<code>[^<]*<\/code>)?)/g)].map((match) => [match[1], match[2]]));
+    expect([...figures]).toEqual(changed.windows.map((window) => [window.window, window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${window.reason}</code>`]));
+    const facts = [...body.matchAll(/<li data-change-kind="([^"]+)" data-change-id="([^"]+)">([^]*?)<\/li>/g)]
+      .map(([, kind, id, item]) => {
+        const statuses = /\((?:<code>([^<]+)<\/code>|—) → (?:<code>([^<]+)<\/code>|—)\)$/.exec(item!);
+        if (statuses === null) throw new Error(`missing status transition for ${id}`);
+        return { id, kind, from: statuses[1] ?? null, to: statuses[2] ?? null };
+      });
+    expect(facts).toEqual(day.facts);
+    expect(served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-changed')?.epistemic).toMatchObject({
+      label: 'Unknown',
+      reason: "What changed is answered from the tracker's own history between two named revisions, where it can be read; the since-last-evaluation window is Unknown because no previous evaluation's work-item revision is recorded, so there is no start to diff from. An Unknown window is never a zero.",
+    });
+  });
+
+  it('switches window by the changed parameter, keeping the default selection, and links each window', () => {
+    const page = model();
+    const week = route(page, 'changed=week');
+    expect(answerBody(week, 'changed')).toContain(`data-revision="${WEEK_FROM}"`);
+    expect(answerBody(week, 'changed')).toContain('<span data-parity-field="answer-changed-total">0</span> items changed state');
+    expect(answerBody(week, 'changed')).toContain('No item changed state between these revisions: an observed zero.');
+    // A changed window by itself keeps the default outline.
+    expect(week).toContain(renderTrajectoryPage(page).match(/<p class="scope-statement[\s\S]*?<\/p>/)![0]);
+    const links = [...answerBody(renderTrajectoryPage(page), 'changed').matchAll(/<a data-change-window-link="([^"]+)" href="([^"]+)"/g)].map((match) => [match[1], match[2]]);
+    expect(links).toEqual([['week', '/trajectory?changed=week#answers-heading'], ['since-last', '/trajectory?changed=since-last#answers-heading']]);
+    // With a view, the window link keeps it.
+    expect(answerBody(route(page, 'status=open&changed=week'), 'changed')).toContain('href="/trajectory?status=open&amp;changed=day&amp;page=1#answers-heading"');
+    expect(answerBody(route(page, 'changed=week', '/butlers-syzygy'), 'changed')).toContain('href="/butlers-syzygy/trajectory?changed=day#answers-heading"');
+  });
+
+  it('keeps every Unknown window\'s reason and route on a page showing an observed window (R-T6S1-CHANGES-1 F2)', () => {
+    const body = answerBody(renderTrajectoryPage(model()), 'changed');
+    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown: <code>no-previous-evaluation-recorded</code></span>)');
+    expect(body).toContain('data-parity-field="answer-changed-disclosure" data-unknown-disclosure="region:trajectory-changed" data-unknown-reason="source-uncaptured-or-unreachable"');
+    expect(body.replace(/<[^>]+>/g, '')).toContain('Route: Repair the observer/source; new snapshot.');
+  });
+
+  it('renders an Unknown window with its reason and the disclosure, never a zero', () => {
+    const body = answerBody(route(model(), 'changed=since-last'), 'changed');
+    expect(body).toContain('Since the last evaluation: Unknown, because no previous evaluation&#39;s work-item revision is recorded, so there is no start to diff from (<code data-parity-field="answer-changed-reason">no-previous-evaluation-recorded</code>); never a zero.');
+    expect(body).toContain('data-unknown-disclosure="region:trajectory-changed"');
+    expect(body).toContain('Since the last evaluation (<span data-parity-field="answer-changed-since-last-count">Unknown: <code>no-previous-evaluation-recorded</code></span>)');
+  });
+
+  it('reads the history once per observation, never per render (R-T6S1-CHANGES-1 note 5)', () => {
+    const calls: string[] = [];
+    const read = history(DAY);
+    const page = buildFixtureModel(cleanups, { runHistoryQuery: (sql) => { calls.push(sql); return read(sql); } });
+    expect(calls).toHaveLength(2);
+    for (const query of ['', 'changed=week', 'changed=since-last', 'status=open&changed=day']) route(page, query);
+    expect(calls).toHaveLength(2);
+  });
+
+  it('serves the changed-window links and typed HTTP 400 on each mount', async () => {
+    const page = model();
+    for (const mount of mounts) {
+      const invalid = await getChanged(page, mount, 'changed=month');
+      expect(invalid.status).toBe(400);
+      expect(JSON.parse(invalid.body)).toEqual({
+        refused: 'trajectory-view-parameter', parameter: 'changed', reason: 'unknown-value', allowed: ['day', 'week', 'since-last'],
+      });
+      const week = await getChanged(page, mount, 'changed=week');
+      expect(week.status).toBe(200);
+      expect(answerBody(week.body, 'changed')).toContain(`href="${mount.prefix}/trajectory?changed=day#answers-heading"`);
+    }
+  });
+
+  it('lists at most 250 changed items and measures complete served pages below half the byte ceiling', async () => {
+    const ids = Array.from({ length: 260 }, (_, i) => `bu-n${String(i).padStart(3, '0')}`);
+    const many = (window: string) => ids.map((id) => diffRow(window, 'added', null, id, null, 'open'));
+    const page = buildFixtureModel(cleanups, {
+      workItemRows: ids.map((id) => fixtureWorkItemRow(id, 'open', '2026-08-29T12:00:00Z', '2026-08-29T12:00:00Z', null)),
+      runHistoryQuery: history([...many('day'), ...outside('day', 0)], [...many('week'), ...outside('week', 0)]),
+    });
+    const body = answerBody(renderTrajectoryPage(page), 'changed');
+    expect(body.match(/data-change-id=/g)).toHaveLength(250);
+    expect(body).toContain('<span data-parity-field="answer-changed-unlisted">10</span> more changed items are not listed here; the machine answer lists every one.');
+    const changed = page.trajectory.kind === 'observed' ? page.trajectory.answers.find((answer) => answer.id === 'changed') : undefined;
+    if (changed === undefined || !('windows' in changed) || changed.windows[0]?.kind !== 'observed') throw new Error('unreachable');
+    expect(changed.windows[0].facts.length - 250).toBe(10);
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      const earlier = Date.parse('2026-11-24T17:00:00Z');
+      const later = Date.parse('2027-01-01T00:00:00Z');
+      vi.setSystemTime(earlier);
+      expect(Date.now()).toBe(earlier);
+      const first = await getChanged(page, mounts[0], 'changed=day');
+      vi.setSystemTime(later);
+      expect(Date.now()).toBe(later);
+      const second = await getChanged(page, mounts[0], 'changed=day');
+      expect(first.status).toBe(200);
+      expect(second).toEqual(first);
+    } finally {
+      vi.useRealTimers();
+    }
+    const bytes: number[] = [];
+    for (const mount of mounts) {
+      for (const window of ['day', 'week', 'since-last']) {
+        const selections = [`changed=${window}`, `page=1&changed=${window}`];
+        for (const selection of selections) {
+          const response = await getChanged(page, mount, selection);
+          expect(response.status).toBe(200);
+          bytes.push(Buffer.byteLength(response.body, 'utf8'));
+        }
+      }
+    }
+    const largest = Math.max(...bytes);
+    expect(bytes).toHaveLength(18);
+    expect(largest).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes / 2);
+    console.info(`Trajectory change fixture served ${bytes.length} pages, largest ${largest} UTF-8 bytes`);
+  });
+});
+
+// POC-REQ-063 (syzygy-t3jk.24): every Trajectory list that names a served
+// item names it with its title as the policy served it, through one helper.
+describe('Every Trajectory list names an item with its screened title (POC-REQ-063, syzygy-t3jk.24)', () => {
+  const instant = '2026-08-29T12:00:00Z';
+  const revision = FIXTURE_DOLT_REVISION;
+  const SECRET = 'password=LISTMARKERsecret1';
+  const ACTIVE = '<script>LISTMARKERactive2</script>';
+  // The 60th code unit is the high half of U+1F600, so the clip ends at 59.
+  const PAIR = `${'L'.repeat(59)}\u{1F600} LISTTAILpair3`;
+  const LONG = `&${'M'.repeat(59)}LISTTAILlong4`;
+  const MARKERS = ['LISTMARKERsecret1', 'LISTMARKERactive2', 'LISTTAILpair3', 'LISTTAILlong4'];
+  const row = (id: string, title: unknown) => ({ ...fixtureWorkItemRow(id, 'open', instant, instant, null), title });
+  const rows = [
+    row('bu-epic', 'Epic & "plan" \'one\''), row('bu-mid', SECRET), row('bu-twin', PAIR),
+    row('bu-blocked', 'Blocked one'), row('bu-act', ACTIVE), row('bu-long', LONG), row('bu-none', null),
+  ];
+  const parentEdge = (child: string, parent: string) =>
+    ({ issue_id: child, depends_on_issue_id: parent, type: 'parent-child', has_external: 0, has_wisp: 0, revision: null });
+  const blockEdge = (blocked: string, blocker: string) =>
+    ({ issue_id: blocked, depends_on_issue_id: blocker, type: 'blocks', has_external: 0, has_wisp: 0, revision: null });
+  const edges = [
+    { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+    parentEdge('bu-mid', 'bu-epic'), parentEdge('bu-twin', 'bu-epic'), parentEdge('bu-twin', 'bu-mid'),
+    blockEdge('bu-blocked', 'bu-act'), blockEdge('bu-blocked', 'bu-long'), blockEdge('bu-blocked', 'bu-none'), blockEdge('bu-blocked', 'bu-twin'),
+  ];
+  const diffRow = (diff_type: string, from_id: string | null, to_id: string | null, from_status: string | null, to_status: string | null) =>
+    ({ w: 'day', diff_type, from_id, to_id, from_status, to_status, n: null });
+  const tallies = (w: string) => ['outside-prefix', 'merges', 'inverted'].map((diff_type) =>
+    ({ w, diff_type, from_id: null, to_id: null, from_status: null, to_status: null, n: 0 }));
+  const historyOf = (day: readonly Record<string, unknown>[]) => (sql: string): string => sql.includes('dolt_diff(')
+    ? JSON.stringify([...day, ...tallies('day'), ...tallies('week')])
+    : JSON.stringify([{
+      revision, revision_at: '2026-08-30T11:58:00.000Z',
+      day_from: 'a'.repeat(32), day_at: '2026-08-29T10:00:00.000Z', week_from: 'b'.repeat(32), week_at: '2026-08-23T10:00:00.000Z',
+    }]);
+  const DAY = [
+    diffRow('added', null, 'bu-mid', null, 'open'), diffRow('added', null, 'bu-twin', null, 'open'),
+    diffRow('added', null, 'bu-epic', null, 'open'), diffRow('removed', 'bu-gone', null, 'open', null),
+  ];
+  const model = () => buildFixtureModel(cleanups, {
+    workItemRows: rows, runDependencyQuery: () => JSON.stringify(edges), runHistoryQuery: historyOf(DAY),
+  });
+  const machine = async (page: PocModel): Promise<string> => {
+    const route = pocRoutes(() => page).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    return response.body as string;
+  };
+  // Each list reference: the item it names and what its title part renders.
+  const REF = /data-title-of="([^"]+)">(?:(?!data-title-of=)[\s\S])*?(?:<bdi class="wi-ref-name" data-parity-field="work-item-ref-title"( data-title-clipped="60")?>([^<]*)<\/bdi>(…?)|data-parity-field="work-item-ref-title" data-unknown-ref="region:work-item-titles" data-unknown-reason="excluded-content">Title: withheld \(([a-z-]+)\) <a class="mark-ref" href="#n-titles")/g;
+  const refs = (html: string) => [...html.matchAll(REF)].map((match) => ({
+    id: match[1], shown: match[3] === undefined ? `withheld ${match[5]}` : `${match[3]}${match[4]}`, clipped: match[2] !== undefined,
+  }));
+  // Typed by hand: the escaped admitted text (clipped where long) or the reason.
+  const EXPECTED: Record<string, { shown: string; clipped: boolean }> = {
+    'bu-epic': { shown: 'Epic &amp; &quot;plan&quot; &#39;one&#39;', clipped: false },
+    'bu-mid': { shown: 'withheld secret-matched', clipped: false },
+    'bu-twin': { shown: `${'L'.repeat(59)}…`, clipped: true },
+    'bu-blocked': { shown: 'Blocked one', clipped: false },
+    'bu-act': { shown: 'withheld active-content', clipped: false },
+    'bu-long': { shown: `&amp;${'M'.repeat(59)}…`, clipped: true },
+    'bu-none': { shown: 'withheld unclassifiable', clipped: false },
+  };
+  const pages = (page: PocModel) => [renderTrajectoryPage(page), trajectoryView(page, 'group=parent')];
+
+  it('names every served item each list mentions with its title as served, on the default and grouped pages', () => {
+    const [plain, grouped] = pages(model());
+    // The default page is the grouped outline: the changed list (bu-epic,
+    // bu-mid, bu-twin; bu-gone is removed), the two parent headings, what
+    // bu-mid sits under, then the blocked card's four blockers.
+    const order = ['bu-epic', 'bu-mid', 'bu-twin', 'bu-epic', 'bu-mid', 'bu-epic', 'bu-act', 'bu-long', 'bu-none', 'bu-twin'];
+    expect(refs(plain!).map((ref) => ref.id)).toEqual(order);
+    expect(refs(grouped!).map((ref) => ref.id)).toEqual(order);
+    for (const html of [plain!, grouped!]) {
+      for (const ref of refs(html)) expect({ shown: ref.shown, clipped: ref.clipped }).toEqual(EXPECTED[ref.id!]);
+      // No list names a served item by its identifier alone.
+      for (const attribute of ['data-blocker-id', 'data-group-parent', 'data-group-under']) {
+        const named = [...html.matchAll(new RegExp(`<a ${attribute}="([^"]+)"`, 'g'))].map((match) => match[1]);
+        const titled = [...html.matchAll(new RegExp(`data-title-of="([^"]+)"><a ${attribute}="\\1"`, 'g'))].map((match) => match[1]);
+        expect(titled).toEqual(named);
+      }
+    }
+    expect(grouped).toContain('Parent <span class="wi-ref" data-title-of="bu-epic"><a data-group-parent="bu-epic"');
+    expect(grouped).toContain('The parent sits under <span class="wi-ref" data-title-of="bu-epic"><a data-group-under="bu-epic"');
+  });
+
+  it('names a removed item in the changed list by its identifier alone', () => {
+    const [plain] = pages(model());
+    expect(answerBody(plain!, 'changed')).toContain('<li data-change-kind="removed" data-change-id="bu-gone"><code>bu-gone</code> removed (<code>open</code> → —)</li>');
+    expect(plain).not.toContain('data-title-of="bu-gone"');
+  });
+
+  it('serves the same titles in the machine answer, and no withheld text on either channel', async () => {
+    const page = model();
+    const body = await machine(page);
+    const served = JSON.parse(body) as PocModel;
+    if (served.workItems.kind !== 'observed') throw new Error('expected observed work items');
+    const titles = Object.fromEntries(served.workItems.items.map((item) => [item.id, item.title]));
+    expect(titles['bu-epic']).toEqual({ text: 'Epic & "plan" \'one\'' });
+    expect(titles['bu-twin']).toEqual({ text: PAIR });
+    expect(titles['bu-long']).toEqual({ text: LONG });
+    expect(titles['bu-blocked']).toEqual({ text: 'Blocked one' });
+    expect([titles['bu-mid'], titles['bu-act'], titles['bu-none']].map((title) => title && 'withheld' in title ? title.withheld : null))
+      .toEqual(['secret-matched', 'active-content', 'unclassifiable']);
+    for (const marker of MARKERS.slice(0, 2)) expect(body).not.toContain(marker);
+    for (const html of pages(page)) {
+      for (const marker of MARKERS.slice(0, 2)) expect(html).not.toContain(marker);
+    }
+  });
+
+  it('clips a long title in a list at 60 code units, never inside a surrogate pair, and shows it whole on its card', () => {
+    for (const html of pages(model())) {
+      expect(cardBody(html, 'bu-twin')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">${PAIR}</bdi>`);
+      expect(cardBody(html, 'bu-long')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">&amp;${LONG.slice(1)}</bdi>`);
+      // The tails appear only on the cards, never in a list.
+      expect(html.split('LISTTAILpair3').length - 1).toBe(html.split('data-work-item-id="bu-twin"').length - 1);
+      expect(html.split('LISTTAILlong4').length - 1).toBe(html.split('data-work-item-id="bu-long"').length - 1);
+      expect(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/.test(html)).toBe(false);
+    }
+  });
+
+  it('states a withheld title in a list as its Unknown, referring to the one titles disclosure', () => {
+    const [plain] = pages(model());
+    const blockers = cardBody(plain!, 'bu-blocked');
+    expect(blockers).toContain('<span class="wi-ref" data-title-of="bu-act"><a data-blocker-id="bu-act"');
+    expect(blockers).toContain('Title: withheld (active-content) <a class="mark-ref" href="#n-titles" aria-describedby="n-titles">reason and route</a>');
+    expect(plain).toContain('<span data-parity-field="titles-unknown-count">3</span>');
+  });
+
+  // Review note 6 of R-T5S1-TITLES-1: a grouped page repeats the card of an
+  // item under two parents. This fixture gives every title the most bytes
+  // escaping can make (500 `"`), every item two parents and three blockers,
+  // and a full changed list. It measures that fan-in, not a bound: blockers
+  // per card are unbounded (syzygy-262m). Since syzygy-t3jk.26 every card
+  // also lists its three-commit cap and a remainder: 1,917,287 bytes at most
+  // (91.4%), 130 KB more than without commits.
+  it('keeps a page of most-escaped titles with two parents, three blockers and three commits per item under 95% of the human response ceiling', async () => {
+    const worst = '"'.repeat(500);
+    const ids = Array.from({ length: 260 }, (_, index) => `bu-w${String(index).padStart(3, '0')}`);
+    const parents = ids.slice(0, 10);
+    const children = ids.slice(10);
+    const dependencyRows = [
+      { revision, issue_id: null, depends_on_issue_id: null, type: null, has_external: null, has_wisp: null },
+      ...children.flatMap((id, index) => [
+        parentEdge(id, parents[index % 10]!), parentEdge(id, parents[(index + 1) % 10]!),
+        blockEdge(id, ids[(index + 11) % 260]!), blockEdge(id, ids[(index + 12) % 260]!), blockEdge(id, ids[(index + 13) % 260]!),
+      ]),
+    ];
+    // syzygy-t3jk.26: four commits name every item, so every card lists
+    // its three-commit cap and a remainder (POC-REQ-065).
+    const repo = fixtureRepoWithGit(cleanups);
+    for (let index = 0; index < 4; index += 1) {
+      execFileSync('git', ['-C', repo.repoRoot, 'commit', '-q', '--allow-empty', '-m', ids.join(' ')]);
+    }
+    const head = execFileSync('git', ['-C', repo.repoRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+    const page = buildFixtureModel(cleanups, {
+      fixtureRepo: { repoRoot: repo.repoRoot, revision: head },
+      workItemRows: ids.map((id) => row(id, worst)),
+      runDependencyQuery: () => JSON.stringify(dependencyRows),
+      runHistoryQuery: historyOf(ids.map((id) => diffRow('added', null, id, null, 'open'))),
+    });
+    const sizes: Record<string, number> = {};
+    for (const query of ['', 'group=parent', 'group=parent&page=2', 'page=1', 'page=2']) {
+      const route = pocRoutes(() => page).find((candidate) => candidate.path === TRAJECTORY_HUMAN_PATH && candidate.method === 'GET')!;
+      const response = await route.handle({ request: { method: 'GET', path: TRAJECTORY_HUMAN_PATH, query: new URLSearchParams(query), headers: { host: '127.0.0.1:7478' } } });
+      expect(response.status).toBe(200);
+      sizes[query === '' ? 'default' : query] = Buffer.byteLength(response.body as string, 'utf8');
+    }
+    process.stdout.write(`[T5 S2 + T10 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
+    expect(page.commitJoins.kind === 'observed' && page.commitJoins.items.length).toBe(260);
+    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.95);
+  });
+});
+
+// POC-REQ-064 (syzygy-t3jk.25): the observation joins served items to the
+// observed repository's commits by exact identifier tokens, read from the
+// observed revision in the same pass; the machine answer keeps no subject.
+describe('Commit joins in the observation (POC-REQ-064, syzygy-t3jk.25)', () => {
+  it('serves the commits that name a served item, read from a real repository at the observed revision', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8' }).trim();
+    git('commit', '-q', '--allow-empty', '-m', 'Land the card [bu-open1] JOINMARKERone');
+    const named = git('rev-parse', 'HEAD');
+    git('commit', '-q', '--allow-empty', '-m', 'Unrelated chore JOINMARKERtwo');
+    const revision = git('rev-parse', 'HEAD');
+    // A commit after the observed revision is never read.
+    git('commit', '-q', '--allow-empty', '-m', 'Later work [bu-progress1] JOINMARKERthree');
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    expect(response.status).toBe(200);
+    const body = response.body as string;
+    const joins = (JSON.parse(body) as PocModel).commitJoins;
+    if (joins.kind !== 'observed') throw new Error(`expected observed joins, got ${JSON.stringify(joins)}`);
+    expect([joins.revision, joins.read, joins.joined, joins.unjoined, joins.truncated]).toEqual([revision, 3, 1, 2, false]);
+    expect(joins.items).toHaveLength(1);
+    expect(joins.items[0]!.id).toBe('bu-open1');
+    expect(joins.items[0]!.commits.map((commit) => commit.hash)).toEqual([named]);
+    expect(body).not.toContain('JOINMARKER');
+    expect(body).not.toContain('Land the card');
+    expect(renderTrajectoryPage(model)).not.toContain('JOINMARKER');
+  });
+});
+
+// POC-REQ-065 (syzygy-t3jk.26): closed work that landed reads apart from
+// closed work with no landing, by the commit join (POC-REQ-064) alone.
+describe('Closed items by landing (POC-REQ-065, syzygy-t3jk.26)', () => {
+  const VERDICT = /\b(?:done|complete|completed|shipped|delivered)\b/i;
+
+  function namingRepo() {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8' }).trim();
+    git('commit', '-q', '--allow-empty', '-m', 'Land the recent closure [bu-closed-recent] LANDMARKERone');
+    const closedHash = git('rev-parse', 'HEAD');
+    git('commit', '-q', '--allow-empty', '-m', 'Progress on bu-open1 LANDMARKERtwo');
+    const openHash = git('rev-parse', 'HEAD');
+    return { repo, git, closedHash, openHash, revision: openHash };
+  }
+
+  async function machine(model: PocModel): Promise<PocModel> {
+    const route = pocRoutes(() => model).find((candidate) => candidate.path === '/api/poc')!;
+    const response = await route.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } });
+    return JSON.parse(response.body as string) as PocModel;
+  }
+
+  function card(html: string, id: string): string {
+    const start = html.indexOf(`data-work-item-id="${id}"`);
+    if (start === -1) throw new Error(`no card for ${id}`);
+    return html.slice(start, html.indexOf('</li>', start));
+  }
+
+  it('counts closed items merged by naming convention apart from closed items no commit names, on both channels', async () => {
+    const { repo, closedHash, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    const remains = served.trajectory.answers.find((answer) => answer.id === 'remains');
+    expect(remains && 'closedLanding' in remains ? remains.closedLanding : null).toEqual({
+      state: 'observed', closed: 2, mergedByConvention: 1, noNamingCommitRead: 1,
+      basis: 'naming-convention', fidelity: 'reduced-fidelity', commitsRead: 3, historyTruncated: false,
+    });
+    const html = trajectoryView(model, 'status=closed');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing-closed">2</span> closed items, <span data-parity-field="answer-remains-closed-landing-merged">1</span> are merged by naming convention');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing-none">1</span> are closed with no commit that names them, so where they landed is Unknown.');
+    expect(html).toContain('id="n-landing-unnamed"');
+    const subject = served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-landing-unnamed');
+    expect([subject?.epistemic.closedReason, subject?.epistemic.reason]).toEqual(['missing-evidence', "1 closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); the observed revision's whole history (3 commits) was read. A commit that names the item resolves it."]);
+    expect(html).toContain("The observed revision's whole history was read (<span data-parity-field=\"answer-remains-closed-landing-read\">3</span> commits).");
+    const merged = card(html, 'bu-closed-recent');
+    expect(merged).toContain('data-landing="merged-by-convention">Merged (by naming convention, reduced fidelity)</span>');
+    expect(merged).toContain(`<code data-parity-field="work-item-commit">${closedHash.slice(0, 12)}</code>`);
+    expect(merged).toContain('data-parity-field="work-item-commit-count">1</span> commits name it (naming convention), newest first:');
+    const unnamed = card(html, 'bu-closed-old');
+    expect(unnamed).toContain('class="epistemic epistemic-unknown wi-landing" data-parity-field="work-item-landing" data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit names it <a class="mark-ref" href="#n-landing-unnamed"');
+    expect(html).not.toContain('LANDMARKER');
+    expect(JSON.stringify(served)).not.toContain('LANDMARKER');
+  });
+
+  it('lists an open item\'s naming commits without a landing, and never a bare "merged" or a verdict word', async () => {
+    const { repo, openHash, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const open = card(renderTrajectoryPage(model), 'bu-open1');
+    const html = trajectoryView(model, 'status=closed');
+    expect(open).toContain(`<code data-parity-field="work-item-commit">${openHash.slice(0, 12)}</code>`);
+    expect(open).not.toContain('data-parity-field="work-item-landing"');
+    const landings = [...html.matchAll(/data-parity-field="work-item-landing"[^>]*>([^<]*)</g)].map((match) => match[1]!);
+    expect(landings.length).toBeGreaterThan(0);
+    for (const text of landings) {
+      expect(text).not.toMatch(VERDICT);
+      if (/merged/i.test(text)) expect(text).toBe('Merged (by naming convention, reduced fidelity)');
+    }
+    const from = html.indexOf('answer-remains-closed-landing-closed');
+    const answer = html.slice(from, html.indexOf('</dd>', from)).replace(/<[^>]*>/g, '');
+    expect(answer).not.toMatch(VERDICT);
+    expect(answer.match(/merged/gi)).toEqual(['merged']);
+    expect(answer).toContain('merged by naming convention');
+  });
+
+  it('renders every card\'s landing as the machine answer\'s join and status give it', async () => {
+    const { repo, revision } = namingRepo();
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    if (served.commitJoins.kind !== 'observed' || served.workItems.kind !== 'observed') throw new Error('expected observed');
+    const joined = new Set(served.commitJoins.items.map((entry) => entry.id));
+    const pages = [renderTrajectoryPage(model), trajectoryView(model, 'status=closed')];
+    const cards = pages.flatMap((html) => [...html.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => [html, match[1]!] as const));
+    expect(new Set(cards.map(([, id]) => id)).size).toBe(served.workItems.items.length);
+    for (const [html, id] of cards) {
+      const item = served.workItems.items.find((entry) => entry.id === id)!;
+      const expected = item.status !== 'closed' ? null : joined.has(id) ? 'merged-by-convention' : 'no-naming-commit-read';
+      const landing = /data-landing="([^"]+)"/.exec(card(html, id))?.[1] ?? null;
+      expect([id, landing]).toEqual([id, expected]);
+    }
+  });
+
+  it('says a closed item without a naming commit was checked only against the commits read when older history was not read', async () => {
+    const { repo, revision } = namingRepo();
+    const copy = JSON.parse(JSON.stringify(buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } }))) as PocModel;
+    if (copy.commitJoins.kind !== 'observed') throw new Error('expected observed');
+    Object.assign(copy.commitJoins, { truncated: true, read: 5000 });
+    const remains = copy.trajectory.answers.find((answer) => answer.id === 'remains');
+    if (remains === undefined || !('closedLanding' in remains) || remains.closedLanding.state !== 'observed') throw new Error('expected observed');
+    Object.assign(remains.closedLanding, { historyTruncated: true, commitsRead: 5000 });
+    const html = trajectoryView(copy, 'status=closed');
+    expect(card(html, 'bu-closed-old')).toContain('data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit among the newest 5000 read names it <a');
+    expect(html).toContain('Only the newest <span data-parity-field="answer-remains-closed-landing-read">5000</span> commits were read; a commit in older history may name an item counted here as having none.');
+    expect(html).not.toContain("whole history was read");
+  });
+
+  it('lists at most three of an item\'s naming commits, newest first with their instants, and counts the rest', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (env: Record<string, string>, ...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8', env: { ...process.env, ...env } }).trim();
+    const hashes: string[] = [];
+    for (let index = 1; index <= 4; index += 1) {
+      git({ GIT_COMMITTER_DATE: `2026-11-2${index}T10:00:00Z` }, 'commit', '-q', '--allow-empty', '-m', `Step ${index} [bu-open1]`);
+      hashes.unshift(git({}, 'rev-parse', 'HEAD'));
+    }
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision: hashes[0]! } });
+    const open = card(renderTrajectoryPage(model), 'bu-open1');
+    const listed = [...open.matchAll(/<code data-parity-field="work-item-commit">([0-9a-f]+)<\/code> ([0-9TZ:-]+)/g)].map((match) => [match[1], match[2]]);
+    expect(listed).toEqual([
+      [hashes[0]!.slice(0, 12), '2026-11-24T10:00:00Z'],
+      [hashes[1]!.slice(0, 12), '2026-11-23T10:00:00Z'],
+      [hashes[2]!.slice(0, 12), '2026-11-22T10:00:00Z'],
+    ]);
+    expect(open).toContain('data-parity-field="work-item-commit-count">4</span> commits name it (naming convention), newest first:');
+    expect(open).toContain('<span data-parity-field="work-item-commits-unlisted">1</span> more in the machine answer');
+  });
+
+  it('is Unknown with its reason and route, never counted, when the history cannot be read', async () => {
+    const { repo, git, revision } = namingRepo();
+    // Remove the root commit's object: the history walk fails past the tip.
+    const root = git('rev-list', '--max-parents=0', 'HEAD');
+    rmSync(join(repo.repoRoot, '.git', 'objects', root.slice(0, 2), root.slice(2)));
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision } });
+    const served = await machine(model);
+    expect(served.commitJoins).toEqual({ kind: 'unknown', reason: 'commit-history-read-failed' });
+    const remains = served.trajectory.answers.find((answer) => answer.id === 'remains');
+    expect(remains && 'closedLanding' in remains ? remains.closedLanding : null).toEqual({ state: 'unknown', disclosure: 'region:trajectory-commit-joins', closed: 2 });
+    const subject = served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-commit-joins');
+    expect(subject?.epistemic.reason).toContain("the observed repository's history could not be read (commit join commit-history-read-failed)");
+    const html = trajectoryView(model, 'status=closed');
+    expect(html).toContain('id="n-commit-joins"');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing"');
+    expect(html).not.toContain('answer-remains-closed-landing-merged');
+    const text = html.slice(html.indexOf('answer-remains-closed-landing-closed'), html.indexOf('</dd>', html.indexOf('answer-remains-closed-landing-closed'))).replace(/<[^>]*>/g, '');
+    expect(text).not.toMatch(VERDICT);
+    for (const said of text.match(/merged[^.]*/gi) ?? []) expect(said).toContain('naming convention');
+    // Every card on the default and closed views: closed ones marked and
+    // linked to a target on the same page, others unmarked.
+    for (const page of [renderTrajectoryPage(model), html]) {
+      expect(page).toContain('id="n-commit-joins"');
+      const ids = new Set([...page.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]!));
+      for (const id of ids) {
+        const body = card(page, id);
+        const status = served.workItems.kind === 'observed' ? served.workItems.items.find((entry) => entry.id === id)!.status : null;
+        if (status === 'closed') {
+          expect(body).toContain('data-unknown-ref="region:trajectory-commit-joins"');
+          expect(body).toContain('Landing: Unknown <a class="mark-ref" href="#n-commit-joins"');
+        } else {
+          expect(body).not.toContain('Landing');
+        }
+      }
+    }
   });
 });

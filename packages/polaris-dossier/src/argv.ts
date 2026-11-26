@@ -1,5 +1,8 @@
 import { parseArgs } from 'node:util';
 
+/** One shell word: the text in single quotes, each single quote closed, escaped and reopened. */
+export const shellQuote = (text: string): string => `'${text.replace(/'/gu, `'\\''`)}'`;
+
 /** The one argument reader of the `syzygy` entry: the daemon, `syzygy dossier` and `syzygy polaris` (syzygy-bpyt.8.2).
  *
  * node:util's parseArgs splits the list into tokens; the spec then decides what each token is, exactly as each family read its

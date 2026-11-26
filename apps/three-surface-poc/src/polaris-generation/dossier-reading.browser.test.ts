@@ -2,9 +2,10 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { generationAnchorId } from '@syzygy/polaris-generation-core';
 import { expect, it } from 'vitest';
 import { findBrowserExecutable, launchBrowser, type Browser } from '../cdp-browser.js';
-import { readingInput } from './dossier-reading.testkit.js';
+import { lineCitationInput, navigationInput, readingInput, splitLineCitationInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
 const executable = findBrowserExecutable();
@@ -136,3 +137,449 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
     await rm(directory, { recursive: true, force: true });
   }
 }, 60_000);
+
+it.skipIf(executable === undefined)('keeps every dossier reading page oriented and linked in the same scriptless order', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'polaris-wayfinding-'));
+  const order = [
+    'index.html', 'find-by-task.html', 'name-index.html', 'deep-dives/why-detail.html',
+    'poles/2.html', 'deep-dives/words-detail.html', 'poles/3.html', 'contents.html', 'glossary.html',
+    'sources/index.html', 'maps/directories.html', 'maps/units.html', 'maps/ci.html', 'maps/infrastructure.html',
+    'understanding.html', 'size-report.html', 'appendix.html',
+  ];
+  const url = (path: string): string => pathToFileURL(join(directory, path)).href;
+  const urls = order.map(url);
+  const inspectPageTurn = `(() => {
+    const main = document.querySelector('main');
+    const nav = document.querySelector('nav.reading-order');
+    if (!nav) return null;
+    const { left, right, top } = nav.getBoundingClientRect();
+    const content = main.getBoundingClientRect();
+    return { name: nav.getAttribute('aria-label'), afterMain: main.nextElementSibling === nav,
+      insideDetails: nav.closest('details') !== null,
+      inReadingColumn: left >= content.left - 1 && right <= content.right + 1 && top >= content.bottom,
+      previous: nav.querySelector('a[rel="prev"]')?.href ?? null, next: nav.querySelector('a[rel="next"]')?.href ?? null };
+  })()`;
+  const files = renderLocalDossier(navigationInput()).files;
+  const htmlPaths = [...files.keys()].filter(path => path.endsWith('.html'));
+  const sourcePages = htmlPaths.filter(path => path.startsWith('sources/') && path !== 'sources/index.html');
+  expect(sourcePages).toHaveLength(1);
+  expect(htmlPaths.filter(path => !sourcePages.includes(path)).sort()).toEqual([...order].sort());
+  let browser: Browser | undefined;
+  try {
+    for (const path of htmlPaths) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), files.get(path)!.replace(/<script\b[^>]*>.*?<\/script>/gisu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(1440, 900);
+      for (const [index, path] of order.entries()) {
+        await page.navigate(url(path));
+        const navs = await page.evaluate<{ name: string; links: string[]; current: string[]; marked: boolean }[]>(`
+          [...document.querySelectorAll('.contents > nav')].map(nav => {
+            const current = [...nav.querySelectorAll('a[aria-current="page"]')];
+            return { name: nav.getAttribute('aria-label'), links: [...nav.querySelectorAll('a')].map(a => a.href),
+              current: current.map(a => a.href), marked: current.every(a => getComputedStyle(a).textDecorationLine === 'underline') };
+          })
+        `);
+        expect(navs, path).toEqual(['Dossier', 'Dossier (mobile)'].map(name => ({ name, links: urls, current: [url(path)], marked: true })));
+        expect(await page.evaluate(inspectPageTurn), path).toEqual({
+          name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+          previous: urls[index - 1] ?? null, next: urls[index + 1] ?? null,
+        });
+      }
+      await page.navigate(url('index.html'));
+      expect(await page.evaluate(`
+        [...document.querySelectorAll('.contents > nav')].map(nav => [...nav.querySelectorAll('.pole-dive-links')].map(list => [
+          list.previousSibling.textContent, ...[...list.querySelectorAll('a')].map(a => a.textContent),
+        ]))
+      `)).toEqual(Array.from({ length: 2 }, () => [['Why it exists', 'Purpose detail'], ['Words', 'Words detail']]));
+      expect(await page.evaluate('getComputedStyle(document.querySelector(".desktop-contents.nav-panel")).position')).toBe('sticky');
+      expect(await page.evaluate('getComputedStyle(document.querySelector("nav.reading-order")).position')).toBe('static');
+      await page.evaluate('document.querySelector(".reading-order [rel=next]").focus()');
+      expect(await page.evaluate('document.activeElement.matches(".reading-order [rel=next]:focus-visible")')).toBe(true);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('document.querySelector("main")?.dataset.page')).toBe('find-by-task.html');
+      await page.setViewport(390, 844);
+      await page.navigate(url('deep-dives/words-detail.html'));
+      expect(await page.evaluate('getComputedStyle(document.querySelector(".mobile-contents")).position')).toBe('static');
+      await page.evaluate('document.querySelector(".mobile-contents > summary").focus()');
+      await page.press('Enter');
+      expect(await page.evaluate('document.querySelector(".mobile-contents").open')).toBe(true);
+      expect(await page.evaluate('document.querySelector(".mobile-contents [aria-current=page]").href')).toBe(url('deep-dives/words-detail.html'));
+      expect(await page.evaluate(inspectPageTurn)).toEqual({
+        name: 'Reading order', afterMain: true, insideDetails: false, inReadingColumn: true,
+        previous: url('poles/2.html'), next: url('poles/3.html'),
+      });
+      await page.navigate(url(sourcePages[0]!));
+      expect(await page.evaluate('document.querySelector(".reading-order, .contents [aria-current=page]") === null')).toBe(true);
+    } finally {
+      await page.close();
+    }
+  } finally {
+    await browser?.close();
+    await rm(directory, { recursive: true, force: true });
+  }
+}, 60_000);
+
+it.skipIf(executable === undefined)('fits every dossier page at 390 by 844 and shows both counted packet digests on Review', async () => {
+  if (!executable) throw Error('Browser required');
+  const { sources, local } = navigationInput();
+  const fidelityDigest = '0123456789abcdef'.repeat(4);
+  const designDigest = 'fedcba9876543210'.repeat(4);
+  const fidelityGroups = '01234567 89abcdef 01234567 89abcdef 01234567 89abcdef 01234567 89abcdef';
+  const designGroups = 'fedcba98 76543210 fedcba98 76543210 fedcba98 76543210 fedcba98 76543210';
+  const longStatusWord = 'longrunreferenceword'.repeat(10);
+  const reviewStatus = [
+    { id: 'review-status/fidelity', text: `Fidelity review: one counts, bound to packet ${fidelityDigest} rebuilt at this render. ${longStatusWord}`, label: 'Inferred' },
+    { id: 'review-status/design', text: `Rendered-design review: one counts, bound to packet ${designDigest}, rebuilt from these pages.`, label: 'Inferred' },
+  ] as const;
+  const longPath = `src/${'selectedSourceSegment'.repeat(4)}.ts`;
+  const codePath = `src/${'quotedSourceSegment'.repeat(4)}.c`;
+  const revision = '73c810edba'.repeat(4);
+  const sampleSource = sources[0]!;
+  const { body: _body, ...sourceIdentity } = sampleSource;
+  const pathOnlySource = { ...sourceIdentity, sourceId: 'long-path-census', path: longPath, classificationBasis: 'path-only', spans: [] } as const;
+  const quotedIdentity = { ...sampleSource, sourceId: 'long-quoted-source', path: codePath, objectId: sampleSource.objectId! };
+  const sampleSpan = sampleSource.spans[0]!;
+  const { start, end, text } = sampleSpan;
+  const quotedSource = { ...quotedIdentity, spans: [{ start, end, text, anchorId: generationAnchorId(quotedIdentity, start, end) }] };
+  const sourceAnchor = { ...local.sourceAnchors.get(sampleSource.sourceId)!, pathLabel: codePath };
+  const quotedCode: (typeof local.draft.sections)[number]['paragraphs'][number] = {
+    id: 'local-reflow-code', text: '', sourceIds: [quotedSource.sourceId], children: [],
+    element: { kind: 'code', language: 'C', path: codePath, startLine: 1, endLine: 1,
+      parts: [{ kind: 'quotation', sourceId: quotedSource.sourceId, start, end, text, anchor: { ...sourceAnchor, fragment: { start, end } } }] },
+  };
+  const inlineCitation = { id: 'local-reflow-inline', text: 'Readers can compare the complete screened file here.',
+    sourceIds: [quotedSource.sourceId], children: [] };
+  const blocks = new Map(local.blocks);
+  blocks.set(inlineCitation.id, { marking: 'inferred', unknownReason: null, basis: 'fixture', executions: [],
+    segments: [{ kind: 'prose', text: inlineCitation.text }] });
+  const citationLines = new Map(local.citationLines);
+  citationLines.set(inlineCitation.id, new Map([[quotedSource.sourceId, [{ start: 1, end: 1 }]]]));
+  const draft = { ...local.draft, sections: local.draft.sections.map(section => section.id !== 'one' ? section
+    : { ...section, paragraphs: [...section.paragraphs, inlineCitation, quotedCode] }) };
+  const sourceAnchors = new Map(local.sourceAnchors);
+  sourceAnchors.set(quotedSource.sourceId, sourceAnchor);
+  const reportedGroup = (id: string, heading: string, title: string, details: readonly string[]) => ({
+    id, heading, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `${id}/path`, marking: 'inferred' as const, unknownReason: null, title, text: 'The fixture names one source path.', details, sourceIds: [],
+    }],
+  });
+  const reportedPaths = ['selected', 'excluded', 'unresolved', 'deferred'] as const;
+  const discoveryPage = { path: 'discovery.html', title: 'Discovery', intro: 'Source reads at this render.', groups: [
+    { id: 'discovery-inspected', heading: 'Inspected, as the agent reports', note: 'Self-reported.', empty: 'None.', items: [{
+      id: 'discovery/inspected', marking: 'inferred', unknownReason: null, title: null, text: 'One path inspected.', details: [longPath], sourceIds: [],
+    }] },
+    ...reportedPaths.map(part => ({ id: `discovery-${part}`, heading: `${part}, as the agent reports`, note: 'Self-reported.', empty: 'None.', items: [{
+      id: `discovery/${part}/1`, marking: 'inferred' as const, unknownReason: null, title: longPath, text: 'Fixture path.', details: [], sourceIds: [],
+    }] })),
+    { id: 'discovery-read', heading: 'Read by this render', note: `Read at revision ${revision}.`, empty: 'None.', items: [{
+      id: 'discovery/read/1', marking: 'observed', unknownReason: null, title: longPath, text: 'Admitted by screening.',
+      details: [`object sha1:${revision}`, `revision ${revision}`], sourceIds: [],
+    }] },
+  ] } as const;
+  const reviewPage = { path: 'review.html', title: 'Review', intro: 'The fixture’s review of record.', groups: [{
+    id: 'review-fidelity', heading: 'Fidelity review', note: 'Rebuilt at this render.', empty: 'None.', items: [{
+      id: 'review/fidelity/binding', marking: 'observed', unknownReason: null, title: 'Packet binding',
+      text: `The rebuilt packet digest is ${fidelityDigest}, and the verdict names it.`, details: [], sourceIds: [],
+    }],
+  }] } as const;
+  const disclosure = [...local.disclosure, { id: 'run/screened-path', text: `Screened source ${longPath}`, label: 'Inferred' }] as const;
+  const executionsPage = { path: 'executions.html', title: 'Executions', intro: 'Reported commands.', groups: [
+    reportedGroup('executions-reported', 'Reported commands', `cat ${longPath}`, [`Working directory: ${longPath}`]),
+  ] };
+  const clarificationsPage = { path: 'clarifications.html', title: 'Clarifications', intro: 'Operator questions and answers.', groups: [
+    reportedGroup('clarifications-asked', 'Questions and answers', `Is ${longPath} in scope?`, [`Consequence: ${longPath}`]),
+  ] };
+  const existingPages = local.pages.map(page => page.path !== 'understanding.html' ? page : { ...page, groups: [...page.groups,
+    reportedGroup('understanding-purpose', 'Purpose', 'Source scope', [`Scope: ${longPath}`]),
+  ] });
+  const layoutFixture = { ...local, draft, blocks, citationLines, sourceAnchors, disclosure, reviewStatus,
+    pages: [...existingPages, discoveryPage, reviewPage, executionsPage, clarificationsPage] };
+  const longText = new Map<string, ReadonlyArray<readonly [selector: string, text: string]>>([
+    ['appendix.html', [['#appendix-disclosure > ul > li', longPath]]],
+    ['clarifications.html', [['#clarifications-asked strong', longPath], ['#clarifications-asked ul.item-details > li', longPath]]],
+    ['discovery.html', [
+      ['#discovery-inspected ul.item-details > li', longPath],
+      ...reportedPaths.map(part => [`#discovery-${part} > ul.local-items > li`, longPath] as const),
+      ['#discovery-read > ul.local-items > li', longPath],
+      ['#discovery-read .group-note', revision],
+    ]],
+    ['executions.html', [['#executions-reported strong', longPath], ['#executions-reported ul.item-details > li', longPath]]],
+    ['index.html', [['#element-local-reflow-code .code-path', codePath]]],
+    ['review.html', [['#review-fidelity > ul.local-items > li', fidelityDigest]]],
+    ['sources/index.html', [['#sources > ul > li', longPath], ['#sources > ul > li > a', codePath]]],
+    ['understanding.html', [['#understanding-purpose ul.item-details > li', longPath]]],
+  ] as const);
+  const { files } = renderLocalDossier({ sources: [...sources, pathOnlySource, quotedSource], local: layoutFixture });
+  const pages = [...files].filter(([path]) => path.endsWith('.html'));
+  expect(pages).toHaveLength(23);
+  expect(pages.map(([path]) => path)).toEqual(expect.arrayContaining([...longText.keys()]));
+  expect(JSON.parse(files.get('machine.json')!).reviewStatus).toEqual(reviewStatus);
+  const directory = await mkdtemp(join(tmpdir(), 'polaris-review-reflow-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, html] of pages) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), html.replace(/<script\b[^>]*>.*?<\/script>/gisu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      const overflows: Array<{ path: string; scrollWidth: number }> = [];
+      const longTextOverflows: string[] = [];
+      for (const [path] of pages) {
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        const layout = await page.evaluate<{ width: number; height: number; scrollWidth: number; statuses: string[] }>(`({
+          width: innerWidth,
+          height: innerHeight,
+          scrollWidth: document.documentElement.scrollWidth,
+          statuses: [...document.querySelectorAll('[data-review-status-region]')].map(region => region.innerText),
+        })`);
+        expect([layout.width, layout.height], path).toEqual([390, 844]);
+        expect(layout.statuses, path).toHaveLength(1);
+        const status = layout.statuses[0]!;
+        expect(status, path).not.toMatch(/[0-9a-f]{64}/i);
+        expect(status, path).toContain('Fidelity review: one counts');
+        expect(status, path).toContain('Rendered-design review: one counts');
+        expect(status, path).toContain(longStatusWord);
+        if (path === 'review.html') {
+          expect(status, path).toContain(fidelityGroups);
+          expect(status, path).toContain(designGroups);
+        } else {
+          expect(status, path).toContain('bound to the packet shown on the review page');
+          expect(status, path).not.toContain(fidelityGroups);
+          expect(status, path).not.toContain(designGroups);
+        }
+        if (layout.scrollWidth > layout.width) overflows.push({ path, scrollWidth: layout.scrollWidth });
+        for (const [selector, text] of longText.get(path) ?? []) {
+          const textFits = await page.evaluate<boolean>(`(() => {
+            const text = ${JSON.stringify(text)};
+            const node = [...document.querySelectorAll(${JSON.stringify(selector)})].find(item => item.innerText.includes(text));
+            if (node === undefined) return false;
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rects = [...range.getClientRects()];
+            return rects.length > 0 && rects.every(rect => rect.left >= 0 && rect.right <= innerWidth);
+          })()`);
+          if (!textFits) longTextOverflows.push(`${path} ${selector}`);
+        }
+      }
+      expect({ overflows, longTextOverflows }).toEqual({ overflows: [], longTextOverflows: [] });
+      await page.setViewport(1440, 844);
+      for (const [path] of pages) {
+        await page.navigate(pathToFileURL(join(directory, path)).href);
+        expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), path).toBe(true);
+      }
+      await page.setViewport(390, 844);
+      const indexUrl = pathToFileURL(join(directory, 'index.html')).href;
+      await page.navigate(indexUrl);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const exactPage = pages.find(([path, html]) => path.startsWith('sources/') && html.includes(`<h1 class="source-path">${codePath}</h1>`));
+      expect(exactPage).toBeDefined();
+      const exactHref = `${pathToFileURL(join(directory, exactPage![0])).href}#L1`;
+      const citations = [
+        { selector: '#block-local-reflow-inline a.cite', suffix: 'line 1', leftRange: [260, 390] as const },
+        { selector: '#element-local-reflow-code a.cite', suffix: `bytes ${start}–${end}`, leftRange: [0, 120] as const },
+      ];
+      for (const { selector, suffix, leftRange } of citations) {
+        const citation = `document.querySelector(${JSON.stringify(selector)})`;
+        expect(await page.accessibleNames(`[${citation}]`)).toEqual([`Source 2: ${codePath}, ${suffix}`]);
+        expect(await page.evaluate(`${citation}.href`)).toBe(exactHref);
+        const inspect = `(() => {
+          const link = ${citation};
+          const popup = link.querySelector('.cite-pop');
+          const box = popup.getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(popup);
+          const text = [...range.getClientRects()];
+          return { hidden: getComputedStyle(popup).display === 'none', focus: link.matches(':focus-visible'), hovered: link.matches(':hover'),
+            contents: popup.textContent, fitsPage: document.documentElement.scrollWidth <= innerWidth,
+            contained: box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight
+              && text.length > 0 && text.every(rect => rect.left >= box.left && rect.right <= box.right
+                && rect.top >= box.top && rect.bottom <= box.bottom) };
+        })()`;
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        await page.evaluate(`(() => {
+          const link = ${citation};
+          const stops = [...document.querySelectorAll('a[href], summary, [tabindex="0"]')].filter(el => el.getClientRects().length > 0);
+          stops[stops.indexOf(link) - 1].focus();
+        })()`);
+        for (let step = 0; step < 4; step++) {
+          await page.press('Tab');
+          if (await page.evaluate(`document.activeElement === ${citation}`)) break;
+        }
+        expect(await page.evaluate(inspect), `${selector} keyboard`).toMatchObject({
+          hidden: false, focus: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true,
+        });
+        await page.evaluate(`${citation}.blur()`);
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true });
+        // The preceding keyboard focus can scroll the page. Load the fixture again for the pointer check.
+        await page.navigate('about:blank');
+        await page.navigate(indexUrl);
+        expect(await page.evaluate(inspect)).toMatchObject({ hidden: true, focus: false, hovered: false });
+        const measure = `(() => {
+          const link = ${citation};
+          const label = document.createRange();
+          label.setStart(link, 0);
+          label.setEndBefore(link.querySelector('.cite-pop'));
+          // A superscript can have a zero-height anchor box but still have a hittable label.
+          const rects = [...label.getClientRects()].map(({ left, top, right, bottom }) => ({ left, top, right, bottom }));
+          const point = rects.filter(rect => rect.right > rect.left && rect.bottom > rect.top)
+            .map(rect => ({ x: Math.round((rect.left + rect.right) / 2), y: Math.round((rect.top + rect.bottom) / 2) }))
+            .find(({ x, y }) => link.contains(document.elementFromPoint(x, y))) ?? null;
+          return { point, rects, scroll: [scrollX, scrollY], left: link.getBoundingClientRect().left };
+        })()`;
+        type Measure = {
+          point: { x: number; y: number } | null;
+          rects: { left: number; top: number; right: number; bottom: number }[];
+          scroll: [number, number];
+          left: number;
+        };
+        const { first, second } = await page.evaluate<{ first: Measure; second: Measure }>(`(async () => {
+          const link = ${citation};
+          await document.fonts.ready;
+          link.scrollIntoView({ block: 'center', behavior: 'instant' });
+          const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve(${measure})));
+          const first = await nextFrame();
+          const second = await nextFrame();
+          window.addEventListener('pointermove', event => {
+            const target = event.target;
+            window.citationPointer = { inCitation: link.contains(target), trusted: event.isTrusted,
+              x: event.clientX, y: event.clientY, target: target.tagName,
+              targetId: target.closest('[id]')?.id ?? null, scroll: [scrollX, scrollY] };
+          }, { capture: true, once: true, passive: true });
+          return { first, second };
+        })()`);
+        expect(second, `${selector} pointer geometry on consecutive frames`).toEqual(first);
+        const target = second.point;
+        if (target === null) throw new Error(`${selector} has no hittable label point: ${JSON.stringify(second)}`);
+        expect(second.left, selector).toBeGreaterThanOrEqual(leftRange[0]);
+        expect(second.left, selector).toBeLessThanOrEqual(leftRange[1]);
+        await page.mouseMove(target.x, target.y);
+        const pointerEvidence = `({ event: window.citationPointer ?? null, geometry: ${measure}, hint: ${inspect} })`;
+        let observed: unknown;
+        try {
+          await expect.poll(async () => {
+            observed = await page.evaluate(pointerEvidence);
+            return observed;
+          }, { message: `${selector} hover` }).toMatchObject({
+            event: { inCitation: true, trusted: true, ...target },
+            hint: { hidden: false, hovered: true, contents: `${codePath}, ${suffix}`, contained: true, fitsPage: true },
+          });
+        } catch (cause) {
+          throw new Error(`${selector} hover evidence ${JSON.stringify({ before: second, after: observed })}`, { cause });
+        }
+        await page.mouseMove(0, 0);
+        await expect.poll(() => page.evaluate(inspect)).toMatchObject({ hidden: true, hovered: false });
+      }
+    } finally {
+      await page.close();
+    }
+  } finally {
+    if (browser !== undefined) await browser.close();
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+it.skipIf(executable === undefined)('follows a ranged source citation and highlights only its line span with scripts removed', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'line-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(lineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      expect(await page.evaluate('document.scripts.length')).toBe(0);
+      const link = 'document.querySelector(\'[data-claim-id="introduction"] a.cite\')';
+      expect(await page.evaluate(`${link}.hash`)).toBe('#L1200');
+      await page.evaluate(`${link}.focus()`);
+      await page.press('Enter');
+      await expect.poll(() => page.evaluate('location.hash')).toBe('#L1200');
+      const inspect = `(() => {
+        const target = document.querySelector('.source-line:target');
+        const row = number => document.getElementById('L' + number);
+        if (!target) return null;
+        const background = el => getComputedStyle(el).backgroundColor;
+        return { scripts: document.scripts.length, target: target.id, text: target.textContent.trim(),
+          rowCount: document.querySelectorAll('.source-line').length, scrolled: window.scrollY > 844,
+          onScreen: target.getBoundingClientRect().top >= 0 && target.getBoundingClientRect().bottom <= innerHeight,
+          fits: document.documentElement.scrollWidth <= innerWidth,
+          label: getComputedStyle(target, '::before').content,
+          continuations: [1201, 1202, 1207, 1208].every(n => row(n).classList.contains('cited-span') && background(row(n)) === background(target)),
+          unrelated: [1199, 1203, 1204, 1205].every(n => background(row(n)) !== background(target)),
+          details: document.querySelectorAll('details .source-line').length };
+      })()`;
+      await expect.poll(() => page.evaluate(inspect)).toEqual({ scripts: 0, target: 'L1200', text: '# synthetic option 1200: local documentation',
+        rowCount: 2100, scrolled: true, onScreen: true, fits: true, label: '"1200"', continuations: true, unrelated: true, details: 0 });
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);
+
+it.skipIf(executable === undefined)('continues a citation onto its next source piece using a native keyboard link', async () => {
+  if (!executable) throw Error('Browser required');
+  const directory = await mkdtemp(join(tmpdir(), 'continued-citations-'));
+  let browser: Browser | undefined;
+  try {
+    for (const [path, content] of renderLocalDossier(splitLineCitationInput()).files) {
+      await mkdir(dirname(join(directory, path)), { recursive: true });
+      await writeFile(join(directory, path), content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/giu, ''));
+    }
+    browser = await launchBrowser(executable);
+    const page = await browser.newPage();
+    try {
+      await page.setViewport(390, 844);
+      const index = pathToFileURL(join(directory, 'index.html')).href;
+      const painted = `(() => {
+        const target = document.querySelector('.source-line:target, .source-line:has(>.source-continuation-target:target)');
+        if (!target) return [];
+        const background = getComputedStyle(target).backgroundColor;
+        return [...document.querySelectorAll('.source-line')].filter(line => getComputedStyle(line).backgroundColor === background).map(line => line.id);
+      })()`;
+      const selected = '[...document.querySelectorAll(".source-continuation a")].find(a => a.getClientRects().length > 0)';
+      const destinations = new Set<string>();
+      let firstPage = '';
+      for (const [selector, start, firstLines, nextLines, label] of [
+        ['[data-claim-id="introduction"] a.cite', '#L999', ['L999', 'L1000'], ['L1001', 'L1002'], 'Continue this citation: lines 1001–1002'],
+        ['[data-claim-id="forms"] a.cite', '#L998', ['L998', 'L999', 'L1000'], ['L1001', 'L1002', 'L1003', 'L1004'], 'Continue this citation: lines 1001–1004'],
+      ] as const) {
+        await page.navigate(index);
+        await page.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(start);
+        firstPage = await page.evaluate<string>("location.href.split('#')[0]");
+        await expect.poll(() => page.evaluate(painted)).toEqual(firstLines);
+        expect(await page.evaluate('document.scripts.length')).toBe(0);
+        const destination = await page.evaluate<string>(`${selected}.hash`);
+        expect(destination).toMatch(/^#continued-/u);
+        destinations.add(destination);
+        expect(await page.accessibleNames(`[${selected}]`)).toEqual([label]);
+        await page.press('Tab');
+        expect(await page.evaluate(`document.activeElement === ${selected}`)).toBe(true);
+        await page.press('Enter');
+        await expect.poll(() => page.evaluate('location.hash')).toBe(destination);
+        expect(await page.evaluate("location.href.split('#')[0]")).not.toBe(firstPage);
+        expect(await page.evaluate("document.querySelector(':target').closest('.source-line').id")).toBe('L1001');
+        await expect.poll(() => page.evaluate(painted)).toEqual(nextLines);
+        expect(await page.evaluate('document.querySelectorAll(".source-continuation a").length')).toBe(0);
+      }
+      expect(destinations.size).toBe(2);
+      await page.navigate(`${firstPage}#L4`);
+      expect(await page.evaluate(`${selected} === undefined`)).toBe(true);
+    } finally { await page.close(); }
+  } finally {
+    try { await browser?.close(); } finally { await rm(directory, { recursive: true, force: true }); }
+  }
+}, 30_000);

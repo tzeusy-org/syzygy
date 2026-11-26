@@ -1,3 +1,4 @@
+import { DOSSIER_STYLE as tokens } from './dossier-style-tokens.js';
 /**
  * The two finding pages of an operator-agent dossier (REQ-polaris-generation-034, the index-and-task-routes change): the generated index and the
  * find-by-task page. Both are built at render from what the site already draws, with no model call and no script.
@@ -15,6 +16,16 @@ import { backtickSpans } from '@syzygy/polaris-generation-core/live';
 
 export const FIND_BY_TASK_PAGE = 'find-by-task.html';
 export const NAME_INDEX_PAGE = 'name-index.html';
+
+/** Turn a screened glossary handle into its display spelling. Fragments still use the handle. */
+export function glossaryDisplayName(name: string): string {
+  return name.replace(/_/gu, ' ');
+}
+
+/** Recognise the display spelling alongside the exact handle and the earlier hyphen-space form. */
+export function glossaryNameForms(name: string): readonly string[] {
+  return [...new Set([name, name.replace(/-/gu, ' '), glossaryDisplayName(name)])];
+}
 
 /** A place a reader can be sent: a page, a fragment on it and the words the link shows. */
 export interface IndexTarget { readonly page: string; readonly fragment: string; readonly label: string }
@@ -120,7 +131,8 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   const shown = (block: IndexedBlock): string => `${block.prose}\n${block.quoted}`;
   const entries: IndexEntry[] = [];
 
-  for (const term of [...input.terms].sort(byName)) {
+  const glossary = input.terms.map((term) => ({ id: term.id, name: glossaryDisplayName(term.name) }));
+  for (const term of glossary.sort(byName)) {
     const pattern = wordPattern([...new Set([term.name, term.name.replace(/-/gu, ' ')])]);
     entries.push({ kind: 'term', name: term.name, home: { page: 'glossary.html', fragment: `term-${term.id}`, label: 'Glossary entry' }, blocks: naming(input.blocks, (block) => pattern.test(shown(block))) });
   }
@@ -147,7 +159,7 @@ export function buildNameIndex(input: NameIndexInput): IndexEntry[] {
   // An identifier: a backticked token of some block's prose that is not already a path, a unit or a term of this index.
   const taken = new Set([...pathNames, ...unitNames, ...[...unitNames].map((unit) => `${unit}/`)]);
   for (const span of input.unindexed ?? []) taken.add(span);
-  const termNames = new Set(input.terms.map((term) => term.name.toLowerCase()));
+  const termNames = new Set(glossary.map((term) => term.name.toLowerCase()));
   const spans = new Map<string, Set<string>>();
   for (const block of input.blocks) spans.set(block.id, new Set(identifiersIn(block.prose)));
   const identifiers = new Set([...spans.values()].flatMap((own) => [...own]).filter((span) => !taken.has(span) && !termNames.has(span.toLowerCase())));
@@ -199,6 +211,10 @@ export function renderNameIndex(entries: readonly IndexEntry[], link: (target: I
 export const NO_TASK_ROUTES = 'This run\'s draft declares no task routes, so this page has none. Syzygy writes no route of its own: a route is the authoring agent\'s claim, checked like any other.';
 export const TASK_ROUTES_WITHHELD = 'The draft layer is Unknown, so the agent\'s task routes are not shown.';
 
-export const FINDING_CSS = '.name-index{list-style:none;padding:0;margin:0}.name-index>li{padding:.3rem 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.index-name{font-weight:600;margin-right:.5rem}.index-home,.index-blocks,.index-unnamed,.index-many{font-size:.9rem}.index-unnamed,.index-many{color:var(--muted)}'
-  + '.index-kinds ul,.route-list ol{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;padding:0;list-style:none}.route-list ol{display:block}.route-list li{padding:.15rem 0}'
-  + '.task-route{margin-top:2rem}.route-where,.route-see{display:block;font-size:.88rem;color:var(--muted);margin-top:.2rem}.route-where code{overflow-wrap:anywhere}';
+export const FINDING_CSS = `.name-index{list-style:none;padding:${tokens.spacing.none};margin:${tokens.spacing.none}}.name-index>li{padding:${tokens.spacing.markInset} ${tokens.spacing.none};`
+  + `border-bottom:${tokens.line.hairline} solid var(--line);overflow-wrap:anywhere}.index-name{font-weight:${tokens.type.strongWeight};margin-right:${tokens.spacing.small}}`
+  + `.index-home,.index-blocks,.index-unnamed,.index-many{font-size:${tokens.type.bodySmall}}.index-unnamed,.index-many{color:var(--muted)}`
+  + `.index-kinds ul,.route-list ol{display:flex;flex-wrap:wrap;gap:${tokens.spacing.tight} ${tokens.spacing.panelGap};padding:${tokens.spacing.none};list-style:none}.route-list ol{display:block}`
+  + `.route-list li{padding:${tokens.spacing.stepInset} ${tokens.spacing.none}}`
+  + `.task-route{margin-top:${tokens.spacing.large}}.route-where,.route-see{display:block;font-size:${tokens.type.compact};color:var(--muted);margin-top:${tokens.spacing.hintInset}}`
+  + `.route-where code{overflow-wrap:anywhere}`;

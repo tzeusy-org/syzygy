@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
+import { BoundedJsonError, QUESTION_FILE_FORMAT, parseBoundedJson, questionFileBinding, type QuestionFileBinding } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { dossierLocator, isNormalisedLocator } from './launch-identity.js';
 import type { SourceVisibility } from '@syzygy/polaris-generation-core/live';
@@ -59,9 +59,13 @@ export interface RecordedRunConfig {
   readonly modelVersionProvider: typeof NO_PROVIDER_MODEL_VERSION;
   readonly principal: { readonly name: string; readonly declaredBy: 'operator'; readonly credentialIdentity: 'Unknown' };
   readonly subject: RunSubject;
+  /** The question file the run was initialised under (REQ-polaris-generation-033 version 2.27, syzygy-5dhm.21): its format, version and
+   * SHA-256, so a result names the instrument whose public topics its brief carried and whose held-out part it may be graded by. Written
+   * by every init since 2.27; null for a record written before, whose question file is Unknown. Inferred, like the rest of the record. */
+  readonly questionFile: QuestionFileBinding | null;
 }
 
-export function recordRunConfig(config: RunConfig, subject: RunSubject): RecordedRunConfig {
+export function recordRunConfig(config: RunConfig, subject: RunSubject, questionFile: QuestionFileBinding | null = questionFileBinding()): RecordedRunConfig {
   return {
     format: RUN_RECORD_FORMAT,
     mode: 'operator-agent',
@@ -71,6 +75,7 @@ export function recordRunConfig(config: RunConfig, subject: RunSubject): Recorde
     modelVersionProvider: NO_PROVIDER_MODEL_VERSION,
     principal: { name: config.operator, declaredBy: 'operator', credentialIdentity: 'Unknown' },
     subject,
+    questionFile,
   };
 }
 
@@ -103,6 +108,16 @@ export type ReadRunRecordResult =
 
 const RECORD_JSON_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 256, maxDepth: 4 });
 const RECORD_KEYS = ['declared', 'declaredBy', 'format', 'label', 'mode', 'modelVersionProvider', 'principal', 'subject'];
+/** Since 2.27 a record also names its question file; one written before carries the eight keys above and is read with it Unknown. */
+const RECORD_KEYS_WITH_QUESTION_FILE = [...RECORD_KEYS.slice(0, 7), 'questionFile', ...RECORD_KEYS.slice(7)];
+
+/** A recorded question-file binding, validated in full; a description of the fault otherwise. */
+function readQuestionFileBinding(value: unknown): QuestionFileBinding | string {
+  if (!isRecord(value) || Object.keys(value).sort().join(',') !== 'format,sha256,version' || value['format'] !== QUESTION_FILE_FORMAT
+    || !Number.isSafeInteger(value['version']) || (value['version'] as number) < 1
+    || typeof value['sha256'] !== 'string' || !/^[0-9a-f]{64}$/u.test(value['sha256'])) return `questionFile must carry exactly the ${QUESTION_FILE_FORMAT} format, a version and a SHA-256`;
+  return { format: QUESTION_FILE_FORMAT, version: value['version'] as number, sha256: value['sha256'] };
+}
 
 /** Read a stored record back. The record lies within the agent sessions' write reach, so it is
  * re-validated in full; whatever it says stays Inferred. */
@@ -121,8 +136,8 @@ export function readRunRecord(text: string): ReadRunRecordResult {
     return { ok: false, legacy: true, detail: 'legacy polaris-dossier-run/1 cannot continue under the declared-source model; keep its artifacts and start a new run with dossier init; no file was migrated or changed' };
   }
   const keys = Object.keys(fields).sort();
-  if (keys.join(',') !== RECORD_KEYS.join(',')) {
-    return { ok: false, detail: `run.json carries fields ${keys.join(', ')}; expected ${RECORD_KEYS.join(', ')}` };
+  if (keys.join(',') !== RECORD_KEYS.join(',') && keys.join(',') !== RECORD_KEYS_WITH_QUESTION_FILE.join(',')) {
+    return { ok: false, detail: `run.json carries fields ${keys.join(', ')}; expected ${RECORD_KEYS_WITH_QUESTION_FILE.join(', ')} (questionFile absent only in a record written before it)` };
   }
   if (fields['format'] !== RUN_RECORD_FORMAT || fields['mode'] !== 'operator-agent' || fields['declaredBy'] !== 'operator'
     || fields['label'] !== 'Inferred' || fields['modelVersionProvider'] !== NO_PROVIDER_MODEL_VERSION) {
@@ -138,7 +153,9 @@ export function readRunRecord(text: string): ReadRunRecordResult {
   }
   const subject = readSubject(fields['subject']);
   if (typeof subject === 'string') return { ok: false, detail: `run.json subject is invalid: ${subject}` };
-  return { ok: true, record: recordRunConfig(config.config, subject) };
+  const questionFile = 'questionFile' in fields ? readQuestionFileBinding(fields['questionFile']) : null;
+  if (typeof questionFile === 'string') return { ok: false, detail: `run.json ${questionFile}` };
+  return { ok: true, record: recordRunConfig(config.config, subject, questionFile) };
 }
 
 type Fields = Readonly<Record<string, unknown>>;

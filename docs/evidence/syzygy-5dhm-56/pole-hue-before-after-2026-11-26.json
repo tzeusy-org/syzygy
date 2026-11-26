@@ -1,0 +1,142 @@
+{
+  "bead": "syzygy-5dhm.56",
+  "what": "Before/after (rule A-38): the hue each card, curated figure and in-column eyebrow carries on the pole-hue fixture (poleHueInput: Poles 1 why-only, 2 Words, 3 The rest; cards in sections one and two and in the words-detail deep dive; a figure homed on that dive and one on the overview). A value is the Pole hue number, or none for the neutral accent.",
+  "fixture": "apps/three-surface-poc/src/polaris-generation/dossier-reading.testkit.ts poleHueInput",
+  "script": "docs/evidence/syzygy-5dhm-56/pole_hue_before_after.ts (npx tsx --conditions=source, from the worktree root)",
+  "before": {
+    "commit": "1268de79536edd086288673e18d9b1efbec2a201",
+    "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "subjectBlob": "521e8d79460c949e4c406fbeb1d4d6735ce1e201",
+    "result": {
+      "index.html": {
+        "cards": [
+          "1",
+          "2",
+          "3"
+        ],
+        "figures": [
+          "overview-figure: 5",
+          "flow: 1"
+        ],
+        "eyebrowsInColumn": [
+          "none",
+          "5",
+          "none",
+          "1"
+        ]
+      },
+      "poles/2.html": {
+        "cards": [
+          "1",
+          "2",
+          "3"
+        ],
+        "figures": [
+          "loop: 2",
+          "pair: 2"
+        ],
+        "eyebrowsInColumn": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      "deep-dives/why-detail.html": {
+        "cards": [],
+        "figures": [],
+        "eyebrowsInColumn": [
+          "none"
+        ]
+      },
+      "deep-dives/words-detail.html": {
+        "cards": [
+          "1",
+          "2",
+          "3"
+        ],
+        "figures": [
+          "dive-figure: 4"
+        ],
+        "eyebrowsInColumn": [
+          "none",
+          "4"
+        ]
+      },
+      "positionalHueRules": 6
+    }
+  },
+  "after": {
+    "commit": "e5388d6d000739cc65ee23304cdbdaa44e97309b",
+    "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+    "subjectBlob": "15266de09c165a4987b4f69e6ee4827d2a538e6b",
+    "result": {
+      "index.html": {
+        "cards": [
+          "1",
+          "1",
+          "1"
+        ],
+        "figures": [
+          "overview-figure: none",
+          "flow: 1"
+        ],
+        "eyebrowsInColumn": [
+          "none",
+          "none",
+          "1",
+          "1"
+        ]
+      },
+      "poles/2.html": {
+        "cards": [
+          "2",
+          "2",
+          "2"
+        ],
+        "figures": [
+          "loop: 2",
+          "pair: 2"
+        ],
+        "eyebrowsInColumn": [
+          "2",
+          "2",
+          "2",
+          "2",
+          "2",
+          "2"
+        ]
+      },
+      "deep-dives/why-detail.html": {
+        "cards": [],
+        "figures": [],
+        "eyebrowsInColumn": [
+          "1"
+        ]
+      },
+      "deep-dives/words-detail.html": {
+        "cards": [
+          "2",
+          "2",
+          "2"
+        ],
+        "figures": [
+          "dive-figure: 2"
+        ],
+        "eyebrowsInColumn": [
+          "2",
+          "2"
+        ]
+      },
+      "positionalHueRules": 0
+    }
+  },
+  "reading": [
+    "Before, Pole 2's page drew its three cards in hues 1, 2 and 3 (the positional rule on the card beat the Pole hue it inherited); after, all three are hue 2.",
+    "Before, the overview figure (in no Pole) took hue 5 and the deep-dive figure hue 4, by their place in the draft; after, the overview figure is neutral and the deep-dive figure takes its Pole's hue 2.",
+    "Before, cards on the landing page and in the deep dive took hues 1, 2, 3 by position; after, they take Pole 1 and Pole 2.",
+    "Before, six positional rules set a hue; after, none."
+  ]
+}

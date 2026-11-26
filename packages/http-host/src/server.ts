@@ -56,7 +56,7 @@ export interface RouteResponse {
   readonly diagnostic?: {
     readonly kind: 'response-limit-breached';
     readonly evaluation: { readonly inputsDigest: string; readonly asOf: string };
-    readonly limit: 'maxHumanResponseBytes' | 'maxMachineResponseBytes';
+    readonly limit: 'maxHumanResponseBytes' | 'maxMachineResponseBytes' | 'maxBriefingResponseBytes';
     readonly declared: number;
     readonly observed: number;
     readonly population:
@@ -148,7 +148,7 @@ function safeResponseDiagnostic(response: RouteResponse): Record<string, unknown
   if (diagnostic?.kind !== 'response-limit-breached'
     || !/^[0-9a-f]{64}$/.test(diagnostic.evaluation.inputsDigest)
     || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/.test(diagnostic.evaluation.asOf)
-    || !['maxHumanResponseBytes', 'maxMachineResponseBytes'].includes(diagnostic.limit)
+    || !['maxHumanResponseBytes', 'maxMachineResponseBytes', 'maxBriefingResponseBytes'].includes(diagnostic.limit)
     || ![diagnostic.declared, diagnostic.observed, diagnostic.sequence].every(value => Number.isSafeInteger(value) && value >= 0)) return undefined;
   const population = diagnostic.population;
   const safePopulation = population.kind === 'counted'

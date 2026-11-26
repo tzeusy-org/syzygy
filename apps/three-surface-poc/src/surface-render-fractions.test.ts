@@ -18,7 +18,7 @@ import type { PocModel } from '@syzygy/three-surface-poc-core';
 import { renderOrreryPage } from './orrery.js';
 import { renderPolarisPage } from './polaris.js';
 import { buildFixtureModel, fixtureWorkItemRow } from './test-model-fixture.js';
-import { renderTrajectoryPage } from './trajectory.js';
+import { renderTrajectoryPage, renderTrajectoryRoute } from './trajectory.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -59,7 +59,7 @@ function fileRows(html: string, paths: readonly string[]): number {
 }
 
 describe('rendered fraction of the machine answer on the human surfaces', () => {
-  it('default fixture: Trajectory renders 5 of 5 work items; Polaris and Orrery render none as rows', () => {
+  it('default fixture: Trajectory outlines 3 of 5 work items; Polaris and Orrery render none as rows', () => {
     const model = buildFixtureModel(cleanups);
     const answer = machine(model);
     const html = pages(model);
@@ -67,17 +67,17 @@ describe('rendered fraction of the machine answer on the human surfaces', () => 
     expect(answer.workItems.items).toHaveLength(5);
 
     const cards = cardIds(html.trajectory);
-    expect(cards).toHaveLength(5);
-    expect(new Set(cards).size).toBe(5);
+    expect(cards).toEqual(['bu-blocked1', 'bu-open1', 'bu-progress1']);
+    expect(new Set(cards).size).toBe(3);
     const machineIds = new Set(answer.workItems.items?.map(({ id }) => id));
     expect(cards.every(id => machineIds.has(id))).toBe(true);
-    expect(`${cards.length} of ${answer.workItems.items?.length}`).toBe('5 of 5');
+    expect(`${cards.length} of ${answer.workItems.items?.length}`).toBe('3 of 5');
 
     expect(cardIds(html.polaris)).toHaveLength(0);
     expect(cardIds(html.orrery)).toHaveLength(0);
   });
 
-  it('past the recent-closed window: Trajectory renders 53 of 55 work items', () => {
+  it('with 52 closed items, Trajectory outlines 3 and Recent work shows 53 of the 55 served', () => {
     // 3 open items and 52 closed ones with distinct closing instants; the
     // board keeps every non-closed item and the 50 most recently closed.
     const rows = [
@@ -92,7 +92,10 @@ describe('rendered fraction of the machine answer on the human surfaces', () => 
     const answer = machine(model);
     expect(answer.workItems.items).toHaveLength(55);
 
-    const cards = cardIds(renderTrajectoryPage(model));
+    expect(cardIds(renderTrajectoryPage(model))).toEqual(['bu-o1', 'bu-o2', 'bu-o3']);
+    const recent = renderTrajectoryRoute(model, '', undefined, new URLSearchParams('selection=recent'));
+    if (typeof recent !== 'string') throw new Error('refused');
+    const cards = cardIds(recent);
     expect(new Set(cards).size).toBe(cards.length);
     expect(`${cards.length} of ${answer.workItems.items?.length}`).toBe('53 of 55');
     // The two oldest closings are the ones outside the board.

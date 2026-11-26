@@ -18,7 +18,7 @@ import { join } from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemRow, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 /** The fixture's injected Dolt head and default evaluation instant, typed by hand. */
-const DOLT_REVISION = 'dolt-fixture-revision';
+const DOLT_REVISION = FIXTURE_DOLT_REVISION;
 const CAPTURE_INSTANT = '2026-08-30T12:00:00Z';
 const SAMPLED_PATH = 'src/butlers/identity.py';
 
@@ -209,7 +209,6 @@ describe('POC-REQ-010: the work-item observation states its provenance once', ()
   it('a sampled item matches the database read', () => {
     const { answer } = servedAnswer();
     expect(rowsOf(answer, 'workItems').find((item) => item.id === 'bu-open1')).toEqual({
-      // SEC-5 (syzygy-jytt): the read row's title is never served.
       id: 'bu-open1',
       status: 'open',
       issueType: 'task',
@@ -223,6 +222,8 @@ describe('POC-REQ-010: the work-item observation states its provenance once', ()
         closedReason: 'source-uncaptured-or-unreachable',
         resolutionRoutes: [{ reason: 'source-uncaptured-or-unreachable', route: 'Repair the observer/source; new snapshot', actor: 'operator', verb: 'repair', target: 'evaluation' }],
       },
+      // POC-REQ-063 (syzygy-t3jk.23): the read row's title, admitted by the title policy.
+      title: { text: 'fixture item bu-open1' },
     });
   });
 

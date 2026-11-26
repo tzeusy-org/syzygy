@@ -1,0 +1,7 @@
+# Semantic delta
+
+[Observed] The effective REQ-polaris-generation-033 is scripted benchmark grading version 2.30, A-307. The annotated tag `polaris-dossier-scripted-benchmark-grading-v2.30` points to source `f8be3e9e3a977014f605986f4aa84c05165344b8`. The predecessor file's SHA-256 is `de530007005b65c3f7400d42dabfa2caf50e8b2cc6b00fe2044a31d61ce3ab49`. The predecessor's reader rule says that “their one reader, close, carries at most their first 10,000 lines.” Its bounded log, earlier question-file and benchmark behavior are carried through exactly. [Predecessor](../dossier-scripted-benchmark-grading/proposed/polaris-generation/spec.md) · [Adoption log](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md)
+
+[Inferred] Candidate 2.31 adds two timing paragraphs ahead of the first scenario, four scenarios ahead of the existing verification oracle and a timing paragraph in that oracle. The requirement identity, all 21 existing scenarios and the dependency union remain byte-identical. Removing those additions and restoring the predecessor banner recovers the whole previous file. The observed behavior changes only for new successful close records, which gain a bounded time and count projection.
+
+[Inferred] VIS-2 warrants the explicit Unknown states and Inferred provenance. SEC-5 warrants the closed projection and continued bounds. VIS-4 and CC-REV-2 require the reviewed behavior and the requirement to bind in their joint delivery. The current published record remains the applicable predecessor until the successor's exact adoption and version bind.

@@ -1,0 +1,15 @@
+# REVISE
+
+[Observed] AC4 R2 exact e189bf8aff58d7cd70625c21065ebb996d644d56, tree f6f9bf9265a980bf846b72487573476a4d466846, protected base cb5d7fcec5876592dfcf393839cab0c5ea05f14d. Independent R1 remains byte-exact, SHA-256 2f2b25ed2840bdc1f79efca91469c1c377540e8c891c1eaa9b6fab3da78987ff. This round examines the two source files and the eight private candidate files without allocating an adoption or specification version.
+
+[Observed] F1 authority disposition. The proposed complete REQ-034 successor correctly pairs issued v20 with inherited schema v13 and fixes the one paragraph, placement, report, brief record and artifact digests. The issued text, independent test expectation and candidate paragraph match. The protected A-217 REQ-034 and A-304 REQ-033 bytes survive unchanged. Across the candidate's 215 scenarios, the 214 predecessor scenarios retain the same ordered headings and bodies except that the historic v19 case is confined to v2.26. The new scenario and event-response suffix test the new issued brief. Independent reverse of the eight changed groups restores the exact A-217 bytes including its warrants. The proposed version and ledger remain unbound. [Inferred] This is the right scope for an eventual reviewed successor. The unadopted v20 is still pending.
+
+[Observed] F2 partially addressed. The v20 copy now preserves a literal term in the item's statement when its reader spelling fails the existing ID grammar. An isolated normal v13 check passed with io and the exact statement for I/O, and issued the expected schema finding when the handle was changed back to I/O. It also admitted u-boot as a literal ID. A distinct collision remains: reader spellings A B and A_B both satisfy the transformation as A_B, and the normal check reported duplicate-id for the second item. Case preservation, hyphen preservation and “omit … the u- prefix” are also ambiguous for the already valid literal name u-boot. The glossary turns underscores into spaces, so a literal underscore is another reader-spelling exception. [Inferred] Trigger the valid-unused fallback for a literal underscore or a collision as well as a grammar failure, keep exact spelling in the statement, and specify that the author adds no synthetic u- prefix while preserving a real one.
+
+[Observed] Normal brief issuance passed 42/42 exact tests. The additional three-arm checker probe passed 1/1. Both Git composition orders with the frozen coverage operand f6ff3b9e0ff3ceeffd066c6fef136014556af824 produce c5a5b5e4a02f616f105af983f074814093323aae, all 47 exclusive paths exact. The frozen foreign scope reproduces the same candidate-path bytes both ways, with the pre-existing whole-branch adoption-ledger and reconciliation conflicts. The mobile/browser and full verification suites were outside this round.
+
+## Evidence
+
+- r2-exact-replay.json SHA-256 dc4ab5ff5c8e8368a1b4c31d147511cfe37a17ea949b17b4d8b6aef2b869b40f
+- r2-focused.json SHA-256 2dd73304237fb2368428f29b6fbb9bbdb1f3de70a1f25c6ee94994c52f7ba8a6
+- r2-identity-probe.json SHA-256 d9c51adbbc52c8005e781acbf61c15486c468947b517af4f44e96ba86da72891

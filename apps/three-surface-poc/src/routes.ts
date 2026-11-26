@@ -1,5 +1,7 @@
+import { isDeepStrictEqual } from 'node:util';
+
 import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
-import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type PwbResourceLimits, type Reevaluation, type TrajectoryViewRefusal } from '@syzygy/three-surface-poc-core';
+import { PWB_RESOURCE_LIMITS, buildResponseIdentity, withServedResourceBreaches, type PocEntity, type PocModel, type PocSurface, type ProjectShape, type ProjectShapeClaim, type PwbResourceLimits, type Reevaluation, type TrajectoryViewRefusal } from '@syzygy/three-surface-poc-core';
 
 import { BROWSER_ORIGIN_REFUSAL, browserRequestAllowed } from './browser-origin.js';
 import { epistemicText, exactTablesSection } from './exact-tables.js';
@@ -9,13 +11,14 @@ import { POLARIS_HUMAN_PATH, POLARIS_TAILNET_PATH, renderPolarisPage, renderPola
 import { POLARIS_SOURCE_PATH, POLARIS_SOURCE_TAILNET_PATH, renderPolarisSourcePage, SOURCE_IDENTITY_PARAM } from './polaris-source.js';
 import { mountPrefixForRequest, TAILNET_MOUNT_PREFIX } from './tailnet.js';
 import { renderTrajectoryRoute, TRAJECTORY_HUMAN_PATH, TRAJECTORY_TAILNET_PATH } from './trajectory.js';
-import { ServedResponseRecorder } from './served-response-recorder.js';
+import { ServedResponseRecorder, type ServedResponseLimit } from './served-response-recorder.js';
 
 export { BROWSER_ORIGIN_REFUSAL } from './browser-origin.js';
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export const POC_HUMAN_PATH = '/' as const;
 export const POC_MACHINE_PATH = '/api/poc' as const;
+export const POC_BRIEFING_PATH = '/api/poc/briefing' as const;
 /** The authenticated machine presentation envelope (PWB-REQ-014/020): the
  * Polaris narrative — block, anchor and band multisets — as one JSON body
  * under the machine credential, derived from the same capture as the page.
@@ -131,7 +134,8 @@ export function renderPocPage(model: PocModel, mountPrefix = '', status?: HumanO
 
 // ---------------------------------------------------------------------
 // Final-output ceilings (registry `resourceLimits.maxHumanResponseBytes` /
-// `maxMachineResponseBytes`, `resourceLimitSemantics.breachResult`;
+// `maxMachineResponseBytes`, `maxBriefingResponseBytes` and
+// `resourceLimitSemantics.breachResult`;
 // PWB-REQ-006 as amended). The limit is measured against the final encoded
 // HTTP body of each human HTML response and each authenticated machine
 // JSON response. A breach emits only this bounded typed failure: the
@@ -142,14 +146,15 @@ export function renderPocPage(model: PocModel, mountPrefix = '', status?: HumanO
 const RESPONSE_LIMIT_FAILURE = 'response-limit-breached' as const;
 const RESPONSE_LIMIT_STATUS = 503 as const;
 
-type ResponseLimitIdentity = 'maxHumanResponseBytes' | 'maxMachineResponseBytes';
+type OrdinaryResponseLimit = 'maxHumanResponseBytes' | 'maxMachineResponseBytes';
+type EvaluationIdentity = Pick<PocModel['evaluation'], 'snapshot' | 'asOf' | 'inputsDigest'>;
 
 // Test seam: exported type the tests name; production code uses it only inside this file.
 export interface ResponseLimitFailure {
   readonly served: 'nothing';
   readonly failure: typeof RESPONSE_LIMIT_FAILURE;
-  readonly evaluation: PocModel['evaluation'];
-  readonly limit: ResponseLimitIdentity;
+  readonly evaluation: EvaluationIdentity;
+  readonly limit: ServedResponseLimit;
   readonly declared: number;
   readonly observed: number;
   readonly population:
@@ -164,14 +169,22 @@ function populationOf(model: PocModel): ResponseLimitFailure['population'] {
   return { kind: 'counted', sources: shape.counts.sources, items: shape.counts.items, facts: shape.counts.facts, exclusions: shape.counts.exclusions };
 }
 
-function responseLimitFailure(model: PocModel, limit: ResponseLimitIdentity, declared: number, observed: number): ResponseLimitFailure {
-  return { served: 'nothing', failure: RESPONSE_LIMIT_FAILURE, evaluation: model.evaluation, limit, declared, observed, population: populationOf(model), readiness: false };
+function responseLimitFailure(model: PocModel, limit: ServedResponseLimit, declared: number, observed: number): ResponseLimitFailure {
+  const evaluation = limit === 'maxBriefingResponseBytes' ? evaluationIdentityOf(model) : model.evaluation;
+  return { served: 'nothing', failure: RESPONSE_LIMIT_FAILURE, evaluation, limit, declared, observed, population: populationOf(model), readiness: false };
+}
+
+function evaluationIdentityOf({ evaluation: { snapshot, asOf, inputsDigest } }: PocModel): EvaluationIdentity {
+  return { snapshot, asOf, inputsDigest };
 }
 
 // Serves `body` only when its UTF-8 encoding fits the named ceiling.
-export function boundedResponse(model: PocModel, limits: PwbResourceLimits, limit: ResponseLimitIdentity, contentType: string, body: string, recorder?: ServedResponseRecorder): RouteResponse {
+export function boundedResponse(model: PocModel, limits: PwbResourceLimits, limit: OrdinaryResponseLimit, contentType: string, body: string, recorder?: ServedResponseRecorder): RouteResponse {
+  return boundedOutput(model, limit, limits[limit], contentType, body, recorder);
+}
+
+function boundedOutput(model: PocModel, limit: ServedResponseLimit, declared: number, contentType: string, body: string, recorder?: ServedResponseRecorder): RouteResponse {
   const observed = Buffer.byteLength(body, 'utf8');
-  const declared = limits[limit];
   if (observed <= declared) return { status: 200, contentType, body };
   const failure = responseLimitFailure(model, limit, declared, observed);
   const event = recorder?.record({ evaluation: model.evaluation, limit, declared, observed, population: failure.population });
@@ -202,8 +215,47 @@ export function withServedReadiness(model: PocModel, recorder: ServedResponseRec
  * disclosed as outside the consented class. */
 type PolarisRenderInputsFor = (model: PocModel) => PolarisRenderInputs;
 
-export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS, polarisInputs?: PolarisRenderInputsFor, recorder = new ServedResponseRecorder(), credentialProvision?: () => 'minted' | 'reused' | undefined, reevaluation?: () => Reevaluation | null): readonly Route[] {
-  const linksFor = (request: Parameters<Route['handle']>[0]['request']): NonNullable<PocModel['links']> => {
+type RouteRequest = Parameters<Route['handle']>[0]['request'];
+
+type BriefingShape = Extract<ProjectShape, { readonly kind: 'observed' | 'observation-failed' }>;
+
+interface BriefingSubject {
+  readonly family: 'shape' | 'source' | 'item' | 'class' | 'fact' | 'unenumerated-heading' | 'project-account';
+  readonly record: { readonly claim: ProjectShapeClaim };
+}
+
+function selectBriefingSubject(shape: BriefingShape, claimId: string): BriefingSubject | 'ambiguous' | undefined {
+  // A whole-shape query selects its own claim, never the full shape and its other claims.
+  const families: [BriefingSubject['family'], readonly BriefingSubject['record'][]][] = [['shape', [{ claim: shape.claim }]]];
+  if (shape.kind === 'observed') {
+    families.push(
+      ['source', shape.sources],
+      ['item', shape.items],
+      ['class', Object.values(shape.classes)],
+      ['fact', shape.facts],
+      ['unenumerated-heading', shape.unenumeratedHeadings],
+      ['project-account', shape.projectAccount],
+    );
+  }
+  let subject: BriefingSubject | undefined;
+  for (const [family, records] of families) {
+    for (const record of records) {
+      if (record.claim.claimId !== claimId) continue;
+      if (subject !== undefined) return 'ambiguous';
+      subject = { family, record };
+    }
+  }
+  // Contradictions are an exact subset of facts in the machine answer. A
+  // conflicting or repeated mirror cannot independently supply a subject.
+  if (shape.kind === 'observed') {
+    const mirrors = shape.contradictions.filter(row => row.claim.claimId === claimId);
+    if (mirrors.length > 1 || mirrors.some(row => subject?.family !== 'fact' || !isDeepStrictEqual(row, subject.record))) return 'ambiguous';
+  }
+  return subject;
+}
+
+export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS, polarisInputs?: PolarisRenderInputsFor, recorder = new ServedResponseRecorder(), credentialProvision?: () => 'minted' | 'reused' | undefined, reevaluation?: () => Reevaluation | null, briefingResponseLimit?: () => number | undefined): readonly Route[] {
+  const linksFor = (request: RouteRequest): NonNullable<PocModel['links']> => {
     const mount = mountPrefixForRequest(request.headers);
     const selfPath = mount !== '' && !request.path.startsWith(mount) ? `${mount}${request.path}` : request.path;
     const links = routes.map(({ path, method, credentialClass }) => ({ path, method, credentialClass, self: path === selfPath && method === request.method }));
@@ -233,9 +285,12 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
     const model = servedModel();
     return html(model, renderPocPage(model, mountPrefixForRequest(request.headers), statusFor(model)));
   };
-  const machineHandle: Route['handle'] = ({ request }) => {
+  const machineAnswer = (request: RouteRequest): PocModel => {
     const projected = { ...servedModel(), links: linksFor(request) };
-    const model: PocModel = { ...projected, responseIdentity: buildResponseIdentity(projected) };
+    return { ...projected, responseIdentity: buildResponseIdentity(projected) };
+  };
+  const machineHandle: Route['handle'] = ({ request }) => {
+    const model = machineAnswer(request);
     const full = boundedResponse(model, limits, 'maxMachineResponseBytes', 'application/json', JSON.stringify(model), recorder);
     if (full.status !== 200) return full;
     const etag = `W/"${model.responseIdentity.contentKey}"`;
@@ -243,6 +298,42 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
     return ifNoneMatchMatches(request.headers['if-none-match'], etag)
       ? { status: 304, contentType: full.contentType, body: '', revalidation }
       : { ...full, revalidation };
+  };
+  const briefingHandle: Route['handle'] = ({ request }) => {
+    const refuse = (status: number, failure: string): RouteResponse => ({
+      status, contentType: 'application/json', body: JSON.stringify({ served: 'nothing', failure }),
+    });
+    const limit = briefingResponseLimit?.();
+    if (limit === undefined) return refuse(503, 'briefing-ceiling-unavailable');
+    const claimId = request.query.get('for');
+    if (request.query.size !== 1 || claimId === null || claimId === '') return refuse(400, 'briefing-selector-invalid');
+
+    const machinePath = request.path === POC_BRIEFING_PATH ? POC_MACHINE_PATH : `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`;
+    const model = machineAnswer({ ...request, path: machinePath });
+    // Check the corresponding complete answer without recording a response
+    // to a machine request that never occurred.
+    if (Buffer.byteLength(JSON.stringify(model), 'utf8') > limits.maxMachineResponseBytes) {
+      return refuse(503, 'briefing-machine-answer-unavailable');
+    }
+    const { evaluation, projectShape } = model;
+    if ((projectShape.kind !== 'observed' && projectShape.kind !== 'observation-failed')
+      || !projectShape.authority.admits || projectShape.authority.evaluationInstant !== evaluation.asOf) {
+      return refuse(503, 'briefing-project-shape-unavailable');
+    }
+    const subject = selectBriefingSubject(projectShape, claimId);
+    if (subject === undefined) return refuse(404, 'briefing-claim-unavailable');
+    if (subject === 'ambiguous') return refuse(409, 'briefing-claim-ambiguous');
+    if (subject.record.claim.evaluationId !== projectShape.authority.evaluationId) {
+      return refuse(503, 'briefing-project-shape-unavailable');
+    }
+
+    const body = JSON.stringify({
+      evaluation: evaluationIdentityOf(model),
+      ...(projectShape.kind === 'observed' ? { scope: projectShape.identity.scope } : {}),
+      authority: projectShape.authority,
+      subject,
+    });
+    return boundedOutput(model, 'maxBriefingResponseBytes', limit, 'application/json', body, recorder);
   };
   const presentationHandle: Route['handle'] = ({ request }) => {
     const model = servedModel();
@@ -329,6 +420,10 @@ export function pocRoutes(getModel: () => PocModel, limits: PwbResourceLimits = 
     },
     { method: 'GET', path: POLARIS_PRESENTATION_PATH, credentialClass: 'machine-credentialed', handle: presentationHandle },
     { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POLARIS_PRESENTATION_PATH}`, credentialClass: 'machine-credentialed', handle: presentationHandle },
+    ...(briefingResponseLimit === undefined ? [] : [
+      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },
+      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },
+    ] as const),
   ];
   return routes;
 }

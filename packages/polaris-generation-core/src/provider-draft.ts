@@ -1,5 +1,5 @@
 import type { DiscoveryStage, GenerationStage, PromptStage } from './prompts.js';
-import { check, handle, list, object, refs, text, type Schema } from './closed-schema.js';
+import { check, choice, handle, list, object, refs, text, type Schema } from './closed-schema.js';
 import { disposition, draft, draftHandles, fidelity, treeBlocks, unique, validateRequestedAssets, type AssetDisposition, type DossierDraft, type DraftBlock, type DraftDiagram,
   type DraftDiagramEdge, type DraftDiagramNode, type DraftParagraph, type FidelityBlockSupport, type FidelityInventoryCoverage, type FidelityReview, type RequestedAsset } from './draft-model.js';
 import { SOURCE_TEXT_MAX_LENGTH } from './source-model.js';
@@ -27,6 +27,14 @@ export type ProviderReview = FidelityReview;
 
 const inventory = object({ entries: list(object({ id: handle, sourceIds: refs(), statement: text, kind: { ...text, enum: ['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'other'] }, disposition }), 1) });
 const plan = object({ sections: list(object({ id: handle, title: text, reason: text, sourceIds: refs(), disposition }), 1, 30) });
+// The draft can contain an introduction, two sets of 30 x 30 x 13 tree blocks
+// and 20 diagrams with 40 nodes and 80 edges each.
+const maxDraftBlocks = 25_801;
+const changes = list(object({ blockId: handle, action: choice(['kept', 'rewritten', 'split', 'removed']), reason: text,
+  newBlockIds: refs(0, maxDraftBlocks) }), 1, maxDraftBlocks);
+const findingDispositions = list(object({ findingId: handle, action: choice(['repaired', 'unrepairable']), reason: text }), 0, 100_000);
+const edit = object({ draft, changes });
+const repair = object({ draft, changes, findingDispositions });
 /** Bounds a discovery claim; discovery.ts truncates at `maxClaimChars` (default 400). */
 export const DISCOVERY_CLAIM_MAX_LENGTH = 400;
 export const DISCOVERY_RELEVANCE_MAX = 10;
@@ -37,9 +45,9 @@ const discoveryMap = object({ claims: list(object({
   relevance: { type: 'number', minimum: 0, maximum: DISCOVERY_RELEVANCE_MAX },
 }), 0, 200) });
 const discoveryReduce = object({ ranked: { ...list(handle, 0, 200), uniqueItems: true } });
-const schemas: Record<PromptStage, Schema> = { inventory, plan, author: draft, edit: draft, repair: draft, fidelity, 'discovery-map': discoveryMap, 'discovery-reduce': discoveryReduce };
-// v2: tree blocks and marked, kinded diagrams. Only the draft stages changed shape.
-const schemaVersions: Record<PromptStage, 'v1' | 'v2'> = { inventory: 'v1', plan: 'v1', author: 'v2', edit: 'v2', repair: 'v2', fidelity: 'v1', 'discovery-map': 'v1', 'discovery-reduce': 'v1' };
+const schemas: Record<PromptStage, Schema> = { inventory, plan, author: draft, edit, repair, fidelity, 'discovery-map': discoveryMap, 'discovery-reduce': discoveryReduce };
+// v2 added tree blocks and kinded diagrams. v3 adds the edit and repair accounts.
+const schemaVersions: Record<PromptStage, 'v1' | 'v2' | 'v3'> = { inventory: 'v1', plan: 'v1', author: 'v2', edit: 'v3', repair: 'v3', fidelity: 'v1', 'discovery-map': 'v1', 'discovery-reduce': 'v1' };
 
 export function stageSchema(stage: PromptStage): { version: string; schema: Schema } {
   if (!Object.hasOwn(schemas, stage)) throw new Error('invalid-stage');
@@ -49,9 +57,50 @@ export function stageSchema(stage: PromptStage): { version: string; schema: Sche
 export interface ProviderInventory { entries: { id: string; sourceIds: string[]; statement: string; kind: 'purpose' | 'beneficiary' | 'thesis' | 'capability' | 'choice' | 'term' | 'qualification' | 'conflict' | 'other'; disposition: AssetDisposition }[] }
 export interface ProviderPlan { sections: { id: string; title: string; reason: string; sourceIds: string[]; disposition: AssetDisposition }[] }
 
+export interface EditReply {
+  readonly draft: ProviderDraft;
+  readonly changes: readonly {
+    readonly blockId: string;
+    readonly action: 'kept' | 'rewritten' | 'split' | 'removed';
+    readonly reason: string;
+    readonly newBlockIds: readonly string[];
+  }[];
+}
+
+export interface RepairReply extends EditReply {
+  readonly findingDispositions: readonly {
+    readonly findingId: string;
+    readonly action: 'repaired' | 'unrepairable';
+    readonly reason: string;
+  }[];
+}
+
+export interface RepairFinding {
+  readonly id: string;
+  readonly finding: unknown;
+}
+
 function same(actual: string[], expected: Set<string>): void {
   const set = unique(actual);
   if (set.size !== expected.size || [...set].some(id => !expected.has(id))) throw new Error('incomplete-coverage');
+}
+
+function validateChanges(rows: EditReply['changes'], previous: unknown, outputBlocks: Set<string>): void {
+  check(draft, previous);
+  same(rows.map(row => row.blockId), draftHandles(previous as ProviderDraft).blocks);
+  for (const row of rows) {
+    if (row.reason.trim().length === 0) throw new Error('missing-change-reason');
+    const retained = outputBlocks.has(row.blockId);
+    if (retained !== (row.action === 'kept' || row.action === 'rewritten')) throw new Error('change-action-mismatch');
+    if (row.action === 'split') {
+      if (row.newBlockIds.length < 2 || row.newBlockIds.some(id => !outputBlocks.has(id))) throw new Error('invalid-split-blocks');
+    } else if (row.newBlockIds.length > 0) throw new Error('unexpected-split-blocks');
+  }
+}
+
+function validateFindingDispositions(account: RepairReply, findings: readonly RepairFinding[]): void {
+  same(account.findingDispositions.map(row => row.findingId), unique(findings.map(row => row.id)));
+  if (account.findingDispositions.some(row => row.reason.trim().length === 0)) throw new Error('missing-finding-disposition-reason');
 }
 function references(value: unknown, sources: Set<string>): void {
   if (Array.isArray(value)) {
@@ -184,11 +233,12 @@ export function validateStage(stage: GenerationStage, value: unknown, context: R
     const targets = new Set([...sources, ...handles.all, ...data.inventoryCoverage.map((row) => row.entryId), ...data.blockSupport.map((row) => row.blockId)]);
     if (data.findings.some((finding) => !targets.has(finding.target))) throw new Error('unknown-finding-target');
   } else {
-    const data = value as ProviderDraft;
+    const change = stage === 'edit' || stage === 'repair' ? value as EditReply : undefined;
+    const data = change === undefined ? value as ProviderDraft : change.draft;
     check(plan, context.plan);
     validateStage('inventory', context.inventory, { sources: context.sources, requestedAssets });
     references(context.plan, sources);
-    draftHandles(data);
+    const outputBlocks = draftHandles(data).blocks;
     const planned = (context.plan as ProviderPlan).sections.flatMap((section) => section.disposition.kind === 'produced' ? section.disposition.assetIds : []);
     const produced = [
       ...(context.inventory as ProviderInventory).entries.flatMap(entry => entry.disposition.kind === 'produced' ? entry.disposition.assetIds : []),
@@ -217,6 +267,11 @@ export function validateStage(stage: GenerationStage, value: unknown, context: R
       }
     }
     if (data.deepDives.some((d) => !sections.has(d.sectionId))) throw new Error('unknown-section');
+    if (change !== undefined) validateChanges(change.changes, context.draft, outputBlocks);
+    if (stage === 'repair') {
+      if (!Array.isArray(context.repairFindings)) throw new Error('missing-repair-findings');
+      validateFindingDispositions(value as RepairReply, context.repairFindings as RepairFinding[]);
+    }
   }
   return structuredClone(value);
 }

@@ -1,0 +1,467 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-25T15:18:56.902Z",
+  "commit": "b301c88db124d7f17f6e8d7199362a492a7d7162",
+  "subject": {
+    "packages/polaris-dossier/src/brief.ts": "78cb0ef529da6074cd64f67af2dfadc039c55d91e2412dd795c6ce2ebcd31c72",
+    "packages/polaris-dossier/src/check-derive.ts": "cb4eb7b57d516244dff557b1817c181b5a0822e8f25b7d7ba96cc6ed739ee50b",
+    "packages/polaris-dossier/src/check.ts": "f4d58e370e7e9b40626d8360eba2935009560f5d189e4e30a92cb6e83c4f48ee",
+    "packages/polaris-dossier/src/draft-schema.ts": "097b8da5219b17240956809fc595a515e404be5c4be234694d1d215c603e30bb",
+    "packages/polaris-dossier/src/question-kinds.ts": "c1b5df9334b11e1bfdc3ecf5bef73b9f87d3de2229de84397a939a461599ebd8"
+  },
+  "command": "npx vitest run <the test files of the mutant's source file> --testTimeout=120000 --reporter=json --outputFile=<scratch>/mutation-<id>.json; for a Python or JSON source, python3 <each listed command> (a non-zero exit is a failure)",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the test files listed for that file under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero and at least one test fails (failedTests lists each) or is stopped after 900 s; a run that exits non-zero with no failed test and no timeout is recorded as not run, never as killed. The unmutated baseline of each group runs first and must pass.",
+  "testFiles": {
+    "packages/polaris-dossier/src/question-kinds.ts": [
+      "packages/polaris-dossier/src/question-kinds.test.ts",
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/check-derive.ts": [
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/draft-schema.ts": [
+      "packages/polaris-dossier/src/check.test.ts",
+      "packages/polaris-dossier/src/question-kinds.test.ts"
+    ],
+    "packages/polaris-dossier/src/check.ts": [
+      "packages/polaris-dossier/src/check.test.ts"
+    ],
+    "packages/polaris-dossier/src/brief.ts": [
+      "packages/polaris-dossier/src/brief.test.ts"
+    ]
+  },
+  "baselines": [
+    {
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "exitCode": 0,
+      "tests": 42,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "exitCode": 0,
+      "tests": 306,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/check.ts",
+      "exitCode": 0,
+      "tests": 306,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "exitCode": 0,
+      "tests": 315,
+      "failedTests": []
+    },
+    {
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "exitCode": 0,
+      "tests": 315,
+      "failedTests": []
+    }
+  ],
+  "mutants": [
+    {
+      "id": "units-share-strict",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "fact.files * MAJOR_UNIT_SHARE >= listed",
+      "new": "fact.files * MAJOR_UNIT_SHARE > listed",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) is the whole repository, then each directory holding at least 1 in 20 of the listed files, largest first",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit advises a unit with no `change` block, and nothing for a unit whose blocks answer all six"
+      ],
+      "seconds": 53
+    },
+    {
+      "id": "units-share-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "fact.fact === 'top-level-unit' && fact.files * MAJOR_UNIT_SHARE >= listed",
+      "new": "fact.fact === 'top-level-unit'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) is the whole repository, then each directory holding at least 1 in 20 of the listed files, largest first",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a block for the whole repository only where it cites no file inside a major directory"
+      ],
+      "seconds": 42
+    },
+    {
+      "id": "units-denominator-all-files",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "const listed = facts.files - facts.secretPathsLeftOut;",
+      "new": "const listed = facts.files;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) is the whole repository, then each directory holding at least 1 in 20 of the listed files, largest first",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit advises a unit with no `change` block, and nothing for a unit whose blocks answer all six"
+      ],
+      "seconds": 51
+    },
+    {
+      "id": "units-limit-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": ".slice(0, MAJOR_UNIT_LIMIT);",
+      "new": ";",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) keeps at most eight directories, ties by code unit"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "units-order-by-name",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": ".sort((a, b) => b.files - a.files || (a.unit < b.unit ? -1 : a.unit > b.unit ? 1 : 0))",
+      "new": ".sort((a, b) => (a.unit < b.unit ? -1 : a.unit > b.unit ? 1 : 0))",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) is the whole repository, then each directory holding at least 1 in 20 of the listed files, largest first",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "units-whole-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "return [{ unit: WHOLE_REPOSITORY, files: listed }, ...directories];",
+      "new": "return [...directories];",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) is the whole repository, then each directory holding at least 1 in 20 of the listed files, largest first",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: major units (rule major-unit version 1) keeps at most eight directories, ties by code unit",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit advises a unit with no `change` block, and nothing for a unit whose blocks answer all six",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a block for the whole repository only where it cites no file inside a major directory",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts neither an understanding item nor a non-normative block, though a row names it",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit names no identifier a secret detector matches, and counts it",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit is Unknown, never a thrown error, when computing it fails",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record"
+      ],
+      "seconds": 52
+    },
+    {
+      "id": "unknown-schema-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (!hasWorthKnowingForm(doc['schemaVersion'])) return unknown(",
+      "new": "if (false) return unknown(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit is Unknown, never six missing kinds, where nothing is declared, the schema has no member or the tree was not listed",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports the member in a v10 draft as field-version in place of the schema finding, and the advice Unknown"
+      ],
+      "seconds": 64
+    },
+    {
+      "id": "unknown-tree-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (facts === undefined) return unknown('the pinned tree",
+      "new": "if (facts === undefined && false) return unknown('the pinned tree",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit is Unknown, never six missing kinds, where nothing is declared, the schema has no member or the tree was not listed"
+      ],
+      "seconds": 49
+    },
+    {
+      "id": "unknown-nothing-declared-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (rows === 0) return unknown(",
+      "new": "if (false) return unknown(",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit is Unknown, never six missing kinds, where nothing is declared, the schema has no member or the tree was not listed",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) is Unknown for a v13 draft that declares nothing"
+      ],
+      "seconds": 61
+    },
+    {
+      "id": "guard-dropped",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "    return compute(draft, facts, isSecret);\n  } catch (cause) {",
+      "new": "    return compute(draft, facts, isSecret);\n  } finally {\n  }\n  try {} catch (cause) {",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit is Unknown, never a thrown error, when computing it fails"
+      ],
+      "seconds": 57
+    },
+    {
+      "id": "rows-any-kind",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "typeof kind === 'string' && KIND_SET.has(kind)",
+      "new": "typeof kind === 'string'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block"
+      ],
+      "seconds": 102
+    },
+    {
+      "id": "rows-empty-id-kept",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (blockId === undefined || blockId === '' || kinds.length === 0) continue;",
+      "new": "if (blockId === undefined || kinds.length === 0) continue;",
+      "killed": false,
+      "killedBy": null,
+      "tests": 315,
+      "failedTests": [],
+      "seconds": 154
+    },
+    {
+      "id": "rows-duplicate-unrecorded",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (!duplicated.includes(blockId)) duplicated.push(blockId);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block"
+      ],
+      "seconds": 69
+    },
+    {
+      "id": "rows-duplicate-kinds-not-joined",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "for (const kind of kinds) seen.add(kind);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block"
+      ],
+      "seconds": 59
+    },
+    {
+      "id": "blocks-understanding-counted",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (block.textKey !== 'text' || block.value['label'] !== 'inferred') continue;",
+      "new": "if (block.value['label'] !== 'inferred') continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts neither an understanding item nor a non-normative block, though a row names it"
+      ],
+      "seconds": 52
+    },
+    {
+      "id": "blocks-any-label",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (block.textKey !== 'text' || block.value['label'] !== 'inferred') continue;",
+      "new": "if (block.textKey !== 'text') continue;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts neither an understanding item nor a non-normative block, though a row names it"
+      ],
+      "seconds": 41
+    },
+    {
+      "id": "blocks-counted-twice",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (blockId === undefined || kinds === undefined || counted.has(blockId)) continue;",
+      "new": "if (blockId === undefined || kinds === undefined) continue;",
+      "killed": false,
+      "killedBy": null,
+      "tests": 315,
+      "failedTests": [],
+      "seconds": 117
+    },
+    {
+      "id": "reach-any-directory",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "if (slash > 0 && directories.has(cited!.slice(0, slash)))",
+      "new": "if (slash > 0)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a block for the whole repository only where it cites no file inside a major directory"
+      ],
+      "seconds": 111
+    },
+    {
+      "id": "reach-none",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "reached.add(cited!.slice(0, slash));",
+      "new": ";",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit advises a unit with no `change` block, and nothing for a unit whose blocks answer all six",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts only claim blocks labelled Inferred, joins a repeated row, and lists rows naming no such block",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record"
+      ],
+      "seconds": 34
+    },
+    {
+      "id": "missing-inverted",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "missing: QUESTION_KINDS.filter((kind) => answered[kind] === 0)",
+      "new": "missing: QUESTION_KINDS.filter((kind) => answered[kind] !== 0)",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit advises a unit with no `change` block, and nothing for a unit whose blocks answer all six",
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit counts a block for the whole repository only where it cites no file inside a major directory",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record"
+      ],
+      "seconds": 36
+    },
+    {
+      "id": "secret-listed",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "ids.filter((blockId) => !isSecret(blockId));",
+      "new": "ids.filter(() => true);",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit names no identifier a secret detector matches, and counts it"
+      ],
+      "seconds": 39
+    },
+    {
+      "id": "secret-uncounted",
+      "file": "packages/polaris-dossier/src/question-kinds.ts",
+      "old": "const unnamed = new Set([...unmatched, ...duplicated].filter((blockId) => isSecret(blockId))).size;",
+      "new": "const unnamed = 0;",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/question-kinds.test.ts > question kinds: the advice per major unit names no identifier a secret detector matches, and counts it"
+      ],
+      "seconds": 65
+    },
+    {
+      "id": "field-version-dropped",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of questionKindsFieldVersionPaths(doc)) add({ kind: 'field-version'",
+      "new": "for (const at of [] as string[]) add({ kind: 'field-version'",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 306,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports the member in a v10 draft as field-version in place of the schema finding, and the advice Unknown"
+      ],
+      "seconds": 133
+    },
+    {
+      "id": "field-version-not-replacing",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "for (const at of questionKindsFieldVersionPaths(doc)) subsectionPaths.add(at);",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 306,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports the member in a v10 draft as field-version in place of the schema finding, and the advice Unknown"
+      ],
+      "seconds": 59
+    },
+    {
+      "id": "schema-unique-dropped",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "kinds: { ...list(choice(QUESTION_KINDS), 1, QUESTION_KINDS.length), uniqueItems: true }",
+      "new": "kinds: { ...list(choice(QUESTION_KINDS), 1, QUESTION_KINDS.length) }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports a malformed row in a v13 draft as a schema finding"
+      ],
+      "seconds": 41
+    },
+    {
+      "id": "schema-any-string",
+      "file": "packages/polaris-dossier/src/draft-schema.ts",
+      "old": "kinds: { ...list(choice(QUESTION_KINDS), 1, QUESTION_KINDS.length), uniqueItems: true }",
+      "new": "kinds: { ...list({ type: 'string' }, 1, QUESTION_KINDS.length), uniqueItems: true }",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 315,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports a malformed row in a v13 draft as a schema finding"
+      ],
+      "seconds": 53
+    },
+    {
+      "id": "wiring-dropped",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "...(kinds === undefined ? {} : { questionKindAdvice: kinds }),",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 306,
+      "failedTests": [
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) lists, per major unit, the kinds no declared block answers, sets no outcome and stays out of the check record",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) is Unknown for a v13 draft that declares nothing",
+        "packages/polaris-dossier/src/check.test.ts > check: question-kind advice per major unit (version 2.32) reports the member in a v10 draft as field-version in place of the schema finding, and the advice Unknown"
+      ],
+      "seconds": 135
+    },
+    {
+      "id": "wiring-no-detector",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "questionKindAdvice(doc, treeFacts, secretPathOf(screen))",
+      "new": "questionKindAdvice(doc, treeFacts, () => false)",
+      "killed": false,
+      "killedBy": null,
+      "tests": 306,
+      "failedTests": [],
+      "seconds": 62
+    },
+    {
+      "id": "brief-paragraph-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "WORTH_KNOWING_PARAGRAPH,\n    '',\n    QUESTION_KINDS_PARAGRAPH,",
+      "new": "WORTH_KNOWING_PARAGRAPH,",
+      "killed": true,
+      "killedBy": "tests",
+      "tests": 42,
+      "failedTests": [
+        "packages/polaris-dossier/src/brief.test.ts > brief: shape packs (version 2.4) a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section, worth-knowing paragraph and question-kinds paragraph"
+      ],
+      "seconds": 5
+    }
+  ],
+  "equivalent": [],
+  "summary": {
+    "mutants": 29,
+    "killed": 26,
+    "survived": 3,
+    "byTimeout": 0,
+    "equivalentNotRun": 0
+  }
+}

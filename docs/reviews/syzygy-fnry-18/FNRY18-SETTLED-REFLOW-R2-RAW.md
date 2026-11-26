@@ -1,0 +1,13 @@
+# Settled dossier mobile reflow independent review
+
+Verdict: CONFIRM
+
+[Observed] Reviewed source 6786845aa8d72023fff4ee67562b43529f7361c1, tree 33ad67e7b2499d0c9808b6678ccdea3a636de685, as the correction to 55e017d1d72f8d90b48920103d6a0e86dcb3ed47 on protected base bb064295c160c7365d916eaf8a8cfd274914f516. The exact product and test subjects in apps/three-surface-poc/src/polaris-generation are `dossier-site.ts` (SHA-256 4f481d7c42d740f9a815180397b9cfccec23e3effea92f7b72c8476a44cdc2c1) and `dossier-reading.browser.test.ts` (SHA-256 6441e447afa3c2cd62d634b7ea9443a9f0db507244b99a954890299969866619). I used syzygy-fnry.18's 390×844 reflow and provider-golden criteria, the accepted mobile scope, the effective REQ-polaris-generation-034 at A-306, and repository verification rule 6.
+
+[Observed] The installation point is the operator-agent chrome branch of the generated page stylesheet. The Appendix rule is scoped to its disclosure section, the Review rule to its fidelity section, and the revised Discovery rule to the production body wrapper `#page-discovery`. The wrapper encloses inspected details, selected, excluded, unresolved and deferred titles, the stopping explanation, and observed-read details. It sits outside local navigation and review-status chrome. The patch applies wrapping through CSS inheritance without changing the source text or generated item identities.
+
+[Observed] In a separate clean clone of the exact R2 subject, all three Chrome dossier reading tests ran and passed, and the provider byte golden passed. The reflow case checked the document width across 20 fixture pages at 390×844, nine long-text geometry targets and desktop widths for Appendix, Discovery and Review. The same case checks the existing machine status and visible review-status assertions. The later 19-page ordinary settled-run replay was outside the scope of these four independent tests.
+
+[Observed] Restoring only `#discovery-read{overflow-wrap:anywhere}` in place of `#page-discovery{overflow-wrap:anywhere}` kept the expanded fixture intact. Chrome then measured Discovery at 1,016px in the 390px viewport and found all five independent reported-path geometry failures. I restored the exact reviewed source after the reproduction. This resolves R1's omission. No historic dossier was generated.
+
+[Observed] Evidence is retained in `/home/orca/.tmp/smrr2.2utdwd`. Exact green log SHA-256 de9448f1851e9553fe4589de59185c6af9c1819428356f8f3c3ef33cbf3c7f18. Scoped mutant patch SHA-256 f01502e8a3d0cff81d336d95085f29caa2d57a637852d5d35f81f73a9b0049d0 and failure log SHA-256 d6eba8a3a5a03ac3fcafdce2f0829070010d2895890435d7eeb4e9801148f0f0. This verdict covers the exact source package. Canonical verification and protected landing remain separate checks.

@@ -158,6 +158,44 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   `governance-docs.yml`, whose battery `check:battery` reads from
   `PROJECT-STATUS.md` ("How to verify this page") and never copies.
 
+### Adoption collision preflight
+
+Use the advisory preflight before enrolling a branch that records an adoption
+or claims a spec version. Compare the exact reviewed candidate with freshly
+fetched main.
+
+```sh
+git fetch --no-tags origin main
+candidate=$(git rev-parse HEAD)
+base=$(git rev-parse origin/main)
+python3 scripts/check_adoption_collisions.py --head "$candidate" --base "$base"
+```
+
+The JSON result binds both commits and their unique merge base. Exit 0 reports
+`clear` for the inspected claims. Exit 1 reports `collision`, naming each
+independently introduced row ID and its subjects, or the shared version and
+the competing spec paths. Exit 2 reports `unavailable` with a reason.
+Fetch again immediately before enqueue and rerun if either commit has changed.
+
+The preflight reads the canonical adoption ledger at the three Git commits.
+It checks that newly recorded subjects belong to the history being compared.
+A proposed spec's recorded link, stored version and exact tracked bytes bind
+its claim to the capability's shared version series. Installed amendments
+use their recorded tag series and can advance the stored aggregate at their
+existing spec path. Separate amendment packages can each start at version
+1.0. When both proposed inputs explicitly identify one modified requirement,
+the report includes its ID if shared. Candidate files without an adoption
+row lie outside this comparison.
+
+Two distinct row IDs can still conflict when Git merges adjacent lines.
+Use the normal review and protected merge-group checks for textual conflicts,
+effective-spec composition and acceptance of the merged tree. The preflight
+leaves the checkout, refs and tags as they were.
+
+```sh
+python3 -B scripts/test_adoption_collisions.py
+```
+
 ### CI time budget
 
 Hosted CI must be green within **7 minutes** of a push to a pull request, and
@@ -232,8 +270,8 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    runs or under a second key. The pilot is uncalibrated (one repository,
    model readers, a model grader), so a rise is reported as a number and
    never as evidence that a change is better.
-4. **The key stays held out.** The regression's questions and key are never
-   put in a brief, a packet or any other text an authoring session is given.
+4. **Regression checks and blind comparison custody.** Keep the regression
+   questions and key out of authoring briefs and packets.
    `packages/polaris-dossier/src/regression-hold-out.test.ts` fails if any
    eight consecutive words of one of the key's 24 question texts or 81
    required facts appear in the brief's sources, the installed agent texts or
@@ -241,11 +279,15 @@ under `apps/three-surface-poc/src/polaris-generation/`.
    question texts only. [Observed] The required facts were added to the
    search on 2026-11-22 because they gave no hit in those files that day;
    none is shorter than eight words. The test does not search for the model
-   answers, and a paraphrase passes it. It also cannot keep the key from a
-   session: `docs/evidence/pursuit-2026-11-21b/pilot/key.json` is a tracked
-   file, so it sits in the checkout an operator session starts from. An
-   authoring session works in the observed repository's clone or copy; an
-   operator does not hand it this checkout.
+   answers, and a paraphrase passes it. The published Redis regression key
+   is tracked in the Syzygy checkout, which the supervised role views mount
+   read-only. Use separately frozen evaluator keys for blind comparisons.
+   Keep those keys outside every checkout, mount and packet the authoring
+   roles can read. The public question file carries opaque key identifiers,
+   digests and counts. `packages/polaris-dossier/src/question-file-hold-out.test.ts`
+   checks selected fixture role texts against synthetic keys and checks the
+   supervised view using a synthetic evaluator location. The shipped Redis
+   comparison lists are unwritten.
 
 ## Public-clone validation is part of done
 

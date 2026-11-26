@@ -1,6 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { isRecord, sha256 } from '@syzygy/support';
+import { shellQuote } from './argv.js';
+import { coverageRefusal, type CoverageRevisionPair } from './coverage-hold.js';
 import { RECORDS_WITHIN_REACH, SOURCE_SCREENING_RULE, type GateSources } from './gate-sources.js';
 import {
   INVENTORY_BRIEF_FILE, LAUNCH_FORMS, buildInventoryBrief, errno, latestInventorySession, launchRecordName, logStep, openRun, promptRecordName,
@@ -42,8 +44,7 @@ export const SESSION_PROMPT_FORMAT = 'polaris-dossier-session-prompt/2';
 export const LAUNCH_FORM_FORMAT = 'polaris-dossier-launch-form/1';
 const CONTEXT_TEXT = /^[^\u0000-\u001f\u007f]{1,200}$/u;
 
-/** One shell word: the text in single quotes, each single quote closed, escaped and reopened. */
-export const shellQuote = (text: string): string => `'${text.replace(/'/gu, `'\\''`)}'`;
+export { shellQuote };
 
 /** The inventory session's fixed prompt: one line, carrying SEC-3's rule and never the permission. It holds no single quote, so its
  * one shell word is the text between two single quotes with nothing escaped. */
@@ -145,6 +146,7 @@ export interface HandoverRefusal {
   readonly reason: string;
   readonly reasons?: readonly string[];
   readonly refusals?: readonly ReverifyRefusal[];
+  readonly coverage?: CoverageRevisionPair;
   readonly disclosures: readonly string[];
 }
 
@@ -291,6 +293,10 @@ async function reviewSession(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.28): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {
+      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: PROMPT_DISCLOSURES,
+    } };
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }
@@ -476,6 +482,10 @@ async function deliverReview(
   } else {
     const fidelity = await buildFidelityPacket(opened, { ...deps, now: () => now });
     if (!fidelity.ok) return refuse(fidelity.stage, fidelity.reason);
+    // The review waits until every listed inventory entry has an outcome (version 2.28): nothing is issued or delivered.
+    if (fidelity.coverageHold !== undefined) return { ok: false, refusal: {
+      command: 'session-prompt', outcome: 'refused', ...coverageRefusal(fidelity.coverageHold), disclosures: DELIVERY_DISCLOSURES,
+    } };
     built = fidelity;
     packet = { sha256: fidelity.sha256, draftRevision: fidelity.draft.revision, inventoryRevision: fidelity.inventory.revision };
   }

@@ -1,0 +1,645 @@
+{
+  "subject": {
+    "commit": "73d199b13180473281ac9aae11d341577c9b6d7c",
+    "tree": "63521cf80a07fbcaf9b319aea4b7da8b7d4b53ce",
+    "files": [
+      "scripts/build_boundary_register.py",
+      "scripts/boundary-register-inputs.json",
+      "scripts/check_governance.py",
+      "docs/BOUNDARY-REGISTER.md"
+    ]
+  },
+  "historicalRecord": {
+    "file": "docs/evidence/syzygy-7g2j/n6-boundary-register-2026-11-24.json",
+    "sha256": "039e696c5b2cc63030aa0eec58efb4a03a1a0fc0cfa863eb1904c5a82cda5746",
+    "scopeEntries": 96,
+    "fullBaseline": {
+      "commit": "74fb6d9778d62be96430c3f4385a23f52e09d3db",
+      "productPassed": 9187,
+      "baselineSkips": 7,
+      "governancePassed": 139
+    }
+  },
+  "actualPredecessors": {
+    "briefing": {
+      "actual": "8829f3f48f3458ca37da384e644f2506e05d602f",
+      "actualTime": "2026-11-24T18:49:09Z",
+      "firstParent": "ee8668797514cdea9b33435b56b71d3068734819",
+      "secondParent": "5cf7fbd245b90ddc2d203736701ae958edaa3a78",
+      "actualTree": "7d14ff3fa52db98aa61f9308d8a231ef37cd2652",
+      "officialRuns": [
+        {
+          "conclusion": "success",
+          "databaseId": 45461121394,
+          "headSha": "8829f3f48f3458ca37da384e644f2506e05d602f",
+          "status": "completed",
+          "workflowName": "node-ci"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 45461121436,
+          "headSha": "8829f3f48f3458ca37da384e644f2506e05d602f",
+          "status": "completed",
+          "workflowName": "governance-docs"
+        }
+      ]
+    },
+    "trajectoryChangesTag": {
+      "name": "three-surface-poc-changes-amendment-v1.0",
+      "peeledCommit": "3a98ac9cee5384c95b92086e0d72c2f7c74be355"
+    },
+    "outlineTag": {
+      "name": "three-surface-poc-outline-amendment-v1.0",
+      "peeledCommit": "ed1e65bf7ec02d0093a490e013b2795c798db524"
+    }
+  },
+  "scope": {
+    "governingClauseIds": [
+      "VIS-4",
+      "VIS-5",
+      "SEC-1",
+      "SEC-2",
+      "SEC-3",
+      "SEC-4",
+      "SEC-5",
+      "P-71-Q5"
+    ],
+    "governingUnits": 72,
+    "explanatoryContext": 24,
+    "proseOnlyEnforcementUnknown": 47,
+    "typedMaterializeForeclosure": 1,
+    "declaredPocRoutes": 19,
+    "declaredObserverEffects": 6,
+    "declaredWriteEffects": 1,
+    "totalRegisterEntries": 98,
+    "briefingRouteContribution": {
+      "conditionalEntries": 2,
+      "credentialClass": "machine-credentialed",
+      "methods": [
+        "GET",
+        "GET"
+      ],
+      "finalEncodedCeilingBytes": 20480,
+      "authority": "A-213, PWB-REQ-020, SEC-5"
+    },
+    "observedRuntimeEffects": "No live registration, route calls, credentials, source reads or provider use were tested."
+  },
+  "pinChanges": {
+    "projectionOnly": true,
+    "pins": {
+      "POC-REQ-042": {
+        "prior": "cdfb629f69ecb154b509b2703d37abffd225d05ac0b37a0a98ca287ab4e778a0",
+        "current": "ec69372dfc8cee0d04e0a2f395d39b32b9924739048f7ac91f16f500a3f9a4a0"
+      },
+      "poc-routes": {
+        "prior": "8e3edf6424909af35110f84a5b271025372b1640cf8787fb26b3249f1784de68",
+        "current": "7a943264b1f8942526a48cdad84e9c9d94bd3adaf97ca3e0ebd74ff91ed97a66"
+      },
+      "briefing-scheduling-decision": {
+        "prior": null,
+        "current": "fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0"
+      }
+    },
+    "declarationSourceDigest": {
+      "prior": "034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75",
+      "current": "66a83b4ef7124179ebbad4a50681869c73f93b8f8d8e8b08ecc2617637a60f19"
+    },
+    "newRouteMappings": {
+      "route/GET POC_BRIEFING_PATH": "PWB-REQ-020",
+      "route/GET `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`": "PWB-REQ-020"
+    },
+    "requirements": {
+      "POC-REQ-042": 1022,
+      "POC-REQ-050": 1534
+    }
+  },
+  "independentDeclarationShape": {
+    "typeScriptAST": true,
+    "routes": [
+      {
+        "method": "GET",
+        "path": "POC_HUMAN_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "TAILNET_MOUNT_PREFIX",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "`${TAILNET_MOUNT_PREFIX}/`",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "POLARIS_HUMAN_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "POLARIS_TAILNET_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "POLARIS_SOURCE_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "POLARIS_SOURCE_TAILNET_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "TRAJECTORY_HUMAN_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "TRAJECTORY_TAILNET_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "ORRERY_HUMAN_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "ORRERY_TAILNET_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "GET",
+        "path": "POC_MACHINE_PATH",
+        "credential": "machine-credentialed"
+      },
+      {
+        "method": "GET",
+        "path": "`${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`",
+        "credential": "machine-credentialed"
+      },
+      {
+        "method": "GET",
+        "path": "POLARIS_PRESENTATION_PATH",
+        "credential": "machine-credentialed"
+      },
+      {
+        "method": "GET",
+        "path": "`${TAILNET_MOUNT_PREFIX}${POLARIS_PRESENTATION_PATH}`",
+        "credential": "machine-credentialed"
+      },
+      {
+        "method": "GET",
+        "path": "POC_BRIEFING_PATH",
+        "credential": "machine-credentialed",
+        "conditional": true
+      },
+      {
+        "method": "GET",
+        "path": "`${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`",
+        "credential": "machine-credentialed",
+        "conditional": true
+      },
+      {
+        "method": "POST",
+        "path": "MATERIALIZE_HUMAN_PATH",
+        "credential": "human-open"
+      },
+      {
+        "method": "POST",
+        "path": "MATERIALIZE_TAILNET_PATH",
+        "credential": "human-open"
+      }
+    ],
+    "otherEffects": 7,
+    "totalRegistryEntries": 98
+  },
+  "focusedExactR8": {
+    "registerCheckCount": 98,
+    "registerSyntheticCases": 40,
+    "integratedGovernanceSyntheticCases": 233
+  },
+  "rule6": {
+    "r7ExactFocused": {
+      "subject": "8175398a4737955b98a40ac114477d680c072595",
+      "testFile": "scripts/build_boundary_register.py",
+      "testFileSha256": "bd8480db147440c57f82abb7f70947d2b4d55060502a3ee3932b6fcfae7c159a",
+      "method": "In-process trace of the exact unchanged selftest on synthetic repository fixtures. The trace records observed changed fixture bytes before the checker returns.",
+      "fullSelftestCases": 38,
+      "matchingPositive": {
+        "name": "conditional briefing machine pair and binding",
+        "fixtureLineAtSubject": 657,
+        "count": 19,
+        "reason": null
+      },
+      "focusedNegativeCases": [
+        {
+          "name": "briefing repin alone refuses a new declaration subject",
+          "fixtureLineAtSubject": 661,
+          "changes": [
+            {
+              "fixtureInput": "reviewed_declarations",
+              "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+              "new": "a486f486937956c1d30854d8b15321055e62419769e79f37c7f21da865d15201"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "a486f486937956c1d30854d8b15321055e62419769e79f37c7f21da865d15201"
+          },
+          "derivedManifestRepins": {},
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "declared effect sources differ from the exact independently reviewed declaration inputs"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot drop one mount",
+          "fixtureLineAtSubject": 678,
+          "changes": [
+            {
+              "file": "apps/three-surface-poc/src/routes.ts",
+              "old": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n",
+              "new": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "016c192b57b0d3d394f7dbdcf882ec0bc7dea6d1b787884c5c20e3b454e54a50"
+          },
+          "derivedManifestRepins": {
+            "poc-routes": {
+              "old": "3898f8ba69b0d8b97e85aaee1060093d9dc69c7da7338161b25da91148cd53c3",
+              "new": "f009adf137632c8a76986465b83be46164b15c3130877f186edbeff79e64e07e"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "POC routes: unsupported indirect route declaration"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot change credential",
+          "fixtureLineAtSubject": 678,
+          "changes": [
+            {
+              "file": "apps/three-surface-poc/src/routes.ts",
+              "old": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n",
+              "new": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'human-open', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "e970efe97db5d2d002f802e9c17b2a4eb8e0c9d879ce044f9c579db306ed2237"
+          },
+          "derivedManifestRepins": {
+            "poc-routes": {
+              "old": "3898f8ba69b0d8b97e85aaee1060093d9dc69c7da7338161b25da91148cd53c3",
+              "new": "c369127002de6a4434ac8645ce21d8558fcc110cddf2f9d0d2651c23ecaf8f89"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "POC routes: unsupported indirect route declaration"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot bypass callback",
+          "fixtureLineAtSubject": 678,
+          "changes": [
+            {
+              "file": "apps/three-surface-poc/src/routes.ts",
+              "old": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n",
+              "new": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n];\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "1b65610c6332db288f3976db050dcda9eb20959e46c823ba4b67628f7b5c045e"
+          },
+          "derivedManifestRepins": {
+            "poc-routes": {
+              "old": "3898f8ba69b0d8b97e85aaee1060093d9dc69c7da7338161b25da91148cd53c3",
+              "new": "83cf1479e19ccb40a0a565ebbda63d712860918eb292bd62f58c2022b43ff748"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "POC routes: briefing routes must be the exact conditional machine pair"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot change callback polarity",
+          "fixtureLineAtSubject": 678,
+          "changes": [
+            {
+              "file": "apps/three-surface-poc/src/routes.ts",
+              "old": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n",
+              "new": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit !== undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "901a8fd212303293b53ee5c8532898e41ea3dc7352ce312cc51931dcf17d7c42"
+          },
+          "derivedManifestRepins": {
+            "poc-routes": {
+              "old": "3898f8ba69b0d8b97e85aaee1060093d9dc69c7da7338161b25da91148cd53c3",
+              "new": "741cad406105af3428713635fb38e6cbeebe19179dd956288f7e839a15418857"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "POC routes: unsupported indirect route declaration"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot repeat registration",
+          "fixtureLineAtSubject": 678,
+          "changes": [
+            {
+              "file": "apps/three-surface-poc/src/routes.ts",
+              "old": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n",
+              "new": "{ method: 'GET', path: directPath, credentialClass: 'human-open', handle },\n{ method: 'GET', path: tailnetPath, credentialClass: 'human-open', handle },\nconst routes: readonly Route[] = [\n{ method: 'GET', path: POC_HUMAN_PATH, credentialClass: 'human-open', handle },\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n    ...(briefingResponseLimit === undefined ? [] : [\n      { method: 'GET', path: POC_BRIEFING_PATH, credentialClass: 'machine-credentialed', handle: briefingHandle },\n      { method: 'GET', path: `${TAILNET_MOUNT_PREFIX}${POC_BRIEFING_PATH}`, credentialClass: 'machine-credentialed', handle: briefingHandle },\n    ] as const),\n];\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "a47a99f509246e5ca457a8d9a5a4e96c476ac60675bdfc852535491d6781d86f"
+          },
+          "derivedManifestRepins": {
+            "poc-routes": {
+              "old": "3898f8ba69b0d8b97e85aaee1060093d9dc69c7da7338161b25da91148cd53c3",
+              "new": "887169b1c6eb2d0bf931e76e8d8e30f45fab1055fc6438555c290fd9809f15e5"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "POC routes: repeated briefing registration"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing cannot borrow an altered registry ceiling",
+          "fixtureLineAtSubject": 686,
+          "changes": [
+            {
+              "file": ".syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json",
+              "old": "{\"entries\": [{\"observerId\": \"polaris-butlers-project-shape\", \"observerVersion\": \"fixture\", \"typedAuthority\": {\"authorityType\": \"version-control\", \"questions\": [], \"readAuthority\": \"declared\", \"writeSurface\": [], \"databaseAccess\": [], \"networkAccess\": [], \"executeObservedCode\": false, \"workingTreeRead\": false}, \"resourceLimits\": {\"maxBriefingResponseBytes\": 20480}}]}",
+              "new": "{\"entries\": [{\"observerId\": \"polaris-butlers-project-shape\", \"observerVersion\": \"fixture\", \"typedAuthority\": {\"authorityType\": \"version-control\", \"questions\": [], \"readAuthority\": \"declared\", \"writeSurface\": [], \"databaseAccess\": [], \"networkAccess\": [], \"executeObservedCode\": false, \"workingTreeRead\": false}, \"resourceLimits\": {\"maxBriefingResponseBytes\": 20481}}]}"
+            },
+            {
+              "file": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+              "old": "Exact digest (SHA-256): `39e4b189b57ddc262ee9b658bcc5af95a03ae42e61e871e252aabda8c0506073`\n",
+              "new": "Exact digest (SHA-256): `0288878eb01f9ae8e6b66b8ca09f5b67eaf024e5f95ba740989a3ed5c8f278ca`\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "6c41e1d23b74c8f5a1e4004d88b5f684d7a79abac3a21d9301cc495d2b776487"
+          },
+          "derivedManifestRepins": {
+            "observer-act": {
+              "old": "14447876c878c21316addaaa75bed80d527722ccd991b1cfe6939ccffde95b04",
+              "new": "42456655edef1b09c8588671fefeae78a32ebbfe8fd9a5d41b615586bd0c3193"
+            },
+            "observer-registry": {
+              "old": "39e4b189b57ddc262ee9b658bcc5af95a03ae42e61e871e252aabda8c0506073",
+              "new": "0288878eb01f9ae8e6b66b8ca09f5b67eaf024e5f95ba740989a3ed5c8f278ca"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "Briefing registry: expected the distinct 20,480-byte response ceiling"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing requires the act's exact registry digest",
+          "fixtureLineAtSubject": 690,
+          "changes": [
+            {
+              "file": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+              "old": "Exact digest (SHA-256): `39e4b189b57ddc262ee9b658bcc5af95a03ae42e61e871e252aabda8c0506073`\n",
+              "new": "Synthetic observer act\n"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01"
+          },
+          "derivedManifestRepins": {
+            "observer-act": {
+              "old": "14447876c878c21316addaaa75bed80d527722ccd991b1cfe6939ccffde95b04",
+              "new": "bac57e3b78f76dd91076f084210ee24cf33384f6b67f4995b7a21c32b156befd"
+            }
+          },
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "Briefing registry: exact observer act digest does not bind the declaration"
+          },
+          "selftestPassed": true
+        },
+        {
+          "name": "briefing scheduling decision bytes are pinned",
+          "fixtureLineAtSubject": 693,
+          "changes": [
+            {
+              "file": ".syzygy/governance/decisions/PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md",
+              "old": "Synthetic source for briefing-scheduling-decision\n",
+              "new": "unreviewed"
+            }
+          ],
+          "reviewedDeclarationInput": {
+            "old": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01",
+            "new": "1ec29e1de2d68b21a95ae0c06e45a50f49920b4f4403df682f148fc9f9a99d01"
+          },
+          "derivedManifestRepins": {},
+          "control": {
+            "count": 19,
+            "reason": null
+          },
+          "negative": {
+            "count": 0,
+            "reason": "scoped sources changed; reconcile exact bytes: briefing-scheduling-decision"
+          },
+          "selftestPassed": true
+        }
+      ]
+    },
+    "r8AuthorityRepin": {
+      "subject": "73d199b13180473281ac9aae11d341577c9b6d7c",
+      "predecessor": "8175398a4737955b98a40ac114477d680c072595",
+      "testFile": "scripts/build_boundary_register.py",
+      "testFileSha256": "d1973bd41094aa362ede857312d3deb797f1b79b79fe738793ab58fb076a1c8f",
+      "predecessorCheckerSha256": "bd8480db147440c57f82abb7f70947d2b4d55060502a3ee3932b6fcfae7c159a",
+      "method": "Exact committed checker bodies and Git-backed in-memory synthetic overlays. No repository source was changed for these two controls.",
+      "actualBaselineCount": 98,
+      "reviewedTupleSha256": "30e9b5fef8fc2743be75895c81174f9fba8f4ed1ed3055eefd6f41812be32cad",
+      "exactInputs": [
+        {
+          "id": "effect-authority",
+          "file": "packages/three-surface-poc-core/src/effect-authority.ts",
+          "sha256": "bea910d84ba236ac2b28c6423d07b6f9a3976f297734ca79c01708e8638476a1"
+        },
+        {
+          "id": "materialize-routes",
+          "file": "apps/three-surface-poc/src/materialize-action.ts",
+          "sha256": "cc1e518af864d50d82638fc66878369d0e8dd12a945436808c18a055ca8e403a"
+        },
+        {
+          "id": "observer-registry",
+          "file": ".syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json",
+          "sha256": "f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556"
+        },
+        {
+          "id": "poc-routes",
+          "file": "apps/three-surface-poc/src/routes.ts",
+          "sha256": "7a943264b1f8942526a48cdad84e9c9d94bd3adaf97ca3e0ebd74ff91ed97a66"
+        },
+        {
+          "id": "briefing-scheduling-decision",
+          "file": ".syzygy/governance/decisions/PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md",
+          "sha256": "fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0"
+        },
+        {
+          "id": "observer-act",
+          "file": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+          "sha256": "04662cdfa2c06b6aa3c1dedaa158c37def936fa66afbe283606ae8576c6d6905"
+        }
+      ],
+      "mutations": [
+        {
+          "id": "briefing-scheduling-decision",
+          "file": ".syzygy/governance/decisions/PWB-BRIEFING-IMPLEMENTATION-SCOPE-DECISION.md",
+          "fixture": {
+            "old": {
+              "exactGitBlobAt": "73d199b13180473281ac9aae11d341577c9b6d7c",
+              "sha256": "fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0"
+            },
+            "new": "Synthetic unrelated decision\n"
+          },
+          "manifestPin": {
+            "old": "fbf4061c7f544864e4f4f425be2742cf066b766c738192c597cfd1c47b048dd0",
+            "new": "6a37dac64809d75dea2ce02e43d4748574178e73a908ecf5ae5760bceeec00b7"
+          },
+          "r7RepinnedRegenerated": {
+            "count": 98,
+            "reason": null,
+            "registerSha256": "e72cf1068565267af9b3ce6a7a06081d53c4322ce4e38c97bd1a0f5eb2529aef"
+          },
+          "r8MutatedStale": {
+            "count": 0,
+            "reason": "scoped sources changed; reconcile exact bytes: briefing-scheduling-decision"
+          },
+          "r8RepinnedRegenerated": {
+            "count": 0,
+            "reason": "declared effects differ from the independently reviewed declaration and authority inputs"
+          }
+        },
+        {
+          "id": "observer-act",
+          "file": ".syzygy/governance/decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
+          "fixture": {
+            "old": {
+              "exactGitBlobAt": "73d199b13180473281ac9aae11d341577c9b6d7c",
+              "sha256": "04662cdfa2c06b6aa3c1dedaa158c37def936fa66afbe283606ae8576c6d6905"
+            },
+            "new": "Synthetic unrelated act with copied digest\nExact digest (SHA-256): `f2b3573cfe35169f449a9eed36b4c3330ef037d6668bab0548dd5d5939293556`\n"
+          },
+          "manifestPin": {
+            "old": "04662cdfa2c06b6aa3c1dedaa158c37def936fa66afbe283606ae8576c6d6905",
+            "new": "2f70e4cfef29b043a829a3f41995e6645ccd7fe1e39ed3235b4445cf87f89c48"
+          },
+          "r7RepinnedRegenerated": {
+            "count": 98,
+            "reason": null,
+            "registerSha256": "21c746e0181b26a12f70c3f3e2330095bb6488e4f9f0edca43421b913e64f5b8"
+          },
+          "r8MutatedStale": {
+            "count": 0,
+            "reason": "scoped sources changed; reconcile exact bytes: observer-act"
+          },
+          "r8RepinnedRegenerated": {
+            "count": 0,
+            "reason": "declared effects differ from the independently reviewed declaration and authority inputs"
+          }
+        }
+      ]
+    }
+  },
+  "reviews": [
+    {
+      "round": 5,
+      "file": "docs/reviews/syzygy-7g2j/N6-BOUNDARY-REGISTER-R5-RAW.md",
+      "anchor": 1,
+      "verdict": "CONFIRM",
+      "commit": "74fb6d9778d62be96430c3f4385a23f52e09d3db",
+      "sha256": "943b7d28df3636f606bf906b85608410bbf9951d2e0a10459a3e44f8f04c9a43"
+    },
+    {
+      "round": 6,
+      "file": "docs/reviews/syzygy-7g2j/N6-BOUNDARY-REGISTER-R6-RAW.md",
+      "anchor": 1,
+      "verdict": "CONFIRM",
+      "commit": "0658bf20b68086a9849e474b221d1dbf045243d1",
+      "sha256": "e155dda911f0896bfe5c9a5ff4baf04a2917b1d0ba44727ba52194882e908430"
+    },
+    {
+      "round": 7,
+      "file": "docs/reviews/syzygy-7g2j/N6-BOUNDARY-REGISTER-R7-RAW.md",
+      "anchor": 1,
+      "verdict": "REVISE",
+      "commit": "8175398a4737955b98a40ac114477d680c072595",
+      "sha256": "5e7478557e8ad550616da02d429490f36fdd843cb02cba9345217a9bc28e330c"
+    },
+    {
+      "round": 8,
+      "file": "docs/reviews/syzygy-7g2j/N6-BOUNDARY-REGISTER-R8-RAW.md",
+      "anchor": 1,
+      "verdict": "CONFIRM",
+      "commit": "73d199b13180473281ac9aae11d341577c9b6d7c",
+      "sha256": "fa831c481214a242cd82efc3403e61353e9c09504e377466d158bae442787b1e"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { GrewWhileReadError, NotARegularFileError, PastBoundError, readBoundedFile } from './check-record-read.js';
 import { carriesUserInformation } from './launch-identity.js';
 
 /** What a launch reads of the operator's clone, in process, before any object (REQ-polaris-generation-047's closed list, which the
@@ -73,32 +74,27 @@ const ORIGIN_HEAD = 'refs/remotes/origin/HEAD';
 
 const code = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
 
-/** One file's bytes as text, read through one descriptor opened without following a link, or null when it does not exist. */
+/** One file's bytes as text, or null when it does not exist: read by the reader rule of version 2.10 (`readBoundedFile`, syzygy-3efd.83),
+ * one open without blocking and without following a link at the path, the type and size taken from that descriptor, and at most one byte
+ * past that size read (`refuseGrowth`), so a FIFO, a link or a file grown after its size was taken is refused, never read whole: past the
+ * limit as larger than it, within it as grown while being read, as this reader refused it before it read by the rule. The limits are
+ * this reader's own, stated here and in no requirement yet (syzygy-nffo states them in REQ-polaris-generation-047). */
 function readBounded(file: string, limit: number): { readonly text: string } | { readonly reason: string } | null {
-  let stats: fs.Stats;
-  try { stats = fs.lstatSync(file); } catch (cause) { return code(cause) === 'ENOENT' ? null : { reason: `${file} cannot be read (${code(cause)})` }; }
-  if (!stats.isFile()) return { reason: `${file} is not a regular file; it is refused, never followed` };
-  if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` };
-  let fd: number;
-  try { fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW); } catch (cause) { return { reason: `${file} cannot be read (${code(cause)})` }; }
+  // Whether the entry exists is examined first, so an absent file is never opened (the closed list of REQ-polaris-generation-047 names
+  // what is opened); what is read is decided by the descriptor alone, never by this look.
   try {
-    const opened = fs.fstatSync(fd);
-    if (!opened.isFile()) return { reason: `${file} is not a regular file; it is refused, never followed` };
-    if (opened.size > limit) return { reason: `${file} is larger than ${limit} bytes` };
-    const buffer = Buffer.alloc(opened.size + 1);
-    let filled = 0;
-    for (;;) {
-      const n = fs.readSync(fd, buffer, filled, buffer.length - filled, null);
-      if (n === 0) break;
-      filled += n;
-      if (filled > limit) return { reason: `${file} is larger than ${limit} bytes` };
-      if (filled === buffer.length) return { reason: `${file} grew while being read` };
-    }
-    return { text: buffer.subarray(0, filled).toString('utf8') };
+    if (fs.lstatSync(file, { throwIfNoEntry: false }) === undefined) return null;
   } catch (cause) {
     return { reason: `${file} cannot be read (${code(cause)})` };
-  } finally {
-    fs.closeSync(fd);
+  }
+  try {
+    return { text: readBoundedFile(file, limit, { followLink: false, refuseGrowth: true }).toString('utf8') };
+  } catch (cause) {
+    if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file; it is refused, never followed` };
+    if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };
+    if (cause instanceof GrewWhileReadError) return { reason: `${file} grew while being read` };
+    // A file removed between the existence look and the open is absent, as it would have been had the look come after the removal.
+    return code(cause) === 'ENOENT' ? null : { reason: `${file} cannot be read (${code(cause)})` };
   }
 }
 

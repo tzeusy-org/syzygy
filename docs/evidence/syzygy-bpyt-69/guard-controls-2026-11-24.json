@@ -1,0 +1,365 @@
+{
+  "sourceCommit": "2c4cf99c4726a1dd16ac95bc65cdcf26b53dbf23",
+  "guards": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+      "sha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+      "variants": [
+        {
+          "id": "G0-unmutated",
+          "old": null,
+          "new": null,
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            }
+          ]
+        },
+        {
+          "id": "G1-node-modules-not-looked-for",
+          "old": "('package.json', 'node_modules')",
+          "new": "('package.json',)",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            }
+          ]
+        },
+        {
+          "id": "G2-package-json-not-looked-for",
+          "old": "('package.json', 'node_modules')",
+          "new": "('node_modules',)",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "id": "G3-only-the-parent-looked-at",
+          "old": "    up = os.path.dirname(up)\n",
+          "new": "    break\n",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "id": "G4-two-levels-only",
+          "old": "while True:\n",
+          "new": "for _ in range(2):\n",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-39/root_exception_probe.py",
+      "sha256": "d7b29a5401027f1c1da70c349872b6aca915f662b9c80811f4f9138cc55b9b17",
+      "variants": [
+        {
+          "id": "G0-unmutated",
+          "old": null,
+          "new": null,
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            }
+          ]
+        },
+        {
+          "id": "G1-node-modules-not-looked-for",
+          "old": "('package.json', 'node_modules')",
+          "new": "('package.json',)",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            }
+          ]
+        },
+        {
+          "id": "G2-package-json-not-looked-for",
+          "old": "('package.json', 'node_modules')",
+          "new": "('node_modules',)",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "id": "G3-only-the-parent-looked-at",
+          "old": "    up = os.path.dirname(up)\n",
+          "new": "    break\n",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "id": "G4-two-levels-only",
+          "old": "while True:\n",
+          "new": "for _ in range(2):\n",
+          "cases": [
+            {
+              "case": "parent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "parent-node-modules",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "grandparent-package-json",
+              "outcome": "refused",
+              "exit": 1
+            },
+            {
+              "case": "great-grandparent-package-json",
+              "outcome": "reached-guard-end",
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "path": "docs/evidence/syzygy-bpyt-8-39/record.py",
+    "sha256": "b3e8d599cdfd96e1fe048e8d7944d347f6a7cc58d374222f60f0c670e8f83f60",
+    "old": "    since = [p for p in hooked('since', git('diff', '--name-only', REPAIR1, HEAD).split()) if not p.startswith(f'{HERE_REL}/')]\n",
+    "new": "    since = hooked('since', [p for p in git('diff', '--name-only', REPAIR1, HEAD).split() if not p.startswith(f'{HERE_REL}/')])\n",
+    "results": [
+      {
+        "placement": "before-filter",
+        "baselineProblems": [],
+        "ownEqualsBaseline": true,
+        "ownProblems": [],
+        "foreignProblems": [
+          "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts', 'docs/evidence/syzygy-bpyt-8-36/since-control.json']"
+        ]
+      },
+      {
+        "placement": "after-filter",
+        "baselineProblems": [],
+        "ownEqualsBaseline": false,
+        "ownProblems": [
+          "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts', 'docs/evidence/syzygy-bpyt-8-39/since-control.json']"
+        ],
+        "foreignProblems": [
+          "suite: HEAD differs from REPAIR1 beyond testkit comment lines: ['packages/polaris-generation-core/src/workspace-reach.testkit.ts', 'docs/evidence/syzygy-bpyt-8-36/since-control.json']"
+        ]
+      }
+    ],
+    "oldSelftestAfterMutation": {
+      "exit": 0,
+      "tally": "selftest: 77/77 mutations make a check fail"
+    },
+    "archiveTree": "d856c2910fc54f157ac89fc37e5074aba70ada1f"
+  },
+  "traces": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-39/npmrc-trace-lane-probe-after.json",
+      "sha256": "3738ba913f3b2be7adb809639b53c19fcfe95f932b2cee46ba973d2d4e9350a2",
+      "probeSha256": "677b0fe2a670d02c2e279144d58a1cb33a2e829538e08b73555850ca6a56d0c6",
+      "record": "docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json",
+      "recordSha256": "e5f48acac3987f4bb32a18e341809f132e6f1ee4b064974ec5ec55a1aca48c1c"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-49/npmrc-trace-lane-probe-guarded.json",
+      "sha256": "602477dc18e5d83f248522e28dbc3f0f029ac7c374040f41b4dedd7f9f21f6e4",
+      "probeSha256": "d0681b01b953b0dcff793cb4c6331245ee3c0c101d0977909df30cd0c6444812",
+      "record": "docs/evidence/syzygy-bpyt-8-39/npm-alias-probe.json",
+      "recordSha256": "e5f48acac3987f4bb32a18e341809f132e6f1ee4b064974ec5ec55a1aca48c1c"
+    }
+  ],
+  "verificationScript": {
+    "path": "scripts/check_npm_probe_evidence.py",
+    "sha256": "8701ccaeebfd0120d5760bd46e76a6054b9ee322e317940ec5f4722a66da0795"
+  },
+  "reviewSourceCommit": "e8cd624ecb58e24f763c35276eb7764373f5746e",
+  "scope": "synthetic guard entry and archived summary logic",
+  "sourceIdentityControl": {
+    "sourceCommit": "2c4cf99c4726a1dd16ac95bc65cdcf26b53dbf23",
+    "path": "docs/evidence/syzygy-bpyt-8-39/npm_alias_probe.py",
+    "append": "\n# supplemental source identity control\n",
+    "outcome": "reject before running scratch controls"
+  },
+  "floatingInputControl": {
+    "revision": "2c4cf99c4726a1dd16ac95bc65cdcf26b53dbf23",
+    "file": "docs/evidence/syzygy-bpyt-8-39/suite.json",
+    "field": "runs[0].total",
+    "original": 5385,
+    "dirty": 5386,
+    "dirtySha256": "ce268c147a4a6af7bdadc2e6261383baf0743cc89669f6acaef47e72938493c3",
+    "callerBytesPreserved": true,
+    "predecessorExit": 1,
+    "repairedExit": 0
+  },
+  "firstIndependentReview": {
+    "path": "docs/reviews/R-BPYT69-N3N5-OUTCOME-R1-RAW.md",
+    "sha256": "b31ae4f7443eccd9c4680276c592a63cbc7f9f2ef4149e454303462e7cfa10e1",
+    "reviewedCommit": "36046b83a0ab8aeaa2a5761bf1888453d8c96e8c",
+    "verdict": "REVISE"
+  }
+}

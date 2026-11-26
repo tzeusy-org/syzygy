@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { DISCOVERY_STAGE_ILLUSTRATIONS, DOSSIER_ILLUSTRATION_SOURCES, DOSSIER_STAGE_ILLUSTRATIONS, promptForStage, type GenerationStage, type PromptProfile } from './prompts.js';
-import { validateStage, type ProviderDraft, type ProviderInventory } from './provider-draft.js';
+import { validateStage, type EditReply, type RepairReply, type ProviderDraft, type ProviderInventory } from './provider-draft.js';
 import { QUOTE_LEAD_IN, checkBlockQuotes, checkDraftQuotes } from './quote-fidelity.js';
 
 const QUOTATION_LEAD = `${QUOTE_LEAD_IN} "`;
@@ -16,9 +16,9 @@ const recipes: [GenerationStage, string, string][] = [
   ['inventory', 'polaris-inventory-dossier-v2', '7b059d24a9c5d5a91b4abe9b78c1b131c30f234c7fdac69709e5a94498163e58'],
   ['plan', 'polaris-plan-dossier-v2', 'c55af59b45a0a6f8aa62ef26d29702273c266f024ebe2e3528235537285cb026'],
   ['author', 'polaris-author-dossier-v2', 'dc5e0e39c85a3114f7d537c944811365437010e6ad0079da9660c54ab03689e0'],
-  ['edit', 'polaris-edit-dossier-v2', '2c030ad076f6a45d090016c6e82ffbf6a60575142dbff302d9819791fb217a6f'],
+  ['edit', 'polaris-edit-dossier-v3', '36a90afca6fc4c1149f738da84673840d0b7028453f584b3d66d957e14bbf8c3'],
   ['fidelity', 'polaris-fidelity-dossier-v2', 'c11198c947be8d4710c9b0ca3285236a2686c6592b17d773b31965c570b9f63b'],
-  ['repair', 'polaris-repair-dossier-v2', 'fdd25466c4c2d118053ebe75d0f54a9784371abb729c19870a3dcb3a4f15621a'],
+  ['repair', 'polaris-repair-dossier-v3', 'b4347b30e72eb5124dbff92dedaf82bd4a9509ba6797ed16d590619c8196982f'],
 ];
 
 // The dossier profile's requested assets (dossier-profile.ts on the profile
@@ -35,7 +35,8 @@ const requestedAssets = [
 const sources = DOSSIER_ILLUSTRATION_SOURCES.map(source => ({ ...source }));
 const illustration = (stage: GenerationStage): unknown => structuredClone(DOSSIER_STAGE_ILLUSTRATIONS[stage]);
 // One context serves every stage: each validator reads only what it needs.
-const context = (): Record<string, unknown> => ({ sources, requestedAssets, inventory: illustration('inventory'), plan: illustration('plan'), draft: illustration('author') });
+const context = (): Record<string, unknown> => ({ sources, requestedAssets, inventory: illustration('inventory'), plan: illustration('plan'), draft: illustration('author'),
+  repairFindings: [{ id: 'finding-1', finding: { target: 'e-serve', severity: 'blocking', message: 'How the output is served is unresolved.' } }] });
 const sourceText = (id: string): string => sources.find(source => source.sourceId === id)!.text;
 
 describe('dossier stage prompts', () => {
@@ -149,13 +150,20 @@ describe('dossier stage prompts', () => {
 
 describe('dossier stage illustrations pass the stage validators', () => {
   it.each(recipes)('validates the %s illustration', (stage) => {
-    expect(validateStage(stage, illustration(stage), context())).toEqual(illustration(stage));
-    if (stage === 'author' || stage === 'edit' || stage === 'repair') expect(checkDraftQuotes(illustration(stage), new Map(DOSSIER_ILLUSTRATION_SOURCES.map(source => [source.sourceId, source.text])))).toEqual([]);
+    const output = illustration(stage);
+    expect(validateStage(stage, output, context())).toEqual(output);
+    if (stage === 'author' || stage === 'edit' || stage === 'repair') {
+      const draft = stage === 'author' ? output : (output as EditReply).draft;
+      expect(checkDraftQuotes(draft, new Map(DOSSIER_ILLUSTRATION_SOURCES.map(source => [source.sourceId, source.text])))).toEqual([]);
+    }
   });
 
-  it('shares one draft illustration across author, edit and repair', () => {
-    expect(DOSSIER_STAGE_ILLUSTRATIONS.edit).toBe(DOSSIER_STAGE_ILLUSTRATIONS.author);
-    expect(DOSSIER_STAGE_ILLUSTRATIONS.repair).toBe(DOSSIER_STAGE_ILLUSTRATIONS.author);
+  it('uses the author illustration as the unchanged draft and retains the unrepairable finding', () => {
+    const edit = DOSSIER_STAGE_ILLUSTRATIONS.edit as EditReply;
+    const repair = DOSSIER_STAGE_ILLUSTRATIONS.repair as RepairReply;
+    expect(edit.draft).toBe(DOSSIER_STAGE_ILLUSTRATIONS.author);
+    expect(repair.draft).toBe(DOSSIER_STAGE_ILLUSTRATIONS.author);
+    expect(repair.findingDispositions).toEqual([{ findingId: 'finding-1', action: 'unrepairable', reason: 'No supplied source explains how the output is served.' }]);
   });
 
   it('produces every requested asset in the draft', () => {

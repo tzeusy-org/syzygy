@@ -1,0 +1,610 @@
+{
+  "scope": "The exact terminology instruction and unallocated reconciliation preview. Each historical record names its own subject.",
+  "criteria": "syzygy-fnry.18 AC4 and linked AC7 controls",
+  "reviews": [
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R1-RAW.md",
+      "sha256": "2f2b25ed2840bdc1f79efca91469c1c377540e8c891c1eaa9b6fab3da78987ff",
+      "verdict": "REVISE"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R2-RAW.md",
+      "sha256": "a56bf48a6b199bd43f7052e9c4d5d134a06f31ccccdeeca5a8ee18e7693a4de5",
+      "verdict": "REVISE"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R3-RAW.md",
+      "sha256": "45aa0d6b983744a8369ab755cbc13d2d4416cef01dd5fc8bfbf1ea5b4d8c70fa",
+      "verdict": "CONFIRM"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R4-RAW.md",
+      "sha256": "71e3b8f713d0db573c14debaa181b17b91fd63578f6a9c7dc19b1139e6a545e1",
+      "verdict": "REVISE"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R5-RAW.md",
+      "sha256": "5014c11d0d04dea47db1b1122e2104ce1ecb56eee0a9a2844c403e4c12162071",
+      "verdict": "CONFIRM"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-WIRING-R6-RAW.md",
+      "sha256": "6255adb9e4d44deb0947a8cb42ad8db4b24ea6ce0f466870a12aa693d0804b13",
+      "verdict": "CONFIRM"
+    },
+    {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R7-RAW.md",
+      "sha256": "7a9e7338921e0484b707d370491d43d12138819951b20857e298c28e17dd89b4",
+      "verdict": "REVISE"
+    }
+  ],
+  "normativeDelta": {
+    "record": {
+      "subject": "c15b81ad5de4fe8c067527fd5a321fe81bd23047",
+      "actualBase": "cb5d7fcec5876592dfcf393839cab0c5ea05f14d",
+      "adoptionPin": "fb265c698c15e57255b226e45aa22edd2d4bc6de",
+      "coverageAuthoredOnly": "f6ff3b9e0ff3ceeffd066c6fef136014556af824",
+      "predecessorSha256": "127e4a8f809211fbff47b118212f94e47d204ef6aaad75a0f357906b9a975928",
+      "candidateSha256": "a6476066943ff68ec60fa2641794ef83d1ea11853f0f2e56e9ee126fe4788ac2",
+      "instructionSha256": "baabb39125f51ad33bd6b660ff6e8dd6f2b10c7aa0475588c55ea6135c29078b",
+      "requirement": "REQ-polaris-generation-034",
+      "coexistingCoverageRequirement": "REQ-polaris-generation-035",
+      "scenarioPopulation": {
+        "previous": 214,
+        "new": 215,
+        "exactOrderedPredecessors": 213,
+        "previousTimeScopeOnly": 1,
+        "appendedScenario": 1
+      },
+      "methods": [
+        "manual and independent regex scenario byte census",
+        "canonical reconciliation ID and name parsers",
+        "exact reverse replay using pinned anchors"
+      ]
+    },
+    "sourceProofSha256": "79e7a63b183c60029fffbf578af3778c34e4451f4f9c36605d7f520aa1678385",
+    "embeddedCanonicalSha256": "9da1e103aedf7803d1e2fce23ed81f8be90a6fa842ed6a9d44f2593ad826f0d3"
+  },
+  "runtimeRule6": {
+    "record": {
+      "subject": "c15b81ad5de4fe8c067527fd5a321fe81bd23047",
+      "originalSourceSha256": "8ca9668fdc96e1a0c5dc6a85f0254f12ee06758ae72425b0365df3b513c32a7d",
+      "execution": "Vitest integration under a private disabled-egress network namespace, isolated synthetic declarations",
+      "controls": [
+        {
+          "id": "omission",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "    'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for \"append-only file\" and `AOF` for \"AOF\". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\\'s `statement`. For example, use an unused `io` as the ID for \"I/O\" and write \"I/O\" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.',\n    '',\n",
+          "new": "",
+          "namedTest": "teaches the author one terminology item per term using its reader spelling",
+          "changedSha256": "d887df19cc9e78489018c502f51a45c0acfa1a54e95d64dd4b618de59ac962f5",
+          "reportSha256": "482fa38ca6338ba0c6b035355c7376440823ee09b05d33c7353ab1d2dbe621f9",
+          "logSha256": "b387c0aac2e26ddd84d236fd3a2cb1ad72c2973bff083462ea8296417ff57ab8",
+          "expectedDiagnostic": "+ Received",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        },
+        {
+          "id": "fallback-omission",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "    'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for \"append-only file\" and `AOF` for \"AOF\". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\\'s `statement`. For example, use an unused `io` as the ID for \"I/O\" and write \"I/O\" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.',\n",
+          "new": "    'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for \"append-only file\" and `AOF` for \"AOF\". Omit comma-separated lists and the `u-` prefix.',\n",
+          "namedTest": "teaches the author one terminology item per term using its reader spelling",
+          "changedSha256": "1d2f394180b224f3e4296b82e6e1edffd71449f3019308d5a7169f1ef1f7d45c",
+          "reportSha256": "12eeca7c144dacd66d7aed7e327708b342a57db0ec4ecfc9c8b4f5b379b88095",
+          "logSha256": "7284f32a38abe38302399db1a8525a5c3d946c6c0fe849923ab52e33063fa0b5",
+          "expectedDiagnostic": "I/O",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        },
+        {
+          "id": "literal-underscore",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "the spelling has a literal underscore, ",
+          "new": "",
+          "namedTest": "teaches the author one terminology item per term using its reader spelling",
+          "changedSha256": "50de04715634e6e01f829db4a0c3498119c81b77763177a8953d79d3d71334a4",
+          "reportSha256": "7081eafa8aafd0c4a6f0717a86c759e1f723ce177b92782ef465c92c236d9fa9",
+          "logSha256": "7c958f3c80dd517aa1e9279b0e8f48164c04e41d9bd6f3c1ad5db94deb88d7ef",
+          "expectedDiagnostic": "literal underscore",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        },
+        {
+          "id": "used-identity",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "the resulting ID is invalid, or the ID is already used elsewhere in the draft, ",
+          "new": "or the resulting ID is invalid, ",
+          "namedTest": "teaches the author one terminology item per term using its reader spelling",
+          "changedSha256": "31d04c396ed52348480485fedc7e192f1882591da0bfda86e8306f6f69394344",
+          "reportSha256": "e5ca1c5f7e92641d766e4ba49e7ef2c7ba543d80933e772487aff60187f84827",
+          "logSha256": "2eb39aa8424ac0c9071caa60c2b28d68eb21cd6a21044a880e3a3f9ae2267737",
+          "expectedDiagnostic": "already used elsewhere",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        },
+        {
+          "id": "genuine-prefix",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.",
+          "new": "Omit the `u-` prefix.",
+          "namedTest": "teaches the author one terminology item per term using its reader spelling",
+          "changedSha256": "e6fb1738cbd74622c547b316692baaaffe23f56eaf91b6bb6d75bfd6fb1fe624",
+          "reportSha256": "5d3a0e556a8c2c136fad30afffc9adea2557c0428dccca6465adc90ec5acdd64",
+          "logSha256": "ff38f2d32b6dfe2eac0c05c3df904f035135db2a033d220919ef06aeaa73c867",
+          "expectedDiagnostic": "u-boot",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        },
+        {
+          "id": "stale-version",
+          "file": "packages/polaris-dossier/src/brief.ts",
+          "old": "export const BRIEF_VERSION = 'polaris-dossier-brief-v20';",
+          "new": "export const BRIEF_VERSION = 'polaris-dossier-brief-v19';",
+          "namedTest": "writes the brief, the schema and the brief record, binding the run, the pinned revision and the schema version",
+          "changedSha256": "1bf0eb041480622712d66f079f26b408f4387dbbc2272ceb6295577df7c799d8",
+          "reportSha256": "b1be2bee5467802e79b53cfd5ed4afc6630b038043ee5bf78d0b386389d4c97e",
+          "logSha256": "ed7c9146136abfc53c17bd216dd54e4666b4250ccf0aae405c045dc0a64aed63",
+          "expectedDiagnostic": "polaris-dossier-brief-v19",
+          "baselineReport": "ac4-r3-brief-focused.json",
+          "testsPassed": 0,
+          "testsFailed": 1,
+          "testsPending": 41,
+          "exit": 1
+        }
+      ]
+    },
+    "sourceProofSha256": "8129c97419917ee568c653c9586bf52b9b69f5309652853791b7941bdbd043a6",
+    "embeddedCanonicalSha256": "0308e160264aa237d37d70ac68d062349530ba81ece2f14c1b5621baa5f4100b"
+  },
+  "routingRule6": {
+    "record": {
+      "subject": "032b89e28736ee5fb77d00514ab0bbc266e49a4b",
+      "focusedControls": [
+        {
+          "mutant": "term-brief-pending",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "",
+          "expected": "candidate only; v2.26 stays effective",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-pending-citation",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "| A-1001 | 2026-11-25 | `ffffffffffffffffffffffffffffffffffffffff` | [prior spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | `polaris-dossier-brief-terminology-selftest` | `git revert ffffffffffffffffffffffffffffffffffffffff` | — |\n",
+          "expected": "prior snapshot citation stays pending",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-unassigned",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "| A-999 | 2026-11-25 | `0123456789abcdef0123456789abcdef01234567` | [spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | Selftest | `git revert 0123456789abcdef0123456789abcdef01234567` | `polaris-dossier-brief-terminology-selftest` |\n",
+          "expected": "no tag allocation, no activation",
+          "failed": [
+            "terminology brief: the version tag is unassigned"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-activated",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "| A-999 | 2026-11-25 | `0123456789abcdef0123456789abcdef01234567` | [spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | Selftest | `git revert 0123456789abcdef0123456789abcdef01234567` | `polaris-dossier-brief-terminology-selftest` |\n",
+          "expected": "only 034 changes from 214 to 215",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-adopted-citation",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "| A-1001 | 2026-11-25 | `ffffffffffffffffffffffffffffffffffffffff` | [prior spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | `polaris-dossier-brief-terminology-selftest` | `git revert ffffffffffffffffffffffffffffffffffffffff` | — |\n",
+          "expected": "prior snapshot citation and tag outside its column do not add an adoption",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-duplicate",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "| A-999 | 2026-11-25 | `0123456789abcdef0123456789abcdef01234567` | [spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | Selftest | `git revert 0123456789abcdef0123456789abcdef01234567` | `polaris-dossier-brief-terminology-selftest` |\n",
+          "new": "| A-999 | 2026-11-25 | `0123456789abcdef0123456789abcdef01234567` | [spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | Selftest | `git revert 0123456789abcdef0123456789abcdef01234567` | `polaris-dossier-brief-terminology-selftest` |\n| A-999 | 2026-11-25 | `0123456789abcdef0123456789abcdef01234567` | [spec](https://github.com/tzeusy-org/syzygy/blob/0123456789abcdef0123456789abcdef01234567/openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md) | Selftest | `git revert 0123456789abcdef0123456789abcdef01234567` | `polaris-dossier-brief-terminology-selftest` |\n",
+          "expected": "expected one seven-column",
+          "failed": [
+            "terminology brief: expected one seven-column agent adoption row"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-malformed-tagged",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "| Selftest | ",
+          "new": "| ",
+          "expected": "expected one seven-column",
+          "failed": [
+            "terminology brief: expected one seven-column agent adoption row"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-wrong-tag",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "`polaris-dossier-brief-terminology-selftest`",
+          "new": "`other`",
+          "expected": "malformed adoption",
+          "failed": [
+            "terminology brief: malformed adoption identity, date, commit, reason or tag"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-wrong-revert",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "git revert 0123456789abcdef0123456789abcdef01234567",
+          "new": "git revert other",
+          "expected": "revert does not name",
+          "failed": [
+            "terminology brief: revert does not name the landed commit"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-wrong-link",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "/blob/0123456789abcdef0123456789abcdef01234567/",
+          "new": "/blob/other/",
+          "expected": "does not name",
+          "failed": [
+            "terminology brief: adoption row does not name `openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md`"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-missing-predecessor",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "| A-217 | 2026-11-24 | `fb265c698c15e57255b226e45aa22edd2d4bc6de` | [Worth-knowing mark 2.26](https://github.com/tzeusy-org/syzygy/blob/fb265c698c15e57255b226e45aa22edd2d4bc6de/openspec/changes/dossier-worth-knowing/proposed/polaris-generation/spec.md): one complete MODIFIED REQ-polaris-generation-034 after system model 2.24 (A-64; 207 to 214 scenarios), installed at this row's commit, which corrects the bytes first installed at `9c10e316e3973921254f63eaac29874c5d40f44b` after an independent review of the pull request (first drafted as 2.23, relabelled 2.25 with schema v13 and brief v19, and rebuilt by the same anchored script over 2.24's text once the system model took 2.24 and edit and repair accounting took 2.25: 1442 of 1443 predecessor lines carried byte for byte, 1 amended in place, every predecessor scenario kept). Draft schema `polaris-dossier-local-draft-v13`, a schema-v10 draft plus two members, lets a cited Inferred block that is one of a section's own paragraphs carry `worthKnowing: true`, a fact about the project a newcomer would not guess from its kind, and a Pole say in `worthKnowingNone` why it marks none. Check reports a `worth-knowing` finding, with literal details, for a mark on any other block, on an uncited block or on a judgement, and a `field-version` finding for either member in schema v12 or earlier; its report carries count advice, never a finding, for a Pole that marks none without a reason or more than three (a ceiling, never a quota), and for a draft with no Poles advice that names no reason member, since it has none. A page's marked blocks that render Inferred on the counted review's support, with no judgement mark, not withheld and matched by no secret detector, render once, in one \"Worth knowing\" callout before its sections, each linked to its section; any other marked block stays in its section as it renders unmarked; a Pole's reason is never rendered, only Syzygy's none-found sentence. Brief `polaris-dossier-brief-v19`, brief v16 plus one paragraph, asks for one to three per Pole; inventory schema `polaris-dossier-local-inventory-v2` and inventory brief `polaris-dossier-inventory-brief-v4` add the `worth-knowing` entry kind, so a fact the inventory records and the draft never cites surfaces as an uncovered entry, and a v1 inventory is checked against the v1 kinds alone. Drafts of schema v12 and earlier and the provider mode keep their findings and bytes. Schema v13 and brief v19 carry neither 2.23's containment kind nor 2.24's system model, which are adopted but not implemented; a later version that joins either to the mark takes a new schema and brief number, so v13 and v19 never change shape (the package's `design.md` D2), and until 2.23 and 2.24 are implemented a v11 or v12 draft is refused as an unknown version. This row replaces the branch's earlier private rows A-64, A-210, A-213 and A-215, none of which reached `main` (each id was taken there by another adoption). No review has read the spec bytes as a specification review; the pull request review that asked for these corrections read the code and the 2.26 text at `b363f964` | Bead syzygy-5dhm.41 (pursuit 2026-11-21b, move R8 slice 1): depth comes from naming the non-obvious, and nothing in the brief asked for it; the mark lets the author single out the facts that break the pattern of the project's kind and the reader find them first. Mutation record and the seven-run re-render at this branch's head after the corrections: `docs/evidence/syzygy-5dhm-41/`. Reader share under brief v19 is Unknown until a new run (CONTRIBUTING.md rule A-38 as amended by A-63) | `git revert fb265c698c15e57255b226e45aa22edd2d4bc6de 9c10e316e3973921254f63eaac29874c5d40f44b` | `polaris-dossier-worth-knowing-v2.26` |\n",
+          "new": "",
+          "expected": "prior v2.26 adoption is required",
+          "failed": [
+            "terminology brief: prior v2.26 worth-knowing adoption is unavailable"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-changed-subject",
+          "path": "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+          "old": "",
+          "new": "\n",
+          "expected": "R2 subject drift",
+          "failed": [
+            "terminology brief: `openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md` differs from the reviewed subject"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-changed-union",
+          "path": "openspec/changes/dossier-brief-terminology/GOVERNING-DEPENDENCIES.json",
+          "old": "\"REQ-polaris-generation-033\"",
+          "new": "\"REQ-polaris-generation-099\"",
+          "expected": "R4 independently derived union mismatch",
+          "failed": [
+            "`openspec/changes/dossier-brief-terminology/GOVERNING-DEPENDENCIES.json`: POLARIS identifier 099 resolves to no requirement (in `REQ-polaris-generation-099`)",
+            "`openspec/changes/dossier-brief-terminology/GOVERNING-DEPENDENCIES.json` differs from its amendment's warrants"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-adopted-routes",
+          "path": "PROJECT-STATUS.md and openspec/README.md",
+          "old": "| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | **Candidate.** Specification version and adoption pending | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "new": "\n[Terminology-brief amendment](openspec/changes/dossier-brief-terminology) is agent-adopted in A-999.\n| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | Agent adoption in [AGENT-ADOPTIONS.md](../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and tag `polaris-dossier-brief-terminology-selftest` | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "expected": "both adopted routes are accepted",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-missing-status-route",
+          "path": "PROJECT-STATUS.md",
+          "old": "\n[Terminology-brief amendment](openspec/changes/dossier-brief-terminology) is agent-adopted in A-999.\n",
+          "new": "",
+          "expected": "`PROJECT-STATUS.md` does not route terminology brief and its adoption A-999",
+          "failed": [
+            "`PROJECT-STATUS.md` does not route terminology brief and its adoption A-999"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-missing-index-route",
+          "path": "openspec/README.md",
+          "old": "| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | Agent adoption in [AGENT-ADOPTIONS.md](../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and tag `polaris-dossier-brief-terminology-selftest` | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "new": "| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | **Candidate.** Specification version and adoption pending | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "expected": "`openspec/README.md` does not route terminology brief to `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` and its version tag",
+          "failed": [
+            "`openspec/README.md` does not route terminology brief to `.syzygy/governance/decisions/AGENT-ADOPTIONS.md` and its version tag"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-premature-PROJECT-STATUS.md",
+          "path": "PROJECT-STATUS.md",
+          "old": "",
+          "new": "\n[Terminology-brief amendment](openspec/changes/dossier-brief-terminology) is agent-adopted in A-999.\n",
+          "expected": "`PROJECT-STATUS.md` calls terminology brief adopted while it is not in force",
+          "failed": [
+            "`PROJECT-STATUS.md` calls terminology brief adopted while it is not in force"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-premature-openspec-README.md",
+          "path": "openspec/README.md",
+          "old": "| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | **Candidate.** Specification version and adoption pending | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "new": "| [`dossier-brief-terminology`](changes/dossier-brief-terminology) | Proposed author brief v20 explains one terminology item per term, including valid ID and exact statement fallbacks. | Agent adoption in [AGENT-ADOPTIONS.md](../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) and tag `polaris-dossier-brief-terminology-selftest` | [Draft semantic delta](changes/dossier-brief-terminology/SEMANTIC-DELTA.md) |",
+          "expected": "`openspec/README.md` calls terminology brief adopted while it is not in force",
+          "failed": [
+            "`openspec/README.md` calls terminology brief adopted while it is not in force"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-veto",
+          "path": ".syzygy/governance/decisions/AGENT-ADOPTIONS.md",
+          "old": "",
+          "new": "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n",
+          "expected": "v2.26 restores 034 while other layers remain",
+          "failed": [],
+          "outcome": "held"
+        },
+        {
+          "mutant": "term-brief-wrong-id",
+          "path": "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+          "old": "ID: REQ-polaris-generation-034",
+          "new": "ID: REQ-polaris-generation-035",
+          "expected": "both parsers refuse the wrong layer",
+          "failed": [
+            "unexpected figure-homes requirement operations",
+            "unexpected figure-homes requirement operations"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-wrong-name",
+          "path": "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+          "old": "### Requirement: Agent brief and mechanically checked draft",
+          "new": "### Requirement: Unrecognised terminology requirement",
+          "expected": "both parsers refuse the wrong layer",
+          "failed": [
+            "MODIFIED REQ-polaris-generation-034 must preserve its predecessor's ID and name",
+            "MODIFIED `Unrecognised terminology requirement` must preserve its predecessor's ID and name"
+          ],
+          "outcome": "killed"
+        },
+        {
+          "mutant": "term-brief-second-block",
+          "path": "openspec/changes/dossier-brief-terminology/proposed/polaris-generation/spec.md",
+          "old": "ID: REQ-polaris-generation-034",
+          "new": "ID: REQ-polaris-generation-034\n\n### Requirement: Extra\nID: REQ-polaris-generation-099",
+          "expected": "both parsers refuse the wrong layer",
+          "failed": [
+            "unexpected figure-homes requirement operations",
+            "unexpected figure-homes requirement operations"
+          ],
+          "outcome": "killed"
+        }
+      ],
+      "checkSensitivity": [
+        {
+          "mutant": "status",
+          "old": "if AGENT_ADOPTIONS not in status or term_brief_fields != [f\"{TERM_BRIEF_STATUS_PREFIX} is agent-adopted in {identity}.\"]:",
+          "new": "if False:",
+          "failures": [
+            "term-brief-missing-status-route"
+          ]
+        },
+        {
+          "mutant": "index",
+          "old": "if not any(Path(AGENT_ADOPTIONS).name in line and TERM_BRIEF_TAG in line\n                   for line in rows.get(TERM_BRIEF_CHANGE, [])):",
+          "new": "if False:",
+          "failures": [
+            "term-brief-missing-index-route"
+          ]
+        }
+      ]
+    },
+    "sourceProofSha256": "09e098816ea217369e400ad05d42456ffefc965b07f098bc7e20b31ee164a9e0",
+    "embeddedCanonicalSha256": "6ecc9ce0844dcd6b83d9bb259e83bb79c9e5519137721598f3fd07887f88fa19"
+  },
+  "syntheticRoutingOnly": {
+    "record": {
+      "previewCommit": "fb763122d635a5114669385f99e637aa627a0c28",
+      "activated": false,
+      "syntheticRowOnly": true,
+      "citationStates": [
+        "pending",
+        "active"
+      ],
+      "priorRecognitionRefusalsReproduced": 2,
+      "scenarioTotal": [
+        554,
+        555
+      ],
+      "requirementTotal": 39,
+      "namedLayer": [
+        "REQ-polaris-generation-034",
+        214,
+        215
+      ],
+      "unchangedCoverage": [
+        "REQ-polaris-generation-035",
+        46
+      ],
+      "censusSha256": "2aa6382e203d068b7a25620cfeb3c9b9242f6c0ba08dd66655c333b2f734968b",
+      "generatedPaths": [
+        "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json"
+      ],
+      "reconciliationPredicatesPassed": 7
+    },
+    "sourceProofSha256": "9d0d5a96c23a696d4f3482dbe92f0977d19f85c2eba9551456e4e9e8cbceb615",
+    "embeddedCanonicalSha256": "15e2fe4d3acd2e180e16db8dd7bda6eef33a9fe73342b2bd9e4f56541a3f84bc"
+  },
+  "priorCriteriaEvidence": {
+    "AC1": {
+      "path": "docs/evidence/syzygy-fnry-18/counted-review-reflow-ac1-2026-11-24.json",
+      "sha256": "01113f62fcd1dc75e9df4a6071dcb8156c8fc5e949cd5fd3d217b86156a5814a"
+    },
+    "AC2": {
+      "path": "docs/evidence/syzygy-fnry-18/wayfinding-ac2-2026-11-24.json",
+      "sha256": "0fc9121efeebfb5e8ed3250ef9674232cc582b859759d24aa990616f79517412"
+    },
+    "AC3": {
+      "path": "docs/evidence/syzygy-fnry-18/glossary-ac3-2026-11-25.json",
+      "sha256": "fe3be7443969e1bcf79c0ef21f15e60891be48dc960e7c6815540301c1693a0e"
+    },
+    "AC5": {
+      "path": "docs/evidence/syzygy-fnry-18/counted-review-region-ac5-2026-11-24.json",
+      "sha256": "332408528d3823b55333eca00505529dcec9763ff77a7496c0cbcfa01439d1a4"
+    },
+    "layoutResidual": {
+      "path": "docs/evidence/syzygy-fnry-18/counted-review-region-ac5-layout-2026-11-24.json",
+      "sha256": "d255c9005ee2cacb3867968d597e11b409a30bed41d216d5906104e5364109b8"
+    }
+  },
+  "unchangedProviderGoldenOnR3": {
+    "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+    "sha256": "ed4578ea5b1c804a7bf4e4b1700eb30e009fcc3b280312bd1c248739fded4104",
+    "focusedPasses": 1,
+    "historicalReportSha256": "21d27e799fac24d0791e41978d74b87f534df522a667d76f841480cf19c33f47"
+  },
+  "limitations": {
+    "readerShare": "Unknown overall and for purpose, structure, mechanism, rationale, change and limits.",
+    "reflow": "The inherited overflow was witnessed on a separate settled 19-file renderRun fixture, outside its named review-status regions. The ordinary AC1 fixture is separately enumerated.",
+    "authority": "The preview carries no adopted terminology version."
+  },
+  "historicalFixtureIsolation": {
+    "oldExactHead": "90c7ba580d0bc0f2531abe127d0b4444cd83ddfc",
+    "exactCorrectedSource": "ec0fc11fe8e83bb04b9ff169c3e321267c2baf91",
+    "disposition": "Prior product tiers passed. The historical fixture suite retained the current dependent adoption after removing its prerequisite. Older synthetic layers now remove the dependent adoption too.",
+    "priorFullLogSha256": "7a2e679887bb8a29002d1328e1d2662e432ca89551c03a4c8f9a89bf2e122352",
+    "priorCanonicalPassed": 138,
+    "priorCanonicalFailed": 1,
+    "checkerFile": "scripts/check_spec_reconciliation.py",
+    "old": "    # These cases reconstruct historical REQ-034 floors, including versions\n    # at which the v2.24 prerequisite for edit accounting cannot exist.\n    figure_base = base\n    if edit_account_rows(base):\n        figure_base = Path(tmp) / \"before-edit-accounting\"\n        shutil.copytree(base, figure_base)\n        ledger = figure_base / AGENT_ADOPTIONS\n        rows = ledger.read_text().splitlines(keepends=True)\n        ledger.write_text(\"\".join(line for line in rows if not is_edit_account_row(line)))\n",
+    "new": "    # These cases reconstruct historical REQ-034 floors where the prerequisites\n    # for edit accounting and the terminology brief cannot exist.\n    figure_base = base\n    if edit_account_rows(base) or term_brief_rows(base):\n        figure_base = Path(tmp) / \"historical-034\"\n        shutil.copytree(base, figure_base)\n        ledger = figure_base / AGENT_ADOPTIONS\n        rows = ledger.read_text().splitlines(keepends=True)\n        ledger.write_text(\"\".join(line for line in rows\n                                  if not is_edit_account_row(line) and not is_term_brief_row(line)))\n",
+    "exactFixtures": [
+      "figure_cases",
+      "derived_cases",
+      "ledger_cases",
+      "kinds_cases",
+      "manifests_cases",
+      "repairs_cases",
+      "maps_cases",
+      "bounds_cases",
+      "corr_cases",
+      "coverage_cases",
+      "infra_cases",
+      "findpages_cases",
+      "subsec_cases",
+      "reltype_cases",
+      "hero_cases",
+      "readers_cases",
+      "cont_cases",
+      "model_cases",
+      "worth_cases"
+    ],
+    "previouslyFailedArms": [
+      "figure-pending",
+      "figure-adopted",
+      "figure-vetoed",
+      "derived-pending",
+      "derived-adopted",
+      "derived-vetoed",
+      "ledger-pending",
+      "ledger-adopted",
+      "ledger-vetoed",
+      "kinds-pending",
+      "kinds-adopted",
+      "kinds-vetoed",
+      "manifests-pending",
+      "manifests-adopted",
+      "manifests-vetoed",
+      "repairs-pending",
+      "repairs-adopted",
+      "repairs-vetoed",
+      "maps-pending",
+      "maps-adopted",
+      "maps-vetoed",
+      "bounds-pending",
+      "bounds-adopted",
+      "bounds-vetoed",
+      "corr-pending",
+      "corr-adopted",
+      "corr-vetoed",
+      "coverage-pending",
+      "coverage-adopted",
+      "coverage-vetoed",
+      "infra-pending",
+      "infra-adopted",
+      "infra-vetoed",
+      "findpages-pending",
+      "findpages-adopted",
+      "findpages-vetoed",
+      "subsec-pending",
+      "subsec-adopted",
+      "subsec-vetoed",
+      "reltype-pending",
+      "reltype-adopted",
+      "reltype-vetoed",
+      "hero-pending",
+      "hero-adopted",
+      "hero-vetoed",
+      "readers-pending",
+      "readers-adopted",
+      "readers-vetoed",
+      "cont-pending",
+      "cont-adopted",
+      "cont-vetoed",
+      "model-pending",
+      "model-adopted",
+      "model-vetoed",
+      "worth-pending",
+      "worth-adopted",
+      "worth-vetoed"
+    ],
+    "beforeReplaySha256": "17331c905f14c43e671c5d318418c28ad53b006b514b4428e1b2b38abc71fffd",
+    "afterReplaySha256": "afbc423d8f1e8dad72d7de03ede09e0af21738c09a3685aed58f261e18a87fbe",
+    "focusedRecordCount": 68,
+    "oldFailingControls": [
+      "figure-pending",
+      "figure-adopted",
+      "figure-vetoed",
+      "worth-pending",
+      "worth-adopted",
+      "worth-vetoed"
+    ],
+    "newFailingControls": [],
+    "currentPredecessorRefusalRetained": true,
+    "priorIndependentRaw": {
+      "path": "docs/reviews/syzygy-fnry-18/FNRY18-GLOSSARY-AC4-R8-RAW.md",
+      "sha256": "dbfcb28a397f0596159b7618f26b1b5b24dfacad8bb8af380a7d46ff5fa9294b"
+    }
+  }
+}

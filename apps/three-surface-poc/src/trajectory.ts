@@ -9,11 +9,30 @@ import {
   projectTrajectoryView,
   workerChangeVerificationId,
   type TrajectoryNarrowing,
+  type TrajectoryEligibility,
+  type TrajectoryEligibilityReason,
+  groupAnchor,
+  type TrajectoryGroupSlice,
+  type TrajectoryGrouping,
+  type TrajectoryItemEligibility,
   type TrajectoryViewRefusal,
   type TrajectoryViewRequest,
   type PocModel,
   type PocUnknown,
   type WorkerChangeObserved,
+  CHANGE_KINDS,
+  CHANGE_WINDOWS,
+  CHANGE_WINDOW_REASON_TEXT,
+  TRAJECTORY_PAGE_SIZE,
+  type ChangeWindow,
+  type TrajectoryChangeWindow,
+  isTitleAdmitted,
+  closedItemLanding,
+  TRAJECTORY_COMMIT_JOINS_ID,
+  TRAJECTORY_LANDING_UNNAMED_ID,
+  type TrajectoryClosedLanding,
+  type WorkItemFact,
+  type WorkItemTitle,
 } from '@syzygy/three-surface-poc-core';
 import type { TrajectoryAnswer, TrajectoryAnswerId, TrajectoryColumn, TrajectoryLaneItem, WorkItemStatus } from '@syzygy/three-surface-poc-core';
 import type { TestArtifactVerificationResult } from '@syzygy/three-surface-poc-core';
@@ -116,7 +135,7 @@ function closureNotice(rendered: readonly TrajectoryLaneItem[]): string {
   const unverified = closed.filter((item) => item.verification === 'unknown').length;
   return `<p class="closure-notice notice" data-parity-field="trajectory-closure-notice">
         <span data-parity-field="trajectory-closed-count">${closed.length}</span> of these items are closed in the tracker. Closed is the tracker's word, not a verification:
-        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test or merge evidence is ingested for a work item; the <a href="#n-verification">verification notice</a> gives the reason and route.
+        verification is Unknown for <span data-parity-field="trajectory-closed-unverified-count">${unverified}</span> of them, because no test evidence is ingested for a work item, and a commit that names an item shows where it landed, not that it works; the <a href="#n-verification">verification notice</a> gives the reason and route.
       </p>`;
 }
 
@@ -126,6 +145,8 @@ const NOTICE_ELEMENT_ID = {
   [WORK_ITEM_GOVERNING_INTENT_REGION_ID]: 'n-intent',
   [WORK_ITEM_VERIFICATION_REGION_ID]: 'n-verification',
   [WORK_ITEMS_REGION_ID]: 'n-work-items',
+  [TRAJECTORY_COMMIT_JOINS_ID]: 'n-commit-joins',
+  [TRAJECTORY_LANDING_UNNAMED_ID]: 'n-landing-unnamed',
 } as const;
 
 type BoardDisclosureId = keyof typeof NOTICE_ELEMENT_ID;
@@ -185,7 +206,127 @@ function answerDisclosure(model: PocModel, field: string, id: string, label: str
   return `<span class="epistemic epistemic-unknown" data-parity-field="${field}"${unknownMarker(id, unknown)}>${escapeHtml(label)}: Unknown. ${escapeHtml(unknown.reason)} Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}</span>`;
 }
 
-function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
+/** syzygy-t3jk.21: what the changed answer needs from the request. */
+interface ChangedContext {
+  readonly window: ChangeWindow;
+  /** The current view, so a window link keeps it. */
+  readonly view: Partial<TrajectoryViewRequest> | null;
+  readonly mountPrefix: string;
+}
+
+const CHANGE_WINDOW_NAME: Readonly<Record<ChangeWindow, string>> = {
+  day: 'Last day',
+  week: 'Last week',
+  'since-last': 'Since the last evaluation',
+};
+
+/** How many changed items the page lists; the rest are counted (POC-REQ-044). */
+export const CHANGED_LIST_LIMIT = 250;
+
+/** syzygy-t3jk.21: the changed answer for the selected window, with links to
+ * the others. Counts are the tracker's net change between the two named
+ * revisions: never a velocity, a verdict or a per-person figure. */
+function changedAnswer(model: PocModel, windows: readonly TrajectoryChangeWindow[], context: ChangedContext): string {
+  const selected = windows.find((window) => window.window === context.window)!;
+  const view = context.view;
+  const firstOutlinePage = view?.group === 'parent' && view.status === null && view.governingIntent === null && view.page === 1;
+  const links = CHANGE_WINDOWS.map((name) => {
+    const window = windows.find((entry) => entry.window === name)!;
+    const figure = window.kind === 'observed' ? `${window.facts.length} changed` : `Unknown: <code>${escapeHtml(window.reason)}</code>`;
+    const label = `${escapeHtml(CHANGE_WINDOW_NAME[name])} (<span data-parity-field="answer-changed-${name}-count">${figure}</span>)`;
+    return name === context.window
+      ? `<strong aria-current="true" data-change-window-link="${name}">${label}</strong>`
+      : `<a data-change-window-link="${name}" href="${viewHref(context.mountPrefix, { ...(firstOutlinePage ? null : view), changed: name })}#answers-heading">${label}</a>`;
+  }).join(' · ');
+  const head = `<p class="change-windows">Window: ${links}.</p>`;
+  // R-T6S1-CHANGES-1 F2: an Unknown window keeps its reason and route on
+  // every page, not only when it is the selected one.
+  const unknownElsewhere = windows.some((window) => window.kind === 'unknown' && window.window !== context.window);
+  const disclosureId = windows.find((window) => window.kind === 'unknown')?.disclosure;
+  if (selected.kind === 'unknown') {
+    return `${head}<p data-parity-field="answer-changed" data-change-window="${selected.window}" data-change-state="unknown">${escapeHtml(CHANGE_WINDOW_NAME[selected.window])}: Unknown, because ${escapeHtml(CHANGE_WINDOW_REASON_TEXT[selected.reason])} (<code data-parity-field="answer-changed-reason">${escapeHtml(selected.reason)}</code>); never a zero. ${answerDisclosure(model, 'answer-changed-disclosure', selected.disclosure, 'What changed')}</p>`;
+  }
+  const point = (field: string, label: string, commit: { readonly revision: string; readonly at: string }): string =>
+    `${label} <code data-parity-field="${field}" data-revision="${escapeHtml(commit.revision)}">${escapeHtml(commit.revision.slice(0, 8))}</code> (<time datetime="${escapeHtml(commit.at)}">${escapeHtml(commit.at)}</time>)`;
+  const counts = CHANGE_KINDS.map((kind) => `<span data-parity-field="answer-changed-${kind}">${selected.counts[kind]}</span> ${kind}`).join(', ');
+  const served = new Map([...(model.workItems.kind === 'observed' ? model.workItems.items : [])].map((item) => item.id).sort().map((id, index) => [id, Math.floor(index / TRAJECTORY_PAGE_SIZE) + 1]));
+  const listed = selected.facts.slice(0, CHANGED_LIST_LIMIT).map((fact) => {
+    const page = served.get(fact.id);
+    const id = page === undefined
+      ? `<code>${escapeHtml(fact.id)}</code>`
+      : `<a href="${viewHref(context.mountPrefix, { page })}#${escapeHtml(encodeURIComponent(`workitem-${fact.id}`))}"><code>${escapeHtml(fact.id)}</code></a>`;
+    const statuses = `${fact.from === null ? '—' : `<code>${escapeHtml(fact.from)}</code>`} → ${fact.to === null ? '—' : `<code>${escapeHtml(fact.to)}</code>`}`;
+    return `<li data-change-kind="${fact.kind}" data-change-id="${escapeHtml(fact.id)}">${itemName(model, fact.id, id)} ${fact.kind} (${statuses})</li>`;
+  }).join('');
+  const remainder = selected.facts.length - Math.min(selected.facts.length, CHANGED_LIST_LIMIT);
+  const list = selected.facts.length === 0
+    ? '<p>No item changed state between these revisions: an observed zero.</p>'
+    : `<ol class="change-list">${listed}</ol>${remainder === 0 ? '' : `<p><span data-parity-field="answer-changed-unlisted">${remainder}</span> more changed items are not listed here; the machine answer lists every one.</p>`}`;
+  const elsewhere = unknownElsewhere && disclosureId !== undefined
+    ? `<p class="answer-note">${answerDisclosure(model, 'answer-changed-disclosure', disclosureId, 'Other windows')}</p>`
+    : '';
+  return `${head}${elsewhere}<p data-parity-field="answer-changed" data-change-window="${selected.window}">Between ${point('answer-changed-from', 'revision', selected.from)} and ${point('answer-changed-to', 'the observed revision', selected.to)}: <span data-parity-field="answer-changed-total">${selected.facts.length}</span> items changed state (${counts}). <span data-parity-field="answer-changed-updated-only">${selected.updatedWithoutStatusChange}</span> more were updated without a status change, and <span data-parity-field="answer-changed-outside-prefix">${selected.outsidePrefix}</span> changed rows are outside this tracker's prefix, counted only. Net change between the two revisions, from the tracker's history; not a rate or a verdict.</p>${list}`;
+}
+
+/** How many commits a card lists; the machine answer lists every one. */
+export const CARD_COMMIT_LIMIT = 3;
+
+const MERGED_LABEL = 'Merged (by naming convention, reduced fidelity)';
+
+/** RFC4-22: a join that cannot be established renders Unknown. */
+function noNamingCommitLabel(truncated: boolean, read: number): string {
+  return truncated ? `Landing: Unknown, no commit among the newest ${read} read names it` : 'Landing: Unknown, no commit names it';
+}
+
+/** POC-REQ-065 (syzygy-t3jk.26): the closed items' landings in the remains
+ * answer, never a bare "merged" and never a verdict word. */
+function closedLandingSentence(model: PocModel, landing: TrajectoryClosedLanding): string {
+  const closed = `<span data-parity-field="answer-remains-closed-landing-closed">${landing.closed}</span>`;
+  if (landing.state === 'unknown') {
+    return ` <span id="${NOTICE_ELEMENT_ID[TRAJECTORY_COMMIT_JOINS_ID]}">${closed} items are closed. ${answerDisclosure(model, 'answer-remains-closed-landing', landing.disclosure, 'Their landing')}</span>`;
+  }
+  const older = landing.historyTruncated
+    ? ` Only the newest <span data-parity-field="answer-remains-closed-landing-read">${landing.commitsRead}</span> commits were read; a commit in older history may name an item counted here as having none.`
+    : ` The observed revision's whole history was read (<span data-parity-field="answer-remains-closed-landing-read">${landing.commitsRead}</span> commits).`;
+  return ` Of ${closed} closed items, <span data-parity-field="answer-remains-closed-landing-merged">${landing.mergedByConvention}</span> are merged by naming convention: a commit reachable from the observed revision names each one, a reduced-fidelity join that shows where work landed, not that it satisfied its intent. <span data-parity-field="answer-remains-closed-landing-none">${landing.noNamingCommitRead}</span> are closed with no commit that names them, so where they landed is Unknown.${older}${unnamedDisclosure(model, landing.noNamingCommitRead)}`;
+}
+
+/** The one disclosure the Unknown landing of an unnamed closed item refers to. */
+function unnamedDisclosure(model: PocModel, count: number): string {
+  if (count === 0) return '';
+  return ` <span id="${NOTICE_ELEMENT_ID[TRAJECTORY_LANDING_UNNAMED_ID]}">${answerDisclosure(model, 'answer-remains-closed-landing-unnamed', TRAJECTORY_LANDING_UNNAMED_ID, 'Their landing')}</span>`;
+}
+
+/** POC-REQ-065: a card's commits and, for a closed item, its landing. */
+function itemCommits(model: PocModel, item: WorkItemFact): string {
+  const joins = model.commitJoins;
+  if (joins.kind !== 'observed') {
+    if (item.status !== 'closed') return '';
+    const unknown = unknownSubject(model, TRAJECTORY_COMMIT_JOINS_ID);
+    return cardMark('work-item-landing', TRAJECTORY_COMMIT_JOINS_ID, 'epistemic-unknown', unknown.closedReason, 'Landing: Unknown');
+  }
+  const landing = closedItemLanding(item, joins);
+  const commits = joins.items.find((entry) => entry.id === item.id)?.commits ?? [];
+  const label = landing === null ? '' : landing === 'merged-by-convention'
+    ? `<span class="wi-landing" data-parity-field="work-item-landing" data-landing="${landing}">${MERGED_LABEL}</span>`
+    : unnamedLandingMark(model, noNamingCommitLabel(joins.truncated, joins.read));
+  if (commits.length === 0) return label === '' ? '' : `<div class="wi-commits">${label}</div>`;
+  const listed = commits.slice(0, CARD_COMMIT_LIMIT)
+    .map((commit) => `<br><code data-parity-field="work-item-commit">${escapeHtml(commit.hash.slice(0, 12))}</code> ${escapeHtml(commit.at)}`)
+    .join('');
+  const more = commits.length > CARD_COMMIT_LIMIT
+    ? `<br><span data-parity-field="work-item-commits-unlisted">${commits.length - CARD_COMMIT_LIMIT}</span> more in the machine answer`
+    : '';
+  return `<div class="wi-commits">${label}<span><span data-parity-field="work-item-commit-count">${commits.length}</span> commits name it (naming convention), newest first:${listed}${more}</span></div>`;
+}
+
+function unnamedLandingMark(model: PocModel, label: string): string {
+  const notice = NOTICE_ELEMENT_ID[TRAJECTORY_LANDING_UNNAMED_ID];
+  const unknown = unknownSubject(model, TRAJECTORY_LANDING_UNNAMED_ID);
+  return `<span class="epistemic epistemic-unknown wi-landing" data-parity-field="work-item-landing" data-landing="no-naming-commit-read" data-unknown-ref="${TRAJECTORY_LANDING_UNNAMED_ID}" data-unknown-reason="${escapeHtml(unknown.closedReason)}">${escapeHtml(label)} <a class="mark-ref" href="#${notice}" aria-describedby="${notice}">reason and route</a></span>`;
+}
+
+function answerBody(model: PocModel, answer: TrajectoryAnswer, context: ChangedContext): string {
   if (answer.state === 'unknown' && answer.disclosure === WORK_ITEMS_REGION_ID) {
     const unknown = unknownSubject(model, WORK_ITEMS_REGION_ID);
     return cardMark(`answer-${answer.id}`, WORK_ITEMS_REGION_ID, 'epistemic-unknown', unknown.closedReason, 'Unknown: work items were not observed');
@@ -196,18 +337,20 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
       const parts = (Object.keys(STATUS_TO_COLUMN) as WorkItemStatus[])
         .map((status) => `<span data-parity-field="answer-remains-${status}">${answer.byStatus[status]}</span> <code>${escapeHtml(status)}</code>`)
         .join(' · ');
-      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection. These are the tracker's items only, not checked against materialization records; approved intent that no proposal covers, and approved intent not yet materialized, are not enumerated here.`;
+      return `<span data-parity-field="answer-remains-served">${answer.served}</span> served work items, by tracker status: ${parts}. Counted over every served item, not this board's selection. These are the tracker's items only, not checked against materialization records; approved intent that no proposal covers, and approved intent not yet materialized, are not enumerated here.${closedLandingSentence(model, answer.closedLanding)}`;
     }
     case 'running': {
       if (!('claimed' in answer)) break;
       return `<span data-parity-field="answer-running-claimed">${answer.claimed}</span> of <span data-parity-field="answer-running-served">${answer.served}</span> served work items are claimed in the tracker (status <code>in_progress</code>), which is the tracker's claim. Liveness: <span class="liveness-state" data-parity-field="answer-running-liveness">${escapeHtml(answer.liveness)}</span>. No staleness bound is declared for claims, so no claimed item can be shown as active; declaring the bound in quality policy resolves it.`;
     }
     case 'changed':
+      if ('windows' in answer) return changedAnswer(model, answer.windows, context);
+      break;
     case 'cost':
       if (answer.state === 'unknown') {
-        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, answer.id === 'changed' ? 'What changed' : 'Cost');
+        const disclosure = answerDisclosure(model, `answer-${answer.id}`, answer.disclosure, 'Cost');
         // syzygy-t3jk.17: elapsed time is measured; the other costs stay Unknown.
-        return answer.id === 'cost' ? `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.` : disclosure;
+        return `${disclosure} Elapsed time is measured: see <a href="#time-measures">lead time and age</a>.`;
       }
       break;
     case 'intent': {
@@ -231,11 +374,11 @@ function answerBody(model: PocModel, answer: TrajectoryAnswer): string {
 
 /** POC-REQ-044: the five answers, first on the page, in their fixed order;
  * an Unknown answer is rendered, never dropped. */
-function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[]): string {
+function answersRegion(model: PocModel, answers: readonly TrajectoryAnswer[], context: ChangedContext): string {
   return `<section class="answers" aria-labelledby="answers-heading" data-parity-field="trajectory-answers">
       <h2 id="answers-heading" class="answers-heading">Five answers about the work</h2>
       <dl>${answers.map((answer) => `
-        <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer)}</dd></div>`).join('')}
+        <div class="answer" data-parity-field="trajectory-answer" data-answer-id="${answer.id}"><dt>${escapeHtml(ANSWER_QUESTION[answer.id])}</dt><dd>${answerBody(model, answer, context)}</dd></div>`).join('')}
       </dl>
     </section>`;
 }
@@ -246,6 +389,56 @@ function itemFacts(item: TrajectoryLaneItem): string {
   const instant = (field: string, label: string, value: string): string =>
     `${label} <time data-parity-field="${field}" datetime="${escapeHtml(value)}">${escapeHtml(value)}</time>`;
   return `<span class="wi-facts">priority <span data-parity-field="work-item-priority">${item.priority}</span> · ${instant('work-item-created', 'created', item.createdAt)} · ${instant('work-item-updated', 'updated', item.updatedAt)}${item.closedAt === null ? '' : ` · ${instant('work-item-closed', 'closed', item.closedAt)}`}</span>`;
+}
+
+const ELIGIBILITY_REASONS = {
+  'tracker-deferred': 'The tracker records this item as deferred.',
+  'work-item-revision-unavailable': 'No exact work-item revision was available for the dependency read.',
+  'dependency-read-failed': 'The dependency read failed.',
+  'dependency-result-malformed': 'The dependency read returned an unexpected result.',
+  'dependency-revision-unverified': 'The dependency read lacked a matching source revision witness.',
+  'unlisted-edge-type': 'A dependency row has an unlisted edge type.',
+  'external-blocker': 'A blocking row has an external target.',
+  'wisp-blocker': 'A blocking row has a wisp target.',
+  'out-of-prefix-blocker': 'A blocking row has a target outside the observed prefix.',
+  'unobserved-blocker': 'A blocking target has no observed work-item status.',
+} as const satisfies Record<TrajectoryEligibilityReason, string>;
+
+function eligibilityCount(label: string, count: number): string {
+  return `<span data-eligibility-count="${escapeHtml(label)}">${escapeHtml(label)} ${count}</span>`;
+}
+
+function eligibilityRegion(eligibility: TrajectoryEligibility): string {
+  const counts = Object.entries(eligibility.counts).map(([label, count]) => eligibilityCount(label, count));
+  const feed = eligibility.feed.kind === 'unknown'
+    ? `Unknown. ${ELIGIBILITY_REASONS[eligibility.feed.reason]}`
+    : [
+        eligibilityCount('rows', eligibility.feed.counts.total),
+        ...Object.entries(eligibility.feed.counts.byType).map(([label, count]) => eligibilityCount(label, count)),
+        eligibilityCount('unlisted', eligibility.feed.counts.unlisted),
+        eligibilityCount('external', eligibility.feed.counts.external),
+        eligibilityCount('wisp', eligibility.feed.counts.wisp),
+        eligibilityCount('out-of-prefix', eligibility.feed.counts.outOfPrefix),
+      ].join(' · ');
+  return `<section class="notice" aria-label="Work-item eligibility">
+    <p>Eligibility across ${eligibilityCount('served non-closed', eligibility.served)} items. ${counts.join(' · ')}</p>
+    <p data-dependency-feed="${eligibility.feed.kind}">Dependency rows. ${feed}</p>
+  </section>`;
+}
+
+function itemEligibility(model: PocModel, eligibility: TrajectoryItemEligibility | undefined, mountPrefix: string): string {
+  if (eligibility === undefined) return '';
+  const reasons = eligibility.reasons.map((reason) =>
+    `<span data-eligibility-reason="${reason}">${ELIGIBILITY_REASONS[reason]}</span>`,
+  ).join(' ');
+  const block = eligibility.block;
+  const cause = block === undefined ? '' :
+    `<span data-blocked-cause="${block.causes[0] ?? 'unknown'}">Cause ${block.causes[0] ?? 'Unknown'}.</span>`;
+  const blockers = block === undefined || block.blockers.length === 0 ? '' :
+    `<div>Blockers ${block.blockers.map(({ id, page }) =>
+      itemName(model, id, `<a data-blocker-id="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`),
+    ).join(', ')}</div>`;
+  return `<div class="wi-facts"><span data-trajectory-eligibility="${eligibility.state}">Eligibility ${eligibility.state}.</span> ${reasons} ${cause}${blockers}</div>`;
 }
 
 /** POC-REQ-014: the served count of the governing-intent Unknown beside how
@@ -271,28 +464,87 @@ function governingIntentRegion(model: PocModel, rendered: readonly TrajectoryLan
       <label class="narrow-label" for="narrow-governing-intent-unknown">Show only items whose governing intent is Unknown</label>`;
 }
 
-/** SEC-5: a card is named by its identifier; its title is never read, and
- * the card's mark refers to the one withheld-title disclosure. */
-function itemTitleWithheld(model: PocModel): string {
-  const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
-  return cardMark('work-item-title', WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, 'Title: withheld (SEC-5)');
+/** POC-REQ-063: how many UTF-16 code units of a title a list shows. The
+ * card shows the whole title; a list names many items, so its title is
+ * clipped to cap each reference's cost. A card's blockers have no count
+ * bound, so this caps a page's bytes per blocker, not the page
+ * (syzygy-262m). */
+export const LIST_TITLE_LIMIT = 60;
+
+/** A title cut to `LIST_TITLE_LIMIT` code units, never inside a surrogate
+ * pair, or null when it already fits. */
+function clipTitle(text: string): string | null {
+  if (text.length <= LIST_TITLE_LIMIT) return null;
+  const end = /[\uD800-\uDBFF]/.test(text[LIST_TITLE_LIMIT - 1]!) ? LIST_TITLE_LIMIT - 1 : LIST_TITLE_LIMIT;
+  return text.slice(0, end);
 }
 
-/** The board-level statement of the withheld titles, with the reason. */
-function titlesWithheldRegion(model: PocModel): string {
-  if (model.workItems.kind !== 'observed') return '';
+/** POC-REQ-063: the one place a work item's title becomes HTML, for its
+ * card and for every list that names it. An admitted title is the item's
+ * own text, escaped, in a <bdi> so its bidirectional controls cannot reorder
+ * the page; a withheld one is a mark naming its reason and referring to the
+ * one withheld-title disclosure. `list` clips the text (see clipTitle). */
+function titleHtml(model: PocModel, title: WorkItemTitle, field: string, className: string, list: boolean): string {
+  if (isTitleAdmitted(title)) {
+    const clipped = list ? clipTitle(title.text) : null;
+    return clipped === null
+      ? `<bdi class="${className}" data-parity-field="${field}">${escapeHtml(title.text)}</bdi>`
+      : `<bdi class="${className}" data-parity-field="${field}" data-title-clipped="${LIST_TITLE_LIMIT}">${escapeHtml(clipped)}</bdi>…`;
+  }
   const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
-  return `<p class="titles-withheld notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_TITLES_REGION_ID]}" data-parity-field="work-item-titles-withheld"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>
-        Titles: ${escapeHtml(unknown.label)} for <span data-parity-field="titles-unknown-count">${model.workItems.items.length}</span> of ${model.workItems.items.length} observed work items (every one). ${escapeHtml(unknown.reason)}
+  return cardMark(field, WORK_ITEM_TITLES_REGION_ID, epistemicClassName(unknown.label), unknown.closedReason, `Title: withheld (${title.withheld})`);
+}
+
+/** POC-REQ-063: the card's title, whole. */
+function itemTitle(model: PocModel, title: WorkItemTitle): string {
+  return titleHtml(model, title, 'work-item-title', 'wi-name', false);
+}
+
+const SERVED_BY_ID = new WeakMap<object, ReadonlyMap<string, WorkItemFact>>();
+
+/** POC-REQ-063 (syzygy-t3jk.24): an item's display name in a list: its
+ * identifier as the list renders it (`idHtml`), then, for a served item, its
+ * title as the policy served it. Every list that names a work item calls
+ * this, so no list reads a title any other way. An item not served (a
+ * removed item in the changed list) stays named by its identifier. */
+function itemName(model: PocModel, id: string, idHtml: string): string {
+  if (model.workItems.kind !== 'observed') return idHtml;
+  let served = SERVED_BY_ID.get(model.workItems);
+  if (served === undefined) {
+    served = new Map(model.workItems.items.map((item) => [item.id, item]));
+    SERVED_BY_ID.set(model.workItems, served);
+  }
+  const item = served.get(id);
+  if (item === undefined) return idHtml;
+  return `<span class="wi-ref" data-title-of="${escapeHtml(id)}">${idHtml} ${titleHtml(model, item.title, 'work-item-ref-title', 'wi-ref-name', true)}</span>`;
+}
+
+/** POC-REQ-063: the board's one statement about titles: the policy, the
+ * admitted count and, while any title is withheld, the withheld count with
+ * its reason and route. */
+function titlesRegion(model: PocModel): string {
+  if (model.workItems.kind !== 'observed') return '';
+  const titles = model.workItems.titles;
+  const total = model.workItems.items.length;
+  const policy = `<code>${escapeHtml(titles.policyId)}</code> ${escapeHtml(titles.policyVersion)}`;
+  const admitted = `<span data-parity-field="titles-admitted-count">${titles.admitted}</span> of ${total} observed work items`;
+  if (titles.withheld === 0) {
+    return `<p class="titles-notice notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_TITLES_REGION_ID]}" data-parity-field="work-item-titles">
+        Titles: shown for ${admitted}, each screened by the title policy ${policy} (its secret detectors and its scan for markup and scripts).
+      </p>`;
+  }
+  const unknown = unknownSubject(model, WORK_ITEM_TITLES_REGION_ID);
+  return `<p class="titles-notice notice" id="${NOTICE_ELEMENT_ID[WORK_ITEM_TITLES_REGION_ID]}" data-parity-field="work-item-titles"${unknownMarker(WORK_ITEM_TITLES_REGION_ID, unknown)}>
+        Titles: shown for ${admitted}, screened by the title policy ${policy}; ${escapeHtml(unknown.label)} for <span data-parity-field="titles-unknown-count">${titles.withheld}</span>. ${escapeHtml(unknown.reason)}
         Reason: <code>${escapeHtml(unknown.closedReason)}</code>. ${unknownRoute(unknown)}
       </p>`;
 }
 
-/** The item's served governing intent; a rendered item is always served. */
-function servedGovernedBy(model: PocModel, itemId: string): { readonly label: string; readonly closedReason: string } {
+/** The item as served; a rendered item is always served. */
+function servedItem(model: PocModel, itemId: string): WorkItemFact {
   const served = model.workItems.kind === 'observed' ? model.workItems.items.find((entry) => entry.id === itemId) : undefined;
   if (served === undefined) throw new Error(`rendered work item ${itemId} is not served`);
-  return served.governedBy;
+  return served;
 }
 
 function itemCard(
@@ -302,16 +554,24 @@ function itemCard(
   testArtifactVerification: TestArtifactVerificationResult,
   governingIntentId: string | null,
   demonstrated: boolean,
+  eligibility: TrajectoryItemEligibility | undefined,
+  mountPrefix: string,
+  anchor = true,
 ): string {
-  const governedBy = servedGovernedBy(model, item.id);
-  return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}" id="workitem-${escapeHtml(item.id)}" data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
+  const served = servedItem(model, item.id);
+  const governedBy = served.governedBy;
+  // syzygy-t3jk.20: an item under two parents renders twice on a grouped
+  // page; only its first card carries the fragment target.
+  return `<li class="wi-card${demonstrated ? ' wi-card-demonstrated' : ''}"${anchor ? ` id="workitem-${escapeHtml(item.id)}"` : ''} data-governed-by="${escapeHtml(governedBy.label)}" data-work-item-id="${escapeHtml(item.id)}">
     ${demonstrated ? '<span class="demo-badge">Demonstrated item</span>' : ''}
     <a class="wi-title" href="#workitem-${escapeHtml(item.id)}" data-parity-field="work-item-id">${escapeHtml(item.id)}</a>
-    ${itemTitleWithheld(model)}
+    ${itemTitle(model, served.title)}
     <span class="wi-status" data-parity-field="work-item-status">${escapeHtml(item.status)}</span>
+    ${itemEligibility(model, eligibility, mountPrefix)}
     ${itemFacts(item)}
     ${itemGoverningIntent(governedBy)}
     ${itemVerification()}
+    ${itemCommits(model, served)}
     ${workerChangeBadge(model, workerChange, testArtifactVerification, governingIntentId)}
   </li>`;
 }
@@ -331,6 +591,8 @@ const TRAJECTORY_STYLE = `
   code { overflow-wrap: anywhere; }
   .board { display: grid; grid-template-columns: repeat(7, minmax(10rem, 1fr)); gap: .75rem; padding: 1.5rem 0 3rem; overflow-x: auto; }
   .wi-facts { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); overflow-wrap: anywhere; }
+  .wi-facts a { color: var(--cyan); }
+  .wi-facts a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   .mark-ref { font-size: .68rem; color: inherit; }
   .board-column { background: linear-gradient(145deg, #102126, var(--panel)); border: 1px solid var(--line); padding: 1rem; min-width: 0; }
   .board-column h2 { font-size: 1.1rem; margin: 0 0 .8rem; }
@@ -346,12 +608,25 @@ const TRAJECTORY_STYLE = `
   .worker-change-note { font-size: .68rem; color: var(--muted); }
   .worker-change-label { font-family: var(--font-mono); font-size: .7rem; text-transform: uppercase; color: var(--cyan); }
   .wi-card-demonstrated { border-color: var(--cyan); }
+  .wi-commits { display: grid; gap: .15rem; font-size: .7rem; color: var(--muted); }
+  .wi-commits code { overflow-wrap: anywhere; }
+  .wi-landing { font-family: var(--font-mono); color: var(--ink); }
   .demo-badge { color: var(--cyan); font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; }
   .demo-callout { max-width: 78ch; }
-  .governing-intent-count, .titles-withheld { max-width: 78ch; }
+  .governing-intent-count, .titles-notice { max-width: 78ch; }
+  .wi-name { display: block; font-size: .82rem; overflow-wrap: anywhere; unicode-bidi: isolate; }
+  .wi-ref-name { overflow-wrap: anywhere; unicode-bidi: isolate; }
   .narrow-label { font-family: var(--font-mono); font-size: .78rem; margin-left: .3rem; }
   .narrow-toggle:focus-visible + .narrow-label { outline: 2px solid var(--cyan); outline-offset: 2px; }
-  .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]) { display: none; }
+  .narrow-toggle:checked ~ .board .wi-card:not([data-governed-by="Unknown"]),
+  .narrow-toggle:checked ~ .outline .wi-card:not([data-governed-by="Unknown"]) { display: none; }
+  .outline { padding: 1.5rem 0 3rem; }
+  .outline-groups { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.2rem; }
+  .outline-group { border-left: 2px solid var(--line); padding-left: .9rem; display: grid; gap: .4rem; }
+  .outline-group h3 { font-size: 1rem; margin: 0; }
+  .outline-group p { margin: 0; color: var(--muted); max-width: 78ch; }
+  .outline-group .wi-list { grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .outline a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   ${MATERIALIZE_PANEL_STYLE}
   ${TIME_MEASURES_STYLE}
   .view-nav { margin: 0 0 1rem; }
@@ -366,6 +641,9 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
   const query = new URLSearchParams();
   if (view?.status) query.set('status', view.status);
   if (view?.governingIntent) query.set('governing-intent', view.governingIntent);
+  if (view?.group) query.set('group', view.group);
+  if (view?.selection) query.set('selection', view.selection);
+  if (view?.changed) query.set('changed', view.changed);
   if (view?.page !== undefined) query.set('page', String(view.page));
   const text = query.toString();
   return escapeHtml(withMountPrefix(mountPrefix, TRAJECTORY_HUMAN_PATH) + (text === '' ? '' : `?${text}`));
@@ -374,8 +652,8 @@ function viewHref(mountPrefix: string, view: Partial<TrajectoryViewRequest> | nu
 /**
  * POC-REQ-042 (syzygy-t3jk.18): every served item is reachable. Real links,
  * never inside a details element and needing no script: the default
- * selection, every item by id, each status and the governing-intent Unknown
- * with their whole-population counts, and the current view's neighbours.
+ * parent-grouped outline, recent work, every item by id, each status and
+ * the governing-intent Unknown, as well as the current view's neighbours.
  */
 function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers: readonly TrajectoryAnswer[], mountPrefix: string): string {
   if (model.workItems.kind !== 'observed') return '';
@@ -384,25 +662,135 @@ function viewNavigation(model: PocModel, narrowing: TrajectoryNarrowing, answers
   const view = narrowing.view;
   const link = (href: string, text: string, current: boolean): string =>
     `<li><a href="${href}"${current ? ' aria-current="page"' : ''}>${text}</a></li>`;
-  const isView = (status: string | null, intent: string | null): boolean =>
-    view !== null && view.status === status && view.governingIntent === intent;
+  const isView = (status: string | null, intent: string | null, group: string | null = null): boolean =>
+    view.selection === undefined && view.status === status && view.governingIntent === intent && view.group === group;
+  const nonClosed = byStatus === null ? null : model.workItems.items.length - byStatus.closed;
   const statuses = byStatus === null ? '' : (Object.keys(byStatus) as WorkItemStatus[])
     .map((status) => link(viewHref(mountPrefix, { status, page: 1 }), `<code>${escapeHtml(status)}</code> <span data-parity-field="trajectory-view-status-count" data-status="${escapeHtml(status)}">${byStatus[status]}</span>`, isView(status, null)))
     .join('');
-  const pages = view === null ? '' : `<p class="view-pages" data-parity-field="trajectory-view-page">Page <span data-parity-field="trajectory-view-page-number">${view.page}</span> of <span data-parity-field="trajectory-view-page-count">${view.pageCount}</span>, over <span data-parity-field="trajectory-view-matching">${view.matching}</span> matching items.
+  const pages = `<p class="view-pages" data-parity-field="trajectory-view-page">Page <span data-parity-field="trajectory-view-page-number">${view.page}</span> of <span data-parity-field="trajectory-view-page-count">${view.pageCount}</span>, over <span data-parity-field="trajectory-view-matching">${view.matching}</span> matching items.
         ${view.page > 1 ? `<a rel="prev" href="${viewHref(mountPrefix, { ...view, page: view.page - 1 })}">Previous page</a>` : ''}
         ${view.page < view.pageCount ? `<a rel="next" href="${viewHref(mountPrefix, { ...view, page: view.page + 1 })}">Next page</a>` : ''}</p>`;
   return `<nav class="view-nav" aria-labelledby="view-nav-heading" data-parity-field="trajectory-view-navigation">
       <h2 id="view-nav-heading" class="answers-heading">Reach every work item</h2>
       <ul class="view-links">
-        ${link(viewHref(mountPrefix, null), 'Default selection', view === null)}
+        ${nonClosed === null ? '' : link(viewHref(mountPrefix, { changed: view.changed }), `Non-closed items grouped by parent <span data-parity-field="trajectory-view-grouped-count">${nonClosed}</span>`, isView(null, null, 'parent'))}
+        ${link(viewHref(mountPrefix, { selection: 'recent', changed: view.changed }), 'Recent work', view.selection === 'recent')}
         ${link(viewHref(mountPrefix, { page: 1 }), `All items by id <span data-parity-field="trajectory-view-all-count">${model.workItems.items.length}</span>`, isView(null, null))}
         ${statuses}
         ${link(viewHref(mountPrefix, { governingIntent: 'unknown', page: 1 }), `Governing intent Unknown <span data-parity-field="trajectory-view-intent-count">${model.workItems.governedByUnknownCount}</span>`, isView(null, 'unknown'))}
       </ul>
-      <p class="view-note">${narrowing.pageSize} items per page, by ascending item id.</p>
+      <p class="view-note">${narrowing.pageSize} items per page, by ascending item id; grouped by parent, ${narrowing.pageSize} positions per page.</p>
       ${pages}
     </nav>`;
+}
+
+/** A fragment reference to an element id: URL-encoded, then HTML-escaped
+ * (R-T4S2-OUTLINE-1 finding 2). */
+function fragment(id: string): string {
+  return `#${escapeHtml(encodeURIComponent(id))}`;
+}
+
+/** syzygy-t3jk.20: what a group's heading says. A parent is named with its
+ * tracker status as recorded and never judged from its children; the four
+ * classes say why their items sit under no named parent. */
+function groupHeading(model: PocModel, group: TrajectoryGroupSlice, view: TrajectoryNarrowing['view'], mountPrefix: string): string {
+  const key = group.key;
+  switch (key.kind) {
+    case 'parent': {
+      const parent = group.parent!;
+      const card = `${viewHref(mountPrefix, { page: parent.cardPage })}#${encodeURIComponent(`workitem-${key.id}`)}`;
+      return `Parent ${itemName(model, key.id, `<a data-group-parent="${escapeHtml(key.id)}" href="${card}">${escapeHtml(key.id)}</a>`)}, tracker status <code data-group-parent-status>${escapeHtml(parent.status)}</code>`;
+    }
+    case 'parent-outside-tracker':
+      return 'Parent outside this tracker';
+    case 'parent-unobserved':
+      return 'Parent not served';
+    case 'no-parent':
+      return 'No parent recorded';
+    case 'parent-unknown':
+      return 'Parent Unknown';
+  }
+}
+
+const GROUP_NOTE = {
+  'parent-outside-tracker': 'A parent row names an external item, a wisp or an item of another tracker; that parent is counted here and never named.',
+  'parent-unobserved': 'A parent row names an item of this tracker that the observation did not serve.',
+  'no-parent': 'No parent-child row names a parent for these items.',
+} as const;
+
+function groupRegion(model: PocModel, group: TrajectoryGroupSlice, view: NonNullable<TrajectoryNarrowing['view']>, mountPrefix: string, cards: string): string {
+  const pageLink = (page: number, text: string, rel: string): string =>
+    `<a data-group-continues="${rel}" href="${viewHref(mountPrefix, { ...view, page })}${fragment(group.anchor)}">${text} ${page}</a>`;
+  const notes: string[] = [];
+  const parent = group.parent;
+  if (parent !== undefined) {
+    if (parent.status === 'closed') notes.push('The parent is closed in the tracker and its items keep their own statuses; neither is read as the other\'s completion.');
+    if (parent.under.length > 0) {
+      notes.push(`The parent sits under ${parent.under.map(({ id, groupPage, cardPage }) => itemName(model, id, groupPage === null
+        ? `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { page: cardPage })}#${encodeURIComponent(`workitem-${id}`)}">${escapeHtml(id)}</a>`
+        : `<a data-group-under="${escapeHtml(id)}" href="${viewHref(mountPrefix, { ...view, page: groupPage })}${fragment(groupAnchor({ kind: 'parent', id }))}">${escapeHtml(id)}</a>`)).join(', ')}.`);
+    }
+    const cycle = parent.cycle;
+    if (cycle !== null && 'members' in cycle) {
+      notes.push(`<span data-group-cycle="${escapeHtml(cycle.members.join(' '))}">Parent-child cycle among ${cycle.members.map((id) => itemName(model, id, `<code>${escapeHtml(id)}</code>`)).join(', ')}: stated here once and not followed further.</span>`);
+    } else if (cycle !== null) {
+      const anchor = groupAnchor({ kind: 'parent', id: cycle.statedUnder });
+      const href = cycle.page === null ? fragment(anchor) : `${viewHref(mountPrefix, { ...view, page: cycle.page })}${fragment(anchor)}`;
+      notes.push(`<span data-group-cycle-ref="${escapeHtml(cycle.statedUnder)}">The parent is in a parent-child cycle, stated under ${itemName(model, cycle.statedUnder, `<a href="${href}">${escapeHtml(cycle.statedUnder)}</a>`)}.</span>`);
+    }
+  } else if (group.key.kind === 'parent-unknown') {
+    notes.push(`<span data-group-reason="${group.key.reason}">The dependency rows were not read. ${ELIGIBILITY_REASONS[group.key.reason]}</span>`);
+  } else if (group.key.kind !== 'parent') {
+    notes.push(GROUP_NOTE[group.key.kind]);
+  }
+  const continuity = [
+    group.continuedFromPage === null ? '' : `Continued from ${pageLink(group.continuedFromPage, 'page', 'prev')}.`,
+    group.continuesOnPage === null ? '' : `Continues on ${pageLink(group.continuesOnPage, 'page', 'next')}.`,
+  ].filter((part) => part !== '').join(' ');
+  return `<li class="outline-group" data-group="${escapeHtml(group.anchor)}">
+      <h3 id="${escapeHtml(group.anchor)}">${groupHeading(model, group, view, mountPrefix)}</h3>
+      <p><span data-group-total>${group.total}</span> items in this group, <span data-group-on-page>${group.onPage.length}</span> on this page.${continuity === '' ? '' : ` ${continuity}`}</p>
+      ${notes.map((note) => `<p>${note}</p>`).join('')}
+      <ol class="wi-list">${cards}</ol>
+    </li>`;
+}
+
+/** syzygy-t3jk.20: the grouped view's page, one region per group. */
+function outlineRegion(model: PocModel, grouping: TrajectoryGrouping, view: TrajectoryNarrowing['view'], mountPrefix: string,
+  card: (item: TrajectoryLaneItem, anchor: boolean) => string, rendered: readonly TrajectoryLaneItem[]): string {
+  const byId = new Map(rendered.map((item) => [item.id, item]));
+  const anchored = new Set<string>();
+  const groups = grouping.groups.map((group) => groupRegion(model, group, view, mountPrefix, group.onPage.map((id) => {
+    const item = byId.get(id);
+    if (item === undefined) throw new Error(`grouped work item ${id} is not rendered`);
+    const anchor = !anchored.has(id);
+    anchored.add(id);
+    return card(item, anchor);
+  }).join(''))).join('');
+  return `<section class="outline" aria-labelledby="outline-heading" data-parity-field="trajectory-outline">
+      <h2 id="outline-heading" class="answers-heading">Work items grouped by parent</h2>
+      <p class="view-note"><span data-parity-field="trajectory-outline-positions">${grouping.positions}</span> positions over every page: an item with several parents sits under each.</p>
+      ${groups === '' ? '<p class="view-note">No matching work items.</p>' : `<ol class="outline-groups">${groups}</ol>`}
+    </section>`;
+}
+
+function statusBoard(rendered: readonly TrajectoryLaneItem[], card: (item: TrajectoryLaneItem) => string): string {
+  const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
+  for (const column of COLUMN_ORDER) {
+    byColumn.set(column, []);
+  }
+  for (const item of rendered) {
+    byColumn.get(item.column)?.push(item);
+  }
+  const columns = COLUMN_ORDER.map((column) => {
+    const items = byColumn.get(column) ?? [];
+    return `<section class="board-column" aria-label="${escapeHtml(column)} column">
+        <h2>${escapeHtml(column)} <span class="count">(${items.length})</span></h2>
+        <ol class="wi-list">${items.map((item) => card(item)).join('')}</ol>
+      </section>`;
+  }).join('');
+  return `<div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
 }
 
 /** The Trajectory route: the default selection, or one declared view, or
@@ -411,48 +799,46 @@ export function renderTrajectoryRoute(model: PocModel, mountPrefix: string, stat
   const request = parseTrajectoryView(query);
   if (request === null) return renderTrajectoryPage(model, mountPrefix, status);
   if ('refused' in request) return request;
+  // syzygy-t3jk.21: `changed` alone picks the changed answer's window and
+  // keeps the default selection; with any other parameter it rides the view.
+  const window = request.changed ?? 'day';
   const view = projectTrajectoryView(model.trajectory, model.workItems, request);
   if ('refused' in view) return view;
-  return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status);
+  return renderTrajectoryPage({ ...model, trajectory: view }, mountPrefix, status, window);
 }
 
-export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus): string {
+export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?: HumanOperabilityStatus, changed: ChangeWindow = 'day'): string {
   const trajectory = model.trajectory;
   const workerChange = model.workerChange.kind === 'observed' ? model.workerChange : null;
+  let lede = 'Five work-item questions and the tracker observation status.';
   let body: string;
   if (trajectory.kind === 'unknown') {
     const unknown = unknownSubject(model, 'region:work-items');
-    body = `${answersRegion(model, trajectory.answers)}
+    body = `${answersRegion(model, trajectory.answers, { window: changed, view: null, mountPrefix })}
       <p class="unavailable-notice" id="${NOTICE_ELEMENT_ID[WORK_ITEMS_REGION_ID]}"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
   } else {
-    const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
-    for (const column of COLUMN_ORDER) {
-      byColumn.set(column, []);
-    }
-    for (const item of trajectory.rendered) {
-      byColumn.get(item.column)?.push(item);
-    }
     const demonstratedId = currentMaterializedBeadId(model);
     const demonstratedRendered =
       demonstratedId !== null && trajectory.rendered.some((item) => item.id === demonstratedId);
-    const columns = COLUMN_ORDER.map((column) => {
-      const items = byColumn.get(column) ?? [];
-      return `<section class="board-column" aria-label="${escapeHtml(column)} column">
-        <h2>${escapeHtml(column)} <span class="count">(${items.length})</span></h2>
-        <ol class="wi-list">${items
-          .map((item) =>
-            itemCard(
-              model,
-              item,
-              workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
-              model.testArtifactVerification,
-              model.governingIntentId,
-              item.id === demonstratedId,
-            ),
-          )
-          .join('')}</ol>
-      </section>`;
-    }).join('');
+    const card = (item: TrajectoryLaneItem, anchor = true): string =>
+      itemCard(
+        model,
+        item,
+        workerChange !== null && workerChange.beadId === item.id ? workerChange : null,
+        model.testArtifactVerification,
+        model.governingIntentId,
+        item.id === demonstratedId,
+        trajectory.eligibility.items[item.id],
+        mountPrefix,
+        anchor,
+      );
+    const grouping = trajectory.grouping;
+    const view = trajectory.narrowing.view;
+    const layout = grouping === undefined ? 'in tracker status columns' : 'grouped by parent';
+    lede = `Five answers over the full observed work-item population, then selected work items ${layout}. Times come from recorded instants.`;
+    const board = grouping !== undefined
+      ? outlineRegion(model, grouping, view, mountPrefix, card, trajectory.rendered)
+      : statusBoard(trajectory.rendered, card);
 
     const demonstratedCallout =
       demonstratedId === null
@@ -462,8 +848,9 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
           : `<p class="demo-callout notice">The demonstrated item <code>${escapeHtml(demonstratedId)}</code> was materialized by this POC but falls outside the current board selection, so no card is shown for it.</p>`;
 
     body = `
-      ${answersRegion(model, trajectory.answers)}
+      ${answersRegion(model, trajectory.answers, { window: changed, view: trajectory.narrowing.view, mountPrefix })}
       ${timeMeasuresRegion(trajectory.timeMeasures)}
+      ${eligibilityRegion(trajectory.eligibility)}
       <p class="scope-statement notice" data-parity-field="trajectory-scope">
         Rendering ${trajectory.renderedCount} of ${trajectory.totalCount} observed work items (${trajectory.selectionRule});
         <span data-parity-field="trajectory-excluded-count">${trajectory.excludedCount}</span> items are outside this selection and not shown.
@@ -471,10 +858,10 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
       ${viewNavigation(model, trajectory.narrowing, trajectory.answers, mountPrefix)}
       ${closureNotice(trajectory.rendered)}
       ${governingIntentRegion(model, trajectory.rendered)}
-      ${titlesWithheldRegion(model)}
+      ${titlesRegion(model)}
       ${verificationRegion(model, trajectory.verificationUnknown)}
       ${demonstratedCallout}
-      <div class="board" role="group" aria-label="Work-item board by status column">${columns}</div>`;
+      ${board}`;
   }
 
   body += renderMaterializePanel(model, mountPrefix);
@@ -484,7 +871,7 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
     current: 'trajectory',
     eyebrow: `Trajectory · ${escapeHtml(model.project.name)} ${model.project.revision.slice(0, 12)}`,
     heading: 'Work and time, observed',
-    lede: 'Five answers over every observed work item, then a board of a selection: columns from a declared status mapping, time from recorded instants only.',
+    lede,
     extraStyle: TRAJECTORY_STYLE,
     body,
     status,

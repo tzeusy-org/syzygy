@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { DOSSIER_REQUESTED_ASSETS } from '@syzygy/polaris-generation-core/live';
+import { DOSSIER_REQUESTED_ASSETS, QUESTION_FILE } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
@@ -41,14 +41,28 @@ import { issuedBriefStatement } from './launch-statements.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-/** v16 (REQ-polaris-generation-034 version 2.20): brief v15 with schema v10 and the hero paragraph after relation types.
+/** v21 (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135): brief v20 with the one question-kinds paragraph
+ * (`QUESTION_KINDS_PARAGRAPH`) immediately after the worth-knowing paragraph, and this line changed. The draft schema stays v13.
+ * v20 (syzygy-fnry.18 AC4): brief v19 with terminology ID instructions in the understanding record.
+ * v19 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): brief v16 with draft schema v13 and the one worth-knowing paragraph
+ * (`WORTH_KNOWING_PARAGRAPH`) immediately after the Poles paragraph, and this line changed. v17 and v18 are the numbers adopted version
+ * 2.23 and the open version 2.24 give their briefs; neither is implemented here.
+ * v16 (REQ-polaris-generation-034 version 2.20): brief v15 with schema v10 and the hero paragraph after relation types.
  * v15 (REQ-polaris-generation-034 version 2.19, syzygy-3efd.28): brief v14 with draft schema v9 and the one relation-types paragraph
  * (`RELATION_TYPES_PARAGRAPH`) immediately after the subsections paragraph, and this line changed. v14 (REQ-polaris-generation-034 version 2.16, syzygy-3efd.50): brief v13 with draft schema v8 and the one subsections paragraph
  * (`SUBSECTIONS_PARAGRAPH`) immediately after the figure-kinds paragraph, and this line changed. v13 (the index-and-task-routes change): brief v12 with the task-routes section (`TASK_ROUTES_RULE`) added after the Poles and this line
  * changed, and nothing else. v12 (REQ-polaris-generation-034 version 2.5): brief v11 with draft schema v7 and the one figure-kinds paragraph
  * (`FIGURE_KINDS_PARAGRAPH`) immediately after the thesis-basis paragraph. v11 (version 2.4) added schema v6 and `THESIS_BASIS_PARAGRAPH`. */
-export const BRIEF_VERSION = 'polaris-dossier-brief-v16';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v21';
 const HERO_PARAGRAPH = 'Name the dossier\'s hero in `hero`: `{"figure": "<diagram id>"}` for one diagram whose `home` is `{"kind": "overview"}` and whose `kind` is `flow`, `lifecycle`, `state-machine`, `boundary`, `dependency` or `placement`, showing the project\'s main parts and what surrounds them. Syzygy draws it first on the overview, after the introduction and any open questions. Where no such figure would be true, write `{"omitted": <block>}` instead, one inferred or unknown block saying why; the overview shows that reason where the figure would stand. A draft that does neither is refused.';
+
+/** The paragraph brief v21 adds immediately after the worth-knowing paragraph, in the requirement's words (version 2.32). It carries no
+ * project content and none of the comprehension key's questions. */
+export const QUESTION_KINDS_PARAGRAPH = 'A newcomer asks six kinds of question about each major part of a project: `purpose` (what it is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) and `limits` (what it does not do and how it fails). In `questionKinds`, list each Inferred claim block that answers one: `{"blockId": "<the block\'s id>", "kinds": [...]}`, naming only the kinds it answers. Check counts these rows for the whole repository and for each top-level directory holding at least one twentieth of the files, a block counting for each such directory it cites a file inside, and advises the kinds no block answers there. It is advice, never a finding: write a block for a missing kind where the part has something to say, and never declare a kind a block does not answer. The rows are never rendered.';
+
+/** The paragraph brief v19 adds immediately after the Poles paragraph, in the requirement's words (version 2.26). It carries no project
+ * content. */
+export const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole and has no place to say why it marks none.';
 
 /** The paragraph brief v15 adds immediately after the subsections paragraph, in the requirement's words (version 2.19). */
 export const RELATION_TYPES_PARAGRAPH = 'Every arrow of a graph diagram (an item of `edges`) carries `relation`, the one relation it asserts: `contains`, `declares-dependency`, `needs-job`, `depends-on-service`, `calls`, `imports`, `reads`, `writes`, `sends-to`, `starts` or `relates-to`, the last where none of the others fits. A node may carry `unit`, the one part of the repository it is: `{"kind": "repository-root"}`, `{"kind": "top-level-directory", "path": "<directory name>"}`, `{"kind": "package-manifest", "path": "<path of a package.json, Cargo.toml, pyproject.toml or go.mod>"}`, `{"kind": "dependency-name", "name": "<name as declared>"}`, `{"kind": "workflow-job", "path": "<workflow path>", "job": "<job key>"}` or `{"kind": "compose-service", "path": "<Compose file path>", "service": "<service key>"}`. Give a node a unit only when it is exactly that unit; Syzygy never matches by label. Where Syzygy derives a fact of an arrow\'s exact relation between its two nodes\' units, it draws the arrow solid as Observed, in its own words; where its derivation is complete and holds no such fact, check reports a finding to repair. Today only `contains`, from the repository root to a top-level directory, can be witnessed.';
@@ -71,13 +85,9 @@ export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s t
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
- * trade-offs. The provider pipeline's profile keeps its own five questions (`DOSSIER_READER_QUESTIONS`). */
-export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string }[] = [
-  { id: 'why-the-project-exists', text: 'Why does this project exist: what problem does it solve, for whom, and what advantages over the alternatives do its maintainers themselves state? Write it as an argument; a quotation, where you use one, supports the argument and is never the argument itself. A repository that states no reason for existing gets an `unknown` block here, never an invented reason.' },
-  { id: 'core-ideas', text: 'What are this project\'s core ideas, stated so a newcomer could repeat them?' },
-  { id: 'end-to-end-workflows', text: 'How does a user get from start to finish on the most important end-to-end workflows?' },
-  { id: 'mechanisms-and-trade-offs', text: 'What mechanisms underneath make those workflows work, where does each live, and what trade-offs, limits and costs does the design accept for them?' },
-];
+ * trade-offs. Written once, in the question file's public part (`question-file.ts` in polaris-generation-core, syzygy-5dhm.21), beside
+ * the provider profile's five questions (`DOSSIER_READER_QUESTIONS`). */
+export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string }[] = QUESTION_FILE.public.briefTopics;
 
 /** The voice rules (dossier spec v1.5): brief guidance, open to the rendered-design review and to no mechanical check. */
 export const VOICE_RULES = [
@@ -193,6 +203,10 @@ export function renderBrief(input: BriefInput): string {
     '',
     `Divide the sections into Poles in \`poles\`: at most ${poleLimitOf(declared)}, this run's Pole limit, each a short label (under the rules for an element's short label) and the sections it holds, every section in exactly one. Choose the Poles from what the repository holds, each holding a substantial share of its documentation; never fill a fixed template, such as a server and a client, where the repository says little about one of them. Name in \`whySection\` the section that answers why the project exists. Syzygy renders a landing page holding the title, that section and a map of the Poles, then one page per Pole; the why section's own Pole links back to the landing page rather than repeating it, and a Pole holding only that section has no page of its own. A Pole is a page boundary and carries no claim. A draft with no \`poles\` keeps its sections on one page.`,
     '',
+    WORTH_KNOWING_PARAGRAPH,
+    '',
+    QUESTION_KINDS_PARAGRAPH,
+    '',
     '## Task routes',
     '',
     TASK_ROUTES_RULE,
@@ -200,6 +214,8 @@ export function renderBrief(input: BriefInput): string {
     '## The understanding record',
     '',
     `Before the argument, write \`understanding\`: the subject's ${UNDERSTANDING_ITEMS.map((item) => `\`${item}\``).join(', ')}. Each holds at least one item. An item is \`inferred\`, with its statement, its scope and at least one citation, or \`unknown\`, with a reason from the list below and the citations you considered, if any; an item you cannot establish is an \`unknown\` entry, never left out. Syzygy checks each item as it checks a claim block and renders the record as your self-reported understanding, labelled Inferred; that you formed it before drafting the argument is your report.`,
+    '',
+    'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\'s `statement`. For example, use an unused `io` as the ID for "I/O" and write "I/O" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.',
     '',
     '## Voice',
     '',

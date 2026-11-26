@@ -69,7 +69,7 @@ import { fileURLToPath } from 'node:url';
 
 import { POLICY_ACT_FORMS, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent';
 import { codeContentExempt, compileEveryOffsetMatcher, documentationExempt, publicSourceContentClass, readCodeContentExemption, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction, readSourceVisibility, redactBody, type PipelinePorts, type SourceVisibility, type PlacementSubject, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
-import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
+import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core/screening';
 import { sha256 } from '@syzygy/support';
 
 import { excludedSourceId, newGenerationRunKey } from './run-key.js';
