@@ -341,9 +341,9 @@ eligibility reason remains visible when a separate edge is unresolved.
    (POC-REQ-065, `syzygy-t3jk.26`): the remains answer counts the closed
    items merged by naming convention apart from those no commit names, and
    each card shows a closed item's landing ("Merged (by naming convention,
-   reduced fidelity)", "Closed, no commit names it", or, past the bound,
-   "... in the newest N read") and up to three naming commits by short
-   hash and instant. While the join is Unknown, every closed card reads
+   reduced fidelity)", or, in the Unknown encoding, "Landing: Unknown, no
+   commit names it", past the bound "... no commit among the newest N read
+   names it") and up to three naming commits by short hash and instant. While the join is Unknown, every closed card reads
    "Landing: Unknown", linked to its reason and route.
 
    The board then shows two separately honest fields for a work item, not

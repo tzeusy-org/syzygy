@@ -2243,8 +2243,11 @@ both channels.
 
 - **Landing.** A closed item that some commit read names is
   `merged-by-convention`: a commit reachable from the observed revision
-  names it. A closed item no commit read names is `no-naming-commit-read`.
-  An item that is not closed has no landing. While the join is Unknown,
+  names it. A closed item no commit read names is `no-naming-commit-read`:
+  its join cannot be established, so where it landed is Unknown (RFC4-22:
+  "message tag absent ... renders Unknown"), counted and disclosed once,
+  reason `missing-evidence`, saying how much history was read. An item
+  that is not closed has no landing. While the join is Unknown,
   every closed item's landing is Unknown, and none is counted as either.
 - **The answer.** The *what remains* answer (POC-REQ-044) SHALL carry
   `closedLanding`, over every served closed item, never the rendered
@@ -2261,21 +2264,25 @@ both channels.
   answer and every card without a naming commit SHALL say only the newest
   commits read were checked.
 - **The card.** Each card SHALL show a closed item's landing, labelled
-  "Merged (by naming convention, reduced fidelity)", "Closed, no commit
-  names it" or, when history went unread, "Closed, no commit names it in
-  the newest N read", or "Landing: Unknown" linked to the disclosure; and,
-  for any item a commit names, at most three of its commits, newest first,
-  each as its first twelve hash characters and its committer instant, with
-  the count of the rest the machine answer lists. No subject is rendered.
+  "Merged (by naming convention, reduced fidelity)"; or, in the Unknown
+  encoding linked to the unnamed-landing disclosure, "Landing: Unknown, no
+  commit names it" or, when history went unread, "Landing: Unknown, no
+  commit among the newest N read names it"; or, while the join is Unknown,
+  "Landing: Unknown" linked to the commit-join disclosure. For any item a
+  commit names, the card SHALL show the count of its naming commits and at
+  most three of them, newest first, each as its first twelve hash
+  characters and its committer instant, with the count of the rest the
+  machine answer lists. No subject is rendered.
 - **Unchanged.** Verification stays Unknown for every item, and the intent
   answer is unchanged: a commit that names an item is neither verification
   nor reconciliation.
 
 - **Scope.** `trajectory.answers` (`remains.closedLanding`); the
-  `unknownSubjects` entry `region:trajectory-commit-joins`; the card.
+  `unknownSubjects` entries `region:trajectory-commit-joins` and
+  `region:trajectory-landing-unnamed`; the card.
 - **Case (fixture, counterexamples and sweep).** A real repository whose
   history from the observed revision names one closed and one open item;
-  a closed item no commit names; the same model with the join marked
+  a closed item no commit names; an item four commits name; the same model with the join marked
   truncated; and a repository whose history walk fails. A sweep over every
   served item's card on the default and closed views.
 - **Observable**: both channels' `closedLanding`; each card's landing and
@@ -2297,8 +2304,9 @@ both channels.
 - **WHEN** the history from the observed revision names one of two closed
   items and nothing older went unread
 - **THEN** the remains answer counts one merged by naming convention and
-  one closed with no commit that names it, on both channels, and each
-  closed card carries its label
+  one closed with no commit that names it, whose landing is Unknown with
+  its disclosure, on both channels, and each closed card carries its
+  label
 
 #### Scenario: Closed landings are Unknown when the history cannot be read
 

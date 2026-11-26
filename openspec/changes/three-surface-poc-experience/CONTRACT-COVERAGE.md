@@ -252,14 +252,15 @@ exhausted — a reviewer who finds an unlisted limb has found a real gap.
 | RFC8-17 | The blocked cause set includes the proven dependency cause and explicitly discloses cause Unknown when empty | covered — Amendment row (eligibility); the mixed edge fixture keeps the proven cause while overall eligibility is undetermined. Moved from Part B2 | POC-REQ-062 |
 | RFC8-17 | Derivations of `pr-wait`, `external` and `decision` blocked causes | **Unknown** — Amendment row (eligibility); those input families remain unread | — |
 | RFC4-22 | The work item ↔ commit link declares its basis, `naming-convention`, and is `reduced-fidelity` with cause `derived-from-convention`, and is never fuzzy-matched; a history that cannot be read is Unknown with its reason | covered — Amendment row (commit joins). Moved from Part B2 | POC-REQ-064 |
-| RFC4-22 | A per-item join that cannot be established renders Unknown | **Unknown** — Amendment row (commit joins); an item no read commit names gets no entry and no per-item state, and beyond the bound its absence is not "no commits" | — |
+| RFC4-22 | A closed item's join that cannot be established (no commit read names it) renders Unknown | covered — Amendment row (closed landings); its landing renders Unknown with one counted disclosure saying how much history was read. The commit-joins amendment's row here said such an item got "no entry and no per-item state"; POC-REQ-065 now gives a closed one that Unknown state | POC-REQ-065 |
+| RFC4-22 | A join that cannot be established renders Unknown for an item that is not closed | **Unknown** — Amendment row (closed landings); an open item no read commit names shows no commits and no per-item state | — |
 | RFC4-22 | The work item ↔ branch/worktree, commit → PR, PR → merge-fact and gate-outcome → artifact links | **Unknown** — Amendment row (commit joins); those inputs are unread | — |
 | RFC8-21 | The chain's work item → commits link, joined on an RFC4-22 adapter join with its declared basis | covered — Amendment row (commit joins); the machine answer serves it. Moved from Part B1, whose row said POC-REQ-014 renders the chain's first link as Unknown and no requirement renders any other | POC-REQ-064 |
 | RFC8-21 | Trajectory renders the work item → commits link with its declared basis and fidelity, and a read that stopped at its bound as thinness | covered — Amendment row (closed landings); each card and the remains answer say "by naming convention, reduced fidelity", and a truncated read says only the newest commits were checked | POC-REQ-065 |
 | RFC8-21 | Trajectory walks the whole chain in both directions, rendering each link's basis and its thinness as thinness | **Unknown** — Amendment row (commit joins; closed landings); POC-REQ-065 renders the commit link alone, and no requirement walks the chain | — |
 
 Part A totals `[Observed, computed by the sweep in "Verifying this
-table"]`: **185 consequence rows over 90 clauses — 132 covered,
+table"]`: **186 consequence rows over 90 clauses — 133 covered,
 53 Unknown.**
 
 **Amendment disclosure — the RFC1-26 closure row (ruling P-75 Q3).**

@@ -963,7 +963,8 @@ describe('Trajectory board-level Unknowns and card facts (T2)', () => {
   const ROUTE_COUNTS: readonly (readonly [string, number])[] = [
     ['Route: <span data-unknown-route="excluded-content" data-route-actor="owner" data-route-verb="decide" data-route-target="policy">Policy change by the owner, or accept the exclusion</span>.', 1],
     ['Route: <span data-unknown-route="source-uncaptured-or-unreachable" data-route-actor="operator" data-route-verb="repair" data-route-target="evaluation">Repair the observer/source; new snapshot</span>.', 4],
-    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 1],
+    // Verification, and the unnamed closed items' landing (POC-REQ-065).
+    ['Route: <span data-unknown-route="missing-evidence" data-route-actor="operator" data-route-verb="capture" data-route-target="evaluation">Produce or capture evidence</span>.', 2],
   ];
   const ROUTES = ROUTE_COUNTS.map(([literal]) => literal);
   const BASES = [
@@ -1161,7 +1162,7 @@ describe('Trajectory opens with its five answers (T3, POC-REQ-044)', () => {
     const html = renderTrajectoryPage(model);
     const served = await servedAnswer(model);
     const disclosed = [...answersRegion(html).matchAll(/data-unknown-disclosure="([^"]*)"/g)].map((m) => m[1]);
-    expect(disclosed).toEqual(['region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
+    expect(disclosed).toEqual(['region:trajectory-landing-unnamed', 'region:trajectory-changed', 'region:trajectory-cost', 'region:trajectory-orphaned-work']);
     for (const id of disclosed) expect(served.unknownSubjects.some((subject) => subject.id === id), id).toBe(true);
   });
 
@@ -1995,8 +1996,10 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
   // item under two parents. This fixture gives every title the most bytes
   // escaping can make (500 `"`), every item two parents and three blockers,
   // and a full changed list. It measures that fan-in, not a bound: blockers
-  // per card are unbounded (syzygy-262m).
-  it('keeps a page of most-escaped titles with two parents and three blockers per item under 90% of the human response ceiling', async () => {
+  // per card are unbounded (syzygy-262m). Since syzygy-t3jk.26 every card
+  // also lists its three-commit cap and a remainder: 1,917,287 bytes at most
+  // (91.4%), 130 KB more than without commits.
+  it('keeps a page of most-escaped titles with two parents, three blockers and three commits per item under 95% of the human response ceiling', async () => {
     const worst = '"'.repeat(500);
     const ids = Array.from({ length: 260 }, (_, index) => `bu-w${String(index).padStart(3, '0')}`);
     const parents = ids.slice(0, 10);
@@ -2008,7 +2011,15 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
         blockEdge(id, ids[(index + 11) % 260]!), blockEdge(id, ids[(index + 12) % 260]!), blockEdge(id, ids[(index + 13) % 260]!),
       ]),
     ];
+    // syzygy-t3jk.26: four commits name every item, so every card lists
+    // its three-commit cap and a remainder (POC-REQ-065).
+    const repo = fixtureRepoWithGit(cleanups);
+    for (let index = 0; index < 4; index += 1) {
+      execFileSync('git', ['-C', repo.repoRoot, 'commit', '-q', '--allow-empty', '-m', ids.join(' ')]);
+    }
+    const head = execFileSync('git', ['-C', repo.repoRoot, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
     const page = buildFixtureModel(cleanups, {
+      fixtureRepo: { repoRoot: repo.repoRoot, revision: head },
       workItemRows: ids.map((id) => row(id, worst)),
       runDependencyQuery: () => JSON.stringify(dependencyRows),
       runHistoryQuery: historyOf(ids.map((id) => diffRow('added', null, id, null, 'open'))),
@@ -2020,8 +2031,9 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
       expect(response.status).toBe(200);
       sizes[query === '' ? 'default' : query] = Buffer.byteLength(response.body as string, 'utf8');
     }
-    process.stdout.write(`[T5 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
-    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.9);
+    process.stdout.write(`[T5 S2 + T10 S2 worst list-title page bytes] ${JSON.stringify(sizes)}\n`);
+    expect(page.commitJoins.kind === 'observed' && page.commitJoins.items.length).toBe(260);
+    expect(Math.max(...Object.values(sizes))).toBeLessThan(PWB_RESOURCE_LIMITS.maxHumanResponseBytes * 0.95);
   });
 });
 
@@ -2093,13 +2105,17 @@ describe('Closed items by landing (POC-REQ-065, syzygy-t3jk.26)', () => {
     });
     const html = trajectoryView(model, 'status=closed');
     expect(html).toContain('data-parity-field="answer-remains-closed-landing-closed">2</span> closed items, <span data-parity-field="answer-remains-closed-landing-merged">1</span> are merged by naming convention');
-    expect(html).toContain('data-parity-field="answer-remains-closed-landing-none">1</span> are closed with no commit that names them.');
+    expect(html).toContain('data-parity-field="answer-remains-closed-landing-none">1</span> are closed with no commit that names them, so where they landed is Unknown.');
+    expect(html).toContain('id="n-landing-unnamed"');
+    const subject = served.unknownSubjects.find((entry) => entry.id === 'region:trajectory-landing-unnamed');
+    expect([subject?.epistemic.closedReason, subject?.epistemic.reason]).toEqual(['missing-evidence', "1 closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); the observed revision's whole history (3 commits) was read. A commit that names the item resolves it."]);
     expect(html).toContain("The observed revision's whole history was read (<span data-parity-field=\"answer-remains-closed-landing-read\">3</span> commits).");
     const merged = card(html, 'bu-closed-recent');
     expect(merged).toContain('data-landing="merged-by-convention">Merged (by naming convention, reduced fidelity)</span>');
     expect(merged).toContain(`<code data-parity-field="work-item-commit">${closedHash.slice(0, 12)}</code>`);
-    expect(merged).toContain('data-parity-field="work-item-commit-count">1</span>');
-    expect(card(html, 'bu-closed-old')).toContain('data-landing="no-naming-commit-read">Closed, no commit names it</span>');
+    expect(merged).toContain('data-parity-field="work-item-commit-count">1</span> commits name it (naming convention), newest first:');
+    const unnamed = card(html, 'bu-closed-old');
+    expect(unnamed).toContain('class="epistemic epistemic-unknown wi-landing" data-parity-field="work-item-landing" data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit names it <a class="mark-ref" href="#n-landing-unnamed"');
     expect(html).not.toContain('LANDMARKER');
     expect(JSON.stringify(served)).not.toContain('LANDMARKER');
   });
@@ -2150,9 +2166,29 @@ describe('Closed items by landing (POC-REQ-065, syzygy-t3jk.26)', () => {
     if (remains === undefined || !('closedLanding' in remains) || remains.closedLanding.state !== 'observed') throw new Error('expected observed');
     Object.assign(remains.closedLanding, { historyTruncated: true, commitsRead: 5000 });
     const html = trajectoryView(copy, 'status=closed');
-    expect(card(html, 'bu-closed-old')).toContain('data-landing="no-naming-commit-read">Closed, no commit names it in the newest 5000 read</span>');
+    expect(card(html, 'bu-closed-old')).toContain('data-landing="no-naming-commit-read" data-unknown-ref="region:trajectory-landing-unnamed" data-unknown-reason="missing-evidence">Landing: Unknown, no commit among the newest 5000 read names it <a');
     expect(html).toContain('Only the newest <span data-parity-field="answer-remains-closed-landing-read">5000</span> commits were read; a commit in older history may name an item counted here as having none.');
     expect(html).not.toContain("whole history was read");
+  });
+
+  it('lists at most three of an item\'s naming commits, newest first with their instants, and counts the rest', async () => {
+    const repo = fixtureRepoWithGit(cleanups);
+    const git = (env: Record<string, string>, ...args: string[]) => execFileSync('git', ['-C', repo.repoRoot, ...args], { encoding: 'utf8', env: { ...process.env, ...env } }).trim();
+    const hashes: string[] = [];
+    for (let index = 1; index <= 4; index += 1) {
+      git({ GIT_COMMITTER_DATE: `2026-11-2${index}T10:00:00Z` }, 'commit', '-q', '--allow-empty', '-m', `Step ${index} [bu-open1]`);
+      hashes.unshift(git({}, 'rev-parse', 'HEAD'));
+    }
+    const model = buildFixtureModel(cleanups, { fixtureRepo: { repoRoot: repo.repoRoot, revision: hashes[0]! } });
+    const open = card(renderTrajectoryPage(model), 'bu-open1');
+    const listed = [...open.matchAll(/<code data-parity-field="work-item-commit">([0-9a-f]+)<\/code> ([0-9TZ:-]+)/g)].map((match) => [match[1], match[2]]);
+    expect(listed).toEqual([
+      [hashes[0]!.slice(0, 12), '2026-11-24T10:00:00Z'],
+      [hashes[1]!.slice(0, 12), '2026-11-23T10:00:00Z'],
+      [hashes[2]!.slice(0, 12), '2026-11-22T10:00:00Z'],
+    ]);
+    expect(open).toContain('data-parity-field="work-item-commit-count">4</span> commits name it (naming convention), newest first:');
+    expect(open).toContain('<span data-parity-field="work-item-commits-unlisted">1</span> more in the machine answer');
   });
 
   it('is Unknown with its reason and route, never counted, when the history cannot be read', async () => {
@@ -2171,8 +2207,24 @@ describe('Closed items by landing (POC-REQ-065, syzygy-t3jk.26)', () => {
     expect(html).toContain('id="n-commit-joins"');
     expect(html).toContain('data-parity-field="answer-remains-closed-landing"');
     expect(html).not.toContain('answer-remains-closed-landing-merged');
-    expect(card(html, 'bu-closed-old')).toContain('data-unknown-ref="region:trajectory-commit-joins"');
-    expect(card(html, 'bu-closed-old')).toContain('Landing: Unknown');
-    expect(card(renderTrajectoryPage(model), 'bu-open1')).not.toContain('Landing');
+    const text = html.slice(html.indexOf('answer-remains-closed-landing-closed'), html.indexOf('</dd>', html.indexOf('answer-remains-closed-landing-closed'))).replace(/<[^>]*>/g, '');
+    expect(text).not.toMatch(VERDICT);
+    for (const said of text.match(/merged[^.]*/gi) ?? []) expect(said).toContain('naming convention');
+    // Every card on the default and closed views: closed ones marked and
+    // linked to a target on the same page, others unmarked.
+    for (const page of [renderTrajectoryPage(model), html]) {
+      expect(page).toContain('id="n-commit-joins"');
+      const ids = new Set([...page.matchAll(/data-work-item-id="([^"]+)"/g)].map((match) => match[1]!));
+      for (const id of ids) {
+        const body = card(page, id);
+        const status = served.workItems.kind === 'observed' ? served.workItems.items.find((entry) => entry.id === id)!.status : null;
+        if (status === 'closed') {
+          expect(body).toContain('data-unknown-ref="region:trajectory-commit-joins"');
+          expect(body).toContain('Landing: Unknown <a class="mark-ref" href="#n-commit-joins"');
+        } else {
+          expect(body).not.toContain('Landing');
+        }
+      }
+    }
   });
 });

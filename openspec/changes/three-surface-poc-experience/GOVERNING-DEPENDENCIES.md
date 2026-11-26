@@ -8,7 +8,7 @@
 > here is overwritten and `--check` fails first. Identifiers only —
 > nothing here quotes or paraphrases any clause.
 >
-> Source: `spec.md` sha256 `be56a6ab27870e5fccf4982db7c1682dd451fafc012cd0485b1fb9109209b658` — 32 requirement(s), 115 distinct authorities.
+> Source: `spec.md` sha256 `97641453697dda04bdf9f05287c4e535dcc5aea1dbd215051db7dd5f372aea6b` — 32 requirement(s), 115 distinct authorities.
 
 ## doctrine (10)
 

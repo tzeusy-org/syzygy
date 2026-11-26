@@ -63,6 +63,10 @@ export const TRAJECTORY_CHAIN_MEMBERSHIP_ID = 'region:trajectory-chain-membershi
 /** POC-REQ-065 (syzygy-t3jk.26): the disclosure a closed item's landing
  * names when the commit join (POC-REQ-064) is Unknown. */
 export const TRAJECTORY_COMMIT_JOINS_ID = 'region:trajectory-commit-joins' as const;
+/** POC-REQ-065: the disclosure every closed item no read commit names
+ * refers to. RFC4-22: a join that cannot be established (message tag
+ * absent) renders Unknown, never fuzzy-matched. */
+export const TRAJECTORY_LANDING_UNNAMED_ID = 'region:trajectory-landing-unnamed' as const;
 /** The board's governing-intent disclosure (POC-REQ-014); model.ts exports it. */
 export const GOVERNING_INTENT_REGION_ID = 'region:work-item-governing-intent' as const;
 /** The disclosure every answer names when work items were not observed. */
@@ -83,7 +87,9 @@ export interface TrajectoryAnswerUnknown {
  * join alone. `merged-by-convention`: a commit reachable from the observed
  * revision names it (RFC4-22 `naming-convention`, `reduced-fidelity`), never
  * proof the work was done or the intent satisfied. `no-naming-commit-read`:
- * no commit read names it; when the read was truncated, older history may. */
+ * no commit read names it, so its join cannot be established and where it
+ * landed is Unknown (RFC4-22); when the read was truncated, older history
+ * may name it. */
 export type ClosedItemLanding = 'merged-by-convention' | 'no-naming-commit-read';
 
 /** The closed items' landings, counted over every served closed item, or

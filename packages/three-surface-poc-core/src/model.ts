@@ -1,4 +1,4 @@
-import type { CommitJoinsResult } from './commit-joins.js';
+import type { CommitJoinsResult, CommitJoinsUnknown, CommitJoinUnknownReason } from './commit-joins.js';
 import type { CodeStructureResult } from './code-structure.js';
 import { GOVERNING_INTENT_UNKNOWN_BASIS, workItemTitlesDisclosure, type WorkItemsResult } from './work-items.js';
 import type { WorkerChangeResult } from './worker-change-observation.js';
@@ -11,6 +11,7 @@ import {
   TRAJECTORY_COST_ID,
   TRAJECTORY_ORPHANED_WORK_ID,
   TRAJECTORY_COMMIT_JOINS_ID,
+  TRAJECTORY_LANDING_UNNAMED_ID,
   type TrajectoryProjection,
 } from './trajectory-projection.js';
 import type { DispatchDisclosure, MaterializationRecord } from './materialization.js';
@@ -310,16 +311,24 @@ const ORPHANED_WORK_BASIS = 'No orphaned-work check is implemented, and the obse
 
 /** POC-REQ-065: why each closed item's landing is Unknown, by the commit
  * join's closed reason (POC-REQ-064). */
-const COMMIT_JOINS_UNKNOWN_BASIS: Readonly<Record<string, string>> = {
+const COMMIT_JOINS_UNKNOWN_BASIS: Readonly<Record<CommitJoinUnknownReason, string>> = {
   'work-items-unobserved': 'the work items were not observed',
   'repository-revision-unavailable': 'the observed repository revision is not a commit identifier',
   'commit-history-read-failed': "the observed repository's history could not be read",
   'commit-history-malformed': "the observed repository's history read returned rows of an unexpected shape, or did not start at the observed revision",
 };
 
-function commitJoinsBasis(joins: CommitJoinsResult): string {
-  const why = joins.kind === 'unknown' ? COMMIT_JOINS_UNKNOWN_BASIS[joins.reason] ?? joins.reason : 'the commit join was not read';
-  return `Whether each closed item merged, by a commit that names it, is Unknown: ${why} (commit join ${joins.kind === 'unknown' ? joins.reason : 'unread'}). No closed item is counted as merged or as having no naming commit.`;
+function commitJoinsBasis(joins: CommitJoinsUnknown): string {
+  return `Where each closed item landed, by a commit that names it (naming convention), is Unknown: ${COMMIT_JOINS_UNKNOWN_BASIS[joins.reason]} (commit join ${joins.reason}). No closed item is counted as merged by naming convention or as having no naming commit.`;
+}
+
+/** POC-REQ-065: why a closed item no read commit names has an Unknown
+ * landing, with the count and the read's extent. */
+function landingUnnamedBasis(count: number, read: number, truncated: boolean): string {
+  const extent = truncated
+    ? `only the newest ${read} commits from the observed revision were read, and older history may name them`
+    : `the observed revision's whole history (${read} commits) was read`;
+  return `${count} closed items have no commit that names them, so where each landed is Unknown: no commit subject carries the item's identifier as an exact token, and the join is never fuzzy-matched (RFC4-22); ${extent}. A commit that names the item resolves it.`;
 }
 
 export const WORK_ITEM_VERIFICATION_REGION_ID = 'region:work-item-verification' as const;
@@ -390,8 +399,16 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
       // POC-REQ-065 (syzygy-t3jk.26): closed items' landings are Unknown
       // exactly when the commit join is.
       const remains = input.trajectory.answers.find((answer) => answer.id === 'remains');
-      if (remains !== undefined && 'closedLanding' in remains && remains.closedLanding.state === 'unknown') {
-        add(TRAJECTORY_COMMIT_JOINS_ID, commitJoinsBasis(input.commitJoins), 'source-uncaptured-or-unreachable');
+      if (remains !== undefined && 'closedLanding' in remains) {
+        const landing = remains.closedLanding;
+        if (landing.state === 'unknown') {
+          const basis = input.commitJoins.kind === 'unknown'
+            ? commitJoinsBasis(input.commitJoins)
+            : 'Where each closed item landed is Unknown: the commit join was not supplied to the Trajectory projection. No closed item is counted as merged by naming convention or as having no naming commit.';
+          add(TRAJECTORY_COMMIT_JOINS_ID, basis, 'source-uncaptured-or-unreachable');
+        } else if (landing.noNamingCommitRead > 0) {
+          add(TRAJECTORY_LANDING_UNNAMED_ID, landingUnnamedBasis(landing.noNamingCommitRead, landing.commitsRead, landing.historyTruncated), 'missing-evidence');
+        }
       }
       const intent = input.trajectory.answers.find((answer) => answer.id === 'intent');
       if (intent !== undefined && 'reconciliationChain' in intent && typeof intent.reconciliationChain.members !== 'number') {
