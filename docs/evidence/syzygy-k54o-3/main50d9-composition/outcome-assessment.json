@@ -1,0 +1,208 @@
+{
+  "unitAndTypecheck": {
+    "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+    "tree": "ba9f5b6e2e842725b4f95f868d26243ddff0c900",
+    "command": "npm run check",
+    "session": 43151,
+    "exitCode": 0,
+    "logSHA256": "c9b5f92f8439e4b1294b0d93f16341e40df6bc10484cd3714bb4b80bc9985ce8",
+    "textSummary": [
+      "Test Files  270 passed (270)",
+      "Tests  6559 passed | 1 skipped (6560)",
+      "Duration  53.08s (transform 10.01s, setup 5.86s, collect 57.71s, tests 179.23s, environment 57ms, prepare 20.69s)"
+    ],
+    "secondMethod": {
+      "files": 270,
+      "cases": {
+        "passed": 6559,
+        "failed": 0,
+        "skipped": 1,
+        "todo": 0
+      }
+    },
+    "scope": "typecheck+hermetic unit only; integration/e2e/battery not established",
+    "capturedAt": "2026-11-26T16:45:28.741050+00:00"
+  },
+  "tiers": {
+    "source": "main50d9-check-0f629-1/tiers.log",
+    "outputVerdict": "ok: every test file is in exactly one tier",
+    "tierFiles": {
+      "unit": 270,
+      "integration": 145,
+      "e2e": 29,
+      "live": 3,
+      "total": 447,
+      "rootConfig": 436,
+      "systemConfig": 11
+    },
+    "processExitNotSeparatelyStored": "Unknown from this retained log; output verdict only"
+  },
+  "integrationAssessments": [
+    {
+      "source": "main50d9-owning-integration-0f629-1",
+      "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+      "exitCode": 1,
+      "fileDenominator": 13,
+      "caseDenominator": 784,
+      "caseCounts": {
+        "passed": 732,
+        "failed": 52,
+        "pending": 0,
+        "todo": 0
+      },
+      "files": [
+        {
+          "path": "trajectory.test.ts",
+          "status": "passed",
+          "cases": 76,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "brief.test.ts",
+          "status": "passed",
+          "cases": 47,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "check.test.ts",
+          "status": "failed",
+          "cases": 307,
+          "failed": 34,
+          "failedWithENOSPCText": 34
+        },
+        {
+          "path": "close-step-measures.test.ts",
+          "status": "passed",
+          "cases": 6,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "close.test.ts",
+          "status": "passed",
+          "cases": 22,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "render.test.ts",
+          "status": "failed",
+          "cases": 163,
+          "failed": 17,
+          "failedWithENOSPCText": 8
+        },
+        {
+          "path": "url-origin-ledger.test.ts",
+          "status": "passed",
+          "cases": 27,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "url-run-artifacts.test.ts",
+          "status": "failed",
+          "cases": 74,
+          "failed": 1,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "url-run-origins.test.ts",
+          "status": "passed",
+          "cases": 7,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "verify-text-script.test.ts",
+          "status": "passed",
+          "cases": 4,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "model-observations.test.ts",
+          "status": "passed",
+          "cases": 3,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "model.test.ts",
+          "status": "passed",
+          "cases": 18,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "work-items.test.ts",
+          "status": "passed",
+          "cases": 30,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        }
+      ],
+      "sourceUnchanged": true,
+      "result": "FAILED; subsequent evidence does not rewrite this result"
+    },
+    {
+      "source": "main50d9-owning-integration-0f629-R2",
+      "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+      "exitCode": 1,
+      "fileDenominator": 3,
+      "caseDenominator": 544,
+      "caseCounts": {
+        "passed": 534,
+        "failed": 10,
+        "pending": 0,
+        "todo": 0
+      },
+      "files": [
+        {
+          "path": "check.test.ts",
+          "status": "passed",
+          "cases": 307,
+          "failed": 0,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "render.test.ts",
+          "status": "failed",
+          "cases": 163,
+          "failed": 9,
+          "failedWithENOSPCText": 0
+        },
+        {
+          "path": "url-run-artifacts.test.ts",
+          "status": "failed",
+          "cases": 74,
+          "failed": 1,
+          "failedWithENOSPCText": 0
+        }
+      ],
+      "sourceUnchanged": true,
+      "result": "FAILED; subsequent evidence does not rewrite this result"
+    }
+  ],
+  "earlierEc4daProbe": {
+    "subject": "ec4da37c09bdf35ef5c13102df8e49a18155f432",
+    "diagnosticCaptureComplete": true,
+    "nativeOutcome": "FAILED",
+    "selection": {
+      "total": 7,
+      "passed": 0,
+      "failed": 1,
+      "selectionSkipped": 6
+    },
+    "noOwnedChildren": true,
+    "cloneSourceRestored": true,
+    "primarySourceUnchanged": true,
+    "primaryRuntimeUnchanged": true,
+    "genuineAcceptance": false,
+    "fullGate": false,
+    "causalityLimit": "Temporary inclusive instrumentation and retained terminal sequence narrow diagnosis, not causal optimization proof, unchanged-runtime acceptance or evidence for later combined graph."
+  },
+  "pendingBridgeRepair": "Separate four-file candidate and A264; no repair pass or adoption claimed here",
+  "renderOperator": "Sealed historical source preparation only; never executed by this task"
+}

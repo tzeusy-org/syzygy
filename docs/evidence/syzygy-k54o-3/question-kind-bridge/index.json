@@ -1,0 +1,251 @@
+{
+  "createdAt": "2026-11-26T17:03:39.894388+00:00",
+  "sourceCommit": "70fc55ebc708937ff1900070c32e63670cd3860f",
+  "sourceTree": "090dad5e8c56b21eda2627412ebeaf225712c078",
+  "archiveMembers": [
+    {
+      "archiveMember": "R1/manifest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/manifest.json",
+      "bytes": 1656,
+      "sha256": "635be00f71e1b6bc45636612fddbd6e9e86f51700fe9dab34ac453229fc5c9bc"
+    },
+    {
+      "archiveMember": "R1/candidate.patch",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/candidate.patch",
+      "bytes": 11215,
+      "sha256": "91dcab8966e676c1287b90308797ce937e0742e3e6b2cff7603c1c26fe53e6c6"
+    },
+    {
+      "archiveMember": "R1/candidate/packages/polaris-dossier/src/url-check-product-shape.test.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/candidate/packages/polaris-dossier/src/url-check-product-shape.test.ts",
+      "bytes": 5374,
+      "sha256": "b6612a8b98101aa1acc6a06f5450c74612fd5e9b13e59f89d57e816eeeee0274"
+    },
+    {
+      "archiveMember": "R1/candidate/packages/polaris-dossier/src/url-check-product-shape.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/candidate/packages/polaris-dossier/src/url-check-product-shape.ts",
+      "bytes": 7109,
+      "sha256": "e1beab3c7ab3dfb798b9562fcd9dafb6eadef2db8feee8b60e16cea59d036295"
+    },
+    {
+      "archiveMember": "R1/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150805,
+      "sha256": "b60c85df1c0d2fdfe4c3519bd63466d7b3f4d8b2d08673a5f32acc5470834959"
+    },
+    {
+      "archiveMember": "R1/candidate/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/candidate/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "bytes": 127206,
+      "sha256": "ea1665b8f8afcb53d25e4e32c913afc987fa01b840980e796f400c99b29fc509"
+    },
+    {
+      "archiveMember": "R1/execution/integration.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/execution/integration.json",
+      "bytes": 90522,
+      "sha256": "dad1b9b6491e1a5db0391f8ba260e353b3a797e7e5f0c47c76d584f2f974d919"
+    },
+    {
+      "archiveMember": "R1/execution/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/execution/terminal.json",
+      "bytes": 2807,
+      "sha256": "647d10a986333ac7267af008e18b19da53e6e4376371dad516a126dd25380c60"
+    },
+    {
+      "archiveMember": "R1/execution/unit.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/execution/unit.json",
+      "bytes": 2261,
+      "sha256": "324c457932713d26ddf31c07e1a63e75f300c41414e3bbece0d6fd94a6dc55e8"
+    },
+    {
+      "archiveMember": "R1/execution/integration.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/execution/integration.log",
+      "bytes": 19210,
+      "sha256": "d2791b326811982b76dc69a77293e7d1670416589ca851190a437b13af74d896"
+    },
+    {
+      "archiveMember": "R1/execution/unit.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R1/execution/unit.log",
+      "bytes": 458,
+      "sha256": "61b3da0e10662e80b6f08cd6cf04fbcee8f711c69ff500c3b6b5241c79a52da4"
+    },
+    {
+      "archiveMember": "R2/manifest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/manifest.json",
+      "bytes": 1525,
+      "sha256": "d3cb4c30d2c6d13e91350ce93bb0ef645ec3ab8df0080111c718b1c87f1a59ca"
+    },
+    {
+      "archiveMember": "R2/candidate.patch",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/candidate.patch",
+      "bytes": 10609,
+      "sha256": "5fb4ec3eb21bf632f6db2e5deb9f02cf02b3a6e68a9d56a03a0d13766c86de1f"
+    },
+    {
+      "archiveMember": "R2/candidate/packages/polaris-dossier/src/url-check-product-shape.test.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/candidate/packages/polaris-dossier/src/url-check-product-shape.test.ts",
+      "bytes": 5374,
+      "sha256": "b6612a8b98101aa1acc6a06f5450c74612fd5e9b13e59f89d57e816eeeee0274"
+    },
+    {
+      "archiveMember": "R2/candidate/packages/polaris-dossier/src/url-check-product-shape.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/candidate/packages/polaris-dossier/src/url-check-product-shape.ts",
+      "bytes": 7109,
+      "sha256": "e1beab3c7ab3dfb798b9562fcd9dafb6eadef2db8feee8b60e16cea59d036295"
+    },
+    {
+      "archiveMember": "R2/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/candidate/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+      "bytes": 150640,
+      "sha256": "26c2c9c7c2504cd6b23d0e46fbb95f586ddd867b80914847cfa9c4003994e5a8"
+    },
+    {
+      "archiveMember": "R2/candidate/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/candidate/packages/polaris-dossier/src/url-run-artifacts.ts",
+      "bytes": 127206,
+      "sha256": "ea1665b8f8afcb53d25e4e32c913afc987fa01b840980e796f400c99b29fc509"
+    },
+    {
+      "archiveMember": "R2/execution/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/execution/terminal.json",
+      "bytes": 1424,
+      "sha256": "47c5fe018f3afb42488fffc74db26a12b881e23e76c584f3bc8daf8f9cc77670"
+    },
+    {
+      "archiveMember": "R2/execution/vitest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/execution/vitest.json",
+      "bytes": 27693,
+      "sha256": "66dc173a2aa751850f05a8134fab1769e23febdf20a646e66848fcc1dcb0b2d3"
+    },
+    {
+      "archiveMember": "R2/execution/integration.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/execution/integration.log",
+      "bytes": 2580,
+      "sha256": "daded3dc2f44157f84111e7bd2a04339d4754d5aba22b9d817cb8ff78f0ea858"
+    },
+    {
+      "archiveMember": "R2/execution/typecheck.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/execution/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "archiveMember": "R2/mutation-controls/accept-malformed-advice.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/mutation-controls/accept-malformed-advice.json",
+      "bytes": 3426,
+      "sha256": "9e533ad5f29375805a8b79943e0e84fe2b35db7d78fb75e04c0b3c9361267ba0"
+    },
+    {
+      "archiveMember": "R2/mutation-controls/accept-malformed-advice.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/mutation-controls/accept-malformed-advice.log",
+      "bytes": 2086,
+      "sha256": "bd8974b251c973eabf750c5647819c4d701574f4e28650aedc10f3d7edef7a58"
+    },
+    {
+      "archiveMember": "R2/mutation-controls/retain-advice-in-stored-projection.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/mutation-controls/retain-advice-in-stored-projection.json",
+      "bytes": 26416,
+      "sha256": "39cf367bb8d4af764995d97dfcf63231921f1138dc5b5a17857b87cbafe516ce"
+    },
+    {
+      "archiveMember": "R2/mutation-controls/retain-advice-in-stored-projection.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/mutation-controls/retain-advice-in-stored-projection.log",
+      "bytes": 11444,
+      "sha256": "36043139febcb8adb66a191a74430342e3bcd1e870ff721f347c626a5c75b8df"
+    },
+    {
+      "archiveMember": "R2/mutation-controls/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/question-kind-bridge-repair-0f629-R2/mutation-controls/terminal.json",
+      "bytes": 5923,
+      "sha256": "58d8698592fc7f08da56febff0f420cb562273077bf1f7574ea4fdbcbcded609"
+    }
+  ],
+  "memberDenominator": 26,
+  "archiveSHA256": "3d07ba468d2f9e1623ef2101771a3ef34bdf491cdc4d7829e2a615217b4da764",
+  "rawReviews": [
+    {
+      "path": "docs/reviews/F3-QUESTION-KIND-BRIDGE-R1-RAW.md",
+      "sha256": "fe8e1e231f9127f1d70954894bf4bb27733cd1a7a99f300a01b71a7448d64d55"
+    },
+    {
+      "path": "docs/reviews/F3-QUESTION-KIND-BRIDGE-R2-RAW.md",
+      "sha256": "96c205c9a050b703c2f17a8d15341b5151d65f5ebd276fd9db27096acba686d7"
+    }
+  ],
+  "browserArchiveMembers": [
+    {
+      "archiveMember": "1/start.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-1/start.json",
+      "bytes": 526,
+      "sha256": "a61060e7fa03b7a9f4330d1e9d48852212c578c915ae8d7ace02c5a7ebdc713c"
+    },
+    {
+      "archiveMember": "1/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-1/terminal.json",
+      "bytes": 6647,
+      "sha256": "82db5b749d0c52862c90dc59fd5958476e8e1334d93d43ef7ca06fcec105f59e"
+    },
+    {
+      "archiveMember": "1/vitest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-1/vitest.json",
+      "bytes": 18121,
+      "sha256": "cd50e230bab8da266f1bbc49a5e853fc1e7a4bdbc48ce31e8e8f740149365492"
+    },
+    {
+      "archiveMember": "1/vitest.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-1/vitest.log",
+      "bytes": 13518,
+      "sha256": "b3de8eaeaf9f809130e6b70a01bff2523f11db48da51097c61e909b23e5214d2"
+    },
+    {
+      "archiveMember": "R2/start.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R2/start.json",
+      "bytes": 844,
+      "sha256": "3f1150802a9d33af07502dc35374d21f946e62dd1406212b3a9e8dcf6363141a"
+    },
+    {
+      "archiveMember": "R2/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R2/terminal.json",
+      "bytes": 10677,
+      "sha256": "ca9738b33b3a0f4ea116ef3ec1cf9eea60e149212bcafda56aa0d2f676a5c53d"
+    },
+    {
+      "archiveMember": "R2/vitest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R2/vitest.json",
+      "bytes": 16987,
+      "sha256": "9f4cefa7414fd294590c44caa01fd1108eb1c40a0d3b881bfca7c162fd6b04ef"
+    },
+    {
+      "archiveMember": "R2/vitest.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R2/vitest.log",
+      "bytes": 8377,
+      "sha256": "a67941dd6068ca2dea54c2dea07272bbafe715684f3808c3b3d21a0cb149cbbc"
+    },
+    {
+      "archiveMember": "R3/start.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R3/start.json",
+      "bytes": 846,
+      "sha256": "f6cd97ae96cc7ebd70fff7e75bc14af9f4b28ca4e7b6f5cbeed62e54c9eb91fc"
+    },
+    {
+      "archiveMember": "R3/terminal.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R3/terminal.json",
+      "bytes": 1622,
+      "sha256": "7aa2c8686ef7b424405dc3f85660542369f0e88c6f6752651bce50f05eced285"
+    },
+    {
+      "archiveMember": "R3/vitest.json",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R3/vitest.json",
+      "bytes": 14816,
+      "sha256": "4cc25500940468364182d815daefc29c066540feb29698a900c1df30924ee532"
+    },
+    {
+      "archiveMember": "R3/vitest.log",
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/main50d9-browser-70fc55-R3/vitest.log",
+      "bytes": 4693,
+      "sha256": "0ca20b92c467a8c6ecd1acb9e5769ed239ed5cf9db67aa83659a372d76899c32"
+    }
+  ],
+  "browserMemberDenominator": 12,
+  "browserArchiveSHA256": "b29f294bb17fb6336d7c3dc7d1a46c5d4d5352d9fe482704f8926a83ade50b2a"
+}

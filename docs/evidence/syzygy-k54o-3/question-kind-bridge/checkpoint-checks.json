@@ -1,0 +1,20 @@
+{
+  "asOf": "2026-11-26T17:07:09.299000+00:00",
+  "sourceCommit": "70fc55ebc708937ff1900070c32e63670cd3860f",
+  "sourceTree": "090dad5e8c56b21eda2627412ebeaf225712c078",
+  "checks": [
+    {
+      "command": "python3 scripts/check_governance.py",
+      "outcome": "22OK17WARN0FAIL/39",
+      "logSHA256": "39fe551fccb1b5f3b5af4a804aa535d35844da0ace14ad88435e66724a0f399e",
+      "scope": "normal governance check only; not canonical battery"
+    },
+    {
+      "command": "browser owning2files",
+      "outcome": "40/40PASS",
+      "terminalSHA256": "7aa2c8686ef7b424405dc3f85660542369f0e88c6f6752651bce50f05eced285",
+      "scope": "33accessible names+7dossierreading; notfullE2E"
+    }
+  ],
+  "publication": "draft checkpoint; native recovery/fullcombinedgate/finalrender remainUnknown"
+}

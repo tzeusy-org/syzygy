@@ -1,0 +1,155 @@
+{
+  "scope": "Read-only assessment of frozen owning outputs; assertion-message classification is not proof of a sole causal explanation",
+  "runs": [
+    {
+      "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+      "run": "main50d9-owning-integration-0f629-1",
+      "exitCode": 1,
+      "fileDenominator": 13,
+      "counts": {
+        "numTotalTestSuites": 92,
+        "numPassedTestSuites": 80,
+        "numFailedTestSuites": 12,
+        "numTotalTests": 784,
+        "numPassedTests": 732,
+        "numFailedTests": 52,
+        "numPendingTests": 0,
+        "numTodoTests": 0,
+        "success": false
+      },
+      "independentlyComparedTerminalAndVitestJSON": true,
+      "files": [
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/apps/three-surface-poc/src/trajectory.test.ts",
+          "status": "passed",
+          "cases": 76,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/brief.test.ts",
+          "status": "passed",
+          "cases": 47,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/check.test.ts",
+          "status": "failed",
+          "cases": 307,
+          "failed": 34,
+          "failedCasesWithENOSPCText": 34
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/close-step-measures.test.ts",
+          "status": "passed",
+          "cases": 6,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/close.test.ts",
+          "status": "passed",
+          "cases": 22,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/render.test.ts",
+          "status": "failed",
+          "cases": 163,
+          "failed": 17,
+          "failedCasesWithENOSPCText": 8
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-origin-ledger.test.ts",
+          "status": "passed",
+          "cases": 27,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+          "status": "failed",
+          "cases": 74,
+          "failed": 1,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-run-origins.test.ts",
+          "status": "passed",
+          "cases": 7,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/verify-text-script.test.ts",
+          "status": "passed",
+          "cases": 4,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/three-surface-poc-core/src/model-observations.test.ts",
+          "status": "passed",
+          "cases": 3,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/three-surface-poc-core/src/model.test.ts",
+          "status": "passed",
+          "cases": 18,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/three-surface-poc-core/src/work-items.test.ts",
+          "status": "passed",
+          "cases": 30,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        }
+      ],
+      "verdict": "FAILED; never converted by later rerun or proposed repair"
+    },
+    {
+      "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+      "run": "main50d9-owning-integration-0f629-R2",
+      "exitCode": 1,
+      "fileDenominator": 3,
+      "counts": {
+        "numTotalTests": 544,
+        "numPassedTests": 534,
+        "numFailedTests": 10,
+        "numPendingTests": 0,
+        "success": false
+      },
+      "independentlyComparedTerminalAndVitestJSON": true,
+      "files": [
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/check.test.ts",
+          "status": "passed",
+          "cases": 307,
+          "failed": 0,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/render.test.ts",
+          "status": "failed",
+          "cases": 163,
+          "failed": 9,
+          "failedCasesWithENOSPCText": 0
+        },
+        {
+          "path": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w/packages/polaris-dossier/src/url-run-artifacts.test.ts",
+          "status": "failed",
+          "cases": 74,
+          "failed": 1,
+          "failedCasesWithENOSPCText": 0
+        }
+      ],
+      "verdict": "FAILED; never converted by later rerun or proposed repair"
+    }
+  ]
+}

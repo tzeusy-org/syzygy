@@ -1,0 +1,25 @@
+{
+  "scope": "Read-only actual committed application observation, not a capture of the historical mutating command",
+  "subject": "0f629938f7fafa14746d28b2144664415dc78acb",
+  "tree": "ba9f5b6e2e842725b4f95f868d26243ddff0c900",
+  "parents": [
+    "ec4da37c09bdf35ef5c13102df8e49a18155f432",
+    "50d9d2a45978b7916cbe7ed6911a57ced2d640b9"
+  ],
+  "reviewedTree": "ba9f5b6e2e842725b4f95f868d26243ddff0c900",
+  "commitTreeEqualsReviewedTree": true,
+  "independentTreeDiffPaths": [],
+  "actualCheckpointToSubjectPatchSha256": "1e1cf16e0524cccb574fa75ae5b5ef52e3cc7973ab7eb2e873b4d3bf97a5ebec",
+  "preparedPatchSha256": "1e1cf16e0524cccb574fa75ae5b5ef52e3cc7973ab7eb2e873b4d3bf97a5ebec",
+  "byteIdenticalActualAndPreparedPatch": true,
+  "currentPrimaryFollowOnPaths": [
+    "packages/polaris-dossier/src/url-check-product-shape.test.ts",
+    "packages/polaris-dossier/src/url-check-product-shape.ts",
+    "packages/polaris-dossier/src/url-run-artifacts.test.ts",
+    "packages/polaris-dossier/src/url-run-artifacts.ts"
+  ],
+  "currentWorktreeIsNotThisReceiptSubject": "Pending four-file bridge repair is separate; no clean/current-product claim",
+  "mainReviewSha256": "e69b0e04bc2aa73ddacdd66d6932740e58aaed3dde763c85fb93e3f82b3cf6d7",
+  "sourceReviewVerdict": "PASS",
+  "sourceReviewIsRuntimeAcceptance": false
+}

@@ -1,0 +1,15 @@
+# F3 URL check report question-kind advice
+
+[Observed] Source commit 70fc55ebc708937ff1900070c32e63670cd3860f repairs the composition with main50d9: the genuine check producer emits optional report-only questionKindAdvice, but F3's strict URL artifact bridge refused the unrecognized member. On source 0f629, nine existing render cases and one artifact case failed in a private temporary directory. The earlier thirteen-file run also exhausted shared /tmp; both failed runs remain in the main-composition evidence.
+
+[Observed] The bridge now admits the current Unknown and compared advice through a closed nested validator, only on author check reports. Advice is removed from the report projection before comparing the complete frozen check record. Stored check records still reject the field. The advice remains Inferred; shape admission attests no declaration's truth. This changes no screening rule, authority read, CPU reservation or deadline. The [R2 source review](../../../reviews/F3-QUESTION-KIND-BRIDGE-R2-RAW.md) says PASS.
+
+[Observed] Candidate R1 passed four unit cases and all 163 render cases, with the same production and unit bytes committed in 70fc55. Its artifact file passed 73 of 74 cases: the newly added assertion incorrectly expected compared advice from an older-schema fixture, whose genuine producer returns Unknown. R2 changes only that test setup/assertion. R2's actual shared typecheck and all 74 artifact cases passed. These are scoped candidate executions on 0f629, byte-bound to the committed files; they are not a complete check:all run at 70fc55.
+
+[Observed] Two deliberate controls each failed one selected existing case: accepting malformed advice made the unit regression fail (three selection skips of four); retaining advice in the stored projection made the artifact regression fail (73 selection skips of 74). Each source was restored to its exact reviewed bytes before the source commit. The retained records name the subject, old/new fragments, commands, counts and digests. Test delta: +1 unit case, ~1 existing integration case, -0; no new test file.
+
+[Observed] On committed 70fc55, both affected browser files passed all 40 cases (seven dossier reading, 33 accessible names) with already installed Chrome for Testing 148 and a short private home temporary directory. Earlier runs failed at browser startup, before DevTools; their failures and exact temporary-directory remainders remain in the browser archive. This is scoped browser evidence, not the full e2e tier.
+
+[Unknown] Full F3 recovery, the combined full gate, final rendered comparison, complete e2e acceptance and merge readiness. This repair closes the report compatibility defect; the earlier native recovery failure remains separate. A-14 already supplies agent adoption of reviewed package 256 under D10.
+
+The archive retains the frozen source patches/candidates, raw candidate execution reports and both mutation controls. The index hashes each member. Raw source reviews are retained verbatim under docs/reviews. Large earlier full-gate logs and private diagnostic checkouts remain external; this proof makes no guarantee of their future availability.

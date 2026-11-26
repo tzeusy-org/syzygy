@@ -1,0 +1,27 @@
+{
+  "scope": "Read-only preparation-time observations; root must repeat exact collision preflight immediately before appending",
+  "proposedID": "A-263",
+  "followOnReservedOnlyInThisPlan": "A-264 is not adopted here",
+  "ledgers": [
+    {
+      "label": "source0f629",
+      "repository": "/home/orca/.tmp/f3-ordinary-store-read.70BHIdrK/w",
+      "commit": "0f629938f7fafa14746d28b2144664415dc78acb",
+      "ledgerSha256": "63da50a83625a18b5aa0b5bff829d0702d65aabee33d7908ae345cc93137295b",
+      "rowPopulation": 270,
+      "distinctIDs": 270,
+      "A263Occurrences": 0,
+      "A264Occurrences": 0
+    },
+    {
+      "label": "laterPinnedMain",
+      "repository": "/home/orca/orca/projects/syzygy",
+      "commit": "3f6c2b0030c2a80e766169aa6ff8108e3bac850c",
+      "ledgerSha256": "e3c232840f8e5e60f03ba4dd0b081327b2579dcd8b4a28cb10c81ebd389d9e55",
+      "rowPopulation": 102,
+      "distinctIDs": 102,
+      "A263Occurrences": 0,
+      "A264Occurrences": 0
+    }
+  ]
+}

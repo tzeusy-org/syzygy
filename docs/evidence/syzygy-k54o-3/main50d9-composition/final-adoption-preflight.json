@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-11-26T17:06:26.572104+00:00",
+  "candidateSource": "70fc55ebc708937ff1900070c32e63670cd3860f",
+  "pinnedMain": "4b86e4285e7c78ddf049f64c9a3fd95fc0952cf3",
+  "candidateLedgerRows": 270,
+  "mainLedgerRows": 102,
+  "candidateLedgerSHA256": "63da50a83625a18b5aa0b5bff829d0702d65aabee33d7908ae345cc93137295b",
+  "mainLedgerSHA256": "e3c232840f8e5e60f03ba4dd0b081327b2579dcd8b4a28cb10c81ebd389d9e55",
+  "IDs": [
+    "A-263",
+    "A-264"
+  ],
+  "occupiedInEither": false,
+  "secondMethod": "exact row token check independent of anchored regex"
+}
