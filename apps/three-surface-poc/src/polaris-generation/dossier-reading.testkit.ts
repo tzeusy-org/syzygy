@@ -190,6 +190,34 @@ export function navigationInput(): ReturnType<typeof readingInput> {
   } };
 }
 
+/** Pole hue as identity (syzygy-5dhm.56): the navigation dossier with a set of three cards in the why section (Pole 1, drawn on the
+ * landing page), in section two (Pole 2's page) and in the deep dive on section two, a figure homed on that deep dive, and a figure
+ * homed on the overview, which belongs to no Pole. */
+export function poleHueInput(): ReturnType<typeof readingInput> {
+  const { local, sources } = navigationInput();
+  const draft = local.draft as unknown as { sections: { id: string; paragraphs: unknown[] }[]; deepDives: { id: string; paragraphs: unknown[] }[]; diagrams: unknown[] };
+  const blocks = new Map(local.blocks);
+  const cards = (at: string) => {
+    const items = ['first', 'second', 'third'].map(n => {
+      blocks.set(`${at}-card-${n}`, claim(`Card ${n} of ${at}.`));
+      return { label: `${at} ${n}`, body: { id: `${at}-card-${n}`, text: 'x', sourceIds: [READING_SOURCE.sourceId], children: [] } };
+    });
+    blocks.set(`${at}-cards`, claim(`The cards of ${at}.`));
+    return { id: `${at}-cards`, text: 'x', sourceIds: [READING_SOURCE.sourceId], children: [], element: { kind: 'cards', items } };
+  };
+  const figure = (id: string, sectionId: string, home: unknown) => ({
+    id, sectionId, home, kind: 'flow', title: `Figure ${id}`, relationship: 'how it goes', disposition: { kind: 'produced', assetIds: [] },
+    nodes: ['p', 'q'].map(n => ({ id: `${id}-${n}`, label: `Node ${n}`, epistemic: 'inferred', sourceIds: [READING_SOURCE.sourceId] })),
+    edges: [{ id: `${id}-edge`, from: `${id}-p`, to: `${id}-q`, label: 'then', epistemic: 'inferred', sourceIds: [READING_SOURCE.sourceId] }],
+  });
+  return { sources, local: { ...local, blocks, draft: {
+    ...draft,
+    sections: draft.sections.map(s => s.id === 'one' || s.id === 'two' ? { ...s, paragraphs: [...s.paragraphs, cards(s.id)] } : s),
+    deepDives: draft.deepDives.map(d => d.id === 'words-detail' ? { ...d, paragraphs: [...d.paragraphs, cards(d.id)] } : d),
+    diagrams: [...draft.diagrams, figure('dive-figure', 'two', { kind: 'deep-dive', id: 'words-detail' }), figure('overview-figure', '', { kind: 'overview' })],
+  } as unknown as LocalRenderInput['draft'] } };
+}
+
 function lineCitationFixture(body: string, introduction: readonly { start: number; end: number }[], forms: readonly { start: number; end: number }[]) {
   const input = readingInput();
   const { repositoryId, revision, evaluationId } = READING_SOURCE;
