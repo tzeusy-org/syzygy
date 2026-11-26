@@ -44,6 +44,8 @@ export type CheckFindingKind =
   | 'hero'
   // Version 2.5 (schema v7): members that do not fit a diagram's kind, and a participant or lane nothing names.
   | 'figure-kind' | 'figure-unused'
+  // A v11 containment (REQ-polaris-generation-034 version 2.23).
+  | 'containment-depth' | 'containment-size' | 'containment-flat'
   // Version 2.16 (schema v8): a subsection answer that is non-normative or more than one sentence.
   | 'subsection-answer'
   // Version 2.19 (schema v9): a node's unit that names no unit of its kind, and an edge rule `relation-witness` challenges.

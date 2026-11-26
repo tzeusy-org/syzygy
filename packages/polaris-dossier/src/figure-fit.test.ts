@@ -132,4 +132,24 @@ describe('figure fit: sequence and swimlane (syzygy-3efd.30)', () => {
     expect(figureFit(v7(fitting, allLanes), siteLayout)).toEqual({ ...HEAD, examined: 2, entries: [] });
     expect(figureFit(v7({ ...fitting, messages: [{ ...el('a-m9'), from: 'a-p0', to: 'a-p9' }] }), siteLayout).entries).toEqual([{ diagram: 'a', unknown: 'the figure could not be laid out' }]);
   });
+
+  // A v11 containment (version 2.23) is examined as a sequence or swimlane is; its layout's faults leave it Unknown.
+  const contained = (groups: unknown[], over: Record<string, unknown> = {}) => ({ schemaVersion: 'polaris-dossier-local-draft-v11',
+    diagrams: [{ id: 'parts', kind: 'containment', disposition: { kind: 'produced', assetIds: ['parts'] }, groups, ...over }] });
+  const group = (id: string, children: unknown[] = []) => ({ id, label: `Group ${id}`, epistemic: 'inferred', citations: [], children });
+  const unknownFit = [{ diagram: 'parts', unknown: 'the figure could not be laid out' }];
+
+  it('with the site\'s layout: a three-level containment fits both viewports', () => {
+    expect(figureFit(contained([group('a', [group('a1', [group('a11')]), group('a2')]), group('b')]), siteLayout)).toEqual({ ...HEAD, examined: 1, entries: [] });
+  });
+
+  it('with the site\'s layout: a containment with no nesting, a level-4 group, more than 40 groups or another kind\'s member is Unknown', () => {
+    const many = (prefix: string, n: number) => Array.from({ length: n }, (_, i) => group(`${prefix}${i}`));
+    expect(figureFit(contained([group('a'), group('b')]), siteLayout).entries).toEqual(unknownFit);
+    expect(figureFit(contained([group('a', [group('b', [group('c', [group('d')])])])]), siteLayout).entries).toEqual(unknownFit);
+    expect(figureFit(contained([group('a', many('p', 8)), group('b', many('q', 8)), group('c', many('r', 8)), group('d', many('s', 8)), group('e', many('u', 4))]), siteLayout).entries).toEqual(unknownFit);
+    expect(figureFit(contained([group('a', [group('b')])], { nodes: [] }), siteLayout).entries).toEqual(unknownFit);
+    // In a v10 draft a containment is no kind: read as a graph of no nodes, its layout fails too.
+    expect(figureFit({ ...contained([group('a', [group('b')])]), schemaVersion: 'polaris-dossier-local-draft-v10' }, siteLayout).entries).toEqual(unknownFit);
+  });
 });

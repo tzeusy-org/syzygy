@@ -26,7 +26,8 @@ import { derivedRecordFile, encodeDerivedRecord, secretPathOf } from './derived-
 import { CHECK_RECORD_LIMITS, NotARegularFileError, readBoundedFile } from './check-record-read.js';
 import { MANIFEST_BLOB_LIMIT, deriveManifestFacts, manifestFactsUnknown, type ManifestFacts } from './manifest-facts.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type BoundedCheckRecord, type RecordMeasure, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type MechanismAdvice, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
-import { type Derived, type SubjectRules, applyHeroFindings, deriveFindings, draftRules, relationDecisions, relationFindings } from './check-derive.js';
+import { type Derived, type SubjectRules, applyHeroFindings, containmentRelationFindings, deriveFindings, draftRules, relationDecisions, relationFindings, type RelationDecisions } from './check-derive.js';
+import { applyContainmentFindings, containmentStructuralFindings, undecidedContainments } from './containment.js';
 import { hasRelationForm, hasWithheldHeroIdentity } from './draft-schema.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { RUN_TREE_BOUNDS, readBoundedText } from './run-tree-read.js';
@@ -276,6 +277,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   // Version 2.19 (syzygy-3efd.28): after every finding version 2.16 reports, the `unit-reference` findings and then the `relation-challenged`
   // findings of a v9 draft, from the tree this check listed, the structure facts and the manifest facts it derived. The states of the edges
   // are decided only for a draft with no schema finding; an `unknown` state is never a finding. Check reads no currency policy for them.
+  // A v11 draft's group units and nestings (version 2.23), decided here and reported after its structural containment findings below.
+  let containmentDecisions: Pick<RelationDecisions, 'groupUnits' | 'nestings'> | undefined;
   if (plan.command === 'check' && parseFault === null && isRecord(doc) && hasRelationForm(doc['schemaVersion'])) {
     const isSecretPath = secretPathOf(screen);
     const blobs = new Set(listedEntries?.filter((entry) => BLOB_MODES.has(entry.mode)).map((entry) => entry.path));
@@ -288,11 +291,22 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
         structure: treeFacts === undefined ? { state: 'unknown' } : { state: 'derived', ...treeFacts },
         manifest: manifestFacts === undefined || manifestFacts.state !== 'derived' ? { state: 'unknown' } : manifestFacts,
         hidden,
-      });
-    findings.push(...relationFindings(findings.some((finding) => finding.kind === 'schema') ? { ...decisions, edges: [] } : decisions));
+      }, (element) => isWithheldElement(element, reach),
+      // A containment with a figure-kind, depth, size or flat finding has no nesting decided; where the draft has a schema finding no
+      // nesting is decided at all (cleared below), so the structural findings are read here as if no list had one.
+      undecidedContainments([...findings, ...containmentStructuralFindings(doc, new Set())]));
+    const schemaFault = findings.some((finding) => finding.kind === 'schema');
+    findings.push(...relationFindings(schemaFault ? { ...decisions, edges: [] } : decisions));
+    containmentDecisions = schemaFault ? { ...decisions, nestings: [] } : decisions;
   }
 
-  if (plan.command === 'check' && parseFault === null && isRecord(doc)) applyHeroFindings(doc, findings);
+  if (plan.command === 'check' && parseFault === null && isRecord(doc)) {
+    applyHeroFindings(doc, findings);
+    // Version 2.23: after every finding version 2.22 reports, a v11 draft's containment-depth, -size and -flat findings, then its groups'
+    // unit-reference and its nestings' relation-challenged findings.
+    applyContainmentFindings(doc, findings);
+    if (containmentDecisions !== undefined) findings.push(...containmentRelationFindings(containmentDecisions));
+  }
 
   const frozen = path.join(frozenDir, `rev-${revision}.json`), checkFile = path.join(checksDir, `rev-${revision}.json`);
   // A derived record already in place for this revision (planted, or left by a crash) is never overwritten or adopted: refused here,

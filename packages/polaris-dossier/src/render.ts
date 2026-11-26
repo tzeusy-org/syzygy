@@ -5,16 +5,17 @@ import {
   backtickSpans, excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDerivedFact, type LocalDerivedStructure, type LocalDisclosureItem, type LocalDraftLayer, type LocalEdgeRelation, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
-  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftFigure, type DraftFigureElement, type DraftParagraph,
+  type DossierDraft, type DraftBlock, type DraftDiagramHome, type DraftContainmentGroup, type DraftFigure, type DraftFigureElement, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { applyHeroFindings, relationDecisions } from './check-derive.js';
+import { applyContainmentFindings, groupsOf } from './containment.js';
 import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
+import { CONTAINMENT_KIND, UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasContainmentForm, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -187,6 +188,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   }
   const findings = [...derived.findings];
   applyHeroFindings(doc, findings);
+  applyContainmentFindings(doc, findings);
   if (findings.length > 0) {
     return refuse('rederive', `draft revision ${draftRev.revision} passed its check, but checking it again at this render from the objects read now finds ${findings.length} finding(s); the stored result is not trusted, so nothing is rendered`,
       { reasons: findings.map((finding) => `${finding.kind} at ${finding.at}`) });
@@ -310,9 +312,12 @@ export async function edgeRelationsAt(inputs: {
         : { state: 'derived', facts: derived.facts, secretPathsLeftOut: derived.tree.secretPathsLeftOut, submodules: derived.tree.submodules, unitsNotListed: derived.tree.unitsNotListed },
       manifest: manifestFacts.state === 'derived' ? manifestFacts : { state: 'unknown' },
       hidden,
-    });
+    }, (element) => withheld.has(text(element['id']) ?? ''));
   const facts = derived.state === 'derived' ? new Map(derived.facts.map((fact) => [fact.id, fact])) : new Map<string, LocalDerivedFact>();
-  return new Map(decisions.edges.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
+  // A v11 containment's nestings (version 2.23) are keyed by the child group's id, read as `contains` edges; a render follows a passing
+  // check, so no containment here has a finding that leaves its nestings undecided.
+  const decided = [...decisions.edges, ...decisions.nestings.map(({ id, decision }) => ({ id, relation: 'contains' as RelationType, decision }))];
+  return new Map(decided.map(({ id, relation, decision: checked }): [string, LocalEdgeRelation] => {
     // At version 1 every eligible fact is a structure fact, so `facts` (the structure record's, as this render derives them) holds every
     // fact a decision can name, and the evidence names that record; a fact found in no rendered record is not current.
     const decision = witnessAtRender(checked, (factId) => facts.get(factId)?.epistemic === 'observed');
@@ -704,11 +709,13 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return { held };
   };
   // A v7 sequence or swimlane (version 2.5): its participants, lanes and steps are rendered as nodes are, its messages as edges are.
-  const figureKind = (diagram: Readonly<Record<string, unknown>>): 'sequence' | 'swimlane' | undefined =>
-    (hasFigureKindForm(doc['schemaVersion']) && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind'] : undefined);
+  // A v11 containment (version 2.23): each group, at every level, is rendered as a node is.
+  const figureKind = (diagram: Readonly<Record<string, unknown>>): 'sequence' | 'swimlane' | typeof CONTAINMENT_KIND | undefined =>
+    (hasFigureKindForm(doc['schemaVersion']) && (diagram['kind'] === 'sequence' || diagram['kind'] === 'swimlane') ? diagram['kind']
+      : hasContainmentForm(doc['schemaVersion']) && diagram['kind'] === CONTAINMENT_KIND ? CONTAINMENT_KIND : undefined);
   const elementsOf = (diagram: Readonly<Record<string, unknown>>): unknown[] => {
     const kind = figureKind(diagram);
-    return kind === 'sequence' ? [...list(diagram['participants']), ...list(diagram['messages'])]
+    return kind === CONTAINMENT_KIND ? groupsOf(diagram, 0).map(({ group }) => group) : kind === 'sequence' ? [...list(diagram['participants']), ...list(diagram['messages'])]
       : kind === 'swimlane' ? [...list(diagram['lanes']), ...list(diagram['steps'])] : [...list(diagram['nodes']), ...list(diagram['edges'])];
   };
   const diagramHeld = (diagram: Readonly<Record<string, unknown>>): boolean => {
@@ -751,7 +758,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { id: text(value['id'])!, label: gone === undefined ? title(value['label']) : WITHHELD_LABEL, sourceIds: cites(text(value['id'])!, value), epistemic: gone === undefined && value['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
         };
         const records = (key: string): Readonly<Record<string, unknown>>[] => list(diagram[key]).filter(isRecord);
-        const figure: DraftFigure = kind === 'sequence'
+        const groupOf = (value: Readonly<Record<string, unknown>>): DraftContainmentGroup => ({ ...claimOf(value), children: list(value['children']).filter(isRecord).map(groupOf) });
+        const figure: DraftFigure = kind === CONTAINMENT_KIND ? { kind, groups: records('groups').map(groupOf) } : kind === 'sequence'
           ? { kind, participants: records('participants').map(claimOf), messages: records('messages').map((message) => ({ ...claimOf(message), from: text(message['from'])!, to: text(message['to'])! })) }
           : { kind, lanes: records('lanes').map(claimOf), steps: records('steps').map((step) => ({ ...claimOf(step), lane: text(step['lane'])! })) };
         return {

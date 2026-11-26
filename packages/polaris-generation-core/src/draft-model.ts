@@ -78,13 +78,14 @@ export interface DossierDraft {
 /** A subsection (version 2.16): its title, its one-sentence answer and its paragraphs, rendered after its section's own paragraphs. */
 export interface DraftSubsection { id: string; title: string; answer: DraftParagraph; paragraphs: DraftBlock[] }
 export interface DraftDiagram {
-  id: string; title: string; sectionId: string; kind: DiagramKind | FigureKind; relationship: string;
+  id: string; title: string; sectionId: string; kind: DiagramKind | FigureKind | typeof CONTAINMENT_KIND; relationship: string;
   nodes: DraftDiagramNode[]; edges: DraftDiagramEdge[]; disposition: AssetDisposition;
   /** An operator-agent v5 diagram on a page other than a section (syzygy-3efd.18): a deep dive, or the overview. Absent, the diagram's page
    * is the section `sectionId` names; present, `sectionId` names the section the deep dive belongs to, or is empty for the overview. */
   home?: DraftDiagramHome;
   /** An operator-agent v7 figure kind's own record (REQ-polaris-generation-034 version 2.5, syzygy-3efd.30): present exactly when `kind`
-   * is `sequence` or `swimlane`, whose `nodes` and `edges` are then empty. The provider pipeline never sets it. */
+   * is `sequence` or `swimlane`, or (v11, version 2.23) `containment`, whose `nodes` and `edges` are then empty. The provider pipeline
+   * never sets it. */
   figure?: DraftFigure;
 }
 /** The figure kinds with records of their own (version 2.5), beside the six graph kinds; operator-agent drafts only. */
@@ -94,9 +95,15 @@ export type FigureKind = typeof FIGURE_KINDS[number];
 export interface DraftFigureElement { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }
 export interface DraftSequenceMessage extends DraftFigureElement { from: string; to: string }
 export interface DraftSwimlaneStep extends DraftFigureElement { lane: string }
+/** The containment kind (REQ-polaris-generation-034 version 2.23, schema v11): nested groups, boxes within boxes; operator-agent drafts only.
+ * It is not one of `FIGURE_KINDS`, whose two members read a diagram naming no kind (version 2.5). */
+export const CONTAINMENT_KIND = 'containment';
+/** A containment's group: a claim as a node is, with the groups drawn inside it, top to bottom. */
+export interface DraftContainmentGroup extends DraftFigureElement { children: DraftContainmentGroup[] }
 export type DraftFigure =
   | { kind: 'sequence'; participants: DraftFigureElement[]; messages: DraftSequenceMessage[] }
-  | { kind: 'swimlane'; lanes: DraftFigureElement[]; steps: DraftSwimlaneStep[] };
+  | { kind: 'swimlane'; lanes: DraftFigureElement[]; steps: DraftSwimlaneStep[] }
+  | { kind: typeof CONTAINMENT_KIND; groups: DraftContainmentGroup[] };
 export type DraftDiagramHome = { readonly kind: 'deep-dive'; readonly id: string } | { readonly kind: 'overview' };
 export interface FidelityInventoryCoverage { entryId: string; disposition: 'represented' | 'justified-omission' | 'unsupported' | 'unresolved'; blockIds: string[]; reason: string }
 export interface FidelityBlockSupport { blockId: string; verdict: 'supported' | 'anchor-does-not-support' | 'unresolved'; sourceIds: string[]; reason: string }
@@ -202,6 +209,7 @@ const figureLabel = (element: DraftFigureElement): string => mermaidText(element
  * (inferred, then unknown) and the graph source's two `classDef` lines. Throws where a reference names nothing.
  */
 export function figureToMermaid(figure: DraftFigure): string {
+  if (figure.kind === CONTAINMENT_KIND) return containmentToMermaid(figure.groups);
   if (figure.kind === 'sequence') {
     const index = new Map(figure.participants.map((participant, i) => [participant.id, `p${i}`]));
     const lines = ['sequenceDiagram', ...figure.participants.map((participant, i) => `  participant p${i} as ${figureLabel(participant)}`)];
@@ -225,6 +233,34 @@ export function figureToMermaid(figure: DraftFigure): string {
     const members = figure.steps.flatMap((step, k) => step.epistemic === marking ? [`s${k}`] : []);
     if (members.length > 0) lines.push(`  class ${members.join(',')} ${marking}`);
   }
+  lines.push('  classDef inferred stroke-dasharray:6 4', '  classDef unknown stroke-dasharray:2 4');
+  return `${lines.join('\n')}\n`;
+}
+
+/**
+ * The declarative source of a containment (REQ-polaris-generation-034 version 2.23), from its record alone, by position and never by the
+ * draft's identities, one statement to a line, each indented two spaces for each level it is nested, ending in a newline: `flowchart TB`,
+ * then for each group in preorder `subgraph g<k>["<label>"]` and, after its children, `end` where it has children, or `g<k>["<label>"]`
+ * where it has none; then one `class` line per mark that has groups (inferred, then unknown) and the graph source's two `classDef` lines.
+ * `<k>` counts from 0 in preorder.
+ */
+function containmentToMermaid(groups: readonly DraftContainmentGroup[]): string {
+  const lines = ['flowchart TB'];
+  const marks: Record<'inferred' | 'unknown', string[]> = { inferred: [], unknown: [] };
+  let k = 0;
+  const visit = (group: DraftContainmentGroup, level: number): void => {
+    const name = `g${k++}`, pad = '  '.repeat(level);
+    if (group.epistemic === 'inferred' || group.epistemic === 'unknown') marks[group.epistemic].push(name);
+    if (group.children.length === 0) {
+      lines.push(`${pad}${name}["${figureLabel(group)}"]`);
+      return;
+    }
+    lines.push(`${pad}subgraph ${name}["${figureLabel(group)}"]`);
+    for (const child of group.children) visit(child, level + 1);
+    lines.push(`${pad}end`);
+  };
+  for (const group of groups) visit(group, 1);
+  for (const marking of ['inferred', 'unknown'] as const) if (marks[marking].length > 0) lines.push(`  class ${marks[marking].join(',')} ${marking}`);
   lines.push('  classDef inferred stroke-dasharray:6 4', '  classDef unknown stroke-dasharray:2 4');
   return `${lines.join('\n')}\n`;
 }
