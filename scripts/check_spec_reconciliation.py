@@ -878,6 +878,20 @@ FIGPLAN_SUBJECTS = {
     FIGPLAN_SPEC: "8ae85a0b259825a13d5628b939cebf46e002fb72a671117f8685fc7c44016a3c",
 }
 FIGPLAN_BOUND_PARTS = len(FIGPLAN_SUBJECTS)
+
+# The v2.34 derived-base views (syzygy-3efd.38): one MODIFIED REQ-polaris-generation-034
+# after the v2.33 figure plan, pending until its own VIS-4 ledger row.
+VBASE_CHANGE = "dossier-derived-base-views"
+VBASE_HOME = f"{CHANGES}/{VBASE_CHANGE}"
+VBASE_SPEC = f"{VBASE_HOME}/proposed/polaris-generation/spec.md"
+VBASE_UNION = f"{VBASE_HOME}/GOVERNING-DEPENDENCIES.json"
+VBASE_TAG = "polaris-dossier-derived-base-views-v2.34"
+VBASE_STATUS_PREFIX = f"[Derived-base views amendment 2.34]({VBASE_HOME})"
+VBASE_REPLACES = (POLARIS_ID + "034",)
+VBASE_SUBJECTS = {
+    VBASE_SPEC: "a404fa70e788f7ca20761f5a30f1d840604706cb811fcf50664f3e2942592c45",
+}
+VBASE_BOUND_PARTS = len(VBASE_SUBJECTS)
 ADOPTION_LEDGER_TITLE = "# Agent adoptions"
 ADOPTION_TABLE_HEADER = "| Id | Date | Commit | What changed | Why | Revert | Tag |"
 ADOPTION_TABLE_DIVIDER = "|---|---|---|---|---|---|---|"
@@ -3410,6 +3424,33 @@ def figplan_binding(root):
     )
 
 
+def is_vbase_row(line):
+    return _is_reviewed_version_row(line, VBASE_TAG, VBASE_SUBJECTS)
+
+
+def vbase_rows(root):
+    return [[cell.strip() for cell in line.split("|")[1:-1]]
+            for line in adoption_table_rows(root) if is_vbase_row(line)]
+
+
+def vbase_disposition(root, rows):
+    if VBASE_TAG is not None and len(rows) == 1 and len(rows[0]) == 7:
+        identity, _date, commit, _changed, _why, _revert, _tag = rows[0]
+        return recorded_disposition(root, identity, commit.strip("`"), VBASE_TAG,
+                                    VBASE_SUBJECTS, plain_revert=True)
+    return None
+
+
+def vbase_binding(root):
+    """Apply the derived base only over the effective v2.33 figure-plan REQ-034."""
+    return _reviewed_version_binding(
+        root, vbase_rows(root), vbase_disposition,
+        version_tag=VBASE_TAG, subjects_map=VBASE_SUBJECTS, spec=VBASE_SPEC,
+        predecessor=figplan_binding, predecessor_label="v2.33 figure plan", version="v2.34",
+        label="derived base",
+    )
+
+
 def url_source_contract_findings(root):
     """Verify the reviewed amendment in its actual contract homes."""
     body = read_bytes(root, URL_SOURCE_REPLACEMENTS)
@@ -4152,6 +4193,15 @@ def check_outcomes(root, report):
         subjects_seen += FIGPLAN_BOUND_PARTS
     r1 += figplan_records
     r2 += figplan_subjects
+    vbase_retired_by = vbase_disposition(root, vbase_rows(root))
+    vbase_amendment, vbase_records, vbase_subjects = vbase_binding(root)
+    if vbase_retired_by:
+        records += 2
+    elif vbase_amendment is not None or vbase_records or vbase_subjects:
+        records += 1
+        subjects_seen += VBASE_BOUND_PARTS
+    r1 += vbase_records
+    r2 += vbase_subjects
     retirement = ""
     if declared_retired_by:
         retirement += f"; v2.0 inactive by {declared_retired_by}"
@@ -4207,6 +4257,8 @@ def check_outcomes(root, report):
         retirement += f"; v2.32 inactive by {qkind_retired_by}"
     if figplan_retired_by:
         retirement += f"; v2.33 inactive by {figplan_retired_by}"
+    if vbase_retired_by:
+        retirement += f"; v2.34 inactive by {vbase_retired_by}"
     if qfile_retired_by:
         retirement += f"; v2.27 inactive by {qfile_retired_by}"
     if scripted_grade_retired_by:
@@ -5235,6 +5287,16 @@ def census(root):
                 b, extra_b = compose_figure_by_name(b, figplan_amendment, FIGPLAN_REPLACES)
                 pa += extra_a
                 pb += extra_b
+        vbase_amendment, vbase_records, vbase_subjects = vbase_binding(root)
+        findings += vbase_records + vbase_subjects
+        if vbase_amendment is not None:
+            if figplan_amendment is None:
+                findings.append("POLARIS: derived base requires effective figure plan v2.33")
+            else:
+                a, extra_a = compose_figure_by_id(a, vbase_amendment, VBASE_REPLACES)
+                b, extra_b = compose_figure_by_name(b, vbase_amendment, VBASE_REPLACES)
+                pa += extra_a
+                pb += extra_b
         findings += [f"POLARIS method A: {p}" for p in pa]
         findings += [f"POLARIS method B: {p}" for p in pb]
         if a != b:
@@ -5621,6 +5683,18 @@ def polaris_expected(root, findings):
             findings.append("POLARIS figure plan: cannot count predecessor and successor for 034")
         else:
             n_scen += replacement[0] - previous[0]
+    vbase_amendment, _records, _subjects = vbase_binding(root)
+    if vbase_amendment is not None:
+        # Only 034 moves, after the figure plan v2.33.
+        ident = VBASE_REPLACES[0]
+        previous = [len(block["scenarios"]) for block in _polaris_blocks_manual(figplan_amendment or "")
+                    if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        replacement = [len(block["scenarios"]) for block in _polaris_blocks_manual(vbase_amendment)
+                       if block["section"] == "MODIFIED" and tuple(block["ids"]) == (ident,)]
+        if len(previous) != 1 or len(replacement) != 1:
+            findings.append("POLARIS derived base: cannot count predecessor and successor for 034")
+        else:
+            n_scen += replacement[0] - previous[0]
     return n_req, n_scen, ids
 
 
@@ -5860,6 +5934,9 @@ def check_generated(root, pop, report):
     figplan_amendment, _records, _subjects = figplan_binding(root)
     if figplan_amendment is not None:
         files += tracked(root, FIGPLAN_HOME)
+    vbase_amendment, _records, _subjects = vbase_binding(root)
+    if vbase_amendment is not None:
+        files += tracked(root, VBASE_HOME)
     candidate_ref_dirs = addition_dirs + (URL_SOURCE_HOME + "/",)
     files += list(ROUTE_PAGES)
     # An addition may cite a candidate Polaris requirement still under
@@ -5928,7 +6005,8 @@ def check_generated(root, pop, report):
                         (covhold_amendment, COVHOLD_UNION),
                         (term_brief_amendment, TERM_BRIEF_UNION),
                         (qkind_amendment, QKIND_UNION),
-                        (figplan_amendment, FIGPLAN_UNION)):
+                        (figplan_amendment, FIGPLAN_UNION),
+                        (vbase_amendment, VBASE_UNION)):
         if delta is None:
             continue
         examined += 1
@@ -6468,6 +6546,24 @@ def check_routes(root, pop, report):
             findings.append(f"`{STATUS}` calls figure plan v2.33 adopted while it is not in force")
         if any("Agent adoption" in line for line in rows.get(FIGPLAN_CHANGE, [])):
             findings.append(f"`{OPENSPEC_README}` calls figure plan v2.33 adopted while it is not in force")
+    vbase_amendment, _records, _subjects = vbase_binding(root)
+    vbase_fields = [line.strip() for line in visible_route_lines(status)
+                    if line.strip().startswith(VBASE_STATUS_PREFIX)]
+    if vbase_amendment is not None:
+        examined += 2
+        if not any(Path(AGENT_ADOPTIONS).name in line and VBASE_TAG in line
+                   for line in rows.get(VBASE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` does not route derived base v2.34 "
+                            f"to `{AGENT_ADOPTIONS}` and its version tag")
+        identity = vbase_rows(root)[0][0]
+        if AGENT_ADOPTIONS not in status or vbase_fields != [f"{VBASE_STATUS_PREFIX} is agent-adopted in {identity}."]:
+            findings.append(f"`{STATUS}` does not route derived base v2.34 and its adoption {identity}")
+    elif VBASE_CHANGE in changes:
+        examined += 2
+        if any("is agent-adopted" in field for field in vbase_fields):
+            findings.append(f"`{STATUS}` calls derived base v2.34 adopted while it is not in force")
+        if any("Agent adoption" in line for line in rows.get(VBASE_CHANGE, [])):
+            findings.append(f"`{OPENSPEC_README}` calls derived base v2.34 adopted while it is not in force")
     reltype_amendment, _records, _subjects = reltype_binding(root)
     reltype_fields = [line.strip() for line in visible_route_lines(status)
                     if line.strip().startswith(RELTYPE_STATUS_PREFIX)]
@@ -6749,9 +6845,10 @@ def check_unions(root, report):
                 "a change to a signed union needs a signed successor")
 
 
-# Within one read invocation the tree is only read, so its P115 transaction
-# cannot change between the predicates that ask; it was asked twelve
-# times per run (~4,200 git calls, syzygy-b6dp). A later invocation asks afresh.
+# Within one run() the tree is only read, so whether its P115 transaction is
+# signed cannot change between the predicates that ask; it was asked twelve
+# times per run (~4,200 git calls, syzygy-b6dp). The memo lives for one run()
+# call only: a later run, or a caller between runs, asks afresh.
 _SIGNED_MEMO = None
 
 
@@ -6764,11 +6861,11 @@ def reference_signed(root):
     return _SIGNED_MEMO[key]
 
 
-# Within one read invocation neither D10's state nor any
+# Within one run() the tree is only read, so neither D10's state nor any
 # versioned binding can change between the predicates that ask. Each binding
 # re-derived every predecessor's binding (a call chain that grew with the square
 # of the version count) and each asked D10's recorder afresh (syzygy-v0b5). The
-# memo is keyed by function and resolved root, lives for one invocation only,
+# memo is keyed by function and resolved root, lives for one run() call only,
 # and is bypassed while `_FILES_OVERRIDE` puts other bytes in front of a read.
 _RUN_MEMO = None
 
@@ -6788,16 +6885,48 @@ def _per_run(function):
     return memoized
 
 
+@contextlib.contextmanager
+def _run_scope():
+    """One run()'s memos: P115's answer, the per-run bindings, D10's state.
+
+    Entered by run() and by every caller that asks a predicate outside run()
+    (a bare `check_outcomes`, which otherwise re-derives P115 about twenty
+    times per call, syzygy-7rkx). Each entry starts empty and each exit
+    clears, so nothing carries from one scope to the next. Scopes do not
+    nest: an inner exit would clear the outer scope's memos, so entering
+    one inside another is refused.
+    """
+    global _SIGNED_MEMO, _RUN_MEMO
+    assert _SIGNED_MEMO is None and _RUN_MEMO is None, "_run_scope nested"
+    _SIGNED_MEMO = {}
+    _RUN_MEMO = {}
+    import d10_supersession
+    d10_state = d10_supersession.state
+    d10_supersession.state = _per_run(d10_state)
+    try:
+        yield
+    finally:
+        _SIGNED_MEMO = None
+        _RUN_MEMO = None
+        d10_supersession.state = d10_state
+
+
+def scoped_check_outcomes(root, report):
+    """`check_outcomes` as run() asks it, for a caller outside run()."""
+    with _run_scope():
+        check_outcomes(root, report)
+
+
 @_reverse_cache_scope()
-@_read_memo_scope()
 def run(root):
     report = Report()
-    check_outcomes(root, report)
-    pop = check_census(root, report)
-    check_generated(root, pop, report)
-    check_routes(root, pop, report)
-    check_pins(root, report)
-    check_unions(root, report)
+    with _run_scope():
+        check_outcomes(root, report)
+        pop = check_census(root, report)
+        check_generated(root, pop, report)
+        check_routes(root, pop, report)
+        check_pins(root, report)
+        check_unions(root, report)
     return report
 
 
@@ -6882,6 +7011,7 @@ def inputs(root):
     paths |= {TERM_BRIEF_UNION, *TERM_BRIEF_SUBJECTS}
     paths |= {QKIND_UNION, *QKIND_SUBJECTS}
     paths |= {FIGPLAN_UNION, *FIGPLAN_SUBJECTS}
+    paths |= {VBASE_UNION, *VBASE_SUBJECTS}
     paths |= poc_reference().validation_inputs(root)
     return sorted(paths)
 
@@ -7282,6 +7412,10 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
     figplan_retired = figplan_disposition(tree, figplan_rows_now)
     figplan_records = 2 if figplan_retired else int(bool(figplan_rows_now))
     figplan_subjects = FIGPLAN_BOUND_PARTS if figplan_rows_now and not figplan_retired else 0
+    vbase_rows_now = vbase_rows(tree)
+    vbase_retired = vbase_disposition(tree, vbase_rows_now)
+    vbase_records = 2 if vbase_retired else int(bool(vbase_rows_now))
+    vbase_subjects = VBASE_BOUND_PARTS if vbase_rows_now and not vbase_retired else 0
     edit_rows = edit_account_rows(tree)
     edit_retired = edit_account_disposition(tree, edit_rows)
     edit_records = 2 if edit_retired else int(bool(edit_rows))
@@ -7294,13 +7428,13 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
                             and not is_bounds_row(line)
                       and not is_corr_row(line) and not is_coverage_row(line)
                       and not is_readmit_row(line) and not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line)
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line)
                       and not is_infra_row(line)
                       and not is_findpages_row(line) and not is_subsec_row(line) and not is_reltype_row(line) and not is_hero_row(line) and not is_readers_row(line) and not is_cont_row(line) and not is_model_row(line) and not is_worth_row(line)
                       and not is_edit_account_row(line))
     ledger.write_text(absent_ledger)
     report = Report()
-    check_outcomes(tree, report)
+    scoped_check_outcomes(tree, report)
 
     def examined(result, rid):
         return next(int(match.group(1)) for line in result.lines
@@ -7310,8 +7444,8 @@ def declared_source_historical_cases(tmp, base, clean, witnesses, failures):
             and declared_source_binding(tree) == (None, [], [])
             and not report.failed
             and examined(report, "R1") == examined(clean, "R1") - 1 - had_url_source - had_figure - had_derived - had_ledger - had_kinds - had_manifests
-            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records
-            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects
+            - had_reach - had_repairs - had_maps - had_bounds - had_corr - had_coverage - had_readmit - had_infra - had_findpages - had_subsec - had_reltype - had_hero - had_readers - had_cont - had_model - had_worth - had_raw_read - had_treeread - had_verify - had_qfile - had_scripted_grade - had_covhold - had_term_brief - edit_records - step_records - qkind_records - figplan_records - vbase_records
+            and examined(report, "R2") == examined(clean, "R2") - 3 - edit_subjects - step_subjects - qkind_subjects - figplan_subjects - vbase_subjects
             - (URL_SOURCE_BOUND_PARTS if had_url_source else 0)
             - (FIGURE_BOUND_PARTS if had_figure else 0)
             - (DERIVED_BOUND_PARTS if had_derived else 0)
@@ -7469,7 +7603,7 @@ def url_source_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_url_source_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10450,7 +10584,7 @@ def reach_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_reach_row(line) and not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -10570,7 +10704,7 @@ def raw_read_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_raw_read_row(line) and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "01234567"
@@ -10642,7 +10776,7 @@ def treeread_cases(tmp, base, witnesses, failures):
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     before, findings = census(tree)
     oid = "0123456789abcdef" * 2 + "89abcdef"
@@ -11177,7 +11311,7 @@ def qkind_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_qkind_row(line) and not is_figplan_row(line))
+                      if not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -11270,7 +11404,7 @@ def figplan_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_figplan_row(line))
+                      if not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     before, before_findings = census(tree)
     prior = before["POLARIS"]
@@ -11342,6 +11476,99 @@ def figplan_cases(tmp, base, witnesses, failures):
     ledger.write_text(pending + row + veto)
     retired, found = census(tree)
     held = (figplan_disposition(tree, figplan_rows(tree)) == "A-1000"
+            and not found and retired["POLARIS"] == prior)
+    record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
+
+def vbase_cases(tmp, base, witnesses, failures):
+    """Guard the REQ034 succession over the figure plan, the checked spec bytes and retirement."""
+    original = read_text(base, VBASE_SPEC)
+    if original is None or VBASE_TAG is None or figplan_binding(base)[0] is None:
+        return
+
+    def record(name, rel, old, new, expected, found, held, baseline=False):
+        mutant = f"derived-base-{name}"
+        witnesses.append({"mutant": mutant, "path": rel, "old": old, "new": new,
+                          "expected": expected, "failed": found,
+                          "outcome": ("held" if baseline else "killed") if held else "SURVIVED"})
+        if not held:
+            failures.append(mutant)
+
+    tree = Path(tmp) / "dossier-derived-base-views"
+    shutil.copytree(base, tree)
+    ledger = tree / AGENT_ADOPTIONS
+    pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
+                      if not is_vbase_row(line) and not is_vbase_row(line))
+    ledger.write_text(pending)
+    before, before_findings = census(tree)
+    prior = before["POLARIS"]
+    requirement = VBASE_REPLACES[0]
+    held = (vbase_binding(tree) == (None, [], []) and not before_findings
+            and len(prior[requirement]["scenarios"]) == 232)
+    record("pending", AGENT_ADOPTIONS, "<no row>", "<unchanged>", "prior 034 has 232 scenarios",
+           before_findings, held, baseline=True)
+
+    oid = "0123456789abcdef0123456789abcdef01234567"
+    snapshot = f"https://github.com/tzeusy-org/syzygy/blob/{oid}/{VBASE_SPEC}"
+    row = (f"| A-999 | 2026-11-25 | `{oid}` | [spec]({snapshot}) | Selftest | "
+           f"`git revert -m 1 {oid}` | `{VBASE_TAG}` |\n")
+    later = "f" * 40
+    unrelated = f"| A-1001 | 2026-11-25 | `{later}` | "
+    citations = (
+        ("prior-snapshot", unrelated + f"[prior spec]({snapshot}) | Other work | `git revert {later}` | — |\n"),
+        ("tag-in-reason", unrelated + f"Other work | `{VBASE_TAG}` | `git revert {later}` | — |\n"),
+    )
+    for state, prefix, expected in (("pending", pending, None), ("adopted", pending + row, original)):
+        for name, citation in citations:
+            ledger.write_text(prefix + citation)
+            text, r1, r2 = vbase_binding(tree)
+            record(f"{state}-{name}", AGENT_ADOPTIONS, "<no citation>", citation,
+                   "an unrelated row does not claim this adoption", r1 + r2,
+                   text == expected and not r1 and not r2, baseline=True)
+
+    ledger.write_text(pending + row)
+    after, after_findings = census(tree)
+    effective = after["POLARIS"]
+    held = (vbase_binding(tree) == (original, [], []) and not after_findings
+            and len(effective[requirement]["scenarios"]) == 250
+            and set(prior) == set(effective)
+            and all(prior[other] == body for other, body in effective.items() if other != requirement))
+    record("adopted", AGENT_ADOPTIONS, "<no row>", row, "only 034 moves from 232 to 250 scenarios",
+           after_findings, held, baseline=True)
+
+    for name, old, new, detail in (
+        ("duplicate-row", row, row + row, "seven-column"),
+        ("malformed-tagged", "| Selftest | ", "| ", "seven-column"),
+        ("wrong-tag", VBASE_TAG, VBASE_TAG + "-wrong", "malformed"),
+        ("wrong-snapshot", snapshot, snapshot.replace("/blob/", "/tree/"), "does not name"),
+        ("wrong-revert", f"git revert -m 1 {oid}", f"git revert {'0' * 40}", "revert"),
+    ):
+        assert row.count(old) == 1 and old != new
+        ledger.write_text(pending + row.replace(old, new, 1))
+        text, r1, r2 = vbase_binding(tree)
+        record(name, AGENT_ADOPTIONS, old, new, f"R1 refusal mentioning {detail}", r1 + r2,
+               text is None and not r2 and any(detail in finding for finding in r1))
+
+    predecessor = next(line for line in pending.splitlines(keepends=True) if is_figplan_row(line))
+    ledger.write_text(pending.replace(predecessor, "", 1) + row)
+    text, r1, r2 = vbase_binding(tree)
+    record("prior-unavailable", AGENT_ADOPTIONS, predecessor, "", "R1 requires effective v2.33", r1 + r2,
+           text is None and not r2 and any("prior v2.33" in finding for finding in r1))
+
+    ledger.write_text(pending + row)
+    spec = tree / VBASE_SPEC
+    changed = "double border, two lines 4 px apart"
+    current_capacity = "double border, two lines 3 px apart"
+    assert original.count(current_capacity) == 1
+    spec.write_text(original.replace(current_capacity, changed, 1))
+    text, r1, r2 = vbase_binding(tree)
+    record("modified-border", VBASE_SPEC, current_capacity, changed, "R2 bound-subject refusal",
+           r1 + r2, text is None and not r1 and len(r2) == 1 and VBASE_SPEC in r2[0])
+    spec.write_text(original)
+
+    veto = "| A-1000 | 2026-11-25 | `8a468bc` | Veto A-999 | Test only | `git revert 8a468bc` | — |\n"
+    ledger.write_text(pending + row + veto)
+    retired, found = census(tree)
+    held = (vbase_disposition(tree, vbase_rows(tree)) == "A-1000"
             and not found and retired["POLARIS"] == prior)
     record("vetoed", AGENT_ADOPTIONS, row, row + veto, "restore exact previous 034", found, held, baseline=True)
 
@@ -11491,7 +11718,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
     shutil.copytree(base, tree)
     ledger = tree / AGENT_ADOPTIONS
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
-                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      if not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     before_pop, before_findings = census(tree)
     before = before_pop["POLARIS"]
@@ -11575,7 +11802,7 @@ def term_brief_cases(tmp, base, witnesses, failures):
         status = tree / STATUS
         prior_status = status.read_text()
         status_without_route = "".join(line for line in prior_status.splitlines(keepends=True)
-                                       if not line.strip().startswith((TERM_BRIEF_STATUS_PREFIX, QKIND_STATUS_PREFIX, FIGPLAN_STATUS_PREFIX)))
+                                       if not line.strip().startswith((TERM_BRIEF_STATUS_PREFIX, QKIND_STATUS_PREFIX, FIGPLAN_STATUS_PREFIX, VBASE_STATUS_PREFIX)))
         pending_total = sum(len(item["scenarios"]) for item in before.values())
         adopted_total = sum(len(item["scenarios"]) for item in after.values())
         pending_status, slots = STATUS_FIGURE.subn(
@@ -11600,6 +11827,12 @@ def term_brief_cases(tmp, base, witnesses, failures):
             figplan_cells = figplan_row.split(" | ")
             figplan_cells[2] = "**Candidate.** Specification version and adoption pending"
             base_index = base_index.replace(figplan_row, " | ".join(figplan_cells), 1)
+        # The v2.34 derived-base views stand on v2.33, so they are candidate too.
+        vbase_row = next((line for line in base_index.splitlines() if line.startswith(f"| [`{VBASE_CHANGE}`]")), None)
+        if vbase_row is not None:
+            vbase_cells = vbase_row.split(" | ")
+            vbase_cells[2] = "**Candidate.** Specification version and adoption pending"
+            base_index = base_index.replace(vbase_row, " | ".join(vbase_cells), 1)
         index_row = next(line for line in base_index.splitlines() if line.startswith(f"| [`{TERM_BRIEF_CHANGE}`]"))
         cells = index_row.split(" | ")
         assert len(cells) == 4
@@ -11689,7 +11922,7 @@ def readmit_cases(tmp, base, witnesses, failures):
     pending = "".join(line for line in ledger.read_text().splitlines(keepends=True)
                       if not is_readmit_row(line) and not is_raw_read_row(line)
                       and not is_treeread_row(line)
-                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line))
+                      and not is_verify_row(line) and not is_qfile_row(line) and not is_scripted_grade_row(line) and not is_step_measures_row(line) and not is_covhold_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line))
     ledger.write_text(pending)
     pending_pop, pending_findings = census(tree)
     predecessor = pending_pop["POLARIS"]
@@ -12162,7 +12395,6 @@ def _profile_selftest_call(phase, function, *args, witnesses=None):
             pass  # A diagnostic failure must not replace the result or error.
 
 
-
 # The case workers fork after the parent warms this invocation's cache.
 @_reverse_cache_scope()
 def selftest(witness_path=None):
@@ -12244,12 +12476,6 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
             witnesses.append(witness)
         if failure is not None:
             failures.append(failure)
-    _profile_selftest_call("_entry_kind_cases", _entry_kind_cases,
-                           tmp, base, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("declared_source_historical_cases", declared_source_historical_cases,
-                           tmp, base, clean, witnesses, failures, witnesses=witnesses)
-    _profile_selftest_call("declared_source_composition_cases", declared_source_composition_cases,
-                           witnesses, failures, witnesses=witnesses)
     # These cases reconstruct historical REQ-034 floors where the prerequisites
     # for edit accounting and the terminology brief cannot exist.
     figure_base = base
@@ -12259,27 +12485,69 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         ledger = figure_base / AGENT_ADOPTIONS
         rows = ledger.read_text().splitlines(keepends=True)
         ledger.write_text("".join(line for line in rows
-                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line)))
-    historical_families = (figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
-                           repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
-                           infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
-                           readers_cases, cont_cases, model_cases, worth_cases)
-    tail_families = (edit_account_cases, poc_d10_cases, reach_cases, readmit_cases,
-                     raw_read_cases, treeread_cases, verify_cases, qfile_cases,
-                     scripted_grade_cases, covhold_cases, term_brief_cases)
-    # Each task owns its fixture tree; preserve the historical fixture base.
-    families = (((url_source_cases, base),)
-                + tuple((family, figure_base) for family in historical_families)
-                + tuple((family, base) for family in tail_families))
-    global _EDITION_STATE
-    _EDITION_STATE = (tmp, families)
-    try:
-        results = _map_cases(len(families), _run_edition)
-    finally:
-        _EDITION_STATE = None
-    # Preserve canonical witness order; the original join rejects bad indices.
-    results.sort(key=lambda result: result[0] if type(result[0]) is int else -1)
-    _join_case_results(results, len(families), witnesses, failures)
+                                  if not is_edit_account_row(line) and not is_term_brief_row(line) and not is_qkind_row(line) and not is_figplan_row(line) and not is_vbase_row(line)))
+    # The families below run side by side, each in its own fresh fork, and
+    # their witnesses, failures and printed lines are merged in this order
+    # (syzygy-7rkx). A family added here must keep three rules, or a
+    # verdict can depend on which families happen to run beside it:
+    # - it reads the starts (`base`, `figure_base`, `added`, `clean`) and
+    #   never writes them; it writes only trees it copied under `tmp`;
+    # - every tree it copies has a top-level name under `tmp` that no other
+    #   family or pooled case uses;
+    # - a global it patches is restored before it returns (a fork discards
+    #   it anyway, but `SELFTEST_WORKERS=1` runs the families in turn in
+    #   one process).
+    # Families share the CPU, so a family's own wall-clock bound must allow
+    # for the others (`_after_refusal_cases` gives its child 120 s).
+    families = [
+        lambda w, f: _entry_kind_cases(tmp, base, w, f),
+        lambda w, f: declared_source_historical_cases(tmp, base, clean, w, f),
+        lambda w, f: declared_source_composition_cases(w, f),
+        lambda w, f: url_source_cases(tmp, base, w, f),
+    ]
+    families += [functools.partial(case, tmp, figure_base) for case in (
+        figure_cases, derived_cases, ledger_cases, kinds_cases, manifests_cases,
+        repairs_cases, maps_cases, bounds_cases, corr_cases, coverage_cases,
+        infra_cases, findpages_cases, subsec_cases, reltype_cases, hero_cases,
+        readers_cases, cont_cases, model_cases, worth_cases)]
+    families += [
+        lambda w, f: edit_account_cases(tmp, base, w, f),
+        lambda w, f: poc_d10_cases(base, w, f),
+    ]
+    families += [functools.partial(case, tmp, base) for case in (
+        reach_cases, readmit_cases, raw_read_cases, treeread_cases, verify_cases,
+        qfile_cases, scripted_grade_cases, covhold_cases, term_brief_cases)]
+    families += [
+        lambda w, f: _scripted_addition_cases(tmp, added, w, f),
+        lambda w, f: step_measures_cases(tmp, base, w, f),
+        lambda w, f: qkind_cases(tmp, base, w, f),
+        lambda w, f: figplan_cases(tmp, base, w, f),
+        lambda w, f: vbase_cases(tmp, base, w, f),
+    ]
+    _run_families(families, witnesses, failures)
+    doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
+           "mutants": witnesses}
+    if witness_path:
+        Path(witness_path).write_text(json.dumps(doc, indent=2,
+                                                 ensure_ascii=False) + "\n",
+                                      encoding="utf-8")
+    for w in witnesses:
+        print(f"{w['outcome']:8} {w['mutant']:28} {w['expected']} "
+              f"(failed: {', '.join(w['failed'])})")
+    if failures:
+        print("\n".join(f"SELFTEST FAIL: {f}" for f in failures))
+        return 1
+    held = sum(w["outcome"] == "held" for w in witnesses)
+    print(f"SELFTEST PASS: clean scratch copy and its signed- and "
+          f"adopted-addition variants pass; {len(witnesses) - held} of "
+          f"{len(witnesses) - held} mutants killed by their expected "
+          f"predicate; {held} of {held} controls held "
+          f"(commit {commit[:12]})")
+    return 0
+
+
+def _scripted_addition_cases(tmp, added, witnesses, failures):
+    """The two scripted cases over the signed-addition tree."""
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -12315,33 +12583,9 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                           "outcome": "killed" if caught else "SURVIVED"})
         if not caught:
             failures.append(f"{name}: expected {expect}")
-    step_measures_cases(tmp, base, witnesses, failures)
-    qkind_cases(tmp, base, witnesses, failures)
-    figplan_cases(tmp, base, witnesses, failures)
-    doc = {"commit": commit, "script": "scripts/check_spec_reconciliation.py",
-           "mutants": witnesses}
-    if witness_path:
-        Path(witness_path).write_text(json.dumps(doc, indent=2,
-                                                 ensure_ascii=False) + "\n",
-                                      encoding="utf-8")
-    for w in witnesses:
-        print(f"{w['outcome']:8} {w['mutant']:28} {w['expected']} "
-              f"(failed: {', '.join(w['failed'])})")
-    if failures:
-        print("\n".join(f"SELFTEST FAIL: {f}" for f in failures))
-        return 1
-    held = sum(w["outcome"] == "held" for w in witnesses)
-    print(f"SELFTEST PASS: clean scratch copy and its signed- and "
-          f"adopted-addition variants pass; {len(witnesses) - held} of "
-          f"{len(witnesses) - held} mutants killed by their expected "
-          f"predicate; {held} of {held} controls held "
-          f"(commit {commit[:12]})")
-    return 0
 
 
 _CASE_STATE = None
-_ENTRY_STATE = None
-_EDITION_STATE = None
 
 
 def _selftest_workers():
@@ -12351,62 +12595,117 @@ def _selftest_workers():
     return max(1, min(os.cpu_count() or 1, 8))
 
 
-def _map_cases(count, worker=None):
+def _map_cases(count):
     """Run every case, in parallel under fork, returning results in order."""
-    if worker is None:
-        worker = _run_case
+    return _fork_map(_run_case, count)
+
+
+def _selftest_timeout():
+    """Seconds one `_fork_map` may wait for all its results (default 3600).
+
+    A whole selftest takes a few minutes; the bound only turns a lost result
+    (a worker killed by the OOM killer or `os._exit`) into a failure instead
+    of a wait that never ends (syzygy-7rkx).
+    """
+    raw = os.environ.get("SELFTEST_TIMEOUT", "")
+    return int(raw) if raw.isdigit() and int(raw) > 0 else 3600
+
+
+class PoolTimeout(RuntimeError):
+    """A forked selftest map lost a result or overran `_selftest_timeout`."""
+
+
+def _guarded(function, index):
+    """`function(index)`, with a `BaseException` re-raised as RuntimeError.
+
+    `multiprocessing.pool.worker` forwards only `Exception`; a `SystemExit`
+    or `KeyboardInterrupt` would kill the worker and lose the result. As a
+    RuntimeError it reaches the parent and fails the run as before.
+    """
+    try:
+        return function(index)
+    except Exception:
+        raise
+    except BaseException as exc:
+        raise RuntimeError(f"task {index} raised {type(exc).__name__}: "
+                           f"{exc}") from None
+
+
+def _fork_map(function, count, fresh=False):
+    """`function(i)` for each i, under a fork pool, in order.
+
+    `fresh` gives every task its own fork of this process (one task per
+    worker), so nothing one task leaves behind reaches the next. With one
+    worker (`SELFTEST_WORKERS=1`), or where `fork` is unavailable, the tasks
+    run in this process in order instead: `fresh` then isolates nothing, and
+    a task sees what earlier tasks left in module state, as before the pool.
+    Under fork, a task's `BaseException` fails the run and a lost result
+    raises `PoolTimeout` after `_selftest_timeout()` seconds.
+    """
     workers = _selftest_workers()
     if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
-        return [worker(i) for i in range(count)]
-    with multiprocessing.get_context("fork").Pool(workers) as pool:
-        return pool.map(worker, range(count), chunksize=1)
+        return [function(i) for i in range(count)]
+    with multiprocessing.get_context("fork").Pool(
+            workers, maxtasksperchild=1 if fresh else None) as pool:
+        pending = pool.map_async(functools.partial(_guarded, function),
+                                 range(count), chunksize=1)
+        try:
+            return pending.get(timeout=_selftest_timeout())
+        except multiprocessing.TimeoutError:
+            raise PoolTimeout(
+                f"{count} forked tasks gave no complete result within "
+                f"{_selftest_timeout()} s; a worker died or a task hung"
+                ) from None
 
 
-def _run_entry(index):
-    tmp, base, tasks = _ENTRY_STATE
-    kind, name, case = tasks[index]
-    witnesses, failures, messages = [], [], []
-    if kind == 'kind':
-        function, arguments = _entry_kind_case, (name, case, witnesses, failures, messages)
-    elif kind == 'control':
-        function, arguments = _entry_control_case, (name, case, witnesses, failures)
-    elif kind == 'fifo':
-        function, arguments = _fifo_control, (witnesses, failures)
-    elif kind == 'after':
-        setup, expected = case
-        function, arguments = _after_refusal_case, (
-            name, setup, expected, witnesses, failures, messages)
-    else:
-        raise RuntimeError('unknown entry fixture kind')
-    _profile_selftest_call(name, function, tmp, base, *arguments, witnesses=witnesses)
-    return index, witnesses, failures, messages
+_FAMILY_STATE = None
 
 
-def _run_edition(index):
-    tmp, families = _EDITION_STATE
-    index = _EDITION_WORK_ORDER[index]
-    family, fixture_base = families[index]
-    witnesses, failures = [], []
-    arguments = (fixture_base,) if family is poc_d10_cases else (tmp, fixture_base)
-    _profile_selftest_call(family.__name__, family, *arguments,
-                           witnesses, failures, witnesses=witnesses)
-    return index, witnesses, failures, []
+def _run_families(families, witnesses, failures):
+    """Each `family(witnesses, failures)` in a fresh fork, merged in order.
+
+    A family's witnesses and failures are appended in list order, and what it
+    printed is re-emitted at its place, so the record and the output are the
+    same as a serial run's (syzygy-7rkx). A family that raises, `SystemExit`
+    included, keeps what it found and adds one failure naming it. Isolation
+    holds only under fork with more than one worker (`_fork_map`).
+    """
+    global _FAMILY_STATE
+    _FAMILY_STATE = families
+    try:
+        results = _fork_map(_run_family, len(families), fresh=True)
+    finally:
+        _FAMILY_STATE = None
+    for found, failed, printed in results:
+        sys.stdout.write(printed)
+        witnesses.extend(found)
+        failures.extend(failed)
 
 
-# Fixed longest-first order from the retained a7be hosted family timings.
-# Return the original canonical index; timings are not an acceptance guarantee.
-_EDITION_WORK_ORDER = (30, 0, 20, 26, 29, 27, 16, 15, 19, 18, 14, 12, 23, 13, 21, 17, 22, 11, 10, 9, 8, 7, 28, 6, 5, 4, 25, 3, 2, 1, 24)
+def _run_family(index):
+    found, failed = [], []
+    family = _FAMILY_STATE[index]
+    with contextlib.redirect_stdout(io.StringIO()) as printed:
+        try:
+            _profile_selftest_call(_family_name(family), family, found, failed,
+                                   witnesses=found)
+        except KeyboardInterrupt:
+            raise
+        except BaseException as exc:
+            failed.append(f"family {index} ({_family_name(family)}) raised "
+                          f"{type(exc).__name__}: {exc}")
+    return found, failed, printed.getvalue()
 
 
-def _join_case_results(results, count, witnesses, failures):
-    indices = [index for index, _witnesses, _failures, _messages in results]
-    if any(type(index) is not int for index in indices) or indices != list(range(count)):
-        raise RuntimeError('selftest task result population differs')
-    for _index, task_witnesses, task_failures, messages in results:
-        for message in messages:
-            print(message)
-        witnesses.extend(task_witnesses)
-        failures.extend(task_failures)
+def _family_name(family):
+    """A family's case function name, for a failure line."""
+    inner = getattr(family, "func", family)
+    code = getattr(inner, "__code__", None)
+    if inner.__name__ == "<lambda>" and code is not None:
+        named = [n for n in code.co_names if n.endswith("_cases")]
+        if named:
+            return named[0]
+    return inner.__name__
 
 
 def _run_case(index):
@@ -12700,80 +12999,66 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
     `census`, `check_outcomes`, `check_census`), refuse by name when
     collected, and refuse in the CLI (exit 1, no write); each control must
     pass exactly as it did before."""
-    tasks = ([('kind', name, case) for name, case in ENTRY_KIND_CASES.items()]
-             + [('control', name, setup) for name, setup in ENTRY_CONTROLS.items()]
-             + [('fifo', 'signoff-entry-control-live-writer-fifo', None)]
-             + [('after', name, case) for name, case in AFTER_REFUSAL_CASES.items()])
-    global _ENTRY_STATE
-    _ENTRY_STATE = (tmp, base, tasks)
-    try:
-        results = _map_cases(len(tasks), _run_entry)
-    finally:
-        _ENTRY_STATE = None
-    _join_case_results(results, len(tasks), witnesses, failures)
-
-
-def _entry_kind_case(tmp, base, name, case, witnesses, failures, messages):
-    entry, setup, kind, cls = case
-    if name.endswith("block-device") and _block_device() is None:
-        messages.append(f"SKIPPED  {name}: no unreadable block device under /dev")
-        return
-    tree = Path(tmp) / name
-    shutil.copytree(base, tree)
-    path = tree / DECISIONS / entry
-    setup(path, tree)
-    needle = f"`{DECISIONS}/{entry}`: {kind}"
-    got = []
-    for label, method in (("run", run), ("census", census),
-                          ("check_outcomes",
-                           lambda t: check_outcomes(t, Report())),
-                          ("check_census",
-                           lambda t: check_census(t, Report()))):
-        got += _library_error(label, method, tree, path, cls)
-    try:
-        signoff_texts(tree, collect=True)
-        got.append("collected: not refused")
-    except SignoffEntriesRefused as exc:
-        if not any(f.startswith(needle) for f in exc.findings):
-            got.append(f"collected: refused {exc.findings}")
-        if exc.filename is None or Path(exc.filename) != path:
-            got.append(f"collected: filename {exc.filename!r}")
-    if name == "signoff-entry-directory":
-        # The CLI's polarity, once: exit 1 with the refusal in every
-        # mode, and `--regenerate` writes nothing.
-        codes, wrote = _cli_exits(tree)
-        got += [f"{flag}: exit {code}, refusal printed {printed}"
-                for flag, (code, printed) in codes.items()
-                if (code, printed) != (1, True)]
-        if wrote:
-            got.append("the CLI wrote a file")
-    if path.is_file():
-        path.chmod(0o644)
-    witnesses.append({"mutant": name, "path": f"{DECISIONS}/{entry}",
-                      "old": "<no entry>", "new": f"<{kind}>",
-                      "expected": f"REFUSED:{kind}", "failed": got,
-                      "outcome": "SURVIVED" if got else "killed"})
-    if got:
-        failures.append(f"{name}: expected REFUSED {needle}; {got}")
-
-
-def _entry_control_case(tmp, base, name, setup, witnesses, failures):
-    tree = Path(tmp) / name
-    shutil.copytree(base, tree)
-    setup(tree)
-    try:
-        report = run(tree)
-        census(tree)
-        signoff_texts(tree, collect=True)
-        got = sorted(report.failed)
-    except (OSError, ValueError) as exc:
-        got = [f"raised {type(exc).__name__}: {exc}"]
-    witnesses.append({"mutant": name, "path": "<scripted control>",
-                      "old": "<no entry>", "new": "<control>",
-                      "expected": "PASS", "failed": got,
-                      "outcome": "BROKEN" if got else "held"})
-    if got:
-        failures.append(f"{name}: must read as before and pass; {got}")
+    for name, (entry, setup, kind, cls) in ENTRY_KIND_CASES.items():
+        if name.endswith("block-device") and _block_device() is None:
+            print(f"SKIPPED  {name}: no unreadable block device under /dev")
+            continue
+        tree = Path(tmp) / name
+        shutil.copytree(base, tree)
+        path = tree / DECISIONS / entry
+        setup(path, tree)
+        needle = f"`{DECISIONS}/{entry}`: {kind}"
+        got = []
+        for label, method in (("run", run), ("census", census),
+                              ("check_outcomes",
+                               lambda t: scoped_check_outcomes(t, Report())),
+                              ("check_census",
+                               lambda t: check_census(t, Report()))):
+            got += _library_error(label, method, tree, path, cls)
+        try:
+            signoff_texts(tree, collect=True)
+            got.append("collected: not refused")
+        except SignoffEntriesRefused as exc:
+            if not any(f.startswith(needle) for f in exc.findings):
+                got.append(f"collected: refused {exc.findings}")
+            if exc.filename is None or Path(exc.filename) != path:
+                got.append(f"collected: filename {exc.filename!r}")
+        if name == "signoff-entry-directory":
+            # The CLI's polarity, once: exit 1 with the refusal in every
+            # mode, and `--regenerate` writes nothing.
+            codes, wrote = _cli_exits(tree)
+            got += [f"{flag}: exit {code}, refusal printed {printed}"
+                    for flag, (code, printed) in codes.items()
+                    if (code, printed) != (1, True)]
+            if wrote:
+                got.append("the CLI wrote a file")
+        if path.is_file():
+            path.chmod(0o644)
+        witnesses.append({"mutant": name, "path": f"{DECISIONS}/{entry}",
+                          "old": "<no entry>", "new": f"<{kind}>",
+                          "expected": f"REFUSED:{kind}", "failed": got,
+                          "outcome": "SURVIVED" if got else "killed"})
+        if got:
+            failures.append(f"{name}: expected REFUSED {needle}; {got}")
+    for name, setup in ENTRY_CONTROLS.items():
+        tree = Path(tmp) / name
+        shutil.copytree(base, tree)
+        setup(tree)
+        try:
+            report = run(tree)
+            census(tree)
+            signoff_texts(tree, collect=True)
+            got = sorted(report.failed)
+        except (OSError, ValueError) as exc:
+            got = [f"raised {type(exc).__name__}: {exc}"]
+        witnesses.append({"mutant": name, "path": "<scripted control>",
+                          "old": "<no entry>", "new": "<control>",
+                          "expected": "PASS", "failed": got,
+                          "outcome": "BROKEN" if got else "held"})
+        if got:
+            failures.append(f"{name}: must read as before and pass; {got}")
+    _fifo_control(tmp, base, witnesses, failures)
+    _after_refusal_cases(tmp, base, witnesses, failures)
 
 
 #: Entries sorted after a refused directory (round 4 F7): name ->
@@ -12822,42 +13107,47 @@ except module.SignoffEntriesRefused as exc:
 """
 
 
-def _after_refusal_case(tmp, base, name, setup, expected,
-                        witnesses, failures, messages):
-    if "ptmx" in name and not Path("/dev/ptmx").exists():
-        messages.append(f"SKIPPED  {name}: no /dev/ptmx")
-        return
-    tree = Path(tmp) / name
-    shutil.copytree(base, tree)
-    (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
-    setup(tree / DECISIONS / AFTER_REFUSAL_ENTRY, tree)
-    got = []
-    try:
-        child = subprocess.run(
-            [sys.executable, "-c", _COLLECT_CHILD,
-             str(Path(__file__).resolve()), str(tree)],
-            capture_output=True, text=True, timeout=30)
-        if child.returncode != 0:
-            tail = (child.stderr.strip().splitlines() or [""])[-1]
-            got.append(f"collection exited {child.returncode}: {tail}")
+def _after_refusal_cases(tmp, base, witnesses, failures):
+    """Each `AFTER_REFUSAL_CASES` entry, sorted after a refused directory,
+    must be named with its expected finding beside the directory's, in a
+    child given 120 seconds and 1 GiB of address space. The bound is
+    generous because the child shares the CPU with the other families
+    (syzygy-7rkx); only a child that blocks ever reaches it."""
+    for name, (setup, expected) in AFTER_REFUSAL_CASES.items():
+        if "ptmx" in name and not Path("/dev/ptmx").exists():
+            print(f"SKIPPED  {name}: no /dev/ptmx")
+            continue
+        tree = Path(tmp) / name
+        shutil.copytree(base, tree)
+        (tree / DECISIONS / "J5DG-DIR-SIGNOFF-v1.0.md").mkdir()
+        setup(tree / DECISIONS / AFTER_REFUSAL_ENTRY, tree)
+        got = []
+        try:
+            child = subprocess.run(
+                [sys.executable, "-c", _COLLECT_CHILD,
+                 str(Path(__file__).resolve()), str(tree)],
+                capture_output=True, text=True, timeout=120)
+            if child.returncode != 0:
+                tail = (child.stderr.strip().splitlines() or [""])[-1]
+                got.append(f"collection exited {child.returncode}: {tail}")
+                findings = None
+            else:
+                findings = json.loads(child.stdout)
+        except subprocess.TimeoutExpired:
+            got.append("collection opened the entry and blocked")
             findings = None
-        else:
-            findings = json.loads(child.stdout)
-    except subprocess.TimeoutExpired:
-        got.append("collection opened the entry and blocked")
-        findings = None
-    wanted = [f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
-              f"`{DECISIONS}/{AFTER_REFUSAL_ENTRY}`: {expected}"]
-    if not got and findings != wanted:
-        got.append(f"collected: {findings!r}")
-    witnesses.append({"mutant": name,
-                      "path": f"{DECISIONS}/{AFTER_REFUSAL_ENTRY}",
-                      "old": "<no entry>",
-                      "new": "<directory, then entry>",
-                      "expected": f"REFUSED:{expected}", "failed": got,
-                      "outcome": "SURVIVED" if got else "killed"})
-    if got:
-        failures.append(f"{name}: expected {wanted}; {got}")
+        wanted = [f"`{DECISIONS}/J5DG-DIR-SIGNOFF-v1.0.md`: directory",
+                  f"`{DECISIONS}/{AFTER_REFUSAL_ENTRY}`: {expected}"]
+        if not got and findings != wanted:
+            got.append(f"collected: {findings!r}")
+        witnesses.append({"mutant": name,
+                          "path": f"{DECISIONS}/{AFTER_REFUSAL_ENTRY}",
+                          "old": "<no entry>",
+                          "new": "<directory, then entry>",
+                          "expected": f"REFUSED:{expected}", "failed": got,
+                          "outcome": "SURVIVED" if got else "killed"})
+        if got:
+            failures.append(f"{name}: expected {wanted}; {got}")
 
 
 def _fifo_control(tmp, base, witnesses, failures):
@@ -12945,7 +13235,7 @@ def main(argv):
         if args.selftest:
             # Its fixtures drive the library path, which must raise each
             # entry's own read error, so it never collects.
-            return _profile_selftest_call("total", selftest, args.witnesses)
+            return selftest(args.witnesses)
         _COLLECT_REFUSALS = True
         return _main(args)
     except SignoffEntriesRefused as exc:

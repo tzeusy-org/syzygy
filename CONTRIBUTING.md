@@ -154,6 +154,21 @@ See [repository scripts](scripts/README.md) for the Python governance tools.
   The remaining e2e files then run together, followed by the system tier.
   `test:tiers` checks that these phases discover every e2e file exactly once.
 - **Live** never runs in a workflow.
+- **What a pull request runs** (`syzygy-qu5j`). Hosted CI selects the unit
+  and e2e files a pull request's change can reach. Integration conservatively
+  runs all seven mandatory lanes: its router does not yet consume a selection,
+  and every native case, prerequisite and success receipt remains required.
+  The integration jobs print the selection and disclose this full-tier fallback;
+  they do not run the generic selected-tier runner once per matrix cell.
+  Merge-group runs run every tier whole, so `main` only moves to a tree that
+  passed the full suite. `scripts/select_ci_tests.mjs` prints the choice:
+  Vitest's module graph for changed workspace modules, plus the tests that
+  import a "reader" of a changed file (a module that names it, or one that
+  locates the repository, for a file outside the workspaces). A manifest, the
+  lockfile, test or type configuration, the workflow, the selector or a
+  deleted workspace module runs everything. The rule and its known blind spot
+  are in `ci-selection.ts`. To see a choice locally:
+  `node scripts/select_ci_tests.mjs --base origin/main --out /tmp/sel.json`.
 - **Where a test goes.** A new test file is a unit test until
   `vitest.tiers.ts` lists it under `INTEGRATION_TESTS`, `E2E_TESTS` or
   `LIVE_TESTS`; list it under the lowest tier that holds what it uses. The

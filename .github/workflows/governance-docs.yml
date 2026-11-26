@@ -588,6 +588,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      # The selftest's family pool and per-run scope, which its own witness
+      # record cannot show (syzygy-7rkx); seconds, so it runs first.
+      - name: test_reconciliation_pool
+        run: python3 scripts/test_reconciliation_pool.py
+
       - name: check_spec_reconciliation --selftest
         env:
           SELFTEST_PROFILE: '1'

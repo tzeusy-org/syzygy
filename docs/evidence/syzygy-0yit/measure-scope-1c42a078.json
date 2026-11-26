@@ -1,0 +1,15 @@
+{
+  "bare": {
+    "seconds": 50.34,
+    "isSignedCalls": 22
+  },
+  "scoped": {
+    "seconds": 2.99,
+    "isSignedCalls": 1
+  },
+  "bare-again": {
+    "seconds": 49.14,
+    "isSignedCalls": 22
+  },
+  "findingsEqual": true
+}
