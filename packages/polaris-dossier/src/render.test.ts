@@ -479,11 +479,14 @@ describe('render', () => {
       if (!result.ok) throw new Error(result.refusal.reason);
       const files = readSite(result.report.site);
       for (const [file, page] of html(files)) {
-        // Version 2.9: each computed map page carries its own legend with the same switch and target.
-        const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/');
+        // Version 2.9: each computed map page carries its own legend with the same switch and target; version 2.34: so does the
+        // test-names reference page.
+        const legended = file === 'index.html' || file.startsWith('deep-dives/') || file.startsWith('maps/') || file === 'reference/test-names.html';
         expect(page.split('class="reading-legend"').length - 1, file).toBe(legended ? 1 : 0);
         expect(page.split('id="evidence-view"').length - 1, file).toBe(legended ? 1 : 0);
       }
+      // The render derives the test-names member itself, so its page is always published.
+      expect(files.has('reference/test-names.html')).toBe(true);
       const legend = files.get('index.html')!;
       expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
       expect(legend).toContain('text with such a mark is the agent\'s reading of that source.');
