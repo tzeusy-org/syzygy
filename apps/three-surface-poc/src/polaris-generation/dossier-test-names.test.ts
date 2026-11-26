@@ -3,7 +3,7 @@ import type { LocalDerivedStructure, LocalTestNames, LocalTestNamesRecognizer } 
 import { readingInput } from './dossier-reading.testkit.js';
 import { renderLocalDossier } from './dossier-site.js';
 
-// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.34): the test-names reference page and its machine member. Inputs are built here;
+// syzygy-5dhm.45 (REQ-polaris-generation-034 version 2.35): the test-names reference page and its machine member. Inputs are built here;
 // every expected string and count is a literal written from the requirement's words before the renderer ran.
 
 const REV = 'c'.repeat(40);
@@ -52,7 +52,7 @@ const site = (testNames: LocalTestNames | undefined, structure: LocalDerivedStru
   return renderLocalDossier({ ...input, local: { ...input.local, ...(structure === null ? {} : { derivedStructure: structure }), ...(testNames === undefined ? {} : { testNames }) } }).files;
 };
 
-describe('the test-names reference page (version 2.34)', () => {
+describe('the test-names reference page (version 2.35)', () => {
   it('renders a per-unit table, every name with its label and evidence, and the Unknown files with their reasons', () => {
     const files = site(MEMBER);
     const page = files.get(PAGE)!;

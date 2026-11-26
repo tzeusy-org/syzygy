@@ -873,7 +873,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const standaloneDives = poleSpec === undefined ? diveLinks : [];
   // Both the sidebar and the page turns use this order, including the maps only when the site renders them.
   const maps = local?.derivedStructure !== undefined && local.manifestFacts !== undefined ? { derived: local.derivedStructure, manifests: local.manifestFacts } : undefined;
-  // Version 2.34: the test-names reference page, after the maps, only where the render derived the member and holds a derived record.
+  // Version 2.35: the test-names reference page, after the maps, only where the render derived the member and holds a derived record.
   const testNames = local?.derivedStructure !== undefined && local.testNames !== undefined ? { derived: local.derivedStructure, member: local.testNames } : undefined;
   const referenceLinks = testNames === undefined ? [] : [TEST_NAMES_PAGE];
   const findingLinks = local === undefined ? [] : [{ path: FIND_BY_TASK_PAGE, title: 'Find by task' }, { path: NAME_INDEX_PAGE, title: 'Index' }];
@@ -1263,7 +1263,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     mapFigures = { directories: drawn.directories.figures, units: drawn.units.figures, ci: drawn.ci.figures, infrastructure: drawn.infrastructure.figures };
   }
 
-  // --- the test-names reference page (version 2.34), after the maps.
+  // --- the test-names reference page (version 2.35), after the maps.
   if (testNames !== undefined) add(TEST_NAMES_PAGE.path, 1, TEST_NAMES_PAGE.title, testNamesPage(testNames.member, testNames.derived.revision));
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review

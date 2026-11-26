@@ -97,7 +97,7 @@ export const TERRAFORM_CONFIGURATION = { id: 'terraform-configuration', version:
 export const MAKEFILE = { id: 'makefile', version: 1 } as const;
 export const CMAKE_LISTS = { id: 'cmake-lists', version: 1 } as const;
 
-/** The test-name recognizers (REQ-polaris-generation-034 version 2.34, syzygy-5dhm.45), each version 1: the names one admitted test file
+/** The test-name recognizers (REQ-polaris-generation-034 version 2.35, syzygy-5dhm.45), each version 1: the names one admitted test file
  * declares, read lexically by `test-names-*.ts` with its comments and string interiors blanked first, so a name inside a comment or a
  * string is never one. They read bodies, so they are outside `DERIVE_RULES`, as the manifest recognizers are. A change to a path rule or to
  * what a recognizer matches is a new version. */

@@ -1,4 +1,4 @@
-/** The lexical layer under the test-name recognizers (REQ-polaris-generation-034 version 2.34, syzygy-5dhm.45). Pure.
+/** The lexical layer under the test-name recognizers (REQ-polaris-generation-034 version 2.35, syzygy-5dhm.45). Pure.
  *
  * A scan reads one body and returns its code text: the body with every comment and every string literal's interior replaced by spaces,
  * newlines kept, so every offset and line of the code text is the body's. A string keeps its delimiters in the code text, and the scan
