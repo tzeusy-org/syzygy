@@ -177,7 +177,8 @@ describe('a link swapped in after the lstat is still not followed (R-PDJA-33-SLI
       path.resolve(String(p)) === link ? fs.statSync(p) : (lstatSync as (...args: unknown[]) => fs.Stats)(p, ...rest)) as typeof fs.lstatSync);
     let read: CloneSnapshotRead;
     try { read = readCloneSnapshot(clone); } finally { restore(); }
-    expect(read).toEqual({ ok: false, reason: `${link} cannot be read (ELOOP)` });
+    // The open refuses the link (O_NOFOLLOW), which the reader rule reports as no regular file (syzygy-3efd.83).
+    expect(read).toEqual({ ok: false, reason: `${link} is not a regular file; it is refused, never followed` });
   });
 });
 

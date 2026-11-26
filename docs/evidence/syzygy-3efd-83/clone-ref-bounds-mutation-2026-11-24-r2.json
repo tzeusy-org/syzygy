@@ -1,0 +1,406 @@
+{
+  "format": "mutation-run/1",
+  "ranAt": "2026-11-24T02:49:07.855Z",
+  "commit": "c05981977496378192f0a02bc24a6db71ca73299",
+  "subject": {
+    "packages/polaris-dossier/src/check-record-read.ts": "b0c5792ea447cc66af5a647d9173d893ada0b44d037c9b6c7d62aefb04c3090e",
+    "packages/polaris-dossier/src/clone-head.ts": "a354b060fdae12a0d19905138f49b2ee5397080d46763879a345751ddbaeb959",
+    "packages/polaris-dossier/src/launch-clone.ts": "111e5a5c4fb123766cf970e34aa4ff677c60d8a4bf609a0dbb8c8ca963bfa6c6",
+    "packages/polaris-dossier/src/verify-text-run.ts": "6165e054dc7efc359a8767fc576788d34ee38eb3df1cd239820ac16fd94bf86b"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/clone-ref-read-bounds.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/check-record-read.test.ts --reporter=json --outputFile=<scratch>/mutation-<id>.json",
+  "method": "Each mutant replaces one fragment (asserted to occur exactly once) in its file, runs the 3 test files above under vitest with the JSON reporter, and restores every source in finally. A mutant is killed when the run exits non-zero (failedTests lists each failing test) or is stopped after 120 s (killedBy \"timeout\": a reader that blocks on a FIFO cannot be interrupted by vitest's own test timeout). The unmutated baseline runs first and must pass.",
+  "testFiles": [
+    "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts",
+    "packages/polaris-dossier/src/launch-clone.test.ts",
+    "packages/polaris-dossier/src/check-record-read.test.ts"
+  ],
+  "baseline": {
+    "exitCode": 0,
+    "tests": 54,
+    "failedTests": []
+  },
+  "mutants": [
+    {
+      "id": "reader-no-nofollow",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "(followLink ? 0 : fs.constants.O_NOFOLLOW)",
+      "new": "0",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/launch-clone.test.ts > a link swapped in after the lstat is still not followed (R-PDJA-33-SLICE-A-1 finding 5) an admitted reference that lstat reports as a regular file but is a symbolic link: the open refuses it, never reading its target",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a symbolic link at HEAD even when it names a regular file holding a commit"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reader-eloop-not-mapped",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "if (!followLink && (cause as NodeJS.ErrnoException).code === 'ELOOP') throw new NotARegularFileError();",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/launch-clone.test.ts > a link swapped in after the lstat is still not followed (R-PDJA-33-SLICE-A-1 finding 5) an admitted reference that lstat reports as a regular file but is a symbolic link: the open refuses it, never reading its target",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a FIFO, a directory and a symbolic link at HEAD, never blocking and never following the link",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a symbolic link at HEAD even when it names a regular file holding a commit",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a FIFO, a directory and a symbolic link at HEAD, never blocking and never following the link"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reader-default-no-follow",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "options.followLink ?? true",
+      "new": "options.followLink ?? false",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses a FIFO, a device and a directory at a check record's path in every reader, reading no byte and never blocking",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) refuses each by its own error before reading a byte, and reads a regular file through a symbolic link",
+        "packages/polaris-dossier/src/check-record-read.test.ts > the check-record reader rule (version 2.10) opens the path read-only, without blocking and never as a controlling terminal",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule reads a regular file through a symbolic link, as it did when it took the size by stat",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule names the open's own ELOOP for a link that loops, as the following reader always did"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "reader-drops-nonblock",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY | (followLink",
+      "new": "fs.constants.O_RDONLY | fs.constants.O_NOCTTY | (followLink",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "head-follows-link",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "{ followLink: false }",
+      "new": "{ followLink: true }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a symbolic link at HEAD even when it names a regular file holding a commit"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-bound-wider",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "readBoundedFile(file, limit,",
+      "new": "readBoundedFile(file, limit + 1,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads packed-refs of exactly 16,777,216 bytes and refuses one of 16,777,217 from its size"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-ref-bound-wider",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "const MAX_REF_BYTES = 4096;",
+      "new": "const MAX_REF_BYTES = 4097;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-packed-bound-wider",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "const MAX_PACKED_REFS_BYTES = 16 * 1024 * 1024;",
+      "new": "const MAX_PACKED_REFS_BYTES = 16 * 1024 * 1024 + 1;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads packed-refs of exactly 16,777,216 bytes and refuses one of 16,777,217 from its size"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-not-regular-words",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a FIFO, a directory and a symbolic link at HEAD, never blocking and never following the link",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a symbolic link at HEAD even when it names a regular file holding a commit",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a FIFO at the loose branch HEAD names, never blocking"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-past-bound-words",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule reads packed-refs of exactly 16,777,216 bytes and refuses one of 16,777,217 from its size"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "head-stat-then-read",
+      "file": "packages/polaris-dossier/src/clone-head.ts",
+      "old": "return { text: readBoundedFile(file, limit, { followLink: false }).toString('utf8') };",
+      "new": "{ const stats = fs.lstatSync(file); if (!stats.isFile()) return { reason: `${file} is not a regular file` }; if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` }; return { text: fs.readFileSync(file, 'utf8') }; }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > init: the clone HEAD resolver reads HEAD, a loose branch and packed-refs by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-follows-link",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "{ followLink: false, refuseGrowth: true }",
+      "new": "{ followLink: true, refuseGrowth: true }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/launch-clone.test.ts > a link swapped in after the lstat is still not followed (R-PDJA-33-SLICE-A-1 finding 5) an admitted reference that lstat reports as a regular file but is a symbolic link: the open refuses it, never reading its target"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-bound-wider",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "readBoundedFile(file, limit,",
+      "new": "readBoundedFile(file, limit + 1,",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses packed-refs of 16,777,217 bytes from its size, and a directory there",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a configuration that is a FIFO or past 16,777,216 bytes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-ref-bound-wider",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "const MAX_REF_BYTES = 4096;",
+      "new": "const MAX_REF_BYTES = 4097;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-file-bound-wider",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "const MAX_FILE_BYTES = 16 * 1024 * 1024;",
+      "new": "const MAX_FILE_BYTES = 16 * 1024 * 1024 + 1;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses packed-refs of 16,777,217 bytes from its size, and a directory there",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a configuration that is a FIFO or past 16,777,216 bytes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-not-regular-words",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "if (cause instanceof NotARegularFileError) return { reason: `${file} is not a regular file; it is refused, never followed` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/launch-clone.test.ts > a link swapped in after the lstat is still not followed (R-PDJA-33-SLICE-A-1 finding 5) an admitted reference that lstat reports as a regular file but is a symbolic link: the open refuses it, never reading its target",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a FIFO, a directory and a symbolic link at HEAD, never blocking and never following the link",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a FIFO swapped in after the lstat that found the entry, never blocking",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses packed-refs of 16,777,217 bytes from its size, and a directory there",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a configuration that is a FIFO or past 16,777,216 bytes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-past-bound-words",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "if (cause instanceof PastBoundError) return { reason: `${file} is larger than ${limit} bytes` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule reads a HEAD of exactly 4,096 bytes and refuses one of 4,097",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown past 4,096 bytes after its size was taken",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses packed-refs of 16,777,217 bytes from its size, and a directory there",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a configuration that is a FIFO or past 16,777,216 bytes"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-absent-opened",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "if (fs.lstatSync(file, { throwIfNoEntry: false }) === undefined) return null;",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/launch-clone.test.ts > REQ-polaris-generation-047: Syzygy's own reads of the operator's clone are the closed list with no remote default, main and master are read; with one, neither is consulted",
+        "packages/polaris-dossier/src/launch-clone.test.ts > REQ-polaris-generation-047: Syzygy's own reads of the operator's clone are the closed list origin's HEAD absent, or not symbolic: the other remotes' HEADs are read to find the one default",
+        "packages/polaris-dossier/src/launch-clone.test.ts > REQ-polaris-generation-047: Syzygy's own reads of the operator's clone are the closed list several remote defaults and none origin: no branch value is read past the remote HEADs",
+        "packages/polaris-dossier/src/launch-clone.test.ts > REQ-polaris-generation-047: Syzygy's own reads of the operator's clone are the closed list tells whether objects/info/alternates exists without opening it"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-stat-then-read",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "return { text: readBoundedFile(file, limit, { followLink: false, refuseGrowth: true }).toString('utf8') };",
+      "new": "{ const stats = fs.lstatSync(file); if (!stats.isFile()) return { reason: `${file} is not a regular file; it is refused, never followed` }; if (stats.size > limit) return { reason: `${file} is larger than ${limit} bytes` }; return { text: fs.readFileSync(file, 'utf8') }; }",
+      "killed": true,
+      "killedBy": "timeout",
+      "failedTests": [],
+      "seconds": 120
+    },
+    {
+      "id": "reader-growth-accepted",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "if (refuseGrowth && total > stats.size) throw new GrewWhileReadError();",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown within 4,096 bytes after its size was taken, as grown while being read"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-growth-accepted",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "{ followLink: false, refuseGrowth: true }",
+      "new": "{ followLink: false, refuseGrowth: false }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown within 4,096 bytes after its size was taken, as grown while being read"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-grew-words",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "if (cause instanceof GrewWhileReadError) return { reason: `${file} grew while being read` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule refuses a HEAD grown within 4,096 bytes after its size was taken, as grown while being read"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "reader-eloop-unguarded",
+      "file": "packages/polaris-dossier/src/check-record-read.ts",
+      "old": "if (!followLink && (cause as NodeJS.ErrnoException)",
+      "new": "if ((cause as NodeJS.ErrnoException)",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule names the open's own ELOOP for a link that loops, as the following reader always did"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "launch-removed-after-look-refused",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "return code(cause) === 'ENOENT' ? null : {",
+      "new": "return {",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > launch: the clone snapshot reads HEAD, references, packed-refs and the configuration by the reader rule treats packed-refs removed after the lstat that found it as absent"
+      ],
+      "seconds": 6
+    },
+    {
+      "id": "verify-bound-wider",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "export const VERIFY_TEXT_MAX_BYTES = 4 * 1024 * 1024;",
+      "new": "export const VERIFY_TEXT_MAX_BYTES = 4 * 1024 * 1024 + 1;",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts (file failed: )"
+      ],
+      "seconds": 24
+    },
+    {
+      "id": "verify-no-follow",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES)",
+      "new": "readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES, { followLink: false })",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule reads a regular file through a symbolic link, as it did when it took the size by stat",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule names the open's own ELOOP for a link that loops, as the following reader always did"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "verify-not-regular-words",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "if (cause instanceof NotARegularFileError) return { reason: `${textFile} is not a regular file` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule refuses a FIFO, a directory and a symbolic link to a device, never blocking and reading no byte of the device"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "verify-past-bound-words",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "if (cause instanceof PastBoundError) return { reason: `${textFile} is larger than the ${VERIFY_TEXT_MAX_BYTES}-byte text bound` };",
+      "new": "",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule reads a text of exactly 4,194,304 bytes and refuses one of 4,194,305 from its size",
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts > verify: the --text file is read by the reader rule refuses a text grown past 4,194,304 bytes after its size was taken"
+      ],
+      "seconds": 4
+    },
+    {
+      "id": "verify-stat-then-read",
+      "file": "packages/polaris-dossier/src/verify-text-run.ts",
+      "old": "return { bytes: new Uint8Array(readBoundedFile(textFile, VERIFY_TEXT_MAX_BYTES)) };",
+      "new": "{ const stats = fs.statSync(textFile); if (!stats.isFile()) return { reason: `${textFile} is not a regular file` }; if (stats.size > VERIFY_TEXT_MAX_BYTES) return { reason: `${textFile} is larger than the ${VERIFY_TEXT_MAX_BYTES}-byte text bound` }; return { bytes: new Uint8Array(fs.readFileSync(textFile)) }; }",
+      "killed": true,
+      "killedBy": "tests",
+      "failedTests": [
+        "packages/polaris-dossier/src/clone-ref-read-bounds.test.ts (file failed: )"
+      ],
+      "seconds": 15
+    }
+  ],
+  "summary": {
+    "mutants": 29,
+    "killed": 29,
+    "survived": 0
+  }
+}
