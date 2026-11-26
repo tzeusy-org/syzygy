@@ -14,6 +14,7 @@ import { encodeCanonicalJson, REVIEW_STATUS_REGION_OPEN } from '@syzygy/polaris-
 import { createOrderedDesignSessionProfile, DEFAULT_SESSION_MODEL } from './session-profile.js';
 import { assertSessionMachineEffectCurrent, createSessionMachineTransport } from './session-machine-transport.js';
 import * as nativePeer from './url-machine-peer.js';
+import * as sessionBroker from './session-broker.js';
 import { captureUrlMachinePeer, closeUrlMachinePeer, prepareUrlMachineListenerAsync, type UrlMachinePeer, type UrlMachineListener } from './url-machine-peer.js';
 import { planOrderedDesignBytes } from './url-design-delivery.js';
 import { isOrderedDesignHostFor, orderedDesignHostTestPort, startOrderedDesignHost, type OrderedDesignHost } from './url-ordered-design-host.js';
@@ -95,14 +96,19 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
   let onRetire: (() => void) | undefined;
   const stagedFile = path.join(directory, `staged-${suffix}.json`);
   const cpuBound = (deadline - Date.now()) * 1000, parentCpuStart = process.cpuUsage();
-  const workCpu = () => { const used = process.cpuUsage(parentCpuStart); return used.user + used.system + workerCpu; };
+  let controlledCpu: (() => number) | undefined, controlledRemaining: (() => number) | undefined;
+  let cpuReads = 0, remainingReads = 0, authorityReads = 0, reservationCpu: number | null = null;
+  const workCpu = () => { cpuReads++; if (controlledCpu !== undefined) return controlledCpu();
+    const used = process.cpuUsage(parentCpuStart); return used.user + used.system + workerCpu; };
+  const remainingWorkCpu = () => { remainingReads++; return controlledRemaining === undefined ? cpuBound - chargedCpu() : controlledRemaining(); };
   const chargedCpu = () => workCpu() + nativeCpu;
   let continuationReserved = false;
   const reserveRemainingCpuMicroseconds = (required: number) => {
     if (continuationReserved) return null;
     continuationReserved = true;
     const cpuMicroseconds = workCpu(), remaining = cpuBound - cpuMicroseconds - nativeCpu;
-    return required <= remaining ? { cpuMicroseconds, remainingCpuMicroseconds: remaining } : null;
+    if (required <= remaining) { reservationCpu = cpuMicroseconds; return { cpuMicroseconds, remainingCpuMicroseconds: remaining }; }
+    return null;
   };
   const chargeNative = (capacity: number) => { if (!Number.isSafeInteger(capacity) || capacity <= 0 || chargedCpu() + capacity > cpuBound) throw new Error('owned native CPU capacity unavailable'); nativeCpu += capacity; };
   const writer = createOrderedDesignAuditWriter({ profile, plan, principal: 'owned-operator' }, {
@@ -125,8 +131,10 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
       operations: { request: operation, response: operation, tool: operation, audit: operation, terminal: operation }, relayMilliseconds: 180_000, brokerMilliseconds: 85_000 },
       cpuMicroseconds: workCpu,
       reserveRemainingCpuMicroseconds,
-      remainingRunCpuMicroseconds: () => cpuBound - chargedCpu(), chargeScreenCpuMicroseconds: value => { if (chargedCpu() + value > cpuBound) throw new Error('owned screen CPU capacity unavailable'); workerCpu += value; } },
-    relay: () => host?.relay, envelope: () => envelope, current: () => true, assertCurrent: () => {}, ...guards, stageVerdict: async ({ stdin, assertCurrent }) => {
+      remainingRunCpuMicroseconds: remainingWorkCpu, chargeScreenCpuMicroseconds: value => { if (chargedCpu() + value > cpuBound) throw new Error('owned screen CPU capacity unavailable'); workerCpu += value; } },
+    relay: () => host?.relay, envelope: () => envelope, ...guards,
+    current: () => { authorityReads++; return guards.current === undefined ? true : guards.current(); },
+    assertCurrent: () => { authorityReads++; guards.assertCurrent?.(); }, stageVerdict: async ({ stdin, assertCurrent }) => {
       assertCurrent();
       const verdict = JSON.parse(stdin);
       if (validateDesignVerdict(verdict, packet, 'a'.repeat(40), new Set()).length !== 0) return null;
@@ -165,6 +173,9 @@ async function fixture(guards: Partial<Pick<Parameters<typeof createOrderedDesig
     cleanup.push(() => host!.close()); return host;
   };
   return { controller, profile, plan, packet, envelope, deadline, activation, activate, reject, start, stored, brokerSocket, relaySocket,
+    setWorkSamples: (cpu?: () => number, remaining?: () => number) => { controlledCpu = cpu; controlledRemaining = remaining; },
+    sampleWorkCpu: workCpu, reservedCpu: () => reservationCpu,
+    workCounters: () => ({ cpu: cpuReads, remaining: remainingReads, authority: authorityReads }),
     setHost: (value: OrderedDesignHost) => { host = value; }, setOnRetire: (value: () => void) => { onRetire = value; }, stagedFile, stageWriteReached: () => stageWriteReached, staged: () => staged, setBeforeStageWrite: (value: () => void | Promise<void>) => { beforeStageWrite = value; }, workerCpu: () => workerCpu, chargeNative, nativeCpu: () => nativeCpu, cpuBound, callbacks: () => callbacks, accepts: () => accepts };
 }
 
@@ -357,7 +368,11 @@ describe('production ordered host activation', () => {
 /** Provider bytes are owned synthetic input. Launch, fixed bridge/MCP images,
  * accepted sockets, per-chunk sender proofs, lifecycle files and effect leases
  * are the real production components. Provider receipt remains Unknown. */
-async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' = false) {
+const directRefusals = ['invalid-cpu', 'regressing-cpu', 'invalid-remaining-cpu', 'negative-remaining-cpu',
+  'wall-deadline', 'monotonic-wall-limit', 'cpu-limit', 'ledger-refused', 'private-check-rejection'] as const;
+type BoundaryScenario = typeof directRefusals[number] | 'timer' | 'unclassified' | 'finish';
+
+async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' = false, diagnostic?: BoundaryScenario) {
   let proofExpired = false, responseProofRenewals = 0;
   const f = await fixture({
     current: () => {
@@ -372,6 +387,51 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
   }), root = tempDir('ohn-');
   for (const name of ['support', 'home', 'work', 'broker', 'relay', 'hidden']) await mkdir(path.join(root, name), { mode: 0o700 });
   const canary = path.join(root, 'hidden/canary'); await writeFile(canary, 'OWN SYNTHETIC CANARY');
+  let releaseProbe: { cpuReads: number; remainingReads: number; authorityReads: number;
+    wallReads: number; monotonicReads: number; failure: unknown } | undefined;
+  if (diagnostic !== undefined && diagnostic !== 'timer' && diagnostic !== 'unclassified') {
+    const startBroker = sessionBroker.startSessionBroker;
+    const broker = vi.spyOn(sessionBroker, 'startSessionBroker').mockImplementation((socket, invoke, ...rest) => startBroker(socket,
+      (value, release, context) => invoke(value, (reply, revalidate, finalBudget) => release(reply, revalidate,
+        finalBudget === undefined ? undefined : () => {
+          if (releaseProbe !== undefined) return finalBudget();
+          if (diagnostic === 'finish') {
+            try { return finalBudget(); }
+            finally {
+              releaseProbe = { cpuReads: 0, remainingReads: 0, authorityReads: 0, wallReads: 0, monotonicReads: 0,
+                failure: f.controller.workSnapshot()?.firstBoundaryFailure };
+              // The genuine release check passed. Its owning tool's finally
+              // still has to check the original boundary before finishing.
+              f.setWorkSamples(() => { f.setWorkSamples(); return -1; });
+            }
+          }
+          const cpu = f.sampleWorkCpu(), originalWall = Date.now, originalMonotonic = performance.now.bind(performance);
+          let cpuRead = 0;
+          f.setWorkSamples(() => {
+            cpuRead++;
+            return diagnostic === 'invalid-cpu' ? 1.5 : diagnostic === 'regressing-cpu' ? -1
+              : diagnostic === 'cpu-limit' ? cpu + 32_000_001 : diagnostic === 'ledger-refused' && cpuRead > 1 ? -1 : cpu;
+          }, () => {
+            if (diagnostic === 'private-check-rejection') throw new Error('OWN-PRIVATE-CAPACITY-EXCEPTION');
+            return diagnostic === 'invalid-remaining-cpu' ? 1.5 : diagnostic === 'negative-remaining-cpu' ? -1 : f.cpuBound;
+          });
+          // Perturb only the genuine broker's last budget callback, after its
+          // unchanged authority checks. Restore before subsequent cleanup.
+          const wall = vi.spyOn(Date, 'now').mockImplementation(() => diagnostic === 'wall-deadline' ? f.deadline + 1 : originalWall());
+          const monotonic = vi.spyOn(performance, 'now').mockImplementation(() => diagnostic === 'monotonic-wall-limit'
+            ? Number.MAX_SAFE_INTEGER : originalMonotonic());
+          const before = f.workCounters();
+          try { finalBudget(); }
+          finally {
+            const after = f.workCounters();
+            releaseProbe = { cpuReads: after.cpu - before.cpu, remainingReads: after.remaining - before.remaining,
+              authorityReads: after.authority - before.authority, wallReads: wall.mock.calls.length,
+              monotonicReads: monotonic.mock.calls.length, failure: f.controller.workSnapshot()?.firstBoundaryFailure };
+            monotonic.mockRestore(); wall.mockRestore(); f.setWorkSamples();
+          }
+        }), context), ...rest));
+    cleanup.push(() => broker.mockRestore());
+  }
   const bridge = support.get('support/session-bridge.js')!, mcp = support.get('design-support/session-mcp.js')!;
   const bridgePath = path.join(root, 'support/session-bridge.js'), mcpPath = path.join(root, 'support/session-mcp.js');
   await writeFile(bridgePath, bridge); await writeFile(mcpPath, mcp);
@@ -515,6 +575,8 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
   f.setHost(host);
   if (revoke === 'stage') f.setBeforeStageWrite(() => { current = false; });
   if (revoke === 'proof-expiry') f.setBeforeStageWrite(() => { proofExpired = true; });
+  if (diagnostic === 'timer') f.setBeforeStageWrite(() => new Promise<void>(resolve => setTimeout(resolve, 30_050)));
+  if (diagnostic === 'unclassified') f.setBeforeStageWrite(async () => { await Promise.resolve(); throw new Error('OWN-PRIVATE-EXCEPTION-MUST-NOT-BE-RETAINED'); });
   cleanup.push(() => host.close());
   expect(isOrderedDesignHostFor(host, f.profile)).toBe(true);
   eventLoop.enable();
@@ -523,7 +585,7 @@ async function nativeExchange(revoke: false | 'send' | 'stage' | 'proof-expiry' 
   eventLoop.disable();
   const recordKinds = await Promise.all(f.stored.map(async file => (JSON.parse(await readFile(file, 'utf8')) as { kind: string }).kind));
   return { f, outcome, forwards, observed, terminal, requests, recordKinds, captures, machineAudits, screenTimes, stages, reads, peerChecks,
-    responseProofRenewals, inspection: inspect(), maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
+    releaseProbe, responseProofRenewals, inspection: inspect(), maximumEventLoopMilliseconds: Math.ceil(eventLoop.max / 1_000_000) };
 }
 
 function exchangeDiagnostic(result: Awaited<ReturnType<typeof nativeExchange>>): string {
@@ -543,6 +605,7 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
     expect(result.responseProofRenewals).toBe(1);
     expect(result.f.staged()).toBe(1); expect(result.f.workerCpu()).toBeGreaterThan(0);
     expect(result.terminal).toMatchObject({ packetSha256: result.f.packet.sha256 });
+    expect(result.f.controller.workSnapshot(), 'F3-ORDERED-FIRST-REFUSAL/healthy-absence').not.toHaveProperty('firstBoundaryFailure');
     const last = result.requests.at(-1) as { messages: { content: string | { type: string; tool_use_id?: string; content: { text: string }[] }[] }[] };
     const parts = last.messages.flatMap(message => typeof message.content === 'string' ? [] : message.content
       .filter(block => block.type === 'tool_result' && block.tool_use_id?.startsWith('toolu_part_owned_'))
@@ -577,6 +640,88 @@ describe('native authenticated ordered host', { timeout: 180_000 }, () => {
     const records = await Promise.all(result.f.stored.map(async file => JSON.parse(await readFile(file, 'utf8'))));
     expect(records.some(record => record.kind === 'delivery-completed')).toBe(true);
     expect(records.some(record => ['verdict-staged', 'acknowledgment-receipt', 'eligible'].includes(record.kind))).toBe(false);
+    const failure = result.f.controller.workSnapshot()?.firstBoundaryFailure;
+    expect(failure, 'F3-ORDERED-FIRST-REFUSAL/nested-unclassified').toMatchObject({ origin: 'operation', reason: 'unclassified', operation: 'audit', turn: 2,
+      cpuMicroseconds: null, remainingCpuMicroseconds: null, wallMilliseconds: null, monotonicMilliseconds: null });
+    // A prior uncertain retirement must not replace the first diagnostic.
+    await Promise.allSettled([result.f.controller.retire('interrupted')]);
+    expect(result.f.controller.workSnapshot()?.firstBoundaryFailure, 'F3-ORDERED-FIRST-REFUSAL/first-write-retained').toBe(failure);
+  });
+
+  it.each(directRefusals)('retains the genuine last tool budget predicate without extra samples: %s', async scenario => {
+    const result = await nativeExchange(false, scenario), snapshot = result.f.controller.workSnapshot();
+    const failure = snapshot?.firstBoundaryFailure;
+    expect(result.forwards, exchangeDiagnostic(result)).toBe(1);
+    expect(result.releaseProbe).toBeDefined();
+    expect(failure, 'F3-ORDERED-FIRST-REFUSAL/direct-owner-predicate').toMatchObject({ origin: 'check',
+      reason: scenario === 'private-check-rejection' ? 'unclassified' : scenario, operation: 'tool', turn: 0,
+      cpuLimitMicroseconds: 32_000_000, wallLimitMilliseconds: 30_000 });
+    if (failure === undefined) throw new Error('owned first boundary failure missing');
+    expect(failure.beganCpuMicroseconds, 'F3-ORDERED-FIRST-REFUSAL/original-cpu-baseline').toBe(result.f.reservedCpu());
+    expect(failure.expiresAt, 'F3-ORDERED-FIRST-REFUSAL/original-wall-baseline').toBe(Math.min(result.f.deadline, failure.beganWallMilliseconds + 30_000));
+    const early = ['invalid-cpu', 'regressing-cpu', 'invalid-remaining-cpu', 'negative-remaining-cpu', 'private-check-rejection'].includes(scenario);
+    expect(result.releaseProbe, 'F3-ORDERED-FIRST-REFUSAL/sample-counts').toMatchObject({ cpuReads: scenario === 'ledger-refused' ? 2 : 1, remainingReads: 1,
+      authorityReads: 0, wallReads: early ? 0 : scenario === 'ledger-refused' ? 2 : 1,
+      monotonicReads: early || scenario === 'wall-deadline' ? 0 : scenario === 'ledger-refused' ? 2 : 1 });
+    if (scenario === 'private-check-rejection') {
+      expect(failure, 'F3-ORDERED-FIRST-REFUSAL/private-check-samples-unknown').toMatchObject({
+        cpuMicroseconds: null, remainingCpuMicroseconds: null, wallMilliseconds: null, monotonicMilliseconds: null });
+      expect(JSON.stringify(snapshot), 'F3-ORDERED-FIRST-REFUSAL/private-exception-suppressed').not.toContain('OWN-PRIVATE-CAPACITY-EXCEPTION');
+    } else {
+      if (scenario === 'invalid-cpu') expect(failure.cpuMicroseconds).toBe(1.5);
+      else if (scenario === 'regressing-cpu') expect(failure.cpuMicroseconds).toBe(-1);
+      else expect(failure.cpuMicroseconds).toBeGreaterThanOrEqual(failure.beganCpuMicroseconds);
+      expect(failure.remainingCpuMicroseconds).toBe(scenario === 'invalid-remaining-cpu' ? 1.5 : scenario === 'negative-remaining-cpu' ? -1 : result.f.cpuBound);
+    }
+    expect(failure.wallMilliseconds === null).toBe(early);
+    expect(failure.monotonicMilliseconds === null).toBe(early || scenario === 'wall-deadline');
+    if (scenario === 'ledger-refused') expect(failure).toMatchObject({ ledgerState: 'stopped', ledgerReason: 'clock' });
+    if (scenario === 'cpu-limit') expect(failure.cpuMicroseconds! - failure.beganCpuMicroseconds, 'F3-ORDERED-FIRST-REFUSAL/cpu-limit-delta').toBeGreaterThan(32_000_000);
+    if (scenario === 'monotonic-wall-limit') {
+      expect(failure.monotonicMilliseconds).toBe(Number.MAX_SAFE_INTEGER);
+      expect(failure.beganMonotonicMilliseconds).toBeLessThan(Number.MAX_SAFE_INTEGER - 30_000);
+    }
+    expect(result.releaseProbe!.failure, 'F3-ORDERED-FIRST-REFUSAL/first-write-retained').toBe(failure);
+    expect(Object.isFrozen(snapshot)).toBe(true); expect(Object.isFrozen(failure), 'F3-ORDERED-FIRST-REFUSAL/failure-frozen').toBe(true);
+    expect(Reflect.set(failure, 'reason', 'unclassified')).toBe(false);
+    // A prior uncertain retirement must not replace the first diagnostic.
+    await Promise.allSettled([result.f.controller.retire('interrupted')]);
+    expect(result.f.controller.workSnapshot()?.firstBoundaryFailure, 'F3-ORDERED-FIRST-REFUSAL/first-write-retained').toBe(failure);
+    expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
+  });
+
+  it.each(['timer', 'unclassified', 'finish'] as const)('keeps the initiating operation and unknown CPU through cleanup: %s', async scenario => {
+    const result = await nativeExchange(false, scenario), snapshot = result.f.controller.workSnapshot();
+    const failure = snapshot?.firstBoundaryFailure;
+    expect(result.forwards, exchangeDiagnostic(result)).toBe(scenario === 'finish' ? 1 : 4);
+    expect(result.f.stageWriteReached()).toBe(scenario !== 'finish');
+    if (scenario === 'finish') {
+      expect(result.releaseProbe?.failure).toBeUndefined();
+      expect(failure).toMatchObject({ origin: 'check', reason: 'regressing-cpu', operation: 'tool', turn: 0, cpuMicroseconds: -1 });
+    } else {
+      expect(failure, 'F3-ORDERED-FIRST-REFUSAL/lifecycle-owner-predicate').toMatchObject({
+        origin: scenario === 'timer' ? 'timer' : 'operation', reason: scenario });
+      expect(failure, 'F3-ORDERED-FIRST-REFUSAL/timer-or-catch-cpu-unknown').toMatchObject({ cpuMicroseconds: null, remainingCpuMicroseconds: null });
+      if (scenario === 'unclassified') expect(failure, 'F3-ORDERED-FIRST-REFUSAL/nested-unclassified').toMatchObject({ operation: 'audit', turn: 2,
+        wallMilliseconds: null, monotonicMilliseconds: null });
+      else {
+        // Equal millisecond expiries can race between the parent tool and its
+        // nested audit. Both are genuine original timers; retain the winner.
+        expect(['tool', 'audit']).toContain(failure?.operation);
+        expect(failure?.turn).toBe(failure?.operation === 'tool' ? 3 : 2);
+      }
+    }
+    if (failure === undefined) throw new Error('owned first boundary failure missing');
+    if (scenario === 'timer') {
+      expect(failure.wallMilliseconds).toBeGreaterThanOrEqual(failure.expiresAt);
+      expect(failure.monotonicMilliseconds).not.toBeNull();
+    } else expect(failure).toMatchObject({ wallMilliseconds: null, monotonicMilliseconds: null });
+    expect(JSON.stringify(snapshot)).not.toContain('OWN-PRIVATE-EXCEPTION-MUST-NOT-BE-RETAINED');
+    expect(Object.isFrozen(failure), 'F3-ORDERED-FIRST-REFUSAL/failure-frozen').toBe(true);
+    // A prior uncertain retirement must not replace the first diagnostic.
+    await Promise.allSettled([result.f.controller.retire('interrupted')]);
+    expect(result.f.controller.workSnapshot()?.firstBoundaryFailure, 'F3-ORDERED-FIRST-REFUSAL/first-write-retained').toBe(failure);
+    expect(result.f.staged()).toBe(0); expect(result.terminal).toBeUndefined();
   });
 
 });

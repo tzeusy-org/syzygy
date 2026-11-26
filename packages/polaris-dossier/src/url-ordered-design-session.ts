@@ -75,6 +75,28 @@ const refused = (): Error => new Error('url-ordered-design-session-refused');
 const identify = (text: string) => ({ sha256: sha256(text), bytes: Buffer.byteLength(text, 'utf8') });
 const byteIdentity = (value: { readonly digest: string; readonly bytes: number }) => ({ sha256: value.digest, bytes: value.bytes });
 type RetireReason = 'refused' | 'transport-uncertain' | 'interrupted';
+type OperationFailureReason = 'invalid-cpu' | 'regressing-cpu' | 'invalid-remaining-cpu' | 'negative-remaining-cpu'
+  | 'wall-deadline' | 'monotonic-wall-limit' | 'cpu-limit' | 'ledger-refused' | 'timer' | 'unclassified';
+interface OperationFailure {
+  readonly origin: 'check' | 'finish' | 'timer' | 'operation';
+  readonly reason: OperationFailureReason;
+  readonly operation: 'request' | 'response' | 'tool' | 'audit' | 'terminal';
+  readonly turn: number;
+  readonly beganMonotonicMilliseconds: number | null;
+  readonly beganCpuMicroseconds: number;
+  readonly beganWallMilliseconds: number;
+  readonly expiresAt: number;
+  readonly cpuLimitMicroseconds: number;
+  readonly wallLimitMilliseconds: number;
+  /** Null means unavailable or not evaluated; an earlier sample is never current. */
+  readonly cpuMicroseconds: number | null;
+  readonly remainingCpuMicroseconds: number | null;
+  readonly wallMilliseconds: number | null;
+  readonly monotonicMilliseconds: number | null;
+  readonly ledgerState: 'open' | 'stopped' | 'complete' | null;
+  readonly ledgerReason: ReturnType<ReturnType<typeof createOrderedDesignWorkBudget>['snapshot']>['reason'] | null;
+}
+const diagnosticNumber = (value: number): number | null => Number.isFinite(value) ? value : null;
 
 function nativeResponse(native: NonNullable<SessionAuditEvent['response']>): OrderedDesignAuditPayloads['response-admitted']['native'] {
   if (native.content !== 'messages-event-stream') throw refused();
@@ -106,6 +128,7 @@ export function createOrderedDesignSession(options: Options) {
       || work.enforcement.operations[kind].wallMilliseconds <= ORDERED_SCREEN_LIMITS.wallMilliseconds))) throw refused();
   type WorkBudget = ReturnType<typeof createOrderedDesignWorkBudget>;
   let workBudget: WorkBudget | null = null;
+  let firstBoundaryFailure: OperationFailure | null = null;
   let activeRead: ((bytes: number) => void) | null = null;
   const { binding, parts, originalBytes, originalSha256 } = plan.manifest;
   const canonical = (value: unknown) => encodeCanonicalJson(value, transcript.requestLimits);
@@ -184,7 +207,8 @@ export function createOrderedDesignSession(options: Options) {
   const openOperation = (operation: 'request' | 'response' | 'tool' | 'audit' | 'terminal', turn: number, start?: OrderedDesignWorkStart) => {
     const cap = work.enforcement.operations[operation];
     const began = start?.monotonicMilliseconds ?? performance.now(), cpu = start?.cpuMicroseconds ?? work.cpuMicroseconds();
-    const expires = Math.min(deadline, workBudget?.snapshot().expiresAt ?? deadline, (start?.wallMilliseconds ?? Date.now()) + cap.wallMilliseconds);
+    let beganWallMilliseconds: number;
+    const expires = Math.min(deadline, workBudget?.snapshot().expiresAt ?? deadline, (beganWallMilliseconds = start?.wallMilliseconds ?? Date.now()) + cap.wallMilliseconds);
     const ledger = stopped ? null : workBudget;
     const ticket = ledger?.begin(operation, turn) ?? null;
     const remaining = work.remainingRunCpuMicroseconds();
@@ -192,11 +216,35 @@ export function createOrderedDesignSession(options: Options) {
       || !Number.isSafeInteger(cpu) || cpu < 0 || !Number.isSafeInteger(remaining) || remaining < cap.cpuMicroseconds
       || (ledger !== null && ticket === null) || !(Date.now() < expires)) throw refused();
     let reads = 0;
+    const recordFailure = (origin: OperationFailure['origin'], reason: OperationFailureReason,
+      observed: Pick<OperationFailure, 'cpuMicroseconds' | 'remainingCpuMicroseconds' | 'wallMilliseconds' | 'monotonicMilliseconds'>): void => {
+      if (firstBoundaryFailure !== null) return;
+      const ledgerSnapshot = ledger?.snapshot();
+      firstBoundaryFailure = deepFreeze({ origin, reason, operation, turn,
+        beganMonotonicMilliseconds: diagnosticNumber(began), beganCpuMicroseconds: cpu, beganWallMilliseconds, expiresAt: expires,
+        cpuLimitMicroseconds: cap.cpuMicroseconds, wallLimitMilliseconds: cap.wallMilliseconds, ...observed,
+        wallMilliseconds: observed.wallMilliseconds === null ? null : diagnosticNumber(observed.wallMilliseconds),
+        monotonicMilliseconds: observed.monotonicMilliseconds === null ? null : diagnosticNumber(observed.monotonicMilliseconds),
+        ledgerState: ledgerSnapshot?.state ?? null, ledgerReason: ledgerSnapshot?.reason ?? null });
+    };
+    const unavailable = { cpuMicroseconds: null, remainingCpuMicroseconds: null, wallMilliseconds: null, monotonicMilliseconds: null };
+    const rejected = (): void => recordFailure('operation', 'unclassified', unavailable);
     const check = (): void => {
-      const actualCpu = work.cpuMicroseconds(), available = work.remainingRunCpuMicroseconds();
-      if (!Number.isSafeInteger(actualCpu) || actualCpu < cpu || !Number.isSafeInteger(available) || available < 0 || !(Date.now() < expires) || performance.now() - began >= cap.wallMilliseconds
-        || actualCpu - cpu > cap.cpuMicroseconds
-        || (ledger !== null && !ledger.current())) throw refused();
+      const observed: Record<keyof typeof unavailable, number | null> = { ...unavailable };
+      try {
+        const actualCpu = work.cpuMicroseconds(); observed.cpuMicroseconds = diagnosticNumber(actualCpu);
+        const available = work.remainingRunCpuMicroseconds(); observed.remainingCpuMicroseconds = diagnosticNumber(available);
+        let reason: OperationFailureReason | null = null;
+        if (!Number.isSafeInteger(actualCpu)) reason = 'invalid-cpu';
+        else if (actualCpu < cpu) reason = 'regressing-cpu';
+        else if (!Number.isSafeInteger(available)) reason = 'invalid-remaining-cpu';
+        else if (available < 0) reason = 'negative-remaining-cpu';
+        else if (!((observed.wallMilliseconds = Date.now()) < expires)) reason = 'wall-deadline';
+        else if ((observed.monotonicMilliseconds = performance.now()) - began >= cap.wallMilliseconds) reason = 'monotonic-wall-limit';
+        else if (actualCpu - cpu > cap.cpuMicroseconds) reason = 'cpu-limit';
+        else if (ledger !== null && !ledger.current()) reason = 'ledger-refused';
+        if (reason !== null) { recordFailure('check', reason, observed); throw refused(); }
+      } catch (cause) { recordFailure('check', 'unclassified', unavailable); throw cause; }
     };
     const priorRead = activeRead;
     const boundary = { ticket, expires, check, read: (bytes: number): void => {
@@ -204,7 +252,15 @@ export function createOrderedDesignSession(options: Options) {
       if (!Number.isSafeInteger(bytes) || bytes < 0 || !Number.isSafeInteger(reads) || reads > cap.auditReadBytes
         || (ticket !== null && ledger?.auditRead(ticket, bytes) !== true)) throw refused();
       check();
-    }, finish: (): void => { try { check(); if (ticket !== null && ledger?.finish(ticket) !== true) throw refused(); } finally { activeRead = priorRead; } } };
+    }, rejected, timedOut: (): void => recordFailure('timer', 'timer', { ...unavailable,
+      wallMilliseconds: Date.now(), monotonicMilliseconds: performance.now() }),
+    finish: (): void => {
+      try {
+        check();
+        if (ticket !== null && ledger?.finish(ticket) !== true) { recordFailure('finish', 'ledger-refused', unavailable); throw refused(); }
+      } catch (cause) { recordFailure('finish', 'unclassified', unavailable); throw cause; }
+      finally { activeRead = priorRead; }
+    } };
     activeRead = boundary.read;
     return boundary;
   };
@@ -212,9 +268,10 @@ export function createOrderedDesignSession(options: Options) {
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
       return await Promise.race([operation(), new Promise<never>((_resolve, reject) => {
-        timer = setTimeout(() => { stop('refused'); reject(refused()); }, Math.max(1, boundary.expires - Date.now()));
+        timer = setTimeout(() => { boundary.timedOut(); stop('refused'); reject(refused()); }, Math.max(1, boundary.expires - Date.now()));
       })]);
-    } finally { if (timer !== undefined) clearTimeout(timer); }
+    } catch (cause) { boundary.rejected(); throw cause; }
+    finally { if (timer !== undefined) clearTimeout(timer); }
   };
   const auditOperation = async <T>(kind: 'audit' | 'terminal', operation: () => Promise<T>): Promise<T> => {
     const boundary = openOperation(kind, Math.max(0, receipts.length - 1));
@@ -270,7 +327,8 @@ export function createOrderedDesignSession(options: Options) {
         } else if (workBudget?.detectors(boundary.ticket, 'operation', observed.counts) !== true) throw refused();
       }
       return observed;
-    } finally { boundary.finish(); }
+    } catch (cause) { boundary.rejected(); throw cause; }
+    finally { boundary.finish(); }
   };
   const common = (bytes: Uint8Array) => ({ policyBase64: policy === null ? '' : Buffer.from(policy).toString('base64'),
     policySha256: profile.input.binding.policy, profileInput: profile.input, profileSha256: profile.digest,
@@ -543,7 +601,11 @@ export function createOrderedDesignSession(options: Options) {
   const session = Object.freeze({ checkRequest, checkResponse, observe, issueReply, retire, readTerminal,
     reportAuditRead: (bytes: number): boolean => { if (activeRead === null) return false; activeRead(bytes); return true; },
     chargeAuditRead: (bytes: number): void => { if (activeRead === null) throw refused(); activeRead(bytes); },
-    workSnapshot: () => workBudget?.snapshot() ?? null });
+    workSnapshot: () => {
+      const snapshot = workBudget?.snapshot();
+      return snapshot === undefined ? null : deepFreeze({ ...snapshot,
+        ...(firstBoundaryFailure === null ? {} : { firstBoundaryFailure }) });
+    } });
   issuedSessions.add(session);
   if (screening.kind === 'bounded-worker') productionSessions.set(session, profile);
   return session;
