@@ -2,6 +2,8 @@
 
 ## Patterns
 
+- `syzygy-k54o-3/f3-(ordered-preflight-gap-be93-R1-review|ordered-gap-owning-operator-(initial|review)|ordinary-3bd8-R1-operator-review)-RAW\\.md`
+
 - `syzygy-k54o-3/f3-(supervisor-idle-microdiagnostic-1ef-R[12]-review|supervisor-pidfd-1ef-R1-review|supervisor-pidfd-1ef-R2-documentation-review|supervisor-pidfd-owning-1ef-R[234]-review|ordinary-recovery-f51-R[123]-operator-review|final-render-1ef234-attribution-independent-review)-RAW\.md`
 
 - `F3-MAIN-50D9-COMPOSITION-BA9F5B6-RAW\.md`
@@ -320,3 +322,5 @@
 [Observed] The [recovery source observer](../evidence/syzygy-k54o-3/recovery-source-observer-followup/binding.json) at `9e5ec77a56a251f527e7028a5a8168db2f897476` retains R1 `REVISE` and corrected R2 source `PASS`, three focused passes with four native skips, and typecheck for its source-substituted baseline. The exact private-loop correspondence, original callback identity and bounded metadata are reviewed; no new authority sample or runtime limit is introduced. [Unknown] Native refusal cause and final acceptance.
 
 [Observed 2026-11-27] Native supervisor Git exit-wake source/documentation and final owning operator reviews PASS; actual typecheck and 19 native cases pass, five intended assertion mutants fail. [Scoped proof](../evidence/syzygy-k54o-3/supervisor-git-exit-wake/README.md). The subsequent [original recovery retry](../evidence/syzygy-k54o-3/ordinary-recovery-f51ba4/README.md) failed after 458.725868 seconds with resumed Design inspection failure. [Unknown] Initiating predicate, successful recovery and complete final acceptance. The independent [static attribution](../evidence/syzygy-k54o-3/final-render-1ef234/README.md) is PASS for its pinned predecessor pair only.
+
+[Observed 2026-11-27] The [ordered preflight capacity correction](../evidence/syzygy-k54o-3/ordered-preflight-capacity/README.md) passes independent source/final operator review, typecheck, 87 unit and65 integration cases, and six intended assertion mutations. The original recovery retry on3bd8 rebuilt successfully but failed after529.661431 seconds with terminal transport-unavailable. Retained inference mediations accept; the first retained rejection is final tool4 host action, preceding the audit guard refusal. [Unknown] Exact initiating operation limit/private exception, successful recovery and full acceptance.
