@@ -23,8 +23,8 @@ Carried forward [Inferred]:
 - Comment, string and template non-matches. A scan stops honestly where a token boundary cannot be established, keeping what closed before it.
 - The finite extensionless address forms `<path>.ts` and `<path>/index.ts`.
 - Target eligibility from metadata alone (regular mode, citable path, screen and class decisions), with no target-body read. A known nonregular entry supplies no match.
-- An undecidable alternative makes the statement Unknown rather than being passed over. This text states the address order exactly, so only an undecidable address ahead of the first usable one can change the result.
-- Coverage words `complete`, `partial` and `unknown`, with a zero claimed only over complete coverage.
+- An undecidable alternative makes the statement Unknown rather than being passed over. This text states the address order exactly, so only an undecidable address ahead of the first usable one can change the result. A symbolic link at an address, or at any of its directory prefixes, is such an alternative, since where it leads is not read (#968 R1 finding 1; this package's review finding 5).
+- Coverage words `complete`, `partial` and `unknown`, with a zero claimed only over complete coverage. An identified outside-grammar form is a limit on `complete`, as #968's "every identified form is accounted for" made it (review finding 2).
 - No operand or body text in the output.
 - Bounded input and output with deterministic prefixes.
 - Python stated unevaluated.
@@ -37,7 +37,9 @@ New here [Inferred], each for a reviewer to contest:
 - Rule `typescript-package-import`. In a workspace, units mostly import each other by package name, not by relative path, so a relative-only rule would miss most edges.
   - It matches a bare operand's package name exactly against the same check's `package` facts.
   - Two matches make it Unknown (`target-ambiguous`).
-  - No match is `external` only where the npm recognizer's coverage is complete. Otherwise it is Unknown (`target-undecidable`), since an unread or unlisted manifest could declare the name.
+  - The rule decides at all only where the npm recognizer's coverage is complete: no secret-matched, set-apart or Unknown `package.json`, no value left out and nothing unlisted. Otherwise every package operand is Unknown (`target-undecidable`), since an unread manifest could declare the name. This guards the one-match arm as well as the no-match arm, so one known declarer is never taken for the only one (review findings 4 and 6).
+  - It takes only an operand whose first segment could be a package name: not empty, not beginning with `.`, `/`, `#` or `_`, and a scope with its name. `''`, `'#internal'`, `'/abs'` and a bare scope are outside the grammar, never `external` (review finding 3).
+  - The cost [Inferred]: a tree holding any set-apart `package.json` (a test fixture package, say) gets no package edges at all. That is the price of never asserting an edge or an absence over a manifest the member did not read.
   - It never consults `node_modules`, `exports` maps or `paths` mappings. The fact says the operand names the package, never that it resolves there.
 - The `.js` to `.ts` address form. Under TypeScript's `NodeNext` resolution a relative operand ending in `.js` names the `.ts` source beside it, and this repository writes its imports that way.
 - Re-exports (`export … from`) are statements of the grammar. They name a module exactly as an import does. #968 put them outside the grammar.
@@ -68,14 +70,20 @@ So it narrows no secret detector and no fail-closed rule (SEC-5), and no owner d
 
 ## D5. The lexical grammar
 
-- [Inferred] The scan is a tokenization, not a parse. A statement must start at a top-level `import` or `export` token, outside every brace, parenthesis, bracket and template substitution, so imports inside `declare module` blocks or functions are neither statements nor outside-grammar forms.
-- [Inferred] The regular-expression ambiguity of `/` is decided by the preceding significant token, with a stated keyword list. After `}` it is undecidable (a block or an object literal) and the file becomes `incomplete` there, keeping what closed before it.
+- [Inferred] The scan is a tokenization, not a parse. A statement must start at a top-level `import` or `export` token, outside every brace, parenthesis, bracket and template substitution. An import or re-export nested inside a `declare module`, `declare global` or `namespace` block is counted in `outsideGrammar`, never dropped, so it makes coverage `partial` (review finding 2).
+- [Inferred] The regular-expression ambiguity of `/` is decided by the preceding significant token, with a stated keyword list that now includes `default`, `extends`, `break` and `continue`. A `)` closing the head of `if`, `while`, `for` or `with` starts a regular expression; any other `)` gives a division.
+  - Where the token cannot decide, the scan stops and the file is `incomplete`, keeping what closed before it. That covers `/` after `}` (a block or an object literal), `>` (a comparison or the end of type arguments), `!` (logical not or TypeScript's non-null assertion), `++` and `--` (prefix or postfix), the contextual words `of`, `yield` and `await`, and a label after `break` or `continue` (review finding 1).
+  - The cost [Inferred]: a file with `x! / 2` or `i++ / 2` is `incomplete` from that point, and coverage is `partial`. Guessing would give a fact for text inside a regular expression.
+- [Inferred] A statement ends at its operand's closing quote. An import-attributes clause (`with` or `assert`) after the operand puts the statement outside the grammar. An import clause is the ECMAScript `ImportClause` production, with TypeScript's `type` prefixes (review finding 8).
+- [Inferred] `import(`, `typeof import(` and `require(` are counted wherever they stand, except after `.` or `?.` (a property) and a `function require` declaration. A `require` a file binds for itself is still counted where it is called. So `outsideGrammar` can over-count, never under-count, and an over-count only makes coverage `partial` (review finding 9).
+- [Inferred] `.`, `..`, an operand ending in `/` and one holding an empty segment are outside the grammar. A `..` that would undo a symbolic-link segment makes the target undecidable, since a file system follows the link first (review findings 3 and 5).
+- [Inferred] A leading U+FEFF is whitespace, and LF, CR, CRLF, U+2028 and U+2029 end lines. A statement's lines are numbered as the path-and-range check numbers them; a scenario pins a BOM-prefixed CRLF file (review finding 12).
 - [Inferred] An operand holding a backslash is outside the grammar rather than unescaped. This removes the escape alphabet from the rule and keeps the operand text a literal.
 
 ## D6. Units
 
 - [Inferred] A unit is a `package-manifest` unit of version 2.19, written as its `package.json` path, found as the nearest enclosing `package.json` entry in the listing.
-- [Inferred] A nearest entry that is a symlink, submodule, secret-matched, set apart or not citable makes the unit undecidable, rather than skipping to the next one up. Skipping could attribute a file to the wrong unit.
+- [Inferred] A nearest entry that is a symlink, submodule, secret-matched (by its path or a directory prefix), set apart, not citable or denied by the screen's path outcome makes the unit undecidable, rather than skipping to the next one up. Skipping could attribute a file to the wrong unit. The tests match those by which version 2.19 withholds a `package-manifest` unit (review finding 7).
 - [Inferred] A set-apart `package.json` (under `node_modules` or a fixtures directory, say) blocks the walk, but a file under it is usually set apart too.
 
 ## D7. The bytes that move
@@ -85,13 +93,15 @@ So it narrows no secret detector and no fail-closed rule (SEC-5), and no owner d
 - The bounded form is unchanged.
 - The structure record, `manifestFacts`, inventory check records, the brief, the draft schemas, every rendered page, `machine.json`, `dossier.json`, the size report, the review packets, relation witness states and every provider-mode byte are unchanged.
 - Records written earlier keep their bytes and digests. No reader takes anything from `importFacts` at this version, so old and new records read alike.
+- One outcome can change (review finding 10). A draft whose version 2.33 record lay within the read bound can be taken past it by up to 2,000,000 bytes of this member. That record is then written in its bounded form with its `check-record-bound` finding, so the draft fails a check it passed. The repair cycle, the check's report, `run-advice.json`, the step log's findings count and the close record's digests change with it. The paragraph says so, and the last scenario is limited to records within the bound under both versions.
 
 ## D8. The version label
 
 - [Observed] The newest adopted REQ-034 on `main` at drafting is 2.33 (A-65).
 - [Inferred] The lead session reports that syzygy-3efd.38 adopts next as 2.34 and syzygy-3efd.32 follows, so this text keeps the placeholder `2.NN`.
 - [Inferred] At adoption the build script runs again over the newest effective text, with its anchors and its two symbolic constants (`<PV>`, `<PN>`). Its edits are anchored to version 2.7, 2.10 and 2.14 text that no pending candidate is known to change.
-- [Inferred] The checker wiring (`check_spec_reconciliation.py`, `count_polaris_effective_scenarios.py`) is added with the version number, as the figure plan's was.
+- [Observed] The checker wiring is in place, pending until its row, as the figure plan's draft wiring was (commit `6c2ac2d62`). `check_spec_reconciliation.py` binds the reviewed spec by its sha256 and takes the placeholder tag `polaris-dossier-import-facts-v2.NN`, over the v2.33 figure plan; `impfacts_cases` guards the pending and adopted states, the row's form, the predecessor and the spec bytes. `count_polaris_effective_scenarios.py` composes it.
+- [Inferred] At adoption the build script runs again over the newest effective text, the version number and the tag replace `2.NN`, and the subject digest moves with them. The rebuilt text is diffed against the reviewed bytes, modulo the placeholder and the intervening adopted deltas, and that diff goes into the adoption row's evidence (review finding 13).
 
 ## D9. Residuals
 
@@ -102,4 +112,20 @@ So it narrows no secret detector and no fail-closed rule (SEC-5), and no owner d
 
 ## Review
 
-Not yet reviewed. Fresh-context review is to be dispatched by the lead session.
+[Observed] One fresh-context review, `docs/reviews/syzygy-3efd-60/R-IMPORT-FACTS-SPEC-1-RAW.md`, line 3: `Verdict: REVISE`. It read the spec with sha256 `c6dd78287bf7bf9a4e7771324d2a02c98207fc95954618e94062b41d584d2a98` at commit `d2f08f100`, and found five blocking findings and eight notes. Every finding is repaired below, in the build script and so in the spec, now sha256 `5d5213855dc7cd2a82fbaf66e0c06e86e040ce9aff37fdef87644794a25c0254`. No review has read the repaired bytes. Since D10 a review is one round, so no confirmation round follows.
+
+| # | Finding | Disposition |
+|---|---|---|
+| 1 | Blocking: `/` after `)` read as division, and `default` missing, so `if (c) /import x from 'y'/` gave a false statement | Repaired. A `)` closing an `if`, `while`, `for` or `with` head starts a regular expression. `default`, `extends`, `break` and `continue` are added to the keyword list. Where the token cannot decide (after `}`, `>`, `!`, `++`, `--`, `of`, `yield`, `await`, or a label after `break` or `continue`), the scan stops and the file is `incomplete`. The regex scenario replays the `if` and `export default` lines, a call's `(a + b) / 2`, and the `x! / 2` and `i++ / 2` stops (D5). |
+| 2 | Blocking: `complete` ignored `outsideGrammar`, and nested imports were dropped uncounted | Repaired. `outsideGrammar` = 0 is part of `complete`. A nested import or re-export is counted in `outsideGrammar`. The outside-grammar scenario now expects `partial` with 13 forms and pins the nested one as counted (D2, D5). |
+| 3 | Blocking: `'.'`, `'..'`, `'#x'` and `''` fell into the package rule and came out `external`; `./dir/` was undefined | Repaired. The relative rule takes `.` and `..` and puts them outside the grammar, with any operand ending in `/` or holding an empty segment. Normalisation is stated. The package rule takes only a first segment that could be a package name. All five operands are in the scenario as outside-grammar forms (D2, D5). |
+| 4 | Blocking: `external` ignored set-apart `package.json` files | Repaired. `setApart` = 0 joins the predicate, and the package scenario's set-apart tree is now `target-undecidable` (D2). |
+| 5 | Blocking: a symlink at an earlier address was passed over; `..` through a symlink segment was lexical | Repaired. A symbolic link at an address, or at any of its directory prefixes, makes the target undecidable. Absent addresses, trees and submodules are passed over, as a resolver takes no directory for a `.ts` path. A `..` that removes a symbolic-link segment makes the target undecidable. The scenario's symlink replay and a `./link/../w` statement expect `target-undecidable` (D2, D5). |
+| 6 | Note: one known match was an `edge` under incomplete npm coverage | Repaired by the stricter choice. The completeness predicate guards every arm, so incomplete coverage makes one match `target-undecidable` too. The package scenario pins it (D2). |
+| 7 | Note: the unit rule lacked the denied-path test | Repaired. The unit rule now applies the screen's path outcome and the directory-prefix detector test, matching version 2.19's withholding of a `package-manifest` unit (D6). |
+| 8 | Note: statement extent and import clause undefined | Repaired. A statement ends at its operand's closing quote, and `;` is not part of it. An attributes clause puts the statement outside the grammar. The clause is the ECMAScript `ImportClause` production with TypeScript's `type` prefixes (D5). |
+| 9 | Note: `outsideGrammar` over-counted property calls | Repaired in part, stated in full. A token after `.` or `?.` and a `function require` declaration are excluded. A self-bound `require` is still counted where called, and the text states that the count can over-count, never under-count (D5). |
+| 10 | Note: the byte paragraph omitted the pass-to-findings case and the close record | Repaired. The paragraph states the case, the bounded form's finding, the repair-cycle count, the report, `run-advice.json`, the step log and the close record's digests. The last scenario is limited to records within the bound under both versions (D7). |
+| 11 | Note: listing-budget entry size was circular for the last entry | Repaired. Every entry's size counts a separating comma and newline, the last of its list among them. |
+| 12 | Note: BOM, CRLF and U+2028 decided only implicitly | Repaired. The text names the leading U+FEFF and the line terminators, and a new scenario pins a BOM-prefixed CRLF file whose `lines` the path-and-range check accepts. Scenarios: 232 carried, 12 added, 244 in all (D5). |
+| 13 | Note: checker wiring absent | Repaired now, at the lead session's direction: the overlay is wired pending until its row, with `impfacts_cases`. The diff at adoption goes into the row's evidence (D8). |

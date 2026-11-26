@@ -11,7 +11,7 @@
 | `GOVERNING-DEPENDENCIES.json` | The union of its warrants; version 2.33's, unchanged |
 | `tasks.md` | Delivery |
 
-[Observed] Not yet wired into `scripts/check_spec_reconciliation.py` or `scripts/count_polaris_effective_scenarios.py`: until a reviewed text takes its version number, the checker does not read this package, and the effective REQ-034 stays the newest adopted version's (`tasks.md`).
+[Observed] Wired into `scripts/check_spec_reconciliation.py` and `scripts/count_polaris_effective_scenarios.py`, pending until its agent adoption row: with no row the effective REQ-034 stays the newest adopted version's. The tag and status prefix carry the placeholder `2.NN` until adoption (`design.md` D8). Reviewed once (`REVISE`); every finding is dispositioned in `design.md` under Review.
 
 ## Rollback after a veto
 

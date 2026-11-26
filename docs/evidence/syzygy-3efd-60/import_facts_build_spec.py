@@ -109,49 +109,78 @@ P.append(
     "check, never a rule of this requirement.")
 # P3: the lexical grammar.
 P.append(
-    "A scanned body is read as TypeScript tokens from its first code point. A statement of the grammar begins at a top-level `import` or "
-    "`export` token, top-level meaning outside every brace, parenthesis, bracket and template substitution, and takes one of these "
-    "forms, its module operand being one string literal, single- or double-quoted, holding no backslash and no line terminator: "
-    "`import`, an import clause, `from` and the operand (form `import`, or `import-type` where the clause begins with `type` followed "
-    "by `{`, `*` or an identifier other than `from`); `import` followed directly by the operand (form `side-effect`); and `export`, "
-    "optionally `type`, then `*`, `* as` and an identifier, or a brace-delimited export clause, then `from` and the operand (form "
-    "`re-export`, or `re-export-type` where `type` is written). These are outside the grammar and counted in `outsideGrammar`, never "
-    "resolved: a top-level `import` followed by an identifier and `=` (an import-equals declaration); an `import` token followed by `(` "
-    "and an identifier `require` followed by `(` that is not the operand of such a declaration, wherever either stands "
-    "outside the texts named next; and a top-level form above whose "
-    "operand is not such a literal or whose operand a rule below calls outside the grammar. Text inside a line comment, a block comment, "
-    "a string literal, a template literal outside its substitutions or a regular-expression literal is never a statement and never an "
-    "outside-grammar form. A `/` that does not begin a comment begins a regular-expression literal where the significant token before "
-    "it is none, punctuation other than `)`, `]` and `}`, an operator, or one of the words `return`, `typeof`, `case`, `do`, `else`, "
-    "`in`, `instanceof`, `new`, `delete`, `void`, `throw`, `yield`, `await` and `of`, and a division operator where that token is any "
-    "other identifier, a number, a string, the end of a template, `)` or `]`. Wherever the scan cannot establish a token boundary (a `/` "
-    "after `}` that begins no comment, an unterminated comment, string, template or regular-expression literal, or a code point the "
-    "TypeScript lexical grammar does not allow outside them), the scan stops there and the file is `incomplete`: the statements and "
-    "outside-grammar forms whose last token ends before that point are kept, and no later text of the file is read for them. A body the "
-    "scan reads to its end is `scanned`. A statement's lines are the first and last lines holding a code point of it, numbered as the "
-    "path-and-range check numbers them, so `[first, last]` is a range that check accepts as a citation of its path.")
+    "A scanned body is read as TypeScript tokens from its first code point, a leading U+FEFF being whitespace, and its line "
+    "terminators being LF, CR, CRLF, U+2028 and U+2029. A statement of the grammar begins at a top-level `import` or `export` token, "
+    "top-level meaning outside every brace, parenthesis, bracket and template substitution, and takes one of these forms, its module "
+    "operand being one string literal, single- or double-quoted, holding no backslash and no line terminator: `import`, an import "
+    "clause, `from` and the operand (form `import`, or `import-type` where the clause begins with `type` followed by `{`, `*` or an "
+    "identifier other than `from`); `import` followed directly by the operand (form `side-effect`); and `export`, optionally `type`, "
+    "then `*`, `* as` and an identifier, or a brace-delimited export clause, then `from` and the operand (form `re-export`, or "
+    "`re-export-type` where `type` is written). An import clause is the ECMAScript `ImportClause` production (a default binding; a "
+    "namespace import, `* as` and a binding; a brace-delimited named-imports list; or a default binding, `,` and one of the other two), "
+    "with TypeScript's `type` written before the clause or before a named import, a binding being any identifier, `from`, `type` and "
+    "`as` among them. A statement ends at its operand's closing quote, and a `;` after it is not part of it. These are outside the "
+    "grammar and counted in `outsideGrammar`, never resolved: a top-level import-equals declaration of a module (`import`, optionally "
+    "after `export`, then an identifier, `=`, `require` and `(`); an `import` token followed by `(`, wherever it stands outside the "
+    "texts named next, a type query `typeof import(` among them; an identifier `require` followed by `(`, wherever it stands outside "
+    "those texts, except where it is preceded by `function` or is the `require` of an import-equals declaration; an `import` or "
+    "`export` token that is not top level and begins a form above, or an `import` token that is not top level and is followed by an "
+    "identifier, `{`, `*` or a string literal (an import inside a `declare module`, `declare global` or `namespace` block, for "
+    "example), counted and never dropped; a top-level `import` token that begins no form above and no import-equals declaration and is "
+    "followed by neither `(` nor `.`; and a top-level form above whose operand is not such a literal, whose operand is followed by an "
+    "import-attributes clause (`with` or `assert`, then a brace), or whose operand a rule below calls outside the grammar. No `import`, "
+    "`export` or `require` token preceded by `.` or `?.` (a property, such as `obj.require(x)`) is a statement or an outside-grammar "
+    "form; neither is an `import` token followed by `.` (`import.meta`), nor an import-equals declaration whose right side is not "
+    "`require(` (a namespace alias). A `require` a file binds for itself is still counted where it is called, so `outsideGrammar` can "
+    "count a form that loads no module, and never leaves one uncounted. Text inside a line comment, a block comment, a string literal, "
+    "a template literal outside its substitutions or a regular-expression literal is never a statement and never an outside-grammar "
+    "form, where each such text begins being decided by this token rule alone: a `/` that does not begin a comment begins a "
+    "regular-expression literal where the significant token before it is none, punctuation or an operator other than `)`, `]`, `}`, "
+    "`>`, `!`, `++` and `--`, one of the words `return`, `typeof`, `case`, `default`, `do`, `else`, `in`, `instanceof`, `new`, "
+    "`delete`, `void`, `throw`, `extends`, `break` and `continue`, or a `)` that closes the parenthesised head of `if`, `while`, `for` "
+    "or `with` (the token before its matching `(` being that word, or `await` after `for`); and it is a division operator where that "
+    "token is any other identifier or word, a number, a string, the end of a template or regular-expression literal, `]`, or any "
+    "other `)`. Where the rule cannot tell the two readings apart, the scan does not guess: a `/` that begins no comment after `}`, "
+    "`>`, `!`, `++`, `--`, `of`, `yield` or `await`, or after an identifier that directly follows `break` or `continue`, is a point "
+    "where the scan cannot establish a token boundary, as are an unterminated comment, string, template or regular-expression literal "
+    "and a code point the TypeScript lexical grammar does not allow outside them. At such a point the scan stops and the file is "
+    "`incomplete`: the statements and outside-grammar forms whose last token ends before that point are kept, and no later text of the "
+    "file is read for them. A body the scan reads to its end is `scanned`. A statement's lines are the first and last lines holding a "
+    "code point of it, numbered as the path-and-range check numbers them, so `[first, last]` is a range that check accepts as a "
+    "citation of its path.")
 # P4: the units, and the two resolution rules.
 P.append(
     "Each statement is collapsed to units, from the tree listing and the `manifestFacts` member alone; no target body is read. A file's "
     "unit is the `package.json` entry of the nearest directory enclosing the file, its own directory first and the root last. Where no "
-    "enclosing directory holds an entry named `package.json`, the file lies in no unit; where the nearest such entry is not a blob of "
-    "mode 100644 or 100755, or is one whose path a secret detector matches, which is set apart, or whose path is not citable, the file's "
-    "unit is undecidable. Rule `typescript-relative-import` version 1 takes an operand beginning with `./` or `../`: it is joined to the "
-    "importing file's directory and normalised by segments, and one that would leave the root is outside the grammar. Its candidate "
-    "addresses are that path where its last segment ends in `.ts`; that path with a final `.js` replaced by `.ts` where it ends in `.js`; "
-    "and `<path>.ts` then `<path>/index.ts` where its last segment holds no `.`; an operand of any other form (one ending in `.json`, "
-    "`.mjs` or `.css`, for example) is outside the grammar. The rule takes the addresses in that order and stops at the first that the "
-    "listing holds as a blob of mode 100644 or 100755: that address is the target where its path is citable, no secret detector matches "
-    "it or any of its directory prefixes, and the screen's path outcome and the class gate admit it as they would admit a cited blob; "
-    "otherwise the target is undecidable, and the statement names nothing. An address the listing holds as any other entry, or does not "
-    "hold, is passed over; where every address is passed over the target is absent. Rule `typescript-package-import` version 1 takes "
-    "every other operand that does not begin with `/` (one that does is outside the grammar): its package name is its first segment, or "
-    "its first two where the first begins with `@`. Where the `manifestFacts` member is `unknown`, the target is undecidable; where "
-    "exactly one `package` fact of rule `npm-package-manifest` version 1 in that member has that `name`, the target unit is that fact's "
-    "`path`; where two or more do, the target is ambiguous; and where none does, the operand names no unit of the tree where that "
-    "recognizer's entry has `secretPathsLeftOut`, `unknown`, `valuesLeftOut` and `filesNotListed` all zero and the member's "
-    "`factsNotListed` is zero, and otherwise the target is undecidable, since a package a left-out, Unknown or unlisted file declares "
-    "could hold the name. A relative statement's target unit is the unit of its target, by the unit rule above.")
+    "enclosing directory holds an entry named `package.json`, the file lies in no unit. Where the nearest such entry is not a blob of "
+    "mode 100644 or 100755, or is one whose path is not citable, whose path or any of whose directory prefixes a secret detector "
+    "matches, read as a path or as text, whose path the screen's path outcome denies, or which the vendored-path, generated-path or "
+    "tests-path rule above sets apart, the file's unit is undecidable, as version 2.19 withholds such a `package-manifest` unit. Rule "
+    "`typescript-relative-import` version 1 takes an operand that is `.` or `..` or begins with `./` or `../`. Such an operand is "
+    "outside the grammar where it is `.` or `..`, ends in `/` or holds an empty segment; otherwise it is joined to the importing file's "
+    "directory and normalised by segments, a `.` segment being dropped and a `..` segment removing the segment before it, and it is "
+    "outside the grammar where that would leave the root. Where a `..` removes a segment whose path the listing holds as a symbolic link "
+    "(mode 120000), which a file system follows before it applies the `..`, the target is undecidable. Its candidate addresses are that "
+    "path where its last segment ends in `.ts`; that path with a final `.js` replaced by `.ts` where it ends in `.js`; and `<path>.ts` "
+    "then `<path>/index.ts` where its last segment holds no `.`; an operand of any other form (one ending in `.json`, `.mjs` or `.css`, "
+    "for example) is outside the grammar. The rule takes the addresses in that order. An address that the listing does not hold, and "
+    "none of whose directory prefixes it holds as a symbolic link, is passed over, as is one it holds as a tree or a submodule (mode "
+    "040000 or 160000), since a resolver takes no directory for a file named by a `.ts` path; where every address is passed over the "
+    "target is absent. The rule stops at the first address not passed over: where the listing holds that address, or any of its "
+    "directory prefixes, as a symbolic link, the target is undecidable, since where the link leads is not read and could change the "
+    "result; where it holds it as a blob of mode 100644 or 100755, that address is the target where its path is citable, no secret "
+    "detector matches it or any of its directory prefixes, and the screen's path outcome and the class gate admit it as they would admit "
+    "a cited blob, and otherwise the target is undecidable. An undecidable target names nothing. A relative statement's target unit is "
+    "the unit of its target, by the unit rule above. Rule `typescript-package-import` version 1 takes an operand whose first segment is "
+    "not empty and begins with none of `.`, `/`, `#` and `_`, and whose second segment, where the first begins with `@`, is present and "
+    "not empty; every operand that neither rule takes (`''`, `'#internal'`, `'/abs/f'` or `'@scope'`, for example) is outside the "
+    "grammar. Its package name is its first segment, or its first two where the first begins with `@`. Where the `manifestFacts` "
+    "member is `unknown`, the target is undecidable. Otherwise the rule decides only where the `npm-package-manifest` version 1 entry "
+    "of that member has `secretPathsLeftOut`, `setApart`, `unknown`, `valuesLeftOut` and `filesNotListed` all zero and the member's "
+    "`factsNotListed` is zero, and elsewhere the target is undecidable, whatever the listed facts hold, since a package that a "
+    "left-out, set-apart, Unknown or unlisted `package.json` declares could hold the name: one known declarer is never read as the only "
+    "one. Where the rule decides, exactly one `package` fact of that recognizer with that `name` makes the target unit that fact's "
+    "`path`, two or more make the target ambiguous, and none makes the operand name no unit of the tree.")
 # P5: statement outcomes, the member's form, coverage, listing and bounds.
 P.append(
     "Each statement takes exactly one outcome, the first of these that applies: `unknown` with the reason `source-unit-undecidable` "
@@ -182,12 +211,14 @@ P.append(
     "otherwise `inferred`; facts are ordered by path, then first line, then last line, then position in the file, and `id` is "
     "`_import-<k>`, `<k>` counting from 1 in that order. A path is the raw repository path, escaped only as JSON escapes a string, "
     "except that a `path-not-citable` file's entry gives it in the census's shown form, as version 2.7 does. `coverage` is `complete` "
-    "where `secretPathsLeftOut`, `incomplete`, `unknown` and the `unknown` statements are all zero, so that every candidate not set "
-    "apart was scanned to its end and every statement found was decided; otherwise `partial` where some file is `scanned`, or some "
+    "where `secretPathsLeftOut`, `incomplete`, `unknown`, `outsideGrammar` and the `unknown` statements are all zero, so that every "
+    "candidate not set apart was scanned to its end, every statement found was decided and no form the grammar leaves undecided was "
+    "found; otherwise `partial` where some file is `scanned`, or some "
     "statement or outside-grammar form of an `incomplete` file was kept; and otherwise `unknown`. A count of zero edges is a claim about "
     "the candidates not set apart only where `coverage` is `complete`, and is otherwise never read as the tree having no import between "
     "units. The three lists are listed as prefixes, `edges` first, then `files`, then `facts`, each in its order: an entry's size is "
-    "the UTF-8 bytes it takes in the check record's text, its indentation and separating comma and newline included, and entries are "
+    "the UTF-8 bytes it takes in the check record's text, its indentation and a separating comma and newline included, counted as "
+    "though every entry, the last of its list among them, were followed by both, and entries are "
     "listed while the sizes of all entries listed, in the three lists together, stay within 1,900,000 bytes; the first entry of a list "
     "that would pass that bound, and every later entry of that list, is counted in its `edgesNotListed`, `filesNotListed` or "
     "`factsNotListed`, and the next list is then filled. So the member, encoded as the check record encodes it, takes fewer than "
@@ -204,9 +235,15 @@ B_ANCHOR = 'the provider mode renders no map page, link, member or remainder.'
 B = (
     "These are the bytes version 2.NN changes. In the operator-agent mode every draft check record that check writes in its full form "
     "gains the member `importFacts`, immediately before `manifestFacts`, whatever the tree holds (a tree with no `.ts` file gives a "
-    "member with zero candidates and `coverage` `complete`); with it, check's report and any digest of such a record change. The bounded "
+    "member with zero candidates and `coverage` `complete`); with it, check's report, the close record's digest of such a record and "
+    "any other digest of it change. The bounded "
     "form of version 2.10 holds no `importFacts`, as it holds no `manifestFacts`, and its bytes are unchanged; a record whose full form "
-    "this member takes past the read bound is written in that bounded form, by version 2.10. No other byte changes: the structure "
+    "this member takes past the read bound is written in that bounded form, by version 2.10, with its one `check-record-bound` repair "
+    "finding. So a draft whose full record version <PV> writes within the read bound, and which passes check there, fails check under "
+    "this version where the member takes that record past the bound: the run's repair cycle counts that check as one with findings, "
+    "every later step that takes the latest passed draft revision takes another or none, and that check's report (which then carries "
+    "no `figureFit`), the run's `run-advice.json` (the bounded form counted among the records it read), the step log's findings count "
+    "and the close record's digests of those files change with it. For every other draft no outcome changes. No other byte changes: the structure "
     "record (`derived/rev-<n>.json` and `derived-structure.json`), the `manifestFacts` member, its facts, their identities and its "
     "remainder, every inventory check record, the brief, every draft schema, every rendered page, `machine.json`, `dossier.json`, the "
     "size report, the review packets, every relation witness state and every provider-mode byte stay as version <PV> writes them, and "
@@ -238,18 +275,26 @@ S.append((
     "Comments, strings, templates and regular expressions hold no import",
     "a scanned file holds one genuine `import { a } from './a';` and, at other lines, the same words inside a line comment, a block "
     "comment, a single- and a double-quoted string, a template literal and a regular-expression literal, and in paired replays the "
-    "genuine statement is moved wholly into each of those texts in turn",
+    "genuine statement is moved wholly into each of those texts in turn; further files hold the top-level lines "
+    "`if (c) /import x from 'y'/.test(s);`, `export default /import x from 'y'/;` and `const q = (a + b) / 2;`, and others "
+    "`const r = x! / 2;` and `i++ / 2;`",
     "the first file gives exactly one fact, at the genuine statement's lines, and each replay gives no fact and no outside-grammar "
-    "form at the moved text",
-    "a `/` after `)` reads as division and one after `return` as the start of a regular expression, as the token rule states, and "
-    "neither changes the count"))
+    "form at the moved text; the `if` and `export default` files are `scanned` with no fact, the `)` closing an `if` head and the "
+    "word `default` each starting a regular-expression literal, and the `(a + b) / 2` file is `scanned`, its `/` a division",
+    "the `x! / 2` and `i++ / 2` files are `incomplete`, the scan stopping at the `/` it cannot read either way rather than guessing, "
+    "and no file states a fact for text inside a regular-expression literal"))
 S.append((
     "Forms outside the grammar are counted and never resolved",
     "a scanned file holds a call `import('./a')`, a call `require('./b')`, a top-level `import c = require('./c');`, a top-level "
-    "`import d from './d\\u0041';` whose operand holds a backslash, `import e from './e.json';`, `import f from '/abs/f';` and an "
-    "`import g from './g';` inside a `declare module 'm' { }` block",
-    "the file's `outsideGrammar` is 6 and its `statements` is 0, and none of those operands is resolved, named or counted as a statement",
-    "the statement inside the block is neither a statement nor an outside-grammar form, being nested"))
+    "`import d from './d\\u0041';` whose operand holds a backslash, `import e from './e.json';`, `import f from '/abs/f';`, an "
+    "`import g from './g';` inside a `declare module 'm' { }` block, the top-level statements `import h from '.';`, "
+    "`import i from '..';`, `import j from '#internal';`, `import k from '';` and `import l from './dir/';`, and "
+    "`import m from './m' with { type: 'json' };`",
+    "the file's `outsideGrammar` is 13 and its `statements` is 0, none of those operands is resolved, named or counted as a statement, "
+    "no operand comes out `external`, and `coverage` is `partial`, never `complete`",
+    "a property call `obj.require('./n')`, a `function require(p)` declaration, `import.meta.url` and a namespace alias "
+    "`import o = N.o;` are neither statements nor outside-grammar forms, and the same file without the thirteen forms has `coverage` "
+    "`complete`"))
 S.append((
     "Only a whole body the screen admits is scanned",
     "three otherwise equal candidates differ in one way each: the first's body holds a value a secret detector matches, the second's "
@@ -269,10 +314,12 @@ S.append((
     "An undecidable target address is Unknown, never passed over",
     "a statement `import { y } from '../lib/y';` has the address `lib/y.ts` held as a blob whose screen path outcome is "
     "`unknown-extraction-class` and the address `lib/y/index.ts` held as an admitted blob in another unit, and in paired replays the "
-    "first address is absent, or held as a symbolic link",
-    "the first case is `unknown` with reason `target-undecidable`, names no target or target unit and names neither address, and "
-    "both replays resolve to `lib/y/index.ts` and give an `edge` to that file's unit",
-    "no target body is read in any case, as an instrumented reader shows"))
+    "first address is absent, held as a tree, or held as a symbolic link, and a further statement "
+    "`import { w } from './link/../w';` names a path through a directory segment `link` the listing holds as a symbolic link",
+    "the first case is `unknown` with reason `target-undecidable`, names no target or target unit and names neither address; the "
+    "absent and tree replays pass the first address over, resolve to `lib/y/index.ts` and give an `edge` to that file's unit; and the "
+    "symbolic-link replay and the `./link/../w` statement are `unknown` with reason `target-undecidable`",
+    "no target body and no link target is read in any case, as an instrumented reader shows"))
 S.append((
     "A package name resolves only against complete manifest facts",
     "`import { z } from '@w/z';` is checked in four trees: one where exactly one `package.json` names `@w/z`, one where two do, one where "
@@ -280,8 +327,9 @@ S.append((
     "(`unparsed`)",
     "the outcomes are `edge` (or `same-unit` where the importing file lies in that package), `unknown` with `target-ambiguous`, "
     "`external`, and `unknown` with `target-undecidable`",
-    "a subpath `@w/z/sub` resolves as `@w/z` does, and an operand naming a package whose declaring file is set apart is `external` "
-    "only where the entry's counts above are zero, a set-apart file being outside the recognizer's facts"))
+    "a subpath `@w/z/sub` resolves as `@w/z` does, and in two further trees, one holding a set-apart `package.json` under a "
+    "tests-path segment and one where exactly one `package.json` names `@w/z` and another is Unknown (`unparsed`), the outcome is "
+    "`unknown` with `target-undecidable`, never `external` and never `edge`"))
 S.append((
     "An undecidable source unit is Unknown",
     "a scanned file's nearest enclosing `package.json` entry is a symbolic link, and in a paired replay the same directory holds no "
@@ -305,9 +353,16 @@ S.append((
     "the member takes fewer than 2,000,000 bytes, and the check record is within the read bound or written in its bounded form, which "
     "holds no `importFacts`"))
 S.append((
+    "A byte-order mark and CRLF lines keep line numbers citable",
+    "a scanned file begins with U+FEFF, ends its lines with CRLF, and holds `import { a } from '../x/a';` on its line 2 and a "
+    "statement spanning its lines 4 to 6",
+    "the file is `scanned`, the first statement's `lines` is `[2, 2]` and the second's `[4, 6]`, and the path-and-range check accepts "
+    "both ranges as citations of the file's path",
+    "the same file with LF lines and no U+FEFF gives the same facts and the same `lines`"))
+S.append((
     "Earlier records and every other output keep their bytes",
-    "a run's earlier check record written before this version is read back by review, render and close, and the same draft is checked "
-    "and rendered under this version, in both modes",
+    "a run's earlier check record written before this version is read back by review, render and close, and the same draft, whose "
+    "full check record lies within the read bound under both versions, is checked and rendered under this version, in both modes",
     "the earlier record keeps its bytes and digest and is read as before, with no `importFacts`; the new record differs from the "
     "version <PV> record only by the `importFacts` member",
     "every rendered page, `machine.json`, `dossier.json`, `derived-structure.json`, the size report, the review packets, every relation "

@@ -1,6 +1,6 @@
 # Proposal: lexical import facts in the check record
 
-**State:** Candidate for independent review. Version number, adoption and implementation pending.
+**State:** Candidate, reviewed once (`REVISE`, every finding repaired; `design.md` Review). Version number, adoption and implementation pending.
 
 ## Why
 
