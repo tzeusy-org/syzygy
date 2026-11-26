@@ -2309,4 +2309,16 @@ describe('check: the worth-knowing mark (schema v13)', () => {
       expect(listed(result).filter(({ at }) => at === '$.schemaVersion'), version).toEqual([{ kind: 'schema', at: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4, polaris-dossier-local-draft-v5, polaris-dossier-local-draft-v6, polaris-dossier-local-draft-v7, polaris-dossier-local-draft-v8, polaris-dossier-local-draft-v9, polaris-dossier-local-draft-v10, polaris-dossier-local-draft-v13' }]);
     }
   });
+  // Version 2.33 (syzygy-5dhm.43): the choice floor on check's report, from the understanding record, never in the check record.
+  it('advises on its report a Pole with two choices or trade-offs on record, and none at three, writing neither into the check record', async () => {
+    const two = await findingsOf(drafted(V13, (d) => { poles(d); }));
+    expect(two.outcome).toBe('passed');
+    expect(two.readerAdvice?.choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: 'the Pole "Ideas" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' }]);
+    const run = await briefedRun();
+    writeDraft(run, drafted(V13, (d) => { poles(d); d.understanding.tradeOffs.push({ id: 'u-trade-2', label: 'inferred', statement: 'A cost.', scope: 'The server.', citations: [cite('u-trade-2-c')] }); }));
+    const three = report(await checkDraft(run, {}, deps()));
+    expect(three.readerAdvice?.choiceFloor).toEqual([]);
+    expect(read(run, 'checks/rev-0.json')).not.toContain('choiceFloor');
+    expect((await findingsOf(drafted('polaris-dossier-local-draft-v10', () => {}))).readerAdvice).not.toHaveProperty('choiceFloor');
+  });
 });

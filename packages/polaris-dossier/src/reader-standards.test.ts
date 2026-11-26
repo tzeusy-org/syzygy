@@ -225,3 +225,45 @@ describe('reader advice: the worth-knowing count (version 2.26)', () => {
     }
   });
 });
+
+// Version 2.33 (syzygy-5dhm.43): the choice floor, on a schema-v13 draft only. Literals from the specification.
+describe('reader advice: the choice floor (version 2.33)', () => {
+  const V13 = 'polaris-dossier-local-draft-v13';
+  const cite = (path: string) => ({ id: `c-${path}`, path, startLine: 1, endLine: 1 });
+  const claim = (id: string, path: string) => ({ id, label: 'inferred', text: 'w', citations: [cite(path)] });
+  const sec = (id: string, path: string) => ({ id, title: id, paragraphs: [claim(`${id}-p`, path)] });
+  const item = (id: string, path: string, label = 'inferred') => (label === 'inferred'
+    ? { id, label, statement: 's', scope: 'here', citations: [cite(path)] } : { id, label, reason: 'not-found', statement: 's', scope: 'here', citations: [] });
+  const doc = (choices: unknown[], tradeOffs: unknown[], poles?: unknown[], schemaVersion = V13) => ({
+    schemaVersion, deepDives: [], diagrams: [], understanding: { choices, tradeOffs },
+    sections: [sec('a', 'src/a.c'), sec('b', 'src/b.c'), { id: 'c', title: 'c', paragraphs: [{ kind: 'code', id: 'x', citation: cite('src/c.c') }] }],
+    ...(poles === undefined ? {} : { poles, whySection: 'a' }) });
+  const POLES = [{ label: 'Core', sections: ['a'] }, { label: 'Edge', sections: ['b', 'c'] }];
+  const TWO = 'the Pole "Core" has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show';
+
+  it('advises a Pole with two choices or trade-offs on record and not one with three', () => {
+    const advice = readerAdvice(doc([item('ch1', 'src/a.c'), item('ch2', 'src/b.c')], [item('t1', 'src/a.c'), item('t2', 'src/b.c'), item('t3', 'src/c.c')], POLES));
+    expect(advice.choiceFloor).toEqual([{ at: '$.poles[0]', onRecord: 2, detail: TWO }]);
+    expect(advice.advisories).toEqual(readerAdvice(doc([], [], POLES, 'polaris-dossier-local-draft-v10')).advisories);
+  });
+
+  it('counts only Inferred items, by a file the Pole\'s sections cite, each section in the first Pole naming it', () => {
+    const one = readerAdvice(doc([item('ch1', 'src/a.c'), item('u1', '', 'unknown'), item('o1', 'docs/other.md')], [], [{ label: 'Core', sections: ['a'] }, { label: 'Again', sections: ['a'] }]));
+    expect(one.choiceFloor).toEqual([
+      { at: '$.poles[0]', onRecord: 1, detail: 'the Pole "Core" has 1 choice or trade-off on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' },
+      { at: '$.poles[1]', onRecord: 0, detail: 'the Pole "Again" has 0 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs` citing a file its sections cite; never record one its source does not show' },
+    ]);
+  });
+
+  it('counts every Inferred item for a draft with no Poles', () => {
+    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2')], [])).choiceFloor).toEqual([{ at: '$.sections', onRecord: 2,
+      detail: 'the draft has 2 choices or trade-offs on record, fewer than 3: where its source shows a decision this part makes, the alternative it passes over or what it costs, record each as a cited Inferred item of the understanding record\'s `choices` or `tradeOffs`; never record one its source does not show' }]);
+    expect(readerAdvice(doc([item('ch1', 'x/1'), item('ch2', 'x/2')], [item('t1', 'x/3')])).choiceFloor).toEqual([]);
+  });
+
+  it('gives an earlier draft no choice-floor member at all', () => {
+    for (const version of ['polaris-dossier-local-draft-v12', 'polaris-dossier-local-draft-v10', 'polaris-dossier-local-draft-v2']) {
+      expect(Object.keys(readerAdvice(doc([], [], POLES, version))), version).toEqual(['standards', 'note', 'advisories']);
+    }
+  });
+});
