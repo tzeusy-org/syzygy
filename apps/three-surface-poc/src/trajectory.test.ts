@@ -1867,7 +1867,7 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
   const ACTIVE = '<script>LISTMARKERactive2</script>';
   // The 60th code unit is the high half of U+1F600, so the clip ends at 59.
   const PAIR = `${'L'.repeat(59)}\u{1F600} LISTTAILpair3`;
-  const LONG = `${'M'.repeat(60)}LISTTAILlong4`;
+  const LONG = `&${'M'.repeat(59)}LISTTAILlong4`;
   const MARKERS = ['LISTMARKERsecret1', 'LISTMARKERactive2', 'LISTTAILpair3', 'LISTTAILlong4'];
   const row = (id: string, title: unknown) => ({ ...fixtureWorkItemRow(id, 'open', instant, instant, null), title });
   const rows = [
@@ -1918,7 +1918,7 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
     'bu-twin': { shown: `${'L'.repeat(59)}…`, clipped: true },
     'bu-blocked': { shown: 'Blocked one', clipped: false },
     'bu-act': { shown: 'withheld active-content', clipped: false },
-    'bu-long': { shown: `${'M'.repeat(60)}…`, clipped: true },
+    'bu-long': { shown: `&amp;${'M'.repeat(59)}…`, clipped: true },
     'bu-none': { shown: 'withheld unclassifiable', clipped: false },
   };
   const pages = (page: PocModel) => [renderTrajectoryPage(page), trajectoryView(page, 'group=parent')];
@@ -1971,7 +1971,7 @@ describe('Every Trajectory list names an item with its screened title (POC-REQ-0
   it('clips a long title in a list at 60 code units, never inside a surrogate pair, and shows it whole on its card', () => {
     for (const html of pages(model())) {
       expect(cardBody(html, 'bu-twin')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">${PAIR}</bdi>`);
-      expect(cardBody(html, 'bu-long')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">${LONG}</bdi>`);
+      expect(cardBody(html, 'bu-long')).toContain(`<bdi class="wi-name" data-parity-field="work-item-title">&amp;${LONG.slice(1)}</bdi>`);
       // The tails appear only on the cards, never in a list.
       expect(html.split('LISTTAILpair3').length - 1).toBe(html.split('data-work-item-id="bu-twin"').length - 1);
       expect(html.split('LISTTAILlong4').length - 1).toBe(html.split('data-work-item-id="bu-long"').length - 1);
