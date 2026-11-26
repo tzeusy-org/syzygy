@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "fd6caec7d78fe0de748f85ec05757677de2e88cf",
+  "baseCommit": "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+  "archive": {
+    "path": "payload.tar.gz",
+    "bytes": 4687806,
+    "sha256": "db0f58c55b0a9ff767fff3107a8adceb732d0bec71f83a5e8f3c8da6800d2686"
+  },
+  "index": {
+    "path": "index.json",
+    "bytes": 33790,
+    "sha256": "83d7aa5abb6914fe64fd248fd33cc1d3d5bf8228573b24f55dcbbba76cdf2c1f"
+  },
+  "members": 63,
+  "externalSourceSnapshots": 5,
+  "externalRawProfiles": 8,
+  "verification": {
+    "twoBuildsByteIdentical": true,
+    "pythonAllMembersBytesMetadata": true,
+    "gnuTarAllMembersBytesSha": true,
+    "sha256sum": true
+  },
+  "limits": [
+    "No adoption by packaging.",
+    "No production build or genuine recovery atfd6c included.",
+    "96warm compiled diagnostic: MODULE/SOURCE0028 vs genuine TARGET/PROGRAM0e14; cold/full-runtime/recovery speedUnknown.",
+    "Ordinary0028 timeout with4forwards differs from profiled0028 pre-timeout inspection failure with0forwards; no paired ratio.",
+    "5full12421-row source snapshots and8raw profiles remain external; exact indexes provided.",
+    "Historical preparation flags remain verbatim; actual scoped execution is described by later terminal receipts."
+  ]
+}

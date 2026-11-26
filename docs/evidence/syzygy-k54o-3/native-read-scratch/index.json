@@ -1,0 +1,677 @@
+{
+  "sourceCommit": "fd6caec7d78fe0de748f85ec05757677de2e88cf",
+  "memberCount": 63,
+  "members": [
+    {
+      "originalPath": null,
+      "archivePath": "EXECUTION-SUMMARY.json",
+      "bytes": 6183,
+      "sha256": "26ec63fbf86b4ef05c25f0159ff711904240898e04793a25acae7476e25c2a97",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "generated packaging description/index; not execution"
+    },
+    {
+      "originalPath": null,
+      "archivePath": "README.md",
+      "bytes": 2382,
+      "sha256": "cebbb57b7bd8d5b11d50210e6ffe1aba2d027c313d63b6795021b423219d1737",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "generated packaging description/index; not execution"
+    },
+    {
+      "originalPath": null,
+      "archivePath": "SOURCE-INVENTORY.json",
+      "bytes": 32163,
+      "sha256": "a50c548cada4cead4ae9c84f07c0c44e76055a71059f833073a50514a2b17c1e",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "generated packaging description/index; not execution"
+    },
+    {
+      "originalPath": null,
+      "archivePath": "SOURCE-SNAPSHOT-INDEX.json",
+      "bytes": 4619,
+      "sha256": "c2d4ee0b79f340abb1a87d27890c87ed237516cf5115d89a7666fa52c6397cae",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "generated packaging description/index; not execution"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-0028-current-provenance-assessment-1/ASSESSMENT.md",
+      "archivePath": "artifacts/native-production-recovery-0028-current-provenance-assessment-1/ASSESSMENT.md",
+      "bytes": 7894,
+      "sha256": "adac6d6a3c69e69a4fb8f97b5e8d7310ddeab218d94e9f21284db0c2206c3ceb",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "ordinary600s selected current/provenance assessment"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-0028-execution-1/recovery.log",
+      "archivePath": "artifacts/native-production-recovery-0028-execution-1/recovery.log",
+      "bytes": 436485,
+      "sha256": "4b3d42746a9c31c473a53111e4de7e34348afb1d0f95a1d48947534a9535c0d9",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "ordinary genuine600s timeout failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-0028-execution-1/result.json",
+      "archivePath": "artifacts/native-production-recovery-0028-execution-1/result.json",
+      "bytes": 1629,
+      "sha256": "e34ed1b5f158f619684292e77dccb19bfd5453fcbc383684d150549605c3b947",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "ordinary genuine600s timeout failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-0028-execution-1/subject.json",
+      "archivePath": "artifacts/native-production-recovery-0028-execution-1/subject.json",
+      "bytes": 779,
+      "sha256": "67f033e2e74fd8032d3b36343d163d189584619e5dc7dcaaeb2a81784493b7e4",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "ordinary genuine600s timeout failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/ASSESSMENT-RAW.md",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/ASSESSMENT-RAW.md",
+      "bytes": 6350,
+      "sha256": "7885117f705a093c18a4e3e17c4e11844f92f7069a59432739120593ffa9bb6a",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/analyze_profiles.py",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/analyze_profiles.py.txt",
+      "bytes": 11103,
+      "sha256": "eb58408b72864a6a6dcd5fd7f8a72bb18d22e2c0264ff072b212fdf1f6b68e9b",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/finalize_metadata.py",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/finalize_metadata.py.txt",
+      "bytes": 8431,
+      "sha256": "10bd2d8e746de7cc0c199d9287f01b8fcab98411b8315ddd6c10489c244c355a",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/manifest.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/manifest.json",
+      "bytes": 4518,
+      "sha256": "0fb996221edc890a697d40676449a6475b64025e14405660fa457ac36ac90d1c",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/profile-analysis-metadata.json.gz",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/profile-analysis-metadata.json.gz",
+      "bytes": 4450685,
+      "sha256": "ba07753ba6fc74fc0534d600e71b56f70ed037f356891123fc43e8fe1952deaa",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/selected-terminal-metadata.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/selected-terminal-metadata.json",
+      "bytes": 7763,
+      "sha256": "38ca4dfe39df37939c6c9a72f217ac11b41c9b3e7e89d1578b591bfcba19fbb4",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/source-binding.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/source-binding.json",
+      "bytes": 6606,
+      "sha256": "51acab82ed72074f7b365a4cb56b817f12c5ba7a1a0eadab6ef9a2da1dc4aa31",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/summary.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/summary.json",
+      "bytes": 242035,
+      "sha256": "9d4578341a9e54aa1c710cbfb76918397098891c25ed27d955023f971af012a6",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-assessment-1/terminal-input-bindings.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-assessment-1/terminal-input-bindings.json",
+      "bytes": 916,
+      "sha256": "512be1e2f928b161866b276f625a5293b6db55191223c09fad575e5b6492aae1",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "completed failed profile diagnostic metadata; not acceptance"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-execution-1/recovery.log",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-execution-1/recovery.log",
+      "bytes": 531411,
+      "sha256": "fe56aa71069e70a2674bfcc9d6f0a09579a005527fd8ee4fed96b3d41d217c62",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "profiled pre-timeout role-ended failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-execution-1/result.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-execution-1/result.json",
+      "bytes": 1657,
+      "sha256": "3ddc28a4f9dcaef8ceb09543a2c6ef90ce1a32c60621cac436ce25173cdc3df3",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "profiled pre-timeout role-ended failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-production-recovery-profile-0028-execution-1/subject.json",
+      "archivePath": "artifacts/native-production-recovery-profile-0028-execution-1/subject.json",
+      "bytes": 1019,
+      "sha256": "cee636cf11a629ba6f962baefd5dafbc7dbe4631a8fe514cb8b001575873f1c7",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "profiled pre-timeout role-ended failure"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/ASSESSMENT.md",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/ASSESSMENT.md",
+      "bytes": 5212,
+      "sha256": "aee090ffb4738c50a93f7aad23668976598013e9e915a976f24e5289c45a583e",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/README.md",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/README.md",
+      "bytes": 667,
+      "sha256": "1728967157330823304576ade0a87b82fbede94cc93d6f6b40c8354c8ab426a1",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/RESULTS-MANIFEST.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/RESULTS-MANIFEST.json",
+      "bytes": 2408,
+      "sha256": "4470b37a257ba19d9489d3f07b08abefbf654bfcf145560585ce9cc9a75eac71",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/candidate.mjs",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/candidate.mjs.txt",
+      "bytes": 12736,
+      "sha256": "fcd922230e648fa6e20026e9e429d74f3088c6150f2c0fe6faf8dc3fc218c294",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/candidate.patch.txt",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/candidate.patch.txt",
+      "bytes": 2070,
+      "sha256": "a40919406018ca6fe52395b4c2b7963ad2ea9bedb2d678c87512803f47cf0e2b",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/execution-1/measurement.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/execution-1/measurement.json",
+      "bytes": 12026,
+      "sha256": "e5cbc76a1bed358f1b11a05bdad47da9353f0ed30f48fe32f8394f0f1a8239b7",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual compiled diagnostic pairs/result/identities"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/execution-1/pairs.log",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/execution-1/pairs.log",
+      "bytes": 75878,
+      "sha256": "ffc81a273732d2db98ba4b771b4b55b040d4cd88e757157446469739f0f7fed2",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual compiled diagnostic pairs/result/identities"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/execution-1/result.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/execution-1/result.json",
+      "bytes": 652,
+      "sha256": "9eb34944a04f05f343c61cb2bcde0339e4720f147c9e4044131fb0ec5f09a13c",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual compiled diagnostic pairs/result/identities"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/execution-1/subject.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/execution-1/subject.json",
+      "bytes": 103119,
+      "sha256": "765a5828082b6fc487b676768d5263ae9b823fbbc3289367218d7d014fde2d6c",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual compiled diagnostic pairs/result/identities"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/experiment.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/experiment.json",
+      "bytes": 2103,
+      "sha256": "faedbe11fcd78b82814703ca3e30742cacc25a6f937880012021a8713d95faaf",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/manifest.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/manifest.json",
+      "bytes": 1269,
+      "sha256": "31ad3c99acb592c1c396f41e05647b8d30954f0720d6d5106dc59f716242d8e0",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/measure.mjs",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/measure.mjs.txt",
+      "bytes": 12824,
+      "sha256": "34a38dd46fd697c93ead2900ae4c0f8f6cd4e8fa0b28d9aef1ee64d3e160c2fe",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/original.js.txt",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/original.js.txt",
+      "bytes": 12298,
+      "sha256": "0f7b0b171e84727f182a8da857800c067a057113e8782a38d7934cac15b39867",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/run-measurement.py",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/run-measurement.py.txt",
+      "bytes": 6284,
+      "sha256": "d0a156e1fbbe494926c7c5cb86abf82f9f1550aa33425c2511b52c7f3f96d53d",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/source-policy-git-native.ts.txt",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/source-policy-git-native.ts.txt",
+      "bytes": 11584,
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-after-byte-reference-0028/summary.json",
+      "archivePath": "artifacts/native-scratch-reuse-after-byte-reference-0028/summary.json",
+      "bytes": 4414,
+      "sha256": "62ee1156835c0f873149eda4499d2cffa6837116e87e43224308d4d2ca3f1f57",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "completed compiled-only96warm-pair diagnostic; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/candidate-original.ts",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/candidate-original.ts.txt",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/mutant-binding.json",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/mutant-binding.json",
+      "bytes": 2964,
+      "sha256": "3031c901d52f479de497290df40d2ec816026bbe204ed8b7942aa6ce6d6e67ed",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/mutant.ts",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/mutant.ts.txt",
+      "bytes": 11949,
+      "sha256": "5e349765e448d0a5fd2ef2641bb0b612f6eb5843be51a815fbb441533d3c8d08",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/terminal.json",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/terminal.json",
+      "bytes": 3753,
+      "sha256": "43b82b33ebb2ccfae8f4d724778adae1b0422c3df2d25b8ccc7dd152c0365e59",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/vitest.json",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/vitest.json",
+      "bytes": 7747,
+      "sha256": "a45ce79c53c777922f8117ea26d6198e731562fe30830b6a151b006f95d1af1f",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-mutant-0028-execution-1/vitest.log",
+      "archivePath": "artifacts/native-scratch-reuse-mutant-0028-execution-1/vitest.log",
+      "bytes": 122,
+      "sha256": "ab2d1c72a0b82c2031159deb2191888e465e5649b5e1dbaad03a8676467e33db",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual mutant scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/README.md",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/README.md",
+      "bytes": 3688,
+      "sha256": "c9b9964bb8d7cfe8066b3d6afbf748da24c58ccc7fa171b5e42bfb726c35929c",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/manifest.json",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/manifest.json",
+      "bytes": 2966,
+      "sha256": "c59e39271e5b8cd176df4ae690185b430521eee0cc683b422c4047a9f83c38a3",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/mutant.json",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/mutant.json",
+      "bytes": 2964,
+      "sha256": "3031c901d52f479de497290df40d2ec816026bbe204ed8b7942aa6ce6d6e67ed",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/mutant.py",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/mutant.py.txt",
+      "bytes": 127,
+      "sha256": "d267f0eea97a4087da3692e4e6a006964cf7096f5d6c3f942340517c119ee9b9",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/operator_common.py",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/operator_common.py.txt",
+      "bytes": 17288,
+      "sha256": "6cb3c7bf8d03690a312b53378ce3a8581ff30a08858d1467e5d1143608fc0d65",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-operators-0028/owning.py",
+      "archivePath": "artifacts/native-scratch-reuse-operators-0028/owning.py.txt",
+      "bytes": 127,
+      "sha256": "fb0c79bde662134a45d8020866b92ee212ec77aa77fc1521891ec73496746887",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "validation operators/fragments, inert; preparation flags historical"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-owning-0028-execution-1/terminal.json",
+      "archivePath": "artifacts/native-scratch-reuse-owning-0028-execution-1/terminal.json",
+      "bytes": 3126,
+      "sha256": "ae377ff45704182f633b1592e8deba94fe85d9a2e6a05e34e26f732d208ee6c7",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual owning scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-owning-0028-execution-1/typecheck.log",
+      "archivePath": "artifacts/native-scratch-reuse-owning-0028-execution-1/typecheck.log",
+      "bytes": 37,
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual owning scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-owning-0028-execution-1/vitest.json",
+      "archivePath": "artifacts/native-scratch-reuse-owning-0028-execution-1/vitest.json",
+      "bytes": 7014,
+      "sha256": "585f384f23e117b995dbf3b284270de7daa07f60cef45e7c009bc690d8839a89",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual owning scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-owning-0028-execution-1/vitest.log",
+      "archivePath": "artifacts/native-scratch-reuse-owning-0028-execution-1/vitest.log",
+      "bytes": 122,
+      "sha256": "f3aed2d026f2883f132d6a7f06ee6c1596a2d09ad51e1796f6a0a004873cf10a",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "actual owning scoped execution terminal/JSON/log/fragments"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/PREPARATION.md",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/PREPARATION.md",
+      "bytes": 2842,
+      "sha256": "bbef5dd9bf597239d51e14637b39f1e116774034023be2b106ece96b0e1555b2",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "verbatim source preparation and both review versions; reissue final"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/bindings.json",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/bindings.json",
+      "bytes": 1290,
+      "sha256": "43410269ac2fdbf9e34dd045f066b65762cb27d696baa1e16d1fa3b32718f8f0",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "verbatim source preparation and both review versions; reissue final"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/candidate.patch",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/candidate.patch.txt",
+      "bytes": 4370,
+      "sha256": "48f62f2c573d1a8baf4b3238c1d6582423a412bcac05e333ad99b3d44624c404",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "verbatim source preparation and both review versions; reissue final"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/candidate/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/candidate/packages/polaris-dossier/src/policy-git-native.test.ts.txt",
+      "bytes": 31953,
+      "sha256": "d3017b4deee31e18a4c852a9dd4fc7fda3bb2582a57a4bcd130d7425d4bf15fc",
+      "subjects": [
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "exact source bytes equal named commit"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/candidate/packages/polaris-dossier/src/policy-git-native.ts",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/candidate/packages/polaris-dossier/src/policy-git-native.ts.txt",
+      "bytes": 11991,
+      "sha256": "b899ceba35cce3c6561a3e7bae7d8b97d5a05865468ce49dc5f37ccede9c2971",
+      "subjects": [
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "exact source bytes equal named commit"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/original/packages/polaris-dossier/src/policy-git-native.test.ts",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/original/packages/polaris-dossier/src/policy-git-native.test.ts.txt",
+      "bytes": 30367,
+      "sha256": "e5ca44eabfb5d0ba4520f4296814d30b2a570aee589a7c5beeaceb9c4e000462",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "exact source bytes equal named commit"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/original/packages/polaris-dossier/src/policy-git-native.ts",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/original/packages/polaris-dossier/src/policy-git-native.ts.txt",
+      "bytes": 11584,
+      "sha256": "12c65529eb41bd4f00a040dd283855cab3b12b75fe49128037e007061bcd3ce1",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "exact source bytes equal named commit"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/source-review-scratch-borrow-20261126T131746930075Z-RAW.md",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/source-review-scratch-borrow-20261126T131746930075Z-RAW.md",
+      "bytes": 6409,
+      "sha256": "976f4715e26a530a0d9411ae009bcdef871b669852abf5ac10ad40e26570fd68",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "verbatim source preparation and both review versions; reissue final"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/native-scratch-reuse-ts-preparation-0028/source-review-scratch-borrow-reissued-20261126T131759597657Z-RAW.md",
+      "archivePath": "artifacts/native-scratch-reuse-ts-preparation-0028/source-review-scratch-borrow-reissued-20261126T131759597657Z-RAW.md",
+      "bytes": 6805,
+      "sha256": "2e1e1808584609674f3f2128d0c5c988af553c078c483850f8bb7b7b5b475924",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535",
+        "fd6caec7d78fe0de748f85ec05757677de2e88cf"
+      ],
+      "scope": "verbatim source preparation and both review versions; reissue final"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/profile-0028-inspection-failure-source-assessment-20261126-1.md",
+      "archivePath": "artifacts/profile-0028-inspection-failure-source-assessment-20261126-1.md",
+      "bytes": 9986,
+      "sha256": "206d00830b92af1ab80e12086168896baf10ef836032ba88d95d038318c8ec7e",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "exact causal assessment of profile storage timeout; ordinary timeout distinguished"
+    },
+    {
+      "originalPath": "/home/orca/.tmp/f3-native-admission-fixes/run-clean-native-recovery-profile-0028.py",
+      "archivePath": "artifacts/run-clean-native-recovery-profile-0028.py.txt",
+      "bytes": 3791,
+      "sha256": "81c3161e5918d2d3b8c65ac2d2b3b875c3a4ba65ebc27268f7911382ddd161cd",
+      "subjects": [
+        "0028c1bb8fd92da2837dd0bb919a2e155224b535"
+      ],
+      "scope": "original profiling diagnostic operator, inert"
+    }
+  ]
+}
