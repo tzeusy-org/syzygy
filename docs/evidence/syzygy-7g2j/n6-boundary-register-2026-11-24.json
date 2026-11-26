@@ -1,0 +1,747 @@
+{
+  "subject": {
+    "commit": "e1a6006333e2eca42b5d6b72c6a19c6a5dd534cd",
+    "protected_base": "1e30b1c196c691565fc2d858649aa4942306e305",
+    "scope": "N6 eight-clause boundary and declared effects"
+  },
+  "scope_enumeration": {
+    "record_sha256": "b7d99758df0bc5dca0508bdba1b1858f9af8168a449919fb6568cc3095f3d9dd",
+    "method": "Read exact protected Git blobs using independently known line ranges and declaration paths. Compare separately with generator --check.",
+    "result": {
+      "disposition_counts": {
+        "context": 24,
+        "prose-only": 47,
+        "typed-refusal": 1
+      },
+      "effect_count": 24,
+      "effect_keys": [
+        "effect/butlers-tracker-write",
+        "observer/databaseAccess",
+        "observer/executeObservedCode",
+        "observer/networkAccess",
+        "observer/readAuthority",
+        "observer/workingTreeRead",
+        "observer/writeSurface",
+        "route/GET ORRERY_HUMAN_PATH",
+        "route/GET ORRERY_TAILNET_PATH",
+        "route/GET POC_HUMAN_PATH",
+        "route/GET POC_MACHINE_PATH",
+        "route/GET POLARIS_HUMAN_PATH",
+        "route/GET POLARIS_PRESENTATION_PATH",
+        "route/GET POLARIS_SOURCE_PATH",
+        "route/GET POLARIS_SOURCE_TAILNET_PATH",
+        "route/GET POLARIS_TAILNET_PATH",
+        "route/GET TAILNET_MOUNT_PREFIX",
+        "route/GET TRAJECTORY_HUMAN_PATH",
+        "route/GET TRAJECTORY_TAILNET_PATH",
+        "route/GET `${TAILNET_MOUNT_PREFIX}${POC_MACHINE_PATH}`",
+        "route/GET `${TAILNET_MOUNT_PREFIX}${POLARIS_PRESENTATION_PATH}`",
+        "route/GET `${TAILNET_MOUNT_PREFIX}/`",
+        "route/POST MATERIALIZE_HUMAN_PATH",
+        "route/POST MATERIALIZE_TAILNET_PATH"
+      ],
+      "manifest_sha256": "0f428ecbdb57ddda4359e7fc241fcf036a28d661e20eb54c3fa9aa43a41edf68",
+      "protected_base": "1e30b1c196c691565fc2d858649aa4942306e305",
+      "reviewed_commit": "e1a6006333e2eca42b5d6b72c6a19c6a5dd534cd",
+      "reviewed_context_sha256": "a609d181d8473deb8bd3087c74314ee2d8551d638f221d283fb186aea11fa5a4",
+      "reviewed_declarations_sha256": "034bc939d2b35c9ee1d4c9e6b123f423c037c2a1b408e36509cf685a35066f75",
+      "scoped_source_pin_count": 24,
+      "source_units": {
+        "P-71-Q5/1ca2cf1f3efff7aa": {
+          "identity": "P-71-Q5",
+          "path": ".syzygy/governance/decisions/POLARIS-PURSUIT-OWNER-RULINGS-P68-P83-DECISION.md",
+          "source_line": 59
+        },
+        "SEC-1/3f3ea56fd3da4bc5": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 21
+        },
+        "SEC-1/407bec789c9c342c": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 27
+        },
+        "SEC-1/808272af80c3fb46": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 30
+        },
+        "SEC-1/adbd1b103575b0fd": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 39
+        },
+        "SEC-1/b9a0e69d7d75bf12": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 25
+        },
+        "SEC-1/ce299a3d3246622c": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 17
+        },
+        "SEC-1/d9a26341910a7541": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 34
+        },
+        "SEC-1/f52c9c1656c3f4df": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 28
+        },
+        "SEC-1/fd951743f0caa38c": {
+          "identity": "SEC-1",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 22
+        },
+        "SEC-2/054d2d3f082e8574": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 51
+        },
+        "SEC-2/09d1f21b0471c207": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 58
+        },
+        "SEC-2/4974c59bf37c804e": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 90
+        },
+        "SEC-2/524b5e2985826be9": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 64
+        },
+        "SEC-2/6ff7f99a5cebc8dd": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 86
+        },
+        "SEC-2/7e75d5e5c598b5f9": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 69
+        },
+        "SEC-2/880b9ab001932a86": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 65
+        },
+        "SEC-2/8f6bb9ad75b6a63d": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 61
+        },
+        "SEC-2/c91bcbc68b758de1": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 77
+        },
+        "SEC-2/ca39d904442c0137": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 92
+        },
+        "SEC-2/cd288ee03f604174": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 78
+        },
+        "SEC-2/e291d83b8f6f74bf": {
+          "identity": "SEC-2",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 88
+        },
+        "SEC-3/11aeb33b6f4a9069": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 144
+        },
+        "SEC-3/31576b5846838258": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 102
+        },
+        "SEC-3/5d9baea48e5f2946": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 136
+        },
+        "SEC-3/74e11dd6337d4125": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 142
+        },
+        "SEC-3/b46dab1f88a6ca5b": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 114
+        },
+        "SEC-3/b93e22d085e47f9e": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 97
+        },
+        "SEC-3/bdcad337cba7ee20": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 104
+        },
+        "SEC-3/c5f4a9b8fff69cb5": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 101
+        },
+        "SEC-3/e2b9701d448d019f": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 107
+        },
+        "SEC-3/f9ee359545af7509": {
+          "identity": "SEC-3",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 129
+        },
+        "SEC-4/3951595a6f0080b8": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 165
+        },
+        "SEC-4/5319ec96ea7927ae": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 158
+        },
+        "SEC-4/81eb1a01780687d1": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 155
+        },
+        "SEC-4/a8be5f2ac45ba099": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 150
+        },
+        "SEC-4/a8f7b25132551afc": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 163
+        },
+        "SEC-4/d664533dad8c8855": {
+          "identity": "SEC-4",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 167
+        },
+        "SEC-5/1d98150bd7a77b88": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 186
+        },
+        "SEC-5/3e0e29e449c26c12": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 185
+        },
+        "SEC-5/900487ebfc35668d": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 178
+        },
+        "SEC-5/ab2cbeeaef981677": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 187
+        },
+        "SEC-5/c2abe134f7392b4c": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 182
+        },
+        "SEC-5/da23d89d78c0d926": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 172
+        },
+        "SEC-5/ed1b48311f238a64": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 189
+        },
+        "SEC-5/f730c8f1fc2babcc": {
+          "identity": "SEC-5",
+          "path": ".syzygy/governance/doctrine/security.md",
+          "source_line": 176
+        },
+        "VIS-4/384a3604b3dc5d69": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 177
+        },
+        "VIS-4/551c6a1ecf9efc96": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 202
+        },
+        "VIS-4/5adf209f1ea8a2ae": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 199
+        },
+        "VIS-4/6e17891f5ee99a50": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 176
+        },
+        "VIS-4/7badbc4602dde230": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 172
+        },
+        "VIS-4/7bbb8d7318346c32": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 187
+        },
+        "VIS-4/7c5e282e4fa7e178": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 182
+        },
+        "VIS-4/802e934b41bee7c9": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 178
+        },
+        "VIS-4/89c30d518873f062": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 215
+        },
+        "VIS-4/c305bc6692580e44": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 194
+        },
+        "VIS-4/ca02f01ad0ba1a82": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 208
+        },
+        "VIS-4/cde8eda8cd5c6dac": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 205
+        },
+        "VIS-4/db4ccb1499415693": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 219
+        },
+        "VIS-4/eae64ec8c8aedfda": {
+          "identity": "VIS-4",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 185
+        },
+        "VIS-5/162b9520fc20d61d": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 248
+        },
+        "VIS-5/1daa58621bf285ff": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 259
+        },
+        "VIS-5/332cd0489daedb7a": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 237
+        },
+        "VIS-5/546b490efa261cef": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 255
+        },
+        "VIS-5/869b0eb311b86190": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 227
+        },
+        "VIS-5/9768f5f3aeaf2f0a": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 242
+        },
+        "VIS-5/9dec629e313ae95d": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 252
+        },
+        "VIS-5/a3c9bdc182831bb0": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 246
+        },
+        "VIS-5/ae8b9de5cfd4eed0": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 235
+        },
+        "VIS-5/afc9828a9d667493": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 236
+        },
+        "VIS-5/e3c03e47b45dc6a3": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 232
+        },
+        "VIS-5/fb0f635ca2068958": {
+          "identity": "VIS-5",
+          "path": ".syzygy/governance/doctrine/vision.md",
+          "source_line": 233
+        }
+      }
+    }
+  },
+  "governance_selftests": {
+    "command": "python3 scripts/check_governance.py --selftest",
+    "passed": 221,
+    "failed": 0
+  },
+  "targeted_behavior": {
+    "scope": "Repository-owned synthetic fixtures",
+    "command": "vitest run --reporter=json packages/three-surface-poc-core/src/effect-authority.test.ts apps/three-surface-poc/src/materialize-action.test.ts",
+    "passed": 22,
+    "failed": 0,
+    "files": [
+      {
+        "file": "packages/three-surface-poc-core/src/effect-authority.test.ts",
+        "source_sha256": "fa5be4fbfa38f34ffa1166300ce44f9e46e58daefad456f505912bc626b6f3ed",
+        "assertions": [
+          {
+            "name": "effectAuthority forecloses the Butlers tracker write with citation P-71-Q5",
+            "status": "passed"
+          },
+          {
+            "name": "effectAuthority keeps the foreclosure even when a registry entry names the write surface",
+            "status": "passed"
+          },
+          {
+            "name": "effectAuthority refuses an effect the registry entry does not name",
+            "status": "passed"
+          },
+          {
+            "name": "effectAuthority refuses when no registry entry is supplied",
+            "status": "passed"
+          },
+          {
+            "name": "effectAuthority refuses a malformed write surface",
+            "status": "passed"
+          },
+          {
+            "name": "effectAuthority authorizes only an unforeclosed effect the registry entry names",
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "file": "apps/three-surface-poc/src/materialize-action.test.ts",
+        "source_sha256": "1bc14408f0d05622c0f4bb0b6c2deb4e68f84f8e3e8e76e739e0bc718e470342",
+        "assertions": [
+          {
+            "name": "renderMaterializePanel previews the exact packet and target repository read-only, before any trigger (AC1)",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel matches decoded Trajectory fields to authenticated API dispatch with exact denominators and named machine-only values",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel is embedded on the Trajectory page with the write foreclosed and the trigger disabled",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel renders the foreclosed write with its citation and reason, and disables the trigger (P-71-Q5)",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel enables the trigger only for an authorized verdict",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel posts to the tailnet-mounted action when rendered under the tailnet mount",
+            "status": "passed"
+          },
+          {
+            "name": "renderMaterializePanel does not render a compiled materialization packet for a model with no dispatch",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes refuses a cross-origin POST the same way every other human route does (fail-closed)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes refuses the foreclosed write with a bounded typed refusal and never runs Beads (P-71-Q5)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes refuses an effect the registry does not name before any runner is called",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes creates exactly one Bead on trigger, persists the record, and calls onMaterialized (AC2)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes keeps the result page's back-link under the tailnet mount when the tailnet-Host-headered request `tailscale serve` actually forwards triggers it (AC2)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes is idempotent over HTTP: a second POST reuses the same Bead without a second create (AC3)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes renders a named failure over HTTP and leaves no partial record when bd is missing (AC5)",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes fails closed without invoking Beads when the actual model has no dispatch",
+            "status": "passed"
+          },
+          {
+            "name": "materializeRoutes states the Bead exists when it was created but only the local record write failed, instead of the generic no-Bead suffix (AC5)",
+            "status": "passed"
+          }
+        ]
+      }
+    ]
+  },
+  "predicate_controls": {
+    "record_sha256": "bb962c1a7c23dde9345cd86a924cacf17962be459b9b121d81ae6cb466126957",
+    "replay": "Read the named source at the exact subject. Execute untouched selftest_cases. Replace the sole old fragment with its new fragment in a scratch module, run selftest_cases, and compare the failed names and unchanged passing control. Repeat from original bytes for each predicate.",
+    "result": {
+      "commit": "e1a6006333e2eca42b5d6b72c6a19c6a5dd534cd",
+      "source": "scripts/build_boundary_register.py",
+      "source_sha256": "7292408b9678347c584592c158daa0354754b7a4d313ca9bcabda1fe29f7be90",
+      "baseline": {
+        "complete fixture and explicit Unknown": true,
+        "new boundary": true,
+        "changed evidence": true,
+        "missing cited requirement": true,
+        "changed cited requirement": true,
+        "stale generated bytes": true,
+        "unmapped new unit after source repin": true,
+        "missing refusal witness after source repin": true,
+        "duplicate input key": true,
+        "rewritten reviewed base": true,
+        "unrelated POST cannot borrow foreclosure": true,
+        "new HEAD stale source": true,
+        "new HEAD exact source review still required after source repin": true,
+        "new HEAD remains unmapped after source repin": true,
+        "new HEAD cannot borrow GET authority": true,
+        "dynamic method": true,
+        "extra spread": true,
+        "quoted method cannot be hidden by a repin": true,
+        "reordered properties cannot be hidden by a repin": true,
+        "relabelled prohibition": true,
+        "missing arm": true,
+        "orphan arm": true,
+        "missing prose-only rationale": true,
+        "wrong effect refusal": true,
+        "wrong enforcing caller": true,
+        "foreclosed effect misclassified as prose-only": true,
+        "missing effect": true,
+        "wrong governing authority": true
+      },
+      "mutations": [
+        {
+          "predicate": "source-drift",
+          "old": "require(not drift, f\"scoped sources changed;",
+          "new": "require(True, f\"scoped sources changed;",
+          "selected_cases_failed": [
+            "changed cited requirement",
+            "changed evidence",
+            "new HEAD stale source",
+            "new boundary"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 24
+        },
+        {
+          "predicate": "boundary-population",
+          "old": "    check_population(units, mappings, \"governing units\")",
+          "new": "    pass  # released boundary population",
+          "selected_cases_failed": [
+            "missing arm",
+            "orphan arm",
+            "unmapped new unit after source repin"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 25
+        },
+        {
+          "predicate": "duplicate-key",
+          "old": "        require(key not in result, f\"duplicate JSON key: {key}\")",
+          "new": "        pass  # released JSON duplicate check",
+          "selected_cases_failed": [
+            "duplicate input key"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "prose-only-reason",
+          "old": "            text_field(row[\"rationale\"], f\"{unit} prose-only rationale\")",
+          "new": "            pass  # released prose-only rationale",
+          "selected_cases_failed": [
+            "missing prose-only rationale"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "refusal-binding",
+          "old": "require(clause == \"P-71-Q5\" and row[\"binding\"] == FORECLOSURE,",
+          "new": "require(clause == \"P-71-Q5\",",
+          "selected_cases_failed": [
+            "wrong effect refusal",
+            "wrong enforcing caller"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 26
+        },
+        {
+          "predicate": "typed-witness",
+          "old": "require(sources[path].count(witness) == 1,",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "missing refusal witness after source repin"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "required-foreclosure",
+          "old": "require(any(units[unit][0] == \"P-71-Q5\" and row[\"disposition\"] == \"typed-refusal\"\n                for unit, row in mappings.items()), \"P-71-Q5: typed refusal is required\")",
+          "new": "pass  # released the required foreclosure",
+          "selected_cases_failed": [
+            "foreclosed effect misclassified as prose-only"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "effect-population",
+          "old": "    check_population(effects, manifest[\"effects\"], \"declared effects\")",
+          "new": "    pass  # released effect population",
+          "selected_cases_failed": [
+            "missing effect",
+            "new HEAD remains unmapped after source repin"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 26
+        },
+        {
+          "predicate": "authority-subject",
+          "old": "require(authority == effect_authority(key)[0],",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "wrong governing authority"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "context-classification",
+          "old": "require(digest(\"\\n\".join(context_ids)) == context_sha256,",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "relabelled prohibition"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "missing-specification",
+          "old": "require(set(subjects) <= set(result), f\"{path}: missing specification subjects \"",
+          "new": "require(True, f\"{path}: missing specification subjects \"",
+          "selected_cases_failed": [
+            "missing cited requirement"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "reviewed-base",
+          "old": "require(manifest[\"reviewed_base\"] == REVIEWED_BASE,",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "rewritten reviewed base"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "reviewed-declared-inputs",
+          "old": "require(declaration_digest(pins) == declarations_sha256,",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "new HEAD exact source review still required after source repin",
+            "quoted method cannot be hidden by a repin",
+            "reordered properties cannot be hidden by a repin"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 25
+        },
+        {
+          "predicate": "route-method-population",
+          "old": "method: '([A-Z]+)'",
+          "new": "method: '(GET|POST)'",
+          "selected_cases_failed": [
+            "new HEAD cannot borrow GET authority",
+            "new HEAD remains unmapped after source repin"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 26
+        },
+        {
+          "predicate": "dynamic-shape-refusal",
+          "old": "require(len(rows) == len(ROUTE_PROPERTY.findall(body)),",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "dynamic method"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "indirect-shape-refusal",
+          "old": "require(len(mounted_pairs) == len(SPREAD_ROW.findall(route_array)),",
+          "new": "require(True,",
+          "selected_cases_failed": [
+            "extra spread"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        },
+        {
+          "predicate": "generated-bytes",
+          "old": "require(read(REGISTER) == output, \"generated register is stale; regenerate and review\")",
+          "new": "pass  # released generated byte comparison",
+          "selected_cases_failed": [
+            "stale generated bytes"
+          ],
+          "matched_present_input_passed": true,
+          "other_controls_passed": 27
+        }
+      ]
+    }
+  }
+}

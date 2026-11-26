@@ -191,6 +191,7 @@ async function serveBoundRepository(
       observerRevision: observer.revision,
       workingTreeDigest: repository.worktreeMetadataDigest,
       authority: observer.grant.authority,
+      ...(observer.grant.briefingResponseLimit === undefined ? {} : { briefingResponseLimit: observer.grant.briefingResponseLimit }),
       evidence: buildPocEvaluationEvidence(observer.evaluationInstant, repository.revision, repository.committerInstant, horizon),
     };
   };
@@ -263,7 +264,9 @@ async function serveBoundRepository(
           verbatim: admitsTransientReads
             ? verbatimRouteReader(current, gitBlobReaderFor(repoRoot))
             : () => ({ refused: 'unconsented-source-or-provider', detail: 'The current repository authority is unconfirmed. No source was read.' }),
-        }), servedResponses, () => credentialProvision, session.latest),
+        }), servedResponses, () => credentialProvision, session.latest, () => admitsTransientReads
+          ? session.briefingResponseLimit()
+          : undefined),
         ...deps.materializeRoutes({
           getModel: session.model,
           targetRepoRoot: repoRoot,

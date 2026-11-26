@@ -12,8 +12,7 @@ It has five scenarios and no obligation to account for each input block
 through an edit or repair stage.
 
 The [proposed complete replacement](proposed/polaris-generation/spec.md)
-adds the following clause. The current requirement has no corresponding
-clause.
+adds the following clause. The predecessor carried no corresponding clause.
 
 > Every generator edit or repair stage SHALL account for each block in its own
 > input draft exactly once with an action and a reason. A retained block is
@@ -34,8 +33,8 @@ removal and an accounted split distinct outcomes. It names the existing
 readiness effect for an unrepairable finding.
 
 [Inferred] The change is semantic. It adds a stage acceptance predicate,
-and preserves the existing readiness predicate. Adoption needs one new
-complete replacement in the current versioned composition. The counter's
+and preserves the existing readiness predicate. [Agent adoption A-208](../../../.syzygy/governance/decisions/AGENT-ADOPTIONS.md) installs the complete
+replacement in the versioned composition. The counter's
 current effective assertion and the product requirement reader must
 agree on that replacement. The two historic source files and their
 recorded bindings remain prior inputs. The earlier candidate status

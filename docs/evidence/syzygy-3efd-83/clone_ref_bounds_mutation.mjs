@@ -29,10 +29,10 @@ const NEW_CLONE = 'readBoundedFile(file, limit, { followLink: false }).toString(
 
 const MUTANTS = [
   // The shared reader: no-follow where asked, and its refusal named as no regular file.
-  ['reader-no-nofollow', READ, '(followLink ? 0 : fs.constants.O_NOFOLLOW)', '0'],
+  ['reader-no-nofollow', READ, '!followLink || privateFile ? flags | fs.constants.O_NOFOLLOW : flags', 'privateFile ? flags | fs.constants.O_NOFOLLOW : flags'],
   ['reader-eloop-not-mapped', READ, "if (!followLink && (cause as NodeJS.ErrnoException).code === 'ELOOP') throw new NotARegularFileError();", ''],
   ['reader-default-no-follow', READ, 'options.followLink ?? true', 'options.followLink ?? false'],
-  ['reader-drops-nonblock', READ, 'fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY | (followLink', 'fs.constants.O_RDONLY | fs.constants.O_NOCTTY | (followLink'],
+  ['reader-drops-nonblock', READ, 'const flags = fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY;', 'const flags = fs.constants.O_RDONLY | fs.constants.O_NOCTTY;'],
   // init: the clone HEAD resolver.
   ['head-follows-link', HEAD, '{ followLink: false }', '{ followLink: true }'],
   ['head-bound-wider', HEAD, 'readBoundedFile(file, limit,', 'readBoundedFile(file, limit + 1,'],

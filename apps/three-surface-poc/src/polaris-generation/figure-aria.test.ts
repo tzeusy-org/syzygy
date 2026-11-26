@@ -79,7 +79,7 @@ describe('figure accessible names: every aria reference resolves (syzygy-3efd.70
 
   it('names the drawing by its caption and describes it by its list, inside the one figure', () => {
     const index = renderLocalDossier(figureKindsInput()).files.get('index.html')!;
-    const figure = index.slice(index.indexOf('<figure data-hue="1"'), index.indexOf('</figure>', index.indexOf('<figure data-hue="1"')));
+    const figure = index.slice(index.indexOf('<figure data-visual-provenance="curated" data-figure-kind="sequence"'), index.indexOf('</figure>', index.indexOf('<figure data-visual-provenance="curated" data-figure-kind="sequence"')));
     expect(figure).toContain('<figcaption id="diagram-title-0">Handshake</figcaption>');
     expect(figure).toContain('role="img" aria-labelledby="diagram-title-0" aria-describedby="diagram-text-0"');
     expect(figure).toContain('<details><summary>Read every component and relationship</summary><div id="diagram-text-0"><ul>');

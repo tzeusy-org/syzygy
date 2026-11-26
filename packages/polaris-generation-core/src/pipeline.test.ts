@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { runGenerationPipeline, type AttemptInput, type AttemptOutcome, type PipelinePorts, type PipelineRequest, type ProviderReply } from './pipeline.js';
 import { createHash } from 'node:crypto';
-import { promptForStage } from './prompts.js';
+import { promptForStage, type GenerationStage } from './prompts.js';
 import { generationAnchorId, generationSourcesForBody, gitBlobObjectId, type GenerationSource } from './generation-source.js';
 
 const fixtureSource = (): GenerationSource => {
@@ -18,6 +18,17 @@ const request = (): PipelineRequest => ({
   budget: { maxCalls: 10, maxInputBytes: 200_000, maxOutputBytes: 20_000, maxUsageUnits: 100, maxElapsedMs: 10_000, maxRepairCycles: 1, accountingPolicy: 'synthetic-units-v1' },
   sources: [fixtureSource()], readerQuestions: [{ id: 'why', topics: [], text: 'Why does this project exist?' }], requestedAssets: [],
 });
+
+function scriptedReply(stage: GenerationStage, input: string, draft: unknown, blockIds: readonly string[] = []): ProviderReply {
+  const edit = { draft, changes: blockIds.map(blockId => ({ blockId, action: 'kept', reason: 'Fixture block.', newBlockIds: [] })) };
+  let value = draft;
+  if (stage === 'edit') value = edit;
+  if (stage === 'repair') {
+    const { findings } = JSON.parse(input).inputs as { findings: { id: string }[] };
+    value = { ...edit, findingDispositions: findings.map(({ id }) => ({ findingId: id, action: 'repaired', reason: 'Fixture repair.' })) };
+  }
+  return { body: JSON.stringify(value), model: 'synthetic-v1', usageUnits: 1 };
+}
 
 function harness() {
   const sends: { stage: string; input: string }[] = [];
@@ -38,9 +49,10 @@ function harness() {
     },
     permitted: async () => true, releaseUnsent: async () => undefined,
     responseSchema: stage => ({ version: 'test-record-v1', schema: { type: 'object', properties: { stage: { const: stage } }, required: ['stage'], additionalProperties: false } }),
-    generate: async input => { sends.push(input); return { body: JSON.stringify({ stage: input.stage }), model: 'synthetic-v1', usageUnits: 1 }; },
+    generate: async input => { sends.push(input); return scriptedReply(input.stage, input.input, { stage: input.stage }); },
     validate: (stage, data) => {
-      if (!data || typeof data !== 'object' || Object.keys(data).length !== 1 || (data as { stage?: unknown }).stage !== stage) throw Error('schema');
+      const value = (stage === 'edit' || stage === 'repair') ? (data as { draft?: unknown }).draft : data;
+      if (!value || typeof value !== 'object' || Object.keys(value).length !== 1 || (value as { stage?: unknown }).stage !== stage) throw Error('schema');
       return data;
     },
     record: async (_, outcome) => { outcomes.push(outcome.kind); fullOutcomes.push(outcome); },
@@ -191,7 +203,38 @@ describe('source to editorial draft pipeline', () => {
     const result = await runGenerationPipeline(request(), ports, signal());
     expect(result.status).toBe('awaiting-rendered-review');
     expect(h.sends.map(x => x.stage)).toEqual(['inventory', 'plan', 'author', 'edit', 'fidelity', 'repair', 'fidelity']);
-    expect(JSON.parse(h.sends[5]!.input).inputs.findings).toEqual(['unsupported edge']);
+    expect(JSON.parse(h.sends[5]!.input).inputs.findings).toEqual([{ id: 'finding-1-1', finding: 'unsupported edge' }]);
+  });
+
+  it('refuses a bare edit reply before marking the attempt complete', async () => {
+    const h = harness();
+    const result = await runGenerationPipeline(request(), { ...h.ports, validate: (_stage, value) => value,
+      generate: async input => input.stage === 'edit' ? { body: '{"stage":"edit"}', model: 'synthetic-v1', usageUnits: 1 } : h.ports.generate(input),
+    }, signal());
+    expect(result).toMatchObject({ status: 'stopped', reason: 'invalid-output' });
+    expect(result.artifacts.map(artifact => artifact.stage)).toEqual(['inventory', 'plan', 'author']);
+    expect(h.fullOutcomes.at(-1)).toMatchObject({ kind: 'invalid-output', reason: 'schema-rejected', detail: 'missing-editorial-account' });
+  });
+
+  it('retains an unchanged repair and its blocking disposition despite a clear subsequent review', async () => {
+    const h = harness();
+    let reviews = 0;
+    const finding = { target: 'body', severity: 'blocking', message: 'An omitted qualification is still unsupported.' };
+    const unchangedDraft = { stage: 'edit' };
+    const disposition = { findingId: 'finding-1-1', action: 'unrepairable', reason: 'The supplied sources do not support the qualification.' };
+    const result = await runGenerationPipeline(request(), { ...h.ports, validate: (_stage, value) => value,
+      fidelity: () => ++reviews === 1 ? { blocking: true, findings: [finding] } : { blocking: false, findings: [] },
+      generate: async input => input.stage === 'repair'
+        ? { body: JSON.stringify({ draft: unchangedDraft, changes: [], findingDispositions: [disposition] }), model: 'synthetic-v1', usageUnits: 1 }
+        : h.ports.generate(input),
+    }, signal());
+    expect(result).toMatchObject({ status: 'stopped', reason: 'repair-exhausted' });
+    expect(result.receipts.map(receipt => receipt.stage)).toEqual(['inventory', 'plan', 'author', 'edit', 'fidelity', 'repair', 'fidelity']);
+    expect(result.artifacts.find(artifact => artifact.stage === 'repair')).toEqual({ stage: 'repair',
+      value: { draft: unchangedDraft, changes: [], findingDispositions: [disposition] },
+      repairFindings: [{ id: 'finding-1-1', finding }],
+    });
+    expect(h.outcomes).toEqual(Array(7).fill('validated'));
   });
 
   it('refuses source failure, duplicate admissions and absent effect permission without sending', async () => {
@@ -311,7 +354,9 @@ describe('source to editorial draft pipeline', () => {
       const h = harness();
       const ports: PipelinePorts = { ...h.ports, validate: (_stage, data) => data,
         generate: async input => { h.sends.push(input); const stage = input.stage;
-          return { body: JSON.stringify(['author', 'edit', 'repair'].includes(stage) ? { stage, ...draftWith(quotes()) } : { stage }), model: 'synthetic-v1', usageUnits: 1 }; } };
+          return ['author', 'edit', 'repair'].includes(stage)
+            ? scriptedReply(stage, input.input, { stage, ...draftWith(quotes()) }, ['intro'])
+            : scriptedReply(stage, input.input, { stage }); } };
       return { h, ports };
     };
 
@@ -329,7 +374,24 @@ describe('source to editorial draft pipeline', () => {
       expect(result.status).toBe('awaiting-rendered-review');
       expect(h.sends.map(x => x.stage)).toEqual(['inventory', 'plan', 'author', 'edit', 'fidelity', 'repair', 'fidelity']);
       const repair = JSON.parse(h.sends[5]!.input).inputs;
-      expect(repair.findings).toEqual([expect.objectContaining({ severity: 'blocking', target: 'intro', message: expect.stringContaining('quote-not-in-cited-sources') })]);
+      expect(repair.findings).toEqual([{ id: 'finding-1-1', finding: expect.objectContaining({ severity: 'blocking', target: 'intro', message: expect.stringContaining('quote-not-in-cited-sources') }) }]);
+    });
+
+    it('retains a prior unrepairable quote disposition and marks only defects in the final quote', async () => {
+      let drafts = 0;
+      const { ports } = quoting(() => (++drafts <= 2 ? 'Remove recurring mental labor.' : 'Reduce recurring mental labor.'));
+      const disposition = { findingId: 'finding-1-1', action: 'unrepairable', reason: 'The original words cannot be verified.' };
+      const result = await runGenerationPipeline(request(), { ...ports, generate: async input => {
+        const reply = await ports.generate(input);
+        if (input.stage !== 'repair') return reply;
+        return { ...reply, body: JSON.stringify({ ...JSON.parse(reply.body), findingDispositions: [disposition] }) };
+      } }, signal());
+
+      expect(result).toMatchObject({ status: 'awaiting-rendered-review', quoteFindings: [] });
+      expect(result.artifacts.find(artifact => artifact.stage === 'repair')).toMatchObject({
+        value: { findingDispositions: [disposition] },
+        repairFindings: [{ id: 'finding-1-1', finding: { target: 'intro' } }],
+      });
     });
 
     it('does not stop the run when a misquote survives the last repair: it returns the finding for that block, and keeps the reviewer\'s own findings first in the repair input', async () => {
@@ -337,7 +399,7 @@ describe('source to editorial draft pipeline', () => {
       const result = await runGenerationPipeline(request(), { ...ports, fidelity: () => ({ blocking: false, findings: ['reviewer note'] }) }, signal());
       expect(result).toMatchObject({ status: 'awaiting-rendered-review', quoteFindings: [{ blockId: 'intro', kind: 'quote-not-in-cited-sources', quote: 'Remove recurring mental labor.' }] });
       const repair = JSON.parse(h.sends.find(x => x.stage === 'repair')!.input).inputs;
-      expect(repair.findings[0]).toBe('reviewer note');
+      expect(repair.findings[0]).toEqual({ id: 'finding-1-1', finding: 'reviewer note' });
       expect(repair.findings).toHaveLength(2);
     });
 
@@ -357,8 +419,8 @@ describe('source to editorial draft pipeline', () => {
       let n = 0;
       await runGenerationPipeline(request(), { ...ports, fidelity: () => ({ blocking: ++n === 1, findings: 'single note' }) }, signal());
       const repair = JSON.parse(h.sends.find(x => x.stage === 'repair')!.input).inputs;
-      expect(repair.findings[0]).toBe('single note');
-      expect(repair.findings[1]).toMatchObject({ target: 'intro' });
+      expect(repair.findings[0]).toEqual({ id: 'finding-1-1', finding: 'single note' });
+      expect(repair.findings[1]).toMatchObject({ id: 'finding-1-2', finding: { target: 'intro' } });
     });
   });
 

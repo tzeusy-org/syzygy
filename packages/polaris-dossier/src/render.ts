@@ -14,7 +14,7 @@ import { secretOrUnder } from './derive.js';
 import { BLOB_MODES } from './git-object-reader.js';
 import { witnessAtRender, witnessWords, type RelationType } from './relation-witness.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialFindings, credentialStepCheck, storedBriefArm, type CredentialBreachFinding, type CredentialStepResult } from './credential-probe.js';
-import { UNDERSTANDING_ITEMS, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, heroOf } from './draft-schema.js';
+import { UNDERSTANDING_ITEMS, WORTH_KNOWING_FIELD, WORTH_KNOWING_NONE_FIELD, hasFigureKindForm, hasRelationForm, hasSubsectionForm, hasThesisBasisForm, hasWithheldHeroIdentity, hasWorthKnowingForm, heroOf } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
@@ -521,16 +521,18 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   }))];
   // The cited lines behind each citation mark, by claim and source piece: a mark shows its file and lines on hover and focus (v1.5). These
   // are the draft's ranges, checked against the blob at this render; a withheld item's are never shown, since it cites no admitted piece.
-  const citationLines = new Map<string, Map<string, string>>();
+  const citationLines = new Map<string, Map<string, { start: number; end: number }[]>>();
   const cites = (claimId: string, value: Readonly<Record<string, unknown>>): string[] => {
-    const lines = new Map<string, string[]>();
+    const lines = new Map<string, { start: number; end: number }[]>();
     for (const citation of list(value['citations']).filter(isRecord)) {
       const [sourceId] = citedSources({ citations: [citation] });
       const startLine = citation['startLine'], endLine = citation['endLine'];
       if (sourceId === undefined || typeof startLine !== 'number' || typeof endLine !== 'number') continue;
-      lines.set(sourceId, [...(lines.get(sourceId) ?? []), startLine === endLine ? `line ${startLine}` : `lines ${startLine}\u2013${endLine}`]);
+      const ranges = lines.get(sourceId) ?? [];
+      if (!ranges.some(range => range.start === startLine && range.end === endLine)) ranges.push({ start: startLine, end: endLine });
+      lines.set(sourceId, ranges);
     }
-    if (lines.size > 0) citationLines.set(claimId, new Map([...lines].map(([sourceId, ranges]) => [sourceId, [...new Set(ranges)].join(', ')])));
+    if (lines.size > 0) citationLines.set(claimId, lines);
     return citedSources(value);
   };
   const anchorOf = (source: GenerationSource, start: number, end: number): EvidenceAnchor => ({
@@ -936,6 +938,16 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           return { paragraph: paragraph(step), ...(see === undefined ? {} : { see: { kind: see['kind'] === 'deep-dive' ? 'deep-dive' as const : 'section' as const, id: text(see['target'])! } }) };
         }),
       })) } : {}),
+      // A v13 draft's worth-knowing marks (version 2.26): the marked blocks of the sections' own paragraphs, where check admits the mark,
+      // and the Poles that say none was found. The reason a Pole gives is never rendered. Only a block the counted review found supported,
+      // rendering Inferred, neither withheld nor matched by a secret detector, is lifted into the callout; any other marked block stays
+      // in its section, as it renders there unmarked, so the callout never carries an Unknown or withheld claim under "Worth knowing".
+      ...(hasWorthKnowingForm(doc['schemaVersion']) ? { worthKnowing: {
+        blockIds: list(doc['sections']).filter(isRecord).flatMap((section) => list(section['paragraphs'])
+          .flatMap((entry) => (isRecord(entry) && entry[WORTH_KNOWING_FIELD] === true && typeof entry['id'] === 'string'
+            && liftable(blocks.get(entry['id'])) ? [entry['id']] : []))),
+        nonePoles: list(doc['poles']).flatMap((pole, index) => (isRecord(pole) && typeof pole[WORTH_KNOWING_NONE_FIELD] === 'string' ? [index] : [])),
+      } } : {}),
       counts: {
         uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
         withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,
@@ -945,6 +957,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     },
   };
 }
+
+/** Whether a block marked worth knowing is lifted into its page's callout (REQ-polaris-generation-034 version 2.26): it renders Inferred
+ * on the counted review's support, carries no judgement mark, is not a withheld item and matches no secret detector. */
+const liftable = (block: LocalBlock | undefined): boolean => block !== undefined && block.marking === 'inferred' && block.judgement === undefined
+  && block.withheld === undefined && block.secretMatched === undefined;
 
 /** The Syzygy-written short label over content that is all withheld (dossier spec v1.5). */
 export const WITHHELD_LABEL = 'Withheld item';

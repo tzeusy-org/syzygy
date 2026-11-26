@@ -210,7 +210,7 @@ export function shapeInput(shape: SyntheticShape): { readonly local: LocalRender
   return {
     sources: [source],
     local: {
-      citationLines: new Map([['introduction', new Map([[source.sourceId, 'line 1']])]]),
+      citationLines: new Map([['introduction', new Map([[source.sourceId, [{ start: 1, end: 1 }]]])]]),
       draft: {
         title: `The ${shape.name} dossier`,
         introduction: { id: 'introduction', text: 'intro', sourceIds: [source.sourceId] },

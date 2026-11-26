@@ -7,7 +7,7 @@ import { BUTLERS_POC_SEEDS, buildPocModel, type PocModel, type PocUnknown } from
 
 import { renderOrreryPage } from './orrery.js';
 import { renderPolarisPage } from './polaris.js';
-import { buildFixtureModel, fixtureRepoWithGit } from './test-model-fixture.js';
+import { buildFixtureModel, fixtureRepoWithGit, fixtureWorkItemQuery, FIXTURE_DOLT_REVISION } from './test-model-fixture.js';
 import { ADMITTING_AUTHORITY, projectShapeFixtureGit } from './test-project-shape-fixture.js';
 import { renderTrajectoryPage } from './trajectory.js';
 
@@ -198,7 +198,9 @@ beforeAll(() => {
     const changed = git(repoRoot, ['rev-parse', 'HEAD']);
     git(repoRoot, ['update-ref', 'refs/remotes/origin/main', changed]);
     git(repoRoot, ['symbolic-ref', 'refs/remotes/origin/HEAD', 'refs/remotes/origin/main']);
-    const rows = [{ revision: 'dolt-rev-2', id: 'bu-sweep-1', title: 'Materialized work item', status: 'in_progress', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
+    // POC-REQ-063: an absent title is withheld, so this board keeps the
+    // withheld-title disclosure in the population.
+    const rows = [{ revision: FIXTURE_DOLT_REVISION, id: 'bu-sweep-1', title: null, status: 'in_progress', issue_type: 'task', priority: 2, created_at: '2026-08-30T00:00:00Z', updated_at: '2026-08-30T00:00:00Z', closed_at: null }];
     models.set('worker-change', buildPocModel({
       seeds: BUTLERS_POC_SEEDS,
       repoRoot,
@@ -206,7 +208,7 @@ beforeAll(() => {
       observerRevision: revision,
       evaluation: { snapshot: 'butlers@worker-change', asOf: '2026-08-30T12:00:00Z' },
       materializationRecord: { beadId: 'bu-sweep-1', externalRef: 'syzygy-poc:work:whatsapp-single-event-normalization', targetRepoRoot: repoRoot, createdAt: '2026-08-30T00:00:00Z', doltRevisionAtCreation: 'dolt-rev-1', attribution: 'test-actor' },
-      runWorkItemQuery: (_root, sql) => sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: 'dolt-rev-2' }]),
+      runWorkItemQuery: fixtureWorkItemQuery(rows),
     }));
   }
 });
@@ -246,6 +248,14 @@ function model(name: string): PocModel {
 // with no work items each of the five answers is a reference to the
 // work-items notice and no disclosure: unreachable and
 // unsupported-repository keep 1 and 2, references 0 + 5.
+// syzygy-t3jk.23 (POC-REQ-063) admits screened titles: with every title
+// admitted the titles notice is no Unknown, so plain and observed-shape go
+// 6 → 5 and their cards' title marks become text (references 10 → 7);
+// worker-change's one title is withheld and keeps both.
+// syzygy-t3jk.26 (POC-REQ-065): plain and observed-shape serve two closed
+// items no fixture commit names, so the remains answer discloses their
+// Unknown landing once: 5 → 6. Their default page renders no closed card,
+// so no reference is added. worker-change's count does not move.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
   plain: { polaris: 21, trajectory: 6, orrery: 9 },
   'observed-shape': { polaris: 13, trajectory: 6, orrery: 9 },
@@ -255,10 +265,10 @@ const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> 
 };
 
 /** Trajectory's marks that refer to a board disclosure: three per rendered
- * card (title, governing intent, verification), one Unknown-provenance mark
+ * card (title while withheld, governing intent, verification), one Unknown-provenance mark
  * on an observed board, and five answer marks on a board with no work items. */
 const REFERENCES: Readonly<Record<string, number>> = {
-  plain: 16, 'observed-shape': 16, unreachable: 5, 'unsupported-repository': 5, 'worker-change': 4,
+  plain: 7, 'observed-shape': 7, unreachable: 5, 'unsupported-repository': 5, 'worker-change': 4,
 };
 
 describe('every surface Unknown carries a closed reason and a route (M4 slice 1, POC-REQ-060)', () => {

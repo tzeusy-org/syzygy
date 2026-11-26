@@ -81,6 +81,8 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
 const tree = (paths: readonly string[] = ['src/server.c']) => (): PinnedObjectReader => ({ listTree: async () => paths.map((p) => ({ path: p, mode: '100644' })) }) as unknown as PinnedObjectReader;
 const read = (run: string, name: string): string => fs.readFileSync(path.join(run, name), 'utf8');
 
+const TERMINOLOGY_ID_PARAGRAPH = 'For each term in `understanding.terminology`, write one item. Set its `id` to the term as a reader writes it, keeping capitalization and hyphens and replacing each space with one underscore. For example, use `append-only_file` for "append-only file" and `AOF` for "AOF". If the spelling has a literal underscore, the resulting ID is invalid, or the ID is already used elsewhere in the draft, choose a valid, unused ID and keep the exact term in the item\'s `statement`. For example, use an unused `io` as the ID for "I/O" and write "I/O" in the statement. Omit comma-separated lists. Keep `u-` if it is part of the term, as in `u-boot`, and do not add it as an ID prefix.';
+
 describe('brief: issued', () => {
   it.each(['repository', 'clone', 'visibility'] as const)('refuses a changed %s declaration after the brief binds its source', async field => {
     const run = runDirectory(); const ports = { sources: sources(), openReader: tree(), now: () => NOW };
@@ -97,14 +99,14 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v16', schemaVersion: 'polaris-dossier-local-draft-v10',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v21', schemaVersion: 'polaris-dossier-local-draft-v13',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
     expect(brief).toContain('Repository role: observed-source (Inferred); governance-root material keeps this same repository identity.');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (label-in-run-json)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v13\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -127,8 +129,8 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v16', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v10', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v21', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      schemaVersion: 'polaris-dossier-local-draft-v13', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -138,6 +140,19 @@ describe('brief: issued', () => {
       label: 'Inferred',
     });
     for (const name of ['brief.md', 'draft.schema.json', 'brief.json']) expect(fs.statSync(path.join(run, name)).mode & 0o777).toBe(0o600);
+  });
+
+  it('teaches the author one terminology item per term using its reader spelling', async () => {
+    const run = runDirectory();
+    const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
+    expect(result.ok).toBe(true);
+    const brief = read(run, 'brief.md');
+    expect(brief).toContain('## The understanding record\n\n');
+    const understanding = brief.split('## The understanding record\n\n')[1]!.split('\n\n## Voice')[0]!;
+    expect(understanding.split('\n\n')).toEqual([
+      expect.stringContaining('Before the argument, write `understanding`'),
+      TERMINOLOGY_ID_PARAGRAPH,
+    ]);
   });
 
   it('asks for task routes after the Poles: eight to fifteen reader tasks, each step citing the file and lines (the index-and-task-routes change)', async () => {
@@ -338,6 +353,10 @@ const TASK_ROUTES_PARAGRAPH = 'Write `taskRoutes`: 8 to 15 tasks a reader brings
 const SUBSECTIONS_PARAGRAPH = 'A section may also carry `subsections`, two to twelve, in reading order, when it answers more than one question. Each subsection has `id`, `title`, `answer` and `paragraphs`: `title` names the question in a short label; `answer` is one Inferred or Unknown claim block, with the members that form of a paragraph takes, whose `text` is one sentence that answers the question; and `paragraphs`, zero to thirty, hold what supports that answer, as a section\'s paragraphs do. Check counts a full stop, question mark or exclamation mark that a space follows, outside a quotation, as the end of a sentence, so write `for example`, not `e.g.`, in an answer. A section\'s own paragraphs open it, before its subsections. Syzygy renders each subsection under its own heading with its answer first, and lists the page\'s sections and subsections at the top of the page. A figure is never homed in a subsection, and a deep dive has none.';
 /** Brief v15's paragraph (version 2.19), copied by hand from the requirement's text. */
 const RELATION_TYPES_PARAGRAPH = 'Every arrow of a graph diagram (an item of `edges`) carries `relation`, the one relation it asserts: `contains`, `declares-dependency`, `needs-job`, `depends-on-service`, `calls`, `imports`, `reads`, `writes`, `sends-to`, `starts` or `relates-to`, the last where none of the others fits. A node may carry `unit`, the one part of the repository it is: `{"kind": "repository-root"}`, `{"kind": "top-level-directory", "path": "<directory name>"}`, `{"kind": "package-manifest", "path": "<path of a package.json, Cargo.toml, pyproject.toml or go.mod>"}`, `{"kind": "dependency-name", "name": "<name as declared>"}`, `{"kind": "workflow-job", "path": "<workflow path>", "job": "<job key>"}` or `{"kind": "compose-service", "path": "<Compose file path>", "service": "<service key>"}`. Give a node a unit only when it is exactly that unit; Syzygy never matches by label. Where Syzygy derives a fact of an arrow\'s exact relation between its two nodes\' units, it draws the arrow solid as Observed, in its own words; where its derivation is complete and holds no such fact, check reports a finding to repair. Today only `contains`, from the repository root to a top-level directory, can be witnessed.';
+// Brief v19's paragraph, as REQ-polaris-generation-034 version 2.26 states it (a literal, never imported from brief.ts).
+const WORTH_KNOWING_PARAGRAPH = 'Mark, in each Pole, one to three blocks worth knowing: set `worthKnowing` to true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is, such as a default, a limit, an ordering or a choice unlike that of similar projects. A marked block cites at least one source and is never a judgement; check refuses one that is not a section\'s own paragraph, cites nothing or carries the judgement mark. Three is a ceiling, never a quota: where no fact in a Pole meets that test, mark none and say why in that Pole\'s `worthKnowingNone`, which Syzygy never renders. Syzygy renders the marked blocks of a page in one callout headed "Worth knowing" near its top, each linked to its section, and says on a Pole\'s page when none was found; check advises a Pole that marks none without a reason, or more than three. A draft with no `poles` counts as one Pole and has no place to say why it marks none.';
+// Brief v21's paragraph, as REQ-polaris-generation-034 version 2.32 states it (a literal, never imported from brief.ts).
+const QUESTION_KINDS_PARAGRAPH = 'A newcomer asks six kinds of question about each major part of a project: `purpose` (what it is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) and `limits` (what it does not do and how it fails). In `questionKinds`, list each Inferred claim block that answers one: `{"blockId": "<the block\'s id>", "kinds": [...]}`, naming only the kinds it answers. Check counts these rows for the whole repository and for each top-level directory holding at least one twentieth of the files, a block counting for each such directory it cites a file inside, and advises the kinds no block answers there. It is advice, never a finding: write a block for a missing kind where the part has something to say, and never declare a kind a block does not answer. The rows are never rendered.';
 const SERVER_ONLY = ['Networking:', 'State and persistence:', 'Concurrency:', 'deployed and divided', '(server and'];
 const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ readonly run: string; readonly brief: string; readonly record: Record<string, unknown> }> => {
   const run = runDirectory(SUBJECT, configOf(), name);
@@ -347,15 +366,15 @@ const briefOf = async (paths: readonly string[], name = RUN_ID): Promise<{ reado
 };
 
 describe('brief: shape packs (version 2.4)', () => {
-  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph and task-routes section', async () => {
+  it('a server entry selects default@1 then server@1, and the brief is the v10 golden but for its version line, draft-schema line, thesis paragraph, figure-kinds paragraph, subsections paragraph, relation-types paragraph, hero paragraph, task-routes section, worth-knowing paragraph and question-kinds paragraph', async () => {
     const { run, brief, record } = await briefOf(['src/server.c', 'README.md']);
     const golden: string = JSON.parse(fs.readFileSync(BRIEF_V10_GOLDEN, 'utf8')).brief;
     const schemaSha = sha(read(run, 'draft.schema.json'));
     const lines = golden.split('\n');
     const swap = (from: string, to: string): void => { const at = lines.indexOf(from); expect(at).toBeGreaterThan(-1); lines[at] = to; };
-    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v16`');
+    swap('- Brief version: `polaris-dossier-brief-v10`', '- Brief version: `polaris-dossier-brief-v21`');
     swap('- Draft schema: `polaris-dossier-local-draft-v5`, in `draft.schema.json` beside this brief (sha256 `36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc`)',
-      `- Draft schema: \`polaris-dossier-local-draft-v10\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
+      `- Draft schema: \`polaris-dossier-local-draft-v13\`, in \`draft.schema.json\` beside this brief (sha256 \`${schemaSha}\`)`);
     const sections = lines.findIndex((line) => line.startsWith('Write one section per topic, in this order, each section\'s `id` the topic\'s id'));
     expect(sections).toBeGreaterThan(-1);
     // Brief v11 (version 2.4) added the thesis paragraph; brief v12 (version 2.5) the figure-kinds paragraph immediately after it.
@@ -366,6 +385,13 @@ describe('brief: shape packs (version 2.4)', () => {
     const understanding = lines.indexOf('## The understanding record');
     expect(lines[understanding - 2]!.startsWith('Divide the sections into Poles in `poles`')).toBe(true);
     lines.splice(understanding, 0, '## Task routes', '', TASK_ROUTES_PARAGRAPH, '');
+    // Brief v19 (version 2.26) added the worth-knowing paragraph immediately after the Poles paragraph.
+    lines.splice(lines.indexOf('## Task routes'), 0, WORTH_KNOWING_PARAGRAPH, '');
+    // Brief v21 (version 2.32) added the question-kinds paragraph immediately after the worth-knowing paragraph.
+    lines.splice(lines.indexOf('## Task routes'), 0, QUESTION_KINDS_PARAGRAPH, '');
+    const understandingParagraph = lines.indexOf('## The understanding record') + 2;
+    expect(lines[understandingParagraph]).toContain('Before the argument, write `understanding`');
+    lines.splice(understandingParagraph + 2, 0, TERMINOLOGY_ID_PARAGRAPH, '');
     expect(brief).toBe(lines.join('\n'));
     expect(schemaSha).not.toBe('36320b3ee0ce3a85ef4b9148db5aa5e7c4689a1746a6d6cf21110dfb99538dcc');
     expect(record['readerStandards']).toEqual({ version: 'polaris-reader-standards-v1', sha256: V1_SHA });

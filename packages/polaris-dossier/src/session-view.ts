@@ -77,15 +77,25 @@ export function viewFor(inputs: ViewInputs): ViewSpec {
 
 export const viewSha256 = (spec: ViewSpec): string => sha256(JSON.stringify(spec));
 
+/** The physical host binds, in the same order bubblewrap applies them. */
+export function viewBinds(spec: ViewSpec): readonly {
+  readonly option: '--ro-bind-try' | '--ro-bind' | '--bind';
+  readonly path: string;
+}[] {
+  return [
+    ...SYSTEM_READ_ONLY.map(path => ({ option: '--ro-bind-try' as const, path })),
+    ...spec.readOnly.map(path => ({ option: '--ro-bind' as const, path })),
+    ...spec.readWrite.map(path => ({ option: '--bind' as const, path })),
+    ...spec.readOnlyOver.map(path => ({ option: '--ro-bind' as const, path })),
+  ];
+}
+
 /** The bubblewrap argument list that builds the view, ending before the command it runs. */
 export function bwrapArgs(spec: ViewSpec): string[] {
   const args = ['--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
     '--dev', '/dev', '--proc', '/proc', '--tmpfs', '/tmp',
     '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib', '--symlink', 'usr/lib64', '/lib64', '--symlink', 'usr/sbin', '/sbin'];
-  for (const dir of SYSTEM_READ_ONLY) args.push('--ro-bind-try', dir, dir);
-  for (const dir of spec.readOnly) args.push('--ro-bind', dir, dir);
-  for (const dir of spec.readWrite) args.push('--bind', dir, dir);
-  for (const dir of spec.readOnlyOver) args.push('--ro-bind', dir, dir);
+  for (const bind of viewBinds(spec)) args.push(bind.option, bind.path, bind.path);
   for (const [key, value] of Object.entries(spec.env)) args.push('--setenv', key, value);
   args.push('--chdir', spec.cwd);
   return args;

@@ -60,12 +60,19 @@ export function readFileAsSized(file: string): Buffer {
   return readRegularFile(file, (size) => size, true, false);
 }
 
-function readRegularFile(file: string, boundOf: (size: number) => number, followLink: boolean, refuseGrowth: boolean): Buffer {
-  // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open. O_NOFOLLOW, where asked: a link at
-  // the path is refused by the open itself (ELOOP), so no link swapped in after any earlier look at the path is followed.
+/** A private evaluator file cannot be a symlink, share an inode, or grant group/other access. */
+export function readPrivateBoundedFile(file: string, maxBytes: number): Buffer {
+  return readRegularFile(file, () => maxBytes, true, false, true);
+}
+
+function readRegularFile(file: string, boundOf: (size: number) => number, followLink: boolean, refuseGrowth: boolean, privateFile = false): Buffer {
+  // O_NOCTTY: a terminal device at the path never becomes this process's controlling terminal on open. O_NOFOLLOW, where asked or for a
+  // private file: a link at the path is refused by the open itself (ELOOP), so no link swapped in after any earlier look at the path is
+  // followed. Only a no-follow read reports that refusal as no regular file; a private file's ELOOP is the open's own error.
+  const flags = fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY;
   let fd: number;
   try {
-    fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NONBLOCK | fs.constants.O_NOCTTY | (followLink ? 0 : fs.constants.O_NOFOLLOW));
+    fd = fs.openSync(file, !followLink || privateFile ? flags | fs.constants.O_NOFOLLOW : flags);
   } catch (cause) {
     if (!followLink && (cause as NodeJS.ErrnoException).code === 'ELOOP') throw new NotARegularFileError();
     throw cause;
@@ -73,6 +80,7 @@ function readRegularFile(file: string, boundOf: (size: number) => number, follow
   try {
     const stats = fs.fstatSync(fd);
     if (!stats.isFile()) throw new NotARegularFileError();
+    if (privateFile && (stats.nlink !== 1 || (stats.mode & 0o077) !== 0)) throw new Error('file is not private');
     const maxBytes = boundOf(stats.size);
     if (stats.size > maxBytes) throw new PastBoundError(maxBytes);
     const limit = (refuseGrowth ? stats.size : maxBytes) + 1;

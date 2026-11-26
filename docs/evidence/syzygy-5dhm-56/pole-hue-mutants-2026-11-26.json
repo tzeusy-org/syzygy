@@ -1,0 +1,122 @@
+{
+  "bead": "syzygy-5dhm.56",
+  "rule": "AGENTS.md verification rule 6",
+  "commit": "e5388d6d000739cc65ee23304cdbdaa44e97309b",
+  "test": "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts --reporter=json",
+  "mutants": [
+    {
+      "id": "M1-card-position-hue",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "[data-hue=\"1\"]{--accent:var(--h1);--accent-tint:var(--h1t)}",
+      "new": "[data-hue=\"1\"],ul.cards>li.card:nth-child(6n+1){--accent:var(--h1);--accent-tint:var(--h1t)}",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole",
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) colours nothing by its position: no positional selector on any page sets a hue"
+      ]
+    },
+    {
+      "id": "M2-accent-fallback-coloured",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "--accent:var(--muted);--accent-tint:var(--d-surface-2)}",
+      "new": "--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole"
+      ]
+    },
+    {
+      "id": "M3-figure-position-hue",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${curated}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class=\"diagram-relationship\"><span class=\"eyebrow\">${escape(d.kind)}</span>",
+      "new": "${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}${curated}${local === undefined ? '' : ` id=\"figure-${escape(d.id)}\"`}><figcaption${ids.title}>${escape(d.title)}</figcaption><p class=\"diagram-relationship\"><span class=\"eyebrow\">${escape(d.kind)}</span>",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) colours a Pole page, and its why section on the landing page, by its Pole; a figure carries no hue of its own (syzygy-5dhm.56)",
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives a card, a figure and an eyebrow their Pole's hue wherever they are drawn, and nothing in no Pole a hue"
+      ]
+    },
+    {
+      "id": "M4-landing-section-no-hue",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${topicAttr(section.id)}${from.startsWith('poles/') ? '' : sectionHue(section.id)}>${head}${local === undefined",
+      "new": "${topicAttr(section.id)}>${head}${local === undefined",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5) colours a Pole page, and its why section on the landing page, by its Pole; a figure carries no hue of its own (syzygy-5dhm.56)",
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives a card, a figure and an eyebrow their Pole's hue wherever they are drawn, and nothing in no Pole a hue"
+      ]
+    },
+    {
+      "id": "M5-deep-dive-no-hue",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${topicAttr(dive.id)}${sectionHue(dive.sectionId)}>",
+      "new": "${topicAttr(dive.id)}>",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives a card, a figure and an eyebrow their Pole's hue wherever they are drawn, and nothing in no Pole a hue"
+      ]
+    },
+    {
+      "id": "M6-eyebrow-not-pole",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".eyebrow{color:var(--accent)}",
+      "new": "",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole"
+      ]
+    },
+    {
+      "id": "M7-card-label-decorative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "font-weight:${tokens.type.strongWeight};color:var(--accent)}`\n  + `details.details",
+      "new": "font-weight:${tokens.type.strongWeight};color:var(--cyan)}`\n  + `details.details",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole"
+      ]
+    },
+    {
+      "id": "M8-worth-knowing-no-hue",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "<div class=\"worth-knowing-item\"${from.startsWith('poles/') ? '' : sectionHue(section.id)}>",
+      "new": "<div class=\"worth-knowing-item\">",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives a worth-knowing block the landing page borrows from the why section its Pole's hue"
+      ]
+    },
+    {
+      "id": "M9-callout-important-decorative",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".callout-important{--c:var(--accent);--t:var(--accent-tint)}",
+      "new": ".callout-important{--c:var(--cyan);--t:var(--d-accent-tint)}",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) keeps every hue legible in both themes: as text on the page, a panel and its own tint, and the neutral accent outside every Pole"
+      ]
+    },
+    {
+      "id": "M10-pole-hue-by-section-position",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "pole.sections.map(id => [id, pole.hue] as const)",
+      "new": "pole.sections.map((id, i) => [id, i % HUES + 1] as const)",
+      "outcome": "killed",
+      "testsRun": 38,
+      "failedTests": [
+        "colour: a hue names a Pole and nothing else, never a position (syzygy-pdja.14, syzygy-5dhm.56) gives a card, a figure and an eyebrow their Pole's hue wherever they are drawn, and nothing in no Pole a hue"
+      ]
+    }
+  ]
+}

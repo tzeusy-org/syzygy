@@ -167,6 +167,11 @@ npm ci && npm run poc -- --repo /home/tze/GitHub/butlers
 
 - The daemon binds only to loopback and prints the human URL plus the
   authenticated machine endpoint and credential-file location.
+- Read the complete machine answer with `GET /api/poc`. To inspect one
+  project-shape claim from that answer, send
+  `GET /api/poc/briefing?for=<full-claim-id>` with the same machine credential.
+  URL-encode the full ID. The briefing is available only with a verified
+  registry ceiling and has its own 20,480-byte response limit.
 - [`docs/THREE-SURFACE-POC.md`](docs/THREE-SURFACE-POC.md) has the
   ten-minute walkthrough, the implemented materialization/observation/evidence
   paths, and the relationships that remain deliberately absent.

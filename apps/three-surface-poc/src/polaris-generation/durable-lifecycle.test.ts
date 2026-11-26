@@ -23,10 +23,12 @@ function fixture(stateDir: string, sends: string[], options: { readonly failFide
     verifySources: async () => true, permitted: async () => true,
     responseSchema: stage => { if (stage === 'fidelity' && options.failFidelitySchema) throw new Error('scripted reviewer unavailable');
       return { version: 'fixture-schema-v1', schema: { stage } }; },
-    validate: (stage, value) => { if ((value as { stage?: unknown }).stage !== stage) throw new Error('schema'); return value; },
+    validate: (stage, value) => { const record = stage === 'edit' ? (value as { draft: unknown }).draft : value;
+      if ((record as { stage?: unknown }).stage !== stage) throw new Error('schema'); return value; },
     fidelity: () => ({ blocking: false, findings: [] }),
     scriptedGenerate: async input => { sends.push(input.stage); await options.generate?.(input.stage);
-      return { body: JSON.stringify({ stage: input.stage }), model: 'scripted-v1', usageUnits: 1 }; },
+      const draft = { stage: input.stage };
+      return { body: JSON.stringify(input.stage === 'edit' ? { draft, changes: [] } : draft), model: 'scripted-v1', usageUnits: 1 }; },
   });
 }
 

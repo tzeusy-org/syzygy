@@ -4,7 +4,7 @@
 // The machine answer is `GET /api/poc`'s body, `JSON.stringify(model)`
 // (routes.ts); the human channel is the served Trajectory page. Both
 // denominators are this checker's own enumerations: the served items read
-// from the answer, and the cards read from the page. The reason and its
+// from the answer, and the distinct item ids read from the page. The reason and its
 // route are typed here from RFC2-24 (`RFC-0002/rendering-vocabularies.md`,
 // row 10); the expected encoding is POC-REQ-060's checked-in table, pinned
 // to its literal class below; the fixture title is this file's own.
@@ -96,8 +96,8 @@ function violations(answer: Obj, html: string): string[] {
     if (governedBy.label !== 'Unknown') found.push(`${id}: governedBy is ${String(governedBy.label)}, not Unknown`);
     if (governedBy.closedReason !== REASON) found.push(`${id}: reason ${String(governedBy.closedReason)}`);
     if (routes.length !== 1 || routes[0]?.reason !== REASON || routes[0]?.route !== ROUTE) found.push(`${id}: route is not RFC2-24's for ${REASON}`);
-    // The title is the checker's own fixture row's: the answer serves none
-    // (SEC-5, syzygy-jytt).
+    // The title is the checker's own fixture row's; it is served as the
+    // item's title (POC-REQ-063), never as its governing intent.
     const title = FIXTURE_TITLES.get(id) ?? '';
     for (const identifier of title.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b/g) ?? []) {
       if (JSON.stringify(governedBy).includes(identifier)) found.push(`${id}: governedBy names ${identifier} from its title`);
@@ -106,11 +106,15 @@ function violations(answer: Obj, html: string): string[] {
   }
   if (unknowns !== items.length) found.push(`machine: ${unknowns} of ${items.length} served items carry the Unknown`);
   if (work.governedByUnknownCount !== unknowns) found.push(`machine count ${String(work.governedByUnknownCount)} differs from the enumerated ${unknowns}`);
-  // No title is served, so no served field may hold the title's identifier.
-  const titleHolders = leaves(answer).filter(([, value]) => typeof value === 'string' && value.includes(TITLE_IDENTIFIER)).map(([path]) => path);
+  // POC-REQ-063 serves an admitted title as the item's own `title.text`;
+  // no other served field may hold the title's identifier.
+  const titleHolders = leaves(answer)
+    .filter(([path, value]) => typeof value === 'string' && value.includes(TITLE_IDENTIFIER) && !/^workItems\.items\[\d+\]\.title\.text$/.test(path))
+    .map(([path]) => path);
   for (const path of titleHolders) found.push(`${path} names ${TITLE_IDENTIFIER}`);
 
   const rendered = cards(html);
+  const renderedItems = new Set(rendered.map((card) => card.id)).size;
   const regionHtml = region(html);
   if (regionHtml === undefined) {
     found.push('no count region');
@@ -120,7 +124,7 @@ function violations(answer: Obj, html: string): string[] {
     const outside = figure(regionHtml, 'governed-by-unknown-outside');
     if (count !== unknowns) found.push(`Trajectory count ${String(count)} differs from the enumerated ${unknowns}`);
     if (count !== work.governedByUnknownCount) found.push(`the channels serve different counts: ${String(count)} and ${String(work.governedByUnknownCount)}`);
-    if (inside !== rendered.length) found.push(`inside ${String(inside)} differs from the ${rendered.length} rendered cards`);
+    if (inside !== renderedItems) found.push(`inside ${String(inside)} differs from the ${renderedItems} rendered items`);
     if (inside === undefined || outside === undefined || inside + outside !== count) found.push(`inside ${String(inside)} plus outside ${String(outside)} differs from ${String(count)}`);
     const words = text(regionHtml);
     if (!words.includes(REASON)) found.push('count region lacks the reason');
@@ -142,8 +146,8 @@ function violations(answer: Obj, html: string): string[] {
   return found;
 }
 
-// Two open items (one titled with a requirement identifier) and 52 closed:
-// the selection keeps the 50 most recently closed, so two fall outside it.
+// Two non-closed items (one titled with a requirement identifier) and 52 closed.
+// The default outline places the two non-closed items.
 function rows(): Record<string, unknown>[] {
   const out: Record<string, unknown>[] = [
     { ...fixtureWorkItemRow(TITLED_ITEM, 'open', '2026-08-01T00:00:00Z', '2026-08-02T00:00:00Z', null), title: FIXTURE_TITLES.get(TITLED_ITEM) },
@@ -185,13 +189,13 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     expect(EPISTEMIC_ENCODING.filter((entry) => entry.label !== 'Unknown').map((entry) => entry.className)).toEqual(OTHER_STATE_CLASSES);
   });
 
-  it('serves 54 of 54 with the Unknown on both channels; Trajectory shows 52 inside and 2 outside', () => {
+  it('serves 54 of 54 with the Unknown on both channels and shows 2 inside the outline and 52 outside', () => {
     expect(items(answer)).toHaveLength(54);
-    expect(cards(html)).toHaveLength(52);
+    expect(cards(html).map((card) => card.id)).toEqual(['bu-open2', 'bu-titled']);
     const regionHtml = region(html) ?? '';
     expect(figure(regionHtml, 'governed-by-unknown-count')).toBe(54);
-    expect(figure(regionHtml, 'governed-by-unknown-inside')).toBe(52);
-    expect(figure(regionHtml, 'governed-by-unknown-outside')).toBe(2);
+    expect(figure(regionHtml, 'governed-by-unknown-inside')).toBe(2);
+    expect(figure(regionHtml, 'governed-by-unknown-outside')).toBe(52);
     expect(violations(answer, html)).toEqual([]);
   });
 
@@ -205,18 +209,18 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     }
   });
 
-  // SEC-5 (syzygy-jytt): the read row carries the title, the observation
-  // never selects or serves it, so the counterexample now shows nothing
-  // served naming the identifier at all, on either channel.
-  it('a read row titled "Implement POC-REQ-010" yields the same Unknown, and nothing served names POC-REQ-010', () => {
+  // POC-REQ-063 (syzygy-t3jk.23): the read row's title is admitted and
+  // served as the item's title, and only there: its identifier never
+  // becomes the governing intent, on either channel.
+  it('a read row titled "Implement POC-REQ-010" yields the same Unknown, and names POC-REQ-010 only as its title', () => {
     const titled = items(answer).find((item) => item.id === TITLED_ITEM);
     expect(titled).toBeDefined();
-    expect(titled).not.toHaveProperty('title');
+    expect(titled?.title).toEqual({ text: 'Implement POC-REQ-010' });
     expect(titled?.governedBy).toEqual(items(answer).find((item) => item.id === 'bu-open2')?.governedBy);
-    expect(JSON.stringify(answer)).not.toContain('POC-REQ-010');
+    expect(JSON.stringify(answer).split('POC-REQ-010').length - 1).toBe(1);
     const card = cards(html).find((entry) => entry.id === TITLED_ITEM);
-    expect(card?.body).toBeDefined();
-    expect(html).not.toContain('POC-REQ-010');
+    expect(card?.body).toContain('<bdi class="wi-name" data-parity-field="work-item-title">Implement POC-REQ-010</bdi>');
+    expect(html.split('POC-REQ-010').length - 1).toBe(1);
   });
 
   it('the count region reads, as text alone, the reason, the route and the warrant statement', () => {
@@ -226,9 +230,9 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     expect(words).toContain("Supplying an item's warrant resolves its governing intent.");
   });
 
-  it('the narrowed board lists exactly the 52 rendered cards', () => {
+  it('the narrowed outline keeps both rendered cards', () => {
     expect(narrowed(html)).toEqual(cards(html).map((card) => card.id));
-    expect(narrowed(html)).toHaveLength(52);
+    expect(narrowed(html)).toHaveLength(2);
     expect(html).toContain('<input type="checkbox" class="narrow-toggle" id="narrow-governing-intent-unknown">');
   });
 
@@ -281,8 +285,8 @@ describe('POC-REQ-014: every work item\'s governing intent renders as a counted 
     const pageCases: readonly [string, (page: string) => string, RegExp][] = [
       ['a Trajectory miscount', (p) => p.replace('data-parity-field="governed-by-unknown-count">54<', 'data-parity-field="governed-by-unknown-count">53<'), /Trajectory count 53 differs/],
       ['channels that disagree', (p) => p.replace('data-parity-field="governed-by-unknown-count">54<', 'data-parity-field="governed-by-unknown-count">55<'), /the channels serve different counts/],
-      ['an inside figure that is not the rendered selection', (p) => p.replace('data-parity-field="governed-by-unknown-inside">52<', 'data-parity-field="governed-by-unknown-inside">54<'), /inside 54 differs from the 52 rendered cards/],
-      ['inside plus outside that misses the count', (p) => p.replace('data-parity-field="governed-by-unknown-outside">2<', 'data-parity-field="governed-by-unknown-outside">0<'), /plus outside 0 differs from 54/],
+      ['an inside figure that is not the rendered selection', (p) => p.replace('data-parity-field="governed-by-unknown-inside">2<', 'data-parity-field="governed-by-unknown-inside">54<'), /inside 54 differs from the 2 rendered items/],
+      ['inside plus outside that misses the count', (p) => p.replace('data-parity-field="governed-by-unknown-outside">52<', 'data-parity-field="governed-by-unknown-outside">0<'), /plus outside 0 differs from 54/],
       ['a region missing the reason', (p) => p.replace(/(data-parity-field="work-item-governed-by-count"[\s\S]*?)Reason: <code>source-uncaptured-or-unreachable<\/code>\./, '$1Reason: none.'), /lacks the reason$/],
       ['a region missing the route', (p) => p.replace(/(data-parity-field="work-item-governed-by-count"[\s\S]*?)Repair the observer\/source; new snapshot/, '$1Repair it'), /lacks the route$/],
       ['a region missing the resolution statement', (p) => p.replace("Supplying an item's warrant resolves its governing intent.", ''), /warrant resolution statement/],

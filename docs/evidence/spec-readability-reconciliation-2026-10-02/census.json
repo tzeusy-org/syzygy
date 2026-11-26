@@ -275,8 +275,8 @@
       }
     },
     "POC": {
-      "requirements": 28,
-      "scenarios": 43,
+      "requirements": 32,
+      "scenarios": 61,
       "members": {
         "POC-REQ-001": {
           "name": "Code-structure observation is bound to an exact revision",
@@ -392,6 +392,8 @@
           "name": "Trajectory declares its scope and denominator",
           "scenarios": [
             "Bounded board over a large history",
+            "Items grouped under their parents",
+            "Recent work remains reachable",
             "Every item reachable by state and page"
           ]
         },
@@ -408,7 +410,9 @@
           "scenarios": [
             "Five answers before the board",
             "A merged materialized item enters the chain",
-            "Work items not observed"
+            "Work items not observed",
+            "What changed in the last day",
+            "A window the history cannot answer"
           ]
         },
         "POC-REQ-045": {
@@ -459,6 +463,40 @@
           "name": "The accessibility floor holds on every surface",
           "scenarios": [
             "Keyboard-only reading"
+          ]
+        },
+        "POC-REQ-062": {
+          "name": "Trajectory derives eligibility from revision-bound dependencies",
+          "scenarios": [
+            "Complete revision with a known blocker and a ready item",
+            "Observed empty and unavailable dependencies",
+            "Missing work-item revision prevents dependency observation",
+            "A blocked card retains a known cause alongside an unsettled edge",
+            "Unsettled edge metadata is counted without disclosing input strings",
+            "Planned, blocked without cause, and statuses outside derived eligibility",
+            "Blocker reaches its card across pages"
+          ]
+        },
+        "POC-REQ-063": {
+          "name": "Work-item titles render under the declared, screened title policy",
+          "scenarios": [
+            "Clean titles are shown",
+            "A title that fails screening is withheld",
+            "Every list names an item with its title"
+          ]
+        },
+        "POC-REQ-064": {
+          "name": "Work items join the observed repository's commits by exact identifier tokens",
+          "scenarios": [
+            "Commits that name an item join it",
+            "A history that cannot be read is Unknown"
+          ]
+        },
+        "POC-REQ-065": {
+          "name": "Trajectory renders closed work that merged apart from closed work no commit names",
+          "scenarios": [
+            "Closed items read merged by naming convention or closed with no naming commit",
+            "Closed landings are Unknown when the history cannot be read"
           ]
         }
       }
@@ -619,7 +657,7 @@
     },
     "POLARIS": {
       "requirements": 39,
-      "scenarios": 524,
+      "scenarios": 567,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -689,7 +727,8 @@
             "Revision after confirmation",
             "Source trade-off omitted entirely",
             "Omitted material qualification",
-            "New evidence outside the current budget or authority"
+            "New evidence outside the current budget or authority",
+            "Edit or repair drops a prior block without account"
           ]
         },
         "REQ-polaris-generation-007": {
@@ -1001,7 +1040,16 @@
             "Verify gives each claim one of six outcomes",
             "Verify never reads or names a withheld path",
             "Verify's quotation check is check's",
-            "Verify writes nothing into a run"
+            "Verify writes nothing into a run",
+            "The run record names the question file",
+            "Synthetic hold-out checks cover selected packets and supervised mounts",
+            "Scripted answers round-trip with their frozen comparison run",
+            "The scripted grader receives only the blind fact projection",
+            "The scripted benchmark refuses invalid custody or a changed binding",
+            "A close record carries bounded step-derived measures",
+            "Both close projections use the same bounded snapshot",
+            "Missing or refused observations remain Unknown",
+            "Review rounds pair only within the observed kind and order"
           ]
         },
         "REQ-polaris-generation-034": {
@@ -1199,7 +1247,34 @@
             "Nesting challenged where coverage is complete",
             "Nesting of other units is Unknown, never a finding",
             "Earlier schema keeps its bytes",
-            "Brief v17 states the containment kind"
+            "Brief v17 states the containment kind",
+            "Two views share one element",
+            "Migration renders the same figures",
+            "View naming a missing element refused",
+            "View showing a relationship without its ends refused",
+            "Element parents that loop refused",
+            "Element type disagreeing with its unit refused",
+            "Derived relationship stated by Syzygy",
+            "Derived relationship with nothing to derive it refused",
+            "Element no view shows refused",
+            "Schema v11 and earlier keep their bytes",
+            "Derived relationship Syzygy cannot derive drawn Unknown",
+            "Findings beside a schema finding not computed",
+            "Shared element in a later containment and a witnessed relationship",
+            "Brief v18 states the system model",
+            "A worth-knowing block leads its page",
+            "A marked block that does not render Inferred stays in its section",
+            "A Pole with none found",
+            "A misplaced, uncited or judged mark refused",
+            "Count advice without a quota",
+            "A pre-v13 draft keeps its bytes",
+            "Brief v19 and inventory brief v4 ask for the facts",
+            "Brief v20 teaches reader-spelled terminology IDs",
+            "Unit with no change block advised",
+            "Unit answering all six kinds is not advised",
+            "Nothing declared is Unknown",
+            "Declarations in an earlier schema",
+            "Brief v21 teaches the six kinds"
           ]
         },
         "REQ-polaris-generation-035": {
@@ -1244,7 +1319,13 @@
             "Supervised packet delivery uses only admitted MCP tools",
             "Review files read under their bounds",
             "Frozen verdict past its bound",
-            "Delivered packet read under its recorded size"
+            "Delivered packet read under its recorded size",
+            "Fidelity review waits for an entry without an outcome",
+            "The review proceeds once every entry has an outcome",
+            "Earlier drafts and withheld entries do not hold the review",
+            "The supervisor tells the author once",
+            "A failed author notice leaves the packet held",
+            "The bounded supervisor notice preserves the repair"
           ]
         },
         "REQ-polaris-generation-036": {

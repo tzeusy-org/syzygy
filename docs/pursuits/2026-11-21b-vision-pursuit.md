@@ -151,9 +151,9 @@ stays inside the ceilings.
 
 **Six moves were added** (R23 to R28, described under "Ranked moves"), and both reviewers'
 faults were applied. The most serious: the dossier's author would have read the same question
-file the benchmark grades on, while the plain session met those questions cold. The graded
-questions, depth list and reader tasks are now held out of every authoring session, and check
-asserts their absence.
+file the benchmark grades on, while the plain session met those questions cold. R1 therefore requires separately frozen graded questions, depth facts and reader tasks
+outside the authoring views. The question-file slice checks synthetic role texts and mount
+boundaries. The published Redis pilot remains available as historical regression evidence.
 
 **The first measurements were taken**, over the six stored Redis runs, with no new run and
 nothing sent anywhere. The record with predicates, denominators and the digest of every file
@@ -652,6 +652,225 @@ implementation (`d2b84f57`), "after" is the code after its review corrections (`
 - [Inferred] The dossier's quotations are under-counted: `scripts/dossier_site_to_text.py` drops
   the quote marks around its rendered quotations. The dossier's 17 missing paths are mostly its
   own pages and generator files. Neither arm's figures say whether an unquoted claim is true.
+
+## R16 slice 1: the corpus, written before any pass (2026-11-24)
+
+Bead syzygy-5dhm.74. The corpus, the mechanism-version definition, the pass budget and the
+generality pass rule are one sealed file, `docs/polaris-generation/dossier-corpus-v1.json`,
+written before any corpus pass has run (none can until syzygy-k54o.3 and the runner,
+syzygy-5dhm.75, land). `node scripts/dossier_corpus.mjs --check` validates it and
+`packages/polaris-dossier/src/corpus.test.ts` holds its seal as a literal, so editing the rule
+fails a check; a changed rule is a new file, `dossier-corpus-v2.json`, with its own adoption
+row, and applies only to passes that start after it.
+
+[Observed] Fourteen entries, chosen by tree listing and public metadata only (no body read,
+nothing cloned). Each survey is the script's `--survey` output on 2026-11-24, which applies the
+structure record's own rules to the listing; the tier is a selection label over listed blob
+bytes (XS under 256 KiB, S under 4 MiB, M under 16 MiB, L under 128 MiB), not the scale
+ladder's tier, which is not built.
+
+| Id | Repository | Commit | Shape | Strata it fills | Tier | Server trait |
+|---|---|---|---|---|---|---|
+| C01 | redis/redis | `498ecd0d` | C server, data store | cost-baseline anchor | L | yes |
+| C02 | psf/requests | `6e83187b` | Python library | | M | no |
+| C03 | BurntSushi/ripgrep | `e89fff89` | Rust CLI workspace | | S | no |
+| C04 | caddyserver/caddy | `edcdfa0e` | Go server | | M | yes |
+| C05 | excalidraw/excalidraw | `9c2e462e` | TypeScript web app workspace | | L | no |
+| C06 | kubernetes/kubernetes | `43cbb94e` | Go large monorepo | large monorepo | XL | yes |
+| C07 | terraform-aws-modules/terraform-aws-vpc | `577ad620` | Terraform module | infrastructure-only | S | no |
+| C08 | github/gitignore | `eeb775f7` | data-only templates | data or documentation only | XS | no |
+| C09 | rust-lang/rfcs | `f43d5789` | documentation-only design records | data or documentation only | M | no |
+| C10 | dromara/hutool | `87ec1186` | Java library workspace, Chinese docs | non-English documentation | M | no |
+| C11 | torvalds/pesconvert | `d6d7001b` | C tool, no README, no docs root | no README or documentation root | XS | no |
+| C12 | tzeusy-org/butlers | `be3a18d7` | owned Python application workspace | owner-owned | L | yes |
+| C13 | tzeusy-org/syzygy | `21e73d5c` | owned TypeScript governance polyglot | owner-owned | XL | yes |
+| C14 | synthetic notebook pipeline | `fb635704` (this repository, holding the kit) | synthetic, private | synthetic private visibility | XS | — |
+
+The file holds the full 40-hex commits. Five candidates were left out, each with its reason in
+the file (Sentry for its licence, OpenBSD because its listing is truncated).
+
+**Mechanism version.** One SHA-256 over a format line and one `<sha256>  <path>` line per member
+file, sorted, test files left out. It covers everything that shapes what a run produces, in six
+groups: the brief (`brief.ts`, `reader-standards.ts`, the shape packs); the draft schema; check
+(the structure rules, the census, the manifest recognizers, the relation witness); the renderer
+(`render.ts`, `figure-fit.ts`, `dossier-render*.ts`, `dossier-site.ts`, findings, diagram
+layout, draft preview, SVG inertness, design tokens); the screen (`screen.ts`,
+`policy-snapshot.ts`, the declared-source policies, and the detectors and classifiers it calls
+in `three-surface-poc-core` and `polaris-generation-core`); and the agent texts (the
+`polaris-dossier` skill and its references, `polaris.ts`, `session-handover.ts`, `review*.ts`,
+`design-review.ts`). The agent texts are a group of the one digest, not a second digest, so two
+passes compare only at one equal digest. [Observed] At `ed1e65bf` (main on 2026-11-24) it is
+`0d28717d…` over 60 files. Earlier drafts read `b9506ac8…` over 22 files at `fb635704`, then
+`da891d2e…` at `3a24d409` (main had changed `dossier-render.ts` and `dossier-site.ts`). The
+review of #976 then widened the members. The seal was taken again each time before adoption,
+so no adopted seal changed. The command surface and run bookkeeping (`cli.ts`, `close.ts`, the
+inventory) are not covered, so a change there starts no pass; a comment in a covered file does.
+
+**Budget.** Runs go in entry-id order: for each entry, dossier run 1, dossier run 2, then its
+plain-arm sessions, at most two at once. Each entry is run twice per pass. A run is re-run once
+only after one of four infrastructure faults, a closed list: provider unavailable, provider
+throttled, host interrupted, runner defect. A second fault leaves the run Unknown
+(`infrastructure-fault`). Per run: `claude-opus-5-5`, PT4H, 30,000,000 tokens, 1,000 turns, six
+repair cycles, the supervisor's four sessions. Two plain-arm sessions per public entry, on the
+same pinned model (PT1H, 5,000,000 tokens each). Per pass: 72 wall hours, 550,000,000 tokens,
+and at most one pass started per ISO week. [Unknown] The token figures are unmeasured
+allowances: Syzygy cannot observe usage, a run's usage is only what the runner declares at
+close (Inferred), and with undeclared usage the pass's token spend is Unknown. Whatever the
+budget does not reach is recorded Unknown. Every started pass is recorded to its end, and the
+current verdict is the latest started pass's once it ends.
+
+**Generality pass rule.** The verdict is `pass`, `fail` or `incomplete`; an Unknown is never a
+pass, and a clause that does not apply to an entry is not counted for it. The clauses:
+
+- G1: both runs close `closed`, not `closed-with-finding`, with the last fidelity and design
+  verdicts non-blocking.
+- G2 (public entries): the dossier, as the mean of two runs, is below the plain arm, as the
+  mean of two sessions, on at most one applicable question kind. "Below" means by more than
+  one required fact (A-63's per-kind bar). G2 is a no-worse floor: a pass establishes parity
+  at most.
+- G3: no required figure view is missing.
+- G4: per-Pole depth minimums.
+- G5: each run names the traits no shape pack matched and the units left derived-only.
+
+The key that G2 grades against is fixed before the pass:
+
+- It is written, before the pass, by a session that has seen neither arm.
+- Its digest is frozen in the pass record.
+- Each kind needs at least three facts, or is marked not-applicable beforehand.
+- It is held out as CONTRIBUTING rule 4 holds the pilot key.
+- Comparisons across passes are made only at an equal key digest.
+
+The pass record attributes each G2 miss to reach or to authoring, without changing the
+verdict.
+
+The advantage measure is reported beside the verdict and gates nothing. It is dossier share
+minus plain share, per entry and pooled, overall and per kind. Its fixed vision target is a
+pooled overall advantage of at least 10 points, called met only when two consecutive passes
+reach it.
+
+Reviewer calibration: nine known-false blocks are seeded into a copy of C01 run 1's first
+fidelity packet. If fewer than seven are caught, or there is no calibration review, the pass
+is uncalibrated and its verdict is at most `incomplete`.
+
+Cost: [Observed] the six stored runs' medians are 44.75 wall minutes and five review rounds,
+recomputed by the test from `measure-now.json`. The targets for the Redis anchor are at most
+31.325 minutes and three rounds. [Unknown] Tokens: no stored run recorded usage, so the token
+target is 0.7 of the anchor's median declared usage in the first pass that records it.
+
+A regression needs a drop in both runs at an equal key digest (A-38, A-63), and no rise is
+called a win.
+
+**Deviations from R16's text.**
+
+- The cost targets bind the anchor repository, not every dossier, because the baseline is of
+  one repository. The pass-wide medians are reported against the same figures but decide
+  nothing.
+- The token baseline is not "the six stored runs' medians", because those runs recorded no
+  tokens.
+- [Observed] Both owned repositories are public on GitHub. So the private stratum is the
+  synthetic fixture alone, and the owned repositories fill the owned stratum.
+- The validator's trait check is hard-coded to the server-entry trait. A v2 corpus should read
+  the traits from the shape packs' own selectors.
+
+## R1 slice 1: one question file, held out by reference (2026-11-25)
+
+Bead syzygy-5dhm.21. The reader questions are now written in one place,
+`packages/polaris-generation-core/src/question-file.ts`, whose bytes are held identical by a test
+to `docs/polaris-generation/question-file-v1.json`; spec version 2.27 (one MODIFIED
+REQ-polaris-generation-033) makes the run record name its digest.
+
+- [Observed] Its public part holds the brief's four topics, the provider profile's five reader
+  questions and the kit's seven evaluation questions, in their former words and order. The
+  brief and the profile read them from it; the brief's bytes and the provider golden are
+  unchanged. `TARGETS.md` and the kit `README.md` point at the file instead of listing the
+  seven.
+- [Observed] Its held-out part carries evaluator key identifiers, SHA-256 digests and
+  counts. The published Redis pilot travels with the checkout and remains the historical
+  regression. All three Redis comparison lists are `not-written`. The independent evaluator
+  must supply new blind graded questions, depth facts and tasks before `bindComparison`
+  can succeed.
+- [Observed] `init` writes `questionFile` (`polaris-question-file/1`, version 1, digest
+  `b3898375…`) into `run.json`; a record written before is read with its question file
+  Unknown. Results compare only at equal digest, as the corpus pass rule already says of keys.
+- [Observed] `packages/polaris-dossier/src/question-file-hold-out.test.ts` builds seven packets
+  over five roles from fixtures (the brief for author and editor, the inventory brief, the
+  fidelity criteria, the provider reader-questions file, the discovery questions and the file
+  itself) against 19 needles from three artificial keys. The synthetic mount control uses
+  the four supervised roles and a key placed first outside, then inside the checkout. A
+  planted question or fact is reported by role, packet and needle identifier.
+- [Unknown] Actual blind keys, live packet coverage and session reads need separate evidence.
+  The lexical predicate detects matching word sequences and leaves paraphrases outside its
+  scope.
+
+## R4 slice 2: the review waits for coverage (2026-11-25)
+
+Bead syzygy-5dhm.29, spec version 2.28 (REQ-polaris-generation-035,
+`openspec/changes/dossier-coverage-hold/`). Slice 1 told the author, as advice, which inventory
+entries no draft block covers. Now Syzygy issues no fidelity packet while such an entry has no
+outcome. An outcome is either coverage by check's rule or a line in `inventoryOmissions` with a
+reason. This holds `review-packet`, a review `session-prompt` and a delivery to a waiting
+reviewer, and so the URL supervisor.
+
+- [Observed] The refusal has the stage `coverage`. It names each entry by identifier and cited
+  paths only, never its statement, and never names a path a secret detector matches. It ends
+  with the next step: represent the entry with a citation, or record the omission with a
+  reason, then check again.
+- [Observed] The supervisor keys its author notice to the pair returned by the packet build.
+  It records a send after the literal input and Enter both succeed. A failed literal send can
+  retry the saved bounded notice without asking for another packet. An Enter failure stops
+  further coverage input to that live pane. The notice keeps the edit, omission and recheck
+  instructions and counts entry descriptions omitted to fit. At the repair-cycle limit the run
+  ends blocked and names the hold.
+- [Observed] These are unchanged: drafts of schema v2 to v4 (they cannot record an omission),
+  entries screening withholds, the packet's bytes, verdict validation and the review of record.
+  `review-check` rebuilds the packet without the hold, so an older verdict counts as before.
+- [Observed] The predecessor candidate's 14 recorded mutants are retained at their historical
+  runtime commit (`docs/evidence/syzygy-5dhm-29/coverage-hold-mutation-2026-11-25.json`).
+- [Inferred] The hold uses check's mechanical rule. So an entry the draft represents in words,
+  without a citation or a path, holds the review until the author adds one.
+- [Unknown] Review rounds per run under the hold. Slice 4 (syzygy-5dhm.86) measures them before
+  and after. No run has been made under this change.
+
+## R2 slice 2: the checked text as a page (2026-11-25)
+
+Bead syzygy-5dhm.24. `renderVerifiedTextPage` (`packages/polaris-dossier/src/verify-text-page.ts`)
+draws a checked text as one HTML page in a neutral shell, the frame R1's graders will see for
+every arm. `scripts/dossier_verify_text.mjs --html <file>` writes it. No spec change: the
+`verify` command is unchanged, and slice 1's delta names the page as out of its scope.
+
+- [Observed] The page shows the text as its own Markdown source, line for line and escaped. Each
+  claim's lines sit in one element with its number and outcome, with a mark at the claim's last
+  line. Below the text come the tally, the count of claims that cannot be checked, the item
+  counts, the results by claim and the checker's disclosures. The results come from
+  `claimResults`, which also writes the annotated copy's closing section, so a path screening
+  withholds by name appears in neither. The annotated copy's bytes are unchanged.
+- [Observed] Neutral means: no Syzygy or Polaris name, no navigation, no file name and no link
+  out of the page. The disclosures appear in grader wording, which names neither the dossier nor
+  its lead-in phrase. A test renders two texts and pins their common frame as a literal. The page has no script, no handler and no remote load, under the dossier
+  pages' closed policy; `pageSinkCspFinding` and `pageSinkScriptFinding` accept it.
+- [Observed] The bead asked to reuse the app's inert helpers. This package cannot import the app,
+  so the page has its own five-character escape and is held to the same core page-sink checks.
+- [Observed] Before: the plain synthesis's result existed only as an annotated Markdown copy.
+  After: the same run draws a 55,763-byte page with 101 claim elements for 101 claims. Its
+  outcomes equal slice 1's recorded tally, and the annotated copy's digest did not change across
+  the repairs (`docs/evidence/syzygy-5dhm-24/verify-text-page-pilot-2026-11-25.json`).
+  Rule 6: 29 of 29 mutants killed at first, then 38 of 38 after the repairs, including the
+  review's two survivors (`docs/evidence/syzygy-5dhm-24/`).
+- [Observed] One fresh-context review (`docs/reviews/syzygy-5dhm-24/R-GRADER-SHELL-1-RAW.md`)
+  returned `CONFIRM WITH EXCEPTIONS` with six non-blocking findings. Five were repaired in
+  `8d3e55be`, and the sixth (F5) is disclosed:
+  - F1: the page's disclosures named the dossier and its lead-in phrase. They are now in
+    grader wording, and the test forbids both words.
+  - F2: fixture counts were equal. They are now distinct.
+  - F3: neutrality was pinned only by exclusion. The frame is now pinned as a literal, identical
+    across two texts.
+  - F4: the script's `--html` guards had no test. Four child-process tests now cover them.
+  - F5: the page uses a local escape, disclosed in the bullet above.
+  - F6: an `aria-label` sat on `<pre>`. The text is now a labelled region under a visible
+    heading.
+- [Unknown] Whether graders read the marks as intended. No grader has seen the page yet;
+  R1's protocol slices decide that. The dossier arm's text was not drawn here, because no
+  dossier text is retained in the repository.
 
 ## Known ledger and deviations
 

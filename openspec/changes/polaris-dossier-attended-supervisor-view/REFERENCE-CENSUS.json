@@ -1,0 +1,67 @@
+{
+  "base": "cb5d7fcec5876592dfcf393839cab0c5ea05f14d",
+  "identifier": "REQ-polaris-generation-048",
+  "regularPaths": 10680,
+  "distinctBlobCount": 10329,
+  "method": "git grep literal over the pinned tree and independent complete ls-tree/cat-file text scan",
+  "count": 47,
+  "pathsBySection": {
+    ".syzygy": [
+      ".syzygy/governance/contracts/candidates/rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+      ".syzygy/governance/contracts/rfcs/RFC-0003/governance-homes-and-owner-acts.md",
+      ".syzygy/governance/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json"
+    ],
+    "docs": [
+      "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "docs/evidence/syzygy-3efd-80/run-tree-read-sweep-2026-11-23.json",
+      "docs/evidence/syzygy-k54o-3/R-D10-F3-TERMINAL-OUTCOME-254-RAW.md",
+      "docs/evidence/syzygy-k54o-3/R-D10-F3-TRANSPORT-CORRECTIONS-253-RAW.md",
+      "docs/evidence/syzygy-k54o-3/d10-f3-transport-offering-253-checked.json",
+      "docs/evidence/syzygy-k54o-3/d10-f3-transport-offering-254-checked.json",
+      "docs/evidence/syzygy-v0b5/witness-after-2026-11-24.json",
+      "docs/evidence/syzygy-v0b5/witness-before-2026-11-24.json",
+      "docs/evidence/syzygy-v0b5/witness-memo-protected-f9fbc5d3.json",
+      "docs/evidence/syzygy-v0b5/witness-stock-protected-f9fbc5d3.json",
+      "docs/reviews/syzygy-zwja-attended/ZWJA-ATTENDED-VIEW-DESIGN-BAR-R1-RAW.md",
+      "docs/reviews/syzygy-zwja-attended/ZWJA-ATTENDED-VIEW-DESIGN-BAR-R2-RAW.md"
+    ],
+    "openspec": [
+      "openspec/changes/dossier-declared-source-reach/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-declared-source-reach/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-declared-source-reach/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-declared-source-readmission/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-declared-source-readmission/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-declared-source-readmission/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-question-file/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-question-file/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-raw-read-disclosure/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-raw-read-disclosure/REVIEW-DISPOSITIONS.md",
+      "openspec/changes/dossier-raw-read-disclosure/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-raw-read-disclosure/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-run-tree-read-bounds/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-run-tree-read-bounds/design.md",
+      "openspec/changes/dossier-run-tree-read-bounds/proposal.md",
+      "openspec/changes/dossier-run-tree-read-bounds/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/CAPABILITY-COVERAGE.json",
+      "openspec/changes/dossier-url-declared-source-run/CONTRACT-COVERAGE.json",
+      "openspec/changes/dossier-url-declared-source-run/EXACT-REPLACEMENTS.json",
+      "openspec/changes/dossier-url-declared-source-run/IMPACT-LEDGER.json",
+      "openspec/changes/dossier-url-declared-source-run/SCENARIO-COVERAGE.json",
+      "openspec/changes/dossier-url-declared-source-run/proposed/contracts/DOSSIER-URL-LOCAL-MACHINE-CREDENTIAL-AMENDMENT.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/polaris-generation/spec.md",
+      "openspec/changes/dossier-url-declared-source-run/proposed/policies/POLARIS-DOSSIER-URL-ORIGIN-SPECIES-POLICY-v1.json",
+      "openspec/changes/dossier-verify-text/GOVERNING-DEPENDENCIES.json",
+      "openspec/changes/dossier-verify-text/SEMANTIC-DELTA.md",
+      "openspec/changes/dossier-verify-text/design.md",
+      "openspec/changes/dossier-verify-text/proposed/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-one-command-run/ATTENDED-VIEW-DESIGN.md"
+    ],
+    "packages": [
+      "packages/polaris-dossier/src/polaris.ts",
+      "packages/polaris-dossier/src/run-tree-readers.test.ts"
+    ],
+    "scripts": [
+      "scripts/check_spec_reconciliation.py"
+    ]
+  }
+}

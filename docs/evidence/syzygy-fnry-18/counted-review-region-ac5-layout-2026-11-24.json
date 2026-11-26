@@ -1,0 +1,50 @@
+{
+  "subject": "887c8ba10f869bb8bc7fa25b64f3298da84967f4",
+  "prior": "973b1d1911f24b9080c8bcf342a0538c7a5f08fe",
+  "method": "Independent settled renderRun counted fixture HTML copied in each subject in a count-only test instrumentation; real Chromium 390x844; actual text ranges located using DOM Range outside the named region. Instrumentation was restored.",
+  "htmlDenominator": 19,
+  "allCurrentPagesOneRegionNoUngroupedDigests": true,
+  "priorAllPagesTwoLiteralRegionDigests": true,
+  "sameInheritedOverflowPaths": [
+    {
+      "path": "appendix.html",
+      "priorScrollWidth": 659,
+      "currentScrollWidth": 659,
+      "responsibleRegion": "appendix-disclosure",
+      "subject": null,
+      "outsideReviewStatusRegion": true,
+      "matchingUnbrokenHexLengths": [
+        64
+      ]
+    },
+    {
+      "path": "discovery.html",
+      "priorScrollWidth": 553,
+      "currentScrollWidth": 553,
+      "responsibleRegion": "discovery-read",
+      "subject": "discovery/read/2",
+      "outsideReviewStatusRegion": true,
+      "matchingUnbrokenHexLengths": []
+    },
+    {
+      "path": "review.html",
+      "priorScrollWidth": 725,
+      "currentScrollWidth": 722,
+      "responsibleRegion": "review-fidelity",
+      "subject": "review/fidelity/binding",
+      "outsideReviewStatusRegion": true,
+      "matchingUnbrokenHexLengths": [
+        64
+      ]
+    }
+  ],
+  "retainedSha256": {
+    "actual-layout.json": "2740d5c5e368eda8a2c0493474137efe49ad7033fba38d6c141e6ddb2116546b",
+    "prior-layout.json": "643eae76bae6a5f332c300b66d155eea181c88c92e1acc59472240390f81fc73",
+    "overflow-causes.json": "df37fb3a3c72b0722886657deac54c87d4324c03f89891829b01518c2fe0de0c",
+    "capture-render.log": "fc4572213100779d8777a87d502eb2e75f5e3d270865750bcefa68d88fc646b2",
+    "capture-prior-render.log": "267e5a89491571c53f39ab50204235cd4a05334cc708a7afaa972e495b076c26",
+    "capture-browser.log": "9a6ddaf21b9cf4a4d6fe5ccff3f72f99698979152c373d208cead797544ab4ef",
+    "capture-prior-browser.log": "638b0c9b24130290a0ceb494019318678ed1235b9df6150dec575f0b92c086a8"
+  }
+}

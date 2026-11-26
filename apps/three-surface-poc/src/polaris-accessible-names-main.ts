@@ -14,14 +14,15 @@
 // the operator keeps outside the repository.
 //
 // It reads no repository itself; the daemon (`main.ts`) never imports it.
-// Exits 0 only when every listed page was served and has zero violations.
+// Exits 0 only when every listed page was served, bound to the authenticated
+// evaluation and checked without violations or missing machine path evidence.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { sha256 } from '@syzygy/support';
 
 import { findBrowserExecutable, launchBrowser } from './cdp-browser.js';
-import { sweepPolarisNamesAndHeadings, type MachineAnswerSources, type NameHeadingViolation, type WholeSurfaceReport } from './polaris-accessible-names.js';
+import { sweepPolarisNamesAndHeadings, type MachineAnswerEvaluation, type NameHeadingViolation, type WholeSurfaceReport } from './polaris-accessible-names.js';
 import { POLARIS_HUMAN_PATH } from './polaris.js';
 import { POLARIS_SOURCE_PATH } from './polaris-source.js';
 import { POC_MACHINE_PATH } from './routes.js';
@@ -39,8 +40,7 @@ function byKind(violations: readonly NameHeadingViolation[]): Record<string, num
   return counts;
 }
 
-interface MachineAnswer extends MachineAnswerSources {
-  readonly evaluation: { readonly inputsDigest: string; readonly snapshot: string; readonly asOf: string };
+interface MachineAnswer extends MachineAnswerEvaluation {
   readonly project: { readonly revision: string };
 }
 
@@ -54,13 +54,13 @@ function namesSweepEvidence(input: { readonly task: string; readonly capturedAt:
     capturedAt: input.capturedAt,
     syzygyHead: input.syzygyHead,
     browser: input.browser,
-    evaluation: {
+    evaluation: report.machineEvaluationValid ? {
       inputsDigest: input.answer.evaluation.inputsDigest,
       snapshot: input.answer.evaluation.snapshot,
       asOf: input.answer.evaluation.asOf,
       projectRevision: input.answer.project.revision,
       shape: input.answer.projectShape.kind,
-    },
+    } : { status: 'Unknown', reason: 'invalid-machine-evaluation' },
     pageListSource: `machine answer ${POC_MACHINE_PATH}: entry page plus one ${POLARIS_SOURCE_PATH} response per projectShape.sources entry`,
     pages: report.pages.map((page, index) => ({
       position: index,
@@ -71,13 +71,22 @@ function namesSweepEvidence(input: { readonly task: string; readonly capturedAt:
       levelOneHeadings: page.levelOneHeadings,
       sharedLabelGroups: page.sharedLabelGroups,
       exactSourceTargetsInSharedLabelGroups: page.exactSourceTargets,
+      exactSourceTargetsWithoutMachinePath: page.exactSourceTargetsWithoutMachinePath,
       violationsByKind: byKind(page.violations),
+    })),
+    unboundPages: report.unboundPages.map(({ page, reason }) => ({
+      page: page === 'entry' ? 'entry' : 'exact-source',
+      ...(page === 'entry' ? {} : { sourceIdentitySha256: sha256(page) }),
+      status: 'Unknown',
+      reason,
     })),
     totals: {
       pagesListed: report.pagesListed,
       pagesSwept: report.pagesSwept,
       interactive: report.interactive,
       headings: report.headings,
+      exactSourceTargetsWithoutMachinePath: report.exactSourceTargetsWithoutMachinePath,
+      unboundPages: report.unboundPages.length,
       violations: report.violations.length,
       violationsByKind: byKind(report.violations),
     },
@@ -125,7 +134,7 @@ async function main(): Promise<number> {
   writeFileSync(output, `${JSON.stringify(evidence, null, 2)}\n`);
   const details = argument('--details');
   if (details !== undefined) writeFileSync(details, `${JSON.stringify(report.violations, null, 2)}\n`);
-  process.stdout.write(`pages ${report.pagesSwept}/${report.pagesListed}, interactive ${report.interactive}, headings ${report.headings}, violations ${report.violations.length} ${JSON.stringify(byKind(report.violations))}\nwrote ${output}\n`);
+  process.stdout.write(`pages ${report.pagesSwept}/${report.pagesListed}, interactive ${report.interactive}, headings ${report.headings}, unbound ${report.unboundPages.length}, unknown source paths ${report.exactSourceTargetsWithoutMachinePath}, violations ${report.violations.length} ${JSON.stringify(byKind(report.violations))}\nwrote ${output}\n`);
   return report.violations.length === 0 && report.pagesSwept === report.pagesListed ? 0 : 1;
 }
 

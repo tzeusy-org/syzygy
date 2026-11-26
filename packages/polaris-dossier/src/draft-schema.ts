@@ -49,8 +49,14 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V8 = 'polaris-dossier-local-draft-v8';
  * renders as before, and `relation` or `unit` in one is field-version. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V9 = 'polaris-dossier-local-draft-v9';
 /** v10 (REQ-polaris-generation-034 version 2.20): one overview hero figure or a reasoned omission. */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v10';
-export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+export const LOCAL_DRAFT_SCHEMA_VERSION_V10 = 'polaris-dossier-local-draft-v10';
+/** v13 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an Inferred block may carry `worthKnowing: true`, the worth-knowing mark,
+ * and a Pole may say in `worthKnowingNone` why it holds no block so marked. Everything else is v10; a v10 or earlier draft still checks and
+ * renders as before, and either member in one is field-version. v11 and v12 are the numbers adopted version 2.23 (containment figure)
+ * and the open version 2.24 (system model) give their schemas; neither is implemented here, so this code knows no v11 or v12 draft and
+ * refuses either as an unknown version. Each slots into the chain below when its implementation lands. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v13';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION_V4, LOCAL_DRAFT_SCHEMA_VERSION_V5, LOCAL_DRAFT_SCHEMA_VERSION_V6, LOCAL_DRAFT_SCHEMA_VERSION_V7, LOCAL_DRAFT_SCHEMA_VERSION_V8, LOCAL_DRAFT_SCHEMA_VERSION_V9, LOCAL_DRAFT_SCHEMA_VERSION_V10, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** Whether a draft's version has the v4 forms: v4 and every later version. */
 export const hasV4Forms = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V4 || hasHomeForm(version);
 /** Whether a draft's version names a diagram's page in `home`: v5 and every later version. */
@@ -63,7 +69,31 @@ export const hasFigureKindForm = (version: unknown): boolean => version === LOCA
 export const hasSubsectionForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V8 || hasRelationForm(version);
 /** Whether a draft's graph edges carry `relation` and its graph nodes may carry `unit`: v9 (version 2.19). */
 export const hasRelationForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V9 || hasHeroForm(version);
-export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** Whether a draft carries the overview `hero`: v10 (version 2.20) and every later version. */
+export const hasHeroForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION_V10 || hasWorthKnowingForm(version);
+/** Whether a draft's version has the worth-knowing mark and a Pole's `worthKnowingNone`: v13 (version 2.26). */
+export const hasWorthKnowingForm = (version: unknown): boolean => version === LOCAL_DRAFT_SCHEMA_VERSION;
+/** The worth-knowing mark (v13) on a claim block, and the member in which a v13 Pole says why it holds no block so marked. */
+export const WORTH_KNOWING_FIELD = 'worthKnowing';
+export const WORTH_KNOWING_NONE_FIELD = 'worthKnowingNone';
+/** The most worth-knowing blocks the brief asks of one Pole; a ceiling, never a quota. */
+export const WORTH_KNOWING_CEILING = 3;
+/** The mark's description in the schema, and so what `draft.schema.json` tells the authoring session. */
+export const WORTH_KNOWING_DESCRIPTION = 'Set true on a cited Inferred block, one of a section\'s own paragraphs, that states a fact about this project an engineer new to it would not guess from the kind of project it is. Such a block cites at least one source and is never a judgement. Syzygy renders the marked blocks of a page in one callout near its top.';
+/** The description of a v13 Pole's `worthKnowingNone`. */
+export const WORTH_KNOWING_NONE_DESCRIPTION = 'Optional. Why no block of this Pole\'s sections carries the worth-knowing mark: no fact you found in them meets the test. Syzygy renders that none was found and never renders this reason; the fidelity reviewer reads it.';
+
+/** The six kinds of newcomer question (REQ-polaris-generation-034 version 2.32, syzygy-5dhm.135), in the comprehension key's order and
+ * spelling: what the project is for, how its parts fit, how it works, why it is built this way, where to change something, and what it
+ * does not do or how it fails. */
+export const QUESTION_KINDS = Object.freeze(['purpose', 'structure', 'mechanism', 'rationale', 'change', 'limits'] as const);
+export type QuestionKind = (typeof QUESTION_KINDS)[number];
+/** The v13 draft's top-level declaration of which question kinds its blocks answer (version 2.32). Inert, like `inventoryOmissions`: it
+ * is optional, never rendered, and nothing but check's advice reads it, so it adds no schema version. */
+export const QUESTION_KINDS_FIELD = 'questionKinds';
+/** At most this many declaration rows. */
+export const QUESTION_KINDS_ROWS = 2000;
+export const QUESTION_KINDS_DESCRIPTION = 'Optional. Each row names, in `blockId`, the `id` of one claim block labelled Inferred, and lists in `kinds` the kinds of newcomer question that block answers: `purpose` (what the project is for), `structure` (how its parts fit), `mechanism` (how it works), `rationale` (why it is built this way), `change` (where to change something) or `limits` (what it does not do and how it fails). `syzygy dossier check` advises, for the whole repository and each major top-level directory, the kinds no block answers. The rows are your own report: they are never rendered and claim nothing about the project.';
 
 /** Choose the v10 form without interpreting unchecked input or accepting extra members. */
 export function heroOf(doc: Readonly<Record<string, unknown>>): { readonly form: 'figure' | 'omitted'; readonly value: unknown } | undefined {
@@ -188,15 +218,19 @@ const THESIS_BASIS: DraftSchema = { type: 'string', minLength: 1, maxLength: 12,
 /** The judgement mark (v4): the block is the authoring session's own assessment of the project and asserts no fact about it. */
 export const JUDGEMENT_DESCRIPTION = 'Set true only on an Inferred block that is your own assessment of the project, such as that a design is sound or a trade-off is worth making, and asserts no fact about its rules, behaviour, structure, status, history or decisions. Only a block so marked may cite nothing; a fact with no citation is Unknown, never a judgement. A cited block may carry the mark too.';
 const judgement: DraftSchema = { type: 'boolean', description: JUDGEMENT_DESCRIPTION };
+const worthKnowing: DraftSchema = { type: 'boolean', description: WORTH_KNOWING_DESCRIPTION };
 
 /** The four claim forms. `quotations` lists, in order, the citation each `The project states: "…"` span in `text` is taken from. An
  * Inferred form's citations may be empty in the schema: whether it must cite (every version but v4, and in v4 any block without the
  * judgement mark) is `check`'s, which names the rule. */
-function claimForms(extra: Record<string, DraftSchema>, optional: readonly string[]): DraftSchema {
+function claimForms(extra: Record<string, DraftSchema>, optional: readonly string[], marked = true): DraftSchema {
   const quotations = quotationRefs(QUOTATION_FORM);
+  // The worth-knowing mark (v13) is a member of the two Inferred forms alone; an earlier version's forms have none.
+  const mark: Record<string, DraftSchema> = marked ? { [WORTH_KNOWING_FIELD]: worthKnowing } : {};
+  const markOptional = marked ? [WORTH_KNOWING_FIELD] : [];
   return { oneOf: [
-    object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(0), quotations, judgement, ...extra }, ['judgement', ...optional]),
-    object({ id: handle, label: one('inferred'), basis: one('execution'), executionIds: refs(1, 20), text, citations: citations(0), quotations, judgement, ...extra }, ['judgement', ...optional]),
+    object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(0), quotations, judgement, ...mark, ...extra }, ['judgement', ...markOptional, ...optional]),
+    object({ id: handle, label: one('inferred'), basis: one('execution'), executionIds: refs(1, 20), text, citations: citations(0), quotations, judgement, ...mark, ...extra }, ['judgement', ...markOptional, ...optional]),
     object({ id: handle, label: one('unknown'), reason, text, citations: citations(0), ...extra }, optional),
     object({ id: handle, label: one('non-normative'), text, ...extra }, optional),
   ] };
@@ -214,12 +248,13 @@ const understandingItem: DraftSchema = { oneOf: [
 ] };
 const pathReason = object({ path: repoPath, reason: text });
 
-/** Shared definitions, written once in the document and reached by `$ref`. */
-const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
+/** Shared definitions, written once in the document and reached by `$ref`. `marked` says whether the claim forms take the worth-knowing
+ * mark (v13) or have no such member (v10 and earlier). */
+const defsOf = (marked: boolean): Readonly<Record<string, DraftSchema>> => Object.freeze({
   citation: object({ id: handle, path: repoPath, startLine: line, endLine: line }),
   unknownReason: choice(UNKNOWN_REASONS),
-  paragraph: claimForms({}, []),
-  block: claimForms({ children: list(ref('paragraph'), 0, 12) }, []),
+  paragraph: claimForms({}, [], marked),
+  block: claimForms({ children: list(ref('paragraph'), 0, 12) }, [], marked),
   // v1.3 rich elements. Their labels (caption, columns, title, term, label, summary) are presentation, never a claim or a quotation;
   // every text-bearing cell or item is a claim form, checked, reviewed and rendered as a block is.
   table: object({ kind: one('table'), id: handle, caption: presentationLabel, columns: list(presentationLabel, 1, 8), rowHeaders: { type: 'boolean' },
@@ -258,6 +293,8 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
     object({ kind: one('compose-service'), path: repoPath, service: unitText }),
   ] },
 });
+const DEFS = defsOf(true);
+const DEFS_UNMARKED = defsOf(false);
 
 export interface DraftSchemaParameters {
   /** The run's pinned revision; the draft must name it. */
@@ -276,9 +313,11 @@ export interface DraftSchemaParameters {
  * and earlier); `unnamed` is the form `check` reads a diagram naming no kind against. `subsections` says whether a section may carry
  * `subsections` (schema v8 and later; version 2.16) or has no such member (schema v7 and earlier). `relations` says whether a graph edge
  * carries its required `relation` and a graph node may carry `unit` (schema v9 and later; version 2.19) or neither (schema
- * v8 and earlier). */
+ * v8 and earlier). `worthKnowing` says whether a claim block may carry the worth-knowing mark and a Pole `worthKnowingNone` (schema v13,
+ * what the brief publishes; version 2.26) or neither member exists (schema v10 and earlier). */
 export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm: 'home' | 'sectionId' = 'home', thesisBasis: 'required' | 'absent' = 'required',
-  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
+  figureKinds: 'taken' | 'absent' | 'unnamed' = 'taken', subsections: 'taken' | 'absent' = 'taken', relations: 'taken' | 'absent' = 'taken',
+  worthKnowing: 'taken' | 'absent' = 'taken'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   const graph = (kind: Schema): Record<string, Schema> => ({
@@ -312,7 +351,7 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
   const diagram: Schema = figureKinds === 'absent' ? object(graph(choice(DIAGRAM_KINDS)))
     : figureKinds === 'unnamed' ? object(graph(choice([...DIAGRAM_KINDS, ...FIGURE_KINDS])))
     : { oneOf: [...DIAGRAM_KINDS.map((kind) => object(graph(one(kind)))), figure('sequence'), figure('swimlane')] };
-  return { defs: DEFS, root: object({
+  return { defs: worthKnowing === 'taken' ? DEFS : DEFS_UNMARKED, root: object({
     schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,
@@ -345,7 +384,10 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     executions: list(object({ id: handle, command: text, workingDirectory: text, scope: choice(EXECUTION_SCOPES), purpose: text }, ['workingDirectory', 'scope']), 0, 500),
     // Poles (v4, dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections. The run's Pole limit, an
     // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
-    poles: list(object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
+    // A v13 Pole may say in `worthKnowingNone` why none of its blocks carries the worth-knowing mark (version 2.26).
+    poles: list(worthKnowing === 'taken'
+      ? object({ label: presentationLabel, sections: refs(0, 30), [WORTH_KNOWING_NONE_FIELD]: { ...text, description: WORTH_KNOWING_NONE_DESCRIPTION } }, [WORTH_KNOWING_NONE_FIELD])
+      : object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
     whySection: handle,
     ...(thesisBasis === 'required' ? { thesisBasis: THESIS_BASIS } : {}),
     // The justified-omission record (dossier spec 2.12): identifiers of inventory entries and the author's reasons, never a claim. Not
@@ -354,7 +396,9 @@ export function localDraftSchema(parameters: DraftSchemaParameters, diagramForm:
     // Task routes (the index-and-task-routes change): reader tasks, each a short label phrased as the reader's task and a route of cited steps. In a draft
     // before v5 the member is a field-version finding (check-derive's structure).
     [TASK_ROUTE_FIELD]: list(ref('taskRoute'), TASK_ROUTE_MIN, TASK_ROUTE_MAX),
-  }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD]) };
+    // The question-kind declarations (version 2.32): a v13 member, inert; in an earlier draft a field-version finding (check-derive).
+    ...(worthKnowing === 'taken' ? { [QUESTION_KINDS_FIELD]: { ...list(object({ blockId: handle, kinds: { ...list(choice(QUESTION_KINDS), 1, QUESTION_KINDS.length), uniqueItems: true } }), 0, QUESTION_KINDS_ROWS), description: QUESTION_KINDS_DESCRIPTION } } : {}),
+  }, ['poles', 'whySection', 'inventoryOmissions', TASK_ROUTE_FIELD, QUESTION_KINDS_FIELD]) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */
@@ -366,24 +410,32 @@ export function draftSchemaDocument(parameters: DraftSchemaParameters): Record<s
  * draft: entries of what the project states, in REQ-polaris-generation-006's kinds, each `inferred` with path and line-range citations
  * or `unknown` with an RFC2-24 reason, quotations in the one lead-in form, and its own account of what it covered. Syzygy checks its
  * quotations and citations as `check` checks a draft's; its completeness over the clone stays the session's self-report, Inferred. */
-export const LOCAL_INVENTORY_SCHEMA_VERSION = 'polaris-dossier-local-inventory-v1';
-export const INVENTORY_ENTRY_KINDS = Object.freeze(['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'other'] as const);
+export const LOCAL_INVENTORY_SCHEMA_VERSION_V1 = 'polaris-dossier-local-inventory-v1';
+/** v2 (REQ-polaris-generation-034 version 2.26, syzygy-5dhm.41): an entry's `kind` may also be `worth-knowing`. A v1 inventory still
+ * validates against the v1 kinds alone, so a v1 entry of kind `worth-knowing` is a schema finding. */
+export const LOCAL_INVENTORY_SCHEMA_VERSION = 'polaris-dossier-local-inventory-v2';
+export const INVENTORY_ENTRY_KINDS = Object.freeze(['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'worth-knowing', 'other'] as const);
+/** The entry kinds of inventory schema v1: every v2 kind but `worth-knowing`. */
+export const INVENTORY_ENTRY_KINDS_V1 = Object.freeze(INVENTORY_ENTRY_KINDS.filter((kind) => kind !== 'worth-knowing'));
 
-const INVENTORY_DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
+const inventoryDefs = (kinds: readonly string[]): Readonly<Record<string, DraftSchema>> => Object.freeze({
   citation: DEFS['citation']!,
   unknownReason: DEFS['unknownReason']!,
   pathReason,
   entry: { oneOf: [
-    object({ id: handle, kind: choice(INVENTORY_ENTRY_KINDS), label: one('inferred'), statement: text, citations: citations(1),
+    object({ id: handle, kind: choice(kinds), label: one('inferred'), statement: text, citations: citations(1),
       quotations: quotationRefs(INVENTORY_QUOTATION_FORM) }),
-    object({ id: handle, kind: choice(INVENTORY_ENTRY_KINDS), label: one('unknown'), reason, statement: text, citations: citations(0) }),
+    object({ id: handle, kind: choice(kinds), label: one('unknown'), reason, statement: text, citations: citations(0) }),
   ] },
 });
+const INVENTORY_DEFS = inventoryDefs(INVENTORY_ENTRY_KINDS);
+const INVENTORY_DEFS_V1 = inventoryDefs(INVENTORY_ENTRY_KINDS_V1);
 
-export function localInventorySchema(parameters: { readonly pinnedRevision: string }): DraftSchemaWithDefs {
+/** The inventory schema; `kinds: 'v1'` gives the schema a v1 inventory is checked against, whose entries take the v1 kinds alone. */
+export function localInventorySchema(parameters: { readonly pinnedRevision: string }, kinds: 'v1' | 'v2' = 'v2'): DraftSchemaWithDefs {
   requirePinnedRevision(parameters.pinnedRevision);
-  return { defs: INVENTORY_DEFS, root: object({
-    schemaVersion: one(LOCAL_INVENTORY_SCHEMA_VERSION),
+  return { defs: kinds === 'v1' ? INVENTORY_DEFS_V1 : INVENTORY_DEFS, root: object({
+    schemaVersion: choice([LOCAL_INVENTORY_SCHEMA_VERSION_V1, LOCAL_INVENTORY_SCHEMA_VERSION]),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,
     entries: list(ref('entry'), 1, 2000),
