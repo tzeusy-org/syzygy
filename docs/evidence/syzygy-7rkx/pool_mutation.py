@@ -58,8 +58,10 @@ MUTANTS = [
          "            workers, maxtasksperchild=None) as pool:")]),
     ("merge-out-of-order", "results are merged in completion order", [
         (MAP + "        try:\n" + GET,
-         "        try:\n            return list(pool.imap_unordered(functools.partial(_guarded, function),\n"
-         "                                            range(count), chunksize=1))")]),
+         "        done = pool.imap_unordered(functools.partial(_guarded, function),\n"
+         "                                   range(count), chunksize=1)\n"
+         "        try:\n"
+         "            return [done.next(timeout=_selftest_timeout()) for _ in range(count)]")]),
     ("drop-family-failures", "a family's failures are dropped when it records no witness", [
         ("        failures.extend(failed)",
          "        if found:\n            failures.extend(failed)")]),
