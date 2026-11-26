@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
 import { READING_QUOTE, READING_SOURCE, navigationInput, poleHueInput, readingInput } from './dossier-reading.testkit.js';
@@ -297,6 +298,81 @@ describe('colour: a hue names a Pole and nothing else, never a position (syzygy-
     expect(eyebrows('deep-dives/words-detail.html', true)).toEqual(['2', '2']);
     expect(eyebrows('deep-dives/why-detail.html', true)).toEqual(['1']);
     for (const path of ['poles/2.html', 'deep-dives/words-detail.html', 'deep-dives/why-detail.html']) expect(eyebrows(path, false), path).toEqual([null, null]);
+  });
+
+  // Every rule of every page's stylesheets, in cascade order, as selector parts and declarations.
+  const stylesheetRules = (html: string) => [...html.matchAll(/<style>([\s\S]*?)<\/style>/gu)].flatMap(style => [...style[1]!.matchAll(/([^{}]+)\{([^{}]*)\}/gu)]
+    .map(rule => ({ parts: rule[1]!.split(',').map(part => part.trim()), decls: rule[2]!.split(';').flatMap(decl => {
+      const at = decl.indexOf(':');
+      return at < 0 ? [] : [{ prop: decl.slice(0, at).trim(), value: decl.slice(at + 1).trim() }];
+    }) })));
+  // The declarations that read a token in `reads` on a selector part `allowed` does not match, and that no later rule on the same selector
+  // part takes back (the same property, or its colour longhand, set without such a token).
+  const standing = (html: string, reads: RegExp, allowed: RegExp | null): string[] => {
+    const rules = stylesheetRules(html);
+    return rules.flatMap((rule, index) => rule.decls.filter(decl => reads.test(decl.value)).flatMap(decl => rule.parts
+      .filter(part => allowed === null || !allowed.test(part))
+      .filter(part => !rules.slice(index + 1).some(later => later.parts.includes(part)
+        && later.decls.some(d => (d.prop === decl.prop || d.prop === `${decl.prop}-color`) && !reads.test(d.value))))
+      .map(part => `${part}{${decl.prop}:${decl.value}}`)));
+  };
+
+  it('draws an evidence-state colour only on an evidence-state element, and the decorative accent nowhere (R-POLE-HUE-1 F1, F2)', () => {
+    const files = renderLocalDossier(poleHueInput()).files;
+    const pages = [...files].filter(([path]) => path.endsWith('.html'));
+    // Denominator: every page of the fixture, each with its full set of stylesheets.
+    expect(pages.length).toBeGreaterThan(10);
+    const evidence = /var\(--(?:observed|proposed|unknown|amber|d-ok-tint|d-info-tint|d-warn-tint)\)/u;
+    const evidenceElement = /epistemic|claim-tuple|unknown|verified-quote|exact-source|not-established|unresolved-asset|withheld/u;
+    for (const [path, html] of pages) {
+      expect(standing(html, evidence, evidenceElement), path).toEqual([]);
+      expect(standing(html, /var\(--cyan\)/u, null), path).toEqual([]);
+    }
+    // The predicate sees what it claims to: an evidence-state rule is read, and the base sheet's decorative rules are taken back.
+    const index = files.get('index.html')!;
+    expect(stylesheetRules(index).some(rule => rule.parts.includes('blockquote.exact-source') && rule.decls.some(d => evidence.test(d.value)))).toBe(true);
+    expect(stylesheetRules(index).filter(rule => rule.decls.some(d => /var\(--cyan\)/u.test(d.value))).length).toBeGreaterThan(5);
+  });
+
+  it('gives six Poles six hues and a seventh none, and names every Pole in words (R-POLE-HUE-1 F3)', () => {
+    const input = poleHueInput();
+    const labels = ['Why it exists', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'];
+    const sections = [['one'], ['two'], ['three'], ['four'], ['five'], ['six'], ['seven', 'nine', 'eight']];
+    const files = renderLocalDossier({ ...input, local: { ...input.local, poles: { whySection: 'one', poles: labels.map((label, i) => ({ label, sections: sections[i]! })) } } }).files;
+    const index = files.get('index.html')!;
+    expect([...index.matchAll(/<li( data-hue="(\d)")?><a href="[^"]*">([^<]*)<\/a><ul>/gu)].map(m => [m[3], m[2] ?? null]))
+      .toEqual(labels.map((label, i) => [label, i < 6 ? String(i + 1) : null]));
+    for (let pole = 2; pole <= 7; pole++) {
+      const html = files.get(`poles/${pole}.html`)!;
+      expect(html, `pole ${pole}`).toContain(`<section id="pole" data-reading-level="1" data-pole="poles/${pole}.html"${pole < 7 ? ` data-hue="${pole}"` : ''}><span class="eyebrow">Part of <a href="../index.html">Reading dossier</a></span><h1>${labels[pole - 1]}</h1>`);
+    }
+    expect(huesOf(files.get('poles/7.html')!, /^<li class="card">$/u)).toEqual([]);
+    expect(main(files.get('poles/7.html')!)).not.toMatch(/data-hue=/u);
+  });
+
+  it('writes no positional hue rule in any source module either (R-POLE-HUE-1 F4)', () => {
+    const root = new URL('../../../../', import.meta.url);
+    const walk = (dir: URL): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.name === 'node_modules' || entry.name === 'dist' || entry.name.startsWith('.')
+      ? [] : entry.isDirectory() ? walk(new URL(`${entry.name}/`, dir)) : /\.(?:ts|mts|mjs|js|css|html)$/u.test(entry.name) && !/\.(?:test|testkit)\.ts$/u.test(entry.name) ? [new URL(entry.name, dir).pathname] : []);
+    const files = ['apps/', 'packages/', 'scripts/'].flatMap(dir => walk(new URL(dir, root)));
+    // Denominator: every non-test source module under the three implementation trees.
+    expect(files.length).toBeGreaterThan(300);
+    const positional = /:nth-(?:last-)?(?:child|of-type)\(/gu;
+    const hits = files.flatMap(file => {
+      const text = readFileSync(file, 'utf8');
+      return [...text.matchAll(positional)].map(m => {
+        const open = text.indexOf('{', m.index), close = text.indexOf('}', open);
+        return { file: file.slice(new URL(root).pathname.length), block: open < 0 || close < 0 ? '' : text.slice(open, close + 1) };
+      });
+    });
+    expect([...new Set(hits.map(hit => hit.file))].sort()).toEqual([
+      'apps/three-surface-poc/src/polaris-accessibility.ts',
+      'apps/three-surface-poc/src/polaris-generation/dossier-site.ts',
+      'apps/three-surface-poc/src/polaris-generation/dossier-source-lines.ts',
+    ]);
+    // The accessibility audit builds a selector to name an element, not a style; the two stylesheet rules set no hue.
+    const hueBearing = /--accent(?:-tint)?:|var\(--h\d|var\(--cyan\)|#[0-9a-f]{3,8}\b/u;
+    for (const hit of hits.filter(hit => !hit.file.endsWith('polaris-accessibility.ts'))) expect(hueBearing.test(hit.block), `${hit.file} ${hit.block}`).toBe(false);
   });
 
   it('gives a worth-knowing block the landing page borrows from the why section its Pole\'s hue', () => {

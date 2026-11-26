@@ -143,8 +143,8 @@ export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${t
   + `border-radius:${tokens.radius.hint};padding:${tokens.spacing.fineInline} ${tokens.spacing.codeInset}}`
   + `a.cite{font:${tokens.type.strongWeight} ${tokens.type.citation} var(--font-mono);text-decoration:none;vertical-align:super;line-height:${tokens.type.zeroLeading};`
   + `padding:${tokens.spacing.none} ${tokens.spacing.markerInset}}a.cite:hover{text-decoration:underline}`
-  + `.pipeline-notice,.run-disclosure,.review-status{background:var(--d-info-tint);`
-  + `border:${tokens.line.hairline} solid color-mix(in srgb,var(--proposed) ${tokens.mix.informationBorder},${tokens.color.clear});border-radius:${tokens.radius.panel};`
+  + `.pipeline-notice,.run-disclosure,.review-status{background:var(--d-surface-2);color:var(--ink);`
+  + `border:${tokens.line.hairline} solid var(--line);border-radius:${tokens.radius.panel};`
   + `padding:${tokens.spacing.medium} ${tokens.spacing.standard}}`
   + `.unresolved-asset,.quote-withheld,.unknown-reason,[data-epistemic="unknown"]{background:var(--d-warn-tint);border-radius:${tokens.radius.callout}}`
   + `.unresolved-asset,[data-epistemic="unknown"]{display:block;border-left:${tokens.line.section} solid var(--unknown);padding:${tokens.spacing.mediumSmall} ${tokens.spacing.cardGap};`
@@ -167,8 +167,9 @@ export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${t
   + 'tbody tr:nth-child(even) td{background:var(--d-surface-2)}'
   + `.callout{border:${tokens.line.hairline} solid var(--line);border-left:${tokens.line.section} solid var(--c);background:var(--t);border-radius:${tokens.radius.card};`
   + `padding:${tokens.spacing.medium} ${tokens.spacing.standard};margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}`
-  + '.callout-note{--c:var(--proposed);--t:var(--d-info-tint)}.callout-tip{--c:var(--observed);--t:var(--d-ok-tint)}'
-  + '.callout-caution{--c:var(--amber);--t:var(--d-warn-tint)}.callout-important{--c:var(--accent);--t:var(--accent-tint)}'
+  // A callout's tone is its visible word (Note, Tip, Caution, Important), so its colour is the region's accent and never an evidence
+  // state's (syzygy-5dhm.56, R-POLE-HUE-1 F1).
+  + '.callout-note,.callout-tip,.callout-caution,.callout-important{--c:var(--accent);--t:var(--accent-tint)}'
   + `.callout-title{margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.compact};font-weight:${tokens.type.strongWeight}}.callout-tone{color:var(--c);text-transform:uppercase;`
   + `letter-spacing:${tokens.type.labelTracking};font-size:${tokens.type.citation};margin-right:${tokens.spacing.codeInset}}`
   + `ol.steps{counter-reset:step;list-style:none;padding:${tokens.spacing.none};margin:${tokens.spacing.panelGap} ${tokens.spacing.none}}ol.steps>li{counter-increment:step;position:relative;`
@@ -275,6 +276,10 @@ export const DOSSIER_THEME_CSS = `:root{--void:${tokens.dark.canvas};--panel:${t
   + '.pole-map,.about-this-run>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
   + `li.card{background:var(--accent-tint);border-top:${tokens.line.emphasis} solid var(--accent)}th{background:color-mix(in srgb,var(--accent) ${tokens.mix.tableHeading},var(--panel))}`
   + `ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}.eyebrow{color:var(--accent)}`
+  // The shared and preview sheets draw links, summaries, targeted rows and bare drawings in the decorative accent, and a notice in the
+  // caution colour; on a local page each takes the region's accent or a neutral line instead (R-POLE-HUE-1 F1, F2).
+  + 'a{color:var(--accent)}summary{color:var(--accent)}tr:target{outline-color:var(--accent)}svg rect{stroke:var(--accent)}svg path{stroke:var(--muted)}'
+  + 'svg marker path{fill:var(--muted)}.notice{border-left-color:var(--line)}.pipeline-notice{color:var(--ink)}'
   + `.run-sentence{margin:${tokens.spacing.small} ${tokens.spacing.none};font-size:${tokens.type.bodySmall};color:var(--muted)}.reading-legend{border:${tokens.line.hairline} solid var(--line);`
   + `border-radius:${tokens.radius.card};padding:${tokens.spacing.small} ${tokens.spacing.standard};margin:${tokens.spacing.none} ${tokens.spacing.none} ${tokens.spacing.section};`
   + `font-size:${tokens.type.helper};color:var(--muted)}.reading-legend ul{margin:${tokens.spacing.tight} ${tokens.spacing.none};padding-left:${tokens.spacing.legendInset}}`
@@ -394,7 +399,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // its own page, and one holding only the why section has none. Every section is in exactly one Pole, and the why section is one of them.
   const poleSpec = withheld ? undefined : local?.poles;
   const poles = poleSpec === undefined ? [] : poleSpec.poles.map((pole, index) => ({
-    label: pole.label, sections: pole.sections, hue: index % HUES + 1, path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,
+    label: pole.label, sections: pole.sections, hue: index < HUES ? index + 1 : null, path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,
   }));
   // Colour (syzygy-pdja.14; syzygy-5dhm.56): on an operator-agent page a hue names a Pole and nothing else. Each Pole takes one of six
   // hues by its place in the Pole list, and every part of it carries that hue wherever it is drawn: its page, its why section on the
@@ -402,7 +407,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // hue from the region around them. Nothing takes a hue by its own position, and what belongs to no Pole is neutral. The label still says
   // which Pole a thing is in, so nothing a reader needs rests on the hue.
   const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
-  const poleHue = new Map(poles.flatMap(pole => pole.sections.map(id => [id, pole.hue] as const)));
+  // There are six hues, so a hue names exactly one Pole: a run may declare more Poles (its `poleLimit` is unbounded), and the seventh
+  // onward are neutral. Every Pole keeps its label in the navigation, the map, its page's heading and its "Part of" line, so none is
+  // known by its colour alone (R-POLE-HUE-1 F3).
+  const poleHue = new Map(poles.flatMap(pole => pole.hue === null ? [] : pole.sections.map(id => [id, pole.hue!] as const)));
+  const poleHueAttr = (hue: number | null): string => hue === null ? '' : hueAttr(hue);
   const sectionHue = (sectionId: string): string => { const hue = poleHue.get(sectionId); return hue === undefined ? '' : hueAttr(hue); };
   // Every operator-agent figure drawn from the draft says it is curated (RFC7-28, version 2.3); the provider mode's bytes are pinned.
   const curated = local === undefined ? '' : ' data-visual-provenance="curated"';
@@ -888,7 +897,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (group.link === null && group.dives.length === 0) return '';
     const label = group.link === null ? escape(group.title) : navigationLink(from, group.link);
     const dives = group.dives.length === 0 ? '' : `<ol class="pole-dive-links">${navigationItems(from, group.dives)}</ol>`;
-    return `<li${group.hue === null ? '' : hueAttr(group.hue)}>${label}${dives}</li>`;
+    return `<li${poleHueAttr(group.hue)}>${label}${dives}</li>`;
   }).join('');
   const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol>${sidebarItems(from)}${reviewReport(from)}`;
   const readingOrder = [...readingGroups.flatMap(group => [...(group.link === null ? [] : [group.link]), ...group.dives]), ...reportLinks];
@@ -1011,7 +1020,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // The map of the Poles: each Pole's label linking to its page (the why section's Pole to the section here), with its sections.
   const poleMap = poles.length === 0 ? '' : `<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol>${poles.map(pole => {
     const target = pole.path === null ? href(from, 'index.html', `section-${poleSpec!.whySection}`) : href(from, pole.path);
-    return `<li${hueAttr(pole.hue)}><a href="${escape(target)}">${escape(pole.label)}</a><ul>${pole.sections.map(id => `<li><a href="${escape(sectionHref(from, id))}">${escape(draft.sections.find(section => section.id === id)!.title)}</a></li>`).join('')}</ul></li>`;
+    return `<li${poleHueAttr(pole.hue)}><a href="${escape(target)}">${escape(pole.label)}</a><ul>${pole.sections.map(id => `<li><a href="${escape(sectionHref(from, id))}">${escape(draft.sections.find(section => section.id === id)!.title)}</a></li>`).join('')}</ul></li>`;
   }).join('')}</ol></nav>`;
   // Claim ids are unique across the dossier, so each page's banner carries its own.
   const bannerFor = (claimId: string): string => stop === null ? '' : claim('aside', claimId, 'unknown',
@@ -1106,7 +1115,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         ? `<p class="pole-why"><a href="${escape(href(at, 'index.html', `section-${id}`))}">${escape(section.title)}</a> is on the overview.</p>`
         : sectionMarkup(at, section, draft.sections.indexOf(section));
     }).join('');
-    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${callout}${pageContents(rendered)}${body}</section>`);
+    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${poleHueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${callout}${pageContents(rendered)}${body}</section>`);
   }
 
   // --- deep dives
@@ -1389,7 +1398,7 @@ function withheldWords(note: WithheldNote): string {
   return `(withheld from this dossier: it rests on ${note.sources} source file(s) that screening withholds: ${names.join('; ')})`;
 }
 
-/** How many hues an operator-agent page cycles through (syzygy-pdja.14). */
+/** How many Pole hues an operator-agent page has (syzygy-pdja.14); Poles past this many are neutral (syzygy-5dhm.56). */
 const HUES = 6;
 
 /** The appendix page (dossier spec v1.5). */
