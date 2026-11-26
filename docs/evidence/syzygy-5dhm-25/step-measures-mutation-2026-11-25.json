@@ -1,0 +1,497 @@
+{
+  "subject": "REQ-polaris-generation-033 version 2.31 step measures (syzygy-5dhm.25)",
+  "commit": "fe3e55dfe8b90ff60d621a97191c2b7ab9088931",
+  "files": [
+    "packages/polaris-dossier/src/close.ts",
+    "packages/polaris-dossier/src/step-measures.ts"
+  ],
+  "tests": [
+    "packages/polaris-dossier/src/step-measures.test.ts",
+    "packages/polaris-dossier/src/close-step-measures.test.ts"
+  ],
+  "command": "npx vitest run --project unit --project integration packages/polaris-dossier/src/step-measures.test.ts packages/polaris-dossier/src/close-step-measures.test.ts",
+  "baseline": {
+    "exit": 0,
+    "failed": 0,
+    "passed": 17,
+    "fileFailures": 0
+  },
+  "restored": {
+    "exit": 0,
+    "failed": 0,
+    "passed": 17,
+    "fileFailures": 0
+  },
+  "mutants": 41,
+  "killed": 39,
+  "survived": [
+    "byte-check-chars",
+    "instant-ms-optional"
+  ],
+  "notApplied": [],
+  "results": [
+    {
+      "id": "steps-view-rereads",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "steps: stepInstantsOf(stepLog),",
+      "new": "steps: stepInstants(run),",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "measures-reread",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "stepMeasures: stepMeasures(stepLog, now),",
+      "new": "stepMeasures: stepMeasures(readStepLog(run), now),",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "no-compact-form",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": ", `${JSON.stringify(candidate)}\\n`]",
+      "new": "]",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "no-capacity-fallback",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "[record, { ...record, stepMeasures: CAPACITY_UNKNOWN }]",
+      "new": "[record]",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "capacity-not-refused",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "if (encoded === null) {",
+      "new": "if (false) {",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "byte-check-chars",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": "Buffer.byteLength(text, 'utf8') > CLOSE_RECORD_MAX_BYTES",
+      "new": "text.length > CLOSE_RECORD_MAX_BYTES",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 17,
+      "fileFailures": 0
+    },
+    {
+      "id": "format-unchecked",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "entry['format'] !== STEP_LOG_FORMAT || ",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "instant-no-roundtrip",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": " || new Date(ms).toISOString() !== at",
+      "new": "",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 1
+    },
+    {
+      "id": "instant-ms-optional",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "\\d{2}:\\d{2}\\.\\d{3}Z$/u",
+      "new": "\\d{2}:\\d{2}(?:\\.\\d{3})?Z$/u",
+      "outcome": "survived",
+      "exit": 0,
+      "failed": 0,
+      "passed": 17,
+      "fileFailures": 0
+    },
+    {
+      "id": "absent-as-unreadable",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "why: 'step-log-absent' };",
+      "new": "why: 'step-log-unreadable' };",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "empty-not-unknown",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "prefix.length === 0 ? 'step-log-empty'",
+      "new": "false ? 'step-log-empty'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "malformed-not-unknown",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "counts.rejected > 0 ? 'step-log-malformed-row'",
+      "new": "false ? 'step-log-malformed-row'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "over-limit-off-by-one",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "counts.omitted > 0 ? 'step-log-over-retained-limit'",
+      "new": "counts.omitted > 1 ? 'step-log-over-retained-limit'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "prefix-uncapped",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "snapshot.lines.slice(0, STEP_LINES_MAX)",
+      "new": "snapshot.lines",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "retained-limit-larger",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "export const STEP_LINES_MAX = 10_000;",
+      "new": "export const STEP_LINES_MAX = 10_001;",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 2
+    },
+    {
+      "id": "missing-ending-zero",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (end === undefined) return { state: 'unknown', why: 'no-ending-observation' };",
+      "new": "if (end === undefined) return { state: 'measured', ms: 0 };",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "backward-ending-allowed",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (end < start) return",
+      "new": "if (false) return",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "attempt-excludes-refused",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "first((row) => row.step === 'check')),",
+      "new": "first((row) => row.step === 'check' && row.outcome !== 'refused')),",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 1
+    },
+    {
+      "id": "passed-draft-any-completed",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'check' && row.outcome === 'passed'",
+      "new": "row.step === 'check' && row.outcome !== 'refused'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 3,
+      "passed": 14,
+      "fileFailures": 2
+    },
+    {
+      "id": "passed-inventory-any",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'inventory-check' && row.outcome === 'passed'",
+      "new": "row.step === 'inventory-check'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "render-any-outcome",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'render' && row.outcome === 'rendered'",
+      "new": "row.step === 'render'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "revisions-not-distinct",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "new Set(completed.map((row) => row.revision)).size",
+      "new": "completed.length",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 3,
+      "passed": 14,
+      "fileFailures": 2
+    },
+    {
+      "id": "revisions-include-refused",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "(row.outcome === 'passed' || row.outcome === 'findings')",
+      "new": "row.outcome !== undefined",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 1
+    },
+    {
+      "id": "unusable-revision-ignored",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (!completed.every((row) => nonnegative(row.revision)))",
+      "new": "if (false)",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "revision-zero-rejected",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "Number.isSafeInteger(value) && value >= 0",
+      "new": "Number.isSafeInteger(value) && value > 0",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 3,
+      "passed": 14,
+      "fileFailures": 2
+    },
+    {
+      "id": "no-completed-check-zero",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (completed.length === 0) return { state: 'unknown', why: 'no-completed-check' };",
+      "new": "if (completed.length === 0) return { state: 'counted', distinct: 0 };",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 1
+    },
+    {
+      "id": "opener-any-role",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.step === 'session-prompt' && row.role === 'review' && ",
+      "new": "row.step === 'session-prompt' && ",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "opener-issued-only",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "(row.outcome === 'issued' || row.outcome === 'delivered')",
+      "new": "row.outcome === 'issued'",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 5,
+      "passed": 12,
+      "fileFailures": 2
+    },
+    {
+      "id": "issued-uses-row-round",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.outcome === 'issued' ? 1 : row.round",
+      "new": "row.round",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 7,
+      "passed": 10,
+      "fileFailures": 2
+    },
+    {
+      "id": "session-unchecked",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (!positive(row.session) || !positive(round))",
+      "new": "if (!positive(round))",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "repeat-allowed",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (seen.has(identity))",
+      "new": "if (false)",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "earliest-opener-kept",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (pending !== null) unfinished++;\n      pending = row;",
+      "new": "if (pending === null) pending = row; else unfinished++;",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 4,
+      "passed": 13,
+      "fileFailures": 2
+    },
+    {
+      "id": "validation-pairs-repeatedly",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "pending = null;\n    }\n  }",
+      "new": "}\n  }",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 6,
+      "passed": 11,
+      "fileFailures": 2
+    },
+    {
+      "id": "refused-check-pairs",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "row.outcome === 'validated' && pending !== null",
+      "new": "pending !== null",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 4,
+      "passed": 13,
+      "fileFailures": 2
+    },
+    {
+      "id": "kind-unfiltered",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "if (row.kind !== kind) continue;",
+      "new": "if (row.step === 'session-prompt' && row.kind !== kind) continue;",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 4,
+      "passed": 13,
+      "fileFailures": 2
+    },
+    {
+      "id": "backward-pair-summed",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "backwards ? { state: 'unknown', why: 'paired-interval-backwards' }",
+      "new": "false ? { state: 'unknown', why: 'paired-interval-backwards' }",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "no-pair-zero",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "paired === 0 ? { state: 'unknown', why: 'no-paired-round' }",
+      "new": "false ? { state: 'unknown', why: 'no-paired-round' }",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 5,
+      "passed": 12,
+      "fileFailures": 2
+    },
+    {
+      "id": "sum-unchecked",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "!Number.isSafeInteger(sum) ?",
+      "new": "false ?",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "byte-check-chars+no-parse-check",
+      "file": "packages/polaris-dossier/src/close.ts",
+      "old": [
+        "Buffer.byteLength(text, 'utf8') > CLOSE_RECORD_MAX_BYTES",
+        "try { parseBoundedJson(text, CLOSE_RECORD_JSON_LIMITS); return true; } catch { return false; }"
+      ],
+      "new": [
+        "text.length > CLOSE_RECORD_MAX_BYTES",
+        "return true;"
+      ],
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 1,
+      "passed": 16,
+      "fileFailures": 1
+    },
+    {
+      "id": "instant-ms-optional+no-roundtrip",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": [
+        "\\d{2}:\\d{2}\\.\\d{3}Z$/u",
+        " || new Date(ms).toISOString() !== at"
+      ],
+      "new": [
+        "\\d{2}:\\d{2}(?:\\.\\d{3})?Z$/u",
+        ""
+      ],
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 2,
+      "passed": 15,
+      "fileFailures": 1
+    },
+    {
+      "id": "label-observed",
+      "file": "packages/polaris-dossier/src/step-measures.ts",
+      "old": "label: 'Inferred',\n    rows: counts,",
+      "new": "label: 'Observed',\n    rows: counts,",
+      "outcome": "killed",
+      "exit": 1,
+      "failed": 7,
+      "passed": 10,
+      "fileFailures": 2
+    }
+  ]
+}
