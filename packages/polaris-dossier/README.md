@@ -57,8 +57,9 @@ Before a change to `src/brief.ts` (or `BRIEF_VERSION`), `src/draft-schema.ts` or
       No result is reported as a win.
 - [ ] No question or required fact of the regression key is in the brief, a packet or an agent text: `src/regression-hold-out.test.ts`
       (unit; the 24 question texts and 81 required facts, by any eight consecutive words) and the rendered-brief case in
-      `src/brief.test.ts` (integration; the question texts only) pass. The key itself is a tracked file of this repository, so it
-      sits in the checkout an operator session starts from: never hand an authoring session this checkout.
+      `src/brief.test.ts` (integration; the question texts only) pass. The historical regression key is tracked in the Syzygy
+      checkout, which the supervised roles mount read-only. For blind comparisons, use separately frozen evaluator keys
+      outside every checkout, mount and packet the authoring roles can read.
 
 The rule and its reasons are in `CONTRIBUTING.md` ("Changing the dossier brief, draft schema or renderer"). It is review
 practice adopted by agents (`.syzygy/governance/decisions/AGENT-ADOPTIONS.md`). The reporting rule gates no merge; the hold-out
